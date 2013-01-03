@@ -84,7 +84,14 @@ class AKHelperLang {
 	
 	public static function loadAll($lang = 'en-GB')
 	{
-		$files 	= JFolder::files(AKHelper::_('path.getAdmin').'/language/'.$lang);
+		$folder = AKHelper::_('path.getAdmin').'/language/'.$lang ;
+		
+		if(JFolder::exists($folder)) {
+			$files 	= JFolder::files($folder);
+		}else{
+			return ;
+		}
+		
 		$lang 	= JFactory::getLanguage();
 		$langs 	= array();
 		
