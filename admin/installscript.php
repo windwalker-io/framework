@@ -47,151 +47,37 @@ if(JVERSION >= 3){
 $td_class = array('style' => 'text-align:center;') ;
 
 
-// Set component install success info
-$grid->addRow(array( 'class' => 'row'.($i % 2) )) ;
-$grid->setRowCell('num', ++$i , $td_class);
-$grid->setRowCell('type', JText::_('COM_INSTALLER_TYPE_COMPONENT') , $td_class);
-$grid->setRowCell('name', JText::_(strtoupper($manifest->name)) , array());
-$grid->setRowCell('version', $manifest->version , $td_class);
-$grid->setRowCell('state', $tick , $td_class);
-$grid->setRowCell('info', '', array());
-
+// Set Extension install success info
+// ========================================================================
+include dirname(__FILE__).'/installscript/'.$manifest['type'].'.php' ;
 
 
 // Install WindWalker
 // ========================================================================
-// Do install
-$installer 		= new JInstaller();
-$install_path 	= $path.'/windwalker';
-if($result[] = $installer->install($install_path)){
-	$status = $tick ;
-}else{
-	$status = $cross ;
-}
-// Set success table
-$grid->addRow(array( 'class' => 'row'.($i % 2) )) ;
-$grid->setRowCell('num', ++$i , $td_class);
-$grid->setRowCell('type', JText::_('COM_INSTALLER_TYPE_LIBRARY') , $td_class);
-$grid->setRowCell('name', JText::_('LIB_WINDWALKER') , array());
-$grid->setRowCell('version', $installer->manifest->version , $td_class);
-$grid->setRowCell('state', $status , $td_class);
-$grid->setRowCell('info', JText::_($installer->manifest->description), array());
+include dirname(__FILE__).'/installscript/windwalker.php' ;
 
 
 // Install modules
 // ========================================================================
-$modules 	= $manifest->modules ;
-
-if(!empty($modules)){
-	foreach( (array)$modules as $module ):
-		
-		if(!trim($module)) continue ;
-		
-		$module = is_array($module) ? $module : array($module) ;
-		
-		// Install per module
-		foreach( $module as $var ):
-			$install_path = $path.'/../modules/'.$var ;
-			
-			// Do install
-			$installer = new JInstaller();
-			if($result[] = $installer->install($install_path)){
-				$status = $tick ;
-			}else{
-				$status = $cross ;
-			}
-			
-			// Set success table
-			$grid->addRow(array( 'class' => 'row'.($i % 2) )) ;
-			$grid->setRowCell('num', ++$i , $td_class);
-			$grid->setRowCell('type', JText::_('COM_INSTALLER_TYPE_MODULE') , $td_class);
-			$grid->setRowCell('name', JText::_(strtoupper($var)) , array());
-			$grid->setRowCell('version', $installer->manifest->version , $td_class);
-			$grid->setRowCell('state', $status , $td_class);
-			$grid->setRowCell('info', JText::_($installer->manifest->description), array());
-			
-		endforeach;
-		
-	endforeach;
-}
-
+include dirname(__FILE__).'/installscript/modules.php' ;
 
 
 // Install plugins
 // ========================================================================
-$plugins 	= $manifest->plugins ;
+include dirname(__FILE__).'/installscript/plugins.php' ;
 
-if(!empty($plugins)){
-	foreach( (array)$plugins as $plugin ):
-		
-		if(!trim($plugin)) continue ;
-		
-		$plugin = is_array($plugin) ? $plugin : array($plugin) ;
-		
-		// Install per plugin
-		foreach( $plugin as $var ):
-			$install_path = $path.'/../plugins/'.$var ;
-			
-			// Get plugin name
-			$path 		= explode('/', $var) ;
-			$plg_name 	= array_pop($path) ;
-				
-			if( substr( $plg_name,0 ,4 ) == 'plg_' ){
-				$plg_name = substr( $plg_name, 4 ) ;
-			}
-			
-			$plg_name	= explode('_', $plg_name) ;
-			$plg_name	= $plg_name[1];
-			
-			
-			// Do install
-			$installer = new JInstaller();
-			if( $result[] = $installer->install($install_path) ){
-				
-				$plg_group 	= (string) $installer->manifest['group'] ;
-				
-				// Enable this plugin.
-				if($type == 'install'):
-					$q = $db->getQuery(true) ;
-					
-					$q->update('#__extensions')
-						->set("enabled = 1")
-						->where("type = 'plugin'")
-						->where("element = '{$plg_name}'")
-						->where("folder = '{$plg_group}'")
-						;
-					
-					$db->setQuery($q);
-					$db->query();
-				endif;
-				
-				$status = $tick ;
-			}else{
-				$status = $cross ;
-			}
-			
-			// Set success table
-			$grid->addRow(array( 'class' => 'row'.($i % 2) )) ;
-			$grid->setRowCell('num', ++$i , $td_class);
-			$grid->setRowCell('type', JText::_('COM_INSTALLER_TYPE_PLUGIN') , $td_class);
-			$grid->setRowCell('name', JText::_($var) , array());
-			$grid->setRowCell('version', $installer->manifest->version , $td_class);
-			$grid->setRowCell('state', $status , $td_class);
-			$grid->setRowCell('info', JText::_($installer->manifest->description), array());
-			
-		endforeach;
-		
-	endforeach;
-}
 
 // Render install information
-echo '<h1>'.JText::_(strtoupper($manifest->name)).'</h1>' ;
-$img = JURI::base().'/components/'.strtolower($manifest->name).'/images/'.strtolower($manifest->name).'_logo.png' ;
-$img = JHtml::_('image', $img, 'LOGO' ) ;
-$link = JRoute::_("index.php?option=".$manifest->name);
-echo '<div id="ak-install-img">'.JHtml::link($link, $img).'</div>';
-echo '<div id="ak-install-msg">'.JText::_( strtoupper($manifest->name).'_INSTALL_MSG' ).'</div>';
-echo '<br /><br />';
+// ========================================================================
+if( $manifest['type'] == 'component' ):
+	echo '<h1>'.JText::_(strtoupper($manifest->name)).'</h1>' ;
+	$img = JURI::base().'/components/'.strtolower($manifest->name).'/images/'.strtolower($manifest->name).'_logo.png' ;
+	$img = JHtml::_('image', $img, 'LOGO' ) ;
+	$link = JRoute::_("index.php?option=".$manifest->name);
+	echo '<div id="ak-install-img">'.JHtml::link($link, $img).'</div>';
+	echo '<div id="ak-install-msg">'.JText::_( strtoupper($manifest->name).'_INSTALL_MSG' ).'</div>';
+	echo '<br /><br />';
+endif;
 
 echo $grid ;
 
