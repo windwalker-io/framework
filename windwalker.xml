@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="library" version="2.5" method="upgrade">
+	<name>windwalker</name>
+	<libraryname>windwalker</libraryname>
+	<creationDate>2012-11-23</creationDate>
+	<copyright>Copyright (C) 2012. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <author>Asika</author>
+	<authorEmail>asika32764@gmail.com</authorEmail>
+	<authorUrl>http://asikart.com</authorUrl>
+	<version>3.2.2</version>
+	<description>LIB_WINDWALKER_XML_DESC</description>
+	
+	<files>
+		<folder>admin</folder>
+		<folder>component</folder>
+		<folder>base</folder>
+		<folder>form</folder>
+		<folder>helpers</folder>
+		<folder>html</folder>
+		<folder>layouts</folder>
+		<folder>language</folder>
+		<file>init.php</file>
+		<file>windwalker.xml</file>
+		<file>index.html</file>
+	</files>
+	
+	<languages folder="language/zh-TW">
+		<language tag="zh-TW">zh-TW.lib_windwalker.ini</language>
+		<language tag="zh-TW">zh-TW.lib_windwalker.sys.ini</language>
+	</languages>
+	
+	<updateservers>
+        <server type="extension" priority="1" name="WindWalker Framework">http://update.asikart.com/library/lib_windwalker.xml</server>
+    </updateservers>
+</extension>
+
