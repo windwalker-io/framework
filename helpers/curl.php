@@ -20,7 +20,7 @@ class AKHelperCurl
 	 * @param $url
 	 */
 	
-	public static function getPage($url='')
+	public static function getPage($url='', $method = 'get', $query = '')
 	{
 		if(!$url) return ;
 		
@@ -33,6 +33,15 @@ class AKHelperCurl
 			CURLOPT_USERAGENT 		=> "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1",
 			CURLOPT_FOLLOWLOCATION 	=> true ,
 		);
+		
+		if($method == 'post') {
+			$option[CURLOPT_POST] = true ;
+			if(is_array($query)) {
+				$query = http_build_query($query) ;
+			}
+			$option[CURLOPT_POSTFIELDS] = $query ;
+		}
+		
 		curl_setopt_array($ch, $options);
 		$output = curl_exec($ch);
 		curl_close($ch);
