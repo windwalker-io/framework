@@ -80,7 +80,7 @@ class AKViewList extends AKView
 		
 		// Toolbar Buttons
 		// ========================================================================
-		if ($canDo->get('core.create') && (count($user->getAuthorisedCategories($this->option, 'core.create'))) > 0 ) {
+		if ($canDo->get('core.create') ) {
 			JToolBarHelper::addNew( $this->item_name.'.add');
 		}
 
