@@ -36,6 +36,7 @@ class AKViewList extends AKView
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal') {
 			$this->addToolbar();
+			$this->sidebarFilter();
 			
 			if( JVERSION >= 3 ){
 				$this->sidebar = JHtmlSidebar::render();
@@ -79,12 +80,16 @@ class AKViewList extends AKView
 		
 		// Toolbar Buttons
 		// ========================================================================
-		if ($canDo->get('core.create') || (count($user->getAuthorisedCategories($this->option, 'core.create'))) > 0 ) {
+		if ($canDo->get('core.create') && (count($user->getAuthorisedCategories($this->option, 'core.create'))) > 0 ) {
 			JToolBarHelper::addNew( $this->item_name.'.add');
 		}
 
 		if ($canDo->get('core.edit')) {
 			JToolBarHelper::editList( $this->item_name.'.edit');
+		}
+		
+		if ($canDo->get('core.create')) {
+			JToolBarHelper::custom($this->list_name.'.duplicate', 'copy.png', 'copy_f2.png', 'JTOOLBAR_DUPLICATE', true);
 		}
 
 		if ($canDo->get('core.edit.state')) {
@@ -100,7 +105,7 @@ class AKViewList extends AKView
 			JToolBarHelper::divider();
 		}
 		
-		if ($filter_state['a.published'] == -2 && $canDo->get('core.delete')) {
+		if ( JArrayHelper::getValue($filter_state, 'a.published') == -2 && $canDo->get('core.delete') ) {
 			JToolbarHelper::deleteList('Are you sure?', $this->list_name.'.delete');
 		}
 		elseif ($canDo->get('core.edit.state')) {
@@ -108,7 +113,8 @@ class AKViewList extends AKView
 		}
 		
 		// Add a batch modal button
-		if ($user->authorise('core.edit') && JVERSION >= 3)
+		$batch = AKHelper::_('path.get').'/views/'.$this->list_name.'/tmpl/default_batch.php';
+		if ($canDo->get('core.edit') && JVERSION >= 3 && JFile::exists($batch))
 		{
 			AKToolbarHelper::modal( 'JTOOLBAR_BATCH', 'batchModal');
 		}
@@ -118,6 +124,17 @@ class AKViewList extends AKView
 		}
 		
 		
+	}
+	
+	
+	
+	/*
+	 * function sidebarFilter
+	 * @param 
+	 */
+	
+	public function sidebarFilter()
+	{
 		// Sidebar Filters
 		// ========================================================================
 		
@@ -146,7 +163,6 @@ class AKViewList extends AKView
 			endforeach;
 			
 		}
-		
 	}
 	
 	

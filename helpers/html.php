@@ -64,6 +64,60 @@ class AKHelperHtml {
 		
         endif;
 	}
+	
+	
+	
+	/*
+	 * function parseBBCode
+	 * @param $text
+	 */
+	
+	public static function parseBBCode($text)
+	{
+		require_once( "phar://".AKPATH_HTML."/jbbcode/jbbcode.phar/Parser.php" );
+
+		$parser = new JBBCode\Parser();
+		$parser->loadDefaultCodes();
+		 
+		$parser->parse($text);
+		 
+		print $parser->getAsHtml();	
+	}
+	
+	
+	
+	/*
+	 * function modal
+	 * @param $id
+	 */
+	
+	public static function modal($id, $content)
+	{
+		$doc = JFactory::getDocument();
+		
+		if(JVERSION >= 3) {
+			
+		}else{
+			JHtml::_('behavior.modal');
+			
+			$script =
+<<<SCRIPT
+			window.addEvent('domready', function(){
+				SqueezeBox.assign($$('a#{$id}'), {
+					parse: 'rel',
+					onOpen: function(e) {
+						e.getChildren().show();
+					}
+				});
+				
+				$('{$content}').hide();
+				
+			});
+SCRIPT;
+
+			$doc->addScriptDeclaration($script);
+		}
+	}
 }
 
 

@@ -1,0 +1,57 @@
+/*!
+ * Windwalker CSS
+ *
+ * Copyright 2013 Asikart.com
+ * License GNU General Public License version 2 or later; see LICENSE.txt, see LICENSE.php
+ *
+ * Generator: AKHelper
+ * Author: Asika
+ */
+
+
+/* FORM */
+
+.control-group .star {
+	color: red;
+}
+
+#editor-xtd-buttons {
+	float: none;
+}
+
+
+/* Fix Bluestork and Bootstrap Conflict */
+#ak-panel-wrap {
+	margin-top: 15px;
+}
+
+#toolbar-box .pagetitle {
+	background-position: 0 0;
+	width: auto;
+	height: auto;
+}
+
+div.toolbar-list span {
+	background-position: 0 0;
+	width: auto;
+	height: auto;
+}
+
+#toolbar ul li.button {
+	margin-top: -10px;
+}
+
+ul.adminformlist li label {
+	display: inline-block;
+	min-width: 135px;
+	float: left;
+}
+
+ul.adminformlist li {
+	display: block;
+	clear: both;
+}
+
+div.button2-left {
+	margin-top: 0;
+}

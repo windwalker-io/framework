@@ -106,6 +106,26 @@ class AKHelperLang {
 			$lang->load(implode('.', $file), AKHelper::_('path.getAdmin')) ;
 		endforeach;
 	}
+	
+	
+	
+	/*
+	 * function loadLanguage
+	 * @param $ext
+	 */
+	
+	public static function loadLanguage($ext = null, $client = 'site')
+	{
+		if(!$ext) {
+			$ext = AKHelper::_('path.getOption');
+		}
+		$lang = JFactory::getLanguage();
+		
+		$lang->load($ext, JPATH_BASE, null, false, false)
+		|| $lang->load($ext, AKHelper::_('path.get', $client, $ext), null, false, false)
+		|| $lang->load($ext, JPATH_BASE, null, true)
+		|| $lang->load($ext, AKHelper::_('path.get', $client, $ext), null, true);
+	}
 }
 
 

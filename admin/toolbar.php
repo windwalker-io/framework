@@ -94,12 +94,16 @@ class AKToolBarHelper
 	
 	public static function modal($title  = 'JTOOLBAR_BATCH' , $selector = 'myModal' )
 	{
-		JHtml::_('bootstrap.modal', $selector);
+		AKHelper::_('ui.modal', $selector) ;
 		$bar 	= JToolbar::getInstance('toolbar');
 		$title  = JText::_($title);
-		$dhtml 	= "<button data-toggle=\"modal\" data-target=\"#$selector\" class=\"btn btn-small\">
-					<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-					$title</button>";
+		
+		$option = array(
+			'class' => 'btn btn-small' ,
+			'icon' 	=> 'icon-checkbox-partial'
+		);
+		
+		$dhtml	= AKHelper::_('ui.modalLink', $title, $selector, $option) ;
 		$bar->appendButton('Custom', $dhtml, 'batch');	
 	}
 	

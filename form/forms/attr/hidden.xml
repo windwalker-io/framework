@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="attrs">
+		<field
+			name="name"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_NAME"
+			description="LIB_WINDWALKER_FIELD_ATTR_NAME_DESC"
+			required="true"
+		/>
+		
+		<field
+			name="default"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DEFAULT"
+			description="LIB_WINDWALKER_FIELD_ATTR_DEFAULT_DESC"
+		/>
+		
+		<field
+			name="class"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_CLASS"
+			description="LIB_WINDWALKER_FIELD_ATTR_CLASS_DESC"
+		/>
+	</fieldset>
+</form>

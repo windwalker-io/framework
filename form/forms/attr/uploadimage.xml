@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="attrs">
+		<field
+			name="name"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_NAME"
+			description="LIB_WINDWALKER_FIELD_ATTR_NAME_DESC"
+			required="true"
+		/>
+		
+		<field
+			name="label"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_LABEL"
+			description="LIB_WINDWALKER_FIELD_ATTR_LABEL_DESC"
+			required="true"
+			filter="safehtml"
+		/>
+		
+		<field
+			name="description"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION"
+			description="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION_DESC"
+			filter="safehtml"
+		/>
+<!--		
+		<field
+			name="accept"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION"
+			description="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION_DESC"
+			filter="safehtml"
+		/>
+-->		
+		<field
+			name="default"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DEFAULT"
+			description="LIB_WINDWALKER_FIELD_ATTR_DEFAULT_DESC"
+		/>
+		
+		<field
+			name="required"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_REQUIRED"
+			description="LIB_WINDWALKER_FIELD_ATTR_REQUIRED_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+	</fieldset>
+	
+	<fieldset name="advanced">
+		
+		<field
+			name="width"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_WIDTH"
+			description="LIB_WINDWALKER_FIELD_ATTR_WIDTH_DESC"
+			filter="string"
+			class="input-small"
+		/>
+		
+		<field
+			name="height"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_IMG_HEIGHT"
+			description="LIB_WINDWALKER_FIELD_ATTR_IMG_HEIGHT_DESC"
+			filter="string"
+			class="input-small"
+		/>
+		
+		<field
+			name="width"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_IMG_WIDTH"
+			description="LIB_WINDWALKER_FIELD_ATTR_IMG_WIDTH_DESC"
+			filter="string"
+			class="input-small"
+		/>
+		
+		<field
+			name="crop"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_CROP"
+			description="LIB_WINDWALKER_FIELD_ATTR_CROP_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+		
+		<field
+			name="size"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_SIZE"
+			description="LIB_WINDWALKER_FIELD_ATTR_SIZE_DESC"
+			class="input-small"
+		/>
+		
+		<field
+			name="class"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_CLASS"
+			description="LIB_WINDWALKER_FIELD_ATTR_CLASS_DESC"
+		/>
+		
+		<field
+			name="filter"
+			type="filterlist"
+			label="LIB_WINDWALKER_FIELD_ATTR_FILTERLIST"
+			description="LIB_WINDWALKER_FIELD_ATTR_FILTERLIST_DESC"
+		>
+			<option>JDEFAULT</option>
+		</field>
+		
+		<field
+			name="readonly"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_READONLY"
+			description="LIB_WINDWALKER_FIELD_ATTR_READONLY_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+		
+		<field
+			name="disabled"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_DISABLED"
+			description="LIB_WINDWALKER_FIELD_ATTR_DISABLED_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+	</fieldset>
+</form>

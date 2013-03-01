@@ -48,13 +48,23 @@ class AKProxy
         $key = preg_replace('#[^A-Z0-9_\.]#i', '', $key);
  
         // Check to see whether we need to load a helper file
-        $parts = explode('.', $key);
+        $parts 	= explode('.', $key);
+		$file 	= '' ;
+		$prefix = '' ;
  
-        $prefix = (count($parts) == 3 ? array_shift($parts) : self::$prefix);
-        $file = (count($parts) == 2 ? array_shift($parts) : '');
+		if(count($parts) == 3) {
+			$prefix = array_shift($parts) ;
+			$file 	= array_shift($parts) ;
+		}elseif(count($parts) == 2){
+			$prefix = self::$prefix ;
+			$file 	= array_shift($parts) ;
+		}else{
+			$prefix = self::$prefix ;
+		}
+		
         $func = array_shift($parts);
  
-        return array(strtolower($prefix . '.' . $file . '.' . $func), $prefix, $file, $func);
+        return array(strtolower($key), $prefix, $file, $func);
     }
  
     /**
@@ -73,6 +83,7 @@ class AKProxy
      */
     public static function _($key)
     {
+		
         list($key, $prefix, $file, $func) = self::extract($key);
         if (array_key_exists($key, self::$registry))
         {
@@ -82,16 +93,16 @@ class AKProxy
             array_shift($args);
             return self::call($function, $args);
         }
- 
+		
         $className = $prefix . ucfirst($file);
- 
+		
         if (!class_exists($className))
         {
             jimport('joomla.filesystem.path');
             if ($path = JPath::find(self::$includePaths[$prefix], strtolower($file) . '.php'))
             {
                 require_once $path;
- 
+				
                 if (!class_exists($className))
                 {
                     //JError::raiseError(500, JText::sprintf('JLIB_HTML_ERROR_NOTFOUNDINFILE', $className, $func));
@@ -102,6 +113,7 @@ class AKProxy
         }
  
         $toCall = array($className, $func);
+		
         if (is_callable($toCall))
         {
             self::register($key, $toCall);
@@ -113,9 +125,9 @@ class AKProxy
 		elseif( $prefix != 'AKHelper' )
 		{
 			$args = func_get_args();
-			$args[0] = "AKHelper." . $args[0] ;
+			$args[0] = 'AKHelper.' . $file . '.' . $func ;
 			
-			return call_user_func_array( array('AKProxy', '_') , $args) ;
+			return call_user_func_array( array('AKHelper', '_') , $args) ;
 		}
         else
         {

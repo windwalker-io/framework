@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="attrs">
+		<field
+			name="name"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_NAME"
+			description="LIB_WINDWALKER_FIELD_ATTR_NAME_DESC"
+			required="true"
+		/>
+		
+		<field
+			name="label"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_LABEL"
+			description="LIB_WINDWALKER_FIELD_ATTR_LABEL_DESC"
+			required="true"
+			filter="safehtml"
+		/>
+		
+		<field
+			name="description"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION"
+			description="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION_DESC"
+			filter="safehtml"
+		/>
+		
+		<field
+			name="default"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DEFAULT"
+			description="LIB_WINDWALKER_FIELD_ATTR_DEFAULT_DESC"
+		/>
+		
+	</fieldset>
+	
+	<fieldset name="advanced">
+		<field
+			name="class"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_CLASS"
+			description="LIB_WINDWALKER_FIELD_ATTR_CLASS_DESC"
+		/>
+	</fieldset>
+	
+	<fieldset name="options">
+		<field
+			name="options"
+			type="options"
+			label="LIB_WINDWALKER_FIELD_ATTR_OPTIONS"
+			description="LIB_WINDWALKER_FIELD_ATTR_OPTIONS_DESC"
+			checkbox="true"
+		>
+			<option>JDEFAULT</option>
+		</field>
+	</fieldset>
+</form>

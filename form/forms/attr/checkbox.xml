@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="attrs">
+		<field
+			name="name"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_NAME"
+			description="LIB_WINDWALKER_FIELD_ATTR_NAME_DESC"
+			required="true"
+		/>
+		
+		<field
+			name="label"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_LABEL"
+			description="LIB_WINDWALKER_FIELD_ATTR_LABEL_DESC"
+			required="true"
+			filter="safehtml"
+		/>
+		
+		<field
+			name="description"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION"
+			description="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION_DESC"
+			filter="safehtml"
+		/>
+		
+		<field
+			name="value"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_VALUE"
+			description="LIB_WINDWALKER_FIELD_ATTR_VALUE_DESC"
+		/>
+		
+		<field
+			name="default"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_DEFAULT_CHECKED"
+			description="LIB_WINDWALKER_FIELD_ATTR_DEFAULT_CHECKED_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field
+			name="required"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_REQUIRED"
+			description="LIB_WINDWALKER_FIELD_ATTR_REQUIRED_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+	</fieldset>
+	
+	<fieldset name="advanced">
+		<field
+			name="class"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_CLASS"
+			description="LIB_WINDWALKER_FIELD_ATTR_CLASS_DESC"
+		/>
+	</fieldset>
+</form>

@@ -51,6 +51,9 @@ class JFormFieldItemlist extends JFormFieldList
 		$show_root	= (string) $this->element['show_root'];
 		$published	= (string) $this->element['published'] ;
 		$nested		= (string) $this->element['nested'] ;
+		$key_field	= $this->element['key_field'] 	? (string) $this->element['key_field'] 		: 'id';
+		$value_field= $this->element['value_field'] ? (string) $this->element['value_field'] 	: 'title';
+		$select		= $this->element['select'] ;
 		$db 		= JFactory::getDbo();
 		$q 			= $db->getQuery(true) ;
 		
@@ -82,7 +85,9 @@ class JFormFieldItemlist extends JFormFieldList
 		
 		// Query
 		// ========================================================================
-		$q->select('*')
+		$select = $select ? '*, ' . $select : '*' ;
+		
+		$q->select($select)
 			->from('#__' . $this->component.'_'. $this->view_list )
 			->order($order)
 			;
@@ -99,7 +104,7 @@ class JFormFieldItemlist extends JFormFieldList
 		foreach( $items as $item ):
 			$item = new JObject($item);
 			$level = !empty($item->level) && $nested ? $item->level : 0 ;
-			$options[] = JHtml::_('select.option', $item->id, str_repeat('- ', $level).$item->title );
+			$options[] = JHtml::_('select.option', $item->$key_field, str_repeat('- ', $level).$item->$value_field );
 		endforeach;
 		
 		

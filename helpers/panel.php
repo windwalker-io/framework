@@ -15,6 +15,11 @@ defined('_JEXEC') or die;
 
 class AKHelperPanel
 {
+	static public $legacy 	= false ;
+	
+	static public $buttons 	= array();
+	
+	static public $script 	= null ;
 	
 	/*
 	 * function startPane
@@ -24,7 +29,8 @@ class AKHelperPanel
 	public static function startTabs($selector = 'myTab', $params = array())
 	{
 		if( JVERSION >= 3 ) {
-			return JHtml::_('bootstrap.startPane', $selector, $params );
+			$tab = '<ul id="'.$selector.'_buttons" class="nav nav-tabs"></ul>' ;
+			return $tab . JHtml::_('bootstrap.startPane', $selector, $params );
 		}else{
 			return JHtml::_('tabs.start', $selector, $params);
 		}
@@ -39,6 +45,20 @@ class AKHelperPanel
 	public static function endTabs()
 	{
 		if( JVERSION >= 3 ) {
+			$doc = JFactory::getDocument();
+			$add = implode("\n",self::$script) ;
+			
+			$script =
+<<<SC
+				jQuery(document).ready(function($){
+				var d = document ;
+					{$add}
+				});
+SC;
+			if(!self::$legacy){
+				$doc->addScriptDeclaration($script);
+			}
+			
 			return JHtml::_('bootstrap.endPane' );
 		}else{
 			return JHtml::_('tabs.end');
@@ -54,6 +74,14 @@ class AKHelperPanel
 	public static function addPanel($selector, $text, $id)
 	{
 		if( JVERSION >= 3 ) {
+			self::$buttons[$selector]['text'] = $text ;
+			self::$buttons[$selector]['id'] = $id ;
+			
+			$addclass 	= !self::$script ? ",{class: 'active'}" : '';
+			$ul			= !self::$script ? "var btns = $('#{$selector}_buttons') ;\n\n" : '';
+			
+			self::$script[] = $ul."btns.append( $('<li>'{$addclass}).append( $('<a>', {'href': '#{$id}', 'data-toggle': 'tab', text: '{$text}' }) ) );" ;
+			
 			return JHtml::_('bootstrap.addPanel', $selector, $id );
 		}else{
 			return JHtml::_('tabs.panel', $text, $id);
@@ -144,5 +172,16 @@ class AKHelperPanel
 	public static function setToolbarIcon($image, $default = 'article.png', $path = 'images/admin-icons')
 	{
 		
+	}
+	
+	
+	/*
+	 * function setLegacy
+	 * @param $conditiotn
+	 */
+	
+	public static function setLegacy($conditiotn = true)
+	{
+		self::$legacy = $conditiotn;
 	}
 }

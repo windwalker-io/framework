@@ -13,6 +13,10 @@ defined('_JEXEC') or die;
 
 class AKHelper extends AKProxy
 {
+	static $config = array();
+	
+	static $version ;
+	
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
@@ -69,6 +73,64 @@ class AKHelper extends AKProxy
 			return true;
 		else 
 			return false;
+	}
+	
+	
+	/*
+	 * function getParams
+	 * @param $option
+	 */
+	
+	public static function getParams($option = null)
+	{
+		if(!$option) {
+			$option = AKHelper::_('path.getOption') ;
+		}
+		
+		if($option) {
+			return JComponentHelper::getParams($option);
+		}
+	}
+	
+	
+	/*
+	 * function getConfig
+	 * @param $key
+	 */
+	
+	public static function getConfig($key, $default = null, $option = null)
+	{
+		if(!$option){
+			$option = AKHelper::_('path.getOption') ;
+		}
+		
+		if(isset(self::$config[$option])) {
+			return self::$config[$option]->get($key, $default) ;
+		}
+		
+		// Init Config
+		self::$config[$option] = new JRegistry();
+		self::$config[$option]->loadFile( AKHelper::_('path.getAdmin', $option).'/includes/config.json' );
+		
+		return self::$config[$option]->get($key, $default) ;
+	}
+	
+	
+	/*
+	 * function getVersion
+	 * @param 
+	 */
+	
+	public static function getVersion()
+	{
+		if(self::$version) {
+			return self::$version ;
+		}
+		
+		$xml = AKHelper::_('path.getAdmin').'/'.substr(AKHelper::_('path.getOption'), 4).'.xml' ;
+		$xml = JFactory::getXML($xml, true) ;
+		
+		return self::$version = $xml->version ;
 	}
 }
 

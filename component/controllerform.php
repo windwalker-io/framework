@@ -159,7 +159,7 @@ class AKControllerForm extends JControllerForm
     {
 		$user = JFactory::getUser() ;
 		
-        $allowOwn = $user->authorise('core.edit.own', $this->option) && ($data['created_by'] == $user->id) ;
+        $allowOwn = $user->authorise('core.edit.own', $this->option) && (JArrayHelper::getValue($data, 'created_by') == $user->id) ;
 		$allowEdit = $user->authorise('core.edit', $this->option.'.'.$this->view_item.'.'.$data[$key]) ;
 		
 		return ($allowEdit || $allowOwn) ;

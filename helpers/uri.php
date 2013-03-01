@@ -38,6 +38,27 @@ class AKHelperUri {
 	    return $uri->toString();
 	}
 	
+	
+	
+	/*
+	 * function pathAddSubfolder
+	 * @param $path
+	 */
+	
+	public static function pathAddSubfolder( $path )
+	{
+		$uri 		= JFactory::getURI() ;
+		$host 		= $uri->getScheme().'://'.$uri->getHost();
+		$current 	= JURI::root();
+		
+		$subfolder 	= str_replace( $host, '', $current );
+		$subfolder 	= trim($subfolder, '/') ;
+		
+		return $subfolder . '/' . trim($path, '/') ;
+	}
+	
+	
+	
 	public static function base64( $action , $url ) {
 		
 		switch($action) {

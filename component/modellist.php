@@ -89,7 +89,7 @@ class AKModelList extends JModelList
 		
 		// Set Nested Items
 		// ========================================================================
-		$table = $this->getTable();
+		$table = $this->getTable(ucfirst($this->item_name));
 		if( $table instanceof JTableNested ){
 			$nested = true ;
 		}else{
@@ -120,6 +120,9 @@ class AKModelList extends JModelList
 		if(!$ordering){
 			$ordering = $nested ? 'a.lft' : 'a.ordering' ;
 		}
+		
+		$ordering = in_array('a.catid', $this->filter_fields) ? 'a.catid, ' . $ordering : $ordering ;
+		$this->setState('ordering.orderCol', $ordering);
 		
 		parent::populateState($ordering, 'asc');
 	}
