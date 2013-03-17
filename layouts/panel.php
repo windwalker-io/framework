@@ -88,7 +88,7 @@ if($hide){
 	
 	
 
-<?php if( JVERSION < 3 ): ?>
+<?php if( JVERSION < 3 && $displayMenu): ?>
 <div id="submenu-box">
 	<div class="m">
 		<ul id="submenu">

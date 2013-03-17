@@ -70,25 +70,57 @@ class AKModelAdmin extends JModelAdmin
 	
 	
 	/*
-	 * function getFields
+	 * This Function is deprecated.
 	 * @param 
 	 */
 	
 	public function getFields()
 	{
-		if(!empty($this->fields_name)) return $this->fields_name ;
+		// This Function is deprecated.
+		return $this->getFieldsName();
+	}
+	
+	
+	
+	/*
+	 * function getFields
+	 * @param 
+	 */
+	
+	public function getFieldsGroup()
+	{
+		if(!empty($this->fields_group)) return $this->fields_group ;
 		
 		$xml_file 		= AKHelper::_('path.get').'/models/forms/'.$this->item_name.'.xml' ;
 		$xml 			= JFactory::getXML( $xml_file );
 		$fields 		= $xml->xpath('/form/fields');
 		$fields_name 	= array();
+		$fields_group	= array();
 		
 		foreach( $fields as $field ):
 			if( (string) $field['name'] != 'other' )
-				$fields_name[] = (string) $field['name'] ;
+				$fields_name[] 	= (string) $field['name'] ;
+				$fields_group[] = $field ;
 		endforeach;
 		
-		return $this->fields_name = $fields_name ;
+		$this->fields_name = $fields_name ;
+		
+		return $this->fields_group = $fields_group ;
+	}
+	
+	
+	/*
+	 * function getFields
+	 * @param 
+	 */
+	
+	public function getFieldsName()
+	{
+		if(!empty($this->fields_name)) return $this->fields_name ;
+		
+		$this->getFieldsGroup() ;
+		
+		return $this->fields_name ;
 	}
 	
 	
@@ -163,7 +195,7 @@ class AKModelAdmin extends JModelAdmin
 		
 		
 		// Set Nested Item
-		$table = $this->getTable(ucfirst($this->item_name));
+		$table = $this->getTable();
 		if( $table instanceof JTableNested ){
 			$nested = true ;
 		}else{
@@ -311,7 +343,7 @@ class AKModelAdmin extends JModelAdmin
 		
 		
 		// Get an instance of the table object.
-		$table = $this->getTable(ucfirst($this->item_name));
+		$table = $this->getTable();
 
 		if (!$table->rebuild())
 		{
@@ -342,7 +374,7 @@ class AKModelAdmin extends JModelAdmin
 	public function saveorderNested($idArray = null, $lft_array = null)
 	{
 		// Get an instance of the table object.
-		$table = $this->getTable(ucfirst($this->item_name));
+		$table = $this->getTable();
 
 		if (!$table->saveorder($idArray, $lft_array))
 		{
@@ -370,6 +402,14 @@ class AKModelAdmin extends JModelAdmin
 		$date 	= JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
 		$user 	= JFactory::getUser() ;
 		$db 	= JFactory::getDbo();
+		$task	= JRequest::getVar('task') ;
+		
+		// Handle Save as copy
+		if( $task == 'save2copy' ) {
+			$table->id = null ;
+			$table->title = $table->title . ' (2)' ;
+			$table->alias = $table->alias . ' 2' ;
+		}
 		
 		
 		// alias
@@ -419,11 +459,11 @@ class AKModelAdmin extends JModelAdmin
 		if( $table instanceof JTableNested ){
 			$table->parent_id = $table->parent_id ? $table->parent_id : 1 ;
 			
-			$old = $this->getTable(ucfirst($this->item_name)) ;
+			$old = $this->getTable() ;
 			$old->load($table->id) ;
 			
 			if($table->parent_id != $old->get('parent_id')) {
-				$parent = $this->getTable(ucfirst($this->item_name));
+				$parent = $this->getTable();
 				$parent->load( $table->parent_id );
 				$table->catid = $parent->catid ;
 				
@@ -511,17 +551,16 @@ class AKModelAdmin extends JModelAdmin
 				$table->id = 0;
 
 				// Alter the title.
-				$m = null;
-				if (preg_match('#\((\d+)\)$#', $table->title, $m))
-				{
-					$table->title = preg_replace('#\(\d+\)$#', '('.($m[1] + 1).')', $table->title);
+				if( property_exists($table, 'title') ) {
+					$table->title = $allow_fields['title'] = JString::increment($table->title);
 				}
-				else
-				{
-					$table->title .= ' (2)';
+				
+				if( property_exists($table, 'alias') ) {
+					$table->alias = $allow_fields['alias'] = JString::increment($table->alias, 'dash');
 				}
-				// Unpublish duplicate module
-				$table->published = 0;
+				
+				// Unpublish duplicate item
+				// $table->published = 0;
 
 				if (!$table->check() || !$table->store())
 				{
@@ -556,11 +595,17 @@ class AKModelAdmin extends JModelAdmin
      * @since   12.2
      */
     public function batch($commands, $pks, $contexts)
-	{		
+	{
+		$table 	= $this->getTable();
+		$user 	= JFactory::getUser();
+		$nested = ($table instanceof JTableNested) ? true : false ;
+		$extension 	= $this->option;
+		$i = 0;
+		
 		// Sanitize user ids.
         $pks = array_unique($pks);
         JArrayHelper::toInteger($pks);
- 
+
         // Remove any values of zero.
         if (array_search(0, $pks, true))
         {
@@ -575,14 +620,27 @@ class AKModelAdmin extends JModelAdmin
  
         $done = array();
 		
+		$cmd = JArrayHelper::getValue($commands, 'move_copy', 'm');
+		unset($commands['move_copy']);
 		
-		if (!empty($commands['parent_id']))
-        {
-            $cmd = JArrayHelper::getValue($commands, 'move_copy', 'c');
-
-            if ($cmd == 'c')
+		// unset no value keys
+		foreach( $commands as $key => $val ):
+			if(!$val) {
+				unset($commands[$key]) ;
+				continue ;
+			}
+		endforeach;
+		
+		
+		
+		// Nested Batch
+		// ==========================================================================================
+		$parentId = JArrayHelper::getValue( $commands, 'parent_id' ) ;
+		$nested_copied = false ;
+		if($nested && $parentId) {
+			if ($cmd == 'c')
             {
-                $result = $this->batchCopyNested($commands['parent_id'], $pks, $contexts);
+                $result = $this->batchCopyNested($parentId, $pks, $contexts);
                 if (is_array($result))
                 {
                     $pks = $result;
@@ -592,62 +650,116 @@ class AKModelAdmin extends JModelAdmin
                     return false;
                 }
             }
-            elseif ($cmd == 'm' && !$this->batchMoveNested($commands['parent_id'], $pks, $contexts))
+            elseif ($cmd == 'm' && !$this->batchMoveNested($parentId, $pks, $contexts))
             {
                 return false;
             }
             $done = true;
-        }
+			$nested_copied = true ;
+		}
 		
-		if (!empty($commands['category_id']))
-        {
-            $cmd = JArrayHelper::getValue($commands, 'move_copy', 'c');
- 
-            if ($cmd == 'c')
-            {
-                $result = $this->batchCopy($commands['category_id'], $pks, $contexts);
-                if (is_array($result))
-                {
-                    $pks = $result;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            elseif ($cmd == 'm' && !$this->batchMove($commands['category_id'], $pks, $contexts))
-            {
-                return false;
-            }
+		
+		
+		// Start Batch Process
+		// ==========================================================================================
+		foreach( $pks as $pk ):
 			
-			// If is Nested, rebuild all
-			$table = $this->getTable(ucfirst($this->item_name));
-			if($table instanceof JTableNested){
-				$this->rebuild();
+			// Can item editable?
+			if (!$user->authorise('core.edit', $contexts[$pk]))
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				return false;
 			}
 			
-            $done = true;
-        }
- 
-        if (!empty($commands['assetgroup_id']))
-        {
-            if (!$this->batchAccess($commands['assetgroup_id'], $pks, $contexts))
-            {
-                return false;
-            }
- 
-            $done = true;
-        }
- 
-        if (!empty($commands['language_id']))
-        {
-            if (!$this->batchLanguage($commands['language_id'], $pks, $contexts))
-            {
-                return false;
-            }
- 
-            $done = true;
-        }
+			$table->load($pk);
+			$allow_fields = array();
+			
+			// Set Value
+			foreach( $commands as $key => $val ):
+				
+				if(!$val) {
+					unset($commands[$key]) ;
+					continue ;
+				}
+				
+				// Detect Category Access
+				if( $key == 'catid' ) {
+					if (!$user->authorise('core.create', $this->option . '.category.' . $val))
+					{
+						$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+						return false;
+					}
+				}
+				
+				
+				// Set value in table
+				if( property_exists($table, $key) ) {
+					$table->$key = $val ;
+					$allow_fields[$key] = $val ;
+				}
+				
+				$done = true ;
+				
+			endforeach;
+			
+			
+			// Handle Nested Batch
+			// ==========================================================================================
+			if( $nested && in_array('parent_id', $commands) ) {
+				if (!$user->authorise('core.create', $this->option . '.category.' . $val))
+				{
+					$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+					return false;
+				}
+			}
+			
+			
+			
+			// Copy or Move
+			// ==========================================================================================
+			if( $cmd == 'c' && !$nested_copied) {
+				// Set id as New
+				$table->id = null ;
+				
+				// Handle Title increment
+				$table2 = $this->getTable();
+				
+				if( property_exists($table, 'title') ) $allow_fields['title'] = $table->title ;
+				if( property_exists($table, 'alias') ) $allow_fields['alias'] = $table->alias ;
+				
+				while ($table2->load( $allow_fields ))
+				{
+					if( property_exists($table, 'title') ) {
+						$table->title = $allow_fields['title'] = JString::increment($table->title);
+					}
+					
+					if( property_exists($table, 'alias') ) {
+						$table->alias = $allow_fields['alias'] = JString::increment($table->alias, 'dash');
+					}
+				}
+				
+			}
+			
+			
+			// Check the row.
+			if (!$table->check())
+			{
+				$this->setError($table->getError());
+				return false;
+			}
+
+			// Store the row.
+			if (!$table->store())
+			{
+				$this->setError($table->getError());
+				return false;
+			}
+			
+		endforeach;
+		
+		// Clean the cache
+		$this->cleanCache();
+	
  
         if (!$done)
         {
@@ -677,7 +789,7 @@ class AKModelAdmin extends JModelAdmin
 	protected function batchCopyNested($value, $pks, $contexts)
 	{
 		$parentId 	= $value ? (int) $value : 1 ;
-		$table 		= $this->getTable(ucfirst($this->item_name));
+		$table 		= $this->getTable();
 		$db 		= $this->getDbo();
 		$user 		= JFactory::getUser();
 		$extension 	= $this->option;
@@ -868,7 +980,7 @@ class AKModelAdmin extends JModelAdmin
 	{
 		$parentId = (int) $value;
 
-		$table 	= $this->getTable(ucfirst($this->item_name));
+		$table 	= $this->getTable();
 		$db 	= $this->getDbo();
 		$query 	= $db->getQuery(true);
 		$user 	= JFactory::getUser();
@@ -988,4 +1100,5 @@ class AKModelAdmin extends JModelAdmin
 
 		return true;
 	}
+	
 }

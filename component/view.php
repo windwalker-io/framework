@@ -16,12 +16,14 @@ jimport('joomla.application.component.view');
 
 class AKView extends JViewLegacy
 {
-	public function displayWithPanel($tpl=null)
+	public function displayWithPanel($tpl=null, $path = null)
 	{
+		$path = $path ? $path : AKPATH_LAYOUTS ;
+		
 		$this->innerLayout = JRequest::getVar('layout','default');
 		$this->setLayout('panel');
 		
-		$this->addTemplatePath(AKPATH_LAYOUTS);
+		$this->addTemplatePath($path);
 		$result = $this->loadTemplate($tpl);
 		
 		if (JError::isError($result)) {
@@ -38,6 +40,20 @@ class AKView extends JViewLegacy
 		
 		return $result;
 	}
+	
+	
+	
+	/*
+	 * function settitle
+	 * @param 
+	 */
+	
+	public function setTitle($title)
+	{
+		$doc = JFactory::getDocument();
+		$doc->setTitle($title) ;
+	}
+	
 	
 	
 	/*

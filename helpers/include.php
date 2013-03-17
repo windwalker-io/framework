@@ -170,6 +170,41 @@ JS;
 	
 	
 	/*
+	 * function addCSS
+	 * @param $path
+	 */
+	
+	public static function addCSS($path = null, $client = null)
+	{
+		$doc = JFactory::getDocument();
+		
+		if($client == 'windwalker' || $client == 'ww'){
+			$doc->addStylesheet( JURI::root(true) . '/' .  AKHelper::_('uri.windwalker').'/assets/css/'.$path ) ;
+		}else{
+			$doc->addStylesheet( AKHelper::_('uri.component', $client).'/includes/css/'.$path ) ;
+		}
+	}
+	
+	/*
+	 * function addJS
+	 * @param $path
+	 */
+	
+	public static function addJS($path = null, $client = null)
+	{
+		$doc = JFactory::getDocument();
+		
+		
+		
+		if($client == 'windwalker' || $client == 'ww'){
+			$doc->addScript( JURI::root(true) . '/' .  AKHelper::_('uri.windwalker').'/assets/js/'.$path ) ;
+		}else{
+			$doc->addScript( AKHelper::_('uri.component', $client).'/includes/js/'.$path ) ;
+		}
+	}
+	
+	
+	/*
 	 * function includeStyleByNumber
 	 * @param $path
 	 */
@@ -196,4 +231,15 @@ JS;
 		endforeach;
 	}
 	
+	
+	/*
+	 * function quickedit
+	 * @param 
+	 */
+	
+	public static function quickedit()
+	{
+		JHtml::_('behavior.framework', true);
+		self::addJS('quickedit.js', 'ww') ;
+	}
 }

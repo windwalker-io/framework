@@ -92,11 +92,25 @@ class AKHelperUri {
 		$root 	= $absoulte ? JURI::base() : '' ;
 		$option = JRequest::getVar('option') ;
 		
-		if($client = 'site'){
+		if($client == 'site'){
 			return $root.'components/'.$option ;
 		}else{
 			return $root.'components/'.$option ;
 		}
+	}
+	
+	
+	/*
+	 * function windwalker
+	 * @param $client
+	 */
+	
+	public static function windwalker($absoulte = false)
+	{
+		$root 	= $absoulte ? JURI::base() : '' ;
+		$option = JRequest::getVar('option') ;
+		
+		return $root.'libraries/windwalker' ;
 	}
 }
 

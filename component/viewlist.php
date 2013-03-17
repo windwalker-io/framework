@@ -29,7 +29,7 @@ class AKViewList extends AKView
 	/**
 	 * Display the view
 	 */
-	public function displayWithPanel($tpl = null)
+	public function displayWithPanel($tpl = null, $path = null)
 	{
 		$app = JFactory::getApplication() ;
 		
@@ -56,7 +56,7 @@ class AKViewList extends AKView
 		if($app->isAdmin())	{
 			parent::display($tpl);
 		}else{
-			parent::displayWithPanel($tpl);
+			parent::displayWithPanel($tpl, $path);
 		}
 	}
 	
@@ -69,6 +69,7 @@ class AKViewList extends AKView
 	 */
 	protected function addToolbar()
 	{
+		$app 	= JFactory::getApplication() ;
 		$state	= $this->get('State');
 		$canDo	= AKHelper::getActions($this->option);
 		$user 	= JFactory::getUser() ;
@@ -105,8 +106,8 @@ class AKViewList extends AKView
 			JToolBarHelper::divider();
 		}
 		
-		if ( JArrayHelper::getValue($filter_state, 'a.published') == -2 && $canDo->get('core.delete') ) {
-			JToolbarHelper::deleteList('Are you sure?', $this->list_name.'.delete');
+		if ( (JArrayHelper::getValue($filter_state, 'a.published') == -2 && $canDo->get('core.delete') ) || $this->get('no_trash') || AKDEBUG ) {
+			JToolbarHelper::deleteList(JText::_('LIB_WINDWALKER_TOOLBAR_CONFIRM_DELETE'), $this->list_name.'.delete');
 		}
 		elseif ($canDo->get('core.edit.state')) {
 			JToolbarHelper::trash($this->list_name.'.trash');
@@ -119,7 +120,7 @@ class AKViewList extends AKView
 			AKToolbarHelper::modal( 'JTOOLBAR_BATCH', 'batchModal');
 		}
 		
-		if ($canDo->get('core.admin')) {
+		if ($canDo->get('core.admin') && $app->isAdmin() ) {
 			AKToolBarHelper::preferences($this->option);
 		}
 		

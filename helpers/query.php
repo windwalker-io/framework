@@ -35,11 +35,11 @@ class AKHelperQuery
 			$columns = self::$columns[$table] ;
 			
 			if($all){
-				$select[] = "{$k}.*" ;
+				$select[] = "`{$k}`.*" ;
 			}
 			
 			foreach( $columns as $key=>$var ){
-				$fields[] = "{$k}.{$key} AS {$k}_{$key}" ;
+				$fields[] = $db->qn("{$k}.{$key}", "{$k}_{$key}") ;
 			}
 			
 			$i = ord($i);
@@ -50,7 +50,7 @@ class AKHelperQuery
 		return $final = implode( "," , $select ).",\n".implode( ",\n" , $fields );
 	}
 	
-	public static function mergeFilterFields( $filter_fields , $tables = array() )
+	public static function mergeFilterFields( $filter_fields , $tables = array() , $option = array())
 	{
 		$db = JFactory::getDbo();
 		$fields = array() ;
@@ -59,6 +59,10 @@ class AKHelperQuery
 		$ignore = array(
 			'params'
 		) ;
+		
+		if( !empty($option['ignore']) ) {
+			$ignore = array_merge($ignore, $option['ignore']);
+		}
 		
 		foreach( $tables as $k => $table ){
 			

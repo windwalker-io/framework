@@ -66,7 +66,7 @@ class AKModelList extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = null, $direction = 'asc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -89,7 +89,7 @@ class AKModelList extends JModelList
 		
 		// Set Nested Items
 		// ========================================================================
-		$table = $this->getTable(ucfirst($this->item_name));
+		$table = $this->getTable();
 		if( $table instanceof JTableNested ){
 			$nested = true ;
 		}else{
@@ -121,10 +121,10 @@ class AKModelList extends JModelList
 			$ordering = $nested ? 'a.lft' : 'a.ordering' ;
 		}
 		
-		$ordering = in_array('a.catid', $this->filter_fields) ? 'a.catid, ' . $ordering : $ordering ;
-		$this->setState('ordering.orderCol', $ordering);
+		$orderCol = $nested ? 'a.lft' : 'a.ordering' ;
+		$this->setState('list.orderCol', $orderCol) ;
 		
-		parent::populateState($ordering, 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	
@@ -166,6 +166,7 @@ class AKModelList extends JModelList
 		
 		// Get filter inputs from from xml files in /models/form.
 		JForm::addFormPath(AKHelper::_('path.get').'/models/forms');
+		JForm::addFormPath(AKHelper::_('path.get').'/models/forms/'.$this->list_name);
         JForm::addFieldPath(AKHelper::_('path.get').'/models/fields');
 		
 		
@@ -174,6 +175,7 @@ class AKModelList extends JModelList
 			
 			// Get filter inputs from raw xml file.
 			$file 	= AKHelper::_('path.get').'/models/forms/'.$this->list_name.'_filter.xml' ;
+			$file 	= JFile::exists($file) ? $file : AKHelper::_('path.get').'/models/forms/'.$this->list_name.'/filter.xml' ;
 			$xml 	= simplexml_load_file($file);
 			
 			$filters 	= $xml->xpath('//fieldset[@name="filter_sidebar"]') ;
@@ -185,14 +187,17 @@ class AKModelList extends JModelList
 		
 		
 		// load forms
-		$form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", $this->list_name.'_search', array( 'control' => 'search' ,'load_data'=>'true'));
-		$form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", $this->list_name.'_filter', array( 'control' => 'filter' ,'load_data'=>'true'));
+		$form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", 'search', array( 'control' => 'search' ,'load_data'=>'true'));
+		$form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", 'filter', array( 'control' => 'filter' ,'load_data'=>'true'));
+		$form['batch'] 	= JForm::getInstance("{$this->option}.{$this->list_name}.batch", 'batch', array( 'control' => 'batch' ,'load_data'=>'true'));
+		
+		if(!$form['search']) $form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", $this->list_name.'_search', array( 'control' => 'search' ,'load_data'=>'true'));
+		if(!$form['filter']) $form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", $this->list_name.'_filter', array( 'control' => 'filter' ,'load_data'=>'true'));
 		
 		
 		// Get default data of this form. Any State key same as form key will auto match.
 		$form['search']->bind( $this->getState('search') );
 		$form['filter']->bind( $this->getState('filter') );
-		
 		
 		return $this->filter = $form;
 	}
@@ -227,7 +232,8 @@ class AKModelList extends JModelList
 	
 	public function getFullSearchFields()
 	{
-		$file = AKHelper::_('path.get').'/models/forms/'.$this->list_name.'_search.xml' ;
+		$file = AKHelper::_('path.get').'/models/forms/'.$this->list_name.'/search.xml' ;
+		$file = JFile::exists($file) ? $file : AKHelper::_('path.get').'/models/forms/'.$this->list_name.'_search.xml' ;
 		
 		$xml = simplexml_load_file($file);
 		$field = $xml->xpath('//field[@name="field"]') ;

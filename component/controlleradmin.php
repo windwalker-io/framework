@@ -221,4 +221,38 @@ class AKControllerAdmin extends JControllerAdmin
 			return parent::setRedirect($url, $msg, $type) ;
 		}
     }
+	
+	
+	
+	/*
+	 * function changeFieldData
+	 * @param 
+	 */
+	
+	public function editFieldData()
+	{
+		$id 	= JRequest::getVar('id') ;
+		$field 	= JRequest::getVar('field') ;
+		//$table 	= JRequest::getVar('table') ;
+		$content = JRequest::getVar('content') ;
+		
+		$model = $this->getModel() ;
+		$table = $model->getTable();
+		$table->load($id) ;
+		$result = 'false' ;
+		
+		if(property_exists($table, $field)) {
+			$table->$field = $content ;
+			$table->check();
+			
+			if( !$table->store() ) {
+				$result = 'false' ;
+			}else{
+				$result = 'true' ;
+			}
+		}
+		
+		echo '{"AKResult":'.$result.', "message" : "'.$table->getError().'"}' ;
+		jexit();
+	}
 }

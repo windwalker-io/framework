@@ -169,6 +169,79 @@ class AKHelperArray {
 	
 	
 	/*
+	 * function query
+	 * @param $query
+	 */
+	
+	public static function query($array, $queries = array(), $keepKey = false)
+	{
+		$results = array();
+		
+		// Visit Array
+		foreach( $array as $k => $v ):
+			
+			$data = (array) $v ;
+			
+			// Visit Query Rules
+			foreach( $queries as $key => $val ):
+				
+				// Key: is query key
+				// Val: is query value
+				// Data: is array element
+				$value = null ;
+				
+				if( substr($val, 0, 2) == '>=' ) {
+					
+					if( JArrayHelper::getValue( $data, $key ) >= substr($val, 2) ){
+						$value = $v ;
+					}
+					
+				}elseif( substr($val, 0, 2) == '<=' ) {
+					
+					if( JArrayHelper::getValue( $data, $key ) <= substr($val, 2) ){
+						$value = $v ;
+					}
+					
+				}elseif( substr($val, 0, 1) == '>' ) {
+					
+					if( JArrayHelper::getValue( $data, $key ) > substr($val, 1) ){
+						$value = $v ;
+					}
+					
+				}elseif( substr($val, 0, 1) == '<' ) {
+					
+					if( JArrayHelper::getValue( $data, $key ) < substr($val, 1) ){
+						$value = $v ;
+					}
+					
+				}else{
+					
+					if( JArrayHelper::getValue( $data, $key ) == $val ){
+						$value = $v ;
+					}
+					
+				}
+				
+				
+				 // Set Query results
+				if($value) {
+					if($keepKey) {
+						$results[$k] = $value ;
+					}else{
+						$results[] = $value ;
+					}
+				}
+				
+			endforeach;
+			
+		endforeach;
+		
+		return $results ;
+	}
+	
+	
+	
+	/*
 	 * function setValue
 	 * @param $key
 	 */

@@ -23,6 +23,23 @@
 	float: none;
 }
 
+.wf_editor_toggle,
+.mceEditor {
+	float: left;
+	width: 100%;
+}
+
+
+/* TABLE LIST */
+.quick-edit-hover:hover {
+	background-color: yellow ;
+}
+
+.quick-edit-selected {
+	border: 1px solid blue !important;
+	m/argin: -1px;
+}
+
 
 /* BATCH */
 .joomla25 .control-group label#batch-language-lbl,

@@ -28,7 +28,7 @@ class AKViewItem extends AKView
 	/**
 	 * Display the view
 	 */
-	public function displayWithPanel($tpl = null)
+	public function displayWithPanel($tpl = null, $path = null)
 	{
 		$app = JFactory::getApplication() ;
 		
@@ -39,7 +39,7 @@ class AKViewItem extends AKView
 		if($app->isAdmin())	{
 			parent::display($tpl);
 		}else{
-			parent::displayWithPanel($tpl);
+			parent::displayWithPanel($tpl, $path);
 		}
 	}
 
@@ -79,5 +79,81 @@ class AKViewItem extends AKView
 			$form->removeField('parent_id', 'basic');
 		}
 		
+	}
+	
+	
+	
+	/*
+	 * function editFieldsetPanel
+	 * @param 
+	 */
+	
+	public function startEditFieldsetPanel($fieldset, $fieldsets)
+	{
+		$f_tab = $this->get('f_tab') ;
+		
+		// Get Panel Type
+		if(!empty($fieldset->tab)) {
+			$panel_type 	= 'tab' ;
+			$panel_name 	= $fieldset->tab ;
+			$start_function = 'startTabs' ;
+			$add_function 	= 'addPanel' ;
+		}elseif(!empty($fieldset->slide)) {
+			$panel_type 	= 'slide' ;
+			$panel_name 	= $fieldset->slide ;
+			$start_function = 'startSlider' ;
+			$add_function 	= 'addSlide' ;
+		}else{
+			return true ;
+		}
+		
+		// Set Panel
+		if( $panel_name ) {
+			if( $fieldset->$panel_type != $f_tab ) {
+				echo {COMPONENT_NAME_UCFIRST}Helper::_('panel.' . $start_function , $panel_name . ucfirst($panel_type), array( 'active' => $fieldset->name ) ) ;
+				$this->tab_count 	= count( {COMPONENT_NAME_UCFIRST}Helper::_('array.query', $fieldsets, array($panel_type => $panel_name)) ) ;
+				$this->tab_num 	= 1 ;
+			}
+			
+			echo {COMPONENT_NAME_UCFIRST}Helper::_('panel.' . $add_function , $fieldset->$panel_type . ucfirst($panel_type), $fieldset->label ? JText::_($fieldset->label) : JText::_('COM_{COMPONENT_NAME_UC}_EDIT_FIELDSET_'.$fieldset->name)  , $fieldset->name ) ;
+		}
+	}
+	
+	
+	
+	/*
+	 * function editFieldsetPanel
+	 * @param 
+	 */
+	
+	public function endEditFieldsetPanel($fieldset)
+	{
+		// Get Panel Type
+		if(!empty($fieldset->tab)) {
+			$panel_type 		= 'tab' ;
+			$panel_name 		= $fieldset->tab ;
+			$endpanel_function 	= 'endPanel' ;
+			$end_function 		= 'endTabs' ;
+		}elseif(!empty($fieldset->slide)) {
+			$panel_type 		= 'slide' ;
+			$panel_name 		= $fieldset->slide ;
+			$endpanel_function 	= 'endSlide' ;
+			$end_function 		= 'endSlider' ;
+		}else{
+			return true ;
+		}
+		
+		
+		// Tabs & Slides end
+		if(!empty( $fieldset->$panel_type) ) {
+			echo {COMPONENT_NAME_UCFIRST}Helper::_('panel.' . $endpanel_function , $panel_name . ucfirst($panel_type), $fieldset->name ) ;
+		}
+		
+		if( $this->tab_num == $this->tab_count ) {
+			echo {COMPONENT_NAME_UCFIRST}Helper::_('panel.' . $end_function ) ;
+		}
+		
+		$this->f_tab = !empty($panel_name) ? $fieldset->$panel_type : null;
+		$this->tab_num++ ;
 	}
 }

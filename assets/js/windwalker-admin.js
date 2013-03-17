@@ -12,3 +12,6 @@
 var WindWalker = {
 	
 } ;
+
+
+var Windwalker = WindWalker ;
