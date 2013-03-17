@@ -110,12 +110,12 @@ class AKViewItem extends AKView
 		// Set Panel
 		if( $panel_name ) {
 			if( $fieldset->$panel_type != $f_tab ) {
-				echo {COMPONENT_NAME_UCFIRST}Helper::_('panel.' . $start_function , $panel_name . ucfirst($panel_type), array( 'active' => $fieldset->name ) ) ;
-				$this->tab_count 	= count( {COMPONENT_NAME_UCFIRST}Helper::_('array.query', $fieldsets, array($panel_type => $panel_name)) ) ;
+				echo FlowerHelper::_('panel.' . $start_function , $panel_name . ucfirst($panel_type), array( 'active' => $fieldset->name ) ) ;
+				$this->tab_count 	= count( FlowerHelper::_('array.query', $fieldsets, array($panel_type => $panel_name)) ) ;
 				$this->tab_num 	= 1 ;
 			}
 			
-			echo {COMPONENT_NAME_UCFIRST}Helper::_('panel.' . $add_function , $fieldset->$panel_type . ucfirst($panel_type), $fieldset->label ? JText::_($fieldset->label) : JText::_('COM_{COMPONENT_NAME_UC}_EDIT_FIELDSET_'.$fieldset->name)  , $fieldset->name ) ;
+			echo FlowerHelper::_('panel.' . $add_function , $fieldset->$panel_type . ucfirst($panel_type), $fieldset->label ? JText::_($fieldset->label) : JText::_('COM_FLOWER_EDIT_FIELDSET_'.$fieldset->name)  , $fieldset->name ) ;
 		}
 	}
 	
@@ -146,11 +146,11 @@ class AKViewItem extends AKView
 		
 		// Tabs & Slides end
 		if(!empty( $fieldset->$panel_type) ) {
-			echo {COMPONENT_NAME_UCFIRST}Helper::_('panel.' . $endpanel_function , $panel_name . ucfirst($panel_type), $fieldset->name ) ;
+			echo FlowerHelper::_('panel.' . $endpanel_function , $panel_name . ucfirst($panel_type), $fieldset->name ) ;
 		}
 		
 		if( $this->tab_num == $this->tab_count ) {
-			echo {COMPONENT_NAME_UCFIRST}Helper::_('panel.' . $end_function ) ;
+			echo FlowerHelper::_('panel.' . $end_function ) ;
 		}
 		
 		$this->f_tab = !empty($panel_name) ? $fieldset->$panel_type : null;

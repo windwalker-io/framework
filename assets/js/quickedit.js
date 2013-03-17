@@ -12,7 +12,10 @@
 
 var AKQuickEdit = ({
 	
-	init : function(options){
+	init : function(config){
+		
+		AKQuickEdit.config = config ;
+		
 		window.addEvent('domready', function(){
 			var editFields = $$('.quick-edit-wrap') ;
 			AKQuickEdit.editStatus = false ;
@@ -127,8 +130,8 @@ var AKQuickEdit = ({
 				
 				// Send Request
 				var uri = new URI() ;
-				var view = uri.getData('view') ;
-				var option = uri.getData('option') ;
+				var view = AKQuickEdit.config.view ;
+				var option = AKQuickEdit.config.option ;
 				
 				uri.setData( {
 					'option' 	: option ,
@@ -326,5 +329,5 @@ var AKQuickEdit = ({
 }) ;
 
 AKQuickEdit.profiler = false ;
-AKQuickEdit.init();
+
 

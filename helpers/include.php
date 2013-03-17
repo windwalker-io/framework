@@ -241,5 +241,11 @@ JS;
 	{
 		JHtml::_('behavior.framework', true);
 		self::addJS('quickedit.js', 'ww') ;
+		
+		$option = JRequest::getVar('option') ;
+		$view 	= JRequest::getVar('view') ;
+		
+		$doc = JFactory::getDocument();
+		$doc->addScriptDeclaration('AKQuickEdit.init( { "option" : "'.$option.'", "view" : "'.$view.'" } )');
 	}
 }

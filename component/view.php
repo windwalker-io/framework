@@ -70,7 +70,7 @@ class AKView extends JViewLegacy
 		$lang  = $strip ? substr($key, 2) : $key ;
 		
 		if(!$label){
-			$label = JText::_('COM_{COMPONENT_NAME_UC}_'.strtoupper($lang)) ;
+			$label = JText::_('COM_FLOWER_'.strtoupper($lang)) ;
 		}else{
 			$label = JText::_(strtoupper($label)) ;
 		}

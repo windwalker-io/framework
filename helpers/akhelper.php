@@ -75,6 +75,16 @@ class AKHelper extends AKProxy
 			return false;
 	}
 	
+	
+	/*
+	 * function getParams
+	 * @param 
+	 */
+	
+	public static function getParams($option = null)
+	{
+		return AKHelper::_('system.getParams', $option) ;
+	}
 }
 
 

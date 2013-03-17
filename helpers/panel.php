@@ -45,19 +45,6 @@ class AKHelperPanel
 	public static function endTabs()
 	{
 		if( JVERSION >= 3 ) {
-			$doc = JFactory::getDocument();
-			$add = implode("\n",self::$script) ;
-			
-			$script =
-<<<SC
-				jQuery(document).ready(function($){
-				var d = document ;
-					{$add}
-				});
-SC;
-			if(!self::$legacy){
-				$doc->addScriptDeclaration($script);
-			}
 			
 			return JHtml::_('bootstrap.endPane' );
 		}else{
@@ -77,10 +64,11 @@ SC;
 			self::$buttons[$selector]['text'] = $text ;
 			self::$buttons[$selector]['id'] = $id ;
 			
-			$addclass 	= !self::$script ? ",{class: 'active'}" : '';
-			$ul			= !self::$script ? "var btns = $('#{$selector}_buttons') ;\n\n" : '';
+			$addclass 	= !self::$script[$selector] ? ",{class: 'active'}" : '';
+			//$ul			= !self::$script[$selector] ? "var btns = $('#{$selector}_buttons') ;\n\n" : '';
 			
-			self::$script[] = $ul."btns.append( $('<li>'{$addclass}).append( $('<a>', {'href': '#{$id}', 'data-toggle': 'tab', text: '{$text}' }) ) );" ;
+			$sc = self::$script[$selector][] = "jQuery('#{$selector}_buttons').append( jQuery('<li>'{$addclass}).append( jQuery('<a>', {'href': '#{$id}', 'data-toggle': 'tab', text: '{$text}' }) ) );" ;
+			echo '<script type="text/javascript">'.$sc.'</script>' ;
 			
 			return JHtml::_('bootstrap.addPanel', $selector, $id );
 		}else{

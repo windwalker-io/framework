@@ -131,7 +131,7 @@ class AKProxy
 		}
         else
         {
-            JError::raiseError(500, JText::sprintf('JLIB_HTML_ERROR_NOTSUPPORTED', $className, $func));
+            JError::raiseWarning(500, JText::sprintf('JLIB_HTML_ERROR_NOTSUPPORTED', $className, $func));
             return false;
         }
     }

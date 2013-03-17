@@ -187,12 +187,29 @@ class AKModelList extends JModelList
 		
 		
 		// load forms
-		$form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", 'search', array( 'control' => 'search' ,'load_data'=>'true'));
-		$form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", 'filter', array( 'control' => 'filter' ,'load_data'=>'true'));
-		$form['batch'] 	= JForm::getInstance("{$this->option}.{$this->list_name}.batch", 'batch', array( 'control' => 'batch' ,'load_data'=>'true'));
+		$form_path = AKHelper::_('path.get').'/models/forms/' ;
 		
-		if(!$form['search']) $form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", $this->list_name.'_search', array( 'control' => 'search' ,'load_data'=>'true'));
-		if(!$form['filter']) $form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", $this->list_name.'_filter', array( 'control' => 'filter' ,'load_data'=>'true'));
+		// Search
+		if( JFile::exists($form_path . $this->list_name . '/search.xml') ) {
+			$form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", 'search', array( 'control' => 'search' ,'load_data'=>'true'));
+		}else{
+			// Legacy
+			$form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", $this->list_name.'_search', array( 'control' => 'search' ,'load_data'=>'true'));
+		}
+		
+		
+		// Filter
+		if( JFile::exists($form_path . $this->list_name . '/filter.xml') ) {
+			$form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", 'filter', array( 'control' => 'filter' ,'load_data'=>'true'));
+		}else{
+			// Legacy
+			$form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", $this->list_name.'_filter', array( 'control' => 'filter' ,'load_data'=>'true'));
+		}
+		
+		// Batch
+		if( JFile::exists($form_path . $this->list_name . '/batch.xml') ){
+			$form['batch'] 	= JForm::getInstance("{$this->option}.{$this->list_name}.batch", 'batch', array( 'control' => 'batch' ,'load_data'=>'true'));
+		}
 		
 		
 		// Get default data of this form. Any State key same as form key will auto match.
