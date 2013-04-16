@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="attrs">
+		<field
+			name="name"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_NAME"
+			description="LIB_WINDWALKER_FIELD_ATTR_NAME_DESC"
+			required="true"
+		/>
+		
+		<field
+			name="label"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_LABEL"
+			description="LIB_WINDWALKER_FIELD_ATTR_LABEL_DESC"
+			required="true"
+			filter="safehtml"
+		/>
+		
+		<field
+			name="description"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION"
+			description="LIB_WINDWALKER_FIELD_ATTR_DESCRIPTION_DESC"
+			filter="safehtml"
+		/>
+		
+		<field
+			name="default"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_DEFAULT"
+			description="LIB_WINDWALKER_FIELD_ATTR_DEFAULT_DESC"
+		/>
+		
+		<field
+			name="required"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_REQUIRED"
+			description="LIB_WINDWALKER_FIELD_ATTR_REQUIRED_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+		
+	</fieldset>
+	
+	<fieldset name="advanced">
+		<field
+			name="class"
+			type="text"
+			label="LIB_WINDWALKER_FIELD_ATTR_CLASS"
+			description="LIB_WINDWALKER_FIELD_ATTR_CLASS_DESC"
+		/>
+		
+		<field
+			name="readonly"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_READONLY"
+			description="LIB_WINDWALKER_FIELD_ATTR_READONLY_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+		
+		<field
+			name="disabled"
+			type="radio"
+			label="LIB_WINDWALKER_FIELD_ATTR_DISABLED"
+			description="LIB_WINDWALKER_FIELD_ATTR_DISABLED_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+	</fieldset>
+	
+	<fieldset name="options">
+		<field
+			name="options"
+			type="options"
+			label="LIB_WINDWALKER_FIELD_ATTR_OPTIONS"
+			description="LIB_WINDWALKER_FIELD_ATTR_OPTIONS_DESC"
+		>
+			<option>JDEFAULT</option>
+		</field>
+	</fieldset>
+</form>
