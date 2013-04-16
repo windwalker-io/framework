@@ -122,7 +122,10 @@ class AKHelperUri {
 	public static function safe($uri)
 	{
 		$uri = (string) $uri ;
-		return str_replace(' ', '%20', $uri);
+		$uri = str_replace(' ', '%20', $uri);
+		$uri = str_replace('//', '/', $uri);
+		
+		return $uri ;
 	}
 }
 
