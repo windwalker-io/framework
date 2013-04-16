@@ -209,7 +209,7 @@ JS;
 	 * @param $path
 	 */
 	
-	public static function sortedStyle($path = null, $client = null)
+	public static function sortedStyle($path = null, $option = null, $client = null)
 	{
 		$files 	= JFolder::files(AKHelper::_('path.get', $client).'/'.$path, ".css$", true);
 		$doc 	= JFactory::getDocument();
@@ -226,7 +226,7 @@ JS;
 		foreach( $files as $key => $file ):
 			$name = explode('-', $file) ;
 			if( is_numeric( array_shift( $name ) ) ) {
-				$doc->addStylesheet( AKHelper::_('uri.component').'/'.$path.'/'.$file ) ;
+				$doc->addStylesheet( AKHelper::_('uri.component').'/'.$path.'/'.$file ,$option ) ;
 			}
 		endforeach;
 	}
