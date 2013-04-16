@@ -43,21 +43,83 @@ class AKHelperSystem
 	 * @param $key
 	 */
 	
-	public static function getConfig($key, $default = null, $option = null)
+	public static function getConfig($key = null, $default = null, $option = null)
 	{
 		if(!$option){
 			$option = AKHelper::_('path.getOption') ;
 		}
 		
 		if(isset(self::$config[$option])) {
-			return self::$config[$option]->get($key, $default) ;
+			if(!$key){
+				return self::$config[$option] ;
+			}else{
+				return self::$config[$option]->get($key, $default) ;
+			}
 		}
 		
 		// Init Config
 		self::$config[$option] = new JRegistry();
 		self::$config[$option]->loadFile( AKHelper::_('path.getAdmin', $option).'/includes/config.json' );
 		
-		return self::$config[$option]->get($key, $default) ;
+		if(!$key){
+			return self::$config[$option] ;
+		}else{
+			return self::$config[$option]->get($key, $default) ;
+		}
+	}
+	
+	
+	/*
+	 * function saveParams
+	 * @param $params
+	 */
+	
+	public static function saveParams($params, $element, $client = null, $group = null)
+	{
+		if( $params instanceof JRegistry ) {
+			$params = (string) $params ;
+		}else{
+			$params = json_decode($params) ;
+		}
+		
+		$client = ($client == 'admin' || $client == 1) ? 1 : 0 ;
+		
+		$db = JFactory::getDbo();
+		$q = $db->getQuery(true) ;
+		
+		if( $client ) {
+			$q->where("client_id = '{$client}'") ;
+		}
+		
+		if( $group ) {
+			$q->where("folder = '{$group}'");
+		}
+		
+		$q->update( '#__extensions' )
+			->set("params = '{$params}'")
+			->where("element = '{$element}'")
+			;
+		
+		$db->setQuery($q);
+		return $db->execute();
+	}
+	
+	
+	/*
+	 * function saveConfig
+	 * @param $params
+	 */
+	
+	public static function saveConfig($params, $option = null)
+	{
+		if( $params instanceof JRegistry ) {
+			$params = (string) $params ;
+		}else{
+			$params = json_decode($params) ;
+		}
+		
+		$path = AKHelper::_('path.getAdmin', $option) . '/includes/config.json' ;
+		return JFile::write($path, $params) ;
 	}
 	
 	
