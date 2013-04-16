@@ -16,10 +16,10 @@ $option = JRequest::getVar('option') ;
 $params = JComponentHelper::getParams($option) ;
 
 define('AKTHUMB_CACHE_PATH', 	JPath::clean(JPATH_ROOT.'/'.$params->get('thumb_cache_path', 'cache/thumbs/cache')) ) ;
-define('AKTHUMB_CACHE_URL', 	JURI::root().$params->get('thumb_cache_path', 'cache/thumbs/cache' ) ) ;
+define('AKTHUMB_CACHE_URL', 	JURI::root().$params->get('thumb_cache_url', 'cache/thumbs/cache' ) ) ;
 
 define('AKTHUMB_TEMP_PATH', 	JPath::clean(JPATH_ROOT.'/'.$params->get('thumb_temp_path', 'cache/thumbs/temp')) ) ;
-define('AKTHUMB_TEMP_URL', 		JURI::root().$params->get('thumb_temp_path', 'cache/thumbs/temp') ) ;
+define('AKTHUMB_TEMP_URL', 		JURI::root().$params->get('thumb_temp_url', 'cache/thumbs/temp') ) ;
 
 
 class AKHelperThumb
@@ -183,6 +183,17 @@ class AKHelperThumb
 	
 	
 	/*
+	 * function setCacheUrl
+	 * @param $path
+	 */
+	
+	public static function setCacheUrl($url)
+	{	
+		self::$cache_url = $url ;
+	}
+	
+	
+	/*
 	 * function setTempPath
 	 * @param $path
 	 */
@@ -194,17 +205,43 @@ class AKHelperThumb
 	
 	
 	/*
+	 * function setCachePosition
+	 * @param $path
+	 */
+	
+	public static function setCachePosition($path)
+	{
+		self::setCachePath( JPATH_ROOT . '/' . trim($path, '/') . '/cache' ) ;
+		self::setTempPath( 	JPATH_ROOT . '/' . trim($path, '/') . '/temp' ) ;
+		self::setCacheUrl( trim($path, '/') . '/cache' ) ;
+	}
+	
+	
+	/*
+	 * function resetCachePosition
+	 * @param 
+	 */
+	
+	public static function resetCachePosition()
+	{
+		self::setCachePath( AKTHUMB_CACHE_PATH ) ;
+		self::setTempPath( 	AKTHUMB_TEMP_PATH ) ;
+		self::setCacheUrl( AKTHUMB_CACHE_URL ) ;
+	}
+	
+	
+	/*
 	 * function clearCache
 	 * @param 
 	 */
 	
-	public static function clearCache()
+	public static function clearCache($temp = false)
 	{
 		if(JFolder::exists(self::$cache_path)){
 			JFolder::delete(self::$cache_path) ;
 		}
 		
-		if(JFolder::exists(self::$temp_path)){
+		if($temp && JFolder::exists(self::$temp_path)){
 			JFolder::delete(self::$temp_path) ;
 		}
 	}
