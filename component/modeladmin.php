@@ -406,9 +406,9 @@ class AKModelAdmin extends JModelAdmin
 		
 		// Handle Save as copy
 		if( $task == 'save2copy' ) {
-			$table->id = null ;
-			$table->title = $table->title . ' (2)' ;
-			$table->alias = $table->alias . ' 2' ;
+			if(property_exists($table ,'id')) 		$table->id = null ;
+			if(property_exists($table ,'title')) 	$table->title = $table->title . ' (2)' ;
+			if(property_exists($table ,'alias')) 	$table->alias = $table->alias . ' 2' ;
 		}
 		
 		
