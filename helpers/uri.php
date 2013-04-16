@@ -87,10 +87,12 @@ class AKHelperUri {
 	 * @param $client
 	 */
 	
-	public static function component($client = 'site', $absoulte = false)
+	public static function component($client = 'site', $option = null, $absoulte = false)
 	{
 		$root 	= $absoulte ? JURI::base() : '' ;
-		$option = JRequest::getVar('option') ;
+		if(!$option){
+			$option = JRequest::getVar('option') ;
+		}
 		
 		if($client == 'site'){
 			return $root.'components/'.$option ;
