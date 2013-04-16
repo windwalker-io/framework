@@ -55,6 +55,7 @@ class AKHelperThumb
 				return self::getDefaultImage($width, $height, $zc, $q, $file_type);
 			}
 			
+			
 			// get Width Height
 			$imgdata = JImage::getImageFileProperties($path) ;
 			
@@ -92,6 +93,10 @@ class AKHelperThumb
 		
 		}catch(Exception $e) {
 			
+			if(JDEBUG) {
+				echo $e->getMessage() ;
+			}
+			
 			return self::getDefaultImage($width, $height, $zc, $q, $file_type);
 		
 		}
@@ -123,12 +128,9 @@ class AKHelperThumb
 		}else{
 			
 			// other host
-			$path = self::$temp_path.'/'.JFile::getName($url) ;
+			$path = self::$temp_path.'/'.md5(JFile::getName($url)).'jpg' ;
 			if( !JFile::exists( $path ) ){
 				$result = AKHelper::_('curl.getFile', (string)$url, $path);
-				if(!$result) {
-					return null ;
-				}
 			}
 		}
 		

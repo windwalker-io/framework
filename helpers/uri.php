@@ -123,7 +123,6 @@ class AKHelperUri {
 	{
 		$uri = (string) $uri ;
 		$uri = str_replace(' ', '%20', $uri);
-		$uri = str_replace('//', '/', $uri);
 		
 		return $uri ;
 	}
