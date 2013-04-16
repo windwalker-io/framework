@@ -30,6 +30,17 @@
 }
 
 
+
+
+/* MODAL */
+.admin div.modal,
+.admin div.modal-body,
+.windwalker div.modal,
+.windwalker div.modal-body{
+	overflow: visible;
+}
+
+
 /* TABLE LIST */
 .quick-edit-hover:hover {
 	background-color: yellow ;
@@ -41,12 +52,15 @@
 }
 
 
+
 /* BATCH */
 .joomla25 .control-group label#batch-language-lbl,
 .joomla25 .control-group label#batch-user-lbl ,
 .joomla25 .control-group select#batch-language-id {
 	margin-top: 5px;
 }
+
+
 
 
 /* Joomla! 3.0 */

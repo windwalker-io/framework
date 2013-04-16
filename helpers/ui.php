@@ -59,7 +59,7 @@ SCRIPT;
 		$tag 	= JArrayHelper::getValue($option, 'tag', 'a');
 		$id 	= isset($option['id']) ? " id=\"{$option['id']}\"" : "id=\"{$selector}_link\"";
 		$class 	= isset($option['class']) ? " class=\"{$option['class']}\"" : '';
-		$onclick = isset($option['onclick']) ? " id=\"{$option['onclick']}\"" : '';
+		$onclick = isset($option['onclick']) ? " onclick=\"{$option['onclick']}\"" : '';
 		$icon	= JArrayHelper::getValue($option, 'icon', '');
 		
 		if( JVERSION >= 3 ) {
