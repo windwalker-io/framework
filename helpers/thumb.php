@@ -33,6 +33,8 @@ class AKHelperThumb
 	
 	public static $temp_url		= AKTHUMB_TEMP_URL ;
 	
+	public static $default_image= 'http://placehold.it/{width}x{height}' ;
+	
 	/*
 	 * function resize
 	 * @param $arg
@@ -40,52 +42,59 @@ class AKHelperThumb
 	
 	public static function resize($url = null, $width=100, $height=100,$zc=0, $q=85, $file_type = 'jpg' )
 	{
-		if(!$url) $url = "http://placehold.it/{$width}x{$height}";
+		if(!$url) return self::getDefaultImage($width, $height, $zc, $q, $file_type);
 		$path = self::getImagePath($url) ;
 		
-		$img = new JImage();
+		try{
+			$img = new JImage();
+			
+			if(JFile::exists($path)){
+				$img->loadFile($path);
+			}
+			else{
+				return self::getDefaultImage($width, $height, $zc, $q, $file_type);
+			}
+			
+			// get Width Height
+			$imgdata = JImage::getImageFileProperties($path) ;
+			
+			// set save data
+			if( $file_type != 'png' && $file_type != 'gif' ){
+				$file_type = 'jpg' ;
+			}
+			$file_name = md5($url.$width.$height.$zc.$q.implode('', (array)$imgdata)).'.'.$file_type ;
+			$file_path = self::$cache_path.DS.$file_name;
+			$file_url  = trim(self::$cache_url, '/').'/'.$file_name ;
+			
+			// img exists?
+			if(JFile::exists($file_path)){
+				return $file_url ;
+			}
+			
+			// crop
+			if($zc)
+				$img = self::crop($img, $width , $height, $imgdata);
+			
+			// resize
+			$img = $img->resize($width, $height);
+			
+			// save
+			switch($file_type){
+				case 'gif': $type = IMAGETYPE_GIF ;break;
+				case 'png': $type = IMAGETYPE_PNG ;break;
+				default : $type = IMAGETYPE_JPEG ;break;
+			}
+			
+			JFolder::create(self::$cache_path);
+			$img->toFile($file_path, $type, array('quality' => $q));
+			
+			return $file_url;
 		
-		if(JFile::exists($path)){
-			$img->loadFile($path);
+		}catch(Exception $e) {
+			
+			return self::getDefaultImage($width, $height, $zc, $q, $file_type);
+		
 		}
-		else{
-			return "http://placehold.it/{$width}x{$height}" ;
-		}
-		
-		// get Width Height
-		$imgdata = JImage::getImageFileProperties($path) ;
-		
-		// set save data
-		if( $file_type != 'png' && $file_type != 'gif' ){
-			$file_type = 'jpg' ;
-		}
-		$file_name = md5($url.$width.$height.$zc.$q.implode('', (array)$imgdata)).'.'.$file_type ;
-		$file_path = self::$cache_path.DS.$file_name;
-		$file_url  = trim(self::$cache_url, '/').'/'.$file_name ;
-		
-		// img exists?
-		if(JFile::exists($file_path)){
-			return $file_url ;
-		}
-		
-		// crop
-		if($zc)
-			$img = self::crop($img, $width , $height, $imgdata);
-		
-		// resize
-		$img = $img->resize($width, $height);
-		
-		// save
-		switch($file_type){
-			case 'gif': $type = IMAGETYPE_GIF ;break;
-			case 'png': $type = IMAGETYPE_PNG ;break;
-			default : $type = IMAGETYPE_JPEG ;break;
-		}
-		
-		JFolder::create(self::$cache_path);
-		$img->toFile($file_path, $type, array('quality' => $q));
-		
-		return $file_url;
 	}
 	
 	/*
@@ -114,9 +123,12 @@ class AKHelperThumb
 		}else{
 			
 			// other host
-			$path = self::$temp_path.DS.JFile::getName($url) ;
+			$path = self::$temp_path.'/'.JFile::getName($url) ;
 			if( !JFile::exists( $path ) ){
-				AKHelper::_('curl.getFile', (string)$url, $path);
+				$result = AKHelper::_('curl.getFile', (string)$url, $path);
+				if(!$result) {
+					return null ;
+				}
 			}
 		}
 		
@@ -168,6 +180,36 @@ class AKHelperThumb
 	public static function setHash($path ,$width, $height,$zc, $q)
 	{
 		
+	}
+	
+	
+	/*
+	 * function setDefaultImage
+	 * @param $url
+	 */
+	
+	public static function setDefaultImage($url)
+	{
+		self::$default_image = $url ;
+	}
+	
+	
+	/*
+	 * function getDefaultImage
+	 * @param 
+	 */
+	
+	public static function getDefaultImage($width=100, $height=100,$zc=0, $q=85, $file_type = 'jpg' )
+	{
+		$replace['{width}'] 	= $width ;
+		$replace['{height}'] 	= $height ;
+		$replace['{zc}'] 		= $zc ;
+		$replace['{q}'] 		= $q ;
+		$replace['{file_type}'] = $file_type ;
+		$url = self::$default_image ;
+		$url = strtr($url, $replace) ;
+		
+		return $url ;
 	}
 	
 	
