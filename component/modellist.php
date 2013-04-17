@@ -273,7 +273,7 @@ class AKModelList extends JModelList
 	 * @param $q
 	 */
 	
-	public function searchCondition($search, $q = null)
+	public function searchCondition($search, $q = null, $ignore = array())
 	{
 		$db = JFactory::getDbo();
 		
@@ -295,7 +295,12 @@ class AKModelList extends JModelList
 				array_shift($fields);
 				
 				foreach( $fields as &$field ):
-					$field = $db->qn((string)$field) ;
+					$field = (string) $field;
+					
+					// Ignore fields
+					if( in_array($field, $ignore) ) continue ;
+				
+					$field = $db->qn() ;
 					$field = "{$field} LIKE '%{$search['index']}%'" ;
 				endforeach;
 				
@@ -306,7 +311,9 @@ class AKModelList extends JModelList
 			}else{
 				
 				// Serach one field
-				$search_where[] = "{$db->qn($search['field'])} LIKE '%{$search['index']}%'";
+				if( !in_array($search['field'], $ignore) ){
+					$search_where[] = "{$db->qn($search['field'])} LIKE '%{$search['index']}%'";
+				}
 			}
 			
 		}
@@ -319,6 +326,10 @@ class AKModelList extends JModelList
 		unset($search['field']) ;
 		$condition = array();
 		foreach( $search as $key => $val ):
+			
+			// Ignore fields
+			if( in_array($key, $ignore) ) continue ;
+			
 			if($val){
 				$condition[] = "{$db->qn($key)} LIKE '%{$val}%'" ;
 			}
@@ -335,6 +346,37 @@ class AKModelList extends JModelList
 			$q->where( implode(' OR ', $search_where) ) ;
 		}
 		
+		
+		return $q ;
+	}
+	
+	
+	
+	/*
+	 * function filterCondition
+	 * @param $filter
+	 */
+	
+	public function filterCondition($filter, $q = null, $ignore = array())
+	{
+		$db = JFactory::getDbo();
+		
+		if(!$q) {
+			$q = $db->getQuery() ;
+		}
+		
+		// Start Filter
+		// ========================================================================
+		foreach($filter as $k => $v ){
+			// If this field in ignore, jump.
+			if( in_array($k , $ignore) ) continue ;
+			
+			// Filter Condition
+			if($v !== '' && $v != '*'){
+				$k = $db->qn($k);
+				$q->where("{$k}='{$v}'") ;
+			}
+		}
 		
 		return $q ;
 	}
