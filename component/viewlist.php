@@ -114,7 +114,7 @@ class AKViewList extends AKView
 		}
 		
 		// Add a batch modal button
-		$batch = AKHelper::_('path.get').'/views/'.$this->list_name.'/tmpl/default_batch.php';
+		$batch = AKHelper::_('path.get', null, $this->option).'/views/'.$this->list_name.'/tmpl/default_batch.php';
 		if ($canDo->get('core.edit') && JVERSION >= 3 && JFile::exists($batch))
 		{
 			AKToolbarHelper::modal( 'JTOOLBAR_BATCH', 'batchModal');

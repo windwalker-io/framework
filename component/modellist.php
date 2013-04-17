@@ -165,17 +165,17 @@ class AKModelList extends JModelList
 		}
 		
 		// Get filter inputs from from xml files in /models/form.
-		JForm::addFormPath(AKHelper::_('path.get').'/models/forms');
-		JForm::addFormPath(AKHelper::_('path.get').'/models/forms/'.$this->list_name);
-        JForm::addFieldPath(AKHelper::_('path.get').'/models/fields');
+		JForm::addFormPath(AKHelper::_('path.get', null, $this->option).'/models/forms');
+		JForm::addFormPath(AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name);
+        JForm::addFieldPath(AKHelper::_('path.get', null, $this->option).'/models/fields');
 		
 		
 		// Generate sidebar filter by Joomla! core system.
 		if( JVERSION >=3 && $this->config['core_sidebar'] ) {
 			
 			// Get filter inputs from raw xml file.
-			$file 	= AKHelper::_('path.get').'/models/forms/'.$this->list_name.'_filter.xml' ;
-			$file 	= JFile::exists($file) ? $file : AKHelper::_('path.get').'/models/forms/'.$this->list_name.'/filter.xml' ;
+			$file 	= AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'_filter.xml' ;
+			$file 	= JFile::exists($file) ? $file : AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'/filter.xml' ;
 			$xml 	= simplexml_load_file($file);
 			
 			$filters 	= $xml->xpath('//fieldset[@name="filter_sidebar"]') ;
@@ -187,7 +187,7 @@ class AKModelList extends JModelList
 		
 		
 		// load forms
-		$form_path = AKHelper::_('path.get').'/models/forms/' ;
+		$form_path = AKHelper::_('path.get', null, $this->option).'/models/forms/' ;
 		
 		// Search
 		if( JFile::exists($form_path . $this->list_name . '/search.xml') ) {
@@ -249,8 +249,8 @@ class AKModelList extends JModelList
 	
 	public function getFullSearchFields()
 	{
-		$file = AKHelper::_('path.get').'/models/forms/'.$this->list_name.'/search.xml' ;
-		$file = JFile::exists($file) ? $file : AKHelper::_('path.get').'/models/forms/'.$this->list_name.'_search.xml' ;
+		$file = AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'/search.xml' ;
+		$file = JFile::exists($file) ? $file : AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'_search.xml' ;
 		
 		$xml = simplexml_load_file($file);
 		$field = $xml->xpath('//field[@name="field"]') ;
