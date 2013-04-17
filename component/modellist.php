@@ -287,7 +287,7 @@ class AKModelList extends JModelList
 		
 		// One Search Input
 		// ========================================================================
-		if($search['index']){
+		if(JArrayHelper::getValue($search, 'index')){
 			
 			// Fulltext Search
 			if($this->getState( 'search.fulltext' ) || $search['field'] == '*' ){
@@ -300,7 +300,7 @@ class AKModelList extends JModelList
 					// Ignore fields
 					if( in_array($field, $ignore) ) continue ;
 				
-					$field = $db->qn() ;
+					$field = $db->qn($field) ;
 					$field = "{$field} LIKE '%{$search['index']}%'" ;
 				endforeach;
 				
@@ -325,7 +325,8 @@ class AKModelList extends JModelList
 		unset($search['index']) ; // Remove One search input first
 		unset($search['field']) ;
 		$condition = array();
-		foreach( $search as $key => $val ):
+		
+		foreach( (array)$search as $key => $val ):
 			
 			// Ignore fields
 			if( in_array($key, $ignore) ) continue ;

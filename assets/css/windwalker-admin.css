@@ -51,6 +51,17 @@
 	m/argin: -1px;
 }
 
+#search-bar label {
+	margin-top: 4px;
+	display: inline-block;
+	margin-left: 7px;
+}
+
+.joomla25 #search-bar button {
+	margin-top: 1px;
+	display: inline-block;
+}
+
 
 
 /* BATCH */
