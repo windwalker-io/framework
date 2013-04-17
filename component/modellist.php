@@ -267,4 +267,75 @@ class AKModelList extends JModelList
 		return $fields ;
 	}
 	
+	
+	/*
+	 * function searchCondition
+	 * @param $q
+	 */
+	
+	public function searchCondition($search, $q = null)
+	{
+		$db = JFactory::getDbo();
+		
+		if(!$q) {
+			$q = $db->getQuery() ;
+		}
+		
+		$search_where = array() ;
+		
+		
+		
+		// One Search Input
+		// ========================================================================
+		if($search['index']){
+			
+			// Fulltext Search
+			if($this->getState( 'search.fulltext' ) || $search['field'] == '*' ){
+				$fields = $this->getFullSearchFields();
+				array_shift($fields);
+				
+				foreach( $fields as &$field ):
+					$field = $db->qn((string)$field) ;
+					$field = "{$field} LIKE '%{$search['index']}%'" ;
+				endforeach;
+				
+				if(count($fields)){
+					$search_where[] = "( ".implode(' OR ', $fields )." )" ;
+				}
+				
+			}else{
+				
+				// Serach one field
+				$search_where[] = "{$db->qn($search['field'])} LIKE '%{$search['index']}%'";
+			}
+			
+		}
+		
+		
+		
+		// Multiple Search Input
+		// ========================================================================
+		unset($search['index']) ; // Remove One search input first
+		unset($search['field']) ;
+		$condition = array();
+		foreach( $search as $key => $val ):
+			if($val){
+				$condition[] = "{$db->qn($key)} LIKE '%{$val}%'" ;
+			}
+		endforeach;
+		
+		if(count($condition)) {
+			$search_where[] = "( ".implode(' OR ', $condition )." )";
+		}
+		
+		
+		// Build All Query
+		// ========================================================================
+		if(count($search_where)){
+			$q->where( implode(' OR ', $search_where) ) ;
+		}
+		
+		
+		return $q ;
+	}
 }
