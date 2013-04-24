@@ -61,20 +61,23 @@ class AKHelperDb
      *
      * @return  boolean  is this table a nested table?
      */
-    public static function nested($name, $option)
+    public static function nested($name, $option = null)
     {
-        if(isset(self::$nested[$name])) {
-            return self::$nested[$name] ;
+        if( !$option ){
+            $option = AKHelper::_('path.getOption') ;
         }
-        $option = AKHelper::_('path.getOption') ;
         $option = str_replace('com_', '', $option) ;
+        
+        if(isset(self::$nested[$option. '.' .$name])) {
+            return self::$nested[$option. '.' .$name] ;
+        }
         
         JTable::addIncludePath( AKHelper::_('path.getAdmin').'/components/'.$opntion.'/tables' ) ;
         $table = JTable::getInstance($name, ucfirst($option).'Table');
         if($table instanceof JTableNested) {
-            return self::$nested[$name] = true ;
+            return self::$nested[$option. '.' .$name] = true ;
         }else {
-            return self::$nested[$name] = false ;
+            return self::$nested[$option. '.' .$name] = false ;
         }
     }
 }
