@@ -308,7 +308,7 @@ class simple_html_dom_node {
 
         // return nth-element or array
         if (is_null($idx)) return $found;
-		else if ($idx<0) $idx = count($found) + $idx;
+        else if ($idx<0) $idx = count($found) + $idx;
         return (isset($found[$idx])) ? $found[$idx] : null;
     }
 

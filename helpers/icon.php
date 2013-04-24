@@ -12,29 +12,38 @@
 // No direct access
 defined('_JEXEC') or die;
 
-
-class AKHelperIcon {	
-	
-	/*
-	 * function boolean
-	 * @param $value
-	 */
-	
-	public static function boolean($value, $task = '', $options = array())
-	{
-		if( JVERSION >= 3 ) {
-			$class = $value ? 'icon-publish' : 'icon-unpublish' ;
-			return "<i class=\"{$class}\"></i>" ;
-		}else{
-			$img = $value ? 'tick.png' : 'publish_x.png' ;
-			$img = 'templates/bluestork/images/admin/' . $img ;
-			
-			$alt = $value ? JArrayHelper::getValue($alt, 'true_alt', 'Yes') : JArrayHelper::getValue($alt, 'false_alt', 'No') ;
-			
-			return JHtml::_($img, $alt) ;
-		}
-	}
-	
+/**
+ * Show some icon and function.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
+class AKHelperIcon {    
+    
+    /**
+     * Show a boolean icon.
+     * 
+     * @param   mixed   $value      A variable has value or not. 
+     * @param   string  $task       Click to call a component task. Not available yet.
+     * @param   array   $options    Some options.
+     *
+     * @return  string  A boolean icon HTML string.
+     */
+    public static function boolean($value, $task = '', $options = array())
+    {
+        if( JVERSION >= 3 ) {
+            $class = $value ? 'icon-publish' : 'icon-unpublish' ;
+            return "<i class=\"{$class}\"></i>" ;
+        }else{
+            $img = $value ? 'tick.png' : 'publish_x.png' ;
+            $img = 'templates/bluestork/images/admin/' . $img ;
+            
+            $alt = $value ? JArrayHelper::getValue($alt, 'true_alt', 'Yes') : JArrayHelper::getValue($alt, 'false_alt', 'No') ;
+            
+            return JHtml::_($img, $alt) ;
+        }
+    }
+    
 }
 
 

@@ -11,13 +11,13 @@
 
 /* Fix Bluestork and Joomla! Conflict */
 window.addEvent( 'domready', function(){
-	var modal = $$('#ak-panel-wrap a.modal') ;
-	setTimeout(function(){ modal.removeClass('modal'); }, 500 );
+    var modal = $$('#ak-panel-wrap a.modal') ;
+    setTimeout(function(){ modal.removeClass('modal'); }, 500 );
 } );
 
 
 var WindWalker = {
-	fixToolbar: function(top, duration){
+    fixToolbar: function(top, duration){
 
         top = top || 0 ;
         duration = duration || 300 ;
@@ -53,41 +53,41 @@ var WindWalker = {
             }
         });
     }
-	
-	,
-	
-	/*
-	* @param (event) 	e 				keypress event.
-	* @param (mix) 		targetKeyChar 	key code (int) or key char (string)
-	* @param (function) callBack		The call back function, do not include ().
-	*
-	*/
+    
+    ,
+    
+    /*
+    * @param (event)     e                 keypress event.
+    * @param (mix)         targetKeyChar     key code (int) or key char (string)
+    * @param (function) callBack        The call back function, do not include ().
+    *
+    */
 
    detectKeyPress : function(e, targetKeyChar, callBack, selector, options){
-	   var keynum
-	   var keychar
-	   var numcheck
+       var keynum
+       var keychar
+       var numcheck
 
-	   if(window.event) // For IE
-	   {
-		   keynum = e.keyCode
+       if(window.event) // For IE
+       {
+           keynum = e.keyCode
 
-	   }else if(e.which) // For Netscape/Firefox/Opera
-	   {
-		   keynum = e.which
-	   }
+       }else if(e.which) // For Netscape/Firefox/Opera
+       {
+           keynum = e.which
+       }
 
-	   keychar = String.fromCharCode(keynum)
+       keychar = String.fromCharCode(keynum)
 
-	   if( typeOf(targetKeyChar) == 'string' ) {
-		   if(targetKeyChar == keychar) {
-			   callBack(selector, options) ;
-		   }
-	   }else{
-		   if(targetKeyChar == keynum) {
-			   callBack(selector, options) ;
-		   }
-	   }
+       if( typeOf(targetKeyChar) == 'string' ) {
+           if(targetKeyChar == keychar) {
+               callBack(selector, options) ;
+           }
+       }else{
+           if(targetKeyChar == keynum) {
+               callBack(selector, options) ;
+           }
+       }
    }
 } ;
 

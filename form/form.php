@@ -15,53 +15,53 @@ jimport('libraries.form.form');
 
 class AKForm extends JForm
 {
-	
-	public $fields ;
-	
-	
-	/*
-	 * function handlePostData
-	 * @param $data
-	 */
-	
-	public function getDataForSave($profile, $data = null)
-	{
-		if($data) {
-			$this->bind($data) ;
-		}
-		
-		$fields = $this->getGroup($profile);
-		$data2 = array();
-		foreach( $fields as $field ):
-			$data2[$field->fieldname] = $field->value ;
-		endforeach;
-		
-		return $data2;
-	}
-	
-	
-	
-	/*
-	 * function handlePostData
-	 * @param $data
-	 */
-	
-	public function getDataForShow($profile, $data = null)
-	{
-		if($data) {
-			$this->bind($data) ;
-		}
-		
-		$fields = $this->getGroup($profile);
-		$data2 = array();
-		foreach( $fields as $field ):
-			if(method_exists($field, 'showData')){
-				$data2[$field->fieldname] = $field->showData() ;
-			}else{
-				$data2[$field->fieldname] = $field->value ;
-			}
-		endforeach;
-		
-		return $data2;
-	}
+    
+    public $fields ;
+    
+    
+    /*
+     * function handlePostData
+     * @param $data
+     */
+    
+    public function getDataForSave($profile, $data = null)
+    {
+        if($data) {
+            $this->bind($data) ;
+        }
+        
+        $fields = $this->getGroup($profile);
+        $data2 = array();
+        foreach( $fields as $field ):
+            $data2[$field->fieldname] = $field->value ;
+        endforeach;
+        
+        return $data2;
+    }
+    
+    
+    
+    /*
+     * function handlePostData
+     * @param $data
+     */
+    
+    public function getDataForShow($profile, $data = null)
+    {
+        if($data) {
+            $this->bind($data) ;
+        }
+        
+        $fields = $this->getGroup($profile);
+        $data2 = array();
+        foreach( $fields as $field ):
+            if(method_exists($field, 'showData')){
+                $data2[$field->fieldname] = $field->showData() ;
+            }else{
+                $data2[$field->fieldname] = $field->value ;
+            }
+        endforeach;
+        
+        return $data2;
+    }
 }

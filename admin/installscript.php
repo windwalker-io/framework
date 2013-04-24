@@ -11,7 +11,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-$db 	= JFactory::getDbo();
+$db     = JFactory::getDbo();
 
 
 // Show Installed table
@@ -37,11 +37,11 @@ $grid->setRowCell('info', JText::_('COM_INSTALLER_MSG_DATABASE_INFO') , array())
 $i = 0 ;
 
 if(JVERSION >= 3){
-	$tick 	= '<i class="icon-publish"></i>' ;
-	$cross 	= '<i class="icon-unpublish"></i>' ;
+    $tick     = '<i class="icon-publish"></i>' ;
+    $cross     = '<i class="icon-unpublish"></i>' ;
 }else{
-	$tick 	= '<img src="templates/bluestork/images/admin/tick.png" alt="Success" />' ;
-	$cross 	= '<img src="templates/bluestork/images/admin/publish_y.png" alt="Fail" />' ;
+    $tick     = '<img src="templates/bluestork/images/admin/tick.png" alt="Success" />' ;
+    $cross     = '<img src="templates/bluestork/images/admin/publish_y.png" alt="Fail" />' ;
 }
 
 $td_class = array('style' => 'text-align:center;') ;
@@ -70,13 +70,13 @@ include dirname(__FILE__).'/installscript/plugins.php' ;
 // Render install information
 // ========================================================================
 if( $manifest['type'] == 'component' ):
-	echo '<h1>'.JText::_(strtoupper($manifest->name)).'</h1>' ;
-	$img = JURI::base().'/components/'.strtolower($manifest->name).'/images/'.strtolower($manifest->name).'_logo.png' ;
-	$img = JHtml::_('image', $img, 'LOGO' ) ;
-	$link = JRoute::_("index.php?option=".$manifest->name);
-	echo '<div id="ak-install-img">'.JHtml::link($link, $img).'</div>';
-	echo '<div id="ak-install-msg">'.JText::_( strtoupper($manifest->name).'_INSTALL_MSG' ).'</div>';
-	echo '<br /><br />';
+    echo '<h1>'.JText::_(strtoupper($manifest->name)).'</h1>' ;
+    $img = JURI::base().'/components/'.strtolower($manifest->name).'/images/'.strtolower($manifest->name).'_logo.png' ;
+    $img = JHtml::_('image', $img, 'LOGO' ) ;
+    $link = JRoute::_("index.php?option=".$manifest->name);
+    echo '<div id="ak-install-img">'.JHtml::link($link, $img).'</div>';
+    echo '<div id="ak-install-msg">'.JText::_( strtoupper($manifest->name).'_INSTALL_MSG' ).'</div>';
+    echo '<br /><br />';
 endif;
 
 echo $grid ;

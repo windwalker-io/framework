@@ -16,80 +16,80 @@ jimport('joomla.application.component.view');
 
 class AKView extends JViewLegacy
 {
-	public function displayWithPanel($tpl=null, $path = null)
-	{
-		$path = $path ? $path : AKPATH_LAYOUTS ;
-		
-		$this->innerLayout = JRequest::getVar('layout','default');
-		$this->setLayout('panel');
-		
-		$this->addTemplatePath($path);
-		$result = $this->loadTemplate($tpl);
-		
-		if (JError::isError($result)) {
-			return $result;
-		}
+    public function displayWithPanel($tpl=null, $path = null)
+    {
+        $path = $path ? $path : AKPATH_LAYOUTS ;
+        
+        $this->innerLayout = JRequest::getVar('layout','default');
+        $this->setLayout('panel');
+        
+        $this->addTemplatePath($path);
+        $result = $this->loadTemplate($tpl);
+        
+        if (JError::isError($result)) {
+            return $result;
+        }
  
         echo $result;
-	}
-	
-	public function loadInnerTemplate($tpl=null)
-	{
-		$innerLayout = $this->setLayout($this->innerLayout);
-		$result = $this->loadTemplate($tpl);
-		
-		return $result;
-	}
-	
-	
-	
-	/*
-	 * function settitle
-	 * @param 
-	 */
-	
-	public function setTitle($title)
-	{
-		$doc = JFactory::getDocument();
-		$doc->setTitle($title) ;
-	}
-	
-	
-	
-	/*
-	 * function showInfo
-	 * @param $key
-	 */
-	
-	public function showInfo( $item, $key = null, $label = null, $strip = true, $link = null ,$class = null)
-	{
-		if(empty($item->$key)){
-			return false ;
-		}
-		
-		$lang  = $strip ? substr($key, 2) : $key ;
-		
-		if(!$label){
-			$label = JText::_('COM_FLOWER_'.strtoupper($lang)) ;
-		}else{
-			$label = JText::_(strtoupper($label)) ;
-		}
-		
-		$value = $item->$key ;
-		
-		if($link){
-			$value = JHtml::_('link', $link, $value);
-		}
-		
-		$lang = str_replace( '_', '-', $lang );
-		
-		$info =
+    }
+    
+    public function loadInnerTemplate($tpl=null)
+    {
+        $innerLayout = $this->setLayout($this->innerLayout);
+        $result = $this->loadTemplate($tpl);
+        
+        return $result;
+    }
+    
+    
+    
+    /*
+     * function settitle
+     * @param 
+     */
+    
+    public function setTitle($title)
+    {
+        $doc = JFactory::getDocument();
+        $doc->setTitle($title) ;
+    }
+    
+    
+    
+    /*
+     * function showInfo
+     * @param $key
+     */
+    
+    public function showInfo( $item, $key = null, $label = null, $strip = true, $link = null ,$class = null)
+    {
+        if(empty($item->$key)){
+            return false ;
+        }
+        
+        $lang  = $strip ? substr($key, 2) : $key ;
+        
+        if(!$label){
+            $label = JText::_('COM_FLOWER_'.strtoupper($lang)) ;
+        }else{
+            $label = JText::_(strtoupper($label)) ;
+        }
+        
+        $value = $item->$key ;
+        
+        if($link){
+            $value = JHtml::_('link', $link, $value);
+        }
+        
+        $lang = str_replace( '_', '-', $lang );
+        
+        $info =
 <<<INFO
-		<div class="{$lang} {$class}">
-			<span class="label">{$label}:</span>
-			<span class="value">{$value}</span>
-		</div>
+        <div class="{$lang} {$class}">
+            <span class="label">{$label}:</span>
+            <span class="value">{$value}</span>
+        </div>
 INFO;
-		return $info ;
-	}
+        return $info ;
+    }
 }

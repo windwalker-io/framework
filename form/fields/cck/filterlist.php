@@ -19,100 +19,100 @@ JFormHelper::loadFieldType('List');
  */
 class JFormFieldFilterlist extends JFormFieldList
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var		string
-	 * @since	1.6
-	 */
-	public $type = 'Filterlist';
-	
-	public $value ;
-	
-	public $name ;
-	
-	
-	
-	/**
-	 * Method to get the field input markup.
-	 *
-	 * @return	string	The field input markup.
-	 * @since	1.6
-	 */
-	public function getOptions()
-	{
-		
-		if($this->value){
-			$this->value = (string)$this->element['default'];
-		}
-		
-		$element = $this->element ;
-		
-		$types = array(
-			'raw',
-			'int',
-			'uint',
-			'float',
-			'bool',
-			'word',
-			'alnum',
-			'base64',
-			'string',
-			'safehtml',
-			'array',
-			'url',
-			'path',
-			'username',
-			'tel'
-		);
-		
-		
-		// includes
-		$includes = $element['include'] ;
-		if($includes) {
-			$includes = explode(',', $includes) ;
-			foreach( $includes as &$include ):
-				$include = trim($include);
-			endforeach;
-			
-			$types = $includes ;
-		}
-		
-		
-		
-		// excludes
-		$excludes = (string) $element['exclude'] ;
-		if($excludes){
-			$excludes = explode(',', $excludes) ;
-			foreach( $excludes as &$exclude ):
-				$exclude = trim($exclude);
-			endforeach;
-		}else{
-			$excludes = array();
-		}
-		
-		
-		
-		// Set Options
-		$options = array();
-		
-		foreach( $types as $type ):
-			$type = str_replace('.xml', '', $type);
-			
-			// excludes
-			if( in_array($type, $excludes) ) continue ;
-			
-			$options[] = JHtml::_(
+    /**
+     * The form field type.
+     *
+     * @var        string
+     * @since    1.6
+     */
+    public $type = 'Filterlist';
+    
+    public $value ;
+    
+    public $name ;
+    
+    
+    
+    /**
+     * Method to get the field input markup.
+     *
+     * @return    string    The field input markup.
+     * @since    1.6
+     */
+    public function getOptions()
+    {
+        
+        if($this->value){
+            $this->value = (string)$this->element['default'];
+        }
+        
+        $element = $this->element ;
+        
+        $types = array(
+            'raw',
+            'int',
+            'uint',
+            'float',
+            'bool',
+            'word',
+            'alnum',
+            'base64',
+            'string',
+            'safehtml',
+            'array',
+            'url',
+            'path',
+            'username',
+            'tel'
+        );
+        
+        
+        // includes
+        $includes = $element['include'] ;
+        if($includes) {
+            $includes = explode(',', $includes) ;
+            foreach( $includes as &$include ):
+                $include = trim($include);
+            endforeach;
+            
+            $types = $includes ;
+        }
+        
+        
+        
+        // excludes
+        $excludes = (string) $element['exclude'] ;
+        if($excludes){
+            $excludes = explode(',', $excludes) ;
+            foreach( $excludes as &$exclude ):
+                $exclude = trim($exclude);
+            endforeach;
+        }else{
+            $excludes = array();
+        }
+        
+        
+        
+        // Set Options
+        $options = array();
+        
+        foreach( $types as $type ):
+            $type = str_replace('.xml', '', $type);
+            
+            // excludes
+            if( in_array($type, $excludes) ) continue ;
+            
+            $options[] = JHtml::_(
                 'select.option', (string) $type,
                 JText::_('LIB_WINDWALKER_FILTERLIST_'.strtoupper($type))
             );
-		endforeach;
-		
-		// Merge any additional options in the XML definition.
+        endforeach;
+        
+        // Merge any additional options in the XML definition.
         $options = array_merge(parent::getOptions(), $options);
  
         return $options;
-	}
-	
-	
+    }
+    
+    
 }

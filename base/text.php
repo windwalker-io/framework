@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 
 class AKText
 {
-	
-	static function __callStatic($name, $args)
-	{
-		$option = JRequest::getVar('option') ;
-		
-		$args[0] = strtoupper( strtoupper($option).'_'.$args[0] );
-		
-		return call_user_func_array( array( 'JText' , $name ) , $args );
-	}
+    
+    static function __callStatic($name, $args)
+    {
+        $option = JRequest::getVar('option') ;
+        
+        $args[0] = strtoupper( strtoupper($option).'_'.$args[0] );
+        
+        return call_user_func_array( array( 'JText' , $name ) , $args );
+    }
 }

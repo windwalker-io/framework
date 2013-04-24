@@ -16,18 +16,18 @@ jimport('joomla.application.component.modellist');
 
 class AKModelList extends JModelList
 {
-	public $component ;
-	
-	public $item_name ;
-	
-	public $list_name ;
-	
-	public $items ;
-	
-	public $category ;
-	
+    public $component ;
+    
+    public $item_name ;
+    
+    public $list_name ;
+    
+    public $items ;
+    
+    public $category ;
+    
 
-	
+    
     /**
      * Constructor.
      *
@@ -40,345 +40,345 @@ class AKModelList extends JModelList
         parent::__construct($config);
     }
 
-	
-	
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
-	 * @return	JTable	A database object
-	 * @since	1.6
-	 */
-	public function getTable($type = null, $prefix = null, $config = array())
-	{
-		$prefix = $prefix 	? $prefix 	: ucfirst($this->component).'Table' ;
-		$type 	= $type 	? $type 	: $this->item_name ;
-		
-		return parent::getTable( $type , $prefix , $config );
-	}
-	
-	
-	
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 */
-	protected function populateState($ordering = null, $direction = 'asc')
-	{
-		// Initialise variables.
-		$app = JFactory::getApplication();
-		
-		// Load the parameters.
-		$params = JComponentHelper::getParams($this->option);
-		$this->setState('params', $params);
-		
-		// Fulltext search
-		if(isset($this->config['fulltext_search'])){
-			$this->setState( 'search.fulltext', $this->config['fulltext_search'] );
-		}
-		
-		// Core sidebar
-		if(isset($this->config['core_sidebar'])){
-			$this->setState( 'core_sidebar', $this->config['core_sidebar'] );
-		}
-		
-		
-		
-		// Set Nested Items
-		// ========================================================================
-		$table = $this->getTable();
-		if( $table instanceof JTableNested ){
-			$nested = true ;
-		}else{
-			$nested = false ;
-		}
-		$this->setState( 'items.nested', $nested );
-		
-		
-		
-		// Set all filter fields
-		// ========================================================================
-		$filter = $app->getUserStateFromRequest($this->context.'.field.filter', 'filter');
-		$filter_fields = array();
-		foreach( $this->filter_fields as $field ){
-			$filter_fields[$field] = JArrayHelper::getValue($filter, $field, '') ;
-		}
-		$this->setState('filter', $filter_fields );
-		
-		
-		$search = $app->getUserStateFromRequest($this->context.'.field.search', 'search');
-		if(in_array(JArrayHelper::getValue($search, 'field'), $this->filter_fields) || $this->config['fulltext_search']){
-			$this->setState('search', $search );
-		}
-		
-		
+    
+    
+    /**
+     * Returns a reference to the a Table object, always creating it.
+     *
+     * @param    type    The table type to instantiate
+     * @param    string    A prefix for the table class name. Optional.
+     * @param    array    Configuration array for model. Optional.
+     * @return    JTable    A database object
+     * @since    1.6
+     */
+    public function getTable($type = null, $prefix = null, $config = array())
+    {
+        $prefix = $prefix     ? $prefix     : ucfirst($this->component).'Table' ;
+        $type     = $type     ? $type     : $this->item_name ;
+        
+        return parent::getTable( $type , $prefix , $config );
+    }
+    
+    
+    
+    /**
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     */
+    protected function populateState($ordering = null, $direction = 'asc')
+    {
+        // Initialise variables.
+        $app = JFactory::getApplication();
+        
+        // Load the parameters.
+        $params = JComponentHelper::getParams($this->option);
+        $this->setState('params', $params);
+        
+        // Fulltext search
+        if(isset($this->config['fulltext_search'])){
+            $this->setState( 'search.fulltext', $this->config['fulltext_search'] );
+        }
+        
+        // Core sidebar
+        if(isset($this->config['core_sidebar'])){
+            $this->setState( 'core_sidebar', $this->config['core_sidebar'] );
+        }
+        
+        
+        
+        // Set Nested Items
+        // ========================================================================
+        $table = $this->getTable();
+        if( $table instanceof JTableNested ){
+            $nested = true ;
+        }else{
+            $nested = false ;
+        }
+        $this->setState( 'items.nested', $nested );
+        
+        
+        
+        // Set all filter fields
+        // ========================================================================
+        $filter = $app->getUserStateFromRequest($this->context.'.field.filter', 'filter');
+        $filter_fields = array();
+        foreach( $this->filter_fields as $field ){
+            $filter_fields[$field] = JArrayHelper::getValue($filter, $field, '') ;
+        }
+        $this->setState('filter', $filter_fields );
+        
+        
+        $search = $app->getUserStateFromRequest($this->context.'.field.search', 'search');
+        if(in_array(JArrayHelper::getValue($search, 'field'), $this->filter_fields) || $this->config['fulltext_search']){
+            $this->setState('search', $search );
+        }
+        
+        
 
-		// List state information.
-		if(!$ordering){
-			$ordering = $nested ? 'a.lft' : 'a.ordering' ;
-		}
-		
-		$orderCol = $nested ? 'a.lft' : 'a.ordering' ;
-		$this->setState('list.orderCol', $orderCol) ;
-		
-		parent::populateState($ordering, $direction);
-	}
+        // List state information.
+        if(!$ordering){
+            $ordering = $nested ? 'a.lft' : 'a.ordering' ;
+        }
+        
+        $orderCol = $nested ? 'a.lft' : 'a.ordering' ;
+        $this->setState('list.orderCol', $orderCol) ;
+        
+        parent::populateState($ordering, $direction);
+    }
 
-	
-	
-	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param	string		$id	A prefix for the store id.
-	 * @return	string		A store id.
-	 * @since	1.6
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Compile the store id.
-		$id.= ':' . json_encode($this->getState('search'));
-		$id.= ':' . json_encode($this->getState('filter'));
+    
+    
+    /**
+     * Method to get a store id based on model configuration state.
+     *
+     * This is necessary because the model is used by the component and
+     * different modules that might need different sets of data or different
+     * ordering requirements.
+     *
+     * @param    string        $id    A prefix for the store id.
+     * @return    string        A store id.
+     * @since    1.6
+     */
+    protected function getStoreId($id = '')
+    {
+        // Compile the store id.
+        $id.= ':' . json_encode($this->getState('search'));
+        $id.= ':' . json_encode($this->getState('filter'));
 
-		return parent::getStoreId($id);
-	}
-	
-	
-	
-	/**
-	 * Method to get list page filter form.
-	 *
-	 * @return	object		JForm object.
-	 * @since	2.5
-	 */
-	
-	public function getFilter()
-	{
-		if(!empty($this->filter)){
-			return $this->filter ;
-		}
-		
-		// Get filter inputs from from xml files in /models/form.
-		JForm::addFormPath(AKHelper::_('path.get', null, $this->option).'/models/forms');
-		JForm::addFormPath(AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name);
+        return parent::getStoreId($id);
+    }
+    
+    
+    
+    /**
+     * Method to get list page filter form.
+     *
+     * @return    object        JForm object.
+     * @since    2.5
+     */
+    
+    public function getFilter()
+    {
+        if(!empty($this->filter)){
+            return $this->filter ;
+        }
+        
+        // Get filter inputs from from xml files in /models/form.
+        JForm::addFormPath(AKHelper::_('path.get', null, $this->option).'/models/forms');
+        JForm::addFormPath(AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name);
         JForm::addFieldPath(AKHelper::_('path.get', null, $this->option).'/models/fields');
-		
-		
-		// Generate sidebar filter by Joomla! core system.
-		if( JVERSION >=3 && $this->config['core_sidebar'] ) {
-			
-			// Get filter inputs from raw xml file.
-			$file 	= AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'_filter.xml' ;
-			$file 	= JFile::exists($file) ? $file : AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'/filter.xml' ;
-			$xml 	= simplexml_load_file($file);
-			
-			$filters 	= $xml->xpath('//fieldset[@name="filter_sidebar"]') ;
-			$filters	= $filters[0]->field;
-			
-			
-			$form['filter_sidebar'] 	= $filters ;
-		}
-		
-		
-		// load forms
-		$form_path = AKHelper::_('path.get', null, $this->option).'/models/forms/' ;
-		
-		// Search
-		if( JFile::exists($form_path . $this->list_name . '/search.xml') ) {
-			$form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", 'search', array( 'control' => 'search' ,'load_data'=>'true'));
-		}else{
-			// Legacy
-			$form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", $this->list_name.'_search', array( 'control' => 'search' ,'load_data'=>'true'));
-		}
-		
-		
-		// Filter
-		if( JFile::exists($form_path . $this->list_name . '/filter.xml') ) {
-			$form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", 'filter', array( 'control' => 'filter' ,'load_data'=>'true'));
-		}else{
-			// Legacy
-			$form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", $this->list_name.'_filter', array( 'control' => 'filter' ,'load_data'=>'true'));
-		}
-		
-		// Batch
-		if( JFile::exists($form_path . $this->list_name . '/batch.xml') ){
-			$form['batch'] 	= JForm::getInstance("{$this->option}.{$this->list_name}.batch", 'batch', array( 'control' => 'batch' ,'load_data'=>'true'));
-		}
-		
-		
-		// Get default data of this form. Any State key same as form key will auto match.
-		$form['search']->bind( $this->getState('search') );
-		$form['filter']->bind( $this->getState('filter') );
-		
-		return $this->filter = $form;
-	}
-	
-	
-	
-	/*
-	 * function getCategory
-	 * @param 
-	 */
-	
-	public function getCategory()
-	{
-		if(!empty($this->category)){
-			return $this->category ;
-		}
-		
-		$pk = $this->getState('category.id') ;
-		
-		$this->category  = JTable::getInstance('Category');
-		$this->category->load($pk);
-		
-		return $this->category ;
-	}
-	
-	
-	
-	/*
-	 * function getFulltextSearch
-	 * @param 
-	 */
-	
-	public function getFullSearchFields()
-	{
-		$file = AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'/search.xml' ;
-		$file = JFile::exists($file) ? $file : AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'_search.xml' ;
-		
-		$xml = simplexml_load_file($file);
-		$field = $xml->xpath('//field[@name="field"]') ;
-		$options = $field[0]->option ;
-		
-		$fields = array();
-		foreach( $options as $option ):
-			$attr = $option->attributes();
-			if(in_array($attr['value'], $this->filter_fields)){
-				$fields[] = $attr['value'];
-			}
-		endforeach;
-		
-		return $fields ;
-	}
-	
-	
-	/*
-	 * function searchCondition
-	 * @param $q
-	 */
-	
-	public function searchCondition($search, $q = null, $ignore = array())
-	{
-		$db = JFactory::getDbo();
-		
-		if(!$q) {
-			$q = $db->getQuery() ;
-		}
-		
-		$search_where = array() ;
-		
-		
-		
-		// One Search Input
-		// ========================================================================
-		if(JArrayHelper::getValue($search, 'index')){
-			
-			// Fulltext Search
-			if($this->getState( 'search.fulltext' ) || $search['field'] == '*' ){
-				$fields = $this->getFullSearchFields();
-				array_shift($fields);
-				
-				foreach( $fields as &$field ):
-					$field = (string) $field;
-					
-					// Ignore fields
-					if( in_array($field, $ignore) ) continue ;
-				
-					$field = $db->qn($field) ;
-					$field = "{$field} LIKE '%{$search['index']}%'" ;
-				endforeach;
-				
-				if(count($fields)){
-					$search_where[] = "( ".implode(' OR ', $fields )." )" ;
-				}
-				
-			}else{
-				
-				// Serach one field
-				if( !in_array($search['field'], $ignore) ){
-					$search_where[] = "{$db->qn($search['field'])} LIKE '%{$search['index']}%'";
-				}
-			}
-			
-		}
-		
-		
-		
-		// Multiple Search Input
-		// ========================================================================
-		unset($search['index']) ; // Remove One search input first
-		unset($search['field']) ;
-		$condition = array();
-		
-		foreach( (array)$search as $key => $val ):
-			
-			// Ignore fields
-			if( in_array($key, $ignore) ) continue ;
-			
-			if($val){
-				$condition[] = "{$db->qn($key)} LIKE '%{$val}%'" ;
-			}
-		endforeach;
-		
-		if(count($condition)) {
-			$search_where[] = "( ".implode(' OR ', $condition )." )";
-		}
-		
-		
-		// Build All Query
-		// ========================================================================
-		if(count($search_where)){
-			$q->where( implode(' OR ', $search_where) ) ;
-		}
-		
-		
-		return $q ;
-	}
-	
-	
-	
-	/*
-	 * function filterCondition
-	 * @param $filter
-	 */
-	
-	public function filterCondition($filter, $q = null, $ignore = array())
-	{
-		$db = JFactory::getDbo();
-		
-		if(!$q) {
-			$q = $db->getQuery() ;
-		}
-		
-		// Start Filter
-		// ========================================================================
-		foreach($filter as $k => $v ){
-			// If this field in ignore, jump.
-			if( in_array($k , $ignore) ) continue ;
-			
-			// Filter Condition
-			if($v !== '' && $v != '*'){
-				$k = $db->qn($k);
-				$q->where("{$k}='{$v}'") ;
-			}
-		}
-		
-		return $q ;
-	}
+        
+        
+        // Generate sidebar filter by Joomla! core system.
+        if( JVERSION >=3 && $this->config['core_sidebar'] ) {
+            
+            // Get filter inputs from raw xml file.
+            $file     = AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'_filter.xml' ;
+            $file     = JFile::exists($file) ? $file : AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'/filter.xml' ;
+            $xml     = simplexml_load_file($file);
+            
+            $filters     = $xml->xpath('//fieldset[@name="filter_sidebar"]') ;
+            $filters    = $filters[0]->field;
+            
+            
+            $form['filter_sidebar']     = $filters ;
+        }
+        
+        
+        // load forms
+        $form_path = AKHelper::_('path.get', null, $this->option).'/models/forms/' ;
+        
+        // Search
+        if( JFile::exists($form_path . $this->list_name . '/search.xml') ) {
+            $form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", 'search', array( 'control' => 'search' ,'load_data'=>'true'));
+        }else{
+            // Legacy
+            $form['search'] = JForm::getInstance("{$this->option}.{$this->list_name}.search", $this->list_name.'_search', array( 'control' => 'search' ,'load_data'=>'true'));
+        }
+        
+        
+        // Filter
+        if( JFile::exists($form_path . $this->list_name . '/filter.xml') ) {
+            $form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", 'filter', array( 'control' => 'filter' ,'load_data'=>'true'));
+        }else{
+            // Legacy
+            $form['filter'] = JForm::getInstance("{$this->option}.{$this->list_name}.filter", $this->list_name.'_filter', array( 'control' => 'filter' ,'load_data'=>'true'));
+        }
+        
+        // Batch
+        if( JFile::exists($form_path . $this->list_name . '/batch.xml') ){
+            $form['batch']     = JForm::getInstance("{$this->option}.{$this->list_name}.batch", 'batch', array( 'control' => 'batch' ,'load_data'=>'true'));
+        }
+        
+        
+        // Get default data of this form. Any State key same as form key will auto match.
+        $form['search']->bind( $this->getState('search') );
+        $form['filter']->bind( $this->getState('filter') );
+        
+        return $this->filter = $form;
+    }
+    
+    
+    
+    /*
+     * function getCategory
+     * @param 
+     */
+    
+    public function getCategory()
+    {
+        if(!empty($this->category)){
+            return $this->category ;
+        }
+        
+        $pk = $this->getState('category.id') ;
+        
+        $this->category  = JTable::getInstance('Category');
+        $this->category->load($pk);
+        
+        return $this->category ;
+    }
+    
+    
+    
+    /*
+     * function getFulltextSearch
+     * @param 
+     */
+    
+    public function getFullSearchFields()
+    {
+        $file = AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'/search.xml' ;
+        $file = JFile::exists($file) ? $file : AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'_search.xml' ;
+        
+        $xml = simplexml_load_file($file);
+        $field = $xml->xpath('//field[@name="field"]') ;
+        $options = $field[0]->option ;
+        
+        $fields = array();
+        foreach( $options as $option ):
+            $attr = $option->attributes();
+            if(in_array($attr['value'], $this->filter_fields)){
+                $fields[] = $attr['value'];
+            }
+        endforeach;
+        
+        return $fields ;
+    }
+    
+    
+    /*
+     * function searchCondition
+     * @param $q
+     */
+    
+    public function searchCondition($search, $q = null, $ignore = array())
+    {
+        $db = JFactory::getDbo();
+        
+        if(!$q) {
+            $q = $db->getQuery() ;
+        }
+        
+        $search_where = array() ;
+        
+        
+        
+        // One Search Input
+        // ========================================================================
+        if(JArrayHelper::getValue($search, 'index')){
+            
+            // Fulltext Search
+            if($this->getState( 'search.fulltext' ) || $search['field'] == '*' ){
+                $fields = $this->getFullSearchFields();
+                array_shift($fields);
+                
+                foreach( $fields as &$field ):
+                    $field = (string) $field;
+                    
+                    // Ignore fields
+                    if( in_array($field, $ignore) ) continue ;
+                
+                    $field = $db->qn($field) ;
+                    $field = "{$field} LIKE '%{$search['index']}%'" ;
+                endforeach;
+                
+                if(count($fields)){
+                    $search_where[] = "( ".implode(' OR ', $fields )." )" ;
+                }
+                
+            }else{
+                
+                // Serach one field
+                if( !in_array($search['field'], $ignore) ){
+                    $search_where[] = "{$db->qn($search['field'])} LIKE '%{$search['index']}%'";
+                }
+            }
+            
+        }
+        
+        
+        
+        // Multiple Search Input
+        // ========================================================================
+        unset($search['index']) ; // Remove One search input first
+        unset($search['field']) ;
+        $condition = array();
+        
+        foreach( (array)$search as $key => $val ):
+            
+            // Ignore fields
+            if( in_array($key, $ignore) ) continue ;
+            
+            if($val){
+                $condition[] = "{$db->qn($key)} LIKE '%{$val}%'" ;
+            }
+        endforeach;
+        
+        if(count($condition)) {
+            $search_where[] = "( ".implode(' OR ', $condition )." )";
+        }
+        
+        
+        // Build All Query
+        // ========================================================================
+        if(count($search_where)){
+            $q->where( implode(' OR ', $search_where) ) ;
+        }
+        
+        
+        return $q ;
+    }
+    
+    
+    
+    /*
+     * function filterCondition
+     * @param $filter
+     */
+    
+    public function filterCondition($filter, $q = null, $ignore = array())
+    {
+        $db = JFactory::getDbo();
+        
+        if(!$q) {
+            $q = $db->getQuery() ;
+        }
+        
+        // Start Filter
+        // ========================================================================
+        foreach($filter as $k => $v ){
+            // If this field in ignore, jump.
+            if( in_array($k , $ignore) ) continue ;
+            
+            // Filter Condition
+            if($v !== '' && $v != '*'){
+                $k = $db->qn($k);
+                $q->where("{$k}='{$v}'") ;
+            }
+        }
+        
+        return $q ;
+    }
 }

@@ -12,112 +12,95 @@
 // No direct access
 defined('_JEXEC') or die;
 
-
+/**
+ * HTML Helper to handle some text.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperHtml {
-	
-	public static function repair($html , $use_tidy = true ) {
-		
-		if(function_exists('tidy_repair_string') && $use_tidy ):
-		
-			$TidyConfig = array('indent' 			=> true,
-	                			'output-xhtml' 		=> true,
-	                			'show-body-only' 	=> true,
-	                			'wrap'				=> false
-	                			);
-	        return tidy_repair_string($html,$TidyConfig,'utf8');
-		
+    
+    /**
+     * Repair HTML. If Tidy not exists, use repair function.
+     * 
+     * @param   string  $html       The HTML string to repair.
+     * @param   boolean $use_tidy   Force tidy or not.
+     *
+     * @return  string  Repaired HTML.
+     */
+    public static function repair($html , $use_tidy = true ) {
+        
+        if(function_exists('tidy_repair_string') && $use_tidy ):
+        
+            $TidyConfig = array('indent'        => true,
+                                'output-xhtml'  => true,
+                                'show-body-only'=> true,
+                                'wrap'          => false
+                                );
+            return tidy_repair_string($html,$TidyConfig,'utf8');
+        
         else:
-		
-        	$arr_single_tags = array('meta','img','br','link','area');
-		    
-			//put all opened tags into an array
-		    preg_match_all ( "#<([a-z]+)( .*)?(?!/)>#iU", $html, $result );
-		    $openedtags = $result[1];
-		 
-		    //put all closed tags into an array
-		    preg_match_all ( "#</([a-z]+)>#iU", $html, $result );
-		    $closedtags = $result[1];
-		    $len_opened = count ( $openedtags );
-			
-		    // all tags are closed
-		    if( count ( $closedtags ) == $len_opened )
-		    {
-		        return $html;
-		    }
-			
-		    $openedtags = array_reverse ( $openedtags );
-		    
-			// close tags
-		    for( $i = 0; $i < $len_opened; $i++ )      
-		    {
-		        if ( !in_array ( $openedtags[$i], $closedtags ) )
-		        {
-		            if(!in_array ( $openedtags[$i], $arr_single_tags )) $html .= "</" . $openedtags[$i] . ">";
-		        }
-		        else
-		        {
-		            unset ( $closedtags[array_search ( $openedtags[$i], $closedtags)] );
-		        }
-		    }
-			
-		    return $html;
-		
+        
+            $arr_single_tags = array('meta','img','br','link','area');
+            
+            //put all opened tags into an array
+            preg_match_all ( "#<([a-z]+)( .*)?(?!/)>#iU", $html, $result );
+            $openedtags = $result[1];
+         
+            //put all closed tags into an array
+            preg_match_all ( "#</([a-z]+)>#iU", $html, $result );
+            $closedtags = $result[1];
+            $len_opened = count ( $openedtags );
+            
+            // all tags are closed
+            if( count ( $closedtags ) == $len_opened )
+            {
+                return $html;
+            }
+            
+            $openedtags = array_reverse ( $openedtags );
+            
+            // close tags
+            for( $i = 0; $i < $len_opened; $i++ )      
+            {
+                if ( !in_array ( $openedtags[$i], $closedtags ) )
+                {
+                    if(!in_array ( $openedtags[$i], $arr_single_tags )) $html .= "</" . $openedtags[$i] . ">";
+                }
+                else
+                {
+                    unset ( $closedtags[array_search ( $openedtags[$i], $closedtags)] );
+                }
+            }
+            
+            return $html;
+        
         endif;
-	}
-	
-	
-	
-	/*
-	 * function parseBBCode
-	 * @param $text
-	 */
-	
-	public static function parseBBCode($text)
-	{
-		require_once( "phar://".AKPATH_HTML."/jbbcode/jbbcode.phar/Parser.php" );
+    }
+    
+    
+    
+    /**
+     * Parse BBCode and convert to HTML.
+     *
+     * Use jBBCode library: http://jbbcode.com/
+     * 
+     * @param   string  $text   Text to parse BBCode.
+     *
+     * @return  string  Parsed text.
+     */
+    public static function parseBBCode($text)
+    {
+        require_once( "phar://".AKPATH_HTML."/jbbcode/jbbcode.phar/Parser.php" );
 
-		$parser = new JBBCode\Parser();
-		$parser->loadDefaultCodes();
-		 
-		$parser->parse($text);
-		 
-		print $parser->getAsHtml();	
-	}
-	
-	
-	
-	/*
-	 * function modal
-	 * @param $id
-	 */
-	
-	public static function modal($id, $content)
-	{
-		$doc = JFactory::getDocument();
-		
-		if(JVERSION >= 3) {
-			
-		}else{
-			JHtml::_('behavior.modal');
-			
-			$script =
-<<<SCRIPT
-			window.addEvent('domready', function(){
-				SqueezeBox.assign($$('a#{$id}'), {
-					parse: 'rel',
-					onOpen: function(e) {
-						e.getChildren().show();
-					}
-				});
-				
-				$('{$content}').hide();
-				
-			});
-SCRIPT;
-
-			$doc->addScriptDeclaration($script);
-		}
-	}
+        $parser = new JBBCode\Parser();
+        $parser->loadDefaultCodes();
+         
+        $parser->parse($text);
+         
+        print $parser->getAsHtml();    
+    }
+    
 }
 
 

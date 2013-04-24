@@ -19,76 +19,76 @@ JFormHelper::loadFieldType('List');
  */
 class JFormFieldFieldtype extends JFormFieldList
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var		string
-	 * @since	1.6
-	 */
-	public $type = 'Fieldtype';
-	
-	public $value ;
-	
-	public $name ;
-	
-	
-	
-	/**
-	 * Method to get the field input markup.
-	 *
-	 * @return	string	The field input markup.
-	 * @since	1.6
-	 */
-	public function getOptions()
-	{
-		//$this->value = JRequest::getVar('field_type') ;
-		$this->setFieldData();
-		
-		if(!$this->value){
-			$this->value = (string)$this->element['default'];
-		}
-		
-		JRequest::setVar('field_type', $this->value, 'method', true) ;
-		
-		$element = $this->element ;
-		
-		$types = JFolder::files(AKPATH_FORM.'/forms/attr');
-		
-		JFactory::getApplication()
-			->triggerEvent( 'onCCKEnginePrepareFieldtypes' , array( &$types , &$this, &$element)) ;
-		
-		$options = array();
-		
-		foreach( $types as $type ):
-			$type = str_replace('.xml', '', $type);
-			$options[] = JHtml::_(
+    /**
+     * The form field type.
+     *
+     * @var        string
+     * @since    1.6
+     */
+    public $type = 'Fieldtype';
+    
+    public $value ;
+    
+    public $name ;
+    
+    
+    
+    /**
+     * Method to get the field input markup.
+     *
+     * @return    string    The field input markup.
+     * @since    1.6
+     */
+    public function getOptions()
+    {
+        //$this->value = JRequest::getVar('field_type') ;
+        $this->setFieldData();
+        
+        if(!$this->value){
+            $this->value = (string)$this->element['default'];
+        }
+        
+        JRequest::setVar('field_type', $this->value, 'method', true) ;
+        
+        $element = $this->element ;
+        
+        $types = JFolder::files(AKPATH_FORM.'/forms/attr');
+        
+        JFactory::getApplication()
+            ->triggerEvent( 'onCCKEnginePrepareFieldtypes' , array( &$types , &$this, &$element)) ;
+        
+        $options = array();
+        
+        foreach( $types as $type ):
+            $type = str_replace('.xml', '', $type);
+            $options[] = JHtml::_(
                 'select.option', (string) $type,
                 JText::_('LIB_WINDWALKER_FIELDTYPE_'.strtoupper($type))
             );
-		endforeach;
-		
-		// Merge any additional options in the XML definition.
+        endforeach;
+        
+        // Merge any additional options in the XML definition.
         $options = array_merge(parent::getOptions(), $options);
  
         return $options;
-	}
-	
-	
-	/*
-	 * function setFieldData
-	 * @param arg
-	 */
-	
-	public function setFieldData()
-	{
-		if(!JRequest::getVar('id') ){
-			$app = JFactory::getApplication() ;
-			$app->setUserState('lib_windwalker.cck.fields' , null );
-		}
-		
-		$type = JRequest::getVar('field_type') ;
-		
-		$this->value = $type ? $type : $this->value;
-		
-	}
+    }
+    
+    
+    /*
+     * function setFieldData
+     * @param arg
+     */
+    
+    public function setFieldData()
+    {
+        if(!JRequest::getVar('id') ){
+            $app = JFactory::getApplication() ;
+            $app->setUserState('lib_windwalker.cck.fields' , null );
+        }
+        
+        $type = JRequest::getVar('field_type') ;
+        
+        $this->value = $type ? $type : $this->value;
+        
+    }
 }
