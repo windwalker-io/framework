@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Form
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -13,17 +13,29 @@ defined('_JEXEC') or die;
 
 jimport('libraries.form.form');
 
+/**
+ * A Form constructor class extends from JForm to enhance some function.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Form 
+ */
 class AKForm extends JForm
 {
-    
+    /**
+     * Fields group.
+     *
+     * @var array 
+     */
     public $fields ;
     
-    
-    /*
-     * function handlePostData
-     * @param $data
+    /**
+     * Get data and handle them for prepare save.
+     * 
+     * @param   string  $profile    A fields group name.
+     * @param   array   $data       The data for save.
+     *
+     * @return  array   Handled tree data.
      */
-    
     public function getDataForSave($profile, $data = null)
     {
         if($data) {
@@ -39,13 +51,14 @@ class AKForm extends JForm
         return $data2;
     }
     
-    
-    
-    /*
-     * function handlePostData
-     * @param $data
+    /**
+     * Get data and set every fields' value to format for show.
+     * 
+     * @param   string  $profile    A fields group name.
+     * @param   array   $data       The data for show.
+     *
+     * @return  array   Handled tree data.
      */
-    
     public function getDataForShow($profile, $data = null)
     {
         if($data) {

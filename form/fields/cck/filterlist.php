@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Form.CCK
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -15,22 +15,23 @@ JForm::addFieldPath( AKPATH_FORM.'/fields');
 JFormHelper::loadFieldType('List');
 
 /**
- * Supports an HTML select list of categories
+ * Supports an HTML select list of Filter.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Form.CCK 
  */
 class JFormFieldFilterlist extends JFormFieldList
 {
     /**
      * The form field type.
      *
-     * @var        string
-     * @since    1.6
+     * @var    string
      */
     public $type = 'Filterlist';
     
     public $value ;
     
     public $name ;
-    
     
     
     /**
@@ -113,6 +114,5 @@ class JFormFieldFilterlist extends JFormFieldList
  
         return $options;
     }
-    
     
 }

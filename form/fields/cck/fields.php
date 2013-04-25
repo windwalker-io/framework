@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Form.CCK
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -14,15 +14,17 @@ defined('_JEXEC') or die;
 JForm::addFieldPath( AKPATH_FORM.'/fields');
 
 /**
- * Supports an HTML select list of categories
+ * Supports an HTML select list of CCK fields
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Form.CCK 
  */
 class JFormFieldFields extends JFormField
 {
     /**
      * The form field type.
      *
-     * @var        string
-     * @since    1.6
+     * @var string
      */
     public $type = 'Fields';
     
@@ -37,7 +39,6 @@ class JFormFieldFields extends JFormField
      * Method to get the field input markup.
      *
      * @return    string    The field input markup.
-     * @since    1.6
      */
     public function getInput()
     {
@@ -114,12 +115,9 @@ class JFormFieldFields extends JFormField
 
     }
     
-    
-    /*
-     * function getValues
-     * @param 
+    /**
+     * Get values from session.
      */
-    
     public function getValues()
     {
         if($this->value) {
@@ -139,13 +137,9 @@ class JFormFieldFields extends JFormField
         }
     }
     
-    
-    
-    /*
-     * function addFieldJs
-     * @param 
+    /**
+     * Add JS to head.
      */
-    
     public function addFieldJs()
     {
         $doc = JFactory::getDocument();

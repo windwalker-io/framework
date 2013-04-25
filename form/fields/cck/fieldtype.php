@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Form.CCK
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -15,7 +15,10 @@ JForm::addFieldPath( AKPATH_FORM.'/fields');
 JFormHelper::loadFieldType('List');
 
 /**
- * Supports an HTML select list of categories
+ * Supports an HTML select list of Fieldtype.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Form.CCK 
  */
 class JFormFieldFieldtype extends JFormFieldList
 {
@@ -23,21 +26,17 @@ class JFormFieldFieldtype extends JFormFieldList
      * The form field type.
      *
      * @var        string
-     * @since    1.6
      */
     public $type = 'Fieldtype';
     
     public $value ;
     
     public $name ;
-    
-    
-    
+
     /**
      * Method to get the field input markup.
      *
      * @return    string    The field input markup.
-     * @since    1.6
      */
     public function getOptions()
     {
@@ -73,12 +72,9 @@ class JFormFieldFieldtype extends JFormFieldList
         return $options;
     }
     
-    
-    /*
-     * function setFieldData
-     * @param arg
+    /**
+     * If default value exists.
      */
-    
     public function setFieldData()
     {
         if(!JRequest::getVar('id') ){

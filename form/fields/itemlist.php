@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Form
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -15,7 +15,10 @@ jimport('joomla.html.html');
 JFormHelper::loadFieldClass('list');
 
 /**
- * Supports an HTML select list.
+ * Supports an HTML select list for target items.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Form
  */
 class JFormFieldItemlist extends JFormFieldList
 {
@@ -23,39 +26,75 @@ class JFormFieldItemlist extends JFormFieldList
      * The form field type.
      *
      * @var        string
-     * @since    1.6
      */
     public $type = 'Itemlist';
     
+    /**
+     * The value of the form field.
+     *
+     * @var    mixed 
+     */
     public $value ;
     
+    /**
+     * The name of the form field.
+     *
+     * @var    string
+     */
     public $name ; 
     
+    /**
+     * List name.
+     *
+     * @var string 
+     */
     protected $view_list ;
     
+    /**
+     * Item name.
+     *
+     * @var string 
+     */
     protected $view_item ;
     
+    /**
+     * Extension name, eg: com_content.
+     *
+     * @var string 
+     */
     protected $extension ;
     
+    /**
+     * Component name without ext type, eg: content.
+     *
+     * @var string 
+     */
     protected $component ;
     
     
-    
+    /**
+     * Method to get the list of files for the field options.
+     * Specify the target directory with a directory attribute
+     * Attributes allow an exclude mask and stripping of extensions from file name.
+     * Default attribute may optionally be set to null (no file) or -1 (use a default).
+     *
+     * @return  array  The field option objects.
+     */
     public function getOptions()
     {
         // Initialise variables.
         // ========================================================================
         $this->setElement();
-        $options     = array();
-        $name         = (string) $this->element['name'];
-        $show_root    = (string) $this->element['show_root'];
-        $published    = (string) $this->element['published'] ;
-        $nested        = (string) $this->element['nested'] ;
-        $key_field    = $this->element['key_field']     ? (string) $this->element['key_field']         : 'id';
+        $options    = array();
+        $name       = (string) $this->element['name'];
+        $show_root  = (string) $this->element['show_root'];
+        $published  = (string) $this->element['published'] ;
+        $nested     = (string) $this->element['nested'] ;
+        $key_field  = $this->element['key_field']     ? (string) $this->element['key_field']         : 'id';
         $value_field= $this->element['value_field'] ? (string) $this->element['value_field']     : 'title';
-        $select        = $this->element['select'] ;
+        $select     = $this->element['select'] ;
         $db         = JFactory::getDbo();
-        $q             = $db->getQuery(true) ;
+        $q          = $db->getQuery(true) ;
         
         
         
@@ -63,7 +102,7 @@ class JFormFieldItemlist extends JFormFieldList
         // ========================================================================
         $id     = JRequest::getVar('id') ;
         $option = JRequest::getVar('option') ;
-        $view     = JRequest::getVar('view') ;
+        $view   = JRequest::getVar('view') ;
         $layout = JRequest::getVar('layout') ;
         
         if($nested){
@@ -102,8 +141,8 @@ class JFormFieldItemlist extends JFormFieldList
         // Set Options
         // ========================================================================
         foreach( $items as $item ):
-            $item = new JObject($item);
-            $level = !empty($item->level) && $nested ? $item->level : 0 ;
+            $item   = new JObject($item);
+            $level  = !empty($item->level) && $nested ? $item->level : 0 ;
             $options[] = JHtml::_('select.option', $item->$key_field, str_repeat('- ', $level).$item->$value_field );
         endforeach;
         
@@ -177,13 +216,9 @@ class JFormFieldItemlist extends JFormFieldList
         return $options;
     }
     
-    
-    
-    /*
-     * function setElement
-     * @param 
+    /**
+     * Set some element attributes to class variable.  
      */
-    
     public function setElement()
     {
         $view_item = (string) $this->element['view_item'] ;

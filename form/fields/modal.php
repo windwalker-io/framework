@@ -20,16 +20,35 @@ class JFormFieldModal extends JFormField
      * The form field type.
      *
      * @var        string
-     * @since    1.6
      */
     protected $type = 'Modal';
     
+    /**
+     * List name.
+     *
+     * @var string 
+     */
     protected $view_list ;
     
+    /**
+     * Item name.
+     *
+     * @var string 
+     */
     protected $view_item ;
     
+    /**
+     * Extension name, eg: com_content.
+     *
+     * @var string 
+     */
     protected $extension ;
     
+    /**
+     * Component name without ext type, eg: content.
+     *
+     * @var string 
+     */
     protected $component ;
     
     
@@ -37,7 +56,6 @@ class JFormFieldModal extends JFormField
      * Method to get the field input markup.
      *
      * @return    string    The field input markup.
-     * @since    1.6
      */
     public function getInput()
     {
@@ -107,12 +125,9 @@ class JFormFieldModal extends JFormField
         return implode("\n", $html);
     }
     
-    
-    /*
-     * function setElement
-     * @param 
+    /**
+     * Set some element attributes to class variable.  
      */
-    
     public function setElement()
     {
         $view_item = (string) $this->element['view_item'] ;
@@ -134,12 +149,9 @@ class JFormFieldModal extends JFormField
         $this->component = str_replace('com_', '', $this->extension );
     }
     
-    
-    /*
-     * function getTitle
-     * @param 
+    /**
+     * Get item title.
      */
-    
     public function getTitle()
     {
         $ctrl = $this->view_list ;
@@ -162,13 +174,9 @@ class JFormFieldModal extends JFormField
         return $title ;
     }
     
-    
-    
-    /*
-     * function getLink
-     * @param 
+    /**
+     * Get item link.
      */
-    
     public function getLink()
     {
         // Avoid self
