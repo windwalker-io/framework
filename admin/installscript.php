@@ -37,11 +37,11 @@ $grid->setRowCell('info', JText::_('COM_INSTALLER_MSG_DATABASE_INFO') , array())
 $i = 0 ;
 
 if(JVERSION >= 3){
-    $tick     = '<i class="icon-publish"></i>' ;
-    $cross     = '<i class="icon-unpublish"></i>' ;
+    $tick  = '<i class="icon-publish"></i>' ;
+    $cross = '<i class="icon-unpublish"></i>' ;
 }else{
-    $tick     = '<img src="templates/bluestork/images/admin/tick.png" alt="Success" />' ;
-    $cross     = '<img src="templates/bluestork/images/admin/publish_y.png" alt="Fail" />' ;
+    $tick  = '<img src="templates/bluestork/images/admin/tick.png" alt="Success" />' ;
+    $cross = '<img src="templates/bluestork/images/admin/publish_y.png" alt="Fail" />' ;
 }
 
 $td_class = array('style' => 'text-align:center;') ;

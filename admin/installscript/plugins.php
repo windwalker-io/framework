@@ -42,7 +42,7 @@ if(!empty($plugins)){
             $installer = new JInstaller();
             if( $result[] = $installer->install($install_path) ){
                 
-                $plg_group     = (string) $installer->manifest['group'] ;
+                $plg_group = (string) $installer->manifest['group'] ;
                 
                 // Enable this plugin.
                 if($type == 'install'):
