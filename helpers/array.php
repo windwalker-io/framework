@@ -19,14 +19,13 @@ defined('_JEXEC') or die;
  * @subpackage  AKHelper
  */
 class AKHelperArray {
-    
-    
+
     /**
      * Pivot a two-dimensional matrix array.
      * 
-     * @param     array     $array     An array with two level.
+     * @param  array    $array  An array with two level.
      *
-     * @return array An pivoted array.
+     * @return array    An pivoted array.
      */
     public static function pivot($array)
     {
@@ -47,8 +46,7 @@ class AKHelperArray {
         return $new ;
     }
     
-    
-    /*
+    /**
      * Pivot Array, separate by key. Same as AKHelperArray::pivot().
      * 
      * From:
@@ -84,7 +82,6 @@ class AKHelperArray {
      *
      * @return array An pivoted array.
      */
-    
     public static function pivotByKey($array)
     {
         $array     = (array) $array ;
@@ -104,12 +101,11 @@ class AKHelperArray {
         return $new ;
     }
     
-    
-    
     /**
      * Same as AKHelperArray::pivot().
      * 
      * From:
+     * 
      *          [0] => Array
      *             (
      *                 [value] => aaa
@@ -140,7 +136,6 @@ class AKHelperArray {
      *
      * @return array An pivoted array.
      */
-    
     public static function pivotBySort($array)
     {
         $array     = (array) $array ;
@@ -162,16 +157,14 @@ class AKHelperArray {
         return $new ;
     }
     
-    
-    
     /**
      * Pivot $origin['prefix_xxx'] to $target['prefix']['xxx'].
      * 
-     * @param    string    $prefix    A prefix text.
+     * @param    string   $prefix    A prefix text.
      * @param    array    $origin    Origin array to pivot.
      * @param    array    $target    A target array to store pivoted value.
      *
-     * @return     array    Pivoted array.
+     * @return   array    Pivoted array.
      */
     public static function pivotFromPrefix( $prefix ,$origin, $target = null)
     {
@@ -186,16 +179,14 @@ class AKHelperArray {
         return $target;
     }
     
-    
-    
     /**
      * Pivot $origin['prefix']['xxx'] to $target['prefix_xxx'].
      * 
-     * @param    string    $prefix    A prefix text.
+     * @param    string   $prefix    A prefix text.
      * @param    array    $origin    Origin array to pivot.
      * @param    array    $target    A target array to store pivoted value.
      *
-     * @return     array    Pivoted array.
+     * @return   array    Pivoted array.
      */
     public static function pivotToPrefix( $prefix ,$origin, $target = null)
     {
@@ -212,20 +203,19 @@ class AKHelperArray {
         return $target;
     }
     
-    
     /**
     * Query a two-dimensional array values to get second level array.
     * 
-    * @param    array    $array        An array to query.
+    * @param    array    $array      An array to query.
     * @param    mixed    $queries    Query strings, may contain Comparison Operators: '>', '>=', '<', '<='.
     *                                 <br />Example:
     *                                     <br />array(
     *                                         <br />'id'             => 6 ,     // Get all elements where id=6
     *                                         <br />'>published'     => 0     // Get all elements where published>0
     *                                     <br />) ;
-    * @param    boolean    $keepKey    Keep origin array keys.
+    * @param    boolean  $keepKey    Keep origin array keys.
     *
-    * @return    array    An new two-dimensional array queried.
+    * @return   array    An new two-dimensional array queried.
     */
     public static function query($array, $queries = array(), $keepKey = false)
     {
@@ -294,16 +284,14 @@ class AKHelperArray {
         return $results ;
     }
     
-    
-    
     /**
     * Set a value into array or object.
     * 
-    * @param    mixed    $array    An array to set value.
-    * @param    string    $key    Array key to store this value.
-    * @param    mixed    $value    Value which to set into array or object.
+    * @param    mixed    $array  An array to set value.
+    * @param    string   $key    Array key to store this value.
+    * @param    mixed    $value  Value which to set into array or object.
     *
-    * @return    mixed    Result array or object.
+    * @return   mixed    Result array or object.
     */
     public static function setValue(&$array, $key, $value)
     {
@@ -316,16 +304,14 @@ class AKHelperArray {
         }
     }
     
-    
-    
     /**
     * A function like JArrayHelper::getValue(), but support object.
     * 
-    * @param    mixed    $array        An array or object to getValue.
-    * @param    string    $key        Array key to get value. 
+    * @param    mixed    $array      An array or object to getValue.
+    * @param    string   $key        Array key to get value. 
     * @param    mixed    $default    Default value if key not exists.
     *
-    * @return    mixed    The value.
+    * @return   mixed    The value.
     */
     public static function getValue(&$array, $key, $default = null)
     {

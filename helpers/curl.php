@@ -32,9 +32,9 @@ class AKHelperCurl
     /**
     * Request a page and return it as string.
     * 
-    * @param    string    $url    	A url to request.
+    * @param    string    $url      A url to request.
     * @param    string    $method   Request method, GET or POST.
-    * @param    string    $query    Query string. eg: 'option=com_content&id=11&Itemid=125'
+    * @param    string    $query    Query string. eg: 'option=com_content&id=11&Itemid=125'. <br /> Only use for POST.
     *
     * @return    mixed    If success, return string, or return false.
     */
@@ -91,7 +91,7 @@ class AKHelperCurl
     * @param    string    $url  A url to request.
     * @param    string    $path A system path with file name to save it.    
     *
-    * @return   boolean Success or Fail.
+    * @return   boolean   Success or Fail.
     */
     public static function getFile($url=null, $path=null)
     {

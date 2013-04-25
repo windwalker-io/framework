@@ -12,14 +12,20 @@
 // No direct access
 defined('_JEXEC') or die;
 
-
+/**
+ * A UI helper to generate modal etc.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperUi {    
     
-    /*
-     * function modal
-     * @param $id
+    /**
+     * Set a HTML element as modal container.
+     * 
+     * @param   string  $selector   Modal ID to select element.
+     * @param   array   $option     Modal options. 
      */
-    
     public static function modal($selector, $option = array())
     {
         $doc = JFactory::getDocument();
@@ -48,12 +54,15 @@ SCRIPT;
         }
     }
     
-    
-    /*
-     * function modalLink
-     * @param $title
+    /**
+     * The link to open modal.
+     * 
+     * @param   string  Modal title.
+     * @param   string  Modal select ID.
+     * @param   array   modal params.
+     *
+     * @return  string  Link body text.    
      */
-    
     public static function modalLink($title, $selector, $option = array())
     {
         $tag     = JArrayHelper::getValue($option, 'tag', 'a');

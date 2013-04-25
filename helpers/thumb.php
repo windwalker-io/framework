@@ -12,34 +12,81 @@
 // No direct access
 defined('_JEXEC') or die;
 
+// Setting some const.
 $option = JRequest::getVar('option') ;
 $params = JComponentHelper::getParams($option) ;
 
-define('AKTHUMB_CACHE_PATH',     JPath::clean(JPATH_ROOT.'/'.$params->get('thumb_cache_path', 'cache/thumbs/cache')) ) ;
+// Thumb cache path.
+define('AKTHUMB_CACHE_PATH',    JPath::clean(JPATH_ROOT.'/'.$params->get('thumb_cache_path', 'cache/thumbs/cache')) ) ;
+// Thumb cache URL.
 define('AKTHUMB_CACHE_URL',     JURI::root().$params->get('thumb_cache_url', 'cache/thumbs/cache' ) ) ;
-
+// Thumb temp path.
 define('AKTHUMB_TEMP_PATH',     JPath::clean(JPATH_ROOT.'/'.$params->get('thumb_temp_path', 'cache/thumbs/temp')) ) ;
-define('AKTHUMB_TEMP_URL',         JURI::root().$params->get('thumb_temp_url', 'cache/thumbs/temp') ) ;
+// Thumb temp URL.
+define('AKTHUMB_TEMP_URL',      JURI::root().$params->get('thumb_temp_url', 'cache/thumbs/temp') ) ;
 
-
+/**
+ * A quick thumb generator, will return generated thumb url.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperThumb
 {
+    /**
+    * Thumb cache path.
+    *
+    * @var string 
+    */ 
+    public static $cache_path   = AKTHUMB_CACHE_PATH ;
     
-    public static $cache_path     = AKTHUMB_CACHE_PATH ;
+    /**
+    * Thumb cache URL.
+    *
+    * @var string 
+    */
+    public static $cache_url    = AKTHUMB_CACHE_URL ;
     
-    public static $cache_url     = AKTHUMB_CACHE_URL ;
+    /**
+    * Thumb temp path.
+    *
+    * @var string 
+    */
+    public static $temp_path    = AKTHUMB_TEMP_PATH ;
     
-    public static $temp_path     = AKTHUMB_TEMP_PATH ;
+    /**
+    * Thumb temp URL.
+    *
+    * @var string 
+    */
+    public static $temp_url     = AKTHUMB_TEMP_URL ;
     
-    public static $temp_url        = AKTHUMB_TEMP_URL ;
-    
+    /**
+     * Default image URL.
+     *
+     * Use some placeholder to replace variable.
+     * - {width}    => Image width.
+     * - {height}   => Image height.
+     * - {zc}       => Crop or not.
+     * - {q}        => Image quality.
+     * - {file_type}=> File type.
+     *
+     * @var string 
+     */
     public static $default_image= 'http://placehold.it/{width}x{height}' ;
     
-    /*
-     * function resize
-     * @param $arg
+   /**
+     * Resize an image, auto catch it from remote host and generate a new thumb in cache dir.
+     * 
+     * @param   string  $url        Image URL, recommend a absolute URL.
+     * @param   integer $width      Image width, do not include 'px'.
+     * @param   integer $height     Image height, do not include 'px'.
+     * @param   boolean $zc         Crop or not.
+     * @param   integer $q          Image quality
+     * @param   string  $file_type  File type.
+     *
+     * @return  string  The cached thumb URL.    
      */
-    
     public static function resize($url = null, $width=100, $height=100,$zc=0, $q=85, $file_type = 'jpg' )
     {
         if(!$url) return self::getDefaultImage($width, $height, $zc, $q, $file_type);
@@ -102,11 +149,14 @@ class AKHelperThumb
         }
     }
     
-    /*
-     * function getImagePath
-     * @param $url
+    /**
+     * Get the origin image path, if is a remote image, will store in temp dir first.
+     * 
+     * @param   string  $url    The image URL.
+     * @param   string  $hash   Not available now..
+     *
+     * @return  string  Image path.    
      */
-    
     public static function getImagePath($url, $hash=null)
     {
         $self     = JFactory::getURI() ;
@@ -137,11 +187,16 @@ class AKHelperThumb
         return $path ;
     }
     
-    /*
-     * function loadImage
-     * @param $arg
+    /**
+     * Crop image, will count image with height percentage, and crop from middle.
+     * 
+     * @param   JImage  A JImage object.
+     * @param   integer Target width.
+     * @param   integer Target height.
+     * @param   object  Image information.
+     *
+     * @return  JImage Croped image object.    
      */
-    
     public static function crop($img, $w, $h, $data)
     {
         $p  = $w / $h ;
@@ -174,33 +229,35 @@ class AKHelperThumb
         return $img ;
     }
     
-    /*
-     * function setHash
-     * @param $arg
+    /**
+     * Set image name hash, not available now.
      */
-    
     public static function setHash($path ,$width, $height,$zc, $q)
     {
         
     }
     
-    
-    /*
-     * function setDefaultImage
-     * @param $url
+    /**
+     * Set a new default image placeholder.
+     * 
+     * @param   string  $url    Default image placeholder.
      */
-    
     public static function setDefaultImage($url)
     {
         self::$default_image = $url ;
     }
     
-    
-    /*
-     * function getDefaultImage
-     * @param 
+    /**
+     * Get default image and replace the placeholders.
+     * 
+     * @param   integer $width      Image width, do not include 'px'.
+     * @param   integer $height     Image height, do not include 'px'.
+     * @param   boolean $zc         Crop or not.
+     * @param   integer $q          Image quality
+     * @param   string  $file_type  File type.
+     *
+     * @return  string  Default image.    
      */
-    
     public static function getDefaultImage($width=100, $height=100,$zc=0, $q=85, $file_type = 'jpg' )
     {
         $replace['{width}']     = $width ;
@@ -214,58 +271,54 @@ class AKHelperThumb
         return $url ;
     }
     
-    
-    /*
-     * function setCachePath
-     * @param $path
+    /**
+     * Set cache path, and all image will cache in here.
+     * 
+     * @param   string  Cache path. 
      */
-    
     public static function setCachePath($path)
     {    
         self::$cache_path = $path ;
     }
     
-    
-    /*
-     * function setCacheUrl
-     * @param $path
+    /**
+     * Set cache URL, and all image will cll from here.
+     * 
+     * @param   string  Cache URL. 
      */
-    
     public static function setCacheUrl($url)
     {    
         self::$cache_url = $url ;
     }
     
-    
-    /*
-     * function setTempPath
-     * @param $path
+    /**
+     * Set temp path, and all remote image will store in here.
+     * 
+     * @param   string  Temp path. 
      */
-    
     public static function setTempPath($path)
     {
         self::$temp_path = $path ;
     }
     
-    
-    /*
-     * function setCachePosition
-     * @param $path
+    /**
+     * Set cache position, will auto set cache path, url and temp path.
+     *
+     * If position set in: "cache/thumb"
+     * - Cache path:    ROOT/cache/thumb/cache
+     * - Temp path:     ROOT/cache/thumb/temp
+     * - Cache URL:     http://your-site.com/cache/thumb/cache/
      */
-    
     public static function setCachePosition($path)
     {
         self::setCachePath( JPATH_ROOT . '/' . trim($path, '/') . '/cache' ) ;
-        self::setTempPath(     JPATH_ROOT . '/' . trim($path, '/') . '/temp' ) ;
-        self::setCacheUrl( trim($path, '/') . '/cache' ) ;
+        self::setTempPath(  JPATH_ROOT . '/' . trim($path, '/') . '/temp' ) ;
+        self::setCacheUrl(  trim($path, '/') . '/cache' ) ;
     }
     
-    
-    /*
-     * function resetCachePosition
-     * @param 
+    /**
+     * Reset cache position.
      */
-    
     public static function resetCachePosition()
     {
         self::setCachePath( AKTHUMB_CACHE_PATH ) ;
@@ -273,12 +326,11 @@ class AKHelperThumb
         self::setCacheUrl( AKTHUMB_CACHE_URL ) ;
     }
     
-    
-    /*
-     * function clearCache
-     * @param 
+    /**
+     * Delete all cache and temp images.
+     * 
+     * @param   boolean $temp   Is delete temp dir too?
      */
-    
     public static function clearCache($temp = false)
     {
         if(JFolder::exists(self::$cache_path)){

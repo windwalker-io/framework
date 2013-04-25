@@ -12,19 +12,37 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
+ /**
+ * To include component inner-plugin.
+ *
+ * All inner-plugin put in [component]/includes/plugins.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperPlugin
 {
-    
-    protected static $version ;
-    
-    protected static $plugins ;
-    
-    /*
-     * function get
-     * @param 
+    /**
+     * Version means plugin name. If plugin "pro" exists, verion pro exists.
+     *
+     * @var array 
      */
+    protected static $version = array() ;
     
+    /**
+     * Store all plugins.
+     *
+     * @var array 
+     */
+    protected static $plugins = array() ;
+    
+    /**
+     * Is a plugin exists. Return True or False.
+     * 
+     * @param   string  $version    Plugin name.
+     *
+     * @return  boolean Plugin exists or not.    
+     */
     public static function get($version)
     {
         if(!empty(self::$version[$version])){
@@ -34,11 +52,9 @@ class AKHelperPlugin
         return false ;
     }
     
-    /*
-     * function detectVersion
-     * @param 
+    /**
+     * Attach all inner-plugins.
      */
-    
     public static function attachPlugins()
     {
         jimport('joomla.filesystem.folder');
@@ -53,11 +69,13 @@ class AKHelperPlugin
         endforeach;
     }
     
-    /*
-     * function attachProPlugin
-     * @param 
+    /**
+     * Attach one inner-plugin.
+     * 
+     * @param   string  $name   Plugin name.
+     *
+     * @return  boolean Attach success or not.    
      */
-    
     public static function attachPlugin($name)
     {
         $app     = JFactory::getApplication() ;
@@ -89,5 +107,4 @@ class AKHelperPlugin
         }
         
     }
-    
 }

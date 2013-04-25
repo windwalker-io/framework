@@ -12,17 +12,32 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
+/**
+ * A Loader for WindWalker, but not recommended to use now.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperLoader
 {
-    
+    /**
+     * Cahche files' path, do not include twice.
+     *
+     * @var array 
+     */
     public static $files = array() ;
     
-    /*
-     * function import
-     * @param $uri
+    /**
+     * Import a file by URI.
+     *
+     * Example: "site://models/items" AS ROOT/components/com_component/models/items.php
+     * <br /> OR "admin://includes/plugins/pro/pro" AS ROOT/administrator/components/com_component/includes/plugins/pro/pro.php
+     * 
+     * @param   string  The file URI.
+     * @param   string  Component option, eg: com_content.
+     *
+     * @return  boolean Include success or not.
      */
-    
     public static function import($uri, $option = null)
     {
         $key = $uri ;
@@ -42,6 +57,4 @@ class AKHelperLoader
             return false ;
         }
     }
-    
-    
 }

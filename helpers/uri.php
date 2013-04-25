@@ -12,23 +12,37 @@
 // No direct access
 defined('_JEXEC') or die;
 
-
+/**
+ * A URI helper to handle some common issue.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperUri {
     
+    /**
+     * Give a relative path, return path with host.
+     * 
+     * @param   string  $path    A system path.
+     *
+     * @return  string  Path with host added.
+     */
     public static function pathAddHost ( $path ) {
         
         if( !$path ) return ;
         
         // build path
         $uri = new JURI( $path );
-        if( $uri->getHost() ) return $path ;
+        if( $uri->getHost() ){
+            return $path ;
+        }
         
         $uri->parse( JURI::root() );
         $root_path = $uri->getPath();
         
         if(strpos($path, $root_path) === 0) {
-            $num = JString::strlen($root_path) ;
-            $path = JString::substr($path, $num) ;
+            $num    = JString::strlen($root_path) ;
+            $path   = JString::substr($path, $num) ;
         }
         
         $uri->setPath( $uri->getPath().$path );
@@ -38,27 +52,33 @@ class AKHelperUri {
         return $uri->toString();
     }
     
-    
-    
-    /*
-     * function pathAddSubfolder
-     * @param $path
+    /**
+     * Give a relative path, return path with subdir.
+     * 
+     * @param   string    $path    A system path.
+     *
+     * @return  string    Path with subdir added. 
      */
-    
     public static function pathAddSubfolder( $path )
     {
-        $uri         = JFactory::getURI() ;
-        $host         = $uri->getScheme().'://'.$uri->getHost();
-        $current     = JURI::root();
+        $uri        = JFactory::getURI() ;
+        $host       = $uri->getScheme().'://'.$uri->getHost();
+        $current    = JURI::root();
         
-        $subfolder     = str_replace( $host, '', $current );
-        $subfolder     = trim($subfolder, '/') ;
+        $subfolder  = str_replace( $host, '', $current );
+        $subfolder  = trim($subfolder, '/') ;
         
         return $subfolder . '/' . trim($path, '/') ;
     }
     
-    
-    
+    /**
+     * A base encode & decode function, will auto convert white space to plus to avoid errors.
+     * 
+     * @param   string    $action   'encode' OR 'decode'
+     * @param   string    $url      A url or a base64 string to convert.
+     *
+     * @return  string    URL or base64 decode string.
+     */
     public static function base64( $action , $url ) {
         
         switch($action) {
@@ -74,12 +94,19 @@ class AKHelperUri {
         return $url ;
     }
     
-    
-    /*
-     * function download
-     * @param $stream
+    /**
+     * A download function to hide real file path.
+     *  When call this function, will start download instantly.
+     *
+     * This function should call when view has not executed yet, if header sended,
+     *  the file which downloaded will error, because download by stream will
+     *  contain header in this file.
+     * 
+     * @param   string  $path       The file system path with filename & type.
+     * @param   boolean $absolute   Absolute URL or not.
+     * @param   boolean $stream     Use stream or redirect to download.
+     * @param   array   $option     Some download options.
      */
-    
     public static function download($path, $absolute = false, $stream = false, $option = array())
     {
         if($stream) {
@@ -104,32 +131,40 @@ class AKHelperUri {
             header('Content-length: '.$filesize);
             header('Content-Disposition: attachment; filename="' . $file['basename'] . '"');
             
-            $handle     = fopen($path, 'rb'); 
-            $buffer     = '';
-            $chunksize     = 1 * (1024 * 1024);
+            $handle    = fopen($path, 'rb'); 
+            $buffer    = '';
+            $chunksize = 1 * (1024 * 1024);
             
-            // Start Download File
+            // Start Download File by Stream
             while (!feof($handle)) { 
-              $buffer = fread($handle, $chunksize); 
-              echo $buffer; 
-              ob_flush(); 
-              flush(); 
+                $buffer = fread($handle, $chunksize); 
+                echo $buffer; 
+                ob_flush(); 
+                flush(); 
             }
             
             fclose($handle); 
             
             jexit();
         }else{
+            
             if(!$absolute){
                 $path = JURI::root().$path;
             }
             
+            // Redirect it.
             $app = JFactory::getApplication() ;
             $app->redirect( $path );
         }
     }
     
-    
+    /**
+     * Current URL, same as JURI::current() but add one params.
+     * 
+     * @param   boolean $hasQuery   Is return URL contain query strings?
+     *
+     * @return  string  Current URL.
+     */
     public static function current( $hasQuery = false ) {
         if( $hasQuery )
             return JFactory::getURI()->toString();
@@ -137,15 +172,18 @@ class AKHelperUri {
             return JURI::current();
     }
     
-    
-    /*
-     * function component
-     * @param $client
+    /**
+     * Get component URL.
+     * 
+     * @param   string  $client     Client name, 'site', 'admin', 'administrator'.
+     * @param   array   $option     Component option name.
+     * @param   boolean $absoulte   To get absolute URL or not.
+     *
+     * @return  string  Component URL.    
      */
-    
     public static function component($client = 'site', $option = null, $absoulte = false)
     {
-        $root     = $absoulte ? JURI::base() : '' ;
+        $root = $absoulte ? JURI::base() : '' ;
         if(!$option){
             $option = JRequest::getVar('option') ;
         }
@@ -157,26 +195,30 @@ class AKHelperUri {
         }
     }
     
-    
-    /*
-     * function windwalker
-     * @param $client
+    /**
+     * Get WindWalker URL.
+     * 
+     * @param   boolean $absoulte   To get absolute URL or not.
+     *
+     * @return  string  WindWalker URL.       
      */
-    
     public static function windwalker($absoulte = false)
     {
-        $root     = $absoulte ? JURI::base() : '' ;
+        $root   = $absoulte ? JURI::base() : '' ;
         $option = JRequest::getVar('option') ;
         
         return $root.'libraries/windwalker' ;
     }
     
-    
-    /*
-     * function safe
-     * @param $uri
+    /**
+     * Make a URL safe.
+     *
+     * - Replace white space to '%20'.
+     * 
+     * @param   string    $url    The URL you want to make safe.
+     *
+     * @return  string    Replaced URL.    
      */
-    
     public static function safe($uri)
     {
         $uri = (string) $uri ;

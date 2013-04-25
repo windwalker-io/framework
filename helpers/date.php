@@ -36,18 +36,18 @@ class AKHelperDate {
     /**
     * Get a new time offset from a origin time.
     *
-    * Example: AKHelperDate::offset( '2012-01-01', '5', 'y' ) == '2017-01-01' . 
+    * Example: AKHelperDate::offset( '2012-01-01', '5', 'y' ); will get a 5 year offset to: '2017-01-01' . 
     * 
     * @param    mixed   $date   Time which type is string or JDate object.
     * @param    integer $offset The offset number.
     * @param    unit    $unit   Offset unit:
-    *                                 <br /> 's', 'second'
-    *                                 <br /> 'm', 'minute'
-    *                                 <br /> 'h', 'hr', 'hour'
-    *                                 <br /> 'd', 'day'
-    *                                 <br /> 'w', 'week'
-    *                                 <br /> 'mon', 'month'
-    *                                 <br /> 'y', 'year'
+    *                                 <br /> - 's', 'second'
+    *                                 <br /> - 'm', 'minute'
+    *                                 <br /> - 'h', 'hr', 'hour'
+    *                                 <br /> - 'd', 'day'
+    *                                 <br /> - 'w', 'week'
+    *                                 <br /> - 'mon', 'month'
+    *                                 <br /> - 'y', 'year'
     *
     * @return   DateTime    A DateTime object.
     */

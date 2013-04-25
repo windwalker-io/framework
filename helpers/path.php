@@ -12,19 +12,35 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
+/**
+ * An extension path getter helper.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperPath
 {
-    
+    /**
+     * Default component option.
+     *
+     * @var string 
+     */
     static public $default_option = 'com_content' ;
     
+    /**
+     * Overrides a path, priority to use the new path, if not exists, use origin path.
+     *
+     * @var array
+     */
     static public $overrides    = array();
     
-    /*
-     * function admin
-     * @param $option
-     */
-    
+    /**
+      * Get compoent admin path.
+      * 
+      * @param	string	$option	Component option name.
+      *
+      * @return	string	Component admin path.
+      */
     public static function getAdmin($option = null)
     {
         $option = $option ? $option : self::$default_option ;
@@ -32,12 +48,13 @@ class AKHelperPath
         return $path = JPATH_ADMINISTRATOR."/components/{$option}" ;
     }
     
-    
-    /*
-     * function getSite
-     * @param $option
+    /**
+     * Get compoent site path.
+     * 
+     * @param   string    $option    Component option name.
+     *
+     * @return  string    Component site path.
      */
-    
     public static function getSite($option = null)
     {
         $option = $option ? $option : self::$default_option ;
@@ -45,12 +62,14 @@ class AKHelperPath
         return $path = JPATH_SITE."/components/{$option}" ;
     }
     
-    
-    /*
-     * function get
-     * @param $option = null
+    /**
+     * Get path on different client, site , admin ,or windwalker.
+     * 
+     * @param   string    $client    Client name, 'site', 'admin', 'administrator', 'ww' or 'windwalker'.
+     * @param   string    $option    Component option name.
+     *
+     * @return  string    Component or WindWalker path.
      */
-    
     public static function get( $client = null , $option = null)
     {
         $option = $option ? $option : self::$default_option ;
@@ -66,48 +85,43 @@ class AKHelperPath
         }
     }
     
-    
-    /*
-     * function setOption
-     * @param $option
+    /**
+     * Set a default component option.
+     * 
+     * @param   string    $option Component option name.
      */
-    
     public static function setOption($option)
     {
         self::$default_option = $option ;
     }
     
-    
-    
-    /*
-     * function getOption
-     * @param $option
+    /**
+     * Get current default option.
+     *
+     * @return  string    Component option name.
      */
-    
     public static function getOption()
     {
         return self::$default_option ;
     }
     
-    
-    
-    /*
-     * function getWWPath
-     * @param 
+    /**
+     * Get Windwalker path.
+     *
+     * @return  string    Windwalker root path.    
      */
-    
     public static function getWWPath()
     {
         return AKPATH_ROOT ;
     }
     
-    
-    
-    /*
-     * function getWWUrl
-     * @param $absolute
+    /**
+     * Get WindWalker URL.
+     * 
+     * @param   boolean    $absolute    True for absolute url.
+     *
+     * @return  string    Windwalker url.    
      */
-    
     public static function getWWUrl($absolute = false)
     {
         $path = 'libraries/windwalker' ;
@@ -121,13 +135,16 @@ class AKHelperPath
         
     }
     
-    
-    
-    /*
-     * function getOverridePath
-     * @param $path
+    /**
+     * Get the file override folder path.
+     *
+     * Need to add override first for a folder path,
+     * if override path not setted, will return origin path.
+     * 
+     * @param   string    $path    Origin path to get overridepath.
+     *
+     * @return  string    Result path.    
      */
-    
     public static function getOverridePath($path)
     {
         if( !empty( self::$overrides[ $path ] ) ) {
@@ -137,23 +154,22 @@ class AKHelperPath
         }
     }
     
-    
-    /*
-     * function setOverridePath
-     * @param $origin
+    /**
+     * Add an origin path and override path to make them linked.
+     * 
+     * @param   string    $origin      Origin path to override.
+     * @param   string    $override    Override path to replace origin path.
      */
-    
     public static function addOverridePath($origin, $override)
     {
         self::$overrides[$origin] = $override ;
     }
     
-    
-    /*
-     * function removeOverridePath
-     * @param $path
+    /**
+     * Remove an override path, make it unlinked with origin path.
+     * 
+     * @param   string    $path    Override path to unlinked. 
      */
-    
     public static function removeOverridePath($path)
     {
         unset( self::$overrides[$path] );

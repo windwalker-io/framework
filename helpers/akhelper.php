@@ -37,12 +37,11 @@ class AKHelper extends AKProxy
      * Gets a list of the actions that can be performed.
      *
      * @return   JObject
-     * @since    1.6
      */
     public static function getActions($option)
     {
         $user   = JFactory::getUser();
-        $result	= new JObject;
+        $result    = new JObject;
 
         $assetName = $option;
 
@@ -62,9 +61,7 @@ class AKHelper extends AKProxy
 
         return $result;
     }
-    
-    
-    
+
     /**
      * Print Array or Object as tree node.
      * 
@@ -74,14 +71,12 @@ class AKHelper extends AKProxy
     {
         echo '<pre>'.print_r($data, 1).'</pre>' ;
     }
-    
-    
-    
+
     /**
-    * Detect is this page are frontpage?
-    *
-    * @return    boolean    Is frontpage?
-    */
+     * Detect is this page are frontpage?
+     *
+     * @return    boolean    Is frontpage?
+     */
     public static function isHome() {
         $juri           = JFactory::getURI();
         $current_url    = $juri->toString();
@@ -91,16 +86,14 @@ class AKHelper extends AKProxy
         else 
             return false;
     }
-    
-    
-    
+
     /**
-    * Get Component params. This is a proxy to AKHelperSystem::getParams.
-    * 
-    * @param    string    $option    Component element name, eg: com_extension.
-    *
-    * @return   JRegistry   A JRegistry object.
-    */
+     * Get Component params. This is a proxy to AKHelperSystem::getParams.
+     * 
+     * @param    string     $option    Component element name, eg: com_extension.
+     *
+     * @return   JRegistry  A JRegistry object.
+     */
     public static function getParams($option = null)
     {
         return AKHelper::_('system.getParams', $option) ;
@@ -110,7 +103,7 @@ class AKHelper extends AKProxy
 if(!class_exists('AK')){
     
     /**
-    * A Proxy for AKHelper base class.
+    * An alias for AKHelper base class.
     *
     * @package     Windwalker.Framework
     * @subpackage  AKHelper

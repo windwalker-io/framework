@@ -12,20 +12,42 @@
 // No direct access
 defined('_JEXEC') or die;
 
-
+/**
+ * Handle some component system information.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperSystem
 {
-    static $config         = array();
-    
-    static $version      = array();
-    
-    static $profiler     = array() ;
-    
-        /*
-     * function getParams
-     * @param $option
+    /**
+     * A cache to store component system config (Not Joomla! component params).
+     *
+     * @var array 
      */
+    static $config        = array();
     
+    /**
+     * Version of component.
+     *
+     * @var array 
+     */
+    static $version        = array();
+    
+    /**
+     * Profiler store.
+     *
+     * @var array 
+     */
+    static $profiler    = array() ;
+    
+     /**
+     * Get component Joomla! params, a proxy of JComponentHelper::getParams($option) ;
+     * 
+     * @param   string    $option Component option name.
+     *
+     * @return  JRegistry    Component params object.
+     */
     public static function getParams($option = null)
     {
         if(!$option) {
@@ -37,18 +59,22 @@ class AKHelperSystem
         }
     }
     
-    
-    /*
-     * function getConfig
-     * @param $key
+    /**
+     * Get component system config, if first param not exists, will return all params object.
+     * 
+     * @param   string    $key        Param key.
+     * @param   string    $default    Default value if key not exists.
+     * @param   string    $option     Component option name.
+     *
+     * @return  mixed    Param value.    
      */
-    
     public static function getConfig($key = null, $default = null, $option = null)
     {
         if(!$option){
             $option = AKHelper::_('path.getOption') ;
         }
         
+        // Singleton & Lazy loading
         if(isset(self::$config[$option])) {
             if(!$key){
                 return self::$config[$option] ;
@@ -68,12 +94,16 @@ class AKHelperSystem
         }
     }
     
-    
-    /*
-     * function saveParams
-     * @param $params
+    /**
+     * Save component params to #__extension.
+     * 
+     * @param   mixed    $params        A params object, array or JRegistry object.
+     * @param   string    $element    Extension element name, eg: com_content, mod_modules.
+     * @param   string    $client        Client, 1 => 'site', 2 => 'administrator'.
+     * @param   string    $group        Group(folder) name for plugin.
+     *
+     * @return  boolean    Success or not.
      */
-    
     public static function saveParams($params, $element, $client = null, $group = null)
     {
         if( $params instanceof JRegistry ) {
@@ -104,12 +134,14 @@ class AKHelperSystem
         return $db->execute();
     }
     
-    
-    /*
-     * function saveConfig
-     * @param $params
+    /**
+     * Save component config to "config.json" in includes dir.
+     * 
+     * @param   mixed    $params        A config object, array or JRegistry object.
+     * @param   string    $option     Component option name.
+     *
+     * @return  boolean    Success or not.    
      */
-    
     public static function saveConfig($params, $option = null)
     {
         if( $params instanceof JRegistry ) {
@@ -122,12 +154,13 @@ class AKHelperSystem
         return JFile::write($path, $params) ;
     }
     
-    
-    /*
-     * function getVersion
-     * @param 
+    /**
+     * Get component version form manifest XML file.
+     * 
+     * @param   string    $option    Component option name.
+     *
+     * @return  string    Component version.
      */
-    
     public static function getVersion($option = null)
     {
         if(!$option){
@@ -144,13 +177,12 @@ class AKHelperSystem
         return self::$version[$option] = $xml->version ;
     }
     
-    
-    
-    /*
-     * function profiler
-     * @param $text
+    /**
+     * A helper to add JProfiler log mark. Need to trun on the debug mode.
+     * 
+     * @param   string    $text        Log text.
+     * @param   string    $namespace    The JProfiler instance ID. Default is the core profiler "Application". 
      */
-    
     public static function mark($text, $namespace = null)
     {
         
@@ -173,12 +205,11 @@ class AKHelperSystem
         self::$profiler[$namespace]->mark($text) ;
     }
     
-    
-    /*
-     * function getProfiler
-     * @param 
+    /**
+     * Render the profiler log data, and echo it..
+     * 
+     * @param   string    $namespace    The JProfiler instance ID. Default is the core profiler "Application".  
      */
-    
     public static function renderProfiler($namespace = null)
     {
         if(!$namespace) {

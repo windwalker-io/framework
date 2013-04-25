@@ -12,16 +12,31 @@
 // No direct access
 defined('_JEXEC') or die;
 
-
+/**
+ * Language helper to load extension ini file or other useful functions.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  AKHelper
+ */
 class AKHelperLang {
     
+    /**
+     * An API key for Google translate.
+     *
+     * @var string 
+     */
     const APT_KEY = 'AIzaSyC04nF4KXjfR2VQ0jsFm5vEd9LbyiXqbKw' ;
     
-    /*
-     * function translate
-     * @param $text
+    /**
+     * Translate a long text by Google, if it too long, will separate it..
+     * 
+     * @param   string    $text        String to translate.
+     * @param   string    $SourceLan   Translate from this language, eg: 'zh-tw'. Empty will auto detect.
+     * @param   string    $ResultLan   Translate to this language, eg: 'en'. Empty will auto detect.
+     * @param   integer   $separate    Separate text by a number of words, batch translate them and re combine to return.
+     *
+     * @return  string    Translated text.    
      */
-    
     public static function translate($text, $SourceLan = null, $ResultLan = null, $separate = 0)
     {
         // if text too big, separate it.
@@ -47,7 +62,15 @@ class AKHelperLang {
         return $result ;
     }
     
-    
+    /**
+     * A method to do Google translate.
+     * 
+     * @param   string    $text        String to translate.
+     * @param   string    $SourceLan   Translate from this language, eg: 'zh-tw'. Empty will auto detect.
+     * @param   string    $ResultLan   Translate to this language, eg: 'en'. Empty will auto detect.
+     *
+     * @return  string    Translated text.  
+     */
     public static function gTranslate ($text,$SourceLan,$ResultLan) {
         
         $url = new JURI();
@@ -75,13 +98,11 @@ class AKHelperLang {
         return $r[0]->translatedText ;
     }
     
-    
-    
-    /*
-     * function getLangFiles
-     * @param 
+    /**
+     * Load all language files from component.
+     * 
+     * @param   string    $lang    Language tag.
      */
-    
     public static function loadAll($lang = 'en-GB')
     {
         $folder = AKHelper::_('path.getAdmin').'/language/'.$lang ;
@@ -107,13 +128,12 @@ class AKHelperLang {
         endforeach;
     }
     
-    
-    
-    /*
-     * function loadLanguage
-     * @param $ext
+    /**
+     * Load language from an extension.
+     * 
+     * @param   string    $ext		Extension element name, eg: com_content, plg_group_name.
+     * @param   string    $client	site or admin. 
      */
-    
     public static function loadLanguage($ext = null, $client = 'site')
     {
         if(!$ext) {
