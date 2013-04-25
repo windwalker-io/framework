@@ -28,7 +28,7 @@ class AKHelperDb
     public static $nested = array();
     
     /**
-     * Get select query from tables array. A proxy to AKHelperQuery::getSelectList().
+     * Get select query from tables array. A proxy for AKHelperQuery::getSelectList().
      * 
      * @param   array    $tables   Tables name to get columns.
      * @param   boolean  $all      Contain a.*, b.* etc.
@@ -41,7 +41,7 @@ class AKHelperDb
     }
     
     /**
-     * Merge filter_fields with table columns. A proxy to AKHelperQuery::mergeFilterFields().
+     * Merge filter_fields with table columns. A proxy for AKHelperQuery::mergeFilterFields().
      * 
      * @param    array    $filter_fields    Filter fields from Model.
      * @param    array    $tables            Tables name to get columns.

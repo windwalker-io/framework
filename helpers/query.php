@@ -69,7 +69,7 @@ class AKHelperQuery
     }
     
     /**
-     * Merge filter_fields with table columns. A proxy to AKHelperQuery::mergeFilterFields().
+     * Merge filter_fields with table columns. A proxy for AKHelperQuery::mergeFilterFields().
      * 
      * @param    array    $filter_fields    Filter fields from Model.
      * @param    array    $tables           Tables name to get columns.

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Base
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,6 +11,12 @@
 // no direct access
 defined('_JEXEC') or die;
 
+/**
+ * A base proxy class for AKHelper to call any sub helpers.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Base 
+ */
 class AKProxy
 {
  
@@ -18,7 +24,6 @@ class AKProxy
      * An array to hold included paths
      *
      * @var    array 
-     * @since  11.1
      */
     protected static $includePaths = array();
  
@@ -26,10 +31,14 @@ class AKProxy
      * An array to hold method references
      *
      * @var    array 
-     * @since  11.1
      */
     protected static $registry = array();
     
+    /**
+     * A default prefix when method not exists, call this class instead.
+     *
+     * @var    string 
+     */
     protected static $prefix = 'AKHelper' ;
     
     
@@ -40,8 +49,6 @@ class AKProxy
      *                         prefix and class are optional and can be used to load custom html helpers.
      *
      * @return  array  Contains lowercase key, prefix, file, function.
-     *
-     * @since   11.1
      */
     protected static function extract($key)
     {
@@ -78,8 +85,6 @@ class AKProxy
      *                         html helpers.
      *
      * @return  mixed  self::call($function, $args) or False on error
-     *
-     * @since   11.1
      */
     public static function _($key)
     {
@@ -143,8 +148,6 @@ class AKProxy
      * @param   string  $function  Function or method
      *
      * @return  boolean  True if the function is callable
-     *
-     * @since   11.1
      */
     public static function register($key, $function)
     {
@@ -163,8 +166,6 @@ class AKProxy
      * @param   string  $key  The name of the key
      *
      * @return  boolean  True if a set key is unset
-     *
-     * @since   11.1
      */
     public static function unregister($key)
     {
@@ -184,8 +185,6 @@ class AKProxy
      * @param   string  $key  The name of the key
      *
      * @return  boolean  True if the key is registered.
-     *
-     * @since   11.1
      */
     public static function isRegistered($key)
     {
@@ -202,7 +201,6 @@ class AKProxy
      * @return  mixed   Function result or false on error.
      *
      * @see     http://php.net/manual/en/function.call-user-func-array.php
-     * @since   11.1
      */
     protected static function call($function, $args)
     {
@@ -230,8 +228,6 @@ class AKProxy
      * @param   string  $path  A path to search.
      *
      * @return  array  An array with directory elements
-     *
-     * @since   11.1
      */
     public static function addIncludePath($path = '', $prefix = null)
     {
@@ -257,35 +253,30 @@ class AKProxy
         return self::$includePaths[$prefix];
     }
     
-    
-    /*
-     * function setPrefix
-     * @param $prefix
+    /**
+     * Set current sub class prefix.
+     * 
+     * @param   string  $prefix  A helper name for component.
      */
-    
     public static function setPrefix($prefix)
     {
         self::$prefix = $prefix ;
         self::$includePaths[$prefix] = array();
     }
     
-    
-    /*
-     * function getPrefix
-     * @param 
+    /**
+     * Get current prefix.
+     *
+     * @return  string  Current helper name.    
      */
-    
     public static function getPrefix()
     {
         return self::$prefix ;
     }
     
-    
-    /*
-     * function show
-     * @param $var
+    /**
+     * A debug tool. 
      */
-    
     public static function get($var)
     {
         return self::$$var ;

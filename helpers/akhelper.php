@@ -88,7 +88,7 @@ class AKHelper extends AKProxy
     }
 
     /**
-     * Get Component params. This is a proxy to AKHelperSystem::getParams.
+     * Get Component params. This is a proxy for AKHelperSystem::getParams.
      * 
      * @param    string     $option    Component element name, eg: com_extension.
      *

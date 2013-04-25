@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Base
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,23 +11,23 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
+/**
+ * A Plugin Base class to provide some useful methods.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Base 
+ */
 class AKPlugin extends JPlugin
 {
-    // AKFramework Functions
-    // ====================================================================================
-    
-    
     /**
-     * function call
-     * 
-     * A proxy to call class and functions
-     * Example: $this->call('folder1.folder2.function', $args) ; OR $this->call('folder1.folder2.Class::function', $args)
+     * A proxy for call class and functions
+     *
+     * Example: $this->call('folder1.folder2.function', $args) ;
+     * <br /> OR $this->call('folder1.folder2.Class::function', $args)
      * 
      * @param    string    $uri    The class or function file path.
      * 
-     */
-    
+     */   
     public function call( $uri ) {
         // Split paths
         $path = explode( '.' , $uri );
@@ -74,16 +74,28 @@ class AKPlugin extends JPlugin
         
     }
     
-    
-    
+    /**
+     * Return a file path which name is same as this function.
+     * 
+     * @param   string  $func   Function name.
+     *
+     * @return  string  File path.
+     */
     public function includeEvent($func) {
         $include_path = JPATH_ROOT.'/'.$this->params->get('include_path', 'easyset');
         $event = trim($include_path, '/').'/'.'events'.DS.$func.'.php' ;
         if(file_exists( $event )) return $event ;
     }
     
-    
-    
+    /**
+     * If an array contain false, return false.
+     *
+     * If all elements are true, return true.
+     * 
+     * @param   array   $result An array contain event results.
+     *
+     * @return  boolean True if all true.
+     */
     public function resultBool($result = array()) {
         foreach( $result as $result ):
             if(!$result) return false ;
