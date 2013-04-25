@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Component
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -13,43 +13,67 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-
+/**
+ * Model class for handling lists of items.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Component 
+ */
 class AKModelList extends JModelList
 {
-    public $component ;
+    /**
+     * Component name.
+     *
+     * @var string 
+     */
+    public $component = '';
     
-    public $item_name ;
+    /**
+     * The URL view item variable.
+     *
+     * @var    string 
+     */
+    public $item_name = '';
     
-    public $list_name ;
+    /**
+     * The URL view list variable.
+     *
+     * @var    string 
+     */
+    public $list_name = '';
     
-    public $items ;
+    /**
+     * Items cache.
+     *
+     * @var object 
+     */
+    public $items     = null;
     
-    public $category ;
-    
-
+    /**
+     * Category cache.
+     *
+     * @var object 
+     */
+    public $category  = null;
     
     /**
      * Constructor.
      *
      * @param    array    An optional associative array of configuration settings.
-     * @see        JController
-     * @since    1.6
+     * @see      JController
      */
     public function __construct($config = array())
     {
         parent::__construct($config);
     }
 
-    
-    
     /**
      * Returns a reference to the a Table object, always creating it.
      *
      * @param    type    The table type to instantiate
      * @param    string    A prefix for the table class name. Optional.
      * @param    array    Configuration array for model. Optional.
-     * @return    JTable    A database object
-     * @since    1.6
+     * @return   JTable    A database object
      */
     public function getTable($type = null, $prefix = null, $config = array())
     {
@@ -58,8 +82,6 @@ class AKModelList extends JModelList
         
         return parent::getTable( $type , $prefix , $config );
     }
-    
-    
     
     /**
      * Method to auto-populate the model state.
@@ -127,8 +149,6 @@ class AKModelList extends JModelList
         parent::populateState($ordering, $direction);
     }
 
-    
-    
     /**
      * Method to get a store id based on model configuration state.
      *
@@ -138,7 +158,6 @@ class AKModelList extends JModelList
      *
      * @param    string        $id    A prefix for the store id.
      * @return    string        A store id.
-     * @since    1.6
      */
     protected function getStoreId($id = '')
     {
@@ -149,15 +168,11 @@ class AKModelList extends JModelList
         return parent::getStoreId($id);
     }
     
-    
-    
     /**
      * Method to get list page filter form.
      *
-     * @return    object        JForm object.
-     * @since    2.5
+     * @return    object  JForm object.
      */
-    
     public function getFilter()
     {
         if(!empty($this->filter)){
@@ -219,14 +234,14 @@ class AKModelList extends JModelList
         return $this->filter = $form;
     }
     
-    
-    
-    /*
-     * function getCategory
-     * @param 
+    /**
+     * Method to get category by catid.
+     * 
+     * @param   integer $pk Category id.
+     *
+     * @return  mixed   Category object or false.
      */
-    
-    public function getCategory()
+	function getCategory()
     {
         if(!empty($this->category)){
             return $this->category ;
@@ -240,13 +255,11 @@ class AKModelList extends JModelList
         return $this->category ;
     }
     
-    
-    
-    /*
-     * function getFulltextSearch
-     * @param 
-     */
-    
+    /**
+	 * Get fields from search XML file.
+	 *
+	 * @return  array	fields name.    
+	 */
     public function getFullSearchFields()
     {
         $file = AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->list_name.'/search.xml' ;
@@ -267,12 +280,15 @@ class AKModelList extends JModelList
         return $fields ;
     }
     
-    
-    /*
-     * function searchCondition
-     * @param $q
-     */
-    
+    /**
+	 * Set search condition to support multiple search inputs.
+	 * 
+	 * @param   array			$search	Search fields and values.
+	 * @param   JDatabaseQuery	$q		The query object.
+	 * @param   array			$ignore	An array for ignore fields.
+	 *
+	 * @return  JDatabaseQuery    
+	 */
     public function searchCondition($search, $q = null, $ignore = array())
     {
         $db = JFactory::getDbo();
@@ -351,13 +367,15 @@ class AKModelList extends JModelList
         return $q ;
     }
     
-    
-    
-    /*
-     * function filterCondition
-     * @param $filter
-     */
-    
+    /**
+	 * Set query filter.
+	 * 
+	 * @param   array			$filter	Filter fields and values.
+	 * @param   JDatabaseQuery	$q		The query object.
+	 * @param   array			$ignore	An array for ignore fields.
+	 *
+	 * @return  type    
+	 */
     public function filterCondition($filter, $q = null, $ignore = array())
     {
         $db = JFactory::getDbo();

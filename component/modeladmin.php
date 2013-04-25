@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Component
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -13,18 +13,48 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-
+/**
+ * Prototype admin model.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Component 
+ */
 class AKModelAdmin extends JModelAdmin
 {
-    public $component ;
+    /**
+     * Component name.
+     *
+     * @var string 
+     */
+    public $component = '';
     
-    public $item_name ;
+    /**
+     * The URL view item variable.
+     *
+     * @var    string 
+     */
+    public $item_name = '';
     
-    public $list_name ;
+    /**
+     * The URL view list variable.
+     *
+     * @var    string 
+     */
+    public $list_name = '';
     
-    public $item ;
+    /**
+     * Item cache.
+     *
+     * @var object 
+     */
+    public $item      = null;
     
-    public $category ;
+    /**
+     * Category cache.
+     *
+     * @var object 
+     */
+    public $category  = null;
     
     
     /**
@@ -34,7 +64,6 @@ class AKModelAdmin extends JModelAdmin
      * @param    string    A prefix for the table class name. Optional.
      * @param    array    Configuration array for model. Optional.
      * @return    JTable    A database object
-     * @since    1.6
      */
     public function getTable($type = null, $prefix = null, $config = array())
     {
@@ -43,15 +72,13 @@ class AKModelAdmin extends JModelAdmin
         
         return parent::getTable( $type , $prefix , $config );
     }
-    
-    
+
     /**
      * Method to get the record form.
      *
      * @param    array    $data        An optional array of data for the form to interogate.
      * @param    boolean    $loadData    True if the form is to load its own data (default case), false if not.
      * @return    JForm    A JForm object on success, false on failure
-     * @since    1.6
      */
     public function getForm($data = array(), $loadData = true)
     {
@@ -67,26 +94,24 @@ class AKModelAdmin extends JModelAdmin
         return $form;
     }
     
-    
-    
-    /*
-     * This Function is deprecated.
-     * @param 
+    /**
+     * Get fields group. This Function is deprecated, use getFieldsGroup instead.
+     *
+     * @return      array   Fields groups.
+     * @deprecated  4.0
      */
-    
     public function getFields()
     {
         // This Function is deprecated.
         return $this->getFieldsName();
     }
     
-    
-    
-    /*
-     * function getFields
-     * @param 
+    /**
+     * Get fields group.
+     *
+     * @return      array   Fields groups.
+     * @deprecated  4.0
      */
-    
     public function getFieldsGroup()
     {
         if(!empty($this->fields_group)) return $this->fields_group ;
@@ -108,12 +133,11 @@ class AKModelAdmin extends JModelAdmin
         return $this->fields_group = $fields_group ;
     }
     
-    
-    /*
-     * function getFields
-     * @param 
+    /**
+     * Get fields group name as array.
+     *
+     * @return  array   fields name array.    
      */
-    
     public function getFieldsName()
     {
         if(!empty($this->fields_name)) return $this->fields_name ;
@@ -123,13 +147,10 @@ class AKModelAdmin extends JModelAdmin
         return $this->fields_name ;
     }
     
-    
-
     /**
      * Method to get the data that should be injected in the form.
      *
      * @return    mixed    The data for the form.
-     * @since    1.6
      */
     protected function loadFormData()
     {
@@ -180,14 +201,10 @@ class AKModelAdmin extends JModelAdmin
         return $data;
     }
     
-    
-    
     /**
      * Method to auto-populate the model state.
      *
      * Note. Calling getState in this method will result in recursion.
-     *
-     * @since    1.6
      */
     protected function populateState()
     {
@@ -204,7 +221,6 @@ class AKModelAdmin extends JModelAdmin
         $this->setState( 'item.nested', $nested );
     }
     
-    
     /**
      * Method to allow derived classes to preprocess the form.
      *
@@ -215,7 +231,6 @@ class AKModelAdmin extends JModelAdmin
      * @return  void 
      *
      * @see     JFormField
-     * @since   11.1
      * @throws  Exception if there is an error in the form event.
      */
     protected function preprocessForm(JForm $form, $data, $group = 'content')
@@ -223,28 +238,25 @@ class AKModelAdmin extends JModelAdmin
         parent::preprocessForm($form, $data, $group);
     }
     
-    
-    
     /**
      * Method to get a single record.
      *
      * @param    integer    The id of the primary key.
      *
-     * @return    mixed    Object on success, false on failure.
-     * @since    1.6
+     * @return   mixed    Object on success, false on failure.
      */
     public function getItem($pk = null)
     {
         return $this->item = parent::getItem($pk);
     }
     
-    
-    
-    /*
-     * function getCategory
-     * @param 
+    /**
+     * Method to get category by catid.
+     * 
+     * @param   integer $pk Category id.
+     *
+     * @return  mixed   Category object or false.
      */
-    
     public function getCategory($pk = null)
     {    
         if(!empty($this->category)){
@@ -263,16 +275,12 @@ class AKModelAdmin extends JModelAdmin
         return $this->category ;
     }
     
-    
-    
     /**
      * Method to test whether a record can be deleted.
      *
      * @param   object  $record  A record object.
      *
      * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
-     *
-     * @since   12.2
      */
     protected function canDelete($record)
     {
@@ -286,8 +294,6 @@ class AKModelAdmin extends JModelAdmin
      * @param   object  $record  A record object.
      *
      * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
-     *
-     * @since   12.2
      */
     protected function canEditState($record)
     {
@@ -295,15 +301,12 @@ class AKModelAdmin extends JModelAdmin
         return $user->authorise('core.edit.state', $this->option.'.'.$this->item_name.'.'.$record->id);
     }
     
-    
-    
     /**
      * A protected method to get a set of ordering conditions.
      *
      * @param   object    A record object.
      *
      * @return  array  An array of conditions to add to add to ordering queries.
-     * @since   1.6
      */
     protected function getReorderConditions($table)
     {
@@ -314,14 +317,10 @@ class AKModelAdmin extends JModelAdmin
         }
     }
     
-    
-    
     /**
      * Method rebuild the entire nested set tree.
      *
      * @return  boolean  False on failure or error, true otherwise.
-     *
-     * @since   1.6
      */
     public function rebuild()
     {
@@ -358,7 +357,6 @@ class AKModelAdmin extends JModelAdmin
         return true;
     }
     
-    
     /**
      * Method to save the reordered nested set tree.
      * First we save the new order values in the lft values of the changed ids.
@@ -368,8 +366,6 @@ class AKModelAdmin extends JModelAdmin
      * @param   integer  $lft_array  The lft value
      *
      * @return  boolean  False on failure or error, True otherwise
-     *
-     * @since   1.6
     */
     public function saveorderNested($idArray = null, $lft_array = null)
     {
@@ -387,13 +383,9 @@ class AKModelAdmin extends JModelAdmin
 
         return true;
     }
-    
-    
-    
+
     /**
      * Prepare and sanitise the table prior to saving.
-     *
-     * @since    1.6
      */
     protected function prepareTable(&$table)
     {
@@ -495,19 +487,22 @@ class AKModelAdmin extends JModelAdmin
         }
     }
     
-    
-    
-    /*
-     * function setOrderPosition
-     * @param $position
+    /**
+     * Method to set new item ordering as first or last.
+     * 
+     * @param   JTable  $table      Item table to save.
+     * @param   string  $position   'first' or other are last.
+     *
+     * @return  type    
      */
-    
     public function setOrderPosition($table, $position = null)
     {
         if($position == 'first') {
+            
             if (!$table->ordering) {
                 $table->reorder('catid = '.(int) $table->catid.' AND published >= 0');
             }
+            
         }else{
     
             // Set ordering to the last item if not set
@@ -522,16 +517,12 @@ class AKModelAdmin extends JModelAdmin
         
     }
     
-    
-    
     /**
-     * Method to duplicate modules.
+     * Method to duplicate items.
      *
      * @param   array  &$pks  An array of primary key IDs.
      *
      * @return  boolean  True if successful.
-     *
-     * @since   1.6
      * @throws  Exception
      */
     public function duplicate(&$pks)
@@ -585,9 +576,7 @@ class AKModelAdmin extends JModelAdmin
 
         return true;
     }
-    
-    
-    
+
     /**
      * Method to perform batch operations on an item or a set of items.
      *
@@ -596,8 +585,6 @@ class AKModelAdmin extends JModelAdmin
      * @param   array  $contexts  An array of item contexts.
      *
      * @return  boolean  Returns true on success, false on failure.
-     *
-     * @since   12.2
      */
     public function batch($commands, $pks, $contexts)
     {
@@ -777,9 +764,7 @@ class AKModelAdmin extends JModelAdmin
  
         return true;
     }
-    
-    
-    
+
     /**
      * Batch copy items to be another item's children.
      *
@@ -788,8 +773,6 @@ class AKModelAdmin extends JModelAdmin
      * @param   array    $contexts  An array of item contexts.
      *
      * @return  mixed  An array of new IDs on success, boolean false on failure.
-     *
-     * @since   3.0
      */
     protected function batchCopyNested($value, $pks, $contexts)
     {
@@ -968,8 +951,6 @@ class AKModelAdmin extends JModelAdmin
         return $newIds;
     }
     
-    
-    
     /**
      * Batch move items to be another item's children.
      *
@@ -978,8 +959,6 @@ class AKModelAdmin extends JModelAdmin
      * @param   array    $contexts  An array of item contexts.
      *
      * @return  boolean  True on success.
-     *
-     * @since   1.6
      */
     protected function batchMoveNested($value, $pks, $contexts)
     {
@@ -1105,5 +1084,4 @@ class AKModelAdmin extends JModelAdmin
 
         return true;
     }
-    
 }

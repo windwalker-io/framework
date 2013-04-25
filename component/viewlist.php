@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Component
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,24 +11,67 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
 include_once dirname(__FILE__).'/view.php' ;
 
-
+/**
+ * View class for list.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Component 
+ */
 class AKViewList extends AKView
 {
-    protected     $items ;
-    protected     $pagination ;
-    protected     $state ;
+    /**
+     * Items cache.
+     *
+     * @var array 
+     */
+    protected  $items = null;
     
-    public        $option  ;
-    public        $list_name  ;
-    public        $item_name  ;
+    /**
+     * Pagination cache.
+     *
+     * @var object 
+     */
+    protected  $pagination = null;
+    
+    /**
+     * Model state.
+     *
+     * @var JRegistry 
+     */
+    protected  $state = null;
+    
+    /**
+     * Component option name.
+     *
+     * @var string 
+     */
+    public  $option = '';
+    
+    /**
+     * List name.
+     *
+     * @var string 
+     */
+    public  $list_name = '';
+    
+    /**
+     * Item name.
+     *
+     * @var string 
+     */
+    public  $item_name = '';
     
     
     /**
-     * Display the view
-     */
+	 * Display this view, if in front-end, will show toolbar and submenus.
+	 * 
+	 * @param   string	$tpl	View layout name.
+	 * @param   type	$path	The panel layout from?
+	 *
+	 * @return  string	Render result.
+	 */
     public function displayWithPanel($tpl = null, $path = null)
     {
         $app = JFactory::getApplication() ;
@@ -59,13 +102,9 @@ class AKViewList extends AKView
             parent::displayWithPanel($tpl, $path);
         }
     }
-    
-    
-    
+
     /**
      * Add the page title and toolbar.
-     *
-     * @since    1.6
      */
     protected function addToolbar()
     {
@@ -127,13 +166,9 @@ class AKViewList extends AKView
         
     }
     
-    
-    
-    /*
-     * function sidebarFilter
-     * @param 
-     */
-    
+    /**
+	 * Render filter at sidebar.
+	 */
     public function sidebarFilter()
     {
         // Sidebar Filters
@@ -166,13 +201,14 @@ class AKViewList extends AKView
         }
     }
     
-    
-    
-    /*
-     * function renderGrid
-     * @param $table
-     */
-    
+    /**
+	 * Render table tree array to grid view.
+	 * 
+	 * @param   array	$table	A table tree array.
+	 * @param   array	$option	The option for this table.
+	 *
+	 * @return  string	Grid HTML.    
+	 */
     public function renderGrid($table, $option = array())
     {
         // Set Grid
@@ -212,15 +248,17 @@ class AKViewList extends AKView
         return $grid ;
     }
     
-    
-    /*
-     * function sortButton
-     * @param arg
-     */
-    
+    /**
+	 * A proxy for JHtnlGrid::sort();
+	 * 
+	 * @param   string	$text	Sort button title.
+	 * @param   string	$col	Table column name.
+	 *
+	 * @return  string	Sort button HTML.    
+	 */
     public function sort($text, $col)
     {
-        $listOrder    = $this->state->get('list.ordering');
+        $listOrder   = $this->state->get('list.ordering');
         $listDirn    = $this->state->get('list.direction');
         return JHtml::_('grid.sort',  $text, $col, $listDirn, $listOrder);
     }

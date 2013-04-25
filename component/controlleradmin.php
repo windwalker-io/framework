@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Component
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,16 +11,39 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
 jimport('joomla.application.component.controlleradmin');
 
-
+/**
+ * Base class for a Joomla Administrator Controller
+ *
+ * Controller (controllers are where you put all the actual code) Provides basic
+ * functionality, such as rendering views (aka displaying templates).
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Component
+ */
 class AKControllerAdmin extends JControllerAdmin
 {
+    /**
+     * The URL view list variable.
+     *
+     * @var    string 
+     */
+    public $view_list = '';
     
-    public $view_list ;
-    public $view_item ;
-    public $component ;
+    /**
+     * The URL view item variable.
+     *
+     * @var    string 
+     */
+    public $view_item = '';
+    
+    /**
+     * Component name.
+     *
+     * @var string 
+     */
+    public $component = '';
     
     
     /**
@@ -31,8 +54,6 @@ class AKControllerAdmin extends JControllerAdmin
      * @param   array   $config  Configuration array for model. Optional.
      *
      * @return  object  The model.
-     *
-     * @since   11.1
      */
     public function getModel($name = null, $prefix = null, $config = array('ignore_request' => true))
     {
@@ -41,13 +62,10 @@ class AKControllerAdmin extends JControllerAdmin
         return parent::getModel($name, $prefix, $config);
     }
     
-    
-    
     /**
      * Rebuild the nested set tree.
      *
      * @return    bool    False on failure or error, true on success.
-     * @since    1.6
      */
     public function rebuild()
     {
@@ -70,13 +88,10 @@ class AKControllerAdmin extends JControllerAdmin
         }
     }
     
-    
     /**
      * Method to save the submitted ordering values for records via AJAX.
      *
      * @return    void
-     *
-     * @since   3.0
      */
     public function saveOrderAjax()
     {
@@ -115,13 +130,10 @@ class AKControllerAdmin extends JControllerAdmin
         JFactory::getApplication()->close();
     }
     
-    
     /**
      * Method to save the submitted ordering values for records via AJAX.
      *
      * @return    void
-     *
-     * @since   3.0
      */
     public function saveOrderNestedAjax()
     {
@@ -162,12 +174,9 @@ class AKControllerAdmin extends JControllerAdmin
         JFactory::getApplication()->close();
 
     }
-    
-    
-    
+
     /**
      * Method to clone an existing module.
-     * @since    1.6
      */
     public function duplicate()
     {
@@ -192,8 +201,6 @@ class AKControllerAdmin extends JControllerAdmin
         $this->setRedirect('index.php?option=com_'.$this->component.'&view='.$this->view_list);
     }
     
-    
-    
     /**
      * Set a URL for browser redirection.
      *
@@ -202,10 +209,7 @@ class AKControllerAdmin extends JControllerAdmin
      * @param   string  $type  Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
      *
      * @return  JController  This object to support chaining.
-     *
-     * @since   11.1
      */
-    
     public function setRedirect($url, $msg = null, $type = null)
     {
         $task  = $this->getTask() ;
@@ -222,19 +226,15 @@ class AKControllerAdmin extends JControllerAdmin
         }
     }
     
-    
-    
-    /*
-     * function changeFieldData
-     * @param 
+    /**
+     * Handle QuickEdit Ajax command and print JSON result.
      */
-    
     public function editFieldData()
     {
-        $id     = JRequest::getVar('id') ;
-        $field     = JRequest::getVar('field') ;
+        $id         = JRequest::getVar('id') ;
+        $field      = JRequest::getVar('field') ;
         //$table     = JRequest::getVar('table') ;
-        $content = JRequest::getVar('content') ;
+        $content    = JRequest::getVar('content') ;
         
         $model = $this->getModel() ;
         $table = $model->getTable();

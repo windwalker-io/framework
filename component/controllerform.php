@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Component
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,16 +11,36 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
 jimport('joomla.application.component.controllerform');
 
-
+/**
+ * Controller tailored to suit most form-based admin operations.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Component 
+ */
 class AKControllerForm extends JControllerForm
 {
+    /**
+     * The URL view list variable.
+     *
+     * @var    string 
+     */
+    public $view_list = '';
     
-    public $view_list ;
-    public $view_item ;
-    public $component ;
+    /**
+     * The URL view item variable.
+     *
+     * @var    string 
+     */
+    public $view_item = '';
+    
+    /**
+     * Component name.
+     *
+     * @var string 
+     */
+    public $component = '';
     
     
     /**
@@ -31,8 +51,6 @@ class AKControllerForm extends JControllerForm
      * @param   array   $config  Configuration array for model. Optional.
      *
      * @return  object  The model.
-     *
-     * @since   11.1
      */
     public function getModel($name = null, $prefix = null, $config = array('ignore_request' => true))
     {
@@ -47,9 +65,7 @@ class AKControllerForm extends JControllerForm
      *
      * @param   object  $model  The model of the component being processed.
      *
-     * @return    boolean     True if successful, false otherwise and internal error is set.
-     *
-     * @since    11.1
+     * @return  boolean     True if successful, false otherwise and internal error is set.
      */
     
     public function batch($model = null)
@@ -73,8 +89,6 @@ class AKControllerForm extends JControllerForm
      * @param   string   $urlVar    The name of the URL variable for the id.
      *
      * @return  string  The arguments to append to the redirect URL.
-     *
-     * @since   11.1
      */
     
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
@@ -95,8 +109,6 @@ class AKControllerForm extends JControllerForm
      * Gets the URL arguments to append to a list redirect.
      *
      * @return  string  The arguments to append to the redirect URL.
-     *
-     * @since   11.1
      */
     
     protected function getRedirectToListAppend()
@@ -122,8 +134,6 @@ class AKControllerForm extends JControllerForm
      * @param   string  $type  Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
      *
      * @return  JController  This object to support chaining.
-     *
-     * @since   11.1
      */
     
     public function setRedirect($url, $msg = null, $type = null)
@@ -151,9 +161,7 @@ class AKControllerForm extends JControllerForm
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key; default is id.
      *
-     * @return  boolean 
-     *
-     * @since   12.2
+     * @return  boolean
      */
     protected function allowEdit($data = array(), $key = 'id')
     {
@@ -164,5 +172,4 @@ class AKControllerForm extends JControllerForm
         
         return ($allowEdit || $allowOwn) ;
     }
-    
 }
