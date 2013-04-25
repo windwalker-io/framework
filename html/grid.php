@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  HTML
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -12,11 +12,12 @@
 defined('_JEXEC') or die;
 
 /**
- * AKGrid class to dynamically generate HTML tables
+ * AKGrid class to dynamically generate HTML tables.
+ * 
+ * It is a clone from JGrid because Joomla!2.5 cannot include it.
  *
  * @package     Windwalker.Framework
- * @subpackage  class
- * @since       11.3
+ * @subpackage  HTML
  */
 class AKGrid
 {

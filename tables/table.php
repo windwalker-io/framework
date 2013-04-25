@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  AKTable
+ * @subpackage  Tables
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -14,7 +14,12 @@ defined('_JEXEC') or die;
 jimport('joomla.database.tablenested');
 
 /**
- * icon Table class
+ * A base Table class for Item.
+ *
+ * Not real use in component now.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Tables
  */
 class AKTable extends JTable
 {
@@ -23,8 +28,6 @@ class AKTable extends JTable
      * Method to return the title to use for the asset table.
      *
      * @return  string 
-     *
-     * @since   11.1
      */
     protected function _getAssetTitle()
     {
@@ -38,9 +41,8 @@ class AKTable extends JTable
      * Overloaded bind function to pre-process the params.
      *
      * @param    array        Named array
-     * @return    null|string    null is operation was satisfactory, otherwise returns an error
-     * @see        JTable:bind
-     * @since    1.5
+     * @return   null|string  null is operation was satisfactory, otherwise returns an error
+     * @see      JTable:bind
      */
     public function bind($array, $ignore = '')
     {
