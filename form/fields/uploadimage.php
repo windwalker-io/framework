@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Form
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -13,7 +13,10 @@ defined('_JEXEC') or die;
 
 
 /**
- * Upload Image
+ * Supports an upload image field, and if file exists, will show this image..
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Form
  */
 class JFormFieldUploadimage extends JFormField
 {

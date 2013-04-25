@@ -15,7 +15,7 @@ jimport('joomla.html.html');
 JFormHelper::loadFieldClass('list');
 
 /**
- * Supports an HTML select list for target items.
+ * Supports a HTML select list for target items.
  *
  * @package     Windwalker.Framework
  * @subpackage  Form

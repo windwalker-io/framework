@@ -11,11 +11,19 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
 include_once JPATH_ADMINISTRATOR.'/includes/toolbar.php' ;
 
+/**
+ * A Toolbar helper extends from JToolbarHelper.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Admin 
+ */
 class AKToolBarHelper
 {
+	/**
+	 * Set admin toolbar title and auto add page title to HTML head document.
+	 */
     static function title ($title, $icon = 'generic.png')
     {
         $doc = JFactory::getDocument();
@@ -23,9 +31,9 @@ class AKToolBarHelper
         
         $doc->setTitle($title) ;
         
-        $view     = JRequest::getVar('view') ;
-        $layout = JRequest::getVar('layout', 'default') ;
-        $option = JRequest::getVar('option') ;
+        $view     	= JRequest::getVar('view') ;
+        $layout 	= JRequest::getVar('layout', 'default') ;
+        $option 	= JRequest::getVar('option') ;
         
         // Strip the extension.
         $icons = explode(' ', $icon);
@@ -33,7 +41,7 @@ class AKToolBarHelper
             $icon = 'icon-48-'.preg_replace('#\.[^.]*$#', '', $icon);
         }
         
-        $class     = "header-{$view}-{$layout}" ;
+        $class	= "header-{$view}-{$layout}" ;
         $img    = "components/{$option}/images/admin-icons/{$class}.png" ;
         
         if(JFile::exists(JPATH_ADMINISTRATOR.'/'.$img)) {
@@ -42,7 +50,7 @@ class AKToolBarHelper
         
         if(JVERSION >= 3) $icon = null ;
         
-        $admin    = $app->isSite() ? JURI::root().'administrator/' : '' ;
+        $admin	= $app->isSite() ? JURI::root().'administrator/' : '' ;
         $img    = $admin."components/{$option}/images/admin-icons/{$class}.png" ;
         
         $doc->addStyleDeclaration("
@@ -58,12 +66,9 @@ class AKToolBarHelper
         
     }
     
-    
-    /*
-     * function link
-     * @param 
-     */
-    
+    /**
+	 * Set a link button.
+	 */
     public static function link($alt , $href = '#', $icon = 'asterisk')
     {
         $bar = JToolbar::getInstance('toolbar');
@@ -72,38 +77,33 @@ class AKToolBarHelper
         $bar->appendButton('Link', $icon, $alt, $href);
     }
     
-    
-    /*
-     * function back
-     * @param 
-     */
-    
+    /**
+	 * Set a back link button, contain right arrow icon.
+	 */
     public static function back($alt = 'JTOOLBAR_BACK', $href = 'javascript:history.back();')
     {
-        $bar = JToolbar::getInstance('toolbar');
- 
+        $bar 	= JToolbar::getInstance('toolbar');
+		$icon 	= JVERSION >= 3 ? 'chevron-left' : 'back' ;
+		
         // Add a back button.
-        $bar->appendButton('Link', 'chevron-left', $alt, $href);
+        $bar->appendButton('Link', $icon, $alt, $href);
     }
     
-    
-    /*
-     * function modal
-     * @param 
-     */
-    
+    /**
+	 * Set a modal button.
+	 */
     public static function modal($title  = 'JTOOLBAR_BATCH' , $selector = 'myModal' )
     {
         AKHelper::_('ui.modal', $selector) ;
-        $bar     = JToolbar::getInstance('toolbar');
+        $bar	= JToolbar::getInstance('toolbar');
         $title  = JText::_($title);
         
         $option = array(
             'class' => 'btn btn-small' ,
-            'icon'     => 'icon-checkbox-partial'
+            'icon'	=> 'icon-checkbox-partial'
         );
         
-        $dhtml    = AKHelper::_('ui.modalLink', $title, $selector, $option) ;
+        $dhtml	= AKHelper::_('ui.modalLink', $title, $selector, $option) ;
         $bar->appendButton('Custom', $dhtml, 'batch');    
     }
     
@@ -117,25 +117,21 @@ class AKToolBarHelper
      * @param   string  $alt        The name of the button.
      * @param   string  $path       An alternative path for the configuation xml relative to JPATH_SITE.
      *
-     * @return  void 
-     *
-     * @since   1.5
+     * @return  void
      */
     public static function preferences($component, $height = '550', $width = '875', $alt = 'JToolbar_Options', $path = '')
     {
-        $app = JFactory::getApplication() ;
-        
-        $args = func_get_args();
+        $app 	= JFactory::getApplication() ;
+        $args 	= func_get_args();
         
         $app->triggerEvent('onAKToolbarAppendButton', array('preferences', &$args) ) ;
         call_user_func_array( array('JToolBarHelper', 'preferences'), $args );
     }
     
     
-    /*
-     * function __callStatic
-     */
-    
+    /**
+	 * If alled method not exists in this class, will auto call JToolbarHelper instead.
+	 */
     public static function __callStatic($name, $args)
     {
         $app = JFactory::getApplication() ;

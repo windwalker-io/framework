@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Form
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -12,7 +12,10 @@
 defined('_JEXEC') or die;
 
 /**
- * Supports a modal picker.
+ * Supports a Modal picker for target items.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Form
  */
 class JFormFieldModal extends JFormField
 {

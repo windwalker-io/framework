@@ -54,6 +54,9 @@ class AKHelperUri {
     
     /**
      * Give a relative path, return path with subdir.
+     *
+     * If your site install in htp://site.com/subdir/,
+     *   and the $path = 'images/image.jpg', will return 'subdir/images/image.jpg'.
      * 
      * @param   string    $path    A system path.
      *

@@ -128,9 +128,9 @@ class AKHelperThumb
             
             // save
             switch($file_type){
-                case 'gif': $type = IMAGETYPE_GIF ;break;
-                case 'png': $type = IMAGETYPE_PNG ;break;
-                default : $type = IMAGETYPE_JPEG ;break;
+                case 'gif': $type   = IMAGETYPE_GIF ; break;
+                case 'png': $type   = IMAGETYPE_PNG ; break;
+                default : $type     = IMAGETYPE_JPEG ;break;
             }
             
             JFolder::create(self::$cache_path);
@@ -261,8 +261,8 @@ class AKHelperThumb
     public static function getDefaultImage($width=100, $height=100,$zc=0, $q=85, $file_type = 'jpg' )
     {
         $replace['{width}']     = $width ;
-        $replace['{height}']     = $height ;
-        $replace['{zc}']         = $zc ;
+        $replace['{height}']    = $height ;
+        $replace['{zc}']        = $zc ;
         $replace['{q}']         = $q ;
         $replace['{file_type}'] = $file_type ;
         $url = self::$default_image ;
@@ -322,8 +322,8 @@ class AKHelperThumb
     public static function resetCachePosition()
     {
         self::setCachePath( AKTHUMB_CACHE_PATH ) ;
-        self::setTempPath(     AKTHUMB_TEMP_PATH ) ;
-        self::setCacheUrl( AKTHUMB_CACHE_URL ) ;
+        self::setTempPath(  AKTHUMB_TEMP_PATH ) ;
+        self::setCacheUrl(  AKTHUMB_CACHE_URL ) ;
     }
     
     /**
