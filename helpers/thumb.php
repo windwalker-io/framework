@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  AKHelper
+ * @subpackage  Helpers
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -29,7 +29,7 @@ define('AKTHUMB_TEMP_URL',      JURI::root().$params->get('thumb_temp_url', 'cac
  * A quick thumb generator, will return generated thumb url.
  *
  * @package     Windwalker.Framework
- * @subpackage  AKHelper
+ * @subpackage  Helpers
  */
 class AKHelperThumb
 {

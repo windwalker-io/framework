@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  AKHelper
+ * @subpackage  Helpers
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -16,16 +16,16 @@ defined('_JEXEC') or die;
  * CCK Engine to handle fields and datas.
  *
  * @package     Windwalker.Framework
- * @subpackage  AKHelper
+ * @subpackage  Helpers
  */
 class AKHelperFields
 {
     /**
      * Set element data into table format, called from JModelAdmin::perpareTable();
      * 
-     * @param    JTable    $table    The JTable object prepare save to DB.
+     * @param    JTable   $table    The JTable object prepare save to DB.
      * @param    array    $attrs    Field's attributes.
-     * @param    array    $option    Some option.
+     * @param    array    $option   Some option.
      */
     public static function setFieldTable($table, $attrs = null, $option = array())
     {
@@ -184,12 +184,12 @@ class AKHelperFields
     /**
      * Combine all field elements into one JForm XML with root.
      * 
-     * @param    array    $elements    An array contain all fields' XML element.
+     * @param    array     $elements    An array contain all fields' XML element.
      * @param    string    $fieldset    Fieldset name.
-     * @param    string    $fields        Field group name.
-     * @param    string    $fset_label    Fieldset label.
+     * @param    string    $fields      Field group name.
+     * @param    string    $fset_label  Fieldset label.
      *
-     * @return    string    Form XML string.
+     * @return   string    Form XML string.
      */
     public static function buildFormXML($elements = array(), $fieldset = 'fieldset', $fields = null, $fset_label = null)
     {
@@ -223,7 +223,7 @@ class AKHelperFields
      * 
      * @param    string    $attrs    A JSON string.
      *
-     * @return    array    Attributes array.
+     * @return   array     Attributes array.
      */
     public static function parseAttrs($attrs)
     {
@@ -289,9 +289,9 @@ class AKHelperFields
     /**
      * Convert a JSON element data to array, will not pivot datas.
      * 
-     * @param    mixed    $data    A JSON string, an array or an object.
+     * @param   mixed    $data    A JSON string, an array or an object.
      *
-     * @return    array    Converted datas.
+     * @return  array    Converted datas.
      */
     public static function convertJsonToArray($data)
     {
@@ -317,10 +317,10 @@ class AKHelperFields
     /**
      * Use filter rules to filter value in fields.
      * 
-     * @param    string    $field_type    Type of this field.
-     * @param    array    $data        The data array for filter.
+     * @param   string  $field_type Type of this field.
+     * @param   array   $data       The data array for filter.
      *
-     * @return    array    Filtered dates.
+     * @return  array   Filtered dates.
      */
     public static function filterFields($field_type = 'text', $data = array())
     {
@@ -360,7 +360,7 @@ class AKHelperFields
      * 
      * @param    string    $name    Field name(ID) from field edit page.
      *
-     * @return    string    A safe Name.
+     * @return   string    A safe Name.
      */
     public static function filterName($name)
     {
@@ -377,7 +377,7 @@ class AKHelperFields
      *
      * If not, will throw error.
      * 
-     * @param    JTable    $table        The item table to detect column exists or not.
+     * @param    JTable    $table      The item table to detect column exists or not.
      * @param    string    $context    Context for plugin.
      */
     public static function checkTable($table, $context)

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  AKHelper
+ * @subpackage  Helpers
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * AKHelper base class.
  *
  * @package     Windwalker.Framework
- * @subpackage  AKHelper
+ * @subpackage  Helpers
  */
 class AKHelper extends AKProxy
 {
@@ -106,7 +106,7 @@ if(!class_exists('AK')){
     * An alias for AKHelper base class.
     *
     * @package     Windwalker.Framework
-    * @subpackage  AKHelper
+    * @subpackage  Helpers
     */
     class AK extends AKHelper {}
 }

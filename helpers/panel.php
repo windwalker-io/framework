@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  AKHelper
+ * @subpackage  Helpers
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  *     or use Joomla! legacy function.
  *
  * @package     Windwalker.Framework
- * @subpackage  AKHelper
+ * @subpackage  Helpers
  */
 class AKHelperPanel
 {
