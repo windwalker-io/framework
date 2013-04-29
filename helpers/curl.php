@@ -33,12 +33,13 @@ class AKHelperCurl
     * Request a page and return it as string.
     * 
     * @param    string    $url      A url to request.
-    * @param    string    $method   Request method, GET or POST.
+    * @param    mixed     $method   Request method, GET or POST. If is array, equal to $option.
     * @param    string    $query    Query string. eg: 'option=com_content&id=11&Itemid=125'. <br /> Only use for POST.
+    * @param    array     $option   An option array to override CURL OPT.
     *
     * @return    mixed    If success, return string, or return false.
     */
-    public static function getPage($url='', $method = 'get', $query = '')
+    public static function getPage($url='', $method = 'get', $query = '', $option = array())
     {
         if(!$url) return ;
         
@@ -46,9 +47,13 @@ class AKHelperCurl
             return file_get_contents($url) ;
         }    
         
+        if(is_array($method)) {
+            $option = $method ;
+        }
+        
         
         $ch = curl_init();
-         
+        
         
         $options = array(
             CURLOPT_URL             => AKHelper::_('uri.safe' ,$url),
@@ -64,6 +69,11 @@ class AKHelperCurl
             }
             $options[CURLOPT_POSTFIELDS] = $query ;
         }
+        
+        // Merge option
+        foreach( $option as $key => $opt ):
+            if( isset($option[$key]) ) $options[$key] = $option[$key] ;
+        endforeach;
         
 
         curl_setopt_array($ch, $options);
@@ -89,11 +99,12 @@ class AKHelperCurl
     * Get a page and save it as file.
     * 
     * @param    string    $url  A url to request.
-    * @param    string    $path A system path with file name to save it.    
+    * @param    string    $path A system path with file name to save it.
+    * @param    array     $option   An option array to override CURL OPT.
     *
     * @return   boolean   Success or Fail.
     */
-    public static function getFile($url=null, $path=null)
+    public static function getFile($url=null, $path=null, $option = array())
     {
         if(!$url) return ;
         
@@ -101,7 +112,8 @@ class AKHelperCurl
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.path');
         
-        $url = JFactory::getURI($url) ;
+        $url    = JFactory::getURI($url) ;
+        $path   = JPath::clean($path) ;
         
         //$folder_path = JPATH_ROOT.DS.'files'.DS.$url->task_id ;
         if(substr($path, -1) == DIRECTORY_SEPARATOR){
@@ -129,10 +141,15 @@ class AKHelperCurl
             CURLOPT_FILE            => $fp ,
         );
         
+        // Merge option
+        foreach( $option as $key => $opt ):
+            if( isset($option[$key]) ) $options[$key] = $option[$key] ;
+        endforeach;
+        
         curl_setopt_array($ch, $options);
         curl_exec($ch);
         
-        $errno = curl_errno($ch);
+        $errno  = curl_errno($ch);
         $errmsg = curl_error($ch);
         
         curl_close($ch);

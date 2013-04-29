@@ -41,12 +41,120 @@ class AKHelperSystem
      */
     static $profiler    = array() ;
     
+	
+	/**
+	 * Generate UUID v4 or v5.
+	 *
+	 * Ref from: https://gist.github.com/dahnielson/508447
+	 * 
+	 * @param   mixed   The condition to generate v3 MD5 UUID, may be string or array.
+	 *                  If this params is null, will generate v4 random UUID.
+	 *                  When condition exists, output will always the same.
+	 * @param   mixed   UUID version. May be integer 5 or string 'v5',
+	 *                  others will retuen v4 random uuid or v3 md5 uuid(if $condition exists).
+	 *
+	 * @return  string  32bit UUID.
+	 */
+	public static function uuid($condition = null, $version = 4)
+	{
+        $uuid = '' ;
+        
+        // Generate UUID v4 By Random
+        if(!$condition) {
+            
+            $uuid = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+     
+                // 32 bits for "time_low"
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+         
+                // 16 bits for "time_mid"
+                mt_rand(0, 0xffff),
+         
+                // 16 bits for "time_hi_and_version",
+                // four most significant bits holds version number 4
+                mt_rand(0, 0x0fff) | 0x4000,
+         
+                // 16 bits, 8 bits for "clk_seq_hi_res",
+                // 8 bits for "clk_seq_low",
+                // two most significant bits holds zero and one for variant DCE1.1
+                mt_rand(0, 0x3fff) | 0x8000,
+         
+                // 48 bits for "node"
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            );
+            
+        }else{
+            // Genertae UUID v3 By Condition MD5
+            $condition = (array) $condition ;
+            $condition = implode( '-', $condition );
+            
+            $chars = md5( $condition );
+            $uuid  = substr($chars,0,8) . '-';
+            $uuid .= substr($chars,8,4) . '-';
+            $uuid .= substr($chars,12,4) . '-';
+            $uuid .= substr($chars,16,4) . '-';
+            $uuid .= substr($chars,20,12);
+            
+        }
+        
+        // Generate UUID v5
+        if( $version == 5 || $version == 'v5' ) {
+            if(preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) !== 1 ) {
+                return $uuid ;
+            }
+            
+            // Get hexadecimal components of namespace
+            $nhex = str_replace(array('-','{','}'), '', $uuid);
+            
+            // Binary Value
+            $nstr = '';
+            
+            // Convert Namespace UUID to bits
+            for($i = 0; $i < strlen($nhex); $i+=2) 
+            {
+                $nstr .= chr(hexdec($nhex[$i].$nhex[$i+1]));
+            }
+            
+            // Calculate hash value
+            if( $condition ) {
+                $condition = is_array($condition) ? implode('-', $condition) : $condition ; 
+            }else{
+                $condition = uniqid();
+            }
+            $hash = sha1($nstr . $condition);
+            
+            $uuid = sprintf('%08s-%04s-%04x-%04x-%12s',
+                
+                // 32 bits for "time_low"
+                substr($hash, 0, 8),
+                
+                // 16 bits for "time_mid"
+                substr($hash, 8, 4),
+                
+                // 16 bits for "time_hi_and_version",
+                // four most significant bits holds version number 5
+                (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
+                
+                // 16 bits, 8 bits for "clk_seq_hi_res",
+                // 8 bits for "clk_seq_low",
+                // two most significant bits holds zero and one for variant DCE1.1
+                (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
+                
+                // 48 bits for "node"
+                substr($hash, 20, 12)
+            );
+            
+        }
+        
+        return $uuid ;
+	}
+	
      /**
      * Get component Joomla! params, a proxy of JComponentHelper::getParams($option) ;
      * 
-     * @param   string    $option Component option name.
+     * @param   string     $option Component option name.
      *
-     * @return  JRegistry    Component params object.
+     * @return  JRegistry  Component params object.
      */
     public static function getParams($option = null)
     {
@@ -97,10 +205,10 @@ class AKHelperSystem
     /**
      * Save component params to #__extension.
      * 
-     * @param   mixed    $params        A params object, array or JRegistry object.
-     * @param   string    $element    Extension element name, eg: com_content, mod_modules.
-     * @param   string    $client        Client, 1 => 'site', 2 => 'administrator'.
-     * @param   string    $group        Group(folder) name for plugin.
+     * @param   mixed	$params		A params object, array or JRegistry object.
+     * @param   string	$element    Extension element name, eg: com_content, mod_modules.
+     * @param   string	$client		Client, 1 => 'site', 2 => 'administrator'.
+     * @param   string	$group		Group(folder) name for plugin.
      *
      * @return  boolean    Success or not.
      */
@@ -137,8 +245,8 @@ class AKHelperSystem
     /**
      * Save component config to "config.json" in includes dir.
      * 
-     * @param   mixed    $params        A config object, array or JRegistry object.
-     * @param   string    $option     Component option name.
+     * @param   mixed	$params		A config object, array or JRegistry object.
+     * @param   string	$option     Component option name.
      *
      * @return  boolean    Success or not.    
      */
@@ -157,7 +265,7 @@ class AKHelperSystem
     /**
      * Get component version form manifest XML file.
      * 
-     * @param   string    $option    Component option name.
+     * @param   string    $option	Component option name.
      *
      * @return  string    Component version.
      */
@@ -180,7 +288,7 @@ class AKHelperSystem
     /**
      * A helper to add JProfiler log mark. Need to trun on the debug mode.
      * 
-     * @param   string    $text        Log text.
+     * @param   string    $text			Log text.
      * @param   string    $namespace    The JProfiler instance ID. Default is the core profiler "Application". 
      */
     public static function mark($text, $namespace = null)
