@@ -168,10 +168,11 @@ class AKHelperArray {
      */
     public static function pivotFromPrefix( $prefix ,$origin, $target = null)
     {
+        $target = is_object($target) ? (object)$target : (array)$target ;
         
-        foreach( $origin as $key => $row ):
-            if( strpos( $key, $prefix ) === 0 && isset($row)){
-                $key2 = substr($key, JString::strlen($prefix)) ;
+        foreach( (array)$origin as $key => $row ):
+            if( strpos( $key, $prefix ) === 0 ){
+                $key2 = JString::substr($key, JString::strlen($prefix)) ;
                 self::setValue($target, $key2, $row) ;
             }
         endforeach;
@@ -190,7 +191,9 @@ class AKHelperArray {
      */
     public static function pivotToPrefix( $prefix ,$origin, $target = null)
     {
-        foreach( $origin as $key => $val ):
+        $target = is_object($target) ? (object)$target : (array)$target ;
+
+        foreach( (array)$origin as $key => $val ):
         
             $key = $prefix.$key ;
             
@@ -201,6 +204,43 @@ class AKHelperArray {
         endforeach;
         
         return $target;
+    }
+    
+    /**
+      * Pivot two-dimensional array to one-dimensional.
+      * 
+      * @param   array  $array  A two-dimension array.
+      *
+      * @return  array  Pivoted array.
+      */
+    public static function pivotFromTwoDimension(&$array)
+    {
+        foreach( (array)$array as $val ):
+			if(is_array($val) || is_object($val)) {
+				foreach( (array)$val as $key => $val2 ):
+					self::setValue($array, $key, $val2) ;
+				endforeach;
+			}
+		endforeach;
+        
+        return $array ;
+    }
+    
+    /**
+      * Pivot one-dimensional array to two-dimensional array by a key list.
+      * 
+      * @param   array  Array to pivot.
+      * @param   array  The fields' key list.
+      *
+      * @return  array  Pivoted array.
+      */
+    public static function pivotToTwoDimension(&$array, $keys = array())
+    {
+        foreach( (array)$keys as $key ):
+            self::setValue($array, $key, clone $array) ;
+        endforeach;
+        
+        return $array ;
     }
     
     /**

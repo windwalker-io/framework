@@ -181,10 +181,7 @@ class AKModelAdmin extends JModelAdmin
         // Convert data[field] to data[fields_group][field] then Jform can bind data into forms.
         // ==========================================================================================
         $fields = $this->getFields();
-        
-        foreach( $fields as $field ):
-            $data->$field = clone $data ;
-        endforeach;
+        $data = AKHelper::_('array.pivotToTwoDimension', $data, $fields);
         
         
         

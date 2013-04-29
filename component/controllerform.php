@@ -59,6 +59,33 @@ class AKControllerForm extends JControllerForm
         return parent::getModel($name, $prefix, $config);
     }
     
+    /**
+     * Method to save a record.
+     *
+     * @param   string  $key     The name of the primary key of the URL variable.
+     * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+     *
+     * @return  boolean  True if successful, false otherwise.
+     *
+     * @since   11.1
+     */
+    public function save($key = null, $urlVar = null)
+    {
+        $app    = JFactory::getApplication() ;
+        $input  = $app->input ;
+        $data   = $input->post->get('jform', array(), 'array') ;
+        
+        // for Fields group
+		// Convert jform[fields_group][field] to jform[field] or JTable cannot bind data.
+		// ==========================================================================================
+		$data = AKHelper::_('array.pivotFromTwoDimension', $data);
+        
+        $input->post->set('jform', $data) ;
+        $input->set('jform', $data) ;
+        JRequest::setVar('jform', $data) ;
+        
+        return parent::save($key, $urlVar) ;
+    }
     
     /**
      * Method to run batch operations.
