@@ -111,7 +111,7 @@ class AKModelAdmin extends JModelAdmin
     /**
      * Get fields group.
      *
-     * @return      array   Fields groups.
+     * @return    array   Fields groups.
      */
     public function getFieldsGroup()
     {
