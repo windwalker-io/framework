@@ -102,7 +102,9 @@ class AKModelAdmin extends JModelAdmin
      */
     public function getFields()
     {
-        // This Function is deprecated.
+        // Deprecation warning.
+        JLog::add( __CLASS__.'::'.__FUNCTION__.'() is deprecated.', JLog::WARNING, 'deprecated');
+        
         return $this->getFieldsName();
     }
     
@@ -110,7 +112,6 @@ class AKModelAdmin extends JModelAdmin
      * Get fields group.
      *
      * @return      array   Fields groups.
-     * @deprecated  4.0
      */
     public function getFieldsGroup()
     {

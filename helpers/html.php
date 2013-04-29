@@ -78,8 +78,6 @@ class AKHelperHtml {
         endif;
     }
     
-    
-    
     /**
      * Parse BBCode and convert to HTML.
      *
@@ -89,7 +87,7 @@ class AKHelperHtml {
      *
      * @return  string  Parsed text.
      */
-    public static function parseBBCode($text)
+    public static function bbcode($text)
     {
         require_once( "phar://".AKPATH_HTML."/jbbcode/jbbcode.phar/Parser.php" );
 
@@ -101,6 +99,54 @@ class AKHelperHtml {
         print $parser->getAsHtml();    
     }
     
+    /**
+     * Parse Markdown and convert to HTML.
+     *
+     * Use PHP Markdown & Markdown Extra: http://michelf.ca/projects/php-markdown/
+     * 
+     * @param    string     $text    Text to parse Markdown.
+     * @param    string     $extra   Use MarkdownExtra: http://michelf.ca/projects/php-markdown/extra/ .
+     *
+     * @return   string     Parsed Text.
+     */
+    public static function markdown($text, $extra = true, $option = array())
+    {
+        require_once( "phar://".AKPATH_HTML."/php-markdown/php-markdown.phar/Markdown.php" );
+        
+        $text = str_replace( "\t", '    ', $text );
+        
+        if($extra){
+            require_once( "phar://".AKPATH_HTML."/php-markdown/php-markdown.phar/MarkdownExtra.php" );
+            $result =  Michelf\MarkdownExtra::defaultTransform($text);
+        }else{
+            $result =  Michelf\Markdown::defaultTransform($text);
+        }
+        
+        self::highlight( JArrayHelper::getValue($option, 'highlight', 'default') );
+        
+        return $result ;
+    }
+    
+    /**
+     * Highlight Markdown <pre><code class="lang">.
+     *
+     * Use highlight.js: http://softwaremaniacs.org/soft/highlight/en/
+     * 
+     * @param   string  $theme  Code style name.
+     */
+    public static function highlight($theme = 'default')
+    {
+        $css = '/assets/js/highlight/styles/'.$theme.'.css' ;
+        if( !JFile::exists(AKPATH_ROOT.$css) ) {
+            $css = '/assets/js/highlight/styles/default.css' ;
+        }
+        
+        $doc = JFactory::getDocument();
+        $doc->addStylesheet( AKHelper::_('path.getWWUrl').$css );
+        $doc->addScript(AKHelper::_('path.getWWUrl').'/assets/js/highlight/highlight.pack.js');
+        
+        $doc->addScriptDeclaration("\n    hljs.initHighlightingOnLoad();");
+    }
 }
 
 

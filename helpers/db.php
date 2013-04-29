@@ -34,9 +34,13 @@ class AKHelperDb
      * @param   boolean  $all      Contain a.*, b.* etc.
      *
      * @return  array   Select column list.
+     * @deprecated  4.0
      */
     public static function getSelectList( $tables = array() , $all = true )
     {
+        // Deprecation warning.
+        JLog::add( __CLASS__.'::'.__FUNCTION__.'() is deprecated, Use AKHelperQuery::getSelectList() instead.', JLog::WARNING, 'deprecated');
+        
         return AKHelper::_('query.getSelectList', $tables , $all);
     }
     
@@ -47,9 +51,13 @@ class AKHelperDb
      * @param    array    $tables            Tables name to get columns.
      *
      * @return    array    Filter fields list.
+     * @deprecated  4.0
      */
     public static function mergeFilterFields( $filter_fields , $tables = array() )
     {
+        // Deprecation warning.
+        JLog::add( __CLASS__.'::'.__FUNCTION__.'() is deprecated. Use AKHelperQuery::mergeFilterFields() instead.', JLog::WARNING, 'deprecated');
+        
         return AKHelper::_('query.mergeFilterFields', $filter_fields , $tables);
     }
     
