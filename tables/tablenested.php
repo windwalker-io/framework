@@ -47,46 +47,40 @@ class AKTableNested extends JTableNested
     public function bind($array, $ignore = '')
     {
         // for Fields group
-        // Convert jform[fields_group][field] to jform[field] or JTable cannot bind data.
-        // ==========================================================================================
-        $data = array() ;
-        foreach( $array as $val ):
-            if(is_array($val)) {
-                foreach( $val as $key => $val2 ):
-                    $array[$key] = $val2 ;
-                endforeach;
-            }
-        endforeach;
-        
-        
-        
-        // Set field['param_xxx'] to params
-        // ==========================================================================================
-        if(empty($array['params'])){
-            $array['params'] = (array)AKHelper::_('array.pivotFromPrefix', 'param_', $array, $array['params']) ;
-        }
-        
-        
-        
-        // set params
-        // ==========================================================================================
-        if (isset($array['params']) && is_array($array['params'])) {
-            $registry = new JRegistry();
-            $registry->loadArray($array['params']);
-            $array['params'] = (string)$registry;
-        }
-        
-        
-        
-         // Bind the rules.
-         // ==========================================================================================
+		// Convert jform[fields_group][field] to jform[field] or JTable cannot bind data.
+		// ==========================================================================================
+		$data 	= array() ;
+		$array 	= AKHelper::_('array.pivotFromTwoDimension', $array);
+		
+		
+		
+		// Set field['param_xxx'] to params
+		// ==========================================================================================
+		if(empty($array['params'])){
+			$array['params'] = AKHelper::_('array.pivotFromPrefix', 'param_', $array, JArrayHelper::getValue($array, 'params', array())) ;
+		}
+		
+		
+		
+		// set params to JRegistry
+		// ==========================================================================================
+		if (isset($array['params']) && is_array($array['params'])) {
+			$registry = new JRegistry();
+			$registry->loadArray($array['params']);
+			$array['params'] = (string)$registry;
+		}
+		
+		
+		
+		 // Bind the rules.
+		 // ==========================================================================================
         if (isset($array['rules']) && is_array($array['rules']))
         {
             $rules = new JAccessRules($array['rules']);
             $this->setRules($rules);
         }
-        
-        return parent::bind($array, $ignore);
+		
+		return parent::bind($array, $ignore);
     }
     
     /*
