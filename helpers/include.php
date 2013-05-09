@@ -239,7 +239,7 @@ JS;
         foreach( $files as $key => $file ):
             $name = explode('-', $file) ;
             if( is_numeric( array_shift( $name ) ) ) {
-                $doc->addStylesheet( AKHelper::_('uri.component').'/'.$path.'/'.$file ,$option ) ;
+                $doc->addStylesheet( AKHelper::_('uri.component', null, $option).'/'.$path.'/'.$file ) ;
             }
         endforeach;
     }
