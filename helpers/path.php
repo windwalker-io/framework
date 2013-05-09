@@ -124,13 +124,16 @@ class AKHelperPath
      */
     public static function getWWUrl($absolute = false)
     {
-        $path = 'libraries/windwalker' ;
+        $path = AKPATH_ROOT ;
+        $root = JPATH_ROOT ;
+        $path = str_replace(JPATH_ROOT, '', AKPATH_ROOT) ;
+        $path = trim($path, '/') ;
         
         if($absolute) {
-            return $path = AKHelper::_('uri.pathAddHost', $path);
+            return $path = JURI::root() . $path;
         }
         else{
-            return $path = '/' . AKHelper::_('uri.pathAddSubfolder', $path);
+            return $path = JURI::root(true) . '/' . $path;
         }
         
     }
