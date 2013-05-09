@@ -225,10 +225,9 @@ JS;
      */
     public static function sortedStyle($path = null, $option = null, $client = null)
     {
-        $files     = JFolder::files(AKHelper::_('path.get', $client).'/'.$path, ".css$", true);
-        $doc     = JFactory::getDocument();
-        $option = JRequest::getVar('option') ;
-        $app = JFactory::getApplication() ;
+        $files = JFolder::files(AKHelper::_('path.get', $client).'/'.$path, ".css$", true);
+        $doc   = JFactory::getDocument();
+        $app   = JFactory::getApplication() ;
         
         if($app->isSite()){
             $doc->addStylesheet( AKHelper::_('path.getWWUrl').'/assets/css/windwalker.css');
@@ -255,7 +254,7 @@ JS;
         self::addJS('quickedit.js', 'ww') ;
         
         $option = JRequest::getVar('option') ;
-        $view     = JRequest::getVar('view') ;
+        $view   = JRequest::getVar('view') ;
         
         $doc = JFactory::getDocument();
         $doc->addScriptDeclaration('AKQuickEdit.init( { "option" : "'.$option.'", "view" : "'.$view.'" } );');
