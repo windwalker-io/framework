@@ -136,18 +136,19 @@ class AKHelperHtml {
      */
     public static function highlight($theme = 'default')
     {
-        $css = '/assets/js/highlight/styles/'.$theme.'.css' ;
-        if( !JFile::exists(AKPATH_ROOT.$css) ) {
-            $css = '/assets/js/highlight/styles/default.css' ;
-        }
-        
-        static $loaded = false;
-        
-        $doc = JFactory::getDocument();
-        $doc->addStylesheet( AKHelper::_('path.getWWUrl').$css );
-        $doc->addScript(AKHelper::_('path.getWWUrl').'/assets/js/highlight/highlight.pack.js');
+        static $loaded ;
         
         if(!$loaded){
+            $css = '/assets/js/highlight/styles/'.$theme.'.css' ;
+        
+            if( !JFile::exists(AKPATH_ROOT.$css) ) {
+                $css = '/assets/js/highlight/styles/default.css' ;
+            }
+            
+            $doc = JFactory::getDocument();
+            $doc->addStylesheet( AKHelper::_('path.getWWUrl').$css );
+            $doc->addScript(AKHelper::_('path.getWWUrl').'/assets/js/highlight/highlight.pack.js');
+            
             $doc->addScriptDeclaration("\n    hljs.initHighlightingOnLoad();");
             $loaded = true;
         }
