@@ -67,7 +67,7 @@ SCRIPT;
     {
         $tag     = JArrayHelper::getValue($option, 'tag', 'a');
         $id     = isset($option['id']) ? " id=\"{$option['id']}\"" : "id=\"{$selector}_link\"";
-        $class     = isset($option['class']) ? " class=\"{$option['class']}\"" : '';
+        $class     = isset($option['class']) ? " class=\"{$option['class']} cursor-pointer\"" : 'class="cursor-pointer"';
         $onclick = isset($option['onclick']) ? " onclick=\"{$option['onclick']}\"" : '';
         $icon    = JArrayHelper::getValue($option, 'icon', '');
         
@@ -84,6 +84,60 @@ SCRIPT;
         }
         
         return $button;
+    }
+    
+    /**
+     * Put content and render it as modal box HTML.
+     *
+     * @param   string  $selector  The ID selector for the modal.
+     * @param   array   $option    An array of options for the modal.
+     * @param   string  $footer    Optional markup for the modal footer
+     *
+     * @return  string  HTML markup for a modal
+     *
+     * @since   3.0
+     */
+    public static function renderModal($selector = 'modal', $content = '', $option = array())
+    {
+        self::modal($selector, $option) ;
+        
+        $header = '';
+        $footer = '';
+        
+        // Header
+        if( !empty($option['title']) ) {
+            $header = <<<HEADER
+<div class="modal-header">
+    <button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
+    <h3>{$option['title']}</h3>
+</div>
+HEADER;
+        }
+        
+        //Footer
+        if( !empty($option['footer']) ) {
+            $footer = <<<FOOTER
+<div class="modal-footer">
+    {$option['footer']}
+</div>
+FOOTER;
+        }
+        
+        // Box
+        $html = <<<MODAL
+<div class="modal hide fade" id="{$selector}">
+{$header}
+
+<div id="{$selector}-container" class="modal-body">
+    {$content}
+</div>
+
+{$footer}
+</div>
+MODAL;
+        
+        
+        return $html ;
     }
 }
 

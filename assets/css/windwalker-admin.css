@@ -40,6 +40,10 @@
     overflow: visible;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 
 /* TABLE LIST */
 .quick-edit-hover:hover {
