@@ -371,6 +371,30 @@ class AKHelperArray {
         
         return $result ;
     }
+    
+    /**
+     * Convert an Array or Object keys to new name by an array index.
+     * 
+     * @param   mixed $origin   Array or Object to convert.
+     * @param   mixed $map      Array or Object index for convert.  
+     */
+    public static function mapKey($origin, $map = array())
+    {
+        $result = is_array($origin) ? array() : new StdClass() ;
+        
+        foreach( (array) $origin as $key => $val ):
+            $newKey = self::getValue( $map, $key );
+            
+            if( $newKey ) {
+                
+                AKHelper::_('array.setValue', $result, $newKey, $val );
+            }else{
+                AKHelper::_('array.setValue', $result, $key, $val );
+            }
+        endforeach;
+        
+        return $result ;
+    }
 }
 
 
