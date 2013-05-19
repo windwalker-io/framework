@@ -615,7 +615,7 @@ class AKModelAdmin extends JModelAdmin
         
         // unset no value keys
         foreach( $commands as $key => $val ):
-            if(!$val) {
+            if($val == '') {
                 unset($commands[$key]) ;
                 continue ;
             }
@@ -667,7 +667,7 @@ class AKModelAdmin extends JModelAdmin
             // Set Value
             foreach( $commands as $key => $val ):
                 
-                if(!$val) {
+                if($val == '') {
                     unset($commands[$key]) ;
                     continue ;
                 }
@@ -696,7 +696,7 @@ class AKModelAdmin extends JModelAdmin
             // Handle Nested Batch
             // ==========================================================================================
             if( $nested && in_array('parent_id', $commands) ) {
-                if (!$user->authorise('core.create', $this->option . '.category.' . $val))
+                if (!$user->authorise('core.create', $this->option . '.' . $this->item_name . '.' . $commands['parent_id']))
                 {
                     $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
                     return false;
