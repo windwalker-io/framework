@@ -54,12 +54,12 @@ class AKHelperPanel
      */
     public static function startTabs($selector = 'myTab', $params = array())
     {
-        if( JVERSION >= 3 ) {
+        if( JVERSION >= 3.1 ){
+            return JHtml::_('bootstrap.startTabSet', $selector, $params);
+        }elseif( JVERSION >= 3 && JVERSION < 3.1 ) {
             
             $tab = '' ;
-            if(JVERSION < 3.1){
-                $tab = '<ul id="'.$selector.'_buttons" class="nav nav-tabs"></ul>' ;
-            }
+            $tab = '<ul id="'.$selector.'_buttons" class="nav nav-tabs"></ul>' ;
             
             return $tab . JHtml::_('bootstrap.startPane', $selector, $params );
         }else{
@@ -72,8 +72,9 @@ class AKHelperPanel
      */
     public static function endTabs()
     {
-        if( JVERSION >= 3 ) {
-            
+        if( JVERSION >= 3.1 ){
+            return JHtml::_('bootstrap.endTabSet');
+        }elseif( JVERSION >= 3 ) {
             return JHtml::_('bootstrap.endPane' );
         }else{
             return JHtml::_('tabs.end');
@@ -91,18 +92,20 @@ class AKHelperPanel
      */
     public static function addPanel($selector, $text, $id)
     {
-        if( JVERSION >= 3 ) {
+        if( JVERSION >= 3.1 ){
             
-            if(JVERSION < 3.1){
-                self::$buttons[$selector]['text'] = $text ;
-                self::$buttons[$selector]['id'] = $id ;
-                
-                $addclass     = !self::$script[$selector] ? ",{class: 'active'}" : '';
-                //$ul            = !self::$script[$selector] ? "var btns = $('#{$selector}_buttons') ;\n\n" : '';
-                
-                $sc = self::$script[$selector][] = "jQuery('#{$selector}_buttons').append( jQuery('<li>'{$addclass}).append( jQuery('<a>', {'href': '#{$id}', 'data-toggle': 'tab', text: '{$text}' }) ) );" ;
-                echo '<script type="text/javascript">'.$sc.'</script>' ;
-            }
+            return JHtml::_('bootstrap.addTab', $selector, $id , $text);
+        
+        }elseif( JVERSION >= 3 ) {
+            
+            self::$buttons[$selector]['text'] = $text ;
+            self::$buttons[$selector]['id'] = $id ;
+            
+            $addclass     = !self::$script[$selector] ? ",{class: 'active'}" : '';
+            //$ul            = !self::$script[$selector] ? "var btns = $('#{$selector}_buttons') ;\n\n" : '';
+            
+            $sc = self::$script[$selector][] = "jQuery('#{$selector}_buttons').append( jQuery('<li>'{$addclass}).append( jQuery('<a>', {'href': '#{$id}', 'data-toggle': 'tab', text: '{$text}' }) ) );" ;
+            echo '<script type="text/javascript">'.$sc.'</script>' ;
             
             return JHtml::_('bootstrap.addPanel', $selector, $id , $text);
         }else{
@@ -117,7 +120,9 @@ class AKHelperPanel
      */
     public static function endPanel()
     {
-        if( JVERSION >= 3 ) {
+        if( JVERSION >= 3.1 ){
+            return JHtml::_('bootstrap.endTab');
+        }elseif( JVERSION >= 3 ) {
             return JHtml::_('bootstrap.endPanel' );
         }
     }
