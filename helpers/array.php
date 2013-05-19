@@ -336,12 +336,12 @@ class AKHelperArray {
     public static function setValue(&$array, $key, $value)
     {
         if( is_array($array) ) {
-            return $array[$key] = $value ;
+            $array[$key] = $value ;
         }elseif( is_object($array) ){
-            return $array->$key = $value;
-        }else{
-            return $array ;
+            $array->$key = $value ;
         }
+        
+        return $array;
     }
     
     /**
@@ -376,7 +376,9 @@ class AKHelperArray {
      * Convert an Array or Object keys to new name by an array index.
      * 
      * @param   mixed $origin   Array or Object to convert.
-     * @param   mixed $map      Array or Object index for convert.  
+     * @param   mixed $map      Array or Object index for convert.
+     *
+     * @return  mixed   Mapped array or object.
      */
     public static function mapKey($origin, $map = array())
     {
@@ -386,10 +388,9 @@ class AKHelperArray {
             $newKey = self::getValue( $map, $key );
             
             if( $newKey ) {
-                
-                AKHelper::_('array.setValue', $result, $newKey, $val );
+                self::setValue( $result, $newKey, $val );
             }else{
-                AKHelper::_('array.setValue', $result, $key, $val );
+                self::setValue( $result, $key, $val );
             }
         endforeach;
         
