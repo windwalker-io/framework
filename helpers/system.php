@@ -25,38 +25,44 @@ class AKHelperSystem
      *
      * @var array 
      */
-    static $config        = array();
+    static $config  = array();
     
     /**
      * Version of component.
      *
      * @var array 
      */
-    static $version        = array();
+    static $version = array();
     
     /**
      * Profiler store.
      *
      * @var array 
      */
-    static $profiler    = array() ;
+    static $profiler = array() ;
     
-	
-	/**
-	 * Generate UUID v4 or v5.
-	 *
-	 * Ref from: https://gist.github.com/dahnielson/508447
-	 * 
-	 * @param   mixed   The condition to generate v3 MD5 UUID, may be string or array.
-	 *                  If this params is null, will generate v4 random UUID.
-	 *                  When condition exists, output will always the same.
-	 * @param   mixed   UUID version. May be integer 5 or string 'v5',
-	 *                  others will retuen v4 random uuid or v3 md5 uuid(if $condition exists).
-	 *
-	 * @return  string  32bit UUID.
-	 */
-	public static function uuid($condition = null, $version = 4)
-	{
+    /**
+     * Buffer to save last Profiler logs form UserState.
+     *
+     * @var array 
+     */
+    static $state_buffer = array();
+    
+    /**
+     * Generate UUID v4 or v5.
+     *
+     * Ref from: https://gist.github.com/dahnielson/508447
+     * 
+     * @param   mixed   The condition to generate v3 MD5 UUID, may be string or array.
+     *                  If this params is null, will generate v4 random UUID.
+     *                  When condition exists, output will always the same.
+     * @param   mixed   UUID version. May be integer 5 or string 'v5',
+     *                  others will retuen v4 random uuid or v3 md5 uuid(if $condition exists).
+     *
+     * @return  string  32bit UUID.
+     */
+    public static function uuid($condition = null, $version = 4)
+    {
         $uuid = '' ;
         
         // Generate UUID v4 By Random
@@ -147,8 +153,8 @@ class AKHelperSystem
         }
         
         return $uuid ;
-	}
-	
+    }
+    
      /**
      * Get component Joomla! params, a proxy of JComponentHelper::getParams($option) ;
      * 
@@ -205,10 +211,10 @@ class AKHelperSystem
     /**
      * Save component params to #__extension.
      * 
-     * @param   mixed	$params		A params object, array or JRegistry object.
-     * @param   string	$element    Extension element name, eg: com_content, mod_modules.
-     * @param   string	$client		Client, 1 => 'site', 2 => 'administrator'.
-     * @param   string	$group		Group(folder) name for plugin.
+     * @param   mixed    $params    A params object, array or JRegistry object.
+     * @param   string   $element   Extension element name, eg: com_content, mod_modules.
+     * @param   string   $client    Client, 1 => 'site', 2 => 'administrator'.
+     * @param   string   $group     Group(folder) name for plugin.
      *
      * @return  boolean    Success or not.
      */
@@ -245,8 +251,8 @@ class AKHelperSystem
     /**
      * Save component config to "config.json" in includes dir.
      * 
-     * @param   mixed	$params		A config object, array or JRegistry object.
-     * @param   string	$option     Component option name.
+     * @param   mixed   $params     A config object, array or JRegistry object.
+     * @param   string  $option     Component option name.
      *
      * @return  boolean    Success or not.    
      */
@@ -265,7 +271,7 @@ class AKHelperSystem
     /**
      * Get component version form manifest XML file.
      * 
-     * @param   string    $option	Component option name.
+     * @param   string    $option    Component option name.
      *
      * @return  string    Component version.
      */
@@ -288,12 +294,12 @@ class AKHelperSystem
     /**
      * A helper to add JProfiler log mark. Need to trun on the debug mode.
      * 
-     * @param   string    $text			Log text.
+     * @param   string    $text         Log text.
      * @param   string    $namespace    The JProfiler instance ID. Default is the core profiler "Application". 
      */
     public static function mark($text, $namespace = null)
     {
-        
+        $app = JFactory::getApplication() ;
         if(!$namespace) {
             $namespace = 'Application' ;
         }
@@ -302,15 +308,19 @@ class AKHelperSystem
             return ;
         }
         
-        if(isset(self::$profiler[$namespace])) {
-            self::$profiler[$namespace]->mark($text) ;
+        if(!isset(self::$profiler[$namespace])) {
+            jimport('joomla.error.profiler');
+            self::$profiler[$namespace] = JProfiler::getInstance($namespace);
+            
+            // Get last page logs.
+            self::$state_buffer = $app->getUserState('windwalker.system.profiler.'.$namespace);
         }
         
-        // System profiler.
-        jimport('joomla.error.profiler');
-        self::$profiler[$namespace] = JProfiler::getInstance($namespace);
         
         self::$profiler[$namespace]->mark($text) ;
+        
+        // Save in session
+        $app->setUserState('windwalker.system.profiler.'.$namespace, self::$profiler[$namespace]->getBuffer());
     }
     
     /**
@@ -320,21 +330,38 @@ class AKHelperSystem
      */
     public static function renderProfiler($namespace = null)
     {
+        $app = JFactory::getApplication() ;
+        
         if(!$namespace) {
             $namespace = 'Application' ;
         }
+        
+        $buffer = 'No Profiler data.';
         
         if(isset(self::$profiler[$namespace])) {
             $_PROFILER = self::$profiler[$namespace] ;
             
             $buffer = $_PROFILER->getBuffer();
             $buffer = implode("\n<br />\n", $buffer) ;
-            
         }else{
-            $buffer = 'No Profiler Data.' ;
+            $buffer = $app->getUserState('windwalker.system.profiler.'.$namespace);
+            $buffer = $buffer ? implode("\n<br />\n", $buffer) : '';
         }
         
-        $buffer = '<pre><h3>WindWalker Debug: </h3>'.$buffer.'</pre>' ;
+        $buffer = $buffer ? $buffer : 'No Profiler data.';
+        
+        // Get last page logs
+        $state_buffer = self::$state_buffer ;
+        
+        if($state_buffer) {
+            $state_buffer = implode("\n<br />\n", $state_buffer) ;
+            $buffer = $state_buffer . "\n<br />---------<br />\n" . $buffer ;
+        }
+        
+        // Render
+        $buffer = "<pre><h3>WindWalker Debug [namespace: {$namespace}]: </h3>".$buffer.'</pre>' ;
+        
+        $app->setUserState('windwalker.system.profiler.'.$namespace, '');
         
         echo $buffer ;
     }
