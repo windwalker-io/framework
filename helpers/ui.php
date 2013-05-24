@@ -90,8 +90,8 @@ SCRIPT;
      * Put content and render it as modal box HTML.
      *
      * @param   string  $selector  The ID selector for the modal.
-     * @param   array   $option    An array of options for the modal.
-     * @param   string  $footer    Optional markup for the modal footer
+     * @param   array   $content   HTML content to put in modal.
+     * @param   string  $option    Optional markup for the modal, footer or title.
      *
      * @return  string  HTML markup for a modal
      *
