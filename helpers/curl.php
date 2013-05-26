@@ -60,6 +60,7 @@ class AKHelperCurl
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_USERAGENT       => "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1",
             CURLOPT_FOLLOWLOCATION  => true ,
+            CURLOPT_SSL_VERIFYPEER  => false
         );
         
         if( strtolower($method) == 'post') {
