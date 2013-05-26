@@ -56,7 +56,7 @@ class AKHelperDate {
         if( $origin instanceof JDate ){
             $origin = $origin ;
         }else{
-            $origin = JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
+            $origin = JFactory::getDate( $origin , JFactory::getConfig()->get('offset') ) ;
         }
         
         switch($unit){
