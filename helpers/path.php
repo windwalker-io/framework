@@ -127,6 +127,7 @@ class AKHelperPath
         $path = AKPATH_ROOT ;
         $root = JPATH_ROOT ;
         $path = str_replace(JPATH_ROOT, '', AKPATH_ROOT) ;
+        $path = JPath::clean($path, '/');
         $path = trim($path, '/') ;
         
         if($absolute) {
