@@ -60,6 +60,9 @@ class JFormFieldFieldtype extends JFormFieldList
         
         foreach( $types as $type ):
             $type = str_replace('.xml', '', $type);
+            
+            if($type == 'index.html') continue ;
+            
             $options[] = JHtml::_(
                 'select.option', (string) $type,
                 JText::_('LIB_WINDWALKER_FIELDTYPE_'.strtoupper($type))
