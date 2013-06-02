@@ -71,6 +71,19 @@ class JFormFieldItemlist extends JFormFieldList
      */
     protected $component ;
     
+    /**
+     * Set the published column name in table.
+     *
+     * @var string
+     */
+    protected $published_field = 'published' ;
+    
+    /**
+     * Set the ordering column name in table.
+     *
+     * @var string
+     */
+    protected $ordering_field = null ;
     
     /**
      * Method to get the list of files for the field options.
@@ -90,8 +103,9 @@ class JFormFieldItemlist extends JFormFieldList
         $show_root  = (string) $this->element['show_root'];
         $published  = (string) $this->element['published'] ;
         $nested     = (string) $this->element['nested'] ;
-        $key_field  = $this->element['key_field']     ? (string) $this->element['key_field']         : 'id';
-        $value_field= $this->element['value_field'] ? (string) $this->element['value_field']     : 'title';
+        $key_field  = $this->element['key_field']   ? (string) $this->element['key_field']      : 'id';
+        $value_field= $this->element['value_field'] ? (string) $this->element['value_field']    : 'title';
+        $ordering   = $this->element['ordering']    ? (string) $this->element['ordering']       : null;
         $select     = $this->element['select'] ;
         $db         = JFactory::getDbo();
         $q          = $db->getQuery(true) ;
@@ -116,10 +130,17 @@ class JFormFieldItemlist extends JFormFieldList
         // Some filter
         // ========================================================================
         if($published) {
-            $q->where('published >= 1');
+            $q->where('{$this->published_field} >= 1');
         }
         
-        $order = $nested ? 'lft, ordering' : 'ordering' ;
+        // Ordering
+        $order      = $nested ? 'lft, ordering' : 'ordering' ;
+        $order      = $this->ordering_field ? $this->ordering_field : $order ;
+        $ordering   = $ordering ? $ordering : $order ;
+        
+        if($ordering != 'false') {
+            $q->order($ordering);
+        }
         
         
         // Query
@@ -128,7 +149,6 @@ class JFormFieldItemlist extends JFormFieldList
         
         $q->select($select)
             ->from('#__' . $this->component.'_'. $this->view_list )
-            ->order($order)
             ;
         
         $db->setQuery($q);
