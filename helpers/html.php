@@ -122,7 +122,9 @@ class AKHelperHtml {
             $result =  Michelf\Markdown::defaultTransform($text);
         }
         
-        self::highlight( JArrayHelper::getValue($option, 'highlight', 'default') );
+        if( JArrayHelper::getValue($option, 'highlight_enable', 1) ){
+            self::highlight( JArrayHelper::getValue($option, 'highlight', 'default') );
+        }
         
         return $result ;
     }
