@@ -66,28 +66,19 @@ class JFormFieldModal extends JFormField
         JHtml::_('behavior.modal', 'a.modal');
         $this->setElement();
         
-
-        // Build the script.
-        $script = array();
-        $script[] = '    function jSelect'.ucfirst($this->component).'_'.$this->id.'(id, title) {';
-        $script[] = '        document.id("'.$this->id.'_id").value = id;';
-        $script[] = '        document.id("'.$this->id.'_name").value = title;';
-        $script[] = '        SqueezeBox.close();';
-        $script[] = '    }';
-
-        // Add the script to the document head.
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
-
+        $this->setScript();
 
         // Setup variables for display.
         $html    = array();
         $link    = $this->getLink();
-
-        $title = $this->getTitle();
+        $title   = $this->getTitle();
 
         if (empty($title)) {
-            $title = JText::_('COM_'.strtoupper($this->component).'_SELECT_ITEM');
+            $title = $this->element['select_label']
+                        ? (string) JText::_($this->element['select_label'])
+                        : JText::_('COM_'.strtoupper($this->component).'_SELECT_ITEM');
         }
+        
         $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
         
         if( JVERSION >=3 ){
@@ -129,6 +120,23 @@ class JFormFieldModal extends JFormField
     }
     
     /**
+     * setScript
+     */
+    public function setScript()
+    {
+        // Build the script.
+        $script = array();
+        $script[] = '    function jSelect'.ucfirst($this->component).'_'.$this->id.'(id, title) {';
+        $script[] = '        document.id("'.$this->id.'_id").value = id;';
+        $script[] = '        document.id("'.$this->id.'_name").value = title;';
+        $script[] = '        SqueezeBox.close();';
+        $script[] = '    }';
+
+        // Add the script to the document head.
+        JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+    }
+    
+    /**
      * Set some element attributes to class variable.  
      */
     public function setElement()
@@ -163,7 +171,7 @@ class JFormFieldModal extends JFormField
         $q = $db->getQuery(true) ;
         
         $q->select('title')
-            ->from('#__'.$this->component.'_' . $ctrl)
+            ->from('#__'.$this->component . '_' . $ctrl)
             ->where("id = '{$this->value}'")
             ;
             
@@ -185,7 +193,7 @@ class JFormFieldModal extends JFormField
         // Avoid self
         $id     = JRequest::getVar('id') ;
         $option = JRequest::getVar('option') ;
-        $view     = JRequest::getVar('view') ;
+        $view   = JRequest::getVar('view') ;
         $layout = JRequest::getVar('layout') ;
         $params = '' ;
         
