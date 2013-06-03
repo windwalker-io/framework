@@ -72,7 +72,7 @@ SCRIPT;
         $icon    = JArrayHelper::getValue($option, 'icon', '');
         
         if( JVERSION >= 3 ) {
-            $button = "<{$tag} data-toggle=\"modal\" data-target=\"#$selector\"{$id}{$class}{$onclick}>
+            $button = "<{$tag} data-toggle=\"modal\" data-target=\"#$selector\"{$id}{$class}{$onclick} style=\"cursor: pointer;\">
                     <i class=\"{$icon}\" title=\"$title\"></i>
                     $title</{$tag}>" ;
         }
@@ -80,7 +80,7 @@ SCRIPT;
         {
             $rel    = JArrayHelper::getValue($option, 'rel');
             $rel    = $rel ? " rel=\"{$rel}\"" : '';
-            $button = "<a href=\"#{$selector}\"{$id}{$class}{$onclick}{$rel}>{$title}</a>" ;
+            $button = "<{$tag} href=\"#{$selector}\"{$id}{$class}{$onclick}{$rel}>{$title}</{$tag}>" ;
         }
         
         return $button;

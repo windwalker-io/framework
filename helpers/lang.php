@@ -79,10 +79,10 @@ class AKHelperLang {
         $url->setHost( 'https://www.googleapis.com/' );
         $url->setPath( 'language/translate/v2' ) ;
         
-        $query['key']         = self::APT_KEY ;
+        $query['key']       = self::APT_KEY ;
         $query['q']         = urlencode($text) ;
-        $query['source']     = $SourceLan ;
-        $query['target']     = $ResultLan ;
+        $query['source']    = $SourceLan ;
+        $query['target']    = $ResultLan ;
         
         if( !$text ) return ;
         
@@ -102,10 +102,11 @@ class AKHelperLang {
      * Load all language files from component.
      * 
      * @param   string    $lang    Language tag.
+     * @param   string    $option  Component option.
      */
-    public static function loadAll($lang = 'en-GB')
+    public static function loadAll($lang = 'en-GB', $option = null)
     {
-        $folder = AKHelper::_('path.getAdmin').'/language/'.$lang ;
+        $folder = AKHelper::_('path.getAdmin', $option).'/language/'.$lang ;
         
         if(JFolder::exists($folder)) {
             $files     = JFolder::files($folder);
@@ -124,7 +125,7 @@ class AKHelperLang {
             
             if( count($file) == 1 || $file[1] == 'sys' ) continue ;
             
-            $lang->load(implode('.', $file), AKHelper::_('path.getAdmin')) ;
+            $lang->load(implode('.', $file), AKHelper::_('path.getAdmin', $option)) ;
         endforeach;
     }
     
