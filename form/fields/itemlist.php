@@ -100,61 +100,11 @@ class JFormFieldItemlist extends JFormFieldList
         $this->setElement();
         $options    = array();
         $name       = (string) $this->element['name'];
-        $show_root  = (string) $this->element['show_root'];
-        $published  = (string) $this->element['published'] ;
-        $nested     = (string) $this->element['nested'] ;
         $key_field  = $this->element['key_field']   ? (string) $this->element['key_field']      : 'id';
         $value_field= $this->element['value_field'] ? (string) $this->element['value_field']    : 'title';
-        $ordering   = $this->element['ordering']    ? (string) $this->element['ordering']       : null;
-        $select     = $this->element['select'] ;
-        $db         = JFactory::getDbo();
-        $q          = $db->getQuery(true) ;
+        $show_root  = (string) $this->element['show_root'] ? $this->element['show_root'] : false;
         
-        
-        
-        // Avoid self
-        // ========================================================================
-        $id     = JRequest::getVar('id') ;
-        $option = JRequest::getVar('option') ;
-        $view   = JRequest::getVar('view') ;
-        $layout = JRequest::getVar('layout') ;
-        
-        if($nested){
-            $table = JTable::getInstance($this->view_item, ucfirst($this->component).'Table');
-            $table->load($id) ;
-            $q->where("id != {$id}") ;
-            $q->where("lft < {$table->lft} OR rgt > {$table->rgt}") ;
-        }
-        
-        
-        // Some filter
-        // ========================================================================
-        if($published) {
-            $q->where('{$this->published_field} >= 1');
-        }
-        
-        // Ordering
-        $order      = $nested ? 'lft, ordering' : 'ordering' ;
-        $order      = $this->ordering_field ? $this->ordering_field : $order ;
-        $ordering   = $ordering ? $ordering : $order ;
-        
-        if($ordering != 'false') {
-            $q->order($ordering);
-        }
-        
-        
-        // Query
-        // ========================================================================
-        $select = $select ? '*, ' . $select : '*' ;
-        
-        $q->select($select)
-            ->from('#__' . $this->component.'_'. $this->view_list )
-            ;
-        
-        $db->setQuery($q);
-        $items = $db->loadObjectList();
-        
-        $items = $items ? $items : array() ;
+        $items = $this->getItems();
         
         
         
@@ -220,7 +170,7 @@ class JFormFieldItemlist extends JFormFieldList
         
         // show root
         // ========================================================================
-        if ((string) isset($this->element['show_root']))
+        if ($show_root)
         {
             array_unshift($options, JHtml::_('select.option', 1, JText::_('JGLOBAL_ROOT')));
         }
@@ -234,6 +184,77 @@ class JFormFieldItemlist extends JFormFieldList
         
         
         return $options;
+    }
+    
+    /**
+     * getItems
+     */
+    public function getItems()
+    {
+        $published  = (string) $this->element['published'] ;
+        $nested     = (string) $this->element['nested'] ;
+        $key_field  = $this->element['key_field']   ? (string) $this->element['key_field']      : 'id';
+        $value_field= $this->element['value_field'] ? (string) $this->element['value_field']    : 'title';
+        $ordering   = $this->element['ordering']    ? (string) $this->element['ordering']       : null;
+        $table_name = $this->element['table']       ? (string) $this->element['table']          : '#__' . $this->component.'_'. $this->view_list ;
+        $select     = $this->element['select'] ;
+        
+        $db         = JFactory::getDbo();
+        $q          = $db->getQuery(true) ;
+        
+        // Avoid self
+        // ========================================================================
+        $id     = JRequest::getVar('id') ;
+        $option = JRequest::getVar('option') ;
+        $view   = JRequest::getVar('view') ;
+        $layout = JRequest::getVar('layout') ;
+        
+        if($nested){
+            $table = JTable::getInstance($this->view_item, ucfirst($this->component).'Table');
+            $table->load($id) ;
+            $q->where("id != {$id}") ;
+            $q->where("lft < {$table->lft} OR rgt > {$table->rgt}") ;
+        }
+        
+        
+        // Some filter
+        // ========================================================================
+        if($published) {
+            $q->where('{$this->published_field} >= 1');
+        }
+        
+        // Ordering
+        $order      = $nested ? 'lft, ordering' : 'ordering' ;
+        $order      = $this->ordering_field ? $this->ordering_field : $order ;
+        $ordering   = $ordering ? $ordering : $order ;
+        
+        if($ordering != 'false') {
+            $q->order($ordering);
+        }
+        
+        
+        // Query
+        // ========================================================================
+        $select = $select ? '*, ' . $select : '*' ;
+        
+        $q->select($select)
+            ->from( $table_name )
+            ;
+        
+        $db->setQuery($q);
+        $items = $db->loadObjectList();
+        
+        $items = $items ? $items : array() ;
+        
+        return $items ;
+    }
+    
+    /**
+     * permissionCheck
+     */
+    public function permissionCheck($items)
+    {
+        
     }
     
     /**
