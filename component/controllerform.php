@@ -249,7 +249,7 @@ class AKControllerForm extends JControllerForm
 		$data['id'] = $model->getstate($this->view_item.'.id');
 		
 		$result->set('Result', true);
-		$result->set('item', $data);
+		$result->set('data', $data);
 		jexit($result);
 	}
 }

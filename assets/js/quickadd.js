@@ -33,6 +33,9 @@ var AKQuickAdd = ({
     submit : function(id, event){
         
         event.preventDefault();
+        var button = event.target;
+        button.addClass('disabled');
+        button.set('disabled', true);
         
         var area = $$('#'+id)[0] ;
         var option = this.option[id];
@@ -41,7 +44,36 @@ var AKQuickAdd = ({
             url : 'index.php' ,
             onSuccess : function(responseText){
                 var response = JSON.decode(responseText) ;
-                console.log(response);
+                
+                if (response.Result) {
+                    var data = response.data ;
+                    jQuery('#'+id).modal('hide');
+                    var select_id = '#'+id.replace('_quickadd', '');
+                    
+                    var select = jQuery(select_id) ;
+                    select.append(new Option(data.title, data.id, true, true));
+                    
+                    setTimeout(function(){
+                        $$(select_id).highlight();
+                    } ,500);
+                    
+                    var chzn = $$(select_id+'_chzn .chzn-single span');
+                    if (chzn) {
+                        setTimeout(function(){
+                            select.trigger("liszt:updated");
+                            chzn.highlight();
+                        } ,500);
+                    }
+                }
+                
+            }
+            ,
+            onComplete : function(){
+                button.removeClass('disabled');
+                button.set('disabled', null);
+                
+                var inputs = area.getElements('input, select, textarea');
+                inputs.set('value', null);
             }
         };
         
