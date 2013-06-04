@@ -278,6 +278,9 @@ class JFormFieldItemlist extends JFormFieldList
     {
         $addnew     = $this->element['quickadd']  ? (string) $this->element['quickadd'] : false;
         $table_name = $this->element['table']   ? (string) $this->element['table']  : '#__' . $this->component.'_'. $this->view_list ;
+        $title      = $this->element['quickadd_label']   ? (string) $this->element['quickadd_label']  : 'COM_'.$this->component.'_QUICKADD' ;
+        $key_field  = $this->element['key_field']   ? (string) $this->element['key_field']      : 'id';
+        $value_field= $this->element['value_field'] ? (string) $this->element['value_field']    : 'title';
         $qid = $this->id.'_quickadd' ;
         
         if(!$addnew) return '' ;
@@ -290,6 +293,8 @@ class JFormFieldItemlist extends JFormFieldList
         $config['extension']    = $this->extension ;
         $config['table']        = $table_name ;
         $config['controller']   = $this->view_item ;
+        $config['key_field']    = $key_field ;
+        $config['value_field']  = $value_field ;
         
         $config = AKHelper::_('html.getJSObject', $config);
         
@@ -309,9 +314,9 @@ QA;
         
         
         //if(!AKDEV) $sufix = '_'. $this->component.'_'. $this->view_list ;
-        $button_title   = 'COM_'.$this->component.'_'.$this->view_item.'_QUICKADD' ;
+        $button_title   = $title;
         $modal_title    = $button_title ;
-        $button_class   = 'btn' ;
+        $button_class   = 'btn btn-small btn-success' ;
         
         $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">Cancel</button>";
         $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">Process</button>";

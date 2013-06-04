@@ -1,5 +1,5 @@
 /*!
- * Windwalker JS
+ * AKQuickAdd JS
  *
  * Copyright 2013 Asikart.com
  * License GNU General Public License version 2 or later; see LICENSE.txt, see LICENSE.php
@@ -53,7 +53,7 @@ var AKQuickAdd = ({
                     var select_id = '#'+id.replace('_quickadd', '');
                     
                     var select = jQuery(select_id) ;
-                    select.append(new Option(data.title, data.id, true, true));
+                    select.append(new Option(data[option.value_field], data[option.key_field], true, true));
                     
                     setTimeout(function(){
                         $$(select_id).highlight();
