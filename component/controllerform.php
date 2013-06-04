@@ -212,7 +212,7 @@ class AKControllerForm extends JControllerForm
 		
 		if (!$form)
         {
-            $result->set('errorMsg', array($model->getError()) );
+            $result->set('errorMsg', $model->getError() );
             jexit($result);
         }
 		
@@ -224,25 +224,15 @@ class AKControllerForm extends JControllerForm
         {
             // Get the validation messages.
             $errors 	= $model->getErrors();
-			$errorMsg 	= array();
- 
-            // Push up to three validation messages out to the user.
-            for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
-                if ($errors[$i] instanceof Exception){
-                   $errorMsg[] = $errors[$i]->getMessage();
-                }else{
-                    $errorMsg[] = $errors[$i];
-                }
-            }
 			
-			$result->set('errorMsg', $errorMsg );
+			$result->set('errorMsg', $errors[0]->getMessage() );
             jexit($result);
         }
 		
 		if (!$model->save($validData))
         {
             // Redirect back to the edit screen.
-			$result->set('errorMsg', array( JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()) ) );
+			$result->set('errorMsg', JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()) );
             jexit($result);
         }
 		

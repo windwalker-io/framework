@@ -24,6 +24,8 @@ var AKQuickAdd = ({
         this.option = Array();
         this.option[id] = option ;
         
+        this.send_setted = Array();
+        
         // Remove Required
         inputs.each( function(e){
             e.removeClass('required');
@@ -64,6 +66,9 @@ var AKQuickAdd = ({
                             chzn.highlight();
                         } ,500);
                     }
+                }else{
+                    console.log(response.errorMsg);
+                    alert(response.errorMsg);
                 }
                 
             }
@@ -77,7 +82,12 @@ var AKQuickAdd = ({
             }
         };
         
-        area.set('send', requestSetting );
+        
+        if (!this.send_setted[id]) {
+            area.set('send', requestSetting );
+            this.send_setted[id] = 1;
+        }
+        
         area.send('index.php?option='+option.option+'&task='+option.task+'&ajax=1');
         
         area.get('send');
