@@ -30,13 +30,25 @@ var AKQuickAdd = ({
         });
     }
     ,
-    submit : function(id, button){
+    submit : function(id, event){
+        
+        event.preventDefault();
         
         var area = $$('#'+id)[0] ;
         var option = this.option[id];
         
-        area.set('send', {url : 'index.php'});
+        var requestSetting = {
+            url : 'index.php' ,
+            onSuccess : function(responseText){
+                var response = JSON.decode(responseText) ;
+                console.log(response);
+            }
+        };
+        
+        area.set('send', requestSetting );
         area.send('index.php?option='+option.option+'&task='+option.task+'&ajax=1');
+        
+        area.get('send');
     }
 
 });

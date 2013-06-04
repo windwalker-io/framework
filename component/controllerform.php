@@ -201,9 +201,55 @@ class AKControllerForm extends JControllerForm
 	 */
 	public function quickAddAjax()
 	{
+		$data  	= $this->input->post->get('quickadd', array(), 'array');
+		$result = new JRegistry();
+		$result->set('Result', false);
 		
+		$model 	= $this->getModel();
+		$form 	= $model->getForm($data, false);
+		$fields_name = $model->getFieldsName();
+		$data 	= AKHelper::_('array.pivotToTwoDimension', $data, $fields_name);
 		
-		echo '{"Result" : true}' ;
-		jexit();
+		if (!$form)
+        {
+            $result->set('errorMsg', array($model->getError()) );
+            jexit($result);
+        }
+		
+		// Test whether the data is valid.
+        $validData = $model->validate($form, $data);
+		
+		// Check for validation errors.
+        if ($validData === false)
+        {
+            // Get the validation messages.
+            $errors 	= $model->getErrors();
+			$errorMsg 	= array();
+ 
+            // Push up to three validation messages out to the user.
+            for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
+                if ($errors[$i] instanceof Exception){
+                   $errorMsg[] = $errors[$i]->getMessage();
+                }else{
+                    $errorMsg[] = $errors[$i];
+                }
+            }
+			
+			$result->set('errorMsg', $errorMsg );
+            jexit($result);
+        }
+		
+		if (!$model->save($validData))
+        {
+            // Redirect back to the edit screen.
+			$result->set('errorMsg', array( JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()) ) );
+            jexit($result);
+        }
+		
+		$data['id'] = $model->getstate($this->view_item.'.id');
+		
+		$result->set('Result', true);
+		$result->set('item', $data);
+		jexit($result);
 	}
 }

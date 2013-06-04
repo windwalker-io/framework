@@ -314,7 +314,7 @@ QA;
         $button_class   = 'btn' ;
         
         $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">Cancel</button>";
-        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', this);\">Process</button>";
+        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">Process</button>";
         
         $html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class)) ;
         $html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title) , 'footer' => $footer )) ;

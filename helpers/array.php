@@ -237,7 +237,7 @@ class AKHelperArray {
     public static function pivotToTwoDimension(&$array, $keys = array())
     {
         foreach( (array)$keys as $key ):
-            self::setValue($array, $key, clone $array) ;
+            self::setValue($array, $key, $array) ;
         endforeach;
         
         return $array ;
@@ -338,7 +338,7 @@ class AKHelperArray {
         if( is_array($array) ) {
             $array[$key] = $value ;
         }elseif( is_object($array) ){
-            $array->$key = $value ;
+            $array->$key = clone $value ;
         }
         
         return $array;
