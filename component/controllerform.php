@@ -13,6 +13,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
+if( JRequest::getVar('ajax') ) {
+	ini_set('display_errors', 0);
+}
+
 /**
  * Controller tailored to suit most form-based admin operations.
  *
@@ -108,7 +112,6 @@ class AKControllerForm extends JControllerForm
         return parent::batch($model);
     }
     
-    
     /**
      * Gets the URL arguments to append to an item redirect.
      *
@@ -117,7 +120,6 @@ class AKControllerForm extends JControllerForm
      *
      * @return  string  The arguments to append to the redirect URL.
      */
-    
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
     {
         $append = parent::getRedirectToItemAppend($recordId , $urlVar );
@@ -131,13 +133,11 @@ class AKControllerForm extends JControllerForm
         return $append ;
     }
     
-    
     /**
      * Gets the URL arguments to append to a list redirect.
      *
      * @return  string  The arguments to append to the redirect URL.
      */
-    
     protected function getRedirectToListAppend()
     {
         $append = parent::getRedirectToListAppend();
@@ -151,8 +151,6 @@ class AKControllerForm extends JControllerForm
         return $append ;
     }
     
-    
-    
     /**
      * Set a URL for browser redirection.
      *
@@ -162,7 +160,6 @@ class AKControllerForm extends JControllerForm
      *
      * @return  JController  This object to support chaining.
      */
-    
     public function setRedirect($url, $msg = null, $type = null)
     {
         $task  = $this->getTask() ;
@@ -178,7 +175,6 @@ class AKControllerForm extends JControllerForm
             return parent::setRedirect($url, $msg, $type) ;
         }
     }
-    
     
     /**
      * Method to check if you can add a new record.
@@ -199,4 +195,15 @@ class AKControllerForm extends JControllerForm
         
         return ($allowEdit || $allowOwn) ;
     }
+	
+	/**
+	 * quickAddAjax
+	 */
+	public function quickAddAjax()
+	{
+		
+		
+		echo '{"Result" : true}' ;
+		jexit();
+	}
 }
