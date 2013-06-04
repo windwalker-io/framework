@@ -166,11 +166,12 @@ class JFormFieldModal extends JFormField
     public function getTitle()
     {
         $ctrl = $this->view_list ;
+        $title_field = $this->element['title_field'] ? (string) $this->element['title_field'] : 'title' ;
         
         $db    = JFactory::getDbo();
         $q = $db->getQuery(true) ;
         
-        $q->select('title')
+        $q->select($title_field)
             ->from('#__'.$this->component . '_' . $ctrl)
             ->where("id = '{$this->value}'")
             ;
