@@ -139,6 +139,43 @@ MODAL;
         
         return $html ;
     }
+    
+    /**
+     * getQuickaddForm
+     */
+    static public function getQuickaddForm($id, $extension, $view_item, $view_name)
+    {
+        $content = '';
+        
+        JForm::addFormPath(AKHelper::_('path.get', null, $extension).'/models/forms');
+        JForm::addFieldPath(AKHelper::_('path.get', null, $extension).'/models/fields');
+        
+        try
+        {
+            $form = JForm::getInstance($id.'.form', $view_item, array('control' => 'quickadd'), false, false);
+        }
+        catch (Exception $e)
+        {
+            Jerror::raiseWarning(404, $e->getMessage());
+            return false;
+        }
+        
+        $fieldset = $form->getFieldset('quickadd') ;
+        
+        foreach( $fieldset as $field ):
+            
+            $content .= "<div class=\"control-group\" id=\"jform_basic_alias-wrap\">
+                            <div class=\"control-label\">
+                                {$field->label}
+                            </div>
+                            <div class=\"controls\">
+                                {$field->input}
+                            </div>
+                        </div>" ;
+        endforeach;
+        
+        return $content ;
+    }
 }
 
 

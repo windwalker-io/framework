@@ -86,6 +86,19 @@ class JFormFieldItemlist extends JFormFieldList
     protected $ordering_field = null ;
     
     /**
+     * Method to get the field input markup for a generic list.
+     * Use the multiple attribute to enable multiselect.
+     *
+     * @return  string  The field input markup.
+     *
+     * @since   11.1
+     */
+    protected function getInput()
+    {
+        return parent::getInput() . $this->quickadd();
+    }
+    
+    /**
      * Method to get the list of files for the field options.
      * Specify the target directory with a directory attribute
      * Attributes allow an exclude mask and stripping of extensions from file name.
@@ -256,6 +269,35 @@ class JFormFieldItemlist extends JFormFieldList
         }
         
         return $options ;
+    }
+    
+    /**
+     * quickadd
+     */
+    public function quickadd()
+    {
+        $addnew     = $this->element['quickadd']  ? (string) $this->element['quickadd'] : false;
+        $table_name = $this->element['table']   ? (string) $this->element['table']  : '#__' . $this->component.'_'. $this->view_list ;
+        $qid = $this->id.'_quickadd' ;
+        
+        if(!$addnew) return '' ;
+        
+        AKHelper::_('include.sortedStyle', 'includes/css', $this->extension);
+        
+        $content = AKHelper::_('ui.getQuickaddForm', $qid , $this->extension, $this->view_item, $this->view_name );
+        
+        //if(!AKDEV) $sufix = '_'. $this->component.'_'. $this->view_list ;
+        $button_title   = 'COM_'.$this->component.'_'.$this->view_item.'_QUICKADD' ;
+        $modal_title    = $button_title ;
+        $button_class   = 'btn' ;
+        
+        $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">Cancel</button>";
+        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"QuickAdd.add();\">Process</button>";
+        
+        $html = AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class)) ;
+        $html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title) , 'footer' => $footer )) ;
+        
+        return $html ;
     }
     
     /**
