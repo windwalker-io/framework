@@ -11,16 +11,32 @@
 
 
 var AKQuickAdd = ({
+    
+    init : function(id, option){
+        var inputs  = $$('#'+id).getElements('input, select, textarea, button') ;
 
-    add : function(id){
-        //var d = $$('#'+id+' input, #'+id+' select');
-        //console.log(d);
         
-        var form = $(id);
-        form.send('index.php?option=com_flower&task=sakura.quickAddAjax&ajax=1');
-        var r = form.get('send');
+        // Set Option
+        option.task    = option.controller + '.quickAddAjax' ;
+        option.option  = option.extension ;
+        option.ajax    = 1 ;
         
-        console.log(r);
+        this.option = Array();
+        this.option[id] = option ;
+        
+        // Remove Required
+        inputs.each( function(e){
+            e.removeClass('required');
+        });
+    }
+    ,
+    submit : function(id, button){
+        
+        var area = $$('#'+id)[0] ;
+        var option = this.option[id];
+        
+        area.set('send', {url : 'index.php'});
+        area.send('index.php?option='+option.option+'&task='+option.task+'&ajax=1');
     }
 
 });

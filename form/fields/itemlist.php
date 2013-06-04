@@ -282,8 +282,25 @@ class JFormFieldItemlist extends JFormFieldList
         
         if(!$addnew) return '' ;
         
+        // Prepare Script & Styles
+        $doc = JFactory::getDocument();
         AKHelper::_('include.sortedStyle', 'includes/css', $this->extension);
         AKHelper::_('include.addJS', 'quickadd.js', 'ww');
+        
+        $config['extension']    = $this->extension ;
+        $config['table']        = $table_name ;
+        $config['controller']   = $this->view_item ;
+        
+        $config = AKHelper::_('html.getJSObject', $config);
+        
+        $script = <<<QA
+        window.addEvent('domready', function(){
+            var AKQuickAddOption = {$config} ;
+            AKQuickAdd.init('{$qid}', AKQuickAddOption);
+        });
+QA;
+        
+        $doc->addScriptDeclaration( $script );
         
         $html       = '';
         $content    = '';
@@ -297,7 +314,7 @@ class JFormFieldItemlist extends JFormFieldList
         $button_class   = 'btn' ;
         
         $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">Cancel</button>";
-        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.add('{$qid}');\">Process</button>";
+        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', this);\">Process</button>";
         
         $html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class)) ;
         $html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title) , 'footer' => $footer )) ;
