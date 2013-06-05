@@ -22,6 +22,8 @@ JFormHelper::loadFieldClass('text');
  */
 class JFormFieldFinder extends JFormFieldText
 {
+    protected $showAsTooltip = false ;
+    
     /**
      * Method to get the field input markup.
      *
@@ -48,6 +50,9 @@ class JFormFieldFinder extends JFormFieldText
         
         $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
         
+        // The text field.
+        $html[] = $this->getPreview();
+        
         if( JVERSION >=3 ){
             // The current user display field.
             $html[] = '<span class="input-append">';
@@ -71,24 +76,108 @@ class JFormFieldFinder extends JFormFieldText
             $html[] = '  </div>';
             $html[] = '</div>';
         }
-        
-
-        // The active article id field.
-        if (0 == (int)$this->value) {
-            $value = '';
-        } else {
-            $value = (int)$this->value;
-        }
 
         // class='required' for client side validation
         $class = '';
         if ($this->required) {
             $class = ' class="required modal-value"';
         }
-
-        $html[] = '<input type="hidden" id="'.$this->id.'_link"'.$class.' name="'.$this->name.'" value="'.$value.'" />';
-
-        return implode("\n", $html) ;
+        
+        $html[] = '<input type="hidden" id="'.$this->id.'"'.$class.' name="'.$this->name.'" value="'.$this->value.'" />';
+        
+        $html = implode("\n", $html) ;
+        
+        if($this->showAsTooltip){
+            $html = '<div class="input-prepend input-append">'.$html.'</div>';
+        }
+        
+        
+        return $html ;
+    }
+    
+    /**
+     * previewField
+     */
+    public function getPreview()
+    {
+        // The Preview.
+        $preview = (string) $this->element['preview'];
+        $showPreview = true;
+        $showAsTooltip = false;
+        switch ($preview)
+        {
+            case 'no': // Deprecated parameter value
+            case 'false':
+            case 'none':
+                $showPreview = false;
+                break;
+ 
+            case 'yes': // Deprecated parameter value
+            case 'true':
+            case 'show':
+                break;
+ 
+            case 'tooltip':
+            default:
+                $this->showAsTooltip = $showAsTooltip = true;
+                $options = array(
+                    'onShow' => 'jMediaRefreshPreviewTip',
+                );
+                JHtml::_('behavior.tooltip', '.hasTipPreview', $options);
+                break;
+        }
+ 
+        if ($showPreview)
+        {
+            if ($this->value && file_exists(JPATH_ROOT . '/' . $this->value))
+            {
+                $src = JURI::root() . $this->value;
+            }
+            else
+            {
+                $src = '';
+            }
+ 
+            $width = isset($this->element['preview_width']) ? (int) $this->element['preview_width'] : 300;
+            $height = isset($this->element['preview_height']) ? (int) $this->element['preview_height'] : 200;
+            $style = '';
+            $style .= ($width > 0) ? 'max-width:' . $width . 'px;' : '';
+            $style .= ($height > 0) ? 'max-height:' . $height . 'px;' : '';
+            $style .= !$showAsTooltip ? 'margin-bottom: 10px;' : '';
+            
+            $imgattr = array(
+                'id' => $this->id . '_preview',
+                'class' => 'media-preview',
+                'style' => $style,
+            );
+            
+            $imgattr['class'] = $showAsTooltip ? $imgattr['class'] : $imgattr['class'].' img-polaroid' ;
+            
+            $img = JHtml::image($src, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'), $imgattr);
+            $previewImg = '<div id="' . $this->id . '_preview_img"' . ($src ? '' : ' style="display:none"') . '>' . $img . '</div>';
+            $previewImgEmpty = '<div id="' . $this->id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>'
+                . JText::_('JLIB_FORM_MEDIA_PREVIEW_EMPTY') . '</div>';
+ 
+            $html[] = '<div class="media-preview add-on">';
+            if ($showAsTooltip)
+            {
+                $tooltip = $previewImgEmpty . $previewImg;
+                $options = array(
+                    'title' => JText::_('JLIB_FORM_MEDIA_PREVIEW_SELECTED_IMAGE'),
+                    'text' => '<i class="icon-eye"></i>',
+                    'class' => 'hasTipPreview'
+                );
+                $html[] = JHtml::tooltip($tooltip, $options);
+            }
+            else
+            {
+                $html[] = ' ' . $previewImgEmpty;
+                $html[] = ' ' . $previewImg;
+            }
+            $html[] = '</div>';
+        }
+        
+        return implode("\n", $html );
     }
     
     /**
@@ -96,9 +185,9 @@ class JFormFieldFinder extends JFormFieldText
      */
     public function setScript()
     {
-        // Build the script.
+        // Build Select script.
         $script = array();
-        $script = <<<SCRIPT
+        $script[] = <<<SCRIPT
         var AKFinderSelect_{$this->id} = function(selected, elFinder){
             if(selected.length < 1) return ;
             var link    = elFinder.path(selected[0].hash) ;
@@ -107,14 +196,43 @@ class JFormFieldFinder extends JFormFieldText
             // Clean DS
             link = link.replace(/\\\\/g, '/');
             
-            document.id("{$this->id}_link").value = link;
+            document.id("{$this->id}").value = link;
             document.id("{$this->id}_name").value = name;
+            
+            jMediaRefreshPreview('{$this->id}');
             SqueezeBox.close();
         } 
 SCRIPT;
 
+        $script[] = '    function jMediaRefreshPreview(id) {';
+        $script[] = '        var value = document.id(id).value;';
+        $script[] = '        var img = document.id(id + "_preview");';
+        $script[] = '        if (img) {';
+        $script[] = '            if (value) {';
+        $script[] = '                img.src = "' . JURI::root() . '" + value;';
+        $script[] = '                document.id(id + "_preview_empty").setStyle("display", "none");';
+        $script[] = '                document.id(id + "_preview_img").setStyle("display", "");';
+        $script[] = '            } else { ';
+        $script[] = '                img.src = ""';
+        $script[] = '                document.id(id + "_preview_empty").setStyle("display", "");';
+        $script[] = '                document.id(id + "_preview_img").setStyle("display", "none");';
+        $script[] = '            } ';
+        $script[] = '        } ';
+        $script[] = '    }';
+
+        $script[] = '    function jMediaRefreshPreviewTip(tip)';
+        $script[] = '    {';
+        $script[] = '        var img = tip.getElement("img.media-preview");';
+        $script[] = '        tip.getElement("div.tip").setStyle("max-width", "none");';
+        $script[] = '        var id = img.getProperty("id");';
+        $script[] = '        id = id.substring(0, id.length - "_preview".length);';
+        $script[] = '        jMediaRefreshPreview(id);';
+        $script[] = '        tip.setStyle("display", "block");';
+        $script[] = '    }';
+
+
         // Add the script to the document head.
-        JFactory::getDocument()->addScriptDeclaration($script);
+        JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
     }
     
     /**
@@ -141,7 +259,10 @@ SCRIPT;
     {
         $extension = $this->element['extension'] ? (string) $this->element['extension'] : JRequest::getVar('option') ;
         
-        $link = "index.php?option={$extension}&task=elfinderDisplay&tmpl=component&finder_id={$this->id}" ;
+        $root = $this->element['root'] ? (string) $this->element['root'] : '/' ;
+        $start_path = $this->element['start_path'] ? (string) $this->element['start_path'] : '/' ;
+        
+        $link = "index.php?option={$extension}&task=elfinderDisplay&tmpl=component&finder_id={$this->id}&root={$root}&start_path={$start_path}" ;
         
         return $link ;
     }

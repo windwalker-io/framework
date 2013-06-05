@@ -66,11 +66,16 @@ class AKHelperElfinder
         JHtml::script( $assets_url.'/js/elfinder/js/i18n/elfinder.'.$lang_code.'.js' );
         AKHelper::_('include.core');
         
-        $option = $option ? $option : JRequest::getVar('option') ;
-        $finder_id = JRequest::getVar('finder_id') ;
         
-		$modal  = ( JRequest::getVar('tmpl') == 'component' ) ? true : false ;
+        // Get Request
+        $option     = $option ? $option : JRequest::getVar('option') ;
+        $finder_id  = JRequest::getVar('finder_id') ;
+		$modal      = ( JRequest::getVar('tmpl') == 'component' ) ? true : false ;
+        $root       = JRequest::getVar('root', '/') ;
+        $start_path = JRequest::getVar('start_path', '/') ;
         
+        
+        // Set Script
         $getFileCallback = !$modal ? '' : "
         ,
         getFileCallback : function(file){
@@ -83,7 +88,7 @@ class AKHelperElfinder
 		// Init elFinder
         jQuery(document).ready(function($) {
             elFinder = $('#elfinder').elfinder({
-                url : 'index.php?option={$option}&task=elFinderConnector' ,
+                url : 'index.php?option={$option}&task=elFinderConnector&root={$root}&start_path={$start_path}' ,
                 width : '100%' ,
                 lang : '{$lang_code}',
                 handlers : {
@@ -162,15 +167,20 @@ SCRIPT;
 		// Documentation for connector options:
 		// https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
 		
-		$option = $option ? $option : JRequest::getVar('option') ;
-		
+        
+        // Get Some Request
+		$option     = $option ? $option : JRequest::getVar('option') ;
+		$root       = JRequest::getVar('root', '/') ;
+        $start_path = JRequest::getVar('start_path', '/') ;
+        
 		$opts = array(
 			// 'debug' => true,
 			'roots' => array(
 				array(
 					'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
-					'path'          => JPATH_ROOT,         // path to files (REQUIRED)
-					'URL'           =>  JURI::root(), // URL to files (REQUIRED)
+					'path'          => JPath::clean(JPATH_ROOT.'/'.$root),         // path to files (REQUIRED)
+                    'startPath'     => JPath::clean(JPATH_ROOT.'/'.$root.'/'.$start_path) ,
+					'URL'           => JURI::root().trim($root, '/'), // URL to files (REQUIRED)
 					'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
 				)
 			)
