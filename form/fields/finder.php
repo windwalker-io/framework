@@ -84,12 +84,6 @@ class JFormFieldFinder extends JFormFieldText
             $html[] = '    <a class="modal delicious light blue" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'</a>';
             $html[] = '  </div>';
             $html[] = '</div>';
-            
-            $html[] = '<a class="btn delicious light red fltlft hasTooltip" title="' . JText::_('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
-            $html[] = 'AKFinderClear_'.$this->id.'();';
-            $html[] = 'return false;';
-            $html[] = '">';
-            $html[] = '<i class="icon-remove"></i>'.JText::_('JLIB_FORM_BUTTON_CLEAR').'</a>';
         }
 
         // class='required' for client side validation
@@ -102,16 +96,21 @@ class JFormFieldFinder extends JFormFieldText
         
         $html = implode("\n", $html) ;
         
-        if( JVERSION >= 3 ) {
-            $html = $preview . $html ;
-        }else{
-            $html = $html . $preview;
-        }
         
         if($this->showAsTooltip){
             $html = '<div class="input-prepend input-append">'.$html.'</div>';
         }
         
+        
+        $clear_text = JVERSION < 3 ? JText::_('JLIB_FORM_BUTTON_CLEAR') : '';
+        
+        $html .= '<a class="btn btn-danger delicious light red fltlft hasTooltip" title="' . JText::_('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
+        $html .= 'AKFinderClear_'.$this->id.'();';
+        $html .= 'return false;';
+        $html .= '">';
+        $html .= '<i class="icon-remove"></i>'.$clear_text.'</a>';
+        
+        $html = $html . $preview;
         
         return $html ;
     }
@@ -164,7 +163,7 @@ class JFormFieldFinder extends JFormFieldText
             $style = '';
             $style .= ($width > 0) ? 'max-width:' . $width . 'px;' : '';
             $style .= ($height > 0) ? 'max-height:' . $height . 'px;' : '';
-            $style .= !$showAsTooltip ? 'margin-bottom: 10px;' : '';
+            $style .= !$showAsTooltip ? 'margin: 10px 0;' : '';
             
             $imgattr = array(
                 'id' => $this->id . '_preview',
