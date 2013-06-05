@@ -25,6 +25,13 @@ class JFormFieldFinder extends JFormFieldText
     protected $showAsTooltip = false ;
     
     /**
+     * The initialised state of the document object.
+     *
+     * @var    boolean 
+     */
+    protected static $initialised = false;
+    
+    /**
      * Method to get the field input markup.
      *
      * @return    string    The field input markup.
@@ -34,7 +41,9 @@ class JFormFieldFinder extends JFormFieldText
         // Load the modal behavior script.
         JHtml::_('behavior.modal', 'a.modal');
         
-        $this->setScript();
+        if (!self::$initialised){
+            $this->setScript();
+        }
 
         // Setup variables for display.
         $html    = array();
@@ -51,7 +60,7 @@ class JFormFieldFinder extends JFormFieldText
         $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
         
         // The text field.
-        $html[] = $this->getPreview();
+        $preview = $this->getPreview();
         
         if( JVERSION >=3 ){
             // The current user display field.
@@ -75,6 +84,12 @@ class JFormFieldFinder extends JFormFieldText
             $html[] = '    <a class="modal delicious light blue" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'</a>';
             $html[] = '  </div>';
             $html[] = '</div>';
+            
+            $html[] = '<a class="btn delicious light red fltlft hasTooltip" title="' . JText::_('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
+            $html[] = 'AKFinderClear_'.$this->id.'();';
+            $html[] = 'return false;';
+            $html[] = '">';
+            $html[] = '<i class="icon-remove"></i>'.JText::_('JLIB_FORM_BUTTON_CLEAR').'</a>';
         }
 
         // class='required' for client side validation
@@ -86,6 +101,12 @@ class JFormFieldFinder extends JFormFieldText
         $html[] = '<input type="hidden" id="'.$this->id.'"'.$class.' name="'.$this->name.'" value="'.$this->value.'" />';
         
         $html = implode("\n", $html) ;
+        
+        if( JVERSION >= 3 ) {
+            $html = $preview . $html ;
+        }else{
+            $html = $html . $preview;
+        }
         
         if($this->showAsTooltip){
             $html = '<div class="input-prepend input-append">'.$html.'</div>';
@@ -158,7 +179,7 @@ class JFormFieldFinder extends JFormFieldText
             $previewImgEmpty = '<div id="' . $this->id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>'
                 . JText::_('JLIB_FORM_MEDIA_PREVIEW_EMPTY') . '</div>';
  
-            $html[] = '<div class="media-preview add-on">';
+            $html[] = '<div class="media-preview add-on fltlft">';
             if ($showAsTooltip)
             {
                 $tooltip = $previewImgEmpty . $previewImg;
@@ -167,6 +188,8 @@ class JFormFieldFinder extends JFormFieldText
                     'text' => '<i class="icon-eye"></i>',
                     'class' => 'hasTipPreview'
                 );
+                
+                $options['text'] = JVERSION >= 3 ? $option : JText::_('JLIB_FORM_MEDIA_PREVIEW_TIP_TITLE');
                 $html[] = JHtml::tooltip($tooltip, $options);
             }
             else
@@ -201,7 +224,14 @@ class JFormFieldFinder extends JFormFieldText
             
             AKFinderRefreshPreview('{$this->id}');
             SqueezeBox.close();
-        } 
+        }
+        
+        var AKFinderClear_{$this->id} = function(){
+            document.id("{$this->id}").value = '';
+            document.id("{$this->id}_name").value = '';
+            
+            AKFinderRefreshPreview('{$this->id}');
+        };
 SCRIPT;
 
         $script[] = '    function AKFinderRefreshPreview(id) {';
