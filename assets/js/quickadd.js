@@ -42,7 +42,7 @@ var AKQuickAdd = ({
         var area    = $$('.'+id).getLast() ;
         var option  = this.option[id];
         var uri     = new URI();
-console.log(area);
+
         // Prevent Event
         event.preventDefault();
         
@@ -105,7 +105,7 @@ console.log(area);
                     
                     // Wait and highlight for chosen
                     var chzn = $$(select_id+'_chzn .chzn-single span');
-                    if (chzn.length > 1) {
+                    if (chzn.length > 0) {
                         setTimeout(function(){
                             select.trigger("liszt:updated");
                             chzn.highlight();
