@@ -98,19 +98,22 @@ class JFormFieldFinder extends JFormFieldText
         
         
         if($this->showAsTooltip){
-            $html = '<div class="input-prepend input-append">'.$html.'</div>';
+            $html = $preview . $html ;
+            $html = '<div class="input-prepend input-append" style="margin-right: 7px;">'.$html.'</div>';
         }
         
         
         $clear_text = JVERSION < 3 ? JText::_('JLIB_FORM_BUTTON_CLEAR') : '';
         
         $html .= '<a class="btn btn-danger delicious light red fltlft hasTooltip" title="' . JText::_('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
-        $html .= 'AKFinderClear_'.$this->id.'();';
+        $html .= 'AKFinderClear_'.$this->id."('{$title}');";
         $html .= 'return false;';
         $html .= '">';
         $html .= '<i class="icon-remove"></i>'.$clear_text.'</a>';
         
-        $html = $html . $preview;
+        if(!$this->showAsTooltip){
+            $html = $html . $preview;
+        }
         
         return $html ;
     }
@@ -188,7 +191,7 @@ class JFormFieldFinder extends JFormFieldText
                     'class' => 'hasTipPreview'
                 );
                 
-                $options['text'] = JVERSION >= 3 ? $option : JText::_('JLIB_FORM_MEDIA_PREVIEW_TIP_TITLE');
+                $options['text'] = JVERSION >= 3 ? $options['text'] : JText::_('JLIB_FORM_MEDIA_PREVIEW_TIP_TITLE');
                 $html[] = JHtml::tooltip($tooltip, $options);
             }
             else
@@ -225,9 +228,9 @@ class JFormFieldFinder extends JFormFieldText
             SqueezeBox.close();
         }
         
-        var AKFinderClear_{$this->id} = function(){
+        var AKFinderClear_{$this->id} = function(title){
             document.id("{$this->id}").value = '';
-            document.id("{$this->id}_name").value = '';
+            document.id("{$this->id}_name").value = title;
             
             AKFinderRefreshPreview('{$this->id}');
         };
