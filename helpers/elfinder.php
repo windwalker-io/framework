@@ -42,16 +42,16 @@ class AKHelperElfinder
         
         if( JVERSION >= 3){
                 
-                // jQuery
-                JHtml::_('jquery.framework', true);
-                JHtml::_('bootstrap.framework', true);
+            // jQuery
+            JHtml::_('jquery.framework', true);
+            JHtml::_('bootstrap.framework', true);
         
         }else{
-                $doc->addStyleSheet('components/com_remoteimage/includes/bootstrap/css/bootstrap.min.css');
-                
-                // jQuery
-                AKHelper::_('include.addJS', 'jquery/jquery.js', 'ww') ;
-                $doc->addScriptDeclaration('jQuery.noConflict();');
+            $doc->addStyleSheet('components/com_remoteimage/includes/bootstrap/css/bootstrap.min.css');
+            
+            // jQuery
+            AKHelper::_('include.addJS', 'jquery/jquery.js', 'ww') ;
+            $doc->addScriptDeclaration('jQuery.noConflict();');
         }
         
         $assets_url = AKHelper::_('path.getWWUrl').'/assets' ;
@@ -67,27 +67,52 @@ class AKHelperElfinder
         AKHelper::_('include.core');
         
         $option = $option ? $option : JRequest::getVar('option') ;
+        $finder_id = JRequest::getVar('finder_id') ;
+        
+		$modal  = ( JRequest::getVar('tmpl') == 'component' ) ? true : false ;
+        
+        $getFileCallback = !$modal ? '' : "
+        ,
+        getFileCallback : function(file){
+            if (window.parent) window.parent.AKFinderSelect_{$finder_id}(AKFinderSelected, window.elFinder);
+        }"; 
         
         $script = <<<SCRIPT
-       // Init elFinder
+		var AKFinderSelected ;
+		
+		// Init elFinder
         jQuery(document).ready(function($) {
-                elFinder = $('#elfinder').elfinder({
-                        url : 'index.php?option={$option}&task=elFinderConnector' ,
-                        width : '100%' ,
-                        lang : '{$lang_code}',
-                        
-                        
-                }).elfinder('instance');
+            elFinder = $('#elfinder').elfinder({
+                url : 'index.php?option={$option}&task=elFinderConnector' ,
+                width : '100%' ,
+                lang : '{$lang_code}',
+                handlers : {
+                    select : function(event, elfinderInstance) {
+                        var selected = event.data.selected;
+
+                        if (selected.length) {
+                            AKFinderSelected = [];
+                            jQuery.each(selected, function(i, e){
+                                    AKFinderSelected[i] = elfinderInstance.file(e);
+                            });
+                        }
+
+                    }
+                }
+                
+                {$getFileCallback}
+                
+            }).elfinder('instance');
         }); 
 SCRIPT;
 
         $doc->addScriptDeclaration($script);
         
         echo '<div class="row-fluid">
-                        <div id="elfinder" class="span12 rm-finder">
-                                
-                        </div>
-                </div>' ;
+                <div id="elfinder" class="span12 rm-finder">
+                        
+                </div>
+            </div>' ;
     }
     
     /**
