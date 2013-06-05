@@ -87,15 +87,17 @@ class JFormFieldModal extends JFormField
             $html[] = '<input type="text" class="input-medium" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" /><a class="modal btn" title="'.JText::_('COM_'.strtoupper($this->component).'_CHANGE_ITEM_BUTTON').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-file"></i> '.JText::_('JSELECT').'</a>';
             $html[] = '</span>';
         }else{
+            AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
+            
             // The current user display field.
             $html[] = '<div class="fltlft">';
             $html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
             $html[] = '</div>';
     
             // The user select button.
-            $html[] = '<div class="button2-left">';
-            $html[] = '  <div class="blank">';
-            $html[] = '    <a class="modal" title="'.JText::_('COM_'.strtoupper($this->component).'_CHANGE_ITEM').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_'.strtoupper($this->component).'_CHANGE_ITEM_BUTTON').'</a>';
+            $html[] = '<div class="fltlft">';
+            $html[] = '  <div class="">';
+            $html[] = '    <a class="modal delicious light blue" title="'.JText::_('COM_'.strtoupper($this->component).'_CHANGE_ITEM').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_'.strtoupper($this->component).'_CHANGE_ITEM_BUTTON').'</a>';
             $html[] = '  </div>';
             $html[] = '</div>';
         }
@@ -232,6 +234,10 @@ class JFormFieldModal extends JFormField
         $doc = JFactory::getDocument();
         AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_extension);
         AKHelper::_('include.addJS', 'quickadd.js', 'ww');
+        if( JVERSION < 3 ){
+            AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
+            AKHelper::_('include.addCSS', 'ui/modal-j25.css', 'ww');
+        }
         
         // Set AKQuickAddOption
         $config['quickadd_extension']    = $quickadd_extension ;
@@ -241,6 +247,7 @@ class JFormFieldModal extends JFormField
         $config['model_name']   = $this->view_item ;
         $config['key_field']    = $key_field ;
         $config['value_field']  = $value_field ;
+        $config['joomla3']      = ( JVERSION >= 3 ) ;
         
         $config = AKHelper::_('html.getJSObject', $config);
         
@@ -263,10 +270,11 @@ QA;
         $html       = '';
         $button_title   = $title;
         $modal_title    = $button_title ;
-        $button_class   = 'btn btn-small btn-success' ;
+        $button_class   = 'btn btn-small btn-succes delicious green light fltlft quickadd_buttons' ;
         
-        $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">Cancel</button>";
-        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">Process</button>";
+        
+        $footer = "<button class=\"btn delicious\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');AKQuickAdd.closeModal('{$qid}');\" data-dismiss=\"modal\">".JText::_('JCANCEL')."</button>";
+        $footer .= "<button class=\"btn btn-primary delicious blue\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">".JText::_('JSUBMIT')."</button>";
         
         $html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class, 'icon' => 'icon-new icon-white')) ;
         $html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title) , 'footer' => $footer )) ;

@@ -33,13 +33,15 @@ class AKController extends JControllerLegacy
 	 */
 	public function quickAddAjax()
 	{
-		$data  	= $this->input->post->get( $this->input->get('formctrl') , array(), 'array');
+		$input = JFactory::getApplication()->input ;
+		
+		$data  	= $input->post->get( $input->get('formctrl') , array(), 'array');
 		$result = new JRegistry();
 		$result->set('Result', false);
 		
-        $model_name = $this->input->get('model_name') ;
-        $component  = $this->input->get('component') ;
-        $extension  = $this->input->get('extension') ;
+        $model_name = $input->get('model_name') ;
+        $component  = $input->get('component') ;
+        $extension  = $input->get('extension') ;
         
         JControllerLegacy::addModelPath( JPATH_BASE."/components/com_{$component}/models" );
         JForm::addFormPath( JPATH_BASE."/components/com_{$component}/models/forms" );
@@ -71,7 +73,9 @@ class AKController extends JControllerLegacy
             // Get the validation messages.
             $errors 	= $model->getErrors();
 			
-			$result->set('errorMsg', $errors[0]->getMessage() );
+			$errorMsg   = is_string($errors[0]) ? $errors[0] : $errors[0]->getMessage() ;
+			
+			$result->set('errorMsg', $errorMsg );
             jexit($result);
         }
 		

@@ -27,7 +27,7 @@ var AKQuickAdd = ({
         }
         
         this.option[id] = option ;
-        console.log(this.option);
+        
         this.send_setted = Array();
         
         // Remove Required
@@ -39,10 +39,10 @@ var AKQuickAdd = ({
     submit : function(id, event){
         
         var button  = event.target;
-        var area    = $$('#'+id)[0] ;
+        var area    = $$('.'+id).getLast() ;
         var option  = this.option[id];
         var uri     = new URI();
-
+console.log(area);
         // Prevent Event
         event.preventDefault();
         
@@ -61,8 +61,6 @@ var AKQuickAdd = ({
                 
                 // Set Result Action
                 if (response.Result) {
-                    // Hide Modal
-                    jQuery('#'+id).modal('hide');
                     
                     // Reset inputs
                     var inputs = area.getElements('input, select, textarea');
@@ -71,11 +69,30 @@ var AKQuickAdd = ({
                     var data        = response.data ;
                     var select_id   = '#'+id.replace('_quickadd', '');
                     
-                    // Add new Option in Select
-                    var select      = jQuery(select_id) ;
-                    if (select) {
-                        select.append(new Option(data[option.value_field], data[option.key_field], true, true));
+                    
+                    // Detect Joomla! version
+                    if (option.joomla3) {
+                        
+                         // Hide Modal
+                        jQuery('.'+id).modal('hide');
+                        
+                        // Add new Option in Select
+                        var select      = jQuery(select_id) ;
+                        if (select) {
+                            select.append(new Option(data[option.value_field], data[option.key_field], true, true));
+                        }
+                        
+                    }else{
+                        // Hide Modal
+                        SqueezeBox.close();
+                        
+                        // Add new Option in Select
+                        var select = $$(select_id)[0] ;
+                        if (select) {
+                            new Element( 'option', { text : data[option.value_field], value : data[option.key_field] , selected : true} ).inject(select, 'bottom');
+                        }
                     }
+                    
                     
                     // Add Title for Modal input
                     var modal_name = $$(select_id+'_name');
@@ -88,7 +105,7 @@ var AKQuickAdd = ({
                     
                     // Wait and highlight for chosen
                     var chzn = $$(select_id+'_chzn .chzn-single span');
-                    if (chzn) {
+                    if (chzn.length > 1) {
                         setTimeout(function(){
                             select.trigger("liszt:updated");
                             chzn.highlight();
@@ -128,6 +145,14 @@ var AKQuickAdd = ({
         
         area.send(uri.toString());
         
+    }
+    ,
+    closeModal : function(id){
+        if (this.option[id].joomla3) {
+            
+        }else{
+            SqueezeBox.close();
+        }
     }
 
 });

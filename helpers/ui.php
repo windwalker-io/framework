@@ -72,7 +72,7 @@ SCRIPT;
         $icon    = JArrayHelper::getValue($option, 'icon', '');
         
         if( JVERSION >= 3 ) {
-            $button = "<{$tag} data-toggle=\"modal\" data-target=\"#$selector\"{$id}{$class}{$onclick} style=\"cursor: pointer;\">
+            $button = "<{$tag} data-toggle=\"modal\" data-target=\"#$selector\"{$id}{$class}{$onclick}>
                     <i class=\"{$icon}\" title=\"$title\"></i>
                     $title</{$tag}>" ;
         }
@@ -125,7 +125,7 @@ FOOTER;
         
         // Box
         $html = <<<MODAL
-<div class="modal hide fade" id="{$selector}">
+<div class="modal hide fade {$selector}" id="{$selector}">
 {$header}
 
 <div id="{$selector}-container" class="modal-body">
@@ -180,6 +180,10 @@ MODAL;
                             </div>
                         </div>" ;
         endforeach;
+        
+        if(JVERSION < 3) {
+            $content = "<fieldset class=\"adminform form-horizontal\">{$content}</fieldset>" ;
+        }
         
         return $content ;
     }

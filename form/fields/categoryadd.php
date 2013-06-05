@@ -85,6 +85,11 @@ class JFormFieldCategoryadd extends JFormFieldCategory
         $doc = JFactory::getDocument();
         AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_extension);
         AKHelper::_('include.addJS', 'quickadd.js', 'ww');
+        if( JVERSION < 3 ){
+            AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
+            AKHelper::_('include.addCSS', 'ui/modal-j25.css', 'ww');
+        }
+        
         
         // Set AKQuickAddOption
         $config['quickadd_extension']    = $quickadd_extension ;
@@ -95,6 +100,7 @@ class JFormFieldCategoryadd extends JFormFieldCategory
         $config['model_name']   = 'category' ;
         $config['key_field']    = $key_field ;
         $config['value_field']  = $value_field ;
+        $config['joomla3']      = ( JVERSION >= 3 ) ;
         
         $config = AKHelper::_('html.getJSObject', $config);
         
@@ -119,10 +125,10 @@ QA;
         $html       = '';
         $button_title   = $title;
         $modal_title    = $button_title ;
-        $button_class   = 'btn btn-small btn-success' ;
+        $button_class   = 'btn btn-small btn-success delicious green light fltlft quickadd_button' ;
         
-        $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">".JText::_('JCANCEL')."</button>";
-        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">".JText::_('JSUBMIT')."</button>";
+        $footer = "<button class=\"btn delicious\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');AKQuickAdd.closeModal('{$qid}');\" data-dismiss=\"modal\">".JText::_('JCANCEL')."</button>";
+        $footer .= "<button class=\"btn btn-primary delicious blue\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">".JText::_('JSUBMIT')."</button>";
         
         $html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class, 'icon' => 'icon-new icon-white')) ;
         $html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title) , 'footer' => $footer )) ;
