@@ -281,7 +281,7 @@ class JFormFieldItemlist extends JFormFieldList
         $table_name  = $this->getElement('table'        , '#__' . $this->component.'_'. $this->view_list);
         $key_field   = $this->getElement('key_field'    , 'id');
         $value_field = $this->getElement('value_field'  , 'title');
-        $formpath    = $this->getElement('quickadd_formpath'  , "administrator/{$this->extension}/models/forms/{$this->view_item}.xml");
+        $formpath    = $this->getElement('quickadd_formpath'  , "administrator/components/{$this->extension}/models/forms/{$this->view_item}.xml");
         $quickadd_extension = $this->getElement('quickadd_extension'  , $this->extension);
         $title       = $this->getElement('quickadd_label', 'LIB_WINDWALKER_QUICKADD_TITLE');
         
@@ -327,10 +327,10 @@ QA;
         $modal_title    = $button_title ;
         $button_class   = 'btn btn-small btn-success' ;
         
-        $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">Cancel</button>";
-        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">Process</button>";
+        $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">".JText::_('JCANCEL')."</button>";
+        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">".JText::_('JSUBMIT')."</button>";
         
-        $html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class)) ;
+        $html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class, 'icon' => 'icon-new icon-white')) ;
         $html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title) , 'footer' => $footer )) ;
         
         return $html ;

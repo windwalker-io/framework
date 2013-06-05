@@ -33,7 +33,7 @@ class AKController extends JControllerLegacy
 	 */
 	public function quickAddAjax()
 	{
-		$data  	= $this->input->post->get('quickadd', array(), 'array');
+		$data  	= $this->input->post->get( $this->input->get('formctrl') , array(), 'array');
 		$result = new JRegistry();
 		$result->set('Result', false);
 		

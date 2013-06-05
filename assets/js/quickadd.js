@@ -20,8 +20,12 @@ var AKQuickAdd = ({
         option.task    = 'quickAddAjax' ;
         option.option  = option.quickadd_extension ;
         option.ajax    = 1 ;
+        option.formctrl= id ;
         
-        this.option = Array();
+        if (!this.option) {
+            this.option = Array();
+        }
+        
         this.option[id] = option ;
         
         this.send_setted = Array();
@@ -66,10 +70,16 @@ var AKQuickAdd = ({
                     
                     var data        = response.data ;
                     var select_id   = '#'+id.replace('_quickadd', '');
-                    var select      = jQuery(select_id) ;
                     
                     // Add new Option in Select
-                    select.append(new Option(data[option.value_field], data[option.key_field], true, true));
+                    var select      = jQuery(select_id) ;
+                    if (select) {
+                        select.append(new Option(data[option.value_field], data[option.key_field], true, true));
+                    }
+                    
+                    // Add Title for Modal input
+                    var modal_name = $$(select_id+'_name');
+                    var modal_id = $$(select_id+'_id');
                     
                     // Wait and highlight
                     setTimeout(function(){
@@ -82,6 +92,15 @@ var AKQuickAdd = ({
                         setTimeout(function(){
                             select.trigger("liszt:updated");
                             chzn.highlight();
+                        } ,500);
+                    }
+                    
+                    // Wait and highlight for modal
+                    if (modal_name) {
+                        setTimeout(function(){
+                            modal_name.set('value', data[option.value_field]);
+                            modal_id.set('value', data[option.key_field]);
+                            modal_name.highlight();
                         } ,500);
                     }
                 }else{
