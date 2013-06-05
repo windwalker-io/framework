@@ -82,7 +82,7 @@ class AKController extends JControllerLegacy
             jexit($result);
         }
 		
-		$data['id'] = $model->getstate($this->view_item.'.id');
+		$data['id'] = $model->getstate($model_name.'.id');
 		
 		$result->set('Result', true);
 		$result->set('data', $data);

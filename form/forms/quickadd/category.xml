@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="quickadd" addfieldpath="/administrator/components/com_categories/models/fields" >
+        <field
+		name="title"
+		type="text"
+		label="JGLOBAL_TITLE"
+		description="JFIELD_TITLE_DESC"
+		class="inputbox"
+		size="40"
+		required="true"/>
+        
+        <field
+		name="parent_id"
+		type="categoryparent"
+		label="COM_CATEGORIES_FIELD_PARENT_LABEL"
+		description="COM_CATEGORIES_FIELD_PARENT_DESC"
+		class=""/>
+        
+        <field
+		name="extension"
+		type="hidden"/>
+        
+        <field
+		name="published"
+		type="list"
+		class="span12 small"
+		default="1"
+		size="1"
+		label="JSTATUS"
+		description="JFIELD_PUBLISHED_DESC">
+		<option
+			value="1">
+			JPUBLISHED</option>
+		<option
+			value="0">
+			JUNPUBLISHED</option>
+		<option
+			value="2">
+			JARCHIVED</option>
+		<option
+			value="-2">
+			JTRASHED</option>
+	</field>
+    </fieldset>
+</form>

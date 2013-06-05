@@ -143,7 +143,7 @@ MODAL;
     /**
      * getQuickaddForm
      */
-    static public function getQuickaddForm($id, $path)
+    static public function getQuickaddForm($id, $path, $extension = null)
     {
         $content = '';
         
@@ -160,6 +160,12 @@ MODAL;
             Jerror::raiseWarning(404, $e->getMessage());
             return false;
         }
+        
+        // Set Category Extension
+        if( $extension ) {
+            $form->setValue('extension', null, $extension) ;
+        }
+        
         
         $fieldset = $form->getFieldset('quickadd') ;
         

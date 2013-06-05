@@ -116,6 +116,7 @@ class JFormFieldItemlist extends JFormFieldList
         $key_field  = $this->element['key_field']   ? (string) $this->element['key_field']      : 'id';
         $value_field= $this->element['value_field'] ? (string) $this->element['value_field']    : 'title';
         $show_root  = (string) $this->element['show_root'] ? $this->element['show_root'] : false;
+        $nested     = (string) $this->element['nested'] ;
         
         $items = $this->getItems();
         
@@ -125,7 +126,8 @@ class JFormFieldItemlist extends JFormFieldList
         // ========================================================================
         foreach( $items as $item ):
             $item   = new JObject($item);
-            $level  = !empty($item->level) && $nested ? $item->level : 0 ;
+            $level  = !empty($item->level) ? $item->level - 1 : 0 ;
+            if( $item->level < 0 ) $item->level = 0 ;
             $options[] = JHtml::_('select.option', $item->$key_field, str_repeat('- ', $level).$item->$value_field );
         endforeach;
         
@@ -181,8 +183,8 @@ class JFormFieldItemlist extends JFormFieldList
         $view   = JRequest::getVar('view') ;
         $layout = JRequest::getVar('layout') ;
         
-        if($nested){
-            $table = JTable::getInstance($this->view_item, ucfirst($this->component).'Table');
+        if($nested && $id){
+            $table = JTable::getInstance( ucfirst($this->view_item), ucfirst($this->component).'Table');
             $table->load($id) ;
             $q->where("id != {$id}") ;
             $q->where("lft < {$table->lft} OR rgt > {$table->rgt}") ;
@@ -194,6 +196,8 @@ class JFormFieldItemlist extends JFormFieldList
         if($published) {
             $q->where('{$this->published_field} >= 1');
         }
+        
+        $q->where( "( id != 1 AND title != 'ROOT' )" );
         
         // Ordering
         $order      = $nested ? 'lft, ordering' : 'ordering' ;

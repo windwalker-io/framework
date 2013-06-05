@@ -27,7 +27,7 @@ var AKQuickAdd = ({
         }
         
         this.option[id] = option ;
-        
+        console.log(this.option);
         this.send_setted = Array();
         
         // Remove Required
