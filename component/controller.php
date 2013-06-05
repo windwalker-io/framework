@@ -28,6 +28,24 @@ if( JRequest::getVar('ajax') ) {
  */
 class AKController extends JControllerLegacy
 {
+	/**
+	 * elFinderDisplay
+	 */
+	public function elFinderDisplay()
+	{
+		//JRequest::setVar('tmpl', 'component', 'method', true) ;
+		AKHelper::_('elfinder.display', JRequest::getVar('option') );
+	}
+	
+	/**
+	 * elFinderConnector
+	 */
+	public function elFinderConnector()
+	{
+		AKHelper::_('elfinder.connector', JRequest::getVar('option') );
+		jexit();
+	}
+	
     /**
 	 * quickAddAjax
 	 */

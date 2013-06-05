@@ -270,7 +270,7 @@ QA;
         $html       = '';
         $button_title   = $title;
         $modal_title    = $button_title ;
-        $button_class   = 'btn btn-small btn-succes delicious green light fltlft quickadd_buttons' ;
+        $button_class   = 'btn btn-small btn-success delicious green light fltlft quickadd_buttons' ;
         
         
         $footer = "<button class=\"btn delicious\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');AKQuickAdd.closeModal('{$qid}');\" data-dismiss=\"modal\">".JText::_('JCANCEL')."</button>";
