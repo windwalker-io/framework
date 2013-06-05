@@ -13,10 +13,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
-if( JRequest::getVar('ajax') ) {
-	ini_set('display_errors', 0);
-}
-
 /**
  * Controller tailored to suit most form-based admin operations.
  *
@@ -195,51 +191,4 @@ class AKControllerForm extends JControllerForm
         
         return ($allowEdit || $allowOwn) ;
     }
-	
-	/**
-	 * quickAddAjax
-	 */
-	public function quickAddAjax()
-	{
-		$data  	= $this->input->post->get('quickadd', array(), 'array');
-		$result = new JRegistry();
-		$result->set('Result', false);
-		
-		$model 	= $this->getModel();
-		$form 	= $model->getForm($data, false);
-		$fields_name = $model->getFieldsName();
-		$data 	= AKHelper::_('array.pivotToTwoDimension', $data, $fields_name);
-		
-		if (!$form)
-        {
-            $result->set('errorMsg', $model->getError() );
-            jexit($result);
-        }
-		
-		// Test whether the data is valid.
-        $validData = $model->validate($form, $data);
-		
-		// Check for validation errors.
-        if ($validData === false)
-        {
-            // Get the validation messages.
-            $errors 	= $model->getErrors();
-			
-			$result->set('errorMsg', $errors[0]->getMessage() );
-            jexit($result);
-        }
-		
-		if (!$model->save($validData))
-        {
-            // Redirect back to the edit screen.
-			$result->set('errorMsg', JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()) );
-            jexit($result);
-        }
-		
-		$data['id'] = $model->getstate($this->view_item.'.id');
-		
-		$result->set('Result', true);
-		$result->set('data', $data);
-		jexit($result);
-	}
 }

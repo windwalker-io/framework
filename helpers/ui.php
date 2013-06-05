@@ -143,16 +143,17 @@ MODAL;
     /**
      * getQuickaddForm
      */
-    static public function getQuickaddForm($id, $extension, $view_item, $view_name)
+    static public function getQuickaddForm($id, $path)
     {
         $content = '';
         
-        JForm::addFormPath(AKHelper::_('path.get', null, $extension).'/models/forms');
-        JForm::addFieldPath(AKHelper::_('path.get', null, $extension).'/models/fields');
+        //JForm::addFormPath(AKHelper::_('path.get', null, $extension).'/models/forms');
+        //JForm::addFieldPath(AKHelper::_('path.get', null, $extension).'/models/fields');
         
         try
         {
-            $form = JForm::getInstance($id.'.form', $view_item, array('control' => 'quickadd'), false, false);
+            $form = new JForm($id.'.quickaddform', array('control' => 'quickadd'));
+            $form->loadFile(JPATH_ROOT.'/'.$path) ;
         }
         catch (Exception $e)
         {

@@ -17,8 +17,8 @@ var AKQuickAdd = ({
 
         
         // Set Option
-        option.task    = option.controller + '.quickAddAjax' ;
-        option.option  = option.extension ;
+        option.task    = 'quickAddAjax' ;
+        option.option  = option.quickadd_extension ;
         option.ajax    = 1 ;
         
         this.option = Array();
@@ -34,31 +34,49 @@ var AKQuickAdd = ({
     ,
     submit : function(id, event){
         
+        var button  = event.target;
+        var area    = $$('#'+id)[0] ;
+        var option  = this.option[id];
+        var uri     = new URI();
+
+        // Prevent Event
         event.preventDefault();
-        var button = event.target;
+        
+        // Set button disabled
         button.addClass('disabled');
         button.set('disabled', true);
         
-        var area = $$('#'+id)[0] ;
-        var option = this.option[id];
         
+        // Set Request Option
         var requestSetting = {
-            url : 'index.php' ,
+            url : 'index.php'
+            ,
             onSuccess : function(responseText){
+                // Response
                 var response = JSON.decode(responseText) ;
                 
+                // Set Result Action
                 if (response.Result) {
-                    var data = response.data ;
+                    // Hide Modal
                     jQuery('#'+id).modal('hide');
-                    var select_id = '#'+id.replace('_quickadd', '');
                     
-                    var select = jQuery(select_id) ;
+                    // Reset inputs
+                    var inputs = area.getElements('input, select, textarea');
+                    inputs.set('value', null);
+                    
+                    var data        = response.data ;
+                    var select_id   = '#'+id.replace('_quickadd', '');
+                    var select      = jQuery(select_id) ;
+                    
+                    // Add new Option in Select
                     select.append(new Option(data[option.value_field], data[option.key_field], true, true));
                     
+                    // Wait and highlight
                     setTimeout(function(){
                         $$(select_id).highlight();
                     } ,500);
                     
+                    // Wait and highlight for chosen
                     var chzn = $$(select_id+'_chzn .chzn-single span');
                     if (chzn) {
                         setTimeout(function(){
@@ -67,30 +85,30 @@ var AKQuickAdd = ({
                         } ,500);
                     }
                 }else{
-                    console.log(response.errorMsg);
+                    // Warning
                     alert(response.errorMsg);
                 }
                 
             }
             ,
             onComplete : function(){
+                // Reset button
                 button.removeClass('disabled');
                 button.set('disabled', null);
-                
-                var inputs = area.getElements('input, select, textarea');
-                inputs.set('value', null);
             }
         };
         
-        
+        // Set Request Option once
         if (!this.send_setted[id]) {
             area.set('send', requestSetting );
             this.send_setted[id] = 1;
         }
         
-        area.send('index.php?option='+option.option+'&task='+option.task+'&ajax=1');
+        // Send Request
+        uri.setData(option);
         
-        area.get('send');
+        area.send(uri.toString());
+        
     }
 
 });

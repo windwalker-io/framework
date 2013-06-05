@@ -116,7 +116,7 @@ class JFormFieldModal extends JFormField
 
         $html[] = '<input type="hidden" id="'.$this->id.'_id"'.$class.' name="'.$this->name.'" value="'.$value.'" />';
 
-        return implode("\n", $html);
+        return implode("\n", $html) . $this->quickadd();;
     }
     
     /**
@@ -207,5 +207,82 @@ class JFormFieldModal extends JFormField
         }
         
         return 'index.php?option='.$this->extension.'&view='.$this->view_list.$params.'&layout=modal&tmpl=component&function=jSelect'.ucfirst($this->component).'_'.$this->id ;
+    }
+    
+    /**
+     * Add an quick add button & modal
+     */
+    public function quickadd()
+    {
+        // Prepare Element
+        $quickadd    = $this->getElement('quickadd'     , false);
+        $table_name  = $this->getElement('table'        , '#__' . $this->component.'_'. $this->view_list);
+        $key_field   = $this->getElement('key_field'    , 'id');
+        $value_field = $this->getElement('value_field'  , 'title');
+        $formpath    = $this->getElement('quickadd_formpath'  , "administrator/{$this->extension}/models/forms/{$this->view_item}.xml");
+        $quickadd_extension = $this->getElement('quickadd_extension'  , $this->extension);
+        $title       = $this->getElement('quickadd_label', 'LIB_WINDWALKER_QUICKADD_TITLE');
+        
+        $qid = $this->id.'_quickadd' ;
+        
+        if(!$quickadd) return '' ;
+        
+        
+        // Prepare Script & Styles
+        $doc = JFactory::getDocument();
+        AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_extension);
+        AKHelper::_('include.addJS', 'quickadd.js', 'ww');
+        
+        // Set AKQuickAddOption
+        $config['quickadd_extension']    = $quickadd_extension ;
+        $config['extension']    = $this->extension ;
+        $config['component']    = $this->component ;
+        $config['table']        = $table_name ;
+        $config['model_name']   = $this->view_item ;
+        $config['key_field']    = $key_field ;
+        $config['value_field']  = $value_field ;
+        
+        $config = AKHelper::_('html.getJSObject', $config);
+        
+        $script = <<<QA
+        window.addEvent('domready', function(){
+            var AKQuickAddOption = {$config} ;
+            AKQuickAdd.init('{$qid}', AKQuickAddOption);
+        });
+QA;
+        
+        $doc->addScriptDeclaration( $script );
+        
+        
+        // Load Language & Form
+        AKHelper::_('lang.loadLanguage', $this->extension, null);
+        $content = AKHelper::_('ui.getQuickaddForm', $qid , $formpath );
+        
+        
+        // Prepare HTML
+        $html       = '';
+        $button_title   = $title;
+        $modal_title    = $button_title ;
+        $button_class   = 'btn btn-small btn-success' ;
+        
+        $footer = "<button class=\"btn\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');\" data-dismiss=\"modal\">Cancel</button>";
+        $footer .= "<button class=\"btn btn-primary\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">Process</button>";
+        
+        $html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class)) ;
+        $html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title) , 'footer' => $footer )) ;
+        
+        return $html ;
+    }
+    
+    /**
+     * Get Element Value.
+     */
+    public function getElement($key, $default = null)
+    {
+        if( $this->element[$key] ) {
+            return (string) $this->element[$key] ;
+        }else{
+            return $default ;
+        }
     }
 }

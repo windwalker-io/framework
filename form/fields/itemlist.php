@@ -272,27 +272,35 @@ class JFormFieldItemlist extends JFormFieldList
     }
     
     /**
-     * quickadd
+     * Add an quick add button & modal
      */
     public function quickadd()
     {
-        $addnew     = $this->element['quickadd']  ? (string) $this->element['quickadd'] : false;
-        $table_name = $this->element['table']   ? (string) $this->element['table']  : '#__' . $this->component.'_'. $this->view_list ;
-        $title      = $this->element['quickadd_label']   ? (string) $this->element['quickadd_label']  : 'COM_'.$this->component.'_QUICKADD' ;
-        $key_field  = $this->element['key_field']   ? (string) $this->element['key_field']      : 'id';
-        $value_field= $this->element['value_field'] ? (string) $this->element['value_field']    : 'title';
+        // Prepare Element
+        $quickadd    = $this->getElement('quickadd'     , false);
+        $table_name  = $this->getElement('table'        , '#__' . $this->component.'_'. $this->view_list);
+        $key_field   = $this->getElement('key_field'    , 'id');
+        $value_field = $this->getElement('value_field'  , 'title');
+        $formpath    = $this->getElement('quickadd_formpath'  , "administrator/{$this->extension}/models/forms/{$this->view_item}.xml");
+        $quickadd_extension = $this->getElement('quickadd_extension'  , $this->extension);
+        $title       = $this->getElement('quickadd_label', 'LIB_WINDWALKER_QUICKADD_TITLE');
+        
         $qid = $this->id.'_quickadd' ;
         
-        if(!$addnew) return '' ;
+        if(!$quickadd) return '' ;
+        
         
         // Prepare Script & Styles
         $doc = JFactory::getDocument();
-        AKHelper::_('include.sortedStyle', 'includes/css', $this->extension);
+        AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_extension);
         AKHelper::_('include.addJS', 'quickadd.js', 'ww');
         
+        // Set AKQuickAddOption
+        $config['quickadd_extension']    = $quickadd_extension ;
         $config['extension']    = $this->extension ;
+        $config['component']    = $this->component ;
         $config['table']        = $table_name ;
-        $config['controller']   = $this->view_item ;
+        $config['model_name']   = $this->view_item ;
         $config['key_field']    = $key_field ;
         $config['value_field']  = $value_field ;
         
@@ -307,13 +315,14 @@ QA;
         
         $doc->addScriptDeclaration( $script );
         
+        
+        // Load Language & Form
+        AKHelper::_('lang.loadLanguage', $this->extension, null);
+        $content = AKHelper::_('ui.getQuickaddForm', $qid , $formpath );
+        
+        
+        // Prepare HTML
         $html       = '';
-        $content    = '';
-        
-        $content .= AKHelper::_('ui.getQuickaddForm', $qid , $this->extension, $this->view_item, $this->view_name );
-        
-        
-        //if(!AKDEV) $sufix = '_'. $this->component.'_'. $this->view_list ;
         $button_title   = $title;
         $modal_title    = $button_title ;
         $button_class   = 'btn btn-small btn-success' ;
@@ -349,5 +358,17 @@ QA;
         }
         
         $this->component = str_replace('com_', '', $this->extension );
+    }
+    
+    /**
+     * Get Element Value.
+     */
+    public function getElement($key, $default = null)
+    {
+        if( $this->element[$key] ) {
+            return (string) $this->element[$key] ;
+        }else{
+            return $default ;
+        }
     }
 }
