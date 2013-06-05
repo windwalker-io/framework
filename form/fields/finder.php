@@ -121,7 +121,7 @@ class JFormFieldFinder extends JFormFieldText
             default:
                 $this->showAsTooltip = $showAsTooltip = true;
                 $options = array(
-                    'onShow' => 'jMediaRefreshPreviewTip',
+                    'onShow' => 'AKFinderRefreshPreviewTip',
                 );
                 JHtml::_('behavior.tooltip', '.hasTipPreview', $options);
                 break;
@@ -199,12 +199,12 @@ class JFormFieldFinder extends JFormFieldText
             document.id("{$this->id}").value = link;
             document.id("{$this->id}_name").value = name;
             
-            jMediaRefreshPreview('{$this->id}');
+            AKFinderRefreshPreview('{$this->id}');
             SqueezeBox.close();
         } 
 SCRIPT;
 
-        $script[] = '    function jMediaRefreshPreview(id) {';
+        $script[] = '    function AKFinderRefreshPreview(id) {';
         $script[] = '        var value = document.id(id).value;';
         $script[] = '        var img = document.id(id + "_preview");';
         $script[] = '        if (img) {';
@@ -220,13 +220,13 @@ SCRIPT;
         $script[] = '        } ';
         $script[] = '    }';
 
-        $script[] = '    function jMediaRefreshPreviewTip(tip)';
+        $script[] = '    function AKFinderRefreshPreviewTip(tip)';
         $script[] = '    {';
         $script[] = '        var img = tip.getElement("img.media-preview");';
         $script[] = '        tip.getElement("div.tip").setStyle("max-width", "none");';
         $script[] = '        var id = img.getProperty("id");';
         $script[] = '        id = id.substring(0, id.length - "_preview".length);';
-        $script[] = '        jMediaRefreshPreview(id);';
+        $script[] = '        AKFinderRefreshPreview(id);';
         $script[] = '        tip.setStyle("display", "block");';
         $script[] = '    }';
 
