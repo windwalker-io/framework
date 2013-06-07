@@ -16,7 +16,7 @@ include_once AKPATH_COMPONENT.'/modellist.php' ;
 /**
  * API Response Model for ModelList.
  */
-class AKResponseModelItem extends AKModelList
+class AKResponseModelList extends AKModelList
 {
     public 		$default_method ;
 	

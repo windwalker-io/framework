@@ -59,6 +59,18 @@ class AKHelperApi
     }
     
     /**
+     * initServer
+     */
+    public static function initServer()
+    {
+        include_once AKPATH_COMPONENT.'/api/response/item.php' ;
+        include_once AKPATH_COMPONENT.'/api/response/list.php' ;
+        
+        include_once AKPATH_COMPONENT.'/api/user/item.php' ;
+        //include_once AKPATH_COMPONENT.'/api/user/list.php' ;
+    }
+    
+    /**
      * Get API SDK For AKApi System.
      */
     public static function getSDK( $id = null, $option = array() )

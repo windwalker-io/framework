@@ -14,25 +14,14 @@ defined('_JEXEC') or die;
 include_once AKPATH_COMPONENT.'/modeladmin.php' ;
 
 /**
- * Customer model.
+ * API User handle model.
  */
-class CustomerModelUserItem extends AKModelAdmin
+class AKUserModelItem extends AKModelAdmin
 {
-	/**
-	 * @var		string	The prefix to use with controller messages.
-	 * @since	1.6
-	 */
-	protected 	$text_prefix = 'COM_CUSTOMER';
-	
-	public 		$component = 'customer' ;
-	public 		$item_name = '' ;
-	public 		$list_name = '' ;
-    public 		$default_method = '' ;
+    public 		$default_method ;
 
-    
     /**
-     * function login
-     * @param 
+     * Login a user by username & password.
      */
     public function login()
     {
@@ -65,8 +54,7 @@ class CustomerModelUserItem extends AKModelAdmin
     }
     
     /**
-     * function logout
-     * @param 
+     * Logout a user by session key
      */
     public function logout()
     {
@@ -89,8 +77,7 @@ class CustomerModelUserItem extends AKModelAdmin
     }
     
     /**
-     * function getUser
-     * @param 
+     * Get user information.
      */
     public function getUser()
     {
