@@ -350,12 +350,12 @@ SCRIPT;
      */
     public function getLink()
     {
-        $extension = $this->element['extension'] ? (string) $this->element['extension'] : JRequest::getVar('option') ;
+        $handler = $this->element['handler'] ? (string) $this->element['handler'] : JRequest::getVar('option') ;
         
         $root = $this->element['root'] ? (string) $this->element['root'] : '/' ;
         $start_path = $this->element['start_path'] ? (string) $this->element['start_path'] : '/' ;
         
-        $link = "index.php?option={$extension}&task=elfinderDisplay&tmpl=component&finder_id={$this->id}&root={$root}&start_path={$start_path}" ;
+        $link = "index.php?option={$handler}&task=elfinderDisplay&tmpl=component&finder_id={$this->id}&root={$root}&start_path={$start_path}" ;
         
         return $link ;
     }

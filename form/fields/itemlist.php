@@ -291,7 +291,7 @@ class JFormFieldItemlist extends JFormFieldList
         $key_field   = $this->getElement('key_field'    , 'id');
         $value_field = $this->getElement('value_field'  , 'title');
         $formpath    = $this->getElement('quickadd_formpath'  , "administrator/components/{$this->extension}/models/forms/{$this->view_item}.xml");
-        $quickadd_extension = $this->getElement('quickadd_extension'  , $this->extension);
+        $quickadd_handler = $this->getElement('quickadd_handler'  , $this->extension);
         $title       = $this->getElement('quickadd_label', 'LIB_WINDWALKER_QUICKADD_TITLE');
         
         $qid = $this->id.'_quickadd' ;
@@ -301,7 +301,7 @@ class JFormFieldItemlist extends JFormFieldList
         
         // Prepare Script & Styles
         $doc = JFactory::getDocument();
-        AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_extension);
+        AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_handler);
         AKHelper::_('include.addJS', 'quickadd.js', 'ww');
         if( JVERSION < 3 ){
             AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
@@ -309,7 +309,7 @@ class JFormFieldItemlist extends JFormFieldList
         }
         
         // Set AKQuickAddOption
-        $config['quickadd_extension']    = $quickadd_extension ;
+        $config['quickadd_handler']    = $quickadd_handler ;
         $config['extension']    = $this->extension ;
         $config['component']    = $this->component ;
         $config['table']        = $table_name ;
