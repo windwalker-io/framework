@@ -281,6 +281,11 @@ class JFormFieldItemlist extends JFormFieldList
     public function quickadd()
     {
         // Prepare Element
+        $readonly   = $this->getElement('readonly'  , false);
+        $disabled   = $this->getElement('disabled'  , false);
+        
+        if( $readonly || $disabled ) return ;
+        
         $quickadd    = $this->getElement('quickadd'     , false);
         $table_name  = $this->getElement('table'        , '#__' . $this->component.'_'. $this->view_list);
         $key_field   = $this->getElement('key_field'    , 'id');

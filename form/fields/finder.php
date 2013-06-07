@@ -76,7 +76,7 @@ class JFormFieldFinder extends JFormFieldText
         if( JVERSION >=3 ){
             // The current user display field.
             $html[] = '<span class="'.(!$disabled && !$readonly ? 'input-append' : '').'">';
-            $html[] = '<input type="text" class="'.(!$disabled && !$readonly ? 'input-medium' : $this->element['class']).'" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />' ;
+            $html[] = '<input type="text" class="'.(!$disabled && !$readonly ? 'input-medium '.$this->element['class'] : $this->element['class']).'" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />' ;
             
             if (!$disabled && !$readonly) :
                 $html[] = '<a class="modal btn btn-primary" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">
