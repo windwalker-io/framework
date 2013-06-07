@@ -51,6 +51,7 @@ class AKController extends JControllerLegacy
 	 */
 	public function quickAddAjax()
 	{
+		// Init Variables
 		$input = JFactory::getApplication()->input ;
 		
 		$data  	= $input->post->get( $input->get('formctrl') , array(), 'array');
@@ -61,21 +62,25 @@ class AKController extends JControllerLegacy
         $component  = $input->get('component') ;
         $extension  = $input->get('extension') ;
         
+		
+		// Include Needed Classes
         JControllerLegacy::addModelPath( JPATH_BASE."/components/com_{$component}/models" );
         JForm::addFormPath( JPATH_BASE."/components/com_{$component}/models/forms" );
         JForm::addFieldPath( JPATH_BASE."/components/com_{$component}/models/fields" );
         JTable::addIncludePath( JPATH_BASE."/components/com_{$component}/tables" );
         AKHelper::_('lang.loadLanguage', $extension, null);
         
+		// Get Model
 		$model 	= $this->getModel( ucfirst( $model_name ), ucfirst($component).'Model' , array('ignore_request' => true) );
-        
-		$form 	= $model->getForm($data, false);
-        
+		
+		// For WindWalker Component only
         if( is_callable( array( $model, 'getFieldsName' ) ) ){
             $fields_name = $model->getFieldsName();
             $data 	= AKHelper::_('array.pivotToTwoDimension', $data, $fields_name);
         }
         
+		// get Form
+		$form 	= $model->getForm($data, false);
 		if (!$form)
         {
             $result->set('errorMsg', $model->getError() );
@@ -90,13 +95,12 @@ class AKController extends JControllerLegacy
         {
             // Get the validation messages.
             $errors 	= $model->getErrors();
-			
 			$errorMsg   = is_string($errors[0]) ? $errors[0] : $errors[0]->getMessage() ;
-			
 			$result->set('errorMsg', $errorMsg );
             jexit($result);
         }
 		
+		// Do Save
 		if (!$model->save($validData))
         {
             // Redirect back to the edit screen.
@@ -104,8 +108,10 @@ class AKController extends JControllerLegacy
             jexit($result);
         }
 		
+		// Set ID
 		$data['id'] = $model->getstate($model_name.'.id');
 		
+		// Set Result
 		$result->set('Result', true);
 		$result->set('data', $data);
 		jexit($result);

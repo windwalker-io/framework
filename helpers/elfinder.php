@@ -73,15 +73,16 @@ class AKHelperElfinder
 		$modal      = ( JRequest::getVar('tmpl') == 'component' ) ? true : false ;
         $root       = JRequest::getVar('root', '/') ;
         $start_path = JRequest::getVar('start_path', '/') ;
-        
         $site_root  = JURI::root(true).'/' ;
+        
         
         // Set Script
         $getFileCallback = !$modal ? '' : "
-        ,
-        getFileCallback : function(file){
-            if (window.parent) window.parent.AKFinderSelect( '{$finder_id}',AKFinderSelected, window.elFinder, '{$site_root}');
-        }"; 
+            ,
+            getFileCallback : function(file){
+                if (window.parent) window.parent.AKFinderSelect( '{$finder_id}',AKFinderSelected, window.elFinder, '{$site_root}');
+            }"; 
+        
         
         $script = <<<SCRIPT
 		var AKFinderSelected ;
@@ -115,9 +116,7 @@ SCRIPT;
         $doc->addScriptDeclaration($script);
         
         echo '<div class="row-fluid">
-                <div id="elfinder" class="span12 rm-finder">
-                        
-                </div>
+                <div id="elfinder" class="span12 rm-finder"></div>
             </div>' ;
     }
     
