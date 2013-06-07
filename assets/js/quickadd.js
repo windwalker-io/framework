@@ -18,7 +18,7 @@ var AKQuickAdd = ({
         
         // Set Option
         option.task    = 'quickAddAjax' ;
-        option.option  = option.quickadd_extension ;
+        option.option  = option.quickadd_handler ;
         option.ajax    = 1 ;
         option.formctrl= id ;
         
@@ -135,7 +135,7 @@ var AKQuickAdd = ({
         };
         
         // Set Request Option once
-        if (!this.send_setted[id]) {
+        if (!this.send_setted[id] || !option.joomla3) {
             area.set('send', requestSetting );
             this.send_setted[id] = 1;
         }
@@ -144,7 +144,7 @@ var AKQuickAdd = ({
         uri.setData(option);
         
         area.send(uri.toString());
-        
+        area.send(uri.toString());
     }
     ,
     closeModal : function(id){

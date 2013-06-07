@@ -29,7 +29,10 @@
     width: 100%;
 }
 
-
+/* J25 Config component */
+#component-form input {
+    margin-bottom: 10px;
+}
 
 
 /* MODAL */
