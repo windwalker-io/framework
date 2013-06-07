@@ -365,4 +365,23 @@ class AKHelperSystem
         
         echo $buffer ;
     }
+    
+    /**
+     * Get API SDK For AKApi System.
+     */
+    public static function getApiSDK( $host = null )
+    {
+        static $instance ;
+        
+        if($instance) {
+            return $instance ;
+        }else{
+            include_once SCHEDULE_ADMIN.'/class/customersdk/customersdk.php' ;
+            
+            $instance = $service = AKApiSDK::getInstance($host);
+            
+            return $service;
+        }
+        
+    }
 }
