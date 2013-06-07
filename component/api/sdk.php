@@ -9,6 +9,8 @@ class AKApiSDK extends JObject
     
     protected $password = "" ;
     
+    protected static $instances ;
+    
     public $host    = '' ;
     
     public $uri     = '' ;
@@ -29,11 +31,17 @@ class AKApiSDK extends JObject
      * function __construct
      * @param 
      */
-    public function __construct($host, $ssl = false)
+    public function __construct($option)
     {
         $this->uri = new JURI() ;
-        $this->setHost($host);
+        $this->setHost($option['host']);
+        
+        $ssl = JArrayHelper::getValue($option, 'ssl', false);
         $this->useSSL($ssl);
+        
+        // User Info
+        $this->username = !empty($option['username']) ? $option['username'] : $this->username ;
+        $this->password = !empty($option['password']) ? $option['password'] : $this->password ;
         
         // Get Session Key
         $this->session_cache_path = JPATH_ROOT.'/cache/AKApiSDK' ;
@@ -46,19 +54,17 @@ class AKApiSDK extends JObject
      * function getInstance
      * @param 
      */
-    public static function getInstance($host, $ssl = false)
+    public static function getInstance($option)
     {
-        static $instances ;
+        $hash = AKHelper::_('system.uuid', $option['host'], 3);
         
-        $hash = AKHelper::_('system.uuid', $host, 3);
-        
-        if(!empty($instances[$hash])) {
+        if(!empty(self::$instances[$hash])) {
             return $instances ;
         }
         
-        $instances[$hash] = new AKApiSDK($host);
+        self::$instances[$hash] = new AKApiSDK($option);
         
-        return $instances[$hash] ;
+        return self::$instances[$hash] ;
     }
     
     /**

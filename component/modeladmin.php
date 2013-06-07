@@ -117,11 +117,11 @@ class AKModelAdmin extends JModelAdmin
     {
         if(!empty($this->fields_group)) return $this->fields_group ;
         
-        $xml_file         = AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->item_name.'.xml' ;
-        $xml             = JFactory::getXML( $xml_file );
+        $xml_file       = AKHelper::_('path.get', null, $this->option).'/models/forms/'.$this->item_name.'.xml' ;
+        $xml            = JFactory::getXML( $xml_file );
         $fields         = $xml->xpath('/form/fields');
-        $fields_name     = array();
-        $fields_group    = array();
+        $fields_name    = array();
+        $fields_group   = array();
         
         foreach( $fields as $field ):
             if( (string) $field['name'] != 'other' )

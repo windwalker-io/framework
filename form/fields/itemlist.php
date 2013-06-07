@@ -127,7 +127,7 @@ class JFormFieldItemlist extends JFormFieldList
         foreach( $items as $item ):
             $item   = new JObject($item);
             $level  = !empty($item->level) ? $item->level - 1 : 0 ;
-            if( $item->level < 0 ) $item->level = 0 ;
+            if( $level < 0 ) $level = 0 ;
             $options[] = JHtml::_('select.option', $item->$key_field, str_repeat('- ', $level).$item->$value_field );
         endforeach;
         

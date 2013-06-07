@@ -36,18 +36,24 @@ class AKHelperApi
             $compoenent_option = 'com_'.$component;
         }
         
-        $option['option'] = $compoenent_option;
+        $option['component']    = $component ;
+        $option['option']       = $compoenent_option;
         
         // Include Request SDK
         include_once AKPATH_COMPONENT.'/api/request/item.php' ;
         include_once AKPATH_COMPONENT.'/api/request/list.php' ;
+        include_once AKPATH_TABLES.'/api.php' ;
         
-        include_once AKHelper::_('path.getAdmin', $compoenent_option).'includes/api/sdk.php' ;
+        include_once AKHelper::_('path.getAdmin', $compoenent_option).'/includes/api/sdk.php' ;
         
         // Init SDK
         $params = JComponentHelper::getParams($compoenent_option) ;
         
         $host = $params->get('ApiSystem_Host') ;
+        
+        if( $host ) {
+            $option['host'] = $host;
+        }
         
         self::getSDK($id, $option);
     }
@@ -55,8 +61,10 @@ class AKHelperApi
     /**
      * Get API SDK For AKApi System.
      */
-    public static function getSDK( $id, $option = array() )
+    public static function getSDK( $id = null, $option = array() )
     {
+        if(!$id) $id = AKHelper::_('path.getOption');
+        
         if(!empty(self::$sdk_instance[$id])) {
             
             return self::$sdk_instance[$id] ;
@@ -64,9 +72,8 @@ class AKHelperApi
         }else{
             
             $component = $option['component'] ;
-            $sdk_class = 'AKApiSDK'.ucfirst($component) ;
             
-            self::$sdk_instance[$id] = $service = $sdk_class::getInstance($option);
+            self::$sdk_instance[$id] = $service = AKApiSDK::getInstance($option);
             
             return $service;
         }

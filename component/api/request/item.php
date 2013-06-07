@@ -24,6 +24,18 @@ class AKRequestModelItem extends AKModelAdmin
 	public      $request_item = '';
     public      $request_list = '';
 	
+	/**
+     * Constructor.
+     *
+     * @param    array    An optional associative array of configuration settings.
+     * @see      JController
+     */
+    public function __construct($config = array())
+    {
+		$this->service = AKHelper::_('api.getSDK', $this->option);
+		
+        parent::__construct($config);
+    }
 
 	/**
      * Method to delete one or more records.
@@ -41,7 +53,7 @@ class AKRequestModelItem extends AKModelAdmin
         // Iterate the items to delete each one.
         $uriQuery['cid'] = $pks ;
         
-        $service    = SCHelper::getCustomerSDK();
+        $service    = $this->service;
         $result     = $service->execute("/{$this->request_item}/delete", $uriQuery );
         
         return $this->_handleResult($result, $service);
@@ -66,7 +78,7 @@ class AKRequestModelItem extends AKModelAdmin
         $uriQuery['value']  = $value ;
         $uriQuery['cid']    = $pks ;
         
-        $service    = SCHelper::getCustomerSDK();
+        $service    = $this->service;
         $result     = $service->execute("/{$this->request_item}/publish", $uriQuery );
         
         return $this->_handleResult($result, $service);
@@ -90,7 +102,7 @@ class AKRequestModelItem extends AKModelAdmin
         $uriQuery['commands']   = $commands ;
         $uriQuery['cid']        = $pks ;
         
-        $service    = SCHelper::getCustomerSDK();
+        $service    = $this->service;
         $result     = $service->execute("/{$this->request_item}/batch", $uriQuery );
         
         return $this->_handleResult($result, $service);
@@ -111,7 +123,7 @@ class AKRequestModelItem extends AKModelAdmin
         
         $uriQuery['cid'] = $pks ;
         
-        $service    = SCHelper::getCustomerSDK();
+        $service    = $this->service;
         $result     = $service->execute("/{$this->request_item}/checkin", $uriQuery );
         
         return $this->_handleResult($result, $service);
@@ -128,7 +140,7 @@ class AKRequestModelItem extends AKModelAdmin
      */
     public function checkout($pk = null)
     {
-        $service    = SCHelper::getCustomerSDK();
+        $service    = $this->service;
         $result     = $service->execute("/{$this->request_item}/checkout/".$pk);
         
         return $this->_handleResult($result, $service);
@@ -154,7 +166,7 @@ class AKRequestModelItem extends AKModelAdmin
         $uriQuery['cid']    = $pks ;
         $uriQuery['delta']  = $delta ;
         
-        $service    = SCHelper::getCustomerSDK();
+        $service    = $this->service;
         $result     = $service->execute("/{$this->request_item}/reorder", $uriQuery );
         
         return $this->_handleResult($result, $service);
@@ -177,7 +189,7 @@ class AKRequestModelItem extends AKModelAdmin
         $uriQuery['cid']    = $pks ;
         $uriQuery['order']  = $order ;
         
-        $service    = SCHelper::getCustomerSDK();
+        $service    = $this->service;
         $result     = $service->execute("/{$this->request_item}/saveorder", $uriQuery );
         
         return $this->_handleResult($result, $service);
@@ -197,7 +209,7 @@ class AKRequestModelItem extends AKModelAdmin
         
         $uriQuery['cid'] = $pks ;
         
-        $service    = SCHelper::getCustomerSDK();
+        $service    = $this->service;
         $result     = $service->execute("/{$this->request_item}/duplicate", $uriQuery );
         
         return $this->_handleResult($result, $service);

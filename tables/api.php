@@ -17,7 +17,19 @@ jimport('joomla.database.tablenested');
  * resident Table class
  */
 class AKApiTable extends JTable
-{    
+{
+    /**
+	 * Constructor
+	 *
+	 * @param JDatabase A database connector object
+	 */
+	public function __construct($table, $key, $db)
+	{
+        $this->_service = AKHelper::_('api.getSDK', $this->_option);
+        
+		parent::__construct($table, $key, $db);
+	}
+    
     /**
      * Get the columns from database table.
      *
@@ -40,6 +52,15 @@ class AKApiTable extends JTable
                 $this->setError($e);
                 return false;
             }
+            
+            foreach( $fields as $key => &$field ):
+                $obj = new StdClass;
+                $obj->Default = '' ;
+                $obj->Field = $key ;
+                $obj->Map = $field ;
+                $field = $obj ;
+            endforeach;
+            
             $cache = $fields;
         }
         
@@ -87,7 +108,7 @@ class AKApiTable extends JTable
         }
  
         // Initialise the query.
-        $service    = AKHelper::_('system.getApiSDK');
+        $service    = $this->_service ;
         $pk         = JArrayHelper::getValue($keys, $this->_tbl_key) ;
         unset( $keys[$this->_tbl_key] );
  
@@ -127,7 +148,7 @@ class AKApiTable extends JTable
         
         unset($keys->asset_id);
         
-        $service    = AKHelper::_('system.getApiSDK');
+        $service    = $this->_service ;
         $pk         = JArrayHelper::getValue($keys, $this->_tbl_key) ;
         $pk         = $pk ? $pk : null ;
         unset( $keys[$this->_tbl_key] );
@@ -179,7 +200,7 @@ class AKApiTable extends JTable
         
         unset( $keys[$this->_tbl_key] );
         
-        $service    = AKHelper::_('system.getApiSDK');
+        $service    = $this->_service ;
         $result     = $service->execute("/{$this->_tbl}/delete/".$pk );
         
         if(!$result) {
