@@ -126,7 +126,7 @@ SCRIPT;
      */
     public static function connector($option = null, $drivers = array('LocalFileSystem'))
     {
-        error_reporting(0); // Set E_ALL for debuging
+        //error_reporting(0); // Set E_ALL for debuging
 		
 		$elfinder_path = AKPATH_ASSETS.'/js/elfinder/php/' ;
 		
@@ -148,7 +148,8 @@ SCRIPT;
 		 * @return bool|null
 		 **/
 		function access($attr, $path, $data, $volume) {
-			return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
+            $r = array();
+			$r[] = strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
 				? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
 				:  null;                                    // else elFinder decide it itself
 		}
@@ -172,6 +173,8 @@ SCRIPT;
                     'tmp'			=> JPath::clean(JPATH_CACHE.'/AKFinderTemp'),
 					'accessControl' => 'access',             // disable and hide dot starting files (OPTIONAL)
                     //'uploadDeny'    =>  array('text/x-php')
+                    'uploadAllow' => array('image'),
+                    'dotFiles'     => false,  
 				)
 			)
 		);

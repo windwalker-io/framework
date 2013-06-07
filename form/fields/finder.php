@@ -246,6 +246,7 @@ class JFormFieldFinder extends JFormFieldText
     {
         // Build Select script.
         $url_root = JURI::root() ;
+        $onlyimage = $this->element['onlyimage'] ? (string) $this->element['onlyimage'] : 0 ;
         
         $script = <<<SCRIPT
         // Do Select
@@ -259,8 +260,27 @@ class JFormFieldFinder extends JFormFieldText
             
             link = link.replace( root, '' );
             
-            document.id(id).value = link;
-            document.id(id+"_name").value = name;
+            // Detect is image
+            var onlyImage = {$onlyimage} ;
+            
+            if( selected[0].mime.substring(0, 5) == 'image' ) {
+                $(id).set('image', 1);
+                $(id).set('mime', selected[0].mime.split('/')[0]);
+                
+                document.id(id).value = link;
+                document.id(id+"_name").value = name;
+            }else{
+                $(id).set('image', 0);
+                $(id).set('mime', selected[0].mime.split('/')[1]);
+                
+                if(!onlyImage) {
+                    document.id(id).value = link;
+                    document.id(id+"_name").value = name;
+                }else{
+                    //SqueezeBox.close();
+                    return ;
+                }
+            }
             
             AKFinderRefreshPreview(id);
             SqueezeBox.close();
@@ -277,13 +297,14 @@ class JFormFieldFinder extends JFormFieldText
         // Refresh Preview
         var AKFinderRefreshPreview = function(id) {
             var value = document.id(id).value;
+            var input = $(id) ;
             var img = document.id(id + "_preview");
             if (img) {
-                if (value) {
+                if (value && input.get('image') == 1) {
                     img.src = "{$url_root}" + value;
                     document.id(id + "_preview_empty").setStyle("display", "none");
                     document.id(id + "_preview_img").setStyle("display", "");
-                } else { 
+                } else {
                     img.src = ""
                     document.id(id + "_preview_empty").setStyle("display", "");
                     document.id(id + "_preview_img").setStyle("display", "none");
