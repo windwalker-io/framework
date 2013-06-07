@@ -36,6 +36,12 @@ class AKRequestModelList extends AKModelList
     {
 		$this->service = AKHelper::_('api.getSDK', $this->option);
 		
+		$config['filter_fields'] = array(
+			'filter_order_Dir', 'filter_order', '*'
+		);
+		
+		$config['filter_fields'] = AKHelper::_('query.mergeAPIFilterFields', $config['filter_fields'] , $this->request_item );
+		AK::show($config);
         parent::__construct($config);
     }
 	 

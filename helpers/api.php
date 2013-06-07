@@ -44,7 +44,7 @@ class AKHelperApi
         include_once AKPATH_COMPONENT.'/api/request/list.php' ;
         include_once AKPATH_TABLES.'/api.php' ;
         
-        include_once AKHelper::_('path.getAdmin', $compoenent_option).'/includes/api/sdk.php' ;
+        include_once AKPATH_COMPONENT.'/api/sdk.php' ;
         
         // Init SDK
         $params = JComponentHelper::getParams($compoenent_option) ;

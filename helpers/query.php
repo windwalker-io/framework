@@ -117,6 +117,42 @@ class AKHelperQuery
     }
     
     /**
+     * Map API Response Filter Fields
+     * 
+     * @param $filter_fields    array   Filter fields array.
+     * @param $name             string  Class name.
+     *
+     * @return array Merged filter fields.
+     */
+    public static function mapAPIFilterFields($filter_fields, $name)
+    {
+        $map = (array) AK::_('system.getConfig', 'keyMap.'.$name) ;
+        $map = array_keys($map);
+        
+        $filter_fields = array_merge($filter_fields, $map);
+        
+        return $filter_fields;
+    }
+    
+    /**
+     * Map API Response Filter Fields
+     * 
+     * @param $filter_fields    array   Filter fields array.
+     * @param $name             string  Class name.
+     *
+     * @return array Merged filter fields.
+     */
+    public static function mergeAPIFilterFields($filter_fields, $name)
+    {
+        $map = (array) AK::_('system.getConfig', 'keyMap.'.$name) ;
+        $map = array_keys($map);
+        
+        $filter_fields = array_merge($filter_fields, $map);
+        
+        return $filter_fields;
+    }
+    
+    /**
      * Get a query string to filter the publishing items now.
      *
      * Will return: "( publish_up < 'xxxx-xx-xx' OR publish_up = '0000-00-00' )
