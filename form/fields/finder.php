@@ -45,12 +45,20 @@ class JFormFieldFinder extends JFormFieldText
             $this->setScript();
         }
 
+        
+        
         // Setup variables for display.
+        // ================================================================
         $html    = array();
+        $disabled= ($this->element['disabled'] != false);
+        $readonly= ($this->element['readonly'] != false);
         $link    = $this->getLink();
         $title   = $this->getTitle();
         
-
+        
+        
+        // Set Title
+        // ================================================================
         if (empty($title)) {
             $title = $this->element['select_label']
                         ? (string) JText::_($this->element['select_label'])
@@ -59,16 +67,22 @@ class JFormFieldFinder extends JFormFieldText
         
         $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
         
+        
+        
         // The text field.
+        // ================================================================
         $preview = $this->getPreview();
         
         if( JVERSION >=3 ){
             // The current user display field.
-            $html[] = '<span class="input-append">';
-            $html[] = '<input type="text" class="input-medium" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />
-                        <a class="modal btn btn-primary" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">
-                            <i class="icon-picture"></i> '.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES')
-                        .'</a>';
+            $html[] = '<span class="'.(!$disabled && !$readonly ? 'input-append' : '').'">';
+            $html[] = '<input type="text" class="'.(!$disabled && !$readonly ? 'input-medium' : $this->element['class']).'" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />' ;
+            
+            if (!$disabled && !$readonly) :
+                $html[] = '<a class="modal btn btn-primary" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">
+                                <i class="icon-picture"></i> '.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES')
+                            .'</a>';
+            endif;
             $html[] = '</span>';
         }else{
             AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
@@ -79,38 +93,57 @@ class JFormFieldFinder extends JFormFieldText
             $html[] = '</div>';
     
             // The user select button.
-            $html[] = '<div class="fltlft">';
-            $html[] = '  <div class="">';
-            $html[] = '    <a class="modal delicious light blue" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'</a>';
-            $html[] = '  </div>';
-            $html[] = '</div>';
+            if (!$disabled && !$readonly) :
+                $html[] = '<div class="fltlft">';
+                $html[] = '  <div class="">';
+                $html[] = '    <a class="modal delicious light blue" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'</a>';
+                $html[] = '  </div>';
+                $html[] = '</div>';
+            endif;
         }
 
+        
+        
         // class='required' for client side validation
+        // ================================================================
         $class = '';
         if ($this->required) {
             $class = ' class="required modal-value"';
         }
         
-        $html[] = '<input type="hidden" id="'.$this->id.'"'.$class.' name="'.$this->name.'" value="'.$this->value.'" />';
+        // Velue store input
+        $disabled_attr = $disabled ? ' disabled="true" ' : '';
+        $html[] = '<input type="hidden" id="'.$this->id.'"'.$class.' name="'.$this->name.'" value="'.$this->value.'" '.$disabled_attr.' />';
         
         $html = implode("\n", $html) ;
         
         
+        
+        // Tooltip Preview
+        // ================================================================
         if($this->showAsTooltip){
             $html = $preview . $html ;
             $html = '<div class="input-prepend input-append" style="margin-right: 7px;">'.$html.'</div>';
         }
         
         
+        
+        // Clear Button
+        // ================================================================
         $clear_text = JVERSION < 3 ? JText::_('JLIB_FORM_BUTTON_CLEAR') : '';
         
-        $html .= '<a class="btn btn-danger delicious light red fltlft hasTooltip" title="' . JText::_('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
-        $html .= 'AKFinderClear_'.$this->id."('{$title}');";
-        $html .= 'return false;';
-        $html .= '">';
-        $html .= '<i class="icon-remove"></i>'.$clear_text.'</a>';
+        if (!$disabled && !$readonly) :
+            $html .= '<a class="btn btn-danger delicious light red fltlft hasTooltip" title="' . JText::_('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
+            $html .= "AKFinderClear('{$this->id}', '{$title}');";
+            $html .= 'return false;';
+            $html .= '">';
+            $html .= '<i class="icon-remove"></i>'.$clear_text.'</a>';
+        endif;
         
+        
+        
+        // Image Preview
+        // ================================================================
         if(!$this->showAsTooltip){
             $html = $html . $preview;
         }
@@ -119,7 +152,7 @@ class JFormFieldFinder extends JFormFieldText
     }
     
     /**
-     * previewField
+     * Get Preview Image.
      */
     public function getPreview()
     {
@@ -127,6 +160,7 @@ class JFormFieldFinder extends JFormFieldText
         $preview = (string) $this->element['preview'];
         $showPreview = true;
         $showAsTooltip = false;
+        
         switch ($preview)
         {
             case 'no': // Deprecated parameter value
@@ -206,65 +240,71 @@ class JFormFieldFinder extends JFormFieldText
     }
     
     /**
-     * setScript
+     * Set Selecting JS.
      */
     public function setScript()
     {
         // Build Select script.
-        $script = array();
-        $script[] = <<<SCRIPT
-        var AKFinderSelect_{$this->id} = function(selected, elFinder){
+        $url_root = JURI::root() ;
+        
+        $script = <<<SCRIPT
+        // Do Select
+        var AKFinderSelect = function(id, selected, elFinder, root){
             if(selected.length < 1) return ;
-            var link    = elFinder.path(selected[0].hash) ;
+            var link    = elFinder.url(selected[0].hash) ;
             var name    = selected[0].name ;
             
             // Clean DS
             link = link.replace(/\\\\/g, '/');
             
-            document.id("{$this->id}").value = link;
-            document.id("{$this->id}_name").value = name;
+            link = link.replace( root, '' );
             
-            AKFinderRefreshPreview('{$this->id}');
+            document.id(id).value = link;
+            document.id(id+"_name").value = name;
+            
+            AKFinderRefreshPreview(id);
             SqueezeBox.close();
         }
         
-        var AKFinderClear_{$this->id} = function(title){
-            document.id("{$this->id}").value = '';
-            document.id("{$this->id}_name").value = title;
+        // Clear Select
+        var AKFinderClear = function(id, title){
+            document.id(id).value = '';
+            document.id(id+"_name").value = title;
             
-            AKFinderRefreshPreview('{$this->id}');
+            AKFinderRefreshPreview(id);
         };
+
+        // Refresh Preview
+        var AKFinderRefreshPreview = function(id) {
+            var value = document.id(id).value;
+            var img = document.id(id + "_preview");
+            if (img) {
+                if (value) {
+                    img.src = "{$url_root}" + value;
+                    document.id(id + "_preview_empty").setStyle("display", "none");
+                    document.id(id + "_preview_img").setStyle("display", "");
+                } else { 
+                    img.src = ""
+                    document.id(id + "_preview_empty").setStyle("display", "");
+                    document.id(id + "_preview_img").setStyle("display", "none");
+                } 
+            } 
+        }
+        
+        // Refresh Preview for Tips
+        var AKFinderRefreshPreviewTip = function(tip)
+        {
+            var img = tip.getElement("img.media-preview");
+            tip.getElement("div.tip").setStyle("max-width", "none");
+            var id = img.getProperty("id");
+            id = id.substring(0, id.length - "_preview".length);
+            AKFinderRefreshPreview(id);
+            tip.setStyle("display", "block");
+        }
 SCRIPT;
 
-        $script[] = '    function AKFinderRefreshPreview(id) {';
-        $script[] = '        var value = document.id(id).value;';
-        $script[] = '        var img = document.id(id + "_preview");';
-        $script[] = '        if (img) {';
-        $script[] = '            if (value) {';
-        $script[] = '                img.src = "' . JURI::root() . '" + value;';
-        $script[] = '                document.id(id + "_preview_empty").setStyle("display", "none");';
-        $script[] = '                document.id(id + "_preview_img").setStyle("display", "");';
-        $script[] = '            } else { ';
-        $script[] = '                img.src = ""';
-        $script[] = '                document.id(id + "_preview_empty").setStyle("display", "");';
-        $script[] = '                document.id(id + "_preview_img").setStyle("display", "none");';
-        $script[] = '            } ';
-        $script[] = '        } ';
-        $script[] = '    }';
-
-        $script[] = '    function AKFinderRefreshPreviewTip(tip)';
-        $script[] = '    {';
-        $script[] = '        var img = tip.getElement("img.media-preview");';
-        $script[] = '        tip.getElement("div.tip").setStyle("max-width", "none");';
-        $script[] = '        var id = img.getProperty("id");';
-        $script[] = '        id = id.substring(0, id.length - "_preview".length);';
-        $script[] = '        AKFinderRefreshPreview(id);';
-        $script[] = '        tip.setStyle("display", "block");';
-        $script[] = '    }';
-
-
         // Add the script to the document head.
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+        JFactory::getDocument()->addScriptDeclaration($script);
     }
     
     /**
@@ -285,7 +325,7 @@ SCRIPT;
     }
     
     /**
-     * Get item link.
+     * Get Finder link.
      */
     public function getLink()
     {
