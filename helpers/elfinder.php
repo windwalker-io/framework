@@ -125,7 +125,7 @@ SCRIPT;
      */
     public static function connector($option = null, $drivers = array('LocalFileSystem'))
     {
-        //error_reporting(0); // Set E_ALL for debuging
+        error_reporting(0); // Set E_ALL for debuging
 		
 		$elfinder_path = AKPATH_ASSETS.'/js/elfinder/php/' ;
 		
