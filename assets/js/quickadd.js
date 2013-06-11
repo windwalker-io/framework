@@ -13,7 +13,7 @@
 var AKQuickAdd = ({
     
     init : function(id, option){
-        var inputs  = $$('#'+id).getElements('input, select, textarea, button') ;
+        var inputs  = $$('#'+id)[0].getElements('input, select, textarea') ;
 
         
         // Set Option
@@ -33,6 +33,8 @@ var AKQuickAdd = ({
         // Remove Required
         inputs.each( function(e){
             e.removeClass('required');
+            console.log(e);
+            e.set('default', e.get('value'));
         });
     }
     ,
@@ -64,7 +66,11 @@ var AKQuickAdd = ({
                     
                     // Reset inputs
                     var inputs = area.getElements('input, select, textarea');
-                    inputs.set('value', null);
+                    
+                    inputs.each( function(e){
+                        e.set('value', e.get('default'));
+                    });
+                    
                     
                     var data        = response.data ;
                     var select_id   = '#'+id.replace('_quickadd', '');
