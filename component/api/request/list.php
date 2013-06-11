@@ -41,7 +41,7 @@ class AKRequestModelList extends AKModelList
 		);
 		
 		$config['filter_fields'] = AKHelper::_('query.mergeAPIFilterFields', $config['filter_fields'] , $this->request_item );
-		AK::show($config);
+		
         parent::__construct($config);
     }
 	 
