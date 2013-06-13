@@ -181,9 +181,7 @@ SCRIPT;
 			)
 		);
         
-        foreach( $opts['root'] as $opt ):
-            
-        endforeach;
+        $opts = array_merge( $opts, $option );
 		
 		// run elFinder
 		$connector = new elFinderConnector(new elFinder($opts));
