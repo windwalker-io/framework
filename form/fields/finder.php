@@ -246,7 +246,7 @@ class JFormFieldFinder extends JFormFieldText
     {
         // Build Select script.
         $url_root = JURI::root() ;
-        $onlyimage = $this->element['onlyimage'] ? (string) $this->element['onlyimage'] : 0 ;
+        
         
         $script = <<<SCRIPT
         // Do Select
@@ -261,7 +261,7 @@ class JFormFieldFinder extends JFormFieldText
             link = link.replace( root, '' );
             
             // Detect is image
-            var onlyImage = {$onlyimage} ;
+            var onlyImage = false ;
             
             if( selected[0].mime.substring(0, 5) == 'image' ) {
                 $(id).set('image', 1);
@@ -354,8 +354,9 @@ SCRIPT;
         
         $root = $this->element['root'] ? (string) $this->element['root'] : '/' ;
         $start_path = $this->element['start_path'] ? (string) $this->element['start_path'] : '/' ;
+        $onlymimes = $this->element['onlymimes'] ? (string) $this->element['onlymimes'] : '' ;
         
-        $link = "index.php?option={$handler}&task=elfinderDisplay&tmpl=component&finder_id={$this->id}&root={$root}&start_path={$start_path}" ;
+        $link = "index.php?option={$handler}&task=elfinderDisplay&tmpl=component&finder_id={$this->id}&root={$root}&start_path={$start_path}&onlymimes={$onlymimes}" ;
         
         return $link ;
     }

@@ -23,7 +23,7 @@ class AKHelperElfinder
     /**
      * display
      */
-    public static function display($option = null)
+    public static function display($com_option = null)
     {
         // Init some API objects
         // ================================================================================
@@ -68,12 +68,14 @@ class AKHelperElfinder
         
         
         // Get Request
-        $option     = $option ? $option : JRequest::getVar('option') ;
+        $com_option = $com_option ? $com_option : JRequest::getVar('option') ;
         $finder_id  = JRequest::getVar('finder_id') ;
 		$modal      = ( JRequest::getVar('tmpl') == 'component' ) ? true : false ;
         $root       = JRequest::getVar('root', '/') ;
         $start_path = JRequest::getVar('start_path', '/') ;
         $site_root  = JURI::root(true).'/' ;
+        $onlymimes  = JRequest::getVar('onlymimes') ;
+        $onlymimes  = $onlymimes ? "'".str_replace(",", "','", $onlymimes)."'" : '';
         
         
         // Set Script
@@ -90,8 +92,9 @@ class AKHelperElfinder
 		// Init elFinder
         jQuery(document).ready(function($) {
             elFinder = $('#elfinder').elfinder({
-                url : 'index.php?option={$option}&task=elFinderConnector&root={$root}&start_path={$start_path}' ,
+                url : 'index.php?option={$com_option}&task=elFinderConnector&root={$root}&start_path={$start_path}' ,
                 width : '100%' ,
+                onlyMimes : [$onlymimes],
                 lang : '{$lang_code}',
                 handlers : {
                     select : function(event, elfinderInstance) {
@@ -123,9 +126,9 @@ SCRIPT;
     /**
      * connector
      */
-    public static function connector($option = null, $drivers = array('LocalFileSystem'))
+    public static function connector($com_option = null, $drivers = array('LocalFileSystem'), $option = array())
     {
-        error_reporting(0); // Set E_ALL for debuging
+        error_reporting( JArrayHelper::getValue($option, 'error_reporting', 0) ); // Set E_ALL for debuging
 		
 		$elfinder_path = AKPATH_ASSETS.'/js/elfinder/php/' ;
 		
@@ -155,7 +158,7 @@ SCRIPT;
 		
         
         // Get Some Request
-		$option     = $option ? $option : JRequest::getVar('option') ;
+		$com_option = $com_option ? $com_option : JRequest::getVar('option') ;
 		$root       = JRequest::getVar('root', '/') ;
         $start_path = JRequest::getVar('start_path', '/') ;
         
@@ -177,6 +180,10 @@ SCRIPT;
 				)
 			)
 		);
+        
+        foreach( $opts['root'] as $opt ):
+            
+        endforeach;
 		
 		// run elFinder
 		$connector = new elFinderConnector(new elFinder($opts));
