@@ -16,7 +16,7 @@ jimport('joomla.database.tablenested');
 /**
  * resident Table class
  */
-class AKApiTable extends JTable
+class AKRequestTable extends JTable
 {
     /**
 	 * Constructor

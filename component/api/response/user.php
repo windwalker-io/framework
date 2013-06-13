@@ -16,7 +16,7 @@ include_once AKPATH_COMPONENT.'/modeladmin.php' ;
 /**
  * API User handle model.
  */
-class AKUserModelItem extends AKModelAdmin
+class AKResponseModelUser extends AKModelAdmin
 {
     public 		$default_method ;
 

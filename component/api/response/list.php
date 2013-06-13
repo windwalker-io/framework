@@ -29,7 +29,7 @@ class AKResponseModelList extends AKModelList
      */
     public function __construct($config = array())
     {
-        $config['filter_fields'] = AKHelper::_('query.mapAPIFilterFields', $config['filter_fields'] , $this->list_name );
+        $config['filter_fields'] = AKHelper::_('query.mapAPIFilterFields', $config['filter_fields'] , $this->item_name );
         
         $this->config = $config;
         
