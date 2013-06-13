@@ -59,7 +59,7 @@ class AKHelperCurl
             CURLOPT_URL             => AKHelper::_('uri.safe' ,$url),
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_USERAGENT       => "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1",
-            CURLOPT_FOLLOWLOCATION  => true ,
+            CURLOPT_FOLLOWLOCATION => !ini_get('open_basedir') ? true : false ,
             CURLOPT_SSL_VERIFYPEER  => false
         );
         
@@ -138,7 +138,7 @@ class AKHelperCurl
             CURLOPT_URL             => AKHelper::_('uri.safe' ,$url),
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_USERAGENT       => "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1",
-            CURLOPT_FOLLOWLOCATION  => true ,
+            CURLOPT_FOLLOWLOCATION => !ini_get('open_basedir') ? true : false ,
             CURLOPT_FILE            => $fp ,
             CURLOPT_SSL_VERIFYPEER  => false
         );
