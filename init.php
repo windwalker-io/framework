@@ -21,7 +21,7 @@ define('AKPATH_LANGUAGE'    , AKPATH_ROOT.'/language') ;
 define('AKPATH_LAYOUTS'     , AKPATH_ROOT.'/layouts') ;
 
 define('AKPATH_ASSETS'      , AKPATH_ROOT.'/assets') ;
-define('AKPATH_TABLES'      , AKPATH_ROOT.'/tables') ;
+define('AKPATH_TABLES'      , AKPATH_COMPONENT.'/tables') ;
 
 if(!defined('DS')){
     define('DS', DIRECTORY_SEPARATOR) ;
