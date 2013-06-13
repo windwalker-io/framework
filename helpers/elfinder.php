@@ -23,7 +23,7 @@ class AKHelperElfinder
     /**
      * display
      */
-    public static function display($com_option = null)
+    public static function display($com_option = null, $option = array())
     {
         // Init some API objects
         // ================================================================================
@@ -74,7 +74,9 @@ class AKHelperElfinder
         $root       = JRequest::getVar('root', '/') ;
         $start_path = JRequest::getVar('start_path', '/') ;
         $site_root  = JURI::root(true).'/' ;
-        $onlymimes  = JRequest::getVar('onlymimes') ;
+        
+        $onlymimes  = JArrayHelper::getValue($option, 'onlymimes', JRequest::getVar('onlymimes', null));
+        $onlymimes  = is_array($onlymimes) ? implode(',', $onlymimes) : $onlymimes;
         $onlymimes  = $onlymimes ? "'".str_replace(",", "','", $onlymimes)."'" : '';
         
         
