@@ -79,27 +79,6 @@ class AKHelperHtml {
     }
     
     /**
-     * Parse BBCode and convert to HTML.
-     *
-     * Use jBBCode library: http://jbbcode.com/
-     * 
-     * @param   string  $text   Text to parse BBCode.
-     *
-     * @return  string  Parsed text.
-     */
-    public static function bbcode($text)
-    {
-        require_once( "phar://".AKPATH_HTML."/jbbcode/jbbcode.phar/Parser.php" );
-
-        $parser = new JBBCode\Parser();
-        $parser->loadDefaultCodes();
-         
-        $parser->parse($text);
-         
-        print $parser->getAsHtml();    
-    }
-    
-    /**
      * Parse Markdown and convert to HTML.
      *
      * Use PHP Markdown & Markdown Extra: http://michelf.ca/projects/php-markdown/
@@ -111,12 +90,12 @@ class AKHelperHtml {
      */
     public static function markdown($text, $extra = true, $option = array())
     {
-        require_once( "phar://".AKPATH_HTML."/php-markdown/php-markdown.phar/Markdown.php" );
+        require_once AKPATH_HTML."/php-markdown/Markdown.php" ;
         
         $text = str_replace( "\t", '    ', $text );
         
         if($extra){
-            require_once( "phar://".AKPATH_HTML."/php-markdown/php-markdown.phar/MarkdownExtra.php" );
+            require_once AKPATH_HTML."/php-markdown/MarkdownExtra.php" ;
             $result =  Michelf\MarkdownExtra::defaultTransform($text);
         }else{
             $result =  Michelf\Markdown::defaultTransform($text);
