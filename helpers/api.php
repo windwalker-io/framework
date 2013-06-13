@@ -42,7 +42,7 @@ class AKHelperApi
         // Include Request SDK
         include_once AKPATH_COMPONENT.'/api/request/item.php' ;
         include_once AKPATH_COMPONENT.'/api/request/list.php' ;
-        include_once AKPATH_TABLES.'/api.php' ;
+        include_once AKPATH_TABLES.'/request.php' ;
         
         include_once AKPATH_COMPONENT.'/api/sdk.php' ;
         

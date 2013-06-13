@@ -21,7 +21,6 @@
         <folder>html</folder>
         <folder>layouts</folder>
         <folder>language</folder>
-        <folder>tables</folder>
         <file>init.php</file>
         <file>windwalker.xml</file>
         <file>index.html</file>
