@@ -126,7 +126,7 @@ SCRIPT;
     /**
      * connector
      */
-    public static function connector($com_option = null, $drivers = array('LocalFileSystem'), $option = array())
+    public static function connector($com_option = null, $option = array())
     {
         error_reporting( JArrayHelper::getValue($option, 'error_reporting', 0) ); // Set E_ALL for debuging
 		
@@ -135,10 +135,6 @@ SCRIPT;
 		include_once $elfinder_path.'elFinderConnector.class.php';
 		include_once $elfinder_path.'elFinder.class.php';
 		include_once $elfinder_path.'elFinderVolumeDriver.class.php';
-        
-        foreach( $drivers as $driver ):
-            include_once $elfinder_path.'elFinderVolume'.$driver.'.class.php';
-        endforeach;
 
 		
 		/**
@@ -183,6 +179,10 @@ SCRIPT;
         
         $opts = array_merge( $opts, $option );
 		
+        foreach( $opts['roots'] as $driver ):
+            include_once $elfinder_path.'elFinderVolume'.$driver['driver'].'.class.php';
+        endforeach;
+        
 		// run elFinder
 		$connector = new elFinderConnector(new elFinder($opts));
 		$connector->run();
