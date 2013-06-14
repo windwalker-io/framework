@@ -85,7 +85,7 @@ class AKHelperApi
             
             $component = $option['component'] ;
             
-            self::$sdk_instance[$id] = $service = AKApiSDK::getInstance($option);
+            self::$sdk_instance[$id] = $service = AKRequestSDK::getInstance($option);
             
             return $service;
         }

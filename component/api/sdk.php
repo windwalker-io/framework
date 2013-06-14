@@ -11,7 +11,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-class AKApiSDK extends JObject
+class AKRequestSDK extends JObject
 {
     protected $username = "" ;
     
@@ -52,7 +52,7 @@ class AKApiSDK extends JObject
         $this->password = !empty($option['password']) ? $option['password'] : $this->password ;
         
         // Get Session Key
-        $this->session_cache_path = JPATH_ROOT.'/cache/AKApiSDK' ;
+        $this->session_cache_path = JPATH_ROOT.'/cache/AKRequestSDK' ;
         $this->session_cache_file = $this->session_cache_path.'/session_key' ;
         
         $this->session_key = $this->getSessionKey() ;
@@ -70,7 +70,7 @@ class AKApiSDK extends JObject
             return $instances ;
         }
         
-        self::$instances[$hash] = new AKApiSDK($option);
+        self::$instances[$hash] = new AKRequestSDK($option);
         
         return self::$instances[$hash] ;
     }
