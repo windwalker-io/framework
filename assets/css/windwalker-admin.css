@@ -34,6 +34,10 @@
     margin-bottom: 10px;
 }
 
+#component-form .row-fluid input {
+    margin-bottom: 0px;
+}
+
 
 /* MODAL */
 .admin div.modal,
