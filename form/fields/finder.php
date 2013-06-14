@@ -79,7 +79,7 @@ class JFormFieldFinder extends JFormFieldText
             $html[] = '<input type="text" class="'.(!$disabled && !$readonly ? 'input-medium '.$this->element['class'] : $this->element['class']).'" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />' ;
             
             if (!$disabled && !$readonly) :
-                $html[] = '<a class="modal btn btn-primary" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">
+                $html[] = '<a class="modal btn btn-primary" title="'.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 920, y: 450}}">
                                 <i class="icon-picture"></i> '.JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES')
                             .'</a>';
             endif;
@@ -130,11 +130,12 @@ class JFormFieldFinder extends JFormFieldText
         
         // Clear Button
         // ================================================================
-        $clear_text = JVERSION < 3 ? JText::_('JLIB_FORM_BUTTON_CLEAR') : '';
+        $clear_text     = JVERSION < 3 ? JText::_('JLIB_FORM_BUTTON_CLEAR') : '';
+        $clear_title    = JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_SELECT_FILE');
         
         if (!$disabled && !$readonly) :
             $html .= '<a class="btn btn-danger delicious light red fltlft hasTooltip" title="' . JText::_('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
-            $html .= "AKFinderClear('{$this->id}', '{$title}');";
+            $html .= "AKFinderClear('{$this->id}', '{$clear_title}');";
             $html .= 'return false;';
             $html .= '">';
             $html .= '<i class="icon-remove"></i>'.$clear_text.'</a>';
