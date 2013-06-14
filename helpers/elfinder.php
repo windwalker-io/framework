@@ -215,6 +215,7 @@ SCRIPT;
 					'URL'           => JPath::clean(JURI::root(true).'/'.$root.'/'.$start_path, '/'), // URL to files (REQUIRED)
                     'tmbPath'       => JPath::clean(JPATH_CACHE.'/AKFinderThumb'),
                     'tmbURL'        => JURI::root() . 'cache/AKFinderThumb',
+                    //'tmbSize'       => 128,
                     'tmp'			=> JPath::clean(JPATH_CACHE.'/AKFinderTemp'),
 					'accessControl' => 'access',             // disable and hide dot starting files (OPTIONAL)
                     //'uploadDeny'    =>  array('text/x-php')

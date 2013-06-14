@@ -245,7 +245,15 @@ class AKModelAdmin extends JModelAdmin
      */
     public function getItem($pk = null)
     {
-        return $this->item = parent::getItem($pk);
+        $item = parent::getItem($pk);
+        
+        $key = $this->getTable()->getKeyName();
+        
+        if($item->$key === null) {
+            return false ;
+        }
+        
+        return $this->item = $item ;
     }
     
     /**
