@@ -179,7 +179,7 @@ class JFormFieldFinder extends JFormFieldText
             default:
                 $this->showAsTooltip = $showAsTooltip = true;
                 $options = array(
-                    'onShow' => 'AKFinderRefreshPreviewTip',
+                    'onShow' => 'AKFinderRefreshPreviewTip(this)',
                 );
                 JHtml::_('behavior.tooltip', '.hasTipPreview', $options);
                 break;
@@ -233,6 +233,7 @@ class JFormFieldFinder extends JFormFieldText
             {
                 $html[] = ' ' . $previewImgEmpty;
                 $html[] = ' ' . $previewImg;
+                $html[] = '<script type="text/javascript">AKFinderRefreshPreview("'.$this->id.'");</script>';
             }
             $html[] = '</div>';
         }
@@ -302,17 +303,25 @@ class JFormFieldFinder extends JFormFieldText
             var value = document.id(id).value;
             var input = $(id) ;
             var img = document.id(id + "_preview");
+            var img_ext = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'];
+            var ext = value.split('.').getLast();
             if (img) {
-                if (value && input.get('image') == 1) {
+                if ( img_ext.contains(ext.toLowerCase()) ) {
                     img.src = "{$url_root}" + value;
                     document.id(id + "_preview_empty").setStyle("display", "none");
                     document.id(id + "_preview_img").setStyle("display", "");
                 } else {
                     img.src = ""
-                    document.id(id + "_preview_empty").setStyle("display", "");
+                    document.id(id + "_preview_empty").setStyle("display", "none");
                     document.id(id + "_preview_img").setStyle("display", "none");
                 } 
-            } 
+            }
+            
+            if(!value){
+                img.src = ""
+                document.id(id + "_preview_empty").setStyle("display", "");
+                document.id(id + "_preview_img").setStyle("display", "none");
+            }
         }
         
         // Refresh Preview for Tips

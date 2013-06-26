@@ -131,11 +131,20 @@ class AKModelList extends JModelList
         $this->setState('filter', $filter_fields );
         
         
+        
+        // Set all search fields
+        // ========================================================================
         $search = $app->getUserStateFromRequest($this->context.'.field.search', 'search');
+        $allow_search = array();
         if(in_array(JArrayHelper::getValue($search, 'field'), $this->filter_fields) || $this->config['fulltext_search']){
-            $this->setState('search', $search );
+            $allow_search['field'] = JArrayHelper::getValue($search, 'field');
+            $allow_search['index'] = JArrayHelper::getValue($search, 'index');
         }
         
+        foreach( $this->filter_fields as $field ){
+            $allow_search[$field] = JArrayHelper::getValue($search, $field, '') ;
+        }
+        $this->setState('search', $allow_search );
         
 
         // List state information.
@@ -272,9 +281,7 @@ class AKModelList extends JModelList
         $fields = array();
         foreach( $options as $option ):
             $attr = $option->attributes();
-            if(in_array($attr['value'], $this->filter_fields)){
-                $fields[] = $attr['value'];
-            }
+            $fields[] = $attr['value'];
         endforeach;
         
         return $fields ;
