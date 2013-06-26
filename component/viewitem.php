@@ -94,9 +94,6 @@ class AKViewItem extends AKView
     {
         JRequest::setVar('hidemainmenu', true);
 
-        $user   = JFactory::getUser();
-        $isNew  = ($this->item->id == 0);
-
         JToolBarHelper::apply($this->item_name.'.apply');
         JToolBarHelper::save($this->item_name.'.save');
         JToolBarHelper::custom($this->item_name.'.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
