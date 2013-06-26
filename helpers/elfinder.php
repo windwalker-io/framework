@@ -169,7 +169,7 @@ SCRIPT;
         $doc->addStylesheet( $assets_url.'/js/elfinder/css/theme.css' );
         
         $doc->addscript( $assets_url.'/js/jquery-ui/js/jquery-ui.min.js' );
-        $doc->addscript( $assets_url.'/js/elfinder/js/elfinder.full.js' );
+        $doc->addscript( $assets_url.'/js/elfinder/js/elfinder.min.js' );
         JHtml::script( $assets_url.'/js/elfinder/js/i18n/elfinder.'.$lang_code.'.js' );
         AKHelper::_('include.core');
     }
