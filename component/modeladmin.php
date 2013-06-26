@@ -582,6 +582,31 @@ class AKModelAdmin extends JModelAdmin
 
         return true;
     }
+    
+    /**
+     * Method to validate the form data.
+     *
+     * @param   object  $form   The form to validate against.
+     * @param   array   $data   The data to validate.
+     * @param   string  $group  The name of the field group to validate.
+     *
+     * @return  mixed  Array of filtered data if valid, false otherwise.
+     *
+     * @see     JFormRule
+     * @see     JFilterInput
+     * @since   11.1
+     */
+    public function validate($form, $data, $group = null)
+    {
+        if( $result = parent::validate($form, $data, $group) ) {
+            // for Fields group
+            // Convert jform[fields_group][field] to jform[field] or JTable cannot bind data.
+            // ==========================================================================================
+            $result = AKHelper::_('array.pivotFromTwoDimension', $result);
+        }
+        
+        return $result ;
+    }
 
     /**
      * Method to perform batch operations on an item or a set of items.
