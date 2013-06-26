@@ -190,14 +190,16 @@ class JFormFieldItemlist extends JFormFieldList
             $q->where("lft < {$table->lft} OR rgt > {$table->rgt}") ;
         }
         
+        if($nested) {
+            $q->where( "( id != 1 AND `{$value_field}` != 'ROOT' )" );
+        }
+        
         
         // Some filter
         // ========================================================================
         if($published) {
             $q->where('{$this->published_field} >= 1');
         }
-        
-        $q->where( "( id != 1 AND title != 'ROOT' )" );
         
         // Ordering
         $order      = $nested ? 'lft, ordering' : 'ordering' ;
