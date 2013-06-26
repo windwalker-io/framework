@@ -90,4 +90,30 @@ class AKHelperApi
             return $service;
         }
     }
+    
+    /**
+     * Update whole table.
+     */
+    public static function update($name, $option = null)
+    {
+        $option     = $option ? $option : AKHelper::_('path.getOption');
+        
+        if( substr($option, 0, 4) == 'com_' ) {
+            $component  = substr($option, 4);
+        }
+        
+        $model = JModelLegacy::getInstance(ucfirst($name), ucfirst($component).'Model', array('ignore_request' => true));
+        
+        if( !($model instanceof AKRequestModelList) ) {
+            JError::raiseWarning(500, ucfirst($component).'Model'.ucfirst($name)." Not instance of AKRequestModelList.");
+            return false ;
+        }
+        
+        if( !$model->update() ) {
+            JError::raiseWarning(500, $model->getError());
+            return false ;
+        }
+        
+        return true;
+    }
 }
