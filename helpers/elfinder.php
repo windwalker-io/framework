@@ -32,6 +32,9 @@ class AKHelperElfinder
         $user   = JFactory::getUser() ;
         $app    = JFactory::getApplication() ;
         $doc    = JFactory::getDocument() ;
+        $lang       = JFactory::getLanguage();
+        $lang_code  = $lang->getTag();
+        $lang_code  = str_replace('-', '_', $lang_code) ; 
         
         // Script
         self::_displayScript($com_option, $option);
@@ -88,10 +91,11 @@ class AKHelperElfinder
         
         $script = <<<SCRIPT
 		var AKFinderSelected ;
+        var elFinder ;
 		
 		// Init elFinder
         jQuery(document).ready(function($) {
-            var elFinder = $('#elfinder').elfinder({
+            elFinder = $('#elfinder').elfinder({
                 url         : 'index.php?option={$com_option}&task=elFinderConnector&root={$root}&start_path={$start_path}' ,
                 width       : '100%' ,
                 height      : 445 ,
@@ -165,7 +169,7 @@ SCRIPT;
         $doc->addStylesheet( $assets_url.'/js/elfinder/css/theme.css' );
         
         $doc->addscript( $assets_url.'/js/jquery-ui/js/jquery-ui.min.js' );
-        $doc->addscript( $assets_url.'/js/elfinder/js/elfinder.min.js' );
+        $doc->addscript( $assets_url.'/js/elfinder/js/elfinder.full.js' );
         JHtml::script( $assets_url.'/js/elfinder/js/i18n/elfinder.'.$lang_code.'.js' );
         AKHelper::_('include.core');
     }

@@ -16,14 +16,11 @@ defined('_JEXEC') or die;
 $modules     = $manifest->modules ;
 
 if(!empty($modules)){
-    foreach( (array)$modules as $module ):
-        
-        if(!trim($module)) continue ;
-        
-        $module = is_array($module) ? $module : array($module) ;
+    foreach( $modules as $module ):
         
         // Install per module
         foreach( $module as $var ):
+            $var = (string) $var ;
             $install_path = $path.'/../modules/'.$var ;
             
             // Do install

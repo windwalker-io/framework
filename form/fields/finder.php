@@ -284,7 +284,9 @@ class JFormFieldFinder extends JFormFieldText
             }
             
             AKFinderRefreshPreview(id);
-            SqueezeBox.close();
+            setTimeout( function(){
+                SqueezeBox.close();
+            } ,200);
         }
         
         // Clear Select
