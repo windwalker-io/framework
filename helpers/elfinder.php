@@ -221,9 +221,9 @@ SCRIPT;
                     //'tmbSize'       => 128,
                     'tmp'			=> JPath::clean(JPATH_CACHE.'/AKFinderTemp'),
 					'accessControl' => 'access',             // disable and hide dot starting files (OPTIONAL)
-                    //'uploadDeny'    =>  array('text/x-php')
-                    'uploadAllow' => array('image'),
-                    'dotFiles'     => false,  
+                    'uploadDeny'    => array('text/x-php'),
+                    //'uploadAllow'   => array('image'),
+                    'disabled'      => array('archive', 'extract', 'rename', 'mkfile')
 				)
 			)
 		);
