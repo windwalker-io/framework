@@ -26,35 +26,35 @@ class AKModelAdmin extends JModelAdmin
      *
      * @var string 
      */
-    public $component = '';
+    protected $component = '';
     
     /**
      * The URL view item variable.
      *
      * @var    string 
      */
-    public $item_name = '';
+    protected $item_name = '';
     
     /**
      * The URL view list variable.
      *
      * @var    string 
      */
-    public $list_name = '';
+    protected $list_name = '';
     
     /**
      * Item cache.
      *
      * @var object 
      */
-    public $item      = null;
+    protected $item      = null;
     
     /**
      * Category cache.
      *
      * @var object 
      */
-    public $category  = null;
+    protected $category  = null;
     
     
     /**

@@ -26,21 +26,21 @@ class AKControllerForm extends JControllerForm
      *
      * @var    string 
      */
-    public $view_list = '';
+    protected $view_list = '';
     
     /**
      * The URL view item variable.
      *
      * @var    string 
      */
-    public $view_item = '';
+    protected $view_item = '';
     
     /**
      * Component name.
      *
      * @var string 
      */
-    public $component = '';
+    protected $component = '';
     
     
     /**

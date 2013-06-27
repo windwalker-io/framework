@@ -47,21 +47,21 @@ class AKViewItem extends AKView
      *
      * @var string 
      */
-    public  $option = '';
+    protected  $option = '';
     
     /**
      * List name.
      *
      * @var string 
      */
-    public  $list_name = '';
+    protected  $list_name = '';
     
     /**
      * Item name.
      *
      * @var string 
      */
-    public  $item_name = '';
+    protected  $item_name = '';
     
     
     /**
