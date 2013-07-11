@@ -29,7 +29,7 @@ if( JRequest::getVar('ajax') ) {
 class AKController extends JControllerLegacy
 {
 	/**
-	 * elFinderDisplay
+	 * Display Finder Manager.
 	 */
 	public function elFinderDisplay()
 	{
@@ -38,7 +38,7 @@ class AKController extends JControllerLegacy
 	}
 	
 	/**
-	 * elFinderConnector
+	 * An Ajax connector for Finder Field.
 	 */
 	public function elFinderConnector()
 	{
@@ -47,7 +47,7 @@ class AKController extends JControllerLegacy
 	}
 	
     /**
-	 * quickAddAjax
+	 * An ajax connector for QuickAdd JS.
 	 */
 	public function quickAddAjax()
 	{
@@ -103,7 +103,7 @@ class AKController extends JControllerLegacy
 		// Do Save
 		if (!$model->save($validData))
         {
-            // Redirect back to the edit screen.
+            // Return Error Message.
 			$result->set('errorMsg', JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()) );
             jexit($result);
         }

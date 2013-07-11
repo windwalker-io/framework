@@ -149,7 +149,6 @@ var AKQuickAdd = ({
         uri.setData(option);
         
         area.send(uri.toString());
-        area.send(uri.toString());
     }
     ,
     closeModal : function(id){

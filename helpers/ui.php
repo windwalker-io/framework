@@ -147,9 +147,6 @@ MODAL;
     {
         $content = '';
         
-        //JForm::addFormPath(AKHelper::_('path.get', null, $extension).'/models/forms');
-        //JForm::addFieldPath(AKHelper::_('path.get', null, $extension).'/models/fields');
-        
         try
         {
             $form = new JForm($id.'.quickaddform', array('control' => $id));
@@ -171,7 +168,7 @@ MODAL;
         
         foreach( $fieldset as $field ):
             
-            $content .= "<div class=\"control-group\" id=\"jform_basic_alias-wrap\">
+            $content .= "<div class=\"control-group\" id=\"{$field->id}-wrap\">
                             <div class=\"control-label\">
                                 {$field->label}
                             </div>
