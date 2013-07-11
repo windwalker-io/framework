@@ -92,15 +92,15 @@ class AKToolBarHelper
     /**
 	 * Set a modal button.
 	 */
-    public static function modal($title  = 'JTOOLBAR_BATCH' , $selector = 'myModal' )
+    public static function modal($title  = 'JTOOLBAR_BATCH' , $selector = 'myModal' , $icon = 'checkbox-partial')
     {
         AKHelper::_('ui.modal', $selector) ;
         $bar	= JToolbar::getInstance('toolbar');
         $title  = JText::_($title);
         
         $option = array(
-            'class' => 'btn btn-small' ,
-            'icon'	=> 'icon-checkbox-partial'
+            'class' => 'btn btn-small '.$selector.'-link' ,
+            'icon'	=> JVERSION >= 3 ? 'icon-'.$icon : $icon
         );
         
         $dhtml	= AKHelper::_('ui.modalLink', $title, $selector, $option) ;
