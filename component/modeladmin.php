@@ -282,6 +282,56 @@ class AKModelAdmin extends JModelAdmin
     }
     
     /**
+     * Get an related item of current item.
+     * 
+     * @param   string  $name       The table name.
+     * @param   mixed   $condition  May be id or a condition array for JTable to fetch item.
+     *
+     * @return  JObject Related ttem.
+     */
+    public function getRelatedItem($name, $condition)
+    {
+        $table = $this->getTable(ucfirst($name)) ;
+        
+        if( $table->load($condition) ) {
+            
+            $item = get_object_vars($table) ;
+            
+            foreach( $item as $key => $val ):
+                if($key == '_errors') continue ;
+            
+                $item[ strtolower($name) . '_' . $key ] = $val ;
+                unset( $item[$key] );
+            endforeach;
+            
+            $item = new JObject($item);
+            
+            return $item ;
+        }else{
+            //$this->setError($table->getError());
+            return false ;
+        }
+    }
+    
+    /**
+     * Get related items of current item.
+     * 
+     * @param   string  $name       The model name.
+     * @param   array   $condition  A condition array for ModelList Filter State.
+     *
+     * @return array Related items.
+     */
+    public function getRelatedItems($name, $condition = array())
+    {
+        $model = JModelLegacy::getInstance(ucfirst($name), ucfirst($this->component).'Model', array('ignore_request' => true));
+        
+        $model->setState('filter', $condition);
+        $items = $model->getItems();
+        
+        return (array) $items ;
+    }
+    
+    /**
      * Method to test whether a record can be deleted.
      *
      * @param   object  $record  A record object.
