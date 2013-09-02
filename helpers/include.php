@@ -57,6 +57,8 @@ JS;
     
     /**
      * Include WindWalker and component core JS.
+     *
+     * @param   boolean $js include core JS or not.
      */
     public static function core($js = true)
     {
@@ -67,12 +69,24 @@ JS;
         
         $prefix = $app->isAdmin() ? '../' : '' ;
         
-        if($js){
+        if($js)
+        {
+            // include Mootools first
             JHtml::_('behavior.framework', true);
-            if($app->isSite()){
+            
+            // Include jQuery in Joomla 3.
+            if(JVERSION >= 3)
+            {
+                JHtml::_('jquery.framework', true);
+            }
+            
+            if($app->isSite())
+            {
                 $doc->addScript( AKHelper::_('path.getWWUrl').'/assets/js/windwalker.js');
                 $doc->addScript( 'components/'.$option.'/includes/js/'.$com_name.'.js');
-            }else{
+            }
+            else
+            {
                 $doc->addScript( AKHelper::_('path.getWWUrl').'/assets/js/windwalker-admin.js');
                 $doc->addScript( 'components/'.$option.'/includes/js/'.$com_name.'-admin.js');
             }
