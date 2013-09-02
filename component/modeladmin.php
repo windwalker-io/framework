@@ -332,32 +332,6 @@ class AKModelAdmin extends JModelAdmin
     }
     
     /**
-     * Method to test whether a record can be deleted.
-     *
-     * @param   object  $record  A record object.
-     *
-     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
-     */
-    protected function canDelete($record)
-    {
-        $user = JFactory::getUser();
-        return $user->authorise('core.delete', $this->option.'.'.$this->item_name.'.'.$record->id);
-    }
- 
-    /**
-     * Method to test whether a record can be deleted.
-     *
-     * @param   object  $record  A record object.
-     *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
-     */
-    protected function canEditState($record)
-    {
-        $user = JFactory::getUser();
-        return $user->authorise('core.edit.state', $this->option.'.'.$this->item_name.'.'.$record->id);
-    }
-    
-    /**
      * A protected method to get a set of ordering conditions.
      *
      * @param   object    A record object.
