@@ -22,6 +22,7 @@ class AKHelperInclude
 {
     static $bootstrap ;
     static $bluestork ;
+    static $isis ;
     
     
     /**
@@ -158,15 +159,23 @@ JS;
      */
     public static function isis()
     {
+        if(JVERSION < 3 || self::$isis)
+        {
+            return;
+        }
+        
         $doc    = JFactory::getDocument();
         $app    = JFactory::getApplication() ;
         $option = JRequest::getVar('option') ;
         
         $prefix = $app->isSite() ? 'administrator/' : '' ;
         
-        $doc->addStylesheet($prefix.'templates/isis/css/template.css');
+        JHtml::_('jquery.framework', true);
         
-        self::$bluestork = true ;
+        $doc->addStylesheet($prefix.'templates/isis/css/template.css');
+        $doc->addScript($prefix.'templates/isis/js/template.js');
+        
+        self::$isis = true ;
     }
     
     
