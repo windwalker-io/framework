@@ -35,6 +35,10 @@ class AKRequestSDK extends JObject
     
     protected $session_cache_file   = '' ;
     
+    public $isLogin = true ;
+    
+    public $forceJson = false ;
+    
     /**
      * function __construct
      * @param 
@@ -124,7 +128,7 @@ class AKRequestSDK extends JObject
         
         // If not login or session expire, relogin.
         if( !$result ) {
-            
+           
             if($this->relogin) {
                 
                 // Do Login
@@ -133,6 +137,8 @@ class AKRequestSDK extends JObject
                 if( !$login_result ) {
                     return false ;
                 }
+                
+                $this->isLogin = true ;
                 
                 // Reset session
                 $query['session_key'] = $this->session_key = $login_result->session_key;
@@ -158,10 +164,20 @@ class AKRequestSDK extends JObject
      */
     public function doExecute($path, $query = '', $method = 'get', $type = 'object', $ignore_cache = false)
     {
+        if(!$this->isLogin) {
+            return false ;
+        }
+        
         // Set URI Path
         $uri = $this->uri ;
-        $uri->setPath('/api/'.trim($path, '/'));
+        $uri->setPath('/'.trim($path, '/'));
         $uri->setQuery(array());
+        
+        // Add json format in Debug mode.
+        if(AKDEBUG || $this->forceJson)
+        {
+            $query['format'] = 'json';
+        }
         
         // Set Query
         if($method == 'post') {
@@ -180,10 +196,12 @@ class AKRequestSDK extends JObject
         // Send Request By CURL
         $result = AKHelper::_('curl.getPage', (string)$uri, $method, $query) ;
         
-        
         // Debug ------------
         $this->i++ ;
-        AKHelper::_('system.mark', "Send {$this->i}: ".(string)$uri, 'WindWalker') ;
+        $query = $this->buildAPIQuery($query, true);
+        $query = $query ? '?'.$query : '' ;
+        $query = $method == 'post' ? $query : '' ;
+        AKHelper::_('system.mark', "Send {$this->i} ({$method}): ".(string)$uri , 'WindWalker') ;
         // ------------------
         
         if(!$result) {
@@ -215,8 +233,12 @@ class AKRequestSDK extends JObject
             if( isset($result->ApiError->errorMsg) ) {
                 $this->setError($result->ApiError->errorMsg);
                 
-                // If 404, need relogin.
-                if($result->ApiError->errorNum == 404) {
+                // If 403, need relogin.
+                if($result->ApiError->errorNum == 403) {
+                    if($this->relogin){
+                        $this->isLogin = false ;
+                    }
+                    
                     $this->relogin = true ;
                 }
                 
@@ -266,10 +288,14 @@ class AKRequestSDK extends JObject
             $result = $this->login();
             
             if(!$result) {
+                $this->setError('Need login.');
+                $this->isLogin = false ;
                 return false ;
             }
             
             if(!$result->success) {
+                $this->setError('Need login.');
+                $this->isLogin = false ;
                 return false ;
             }
             
