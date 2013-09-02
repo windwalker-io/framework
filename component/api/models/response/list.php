@@ -93,7 +93,7 @@ class AKResponseModelList extends AKModelList
             
             // Key Mapping
             // ========================================================================
-            $map    = AKHelper::_('system.getConfig', 'keyMap.'.$this->list_name) ;
+            $map    = AKHelper::_('system.getConfig', 'keyMap.'.$this->item_name) ;
             $filter = AKHelper::_('array.mapKey', $filter, $map) ;
             $search = AKHelper::_('array.mapKey', $search, $map) ;
             $order  = !empty($map->$order) ? $map->$order : $order ;
