@@ -366,11 +366,13 @@ class AKModelAdmin extends JModelAdmin
      */
     protected function getReorderConditions($table)
     {
+        $condition = array();
+        
         if(property_exists($table, 'catid')){
-            $condition = array();
-            $condition[] = 'catid = '.(int) $table->catid;
-            return $condition;
+            $condition[] = 'catid = ' . $table->catid;
         }
+        
+        return $condition;
     }
     
     /**
