@@ -782,6 +782,7 @@ class AKModelAdmin extends JModelAdmin
             // ==========================================================================================
             if( $nested && in_array('parent_id', $commands) )
             {
+                // If assit_id dosen't exists, don't check item access.
                 $canCreate = ($commands['parent_id'] == $table->getRootId()) || !property_exists($table, 'asset_id')
                             ? $user->authorise('core.create', $extension)
                             : $user->authorise('core.create', $extension . '.' . $this->item_name . '.' . $commands['parent_id']);
@@ -807,7 +808,8 @@ class AKModelAdmin extends JModelAdmin
                 if( property_exists($table, 'title') ) $allow_fields['title'] = $table->title ;
                 if( property_exists($table, 'alias') ) $allow_fields['alias'] = $table->alias ;
                 
-                while ($table2->load( $allow_fields ))
+                // Get item with same name & alias, if true, increment title & alias
+                if($table2->load( $allow_fields ))
                 {
                     if( property_exists($table, 'title') ) {
                         $table->title = $allow_fields['title'] = JString::increment($table->title);
