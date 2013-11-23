@@ -21,7 +21,7 @@
 #
 namespace Michelf;
 
-// no direct access
+// No direct access
 defined('_JEXEC') or die;
 
 # Just force Michelf/Markdown.php to load. This is needed to load

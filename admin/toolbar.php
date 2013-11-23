@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-// no direct access
+// No direct access
 defined('_JEXEC') or die;
 
 include_once JPATH_ADMINISTRATOR . '/includes/toolbar.php';
@@ -17,25 +17,33 @@ include_once JPATH_ADMINISTRATOR . '/includes/toolbar.php';
  *
  * @package     Windwalker.Framework
  * @subpackage  Admin
+ * @since       2.5
  */
 class AKToolBarHelper
 {
 	/**
 	 * Set admin toolbar title and auto add page title to HTML head document.
+	 *
+	 * @param   string  $title  Toolbar title.
+	 * @param   string  $icon   Icon.
+	 *
+	 * @return  void
 	 */
-	static function title($title, $icon = 'generic.png')
+	public static function title($title, $icon = 'generic.png')
 	{
-		$doc = JFactory::getDocument();
-		$app = JFactory::getApplication();
+		$doc   = JFactory::getDocument();
+		$app   = JFactory::getApplication();
+		$input = JFactory::getApplication()->input;
 
 		$doc->setTitle($title);
 
-		$view   = JRequest::getVar('view');
-		$layout = JRequest::getVar('layout', 'default');
-		$option = JRequest::getVar('option');
+		$view   = $input->get('view');
+		$layout = $input->get('layout', 'default');
+		$option = $input->get('option');
 
 		// Strip the extension.
 		$icons = explode(' ', $icon);
+
 		foreach ($icons as &$icon)
 		{
 			$icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
@@ -67,7 +75,6 @@ class AKToolBarHelper
 		//$html = $title ;
 
 		$app->JComponentTitle = $html;
-
 	}
 
 	/**
@@ -114,13 +121,15 @@ class AKToolBarHelper
 	/**
 	 * Writes a configuration button and invokes a cancel operation (eg a checkin).
 	 *
-	 * @param   string $component The name of the component, eg, com_content.
-	 * @param   int    $height    The height of the popup. [UNUSED]
-	 * @param   int    $width     The width of the popup. [UNUSED]
-	 * @param   string $alt       The name of the button.
-	 * @param   string $path      An alternative path for the configuation xml relative to JPATH_SITE.
+	 * @param   string  $component  The name of the component, eg, com_content.
+	 * @param   string  $height     The height of the popup. [UNUSED]
+	 * @param   string  $width      The width of the popup. [UNUSED]
+	 * @param   string  $alt        The name of the button.
+	 * @param   string  $path       An alternative path for the configuation xml relative to JPATH_SITE.
 	 *
 	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public static function preferences($component, $height = '550', $width = '875', $alt = 'JToolbar_Options', $path = '')
 	{

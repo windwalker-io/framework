@@ -11,7 +11,7 @@
  * @document    http://simplehtmldom.sourceforge.net/manual.htm
  */
 
-// no direct access
+// No direct access
 defined('_JEXEC') or die;
 
 

@@ -2,7 +2,6 @@
 /**
  * @package     Joomla.Libraries
  * @subpackage  Form
- *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
@@ -30,15 +29,14 @@ class JFormFieldAkuser extends JFormField
 	 * Method to get the user field input markup.
 	 *
 	 * @return  string  The field input markup.
-	 *
 	 * @since   1.6.0
 	 */
 	protected function getInput()
 	{
-		$html = array();
-		$groups = $this->getGroups();
+		$html     = array();
+		$groups   = $this->getGroups();
 		$excluded = $this->getExcluded();
-		$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;field=' . $this->id
+		$link     = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;field=' . $this->id
 			. (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '')
 			. (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
 
@@ -53,7 +51,7 @@ class JFormFieldAkuser extends JFormField
 		JHtml::_('behavior.modal', 'a.modal_' . $this->id);
 
 		// Build the script.
-		$script = array();
+		$script   = array();
 		$script[] = '	function jSelectUser_' . $this->id . '(id, title) {';
 		$script[] = '		var old_id = document.getElementById("' . $this->id . '_id").value;';
 		$script[] = '		if (old_id != id) {';
@@ -69,6 +67,7 @@ class JFormFieldAkuser extends JFormField
 
 		// Load the current username if available.
 		$table = JTable::getInstance('user');
+
 		if ($this->value)
 		{
 			$table->load($this->value);
@@ -90,6 +89,7 @@ class JFormFieldAkuser extends JFormField
 				. ' rel="{handler: \'iframe\', size: {x: 800, y: 500}}">';
 			$html[] = '<i class="icon-user"></i></a>';
 		}
+
 		$html[] = '</div>';
 
 		// Create the real field, hidden, that stored the user id.
@@ -102,7 +102,6 @@ class JFormFieldAkuser extends JFormField
 	 * Method to get the filtering groups (null means no filtering)
 	 *
 	 * @return  mixed  array of filtering groups or null.
-	 *
 	 * @since   1.6.0
 	 */
 	protected function getGroups()
@@ -114,7 +113,6 @@ class JFormFieldAkuser extends JFormField
 	 * Method to get the users to exclude from the list of users
 	 *
 	 * @return  mixed  Array of users to exclude or null to to not exclude them
-	 *
 	 * @since   1.6.0
 	 */
 	protected function getExcluded()
