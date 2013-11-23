@@ -44,10 +44,15 @@ class AKToolBarHelper
 		// Strip the extension.
 		$icons = explode(' ', $icon);
 
+		$j32icon = '';
+
 		foreach ($icons as &$icon)
 		{
-			$icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
+			$j32icon .= ' icon-' . preg_replace('#\.[^.]*$#', '', $icon);
+			$icon     = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
 		}
+
+		$j32icon = JVERSION >= 3.2 ? '<i class="' . trim($j32icon) . '"></i>' : '';
 
 		$class = "header-{$view}-{$layout}";
 		$img   = "components/{$option}/images/admin-icons/{$class}.png";
@@ -71,7 +76,7 @@ class AKToolBarHelper
 }
         ");
 
-		$html = '<div class="pagetitle ' . htmlspecialchars($icon) . '"><h2>' . $title . '</h2></div>';
+		$html = '<div class="pagetitle ' . htmlspecialchars($icon) . '"><h2 class="page-title">' . $j32icon . $title . '</h2></div>';
 		//$html = $title ;
 
 		$app->JComponentTitle = $html;

@@ -58,7 +58,7 @@ if($hide){
 
 <div id="ak-panel-wrap">
     <?php if( JVERSION >= 3 ): ?>
-    
+
     <div class="subhead-collapse">
         <div class="subhead">
             <div class="container-fluid">
@@ -71,9 +71,9 @@ if($hide){
             </div>
         </div>
     </div>
-    
+
     <?php else: ?>
-    
+
     <div id="toolbar-box" class="ak-toolbar m">
         <div id="ref-title" class="fltlft">
             <?php echo JFactory::getApplication()->JComponentTitle; ?>
@@ -83,10 +83,10 @@ if($hide){
 
         <div class="clr"></div>
     </div>
-    
+
     <?php endif; ?>
-    
-    
+
+
 
 <?php if( JVERSION < 3 && $displayMenu): ?>
 <div id="submenu-box">
@@ -120,8 +120,8 @@ if($hide){
     </div>
 </div>
 <?php endif; ?>
-    
-    
+
+
     <div id="element-box" class="m">
             <?php echo $this->loadInnerTemplate();?>
     </div>
