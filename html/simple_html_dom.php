@@ -3,7 +3,8 @@
  * @package     Windwalker.Framework
  * @subpackage  HTML
  *
- * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
+ * @author      Simon Asika <asika32764@gmail.com>
+ * @copyright   Copyright (C) 2013 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @author      S.C. Chen <me578022@gmail.com>
  * @website     https://sourceforge.net/
