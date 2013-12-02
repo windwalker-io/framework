@@ -21,8 +21,15 @@ $install_windwalker  = true;
 
 if (JFile::exists($windwalker_xml_path))
 {
-	$windwalker_xml = simplexml_load_file($windwalker_xml_path, true);
-	$install_xml    = simplexml_load_file($install_path . '/windwalker.xml', true);
+	$class = 'SimpleXMLElement';
+
+	if (class_exists('JXMLElement'))
+	{
+		$class = 'JXMLElement';
+	}
+
+	$windwalker_xml = simplexml_load_file($windwalker_xml_path, $class);
+	$install_xml    = simplexml_load_file($install_path . '/windwalker.xml', $class);
 
 	if ((string) $install_xml->version <= (string) $windwalker_xml->version)
 	{
