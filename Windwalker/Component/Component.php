@@ -9,6 +9,7 @@
 
 namespace Windwalker\Component;
 
+use Windwalker\Controller\ControllerHelper;
 use Windwalker\DI\Container;
 
 /**
@@ -109,11 +110,15 @@ class Component
 	 */
 	protected function doExecute()
 	{
-		$controller = \JControllerLegacy::getInstance($this->name);
+		// $controllerHelper = new ControllerHelper;
 
-		$controller->execute($this->input->get('task'));
+		$controller = ControllerHelper::getController($this->name, $this->input, $this->application);
 
-		$controller->redirect();
+		$controller->setComponentPath(JPATH_BASE . '/components/com_' . strtolower($this->name));
+
+		echo get_class($controller);
+
+		$controller->execute();
 	}
 
 	/**
