@@ -55,6 +55,13 @@ class Component
 	protected $reflection;
 
 	/**
+	 * Property defaultController.
+	 *
+	 * @var string
+	 */
+	protected $defaultController;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string           $name
@@ -110,8 +117,6 @@ class Component
 	 */
 	protected function doExecute()
 	{
-		// $controllerHelper = new ControllerHelper;
-
 		$controller = ControllerHelper::getController($this->name, $this->input, $this->application);
 
 		$controller->setComponentPath(JPATH_BASE . '/components/com_' . strtolower($this->name));
@@ -129,6 +134,14 @@ class Component
 	 */
 	protected function init()
 	{
+		$task       = $this->input->getWord('task');
+		$controller = $this->input->getWord('controller');
+
+		if (!$task && !$controller)
+		{
+			$this->input->set('task',       $this->defaultController);
+			$this->input->set('controller', $this->defaultController);
+		}
 	}
 
 	/**
@@ -236,5 +249,29 @@ class Component
 		$this->reflection = new \ReflectionClass($this);
 
 		return $this->reflection;
+	}
+
+	/**
+	 * getDefaultController
+	 *
+	 * @return string
+	 */
+	public function getDefaultController()
+	{
+		return $this->defaultController;
+	}
+
+	/**
+	 * setDefaultController
+	 *
+	 * @param string $defaultController
+	 *
+	 * @return $this
+	 */
+	public function setDefaultController($defaultController)
+	{
+		$this->defaultController = $defaultController;
+
+		return $this;
 	}
 }

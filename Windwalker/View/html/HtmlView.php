@@ -9,8 +9,6 @@
 
 namespace Windwalker\View\Html;
 
-use RuntimeException;
-
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -20,7 +18,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Model
  * @since       3.2
  */
-class ViewHtml extends \JViewHtml
+class HtmlView extends AbstractHtmlView
 {
 	/**
 	 * The output of the template script.

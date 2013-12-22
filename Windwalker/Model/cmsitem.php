@@ -131,9 +131,9 @@ class JModelCmsitem extends JModelCmsform
 		}
 
 		// Guess the JText message prefix. Defaults to the option.
-		if (isset($config['text_prefix']))
+		if (isset($config['textPrefix']))
 		{
-			$this->text_prefix = strtoupper($config['text_prefix']);
+			$this->text_prefix = strtoupper($config['textPrefix']);
 		}
 		elseif (empty($this->text_prefix))
 		{

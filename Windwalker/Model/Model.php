@@ -29,20 +29,6 @@ class Model extends \JModelDatabase
 	protected $name;
 
 	/**
-	 * Property listName.
-	 *
-	 * @var
-	 */
-	protected $listName;
-
-	/**
-	 * Property itemName.
-	 *
-	 * @var
-	 */
-	protected $itemName;
-
-	/**
 	 * The URL option for the component.
 	 *
 	 * @var    string
@@ -56,7 +42,7 @@ class Model extends \JModelDatabase
 	 * @var    string
 	 * @since  3.2
 	 */
-	protected $text_prefix = null;
+	protected $textPrefix = null;
 
 	/**
 	 * Indicates if the internal state has been set
@@ -64,17 +50,27 @@ class Model extends \JModelDatabase
 	 * @var    boolean
 	 * @since  3.2
 	 */
-	protected $state_set = null;
+	protected $stateSet = null;
+
+	/**
+	 * The event to trigger when cleaning cache.
+	 *
+	 * @var      string
+	 * @since    12.2
+	 */
+	protected $eventCleanCache = null;
 
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array             $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   \JRegistry        $state   The model state.
+	 * @param   \JDatabaseDriver  $db      The database adpater.
 	 *
+	 * @throws \Exception
 	 * @since   3.2
-	 * @throws  Exception
 	 */
-	public function __construct($config = array(), $state = null, $database = null)
+	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
 		// Guess the option from the class name (Option)Model(View).
 		if (empty($this->option))
@@ -83,29 +79,29 @@ class Model extends \JModelDatabase
 
 			if (!preg_match('/(.*)Model/i', get_class($this), $r))
 			{
-				throw new \Exception(JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
+				throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
 			}
 
 			$this->option = 'com_' . strtolower($r[1]);
 		}
 
 		// Register the paths for the form
-		$paths = $this->registerTablePaths($config);
+		$this->registerTablePaths($config);
 
 		// Set the internal state marker - used to ignore setting state from the request
 		if (!empty($config['ignore_request']))
 		{
-			$this->state_set = true;
+			$this->stateSet = true;
 		}
 
 		// Set the clean cache event
 		if (isset($config['event_clean_cache']))
 		{
-			$this->event_clean_cache = $config['event_clean_cache'];
+			$this->eventCleanCache = $config['event_clean_cache'];
 		}
-		elseif (empty($this->event_clean_cache))
+		elseif (empty($this->eventCleanCache))
 		{
-			$this->event_clean_cache = 'onContentCleanCache';
+			$this->eventCleanCache = 'onContentCleanCache';
 		}
 
 		$state = new \JRegistry($config);
@@ -122,7 +118,7 @@ class Model extends \JModelDatabase
 	 * @return  string  The name of the model
 	 *
 	 * @since   3.2
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function getName()
 	{
@@ -132,10 +128,8 @@ class Model extends \JModelDatabase
 
 			if (!preg_match('/Model(.*)/i', get_class($this), $r))
 			{
-				throw new \Exception(JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
+				throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
 			}
-
-			$name = strtolower($r[1]);
 
 			$this->name = strtolower($r[1]);
 		}
@@ -146,20 +140,19 @@ class Model extends \JModelDatabase
 	/**
 	 * Method to get model state variables
 	 *
-	 *
 	 * @return  object  The property where specified, the state object where omitted
 	 *
 	 * @since   3.2
 	 */
 	public function getState()
 	{
-		if (!$this->state_set)
+		if (!$this->stateSet)
 		{
 			// Protected method to auto-populate the model state.
 			$this->populateState();
 
 			// Set the model state set flag to true.
-			$this->state_set = true;
+			$this->stateSet = true;
 		}
 
 		return $this->state;
@@ -184,16 +177,18 @@ class Model extends \JModelDatabase
 			$name = $this->getName();
 		}
 
-		if ($table = $this->_createTable($name, $prefix, $options))
+		if ($table = $this->createTable($name, $prefix, $options))
 		{
 			return $table;
 		}
 
-		throw new \Exception(JText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name), 0);
+		throw new \Exception(\JText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name), 0);
 	}
 
 	/**
 	 * Method to register paths for tables
+	 *
+	 * @param array $config
 	 *
 	 * @return  object  The property where specified, the state object where omitted
 	 *
@@ -242,32 +237,6 @@ class Model extends \JModelDatabase
 	}
 
 	/**
-	 * Clean the cache
-	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		$conf = JFactory::getConfig();
-		$dispatcher = JEventDispatcher::getInstance();
-
-		$options = array(
-				'defaultgroup' => ($group) ? $group : (isset($this->option) ? $this->option : JFactory::getApplication()->input->get('option')),
-				'cachebase' => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache'));
-
-		$cache = JCache::getInstance('callback', $options);
-		$cache->clean();
-
-		// Trigger the onContentCleanCache event.
-		$dispatcher->trigger($this->event_clean_cache, $options);
-	}
-
-	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * This method should only be called once per instantiation and is designed
@@ -299,7 +268,7 @@ class Model extends \JModelDatabase
 		{
 			if ($record->published != -2)
 			{
-				return;
+				return false;
 			}
 
 			$user = \JFactory::getUser();
@@ -323,5 +292,76 @@ class Model extends \JModelDatabase
 		$user = \JFactory::getUser();
 
 		return $user->authorise('core.edit.state', $this->option);
+	}
+
+	/**
+	 * Method to load and return a model object.
+	 *
+	 * @param   string  $name    The name of the view
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration settings to pass to JTable::getInstance
+	 *
+	 * @return  mixed  Model object or boolean false if failed
+	 *
+	 * @see     JTable::getInstance()
+	 */
+	protected function createTable($name, $prefix = 'Table', $config = array())
+	{
+		// Clean the model name
+		$name = preg_replace('/[^A-Z0-9_]/i', '', $name);
+		$prefix = preg_replace('/[^A-Z0-9_]/i', '', $prefix);
+
+		if (!$name)
+		{
+			$name = $this->getName();
+		}
+
+		// Make sure we are returning a DBO object
+		if (!array_key_exists('dbo', $config))
+		{
+			$config['dbo'] = $this->getDb();
+		}
+
+		return \JTable::getInstance($name, $prefix, $config);
+	}
+
+	/**
+	 * Adds to the stack of model table paths in LIFO order.
+	 *
+	 * @param   mixed  $path  The directory as a string or directories as an array to add.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.2
+	 */
+	public static function addTablePath($path)
+	{
+		\JTable::addIncludePath($path);
+	}
+
+	/**
+	 * Clean the cache
+	 *
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		$conf = \JFactory::getConfig();
+		$dispatcher = \JEventDispatcher::getInstance();
+
+		$options = array(
+			'defaultgroup' => ($group) ? $group : (isset($this->option) ? $this->option : \JFactory::getApplication()->input->get('option')),
+			'cachebase' => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache'));
+
+		$cache = \JCache::getInstance('callback', $options);
+		$cache->clean();
+
+		// Trigger the onContentCleanCache event.
+		$dispatcher->trigger($this->eventCleanCache, $options);
 	}
 }

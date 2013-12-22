@@ -34,11 +34,11 @@ class Controller extends \JControllerBase
 	protected $option = '';
 
 	/**
-	 * Permission needed for the action. Defaults to most restrictive
+	 * Property name.
 	 *
-	 * @var  string
+	 * @var string
 	 */
-	protected $permission = 'core.admin';
+	protected $name;
 
 	/**
 	 * Property componentPath.
@@ -55,18 +55,18 @@ class Controller extends \JControllerBase
 	protected $reflection;
 
 	/**
-	 * Property name.
+	 * Property model.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $name;
+	protected $model = array();
 
 	/**
-	 * Property defaultView.
+	 * Property view.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $defaultView = 'items';
+	protected $view = array();
 
 	/**
 	 * Instantiate the controller.
@@ -130,8 +130,6 @@ class Controller extends \JControllerBase
 
 		return $this->reflection;
 	}
-
-
 
 	/**
 	 * getPrefix
@@ -214,38 +212,6 @@ class Controller extends \JControllerBase
 		JSession::checkToken() or jexit(JText::_('JInvalid_Token'));
 	}
 
-	public function getView($name = null, $type = null, \JModel $model = null)
-	{
-		if (!$name)
-		{
-			$name = $this->getName();
-		}
-
-		if (!$model)
-		{
-			$model = $this->getModel($name);
-		}
-
-		$type = ucfirst($type);
-
-		$prefix = ucfirst($this->getPrefix()) . 'View' . $type;
-
-		$viewName = $prefix . ucfirst($name);
-
-		if (!class_exists($viewName))
-		{
-			$viewName = '\\Windwalker\\View\\' . $type . '\\View' . $type;
-		}
-
-		$paths = $this->getTemplatePath($name);
-
-		$view = new $viewName($model, $paths);
-
-		$view->setName($name);
-
-		return $view;
-	}
-
 	/**
 	 * getModel
 	 *
@@ -257,16 +223,25 @@ class Controller extends \JControllerBase
 	 */
 	public function getModel($name = null, $prefix = null, $config = array())
 	{
+		// Get name.
 		if (!$name)
 		{
 			$name = $this->getName();
 		}
 
+		// Get from cache.
+		if (!empty($this->model[$name]))
+		{
+			return $this->model[$name];
+		}
+
+		// Get Prefix
 		if (!$prefix)
 		{
 			$prefix = ucfirst($this->getPrefix()) . 'Model';
 		}
 
+		// Get model.
 		$modelName = $prefix . ucfirst($name);
 
 		if (!class_exists($modelName))
@@ -279,30 +254,6 @@ class Controller extends \JControllerBase
 		$model->setName($name)
 			->setOption('com_' . $this->option);
 
-		return $model;
-	}
-
-	/**
-	 * getTemplatePath
-	 *
-	 * @param $view
-	 *
-	 * @return \SplPriorityQueue
-	 */
-	public function getTemplatePath($view)
-	{
-		// Register the layout paths for the view
-		$componentFolder = $this->getComponentPath();
-		$paths = new \SplPriorityQueue;
-
-		$view = $view ?: $this->defaultView;
-
-		// View tmpl path.
-		$paths->insert($componentFolder . '/view/' . $view . '/tmpl', 'normal');
-
-		// Theme override path.
-		$paths->insert(JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/' . $this->option . '/' . $view, 'normal');
-
-		return $paths;
+		return $this->model[$name] = $model;
 	}
 }

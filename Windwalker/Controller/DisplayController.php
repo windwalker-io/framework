@@ -21,6 +21,13 @@ defined('_JEXEC') or die('Restricted access');
 class DisplayController extends Controller
 {
 	/**
+	 * Property defaultView.
+	 *
+	 * @var string
+	 */
+	protected $defaultView;
+
+	/**
 	 * Property cachable.
 	 *
 	 * @var boolean
@@ -51,7 +58,10 @@ class DisplayController extends Controller
 		$model = $this->getModel($viewName);
 
 		// Get View and register Model to it.
-		$view  = $this->getView($viewName, $viewFormat, $model);
+		$view = $this->getView($viewName, $viewFormat, $model);
+
+		// Assign alternative models to view
+		$this->assignModel($view);
 
 		// Set template layout to view.
 		$view->setLayout($layoutName);
@@ -140,5 +150,105 @@ class DisplayController extends Controller
 		$this->urlParams = $urlParams;
 
 		return $this;
+	}
+
+	/**
+	 * getView
+	 *
+	 * @param null    $name
+	 * @param null    $type
+	 * @param \JModel $model
+	 *
+	 * @return mixed
+	 */
+	public function getView($name = null, $type = null, \JModel $model = null)
+	{
+		// Get the name.
+		if (!$name)
+		{
+			$name = $this->getName();
+		}
+
+		// Get from cache.
+		if (!empty($this->view[$name]))
+		{
+			return $this->view[$name];
+		}
+
+		// Get model
+		if (!$model)
+		{
+			$model = $this->getModel($name);
+		}
+
+		// Get View
+		$type = ucfirst($type);
+
+		$prefix = ucfirst($this->getPrefix()) . 'View';
+
+		$viewName = $prefix . ucfirst($name) . $type;
+
+		if (!class_exists($viewName))
+		{
+			$viewName = '\\Windwalker\\View\\' . $type . '\\' . $type . 'View';
+		}
+
+		$paths = $this->getTemplatePath($name);
+
+		$view = new $viewName($model, $paths);
+
+		$view->setName($name);
+
+		return $this->view[$name] = $view;
+	}
+
+	/**
+	 * getTemplatePath
+	 *
+	 * @param \JView $view
+	 *
+	 * @return \SplPriorityQueue
+	 */
+	public function getTemplatePath($view)
+	{
+		// Register the layout paths for the view
+		$componentFolder = $this->getComponentPath();
+		$paths = new \SplPriorityQueue;
+
+		$view = $view ?: $this->defaultView;
+
+		// View tmpl path.
+		$paths->insert($componentFolder . '/view/' . $view . '/tmpl', 'normal');
+
+		// Theme override path.
+		$paths->insert(JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/' . $this->option . '/' . $view, 'normal');
+
+		return $paths;
+	}
+
+	/**
+	 * assignModels
+	 *
+	 * @param \JView $view
+	 *
+	 * @return void
+	 */
+	protected function assignModel($view)
+	{
+	}
+
+	/**
+	 * getDefaultView
+	 *
+	 * @return string
+	 */
+	public function getDefaultView()
+	{
+		if (!$this->defaultView)
+		{
+			$this->defaultView = $this->getName();
+		}
+
+		return $this->defaultView;
 	}
 }
