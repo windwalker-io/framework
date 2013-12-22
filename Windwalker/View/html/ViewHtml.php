@@ -7,6 +7,10 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Windwalker\View\Html;
+
+use RuntimeException;
+
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -16,7 +20,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Model
  * @since       3.2
  */
-abstract class JViewHtmlCms extends JViewHtml
+class ViewHtml extends \JViewHtml
 {
 	/**
 	 * The output of the template script.
@@ -46,6 +50,13 @@ abstract class JViewHtmlCms extends JViewHtml
 	 */
 	protected $layoutExt = 'php';
 
+	/**
+	 * Property name.
+	 *
+	 * @var string
+	 */
+	protected $name;
+
 	/*
 	 * Optional prefix for the view and model classes
 	*
@@ -57,24 +68,23 @@ abstract class JViewHtmlCms extends JViewHtml
 	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param   JModel            $model  The model object.
-	 * @param   SplPriorityQueue  $paths  The paths queue.
+	 * @param   \JModel            $model  The model object.
+	 * @param   \SplPriorityQueue  $paths  The paths queue.
 	 *
 	 * @since   12.1
 	 */
-	public function __construct(JModel $model, SplPriorityQueue $paths = null)
+	public function __construct(\JModel $model, \SplPriorityQueue $paths = null)
 	{
-		$app = JFactory::getApplication();
-		$component = JApplicationHelper::getComponentName();
+		$app = \JFactory::getApplication();
+		$component = \JApplicationHelper::getComponentName();
 		$component = preg_replace('/[^A-Z0-9_\.-]/i', '', $component);
 
-		if(isset($paths))
+		if (isset($paths))
 		{
 			$paths->insert(JPATH_THEMES . '/' . $app->getTemplate() . '/html/' . $component . '/' . $this->getName(), 'normal');
 		}
 
 		parent::__construct($model, $paths);
-
 	}
 
 	/**
@@ -92,7 +102,7 @@ abstract class JViewHtmlCms extends JViewHtml
 		// Clear prior output
 		$this->output = null;
 
-		$template = JFactory::getApplication()->getTemplate();
+		$template = \JFactory::getApplication()->getTemplate();
 		$layout = $this->getLayout();
 
 		// Create the template file name based on the layout
@@ -103,7 +113,7 @@ abstract class JViewHtmlCms extends JViewHtml
 		$tpl = isset($tpl) ? preg_replace('/[^A-Z0-9_\.-]/i', '', $tpl) : $tpl;
 
 		// Load the language file for the template
-		$lang = JFactory::getLanguage();
+		$lang = \JFactory::getLanguage();
 		$lang->load('tpl_' . $template, JPATH_BASE, null, false, false)
 		|| $lang->load('tpl_' . $template, JPATH_THEMES . "/$template", null, false, false)
 		|| $lang->load('tpl_' . $template, JPATH_BASE, $lang->getDefault(), false, false)
@@ -129,13 +139,13 @@ abstract class JViewHtmlCms extends JViewHtml
 		// Load the template script
 		jimport('joomla.filesystem.path');
 		$filetofind = $this->createFileName('template', array('name' => $file));
-		$this->template = JPath::find($this->path['template'], $filetofind);
+		$this->template = \JPath::find($this->path['template'], $filetofind);
 
 		// If alternate layout can't be found, fall back to default layout
 		if ($this->template == false)
 		{
 			$filetofind = $this->createFileName('', array('name' => 'default' . (isset($tpl) ? '_' . $tpl : $tpl)));
-			$this->template = JPath::find($this->path['template'], $filetofind);
+			$this->template = \JPath::find($this->path['template'], $filetofind);
 		}
 
 		if ($this->template != false)
@@ -166,7 +176,7 @@ abstract class JViewHtmlCms extends JViewHtml
 		}
 		else
 		{
-			throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_LAYOUTFILE_NOT_FOUND', $file), 500);
+			throw new \Exception(\JText::sprintf('JLIB_APPLICATION_ERROR_LAYOUTFILE_NOT_FOUND', $file), 500);
 		}
 	}
 
@@ -194,6 +204,7 @@ abstract class JViewHtmlCms extends JViewHtml
 				$filename = strtolower($parts['name']) . '.php';
 				break;
 		}
+
 		return $filename;
 	}
 
@@ -217,11 +228,11 @@ abstract class JViewHtmlCms extends JViewHtml
 
 			if ($viewpos === false)
 			{
-				throw new Exception(JText::_('JLIB_APPLICATION_ERROR_VIEW_GET_NAME'), 500);
+				throw new \Exception(JText::_('JLIB_APPLICATION_ERROR_VIEW_GET_NAME'), 500);
 			}
 
 			$lastPart = substr($classname, $viewpos + 4);
-			$pathParts = explode(' ', JStringNormalise::fromCamelCase($lastPart));
+			$pathParts = explode(' ', \JStringNormalise::fromCamelCase($lastPart));
 
 			if (!empty($pathParts[1]))
 			{
@@ -235,6 +246,17 @@ abstract class JViewHtmlCms extends JViewHtml
 
 		return $this->name;
 	}
+
+	/**
+	 * @param string $name
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
+
 	/**
 	 * Add the page title and toolbar.
 	 *

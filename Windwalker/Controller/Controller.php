@@ -27,6 +27,13 @@ class Controller extends \JControllerBase
 	protected $prefix = '';
 
 	/**
+	 * Property option.
+	 *
+	 * @var string
+	 */
+	protected $option = '';
+
+	/**
 	 * Permission needed for the action. Defaults to most restrictive
 	 *
 	 * @var  string
@@ -53,6 +60,13 @@ class Controller extends \JControllerBase
 	 * @var string
 	 */
 	protected $name;
+
+	/**
+	 * Property defaultView.
+	 *
+	 * @var string
+	 */
+	protected $defaultView = 'items';
 
 	/**
 	 * Instantiate the controller.
@@ -117,6 +131,8 @@ class Controller extends \JControllerBase
 		return $this->reflection;
 	}
 
+
+
 	/**
 	 * getPrefix
 	 *
@@ -142,6 +158,52 @@ class Controller extends \JControllerBase
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getName()
+	{
+		if ($this->name !== null)
+		{
+			return $this->name;
+		}
+
+		$ref = $this->getReflection();
+
+		$name = explode('Controller', $ref->getName());
+
+		if ($name[0] == $this->getPrefix())
+		{
+			return $this->name = '';
+		}
+		elseif (!empty($name[1]))
+		{
+			return $this->name = trim($name[1], '\\');
+		}
+
+		return '';
+	}
+
+	/**
+	 * @param string $name
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $option
+	 */
+	public function setOption($option)
+	{
+		$this->option = $option;
+
+		return $this;
+	}
+
+	/**
 	 * checkToken
 	 *
 	 * @return void
@@ -150,5 +212,97 @@ class Controller extends \JControllerBase
 	{
 		// Check for request forgeries
 		JSession::checkToken() or jexit(JText::_('JInvalid_Token'));
+	}
+
+	public function getView($name = null, $type = null, \JModel $model = null)
+	{
+		if (!$name)
+		{
+			$name = $this->getName();
+		}
+
+		if (!$model)
+		{
+			$model = $this->getModel($name);
+		}
+
+		$type = ucfirst($type);
+
+		$prefix = ucfirst($this->getPrefix()) . 'View' . $type;
+
+		$viewName = $prefix . ucfirst($name);
+
+		if (!class_exists($viewName))
+		{
+			$viewName = '\\Windwalker\\View\\' . $type . '\\View' . $type;
+		}
+
+		$paths = $this->getTemplatePath($name);
+
+		$view = new $viewName($model, $paths);
+
+		$view->setName($name);
+
+		return $view;
+	}
+
+	/**
+	 * getModel
+	 *
+	 * @param null  $name
+	 * @param null  $prefix
+	 * @param array $config
+	 *
+	 * @return mixed
+	 */
+	public function getModel($name = null, $prefix = null, $config = array())
+	{
+		if (!$name)
+		{
+			$name = $this->getName();
+		}
+
+		if (!$prefix)
+		{
+			$prefix = ucfirst($this->getPrefix()) . 'Model';
+		}
+
+		$modelName = $prefix . ucfirst($name);
+
+		if (!class_exists($modelName))
+		{
+			$modelName = '\\Windwalker\\Model\\Model';
+		}
+
+		$model = new $modelName;
+
+		$model->setName($name)
+			->setOption('com_' . $this->option);
+
+		return $model;
+	}
+
+	/**
+	 * getTemplatePath
+	 *
+	 * @param $view
+	 *
+	 * @return \SplPriorityQueue
+	 */
+	public function getTemplatePath($view)
+	{
+		// Register the layout paths for the view
+		$componentFolder = $this->getComponentPath();
+		$paths = new \SplPriorityQueue;
+
+		$view = $view ?: $this->defaultView;
+
+		// View tmpl path.
+		$paths->insert($componentFolder . '/view/' . $view . '/tmpl', 'normal');
+
+		// Theme override path.
+		$paths->insert(JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/' . $this->option . '/' . $view, 'normal');
+
+		return $paths;
 	}
 }

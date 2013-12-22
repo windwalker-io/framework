@@ -21,11 +21,18 @@ defined('_JEXEC') or die('Restricted access');
 class DisplayController extends Controller
 {
 	/**
-	 * Property defaultView.
+	 * Property cachable.
 	 *
-	 * @var string
+	 * @var boolean
 	 */
-	protected $defaultView = 'items';
+	protected $cachable = false;
+
+	/**
+	 * Property urlParams.
+	 *
+	 * @var array
+	 */
+	protected $urlParams = array();
 
 	/**
 	 * Execute.
@@ -34,56 +41,104 @@ class DisplayController extends Controller
 	 */
 	public function execute()
 	{
-		// Get the application
-		$app = $this->getApplication();
+		// Get some data.
+		$document   = \JFactory::getDocument();
+		$viewName   = $this->input->getWord('view', $this->defaultView);
+		$viewFormat = $document->getType();
+		$layoutName = $this->input->getWord('layout', 'default');
 
-		!$app->isAdmin() ? : $this->permission = 'core.manage';
+		// Get Model
+		$model = $this->getModel($viewName);
 
-		// Get the document object.
-		$document     = \JFactory::getDocument();
+		// Get View and register Model to it.
+		$view  = $this->getView($viewName, $viewFormat, $model);
 
-		$componentFolder = $this->getComponentPath();
-		$viewName        = $this->input->getWord('view', $this->defaultView);
-		$viewFormat      = $document->getType();
-		$layoutName      = $this->input->getWord('layout', 'default');
+		// Set template layout to view.
+		$view->setLayout($layoutName);
 
-		// Register the layout paths for the view
-		$paths = new \SplPriorityQueue;
-		$paths->insert($componentFolder . '/view/' . $viewName . '/tmpl', 'normal');
+		// Push JDocument to View
+		$view->document = $document;
 
-		$viewClass  = $this->prefix . 'View' . ucfirst($viewName) . ucfirst($viewFormat);
-		$modelClass = $this->prefix . 'Model' . ucfirst($viewName);
+		// Display the view
+		$conf = \JFactory::getConfig();
 
-		if (class_exists($viewClass))
+		if ($this->cachable && $viewFormat != 'feed' && $conf->get('caching') >= 1)
 		{
-			$model = new $modelClass;
+			$option = $this->input->get('option');
+			$cache = \JFactory::getCache($option, 'view');
 
-			// Access check.
-			if (!empty($this->permission) && !JFactory::getUser()->authorise($this->permission, $model->getState('component.option')))
+			// Register url params for JCache.
+			if (is_array($this->urlParams))
 			{
-				$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+				if (!empty($this->app->registeredurlparams))
+				{
+					$registeredurlparams = $this->app->registeredurlparams;
+				}
+				else
+				{
+					$registeredurlparams = new \StdClass;
+				}
 
-				return;
+				foreach ($this->urlParams as $key => $value)
+				{
+					// Add your safe url parameters with variable type as value {@see JFilterInput::clean()}.
+					$registeredurlparams->$key = $value;
+				}
+
+				$this->app->registeredurlparams = $registeredurlparams;
 			}
 
-			$view = new $viewClass($model, $paths);
-
-			$view->setLayout($layoutName);
-
-			// Push document object into the view.
-			$view->document = $document;
-
-			// Reply for service requests
-			if ($viewFormat == 'json')
-			{
-
-				return $view->render();
-			}
-
-			// Render view.
-			echo $view->render();
+			return $cache->get($view, 'render');
 		}
 
-		return true;
+		return $view->render();
+	}
+
+	/**
+	 * getCachable
+	 *
+	 * @return boolean
+	 */
+	public function getCachable()
+	{
+		return $this->cachable;
+	}
+
+	/**
+	 * setCachable
+	 *
+	 * @param boolean $cachable
+	 *
+	 * @return $this
+	 */
+	public function setCachable($cachable)
+	{
+		$this->cachable = $cachable;
+
+		return $this;
+	}
+
+	/**
+	 * getUrlParams
+	 *
+	 * @return array
+	 */
+	public function getUrlParams()
+	{
+		return $this->urlParams;
+	}
+
+	/**
+	 * setUrlParams
+	 *
+	 * @param array $urlParams
+	 *
+	 * @return $this
+	 */
+	public function setUrlParams($urlParams)
+	{
+		$this->urlParams = $urlParams;
+
+		return $this;
 	}
 }

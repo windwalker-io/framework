@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Windwalker\Model;
+
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -16,7 +18,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Model
  * @since       3.2
  */
-abstract class JModelCms extends JModelDatabase
+class Model extends \JModelDatabase
 {
 	/**
 	 * The model (base) name
@@ -25,6 +27,20 @@ abstract class JModelCms extends JModelDatabase
 	 * @since  3.2
 	 */
 	protected $name;
+
+	/**
+	 * Property listName.
+	 *
+	 * @var
+	 */
+	protected $listName;
+
+	/**
+	 * Property itemName.
+	 *
+	 * @var
+	 */
+	protected $itemName;
 
 	/**
 	 * The URL option for the component.
@@ -48,7 +64,7 @@ abstract class JModelCms extends JModelDatabase
 	 * @var    boolean
 	 * @since  3.2
 	 */
-	protected $__state_set = null;
+	protected $state_set = null;
 
 	/**
 	 * Constructor
@@ -58,7 +74,7 @@ abstract class JModelCms extends JModelDatabase
 	 * @since   3.2
 	 * @throws  Exception
 	 */
-	public function __construct($config = array())
+	public function __construct($config = array(), $state = null, $database = null)
 	{
 		// Guess the option from the class name (Option)Model(View).
 		if (empty($this->option))
@@ -67,43 +83,10 @@ abstract class JModelCms extends JModelDatabase
 
 			if (!preg_match('/(.*)Model/i', get_class($this), $r))
 			{
-				throw new Exception(JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
+				throw new \Exception(JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
 			}
 
 			$this->option = 'com_' . strtolower($r[1]);
-		}
-
-		// Set the view name
-		if (empty($this->name))
-		{
-			if (array_key_exists('name', $config))
-			{
-				$this->name = $config['name'];
-			}
-			else
-			{
-				$this->name = $this->getName();
-			}
-		}
-
-		// Set the model state
-		if (array_key_exists('state', $config))
-		{
-			$this->state = $config['state'];
-		}
-		else
-		{
-			$this->state = new JObject;
-		}
-
-		// Set the model dbo
-		if (array_key_exists('dbo', $config))
-		{
-			$this->_db = $config['dbo'];
-		}
-		else
-		{
-			$this->_db = JFactory::getDbo();
 		}
 
 		// Register the paths for the form
@@ -112,7 +95,7 @@ abstract class JModelCms extends JModelDatabase
 		// Set the internal state marker - used to ignore setting state from the request
 		if (!empty($config['ignore_request']))
 		{
-			$this->__state_set = true;
+			$this->state_set = true;
 		}
 
 		// Set the clean cache event
@@ -125,7 +108,7 @@ abstract class JModelCms extends JModelDatabase
 			$this->event_clean_cache = 'onContentCleanCache';
 		}
 
-		$state = new JRegistry($config);
+		$state = new \JRegistry($config);
 
 		parent::__construct($state);
 	}
@@ -146,10 +129,14 @@ abstract class JModelCms extends JModelDatabase
 		if (empty($this->name))
 		{
 			$r = null;
+
 			if (!preg_match('/Model(.*)/i', get_class($this), $r))
 			{
-				throw new Exception(JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
+				throw new \Exception(JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
 			}
+
+			$name = strtolower($r[1]);
+
 			$this->name = strtolower($r[1]);
 		}
 
@@ -166,13 +153,13 @@ abstract class JModelCms extends JModelDatabase
 	 */
 	public function getState()
 	{
-		if (!$this->__state_set)
+		if (!$this->state_set)
 		{
 			// Protected method to auto-populate the model state.
 			$this->populateState();
 
 			// Set the model state set flag to true.
-			$this->__state_set = true;
+			$this->state_set = true;
 		}
 
 		return $this->state;
@@ -185,10 +172,10 @@ abstract class JModelCms extends JModelDatabase
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
 	 *
-	 * @return  JTable  A JTable object
+	 * @return  \JTable  A JTable object
 	 *
 	 * @since   3.2
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function getTable($name = '', $prefix = 'Table', $options = array())
 	{
@@ -202,7 +189,7 @@ abstract class JModelCms extends JModelDatabase
 			return $table;
 		}
 
-		throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name), 0);
+		throw new \Exception(JText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name), 0);
 	}
 
 	/**
@@ -222,13 +209,36 @@ abstract class JModelCms extends JModelDatabase
 		elseif (defined('JPATH_COMPONENT_ADMINISTRATOR'))
 		{
 			// Register the paths for the form
-			$paths = new SplPriorityQueue;
+			$paths = new \SplPriorityQueue;
 			$paths->insert(JPATH_COMPONENT_ADMINISTRATOR . '/table', 'normal');
 
 			// For legacy purposes. Remove for 4.0
 			$paths->insert(JPATH_COMPONENT_ADMINISTRATOR . '/tables', 'normal');
-
 		}
+	}
+
+	/**
+	 * setName
+	 *
+	 * @param $name
+	 *
+	 * @return $this
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $option
+	 */
+	public function setOption($option)
+	{
+		$this->option = $option;
+
+		return $this;
 	}
 
 	/**
@@ -273,6 +283,7 @@ abstract class JModelCms extends JModelDatabase
 	{
 		$this->loadState();
 	}
+
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
@@ -290,7 +301,8 @@ abstract class JModelCms extends JModelDatabase
 			{
 				return;
 			}
-			$user = JFactory::getUser();
+
+			$user = \JFactory::getUser();
 
 			return $user->authorise('core.delete', $this->option);
 
@@ -308,7 +320,7 @@ abstract class JModelCms extends JModelDatabase
 	 */
 	protected function canEditState($record)
 	{
-		$user = JFactory::getUser();
+		$user = \JFactory::getUser();
 
 		return $user->authorise('core.edit.state', $this->option);
 	}

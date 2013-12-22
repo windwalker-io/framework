@@ -77,15 +77,17 @@ class ControllerHelper
 
 		$tasks = array_map('ucfirst', $tasks);
 
-		$controllerName = '\\' . ucfirst($prefix) . 'Controller' . implode($tasks);
+		$name = '';
+
+		if (count($tasks) > 1)
+		{
+			$name = array_shift($tasks);
+		}
+
+		$controllerName = '\\' . ucfirst($prefix) . 'Controller' . $name . implode($tasks);
 
 		if (!class_exists($controllerName))
 		{
-			if (count($tasks) > 1)
-			{
-				array_shift($tasks);
-			}
-
 			$controllerName = '\\Windwalker\\Controller\\' . implode($tasks) . 'Controller';
 
 			if (!class_exists($controllerName))
@@ -96,7 +98,8 @@ class ControllerHelper
 
 		$controller = new $controllerName($input, $app);
 
-		$controller->setPrefix($prefix);
+		$controller->setPrefix($prefix)
+			->setName($name);
 
 		return $controller;
 	}

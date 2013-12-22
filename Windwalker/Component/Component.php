@@ -92,7 +92,7 @@ class Component
 	/**
 	 * execute
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function execute()
 	{
@@ -100,13 +100,13 @@ class Component
 
 		$this->init();
 
-		$this->doExecute();
+		return $this->doExecute();
 	}
 
 	/**
 	 * doExecute
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	protected function doExecute()
 	{
@@ -116,9 +116,10 @@ class Component
 
 		$controller->setComponentPath(JPATH_BASE . '/components/com_' . strtolower($this->name));
 
-		echo get_class($controller);
+		// echo get_class($controller);
 
-		$controller->execute();
+		return $controller->setOption('com_' . strtolower($this->name))
+			->execute();
 	}
 
 	/**
