@@ -6,14 +6,16 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Controller\Admin;
+namespace Windwalker\Controller\Item;
+
+use Windwalker\Controller\AbstractAdminController;
 
 /**
  * Class FormController
  *
  * @since 1.0
  */
-class FormController extends AdminController
+class AbstractFormController extends AbstractAdminController
 {
 	/**
 	 * Property allowUrlParams.

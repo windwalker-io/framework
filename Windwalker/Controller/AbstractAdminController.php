@@ -6,16 +6,14 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Controller\Admin;
-
-use Windwalker\Controller\Controller;
+namespace Windwalker\Controller;
 
 /**
  * Class AdminController
  *
  * @since 1.0
  */
-class AdminController extends Controller
+abstract class AbstractAdminController extends Controller
 {
 	/**
 	 * The context for storing internal data, e.g. record.

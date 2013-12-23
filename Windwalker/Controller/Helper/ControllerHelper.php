@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Windwalker\Controller;
+namespace Windwalker\Controller\Helper;
 
 defined('_JEXEC') or die('Restricted access');
 

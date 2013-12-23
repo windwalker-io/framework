@@ -9,7 +9,7 @@
 
 namespace Windwalker\Component;
 
-use Windwalker\Controller\ControllerHelper;
+use Windwalker\Controller\Helper\ControllerHelper;
 use Windwalker\DI\Container;
 
 /**

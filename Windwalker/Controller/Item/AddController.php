@@ -2,14 +2,12 @@
 
 namespace Windwalker\Controller\Item;
 
-use Windwalker\Controller\Admin\FormController;
-
 /**
  * Class AddController
  *
  * @since 1.0
  */
-class AddController extends FormController
+class AddController extends AbstractFormController
 {
 	/**
 	 * execute
