@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# A script to copy component template to windwalker dirs.
+# To enable it, copy this file to .git/hooks and add execute permission.
+#
+# @Date: 2013-12-23
+# @Author: Simon Asika <asika32764@gmail.com>
+
+COM="flower"
+MOD="flower"
+PLG="flower"
+GUP="system"
+
+# admin
+rm -rf Template/admin
+mkdir Template/admin
+cp -rf ../../administrator/components/com_$COM/* Template/admin
+echo "Admin copied" ;
+
+# site
+rm -rf Template/site
+mkdir Template/site
+cp -rf ../../components/com_$COM/* Template/site
+echo "Site copied" ;
+
+# Set Template
+rm -rf Template/component
+mkdir -p Template/component
+
+cp -rf Template/admin/ Template/component/init.administrator
+
+mkdir Template/component/subsystem.administrator
+mv Template/component/init.administrator/controller Template/component/subsystem.administrator
+mv Template/component/init.administrator/model      Template/component/subsystem.administrator
+mv Template/component/init.administrator/view       Template/component/subsystem.administrator
+mv Template/component/init.administrator/table      Template/component/subsystem.administrator
+mv Template/component/init.administrator/sql        Template/component/subsystem.administrator
+mv Template/component/init.administrator/image      Template/component/subsystem.administrator
+
+
+cp -rf Template/site/ Template/component/init.site
+
+mkdir Template/component/subsystem.site
+mv Template/component/init.site/controller Template/component/subsystem.site
+mv Template/component/init.site/model      Template/component/subsystem.site
+mv Template/component/init.site/view       Template/component/subsystem.site
+mv Template/component/init.site/sql        Template/component/subsystem.site
+
+git add .
+echo "Execute git add" ;
+
+exit 0
