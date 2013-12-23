@@ -9,7 +9,7 @@
 
 namespace Windwalker\View\Html;
 
-use Windwalker\View\View;
+use Windwalker\View\AbstractView;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -20,7 +20,7 @@ jimport('joomla.filesystem.path');
  *
  * @since 1.0
  */
-abstract class AbstractHtmlView extends View
+abstract class AbstractHtmlView extends AbstractView
 {
 	/**
 	 * The view layout.
@@ -142,7 +142,7 @@ abstract class AbstractHtmlView extends View
 		// Check if the layout path was found.
 		if (!$path)
 		{
-			throw new \RuntimeException('Layout Path Not Found');
+			throw new \RuntimeException(sprintf('Layout Path: %s Not Found', $this->getLayout()));
 		}
 
 		// Start an output buffer.

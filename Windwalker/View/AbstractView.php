@@ -7,7 +7,7 @@ namespace Windwalker\View;
  *
  * @since 1.0
  */
-abstract class View implements \JView
+abstract class AbstractView implements \JView
 {
 	/**
 	 * The model object.

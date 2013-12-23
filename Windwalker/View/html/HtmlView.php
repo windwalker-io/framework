@@ -18,7 +18,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Model
  * @since       3.2
  */
-class HtmlView extends AbstractHtmlView
+class HtmlView extends \JViewHtml
 {
 	/**
 	 * The output of the template script.
@@ -71,7 +71,7 @@ class HtmlView extends AbstractHtmlView
 	 *
 	 * @since   12.1
 	 */
-	public function __construct(\JModel $model, \SplPriorityQueue $paths = null)
+	public function __construct(\JModel $model = null, \SplPriorityQueue $paths = null)
 	{
 		$app = \JFactory::getApplication();
 		$component = \JApplicationHelper::getComponentName();
@@ -93,7 +93,7 @@ class HtmlView extends AbstractHtmlView
 	 * @return  string  The output of the the template script.
 	 *
 	 * @since   3.2
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function loadTemplate($tpl = null)
 	{
@@ -215,7 +215,7 @@ class HtmlView extends AbstractHtmlView
 	 * @return  string  The name of the model
 	 *
 	 * @since   3.2
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function getName()
 	{

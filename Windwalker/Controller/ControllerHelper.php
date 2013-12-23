@@ -88,7 +88,7 @@ class ControllerHelper
 
 		if (!class_exists($controllerName))
 		{
-			$controllerName = '\\Windwalker\\Controller\\' . implode($tasks) . 'Controller';
+			$controllerName = '\\Windwalker\\Controller\\' . implode('\\', $tasks) . 'Controller';
 
 			if (!class_exists($controllerName))
 			{
@@ -96,10 +96,11 @@ class ControllerHelper
 			}
 		}
 
+		/** @var $controller Controller */
 		$controller = new $controllerName($input, $app);
 
 		$controller->setPrefix($prefix)
-			->setName($name);
+			->setName(strtolower($name));
 
 		return $controller;
 	}

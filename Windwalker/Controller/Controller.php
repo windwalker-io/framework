@@ -20,6 +20,14 @@ use JApplicationBase;
 class Controller extends \JControllerBase
 {
 	/**
+	 * The application object.
+	 *
+	 * @var    \JApplicationCms
+	 * @since  12.1
+	 */
+	protected $app;
+
+	/**
 	 * Prefix for the view and model classes
 	 *
 	 * @var  string

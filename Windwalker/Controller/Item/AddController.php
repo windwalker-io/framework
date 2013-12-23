@@ -1,6 +1,6 @@
 <?php
 
-namespace Windwalker\Controller;
+namespace Windwalker\Controller\Item;
 
 use Windwalker\Controller\Admin\FormController;
 
