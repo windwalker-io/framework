@@ -35,7 +35,7 @@ class ControllerHelper
 	 *
 	 * @param   \JApplication  $app  A JApplication object (could be JApplication or JApplicationWeb)
 	 *
-	 * @return  \JController  A JController object
+	 * @return  Controller  A JController object
 	 *
 	 * @since  3.2
 	 */

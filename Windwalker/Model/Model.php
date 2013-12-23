@@ -26,7 +26,7 @@ class Model extends \JModelDatabase
 	 * @var    string
 	 * @since  3.2
 	 */
-	protected $name;
+	protected $name = null;
 
 	/**
 	 * The URL option for the component.
@@ -274,7 +274,6 @@ class Model extends \JModelDatabase
 			$user = \JFactory::getUser();
 
 			return $user->authorise('core.delete', $this->option);
-
 		}
 	}
 
@@ -308,13 +307,8 @@ class Model extends \JModelDatabase
 	protected function createTable($name, $prefix = 'Table', $config = array())
 	{
 		// Clean the model name
-		$name = preg_replace('/[^A-Z0-9_]/i', '', $name);
+		$name   = preg_replace('/[^A-Z0-9_]/i', '', $name);
 		$prefix = preg_replace('/[^A-Z0-9_]/i', '', $prefix);
-
-		if (!$name)
-		{
-			$name = $this->getName();
-		}
 
 		// Make sure we are returning a DBO object
 		if (!array_key_exists('dbo', $config))
@@ -355,8 +349,9 @@ class Model extends \JModelDatabase
 		$dispatcher = \JEventDispatcher::getInstance();
 
 		$options = array(
-			'defaultgroup' => ($group) ? $group : (isset($this->option) ? $this->option : \JFactory::getApplication()->input->get('option')),
-			'cachebase' => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache'));
+			'defaultgroup' => ($group)     ? $group : (isset($this->option) ? $this->option : \JFactory::getApplication()->input->get('option')),
+			'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache')
+		);
 
 		$cache = \JCache::getInstance('callback', $options);
 		$cache->clean();

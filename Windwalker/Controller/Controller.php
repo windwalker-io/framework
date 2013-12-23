@@ -71,12 +71,12 @@ class Controller extends \JControllerBase
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   JInput            $input  The input object.
-	 * @param   JApplicationBase  $app    The application object.
+	 * @param   \JInput            $input  The input object.
+	 * @param   \JApplicationCms   $app    The application object.
 	 *
 	 * @since  12.1
 	 */
-	public function __construct(JInput $input = null, JApplicationBase $app = null)
+	public function __construct(\JInput $input = null, \JApplicationCms $app = null)
 	{
 		parent::__construct($input, $app);
 	}

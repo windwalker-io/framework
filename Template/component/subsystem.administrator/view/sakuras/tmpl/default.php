@@ -1,39 +1,29 @@
 <?php
+/**
+ * @package     Joomla.Administrator
+ * @subpackage  com_flower
+ * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 
-$data = $this->getData();
-
+$listOrder;
+$listDirn;
+$originalOrders;
 ?>
-<h1>Sakuras World!</h1>
 
-<form action="">
+<div id="flower" class="windwalker sakuras tablelist">
+	<form action="<?php echo JURI::getInstance(); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
-	<table class="table table-striped">
-		<thead>
-		<tr>
-			<th>Title</th>
-			<th>Category</th>
-			<th>State</th>
-			<th>Order</th>
-			<th>ID</th>
-		</tr>
-		</thead>
-		<tbody>
-		<?php
-			foreach ($data->items as $item)
-			:
-				$item = new JData($item);
-		?>
-			<tr>
-				<td><?php echo $item->title; ?></td>
-				<td><?php echo $item->catidd; ?></td>
-				<td><?php echo $item->published; ?></td>
-				<td><?php echo $item->ordering; ?></td>
-				<td><?php echo $item->id; ?></td>
-			</tr>
-		<?php
-			endforeach;
-		?>
-		</tbody>
-	</table>
+		<?php echo $this->loadTemplate('table'); ?>
 
-</form>
+		<!-- Hidden Inputs -->
+		<div id="hidden-inputs">
+			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="boxchecked" value="0" />
+			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+			<input type="hidden" name="original_order_values" value="<?php echo implode($originalOrders, ','); ?>" />
+			<?php echo JHtml::_('form.token'); ?>
+		</div>
+	</form>
+</div>
