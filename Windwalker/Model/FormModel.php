@@ -214,7 +214,36 @@ abstract class FormModel extends ItemModel
 	 */
 	protected function loadFormData()
 	{
-		return array();
+		$container = $this->getContainer();
+		$app   = $container->get('app');
+		$input = $container->get('input');
+
+		// Check the session for previously entered form data.
+		$data = $app->getUserState("{$this->option}.edit.{$this->getName()}.data", array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+		else
+		{
+			$data = new \stdClass($data);
+
+			// If Error occured and resend, just return data.
+			return $data;
+		}
+
+		// If page reload, retain data
+		// ==========================================================================================
+		$retain = $input->get('retain', 0);
+
+		// Set Change Field Type Retain Data
+		if ($retain)
+		{
+			$data = $input->getVar('jform');
+		}
+\AK::Show($data);
+		return $data;
 	}
 
 	/**

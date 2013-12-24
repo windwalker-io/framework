@@ -21,6 +21,6 @@ class FlowerModelSakura extends AdminModel
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		return $this->loadForm('com_flower.sakura.form', 'sakura');
+		return $this->loadForm('com_flower.sakura.form', 'sakura', array('load_data' => $loadData));
 	}
 }
