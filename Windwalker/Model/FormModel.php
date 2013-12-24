@@ -123,7 +123,10 @@ abstract class FormModel extends ItemModel
 	 *
 	 * @since   3.2
 	 */
-	abstract public function getForm($data = array(), $loadData = true);
+	public function getForm($data = array(), $loadData = true)
+	{
+		return $this->loadForm('com_flower.' . $this->getName() . '.form', $this->getName(), array('load_data' => $loadData));
+	}
 
 	/**
 	 * Method to get a form object.
@@ -227,7 +230,7 @@ abstract class FormModel extends ItemModel
 		}
 		else
 		{
-			$data = new \stdClass($data);
+			$data = $data;
 
 			// If Error occured and resend, just return data.
 			return $data;
@@ -242,7 +245,7 @@ abstract class FormModel extends ItemModel
 		{
 			$data = $input->getVar('jform');
 		}
-\AK::Show($data);
+
 		return $data;
 	}
 

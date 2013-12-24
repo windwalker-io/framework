@@ -93,7 +93,7 @@ class Controller extends \JControllerBase implements ContainerAwareInterface
 	/**
 	 * execute
 	 *
-	 * @return $this|bool
+	 * @return mixed
 	 */
 	public function execute()
 	{

@@ -92,7 +92,14 @@ class ControllerHelper
 
 			if (!class_exists($controllerName))
 			{
-				throw new \RuntimeException(sprintf('Controller %s not found.', $controllerName));
+				if (JDEBUG)
+				{
+					throw new \RuntimeException(sprintf('Controller %s not found.', $controllerName));
+				}
+				else
+				{
+					throw new \Exception('404 asset not found.');
+				}
 			}
 		}
 

@@ -22,6 +22,17 @@ class FlowerViewSakuraHtml extends HtmlView
 		$data->item = new Data($model->getItem()) ?: new NullData;
 		$data->form = $model->getForm();
 
+		$this->addToolbar();
+
 		return parent::render();
+	}
+
+	protected function addToolbar()
+	{
+		JToolbarHelper::title('Sakura Edit');
+
+		JToolbarHelper::apply('sakura.apply');
+		JToolbarHelper::save('sakura.save');
+		JToolbarHelper::cancel('sakura.cancel');
 	}
 }
