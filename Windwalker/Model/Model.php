@@ -9,6 +9,11 @@
 
 namespace Windwalker\Model;
 
+use Joomla\DI\Container as JoomlaContainer;
+use Joomla\DI\ContainerAwareInterface;
+
+use Windwalker\DI\Container;
+
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -18,7 +23,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Model
  * @since       3.2
  */
-class Model extends \JModelDatabase
+class Model extends \JModelDatabase implements ContainerAwareInterface
 {
 	/**
 	 * The model (base) name
@@ -44,14 +49,6 @@ class Model extends \JModelDatabase
 	protected $component = null;
 
 	/**
-	 * The prefix to use with controller messages.
-	 *
-	 * @var    string
-	 * @since  3.2
-	 */
-	protected $textPrefix = null;
-
-	/**
 	 * Indicates if the internal state has been set
 	 *
 	 * @var    boolean
@@ -66,6 +63,13 @@ class Model extends \JModelDatabase
 	 * @since    12.2
 	 */
 	protected $eventCleanCache = null;
+
+	/**
+	 * Property container.
+	 *
+	 * @var
+	 */
+	protected $container;
 
 	/**
 	 * Constructor
@@ -374,5 +378,39 @@ class Model extends \JModelDatabase
 
 		// Trigger the onContentCleanCache event.
 		$dispatcher->trigger($this->eventCleanCache, $options);
+	}
+
+	/**
+	 * Get the DI container.
+	 *
+	 * @return  Container
+	 *
+	 * @since   1.0
+	 * @throws  \UnexpectedValueException May be thrown if the container has not been set.
+	 */
+	public function getContainer()
+	{
+		if (!$this->container)
+		{
+			$this->container = Container::getInstance($this->option);
+		}
+
+		return $this->container;
+	}
+
+	/**
+	 * Set the DI container.
+	 *
+	 * @param   JoomlaContainer $container The DI container.
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function setContainer(JoomlaContainer $container)
+	{
+		$this->container = $container;
+
+		return $this;
 	}
 }

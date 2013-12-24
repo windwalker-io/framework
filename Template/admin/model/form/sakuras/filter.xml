@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<!-- Filter -->
+
+	<fieldset name="filter">
+
+		<field
+				name="a.published"
+				type="list"
+				default=""
+				onchange="this.form.submit();"
+				class="span12 small"
+				>
+			<option></option>
+			<option>JOPTION_SELECT_PUBLISHED</option>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+			<option value="-2">JTRASHED</option>
+			<option value="*">JALL</option>
+		</field>
+
+		<field
+				name="a.catid"
+				type="category"
+				default=""
+				extension="com_flower"
+				onchange="this.form.submit();"
+				class="span12 small"
+				>
+			<option></option>
+			<option>JOPTION_SELECT_CATEGORY</option>
+		</field>
+
+	</fieldset>
+
+
+	<!-- Sidebar Filter -->
+
+	<fieldset name="filter_sidebar">
+
+		<!--<field
+			name="a.published"
+			type="list"
+			default=""
+			onchange="this.form.submit();"
+		>
+			<option></option>
+			<option>JOPTION_SELECT_PUBLISHED</option>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+			<option value="-2">JTRASHED</option>
+			<option value="*">JALL</option>
+		</field>-->
+
+	</fieldset>
+
+</form>

@@ -7,6 +7,10 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Windwalker\Model;
+
+use Windwalker\Model\Exception\VaildateFailExcption;
+
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -19,7 +23,7 @@ defined('JPATH_PLATFORM') or die;
  * @see         JFormRule
  * @since       3.2
  */
-abstract class JModelCmsform extends JModelCms
+abstract class FormModel extends ItemModel
 {
 	/**
 	 * Array of form objects.
@@ -32,8 +36,9 @@ abstract class JModelCmsform extends JModelCms
 	/**
 	 * Method to checkin a row.
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @param   integer $pk The numeric id of the primary key.
 	 *
+	 * @throws \Exception
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
 	 * @since   3.2
@@ -41,42 +46,39 @@ abstract class JModelCmsform extends JModelCms
 	public function checkin($pk = null)
 	{
 		// Only attempt to check the row in if it exists.
-		if ($pk)
+		if (!$pk)
 		{
-			$user = JFactory::getUser();
-
-			// Get an instance of the row to checkin.
-			$table = $this->getTable();
-
-			if (!$table->load($pk))
-			{
-				$this->setError($table->getError());
-				return false;
-			}
-
-			// Check if this is the user has previously checked out the row.
-			if ($table->checked_out > 0 && $table->checked_out != $user->get('id') && !$user->authorise('core.admin', 'com_checkin'))
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'));
-				return false;
-			}
-
-			// Attempt to check the row in.
-			if (!$table->checkin($pk))
-			{
-				$this->setError($table->getError());
-				return false;
-			}
+			return true;
 		}
 
-		return true;
+		$container = $this->getContainer();
+
+		$user = $container->get('user');
+
+		// Get an instance of the row to checkin.
+		$table = $this->getTable();
+
+		$table->load($pk);
+
+		// Check if this is the user has previously checked out the row.
+		if ($table->checked_out > 0 && $table->checked_out != $user->get('id') && !$user->authorise('core.admin', 'com_checkin'))
+		{
+			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'));
+		}
+
+		// Attempt to check the row in.
+		if (!$table->checkin($pk))
+		{
+			throw new \Exception($table->getError());
+		}
 	}
 
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @param   integer $pk The numeric id of the primary key.
 	 *
+	 * @throws  \Exception
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
 	 * @since   3.2
@@ -86,33 +88,29 @@ abstract class JModelCmsform extends JModelCms
 		// Only attempt to check the row in if it exists.
 		if ($pk)
 		{
-			$user = JFactory::getUser();
-
-			// Get an instance of the row to checkout.
-			$table = $this->getTable();
-
-			if (!$table->load($pk))
-			{
-				$this->setError($table->getError());
-				return false;
-			}
-
-			// Check if this is the user having previously checked out the row.
-			if ($table->checked_out > 0 && $table->checked_out != $user->get('id'))
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_CHECKOUT_USER_MISMATCH'));
-				return false;
-			}
-
-			// Attempt to check the row out.
-			if (!$table->checkout($user->get('id'), $pk))
-			{
-				$this->setError($table->getError());
-				return false;
-			}
+			return true;
 		}
 
-		return true;
+		$container = $this->getContainer();
+
+		$user = $container->get('user');
+
+		// Get an instance of the row to checkout.
+		$table = $this->getTable();
+
+		$table->load($pk);
+
+		// Check if this is the user having previously checked out the row.
+		if ($table->checked_out > 0 && $table->checked_out != $user->get('id'))
+		{
+			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_CHECKOUT_USER_MISMATCH'));
+		}
+
+		// Attempt to check the row out.
+		if (!$table->checkout($user->get('id'), $pk))
+		{
+			throw new \Exception($table->getError());
+		}
 	}
 
 	/**
@@ -125,59 +123,58 @@ abstract class JModelCmsform extends JModelCms
 	 *
 	 * @since   3.2
 	 */
-	public function getForm($data = array(), $loadData = true)
-	{
-	}
+	abstract public function getForm($data = array(), $loadData = true);
 
 	/**
 	 * Method to get a form object.
 	 *
-	 * @param   string   $name     The name of the form.
-	 * @param   string   $source   The form source. Can be XML string if file flag is set to false.
-	 * @param   array    $options  Optional array of options for the form creation.
-	 * @param   boolean  $clear    Optional argument to force load a new form.
-	 * @param   string   $xpath    An optional xpath to search for the fields.
+	 * @param   string    $name    The name of the form.
+	 * @param   string    $source  The form source. Can be XML string if file flag is set to false.
+	 * @param   array     $options Optional array of options for the form creation.
+	 * @param   boolean   $clear   Optional argument to force load a new form.
+	 * @param   string    $xpath   An optional xpath to search for the fields.
 	 *
+	 * @throws \Exception
 	 * @return  mixed  JForm object on success, False on error.
 	 *
 	 * @see     JForm
 	 * @since   3.2
 	 */
-	protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
+	protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = null)
 	{
 		// Handle the optional arguments.
-		$options['control'] = JArrayHelper::getValue($options, 'control', false);
+		$options['control'] = \JArrayHelper::getValue($options, 'control', false);
 
 		// Create a signature hash.
 		$hash = sha1($source . serialize($options));
 
 		// Check if we can use a previously loaded form.
-		if (isset($this->_forms[$hash]) && !$clear)
+		if (isset($this->forms[$hash]) && !$clear)
 		{
-			return $this->_forms[$hash];
+			return $this->forms[$hash];
 		}
 
 		// Get the form.
-		// Register the paths for the form -- failing here
-		$paths = new SplPriorityQueue;
+		// Register the paths for the form
+		$paths = new \SplPriorityQueue;
 		$paths->insert(JPATH_COMPONENT . '/model/form', 'normal');
 		$paths->insert(JPATH_COMPONENT . '/model/field', 'normal');
 		$paths->insert(JPATH_COMPONENT . '/model/rule', 'normal');
 
-		//Legacy support to be removed in 4.0.  -- failing here
+		// Legacy support to be removed in 4.0.
 		$paths->insert(JPATH_COMPONENT . '/models/forms', 'normal');
 		$paths->insert(JPATH_COMPONENT . '/models/fields', 'normal');
 		$paths->insert(JPATH_COMPONENT . '/models/rules', 'normal');
 
-		// test -- prob with previous -- tempory solution
-		JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
-		JForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
-		JForm::addFormPath(JPATH_COMPONENT . '/model/form');
-		JForm::addFieldPath(JPATH_COMPONENT . '/model/field');
+		// Set Form paths
+		\JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
+		\JForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
+		\JForm::addFormPath(JPATH_COMPONENT . '/model/form');
+		\JForm::addFieldPath(JPATH_COMPONENT . '/model/field');
 
 		try
 		{
-			$form = JForm::getInstance($name, $source, $options, false, $xpath);
+			$form = \JForm::getInstance($name, $source, $options, false, $xpath);
 
 			if (isset($options['load_data']) && $options['load_data'])
 			{
@@ -197,17 +194,13 @@ abstract class JModelCmsform extends JModelCms
 			$form->bind($data);
 
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
-
-			$app = JFactory::getApplication();
-			$app->enqueueMessage($e->getMessage());
-
-			return false;
+			throw $e;
 		}
 
 		// Store the form for later.
-		$this->_forms[$hash] = $form;
+		$this->forms[$hash] = $form;
 
 		return $form;
 	}
@@ -237,8 +230,9 @@ abstract class JModelCmsform extends JModelCms
 	protected function preprocessData($context, &$data)
 	{
 		// Get the dispatcher and load the users plugins.
-		$dispatcher = JEventDispatcher::getInstance();
-		JPluginHelper::importPlugin('content');
+		$dispatcher = $this->getContainer()->get('event.dispatcher');
+
+		\JPluginHelper::importPlugin('content');
 
 		// Trigger the data preparation event.
 		$results = $dispatcher->trigger('onContentPrepareData', array($context, $data));
@@ -253,23 +247,23 @@ abstract class JModelCmsform extends JModelCms
 	/**
 	 * Method to allow derived classes to preprocess the form.
 	 *
-	 * @param   JForm   $form   A JForm object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
+	 * @param   \JForm  $form  A JForm object.
+	 * @param   mixed   $data  The data expected for the form.
+	 * @param   string  $group The name of the plugin group to import (defaults to "content").
 	 *
+	 * @throws  \Exception if there is an error in the form event.
 	 * @return  void
 	 *
 	 * @see     JFormField
 	 * @since   3.2
-	 * @throws  Exception if there is an error in the form event.
 	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	protected function preprocessForm(\JForm $form, $data, $group = 'content')
 	{
 		// Import the appropriate plugin group.
-		JPluginHelper::importPlugin($group);
+		\JPluginHelper::importPlugin($group);
 
 		// Get the dispatcher.
-		$dispatcher = JEventDispatcher::getInstance();
+		$dispatcher = $this->getContainer()->get('event.dispatcher');
 
 		// Trigger the form preparation event.
 		$results = $dispatcher->trigger('onContentPrepareForm', array($form, $data));
@@ -280,9 +274,9 @@ abstract class JModelCmsform extends JModelCms
 			// Get the last error.
 			$error = $dispatcher->getError();
 
-			if (!($error instanceof Exception))
+			if (!($error instanceof \Exception))
 			{
-				throw new Exception($error);
+				throw new \Exception($error);
 			}
 		}
 	}
@@ -290,10 +284,12 @@ abstract class JModelCmsform extends JModelCms
 	/**
 	 * Method to validate the form data.
 	 *
-	 * @param   JForm   $form   The form to validate against.
-	 * @param   array   $data   The data to validate.
-	 * @param   string  $group  The name of the field group to validate.
+	 * @param   \JForm  $form  The form to validate against.
+	 * @param   array   $data  The data to validate.
+	 * @param   string  $group The name of the field group to validate.
 	 *
+	 * @throws  VaildateFailExcption
+	 * @throws  \Exception
 	 * @return  mixed  Array of filtered data if valid, false otherwise.
 	 *
 	 * @see     JFormRule
@@ -303,27 +299,21 @@ abstract class JModelCmsform extends JModelCms
 	public function validate($form, $data, $group = null)
 	{
 		// Filter and validate the form data.
-		$data = $form->filter($data);
+		/** @var $form \JForm */
+		$data   = $form->filter($data);
 		$return = $form->validate($data, $group);
 
 		// Check for an error.
-		if ($return instanceof Exception)
+		if ($return instanceof \Exception)
 		{
-			$this->setError($return->getMessage());
-
-			return false;
+			throw $return;
 		}
 
 		// Check the validation results.
 		if ($return === false)
 		{
 			// Get the validation messages from the form.
-			foreach ($form->getErrors() as $message)
-			{
-				$this->setError($message);
-			}
-
-			return false;
+			throw new VaildateFailExcption($form->getErrors());
 		}
 
 		return $data;

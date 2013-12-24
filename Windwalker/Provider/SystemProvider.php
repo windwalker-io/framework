@@ -37,7 +37,7 @@ class SystemProvider implements ServiceProviderInterface
 		$container->share('JInput', \JFactory::getApplication()->input)
 			->alias('input', 'JInput');
 
-		$container->share('JDispatcher', array('JDispatcher', 'getInstance'))
-			->alias('dispatcher', 'JDispatcher');
+		$container->share('JEventDispatcher', array('JEventDispatcher', 'getInstance'))
+			->alias('event.dispatcher', 'JEventDispatcher');
 	}
 }

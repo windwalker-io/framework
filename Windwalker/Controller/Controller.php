@@ -283,7 +283,8 @@ class Controller extends \JControllerBase implements ContainerAwareInterface
 		}
 
 		$model->setName($name)
-			->setOption($this->option);
+			->setOption($this->option)
+			->setContainer($container);
 
 		return $model;
 	}

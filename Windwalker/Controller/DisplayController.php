@@ -199,7 +199,8 @@ class DisplayController extends Controller
 		}
 
 		$view->setName($name)
-			->setPaths($this->getTemplatePath($name));
+			->setPaths($this->getTemplatePath($name))
+			->setContainer($container);
 
 		return $view;
 	}

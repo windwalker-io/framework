@@ -2,12 +2,16 @@
 
 namespace Windwalker\View;
 
+use Joomla\DI\Container as JoomlaContainer;
+use Joomla\DI\ContainerAwareInterface;
+use Windwalker\DI\Container;
+
 /**
  * Class View
  *
  * @since 1.0
  */
-abstract class AbstractView implements \JView
+abstract class AbstractView implements \JView, ContainerAwareInterface
 {
 	/**
 	 * The model object.
@@ -31,6 +35,13 @@ abstract class AbstractView implements \JView
 	protected $data;
 
 	/**
+	 * Property container.
+	 *
+	 * @var Container
+	 */
+	protected $container;
+
+	/**
 	 * Method to instantiate the view.
 	 *
 	 * @param   \JModel  $model  The model object.
@@ -48,6 +59,8 @@ abstract class AbstractView implements \JView
 
 			$this->model[strtolower($modelName)] = $model;
 		}
+
+		$this->data = new \JData;
 	}
 
 	/**
@@ -178,6 +191,40 @@ abstract class AbstractView implements \JView
 	public function setData($data)
 	{
 		$this->data = $data;
+
+		return $this;
+	}
+
+	/**
+	 * Get the DI container.
+	 *
+	 * @return  Container
+	 *
+	 * @since   1.0
+	 * @throws  \UnexpectedValueException May be thrown if the container has not been set.
+	 */
+	public function getContainer()
+	{
+		if (!$this->container)
+		{
+			$this->container = Container::getInstance($this->option);
+		}
+
+		return $this->container;
+	}
+
+	/**
+	 * Set the DI container.
+	 *
+	 * @param   JoomlaContainer $container The DI container.
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function setContainer(JoomlaContainer $container)
+	{
+		$this->container = $container;
 
 		return $this;
 	}
