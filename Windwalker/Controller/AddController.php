@@ -35,6 +35,8 @@ class AddController extends AbstractItemController
 		$this->app->setUserState($context . '.data', null);
 
 		// Redirect to the edit screen.
+		$this->input->set('layout', 'edit');
+
 		$this->redirect(\JRoute::_($this->getRedirectItemUrl(), false));
 
 		return true;

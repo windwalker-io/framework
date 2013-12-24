@@ -38,7 +38,6 @@ class EditController extends AbstractItemController
 
 		// Get the previous record id (if any) and the current record id.
 		$recordId = (int) (count($cid) ? $cid[0] : $this->input->getInt($urlVar));
-		$checkin = property_exists($table, 'checked_out');
 
 		// Access check.
 		if (!$this->allowEdit(array($key => $recordId), $key))
@@ -53,6 +52,8 @@ class EditController extends AbstractItemController
 
 		/*
 		// Attempt to check-out the new record for editing and redirect.
+		$checkin = property_exists($table, 'checked_out');
+
 		if ($checkin && !$model->checkout($recordId))
 		{
 			// Check-out failed, display a notice but allow the user to see the record.
@@ -76,7 +77,7 @@ class EditController extends AbstractItemController
 
 		$this->input->set('layout', 'edit');
 
-		$this->redirect(\JRoute::_($this->getRedirectItemUrl(), false));
+		$this->redirect(\JRoute::_($this->getRedirectItemUrl($recordId, $urlVar), false));
 	}
 
 	/**

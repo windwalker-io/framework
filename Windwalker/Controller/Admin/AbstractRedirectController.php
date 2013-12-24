@@ -65,7 +65,7 @@ abstract class AbstractRedirectController extends Controller
 	protected function getRedirectItemUrl($recordId = null, $urlVar = 'id')
 	{
 		return 'index.php?option=' . $this->option . '&view=' . strtolower($this->getName())
-			. $this->getRedirectItemAppend();
+			. $this->getRedirectItemAppend($recordId, $urlVar);
 	}
 
 	/**
