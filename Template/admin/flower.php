@@ -7,12 +7,11 @@
  */
 
 include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
+include_once __DIR__ . '/component.php';
 
 JLoader::registerPrefix('Flower', JPATH_COMPONENT_ADMINISTRATOR);
 JLoader::registerNamespace('Flower', JPATH_COMPONENT_ADMINISTRATOR . '/src');
 
-use Flower\Component\FlowerComponent;
+// use Flower\Component\FlowerComponent;
 
-$component = new FlowerComponent;
-
-echo $component->execute();
+echo $component = with(new FlowerComponent)->execute();

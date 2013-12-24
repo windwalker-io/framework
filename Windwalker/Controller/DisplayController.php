@@ -157,11 +157,10 @@ class DisplayController extends Controller
 	 *
 	 * @param null    $name
 	 * @param null    $type
-	 * @param \JModel $model
 	 *
 	 * @return mixed
 	 */
-	public function getView($name = null, $type = null, \JModel $model = null)
+	public function getView($name = null, $type = null)
 	{
 		// Get the name.
 		if (!$name)
@@ -169,17 +168,7 @@ class DisplayController extends Controller
 			$name = $this->getName();
 		}
 
-		// Get from cache.
-		if (!empty($this->view[$name]))
-		{
-			return $this->view[$name];
-		}
-
-		// Get model
-		if (!$model)
-		{
-			$model = $this->getModel($name);
-		}
+		$container = $this->getContainer();
 
 		// Get View
 		$type = ucfirst($type);
@@ -193,13 +182,20 @@ class DisplayController extends Controller
 			$viewName = '\\Windwalker\\View\\' . $type . '\\' . $type . 'View';
 		}
 
-		$paths = $this->getTemplatePath($name);
+		// Load view
+		try
+		{
+			$view = $container->get('view.' . $name);
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$view = $container->alias('view.' . $name, $viewName)->buildObject($viewName);
+		}
 
-		$view = new $viewName($model, $paths);
+		$view->setName($name)
+			->setPaths($this->getTemplatePath($name));
 
-		$view->setName($name);
-
-		return $this->view[$name] = $view;
+		return $view;
 	}
 
 	/**

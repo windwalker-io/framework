@@ -106,7 +106,7 @@ class Model extends \JModelDatabase
 
 		$state = new \JRegistry($config);
 
-		parent::__construct($state);
+		parent::__construct($state, $db);
 	}
 
 	/**
@@ -252,6 +252,8 @@ class Model extends \JModelDatabase
 	{
 		$this->loadState();
 	}
+
+
 
 	/**
 	 * Method to test whether a record can be deleted.

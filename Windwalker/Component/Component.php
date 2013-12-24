@@ -79,6 +79,7 @@ class Component
 
 		$this->prepare();
 
+		// Guess component name.
 		if (!$this->name)
 		{
 			$reflection = $this->getReflection();
@@ -93,7 +94,7 @@ class Component
 			}
 		}
 
-		$this->container = $container   ?: Container::getInstance($this->name);
+		$this->container = $container ?: Container::getInstance($this->name);
 	}
 
 	/**
@@ -117,6 +118,7 @@ class Component
 	 */
 	protected function doExecute()
 	{
+		/** @var $controller \Windwalker\Controller\Controller */
 		$controller = ControllerHelper::getController($this->name, $this->input, $this->application);
 
 		$controller->setComponentPath(JPATH_BASE . '/components/com_' . strtolower($this->name));
@@ -124,6 +126,7 @@ class Component
 		// echo get_class($controller);
 
 		return $controller->setOption('com_' . strtolower($this->name))
+			->setContainer($this->container)
 			->execute();
 	}
 
@@ -134,6 +137,8 @@ class Component
 	 */
 	protected function init()
 	{
+		$this->container->registerServiceProvider(new ComponentProvider);
+
 		$task       = $this->input->getWord('task');
 		$controller = $this->input->getWord('controller');
 

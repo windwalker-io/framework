@@ -9,15 +9,16 @@
 
 namespace Windwalker\Controller;
 
-use JInput;
-use JApplicationBase;
+use Windwalker\DI\Container;
+use Joomla\DI\Container as JoomlaContainer;
+use Joomla\DI\ContainerAwareInterface;
 
 /**
  * Class Controller
  *
  * @since 2.0
  */
-class Controller extends \JControllerBase
+class Controller extends \JControllerBase implements ContainerAwareInterface
 {
 	/**
 	 * The application object.
@@ -75,6 +76,13 @@ class Controller extends \JControllerBase
 	 * @var array
 	 */
 	protected $view = array();
+
+	/**
+	 * Property container.
+	 *
+	 * @var JoomlaContainer
+	 */
+	protected $container;
 
 	/**
 	 * Instantiate the controller.
@@ -237,19 +245,12 @@ class Controller extends \JControllerBase
 			$name = $this->getName();
 		}
 
-		// Get from cache.
-		if (!empty($this->model[$name]))
-		{
-			return $this->model[$name];
-		}
-
 		// Get Prefix
 		if (!$prefix)
 		{
 			$prefix = ucfirst($this->getPrefix()) . 'Model';
 		}
 
-		// Get model.
 		$modelName = $prefix . ucfirst($name);
 
 		if (!class_exists($modelName))
@@ -257,11 +258,57 @@ class Controller extends \JControllerBase
 			$modelName = '\\Windwalker\\Model\\Model';
 		}
 
-		$model = new $modelName;
+		// Get model.
+		$container = $this->getContainer();
+
+		try
+		{
+			$model = $container->get('model.' . $name);
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$model = $container->buildObject($modelName, true);
+
+			$container->alias('model.' . $name, $modelName);
+		}
 
 		$model->setName($name)
-			->setOption('com_' . $this->option);
+			->setOption($this->option);
 
-		return $this->model[$name] = $model;
+		return $model;
+	}
+
+	/**
+	 * Get the DI container.
+	 *
+	 * @return  JoomlaContainer
+	 *
+	 * @since   1.0
+	 * @throws  \UnexpectedValueException May be thrown if the container has not been set.
+	 */
+	public function getContainer()
+	{
+		if (!$this->container)
+		{
+			$this->container = Container::getInstance($this->option);
+		}
+
+		return $this->container;
+	}
+
+	/**
+	 * Set the DI container.
+	 *
+	 * @param   JoomlaContainer $container The DI container.
+	 *
+	 * @return $this
+	 *
+	 * @since   1.0
+	 */
+	public function setContainer(JoomlaContainer $container)
+	{
+		$this->container = $container;
+
+		return $this;
 	}
 }

@@ -66,59 +66,6 @@ abstract class AbstractView implements \JView
 	}
 
 	/**
-	 * get
-	 *
-	 * @param string $name
-	 * @param mixed  $default
-	 *
-	 * @return mixed
-	 */
-	public function get($name, $default = null)
-	{
-		return $this->getData()->$name ?: $default;
-	}
-
-	/**
-	 * set
-	 *
-	 * @param string $name
-	 * @param mixed  $value
-	 *
-	 * @return $this
-	 */
-	public function set($name, $value)
-	{
-		$this->getData()->$name = $value;
-
-		return $this;
-	}
-
-	/**
-	 * __get
-	 *
-	 * @param string $name
-	 *
-	 * @return mixed
-	 */
-	public function __get($name)
-	{
-		return $this->get($name);
-	}
-
-	/**
-	 * __set
-	 *
-	 * @param string $name
-	 * @param mixed  $value
-	 *
-	 * @return void
-	 */
-	public function __set($name, $value)
-	{
-		$this->set($name, $value);
-	}
-
-	/**
 	 * Method to get the model object
 	 *
 	 * @param   string  $name  The name of the model (optional)
@@ -178,7 +125,7 @@ abstract class AbstractView implements \JView
 	 *
 	 * @return  mixed  The return value of the method
 	 */
-	public function load($cmd, $model = null, $args = array())
+	public function get($cmd, $model = null, $args = array())
 	{
 		// If $model is null we use the default model
 		$model = $this->getModel($model);
@@ -195,7 +142,9 @@ abstract class AbstractView implements \JView
 		// Does the method exist?
 		if (!method_exists($model, $method))
 		{
-			$method = 'load' . ucfirst($cmd);
+			// $method = 'load' . ucfirst($cmd);
+
+			return null;
 		}
 
 		// The method exists, let's call it and return what we get

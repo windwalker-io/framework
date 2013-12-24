@@ -70,7 +70,7 @@ class FlowerViewSakurasHtml extends HtmlView
 		$model = $this->getModel();
 		$data  = $this->getData();
 
-		$data->items = $model->getItems();
+		$data->items = $this->get('Items');
 		$this->state = $model->getState();
 
 		$this->addToolbar();

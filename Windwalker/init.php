@@ -7,6 +7,8 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Windwalker\DI\Container;
+
 $version = new JVersion;
 
 if (!$version->isCompatible('3.2'))
@@ -16,3 +18,10 @@ if (!$version->isCompatible('3.2'))
 
 // Import Windwalker autoload.
 include_once __DIR__ . '/autoload.php';
+
+include_once __DIR__ . '/PHP/methods.php';
+
+// Register provider
+$container = Container::getInstance();
+
+$container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);

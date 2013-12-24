@@ -18,7 +18,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Model
  * @since       3.2
  */
-class HtmlView extends \JViewHtml
+class HtmlView extends AbstractHtmlView
 {
 	/**
 	 * The output of the template script.
@@ -76,11 +76,6 @@ class HtmlView extends \JViewHtml
 		$app = \JFactory::getApplication();
 		$component = \JApplicationHelper::getComponentName();
 		$component = preg_replace('/[^A-Z0-9_\.-]/i', '', $component);
-
-		if (isset($paths))
-		{
-			$paths->insert(JPATH_THEMES . '/' . $app->getTemplate() . '/html/' . $component . '/' . $this->getName(), 'normal');
-		}
 
 		parent::__construct($model, $paths);
 	}
