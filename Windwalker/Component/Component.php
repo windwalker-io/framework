@@ -137,7 +137,7 @@ class Component
 	 */
 	protected function init()
 	{
-		$this->container->registerServiceProvider(new ComponentProvider);
+		$this->container->registerServiceProvider(new ComponentProvider($this->name));
 
 		$task       = $this->input->getWord('task');
 		$controller = $this->input->getWord('controller');

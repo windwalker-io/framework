@@ -12,23 +12,44 @@ use Joomla\DI\ServiceProviderInterface;
  */
 class ComponentProvider implements ServiceProviderInterface
 {
+	/**
+	 * Property name.
+	 *
+	 * @var string
+	 */
+	protected $name = '';
 
 	/**
-	 * Registers the service provider within a DI container.
+	 * Constructor.
 	 *
-	 * @param   Container  $container  The DI container.
+	 * @param $name
+	 * @param $option
+	 * @param $prefix
+	 */
+	public function __construct($name)
+	{
+		$this->name = $name;
+	}
+
+	/**
+	 * Registers the service provider with a DI container.
 	 *
-	 * @return  void
+	 * @param   Container $container The DI container.
+	 *
+	 * @return  Container  Returns itself to support chaining.
+	 *
+	 * @since   1.0
 	 */
 	public function register(Container $container)
 	{
-		$container->share('JModel',
-			function()
-			{
-				$class = '\\Windwalker\\Model\\Model';
+		$modelName = '\\Windwalker\\Model\\Model';
 
-				return new $class;
-			}
-		);
+		$container->alias('model', $modelName)
+			->alias('JModel', $modelName)
+			->buildSharedObject($modelName);
+
+		$container->get('JModel')
+			->setName('default')
+			->setOption('com_' . strtolower($this->name));
 	}
 }

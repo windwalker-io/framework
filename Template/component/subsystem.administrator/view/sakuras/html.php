@@ -1,5 +1,7 @@
 <?php
 
+use Windwalker\Data\Data;
+use Windwalker\Data\NullData;
 use Windwalker\View\Html\HtmlView;
 
 /**
@@ -70,7 +72,7 @@ class FlowerViewSakurasHtml extends HtmlView
 		$model = $this->getModel();
 		$data  = $this->getData();
 
-		$data->items = $this->get('Items');
+		$data->items = new Data($this->get('Items')) ?: new NullData;
 		$this->state = $model->getState();
 
 		$this->addToolbar();

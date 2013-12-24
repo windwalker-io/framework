@@ -225,7 +225,7 @@ class Controller extends \JControllerBase implements ContainerAwareInterface
 	protected function checkToken()
 	{
 		// Check for request forgeries
-		JSession::checkToken() or jexit(JText::_('JInvalid_Token'));
+		\JSession::checkToken() or jexit(JText::_('JInvalid_Token'));
 	}
 
 	/**
@@ -267,9 +267,8 @@ class Controller extends \JControllerBase implements ContainerAwareInterface
 		}
 		catch (\InvalidArgumentException $e)
 		{
-			$model = $container->buildObject($modelName, true);
-
-			$container->alias('model.' . $name, $modelName);
+			$model = $container->alias('model.' . $name, $modelName)
+				->buildSharedObject($modelName);
 		}
 
 		$model->setName($name)

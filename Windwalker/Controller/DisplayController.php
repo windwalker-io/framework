@@ -54,13 +54,18 @@ class DisplayController extends Controller
 		$viewFormat = $document->getType();
 		$layoutName = $this->input->getWord('layout', 'default');
 
-		// Get Model
-		$model = $this->getModel($viewName);
-
 		// Get View and register Model to it.
-		$view = $this->getView($viewName, $viewFormat, $model);
+		$view = $this->getView($viewName, $viewFormat);
 
-		// Assign alternative models to view
+		// Assign models to view if view using default model.
+		if ($view->getModel()->getName() == 'default')
+		{
+			// Get Model
+			$model = $this->getModel($viewName);
+
+			$view->setModel($model, true);
+		}
+
 		$this->assignModel($view);
 
 		// Set template layout to view.
@@ -189,7 +194,8 @@ class DisplayController extends Controller
 		}
 		catch (\InvalidArgumentException $e)
 		{
-			$view = $container->alias('view.' . $name, $viewName)->buildObject($viewName);
+			$view = $container->alias('view.' . $name, $viewName)
+				->buildSharedObject($viewName);
 		}
 
 		$view->setName($name)
