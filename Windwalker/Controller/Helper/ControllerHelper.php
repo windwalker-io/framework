@@ -100,7 +100,8 @@ class ControllerHelper
 		$controller = new $controllerName($input, $app);
 
 		$controller->setPrefix($prefix)
-			->setName(strtolower($name));
+			->setName(strtolower($name))
+			->setTask(implode('.', $tasks));
 
 		return $controller;
 	}

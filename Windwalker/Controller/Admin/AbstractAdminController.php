@@ -6,14 +6,16 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Controller;
+namespace Windwalker\Controller\Admin;
+
+use Windwalker\Controller\Controller;
 
 /**
  * Class AdminController
  *
  * @since 1.0
  */
-abstract class AbstractAdminController extends Controller
+abstract class AbstractAdminController extends AbstractRedirectController
 {
 	/**
 	 * The context for storing internal data, e.g. record.
@@ -31,16 +33,37 @@ abstract class AbstractAdminController extends Controller
 	protected $user = null;
 
 	/**
+	 * Property viewItem.
+	 *
+	 * @var
+	 */
+	protected $viewItem;
+
+	/**
+	 * Property viewList.
+	 *
+	 * @var
+	 */
+	protected $viewList;
+
+	/**
 	 * Instantiate the controller.
 	 *
 	 * @param   \JInput          $input  The input object.
 	 * @param   \JApplicationCms $app    The application object.
 	 * @param   array            $config Additional config.
 	 *
+	 * @throws \Exception
 	 * @since  12.1
 	 */
 	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
 	{
+		// Guess the item view as the context.
+		if (empty($this->viewItem))
+		{
+			$this->view_item = $this->context;
+		}
+
 		parent::__construct($input, $app);
 
 		$this->user    = \JFactory::getUser();
@@ -67,23 +90,6 @@ abstract class AbstractAdminController extends Controller
 	}
 
 	/**
-	 * Method to check if you can add a new record.
-	 *
-	 * Extended classes can override this if necessary.
-	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key; default is id.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.2
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		return $this->user->authorise('core.edit', $this->option);
-	}
-
-	/**
 	 * Method to check if you can save a new or existing record.
 	 *
 	 * Extended classes can override this if necessary.
@@ -107,19 +113,5 @@ abstract class AbstractAdminController extends Controller
 		{
 			return $this->allowAdd($data);
 		}
-	}
-
-	/**
-	 * Set a URL for browser redirection.
-	 *
-	 * @param   string $url  URL to redirect to.
-	 * @param   string $msg  Message to display on redirect. Optional, defaults to value set internally by controller, if any.
-	 * @param   string $type Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
-	 *
-	 * @return  \JController  This object to support chaining.
-	 */
-	public function redirect($url, $msg = null, $type = null)
-	{
-		$this->app->redirect($url, $msg, $type);
 	}
 }

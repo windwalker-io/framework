@@ -64,18 +64,11 @@ class Controller extends \JControllerBase implements ContainerAwareInterface
 	protected $reflection;
 
 	/**
-	 * Property model.
+	 * Property task.
 	 *
-	 * @var array
+	 * @var string
 	 */
-	protected $model = array();
-
-	/**
-	 * Property view.
-	 *
-	 * @var array
-	 */
-	protected $view = array();
+	protected $task = '';
 
 	/**
 	 * Property container.
@@ -218,6 +211,24 @@ class Controller extends \JControllerBase implements ContainerAwareInterface
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getTask()
+	{
+		return $this->task;
+	}
+
+	/**
+	 * @param string $task
+	 */
+	public function setTask($task)
+	{
+		$this->task = $task;
+
+		return $this;
+	}
+
+	/**
 	 * checkToken
 	 *
 	 * @return void
@@ -225,7 +236,7 @@ class Controller extends \JControllerBase implements ContainerAwareInterface
 	protected function checkToken()
 	{
 		// Check for request forgeries
-		\JSession::checkToken() or jexit(JText::_('JInvalid_Token'));
+		\JSession::checkToken() or jexit(\JText::_('JInvalid_Token'));
 	}
 
 	/**

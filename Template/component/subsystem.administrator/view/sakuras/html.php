@@ -44,14 +44,14 @@ class FlowerViewSakurasHtml extends HtmlView
 	 *
 	 * @var string
 	 */
-	protected $list_name = '';
+	protected $list_name = 'sakuras';
 
 	/**
 	 * Item name.
 	 *
 	 * @var string
 	 */
-	protected $item_name = '';
+	protected $item_name = 'sakura';
 
 	/**
 	 * The prefix to use with controller messages.

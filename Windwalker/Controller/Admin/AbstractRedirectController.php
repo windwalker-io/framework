@@ -1,21 +1,15 @@
 <?php
-/**
- * Part of Windwalker project.
- *
- * @copyright  Copyright (C) 2011 - 2013 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
- */
 
-namespace Windwalker\Controller\Item;
+namespace Windwalker\Controller\Admin;
 
-use Windwalker\Controller\AbstractAdminController;
+use Windwalker\Controller\Controller;
 
 /**
- * Class FormController
+ * Class AbstractRedirectController
  *
  * @since 1.0
  */
-class AbstractFormController extends AbstractAdminController
+abstract class AbstractRedirectController extends Controller
 {
 	/**
 	 * Property allowUrlParams.
@@ -47,6 +41,45 @@ class AbstractFormController extends AbstractAdminController
 	}
 
 	/**
+	 * Set a URL for browser redirection.
+	 *
+	 * @param   string $url  URL to redirect to.
+	 * @param   string $msg  Message to display on redirect. Optional, defaults to value set internally by controller, if any.
+	 * @param   string $type Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
+	 *
+	 * @return  \JController  This object to support chaining.
+	 */
+	public function redirect($url, $msg = null, $type = null)
+	{
+		$this->app->redirect($url, $msg, $type);
+	}
+
+	/**
+	 * getRedirectItemUrl
+	 *
+	 * @param null   $recordId
+	 * @param string $urlVar
+	 *
+	 * @return string
+	 */
+	protected function getRedirectItemUrl($recordId = null, $urlVar = 'id')
+	{
+		return 'index.php?option=' . $this->option . '&view=' . strtolower($this->getName())
+			. $this->getRedirectItemAppend();
+	}
+
+	/**
+	 * getRedirectListUrl
+	 *
+	 * @return string
+	 */
+	protected function getRedirectListUrl()
+	{
+		return 'index.php?option=' . $this->option . '&view=' . strtolower($this->getName())
+			. $this->getRedirectListAppend();
+	}
+
+	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
 	 * @param   integer  $recordId  The primary key id for the item.
@@ -56,7 +89,7 @@ class AbstractFormController extends AbstractAdminController
 	 *
 	 * @since   12.2
 	 */
-	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
+	protected function getRedirectItemAppend($recordId = null, $urlVar = 'id')
 	{
 		$input  = $this->input;
 		$params = array();
@@ -79,7 +112,7 @@ class AbstractFormController extends AbstractAdminController
 			$params[$urlVar] = $recordId;
 		}
 
-		return '&' . http_build_query($params);
+		return (count($params)) ? '&' . http_build_query($params) : '';
 	}
 
 	/**
@@ -89,7 +122,7 @@ class AbstractFormController extends AbstractAdminController
 	 *
 	 * @since   12.2
 	 */
-	protected function getRedirectToListAppend()
+	protected function getRedirectListAppend()
 	{
 		$input  = $this->input;
 		$params = array();
@@ -107,6 +140,6 @@ class AbstractFormController extends AbstractAdminController
 			$this->allowUrlParams
 		);
 
-		return '&' . http_build_query($params);
+		return (count($params)) ? '&' . http_build_query($params) : '';
 	}
 }

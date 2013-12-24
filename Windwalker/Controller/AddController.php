@@ -1,13 +1,15 @@
 <?php
 
-namespace Windwalker\Controller\Item;
+namespace Windwalker\Controller;
+
+use Windwalker\Controller\Admin\AbstractItemController;
 
 /**
  * Class AddController
  *
  * @since 1.0
  */
-class AddController extends AbstractFormController
+class AddController extends AbstractItemController
 {
 	/**
 	 * execute
@@ -24,12 +26,7 @@ class AddController extends AbstractFormController
 			// Set the internal error and also the redirect error.
 			$this->app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
 
-			$this->redirect(
-				\JRoute::_(
-					'index.php?option=' . $this->option . '&view=' . strtolower($this->getName()) . $this->getRedirectToListAppend(),
-					false
-				)
-			);
+			$this->redirect(\JRoute::_($this->getRedirectListUrl(), false));
 
 			return false;
 		}
@@ -38,12 +35,7 @@ class AddController extends AbstractFormController
 		$this->app->setUserState($context . '.data', null);
 
 		// Redirect to the edit screen.
-		$this->redirect(
-			\JRoute::_(
-				'index.php?option=' . $this->option . '&view=' . strtolower($this->getName()) . $this->getRedirectToListAppend(),
-				false
-			)
-		);
+		$this->redirect(\JRoute::_($this->getRedirectItemUrl(), false));
 
 		return true;
 	}

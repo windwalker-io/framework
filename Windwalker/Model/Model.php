@@ -37,6 +37,13 @@ class Model extends \JModelDatabase
 	protected $option = null;
 
 	/**
+	 * Property component.
+	 *
+	 * @var string
+	 */
+	protected $component = null;
+
+	/**
 	 * The prefix to use with controller messages.
 	 *
 	 * @var    string
@@ -170,11 +177,16 @@ class Model extends \JModelDatabase
 	 * @since   3.2
 	 * @throws  \Exception
 	 */
-	public function getTable($name = '', $prefix = 'Table', $options = array())
+	public function getTable($name = '', $prefix = '', $options = array())
 	{
 		if (empty($name))
 		{
 			$name = $this->getName();
+		}
+
+		if (empty($prefix))
+		{
+			$prefix = ucfirst($this->component) . 'Table';
 		}
 
 		if ($table = $this->createTable($name, $prefix, $options))
@@ -232,6 +244,8 @@ class Model extends \JModelDatabase
 	public function setOption($option)
 	{
 		$this->option = $option;
+
+		$this->component = substr($this->option, 4);
 
 		return $this;
 	}
