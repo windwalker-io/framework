@@ -35,11 +35,11 @@ class FlowerViewSakuraHtml extends HtmlView
 
 		JToolbarHelper::title('Sakura Edit');
 
-		JToolbarHelper::apply('sakura.save.apply');
-		JToolbarHelper::save('sakura.save.save');
-		JToolbarHelper::save2new('sakura.save.save2new');
-		JToolbarHelper::save2copy('sakura.save.save2copy');
-		JToolbarHelper::cancel('sakura.save.cancel');
+		JToolbarHelper::apply('sakura.edit.apply');
+		JToolbarHelper::save('sakura.edit.save');
+		JToolbarHelper::save2new('sakura.edit.save2new');
+		JToolbarHelper::save2copy('sakura.edit.save2copy');
+		JToolbarHelper::cancel('sakura.edit.cancel');
 
 //		JToolBarHelper::apply($this->item_name . '.apply');
 //		JToolBarHelper::save($this->item_name . '.save');

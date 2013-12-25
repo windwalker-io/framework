@@ -1,6 +1,6 @@
 <?php
 
-namespace Windwalker\Controller\Save;
+namespace Windwalker\Controller\Edit;
 
 use Windwalker\Controller\Admin\AbstractItemController;
 use Windwalker\Model\Exception\ValidateFailException;
@@ -10,7 +10,7 @@ use Windwalker\Model\Exception\ValidateFailException;
  *
  * @since 1.0
  */
-class Save2newController extends SaveController
+class ApplyController extends SaveController
 {
 	/**
 	 * postExecute
@@ -21,12 +21,15 @@ class Save2newController extends SaveController
 	 */
 	protected function postExecute($return = null)
 	{
-		// Clear the record id and data from the session.
-		$this->releaseEditId($this->context, $this->recordId);
+		// Set the record data in the session.
+		$this->recordId = $this->model->getState()->get($this->getName() . '.id');
+		$this->holdEditId($this->context, $this->recordId);
 		$this->app->setUserState($this->context . '.data', null);
 
+		// $this->model->checkout($recordId);
+
 		// Redirect back to the edit screen.
-		$this->app->redirect(\JRoute::_($this->getRedirectItemUrl(null, $this->urlVar), false));
+		$this->app->redirect(\JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false));
 
 		return $return;
 	}

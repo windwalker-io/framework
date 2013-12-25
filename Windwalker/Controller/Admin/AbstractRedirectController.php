@@ -79,6 +79,36 @@ abstract class AbstractRedirectController extends Controller
 	}
 
 	/**
+	 * redirectToItem
+	 *
+	 * @param null   $recordId
+	 * @param string $urlVar
+	 * @param null   $msg
+	 * @param null   $type
+	 *
+	 * @return void
+	 */
+	public function redirectToItem($recordId = null, $urlVar = 'id', $msg = null, $type = null)
+	{
+		$this->app->redirect(\JRoute::_($this->getRedirectItemUrl($recordId, $urlVar), false), $msg, $type);
+	}
+
+	/**
+	 * redirectToList
+	 *
+	 * @param null $msg
+	 * @param null $type
+	 *
+	 * @return void
+	 */
+	public function redirectToList($msg = null, $type = null)
+	{
+		$this->input->set('layout', null);
+
+		$this->app->redirect(\JRoute::_($this->getRedirectListUrl(), false), $msg, $type);
+	}
+
+	/**
 	 * Set a URL for browser redirection.
 	 *
 	 * @param   string $url  URL to redirect to.

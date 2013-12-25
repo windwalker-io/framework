@@ -1,6 +1,6 @@
 <?php
 
-namespace Windwalker\Controller\Save;
+namespace Windwalker\Controller\Edit;
 
 use Windwalker\Controller\Admin\AbstractItemController;
 use Windwalker\Model\Exception\ValidateFailException;
