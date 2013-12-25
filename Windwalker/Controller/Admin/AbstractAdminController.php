@@ -51,18 +51,6 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	}
 
 	/**
-	 * prepareExecute
-	 *
-	 * @return void
-	 */
-	protected function prepareExecute()
-	{
-		parent::prepareExecute();
-
-		$this->checkToken();
-	}
-
-	/**
 	 * Method to check if you can add a new record.
 	 *
 	 * Extended classes can override this if necessary.

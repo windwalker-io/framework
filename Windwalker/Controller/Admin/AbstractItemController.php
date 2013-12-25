@@ -16,6 +16,48 @@ namespace Windwalker\Controller\Admin;
 abstract class AbstractItemController extends AbstractAdminController
 {
 	/**
+	 * Property key.
+	 *
+	 * @var string
+	 */
+	protected $key;
+
+	/**
+	 * Property urlVar.
+	 *
+	 * @var string
+	 */
+	protected $urlVar;
+
+	/**
+	 * Property recordId.
+	 *
+	 * @var
+	 */
+	protected $recordId;
+
+	/**
+	 * Property data.
+	 *
+	 * @var
+	 */
+	protected $data;
+
+	/**
+	 * Property table.
+	 *
+	 * @var
+	 */
+	protected $table;
+
+	/**
+	 * Property model.
+	 *
+	 * @var
+	 */
+	protected $model;
+
+	/**
 	 * Instantiate the controller.
 	 *
 	 * @param   \JInput           $input  The input object.
@@ -27,6 +69,40 @@ abstract class AbstractItemController extends AbstractAdminController
 	{
 		parent::__construct($input, $app);
 	}
+
+	/**
+	 * prepare
+	 *
+	 * @return void
+	 */
+	protected function prepareExecute()
+	{
+		parent::prepareExecute();
+
+		$this->lang     = \JFactory::getLanguage();
+		$this->model    = $this->getModel();
+		$this->table    = $this->model->getTable();
+		$this->data     = $this->input->post->get('jform', array(), 'array');
+		$this->context  = "$this->option.edit.$this->context";
+
+		// Determine the name of the primary key for the data.
+		if (empty($key))
+		{
+			$this->key = $this->table->getKeyName();
+		}
+
+		// To avoid data collisions the urlVar may be different from the primary key.
+		if (empty($urlVar))
+		{
+			$this->urlVar = $this->key;
+		}
+
+		$this->recordId = $this->input->getInt($this->urlVar);
+
+		// Populate the row id from the session.
+		$this->data[$this->key] = $this->recordId;
+	}
+
 
 	/**
 	 * Method to add a record ID to the edit list.

@@ -86,7 +86,7 @@ abstract class FormModel extends ItemModel
 	public function checkout($pk = null)
 	{
 		// Only attempt to check the row in if it exists.
-		if ($pk)
+		if (!$pk)
 		{
 			return true;
 		}

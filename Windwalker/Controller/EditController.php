@@ -18,29 +18,13 @@ class EditController extends AbstractItemController
 	 */
 	public function doExecute()
 	{
-		$app   = \JFactory::getApplication();
-		$model = $this->getModel();
-		$table = $model->getTable();
-		$cid   = $this->input->post->get('cid', array(), 'array');
-		$context = "$this->option.edit.$this->context";
-
-		// Determine the name of the primary key for the data.
-		if (empty($key))
-		{
-			$key = $table->getKeyName();
-		}
-
-		// To avoid data collisions the urlVar may be different from the primary key.
-		if (empty($urlVar))
-		{
-			$urlVar = $key;
-		}
+		$cid = $this->input->post->get('cid', array(), 'array');
 
 		// Get the previous record id (if any) and the current record id.
-		$recordId = (int) (count($cid) ? $cid[0] : $this->input->getInt($urlVar));
+		$recordId = (int) (count($cid) ? $cid[0] : $this->recordId);
 
 		// Access check.
-		if (!$this->allowEdit(array($key => $recordId), $key))
+		if (!$this->allowEdit(array($this->key => $recordId), $this->key))
 		{
 			// Set the internal error and also the redirect error.
 			$this->app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'), 'error');
@@ -50,33 +34,30 @@ class EditController extends AbstractItemController
 			return false;
 		}
 
-		/*
 		// Attempt to check-out the new record for editing and redirect.
-		$checkin = property_exists($table, 'checked_out');
+		$checkin = property_exists($this->table, 'checked_out');
 
-		if ($checkin && !$model->checkout($recordId))
+		if ($checkin)
 		{
-			// Check-out failed, display a notice but allow the user to see the record.
-			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKOUT_FAILED', $model->getError()));
-			$this->setMessage($this->getError(), 'error');
+			try
+			{
+				$this->model->checkout($recordId);
+			}
+			catch (\Exception $e)
+			{
+				// Check-out failed, display a notice but allow the user to see the record.
+				$this->app->enqueueMessage(\JText::sprintf('JLIB_APPLICATION_ERROR_CHECKOUT_FAILED', $e->getMessage()), 'error');
 
-			$this->setRedirect(
-				 \JRoute::_(
-					   'index.php?option=' . $this->option . '&view=' . $this->view_item
-					   . $this->getRedirectToItemAppend($recordId, $urlVar), false
-				 )
-			);
-
-			return false;
+				$this->redirectToList();
+			}
 		}
-		*/
 
 		// Check-out succeeded, push the new record id into the session.
-		$this->holdEditId($context, $recordId);
-		$app->setUserState($context . '.data', null);
+		$this->holdEditId($this->context, $recordId);
+		$this->app->setUserState($this->context . '.data', null);
 
 		$this->input->set('layout', 'edit');
 
-		$this->redirect(\JRoute::_($this->getRedirectItemUrl($recordId, $urlVar), false));
+		$this->redirect(\JRoute::_($this->getRedirectItemUrl($recordId, $this->urlVar), false));
 	}
 }

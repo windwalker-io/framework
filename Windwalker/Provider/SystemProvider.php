@@ -31,7 +31,7 @@ class SystemProvider implements ServiceProviderInterface
 		$container->share('JDatabaseDriver', array('JFactory', 'getDbo'))
 			->alias('db', 'JDatabaseDriver');
 
-		$container->share('JUser', array('JFactory', 'getUser'))
+		$container->share('JUser', \JFactory::getUser())
 			->alias('user', 'JUser');
 
 		$container->share('JInput', \JFactory::getApplication()->input)

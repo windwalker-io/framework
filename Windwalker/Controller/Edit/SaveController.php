@@ -13,48 +13,6 @@ use Windwalker\Model\Exception\ValidateFailException;
 class SaveController extends AbstractItemController
 {
 	/**
-	 * Property key.
-	 *
-	 * @var string
-	 */
-	protected $key;
-
-	/**
-	 * Property urlVar.
-	 *
-	 * @var string
-	 */
-	protected $urlVar;
-
-	/**
-	 * Property recordId.
-	 *
-	 * @var
-	 */
-	protected $recordId;
-
-	/**
-	 * Property data.
-	 *
-	 * @var
-	 */
-	protected $data;
-
-	/**
-	 * Property table.
-	 *
-	 * @var
-	 */
-	protected $table;
-
-	/**
-	 * Property model.
-	 *
-	 * @var
-	 */
-	protected $model;
-
-	/**
 	 * Property lang.
 	 *
 	 * @var
@@ -83,33 +41,11 @@ class SaveController extends AbstractItemController
 	 */
 	protected function prepareExecute()
 	{
-		parent::prepareExecute();
-
-		// Check for request forgeries.
 		$this->checkToken();
 
-		$this->lang     = \JFactory::getLanguage();
-		$this->model    = $this->getModel();
-		$this->table    = $this->model->getTable();
-		$this->data     = $this->input->post->get('jform', array(), 'array');
-		$this->context  = "$this->option.edit.$this->context";
+		parent::prepareExecute();
 
-		// Determine the name of the primary key for the data.
-		if (empty($key))
-		{
-			$this->key = $this->table->getKeyName();
-		}
 
-		// To avoid data collisions the urlVar may be different from the primary key.
-		if (empty($urlVar))
-		{
-			$this->urlVar = $this->key;
-		}
-
-		$this->recordId = $this->input->getInt($this->urlVar);
-
-		// Populate the row id from the session.
-		$this->data[$this->key] = $this->recordId;
 	}
 
 	/**
