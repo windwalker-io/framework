@@ -6,9 +6,9 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-$listOrder;
-$listDirn;
-$originalOrders;
+$listOrder = 'id';
+$listDirn = 'asc';
+$originalOrders= [];
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist">

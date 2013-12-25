@@ -9,6 +9,21 @@
 include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
 include_once __DIR__ . '/component.php';
 
+
+// Legacy
+define('AKDEBUG', true);
+
+if (AKDEBUG)
+{
+	JLoader::registerNamespace('Whoops', AKPATH_ADMIN . '/debugger');
+
+	$whoops  = new Whoops\Run;
+	$handler = new Whoops\Handler\PrettyPageHandler;
+
+	$whoops->pushHandler($handler);
+	$whoops->register();
+}
+
 JLoader::registerPrefix('Flower', JPATH_COMPONENT_ADMINISTRATOR);
 JLoader::registerNamespace('Flower', JPATH_COMPONENT_ADMINISTRATOR . '/src');
 
