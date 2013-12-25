@@ -119,56 +119,26 @@ class SaveController extends AbstractItemController
 	 */
 	public function doExecute()
 	{
-		return $this->doSave();
-	}
-
-	/**
-	 * doSave
-	 *
-	 * @return bool
-	 */
-	protected function doSave()
-	{
-		$data = $this->data;
-		$key  = $this->key;
-
 		try
 		{
-			// Access check.
-			if (!$this->allowSave($this->data, $key))
-			{
-				throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
-			}
+			$this->preSaveHook();
 
-			// Validate the posted data.
-			// Sometimes the form needs some posted data, such as for plugins and modules.
-			$form = $this->model->getForm($this->data, false);
-
-			// Test whether the data is valid.
-			$validData = $this->model->validate($form, $this->data);
-
-			if (!isset($validData['tags']))
-			{
-				$validData['tags'] = null;
-			}
-
-			// Attempt to save the data.
-			try
-			{
-				$this->model->save($validData);
-			}
-			catch (\Exception $e)
-			{
-				// Save the data in the session.
-				$this->app->setUserState($this->context . '.data', $validData);
-
-				// Redirect back to the edit screen.
-				throw new \Exception(\JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $e->getMessage()));
-			}
+			$validData = $this->doSave();
 
 			// Invoke the postSave method to allow for the child class to access the model.
 			$this->postSaveHook($this->model, $validData);
+
+			// Set success message
+			$this->app->enqueueMessage(
+				\JText::_(
+					($this->lang->hasKey(strtoupper($this->option) . ($this->recordId == 0 && $this->app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS')
+						? strtoupper($this->option)
+						: 'JLIB_APPLICATION') . ($this->recordId == 0 && $this->app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS'
+				)
+			);
 		}
+
+		// Valid fail here
 		catch (ValidateFailException $e)
 		{
 			$errors = $e->getErrors();
@@ -186,13 +156,15 @@ class SaveController extends AbstractItemController
 			}
 
 			// Save the data in the session.
-			$this->app->setUserState($this->context . '.data', $data);
+			$this->app->setUserState($this->context . '.data', $this->data);
 
 			// Redirect back to the edit screen.
 			$this->app->redirect(\JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false));
 
 			return false;
 		}
+
+		// Other error here
 		catch (\Exception $e)
 		{
 			$this->app->enqueueMessage($e->getMessage(), 'error');
@@ -202,15 +174,53 @@ class SaveController extends AbstractItemController
 			return false;
 		}
 
-		$this->app->enqueueMessage(
-			\JText::_(
-				($this->lang->hasKey(strtoupper($this->option) . ($this->recordId == 0 && $this->app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS')
-					? strtoupper($this->option)
-					: 'JLIB_APPLICATION') . ($this->recordId == 0 && $this->app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS'
-			)
-		);
-
 		return true;
+	}
+
+	/**
+	 * doSave
+	 *
+	 * @return bool
+	 */
+	protected function doSave()
+	{
+		$data = $this->data;
+		$key  = $this->key;
+
+
+		// Access check.
+		if (!$this->allowSave($this->data, $key))
+		{
+			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
+		}
+
+		// Validate the posted data.
+		// Sometimes the form needs some posted data, such as for plugins and modules.
+		$form = $this->model->getForm($this->data, false);
+
+		// Test whether the data is valid.
+		$validData = $this->model->validate($form, $this->data);
+
+		if (!isset($validData['tags']))
+		{
+			$validData['tags'] = null;
+		}
+
+		// Attempt to save the data.
+		try
+		{
+			$this->model->save($validData);
+		}
+		catch (\Exception $e)
+		{
+			// Save the data in the session.
+			$this->app->setUserState($this->context . '.data', $validData);
+
+			// Redirect back to the edit screen.
+			throw new \Exception(\JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $e->getMessage()));
+		}
+
+		return $validData;
 	}
 
 	/**
@@ -278,6 +288,15 @@ class SaveController extends AbstractItemController
 	 * @return void
 	 */
 	protected function postSaveHook($model, $validData)
+	{
+	}
+
+	/**
+	 * preSaveHook
+	 *
+	 * @return void
+	 */
+	protected function preSaveHook()
 	{
 	}
 }
