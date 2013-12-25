@@ -2,9 +2,12 @@
 
 namespace Windwalker\Model\Exception;
 
-use Exception;
-
-class VaildateFailExcption extends \Exception
+/**
+ * Class ValidateFailExcption
+ *
+ * @since 1.0
+ */
+class ValidateFailException extends \Exception
 {
 	/**
 	 * Property errors.

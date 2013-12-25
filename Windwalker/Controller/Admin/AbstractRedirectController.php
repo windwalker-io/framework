@@ -23,6 +23,20 @@ abstract class AbstractRedirectController extends Controller
 	);
 
 	/**
+	 * Property viewItem.
+	 *
+	 * @var
+	 */
+	protected $viewItem;
+
+	/**
+	 * Property viewList.
+	 *
+	 * @var
+	 */
+	protected $viewList;
+
+	/**
 	 * Instantiate the controller.
 	 *
 	 * @param   \JInput           $input  The input object.
@@ -37,6 +51,30 @@ abstract class AbstractRedirectController extends Controller
 		if (!empty($config['allow_url_params']) && is_array($config['allow_url_params']))
 		{
 			array_merge($this->allowUrlParams, $config['allow_url_params']);
+		}
+	}
+
+	/**
+	 * prepareExecute
+	 *
+	 * @return void
+	 */
+	protected function prepareExecute()
+	{
+		parent::prepareExecute();
+
+		// Guess the item view as the context.
+		if (empty($this->viewItem))
+		{
+			$this->viewItem = $this->getName();
+		}
+
+		// Guess the list view as the plural of the item view.
+		if (empty($this->viewList))
+		{
+			$inflector = \JStringInflector::getInstance();
+
+			$this->viewList = $inflector->toPlural($this->viewItem);
 		}
 	}
 
@@ -75,7 +113,7 @@ abstract class AbstractRedirectController extends Controller
 	 */
 	protected function getRedirectListUrl()
 	{
-		return 'index.php?option=' . $this->option . '&view=' . strtolower($this->getName())
+		return 'index.php?option=' . $this->option . '&view=' . strtolower($this->viewList)
 			. $this->getRedirectListAppend();
 	}
 

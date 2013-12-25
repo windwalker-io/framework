@@ -33,20 +33,6 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	protected $user = null;
 
 	/**
-	 * Property viewItem.
-	 *
-	 * @var
-	 */
-	protected $viewItem;
-
-	/**
-	 * Property viewList.
-	 *
-	 * @var
-	 */
-	protected $viewList;
-
-	/**
 	 * Instantiate the controller.
 	 *
 	 * @param   \JInput          $input  The input object.
@@ -58,12 +44,6 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	 */
 	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
 	{
-		// Guess the item view as the context.
-		if (empty($this->viewItem))
-		{
-			$this->view_item = $this->context;
-		}
-
 		parent::__construct($input, $app);
 
 		$this->user    = \JFactory::getUser();
@@ -113,5 +93,22 @@ abstract class AbstractAdminController extends AbstractRedirectController
 		{
 			return $this->allowAdd($data);
 		}
+	}
+
+	/**
+	 * Method to check if you can add a new record.
+	 *
+	 * Extended classes can override this if necessary.
+	 *
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key; default is id.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.2
+	 */
+	protected function allowEdit($data = array(), $key = 'id')
+	{
+		return $this->user->authorise('core.edit', $this->option);
 	}
 }

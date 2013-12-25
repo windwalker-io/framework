@@ -26,20 +26,6 @@ abstract class AbstractItemController extends AbstractAdminController
 	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
 	{
 		parent::__construct($input, $app);
-
-		// Guess the item view as the context.
-		if (empty($this->viewItem))
-		{
-			$this->viewItem = $this->getName();
-		}
-
-		// Guess the list view as the plural of the item view.
-		if (empty($this->viewList))
-		{
-			$inflector = \JStringInflector::getInstance();
-
-			$this->viewItem = $inflector->toPlural($this->viewItem);
-		}
 	}
 
 	/**

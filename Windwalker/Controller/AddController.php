@@ -16,7 +16,7 @@ class AddController extends AbstractItemController
 	 *
 	 * @return $this|bool
 	 */
-	public function execute()
+	public function doExecute()
 	{
 		$context = "$this->option.edit.$this->context";
 

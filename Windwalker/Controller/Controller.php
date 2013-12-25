@@ -18,7 +18,7 @@ use Joomla\DI\ContainerAwareInterface;
  *
  * @since 2.0
  */
-class Controller extends \JControllerBase implements ContainerAwareInterface
+abstract class Controller extends \JControllerBase implements ContainerAwareInterface
 {
 	/**
 	 * The application object.
@@ -91,12 +91,45 @@ class Controller extends \JControllerBase implements ContainerAwareInterface
 	}
 
 	/**
+	 * prepareExecute
+	 *
+	 * @return void
+	 */
+	protected function prepareExecute()
+	{
+	}
+
+	/**
 	 * execute
 	 *
 	 * @return mixed
 	 */
 	public function execute()
 	{
+		$this->prepareExecute();
+
+		$return = $this->doExecute();
+
+		return $this->postExecute($return);
+	}
+
+	/**
+	 * doExecute
+	 *
+	 * @return mixed
+	 */
+	abstract public function doExecute();
+
+	/**
+	 * postExecute
+	 *
+	 * @param $data
+	 *
+	 * @return mixed
+	 */
+	protected function postExecute($data = null)
+	{
+		return $data;
 	}
 
 	/**

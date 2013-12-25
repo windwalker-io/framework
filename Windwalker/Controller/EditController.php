@@ -12,11 +12,11 @@ use Windwalker\Controller\Admin\AbstractItemController;
 class EditController extends AbstractItemController
 {
 	/**
-	 * execute
+	 * doExecute
 	 *
-	 * @return $this|bool
+	 * @return mixed
 	 */
-	public function execute()
+	public function doExecute()
 	{
 		$app   = \JFactory::getApplication();
 		$model = $this->getModel();
@@ -78,22 +78,5 @@ class EditController extends AbstractItemController
 		$this->input->set('layout', 'edit');
 
 		$this->redirect(\JRoute::_($this->getRedirectItemUrl($recordId, $urlVar), false));
-	}
-
-	/**
-	 * Method to check if you can add a new record.
-	 *
-	 * Extended classes can override this if necessary.
-	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key; default is id.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.2
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		return $this->user->authorise('core.edit', $this->option);
 	}
 }

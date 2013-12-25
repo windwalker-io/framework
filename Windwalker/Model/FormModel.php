@@ -9,7 +9,7 @@
 
 namespace Windwalker\Model;
 
-use Windwalker\Model\Exception\VaildateFailExcption;
+use Windwalker\Model\Exception\ValidateFailException;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -125,7 +125,12 @@ abstract class FormModel extends ItemModel
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		return $this->loadForm('com_flower.' . $this->getName() . '.form', $this->getName(), array('load_data' => $loadData));
+		$config = array(
+			'control'   => 'jform',
+			'load_data' => $loadData
+		);
+
+		return $this->loadForm('com_flower.' . $this->getName() . '.form', $this->getName(), $config);
 	}
 
 	/**
@@ -345,7 +350,7 @@ abstract class FormModel extends ItemModel
 		if ($return === false)
 		{
 			// Get the validation messages from the form.
-			throw new VaildateFailExcption($form->getErrors());
+			throw new ValidateFailException($form->getErrors());
 		}
 
 		return $data;

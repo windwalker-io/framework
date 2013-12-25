@@ -129,4 +129,97 @@ abstract class AdminModel extends FormModel
 		$value = \JComponentHelper::getParams($this->option);
 		$this->state->set('params', $value);
 	}
+
+	/**
+	 * Method to save the form data.
+	 *
+	 * @param   array  $data  The form data.
+	 *
+	 * @return  boolean  True on success, False on error.
+	 *
+	 * @since   12.2
+	 */
+	public function save($data)
+	{
+		$container  = $this->getContainer();
+		$table      = $this->getTable();
+		$dispatcher = $container->get('event.dispatcher');
+
+		if ((!empty($data['tags']) && $data['tags'][0] != ''))
+		{
+			$table->newTags = $data['tags'];
+		}
+
+		$key = $table->getKeyName();
+		$pk = \JArrayHelper::getValue($data, $key, $this->getState($this->getName() . '.id'));
+
+		$isNew = true;
+
+		// Include the content plugins for the on save events.
+		\JPluginHelper::importPlugin('content');
+
+		// Load the row if saving an existing record.
+		if ($pk)
+		{
+			$table->load($pk);
+			$isNew = false;
+		}
+
+		// Bind the data.
+		$table->bind($data);
+
+		// Prepare the row for saving
+		$this->prepareTable($table);
+
+		// Check the data.
+		if (!$table->check())
+		{
+			throw new \Exception($table->getError());
+		}
+
+		// Trigger the onContentBeforeSave event.
+		$result = $dispatcher->trigger($this->eventBeforeSave, array($this->option . '.' . $this->name, $table, $isNew));
+
+		if (in_array(false, $result, true))
+		{
+			throw new \Exception($table->getError());
+		}
+
+		// Store the data.
+		if (!$table->store())
+		{
+			throw new \Exception($table->getError());
+		}
+
+		// Clean the cache.
+		$this->cleanCache();
+
+		// Trigger the onContentAfterSave event.
+		$dispatcher->trigger($this->eventAfterSave, array($this->option . '.' . $this->name, $table, $isNew));
+
+		$pkName = $table->getKeyName();
+
+		if (isset($table->$pkName))
+		{
+			$this->state->set($this->getName() . '.id', $table->$pkName);
+		}
+
+		$this->state->set($this->getName() . '.new', $isNew);
+
+		return true;
+	}
+
+	/**
+	 * Prepare and sanitise the table data prior to saving.
+	 *
+	 * @param   JTable  $table  A reference to a JTable object.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.2
+	 */
+	protected function prepareTable($table)
+	{
+		// Derived class will provide its own implementation if required.
+	}
 }
