@@ -1,23 +1,76 @@
 <?php
 
-use Windwalker\Model\Model;
+use Windwalker\Model\ListModel;
 
 /**
  * Class FlowerModelSakuras
  *
  * @since 1.0
  */
-class FlowerModelSakuras extends Model
+class FlowerModelSakuras extends ListModel
 {
-	public function getItems()
+	/**
+	 * Constructor.
+	 *
+	 * @param    array  $config  An optional associative array of configuration settings.
+	 *
+	 * @see      JController
+	 * @since    1.6
+	 */
+	public function __construct($config = array())
 	{
-		$q = $this->db->getQuery(true);
+		// Set query tables
+		// ========================================================================
+		$config['tables'] = array(
+			'sakura'    => '#__flower_sakuras',
+			'category'  => '#__categories',
+			'user'      => '#__users',
+			'viewlevel' => '#__viewlevels',
+			'lang'      => '#__languages'
+		);
 
-		$q->select('*')
-			->from('#__flower_sakuras');
+		// Set filter fields
+		// ========================================================================
+		if (empty($config['filter_fields']))
+		{
+			$config['filter_fields'] = array(
+				'filter_order_Dir', 'filter_order', '*'
+			);
 
-		return $this->db
-			->setQuery($q)
-			->loadObjectList();
+			$config['filter_fields'] = AKHelper::_('db.mergeFilterFields', $config['filter_fields'], $config['tables']);
+		}
+
+		$this->config = $config;
+
+		parent::__construct($config);
+	}
+
+	/**
+	 * getListQuery
+	 *
+	 * @return \JDatabaseQuery
+	 */
+	public function getListQuery()
+	{
+		$query = parent::getListQuery();
+
+		// Build query
+		// ========================================================================
+
+		// Get select columns
+		$select = AKHelper::_('db.getSelectList', $this->config['tables']);
+
+		// Build query
+		$query->select($select)
+			->from('#__flower_sakuras AS sakura')
+			->leftJoin('#__categories  AS category  ON sakura.catid      = category.id')
+			->leftJoin('#__users       AS user      ON sakura.created_by = user.id')
+			->leftJoin('#__viewlevels  AS viewlevel ON sakura.access     = viewlevel.id')
+			->leftJoin('#__languages   AS lang      ON sakura.language   = lang.lang_code')
+			// ->where("")
+			// ->order("")
+			;
+
+		return $query;
 	}
 }

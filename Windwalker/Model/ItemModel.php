@@ -13,7 +13,7 @@ namespace Windwalker\Model;
  *
  * @since 1.0
  */
-class ItemModel extends Model
+class ItemModel extends AbstractAdvancedModel
 {
 	/**
 	 * Method to get a single record.

@@ -49,14 +49,6 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 	protected $component = null;
 
 	/**
-	 * Indicates if the internal state has been set
-	 *
-	 * @var    boolean
-	 * @since  3.2
-	 */
-	protected $stateSet = null;
-
-	/**
 	 * The event to trigger when cleaning cache.
 	 *
 	 * @var      string
@@ -102,7 +94,8 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 		// Set the internal state marker - used to ignore setting state from the request
 		if (!empty($config['ignore_request']))
 		{
-			$this->stateSet = true;
+			// Protected method to auto-populate the model state.
+			$this->populateState();
 		}
 
 		// Set the clean cache event
@@ -146,27 +139,6 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 		}
 
 		return $this->name;
-	}
-
-	/**
-	 * Method to get model state variables
-	 *
-	 * @return  object  The property where specified, the state object where omitted
-	 *
-	 * @since   3.2
-	 */
-	public function getState()
-	{
-		if (!$this->stateSet)
-		{
-			// Protected method to auto-populate the model state.
-			$this->populateState();
-
-			// Set the model state set flag to true.
-			$this->stateSet = true;
-		}
-
-		return $this->state;
 	}
 
 	/**
@@ -271,7 +243,58 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 		$this->loadState();
 	}
 
+	/**
+	 * Gets an array of objects from the results of database query.
+	 *
+	 * @param   string   $query       The query.
+	 * @param   integer  $limitstart  Offset.
+	 * @param   integer  $limit       The number of records.
+	 *
+	 * @return  array  An array of results.
+	 *
+	 * @since   12.2
+	 * @throws  \RuntimeException
+	 */
+	public function getList($query, $limitstart = 0, $limit = 0)
+	{
+		$this->db->setQuery($query, $limitstart, $limit);
 
+		$result = $this->db->loadObjectList();
+
+		return $result;
+	}
+
+	/**
+	 * Returns a record count for the query.
+	 *
+	 * @param   \JDatabaseQuery|string  $query  The query.
+	 *
+	 * @return  integer  Number of rows for query.
+	 *
+	 * @since   12.2
+	 */
+	public function getListCount($query)
+	{
+		// Use fast COUNT(*) on JDatabaseQuery objects if there no GROUP BY or HAVING clause:
+		if ($query instanceof \JDatabaseQuery
+			&& $query->type == 'select'
+			&& $query->group === null
+			&& $query->having === null)
+		{
+			$query = clone $query;
+			$query->clear('select')->clear('order')->select('COUNT(*)');
+
+			$this->db->setQuery($query);
+
+			return (int) $this->db->loadResult();
+		}
+
+		// Otherwise fall back to inefficient way of counting all results.
+		$this->db->setQuery($query);
+		$this->db->execute();
+
+		return (int) $this->db->getNumRows();
+	}
 
 	/**
 	 * Method to test whether a record can be deleted.

@@ -271,4 +271,21 @@ class HtmlView extends AbstractHtmlView
 	protected function addSubmenu()
 	{
 	}
+
+	/**
+	 * flash
+	 *
+	 * @param string $msg
+	 * @param string $type
+	 *
+	 * @return $this
+	 */
+	public function flash($msg, $type = 'message')
+	{
+		$app = $this->getContainer()->get('app');
+
+		$app->enqueueMessage($msg, $type);
+
+		return $this;
+	}
 }
