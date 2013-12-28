@@ -21,6 +21,10 @@ include_once __DIR__ . '/autoload.php';
 
 include_once __DIR__ . '/PHP/methods.php';
 
+define('WINDWALKER', dirname(__DIR__));
+
+define('WINDWALKER_SOURCE', __DIR__);
+
 // Register provider
 $container = Container::getInstance();
 

@@ -1,3 +1,3 @@
 <?php
 // Search tools bar
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this->data));
+echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this->data), WINDWALKER . '/Resource/layouts');
