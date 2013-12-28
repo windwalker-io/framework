@@ -54,7 +54,10 @@ class FlowerModelSakuras extends ListModel
 	{
 		$query = parent::getListQuery();
 
-		$filters = $this->state->get('filter');
+		$ordering  = $this->state->get('list.ordering', 'sakura.ordering');
+		$direction = $this->state->get('list.direction', 'ASC');
+
+		$filters = $this->state->get('filter', array());
 
 		foreach ($filters as $name => $value)
 		{
@@ -77,14 +80,14 @@ class FlowerModelSakuras extends ListModel
 		$select = AKHelper::_('db.getSelectList', $this->config['tables']);
 
 		// Build query
-		echo $query->select($select)
+		$query->select($select)
 			->from('#__flower_sakuras AS sakura')
 			->leftJoin('#__categories  AS category  ON sakura.catid      = category.id')
 			->leftJoin('#__users       AS user      ON sakura.created_by = user.id')
 			->leftJoin('#__viewlevels  AS viewlevel ON sakura.access     = viewlevel.id')
 			->leftJoin('#__languages   AS lang      ON sakura.language   = lang.lang_code')
 			// ->where("")
-			// ->order("")
+			->order($query->quoteName($ordering) . ' ' . $direction)
 			;
 
 		return $query;

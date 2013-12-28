@@ -76,13 +76,13 @@ class ListModel extends FormModel
 	 */
 	public function __construct($config = array())
 	{
-		parent::__construct($config);
-
 		// Add the ordering filtering fields white list.
 		if (isset($config['filter_fields']))
 		{
 			$this->filterFields = $config['filter_fields'];
 		}
+
+		parent::__construct($config);
 	}
 
 	/**
