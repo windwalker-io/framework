@@ -123,6 +123,42 @@ abstract class AdminModel extends FormModel
 	}
 
 	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer  $pk  The id of the primary key.
+	 *
+	 * @return  mixed    Object on success, false on failure.
+	 *
+	 * @since   12.2
+	 */
+	public function getItem($pk = null)
+	{
+		$pk = (!empty($pk)) ? $pk : (int) $this->state->get($this->getName() . '.id');
+		$table = $this->getTable();
+
+		if ($pk > 0)
+		{
+			// Attempt to load the row.
+			$table->load($pk);
+		}
+
+		// Convert to the JObject before adding other data.
+		$properties = $table->getProperties(1);
+		$item = \JArrayHelper::toObject($properties, 'stdClass');
+
+		if (property_exists($item, 'params'))
+		{
+			$registry = new \JRegistry;
+
+			$registry->loadString($item->params);
+
+			$item->params = $registry->toArray();
+		}
+
+		return $item;
+	}
+
+	/**
 	 * Method to save the form data.
 	 *
 	 * @param   array  $data  The form data.

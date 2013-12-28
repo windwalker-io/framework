@@ -14,6 +14,8 @@ $originalOrders= [];
 <div id="flower" class="windwalker sakuras tablelist">
 	<form action="<?php echo JURI::getInstance(); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
+		<?php echo $this->loadTemplate('filter'); ?>
+
 		<?php echo $this->loadTemplate('table'); ?>
 
 		<!-- Hidden Inputs -->

@@ -54,6 +54,22 @@ class FlowerModelSakuras extends ListModel
 	{
 		$query = parent::getListQuery();
 
+		$filters = $this->state->get('filter');
+
+		foreach ($filters as $name => $value)
+		{
+			if ($value !== '' && $value != '*')
+			{
+				$query->where($query->quoteName($name) . ' = ' . $query->quote($value));
+			}
+		}
+
+		// Published
+		if (empty($filters['sakura.published']))
+		{
+			$query->where("{$query->quoteName('sakura.published')} >= 0");
+		}
+
 		// Build query
 		// ========================================================================
 
@@ -61,7 +77,7 @@ class FlowerModelSakuras extends ListModel
 		$select = AKHelper::_('db.getSelectList', $this->config['tables']);
 
 		// Build query
-		$query->select($select)
+		echo $query->select($select)
 			->from('#__flower_sakuras AS sakura')
 			->leftJoin('#__categories  AS category  ON sakura.catid      = category.id')
 			->leftJoin('#__users       AS user      ON sakura.created_by = user.id')

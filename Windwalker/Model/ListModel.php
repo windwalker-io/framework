@@ -113,33 +113,6 @@ class ListModel extends FormModel
 	}
 
 	/**
-	 * Function to get the active filters
-	 *
-	 * @return  array  Associative array in the format: array('filter_published' => 0)
-	 *
-	 * @since   3.2
-	 */
-	public function getActiveFilters()
-	{
-		$activeFilters = array();
-
-		if (!empty($this->filterFields))
-		{
-			foreach ($this->filterFields as $filter)
-			{
-				$filterName = 'filter.' . $filter;
-
-				if (property_exists($this->state, $filterName) && (!empty($this->state->{$filterName}) || is_numeric($this->state->{$filterName})))
-				{
-					$activeFilters[$filter] = $this->state->get($filterName);
-				}
-			}
-		}
-
-		return $activeFilters;
-	}
-
-	/**
 	 * Method to get an array of data items.
 	 *
 	 * @return  mixed  An array of data items on success, false on failure.
@@ -315,13 +288,39 @@ class ListModel extends FormModel
 			$this->filterFormName = strtolower($this->getName());
 		}
 
+		\JForm::addFormPath($this->filterFormName);
+
 		if (!empty($this->filterFormName))
 		{
 			// Get the form.
-			$form = $this->loadForm($this->context . '.filter', $this->filterFormName, array('control' => '', 'load_data' => $loadData));
+			$form = $this->loadForm($this->context . '.filter', 'filter', array('control' => '', 'load_data' => $loadData));
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Function to get the active filters
+	 *
+	 * @return  array  Associative array in the format: array('filter_published' => 0)
+	 *
+	 * @since   3.2
+	 */
+	public function getActiveFilters()
+	{
+		$activeFilters = array();
+
+		$filters = (array) $this->state->get('filter');
+
+		foreach ($filters as $name => $value)
+		{
+			if (in_array($name, $this->filterFields) && $value !== '')
+			{
+				$activeFilters[$name] = $value;
+			}
+		}
+
+		return $activeFilters;
 	}
 
 	/**
@@ -347,6 +346,8 @@ class ListModel extends FormModel
 				'start'     => $this->state->get('list.start')
 			);
 		}
+
+		$data->filter = $this->state->get('filter');
 
 		return $data;
 	}
@@ -377,10 +378,14 @@ class ListModel extends FormModel
 			// Receive & set filters
 			if ($filters = $app->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array'))
 			{
+				$filterValue = array();
+
 				foreach ($filters as $name => $value)
 				{
-					$this->setState('filter.' . $name, $value);
+					$filterValue[$name] = $value;
 				}
+
+				$this->state->set('filter', $filterValue);
 			}
 
 			$limit = 0;
@@ -403,7 +408,7 @@ class ListModel extends FormModel
 
 								if (in_array(strtoupper($fullDirection), array('ASC', 'DESC', '')))
 								{
-									$this->setState('list.direction', $fullDirection);
+									$this->state->set('list.direction', $fullDirection);
 								}
 
 								unset($orderingParts[count($orderingParts) - 1]);
@@ -411,20 +416,20 @@ class ListModel extends FormModel
 								// The rest will be the ordering
 								$fullOrdering = implode(' ', $orderingParts);
 
-								if (in_array($fullOrdering, $this->filter_fields))
+								if (in_array($fullOrdering, $this->filterFields))
 								{
-									$this->setState('list.ordering', $fullOrdering);
+									$this->state->set('list.ordering', $fullOrdering);
 								}
 							}
 							else
 							{
-								$this->setState('list.ordering', $ordering);
-								$this->setState('list.direction', $direction);
+								$this->state->set('list.ordering', $ordering);
+								$this->state->set('list.direction', $direction);
 							}
 							break;
 
 						case 'ordering':
-							if (!in_array($value, $this->filter_fields))
+							if (!in_array($value, $this->filterFields))
 							{
 								$value = $ordering;
 							}
@@ -447,18 +452,18 @@ class ListModel extends FormModel
 							break;
 					}
 
-					$this->setState('list.' . $name, $value);
+					$this->state->set('list.' . $name, $value);
 				}
 			}
 
 			$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
 			$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-			$this->setState('list.start', $limitstart);
+			$this->state->set('list.start', $limitstart);
 		}
 		else
 		{
-			$this->setState('list.start', 0);
-			$this->setState('list.limit', 0);
+			$this->state->set('list.start', 0);
+			$this->state->set('list.limit', 0);
 		}
 	}
 

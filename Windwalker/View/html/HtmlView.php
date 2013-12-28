@@ -275,16 +275,20 @@ class HtmlView extends AbstractHtmlView
 	/**
 	 * flash
 	 *
-	 * @param string $msg
+	 * @param string $msgs
 	 * @param string $type
 	 *
 	 * @return $this
 	 */
-	public function flash($msg, $type = 'message')
+	public function flash($msgs, $type = 'message')
 	{
-		$app = $this->getContainer()->get('app');
+		$app  = $this->getContainer()->get('app');
+		$msgs = (array) $msgs;
 
-		$app->enqueueMessage($msg, $type);
+		foreach ($msgs as $msg)
+		{
+			$app->enqueueMessage($msg, $type);
+		}
 
 		return $this;
 	}

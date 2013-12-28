@@ -27,12 +27,6 @@ abstract class AbstractAdvancedModel extends Model
 	 */
 	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
-		// Guess the context as Option.ModelName.
-		if (empty($this->context))
-		{
-			$this->context = strtolower($this->option . '.' . $this->getName());
-		}
-
 		parent::__construct($config, $state, $db);
 	}
 }

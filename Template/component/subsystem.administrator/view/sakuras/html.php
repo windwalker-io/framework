@@ -67,17 +67,17 @@ class FlowerViewSakurasHtml extends HtmlView
 	 */
 	public function render()
 	{
-		echo 'View Sakuras';
+		$data                = $this->getData();
+		$data->items         = $this->get('Items');
+		$data->pagination    = $this->get('Pagination');
+		$this->state         = $this->get('State');
+		$data->filterForm    = $this->get('FilterForm');
+		$data->activeFilters = $this->get('ActiveFilters');
 
-		$model = $this->getModel();
-		$data  = $this->getData();
-
-		$data->items = $this->get('Items');
-		$this->state = $model->getState();
-
-		AK::Show($data->items);
-
-			// $this->flash($e->getMessage());
+		if ($errors = $this->state->get('errors'))
+		{
+			$this->flash($errors);
+		}
 
 		$this->addToolbar();
 
@@ -90,7 +90,7 @@ class FlowerViewSakurasHtml extends HtmlView
 		$canDo        = FlowerHelper::getActions($this->option);
 		$user         = JFactory::getUser();
 
-		$filter_state = $this->state->get('filter');
+		$filter_state = (array) $this->state->get('filter');
 
 		JToolbarHelper::title(JText::_($this->textPrefix . '_' . strtoupper($this->getName()) . '_TITLE'), 'stack article');
 

@@ -13,7 +13,7 @@ include_once __DIR__ . '/component.php';
 // Legacy
 define('AKDEBUG', true);
 
-if (AKDEBUG)
+if (JDEBUG)
 {
 	JLoader::registerNamespace('Whoops', AKPATH_ADMIN . '/debugger');
 

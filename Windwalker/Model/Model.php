@@ -49,6 +49,15 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 	protected $component = null;
 
 	/**
+	 * Context string for the model type.  This is used to handle uniqueness
+	 * when dealing with the getStoreId() method and caching data structures.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $context = '';
+
+	/**
 	 * The event to trigger when cleaning cache.
 	 *
 	 * @var      string
@@ -91,13 +100,6 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 		// Register the paths for the form
 		$this->registerTablePaths($config);
 
-		// Set the internal state marker - used to ignore setting state from the request
-		if (!empty($config['ignore_request']))
-		{
-			// Protected method to auto-populate the model state.
-			$this->populateState();
-		}
-
 		// Set the clean cache event
 		if (isset($config['event_clean_cache']))
 		{
@@ -111,6 +113,19 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 		$state = new \JRegistry($config);
 
 		parent::__construct($state, $db);
+
+		// Guess the context as Option.ModelName.
+		if (empty($this->context))
+		{
+			$this->context = strtolower($this->option . '.' . $this->getName());
+		}
+
+		// Set the internal state marker - used to ignore setting state from the request
+		if (empty($config['ignore_request']))
+		{
+			// Protected method to auto-populate the model state.
+			$this->populateState();
+		}
 	}
 
 	/**
