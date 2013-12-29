@@ -79,13 +79,20 @@ class FlowerViewSakurasHtml extends HtmlView
 			$this->flash($errors);
 		}
 
-		$this->addToolbar();
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
 
 		return parent::render();
 	}
 
 	protected function addToolbar()
 	{
+		FlowerHelper::addSubmenu($this->getName());
+
 		$app          = JFactory::getApplication();
 		$canDo        = FlowerHelper::getActions($this->option);
 		$user         = JFactory::getUser();

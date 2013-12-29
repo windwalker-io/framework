@@ -382,10 +382,38 @@ class ListModel extends FormModel
 
 				foreach ($filters as $name => $value)
 				{
-					$filterValue[$name] = $value;
+					if (in_array($name, $this->filterFields))
+					{
+						$filterValue[$name] = $value;
+					}
 				}
 
 				$this->state->set('filter', $filterValue);
+			}
+
+			// Receive & set searches
+			if ($searches = $app->getUserStateFromRequest($this->context . '.search', 'search', array(), 'array'))
+			{
+				// Convert search field to array
+				if (!empty($searches['field']) && !empty($searches['index']))
+				{
+					$searches[$searches['field']] = $searches['index'];
+				}
+
+				unset($searches['field']);
+				unset($searches['index']);
+
+				$searchValue = array();
+
+				foreach ($searches as $name => $value)
+				{
+					if (in_array($name, $this->filterFields))
+					{
+						$searchValue[$name] = $value;
+					}
+				}
+
+				$this->state->set('search', $searchValue);
 			}
 
 			$limit = 0;

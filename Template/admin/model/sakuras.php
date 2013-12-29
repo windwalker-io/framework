@@ -57,8 +57,10 @@ class FlowerModelSakuras extends ListModel
 		$ordering  = $this->state->get('list.ordering', 'sakura.ordering');
 		$direction = $this->state->get('list.direction', 'ASC');
 
-		$filters = $this->state->get('filter', array());
+		$filters  = $this->state->get('filter', array());
+		$searches = $this->state->get('search', array());
 
+		// Build filter query
 		foreach ($filters as $name => $value)
 		{
 			if ($value !== '' && $value != '*')
@@ -67,10 +69,29 @@ class FlowerModelSakuras extends ListModel
 			}
 		}
 
+		// Build search query
+		$searchValue = array();
+
+		array_walk(
+			$searches,
+			function($value, $key) use (&$searchValue, $query)
+			{
+				if ($value && $key != '*')
+				{
+					$searchValue[] = $query->quoteName($key) . ' LIKE ' . $query->quote('%' . $value . '%');
+				}
+			}
+		);
+
+		if (count($searchValue))
+		{
+			$query->where(new JDatabaseQueryElement('()', $searchValue, " \nOR "));
+		}
+
 		// Published
 		if (empty($filters['sakura.published']))
 		{
-			$query->where("{$query->quoteName('sakura.published')} >= 0");
+			$query->where($query->quoteName('sakura.published') . ' >= 0');
 		}
 
 		// Build query
@@ -89,6 +110,9 @@ class FlowerModelSakuras extends ListModel
 			// ->where("")
 			->order($query->quoteName($ordering) . ' ' . $direction)
 			;
+
+		// Debug here
+		// \AK::show((string) $query);
 
 		return $query;
 	}

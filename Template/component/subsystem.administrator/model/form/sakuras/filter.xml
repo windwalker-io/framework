@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<!-- Filter -->
-	<fields name="filter">
+	<fields name="search">
+		<field name="field"
+			   type="list"
+			   default="title"
+			   label="JSEARCH_FILTER_LABEL"
+			   labelclass="pull-left"
+			   class="input-small"
+			>
+			<option value="*">JALL</option>
+			<option value="sakura.title">JGLOBAL_TITLE</option>
+			<option value="category.title">JCATEGORY</option>
+		</field>
+
 		<field
-			name="search"
+			name="index"
 			type="text"
-			label="COM_CONTENT_FILTER_SEARCH_DESC"
+			label="JSEARCH_FILTER_LABEL"
 			hint="JSEARCH_FILTER"
 			/>
 
+		<fieldset name="multisearch">
+			<field
+				name="sakura.title"
+				type="text"
+				label="Title"
+				hint="JSEARCH_FILTER"
+				/>
+
+			<field
+				name="category.title"
+				type="text"
+				label="Category"
+				hint="JSEARCH_FILTER"
+				/>
+		</fieldset>
+	</fields>
+
+	<!-- Filter -->
+	<fields name="filter">
 		<field
 			name="sakura.published"
 			type="list"
