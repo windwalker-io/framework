@@ -111,7 +111,7 @@ abstract class AdminModel extends FormModel
 	protected function populateState()
 	{
 		$table = $this->getTable();
-		$key = $table->getKeyName();
+		$key   = $table->getKeyName();
 
 		// Get the pk of the record from the request.
 		$pk = \JFactory::getApplication()->input->getInt($key);
@@ -329,5 +329,50 @@ abstract class AdminModel extends FormModel
 		{
 			throw new \Exception($table->getError());
 		}
+	}
+
+	/**
+	 * updateState
+	 *
+	 * @param $field
+	 * @param $value
+	 *
+	 * @return boolean
+	 */
+	public function updateState($pks, $field, $value)
+	{
+		$dispatcher = $this->getContainer()->get('event.dispatcher');
+		$user  = \JFactory::getUser();
+		$query = $this->db->getQuery(true);
+		$table = $this->getTable();
+		$pks   = (array) $pks;
+
+		if (!count($pks))
+		{
+			return false;
+		}
+
+		// Include the content plugins for the change of state event.
+		\JPluginHelper::importPlugin('content');
+
+		// Update the state for rows with the given primary keys.
+		$query->update($table->getTableName())
+			->set($query->quoteName($field) . ' = ' . $query->quote($value))
+			->where($query->quoteName($table->getKeyName()) . ' IN (' . implode(',', $pks) . ')');
+
+		if (!$this->db->setQuery($query)->execute())
+		{
+			throw new \Exception($this->db->getError());
+		}
+		
+		$context = $this->option . '.' . $this->name;
+
+		// Trigger the onContentChangeState event.
+		$result = $dispatcher->trigger($this->eventChangeState, array($context, $pks, $value));
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
 	}
 }

@@ -64,7 +64,7 @@ abstract class AbstractUpdateStateController extends AbstractListController
 		{
 			$this->app->enqueueMessage($e->getMessage(), 'error');
 
-			$this->app->redirect(\JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false));
+			$this->app->redirect(\JRoute::_($this->getRedirectListUrl(), false));
 
 			return false;
 		}
@@ -93,6 +93,13 @@ abstract class AbstractUpdateStateController extends AbstractListController
 
 				if ($this->table->load($pk))
 				{
+					if (!$pk)
+					{
+						unset($pks[$i]);
+
+						continue;
+					}
+
 					if (!$this->allowEditState($this->table->getProperties(true)))
 					{
 						// Prune items that you can't change.
@@ -104,7 +111,7 @@ abstract class AbstractUpdateStateController extends AbstractListController
 			}
 
 			// Check in the items.
-			$this->app->enqueueMessage(\JText::plural('JLIB_CONTROLLER_N_ITEMS_PUBLISHED', $this->model->updateState($pks, $this->stateValue)));
+			$this->app->enqueueMessage(\JText::plural($this->option . '_N_ITEMS_PUBLISHED', $this->model->updateState($pks, $this->stateName,$this->stateValue)));
 		}
 	}
 

@@ -81,7 +81,7 @@ abstract class AbstractListController extends AbstractAdminController
 
 		$this->lang     = \JFactory::getLanguage();
 		$this->model    = $this->getModel($this->viewItem);
-		$this->table    = $this->model->getTable($this->viewItem);
+		$this->table    = $this->model->getTable(ucfirst($this->viewItem));
 		$this->cid      = $this->input->post->get('cid', array(), 'array');
 		$this->context  = $this->option . '.state.' . $this->context;
 	}

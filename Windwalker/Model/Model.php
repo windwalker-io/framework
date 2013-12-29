@@ -85,7 +85,7 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
 		// Guess the option from the class name (Option)Model(View).
-		if (empty($this->option))
+		if (empty($this->component))
 		{
 			$r = null;
 
@@ -94,8 +94,10 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 				throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
 			}
 
-			$this->option = 'com_' . strtolower($r[1]);
+			$this->component = strtolower($r[1]);
 		}
+
+		$this->option = 'com_' . $this->component;
 
 		// Register the paths for the form
 		$this->registerTablePaths($config);
@@ -180,7 +182,7 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 			$prefix = ucfirst($this->component) . 'Table';
 		}
 
-		if ($table = $this->createTable($name, $prefix, $options))
+		if ($table = $this->createTable(ucfirst($name), $prefix, $options))
 		{
 			return $table;
 		}

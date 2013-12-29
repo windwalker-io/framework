@@ -138,7 +138,7 @@ $trashed   = $data->state->get('filter.published') == -2 ? true : false;
 
 		<!--CHECKBOX-->
 		<td class="center">
-			<?php echo JHtml::_('grid.id', $i, $item->a_id); ?>
+			<?php echo JHtml::_('grid.id', $i, $item->sakura_id); ?>
 		</td>
 
 		<!--TITLE-->
