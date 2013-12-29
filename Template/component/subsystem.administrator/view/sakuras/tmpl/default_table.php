@@ -149,7 +149,7 @@ $trashed   = $data->state->get('filter.published') == -2 ? true : false;
 				<div class="item-title">
 					<!-- Checkout -->
 					<?php if ($item->sakura_checked_out) : ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $item->user_name, $item->sakura_checked_out_time, 'sakuras.', $canCheckin); ?>
+						<?php echo JHtml::_('jgrid.checkedout', $i, $item->user_name, $item->sakura_checked_out_time, 'sakuras.check.', $canCheckin); ?>
 					<?php endif; ?>
 
 					<!-- Title -->

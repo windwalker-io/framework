@@ -226,7 +226,7 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 	 */
 	public function setName($name)
 	{
-		$this->name = $name;
+		$this->name = strtolower($name);
 
 		return $this;
 	}

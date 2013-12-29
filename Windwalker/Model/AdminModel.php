@@ -342,7 +342,6 @@ abstract class AdminModel extends FormModel
 	public function updateState($pks, $field, $value)
 	{
 		$dispatcher = $this->getContainer()->get('event.dispatcher');
-		$user  = \JFactory::getUser();
 		$query = $this->db->getQuery(true);
 		$table = $this->getTable();
 		$pks   = (array) $pks;
@@ -364,7 +363,7 @@ abstract class AdminModel extends FormModel
 		{
 			throw new \Exception($this->db->getError());
 		}
-		
+
 		$context = $this->option . '.' . $this->name;
 
 		// Trigger the onContentChangeState event.

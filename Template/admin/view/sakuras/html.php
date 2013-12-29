@@ -122,9 +122,9 @@ class FlowerViewSakurasHtml extends HtmlView
 		if ($canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
-			JToolBarHelper::publish($this->list_name . '.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublish($this->list_name . '.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolbarHelper::checkin($this->list_name . '.checkin');
+			JToolBarHelper::publish($this->list_name . '.state.publish', 'JTOOLBAR_PUBLISH', true);
+			JToolBarHelper::unpublish($this->list_name . '.state.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			JToolbarHelper::checkin($this->list_name . '.check.checkin');
 
 			JToolBarHelper::divider();
 		}
