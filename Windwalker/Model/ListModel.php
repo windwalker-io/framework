@@ -382,7 +382,7 @@ class ListModel extends FormModel
 
 				foreach ($filters as $name => $value)
 				{
-					if (in_array($name, $this->filterFields))
+					if (in_array($name, $this->filterFields) && $value)
 					{
 						$filterValue[$name] = $value;
 					}
@@ -407,7 +407,7 @@ class ListModel extends FormModel
 
 				foreach ($searches as $name => $value)
 				{
-					if (in_array($name, $this->filterFields))
+					if (in_array($name, $this->filterFields)  && $value)
 					{
 						$searchValue[$name] = $value;
 					}

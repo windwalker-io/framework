@@ -44,8 +44,6 @@ class SaveController extends AbstractItemController
 		$this->checkToken();
 
 		parent::prepareExecute();
-
-
 	}
 
 	/**

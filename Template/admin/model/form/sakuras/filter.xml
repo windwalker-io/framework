@@ -2,11 +2,11 @@
 <form>
 	<fields name="search">
 		<field name="field"
-			   type="list"
-			   default="title"
-			   label="JSEARCH_FILTER_LABEL"
-			   labelclass="pull-left"
-			   class="input-small"
+			type="list"
+			default="title"
+			label="JSEARCH_FILTER_LABEL"
+			labelclass="pull-left"
+			class="input-small"
 			>
 			<option value="*">JALL</option>
 			<option value="sakura.title">JGLOBAL_TITLE</option>
@@ -20,6 +20,7 @@
 			hint="JSEARCH_FILTER"
 			/>
 
+		<!-- For multiple search
 		<fieldset name="multisearch">
 			<field
 				name="sakura.title"
@@ -35,6 +36,7 @@
 				hint="JSEARCH_FILTER"
 				/>
 		</fieldset>
+		-->
 	</fields>
 
 	<!-- Filter -->
@@ -94,6 +96,7 @@
 			<option value="sakura.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="sakura.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>
+
 		<field
 			name="limit"
 			type="limitbox"

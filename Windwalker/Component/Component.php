@@ -125,8 +125,7 @@ class Component
 
 		// echo get_class($controller);
 
-		return $controller->setOption('com_' . strtolower($this->name))
-			->setContainer($this->container)
+		return $controller->setContainer($this->container)
 			->execute();
 	}
 

@@ -103,12 +103,16 @@ class ControllerHelper
 			}
 		}
 
-		/** @var $controller Controller */
-		$controller = new $controllerName($input, $app);
+		// Config
+		$config = array(
+			'prefix' => $prefix,
+			'name'   => $name,
+			'task'   => implode('.', $tasks),
+			'option' => 'com_' . strtolower($prefix)
+		);
 
-		$controller->setPrefix($prefix)
-			->setName(strtolower($name))
-			->setTask(implode('.', $tasks));
+		/** @var $controller Controller */
+		$controller = new $controllerName($input, $app, $config);
 
 		return $controller;
 	}

@@ -12,18 +12,18 @@ $data = $this->getData();
 
 // Init some API objects
 // ================================================================================
-$app = JFactory::getApplication();
-$date = JFactory::getDate('now', JFactory::getConfig()->get('offset'));
-$doc = JFactory::getDocument();
-$uri = JFactory::getURI();
-$user = JFactory::getUser();
+$app    = JFactory::getApplication();
+$date   = JFactory::getDate('now', JFactory::getConfig()->get('offset'));
+$doc    = JFactory::getDocument();
+$uri    = JFactory::getURI();
+$user   = JFactory::getUser();
 $userId = $user->get('id');
 
-$listOrder = $this->state->get('list.ordering');
-$listDirn = $this->state->get('list.direction');
-$orderCol = $this->state->get('list.orderCol', 'sakura.ordering');
+$listOrder = $data->state->get('list.ordering');
+$listDirn  = $data->state->get('list.direction');
+$orderCol  = $data->state->get('list.orderCol', 'sakura.ordering');
 $saveOrder = $listOrder == $orderCol;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
+$trashed   = $data->state->get('filter.published') == -2 ? true : false;
 ?>
 
 <!-- List Table -->
@@ -219,17 +219,17 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 
 		<!--PUBLISHED-->
 		<td class="center">
-			<?php echo JHtml::_('jgrid.published', $item->sakura_published, $i, 'sakuras.', $canChange, 'cb', $item->sakura_publish_up, $item->sakura_publish_down); ?>
+			<?php echo JHtml::_('jgrid.published', $item->sakura_published, $i, 'sakuras.state.', $canChange, 'cb', $item->sakura_publish_up, $item->sakura_publish_down); ?>
 		</td>
 
 		<!--CATEGORY-->
 		<td class="center">
-			<?php echo $item->category_title; ?>
+			<?php echo $this->escape($item->category_title); ?>
 		</td>
 
 		<!--ACCESS VIEW LEVEL-->
 		<td class="center">
-			<?php echo $item->viewlevel_title; ?>
+			<?php echo $this->escape($item->viewlevel_title); ?>
 		</td>
 
 		<!--CREATED-->
@@ -239,7 +239,7 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 
 		<!--USER-->
 		<td class="center">
-			<?php echo $item->user_name; ?>
+			<?php echo $this->escape($item->user_name); ?>
 		</td>
 
 		<!--LANGUAGE-->

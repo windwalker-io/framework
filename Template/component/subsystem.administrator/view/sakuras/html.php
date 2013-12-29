@@ -70,11 +70,11 @@ class FlowerViewSakurasHtml extends HtmlView
 		$data                = $this->getData();
 		$data->items         = $this->get('Items');
 		$data->pagination    = $this->get('Pagination');
-		$this->state         = $this->get('State');
+		$data->state         = $this->get('State');
 		$data->filterForm    = $this->get('FilterForm');
-		$data->activeFilters = $this->get('ActiveFilters');
+		// $data->activeFilters = $this->get('ActiveFilters');
 
-		if ($errors = $this->state->get('errors'))
+		if ($errors = $data->state->get('errors'))
 		{
 			$this->flash($errors);
 		}
@@ -83,7 +83,7 @@ class FlowerViewSakurasHtml extends HtmlView
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-			$this->sidebar = JHtmlSidebar::render();
+			$data->sidebar = JHtmlSidebar::render();
 		}
 
 		return parent::render();
@@ -97,7 +97,7 @@ class FlowerViewSakurasHtml extends HtmlView
 		$canDo        = FlowerHelper::getActions($this->option);
 		$user         = JFactory::getUser();
 
-		$filter_state = (array) $this->state->get('filter');
+		$filter_state = (array) $this->data->state->get('filter');
 
 		JToolbarHelper::title(JText::_($this->textPrefix . '_' . strtoupper($this->getName()) . '_TITLE'), 'stack article');
 
@@ -125,11 +125,6 @@ class FlowerViewSakurasHtml extends HtmlView
 			JToolBarHelper::publish($this->list_name . '.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish($this->list_name . '.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolbarHelper::checkin($this->list_name . '.checkin');
-
-			if ($this->state->get('items.nested'))
-			{
-				JToolBarHelper::custom($this->list_name . '.rebuild', 'refresh.png', 'refresh_f2.png', 'JTOOLBAR_REBUILD', false);
-			}
 
 			JToolBarHelper::divider();
 		}

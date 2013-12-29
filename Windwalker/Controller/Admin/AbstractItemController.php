@@ -58,6 +58,13 @@ abstract class AbstractItemController extends AbstractAdminController
 	protected $model;
 
 	/**
+	 * Property lang.
+	 *
+	 * @var
+	 */
+	protected $lang;
+
+	/**
 	 * Instantiate the controller.
 	 *
 	 * @param   \JInput           $input  The input object.
@@ -67,7 +74,21 @@ abstract class AbstractItemController extends AbstractAdminController
 	 */
 	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
 	{
-		parent::__construct($input, $app);
+		parent::__construct($input, $app, $config);
+
+		// Guess the item view as the context.
+		if (empty($this->viewItem))
+		{
+			$this->viewItem = $this->getName();
+		}
+
+		// Guess the list view as the plural of the item view.
+		if (empty($this->viewList))
+		{
+			$inflector = \JStringInflector::getInstance();
+
+			$this->viewList = $inflector->toPlural($this->viewItem);
+		}
 	}
 
 	/**
@@ -83,7 +104,7 @@ abstract class AbstractItemController extends AbstractAdminController
 		$this->model    = $this->getModel();
 		$this->table    = $this->model->getTable();
 		$this->data     = $this->input->post->get('jform', array(), 'array');
-		$this->context  = "$this->option.edit.$this->context";
+		$this->context  = $this->option . '.item.' . $this->task;
 
 		// Determine the name of the primary key for the data.
 		if (empty($key))

@@ -46,7 +46,7 @@ abstract class AbstractRedirectController extends Controller
 	 */
 	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
 	{
-		parent::__construct($input, $app);
+		parent::__construct($input, $app, $config);
 
 		if (!empty($config['allow_url_params']) && is_array($config['allow_url_params']))
 		{
@@ -62,20 +62,6 @@ abstract class AbstractRedirectController extends Controller
 	protected function prepareExecute()
 	{
 		parent::prepareExecute();
-
-		// Guess the item view as the context.
-		if (empty($this->viewItem))
-		{
-			$this->viewItem = $this->getName();
-		}
-
-		// Guess the list view as the plural of the item view.
-		if (empty($this->viewList))
-		{
-			$inflector = \JStringInflector::getInstance();
-
-			$this->viewList = $inflector->toPlural($this->viewItem);
-		}
 	}
 
 	/**

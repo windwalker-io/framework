@@ -26,42 +26,42 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	 * @var    \JApplicationCms
 	 * @since  12.1
 	 */
-	protected $app;
+	protected $app = null;
 
 	/**
 	 * Prefix for the view and model classes
 	 *
 	 * @var  string
 	 */
-	protected $prefix = '';
+	protected $prefix = null;
 
 	/**
 	 * Property option.
 	 *
 	 * @var string
 	 */
-	protected $option = '';
+	protected $option = null;
 
 	/**
 	 * Property name.
 	 *
 	 * @var string
 	 */
-	protected $name;
+	protected $name = null;
 
 	/**
 	 * Property componentPath.
 	 *
 	 * @var string
 	 */
-	protected $componentPath = '';
+	protected $componentPath = null;
 
 	/**
 	 * Property reflection.
 	 *
 	 * @var \ReflectionClass
 	 */
-	protected $reflection;
+	protected $reflection = null;
 
 	/**
 	 * Property task.
@@ -85,8 +85,28 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	 *
 	 * @since  12.1
 	 */
-	public function __construct(\JInput $input = null, \JApplicationCms $app = null)
+	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
 	{
+		if (!$this->prefix && !empty($config['prefix']))
+		{
+			$this->prefix = $config['prefix'];
+		}
+
+		if (!$this->option && !empty($config['option']))
+		{
+			$this->option = $config['option'];
+		}
+
+		if (!$this->name && !empty($config['name']))
+		{
+			$this->name = $config['name'];
+		}
+
+		if (!$this->task && !empty($config['task']))
+		{
+			$this->task = $config['task'];
+		}
+
 		parent::__construct($input, $app);
 	}
 

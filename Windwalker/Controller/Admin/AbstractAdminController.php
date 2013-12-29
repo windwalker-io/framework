@@ -8,8 +8,6 @@
 
 namespace Windwalker\Controller\Admin;
 
-use Windwalker\Controller\Controller;
-
 /**
  * Class AdminController
  *
@@ -33,6 +31,13 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	protected $user = null;
 
 	/**
+	 * Property textPrefix.
+	 *
+	 * @var string
+	 */
+	protected $textPrefix = null;
+
+	/**
 	 * Instantiate the controller.
 	 *
 	 * @param   \JInput          $input  The input object.
@@ -44,10 +49,11 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	 */
 	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
 	{
-		parent::__construct($input, $app);
+		parent::__construct($input, $app, $config);
 
-		$this->user    = \JFactory::getUser();
-		$this->context = $this->input->get('task', $this->input->get('controller'));
+		$this->user       = \JFactory::getUser();
+		$this->context    = $this->option . '.' . $this->task;
+		$this->textPrefix = strtoupper($this->option);
 	}
 
 	/**
@@ -110,5 +116,18 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	protected function allowEdit($data = array(), $key = 'id')
 	{
 		return $this->user->authorise('core.edit', $this->option);
+	}
+
+	/**
+	 * allowEditState
+	 *
+	 * @param $record
+	 * @param $key
+	 *
+	 * @return boolean
+	 */
+	protected function allowEditState($data = array())
+	{
+		return $this->user->authorise('core.edit.state', $this->option);
 	}
 }
