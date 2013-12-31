@@ -5,6 +5,8 @@ defined('JPATH_BASE') or die;
 $data = $displayData['view'];
 
 $textPrefix = JArrayHelper::getValue($displayData, 'text_prefix', 'LIB_WINDWALKER');
+
+$task = JArrayHelper::getValue($displayData, 'task_prefix', '');
 ?>
 
 <div class="modal hide fade" id="batchModal">
@@ -30,7 +32,7 @@ $textPrefix = JArrayHelper::getValue($displayData, 'text_prefix', 'LIB_WINDWALKE
 		<button class="btn" type="button" onclick="var inputs = jQuery('#batchModal input, #batchModal select, #batchModal textarea');inputs.attr('value', '');inputs.trigger('liszt:updated');" data-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
-		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('sakura.batch');">
+		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton(jQuery('#batch_task input[checked]').attr('value'));">
 			<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
 		</button>
 	</div>

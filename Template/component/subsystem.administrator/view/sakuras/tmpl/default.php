@@ -30,7 +30,7 @@ $originalOrders= [];
 
 			<?php echo $this->loadTemplate('table'); ?>
 
-			<?php echo (new FileLayout('joomla.batchtools.modal'))->render(array('view' => $this->data)); ?>
+			<?php echo (new FileLayout('joomla.batchtools.modal'))->render(array('view' => $this->data, 'task_prefix' => 'sakuras.')); ?>
 
 			<!-- Hidden Inputs -->
 			<div id="hidden-inputs">

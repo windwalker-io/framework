@@ -56,16 +56,16 @@
 			<option value="1">JLIB_HTML_ADD_TO_ROOT</option>
 		</field>
 
-		<field name="move_copy"
+		<field name="task"
 			type="radio"
 			label="JLIB_RULES_ACTION"
 			description=""
 			labelclass="control-label"
 			class="combo btn-group"
-			default="m"
+			default="sakuras.batch.move"
 			>
-			<option value="m">JLIB_HTML_BATCH_MOVE</option>
-			<option value="c">JLIB_HTML_BATCH_COPY</option>
+			<option value="sakuras.batch.move">JLIB_HTML_BATCH_MOVE</option>
+			<option value="sakuras.batch.copy">JLIB_HTML_BATCH_COPY</option>
 		</field>
 	</fields>
 </form>
