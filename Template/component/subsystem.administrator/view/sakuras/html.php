@@ -129,13 +129,13 @@ class FlowerViewSakurasHtml extends HtmlView
 			JToolBarHelper::divider();
 		}
 
-		if ((JArrayHelper::getValue($filter_state, 'a.published') == -2 && $canDo->get('core.delete')) || $this->get('no_trash') || AKDEBUG)
+		// if ((JArrayHelper::getValue($filter_state, 'a.published') == -2 && $canDo->get('core.delete')) || $this->get('no_trash') || AKDEBUG)
 		{
-			JToolbarHelper::deleteList(JText::_('LIB_WINDWALKER_TOOLBAR_CONFIRM_DELETE'), $this->list_name . '.delete');
+			JToolbarHelper::deleteList(JText::_('LIB_WINDWALKER_TOOLBAR_CONFIRM_DELETE'), $this->list_name . '.state.delete');
 		}
-		elseif ($canDo->get('core.edit.state'))
+		// elseif ($canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::trash($this->list_name . '.trash');
+			JToolbarHelper::trash($this->list_name . '.state.trash');
 		}
 
 		// Add a batch modal button

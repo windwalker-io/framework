@@ -269,9 +269,10 @@ class CrudModel extends FormModel
 	public function updateState($pks, $data = array())
 	{
 		$dispatcher = $this->getContainer()->get('event.dispatcher');
-		$query = $this->db->getQuery(true);
-		$table = $this->getTable();
-		$pks   = (array) $pks;
+		$errors  = array();
+		$success = 0;
+		$table   = $this->getTable();
+		$pks     = (array) $pks;
 
 		if (!count($pks))
 		{
@@ -297,9 +298,16 @@ class CrudModel extends FormModel
 			// Do save
 			if (!$table->store())
 			{
-				$this->state->set('error.message', $table->getError());
+				$errors[] = $table->getError();
+
+				continue;
 			}
+
+			$success++;
 		}
+
+		$this->state->set('error.message',  $errors);
+		$this->state->set('success.number', $success);
 
 		$context = $this->option . '.' . $this->name;
 
@@ -324,8 +332,10 @@ class CrudModel extends FormModel
 	public function delete(&$pks)
 	{
 		$dispatcher = $this->getContainer()->get('event.dispatcher');
-		$pks   = (array) $pks;
-		$table = $this->getTable();
+		$errors  = array();
+		$success = 0;
+		$pks     = (array) $pks;
+		$table   = $this->getTable();
 
 		// Include the content plugins for the on delete events.
 		\JPluginHelper::importPlugin('content');
@@ -333,31 +343,40 @@ class CrudModel extends FormModel
 		// Iterate the items to delete each one.
 		foreach ($pks as $i => $pk)
 		{
-			if ($table->load($pk))
+			if (!$table->load($pk))
 			{
-				$context = $this->option . '.' . $this->name;
+				$errors[] = $table->getError();
 
-				// Trigger the onContentBeforeDelete event.
-				$result = $dispatcher->trigger($this->eventBeforeDelete, array($context, $table));
-
-				if (in_array(false, $result, true))
-				{
-					throw new \Exception($table->getError());
-				}
-
-				if (!$table->delete($pk))
-				{
-					throw new \Exception($table->getError());
-				}
-
-				// Trigger the onContentAfterDelete event.
-				$dispatcher->trigger($this->eventAfterDelete, array($context, $table));
+				continue;
 			}
-			else
+
+			$context = $this->option . '.' . $this->name;
+
+			// Trigger the onContentBeforeDelete event.
+			$result = $dispatcher->trigger($this->eventBeforeDelete, array($context, $table));
+
+			if (in_array(false, $result, true))
 			{
-				throw new \Exception($table->getError());
+				$errors[] = $table->getError();
+
+				continue;
 			}
+
+			if (!$table->delete($pk))
+			{
+				$errors[] = $table->getError();
+
+				continue;
+			}
+
+			// Trigger the onContentAfterDelete event.
+			$dispatcher->trigger($this->eventAfterDelete, array($context, $table));
+
+			$success++;
 		}
+
+		$this->state->set('error.message',  $errors);
+		$this->state->set('success.number', $success);
 
 		// Clear the component's cache
 		$this->cleanCache();

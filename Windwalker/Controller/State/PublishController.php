@@ -12,4 +12,11 @@ class PublishController extends AbstractUpdateStateController
 	protected $stateData = array(
 		'published' => 1
 	);
+
+	/**
+	 * Property actionText.
+	 *
+	 * @var string
+	 */
+	protected $actionText = 'PUBLISHED';
 }

@@ -3,11 +3,11 @@
 namespace Windwalker\Controller\State;
 
 /**
- * Class UnpublishController
+ * Class TrashController
  *
  * @since 1.0
  */
-class UnpublishController extends AbstractUpdateStateController
+class TrashController extends AbstractUpdateStateController
 {
 	/**
 	 * Property stateData.
@@ -15,7 +15,7 @@ class UnpublishController extends AbstractUpdateStateController
 	 * @var string
 	 */
 	protected $stateData = array(
-		'published' => '0'
+		'published' => '-2'
 	);
 
 	/**
@@ -23,5 +23,5 @@ class UnpublishController extends AbstractUpdateStateController
 	 *
 	 * @var string
 	 */
-	protected $actionText = 'UNPUBLISHED';
+	protected $actionText = 'TRASHED';
 }

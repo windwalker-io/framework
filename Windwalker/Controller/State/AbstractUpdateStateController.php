@@ -19,6 +19,13 @@ abstract class AbstractUpdateStateController extends AbstractListController
 	protected $stateData = array();
 
 	/**
+	 * Property actionText.
+	 *
+	 * @var string
+	 */
+	protected $actionText = 'STATE_CHANGED';
+
+	/**
 	 * prepareExecute
 	 *
 	 * @throws \LogicException
@@ -31,6 +38,11 @@ abstract class AbstractUpdateStateController extends AbstractListController
 		if (!$this->stateData)
 		{
 			throw new \LogicException('You have to set state name in controller.');
+		}
+
+		if (empty($this->cid))
+		{
+			throw new \InvalidArgumentException(\JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 500);
 		}
 	}
 
@@ -68,15 +80,10 @@ abstract class AbstractUpdateStateController extends AbstractListController
 	/**
 	 * doUpdate
 	 *
-	 * @return void
+	 * @return boolean
 	 */
 	public function doUpdate()
 	{
-		if (empty($this->cid))
-		{
-			throw new \InvalidArgumentException(\JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 500);
-		}
-
 		$pks = $this->cid;
 
 		foreach ($pks as $i => $pk)
@@ -102,8 +109,17 @@ abstract class AbstractUpdateStateController extends AbstractListController
 			}
 		}
 
-		// Check in the items.
-		$this->setMessage(\JText::plural($this->option . '_N_ITEMS_PUBLISHED', $this->model->updateState($pks, $this->stateData)));
+		if (!$this->model->updateState($pks, $this->stateData))
+		{
+			return false;
+		}
+
+		$errors = $this->model->getState()->get('error.message');
+
+		if (count($errors))
+		{
+			$this->setMessage(implode('<br />', $errors));
+		}
 	}
 
 	/**
@@ -115,7 +131,10 @@ abstract class AbstractUpdateStateController extends AbstractListController
 	 */
 	protected function postExecute($return = null)
 	{
-		$this->app->redirect(\JRoute::_($this->getRedirectListUrl(), false));
+		// Check in the items.
+		$this->setMessage(\JText::plural($this->option . '_N_ITEMS_' . $this->actionText, $this->model->getState()->get('success.number')));
+
+		$this->redirectToList();
 
 		return $return;
 	}
