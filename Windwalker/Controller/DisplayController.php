@@ -46,7 +46,7 @@ class DisplayController extends Controller
 	 *
 	 * @return  mixed  A rendered view or true
 	 */
-	public function doExecute()
+	protected function doExecute()
 	{
 		// Get some data.
 		$document   = \JFactory::getDocument();

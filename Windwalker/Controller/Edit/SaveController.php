@@ -51,7 +51,7 @@ class SaveController extends AbstractItemController
 	 *
 	 * @return mixed
 	 */
-	public function doExecute()
+	protected function doExecute()
 	{
 		try
 		{

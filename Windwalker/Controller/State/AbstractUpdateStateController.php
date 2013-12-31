@@ -12,18 +12,11 @@ use Windwalker\Controller\Admin\AbstractListController;
 abstract class AbstractUpdateStateController extends AbstractListController
 {
 	/**
-	 * Property stateName.
+	 * Property stateData.
 	 *
 	 * @var string
 	 */
-	protected $stateName = null;
-
-	/**
-	 * Property stateValue.
-	 *
-	 * @var mixed
-	 */
-	protected $stateValue = null;
+	protected $stateData = array();
 
 	/**
 	 * prepareExecute
@@ -35,9 +28,9 @@ abstract class AbstractUpdateStateController extends AbstractListController
 	{
 		parent::prepareExecute();
 
-		if (!$this->stateName)
+		if (!$this->stateData)
 		{
-			throw new \LogicException('You have set state name in controller.');
+			throw new \LogicException('You have to set state name in controller.');
 		}
 	}
 
@@ -46,7 +39,7 @@ abstract class AbstractUpdateStateController extends AbstractListController
 	 *
 	 * @return mixed
 	 */
-	public function doExecute()
+	protected function doExecute()
 	{
 		try
 		{
@@ -83,36 +76,34 @@ abstract class AbstractUpdateStateController extends AbstractListController
 		{
 			throw new \InvalidArgumentException(\JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 500);
 		}
-		else
+
+		$pks = $this->cid;
+
+		foreach ($pks as $i => $pk)
 		{
-			$pks = $this->cid;
+			$this->table->reset();
 
-			foreach ($pks as $i => $pk)
+			if ($this->table->load($pk))
 			{
-				$this->table->reset();
-
-				if ($this->table->load($pk))
+				if (!$pk)
 				{
-					if (!$pk)
-					{
-						unset($pks[$i]);
+					unset($pks[$i]);
 
-						continue;
-					}
+					continue;
+				}
 
-					if (!$this->allowEditState($this->table->getProperties(true)))
-					{
-						// Prune items that you can't change.
-						unset($pks[$i]);
+				if (!$this->allowEditState($this->table->getProperties(true)))
+				{
+					// Prune items that you can't change.
+					unset($pks[$i]);
 
-						$this->app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-					}
+					$this->app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 				}
 			}
-
-			// Check in the items.
-			$this->app->enqueueMessage(\JText::plural($this->option . '_N_ITEMS_PUBLISHED', $this->model->updateState($pks, $this->stateName,$this->stateValue)));
 		}
+
+		// Check in the items.
+		$this->app->enqueueMessage(\JText::plural($this->option . '_N_ITEMS_PUBLISHED', $this->model->updateState($pks, $this->stateData)));
 	}
 
 	/**

@@ -74,9 +74,9 @@ abstract class AbstractRedirectController extends Controller
 	 *
 	 * @return void
 	 */
-	public function redirectToItem($recordId = null, $urlVar = 'id', $msg = null, $type = null)
+	public function redirectToItem($recordId = null, $urlVar = 'id', $msg = null, $type = 'message')
 	{
-		$this->app->redirect(\JRoute::_($this->getRedirectItemUrl($recordId, $urlVar), false), $msg, $type);
+		$this->redirect(\JRoute::_($this->getRedirectItemUrl($recordId, $urlVar), false), $msg, $type);
 	}
 
 	/**
@@ -87,11 +87,11 @@ abstract class AbstractRedirectController extends Controller
 	 *
 	 * @return void
 	 */
-	public function redirectToList($msg = null, $type = null)
+	public function redirectToList($msg = null, $type = 'message')
 	{
 		$this->input->set('layout', null);
 
-		$this->app->redirect(\JRoute::_($this->getRedirectListUrl(), false), $msg, $type);
+		$this->redirect(\JRoute::_($this->getRedirectListUrl(), false), $msg, $type);
 	}
 
 	/**
@@ -101,11 +101,16 @@ abstract class AbstractRedirectController extends Controller
 	 * @param   string $msg  Message to display on redirect. Optional, defaults to value set internally by controller, if any.
 	 * @param   string $type Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
 	 *
-	 * @return  \JController  This object to support chaining.
+	 * @return  void
 	 */
-	public function redirect($url, $msg = null, $type = null)
+	public function redirect($url, $msg = null, $type = 'message')
 	{
-		$this->app->redirect($url, $msg, $type);
+		$this->app->enqueueMessage($msg, $type);
+
+		if (!$this->input->get('hmvc'))
+		{
+			$this->app->redirect($url);
+		}
 	}
 
 	/**

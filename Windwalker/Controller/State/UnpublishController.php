@@ -2,19 +2,19 @@
 
 namespace Windwalker\Controller\State;
 
+/**
+ * Class UnpublishController
+ *
+ * @since 1.0
+ */
 class UnpublishController extends AbstractUpdateStateController
 {
 	/**
-	 * Property stateName.
+	 * Property stateData.
 	 *
 	 * @var string
 	 */
-	protected $stateName = 'published';
-
-	/**
-	 * Property stateValue.
-	 *
-	 * @var mixed
-	 */
-	protected $stateValue = 0;
+	protected $stateData = array(
+		'published' => '0'
+	);
 }

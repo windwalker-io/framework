@@ -8,6 +8,8 @@
 
 namespace Windwalker\Controller\Admin;
 
+use Windwalker\Table\Table;
+
 /**
  * Class AbstractAdminController
  *
@@ -18,28 +20,28 @@ abstract class AbstractListController extends AbstractAdminController
 	/**
 	 * Property table.
 	 *
-	 * @var
+	 * @var Table
 	 */
 	protected $table;
 
 	/**
 	 * Property model.
 	 *
-	 * @var
+	 * @var \JModel
 	 */
 	protected $model;
 
 	/**
 	 * Property lang.
 	 *
-	 * @var
+	 * @var \JLanguage
 	 */
 	protected $lang;
 
 	/**
 	 * Property cid.
 	 *
-	 * @var
+	 * @var int[]
 	 */
 	protected $cid;
 
@@ -81,8 +83,8 @@ abstract class AbstractListController extends AbstractAdminController
 
 		$this->lang     = \JFactory::getLanguage();
 		$this->model    = $this->getModel($this->viewItem);
-		$this->table    = $this->model->getTable(ucfirst($this->viewItem));
-		$this->cid      = $this->input->post->get('cid', array(), 'array');
+		$this->table    = $this->model->getTable();
+		$this->cid      = $this->input->get('cid', array(), 'array');
 		$this->context  = $this->option . '.state.' . $this->context;
 	}
 }

@@ -27,7 +27,7 @@ class CancelController extends AbstractItemController
 	 *
 	 * @since   3.2
 	 */
-	public function doExecute()
+	protected function doExecute()
 	{
 		// Attempt to check-in the current record.
 		if ($this->recordId && property_exists($this->table, 'checked_out'))

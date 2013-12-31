@@ -9,6 +9,7 @@
 
 namespace Windwalker\Controller;
 
+use Windwalker\Controller\Helper\ControllerHelper;
 use Windwalker\DI\Container;
 use Joomla\DI\Container as JoomlaContainer;
 use Joomla\DI\ContainerAwareInterface;
@@ -138,7 +139,7 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	 *
 	 * @return mixed
 	 */
-	abstract public function doExecute();
+	abstract protected function doExecute();
 
 	/**
 	 * postExecute
@@ -150,6 +151,40 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	protected function postExecute($data = null)
 	{
 		return $data;
+	}
+
+	/**
+	 * Fetch HMVC result.
+	 *
+	 * @param string        $prefix
+	 * @param string        $name
+	 * @param \JInput|array $input
+	 *
+	 * @return mixed
+	 */
+	public function fetch($prefix, $name, $input = null)
+	{
+		if (!($input instanceof \JInput))
+		{
+			$newInput = new \JInput($_REQUEST);
+
+			foreach ($input as $field => $value)
+			{
+				$newInput->set($field, $value);
+			}
+
+			$input = $newInput;
+		}
+
+		$input->set('task', $name);
+		$input->set('hmvc', true);
+
+		$controller = ControllerHelper::getController($prefix, $input, $this->app);
+
+		$controller->setComponentPath($this->componentPath);
+
+		return $controller->setContainer($this->container)
+			->execute();
 	}
 
 	/**

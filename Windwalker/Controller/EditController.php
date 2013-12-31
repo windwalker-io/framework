@@ -16,7 +16,7 @@ class EditController extends AbstractItemController
 	 *
 	 * @return mixed
 	 */
-	public function doExecute()
+	protected function doExecute()
 	{
 		$cid = $this->input->post->get('cid', array(), 'array');
 
@@ -35,29 +35,15 @@ class EditController extends AbstractItemController
 		}
 
 		// Attempt to check-out the new record for editing and redirect.
-		$checkin = property_exists($this->table, 'checked_out');
-
-		if ($checkin)
-		{
-			try
-			{
-				$this->model->checkout($recordId);
-			}
-			catch (\Exception $e)
-			{
-				// Check-out failed, display a notice but allow the user to see the record.
-				$this->app->enqueueMessage(\JText::sprintf('JLIB_APPLICATION_ERROR_CHECKOUT_FAILED', $e->getMessage()), 'error');
-
-				$this->redirectToList();
-			}
-		}
+		$this->fetch($this->prefix, strtolower($this->viewList) . '.check.checkout', array('cid' => array($recordId)));
 
 		// Check-out succeeded, push the new record id into the session.
 		$this->holdEditId($this->context, $recordId);
+
 		$this->app->setUserState($this->context . '.data', null);
 
 		$this->input->set('layout', 'edit');
 
-		$this->redirect(\JRoute::_($this->getRedirectItemUrl($recordId, $this->urlVar), false));
+		$this->redirectToItem($recordId, $this->urlVar);
 	}
 }

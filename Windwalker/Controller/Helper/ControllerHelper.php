@@ -41,7 +41,7 @@ class ControllerHelper
 	 */
 	public static function getController($prefix, $input, $app)
 	{
-		if ($controllerTask = $app->input->get('controller'))
+		if ($controllerTask = $input->get('controller'))
 		{
 			// Temporary solution
 			if (strpos($controllerTask, '/') !== false)
@@ -56,7 +56,7 @@ class ControllerHelper
 		else
 		{
 			// Checking for old MVC task
-			$task = $app->input->get('task');
+			$task = $input->get('task');
 
 			// Toolbar expects old style but we are using new style
 			// Remove when toolbar can handle either directly

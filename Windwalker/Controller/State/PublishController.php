@@ -5,16 +5,11 @@ namespace Windwalker\Controller\State;
 class PublishController extends AbstractUpdateStateController
 {
 	/**
-	 * Property stateName.
+	 * Property stateData.
 	 *
 	 * @var string
 	 */
-	protected $stateName = 'published';
-
-	/**
-	 * Property stateValue.
-	 *
-	 * @var mixed
-	 */
-	protected $stateValue = 1;
+	protected $stateData = array(
+		'published' => 1
+	);
 }
