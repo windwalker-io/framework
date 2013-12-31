@@ -207,4 +207,17 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	{
 		return $this->user->authorise('core.edit', $this->option);
 	}
+
+	/**
+	 * If category need authorize, we can write in this method.
+	 *
+	 * @param array  $data  Category record.
+	 * @param string $key   Preimary key name.
+	 *
+	 * @return  boolean Can edit or not.
+	 */
+	public function allowCategoryAdd($data, $key = 'catid')
+	{
+		return $this->user->authorise('core.create', $this->option . '.category.' . $data[$key]);
+	}
 }

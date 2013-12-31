@@ -2,7 +2,6 @@
 
 namespace Windwalker\Controller\Batch;
 
-use Windwalker\Controller\Admin\AbstractAdminController;
 use Windwalker\Controller\Admin\AbstractListController;
 
 /**
@@ -10,7 +9,7 @@ use Windwalker\Controller\Admin\AbstractListController;
  *
  * @since 1.0
  */
-class AbstractBatchController extends AbstractListController
+abstract class AbstractBatchController extends AbstractListController
 {
 	/**
 	 * Property batch.
@@ -25,6 +24,13 @@ class AbstractBatchController extends AbstractListController
 	 * @var boolean
 	 */
 	protected $done = false;
+
+	/**
+	 * Property categoryKey.
+	 *
+	 * @var string
+	 */
+	protected $categoryKey = 'catid';
 
 	/**
 	 * prepareExecute
@@ -66,7 +72,7 @@ class AbstractBatchController extends AbstractListController
 
 			$result = $this->doBatch();
 
-			$this->postBatch($result);
+			$result = $this->postBatch($result);
 
 			$db->transactionCommit();
 		}
@@ -76,14 +82,16 @@ class AbstractBatchController extends AbstractListController
 
 			$db->transactionRollback();
 
-			$result = false;
+			$this->redirectToList();
+
+			return false;
 		}
 
 		$this->setMessage(\JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
 
 		$this->redirectToList();
 
-		return $result;
+		return true;
 	}
 
 	/**
@@ -108,12 +116,11 @@ class AbstractBatchController extends AbstractListController
 			{
 				continue;
 			}
+
 			$data = $this->batch;
 
-			$data[$this->urlVar] = $pk;
-
 			// Start Batch Process
-			$result[] = $this->save($data);
+			$result[] = $this->save($pk, $data);
 		}
 
 		return $result;
@@ -122,19 +129,12 @@ class AbstractBatchController extends AbstractListController
 	/**
 	 * save
 	 *
-	 * @param $data
+	 * @param int   $pk
+	 * @param array $data
 	 *
-	 * @return bool
+	 * @return mixed
 	 */
-	protected function save($data)
-	{
-		if (!$this->allowEdit($data, $this->urlVar))
-		{
-			return false;
-		}
-
-		return $this->model->save($data);
-	}
+	abstract protected function save($pk, $data);
 
 	/**
 	 * prepareBatch
@@ -143,6 +143,11 @@ class AbstractBatchController extends AbstractListController
 	 */
 	protected function prepareBatch()
 	{
+		// Category Access
+		if (in_array($this->categoryKey, $this->batch) && !$this->allowCategoryAdd($this->batch, $this->categoryKey))
+		{
+			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+		}
 	}
 
 	/**
@@ -162,8 +167,10 @@ class AbstractBatchController extends AbstractListController
 		if (!in_array(true, $result, true))
 		{
 			$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+
+			return false;
 		}
 
-		return $result;
+		return true;
 	}
 }

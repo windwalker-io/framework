@@ -32,7 +32,7 @@ $task = JArrayHelper::getValue($displayData, 'task_prefix', '');
 		<button class="btn" type="button" onclick="var inputs = jQuery('#batchModal input, #batchModal select, #batchModal textarea');inputs.attr('value', '');inputs.trigger('liszt:updated');" data-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
-		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton(jQuery('#batch_task input[checked]').attr('value'));">
+		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton(jQuery('input:radio:checked[name=\'batch[task]\']').attr('value'));">
 			<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
 		</button>
 	</div>
