@@ -116,7 +116,7 @@ class FlowerViewSakurasHtml extends HtmlView
 
 		if ($canDo->get('core.create'))
 		{
-			JToolBarHelper::custom($this->list_name . '.duplicate', 'copy.png', 'copy_f2.png', 'JTOOLBAR_DUPLICATE', true);
+			JToolBarHelper::custom($this->list_name . '.batch.copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_DUPLICATE', true);
 		}
 
 		if ($canDo->get('core.edit.state'))

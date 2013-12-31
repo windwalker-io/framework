@@ -69,6 +69,9 @@ class CheckoutController extends AbstractListController
 	/**
 	 * allowEdit
 	 *
+	 * @param array  $data
+	 * @param string $key
+	 *
 	 * @return bool
 	 */
 	protected function allowEdit($data = array(), $key = 'id')

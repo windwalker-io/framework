@@ -39,11 +39,6 @@ abstract class AbstractUpdateStateController extends AbstractListController
 		{
 			throw new \LogicException('You have to set state name in controller.');
 		}
-
-		if (empty($this->cid))
-		{
-			throw new \InvalidArgumentException(\JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 500);
-		}
 	}
 
 	/**
@@ -69,7 +64,7 @@ abstract class AbstractUpdateStateController extends AbstractListController
 		{
 			$this->setMessage($e->getMessage(), 'error');
 
-			$this->app->redirect(\JRoute::_($this->getRedirectListUrl(), false));
+			$this->redirectToList();
 
 			return false;
 		}
@@ -80,10 +75,16 @@ abstract class AbstractUpdateStateController extends AbstractListController
 	/**
 	 * doUpdate
 	 *
+	 * @throws \InvalidArgumentException
 	 * @return boolean
 	 */
 	public function doUpdate()
 	{
+		if (empty($this->cid))
+		{
+			throw new \InvalidArgumentException(\JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 500);
+		}
+
 		$pks = $this->cid;
 
 		foreach ($pks as $i => $pk)
@@ -139,10 +140,22 @@ abstract class AbstractUpdateStateController extends AbstractListController
 		return $return;
 	}
 
+	/**
+	 * preUpdateHook
+	 *
+	 * @return void
+	 */
 	protected function preUpdateHook()
 	{
 	}
 
+	/**
+	 * postUpdateHook
+	 *
+	 * @param $model
+	 *
+	 * @return void
+	 */
 	protected function postUpdateHook($model)
 	{
 	}

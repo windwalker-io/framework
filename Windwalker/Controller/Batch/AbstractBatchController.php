@@ -68,11 +68,11 @@ abstract class AbstractBatchController extends AbstractListController
 		{
 			$db->transactionStart();
 
-			$this->prepareBatch();
+			$this->preBatchHook();
 
 			$result = $this->doBatch();
 
-			$result = $this->postBatch($result);
+			$result = $this->postBatchHook($result);
 
 			$db->transactionCommit();
 		}
@@ -87,11 +87,7 @@ abstract class AbstractBatchController extends AbstractListController
 			return false;
 		}
 
-		$this->setMessage(\JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
-
-		$this->redirectToList();
-
-		return true;
+		return $result;
 	}
 
 	/**
@@ -104,6 +100,12 @@ abstract class AbstractBatchController extends AbstractListController
 		if (!count($this->cid))
 		{
 			throw new \Exception(\JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+		}
+
+		// Category Access
+		if (in_array($this->categoryKey, $this->batch) && !$this->allowCategoryAdd($this->batch, $this->categoryKey))
+		{
+			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 		}
 
 		$pks = array_unique($this->cid);
@@ -137,27 +139,13 @@ abstract class AbstractBatchController extends AbstractListController
 	abstract protected function save($pk, $data);
 
 	/**
-	 * prepareBatch
+	 * postExecute
 	 *
-	 * @return void
-	 */
-	protected function prepareBatch()
-	{
-		// Category Access
-		if (in_array($this->categoryKey, $this->batch) && !$this->allowCategoryAdd($this->batch, $this->categoryKey))
-		{
-			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
-		}
-	}
-
-	/**
-	 * postBatch
-	 *
-	 * @param $result
+	 * @param  null $result
 	 *
 	 * @return mixed
 	 */
-	protected function postBatch($result)
+	protected function postExecute($result = null)
 	{
 		if (!is_array($result))
 		{
@@ -171,6 +159,31 @@ abstract class AbstractBatchController extends AbstractListController
 			return false;
 		}
 
+		$this->setMessage(\JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
+
+		$this->redirectToList();
+
 		return true;
+	}
+
+	/**
+	 * prepareBatch
+	 *
+	 * @return void
+	 */
+	protected function preBatchHook()
+	{
+	}
+
+	/**
+	 * postBatch
+	 *
+	 * @param $result
+	 *
+	 * @return mixed
+	 */
+	protected function postBatchHook($result)
+	{
+		return $result;
 	}
 }

@@ -28,10 +28,16 @@ class DeleteController extends AbstractUpdateStateController
 	/**
 	 * doUpdate
 	 *
+	 * @throws \InvalidArgumentException
 	 * @return boolean
 	 */
 	public function doUpdate()
 	{
+		if (empty($this->cid))
+		{
+			throw new \InvalidArgumentException(\JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 500);
+		}
+
 		$pks = $this->cid;
 
 		foreach ($pks as $i => $pk)
