@@ -72,7 +72,7 @@ class FlowerViewSakurasHtml extends HtmlView
 		$data->pagination    = $this->get('Pagination');
 		$data->state         = $this->get('State');
 		$data->filterForm    = $this->get('FilterForm');
-		// $data->activeFilters = $this->get('ActiveFilters');
+		$data->batchForm     = $this->get('BatchForm');
 
 		if ($errors = $data->state->get('errors'))
 		{
@@ -141,7 +141,7 @@ class FlowerViewSakurasHtml extends HtmlView
 		// Add a batch modal button
 		$batch = AKHelper::_('path.get', null, $this->option) . '/views/' . $this->list_name . '/tmpl/default_batch.php';
 
-		if ($canDo->get('core.edit') && JVERSION >= 3 && JFile::exists($batch))
+		if ($canDo->get('core.edit'))
 		{
 			AKToolbarHelper::modal('JTOOLBAR_BATCH', 'batchModal');
 		}

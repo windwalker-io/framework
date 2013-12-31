@@ -6,6 +6,8 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Windwalker\View\Layout\FileLayout;
+
 $listOrder = 'id';
 $listDirn = 'asc';
 $originalOrders= [];
@@ -24,9 +26,11 @@ $originalOrders= [];
 		<div id="j-main-container">
 		<?php endif;?>
 
-			<?php echo $this->loadTemplate('filter'); ?>
+			<?php echo (new FileLayout('joomla.searchtools.default'))->render(array('view' => $this->data)); ?>
 
 			<?php echo $this->loadTemplate('table'); ?>
+
+			<?php echo (new FileLayout('joomla.batchtools.modal'))->render(array('view' => $this->data)); ?>
 
 			<!-- Hidden Inputs -->
 			<div id="hidden-inputs">

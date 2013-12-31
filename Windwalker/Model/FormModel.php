@@ -82,27 +82,35 @@ abstract class FormModel extends AbstractAdvancedModel
 			return $this->forms[$hash];
 		}
 
-		// Get the form.
-		// Register the paths for the form
-		$paths = new \SplPriorityQueue;
-		$paths->insert(JPATH_COMPONENT . '/model/form', 'normal');
-		$paths->insert(JPATH_COMPONENT . '/model/field', 'normal');
-		$paths->insert(JPATH_COMPONENT . '/model/rule', 'normal');
-
-		// Legacy support to be removed in 4.0.
-		$paths->insert(JPATH_COMPONENT . '/models/forms', 'normal');
-		$paths->insert(JPATH_COMPONENT . '/models/fields', 'normal');
-		$paths->insert(JPATH_COMPONENT . '/models/rules', 'normal');
-
 		// Set Form paths
-		\JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
-		\JForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
-		\JForm::addFormPath(JPATH_COMPONENT . '/model/form');
-		\JForm::addFieldPath(JPATH_COMPONENT . '/model/field');
+		static $formLoaded;
 
-		// Set Form paths for Windwalker
-		\JForm::addFormPath(JPATH_COMPONENT . '/model/form/' . strtolower($this->getName()));
-		// \JForm::addFieldPath(JPATH_COMPONENT . '/model/field/' . strtolower($this->getName()));
+		if (!$formLoaded)
+		{
+			// Get the form.
+			// Register the paths for the form
+			$paths = new \SplPriorityQueue;
+			$paths->insert(JPATH_COMPONENT . '/model/form', 'normal');
+			$paths->insert(JPATH_COMPONENT . '/model/field', 'normal');
+			$paths->insert(JPATH_COMPONENT . '/model/rule', 'normal');
+
+			// Legacy support to be removed in 4.0.
+			$paths->insert(JPATH_COMPONENT . '/models/forms', 'normal');
+			$paths->insert(JPATH_COMPONENT . '/models/fields', 'normal');
+			$paths->insert(JPATH_COMPONENT . '/models/rules', 'normal');
+
+			\JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
+			\JForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
+			\JForm::addFormPath(JPATH_COMPONENT . '/model/form');
+			\JForm::addFieldPath(JPATH_COMPONENT . '/model/field');
+
+			// Set Form paths for Windwalker
+			\JForm::addFormPath(JPATH_COMPONENT . '/model/form/' . strtolower($this->getName()));
+
+			// \JForm::addFieldPath(JPATH_COMPONENT . '/model/field/' . strtolower($this->getName()));
+
+			$formLoaded = true;
+		}
 
 		try
 		{

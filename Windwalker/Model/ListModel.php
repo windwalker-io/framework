@@ -50,7 +50,7 @@ class ListModel extends FormModel
 	 * @var    string
 	 * @since  3.2
 	 */
-	protected $filterFormName = null;
+	protected $formPath = null;
 
 	/**
 	 * Associated HTML form
@@ -278,49 +278,24 @@ class ListModel extends FormModel
 	 *
 	 * @since   3.2
 	 */
-	public function getFilterForm($data = array(), $loadData = true)
+	public function getBatchForm($data = array(), $loadData = false)
 	{
-		$form = null;
-
-		// Try to locate the filter form automatically. Example: ContentModelArticles => "filter_articles"
-		if (empty($this->filterFormName))
-		{
-			$this->filterFormName = strtolower($this->getName());
-		}
-
-		\JForm::addFormPath($this->filterFormName);
-
-		if (!empty($this->filterFormName))
-		{
-			// Get the form.
-			$form = $this->loadForm($this->context . '.filter', 'filter', array('control' => '', 'load_data' => $loadData));
-		}
-
-		return $form;
+		return $this->loadForm($this->context . '.batch', 'batch', array('control' => '', 'load_data' => $loadData));
 	}
 
 	/**
-	 * Function to get the active filters
+	 * Get the filter form
 	 *
-	 * @return  array  Associative array in the format: array('filter_published' => 0)
+	 * @param   array    $data      data
+	 * @param   boolean  $loadData  load current data
+	 *
+	 * @return  \JForm|false  the JForm object or false
 	 *
 	 * @since   3.2
 	 */
-	public function getActiveFilters()
+	public function getFilterForm($data = array(), $loadData = true)
 	{
-		$activeFilters = array();
-
-		$filters = (array) $this->state->get('filter');
-
-		foreach ($filters as $name => $value)
-		{
-			if (in_array($name, $this->filterFields) && $value !== '')
-			{
-				$activeFilters[$name] = $value;
-			}
-		}
-
-		return $activeFilters;
+		return $this->loadForm($this->context . '.filter', 'filter', array('control' => '', 'load_data' => $loadData));
 	}
 
 	/**
@@ -382,7 +357,7 @@ class ListModel extends FormModel
 
 				foreach ($filters as $name => $value)
 				{
-					if (in_array($name, $this->filterFields) && $value)
+					if (in_array($name, $this->filterFields) && $value !== '')
 					{
 						$filterValue[$name] = $value;
 					}
