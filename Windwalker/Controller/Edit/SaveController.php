@@ -63,7 +63,7 @@ class SaveController extends AbstractItemController
 			$this->postSaveHook($this->model, $validData);
 
 			// Set success message
-			$this->app->enqueueMessage(
+			$this->setMessage(
 				\JText::_(
 					($this->lang->hasKey(strtoupper($this->option) . ($this->recordId == 0 && $this->app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS')
 						? strtoupper($this->option)
@@ -81,11 +81,11 @@ class SaveController extends AbstractItemController
 			{
 				if ($error instanceof \Exception)
 				{
-					$this->app->enqueueMessage($error->getMessage(), 'warning');
+					$this->setMessage($error->getMessage(), 'warning');
 				}
 				else
 				{
-					$this->app->enqueueMessage($error, 'warning');
+					$this->setMessage($error, 'warning');
 				}
 			}
 
@@ -101,7 +101,7 @@ class SaveController extends AbstractItemController
 		// Other error here
 		catch (\Exception $e)
 		{
-			$this->app->enqueueMessage($e->getMessage(), 'error');
+			$this->setMessage($e->getMessage(), 'error');
 
 			$this->app->redirect(\JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false));
 

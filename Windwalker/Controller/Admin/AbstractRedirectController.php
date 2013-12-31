@@ -105,9 +105,9 @@ abstract class AbstractRedirectController extends Controller
 	 */
 	public function redirect($url, $msg = null, $type = 'message')
 	{
-		$this->app->enqueueMessage($msg, $type);
+		$this->setMessage($msg, $type);
 
-		if (!$this->input->get('hmvc'))
+		if (!$this->input->get('hmvc') && $this->input->get('redirect', true))
 		{
 			$this->app->redirect($url);
 		}

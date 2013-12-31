@@ -72,7 +72,7 @@ class JControllerUpdatestatelist extends JControllerCmsbase
 			}
 
 			// Check in the items.
-			$this->app->enqueueMessage(JText::plural('JLIB_CONTROLLER_N_ITEMS_PUBLISHED', $model->publish($ids, $newState)));
+			$this->setMessage(JText::plural('JLIB_CONTROLLER_N_ITEMS_PUBLISHED', $model->publish($ids, $newState)));
 		}
 
 		$this->app->redirect('index.php?option=' . $this->input->get('option', 'com_cpanel'));

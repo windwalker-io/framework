@@ -24,9 +24,9 @@ class AddController extends AbstractItemController
 		if (!$this->allowAdd())
 		{
 			// Set the internal error and also the redirect error.
-			$this->app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
+			$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
 
-			$this->redirect(\JRoute::_($this->getRedirectListUrl(), false));
+			$this->redirectToList();
 
 			return false;
 		}
@@ -37,7 +37,7 @@ class AddController extends AbstractItemController
 		// Redirect to the edit screen.
 		$this->input->set('layout', 'edit');
 
-		$this->redirect(\JRoute::_($this->getRedirectItemUrl(), false));
+		$this->redirectToItem();
 
 		return true;
 	}

@@ -18,27 +18,6 @@ use Windwalker\Table\Table;
 abstract class AbstractListController extends AbstractAdminController
 {
 	/**
-	 * Property table.
-	 *
-	 * @var Table
-	 */
-	protected $table;
-
-	/**
-	 * Property model.
-	 *
-	 * @var \JModel
-	 */
-	protected $model;
-
-	/**
-	 * Property lang.
-	 *
-	 * @var \JLanguage
-	 */
-	protected $lang;
-
-	/**
 	 * Property cid.
 	 *
 	 * @var int[]
@@ -81,10 +60,26 @@ abstract class AbstractListController extends AbstractAdminController
 	{
 		parent::prepareExecute();
 
-		$this->lang     = \JFactory::getLanguage();
-		$this->model    = $this->getModel($this->viewItem);
-		$this->table    = $this->model->getTable();
-		$this->cid      = $this->input->get('cid', array(), 'array');
-		$this->context  = $this->option . '.state.' . $this->context;
+		$this->cid     = $this->input->get('cid', array(), 'array');
+		$this->context = $this->option . '.list.' . $this->context;
+	}
+
+	/**
+	 * getModel
+	 *
+	 * @param null  $name
+	 * @param null  $prefix
+	 * @param array $config
+	 *
+	 * @return mixed
+	 */
+	public function getModel($name = null, $prefix = null, $config = array())
+	{
+		if (!$name)
+		{
+			$name = $this->viewItem;
+		}
+
+		return parent::getModel($name, $prefix, $config);
 	}
 }

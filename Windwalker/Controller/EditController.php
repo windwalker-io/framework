@@ -27,7 +27,7 @@ class EditController extends AbstractItemController
 		if (!$this->allowEdit(array($this->key => $recordId), $this->key))
 		{
 			// Set the internal error and also the redirect error.
-			$this->app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'), 'error');
+			$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'), 'error');
 
 			$this->redirect(\JRoute::_($this->getRedirectListUrl(), false));
 

@@ -8,6 +8,9 @@
 
 namespace Windwalker\Controller\Admin;
 
+use Windwalker\Model\Model;
+use Windwalker\Table\Table;
+
 /**
  * Class AdminController
  *
@@ -38,6 +41,41 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	protected $textPrefix = null;
 
 	/**
+	 * Property key.
+	 *
+	 * @var string
+	 */
+	protected $key;
+
+	/**
+	 * Property urlVar.
+	 *
+	 * @var string
+	 */
+	protected $urlVar;
+
+	/**
+	 * Property table.
+	 *
+	 * @var Table
+	 */
+	protected $table;
+
+	/**
+	 * Property model.
+	 *
+	 * @var Model
+	 */
+	protected $model;
+
+	/**
+	 * Property lang.
+	 *
+	 * @var \JLanguage
+	 */
+	protected $lang;
+
+	/**
 	 * Instantiate the controller.
 	 *
 	 * @param   \JInput          $input  The input object.
@@ -54,6 +92,32 @@ abstract class AbstractAdminController extends AbstractRedirectController
 		$this->user       = \JFactory::getUser();
 		$this->context    = $this->option . '.' . $this->task;
 		$this->textPrefix = strtoupper($this->option);
+	}
+
+	/**
+	 * prepareExecute
+	 *
+	 * @return void
+	 */
+	protected function prepareExecute()
+	{
+		parent::prepareExecute();
+
+		$this->lang  = \JFactory::getLanguage();
+		$this->model = $this->getModel();
+		$this->table = $this->model->getTable();
+
+		// Determine the name of the primary key for the data.
+		if (empty($key))
+		{
+			$this->key = $this->table->getKeyName();
+		}
+
+		// To avoid data collisions the urlVar may be different from the primary key.
+		if (empty($urlVar))
+		{
+			$this->urlVar = $this->key;
+		}
 	}
 
 	/**
@@ -121,13 +185,26 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	/**
 	 * allowEditState
 	 *
-	 * @param $record
-	 * @param $key
+	 * @param array  $data
+	 * @param string $key
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	protected function allowEditState($data = array())
+	protected function allowUpdateState($data = array(), $key = 'id')
 	{
 		return $this->user->authorise('core.edit.state', $this->option);
+	}
+
+	/**
+	 * allowDelete
+	 *
+	 * @param array  $data
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	protected function allowDelete($data = array(), $key = 'id')
+	{
+		return $this->user->authorise('core.edit', $this->option);
 	}
 }

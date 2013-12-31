@@ -16,20 +16,6 @@ namespace Windwalker\Controller\Admin;
 abstract class AbstractItemController extends AbstractAdminController
 {
 	/**
-	 * Property key.
-	 *
-	 * @var string
-	 */
-	protected $key;
-
-	/**
-	 * Property urlVar.
-	 *
-	 * @var string
-	 */
-	protected $urlVar;
-
-	/**
 	 * Property recordId.
 	 *
 	 * @var
@@ -42,27 +28,6 @@ abstract class AbstractItemController extends AbstractAdminController
 	 * @var
 	 */
 	protected $data;
-
-	/**
-	 * Property table.
-	 *
-	 * @var
-	 */
-	protected $table;
-
-	/**
-	 * Property model.
-	 *
-	 * @var
-	 */
-	protected $model;
-
-	/**
-	 * Property lang.
-	 *
-	 * @var
-	 */
-	protected $lang;
 
 	/**
 	 * Instantiate the controller.
@@ -100,23 +65,8 @@ abstract class AbstractItemController extends AbstractAdminController
 	{
 		parent::prepareExecute();
 
-		$this->lang     = \JFactory::getLanguage();
-		$this->model    = $this->getModel();
-		$this->table    = $this->model->getTable();
 		$this->data     = $this->input->post->get('jform', array(), 'array');
 		$this->context  = $this->option . '.item.' . $this->task;
-
-		// Determine the name of the primary key for the data.
-		if (empty($key))
-		{
-			$this->key = $this->table->getKeyName();
-		}
-
-		// To avoid data collisions the urlVar may be different from the primary key.
-		if (empty($urlVar))
-		{
-			$this->urlVar = $this->key;
-		}
 
 		$this->recordId = $this->input->getInt($this->urlVar);
 

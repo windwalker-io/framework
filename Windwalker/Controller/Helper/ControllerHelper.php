@@ -98,16 +98,16 @@ class ControllerHelper
 				}
 				else
 				{
-					throw new \Exception('404 asset not found.');
+					throw new \Exception('Bad Route.', 404);
 				}
 			}
 		}
 
 		// Config
 		$config = array(
-			'prefix' => $prefix,
-			'name'   => $name,
-			'task'   => implode('.', $tasks),
+			'prefix' => strtolower($prefix),
+			'name'   => strtolower($name),
+			'task'   => strtolower(implode('.', $tasks)),
 			'option' => 'com_' . strtolower($prefix)
 		);
 

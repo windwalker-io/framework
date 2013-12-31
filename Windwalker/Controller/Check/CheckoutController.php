@@ -20,7 +20,9 @@ class CheckoutController extends AbstractListController
 	/**
 	 * doExecute
 	 *
-	 * @return mixed|void
+	 * @return bool|mixed
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	protected function doExecute()
 	{
@@ -42,9 +44,9 @@ class CheckoutController extends AbstractListController
 
 			$data = $this->table->getProperties(true);
 
-			if (!$this->allowEdit($data))
+			if (!$this->allowEdit($data, $this->urlVar))
 			{
-				$this->app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+				$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
 
 				continue;
 			}
@@ -55,14 +57,22 @@ class CheckoutController extends AbstractListController
 			}
 			catch (\Exception $e)
 			{
-				$this->app->enqueueMessage($this->table->getError());
+				$this->setMessage(\JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $this->table->getError()));
 			}
 		}
 
-		$message = $this->input->get('hmvc') ? null : \JText::plural($this->textPrefix . '_N_ITEMS_CHECKED_IN', count($pks));
+		$this->redirectToList();
 
-		$this->redirectToList($message);
+		return true;
+	}
 
+	/**
+	 * allowEdit
+	 *
+	 * @return bool
+	 */
+	protected function allowEdit($data = array(), $key = 'id')
+	{
 		return true;
 	}
 }

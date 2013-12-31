@@ -33,7 +33,7 @@ class JControllerCancel extends JControllerCmsbase
 		// Check if the user is authorized to do this.
 		if (!JFactory::getUser()->authorise('core.edit'))
 		{
-			$this->app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'));
+			$this->setMessage(JText::_('JERROR_ALERTNOAUTHOR'));
 			$this->app->redirect('index.php');
 		}
 

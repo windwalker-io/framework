@@ -9,7 +9,9 @@
 
 namespace Windwalker\Controller;
 
+use Whoops\Handler\PrettyPageHandler;
 use Windwalker\Controller\Helper\ControllerHelper;
+use Windwalker\Debugger\Debugger;
 use Windwalker\DI\Container;
 use Joomla\DI\Container as JoomlaContainer;
 use Joomla\DI\ContainerAwareInterface;
@@ -179,12 +181,11 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 		$input->set('task', $name);
 		$input->set('hmvc', true);
 
-		$controller = ControllerHelper::getController($prefix, $input, $this->app);
+		$controller = ControllerHelper::getController($prefix, $input, $this->app)
+			->setComponentPath($this->componentPath)
+			->setContainer($this->container);
 
-		$controller->setComponentPath($this->componentPath);
-
-		return $controller->setContainer($this->container)
-			->execute();
+		return $controller->execute();
 	}
 
 	/**
@@ -363,6 +364,11 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 		try
 		{
 			$model = $container->get('model.' . $name);
+
+			if ($model instanceof \JModel)
+			{
+				return $model;
+			}
 		}
 		catch (\InvalidArgumentException $e)
 		{
@@ -407,6 +413,24 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	public function setContainer(JoomlaContainer $container)
 	{
 		$this->container = $container;
+
+		return $this;
+	}
+
+	/**
+	 * setMessage
+	 *
+	 * @param string $msg
+	 * @param string $type
+	 *
+	 * @return Controller
+	 */
+	public function setMessage($msg, $type = 'message')
+	{
+		if (!$this->input->get('quiet', false))
+		{
+			$this->app->enqueueMessage($msg, $type);
+		}
 
 		return $this;
 	}

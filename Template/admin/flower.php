@@ -15,13 +15,7 @@ define('AKDEBUG', true);
 
 if (JDEBUG)
 {
-	JLoader::registerNamespace('Whoops', AKPATH_ADMIN . '/debugger');
-
-	$whoops  = new Whoops\Run;
-	$handler = new Whoops\Handler\PrettyPageHandler;
-
-	$whoops->pushHandler($handler);
-	$whoops->register();
+	\Windwalker\Debugger\Debugger::registerWhoops();
 }
 
 JLoader::registerPrefix('Flower', JPATH_COMPONENT_ADMINISTRATOR);

@@ -30,19 +30,9 @@ class CancelController extends AbstractItemController
 	protected function doExecute()
 	{
 		// Attempt to check-in the current record.
-		if ($this->recordId && property_exists($this->table, 'checked_out'))
-		{
-			try
-			{
-				$this->model->checkin($this->recordId);
-			}
-			catch (\Exception $e)
-			{
-				$this->app->enqueueMessage(\JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $e->getMessage()));
+		$data = array('cid' => array($this->recordId), 'quiet' => true);
 
-				$this->redirectToItem($this->recordId, $this->urlVar);
-			}
-		}
+		$this->fetch($this->prefix, $this->viewList . '.check.checkin', $data);
 
 		// Clean the session data and redirect.
 		$this->releaseEditId($this->context, $this->recordId);

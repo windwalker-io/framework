@@ -55,7 +55,7 @@ abstract class AbstractUpdateStateController extends AbstractListController
 		// Other error here
 		catch (\Exception $e)
 		{
-			$this->app->enqueueMessage($e->getMessage(), 'error');
+			$this->setMessage($e->getMessage(), 'error');
 
 			$this->app->redirect(\JRoute::_($this->getRedirectListUrl(), false));
 
@@ -92,18 +92,18 @@ abstract class AbstractUpdateStateController extends AbstractListController
 					continue;
 				}
 
-				if (!$this->allowEditState($this->table->getProperties(true)))
+				if (!$this->allowUpdateState($this->table->getProperties(true)))
 				{
 					// Prune items that you can't change.
 					unset($pks[$i]);
 
-					$this->app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+					$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 				}
 			}
 		}
 
 		// Check in the items.
-		$this->app->enqueueMessage(\JText::plural($this->option . '_N_ITEMS_PUBLISHED', $this->model->updateState($pks, $this->stateData)));
+		$this->setMessage(\JText::plural($this->option . '_N_ITEMS_PUBLISHED', $this->model->updateState($pks, $this->stateData)));
 	}
 
 	/**
