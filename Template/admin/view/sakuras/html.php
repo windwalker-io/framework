@@ -1,7 +1,6 @@
 <?php
 
-use Windwalker\Data\Data;
-use Windwalker\Data\NullData;
+use Windwalker\Helper\Helper;
 use Windwalker\View\Html\HtmlView;
 
 /**
