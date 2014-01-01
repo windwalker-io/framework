@@ -67,6 +67,13 @@ class ListModel extends FormModel
 	protected $forms;
 
 	/**
+	 * Property orderCol.
+	 *
+	 * @var string
+	 */
+	protected $orderCol = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
@@ -76,10 +83,14 @@ class ListModel extends FormModel
 	 */
 	public function __construct($config = array())
 	{
-		// Add the ordering filtering fields white list.
-		if (isset($config['filter_fields']))
+		if (!$this->orderCol)
 		{
-			$this->filterFields = $config['filter_fields'];
+			$this->orderCol = \JArrayHelper::getValue($config, 'order_column', null);
+		}
+
+		if (!$this->filterFields)
+		{
+			$this->filterFields = \JArrayHelper::getValue($config, 'filter_fields', null);
 		}
 
 		parent::__construct($config);
@@ -402,33 +413,42 @@ class ListModel extends FormModel
 					switch ($name)
 					{
 						case 'fullordering':
-							$orderingParts = explode(' ', $value);
+							$orderingParts = explode(',', $value);
 
-							if (count($orderingParts) >= 2)
+							$ordering = array();
+
+							foreach ($orderingParts as $i => $order)
 							{
-								// Latest part will be considered the direction
-								$fullDirection = end($orderingParts);
+								$order = explode(' ', trim($order));
 
-								if (in_array(strtoupper($fullDirection), array('ASC', 'DESC', '')))
+								if (count($order) == 2)
 								{
-									$this->state->set('list.direction', $fullDirection);
+									list($col, $dir) = $order;
+								}
+								else
+								{
+									$col = $order[0];
+									$dir = '';
 								}
 
-								unset($orderingParts[count($orderingParts) - 1]);
-
-								// The rest will be the ordering
-								$fullOrdering = implode(' ', $orderingParts);
-
-								if (in_array($fullOrdering, $this->filterFields))
+								if (in_array($col, $this->filterFields))
 								{
-									$this->state->set('list.ordering', $fullOrdering);
+									$ordering[] = $dir ? $col . ' ' . strtoupper($dir) : $col;
 								}
 							}
-							else
+
+							$last = array_pop($ordering);
+
+							$last = explode(' ', $last);
+
+							if (isset($last[1]) && in_array(strtoupper($last[1]), array('ASC', 'DESC')))
 							{
-								$this->state->set('list.ordering', $ordering);
-								$this->state->set('list.direction', $direction);
+								$this->state->set('list.direction', $last[1]);
 							}
+
+							$ordering[] = $last[0];
+
+							$this->state->set('list.ordering', implode(', ', $ordering));
 							break;
 
 						case 'ordering':

@@ -54,8 +54,10 @@ class FlowerModelSakuras extends ListModel
 	{
 		$query = parent::getListQuery();
 
-		$ordering  = $this->state->get('list.ordering', 'sakura.ordering');
-		$direction = $this->state->get('list.direction', 'ASC');
+		$ordering    = $this->state->get('list.ordering',    'sakura.ordering');
+		$direction   = $this->state->get('list.direction',   'ASC');
+		$orderPrefix = $this->state->get('list.orderPrefix', $this->orderPrefix);
+		$orderCol    = $this->state->get('list.orderCol',    $this->orderCol);
 
 		$filters  = $this->state->get('filter', array());
 		$searches = $this->state->get('search', array());
@@ -94,6 +96,26 @@ class FlowerModelSakuras extends ListModel
 			$query->where($query->quoteName('sakura.published') . ' >= 0');
 		}
 
+		// Ordering
+		$ordering = explode(',', $ordering);
+
+		$ordering = array_map(
+			function($value) use($query)
+			{
+				$value = explode(' ', trim($value));
+
+				if (isset($value[1]))
+				{
+					return $query->qn($value[0]) . ' ' . $value[1];
+				}
+
+				return $query->qn($value[0]);
+			},
+			$ordering
+		);
+
+		$ordering = implode(', ', $ordering);
+
 		// Build query
 		// ========================================================================
 
@@ -108,7 +130,7 @@ class FlowerModelSakuras extends ListModel
 			->leftJoin('#__viewlevels  AS viewlevel ON sakura.access     = viewlevel.id')
 			->leftJoin('#__languages   AS lang      ON sakura.language   = lang.lang_code')
 			// ->where("")
-			->order($query->quoteName($ordering) . ' ' . $direction)
+			->order($ordering . ' ' . $direction)
 			;
 
 		// Debug here

@@ -21,7 +21,7 @@ $userId = $user->get('id');
 
 $listOrder = $data->state->get('list.ordering');
 $listDirn  = $data->state->get('list.direction');
-$orderCol  = $data->state->get('list.orderCol', 'sakura.ordering');
+$orderCol  = $data->state->get('list.orderCol', 'sakura.catid, sakura.ordering');
 $saveOrder = $listOrder == $orderCol;
 $trashed   = $data->state->get('filter.published') == -2 ? true : false;
 

@@ -21,6 +21,31 @@ defined('JPATH_PLATFORM') or die;
 abstract class AdminModel extends CrudModel
 {
 	/**
+	 * Property reorderConditions.
+	 *
+	 * @var array
+	 */
+	protected $reorderConditions = array();
+
+	/**
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @see     JModel
+	 * @since   3.2
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+
+		if (!$this->reorderConditions)
+		{
+			$this->reorderConditions = \JArrayHelper::getValue($config, 'reorder_conditions', array('catid'));
+		}
+	}
+
+	/**
 	 * Method to checkin a row.
 	 *
 	 * @param   integer $pk The numeric id of the primary key.
@@ -190,7 +215,7 @@ abstract class AdminModel extends CrudModel
 	 */
 	protected function getReorderConditions($table)
 	{
-		$fields = $this->state->get('reorder.condition.fields', array('catid'));
+		$fields = $this->state->get('reorder.condition.fields', $this->reorderConditions);
 
 		$condition = array();
 
