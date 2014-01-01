@@ -24,10 +24,16 @@ $listDirn  = $data->state->get('list.direction');
 $orderCol  = $data->state->get('list.orderCol', 'sakura.ordering');
 $saveOrder = $listOrder == $orderCol;
 $trashed   = $data->state->get('filter.published') == -2 ? true : false;
+
+if ($saveOrder)
+{
+	$saveOrderingUrl = 'index.php?option=com_flower&task=sakuras.state.reorder&tmpl=component';
+	JHtml::_('sortablelist.sortable', 'sakuraList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+}
 ?>
 
 <!-- List Table -->
-<table class="table table-striped adminlist" id="itemList">
+<table class="table table-striped adminlist" id="sakuraList">
 <thead>
 <tr>
 	<!--SORT-->
@@ -114,26 +120,26 @@ $trashed   = $data->state->get('filter.published') == -2 ? true : false;
 		<!-- Drag sort for -->
 		<td class="order nowrap center hidden-phone">
 			<?php
-			if ($canChange)
-			{
-				$disableClassName = '';
-				$disabledLabel    = '';
-			}
+			$iconClass = '';
 
-			if (!$saveOrder || !$canOrder)
-				:
-				$disabledLabel    = JText::_('JORDERINGDISABLED');
-				$disableClassName = 'inactive tip-top';
+			if (!$canChange)
+			{
+				$iconClass = ' inactive';
+			}
+			elseif (!$saveOrder)
+			{
+				$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+			}
 			?>
-			<span class="sortable-handler hasTooltip <?php echo $disableClassName ?>" title="<?php echo $disabledLabel ?>">
+			<span class="sortable-handler<?php echo $iconClass ?>">
 				<i class="icon-menu"></i>
 			</span>
-				<input type="hidden" style="display:none" name="order[]" size="5" value="<?php echo $item->sakura_ordering; ?>" class="text-area-order " />
-			<?php else: ?>
-			<span class="sortable-handler inactive">
-				<i class="icon-menu"></i>
-			</span>
+			<?php if ($canChange && $saveOrder) : ?>
+				<input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->sakura_ordering; ?>" class="width-20 text-area-order " />
 			<?php endif; ?>
+			<span class="label">
+				<?php echo $item->sakura_ordering; ?>
+			</span>
 		</td>
 
 		<!--CHECKBOX-->

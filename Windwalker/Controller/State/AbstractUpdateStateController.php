@@ -62,9 +62,12 @@ abstract class AbstractUpdateStateController extends AbstractListController
 		// Other error here
 		catch (\Exception $e)
 		{
-			$this->setMessage($e->getMessage(), 'error');
+			if (JDEBUG)
+			{
+				echo $e;
+			}
 
-			$this->redirectToList();
+			$this->redirectToList($e->getMessage(), 'error');
 
 			return false;
 		}
@@ -133,9 +136,9 @@ abstract class AbstractUpdateStateController extends AbstractListController
 	protected function postExecute($return = null)
 	{
 		// Check in the items.
-		$this->setMessage(\JText::plural($this->option . '_N_ITEMS_' . $this->actionText, $this->model->getState()->get('success.number')));
+		$msg = \JText::plural($this->option . '_N_ITEMS_' . $this->actionText, $this->model->getState()->get('success.number'));
 
-		$this->redirectToList();
+		$this->redirectToList($msg);
 
 		return $return;
 	}

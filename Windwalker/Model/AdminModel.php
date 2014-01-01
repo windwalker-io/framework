@@ -99,4 +99,157 @@ abstract class AdminModel extends CrudModel
 			throw new \Exception($table->getError());
 		}
 	}
+
+	/**
+	 * Saves the manually set order of records.
+	 *
+	 * @param   array    $pks    An array of primary key ids.
+	 * @param   integer  $order  +1 or -1
+	 *
+	 * @return  mixed
+	 *
+	 * @since   12.2
+	 */
+	public function reorder($pks = null, $order = null)
+	{
+		$table          = $this->getTable();
+		$tableClassName = get_class($table);
+		$contentType    = new \JUcmType;
+		$type           = $contentType->getTypeByTable($tableClassName);
+		$typeAlias      = $type ? $type->type_alias : null;
+		$tagsObserver   = $table->getObserverOfClass('JTableObserverTags');
+		$conditions     = array();
+		$errors         = array();
+		$orderCol       = $this->state->get('reorder.column', 'ordering');
+		\AK::show($order);
+		// Update ordering values
+		foreach ($pks as $i => $pk)
+		{
+			$table->load($pk);
+
+			$table->$orderCol = $order[$i];
+
+			$this->createTagsHelper($tagsObserver, $type, $pk, $typeAlias, $table);
+
+			if (!$table->store())
+			{
+				$errors[] = $table->getError();
+
+				continue;
+			}
+
+			// Remember to reorder within position and client_id
+			$condition = $this->getReorderConditions($table);
+			$found     = false;
+
+			// Found reorder condition if is cached.
+			foreach ($conditions as $cond)
+			{
+				if ($cond['cond'] == $condition)
+				{
+					$found = true;
+					break;
+				}
+			}
+
+			// If not found, we add this condition to cache.
+			if (!$found)
+			{
+				$key = $table->getKeyName();
+
+				$conditions[] = array(
+					'pk'   => $table->$key,
+					'cond' => $condition
+				);
+			}
+		}
+
+		// Execute all reorder for each condition caches.
+		foreach ($conditions as $cond)
+		{
+			$table->load($cond['pk']);
+			$table->reorder($cond['cond']);
+		}
+
+		$this->state->set('error.message',  $errors);
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * A protected method to get a set of ordering conditions.
+	 *
+	 * @param   JTable  $table  A JTable object.
+	 *
+	 * @return  array  An array of conditions to add to ordering queries.
+	 *
+	 * @since   12.2
+	 */
+	protected function getReorderConditions($table)
+	{
+		$fields = $this->state->get('reorder.condition.fields', array('catid'));
+
+		$condition = array();
+
+		foreach ($fields as $field)
+		{
+			if (property_exists($table, $field))
+			{
+				$condition = $this->db->quoteName($field) . '=' . $this->db->quote($table->$field);
+			}
+		}
+
+		return $condition;
+	}
+
+	/**
+	 * Method to create a tags helper to ensure proper management of tags
+	 *
+	 * @param   \JTableObserverTags  $tagsObserver  The tags observer for this table
+	 * @param   \JUcmType            $type          The type for the table being processed
+	 * @param   integer              $pk            Primary key of the item bing processed
+	 * @param   string               $typeAlias     The type alias for this table
+	 * @param   \JTable              $table         The JTable object
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function createTagsHelper($tagsObserver, $type, $pk, $typeAlias, $table)
+	{
+		if (!empty($tagsObserver) && !empty($type))
+		{
+			$table->tagsHelper = new \JHelperTags;
+			$table->tagsHelper->typeAlias = $typeAlias;
+			$table->tagsHelper->tags = explode(',', $table->tagsHelper->getTagIds($pk, $typeAlias));
+		}
+	}
+
+	/**
+	 * Method to change the title & alias.
+	 *
+	 * @param   integer  $category_id  The id of the category.
+	 * @param   string   $alias        The alias.
+	 * @param   string   $title        The title.
+	 *
+	 * @return	array  Contains the modified title and alias.
+	 *
+	 * @since	12.2
+	 */
+	protected function generateNewTitle($category_id, $alias, $title)
+	{
+		// Alter the title & alias
+		$table = $this->getTable();
+
+		while ($table->load(array('alias' => $alias, 'catid' => $category_id)))
+		{
+			$title = \JString::increment($title);
+			$alias = \JString::increment($alias, 'dash');
+		}
+
+		return array($title, $alias);
+	}
 }
