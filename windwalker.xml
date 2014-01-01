@@ -8,7 +8,8 @@
 	<author>Asika</author>
 	<authorEmail>asika32764@gmail.com</authorEmail>
 	<authorUrl>http://asikart.com</authorUrl>
-	<version>2.0.0-alpha</version>
+	<version>3.3.8</version>
+	<newversion>2.0.0-alpha</newversion>
 	<description>LIB_WINDWALKER_XML_DESC</description>
 
 	<files>
