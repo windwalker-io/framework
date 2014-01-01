@@ -74,7 +74,7 @@ class CrudModel extends FormModel
 	 */
 	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
-		parent::__construct($config, $state, $config);
+		parent::__construct($config, $state, $db);
 
 		if (!$this->eventAfterDelete)
 		{
