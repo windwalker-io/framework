@@ -1,6 +1,6 @@
 <?php
 
-use Windwalker\Helper\Helper;
+use Windwalker\View\Helper\GridHelper;
 use Windwalker\View\Html\HtmlView;
 
 /**
@@ -36,7 +36,7 @@ class FlowerViewSakurasHtml extends HtmlView
 	 *
 	 * @var string
 	 */
-	protected $option = '';
+	protected $option = 'com_flower';
 
 	/**
 	 * List name.
@@ -66,12 +66,13 @@ class FlowerViewSakurasHtml extends HtmlView
 	 */
 	public function render()
 	{
-		$data                = $this->getData();
-		$data->items         = $this->get('Items');
-		$data->pagination    = $this->get('Pagination');
-		$data->state         = $this->get('State');
-		$data->filterForm    = $this->get('FilterForm');
-		$data->batchForm     = $this->get('BatchForm');
+		$data             = $this->getData();
+		$data->items      = $this->get('Items');
+		$data->pagination = $this->get('Pagination');
+		$data->state      = $this->get('State');
+		$data->filterForm = $this->get('FilterForm');
+		$data->batchForm  = $this->get('BatchForm');
+		$data->grid       = $this->getGridHelper();
 
 		if ($errors = $data->state->get('errors'))
 		{
@@ -86,6 +87,27 @@ class FlowerViewSakurasHtml extends HtmlView
 		}
 
 		return parent::render();
+	}
+
+	/**
+	 * getGridHelper
+	 *
+	 * @return GridHelper
+	 */
+	public function getGridHelper()
+	{
+		$config = array(
+			'option'    => $this->option,
+			'name'      => $this->getName(),
+			'view_item' => $this->item_name,
+			'view_list' => $this->list_name,
+			'orderCol'  => 'sakura.catid, sakura.ordering',
+			'field'     => array(
+				'ordering'    => 'ordering'
+			)
+		);
+
+		return new GridHelper($this->data, $config);
 	}
 
 	protected function addToolbar()

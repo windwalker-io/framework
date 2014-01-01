@@ -9,36 +9,27 @@
 use Windwalker\Data\Data;
 
 $data = $this->getData();
+$grid = $data->grid;
 
-// Init some API objects
-// ================================================================================
-$app    = JFactory::getApplication();
-$date   = JFactory::getDate('now', JFactory::getConfig()->get('offset'));
-$doc    = JFactory::getDocument();
-$uri    = JFactory::getURI();
-$user   = JFactory::getUser();
-$userId = $user->get('id');
+// Prepare some API objects
+$app  = JFactory::getApplication();
+$date = JFactory::getDate('now', JFactory::getConfig()->get('offset'));
+$doc  = JFactory::getDocument();
+$user = JFactory::getUser();
 
-$listOrder = $data->state->get('list.ordering');
-$listDirn  = $data->state->get('list.direction');
-$orderCol  = $data->state->get('list.orderCol', 'sakura.catid, sakura.ordering');
-$saveOrder = $listOrder == $orderCol;
-$trashed   = $data->state->get('filter.published') == -2 ? true : false;
-
-if ($saveOrder)
-{
-	$saveOrderingUrl = 'index.php?option=com_flower&task=sakuras.state.reorder&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'sakuraList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
-}
+// Set order script.
+$grid->registerTableSort();
 ?>
 
-<!-- List Table -->
+<!-- LIST TABLE -->
 <table class="table table-striped adminlist" id="sakuraList">
+
+<!-- TABLE HEADER -->
 <thead>
 <tr>
 	<!--SORT-->
 	<th width="1%" class="nowrap center hidden-phone">
-		<?php echo JHtml::_('searchtools.sort', '', $orderCol, $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+		<?php echo $grid->orderTitle(); ?>
 	</th>
 
 	<!--CHECKBOX-->
@@ -46,44 +37,44 @@ if ($saveOrder)
 		<?php echo JHtml::_('grid.checkAll'); ?>
 	</th>
 
-	<!--TITLE-->
-	<th class="center">
-		<?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'sakura.title', $listDirn, $listOrder); ?>
+	<!--STATUS-->
+	<th width="5%" class="nowrap center">
+		<?php echo $grid->sortTitle('JSTATUS', 'sakura.published'); ?>
 	</th>
 
-	<!--PUBLISHED-->
-	<th width="5%" class="nowrap center">
-		<?php echo JHtml::_('searchtools.sort', 'JPUBLISHED', 'sakura.published', $listDirn, $listOrder); ?>
+	<!--TITLE-->
+	<th class="center">
+		<?php echo $grid->sortTitle('JGLOBAL_TITLE', 'sakura.title'); ?>
 	</th>
 
 	<!--CATEGORY-->
 	<th width="10%" class="center">
-		<?php echo JHtml::_('searchtools.sort', 'JCATEGORY', 'category.title', $listDirn, $listOrder); ?>
+		<?php echo $grid->sortTitle('JCATEGORY', 'category.title'); ?>
 	</th>
 
 	<!--ACCESS VIEW LEVEL-->
 	<th width="5%" class="center">
-		<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'viewlevel.title', $listDirn, $listOrder); ?>
+		<?php echo $grid->sortTitle('JGRID_HEADING_ACCESS', 'viewlevel.title'); ?>
 	</th>
 
 	<!--CREATED-->
 	<th width="10%" class="center">
-		<?php echo JHtml::_('searchtools.sort', 'JDATE', 'sakura.created', $listDirn, $listOrder); ?>
+		<?php echo $grid->sortTitle('JDATE', 'sakura.created'); ?>
 	</th>
 
 	<!--USER-->
 	<th width="10%" class="center">
-		<?php echo JHtml::_('searchtools.sort', 'JAUTHOR', 'user.name', $listDirn, $listOrder); ?>
+		<?php echo $grid->sortTitle('JAUTHOR', 'user.name'); ?>
 	</th>
 
 	<!--LANGUAGE-->
 	<th width="5%" class="center">
-		<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'lang.title', $listDirn, $listOrder); ?>
+		<?php echo $grid->sortTitle('JGRID_HEADING_LANGUAGE', 'lang.title'); ?>
 	</th>
 
 	<!--ID-->
 	<th width="1%" class="nowrap center">
-		<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'sakura.id', $listDirn, $listOrder); ?>
+		<?php echo $grid->sortTitle('JGRID_HEADING_ID', 'sakura.id'); ?>
 	</th>
 </tr>
 </thead>
@@ -95,56 +86,34 @@ if ($saveOrder)
 		<div class="pull-left">
 			<?php echo $data->pagination->getListFooter(); ?>
 		</div>
-
-		<!-- Limit Box -->
-		<div class="btn-group pull-right hidden-phone">
-			<label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
-			<?php echo $data->pagination->getLimitBox(); ?>
-		</div>
 	</td>
 </tr>
 </tfoot>
 
+<!-- TABLE BODY -->
 <tbody>
 <?php foreach ($data->items as $i => $item)
 	:
 	$item = new Data($item);
 
-	$ordering   = ($listOrder == $orderCol);
-	$canEdit    = $user->authorise('core.edit', 'com_flower.sakura.' . $item->sakura_id);
-	$canCheckin = $user->authorise('core.edit.state', 'com_flower.sakura.' . $item->sakura_id) || $item->sakura_checked_out == $userId || $item->sakura_checked_out == 0;
-	$canChange  = $user->authorise('core.edit.state', 'com_flower.sakura.' . $item->sakura_id) && $canCheckin;
-	$canEditOwn = $user->authorise('core.edit.own', 'com_flower.sakura.' . $item->sakura_id) && $item->sakura_created_by == $userId;
+	$grid->setItem($item, $i);
 	?>
-	<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->sakura_catid; ?>">
-		<!-- Drag sort for -->
+	<tr class="sakura-row" sortable-group-id="<?php echo $item->catid; ?>">
+		<!-- DRAG SORT -->
 		<td class="order nowrap center hidden-phone">
-			<?php
-			$iconClass = '';
-
-			if (!$canChange)
-			{
-				$iconClass = ' inactive';
-			}
-			elseif (!$saveOrder)
-			{
-				$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
-			}
-			?>
-			<span class="sortable-handler<?php echo $iconClass ?>">
-				<i class="icon-menu"></i>
-			</span>
-			<?php if ($canChange && $saveOrder) : ?>
-				<input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->sakura_ordering; ?>" class="width-20 text-area-order " />
-			<?php endif; ?>
-			<span class="label">
-				<?php echo $item->sakura_ordering; ?>
-			</span>
+			<?php echo $grid->dragSort(); ?>
 		</td>
 
 		<!--CHECKBOX-->
 		<td class="center">
 			<?php echo JHtml::_('grid.id', $i, $item->sakura_id); ?>
+		</td>
+
+		<!--PUBLISHED-->
+		<td class="center">
+			<div class="btn-group">
+				<?php echo $grid->published() ?>
+			</div>
 		</td>
 
 		<!--TITLE-->
@@ -154,78 +123,17 @@ if ($saveOrder)
 
 				<div class="item-title">
 					<!-- Checkout -->
-					<?php if ($item->sakura_checked_out) : ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $item->user_name, $item->sakura_checked_out_time, 'sakuras.check.', $canCheckin); ?>
-					<?php endif; ?>
+					<?php echo $grid->checkoutButton(); ?>
 
 					<!-- Title -->
-					<?php if ($canEdit || $canEditOwn) : ?>
-						<a href="<?php echo JRoute::_('index.php?option=com_flower&task=sakura.edit&id=' . $item->sakura_id); ?>">
-							<?php echo $this->escape($item->sakura_title); ?>
-						</a>
-					<?php else: ?>
-						<?php echo $this->escape($item->sakura_title); ?>
-					<?php endif; ?>
+					<?php echo $grid->editTitle(); ?>
 				</div>
 
 				<!-- Sub Title -->
 				<div class="small">
-					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->sakura_alias)); ?>
+					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 				</div>
 			</div>
-
-			<!-- Title Edit Button -->
-			<div class="pull-left">
-				<?php
-				// Create dropdown items
-				if ($canEdit || $canEditOwn)
-				{
-					JHtml::_('dropdown.edit', $item->a_id, 'sakura.');
-					JHtml::_('dropdown.divider');
-				}
-
-
-				if ($canChange || $canEditOwn)
-				{
-					if ($item->sakura_published)
-					{
-						JHtml::_('dropdown.unpublish', 'cb' . $i, 'sakuras.');
-					}
-					else
-					{
-						JHtml::_('dropdown.publish', 'cb' . $i, 'sakuras.');
-					}
-
-					JHtml::_('dropdown.divider');
-				}
-
-
-				if ($item->sakura_checked_out && $canCheckin)
-				{
-					JHtml::_('dropdown.checkin', 'cb' . $i, 'sakuras.');
-				}
-
-				if ($canChange || $canEditOwn)
-				{
-					if ($trashed)
-					{
-						JHtml::_('dropdown.untrash', 'cb' . $i, 'sakuras.');
-					}
-					else
-					{
-						JHtml::_('dropdown.trash', 'cb' . $i, 'sakuras.');
-					}
-				}
-
-				// Render dropdown list
-				echo JHtml::_('dropdown.render');
-				?>
-			</div>
-		</td>
-
-		<!--PUBLISHED-->
-		<td class="center">
-			<?php echo JHtml::_('jgrid.published', $item->sakura_published, $i, 'sakuras.state.', $canChange, 'cb', $item->sakura_publish_up, $item->sakura_publish_down); ?>
 		</td>
 
 		<!--CATEGORY-->
@@ -240,7 +148,7 @@ if ($saveOrder)
 
 		<!--CREATED-->
 		<td class="center">
-			<?php echo JHtml::_('date', $item->sakura_created, JText::_('DATE_FORMAT_LC4')); ?>
+			<?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
 		</td>
 
 		<!--USER-->
@@ -251,7 +159,7 @@ if ($saveOrder)
 		<!--LANGUAGE-->
 		<td class="center">
 			<?php
-			if ($item->sakura_language == '*')
+			if ($item->language == '*')
 			{
 				echo JText::alt('JALL', 'language');
 			}
@@ -264,7 +172,7 @@ if ($saveOrder)
 
 		<!--ID-->
 		<td class="center">
-			<span><?php echo (int) $item->sakura_id; ?></span>
+			<?php echo (int) $item->id; ?>
 		</td>
 
 	</tr>

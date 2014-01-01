@@ -47,6 +47,7 @@ class QueryHelper
 				if ($i === 0 && $noprefix)
 				{
 					$fields[] = $db->quoteName("{$alias}.{$column}", $column);
+					$fields[] = $db->quoteName("{$alias}.{$column}", "{$alias}_{$column}");
 				}
 				else
 				{

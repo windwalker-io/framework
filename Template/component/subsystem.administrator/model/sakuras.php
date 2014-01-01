@@ -120,7 +120,7 @@ class FlowerModelSakuras extends ListModel
 		// ========================================================================
 
 		// Get select columns
-		$select = QueryHelper::getSelectList($this->db, $this->config['tables'], false);
+		$select = QueryHelper::getSelectList($this->db, $this->config['tables'], true);
 
 		// Build query
 		$query->select($select)

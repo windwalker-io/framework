@@ -77,8 +77,8 @@
 			default="a.title ASC"
 			>
 			<option value="">JGLOBAL_SORT_BY</option>
-			<option value="sakura.catid ASC, sakura.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
-			<option value="sakura.catid ASC, sakura.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+			<option value="sakura.catid, sakura.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+			<option value="sakura.catid, sakura.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
 			<option value="sakura.published ASC">JSTATUS_ASC</option>
 			<option value="sakura.published DESC">JSTATUS_DESC</option>
 			<option value="sakura.title ASC">JGLOBAL_TITLE_ASC</option>
