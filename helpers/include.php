@@ -247,7 +247,7 @@ JS;
 	 */
 	public static function sortedStyle($path = null, $option = null, $client = null)
 	{
-		$files = JFolder::files(AKHelper::_('path.get', $client, $option) . '/' . $path, ".css$", true);
+		$files = (array) JFolder::files(AKHelper::_('path.get', $client, $option) . '/' . $path, ".css$", true);
 		$doc   = JFactory::getDocument();
 		$app   = JFactory::getApplication();
 

@@ -146,6 +146,10 @@ class Component
 			$this->input->set('task',       $this->defaultController);
 			$this->input->set('controller', $this->defaultController);
 		}
+
+		// Register form and fields
+		\JForm::addFieldPath(WINDWALKER . '/form/fields');
+		\JForm::addFormPath(WINDWALKER . '/form/forms');
 	}
 
 	/**
