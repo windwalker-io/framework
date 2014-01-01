@@ -146,7 +146,7 @@ abstract class AdminModel extends CrudModel
 		$conditions     = array();
 		$errors         = array();
 		$orderCol       = $this->state->get('reorder.column', 'ordering');
-		\AK::show($order);
+
 		// Update ordering values
 		foreach ($pks as $i => $pk)
 		{
