@@ -1,5 +1,6 @@
 <?php
 
+use Windwalker\Helper\QueryHelper;
 use Windwalker\Model\ListModel;
 
 /**
@@ -17,7 +18,7 @@ class FlowerModelSakuras extends ListModel
 	 * @see      JController
 	 * @since    1.6
 	 */
-	public function __construct($config = array())
+	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
 		// Set query tables
 		// ========================================================================
@@ -37,12 +38,12 @@ class FlowerModelSakuras extends ListModel
 				'filter_order_Dir', 'filter_order', '*'
 			);
 
-			$config['filter_fields'] = AKHelper::_('db.mergeFilterFields', $config['filter_fields'], $config['tables']);
+			$config['filter_fields'] = QueryHelper::mergeFilterFields(null, $config['filter_fields'], $config['tables']);
 		}
 
 		$this->config = $config;
 
-		parent::__construct($config);
+		parent::__construct($config, $state, $db);
 	}
 
 	/**
@@ -56,7 +57,6 @@ class FlowerModelSakuras extends ListModel
 
 		$ordering    = $this->state->get('list.ordering',    'sakura.ordering');
 		$direction   = $this->state->get('list.direction',   'ASC');
-		$orderPrefix = $this->state->get('list.orderPrefix', $this->orderPrefix);
 		$orderCol    = $this->state->get('list.orderCol',    $this->orderCol);
 
 		$filters  = $this->state->get('filter', array());
@@ -120,7 +120,7 @@ class FlowerModelSakuras extends ListModel
 		// ========================================================================
 
 		// Get select columns
-		$select = AKHelper::_('db.getSelectList', $this->config['tables']);
+		$select = QueryHelper::getSelectList($this->db, $this->config['tables'], false);
 
 		// Build query
 		$query->select($select)

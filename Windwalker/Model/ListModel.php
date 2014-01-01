@@ -81,7 +81,7 @@ class ListModel extends FormModel
 	 * @see     JModelLegacy
 	 * @since   12.2
 	 */
-	public function __construct($config = array())
+	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
 		if (!$this->orderCol)
 		{
@@ -93,7 +93,7 @@ class ListModel extends FormModel
 			$this->filterFields = \JArrayHelper::getValue($config, 'filter_fields', null);
 		}
 
-		parent::__construct($config);
+		parent::__construct($config, $state, $db);
 	}
 
 	/**

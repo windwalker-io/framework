@@ -35,9 +35,9 @@ abstract class AdminModel extends CrudModel
 	 * @see     JModel
 	 * @since   3.2
 	 */
-	public function __construct($config = array())
+	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
-		parent::__construct($config);
+		parent::__construct($config, $state, $db);
 
 		if (!$this->reorderConditions)
 		{
