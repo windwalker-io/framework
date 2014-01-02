@@ -8,11 +8,21 @@
 
 use Windwalker\View\Layout\FileLayout;
 
+/**
+ * Prepare data for this template.
+ *
+ * @var $container Windwalker\DI\Container
+ * @var $asset     Windwalker\Helper\AssetHelper
+ */
 $container = $this->getContainer();
+$asset     = $container->get('helper.asset');
 
-$asset = $container->get('helper.asset');
-$asset->addCss('main.css');
-$asset->addJs('main.js');
+$asset->addCSS('main.css')
+	->addJS('main.js')
+	->internalCSS('body{}')
+	->internalCSS('body{}')
+	->internalJS('function yoo(){}')
+	->internalJS('function yoo(){}');
 
 $listOrder = 'id';
 $listDirn = 'asc';

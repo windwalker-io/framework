@@ -90,7 +90,7 @@ class AssetHelper implements ContainerAwareInterface
 	 *
 	 * @return $this
 	 */
-	public function addCss($file, $name = null, $attribs = array())
+	public function addCSS($file, $name = null, $attribs = array())
 	{
 		$doc = $this->getDoc();
 
@@ -129,7 +129,7 @@ class AssetHelper implements ContainerAwareInterface
 	 *
 	 * @return $this
 	 */
-	public function addJs($file, $name = null, $version = null, $attribs = array())
+	public function addJS($file, $name = null, $version = null, $attribs = array())
 	{
 		$doc = $this->getDoc();
 
@@ -165,6 +165,36 @@ class AssetHelper implements ContainerAwareInterface
 		}
 
 		$doc->addScriptVersion(\JUri::root(true) . '/' . $filePath['file'], $filePath['sum'], $type, $defer, $async);
+
+		return $this;
+	}
+
+	/**
+	 * addCssDeclaration
+	 *
+	 * @param string $content
+	 * @param string $type
+	 *
+	 * @return $this
+	 */
+	public function internalCSS($content, $type = 'text/css')
+	{
+		$this->getDoc()->addStyleDeclaration("\n" . $content . "\n", $type);
+
+		return $this;
+	}
+
+	/**
+	 * addScriptDeclaration
+	 *
+	 * @param string $content
+	 * @param string $type
+	 *
+	 * @return $this
+	 */
+	public function internalJS($content, $type = 'text/javascript')
+	{
+		$this->getDoc()->addScriptDeclaration("\n" . $content . "\n", $type);
 
 		return $this;
 	}
