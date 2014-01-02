@@ -10,22 +10,21 @@
 // No direct access
 defined('_JEXEC') or die;
 
-include_once JPATH_ADMINISTRATOR . '/components/com_flower/includes/core.php';
-JForm::addFieldPath(AKPATH_FORM . '/fields');
-JFormHelper::loadFieldClass('Modal');
+include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
+JForm::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
+JFormHelper::loadFieldClass('itemlist');
 
 /**
- * Supports a modal picker.
+ * Supports an HTML select list of categories
  */
-class JFormFieldSakura_Modal extends JFormFieldModal
+class JFormFieldSakura_List extends JFormFieldItemlist
 {
 	/**
 	 * The form field type.
 	 *
 	 * @var string
-	 * @since    1.6
 	 */
-	protected $type = 'Sakura_Modal';
+	public $type = 'Sakura_List';
 
 	/**
 	 * List name.
@@ -48,4 +47,17 @@ class JFormFieldSakura_Modal extends JFormFieldModal
 	 */
 	protected $extension = 'com_flower';
 
+	/**
+	 * Set the published column name in table.
+	 *
+	 * @var string
+	 */
+	protected $published_field = 'published';
+
+	/**
+	 * Set the ordering column name in table.
+	 *
+	 * @var string
+	 */
+	protected $ordering_field = null;
 }

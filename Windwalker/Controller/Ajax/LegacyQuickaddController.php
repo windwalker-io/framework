@@ -6,14 +6,18 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Controller;
+namespace Windwalker\Controller\Ajax;
+
+use Windwalker\Controller\DisplayController;
+use Windwalker\Helper\ArrayHelper;
+use Windwalker\Helper\LanguageHelper;
 
 /**
- * Class QuickAddAjaxController
+ * Class QuickaddController
  *
  * @since 1.0
  */
-class QuickAddAjaxController extends DisplayController
+class LegacyQuickaddController extends DisplayController
 {
 	/**
 	 * doExecute
@@ -36,7 +40,7 @@ class QuickAddAjaxController extends DisplayController
 		\JForm::addFormPath(JPATH_BASE . "/components/com_{$component}/models/forms");
 		\JForm::addFieldPath(JPATH_BASE . "/components/com_{$component}/models/fields");
 		\JTable::addIncludePath(JPATH_BASE . "/components/com_{$component}/tables");
-		\AKHelper::_('lang.loadLanguage', $extension, null);
+		LanguageHelper::loadLanguage($extension, null);
 
 		// Get Model
 		$model = \JModelLegacy::getInstance(ucfirst($model_name), ucfirst($component) . 'Model', array('ignore_request' => true));
@@ -45,7 +49,7 @@ class QuickAddAjaxController extends DisplayController
 		if (is_callable(array($model, 'getFieldsName')))
 		{
 			$fields_name = $model->getFieldsName();
-			$data        = \AKHelper::_('array.pivotToTwoDimension', $data, $fields_name);
+			$data        = ArrayHelper::pivotToTwoDimension($data, $fields_name);
 		}
 
 		// Get Form

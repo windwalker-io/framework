@@ -139,7 +139,7 @@ class JFormFieldItemlist extends JFormFieldList
 			$options = $this->permissionCheck($options);
 		}
 
-		// show root
+		// Show root
 		// ========================================================================
 		if ($show_root)
 		{
@@ -166,15 +166,16 @@ class JFormFieldItemlist extends JFormFieldList
 		$table_name  = $this->element['table'] ? (string) $this->element['table'] : '#__' . $this->component . '_' . $this->view_list;
 		$select      = $this->element['select'];
 
-		$db = JFactory::getDbo();
-		$q  = $db->getQuery(true);
+		$db    = JFactory::getDbo();
+		$q     = $db->getQuery(true);
+		$input = JFactory::getApplication()->input;
 
 		// Avoid self
 		// ========================================================================
-		$id     = JRequest::getVar('id');
-		$option = JRequest::getVar('option');
-		$view   = JRequest::getVar('view');
-		$layout = JRequest::getVar('layout');
+		$id     = $input->get('id');
+		$option = $input->get('option');
+		$view   = $input->get('view');
+		$layout = $input->get('layout');
 
 		if ($nested && $id)
 		{
@@ -285,14 +286,15 @@ class JFormFieldItemlist extends JFormFieldList
 
 		if ($readonly || $disabled)
 		{
-			return;
+			return false;
 		}
 
+		$task             = $this->getElement('task', $this->view_item . '.ajax.quickadd');
 		$quickadd         = $this->getElement('quickadd', false);
 		$table_name       = $this->getElement('table', '#__' . $this->component . '_' . $this->view_list);
 		$key_field        = $this->getElement('key_field', 'id');
 		$value_field      = $this->getElement('value_field', 'title');
-		$formpath         = $this->getElement('quickadd_formpath', "administrator/components/{$this->extension}/models/forms/{$this->view_item}.xml");
+		$formpath         = $this->getElement('quickadd_formpath', "administrator/components/{$this->extension}/model/form/{$this->view_item}.xml");
 		$quickadd_handler = $this->getElement('quickadd_handler', $this->extension);
 		$title            = $this->getElement('quickadd_label', 'LIB_WINDWALKER_QUICKADD_TITLE');
 
@@ -308,13 +310,8 @@ class JFormFieldItemlist extends JFormFieldList
 		AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_handler);
 		AKHelper::_('include.addJS', 'quickadd.js', 'ww');
 
-		if (JVERSION < 3)
-		{
-			AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
-			AKHelper::_('include.addCSS', 'ui/modal-j25.css', 'ww');
-		}
-
 		// Set AKQuickAddOption
+		$config['task']             = $task;
 		$config['quickadd_handler'] = $quickadd_handler;
 		$config['extension']        = $this->extension;
 		$config['component']        = $this->component;

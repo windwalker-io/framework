@@ -15,6 +15,7 @@ use Windwalker\Debugger\Debugger;
 use Windwalker\DI\Container;
 use Joomla\DI\Container as JoomlaContainer;
 use Joomla\DI\ContainerAwareInterface;
+use Windwalker\Model\Model;
 
 /**
  * Class Controller
@@ -335,7 +336,7 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	 * @param null  $prefix
 	 * @param array $config
 	 *
-	 * @return mixed
+	 * @return Model|null
 	 */
 	public function getModel($name = null, $prefix = null, $config = array())
 	{
@@ -348,10 +349,10 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 		// Get Prefix
 		if (!$prefix)
 		{
-			$prefix = ucfirst($this->getPrefix()) . 'Model';
+			$prefix = ucfirst($this->getPrefix());
 		}
 
-		$modelName = $prefix . ucfirst($name);
+		$modelName = $prefix . 'Model' . ucfirst($name);
 
 		if (!class_exists($modelName))
 		{

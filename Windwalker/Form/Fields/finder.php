@@ -64,7 +64,7 @@ class JFormFieldFinder extends JFormFieldText
 		// ================================================================
 		if (empty($title))
 		{
-			$title = \JText::_(XmlHelper::getAttr($this->element, 'select_label', 'LIB_WINDWALKER_FORMFIELD_FINDER_SELECT_FILE'));
+			$title = \JText::_(XmlHelper::get($this->element, 'select_label', 'LIB_WINDWALKER_FORMFIELD_FINDER_SELECT_FILE'));
 		}
 
 		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');

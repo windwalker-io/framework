@@ -17,7 +17,7 @@ var AKQuickAdd = ({
 
         
         // Set Option
-        option.task    = 'quickAddAjax' ;
+        option.task    = option.task || 'quickAddAjax' ;
         option.option  = option.quickadd_handler ;
         option.ajax    = 1 ;
         option.formctrl= id ;

@@ -101,6 +101,7 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 		}
 
 		// Set AKQuickAddOption
+		$config['task']             = $this->view_item . '.ajax.legacyquickadd';
 		$config['quickadd_handler'] = $quickadd_handler;
 		$config['cat_extension']    = (string) $this->element['extension'];
 		$config['extension']        = 'com_' . $this->component;
