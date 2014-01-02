@@ -148,8 +148,8 @@ class Component
 		}
 
 		// Register form and fields
-		\JForm::addFieldPath(WINDWALKER . '/form/fields');
-		\JForm::addFormPath(WINDWALKER . '/form/forms');
+		\JForm::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
+		\JForm::addFormPath(WINDWALKER_SOURCE . '/Form/Forms');
 	}
 
 	/**

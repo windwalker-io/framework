@@ -42,6 +42,13 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	protected $container;
 
 	/**
+	 * Property option.
+	 *
+	 * @var string
+	 */
+	protected $option;
+
+	/**
 	 * Method to instantiate the view.
 	 *
 	 * @param   \JModel  $model  The model object.
@@ -225,6 +232,24 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	public function setContainer(JoomlaContainer $container)
 	{
 		$this->container = $container;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getOption()
+	{
+		return $this->option;
+	}
+
+	/**
+	 * @param string $option
+	 */
+	public function setOption($option)
+	{
+		$this->option = $option;
 
 		return $this;
 	}

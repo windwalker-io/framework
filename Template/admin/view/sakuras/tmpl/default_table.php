@@ -8,21 +8,29 @@
 
 use Windwalker\Data\Data;
 
-$data = $this->getData();
-$grid = $data->grid;
+/**
+ * Prepare data for this template.
+ *
+ * @var $container Windwalker\DI\Container
+ * @var $data      Windwalker\Data\Data
+ * @var $grid      Windwalker\View\Helper\GridHelper
+ */
+$container = $this->getContainer();
+$data      = $this->getData();
+$grid      = $data->grid;
 
 // Prepare some API objects
-$app  = JFactory::getApplication();
-$date = JFactory::getDate('now', JFactory::getConfig()->get('offset'));
-$doc  = JFactory::getDocument();
-$user = JFactory::getUser();
+$app  = $container->get('app');
+$date = $container->get('date');
+$doc  = $container->get('document');
+$user = $container->get('user');
 
 // Set order script.
 $grid->registerTableSort();
 ?>
 
 <!-- LIST TABLE -->
-<table class="table table-striped adminlist" id="sakuraList">
+<table id="sakuraList" class="table table-striped adminlist">
 
 <!-- TABLE HEADER -->
 <thead>
@@ -94,8 +102,10 @@ $grid->registerTableSort();
 <tbody>
 <?php foreach ($data->items as $i => $item)
 	:
+	// Prepare data
 	$item = new Data($item);
 
+	// Prepare item for GridHelper
 	$grid->setItem($item, $i);
 	?>
 	<tr class="sakura-row" sortable-group-id="<?php echo $item->catid; ?>">

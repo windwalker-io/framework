@@ -25,19 +25,33 @@ class SystemProvider implements ServiceProviderInterface
 	{
 		$container->share('joomla.config', array('JFactory', 'getConfig'));
 
-		$container->share('JApplicationCms', array('JFactory', 'getApplication'))
-			->alias('app', 'JApplicationCms');
+		$container->alias('app', 'JApplicationCms')
+			->share('JApplicationCms', array('JFactory', 'getApplication'));
 
-		$container->share('JDatabaseDriver', array('JFactory', 'getDbo'))
-			->alias('db', 'JDatabaseDriver');
+		$container->alias('db', 'JDatabaseDriver')
+			->share('JDatabaseDriver', array('JFactory', 'getDbo'));
 
-		$container->share('JUser', \JFactory::getUser())
-			->alias('user', 'JUser');
+		$container->alias('document', 'JDocumentHtml')
+			->share('JDocumentHtml', array('JFactory', 'getDocument'));
 
-		$container->share('JInput', \JFactory::getApplication()->input)
-			->alias('input', 'JInput');
+		$container->alias('language', 'JLanguage')
+			->share('JLanguage', array('JFactory', 'getLanguage'));
 
-		$container->share('JEventDispatcher', array('JEventDispatcher', 'getInstance'))
-			->alias('event.dispatcher', 'JEventDispatcher');
+		$container->alias('user', 'JUser')
+			->share('JUser', \JFactory::getUser());
+
+		$container->alias('input', 'JInput')
+			->share('JInput', \JFactory::getApplication()->input);
+
+		$container->alias('event.dispatcher', 'JEventDispatcher')
+			->share('JEventDispatcher', array('JEventDispatcher', 'getInstance'));
+
+		$container->alias('date', 'JDate')
+			->set('JDate',
+				function()
+				{
+					return \JFactory::getDate('now', \JFactory::getConfig()->get('offset'));
+				}
+			);
 	}
 }
