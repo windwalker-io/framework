@@ -44,23 +44,19 @@ class Container extends JoomlaContainer
 		// No name, return root container.
 		if (!$name)
 		{
-			if (self::$instance instanceof static)
+			if (!(self::$instance instanceof JoomlaContainer))
 			{
-				return self::$instance;
+				self::$instance = new static;
 			}
-
-			self::$instance = new static;
 
 			return self::$instance;
 		}
 
 		// Has name, we return children container.
-		if (!empty(self::$children[$name]) && self::$children[$name] instanceof JoomlaContainer)
+		if (empty(self::$children[$name]) || !(self::$children[$name] instanceof JoomlaContainer))
 		{
-			return self::$instance;
+			self::$children[$name] = new static(self::getInstance());
 		}
-
-		self::$children[$name] = new static(static::getInstance());
 
 		return self::$children[$name];
 	}
@@ -87,7 +83,7 @@ class Container extends JoomlaContainer
 		}
 
 		// If the provided $value is not a closure, make it one now for easy resolution.
-		if (!is_callable($value))
+		if (!is_callable($value) && !($value instanceof \Closure))
 		{
 			$value = function () use ($value) {
 				return $value;
@@ -117,6 +113,8 @@ class Container extends JoomlaContainer
 	public function get($key, $forceNew = false)
 	{
 		$raw = $this->getRaw($key);
+
+		$key = $this->resolveAlias($key);
 
 		if (is_null($raw))
 		{

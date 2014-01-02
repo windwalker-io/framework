@@ -8,6 +8,8 @@
  */
 
 // No direct access
+use Windwalker\DI\Container;
+
 defined('_JEXEC') or die;
 
 /**
@@ -81,37 +83,16 @@ class JFormFieldModal extends JFormField
 
 		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
-		if (JVERSION >= 3)
+		// The current user display field.
+		$html[] = '<span class="' . (!$disabled && !$readonly ? 'input-append' : '') . '">';
+		$html[] = '<input type="text" class="' . (!$disabled && !$readonly ? 'input-medium ' . $this->element['class'] : $this->element['class']) . '" id="' . $this->id . '_name" value="' . $title . '" disabled="disabled" size="35" />';
+
+		if (!$disabled && !$readonly)
 		{
-			// The current user display field.
-			$html[] = '<span class="' . (!$disabled && !$readonly ? 'input-append' : '') . '">';
-			$html[] = '<input type="text" class="' . (!$disabled && !$readonly ? 'input-medium ' . $this->element['class'] : $this->element['class']) . '" id="' . $this->id . '_name" value="' . $title . '" disabled="disabled" size="35" />';
-
-			if (!$disabled && !$readonly)
-			{
-				$html[] = '<a class="modal btn" title="' . JText::_('COM_' . strtoupper($this->component) . '_CHANGE_ITEM_BUTTON') . '"  href="' . $link . '&amp;' . JSession::getFormToken() . '=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-file"></i> ' . JText::_('JSELECT') . '</a>';
-			}
-
-			$html[] = '</span>';
+			$html[] = '<a class="modal btn" title="' . JText::_('COM_' . strtoupper($this->component) . '_CHANGE_ITEM_BUTTON') . '"  href="' . $link . '&amp;' . JSession::getFormToken() . '=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-file"></i> ' . JText::_('JSELECT') . '</a>';
 		}
-		else
-		{
-			AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
 
-			// The current user display field.
-			$html[] = '<div class="fltlft">';
-			$html[] = '  <input type="text" id="' . $this->id . '_name" value="' . $title . '" disabled="disabled" size="35" />';
-			$html[] = '</div>';
-
-			// The user select button.
-			if (!$disabled && !$readonly):
-				$html[] = '<div class="fltlft">';
-				$html[] = '  <div class="">';
-				$html[] = '    <a class="modal delicious light blue" title="' . JText::_('COM_' . strtoupper($this->component) . '_CHANGE_ITEM') . '"  href="' . $link . '&amp;' . JSession::getFormToken() . '=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('COM_' . strtoupper($this->component) . '_CHANGE_ITEM_BUTTON') . '</a>';
-				$html[] = '  </div>';
-				$html[] = '</div>';
-			endif;
-		}
+		$html[] = '</span>';
 
 		// The active article id field.
 		if (0 == (int) $this->value)
@@ -123,7 +104,7 @@ class JFormFieldModal extends JFormField
 			$value = (int) $this->value;
 		}
 
-		// class='required' for client side validation
+		// Class='required' for client side validation
 		$class = '';
 
 		if ($this->required)
@@ -196,11 +177,14 @@ class JFormFieldModal extends JFormField
 			->where("id = '{$this->value}'");
 
 		$db->setQuery($q);
-		$title = $db->loadResult();
 
-		if ($error = $db->getErrorMsg())
+		try
 		{
-			JError::raiseWarning(500, $error);
+			$title = $db->loadResult();
+		}
+		catch (RuntimeException $e)
+		{
+			Container::getInstance('app')->enqueueMessage($e->getMessage(), 500);
 		}
 
 		return $title;
@@ -264,12 +248,6 @@ class JFormFieldModal extends JFormField
 		$doc = JFactory::getDocument();
 		AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_handler);
 		AKHelper::_('include.addJS', 'quickadd.js', 'ww');
-
-		if (JVERSION < 3)
-		{
-			AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
-			AKHelper::_('include.addCSS', 'ui/modal-j25.css', 'ww');
-		}
 
 		// Set AKQuickAddOption
 		$config['quickadd_handler'] = $quickadd_handler;

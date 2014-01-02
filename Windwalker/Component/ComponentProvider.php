@@ -42,6 +42,23 @@ class ComponentProvider implements ServiceProviderInterface
 	 */
 	public function register(Container $container)
 	{
+		$name = $this->name;
+
+		// Helpers
+		$container->extend(
+			'\\Windwalker\\Helper\\AssetHelper',
+			function($asset, $container) use($name)
+			{
+				$asset = clone $asset;
+
+				return $asset->setName('com_' . strtolower($name))
+					->setContainer($container);
+			}
+		);
+
+		$container->alias('helper.asset', '\\Windwalker\\Helper\\AssetHelper');
+
+		// Bind default model
 		$modelName = '\\Windwalker\\Model\\Model';
 
 		$container->alias('model', $modelName)
@@ -50,6 +67,6 @@ class ComponentProvider implements ServiceProviderInterface
 
 		$container->get('JModel')
 			->setName('default')
-			->setOption('com_' . strtolower($this->name));
+			->setOption('com_' . strtolower($name));
 	}
 }

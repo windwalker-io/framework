@@ -25,7 +25,7 @@ define('WINDWALKER', dirname(__DIR__));
 
 define('WINDWALKER_SOURCE', __DIR__);
 
-// Register provider
+// Register global provider
 $container = Container::getInstance();
 
 $container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);

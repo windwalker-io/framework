@@ -8,6 +8,12 @@
 
 use Windwalker\View\Layout\FileLayout;
 
+$container = $this->getContainer();
+
+$asset = $container->get('helper.asset');
+$asset->addCss('main.css');
+$asset->addJs('main.js');
+
 $listOrder = 'id';
 $listDirn = 'asc';
 $originalOrders= [];
