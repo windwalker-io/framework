@@ -90,7 +90,7 @@ class CurlHelper
 	 *
 	 * @return  Object Object with success or fail information.
 	 */
-	public static function getFile($url = null, $path = null, $option = array())
+	public static function download($url = null, $path = null, $option = array())
 	{
 		if (!$url)
 		{
