@@ -16,9 +16,8 @@ namespace Windwalker\Helper;
 class PathHelper
 {
 	/**
-	 * Property extMapper.
-	 *
-	 * @var array
+	 * @var    array  The mapper to find extension type.
+	 * @since  3.3
 	 */
 	protected static $extMapper = array(
 		'com_' => 'components',
@@ -29,13 +28,15 @@ class PathHelper
 	);
 
 	/**
-	 * get
+	 * Get the path of extension.
 	 *
-	 * @param string $element
-	 * @param string $client
-	 * @param bool   $absolute
+	 * @param   string   $element   The extension element name, example: com_content or plg_group_name
+	 * @param   string   $client    Site or administrator.
+	 * @param   boolean  $absolute  True to return whole path.
 	 *
-	 * @return string
+	 * @return  string  The found path.
+	 *
+	 * @since  3.3
 	 */
 	public static function get($element, $client = null, $absolute = true)
 	{
@@ -96,12 +97,14 @@ class PathHelper
 	}
 
 	/**
-	 * getAdmin
+	 * Get path of administrator.
 	 *
-	 * @param string $element
-	 * @param bool   $absolute
+	 * @param   string   $element   The extension element name, example: com_content or plg_group_name
+	 * @param   boolean  $absolute  True to return whole path.
 	 *
-	 * @return string
+	 * @return  string  The found path.
+	 *
+	 * @since   3.3
 	 */
 	public static function getAdmin($element, $absolute = true)
 	{
@@ -109,12 +112,14 @@ class PathHelper
 	}
 
 	/**
-	 * getAdmin
+	 * Get path of front-end.
 	 *
-	 * @param string $element
-	 * @param bool   $absolute
+	 * @param   string   $element   The extension element name, example: com_content or plg_group_name
+	 * @param   boolean  $absolute  True to return whole path.
 	 *
-	 * @return string
+	 * @return  string  The found path.
+	 *
+	 * @since   3.3
 	 */
 	public static function getSite($element, $absolute = true)
 	{
@@ -122,13 +127,15 @@ class PathHelper
 	}
 
 	/**
-	 * extractElement
+	 * Extract element.
 	 *
-	 * @param string $element
+	 * @param   string  $element  he extension element name, example: com_content or plg_group_name
 	 *
-	 * @return array
+	 * @return  array
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws  \InvalidArgumentException
+	 *
+	 * @since   3.3
 	 */
 	protected static function extractElement($element)
 	{
@@ -163,11 +170,13 @@ class PathHelper
 	}
 
 	/**
-	 * getExtName
+	 * Get extension type name.
 	 *
-	 * @param string $prefix
+	 * @param   string  $prefix  The extension prefix.
 	 *
-	 * @return string|null
+	 * @return  string|null  Extension type name.
+	 *
+	 * @since   3.3
 	 */
 	protected static function getExtName($prefix)
 	{

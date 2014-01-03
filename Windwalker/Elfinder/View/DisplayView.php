@@ -18,6 +18,26 @@ use Windwalker\View\Html\AbstractHtmlView;
 class DisplayView extends AbstractHtmlView
 {
 	/**
+	 * @var  array  Property defaultToolbar.
+	 */
+	protected $defaultToolbar = array(
+		array('back', 'forward'),
+		array('reload'),
+		//array('home', 'up'),
+		array('mkdir', 'mkfile', 'upload'),
+		//array('open', 'download', 'getfile'),
+		array('info'),
+		array('quicklook'),
+		array('copy', 'cut', 'paste'),
+		array('rm'),
+		array('duplicate', 'rename', 'edit', 'resize'),
+		//array('extract', 'archive'),
+		array('search'),
+		array('view'),
+		array('help')
+	);
+
+	/**
 	 * render
 	 *
 	 * @return string
@@ -27,12 +47,8 @@ class DisplayView extends AbstractHtmlView
 		// Init some API objects
 		// ================================================================================
 		$container  = $this->getContainer();
-		$date       = $container->get('date');
-		$uri        = \JUri::getInstance();
-		$user       = $container->get('user');
-		$app        = $container->get('app');
 		$input      = $container->get('input');
-		$doc        = $container->get('document');
+		$asset      = $container->get('helper.asset');
 		$lang       = $container->get('language');
 		$lang_code  = $lang->getTag();
 		$lang_code  = str_replace('-', '_', $lang_code);
@@ -43,24 +59,6 @@ class DisplayView extends AbstractHtmlView
 		// Script
 		$this->displayScript($com_option, $config);
 
-		// Base Toolbar
-		$toolbar_base = array(
-			array('back', 'forward'),
-			array('reload'),
-			//array('home', 'up'),
-			array('mkdir', 'mkfile', 'upload'),
-			//array('open', 'download', 'getfile'),
-			array('info'),
-			array('quicklook'),
-			array('copy', 'cut', 'paste'),
-			array('rm'),
-			array('duplicate', 'rename', 'edit', 'resize'),
-			//array('extract', 'archive'),
-			array('search'),
-			array('view'),
-			array('help')
-		);
-
 		// Get Request
 		$finder_id  = $input->get('finder_id');
 		$modal      = ($input->get('tmpl') == 'component') ? : false;
@@ -68,12 +66,18 @@ class DisplayView extends AbstractHtmlView
 		$start_path = $config->get('start_path', $input->get('start_path', '/'));
 		$site_root  = \JURI::root(true) . '/';
 
-		$toolbar = $config->get('toolbar', $toolbar_base);
-		$toolbar = $toolbar ? json_encode($toolbar) : json_encode($toolbar_base);
+		$toolbar = $config->get('toolbar', $this->defaultToolbar);
+		$toolbar = json_encode($toolbar);
 
 		$onlymimes = $config->get('onlymimes', $input->get('onlymimes', null));
-		$onlymimes = is_array($onlymimes) ? implode(',', $onlymimes) : $onlymimes;
-		$onlymimes = $onlymimes ? "'" . str_replace(",", "','", $onlymimes) . "'" : '';
+
+		if ($onlymimes)
+		{
+			$onlymimes = is_array($onlymimes) ? $onlymimes : explode(',', $onlymimes);
+			$onlymimes = array_map('trim', $onlymimes);
+			$onlymimes = array_map(array('\\Windwalker\\Helper\\StringHelper', 'quote'), $onlymimes);
+			$onlymimes = implode(',', $onlymimes);
+		}
 
 		// Get INI setting
 		$upload_max = ini_get('upload_max_filesize');
@@ -126,7 +130,7 @@ class DisplayView extends AbstractHtmlView
         });
 SCRIPT;
 
-		$doc->addScriptDeclaration($script);
+		$asset->internalJS($script);
 
 		return '<div class="row-fluid">
                 <div id="elfinder" class="span12 windwalker-finder"></div>
@@ -143,28 +147,26 @@ SCRIPT;
 	 */
 	private function displayScript($com_option, $config)
 	{
-		$doc       = \JFactory::getDocument();
-		$lang      = \JFactory::getLanguage();
+		$lang      = $this->container->get('language');
 		$lang_code = $lang->getTag();
 		$lang_code = str_replace('-', '_', $lang_code);
 
 		// Include elFinder and JS
 		// ================================================================================
 
-		// JQuery
-		\JHtml::_('jquery.framework', true);
-		\JHtml::_('bootstrap.framework', true);
+		$asset = $this->container->get('helper.asset');
 
-		$assets_url = \AKHelper::_('path.getWWUrl') . '/assets';
+		// JQuery
+		$asset->jquery();
+		$asset->bootstrap();
 
 		// ElFinder includes
-		$doc->addStylesheet($assets_url . '/js/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css');
-		$doc->addStylesheet($assets_url . '/js/elfinder/css/elfinder.min.css');
-		$doc->addStylesheet($assets_url . '/js/elfinder/css/theme.css');
+		$asset->addCss('js/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css');
+		$asset->addCss('js/elfinder/css/elfinder.min.css');
+		$asset->addCss('js/elfinder/css/theme.css');
 
-		$doc->addscript($assets_url . '/js/jquery-ui/js/jquery-ui.min.js');
-		$doc->addscript($assets_url . '/js/elfinder/js/elfinder.min.js');
-		\JHtml::script($assets_url . '/js/elfinder/js/i18n/elfinder.' . $lang_code . '.js');
-		\AKHelper::_('include.core');
+		$asset->addJs('js/jquery-ui/js/jquery-ui.min.js');
+		$asset->addJs('js/elfinder/js/elfinder.min.js');
+		$asset->addJs('js/elfinder/js/i18n/elfinder.' . $lang_code . '.js');
 	}
 }

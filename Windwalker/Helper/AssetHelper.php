@@ -200,6 +200,17 @@ class AssetHelper implements ContainerAwareInterface
 	}
 
 	/**
+	 * windwalker
+	 *
+	 * @return void
+	 */
+	public function windwalker()
+	{
+		$this->addCSS('windwalker.css');
+		$this->addJS('windwalker.js');
+	}
+
+	/**
 	 * jquery
 	 *
 	 * @param boolean $debug
@@ -245,14 +256,19 @@ class AssetHelper implements ContainerAwareInterface
 	/**
 	 * bootstrap
 	 *
+	 * @param bool    $css
 	 * @param boolean $debug
 	 *
 	 * @return $this
 	 */
-	public function bootstrap($debug = null)
+	public function bootstrap($css = false, $debug = null)
 	{
 		\JHtml::_('bootstrap.framework', $debug);
-		\JHtml::_('bootstrap.loadCss');
+
+		if ($css)
+		{
+			\JHtml::_('bootstrap.loadCss');
+		}
 
 		return $this;
 	}
@@ -339,12 +355,12 @@ class AssetHelper implements ContainerAwareInterface
 		{
 			$sumfile = JPATH_ROOT . '/' . $foundpath . '/' . $file . '.sum';
 
-			if (!file_exists($sumfile))
+			if (!is_file($sumfile))
 			{
 				$sumfile = JPATH_ROOT . '/' . $foundpath . '/' . $this->sumName;
 			}
 
-			if (file_exists($sumfile))
+			if (is_file($sumfile))
 			{
 				$sum = file_get_contents($sumfile);
 			}
@@ -423,7 +439,8 @@ class AssetHelper implements ContainerAwareInterface
 		// (8) Find: media/windwalker/[file_name].[type]
 		$this->paths->insert('media/windwalker', 100);
 
-		// \AK::show($this->paths);
+		// (9) Find: libraries/windwalker/assets/[file_name].[type] (For legacy)
+		$this->paths->insert('libraries/windwalker/assets', 50);
 	}
 
 	/**

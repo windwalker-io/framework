@@ -34,17 +34,7 @@ class ConnectView extends AbstractJsonView
 		// Init some API objects
 		// ================================================================================
 		$container  = $this->getContainer();
-		$date       = $container->get('date');
-		$uri        = \JUri::getInstance();
-		$user       = $container->get('user');
-		$app        = $container->get('app');
 		$input      = $container->get('input');
-		$doc        = $container->get('document');
-		$lang       = $container->get('language');
-		$lang_code  = $lang->getTag();
-		$lang_code  = str_replace('-', '_', $lang_code);
-
-		$com_option = $this->option ? : $input->get('option');
 		$config     = new \JRegistry($this->config);
 
 		// Set E_ALL for debuging
@@ -123,7 +113,9 @@ class ConnectView extends AbstractJsonView
 	}
 
 	/**
-	 * @return array
+	 * getConfig
+	 *
+	 * @return  array
 	 */
 	public function getConfig()
 	{
@@ -131,7 +123,11 @@ class ConnectView extends AbstractJsonView
 	}
 
 	/**
-	 * @param array $config
+	 * setConfig
+	 *
+	 * @param   array  $config
+	 *
+	 * @return  $this
 	 */
 	public function setConfig($config)
 	{
