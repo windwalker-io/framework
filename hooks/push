@@ -1,0 +1,24 @@
+#!/bin/bash
+
+COM='flower'
+
+echo "Copy Admin"
+
+ADMIN=../../../administrator/components/com_$COM;
+
+rm -rf $ADMIN;
+mkdir -p $ADMIN;
+cp -r ../Template/admin/* $ADMIN;
+
+
+echo "Copy Site"
+
+$SITE=../../../components/com_$COM;
+
+rm -rf $SITE;
+mkdir -p $SITE;
+cp -r ../Template/site $SITE;
+
+echo "Done"
+
+exit 0

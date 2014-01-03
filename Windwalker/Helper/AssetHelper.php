@@ -298,7 +298,7 @@ class AssetHelper implements ContainerAwareInterface
 	 *
 	 * @return array|bool
 	 */
-	public function findFile($file, $type, $name = null)
+	protected function findFile($file, $type, $name = null)
 	{
 		$name      = $name ? : $this->name;
 		$foundpath = '';
@@ -397,7 +397,7 @@ class AssetHelper implements ContainerAwareInterface
 	{
 		$app = $this->getContainer()->get('app');
 
-		$prefix = $app->isAdmin() . 'administrator/' . '';
+		$prefix = $app->isAdmin() ? 'administrator/' : '';
 
 		// (1) Find: templates/[tmpl]/[type]/[name]/[file_name].[type]
 		$this->paths->insert($prefix . 'templates/' . $app->getTemplate() . '/{type}/{name}', 800);
