@@ -62,6 +62,17 @@ class Component
 	protected $defaultController;
 
 	/**
+	 * Property path.
+	 *
+	 * @var array
+	 */
+	protected $path = array(
+		'self',
+		'site',
+		'administrator'
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string           $name
@@ -76,8 +87,6 @@ class Component
 		$this->application = $application ?: \JFactory::getApplication();
 		$this->input       = $input       ?: $this->application->input;
 		$this->name        = $name;
-
-		$this->prepare();
 
 		// Guess component name.
 		if (!$this->name)
@@ -95,6 +104,8 @@ class Component
 		}
 
 		$this->container = $container ?: Container::getInstance($this->name);
+
+		$this->prepare();
 	}
 
 	/**
@@ -136,7 +147,24 @@ class Component
 	 */
 	protected function init()
 	{
-		$this->container->registerServiceProvider(new ComponentProvider($this->name));
+	}
+
+	/**
+	 * prepare
+	 *
+	 * @return void
+	 */
+	protected function prepare()
+	{
+		$this->path['self']          = JPATH_BASE . '/components/com_' . strtolower($this->name);
+		$this->path['site']          = JPATH_ROOT . '/components/com_' . strtolower($this->name);
+		$this->path['administrator'] = JPATH_ROOT . '/administrator/components/com_' . strtolower($this->name);
+
+		define(strtoupper($this->name) . '_SELF',  $this->path['self']);
+		define(strtoupper($this->name) . '_SITE',  $this->path['site']);
+		define(strtoupper($this->name) . '_ADMIN', $this->path['administrator']);
+
+		$this->container->registerServiceProvider(new ComponentProvider($this->name, $this));
 
 		$task       = $this->input->getWord('task');
 		$controller = $this->input->getWord('controller');
@@ -150,15 +178,6 @@ class Component
 		// Register form and fields
 		\JForm::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
 		\JForm::addFormPath(WINDWALKER_SOURCE . '/Form/Forms');
-	}
-
-	/**
-	 * prepare
-	 *
-	 * @return void
-	 */
-	protected function prepare()
-	{
 	}
 
 	/**
@@ -281,5 +300,39 @@ class Component
 		$this->defaultController = $defaultController;
 
 		return $this;
+	}
+
+	/**
+	 * getPath
+	 *
+	 * @param string $client
+	 *
+	 * @return string
+	 */
+	public function getPath($client = 'self')
+	{
+		$client = ($client == 'admin') ? 'administrator' : $client;
+
+		return $this->path[$client];
+	}
+
+	/**
+	 * getSitePath
+	 *
+	 * @return string
+	 */
+	public function getSitePath()
+	{
+		return $this->getPath('site');
+	}
+
+	/**
+	 * getAdminPath
+	 *
+	 * @return string
+	 */
+	public function getAdminPath()
+	{
+		return $this->getPath('administrator');
 	}
 }

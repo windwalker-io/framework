@@ -26,7 +26,7 @@ $asset->addCSS('main.css')
 
 $listOrder = 'id';
 $listDirn = 'asc';
-$originalOrders= [];
+$originalOrders = [];
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist">

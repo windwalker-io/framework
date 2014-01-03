@@ -20,15 +20,23 @@ class ComponentProvider implements ServiceProviderInterface
 	protected $name = '';
 
 	/**
+	 * Property component.
+	 *
+	 * @var
+	 */
+	private $component;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param $name
 	 * @param $option
 	 * @param $prefix
 	 */
-	public function __construct($name)
+	public function __construct($name, $component)
 	{
-		$this->name = $name;
+		$this->name      = $name;
+		$this->component = $component;
 	}
 
 	/**
@@ -43,6 +51,10 @@ class ComponentProvider implements ServiceProviderInterface
 	public function register(Container $container)
 	{
 		$name = $this->name;
+
+		// Component
+		$container->alias('component', ucfirst($name) . 'Component')
+			->share(ucfirst($name) . 'Component', $this->component);
 
 		// Helpers
 		$container->extend(
