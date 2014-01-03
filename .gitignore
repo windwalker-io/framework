@@ -1,2 +1,6 @@
 # Development system files #
 .*
+
+# Composer #
+vendor
+composer.lock
