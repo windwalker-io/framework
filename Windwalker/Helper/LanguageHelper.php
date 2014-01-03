@@ -91,10 +91,15 @@ class LanguageHelper
 
 		$url->setQuery($query);
 		$url->toString();
-		$response = \AKHelper::_('curl.getPage', $url->toString());
+		$response = CurlHelper::get((string) $url);
+
+		if (empty($response->body))
+		{
+			return '';
+		}
 
 		$json = new \JRegistry;
-		$json->loadString($response);
+		$json->loadString($response->body, 'json');
 
 		$r = $json->get('data.translations');
 
@@ -106,22 +111,23 @@ class LanguageHelper
 	 *
 	 * @param   string $lang   Language tag.
 	 * @param   string $option Component option.
+	 *
+	 * @return  boolean
 	 */
 	public static function loadAll($lang = 'en-GB', $option = null)
 	{
-		$folder = \AKHelper::_('path.getAdmin', $option) . '/language/' . $lang;
+		$folder = PathHelper::getAdmin($option) . '/language/' . $lang;
 
-		if (\JFolder::exists($folder))
+		if (is_dir($folder))
 		{
 			$files = \JFolder::files($folder);
 		}
 		else
 		{
-			return;
+			return false;
 		}
 
 		$lang  = \JFactory::getLanguage();
-		$langs = array();
 
 		foreach ($files as $file)
 		{
@@ -139,8 +145,10 @@ class LanguageHelper
 				continue;
 			}
 
-			$lang->load(implode('.', $file), \AKHelper::_('path.getAdmin', $option));
+			$lang->load(implode('.', $file), PathHelper::getAdmin($option));
 		}
+
+		return true;
 	}
 
 	/**
@@ -148,19 +156,16 @@ class LanguageHelper
 	 *
 	 * @param   string $ext    Extension element name, eg: com_content, plg_group_name.
 	 * @param   string $client site or admin.
+	 *
+	 * @return  boolean
 	 */
-	public static function loadLanguage($ext = null, $client = 'site')
+	public static function loadLanguage($ext, $client = 'site')
 	{
-		if (!$ext)
-		{
-			$ext = \AKHelper::_('path.getOption');
-		}
-
 		$lang = \JFactory::getLanguage();
 
-		$lang->load($ext, JPATH_BASE, null, false, false)
-		|| $lang->load($ext, \AKHelper::_('path.get', $client, $ext), null, false, false)
-		|| $lang->load($ext, JPATH_BASE, null, true)
-		|| $lang->load($ext, \AKHelper::_('path.get', $client, $ext), null, true);
+		return $lang->load($ext, JPATH_BASE, null, false, false)
+			|| $lang->load($ext, PathHelper::get($ext, $client), null, false, false)
+			|| $lang->load($ext, JPATH_BASE, null, true)
+			|| $lang->load($ext, PathHelper::get($ext, $client), null, true);
 	}
 }

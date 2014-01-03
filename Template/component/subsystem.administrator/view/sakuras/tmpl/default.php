@@ -27,6 +27,8 @@ $asset->addCSS('main.css')
 $listOrder = 'id';
 $listDirn = 'asc';
 $originalOrders = [];
+
+echo \Windwalker\Helper\LanguageHelper::translate('反引號 英文', 'zh-tw', 'en');
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist">

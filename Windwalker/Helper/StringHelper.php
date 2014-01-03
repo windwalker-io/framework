@@ -15,7 +15,14 @@ namespace Windwalker\Helper;
  */
 class StringHelper
 {
-
+	/**
+	 * quote
+	 *
+	 * @param string $string
+	 * @param string $quote
+	 *
+	 * @return  string
+	 */
 	public static function quote($string, $quote = "''")
 	{
 		if (empty($quote[1]))
@@ -24,5 +31,17 @@ class StringHelper
 		}
 
 		return $quote[0] . $string . $quote[1];
+	}
+
+	/**
+	 * backquote
+	 *
+	 * @param string $string
+	 *
+	 * @return  string
+	 */
+	public static function backquote($string)
+	{
+		return static::quote($string, '``');
 	}
 }
