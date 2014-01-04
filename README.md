@@ -6,19 +6,19 @@
 
 This is the version 2 repository, all folder with lower case is legacy code, all folders with capitals is for version 2 and follows PSR-0 naming standard.
 
-This framework is still work in process.
+The version 2 is still work in process.
 
 ## About
 Author
 :   [Simon Asika](mailto://asika@asikart.com)
 
 Joomla!CMS version
-:   3.2 and latter
+:   3.2 and newer
 
 First release
 :   2012-05-05
 
-## All extensions created by version 1
+## All extensions created by Windwalker
 
 - Asikart Quickicoins: https://github.com/asikart/quickicons
 - Asikart Quickcontent: https://github.com/asikart/quickcontent
