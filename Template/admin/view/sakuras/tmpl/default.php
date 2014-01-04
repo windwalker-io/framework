@@ -17,18 +17,9 @@ use Windwalker\View\Layout\FileLayout;
 $container = $this->getContainer();
 $asset     = $container->get('helper.asset');
 
-$asset->addCSS('main.css')
-	->addJS('main.js')
-	->internalCSS('body{}')
-	->internalCSS('body{}')
-	->internalJS('function yoo(){}')
-	->internalJS('function yoo(){}');
-
 $listOrder = 'id';
 $listDirn = 'asc';
 $originalOrders = [];
-
-echo \Windwalker\Helper\LanguageHelper::translate('反引號 英文', 'zh-tw', 'en');
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist">

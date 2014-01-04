@@ -1,22 +1,28 @@
 ![ASIKART_logo_new_550.png](http://doc.asikart.com/images/combuilder/ASIKART_logo_new_550.png)
 
-**Asikart Component Builder** 是飛鳥工作室的內部開發工具，著重在Joomla!元件的敏捷開發、高速原型設計、統一共用函式庫與框架、並提供一組命令列程式碼產生器。代號「**風速般的男人**」，簡稱「**風速男**」，國際語言拼法為：**Rapido de la vento viro**。
+## Introduction
 
-Component Builder 與內置 WindWalker Framework 是一個附掛在 Joomla! CMS 之下的流程優化框架，並非完整的開發框架如 Nooku 或 Yii，因此其功能相依性較為強烈，無法將組成元素的部份單獨抽出去使用。其目的在延伸 Joomla! 既有功能，但不跳離原有的 Joomla! 開發模式與風格，讓開發者無需學習新的架構，降低使用負擔。
+**Windwalker** is a RAD framework of Joomla! CMS.
 
-本站為產生器的教學文章係列，主要提供對產生器各方面功能的導覽與解說，以及提供快速查詢手冊使用。
+This is the version 2 repository, all folder with lower case is legacy code, all folders with capitals is for version 2 and follows PSR-0 naming standard.
 
-## 相關資訊
-製作者
-:   [Asika](mailto://asika@asikart.com)
+This framework is still work in process.
 
-適用Joomla!版本
-:   2.5 / 3.0 / 3.1
+## About
+Author
+:   [Simon Asika](mailto://asika@asikart.com)
 
-第一版釋出時間
+Joomla!CMS version
+:   3.2 and latter
+
+First release
 :   2012-05-05
 
-## 參考資源
-* [Github 頁面](https://github.com/asikart/AK-Component-Builder)
-* [Bug回報與建議](https://github.com/asikart/AK-Component-Builder/issues)
-* [API手冊](http://doc.asikart.com/wwapi/)
+## All extensions created by version 1
+
+- Asikart Quickicoins: https://github.com/asikart/quickicons
+- Asikart Quickcontent: https://github.com/asikart/quickcontent
+- Remote and Local Image Manager: https://github.com/asikart/remoteimage
+- ACE x Markdown Editor: https://github.com/asikart/ace-markdown-editor
+- Asikart UserXTD: https://github.com/asikart/userxtd
+
