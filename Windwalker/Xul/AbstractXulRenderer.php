@@ -8,6 +8,8 @@
 
 namespace Windwalker\Xul;
 
+use Windwalker\Helper\XmlHelper;
+
 /**
  * Class XulRenderer
  *
@@ -112,11 +114,20 @@ abstract class AbstractXulRenderer
 					$class = 'Html';
 				}
 
-				$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . ucfirst($class) . 'Renderer';
+				$handler = XmlHelper::get($child, 'handler');
 
-				if (!class_exists($renderer))
+				if ($handler && is_subclass_of($handler, __CLASS__))
 				{
-					throw new \DomainException(sprintf('Xul tag: "%s" do not support.', $name));
+					$renderer = $handler;
+				}
+				else
+				{
+					$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . ucfirst($class) . 'Renderer';
+
+					if (!class_exists($renderer))
+					{
+						throw new \DomainException(sprintf('Xul tag: "%s" do not support.', $name));
+					}
 				}
 
 				if (is_object($data))

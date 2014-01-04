@@ -44,4 +44,21 @@ class StringHelper
 	{
 		return static::quote($string, '``');
 	}
+
+	/**
+	 * parseVariable
+	 *
+	 * @return  string
+	 */
+	public static function parseVariable($string, $data = array(), $tags = array('{{', '}}'))
+	{
+		return preg_replace_callback(
+			'/\{\{\s*(.+?)\s*\}\}/',
+			function($match) use ($data)
+			{
+				return CallableHelper::getArgumentFromData($match[1], $data);
+			},
+			$string
+		);
+	}
 }

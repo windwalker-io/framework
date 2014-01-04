@@ -8,6 +8,7 @@
 
 namespace Windwalker\Xul\Control;
 
+use Windwalker\Helper\CallableHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
 
@@ -43,6 +44,15 @@ class CallRenderer extends AbstractXulRenderer
 		}
 	}
 
+	/**
+	 * executeStatic
+	 *
+	 * @param string            $static
+	 * @param \SimpleXmlElement $element
+	 * @param mixed             $data
+	 *
+	 * @return  mixed
+	 */
 	protected static function executeStatic($static, $element, $data)
 	{
 		$static = explode('::', $static);
@@ -51,14 +61,31 @@ class CallRenderer extends AbstractXulRenderer
 		return call_user_func_array($static, static::getArguments($element, $data));
 	}
 
+	/**
+	 * executeInstance
+	 *
+	 * @param string            $name
+	 * @param \SimpleXmlElement $element
+	 * @param mixed             $data
+	 *
+	 * @return  mixed
+	 */
 	protected static function executeInstance($name, $element, $data)
 	{
 		$method   = XmlHelper::get($element, 'method');
-		$instance = static::getArgumentFromData($name, $data);
+		$instance = CallableHelper::getArgumentFromData($name, $data);
 
 		return call_user_func_array(array($instance, $method), static::getArguments($element, $data));
 	}
 
+	/**
+	 * getArguments
+	 *
+	 * @param \SimpleXmlElement $element
+	 * @param mixed             $data
+	 *
+	 * @return  array
+	 */
 	protected static function getArguments($element, $data)
 	{
 		$args = $element->xpath('argument');
@@ -69,7 +96,7 @@ class CallRenderer extends AbstractXulRenderer
 		{
 			if (isset($arg['data']))
 			{
-				$return[] = static::getArgumentFromData((string) $arg['data'], $data);
+				$return[] = CallableHelper::getArgumentFromData((string) $arg['data'], $data);
 			}
 			else
 			{
@@ -88,35 +115,5 @@ class CallRenderer extends AbstractXulRenderer
 		}
 
 		return $return;
-	}
-
-	protected static function getArgumentFromData($arguments, $data)
-	{
-		if (!$arguments)
-		{
-			return null;
-		}
-
-		$args = explode('.', $arguments);
-
-		$dataTmp = $data;
-
-		foreach ($args as $arg)
-		{
-			if (is_object($dataTmp) && !empty($dataTmp->$arg))
-			{
-				$dataTmp = $dataTmp->$arg;
-			}
-			elseif (is_array($dataTmp) && !empty($dataTmp[$arg]))
-			{
-				$dataTmp = $dataTmp[$arg];
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		return $dataTmp;
 	}
 }

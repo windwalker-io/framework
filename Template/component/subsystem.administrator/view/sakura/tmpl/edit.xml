@@ -1,46 +1,48 @@
 <?xml version="1.0"?>
 <page xmlns:html="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	<asset type="css" file="main.css"/>
-	<asset type="js" file="main.js"/>
-	<asset file="yoo.js"/>
-
-	<call data="asset" method="mootools">
-		<argument>NULL</argument>
-	</call>
-
-	<call static="AK::show">
-		<argument>behavior.mootools</argument>
-		<argument data="item"/>
-	</call>
-
 	<html:div id="flower"
 		class="windwalker sakuras tablelist"
 		>
-		<tabset name="sakura-edit" active="basic">
-			<tab name="basic">
-				<row class="yoo">
-					<column name="left" span="8">
-						<fieldset name="information" />
-						<fieldset name="text" />
-					</column>
-					<column name="right" span="4">
-						<fieldset name="publish" />
-					</column>
-				</row>
-			</tab>
-			<tab name="advanced">
-				<row>
-					<column name="left">
-						<fieldset name="created" class="span8" />
-					</column>
-				</row>
-			</tab>
-			<tab name="access">
-				<fieldset name="rules"/>
-			</tab>
-		</tabset>
-	</html:div>
-	<tabset name="test">
+		<html:form action="{{ uri }}"
+			method="post"
+			name="adminForm"
+			id="sakura-form"
+			class="form-validate"
+			enctype="multipart/form-data"
+			>
+			<tabset name="sakura-edit" active="basic">
+				<tab name="basic">
+					<row class="yoo">
+						<column name="left" span="8">
+							<fieldset name="information" />
+							<fieldset name="text" />
+						</column>
+						<column name="right" span="4">
+							<fieldset name="publish" />
+						</column>
+					</row>
+				</tab>
+				<tab name="advanced">
+					<row handler="\Windwalker\Xul\Control\BlockRenderer">
+						<column name="left">
+							<fieldset name="created" class="span8" />
+						</column>
+					</row>
+				</tab>
+				<tab name="rules">
 
-	</tabset>
+				</tab>
+			</tabset>
+
+			<html:hr/>
+
+			<fieldset name="rules"/>
+		</html:form>
+	</html:div>
+
+	<block display="false">
+		<call static="JHtmlFormbehavior::chosen">
+			<argument>select</argument>
+		</call>
+	</block>
 </page>

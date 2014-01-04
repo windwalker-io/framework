@@ -8,8 +8,10 @@
 
 namespace Windwalker\Xul\Control;
 
+use Windwalker\Helper\HtmlHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\Html\HtmlRenderer;
 
 /**
  * Class FieldsetRenderer
@@ -25,6 +27,7 @@ class FieldsetRenderer extends AbstractXulRenderer
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \UnexpectedValueException
 	 * @return  mixed
 	 */
 	protected static function doRender($name, \SimpleXmlElement $element, $data)
@@ -44,12 +47,16 @@ class FieldsetRenderer extends AbstractXulRenderer
 			throw new \UnexpectedValueException(sprintf('No form data found in $data->%s.', $formVar));
 		}
 
-		$html = '';
+		$option = $data->option ? : 'LIB_WINDWALKER';
+		$label  = XmlHelper::get($element, 'label', $option . '_EDIT_FIELDSET_' . XmlHelper::get($element, 'name'));
+		$html   = '<legend>' . \JText::_(strtoupper($label)) . '</legend>';
 
 		foreach ($form->getFieldset($fieldset) as $field)
 		{
 			$html .= $field->getControlGroup() . "\n\n";
 		}
+
+		$html = HtmlHelper::buildTag('fieldset', $html, XmlHelper::getAttributes($element));
 
 		return $html;
 	}

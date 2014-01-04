@@ -44,7 +44,7 @@ class HtmlHelper
 
 		$tag = '<' . $name;
 
-		foreach ($attribs as $key => $value)
+		foreach ((array) $attribs as $key => $value)
 		{
 			if ($value !== null && $value !== false && $value !== '')
 			{

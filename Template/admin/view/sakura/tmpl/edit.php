@@ -4,6 +4,7 @@ $container = $this->getContainer();
 $form = $this->data->form;
 $item = $this->data->item;
 $this->data->asset = $container->get('helper.asset');
+$this->data->uri   = JURI::getInstance();
 
 $xul = new \Windwalker\Xul\XulEngine;
 

@@ -9,6 +9,7 @@
 namespace Windwalker\Xul\Html;
 
 use Windwalker\Helper\HtmlHelper;
+use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
 
@@ -32,6 +33,26 @@ class HtmlRenderer extends AbstractXulRenderer
 	{
 		$attributes = XmlHelper::getAttributes($element);
 
+		$attributes = static::replaceVariable($attributes, $data);
+
 		return HtmlHelper::buildTag($name, static::renderChildren($element, $data), $attributes);
+	}
+
+	/**
+	 * replaceVariable
+	 *
+	 * @param $attributes
+	 * @param $data
+	 *
+	 * @return  mixed
+	 */
+	protected static function replaceVariable($attributes, $data)
+	{
+		foreach ($attributes as &$attr)
+		{
+			$attr = StringHelper::parseVariable($attr, $data);
+		}
+
+		return $attributes;
 	}
 }
