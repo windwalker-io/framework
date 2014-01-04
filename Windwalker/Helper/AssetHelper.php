@@ -566,4 +566,14 @@ class AssetHelper implements ContainerAwareInterface
 
 		return $this;
 	}
+
+	/**
+	 * __clone
+	 *
+	 * @return  AssetHelper
+	 */
+	public function __clone()
+	{
+		$this->paths = clone $this->paths;
+	}
 }

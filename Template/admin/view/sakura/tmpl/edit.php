@@ -1,7 +1,16 @@
 <?php
 
+$container = $this->getContainer();
 $form = $this->data->form;
 $item = $this->data->item;
+$this->data->asset = $container->get('helper.asset');
+
+$xul = new \Windwalker\Xul\XulEngine;
+
+$xul->setPath(__DIR__);
+echo $xul->render('edit', $this->data);
+
+if (false):
 ?>
 
 <form action="<?php echo JURI::getInstance(); ?>"  method="post" name="adminForm" id="adminForm"
@@ -33,4 +42,4 @@ $item = $this->data->item;
 	</div>
 </form>
 
-
+<?php endif; ?>

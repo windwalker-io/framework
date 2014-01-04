@@ -1,0 +1,56 @@
+<?php
+/**
+ * Part of Windwalker project. 
+ *
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
+ */
+
+namespace Windwalker\Xul\Control;
+
+use Windwalker\Helper\XmlHelper;
+use Windwalker\Xul\AbstractXulRenderer;
+
+/**
+ * Class FieldsetRenderer
+ *
+ * @since 1.0
+ */
+class FieldsetRenderer extends AbstractXulRenderer
+{
+	/**
+	 * doRender
+	 *
+	 * @param string            $name
+	 * @param \SimpleXmlElement $element
+	 * @param mixed             $data
+	 *
+	 * @return  mixed
+	 */
+	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	{
+		$formVar  = XmlHelper::get($element, 'form', 'form');
+		$fieldset = XmlHelper::get($element, 'name');
+
+		if (!$fieldset)
+		{
+			throw new \UnexpectedValueException('Need "name" attribute in XUL <fieldset> element.');
+		}
+
+		$form = $data->$formVar;
+
+		if (!($form instanceof \JForm))
+		{
+			throw new \UnexpectedValueException(sprintf('No form data found in $data->%s.', $formVar));
+		}
+
+		$html = '';
+
+		foreach ($form->getFieldset($fieldset) as $field)
+		{
+			$html .= $field->getControlGroup() . "\n\n";
+		}
+
+		return $html;
+	}
+}

@@ -8,7 +8,7 @@
  */
 
 // No direct access
-use Windwalker\Form\XmlHelper;
+use Windwalker\Helper\XmlHelper;
 
 defined('_JEXEC') or die;
 

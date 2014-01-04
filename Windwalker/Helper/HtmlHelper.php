@@ -21,6 +21,50 @@ defined('_JEXEC') or die;
 class HtmlHelper
 {
 	/**
+	 * @var  array  Property coupleTags.
+	 */
+	protected static $unpairedTags = array(
+		'img', 'br', 'hr', 'area', 'param', 'wbr', 'base', 'link', 'meta', 'input', 'option'
+	);
+
+	/**
+	 * buildTag
+	 *
+	 * @param string $name
+	 * @param string $content
+	 * @param array  $attribs
+	 *
+	 * @return  string
+	 */
+	public static function buildTag($name, $content = '', $attribs = array())
+	{
+		$name = trim($name);
+
+		$unpaired = in_array(strtolower($name), static::$unpairedTags);
+
+		$tag = '<' . $name;
+
+		foreach ($attribs as $key => $value)
+		{
+			if ($value !== null && $value !== false && $value !== '')
+			{
+				$tag .= ' ' . $key . '=' . StringHelper::quote($value, '""');
+			}
+		}
+
+		if ($content)
+		{
+			$tag .= '>' . PHP_EOL . "\t" . $content . PHP_EOL . '</' . $name . '>';
+		}
+		else
+		{
+			$tag .= $unpaired ? ' />' : '></' . $name . '>';
+		}
+
+		return $tag;
+	}
+
+	/**
 	 * Repair HTML. If Tidy not exists, use repair function.
 	 *
 	 * @param   string  $html     The HTML string to repair.

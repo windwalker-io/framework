@@ -20,7 +20,7 @@ First release
 
 ## All extensions created by Windwalker
 
-- Asikart Quickicoins: https://github.com/asikart/quickicons
+- Asikart Quickicons: https://github.com/asikart/quickicons
 - Asikart Quickcontent: https://github.com/asikart/quickcontent
 - Remote and Local Image Manager: https://github.com/asikart/remoteimage
 - ACE x Markdown Editor: https://github.com/asikart/ace-markdown-editor

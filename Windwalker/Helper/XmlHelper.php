@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Form;
+namespace Windwalker\Helper;
 
 /**
  * Class XmlHelper
@@ -78,7 +78,7 @@ class XmlHelper
 	{
 		$value = self::getAttribute($xml, $attr, $default);
 
-		if (in_array($value, self::$falseValue) || !$value)
+		if (in_array((string) $value, self::$falseValue) || !$value)
 		{
 			return false;
 		}
@@ -98,5 +98,24 @@ class XmlHelper
 	public static function getFalse(\SimpleXMLElement $xml, $attr, $default = null)
 	{
 		return !self::getBool($xml, $attr, $default);
+	}
+
+	/**
+	 * getAttributes
+	 *
+	 * @param \SimpleXMLElement $xml
+	 *
+	 * @return  array
+	 */
+	public static function getAttributes(\SimpleXMLElement $xml)
+	{
+		$attributes = array();
+
+		foreach ($xml->attributes() as $name => $value)
+		{
+			$attributes[$name] = (string) $value;
+		}
+
+		return $attributes;
 	}
 }

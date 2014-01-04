@@ -15,7 +15,7 @@ use Windwalker\View\Layout\FileLayout;
  * @var $asset     Windwalker\Helper\AssetHelper
  */
 $container = $this->getContainer();
-$asset     = $container->get('helper.asset');
+$this->data->asset = $container->get('helper.asset');
 
 $listOrder = 'id';
 $listDirn = 'asc';

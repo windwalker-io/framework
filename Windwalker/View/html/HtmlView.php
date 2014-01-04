@@ -81,6 +81,21 @@ class HtmlView extends AbstractHtmlView
 	}
 
 	/**
+	 * Method to render the view.
+	 *
+	 * @return  string  The rendered view.
+	 *
+	 * @since   12.1
+	 * @throws  \RuntimeException
+	 */
+	public function render()
+	{
+		$this->data->option = $this->option;
+
+		return parent::render();
+	}
+
+	/**
 	 * Load a template file -- first look in the templates folder for an override
 	 *
 	 * @param   string  $tpl  The name of the template source file; automatically searches the template paths and compiles as needed.
