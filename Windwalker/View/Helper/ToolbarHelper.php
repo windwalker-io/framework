@@ -37,21 +37,32 @@ class ToolbarHelper
 	protected $access;
 
 	/**
+	 * @var    Property buttonCallable.
+	 */
+	protected $buttonCallable;
+	/**
+	 * @var  array  Property buttonSet.
+	 */
+	private $buttonSet;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param object $view
 	 * @param array  $config
 	 */
-	public function __construct($data, $config = array())
+	public function __construct($data, array $buttonSet = array(), $config = array())
 	{
-		$this->data   = $data;
-		$this->config = $config ? : new Registry($config);
-		$this->state  = $state = $data->state;
+		$this->data      = $data;
+		$this->config    = $config ? : new Registry($config);
+		$this->state     = $state = $data->state;
+		$this->buttonSet = $buttonSet;
 
 		// Access
 		$access = (array) $this->config->get('access');
 
 		$this->access = new Object($access);
+
 	}
 
 	/**
@@ -77,22 +88,53 @@ class ToolbarHelper
 	 *
 	 * @return  void
 	 */
-	public function register($name)
+	public function register($button, $value)
 	{
 		$args = func_get_args();
 
 		array_shift($args);
+		array_shift($args);
 
-		if (!$this->checkAccess($name, $args))
+		$callback = '';
+
+		if (is_string($value))
 		{
-			return;
+			$callback = array($this, $value);
+
+			if (!is_callable($callback))
+			{
+				$callback = array('JToolbarHelper', $value);
+			}
 		}
 
-		$callback = array('JToolbarHelper', $name);
+		elseif (is_array($value) && !empty($value['code']))
+		{
+			$callback = $value['code'];
+
+			if (!empty($value['arguments']))
+			{
+				$args = (array) $value['arguments'];
+			}
+		}
+
+		if (is_callable($value))
+		{
+			$callback = $value;
+		}
+
+		if (!is_callable($callback))
+		{
+			$callback = $this->buttonCallable[$button];
+		}
 
 		if (is_callable($callback))
 		{
 			call_user_func_array($callback, $args);
+		}
+		else
+		{
+			$app = \JFactory::getApplication();
+			$app->enqueueMessage(sprintf('%s not found', $button));
 		}
 	}
 
@@ -104,11 +146,11 @@ class ToolbarHelper
 
 	public function registerButtons()
 	{
-		$buttons = $this->config->get('buttons');
+		$buttons = $this->buttonSet;
 
-		foreach ($buttons as $button)
+		foreach ($buttons as $button => $type)
 		{
-			$this->register($button);
+			$this->register($button, $type);
 		}
 	}
 }

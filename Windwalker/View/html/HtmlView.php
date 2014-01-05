@@ -11,6 +11,7 @@ namespace Windwalker\View\Html;
 
 use Windwalker\Registry\Registry;
 use Windwalker\View\Helper\ToolbarHelper;
+use Windwalker\View\Toolbar\Button;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -33,29 +34,43 @@ class HtmlView extends AbstractHtmlView
 	protected function getToolbarHelper($config = array())
 	{
 		$component = $this->container->get('component');
+		$itemName = $this->viewItem;
+		$listName = $this->viewList;
 
 		$defaultConfig = array(
 			'view_name' => $this->name,
 			'view_item' => $this->viewItem,
 			'view_list' => $this->viewList,
 			'access' => $component->getActions($this->viewItem),
-			'buttons' => array(
-				10  => 'addNew',
-				20  => 'editList',
-				30  => 'duplicate',
-				40  => 'publish',
-				50  => 'unpublish',
-				60  => 'checkin',
-				70  => 'deleteList',
-				80  => 'trash',
-				90  => 'batch',
-				// 100 => 'preferences',
-			)
 		);
+
+		$buttonSet = array(
+			'add'        => 'addNew',
+			'edit'       => function() use($itemName)
+				{
+					\JToolBarHelper::editList($itemName . '.edit');
+				},
+			'duplicate'  => array(
+				'code' => function() use($listName)
+					{
+						\JToolBarHelper::custom($listName . '.batch.copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_DUPLICATE', true);
+					},
+				'access' => 'core.create'
+			),
+			'publish'    => 'publish',
+			'ubpublish'  => 'unpublish',
+			'checkin'    => 'checkin',
+			'delete'     => 'deleteList',
+			'trash'      => 'trash',
+			'batch'      => 'batch',
+			// 100 => 'preferences',
+		);
+
+		\AK::show(new \SplPriorityQueue($buttonSet));
 
 		$config = with(new Registry($defaultConfig))
 			->loadArray($config);
 
-		return new ToolbarHelper($this->data, $config);
+		return new ToolbarHelper($this->data, $buttonSet, $config);
 	}
 }
