@@ -9,6 +9,8 @@
 
 namespace Windwalker\Controller;
 
+use Windwalker\View\Html\AbstractHtmlView;
+
 defined('_JEXEC') or die('Restricted access');
 
 /**
@@ -50,26 +52,20 @@ class DisplayController extends Controller
 	{
 		// Get some data.
 		$document   = \JFactory::getDocument();
-		$viewName   = $this->input->getWord('view', $this->defaultView);
+		$viewName   = $this->input->get('view', $this->defaultView);
 		$viewFormat = $document->getType();
-		$layoutName = $this->input->getWord('layout', 'default');
+		$layoutName = $this->input->getString('layout', 'default');
 
 		// Get View and register Model to it.
 		$view = $this->getView($viewName, $viewFormat);
 
-		// Assign models to view if view using default model.
-		if ($view->getModel()->getName() == 'default')
-		{
-			// Get Model
-			$model = $this->getModel($viewName);
-
-			$view->setModel($model, true);
-		}
-
 		$this->assignModel($view);
 
 		// Set template layout to view.
-		$view->setLayout($layoutName);
+		if ($view instanceof AbstractHtmlView)
+		{
+			$view->setLayout($layoutName);
+		}
 
 		// Push JDocument to View
 		$view->document = $document;
@@ -160,12 +156,13 @@ class DisplayController extends Controller
 	/**
 	 * getView
 	 *
-	 * @param null    $name
-	 * @param null    $type
+	 * @param null $name
+	 * @param null $type
+	 * @param bool $forceNew
 	 *
 	 * @return mixed
 	 */
-	public function getView($name = null, $type = null)
+	public function getView($name = null, $type = null, $forceNew = false)
 	{
 		// Get the name.
 		if (!$name)
@@ -176,10 +173,8 @@ class DisplayController extends Controller
 		$container = $this->getContainer();
 
 		// Get View
-		$type = ucfirst($type);
-
-		$prefix = ucfirst($this->getPrefix()) . 'View';
-
+		$type     = ucfirst($type);
+		$prefix   = ucfirst($this->getPrefix()) . 'View';
 		$viewName = $prefix . ucfirst($name) . $type;
 
 		if (!class_exists($viewName))
@@ -188,20 +183,36 @@ class DisplayController extends Controller
 		}
 
 		// Load view
+		if (!class_exists($viewName))
+		{
+			return null;
+		}
+
+		$model  = $this->getModel($name);
+		$paths  = $this->getTemplatePath($name);
+		$config = array(
+			'name'   => strtolower($name),
+			'option' => strtolower($this->option),
+			'prefix' => strtolower($this->getPrefix())
+		);
+
 		try
 		{
-			$view = $container->get('view.' . $name);
+			$view = $container->get('view.' . strtolower($name), $forceNew);
 		}
 		catch (\InvalidArgumentException $e)
 		{
-			$view = $container->alias('view.' . $name, $viewName)
-				->buildSharedObject($viewName);
-		}
+			$container->alias('view.' . strtolower($name), $viewName)
+				->share(
+					$viewName,
+					function($container) use($viewName, $model, $paths, $config)
+					{
+						return new $viewName($model, $container, $config, $paths);
+					}
+				);
 
-		$view->setName($name)
-			->setOption($this->option)
-			->setPaths($this->getTemplatePath($name))
-			->setContainer($container);
+			$view = $container->get($viewName);
+		}
 
 		return $view;
 	}
@@ -221,11 +232,11 @@ class DisplayController extends Controller
 
 		$view = $view ?: $this->defaultView;
 
-		// View tmpl path.
-		$paths->insert($componentFolder . '/view/' . $view . '/tmpl', 'normal');
-
 		// Theme override path.
-		$paths->insert(JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/' . $this->option . '/' . $view, 'normal');
+		$paths->insert(JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/' . $this->option . '/' . $view, 200);
+
+		// View tmpl path.
+		$paths->insert($componentFolder . '/view/' . $view . '/tmpl', 100);
 
 		return $paths;
 	}

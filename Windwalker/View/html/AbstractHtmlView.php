@@ -9,6 +9,8 @@
 
 namespace Windwalker\View\Html;
 
+use Windwalker\DI\Container;
+use Windwalker\Model\Model;
 use Windwalker\View\AbstractView;
 
 defined('JPATH_PLATFORM') or die;
@@ -31,6 +33,18 @@ abstract class AbstractHtmlView extends AbstractView
 	protected $layout = 'default';
 
 	/**
+	 * Layout extension
+	 *
+	 * @var    string
+	 */
+	protected $layoutExt = 'php';
+
+	/**
+	 * @var  string  Property layoutTemplate.
+	 */
+	protected $layoutTemplate;
+
+	/**
 	 * The paths queue.
 	 *
 	 * @var    \SplPriorityQueue
@@ -39,19 +53,41 @@ abstract class AbstractHtmlView extends AbstractView
 	protected $paths;
 
 	/**
+	 * The name of the default template source file.
+	 *
+	 * @var string
+	 */
+	protected $template = null;
+
+	/**
+	 * @var  array  Property templatePrepared.
+	 */
+	protected $templatePrepared = array();
+
+	/**
+	 * @var  string  Property viewList.
+	 */
+	protected $viewList = null;
+
+	/**
+	 * @var  string  Property viewItem.
+	 */
+	protected $viewItem = null;
+
+	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param   \JModel            $model  The model object.
+	 * @param   Model            $model  The model object.
 	 * @param   \SplPriorityQueue  $paths  The paths queue.
 	 *
 	 * @since   12.1
 	 */
-	public function __construct(\JModel $model = null, \SplPriorityQueue $paths = null)
+	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
 	{
 		parent::__construct($model);
 
 		// Setup dependencies.
-		$this->paths = isset($paths) ? $paths : $this->loadPaths();
+		$this->paths = $paths ? : $this->loadPaths();
 	}
 
 	/**
@@ -83,6 +119,138 @@ abstract class AbstractHtmlView extends AbstractView
 	}
 
 	/**
+	 * Load a template file -- first look in the templates folder for an override
+	 *
+	 * @param   string  $tpl  The name of the template source file; automatically searches the template paths and compiles as needed.
+	 *
+	 * @return  string  The output of the the template script.
+	 *
+	 * @since   3.2
+	 * @throws  \Exception
+	 */
+	public function loadTemplate($tpl = null)
+	{
+		$container      = $this->container;
+		$layout         = $this->getLayout();
+		$layoutTemplate = $this->getLayoutTemplate();
+		$template       = $container->get('app')->getTemplate();
+
+		// Create the template file name based on the layout
+		$file = $this->layout = isset($tpl) ? $layout . '_' . $tpl : $layout;
+
+		// Clean the file name
+		$file = preg_replace('/[^A-Z0-9_\.-]/i', '', $file);
+		$tpl  = isset($tpl) ? preg_replace('/[^A-Z0-9_\.-]/i', '', $tpl) : $tpl;
+
+		// Load the template script
+		$templateFile = $this->getPath($file);
+
+		// Change the template folder if alternative layout is in different template
+		if (isset($layoutTemplate) && $layoutTemplate != '_' && $layoutTemplate != $template)
+		{
+			$alternateTmplFile = str_replace($template, $layoutTemplate, $template);
+
+			if (is_file($alternateTmplFile))
+			{
+				$templateFile = $alternateTmplFile;
+				$template     = $layoutTemplate;
+			}
+		}
+
+		if (strpos($templateFile, \JPath::clean(JPATH_THEMES)) !== false)
+		{
+			$this->prepareTemplate($template);
+		}
+
+		if (!$templateFile)
+		{
+			throw new \Exception(\JText::sprintf('JLIB_APPLICATION_ERROR_LAYOUTFILE_NOT_FOUND', $file), 500);
+		}
+
+		// Unset so as not to introduce into template scope
+		unset($tpl);
+		unset($file);
+
+		// Never allow a 'this' property
+		if (isset($this->this))
+		{
+			unset($this->this);
+		}
+
+		// Start capturing output into a buffer
+		ob_start();
+
+		// Include the requested template filename in the local scope
+		// (this will execute the view logic).
+		include $templateFile;
+
+		// Done with the requested template; get the buffer and
+		// clear it.
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// Fall back to last layout
+		$this->layout = $layout;
+
+		return $output;
+	}
+
+	/**
+	 * prepareTemplate
+	 *
+	 * @param $template
+	 *
+	 * @return  void
+	 */
+	protected function prepareTemplate($template)
+	{
+		if ($this->templatePrepared)
+		{
+			return;
+		}
+
+		// Load the language file for the template
+		$lang = $this->container->get('language');
+		$lang->load('tpl_' . $template, JPATH_BASE, null, false, false)
+		|| $lang->load('tpl_' . $template, JPATH_THEMES . "/$template", null, false, false)
+		|| $lang->load('tpl_' . $template, JPATH_BASE, $lang->getDefault(), false, false)
+		|| $lang->load('tpl_' . $template, JPATH_THEMES . "/$template", $lang->getDefault(), false, false);
+
+		$this->templatePrepared = true;
+	}
+
+	/**
+	 * flash
+	 *
+	 * @param string $msgs
+	 * @param string $type
+	 *
+	 * @return $this
+	 */
+	public function flash($msgs, $type = 'message')
+	{
+		$app  = $this->getContainer()->get('app');
+		$msgs = (array) $msgs;
+
+		foreach ($msgs as $msg)
+		{
+			$app->enqueueMessage($msg, $type);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * getLayoutTemplate
+	 *
+	 * @return  string
+	 */
+	public function getLayoutTemplate()
+	{
+		return $this->layoutTemplate;
+	}
+
+	/**
 	 * Method to get the view layout.
 	 *
 	 * @return  string  The layout name.
@@ -106,7 +274,7 @@ abstract class AbstractHtmlView extends AbstractView
 	public function getPath($layout)
 	{
 		// Get the layout file name.
-		$file = \JPath::clean($layout . '.php');
+		$file = \JPath::clean($layout . '.' . $this->layoutExt);
 
 		// Find the layout file path.
 		$path = \JPath::find(clone($this->paths), $file);
@@ -127,34 +295,15 @@ abstract class AbstractHtmlView extends AbstractView
 	}
 
 	/**
-	 * Method to render the view.
+	 * doRedner
 	 *
-	 * @return  string  The rendered view.
+	 * @return  string
 	 *
-	 * @since   12.1
-	 * @throws  \RuntimeException
+	 * @throws \RuntimeException
 	 */
-	public function render()
+	protected function doRedner()
 	{
-		// Get the layout path.
-		$path = $this->getPath($this->getLayout());
-
-		// Check if the layout path was found.
-		if (!$path)
-		{
-			throw new \RuntimeException(sprintf('Layout Path: %s Not Found', $this->getLayout()));
-		}
-
-		// Start an output buffer.
-		ob_start();
-
-		// Load the layout.
-		include $path;
-
-		// Get the layout contents.
-		$output = ob_get_clean();
-
-		return $output;
+		return $this->loadTemplate();
 	}
 
 	/**
@@ -168,7 +317,19 @@ abstract class AbstractHtmlView extends AbstractView
 	 */
 	public function setLayout($layout)
 	{
-		$this->layout = $layout;
+		if (strpos($layout, ':') === false)
+		{
+			$this->layout = $layout;
+		}
+		else
+		{
+			// Convert parameter to array based on :
+			$temp = explode(':', $layout);
+			$this->layout = $temp[1];
+
+			// Set layout template
+			$this->layoutTemplate = $temp[0];
+		}
 
 		return $this;
 	}

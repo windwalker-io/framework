@@ -4,7 +4,9 @@ namespace Windwalker\View;
 
 use Joomla\DI\Container as JoomlaContainer;
 use Joomla\DI\ContainerAwareInterface;
+use Windwalker\Data\Data;
 use Windwalker\DI\Container;
+use Windwalker\Model\Model;
 
 /**
  * Class View
@@ -42,6 +44,16 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	protected $container;
 
 	/**
+	 * @var  string  Property prefix.
+	 */
+	protected $prefix;
+
+	/**
+	 * @var  string  Property textPrefix.
+	 */
+	protected $textPrefix;
+
+	/**
 	 * Property option.
 	 *
 	 * @var string
@@ -49,13 +61,20 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	protected $option;
 
 	/**
+	 * @var  string  Property name.
+	 */
+	protected $name;
+
+	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param   \JModel  $model  The model object.
+	 * @param Model     $model     The model object.
+	 * @param Container $container
+	 * @param array     $config
 	 *
 	 * @since  12.1
 	 */
-	public function __construct(\JModel $model = null)
+	public function __construct(Model $model = null, Container $container = null, $config = array())
 	{
 		// Setup dependencies.
 		if ($model)
@@ -67,7 +86,39 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 			$this->model[strtolower($modelName)] = $model;
 		}
 
-		$this->data = new \JData;
+		// Prepare data
+		if (!$this->data)
+		{
+			$this->data = \JArrayHelper::getValue($config, 'data', new Data);
+		}
+
+		// Prepare prefix
+		if (!$this->prefix)
+		{
+			$this->prefix = \JArrayHelper::getValue($config, 'prefix', $this->getPrefix());
+		}
+
+		// Prepare option
+		if (!$this->option)
+		{
+			$this->option = \JArrayHelper::getValue($config, 'option', 'com_' . $this->prefix);
+		}
+
+		// Prepare name
+		if (!$this->name)
+		{
+			$this->name = \JArrayHelper::getValue($config, 'name', $this->getName());
+		}
+
+		// Prepare textPrefix
+		if (!$this->textPrefix)
+		{
+			$this->textPrefix = \JArrayHelper::getValue($config, 'text_prefix', $this->option);
+		}
+
+		$this->textPrefix = strtoupper($this->textPrefix);
+
+		$this->container = $container ? : Container::getInstance($this->option);
 	}
 
 	/**
@@ -81,6 +132,64 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	 * @since   12.1
 	 */
 	public function escape($output)
+	{
+		return $output;
+	}
+
+	/**
+	 * Method to render the view.
+	 *
+	 * @return  string  The rendered view.
+	 *
+	 * @since   12.1
+	 * @throws  \RuntimeException
+	 */
+	public function render()
+	{
+		$this->prepareRender();
+
+		$this->prepareData();
+
+		$output = $this->doRedner();
+
+		return $this->postRender($output);
+	}
+
+	/**
+	 * doRedner
+	 *
+	 * @return  string
+	 *
+	 * @throws \RuntimeException
+	 */
+	abstract protected function doRedner();
+
+	/**
+	 * prepareRender
+	 *
+	 * @return  void
+	 */
+	protected function prepareRender()
+	{
+	}
+
+	/**
+	 * prepareData
+	 *
+	 * @return  void
+	 */
+	protected function prepareData()
+	{
+	}
+
+	/**
+	 * postRender
+	 *
+	 * @param string $output
+	 *
+	 * @return  mixed
+	 */
+	protected function postRender($output)
 	{
 		return $output;
 	}
@@ -250,6 +359,91 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	public function setOption($option)
 	{
 		$this->option = $option;
+
+		return $this;
+	}
+
+	/**
+	 * @return  string
+	 */
+	public function getPrefix()
+	{
+		if (!$this->prefix)
+		{
+			$r = null;
+
+			if (!preg_match('/(.*)View/i', get_class($this), $r))
+			{
+				throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_VIEW_GET_NAME'), 500);
+			}
+
+			$this->prefix = strtolower($r[1]);
+		}
+
+		return $this->prefix;
+	}
+
+	/**
+	 * @param   string $prefix
+	 *
+	 * @return  AbstractView  Return self to support chaining.
+	 */
+	public function setPrefix($prefix)
+	{
+		$this->prefix = $prefix;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get the view name
+	 *
+	 * The model name by default parsed using the classname, or it can be set
+	 * by passing a $config['name'] in the class constructor
+	 *
+	 * @return  string  The name of the model
+	 *
+	 * @since   3.2
+	 * @throws  \Exception
+	 */
+	public function getName()
+	{
+		if (empty($this->name))
+		{
+			$classname = get_class($this);
+			$viewpos = strpos($classname, 'View');
+
+			if ($viewpos === false)
+			{
+				throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_VIEW_GET_NAME'), 500);
+			}
+
+			$lastPart  = substr($classname, $viewpos + 4);
+			$pathParts = explode(' ', \JStringNormalise::fromCamelCase($lastPart));
+
+			if (!empty($pathParts[1]))
+			{
+				$this->name = strtolower($pathParts[0]);
+			}
+			else
+			{
+				$this->name = strtolower($lastPart);
+			}
+		}
+
+		return $this->name;
+	}
+
+	/**
+	 * getName
+	 *
+	 * @param   string $name
+	 *
+	 * @return  AbstractView  Return self to support chaining.
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
 
 		return $this;
 	}

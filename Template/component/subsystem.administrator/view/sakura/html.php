@@ -11,8 +11,10 @@ use Windwalker\View\Html\HtmlView;
  */
 class FlowerViewSakuraHtml extends HtmlView
 {
-	public function render()
+	protected function prepareRender()
 	{
+		parent::prepareRender();
+
 		$data  = $this->getData();
 		$model = $this->getModel();
 		$input = $this->getContainer()->get('input');
@@ -23,8 +25,6 @@ class FlowerViewSakuraHtml extends HtmlView
 		$data->form = $model->getForm();
 
 		$this->addToolbar();
-
-		return parent::render();
 	}
 
 	protected function addToolbar()

@@ -60,7 +60,7 @@ class NullObject extends \JObject implements NullObjectInterface
 	 */
 	public function get($property, $default = null)
 	{
-		return null;
+		return $default;
 	}
 
 	/**
@@ -107,5 +107,25 @@ class NullObject extends \JObject implements NullObjectInterface
 	public function setProperties($properties)
 	{
 		return false;
+	}
+
+	/**
+	 * __call
+	 *
+	 * @return  void
+	 */
+	public function __call()
+	{
+		return;
+	}
+
+	/**
+	 * __get
+	 *
+	 * @return  null
+	 */
+	public function __get()
+	{
+		return null;
 	}
 }
