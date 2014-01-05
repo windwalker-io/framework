@@ -10,6 +10,8 @@
 namespace Windwalker\Helper;
 
 // No direct access
+use JArrayHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -275,35 +277,35 @@ class ArrayHelper
 
 				if (substr($val, -2) == '>=')
 				{
-					if (\JArrayHelper::getValue($data, $key) >= substr($val, 0, -2))
+					if (JArrayHelper::getValue($data, $key) >= substr($val, 0, -2))
 					{
 						$value = $v;
 					}
 				}
 				elseif (substr($val, -2) == '<=')
 				{
-					if (\JArrayHelper::getValue($data, $key) <= substr($val, 0, -2))
+					if (JArrayHelper::getValue($data, $key) <= substr($val, 0, -2))
 					{
 						$value = $v;
 					}
 				}
 				elseif (substr($val, -1) == '>')
 				{
-					if (\JArrayHelper::getValue($data, $key) > substr($val, 0, -1))
+					if (JArrayHelper::getValue($data, $key) > substr($val, 0, -1))
 					{
 						$value = $v;
 					}
 				}
 				elseif (substr($val, -1) == '<')
 				{
-					if (\JArrayHelper::getValue($data, $key) < substr($val, 0, -1))
+					if (JArrayHelper::getValue($data, $key) < substr($val, 0, -1))
 					{
 						$value = $v;
 					}
 				}
 				else
 				{
-					if (\JArrayHelper::getValue($data, $key) == $val)
+					if (JArrayHelper::getValue($data, $key) == $val)
 					{
 						$value = $v;
 					}
@@ -363,7 +365,7 @@ class ArrayHelper
 	{
 		if (is_array($array))
 		{
-			return \JArrayHelper::getValue($array, $key, $default);
+			return JArrayHelper::getValue($array, $key, $default);
 		}
 
 		// If not Array, we do not detect it for warning not Object

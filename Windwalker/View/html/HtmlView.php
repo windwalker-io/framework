@@ -9,6 +9,9 @@
 
 namespace Windwalker\View\Html;
 
+use Windwalker\Registry\Registry;
+use Windwalker\View\Helper\ToolbarHelper;
+
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -21,38 +24,38 @@ defined('JPATH_PLATFORM') or die;
 class HtmlView extends AbstractHtmlView
 {
 	/**
-	 * prepareRender
+	 * getToolbarHelper
 	 *
-	 * @return  void
+	 * @param array $config
+	 *
+	 * @return  ToolbarHelper
 	 */
-	protected function prepareRender()
+	protected function getToolbarHelper($config = array())
 	{
-		parent::prepareRender();
+		$component = $this->container->get('component');
 
-		$this->data->option = $this->option;
+		$defaultConfig = array(
+			'view_name' => $this->name,
+			'view_item' => $this->viewItem,
+			'view_list' => $this->viewList,
+			'access' => $component->getActions($this->viewItem),
+			'buttons' => array(
+				10  => 'addNew',
+				20  => 'editList',
+				30  => 'duplicate',
+				40  => 'publish',
+				50  => 'unpublish',
+				60  => 'checkin',
+				70  => 'deleteList',
+				80  => 'trash',
+				90  => 'batch',
+				// 100 => 'preferences',
+			)
+		);
+
+		$config = with(new Registry($defaultConfig))
+			->loadArray($config);
+
+		return new ToolbarHelper($this->data, $config);
 	}
-
-	/**
-	 * Add the page title and toolbar.
-	 *
-	 * @return  void
-	 *
-	 * @since	3.2
-	 */
-	protected function addToolbar()
-	{
-	}
-
-	/**
-	 * Add the submenu.
-	 *
-	 * @return  void
-	 *
-	 * @since	3.2
-	 */
-	protected function addSubmenu()
-	{
-	}
-
-
 }

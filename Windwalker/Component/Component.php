@@ -11,6 +11,7 @@ namespace Windwalker\Component;
 
 use Windwalker\Controller\Helper\ControllerHelper;
 use Windwalker\DI\Container;
+use Windwalker\Object\Object;
 
 /**
  * Class Component
@@ -46,6 +47,11 @@ class Component
 	 * @var string
 	 */
 	protected $name;
+
+	/**
+	 * @var  string  Property option.
+	 */
+	protected $option;
 
 	/**
 	 * Property reflection.
@@ -103,7 +109,9 @@ class Component
 			}
 		}
 
-		$this->container = $container ?: Container::getInstance($this->name);
+		$this->option = 'com_' . strtolower($this->name);
+
+		$this->container = $container ?: Container::getInstance($this->option);
 
 		$this->prepare();
 	}
@@ -132,7 +140,7 @@ class Component
 		/** @var $controller \Windwalker\Controller\Controller */
 		$controller = ControllerHelper::getController($this->name, $this->input, $this->application);
 
-		$controller->setComponentPath(JPATH_BASE . '/components/com_' . strtolower($this->name));
+		$controller->setComponentPath(JPATH_BASE . '/components/' . $this->option);
 
 		// echo get_class($controller);
 
@@ -156,9 +164,9 @@ class Component
 	 */
 	protected function prepare()
 	{
-		$this->path['self']          = JPATH_BASE . '/components/com_' . strtolower($this->name);
-		$this->path['site']          = JPATH_ROOT . '/components/com_' . strtolower($this->name);
-		$this->path['administrator'] = JPATH_ROOT . '/administrator/components/com_' . strtolower($this->name);
+		$this->path['self']          = JPATH_BASE . '/components/' . strtolower($this->option);
+		$this->path['site']          = JPATH_ROOT . '/components/' . strtolower($this->option);
+		$this->path['administrator'] = JPATH_ROOT . '/administrator/components/' . strtolower($this->option);
 
 		define(strtoupper($this->name) . '_SELF',  $this->path['self']);
 		define(strtoupper($this->name) . '_SITE',  $this->path['site']);
@@ -178,6 +186,54 @@ class Component
 		// Register form and fields
 		\JForm::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
 		\JForm::addFormPath(WINDWALKER_SOURCE . '/Form/Forms');
+	}
+
+	/**
+	 * Gets a list of the actions that can be performed.
+	 *
+	 * @param   string   $assetName   The asset name
+	 * @param   integer  $categoryId  The category ID.
+	 * @param   integer  $id          The item ID.
+	 *
+	 * @return  Object
+	 *
+	 * @since   3.1
+	 */
+	public function getActions($assetName, $categoryId = 0, $id = 0)
+	{
+		$user	= $this->container->get('user');
+		$result	= new Object;
+
+		$path = JPATH_ADMINISTRATOR . '/components/com_' . $this->name . '/access.xml';
+
+		if (!$id && !$categoryId)
+		{
+			$section = 'component';
+		}
+		elseif (!$id && $categoryId)
+		{
+			$section = 'category';
+			$assetName .= '.category.' . (int) $categoryId;
+		}
+		elseif ($id && !$categoryId)
+		{
+			$section = $assetName;
+			$assetName .= '.' . $assetName . '.' . $id;
+		}
+		else
+		{
+			$section = $assetName;
+			$assetName .= '.' . $assetName;
+		}
+
+		$actions = \JAccess::getActionsFromFile($path, "/access/section[@name='" . $section . "']/");
+
+		foreach ($actions as $action)
+		{
+			$result->set($action->name, $user->authorise($action->name, $assetName));
+		}
+
+		return $result;
 	}
 
 	/**

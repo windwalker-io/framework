@@ -45,16 +45,37 @@ class GridView extends ListHtmlView
 		}
 	}
 
+	/**
+	 * Add the submenu.
+	 *
+	 * @return  void
+	 *
+	 * @since	3.2
+	 */
+	protected function addSubmenu()
+	{
+	}
+
+	/**
+	 * addToolbar
+	 *
+	 * @return  void
+	 */
 	protected function addToolbar()
 	{
-		$app          = \JFactory::getApplication();
-		$canDo        = \JHelperContent::getActions($this->option);
+		$app       = \JFactory::getApplication();
+		$component = $this->container->get('component');
+
+		$toolbar = $this->getToolbarHelper();
+
+		$toolbar->registerButtons();
 
 		\JToolbarHelper::title(\JText::_($this->textPrefix . '_' . strtoupper($this->getName()) . '_TITLE'), 'stack article');
 
 		// Get the toolbar object instance
 		$bar = \JToolBar::getInstance('toolbar');
 
+		/*
 		if ($canDo->get('core.create'))
 		{
 			\JToolBarHelper::addNew($this->viewItem . '.add');
@@ -99,6 +120,7 @@ class GridView extends ListHtmlView
 		{
 			\AKToolBarHelper::preferences($this->option);
 		}
+		*/
 	}
 
 	/**
@@ -106,18 +128,20 @@ class GridView extends ListHtmlView
 	 *
 	 * @return GridHelper
 	 */
-	public function getGridHelper()
+	public function getGridHelper($config = array())
 	{
-		$config = array(
+		$defaultConfig = array(
 			'option'    => $this->option,
 			'name'      => $this->getName(),
 			'view_item' => $this->viewItem,
 			'view_list' => $this->viewList,
 			'orderCol'  => 'sakura.catid, sakura.ordering',
 			'field'     => array(
-				'ordering'    => 'ordering'
+				'ordering' => 'ordering'
 			)
 		);
+
+		$config = array_merge($defaultConfig, $config);
 
 		return new GridHelper($this->data, $config);
 	}
