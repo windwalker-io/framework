@@ -15,5 +15,5 @@ namespace Windwalker\View\Helper;
  */
 class ToolbarHelper
 {
-	
+
 }

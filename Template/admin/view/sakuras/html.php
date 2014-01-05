@@ -1,13 +1,13 @@
 <?php
 
-use Windwalker\View\Html\GridHtmlView;
+use Windwalker\View\Html\GridView;
 
 /**
  * Class SakurasHtmlView
  *
  * @since 1.0
  */
-class FlowerViewSakurasHtml extends GridHtmlView
+class FlowerViewSakurasHtml extends GridView
 {
 	/**
 	 * List name.

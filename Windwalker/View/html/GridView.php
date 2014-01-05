@@ -16,7 +16,7 @@ use Windwalker\View\Helper\GridHelper;
  *
  * @since 1.0
  */
-class GridHtmlView extends ListHtmlView
+class GridView extends ListHtmlView
 {
 	/**
 	 * prepareRender

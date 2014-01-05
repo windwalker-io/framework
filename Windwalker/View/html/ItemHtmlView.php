@@ -8,7 +8,6 @@
 
 namespace Windwalker\View\Html;
 
-use Windwalker\View\AbstractView;
 use Windwalker\Model\Model;
 use Windwalker\DI\Container;
 
@@ -17,7 +16,7 @@ use Windwalker\DI\Container;
  *
  * @since 1.0
  */
-class ListHtmlView extends HtmlView
+class ItemHtmlView extends HtmlView
 {
 	/**
 	 * Method to instantiate the view.
@@ -32,17 +31,17 @@ class ListHtmlView extends HtmlView
 		parent::__construct($model, $container, $config, $paths);
 
 		// Guess the item view as the context.
-		if (empty($this->viewList))
+		if (empty($this->viewItem))
 		{
-			$this->viewList = $this->getName();
+			$this->viewItem = $this->getName();
 		}
 
 		// Guess the list view as the plural of the item view.
-		if (empty($this->viewItem))
+		if (empty($this->viewList))
 		{
 			$inflector = \JStringInflector::getInstance();
 
-			$this->viewItem = $inflector->toSingular($this->viewList);
+			$this->viewList = $inflector->toPlural($this->viewItem);
 		}
 	}
 
@@ -55,10 +54,9 @@ class ListHtmlView extends HtmlView
 	{
 		parent::prepareRender();
 
-		$data             = $this->getData();
-		$data->items      = $this->get('Items');
-		$data->pagination = $this->get('Pagination');
-		$data->state      = $this->get('State');
+		$data        = $this->getData();
+		$data->item  = $this->get('Item');
+		$data->state = $this->get('State');
 
 		if ($errors = $data->state->get('errors'))
 		{
