@@ -1,6 +1,6 @@
 <?php
 
-namespace Windwalker\Controller;
+namespace Windwalker\Controller\Edit;
 
 use Windwalker\Controller\Admin\AbstractItemController;
 

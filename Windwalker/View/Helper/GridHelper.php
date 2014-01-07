@@ -22,26 +22,26 @@ class GridHelper
 	 *
 	 * @var object
 	 */
-	protected $view;
+	public $view;
 
 	/**
 	 * Property config.
 	 *
 	 * @var \JRegistry
 	 */
-	protected $config = array();
+	public $config = array();
 
 	/**
 	 * Property fields.
 	 *
 	 * @var array
 	 */
-	protected $fields = array(
+	public $fields = array(
 		'pk'               => 'id',
 		'title'            => 'title',
 		'alias'            => 'alias',
 		'checked_out'      => 'checked_out',
-		'published'        => 'published',
+		'state'            => 'published',
 		'author'           => 'created_by',
 		'author_name'      => 'user_name',
 		'checked_out_time' => 'checked_out_time',
@@ -52,21 +52,21 @@ class GridHelper
 	 *
 	 * @var \JRegistry
 	 */
-	protected $state;
+	public $state;
 
 	/**
 	 * Property current.
 	 *
 	 * @var
 	 */
-	protected $current;
+	public $current;
 
 	/**
 	 * Property row.
 	 *
 	 * @var
 	 */
-	protected $row;
+	public $row;
 
 	/**
 	 * Constructor.
@@ -296,7 +296,7 @@ HTML;
 		$item       = $this->current;
 		$canChange  = $this->state->get('access.canChange', true);
 		$taskPrefix = $taskPrefix ? : $this->config->get('view_list') . '.state.';
-		$field      = $this->config->get('field.published', 'published');
+		$field      = $this->config->get('field.state', 'published');
 
 		return \JHtml::_('jgrid.published', $item->$field, $this->row, $taskPrefix, $canChange, 'cb', $item->publish_up, $item->publish_down);
 	}

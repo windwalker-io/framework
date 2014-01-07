@@ -25,6 +25,19 @@ defined('JPATH_PLATFORM') or die;
 class HtmlView extends AbstractHtmlView
 {
 	/**
+	 * setTitle
+	 *
+	 * @param string $title
+	 * @param string $icons
+	 *
+	 * @return  void
+	 */
+	protected function setTitle($title = null, $icons = 'stack')
+	{
+		\JToolbarHelper::title($title, $icons);
+	}
+
+	/**
 	 * getToolbarHelper
 	 *
 	 * @param array $config
@@ -34,43 +47,30 @@ class HtmlView extends AbstractHtmlView
 	protected function getToolbarHelper($config = array())
 	{
 		$component = $this->container->get('component');
-		$itemName = $this->viewItem;
-		$listName = $this->viewList;
+
+		$buttonSet = $this->configToolbar();
 
 		$defaultConfig = array(
-			'view_name' => $this->name,
+			'view_name' => $this->getName(),
 			'view_item' => $this->viewItem,
 			'view_list' => $this->viewList,
+			'option'    => $this->option,
 			'access' => $component->getActions($this->viewItem),
 		);
-
-		$buttonSet = array(
-			'add'        => 'addNew',
-			'edit'       => function() use($itemName)
-				{
-					\JToolBarHelper::editList($itemName . '.edit');
-				},
-			'duplicate'  => array(
-				'code' => function() use($listName)
-					{
-						\JToolBarHelper::custom($listName . '.batch.copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_DUPLICATE', true);
-					},
-				'access' => 'core.create'
-			),
-			'publish'    => 'publish',
-			'ubpublish'  => 'unpublish',
-			'checkin'    => 'checkin',
-			'delete'     => 'deleteList',
-			'trash'      => 'trash',
-			'batch'      => 'batch',
-			// 100 => 'preferences',
-		);
-
-		\AK::show(new \SplPriorityQueue($buttonSet));
 
 		$config = with(new Registry($defaultConfig))
 			->loadArray($config);
 
 		return new ToolbarHelper($this->data, $buttonSet, $config);
+	}
+
+	/**
+	 * configToolbar
+	 *
+	 * @return  array
+	 */
+	protected function configToolbar()
+	{
+		return array();
 	}
 }
