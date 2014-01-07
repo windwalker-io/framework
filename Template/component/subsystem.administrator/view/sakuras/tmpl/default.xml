@@ -21,5 +21,6 @@
 				<call name="data.grid">getHiddenInputs</call>
 			</html:div>
 		</content>
+
 	</form>
 </page>

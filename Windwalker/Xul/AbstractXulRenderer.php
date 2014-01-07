@@ -8,6 +8,7 @@
 
 namespace Windwalker\Xul;
 
+use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
 
 /**
@@ -144,5 +145,23 @@ abstract class AbstractXulRenderer
 		}
 
 		return $html;
+	}
+
+	/**
+	 * replaceVariable
+	 *
+	 * @param $attributes
+	 * @param $data
+	 *
+	 * @return  mixed
+	 */
+	protected static function replaceVariable($attributes, $data)
+	{
+		foreach ($attributes as &$attr)
+		{
+			$attr = StringHelper::parseVariable($attr, $data);
+		}
+
+		return $attributes;
 	}
 }

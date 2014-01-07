@@ -47,7 +47,7 @@ class FieldsetRenderer extends AbstractXulRenderer
 			throw new \UnexpectedValueException(sprintf('No form data found in $data->%s.', $formVar));
 		}
 
-		$option = $data->option ? : 'LIB_WINDWALKER';
+		$option = $data->view->option ? : 'LIB_WINDWALKER';
 		$label  = XmlHelper::get($element, 'label', $option . '_EDIT_FIELDSET_' . XmlHelper::get($element, 'name'));
 		$html   = '<legend>' . \JText::_(strtoupper($label)) . '</legend>';
 

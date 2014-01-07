@@ -9,6 +9,7 @@
 
 namespace Windwalker\View\Html;
 
+use Windwalker\Data\Data;
 use Windwalker\Registry\Registry;
 use Windwalker\View\Helper\ToolbarHelper;
 use Windwalker\View\Toolbar\Button;
@@ -35,6 +36,19 @@ class HtmlView extends AbstractHtmlView
 	protected function setTitle($title = null, $icons = 'stack')
 	{
 		\JToolbarHelper::title($title, $icons);
+	}
+
+	protected function prepareRender()
+	{
+		parent::prepareRender();
+
+		$data = $this->data;
+
+		$data->view = new Data;
+		$data->view->option   = $this->option;
+		$data->view->name     = $this->getName();
+		$data->view->viewItem = $this->viewItem;
+		$data->view->viewList = $this->viewList;
 	}
 
 	/**

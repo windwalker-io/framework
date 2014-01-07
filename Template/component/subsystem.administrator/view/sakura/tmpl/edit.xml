@@ -1,15 +1,9 @@
 <?xml version="1.0"?>
 <page xmlns:html="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<html:div id="flower"
-		class="windwalker sakuras tablelist"
+		class="windwalker sakura edit-form"
 		>
-		<html:form action="{{ uri }}"
-			method="post"
-			name="adminForm"
-			id="sakura-form"
-			class="form-validate"
-			enctype="multipart/form-data"
-			>
+		<form id="adminForm" type="edit">
 			<tabset name="sakura-edit" active="basic">
 				<tab name="basic">
 					<row class="yoo">
@@ -37,7 +31,7 @@
 			<html:hr/>
 
 			<fieldset name="rules"/>
-		</html:form>
+		</form>
 	</html:div>
 
 	<block display="false">

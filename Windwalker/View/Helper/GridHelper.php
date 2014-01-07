@@ -264,7 +264,7 @@ HTML;
 
 		$query = array(
 			'option' => $this->config->get('option'),
-			'task'   => $task ? : $this->config->get('view_item') . '.edit',
+			'task'   => $task ? : $this->config->get('view_item') . '.edit.edit',
 			$pkName  => $this->current->$pkName
 		);
 

@@ -118,4 +118,21 @@ class XmlHelper
 
 		return $attributes;
 	}
+
+	/**
+	 * set
+	 *
+	 * @param \SimpleXMLElement $xml
+	 * @param string            $attr
+	 * @param string            $value
+	 *
+	 * @return  void
+	 */
+	public static function def(\SimpleXMLElement $xml, $attr, $value)
+	{
+		$value = (string) $value;
+		$attr  = (string) $attr;
+
+		$xml[$attr] = isset($xml[$attr]) ? $xml[$attr] : (string) $value;
+	}
 }

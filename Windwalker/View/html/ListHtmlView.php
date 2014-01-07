@@ -8,7 +8,7 @@
 
 namespace Windwalker\View\Html;
 
-use Windwalker\View\AbstractView;
+use Windwalker\Data\Data;
 use Windwalker\Model\Model;
 use Windwalker\DI\Container;
 

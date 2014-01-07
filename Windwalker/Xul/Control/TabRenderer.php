@@ -31,7 +31,7 @@ class TabRenderer extends AbstractXulRenderer
 	{
 		$tabName = XmlHelper::get($element, 'name');
 
-		$label = $element['label'] ? (string) $element['label'] : $data->option . '_EDIT_FIELDS_' . $tabName;
+		$label = $element['label'] ? (string) $element['label'] : $data->view->option . '_EDIT_FIELDS_' . $tabName;
 
 		$html = \JHtmlBootstrap::addTab($data->tabSetName, $tabName, \JText::_($label));
 

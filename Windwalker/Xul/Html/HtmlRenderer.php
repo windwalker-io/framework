@@ -37,22 +37,4 @@ class HtmlRenderer extends AbstractXulRenderer
 
 		return HtmlHelper::buildTag($name, static::renderChildren($element, $data), $attributes);
 	}
-
-	/**
-	 * replaceVariable
-	 *
-	 * @param $attributes
-	 * @param $data
-	 *
-	 * @return  mixed
-	 */
-	protected static function replaceVariable($attributes, $data)
-	{
-		foreach ($attributes as &$attr)
-		{
-			$attr = StringHelper::parseVariable($attr, $data);
-		}
-
-		return $attributes;
-	}
 }
