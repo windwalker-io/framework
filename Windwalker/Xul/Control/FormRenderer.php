@@ -49,7 +49,7 @@ class FormRenderer extends AbstractXulRenderer
 
 		// Build hidden inputs
 		$footer  = HtmlHelper::buildTag('input', null, array('type' => 'hidden' , 'name' => 'option', 'value' => $data->view->option));
-		$footer .= HtmlHelper::buildTag('input', null, array('type' => 'hidden' , 'name' => 'task', 'value' => $data->view->option));
+		$footer .= HtmlHelper::buildTag('input', null, array('type' => 'hidden' , 'name' => 'task', 'value' => ''));
 		$footer .= is_callable($footerHandler) ? call_user_func_array($footerHandler, array()) : '';
 		$footer .= JHtml::_('form.token');
 

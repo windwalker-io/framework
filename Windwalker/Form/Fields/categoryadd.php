@@ -8,6 +8,11 @@
  */
 
 // No direct access
+use Windwalker\DI\Container;
+use Windwalker\Helper\HtmlHelper;
+use Windwalker\Helper\ModalHelper;
+use Windwalker\Helper\LanguageHelper;
+
 defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('category');
@@ -62,6 +67,8 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 
 	/**
 	 * Add an quick add button & modal
+	 *
+	 * @return void
 	 */
 	public function quickadd()
 	{
@@ -73,6 +80,9 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 		{
 			return;
 		}
+
+		$container = Container::getInstance();
+		$input     = $container->get('input');
 
 		$quickadd         = $this->getElement('quickadd', false);
 		$table_name       = $this->getElement('table', '#__' . $this->component . '_' . $this->view_list);
@@ -90,15 +100,9 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 		}
 
 		// Prepare Script & Styles
-		$doc = JFactory::getDocument();
-		AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_handler);
-		AKHelper::_('include.addJS', 'quickadd.js', 'ww');
-
-		if (JVERSION < 3)
-		{
-			AKHelper::_('include.addCSS', 'buttons/delicious-buttons/delicious-buttons.css', 'ww');
-			AKHelper::_('include.addCSS', 'ui/modal-j25.css', 'ww');
-		}
+		/** @var Windwalker\Helper\AssetHelper $asset */
+		$asset = Container::getInstance($quickadd_handler)->get('helper.asset');
+		$asset->addJs('js/quickadd.js');
 
 		// Set AKQuickAddOption
 		$config['task']             = $this->view_item . '.ajax.legacyquickadd';
@@ -112,7 +116,7 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 		$config['value_field']      = $value_field;
 		$config['joomla3']          = (JVERSION >= 3);
 
-		$config = AKHelper::_('html.getJSObject', $config);
+		$config = HtmlHelper::getJSObject($config);
 
 		$script = <<<QA
         window.addEvent('domready', function(){
@@ -121,13 +125,13 @@ class JFormFieldCategoryadd extends JFormFieldCategory
         });
 QA;
 
-		$doc->addScriptDeclaration($script);
+		$asset->internalJS($script);
 
 		// Load Language & Form
-		AKHelper::_('lang.loadLanguage', 'com_' . $this->component, null);
+		LanguageHelper::loadLanguage('com_' . $this->component, null);
 
 		$formpath = str_replace(JPATH_ROOT, '', $formpath);
-		$content  = AKHelper::_('ui.getQuickaddForm', $qid, $formpath, (string) $this->element['extension']);
+		$content  = ModalHelper::getQuickaddForm($qid, $formpath, (string) $this->element['extension']);
 
 		// Prepare HTML
 		$html         = '';
@@ -138,8 +142,8 @@ QA;
 		$footer = "<button class=\"btn delicious\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');AKQuickAdd.closeModal('{$qid}');\" data-dismiss=\"modal\">" . JText::_('JCANCEL') . "</button>";
 		$footer .= "<button class=\"btn btn-primary delicious blue\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">" . JText::_('JSUBMIT') . "</button>";
 
-		$html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class, 'icon' => 'icon-new icon-white'));
-		$html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title), 'footer' => $footer));
+		$html .= ModalHelper::modalLink(JText::_($button_title), $qid, array('class' => $button_class, 'icon' => 'icon-new icon-white'));
+		$html .= ModalHelper::renderModal($qid, $content, array('title' => JText::_($modal_title), 'footer' => $footer));
 
 		return $html;
 	}
