@@ -6,13 +6,14 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Windwalker\Helper\Html\HtmlElement as Element;
 use Windwalker\View\Layout\FileLayout;
 
 /**
  * Prepare data for this template.
  *
- * @var $container Windwalker\DI\Container
- * @var $asset     Windwalker\Helper\AssetHelper
+ * @var Windwalker\DI\Container       $container
+ * @var Windwalker\Helper\AssetHelper $asset
  */
 $container = $this->getContainer();
 $this->data->asset = $container->get('helper.asset');
@@ -20,6 +21,20 @@ $this->data->asset = $container->get('helper.asset');
 $listOrder = 'id';
 $listDirn = 'asc';
 $originalOrders = [];
+
+$ul = new Element('ul', [
+	new Element(
+		'li',
+		new Element('a', 'Yoo'),
+		['value' => 'yoo']
+	),
+	new Element('li', new Element('a', 'Yoo'), ['value' => 'yoo']),
+	new Element('li', 'Yoo', ['value' => 'yoo']),
+	new Element('li', 'Yoo', ['value' => 'yoo']),
+]);
+
+echo $ul;
+
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist">

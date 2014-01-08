@@ -23,7 +23,7 @@
 		</field>
 
 		<field name="created_by"
-			type="akuser"
+			type="winduser"
 			label="JAUTHOR"
 			description="JLIB_HTML_BATCH_USER_LABEL_DESC"
 			labelclass="control-label"

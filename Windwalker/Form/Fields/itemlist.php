@@ -10,8 +10,9 @@
 // No direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.html.html');
 JFormHelper::loadFieldClass('list');
+
+include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
 
 /**
  * Supports a HTML select list for target items.

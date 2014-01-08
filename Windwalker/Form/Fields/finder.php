@@ -12,8 +12,9 @@ use Windwalker\Helper\XmlHelper;
 
 defined('_JEXEC') or die;
 
-jimport('joomla.html.html');
 JFormHelper::loadFieldClass('text');
+
+include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
 
 /**
  * Supports a File finder to pick files.

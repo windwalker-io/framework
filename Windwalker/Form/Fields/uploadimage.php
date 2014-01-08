@@ -10,6 +10,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
+
 /**
  * Supports an upload image field, and if file exists, will show this image..
  *

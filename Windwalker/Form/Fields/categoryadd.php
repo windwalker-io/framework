@@ -7,15 +7,17 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-// No direct access
 use Windwalker\DI\Container;
 use Windwalker\Helper\HtmlHelper;
 use Windwalker\Helper\ModalHelper;
 use Windwalker\Helper\LanguageHelper;
 
+// No direct access
 defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('category');
+
+include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
 
 /**
  * Form Field class for Category & quickadd.
@@ -58,6 +60,7 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 	 * Use the multiple attribute to enable multiselect.
 	 *
 	 * @return  string  The field input markup.
+	 *
 	 * @since   11.1
 	 */
 	protected function getInput()
@@ -68,7 +71,7 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 	/**
 	 * Add an quick add button & modal
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function quickadd()
 	{
@@ -78,7 +81,7 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 
 		if ($readonly || $disabled)
 		{
-			return;
+			return '';
 		}
 
 		$container = Container::getInstance();
@@ -88,8 +91,8 @@ class JFormFieldCategoryadd extends JFormFieldCategory
 		$table_name       = $this->getElement('table', '#__' . $this->component . '_' . $this->view_list);
 		$key_field        = $this->getElement('key_field', 'id');
 		$value_field      = $this->getElement('value_field', 'title');
-		$formpath         = AKPATH_FORM . "/forms/quickadd/category.xml";
-		$quickadd_handler = $this->getElement('quickadd_handler', JRequest::getVar('option'));
+		$formpath         = WINDWALKER_SOURCE . "/Form/Forms/quickadd/category.xml";
+		$quickadd_handler = $this->getElement('quickadd_handler', $input->get('option'));
 		$title            = $this->getElement('quickadd_label', 'LIB_WINDWALKER_QUICKADD_TITLE');
 
 		$qid = $this->id . '_quickadd';

@@ -10,6 +10,8 @@
 namespace Windwalker\Helper;
 
 // No direct access
+use Windwalker\Helper\Html\HtmlElement;
+
 defined('_JEXEC') or die;
 
 /**
@@ -31,7 +33,7 @@ class HtmlHelper
 	 * buildTag
 	 *
 	 * @param string $name
-	 * @param string $content
+	 * @param mixed  $content
 	 * @param array  $attribs
 	 *
 	 * @return  string
@@ -54,6 +56,11 @@ class HtmlHelper
 
 		if ($content)
 		{
+			if (!($content instanceof HtmlElement))
+			{
+				$content = implode(PHP_EOL, (array) $content);
+			}
+
 			$tag .= '>' . PHP_EOL . "\t" . $content . PHP_EOL . '</' . $name . '>';
 		}
 		else

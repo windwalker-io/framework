@@ -12,6 +12,8 @@ use Windwalker\DI\Container;
 
 defined('_JEXEC') or die;
 
+include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
+
 /**
  * Supports a Modal picker for target items.
  *

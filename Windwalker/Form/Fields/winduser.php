@@ -8,6 +8,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
+
 /**
  * Field to select a user id from a modal list.
  *
@@ -15,7 +17,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Form
  * @since       1.6.0
  */
-class JFormFieldAkuser extends JFormField
+class JFormFieldWinduser extends JFormField
 {
 	/**
 	 * The form field type.
@@ -23,7 +25,7 @@ class JFormFieldAkuser extends JFormField
 	 * @var    string
 	 * @since  1.6.0
 	 */
-	public $type = 'Akuser';
+	public $type = 'Winduser';
 
 	/**
 	 * Method to get the user field input markup.
@@ -74,7 +76,7 @@ class JFormFieldAkuser extends JFormField
 		}
 		else
 		{
-			$table->username = JText::_('JLIB_FORM_SELECT_USER');
+			$table->name = JText::_('JLIB_FORM_SELECT_USER');
 		}
 
 		// Create a dummy text field with the user name.
