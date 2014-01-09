@@ -8,11 +8,12 @@
 
 namespace Windwalker\View\Json;
 
+use Joomla\DI\Container;
+use Windwalker\Model\Model;
+use Windwalker\Registry\Registry;
 use Windwalker\View\AbstractView;
 
 defined('JPATH_PLATFORM') or die;
-
-jimport('joomla.filesystem.path');
 
 /**
  * Class AbstractHtmlView
@@ -24,7 +25,7 @@ abstract class AbstractJsonView extends AbstractView
 	/**
 	 * Property data.
 	 *
-	 * @var \JRegistry
+	 * @var Registry
 	 */
 	protected $data;
 
@@ -35,23 +36,11 @@ abstract class AbstractJsonView extends AbstractView
 	 *
 	 * @since   12.1
 	 */
-	public function __construct(\JModel $model = null)
+	public function __construct(Model $model = null, Container $container = null, $config = array())
 	{
-		parent::__construct($model);
+		parent::__construct($model, $container, $config);
 
-		$this->data = new \JRegistry;
-	}
-
-	/**
-	 * Magic toString method that is a proxy for the render method.
-	 *
-	 * @return  string
-	 *
-	 * @since   12.1
-	 */
-	public function __toString()
-	{
-		return $this->render();
+		$this->data = new Registry;
 	}
 
 	/**
@@ -92,23 +81,9 @@ abstract class AbstractJsonView extends AbstractView
 	{
 		if (!$this->data)
 		{
-			$this->data = new \JRegistry;
+			$this->data = new Registry;
 		}
 
 		return $this->data;
-	}
-
-	/**
-	 * setData
-	 *
-	 * @param $data
-	 *
-	 * @return $this
-	 */
-	public function setData($data)
-	{
-		$this->data = $data;
-
-		return $this;
 	}
 }

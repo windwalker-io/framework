@@ -78,18 +78,6 @@ abstract class AbstractHtmlView extends AbstractView
 	}
 
 	/**
-	 * Magic toString method that is a proxy for the render method.
-	 *
-	 * @return  string
-	 *
-	 * @since   12.1
-	 */
-	public function __toString()
-	{
-		return $this->render();
-	}
-
-	/**
 	 * Method to escape output.
 	 *
 	 * @param   string  $output  The output to escape.

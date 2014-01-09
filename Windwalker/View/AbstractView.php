@@ -135,6 +135,18 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	}
 
 	/**
+	 * Magic toString method that is a proxy for the render method.
+	 *
+	 * @return  string
+	 *
+	 * @since   12.1
+	 */
+	public function __toString()
+	{
+		return $this->render();
+	}
+
+	/**
 	 * Method to render the view.
 	 *
 	 * @return  string  The rendered view.
