@@ -10,16 +10,64 @@
 					<layout name="joomla.searchtools.default"/>
 
 					<grid class="table table-striped table-bordered adminlist" id="adminlist">
+						<!-- TABLE HEADER -->
 						<head>
-							<col sort="true" field="title">JGLOBAL_TITLE</col>
-							<col sort="true" field="category.id">JCATEGORY</col>
+							<!--SORT-->
+							<col sort="true" type="order" />
+							<!--CHECKBOX-->
+							<col><call static="JHtmlGrid::checkAll" /></col>
+							<!--STATUS-->
+							<col sort="true" field="sakura.published">JSTATUS</col>
+							<!--TITLE-->
+							<col sort="true" field="sakura.title">JGLOBAL_TITLE</col>
+							<!--CATEGORY-->
+							<col sort="true" field="category.title">JCATEGORY</col>
+							<!--ACCESS VIEW LEVEL-->
+							<col sort="true" field="viewlevel.title">JGRID_HEADING_ACCESS</col>
+							<!--CREATED-->
+							<col sort="true" field="sakura.created">JDATE</col>
+							<!--USER-->
+							<col sort="true" field="user.name">JAUTHOR</col>
+							<!--LANGUAGE-->
+							<col sort="true" field="lang.title">JGRID_HEADING_LANGUAGE</col>
+							<!--ID-->
+							<col sort="true" field="sakura.id">JGRID_HEADING_ID</col>
 						</head>
 						<body>
-							<rowlist data="items">
+							<rowlist data="items" class="sakura-row">
+								<!--SORT-->
+								<cell><call data="grid" method="dragSort"/></cell>
+								<!--CHECKBOX-->
+								<cell><call data="grid" method="checkbox"/></cell>
+								<!--STATUS-->
+								<cell><html:div class="btn-group"><call data="grid" method="published"/></html:div></cell>
+								<!--TITLE-->
 								<cell>
-									<call data="grid" method="editTitle"/>
+									<html:div>
+										<call data="grid" method="checkoutButton"/>
+
+										<call data="grid" method="editTitle"/>
+									</html:div>
+
+									<html:div class="small">
+										<call static="JText::sprintf">
+											<argument>JGLOBAL_LIST_ALIAS</argument>
+											<argument data="grid.current.alias" />
+										</call>
+									</html:div>
 								</cell>
+								<!--CATEGORY-->
 								<cell field="category_title"/>
+								<!--ACCESS VIEW LEVEL-->
+								<cell field="viewlevel_title"/>
+								<!--CREATED-->
+								<cell><call data="grid" method="createdDate"/></cell>
+								<!--USER-->
+								<cell field="user_name"/>
+								<!--LANGUAGE-->
+								<cell><call data="grid" method="language"/></cell>
+								<!--ID-->
+								<cell field="id"/>
 							</rowlist>
 						</body>
 					</grid>

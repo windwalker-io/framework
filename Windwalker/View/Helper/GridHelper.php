@@ -8,6 +8,8 @@
 
 namespace Windwalker\View\Helper;
 
+use JHtml;
+use JText;
 use Windwalker\Data\Data;
 
 /**
@@ -45,6 +47,9 @@ class GridHelper
 		'author'           => 'created_by',
 		'author_name'      => 'user_name',
 		'checked_out_time' => 'checked_out_time',
+		'created'          => 'created',
+		'language'         => 'language',
+		'lang_title'       => 'lang_title'
 	);
 
 	/**
@@ -245,6 +250,18 @@ HTML;
 	}
 
 	/**
+	 * checkbox
+	 *
+	 * @return  mixed
+	 */
+	public function checkbox()
+	{
+		$pkName = $this->config->get('field.pk');
+
+		return JHtml::_('grid.id', $this->row, $this->current->$pkName);
+	}
+
+	/**
 	 * editTitle
 	 *
 	 * @param array  $append
@@ -331,6 +348,36 @@ HTML;
 			$taskPrefix,
 			$canCheckin
 		);
+	}
+
+	/**
+	 * createdData
+	 *
+	 * @param string $format
+	 *
+	 * @return  mixed
+	 */
+	public function createdDate($format = '')
+	{
+		$field = $this->config->get('field.created', 'created');
+		$format  = $format ? : JText::_('DATE_FORMAT_LC4');
+
+		return JHtml::_('date', $this->current->$field, $format);
+	}
+
+	public function language()
+	{
+		$field = $this->config->get('field.language', 'language');
+		$title = $this->config->get('field.lang_title', 'lang_title');
+
+		if ($this->current->$field == '*')
+		{
+			return JText::alt('JALL', 'language');
+		}
+		else
+		{
+			return $this->current->$title ? $this->escape($this->current->$title) : JText::_('JUNDEFINED');
+		}
 	}
 
 	/**

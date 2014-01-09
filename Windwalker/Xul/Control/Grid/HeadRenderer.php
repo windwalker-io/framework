@@ -39,17 +39,28 @@ class HeadRenderer extends AbstractXulRenderer
 
 		foreach ($cols as $key => $value)
 		{
+			$attribs = static::getParsedAttributes($value, $data);
+
 			$title = XmlHelper::get($value, 'title');
 			$field = XmlHelper::get($value, 'field');
-
-			$attribs = static::getParsedAttributes($element, $data);
 
 			unset($attribs['title']);
 			unset($attribs['field']);
 
 			$grid->addColumn($key, $attribs);
 
-			$grid->setRowCell($key, $gridHelper->sortTitle($title, $field), array());
+			if (XmlHelper::getFalse($value, 'sort', false))
+			{
+				$grid->setRowCell($key, $title, array());
+			}
+			elseif (XmlHelper::get($value, 'type') != 'order')
+			{
+				$grid->setRowCell($key, $gridHelper->sortTitle($title, $field), array());
+			}
+			else
+			{
+				$grid->setRowCell($key, $gridHelper->orderTitle(), array());
+			}
 		}
 	}
 }
