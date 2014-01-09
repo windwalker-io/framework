@@ -8,10 +8,11 @@
 
 namespace Windwalker\View\Html;
 
+use Joomla\DI\Container;
 use Windwalker\Data\Data;
+use Windwalker\Model\Model;
 use Windwalker\Registry\Registry;
 use Windwalker\View\Helper\ToolbarHelper;
-use Windwalker\View\Toolbar\Button;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -25,6 +26,39 @@ defined('JPATH_PLATFORM') or die;
 class HtmlView extends AbstractHtmlView
 {
 	/**
+	 * @var  array  Property buttons.
+	 */
+	protected $buttons = array();
+
+	/**
+	 * @var  array  Property toolbarConfig.
+	 */
+	protected $toolbarConfig = array();
+
+	/**
+	 * Method to instantiate the view.
+	 *
+	 * @param Model             $model     The model object.
+	 * @param Container         $container DI Container.
+	 * @param array             $config    View config.
+	 * @param \SplPriorityQueue $paths     Paths queue.
+	 */
+	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
+	{
+		parent::__construct($model, $container, $config, $paths);
+
+		if (!$this->buttons)
+		{
+			$this->buttons = \JArrayHelper::getValue($config, 'buttons', null);
+		}
+
+		if (!$this->toolbarConfig)
+		{
+			$this->toolbarConfig = \JArrayHelper::getValue($config, 'toolbar', array());
+		}
+	}
+
+	/**
 	 * setTitle
 	 *
 	 * @param string $title
@@ -37,6 +71,11 @@ class HtmlView extends AbstractHtmlView
 		\JToolbarHelper::title($title, $icons);
 	}
 
+	/**
+	 * prepareRender
+	 *
+	 * @return  void
+	 */
 	protected function prepareRender()
 	{
 		parent::prepareRender();
@@ -51,24 +90,37 @@ class HtmlView extends AbstractHtmlView
 	}
 
 	/**
+	 * addToolbar
+	 *
+	 * @return  void
+	 */
+	protected function addToolbar()
+	{
+		$toolbar = $this->getToolbarHelper($this->toolbarConfig, $this->buttons);
+
+		$toolbar->registerButtons();
+	}
+
+	/**
 	 * getToolbarHelper
 	 *
 	 * @param array $config
+	 * @param array $buttonSet
 	 *
 	 * @return  ToolbarHelper
 	 */
-	protected function getToolbarHelper($config = array())
+	protected function getToolbarHelper($config = array(), $buttonSet = array())
 	{
 		$component = $this->container->get('component');
-
-		$buttonSet = $this->configToolbar();
+		$canDo     = $component->getActions($this->viewItem);
+		$buttonSet = $buttonSet ? : $this->configureToolbar($this->buttons, $canDo);
 
 		$defaultConfig = array(
 			'view_name' => $this->getName(),
 			'view_item' => $this->viewItem,
 			'view_list' => $this->viewList,
 			'option'    => $this->option,
-			'access' => $component->getActions($this->viewItem),
+			'access'    => $component->getActions($this->viewItem),
 		);
 
 		$config = with(new Registry($defaultConfig))
@@ -78,11 +130,14 @@ class HtmlView extends AbstractHtmlView
 	}
 
 	/**
-	 * configToolbar
+	 * configureToolbar
+	 *
+	 * @param array $buttonSet
+	 * @param null  $canDo
 	 *
 	 * @return  array
 	 */
-	protected function configToolbar()
+	protected function configureToolbar($buttonSet = array(), $canDo = null)
 	{
 		return array();
 	}

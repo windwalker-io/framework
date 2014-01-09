@@ -68,11 +68,9 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param Model     $model     The model object.
-	 * @param Container $container
-	 * @param array     $config
-	 *
-	 * @since  12.1
+	 * @param Model      $model     The model object.
+	 * @param Container  $container DI Container.
+	 * @param array      $config    View config.
 	 */
 	public function __construct(Model $model = null, Container $container = null, $config = array())
 	{
@@ -150,7 +148,7 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 
 		$this->prepareData();
 
-		$output = $this->doRedner();
+		$output = $this->doRender();
 
 		return $this->postRender($output);
 	}
@@ -162,7 +160,7 @@ abstract class AbstractView implements \JView, ContainerAwareInterface
 	 *
 	 * @throws \RuntimeException
 	 */
-	abstract protected function doRedner();
+	abstract protected function doRender();
 
 	/**
 	 * prepareRender

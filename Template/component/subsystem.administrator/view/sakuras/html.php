@@ -1,5 +1,7 @@
 <?php
 
+use Joomla\DI\Container;
+use Windwalker\Model\Model;
 use Windwalker\View\Html\GridView;
 
 /**
@@ -10,32 +12,63 @@ use Windwalker\View\Html\GridView;
 class FlowerViewSakurasHtml extends GridView
 {
 	/**
-	 * List name.
-	 *
-	 * @var string
+	 * @var  string  Property prefix.
 	 */
-	protected $list_name = 'sakuras';
+	protected $prefix = 'flower';
 
 	/**
-	 * Item name.
-	 *
-	 * @var string
+	 * @var  string  Property option.
 	 */
-	protected $item_name = 'sakura';
+	protected $option = 'com_flower';
+
+	/**
+	 * @var  string  Property viewItem.
+	 */
+	protected $viewItem = 'sakura';
+
+	/**
+	 * @var  string  Property viewList.
+	 */
+	protected $viewList = 'sakuras';
+
+	/**
+	 * Method to instantiate the view.
+	 *
+	 * @param Model            $model     The model object.
+	 * @param Container        $container DI Container.
+	 * @param array            $config    View config.
+	 * @param SplPriorityQueue $paths     Paths queue.
+	 */
+	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
+	{
+		$config['grid'] = array(
+			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering'
+		);
+
+		parent::__construct($model, $container, $config, $paths);
+	}
 
 	/**
 	 * render
 	 *
-	 * @return string
+	 * @return void
 	 */
 	protected function prepareData()
 	{
 	}
 
-	protected function addToolbar()
+	/**
+	 * configToolbar
+	 *
+	 * @param array $buttonSet
+	 * @param null  $canDo
+	 *
+	 * @return  array
+	 */
+	protected function configToolbar($buttonSet = array(), $canDo = null)
 	{
-		FlowerHelper::addSubmenu($this->getName());
+		$buttonSet = parent::configureToolbar($buttonSet, $canDo);
 
-		parent::addToolbar();
+		return $buttonSet;
 	}
 }

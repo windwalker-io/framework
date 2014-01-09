@@ -22,10 +22,10 @@ class ListHtmlView extends HtmlView
 	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param   Model            $model  The model object.
-	 * @param   \SplPriorityQueue  $paths  The paths queue.
-	 *
-	 * @since   12.1
+	 * @param Model             $model     The model object.
+	 * @param Container         $container DI Container.
+	 * @param array             $config    View config.
+	 * @param \SplPriorityQueue $paths     Paths queue.
 	 */
 	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
 	{

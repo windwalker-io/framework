@@ -8,8 +8,8 @@
 
 namespace Windwalker\View\Html;
 
-
-use Windwalker\View\Helper\GridHelper;
+use Joomla\DI\Container;
+use Windwalker\Model\Model;
 
 /**
  * Class GridHtmlView
@@ -18,6 +18,32 @@ use Windwalker\View\Helper\GridHelper;
  */
 class FormView extends ItemHtmlView
 {
+	/**
+	 * Method to instantiate the view.
+	 *
+	 * @param Model             $model     The model object.
+	 * @param Container         $container DI Container.
+	 * @param array             $config    View config.
+	 * @param \SplPriorityQueue $paths     Paths queue.
+	 */
+	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
+	{
+		parent::__construct($model, $container, $config, $paths);
+
+		if (!$this->buttons)
+		{
+			$component = $this->container->get('component');
+			$canDo     = $component->getActions($this->viewItem);
+
+			$this->buttons = \JArrayHelper::getValue($config, 'buttons', $this->configureToolbar(null, $canDo));
+		}
+
+		if (!$this->toolbarConfig)
+		{
+			$this->toolbarConfig = \JArrayHelper::getValue($config, 'toolbar', array());
+		}
+	}
+
 	/**
 	 * prepareRender
 	 *
@@ -30,20 +56,37 @@ class FormView extends ItemHtmlView
 		$data        = $this->getData();
 		$data->form  = $this->get('Form');
 
-		$this->addToolbar();
-
 		if ($errors = $data->state->get('errors'))
 		{
 			$this->flash($errors);
 		}
-	}
 
-	protected function addToolbar()
-	{
+		// Configure UI
+		$this->addToolbar();
+		$this->setTitle();
+
 		$input = $this->getContainer()->get('input');
 
 		$input->set('hidemainmenu', true);
+	}
 
+	/**
+	 * setTitle
+	 *
+	 * @param null   $title
+	 * @param string $icons
+	 *
+	 * @return  void
+	 */
+	protected function setTitle($title = null, $icons = 'stack')
+	{
+		$title = $title ? : \JText::_($this->textPrefix . '_' . strtoupper($this->getName()) . '_' . strtoupper($this->getLayout()) . '_TITLE');
+
+		parent::setTitle($title, 'stack article');
+	}
+
+	protected function addToolbar2()
+	{
 		\JToolbarHelper::title(ucfirst($this->viewItem) . ' Edit');
 
 		\JToolbarHelper::apply($this->viewItem . '.edit.apply');
@@ -51,5 +94,53 @@ class FormView extends ItemHtmlView
 		\JToolbarHelper::save2new($this->viewItem . '.edit.save2new');
 		\JToolbarHelper::save2copy($this->viewItem . '.edit.save2copy');
 		\JToolbarHelper::cancel($this->viewItem . '.edit.cancel');
+	}
+
+	/**
+	 * configureToolbar
+	 *
+	 * @param array  $buttonSet
+	 * @param Object $canDo
+	 *
+	 * @return  array
+	 */
+	protected function configureToolbar($buttonSet = array(), $canDo = null)
+	{
+		return array(
+			'apply' => array(
+				'handler'  => 'apply',
+				'args'     => array($this->viewItem . '.edit.apply'),
+				'access'   => true,
+				'priority' => 1000
+			),
+
+			'save' => array(
+				'handler'  => 'save',
+				'args'     => array($this->viewItem . '.edit.save'),
+				'access'   => true,
+				'priority' => 900
+			),
+
+			'save2new' => array(
+				'handler'  => 'save2new',
+				'args'     => array($this->viewItem . '.edit.save2new'),
+				'access'   => true,
+				'priority' => 800
+			),
+
+			'save2copy' => array(
+				'handler'  => 'save2copy',
+				'args'     => array($this->viewItem . '.edit.save2copy'),
+				'access'   => true,
+				'priority' => 700
+			),
+
+			'cancel' => array(
+				'handler'  => 'cancel',
+				'args'     => array($this->viewItem . '.edit.cancel'),
+				'access'   => true,
+				'priority' => 600
+			),
+		);
 	}
 }

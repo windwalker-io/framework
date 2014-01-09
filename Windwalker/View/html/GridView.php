@@ -8,12 +8,11 @@
 
 namespace Windwalker\View\Html;
 
-
-use JToolBarHelper;
+use Joomla\DI\Container;
 use Windwalker\Helper\ArrayHelper;
+use Windwalker\Model\Model;
 use Windwalker\Registry\Registry;
 use Windwalker\View\Helper\GridHelper;
-use Windwalker\View\Helper\ToolbarHelper;
 
 /**
  * Class GridHtmlView
@@ -22,6 +21,51 @@ use Windwalker\View\Helper\ToolbarHelper;
  */
 class GridView extends ListHtmlView
 {
+	/**
+	 * @var  array  Property fields.
+	 */
+	protected $fields = array(
+		'pk'               => 'id',
+		'title'            => 'title',
+		'alias'            => 'alias',
+		'checked_out'      => 'checked_out',
+		'state'            => 'published',
+		'author'           => 'created_by',
+		'author_name'      => 'user_name',
+		'checked_out_time' => 'checked_out_time',
+		'created'          => 'created',
+		'language'         => 'language',
+		'lang_title'       => 'lang_title'
+	);
+
+	/**
+	 * @var  array  Property gridConfig.
+	 */
+	protected $gridConfig = array();
+
+	/**
+	 * Method to instantiate the view.
+	 *
+	 * @param Model             $model     The model object.
+	 * @param Container         $container DI Container.
+	 * @param array             $config    View config.
+	 * @param \SplPriorityQueue $paths     Paths queue.
+	 */
+	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
+	{
+		parent::__construct($model, $container, $config, $paths);
+
+		if (!empty($config['fields']) && is_array($config['fields']))
+		{
+			$this->fields = array_merge($config['fields']);
+		}
+
+		if (!empty($config['grid']) && is_array($config['grid']))
+		{
+			$this->gridConfig = array_merge($config['grid']);
+		}
+	}
+
 	/**
 	 * prepareRender
 	 *
@@ -32,7 +76,7 @@ class GridView extends ListHtmlView
 		parent::prepareRender();
 
 		$data             = $this->getData();
-		$data->grid       = $this->getGridHelper();
+		$data->grid       = $this->getGridHelper($this->gridConfig);
 		$data->filterForm = $this->get('FilterForm');
 		$data->batchForm  = $this->get('BatchForm');
 
@@ -45,6 +89,8 @@ class GridView extends ListHtmlView
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
+			$this->addSubmenu();
+
 			$data->sidebar = \JHtmlSidebar::render();
 
 			$this->setTitle();
@@ -75,55 +121,27 @@ class GridView extends ListHtmlView
 	 */
 	protected function addSubmenu()
 	{
+		$helper = ucfirst($this->prefix) . 'Helper';
+
+		$helper::addSubmenu($this->getName());
 	}
 
 	/**
-	 * addToolbar
+	 * configureToolbar
 	 *
-	 * @return  void
-	 */
-	protected function addToolbar()
-	{
-		$toolbar = $this->getToolbarHelper();
-
-		$toolbar->registerButtons();
-	}
-
-	/**
-	 * getGridHelper
-	 *
-	 * @return GridHelper
-	 */
-	public function getGridHelper($config = array())
-	{
-		$defaultConfig = array(
-			'option'    => $this->option,
-			'view_name'      => $this->getName(),
-			'view_item' => $this->viewItem,
-			'view_list' => $this->viewList,
-			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering'
-		);
-
-		$config = array_merge($defaultConfig, $config);
-
-		return new GridHelper($this->data, $config);
-	}
-
-	/**
-	 * configButtonSet
-	 *
-	 * @param array $buttonSet
+	 * @param array  $buttonSet
+	 * @param Object $canDo
 	 *
 	 * @return  array
 	 */
-	protected function configToolbar($buttonSet = array())
+	protected function configureToolbar($buttonSet = array(), $canDo = null)
 	{
 		$component = $this->container->get('component');
-		$canDo     = $component->getActions($this->viewItem);
+		$canDo     = $canDo ? : $component->getActions($this->viewItem);
 		$state     = $this->data->state ? : new Registry;
 		$grid      = $this->data->grid;
 
-		$filterState = $state->get('filter');
+		$filterState = $state->get('filter', array());
 
 		return array(
 			'add' => array(
@@ -200,5 +218,47 @@ class GridView extends ListHtmlView
 				'priority' => 200
 			),
 		);
+	}
+
+	/**
+	 * getGridHelper
+	 *
+	 * @param array $config
+	 *
+	 * @return  GridHelper
+	 */
+	public function getGridHelper($config = array())
+	{
+		$defaultConfig = array(
+			'option'    => $this->option,
+			'view_name' => $this->getName(),
+			'view_item' => $this->viewItem,
+			'view_list' => $this->viewList,
+			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering'
+		);
+
+		$config['fields'] = !empty($config['fields']) ? $config['fields'] : $this->configureFields();
+
+		$config = with(new Registry($defaultConfig))
+			->loadArray($config);
+
+		return new GridHelper($this->data, $config);
+	}
+
+	/**
+	 * configureFields
+	 *
+	 * @param null $fields
+	 *
+	 * @return  array
+	 */
+	protected function configureFields($fields = null)
+	{
+		if ($fields && is_array($fields))
+		{
+			$this->fields = array_merge($this->fields, $fields);
+		}
+
+		return $this->fields;
 	}
 }

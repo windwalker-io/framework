@@ -11,6 +11,7 @@ namespace Windwalker\View\Helper;
 use JHtml;
 use JText;
 use Windwalker\Data\Data;
+use Windwalker\Registry\Registry;
 
 /**
  * Class GridHelper
@@ -82,7 +83,7 @@ class GridHelper
 	public function __construct($view, $config = array())
 	{
 		$this->view   = $view;
-		$this->config = $config = new \JRegistry($config);
+		$this->config = $config = ($config instanceof Registry) ? $config : new Registry($config);
 		$this->state  = $state = $view->state;
 
 		// Merge fields
