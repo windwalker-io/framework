@@ -21,7 +21,7 @@
 					</row>
 				</tab>
 				<tab name="advanced">
-					<row handler="\Windwalker\Xul\Control\BlockRenderer">
+					<row>
 						<column name="left">
 							<fieldset name="created"
 									  class="span8"/>
