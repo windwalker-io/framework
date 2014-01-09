@@ -141,7 +141,7 @@ abstract class AbstractXulRenderer
 		}
 		else
 		{
-			$html = trim((string) $element);
+			$html = StringHelper::parseVariable((string) $element, $data);
 		}
 
 		return $html;

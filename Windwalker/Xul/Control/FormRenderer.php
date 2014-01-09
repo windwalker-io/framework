@@ -9,7 +9,7 @@
 namespace Windwalker\Xul\Control;
 
 use JHtml;
-use Windwalker\Helper\HtmlHelper;
+use Windwalker\Html\HtmlBuilder;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
 use Windwalker\Xul\Html\HtmlRenderer;
@@ -48,16 +48,16 @@ class FormRenderer extends AbstractXulRenderer
 		$footerHandler = array(__CLASS__, 'render' . ucfirst($footerHandler) . 'Footer');
 
 		// Build hidden inputs
-		$footer  = HtmlHelper::buildTag('input', null, array('type' => 'hidden' , 'name' => 'option', 'value' => $data->view->option));
-		$footer .= HtmlHelper::buildTag('input', null, array('type' => 'hidden' , 'name' => 'task', 'value' => ''));
+		$footer  = HtmlBuilder::create('input', null, array('type' => 'hidden' , 'name' => 'option', 'value' => $data->view->option));
+		$footer .= HtmlBuilder::create('input', null, array('type' => 'hidden' , 'name' => 'task', 'value' => ''));
 		$footer .= is_callable($footerHandler) ? call_user_func_array($footerHandler, array()) : '';
 		$footer .= JHtml::_('form.token');
 
 		// Wrap inputs
 		$children  = static::renderChildren($element, $data);
-		$children .= HtmlHelper::buildTag('div', $footer, array('id' => 'hidden-inputs'));
+		$children .= HtmlBuilder::create('div', $footer, array('id' => 'hidden-inputs'));
 
-		return HtmlHelper::buildTag($name, $children, $attributes);
+		return HtmlBuilder::create($name, $children, $attributes);
 	}
 
 	/**

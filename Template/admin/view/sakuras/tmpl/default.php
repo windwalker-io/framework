@@ -6,7 +6,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-use Windwalker\Helper\Html\HtmlElement as Element;
+use Windwalker\Html\HtmlElement as Element;
 use Windwalker\View\Layout\FileLayout;
 
 /**
@@ -34,7 +34,6 @@ $ul = new Element('ul', [
 ]);
 
 echo $ul;
-
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist">

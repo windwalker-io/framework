@@ -48,6 +48,10 @@ class StringHelper
 	/**
 	 * parseVariable
 	 *
+	 * @param string $string
+	 * @param array  $data
+	 * @param array  $tags
+	 *
 	 * @return  string
 	 */
 	public static function parseVariable($string, $data = array(), $tags = array('{{', '}}'))
@@ -56,7 +60,7 @@ class StringHelper
 			'/\{\{\s*(.+?)\s*\}\}/',
 			function($match) use ($data)
 			{
-				return CallableHelper::getArgumentFromData($match[1], $data);
+				return ArrayHelper::getByPath($data, $match[1]);
 			},
 			$string
 		);

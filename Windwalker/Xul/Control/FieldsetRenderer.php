@@ -8,10 +8,9 @@
 
 namespace Windwalker\Xul\Control;
 
-use Windwalker\Helper\HtmlHelper;
+use Windwalker\Html\HtmlBuilder;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
-use Windwalker\Xul\Html\HtmlRenderer;
 
 /**
  * Class FieldsetRenderer
@@ -56,7 +55,7 @@ class FieldsetRenderer extends AbstractXulRenderer
 			$html .= $field->getControlGroup() . "\n\n";
 		}
 
-		$html = HtmlHelper::buildTag('fieldset', $html, XmlHelper::getAttributes($element));
+		$html = HtmlBuilder::create('fieldset', $html, XmlHelper::getAttributes($element));
 
 		return $html;
 	}

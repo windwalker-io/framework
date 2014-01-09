@@ -22,6 +22,44 @@ defined('_JEXEC') or die;
 class ArrayHelper
 {
 	/**
+	 * getArgumentFromData
+	 *
+	 * @param mixed $data
+	 * @param mixed $arguments
+	 *
+	 * @return  null
+	 */
+	public static function getByPath($data, $arguments)
+	{
+		if (empty($arguments))
+		{
+			return null;
+		}
+
+		$args = is_array($arguments) ? $arguments : explode('.', $arguments);
+
+		$dataTmp = $data;
+
+		foreach ($args as $arg)
+		{
+			if (is_object($dataTmp) && !empty($dataTmp->$arg))
+			{
+				$dataTmp = $dataTmp->$arg;
+			}
+			elseif (is_array($dataTmp) && !empty($dataTmp[$arg]))
+			{
+				$dataTmp = $dataTmp[$arg];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		return $dataTmp;
+	}
+
+	/**
 	 * Pivot a two-dimensional matrix array.
 	 *
 	 * @param  array $array An array with two level.
