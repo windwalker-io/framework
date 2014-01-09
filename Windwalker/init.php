@@ -1,10 +1,9 @@
 <?php
 /**
- * Part of Windwalker RAD framework package.
+ * Part of Windwalker project.
  *
- * @author     Simon Asika <asika32764@gmail.com>
- * @copyright  Copyright (C) 2014 Asikart. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 use Windwalker\DI\Container;
