@@ -98,8 +98,9 @@ class GridHelper
 		// Ordering
 		$listOrder = $state->get('list.ordering');
 		$orderCol  = $state->get('list.orderCol', $config->get('orderCol'));
+		$listDirn  = $this->state->get('list.direction');
 
-		$state->set('list.saveorder', ($listOrder == $orderCol));
+		$state->set('list.saveorder', ($listOrder == $orderCol) && $listDirn == 'ASC');
 	}
 
 	/**
