@@ -36,7 +36,13 @@ class CellRenderer extends AbstractXulRenderer
 	{
 		$field = XmlHelper::get($element, 'field');
 
-		$ele = new \SimpleXMLElement('<root></root>');
+		$ele   = new \SimpleXMLElement('<root></root>');
+		$attrs = $element->attributes();
+
+		foreach ($attrs as $key => $attr)
+		{
+			$ele[$key] = $attr;
+		}
 
 		if (!$field)
 		{

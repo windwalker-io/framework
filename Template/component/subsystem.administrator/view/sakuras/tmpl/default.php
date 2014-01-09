@@ -24,9 +24,9 @@ $originalOrders = [];
 $xul = new \Windwalker\Xul\XulEngine;
 
 $xul->setPath(__DIR__);
-// echo $xul->render('default', $this->data);
+echo $xul->render('default', $this->data);
 
-// if (false)
+if (false)
 {
 ?>
 

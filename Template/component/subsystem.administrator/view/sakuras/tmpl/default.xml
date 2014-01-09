@@ -11,61 +11,107 @@
 						<!-- TABLE HEADER -->
 						<head>
 							<!--SORT-->
-							<col sort="true" type="order" />
+							<col width="1%" class="nowrap center hidden-phone">
+								<call data="grid" method="orderTitle"/>
+							</col>
+
 							<!--CHECKBOX-->
-							<col><call static="JHtmlGrid::checkAll" /></col>
+							<col width="1%" class="center">
+								<call static="JHtmlGrid::checkAll"/>
+							</col>
+
 							<!--STATUS-->
-							<col sort="true" field="sakura.published">JSTATUS</col>
+							<col width="5%" class="nowrap center">
+								<sort field="sakura.published">JSTATUS</sort>
+							</col>
+
 							<!--TITLE-->
-							<col sort="true" field="sakura.title">JGLOBAL_TITLE</col>
+							<col class="center">
+								<sort field="sakura.title">JGLOBAL_TITLE</sort>
+							</col>
+
 							<!--CATEGORY-->
-							<col sort="true" field="category.title">JCATEGORY</col>
+							<col width="10%" sort="true" class="center">
+								<sort field="category.title">JCATEGORY</sort>
+							</col>
+
 							<!--ACCESS VIEW LEVEL-->
-							<col sort="true" field="viewlevel.title">JGRID_HEADING_ACCESS</col>
+							<col width="5%" sort="true" class="center">
+								<sort field="viewlevel.title">JGRID_HEADING_ACCESS</sort>
+							</col>
+
 							<!--CREATED-->
-							<col sort="true" field="sakura.created">JDATE</col>
+							<col width="10%" sort="true" class="center">
+								<sort field="sakura.created">JDATE</sort>
+							</col>
+
 							<!--USER-->
-							<col sort="true" field="user.name">JAUTHOR</col>
+							<col width="10%" sort="true" class="center">
+								<sort field="user.name">JAUTHOR</sort>
+							</col>
+
 							<!--LANGUAGE-->
-							<col sort="true" field="lang.title">JGRID_HEADING_LANGUAGE</col>
+							<col width="5%" sort="true" class="center">
+								<sort field="lang.title">JGRID_HEADING_LANGUAGE</sort>
+							</col>
+
 							<!--ID-->
-							<col sort="true" field="sakura.id">JGRID_HEADING_ID</col>
+							<col width="1%" sort="true" class="nowrap center">
+								<sort field="sakura.id">JGRID_HEADING_ID</sort>
+							</col>
 						</head>
 						<body>
 							<rowlist data="items" class="sakura-row" sortable-group-id="{{ grid.current.catid }}">
 								<!--SORT-->
-								<cell><call data="grid" method="dragSort"/></cell>
+								<cell class="order nowrap center hidden-phone">
+									<call data="grid" method="dragSort"/>
+								</cell>
+
 								<!--CHECKBOX-->
-								<cell><call data="grid" method="checkbox"/></cell>
+								<cell class="center">
+									<call data="grid" method="checkbox"/>
+								</cell>
+
 								<!--STATUS-->
-								<cell><html:div class="btn-group"><call data="grid" method="published"/></html:div></cell>
+								<cell class="center">
+									<html:div class="btn-group">
+										<call data="grid" method="published"/>
+									</html:div>
+								</cell>
+
 								<!--TITLE-->
-								<cell>
-									<html:div>
+								<cell class="has-context quick-edit-wrap">
+									<html:div class="item-title">
 										<call data="grid" method="checkoutButton"/>
 
 										<call data="grid" method="editTitle"/>
 									</html:div>
 
-									<html:div class="small">
+									<html:div class="small item-alias">
 										<call static="JText::sprintf">
 											<argument>JGLOBAL_LIST_ALIAS</argument>
 											<argument data="grid.current.alias" />
 										</call>
 									</html:div>
 								</cell>
+
 								<!--CATEGORY-->
-								<cell field="category_title"/>
+								<cell class="center" field="category_title"/>
+
 								<!--ACCESS VIEW LEVEL-->
-								<cell field="viewlevel_title"/>
+								<cell class="center" field="viewlevel_title"/>
+
 								<!--CREATED-->
-								<cell><call data="grid" method="createdDate"/></cell>
+								<cell class="center"><call data="grid" method="createdDate"/></cell>
+
 								<!--USER-->
-								<cell field="user_name"/>
+								<cell class="center" field="user_name"/>
+
 								<!--LANGUAGE-->
-								<cell><call data="grid" method="language"/></cell>
+								<cell class="center"><call data="grid" method="language"/></cell>
+
 								<!--ID-->
-								<cell field="id"/>
+								<cell class="center" field="id"/>
 							</rowlist>
 						</body>
 					</grid>

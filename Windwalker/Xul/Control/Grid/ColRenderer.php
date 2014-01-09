@@ -33,9 +33,9 @@ class ColRenderer extends AbstractXulRenderer
 	protected static function doRender($name, \SimpleXmlElement $element, $data)
 	{
 		// Handle title
-		$title = XmlHelper::get($element, 'title', (string) (string) static::renderChildren($element, $data));
+		$title = XmlHelper::get($element, 'title', (string) static::renderChildren($element, $data));
 
-		$element['title'] = $title;
+		$element['title'] = trim($title);
 
 		return $element;
 	}

@@ -8,17 +8,15 @@
 
 namespace Windwalker\Xul\Control\Grid;
 
-use JGrid;
-use Windwalker\Data\Data;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
 
 /**
- * Class TableRenderer
+ * Class SortRenderer
  *
  * @since 1.0
  */
-class HeadRenderer extends AbstractXulRenderer
+class SortRenderer extends AbstractXulRenderer
 {
 	/**
 	 * doRender
@@ -31,23 +29,13 @@ class HeadRenderer extends AbstractXulRenderer
 	 */
 	protected static function doRender($name, \SimpleXmlElement $element, $data)
 	{
-		$cols = static::renderChildren($element, $data);
+		$field = XmlHelper::get($element, 'field');
 
-		$gridHelper = $data->grid;
-		$grid       = $data->xulControl->grid;
-		$grid->addRow(array(), 1);
-
-		foreach ($cols as $key => $value)
+		if (!$field)
 		{
-			$attribs = static::getParsedAttributes($value, $data);
-
-			$title = XmlHelper::get($value, 'title');
-
-			unset($attribs['title']);
-
-			$grid->addColumn($key, $attribs);
-
-			$grid->setRowCell($key, $title, $attribs);
+			throw new \InvalidArgumentException('"sort" tag need field');
 		}
+
+		return $data->grid->sortTitle(static::renderChildren($element, $data), $field);
 	}
 }
