@@ -3,6 +3,7 @@
 use Joomla\DI\Container;
 use Windwalker\Model\Model;
 use Windwalker\View\Html\GridView;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class SakurasHtmlView
@@ -44,6 +45,8 @@ class FlowerViewSakurasHtml extends GridView
 		$config['grid'] = array(
 			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering'
 		);
+
+		$this->engine = new XulEngine;
 
 		parent::__construct($model, $container, $config, $paths);
 	}

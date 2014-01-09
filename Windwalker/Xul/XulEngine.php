@@ -9,6 +9,7 @@
 namespace Windwalker\Xul;
 
 use Windwalker\Data\Data;
+use Windwalker\View\Engine\AbstractEngine;
 use Windwalker\Xul\Html\HtmlRenderer;
 
 /**
@@ -16,31 +17,30 @@ use Windwalker\Xul\Html\HtmlRenderer;
  *
  * @since 1.0
  */
-class XulEngine
+class XulEngine extends AbstractEngine
 {
 	/**
-	 * @var  string  Property path.
+	 * @var  string  Property layoutExt.
 	 */
-	protected $path = '';
+	protected $layoutExt = 'xml';
 
 	/**
-	 * render
+	 * execute
 	 *
-	 * @param string $template
-	 * @param mixed  $data
+	 * @param string $templateFile
+	 * @param null   $data
 	 *
-	 * @return  string
+	 * @throws \InvalidArgumentException
+	 * @return  mixed
 	 */
-	public function render($template = 'default', $data = array())
+	protected function execute($templateFile, $data = null)
 	{
-		$file = $this->path . '/' . $template . '.xml';
-
-		if (!is_file($file))
+		if (!is_file($templateFile))
 		{
-			throw new \InvalidArgumentException(sprintf('Template "%s" not exists.', $template));
+			throw new \InvalidArgumentException(sprintf('Template "%s" not exists.', $templateFile));
 		}
 
-		$xml = simplexml_load_file($file);
+		$xml = simplexml_load_file($templateFile);
 
 		if (!($data instanceof Data))
 		{
@@ -50,25 +50,5 @@ class XulEngine
 		$data->xulControl = new Data;
 
 		return HtmlRenderer::render('div', $xml, $data);
-	}
-
-	/**
-	 * @return  string
-	 */
-	public function getPath()
-	{
-		return $this->path;
-	}
-
-	/**
-	 * @param   string $path
-	 *
-	 * @return  XulRenderer  Return self to support chaining.
-	 */
-	public function setPath($path)
-	{
-		$this->path = $path;
-
-		return $this;
 	}
 }

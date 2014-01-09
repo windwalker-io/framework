@@ -16,7 +16,6 @@ use Windwalker\Data\Data;
  * @var $grid      Windwalker\View\Helper\GridHelper
  */
 $container = $this->getContainer();
-$data      = $this->getData();
 $grid      = $data->grid;
 
 // Prepare some API objects

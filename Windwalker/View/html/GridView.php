@@ -169,21 +169,21 @@ class GridView extends ListHtmlView
 				'handler'  => 'publish',
 				'args'     => array($this->viewList . '.state.publish'),
 				'access'   => 'core.edit.state',
-				'priority' => 1000
+				'priority' => 700
 			),
 
 			'unpublish' => array(
 				'handler'  => 'unpublish',
 				'args'     => array($this->viewList . '.state.unpublish'),
 				'access'   => 'core.create',
-				'priority' => 700
+				'priority' => 600
 			),
 
 			'checkin' => array(
 				'handler'  => 'checkin',
 				'args'     => array($this->viewList . '.state.checkin'),
 				'access'   => 'core.create',
-				'priority' => 600
+				'priority' => 500
 			),
 
 			'delete' => array(
@@ -193,7 +193,7 @@ class GridView extends ListHtmlView
 					ArrayHelper::getValue($filterState, $grid->config->get('field.state', 'published'))
 					&& $canDo->get('core.delete')
 				),
-				'priority' => 500
+				'priority' => 400
 			),
 
 			'trash' => array(
@@ -203,19 +203,19 @@ class GridView extends ListHtmlView
 					!ArrayHelper::getValue($filterState, $grid->config->get('field.state', 'published'))
 					&& $canDo->get('core.edit.state')
 				),
-				'priority' => 400
+				'priority' => 300
 			),
 
 			'batch' => array(
 				'handler'  => 'modal',
 				'access'   => 'core.edit',
-				'priority' => 300
+				'priority' => 200
 			),
 
 			'preferences' => array(
 				'handler' => 'preferences',
 				'access'   => 'core.edit',
-				'priority' => 200
+				'priority' => 100
 			),
 		);
 	}

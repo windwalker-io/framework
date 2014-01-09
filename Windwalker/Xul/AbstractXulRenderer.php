@@ -191,4 +191,17 @@ abstract class AbstractXulRenderer
 
 		return static::replaceVariable($attributes, $data);
 	}
+
+	/**
+	 * Method to escape output.
+	 *
+	 * @param   string  $output  The output to escape.
+	 *
+	 * @return  string  The escaped output.
+	 */
+	public function escape($output)
+	{
+		// Escape the output.
+		return htmlspecialchars($output, ENT_COMPAT, 'UTF-8');
+	}
 }

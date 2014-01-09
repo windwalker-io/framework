@@ -1,17 +1,10 @@
 <?php
 
 $container = $this->getContainer();
-$form = $this->data->form;
-$item = $this->data->item;
-$this->data->asset = $container->get('helper.asset');
-$this->data->uri   = JURI::getInstance();
-
-$xul = new \Windwalker\Xul\XulEngine;
-
-$xul->setPath(__DIR__);
-echo $xul->render('edit', $this->data);
-
-if (false):
+$form = $data->form;
+$item = $data->item;
+$data->asset = $container->get('helper.asset');
+$data->uri   = JURI::getInstance();
 ?>
 
 <form action="<?php echo JURI::getInstance(); ?>"  method="post" name="adminForm" id="adminForm"
@@ -43,4 +36,3 @@ if (false):
 	</div>
 </form>
 
-<?php endif; ?>

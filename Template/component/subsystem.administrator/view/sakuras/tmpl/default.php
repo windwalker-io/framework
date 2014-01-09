@@ -15,19 +15,11 @@ use Windwalker\View\Layout\FileLayout;
  * @var Windwalker\Helper\AssetHelper $asset
  */
 $container = $this->getContainer();
-$this->data->asset = $container->get('helper.asset');
+$data->asset = $container->get('helper.asset');
 
 $listOrder = 'id';
 $listDirn = 'asc';
 $originalOrders = [];
-
-$xul = new \Windwalker\Xul\XulEngine;
-
-$xul->setPath(__DIR__);
-echo $xul->render('default', $this->data);
-
-if (false)
-{
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist">
@@ -62,6 +54,3 @@ if (false)
 		</div>
 	</form>
 </div>
-<?php
-}
-?>
