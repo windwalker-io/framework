@@ -47,6 +47,8 @@ class XulEngine
 			$data = new Data($data);
 		}
 
+		$data->xulControl = new Data;
+
 		return HtmlRenderer::render('div', $xml, $data);
 	}
 

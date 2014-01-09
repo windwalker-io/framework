@@ -80,6 +80,11 @@ class CallRenderer extends AbstractXulRenderer
 		$method   = XmlHelper::get($element, 'method');
 		$instance = ArrayHelper::getByPath($data, $name);
 
+		if (!is_callable(array($instance, $method)))
+		{
+			throw new \InvalidArgumentException(sprintf('Object or method: $data->%s->%s() not exists.', $name, $method));
+		}
+
 		return call_user_func_array(array($instance, $method), static::getArguments($element, $data));
 	}
 
@@ -91,9 +96,9 @@ class CallRenderer extends AbstractXulRenderer
 	 *
 	 * @return  array
 	 */
-	protected static function getArguments($element, $data)
+	protected static function getArguments($element, $data, $argumrntTag = 'argument')
 	{
-		$args = $element->xpath('argument');
+		$args = $element->xpath($argumrntTag);
 
 		$return = array();
 

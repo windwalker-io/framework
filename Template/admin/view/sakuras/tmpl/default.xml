@@ -7,15 +7,31 @@
 			<row>
 				<sidebar name="sakura-sidebar" span="2" title="JOPTION_MENUS" />
 				<column>
-					<dump data="items.0"/>
+					<layout name="joomla.searchtools.default"/>
+
+					<grid class="table table-striped table-bordered adminlist" id="adminlist">
+						<head>
+							<col sort="true" field="title">JGLOBAL_TITLE</col>
+							<col sort="true" field="category.id">JCATEGORY</col>
+						</head>
+						<body>
+							<rowlist data="items">
+								<cell>
+									<call data="grid" method="editTitle"/>
+								</cell>
+								<cell field="category_title"/>
+							</rowlist>
+						</body>
+					</grid>
+
+					<layout name="joomla.batchtools.modal">
+						<data key="text_prefix">sakuras.</data>
+					</layout>
 				</column>
 			</row>
 
 
 			<!--<content>-->
-				<!--<layout name="joomla.searchtools.default">-->
-					<!--<data key="view" name="data" />-->
-				<!--</layout>-->
 				<!--table-->
 				<!--<layout name="joomla.searchtools.modal">-->
 					<!--<data name="view" property="data" />-->

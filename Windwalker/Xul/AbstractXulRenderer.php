@@ -9,6 +9,7 @@
 namespace Windwalker\Xul;
 
 use Windwalker\Data\Data;
+use Windwalker\Debugger\Debugger;
 use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Html\HtmlElements;
@@ -132,7 +133,14 @@ abstract class AbstractXulRenderer
 				}
 				else
 				{
-					$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . ucfirst($class) . 'Renderer';
+					$prefix = $data->xulControl->classPrefix;
+
+					$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . $prefix . ucfirst($class) . 'Renderer';
+
+					if (!class_exists($renderer))
+					{
+						$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . ucfirst($class) . 'Renderer';
+					}
 
 					if (!class_exists($renderer))
 					{
@@ -167,5 +175,20 @@ abstract class AbstractXulRenderer
 		}
 
 		return $attributes;
+	}
+
+	/**
+	 * getParsedAttributes
+	 *
+	 * @param \SimpleXmlElement $element
+	 * @param Data              $data
+	 *
+	 * @return  mixed
+	 */
+	protected static function getParsedAttributes($element, $data)
+	{
+		$attributes = XmlHelper::getAttributes($element);
+
+		return static::replaceVariable($attributes, $data);
 	}
 }
