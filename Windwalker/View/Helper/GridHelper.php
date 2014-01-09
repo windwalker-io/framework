@@ -109,7 +109,7 @@ class GridHelper
 	 *
 	 * @return bool
 	 */
-	public function registerTableSort($task = null)
+	public function registerTableSort($task = null, $tableId = 'TableList')
 	{
 		if (!$this->state->get('list.saveorder', false))
 		{
@@ -122,7 +122,7 @@ class GridHelper
 
 		$saveOrderingUrl = 'index.php?option=' . $option . '&task=' . $task . '&tmpl=component';
 
-		\JHtml::_('sortablelist.sortable', 'sakuraList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+		\JHtml::_('sortablelist.sortable', $tableId, 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 
 		return true;
 	}

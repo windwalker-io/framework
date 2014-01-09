@@ -69,6 +69,8 @@ class FormRenderer extends AbstractXulRenderer
 	{
 		$children = '';
 
+		$children .= HtmlBuilder::create('input', null, array('type' => 'hidden' , 'name' => 'boxchecked', 'value' => ''));
+
 		return $children;
 	}
 
