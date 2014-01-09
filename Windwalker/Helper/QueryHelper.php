@@ -2,6 +2,8 @@
 
 namespace Windwalker\Helper;
 
+use JFactory;
+
 /**
  * Class QueryHelper
  *
@@ -25,11 +27,10 @@ class QueryHelper
 	 *
 	 * @return  array    Select column list.
 	 */
-	public static function getSelectList($db, $tables = array(), $noprefix = true)
+	public static function getSelectList($db = null, $tables = array(), $noprefix = true)
 	{
-		$select = array();
 		$fields = array();
-		$db     = $db ?: \JFactory::getDbo();
+		$db     = $db ?: JFactory::getDbo();
 
 		$i = 0;
 
@@ -71,10 +72,10 @@ class QueryHelper
 	 *
 	 * @return   array    Filter fields list.
 	 */
-	public static function mergeFilterFields($db, $filter_fields, $tables = array(), $option = array())
+	public static function mergeFilterFields($db = null, $filter_fields = array(), $tables = array(), $option = array())
 	{
 		$fields = array();
-		$db     = $db ?: \JFactory::getDbo();
+		$db     = $db ?: JFactory::getDbo();
 		$ignore = array(
 			'params'
 		);

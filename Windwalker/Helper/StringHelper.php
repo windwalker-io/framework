@@ -60,7 +60,16 @@ class StringHelper
 			'/\{\{\s*(.+?)\s*\}\}/',
 			function($match) use ($data)
 			{
-				return ArrayHelper::getByPath($data, $match[1]);
+				$return = ArrayHelper::getByPath($data, $match[1]);
+
+				if (is_array($return) || is_object($return))
+				{
+					return print_r($return, 1);
+				}
+				else
+				{
+					return $return;
+				}
 			},
 			$string
 		);

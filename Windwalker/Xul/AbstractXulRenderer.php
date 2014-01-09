@@ -8,8 +8,10 @@
 
 namespace Windwalker\Xul;
 
+use Windwalker\Data\Data;
 use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
+use Windwalker\Html\HtmlElements;
 
 /**
  * Class XulRenderer
@@ -96,7 +98,14 @@ abstract class AbstractXulRenderer
 	 */
 	protected static function renderChildren($element, $data)
 	{
-		$html = '';
+		$html = new HtmlElements;
+
+		if (!($data instanceof Data))
+		{
+			$data = new Data($data);
+		}
+
+		$data = clone $data;
 
 		$children = $element->xpath('*');
 
@@ -131,12 +140,7 @@ abstract class AbstractXulRenderer
 					}
 				}
 
-				if (is_object($data))
-				{
-					$data = clone $data;
-				}
-
-				$html .= call_user_func_array(array($renderer, 'render'), array($name, $child, $data));
+				$html[] = call_user_func_array(array($renderer, 'render'), array($name, $child, $data));
 			}
 		}
 		else

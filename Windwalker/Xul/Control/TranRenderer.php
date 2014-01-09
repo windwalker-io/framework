@@ -8,17 +8,15 @@
 
 namespace Windwalker\Xul\Control;
 
-use Windwalker\Data\Data;
-use Windwalker\Helper\XmlHelper;
+use JText;
 use Windwalker\Xul\AbstractXulRenderer;
-use Windwalker\Xul\Html\HtmlRenderer;
 
 /**
  * Class ColumnRenderer
  *
  * @since 1.0
  */
-class RowRenderer extends AbstractXulRenderer
+class TranRenderer extends AbstractXulRenderer
 {
 	/**
 	 * doRender
@@ -31,21 +29,6 @@ class RowRenderer extends AbstractXulRenderer
 	 */
 	protected static function doRender($name, \SimpleXmlElement $element, $data)
 	{
-		$rowClass = XmlHelper::getBool($element, 'fluid', true) ? 'row-fluid' : 'row';
-
-		$element['class'] = isset($element['class']) ? $rowClass . ' ' . $element['class'] : $rowClass;
-
-		if (empty($data->view))
-		{
-			$data->view = new Data;
-		}
-
-		$data->view->colSpan = 12;
-
-		$html = HtmlRenderer::render('div', $element, $data);
-
-		unset($data->view->colSpan);
-
-		return $html;
+		return JText::_((string) $element);
 	}
 }

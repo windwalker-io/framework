@@ -26,11 +26,44 @@ class ColumnRenderer extends AbstractXulRenderer
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
 	protected static function doRender($name, \SimpleXmlElement $element, $data)
 	{
-		$colClass = 'span' . XmlHelper::get($element, 'span', '12');
+		if (!isset($data->view->colSpan))
+		{
+			throw new \LogicException('Please put "column" tags in "row" tag.');
+		}
+
+		$span = XmlHelper::get($element, 'span');
+		$fill = XmlHelper::getBool($element, 'fill', !((boolean) $span));
+
+		if (!$span)
+		{
+			$span = 12;
+		}
+
+		if ($fill)
+		{
+			$span = $data->view->colSpan ? : 12;
+		}
+		else
+		{
+			$data->view->colSpan -= $span;
+		}
+
+		if (((int) $span) <= 0)
+		{
+			$span = 12;
+		}
+
+		if ($data->view->colSpan <= 0)
+		{
+			$data->view->colSpan = 12 + $data->view->colSpan;
+		}
+
+		$colClass = 'span' . $span;
 
 		$element['class'] = isset($element['class']) ? $colClass . ' ' . $element['class'] : $colClass;
 

@@ -8,17 +8,15 @@
 
 namespace Windwalker\Xul\Control;
 
-use Windwalker\Data\Data;
 use Windwalker\Helper\XmlHelper;
-use Windwalker\Xul\AbstractXulRenderer;
-use Windwalker\Xul\Html\HtmlRenderer;
+use Windwalker\Html\HtmlElement;
 
 /**
- * Class ColumnRenderer
+ * Class DumpRenderer
  *
  * @since 1.0
  */
-class RowRenderer extends AbstractXulRenderer
+class DumpRenderer extends CallRenderer
 {
 	/**
 	 * doRender
@@ -31,21 +29,20 @@ class RowRenderer extends AbstractXulRenderer
 	 */
 	protected static function doRender($name, \SimpleXmlElement $element, $data)
 	{
-		$rowClass = XmlHelper::getBool($element, 'fluid', true) ? 'row-fluid' : 'row';
+		$element['static'] = $handler = XmlHelper::get($element, 'handler', 'print_r');
 
-		$element['class'] = isset($element['class']) ? $rowClass . ' ' . $element['class'] : $rowClass;
+		$element->addChild('argument')
+			->addAttribute('data', XmlHelper::get($element, 'data'));
 
-		if (empty($data->view))
+		$element->addChild('argument', 1);
+
+		if ($handler == 'print_r')
 		{
-			$data->view = new Data;
+			return new HtmlElement('pre', parent::doRender($name, $element, $data));
 		}
-
-		$data->view->colSpan = 12;
-
-		$html = HtmlRenderer::render('div', $element, $data);
-
-		unset($data->view->colSpan);
-
-		return $html;
+		else
+		{
+			return parent::doRender($name, $element, $data);
+		}
 	}
 }

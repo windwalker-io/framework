@@ -1,36 +1,41 @@
 <?xml version="1.0"?>
-<page xmlns:html="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<page xmlns:html="http://dev.w3.org/html5/html-author ">
 	<html:div id="flower"
-		class="windwalker sakura edit-form"
+			  class="windwalker sakura edit-form"
 		>
-		<form id="adminForm" type="edit">
-			<tabset name="sakura-edit" active="basic">
+		<form id="adminForm"
+			  type="edit">
+			<tabset name="sakura-edit"
+					active="basic">
 				<tab name="basic">
 					<row class="yoo">
-						<column name="left" span="8">
-							<fieldset name="information" />
-							<fieldset name="text" />
+						<column name="left"
+								span="8">
+							<fieldset name="information"/>
+							<fieldset name="text"/>
 						</column>
-						<column name="right" span="4">
-							<fieldset name="publish" />
+						<column name="right"
+								span="4">
+							<fieldset name="publish"/>
 						</column>
 					</row>
 				</tab>
 				<tab name="advanced">
 					<row handler="\Windwalker\Xul\Control\BlockRenderer">
 						<column name="left">
-							<fieldset name="created" class="span8" />
+							<fieldset name="created"
+									  class="span8"/>
 						</column>
 					</row>
 				</tab>
 				<tab name="rules">
-
+					<row>
+						<column>
+							<fieldset name="rules"/>
+						</column>
+					</row>
 				</tab>
 			</tabset>
-
-			<html:hr/>
-
-			<fieldset name="rules"/>
 		</form>
 	</html:div>
 

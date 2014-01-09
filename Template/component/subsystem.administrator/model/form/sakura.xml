@@ -14,15 +14,6 @@
 			       class="input-xlarge"
 					/>
 
-<field name="cars"
-	   type="text"
-	   label="Cars"
-	>
-	<option value="benz" >Benz</option>
-	<option value="audi" >Audi</option>
-	<option value="BMW" />
-</field>
-
 			<field name="alias"
 			       type="text"
 			       label="JFIELD_ALIAS_LABEL"

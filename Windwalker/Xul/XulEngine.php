@@ -33,7 +33,14 @@ class XulEngine
 	 */
 	public function render($template = 'default', $data = array())
 	{
-		$xml = simplexml_load_file($this->path . '/' . $template . '.xml');
+		$file = $this->path . '/' . $template . '.xml';
+
+		if (!is_file($file))
+		{
+			throw new \InvalidArgumentException(sprintf('Template "%s" not exists.', $template));
+		}
+
+		$xml = simplexml_load_file($file);
 
 		if (!($data instanceof Data))
 		{

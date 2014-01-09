@@ -1,26 +1,31 @@
 <?xml version="1.0"?>
-<page xmlns="http://asikart.com/jul-schema"
-	xmlns:html="http://dev.w3.org/html5/html-author"
-	id="flower"
-	class="windwalker sakuras tablelist"
-	>
-	<form id="adminForm" name="adminForm" method="post" action="self">
-		<sidebar name="sakura-sidebar">
+<page xmlns:html="http://dev.w3.org/html5/html-author">
+	<html:div id="flower"
+		class="windwalker sakuras tablelist"
+		>
+		<form id="adminForm" type="grid">
+			<row>
+				<sidebar name="sakura-sidebar" span="2" title="JOPTION_MENUS" />
+				<column>
+					<dump data="items.0"/>
+				</column>
+			</row>
 
-		</sidebar>
-		<content>
-			<layout name="joomla.searchtools.default">
-				<data key="view" name="data" />
-			</layout>
-			table
-			<layout name="joomla.searchtools.modal">
-				<data name="view" property="data" />
-				<data name="task_prefix">sakuras.</data>
-			</layout>
-			<html:div id="hidden-inputs">
-				<call name="data.grid">getHiddenInputs</call>
-			</html:div>
-		</content>
 
-	</form>
+			<!--<content>-->
+				<!--<layout name="joomla.searchtools.default">-->
+					<!--<data key="view" name="data" />-->
+				<!--</layout>-->
+				<!--table-->
+				<!--<layout name="joomla.searchtools.modal">-->
+					<!--<data name="view" property="data" />-->
+					<!--<data name="task_prefix">sakuras.</data>-->
+				<!--</layout>-->
+				<!--<html:div id="hidden-inputs">-->
+					<!--<call name="data.grid">getHiddenInputs</call>-->
+				<!--</html:div>-->
+			<!--</content>-->
+
+		</form>
+	</html:div>
 </page>

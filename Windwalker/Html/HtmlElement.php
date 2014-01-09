@@ -13,7 +13,7 @@ namespace Windwalker\Html;
  *
  * @since 1.0
  */
-class HtmlElement
+class HtmlElement implements \ArrayAccess
 {
 	/**
 	 * @var  string  Property name.
@@ -157,5 +157,60 @@ class HtmlElement
 		$this->name = $name;
 
 		return $this;
+	}
+
+	/**
+	 * Whether a offset exists
+	 *
+	 * @param mixed $offset An offset to check for.
+	 *
+	 * @return boolean True on success or false on failure.
+	 *                 The return value will be casted to boolean if non-boolean was returned.
+	 */
+	public function offsetExists($offset)
+	{
+		return isset($this->attribs[$offset]);
+	}
+
+	/**
+	 * Offset to retrieve
+	 *
+	 * @param mixed $offset The offset to retrieve.
+	 *
+	 * @return mixed Can return all value types.
+	 */
+	public function offsetGet($offset)
+	{
+		if (!$this->offsetExists($offset))
+		{
+			return null;
+		}
+
+		return $this->attribs[$offset];
+	}
+
+	/**
+	 * Offset to set
+	 *
+	 * @param mixed $offset The offset to assign the value to.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @return void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->attribs[$offset] = $value;
+	}
+
+	/**
+	 * Offset to unset
+	 *
+	 * @param mixed $offset The offset to unset.
+	 *
+	 * @return void
+	 */
+	public function offsetUnset($offset)
+	{
+		unset($this->attribs[$offset]);
 	}
 }

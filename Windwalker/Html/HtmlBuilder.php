@@ -8,9 +8,9 @@
 
 namespace Windwalker\Html;
 
-// No direct access
 use Windwalker\Helper\StringHelper;
 
+// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -22,14 +22,14 @@ defined('_JEXEC') or die;
 class HtmlBuilder
 {
 	/**
-	 * @var  array  Property coupleTags.
+	 * @var  array  Property unpairedElements.
 	 */
-	protected static $unpairedTags = array(
+	protected static $unpairedElements = array(
 		'img', 'br', 'hr', 'area', 'param', 'wbr', 'base', 'link', 'meta', 'input', 'option'
 	);
 
 	/**
-	 * buildTag
+	 * create
 	 *
 	 * @param string $name
 	 * @param mixed  $content
@@ -41,7 +41,7 @@ class HtmlBuilder
 	{
 		$name = trim($name);
 
-		$unpaired = in_array(strtolower($name), static::$unpairedTags);
+		$unpaired = in_array(strtolower($name), static::$unpairedElements);
 
 		$tag = '<' . $name;
 

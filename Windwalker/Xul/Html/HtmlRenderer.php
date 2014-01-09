@@ -10,6 +10,7 @@ namespace Windwalker\Xul\Html;
 
 use Windwalker\Html\HtmlBuilder;
 use Windwalker\Helper\XmlHelper;
+use Windwalker\Html\HtmlElement;
 use Windwalker\Xul\AbstractXulRenderer;
 
 /**
@@ -34,6 +35,6 @@ class HtmlRenderer extends AbstractXulRenderer
 
 		$attributes = static::replaceVariable($attributes, $data);
 
-		return HtmlBuilder::create($name, static::renderChildren($element, $data), $attributes);
+		return new HtmlElement($name, static::renderChildren($element, $data), $attributes);
 	}
 }

@@ -6,7 +6,6 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-use Windwalker\Html\HtmlElement as Element;
 use Windwalker\View\Layout\FileLayout;
 
 /**
@@ -22,18 +21,13 @@ $listOrder = 'id';
 $listDirn = 'asc';
 $originalOrders = [];
 
-$ul = new Element('ul', [
-	new Element(
-		'li',
-		new Element('a', 'Yoo'),
-		['value' => 'yoo']
-	),
-	new Element('li', new Element('a', 'Yoo'), ['value' => 'yoo']),
-	new Element('li', 'Yoo', ['value' => 'yoo']),
-	new Element('li', 'Yoo', ['value' => 'yoo']),
-]);
+$xul = new \Windwalker\Xul\XulEngine;
 
-echo $ul;
+$xul->setPath(__DIR__);
+echo $xul->render('default', $this->data);
+
+if (false)
+{
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist">
@@ -68,3 +62,6 @@ echo $ul;
 		</div>
 	</form>
 </div>
+<?php
+}
+?>

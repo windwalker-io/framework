@@ -8,7 +8,9 @@
 
 namespace Windwalker\Xul\Control;
 
+use Windwalker\Helper\ArrayHelper;
 use Windwalker\Helper\CallableHelper;
+use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
 
@@ -34,13 +36,13 @@ class CallRenderer extends AbstractXulRenderer
 
 		if ($static)
 		{
-			static::executeStatic($static, $element, $data);
+			return static::executeStatic($static, $element, $data);
 		}
 		else
 		{
 			$name = XmlHelper::get($element, 'data', XmlHelper::get($element, 'name'));
 
-			static::executeInstance($name, $element, $data);
+			return static::executeInstance($name, $element, $data);
 		}
 	}
 
@@ -55,7 +57,10 @@ class CallRenderer extends AbstractXulRenderer
 	 */
 	protected static function executeStatic($static, $element, $data)
 	{
-		$static = explode('::', $static);
+		if (strpos($static, '::'))
+		{
+			$static = explode('::', $static);
+		}
 
 		// We don't check is_callable that can notice user is method callable or not.
 		return call_user_func_array($static, static::getArguments($element, $data));
@@ -73,7 +78,7 @@ class CallRenderer extends AbstractXulRenderer
 	protected static function executeInstance($name, $element, $data)
 	{
 		$method   = XmlHelper::get($element, 'method');
-		$instance = CallableHelper::getArgumentFromData($name, $data);
+		$instance = ArrayHelper::getByPath($data, $name);
 
 		return call_user_func_array(array($instance, $method), static::getArguments($element, $data));
 	}
@@ -96,7 +101,7 @@ class CallRenderer extends AbstractXulRenderer
 		{
 			if (isset($arg['data']))
 			{
-				$return[] = CallableHelper::getArgumentFromData((string) $arg['data'], $data);
+				$return[] = ArrayHelper::getByPath($data, (string) $arg['data']);
 			}
 			else
 			{
@@ -110,7 +115,7 @@ class CallRenderer extends AbstractXulRenderer
 					$arg = false;
 				}
 
-				$return[] = (string) $arg;
+				$return[] = StringHelper::parseVariable((string) $arg, $data);
 			}
 		}
 
