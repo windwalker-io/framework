@@ -1,5 +1,6 @@
 <?php
 
+use Joomla\DI\Container;
 use Windwalker\Helper\QueryHelper;
 use Windwalker\Model\ListModel;
 
@@ -11,14 +12,14 @@ use Windwalker\Model\ListModel;
 class FlowerModelSakuras extends ListModel
 {
 	/**
-	 * Constructor.
+	 * Constructor
 	 *
-	 * @param    array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see      JController
-	 * @since    1.6
+	 * @param   array              $config    An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   Container          $container Service container.
+	 * @param   \JRegistry         $state     The model state.
+	 * @param   \JDatabaseDriver   $db        The database adpater.
 	 */
-	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
+	public function __construct($config = array(), Container $container = null, \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
 		// Set query tables
 		// ========================================================================
@@ -43,7 +44,7 @@ class FlowerModelSakuras extends ListModel
 
 		$this->config = $config;
 
-		parent::__construct($config, $state, $db);
+		parent::__construct($config, $container, $state, $db);
 	}
 
 	/**
@@ -63,35 +64,13 @@ class FlowerModelSakuras extends ListModel
 		$searches = $this->state->get('search', array());
 
 		// Build filter query
-		foreach ($filters as $name => $value)
-		{
-			if ($value !== '' && $value != '*')
-			{
-				$query->where($query->quoteName($name) . ' = ' . $query->quote($value));
-			}
-		}
+		$this->processFilters($query);
 
 		// Build search query
-		$searchValue = array();
-
-		array_walk(
-			$searches,
-			function($value, $key) use (&$searchValue, $query)
-			{
-				if ($value && $key != '*')
-				{
-					$searchValue[] = $query->quoteName($key) . ' LIKE ' . $query->quote('%' . $value . '%');
-				}
-			}
-		);
-
-		if (count($searchValue))
-		{
-			$query->where(new JDatabaseQueryElement('()', $searchValue, " \nOR "));
-		}
+		$this->processSearches($query);
 
 		// Published
-		if (empty($filters['sakura.published']))
+		if (!isset($filters['sakura.published']))
 		{
 			$query->where($query->quoteName('sakura.published') . ' >= 0');
 		}
@@ -134,8 +113,38 @@ class FlowerModelSakuras extends ListModel
 			;
 
 		// Debug here
-		// \AK::show((string) $query);
+		\AK::show((string) $query);
 
 		return $query;
 	}
+
+	/**
+	 * configureFilters
+	 *
+	 * @param \Windwalker\Model\Filter\FilterHelper $filterHelper
+	 *
+	 * @return  void
+	 */
+	protected function configureFilters($filterHelper)
+	{
+	}
+
+	/**
+	 * configureSearches
+	 *
+	 * @param \Windwalker\Model\Filter\SearchHelper $searchHelper
+	 *
+	 * @return  void
+	 */
+	protected function configureSearches($searchHelper)
+	{
+		$searchHelper->setHandler(
+			'sakura.title',
+			function($query, $field, $value)
+			{
+				return $query->quoteName($field) . ' LIKE ' . $query->quote($value . '%');
+			}
+		);
+	}
+
 }

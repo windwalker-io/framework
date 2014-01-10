@@ -74,14 +74,14 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 	/**
 	 * Constructor
 	 *
-	 * @param   array             $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
-	 * @param   \JRegistry        $state   The model state.
-	 * @param   \JDatabaseDriver  $db      The database adpater.
+	 * @param   array              $config    An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   JoomlaContainer    $container Service container.
+	 * @param   \JRegistry         $state     The model state.
+	 * @param   \JDatabaseDriver   $db        The database adpater.
 	 *
 	 * @throws \Exception
-	 * @since   3.2
 	 */
-	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
+	public function __construct($config = array(), JoomlaContainer $container = null, \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
 		// Guess the option from the class name (Option)Model(View).
 		if (empty($this->component))
@@ -110,6 +110,8 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 		{
 			$this->eventCleanCache = 'onContentCleanCache';
 		}
+
+		$this->container = $container ? : $this->getContainer();
 
 		$state = new \JRegistry($config);
 

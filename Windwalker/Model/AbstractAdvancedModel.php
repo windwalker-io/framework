@@ -17,16 +17,4 @@ abstract class AbstractAdvancedModel extends Model
 	 * @since  12.2
 	 */
 	protected $context = '';
-
-	/**
-	 * Constructor
-	 *
-	 * @param array            $config
-	 * @param \JRegistry       $state
-	 * @param \JDatabaseDriver $db
-	 */
-	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
-	{
-		parent::__construct($config, $state, $db);
-	}
 }

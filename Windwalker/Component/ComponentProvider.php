@@ -69,16 +69,5 @@ class ComponentProvider implements ServiceProviderInterface
 		);
 
 		$container->alias('helper.asset', '\\Windwalker\\Helper\\AssetHelper');
-
-		// Bind default model
-		$modelName = '\\Windwalker\\Model\\Model';
-
-		$container->alias('model', $modelName)
-			->alias('JModel', $modelName)
-			->buildSharedObject($modelName);
-
-		$container->get('JModel')
-			->setName('default')
-			->setOption('com_' . strtolower($name));
 	}
 }

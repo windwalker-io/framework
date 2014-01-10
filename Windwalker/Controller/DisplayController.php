@@ -161,7 +161,7 @@ class DisplayController extends Controller
 	 *
 	 * @return mixed
 	 */
-	public function getView($name = null, $type = null, $forceNew = false)
+	public function getView($name = null, $type = null, $config = array(), $forceNew = false)
 	{
 		// Get the name.
 		if (!$name)
@@ -189,11 +189,14 @@ class DisplayController extends Controller
 
 		$model  = $this->getModel($name);
 		$paths  = $this->getTemplatePath($name);
-		$config = array(
+
+		$defaultConfig = array(
 			'name'   => strtolower($name),
 			'option' => strtolower($this->option),
 			'prefix' => strtolower($this->getPrefix())
 		);
+
+		$config = array_merge($defaultConfig, $config);
 
 		try
 		{

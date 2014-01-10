@@ -8,6 +8,11 @@
 
 namespace Windwalker\Model;
 
+use Joomla\DI\Container as JoomlaContainer;
+use Windwalker\Model\Filter\FilterHelper;
+use Windwalker\Model\Filter\FilterProvider;
+use Windwalker\Model\Filter\SearchHelper;
+
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -52,13 +57,6 @@ class ListModel extends FormModel
 	protected $formPath = null;
 
 	/**
-	 * Associated HTML form
-	 *
-	 * @var  string
-	 */
-	protected $htmlFormName = 'adminForm';
-
-	/**
 	 * Property forms.
 	 *
 	 * @var
@@ -73,15 +71,16 @@ class ListModel extends FormModel
 	protected $orderCol = null;
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see     JModelLegacy
-	 * @since   12.2
+	 * @param   array              $config    An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   JoomlaContainer    $container Service container.
+	 * @param   \JRegistry         $state     The model state.
+	 * @param   \JDatabaseDriver   $db        The database adpater.
 	 */
-	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
+	public function __construct($config = array(), JoomlaContainer $container = null, \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
+		// These need before parent constructor.
 		if (!$this->orderCol)
 		{
 			$this->orderCol = \JArrayHelper::getValue($config, 'order_column', null);
@@ -92,7 +91,9 @@ class ListModel extends FormModel
 			$this->filterFields = \JArrayHelper::getValue($config, 'filter_fields', null);
 		}
 
-		parent::__construct($config, $state, $db);
+		parent::__construct($config, $container, $state, $db);
+
+		$this->container->registerServiceProvider(new FilterProvider($this->name));
 	}
 
 	/**
@@ -209,10 +210,12 @@ class ListModel extends FormModel
 	protected function getStoreId($id = '')
 	{
 		// Add the list state to the store id.
-		$id .= ':' . $this->getState('list.start');
-		$id .= ':' . $this->getState('list.limit');
-		$id .= ':' . $this->getState('list.ordering');
-		$id .= ':' . $this->getState('list.direction');
+		$id .= ':' . $this->state->get('list.start');
+		$id .= ':' . $this->state->get('list.limit');
+		$id .= ':' . $this->state->get('list.ordering');
+		$id .= ':' . $this->state->get('list.direction');
+		$id .= ':' . serialize($this->state->get('filter', array()));
+		$id .= ':' . serialize($this->state->get('search', array()));
 
 		return md5($this->context . ':' . $id);
 	}
@@ -526,6 +529,72 @@ class ListModel extends FormModel
 	}
 
 	/**
+	 * processFilters
+	 *
+	 * @param \JDatabaseQuery $query
+	 * @param array           $filters
+	 *
+	 * @return  \JDatabaseQuery
+	 */
+	protected function processFilters(\JDatabaseQuery $query, $filters = array())
+	{
+		$filters = $filters ? : $this->state->get('filter', array());
+
+		$filterHelper = $this->container->get('model.' . strtolower($this->name) . '.filter');
+
+		$this->configureFilters($filterHelper);
+
+		$query = $filterHelper->execute($query, $filters);
+
+		return $query;
+	}
+
+	/**
+	 * configureFilters
+	 *
+	 * @param FilterHelper $filterHelper
+	 *
+	 * @return  void
+	 */
+	protected function configureFilters($filterHelper)
+	{
+		// Override this method.
+	}
+
+	/**
+	 * processSearches
+	 *
+	 * @param \JDatabaseQuery $query
+	 * @param array           $searches
+	 *
+	 * @return  \JDatabaseQuery
+	 */
+	protected function processSearches(\JDatabaseQuery $query, $searches = array())
+	{
+		$searches = $searches ? : $this->state->get('search', array());
+
+		$searchHelper = $this->container->get('model.' . strtolower($this->name) . '.search');
+
+		$this->configureSearches($searchHelper);
+
+		$query = $searchHelper->execute($query, $searches);
+
+		return $query;
+	}
+
+	/**
+	 * configureSearches
+	 *
+	 * @param SearchHelper $searchHelper
+	 *
+	 * @return  void
+	 */
+	protected function configureSearches($searchHelper)
+	{
+		// Override this method.
+	}
+
+	/**
 	 * Gets the value of a user state variable and sets it in the session
 	 *
 	 * This is the same as the method in JApplication except that this also can optionally
@@ -534,7 +603,7 @@ class ListModel extends FormModel
 	 * @param   string   $key        The key of the user state variable.
 	 * @param   string   $request    The name of the variable passed in a request.
 	 * @param   string   $default    The default value for the variable if not found. Optional.
-	 * @param   string   $type       Filter for the variable, for valid values see {@link JFilterInput::clean()}. Optional.
+	 * @param   string   $type       Filter for the variable, for valid values see {@link \JFilterInput::clean()}. Optional.
 	 * @param   boolean  $resetPage  If true, the limitstart in request is set to zero
 	 *
 	 * @return  array The request user state.

@@ -337,7 +337,7 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	 *
 	 * @return Model|null
 	 */
-	public function getModel($name = null, $prefix = null, $config = array())
+	public function getModel($name = null, $prefix = null, $config = array(), $forceNew = false)
 	{
 		// Get name.
 		if (!$name)
@@ -358,27 +358,34 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 			$modelName = '\\Windwalker\\Model\\Model';
 		}
 
+		$defaultConfig = array(
+			'name'   => strtolower($name),
+			'option' => strtolower($this->option),
+			'prefix' => strtolower($this->getPrefix())
+		);
+
+		$config = array_merge($defaultConfig, $config);
+
 		// Get model.
 		$container = $this->getContainer();
 
 		try
 		{
-			$model = $container->get('model.' . $name);
-
-			if ($model instanceof \JModel)
-			{
-				return $model;
-			}
+			$model = $container->get('model.' . $name, $forceNew);
 		}
 		catch (\InvalidArgumentException $e)
 		{
-			$model = $container->alias('model.' . $name, $modelName)
-				->buildSharedObject($modelName);
-		}
+			$container->alias('model.' . strtolower($name), $modelName)
+				->share(
+					$modelName,
+					function($container) use($modelName, $config)
+					{
+						return new $modelName($config, $container, null, $container->get('db'));
+					}
+				);
 
-		$model->setName($name)
-			->setOption($this->option)
-			->setContainer($container);
+			$model = $container->get($modelName);
+		}
 
 		return $model;
 	}

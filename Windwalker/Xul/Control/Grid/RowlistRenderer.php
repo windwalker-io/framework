@@ -40,7 +40,7 @@ class RowlistRenderer extends AbstractXulRenderer
 	{
 		$itemsKey = XmlHelper::get($element, 'data', 'items');
 
-		$items = ArrayHelper::getByPath($data, $itemsKey);
+		$items = (array) ArrayHelper::getByPath($data, $itemsKey);
 
 		$rows = new HtmlElements;
 
