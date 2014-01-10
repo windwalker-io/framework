@@ -37,7 +37,7 @@ class RowRenderer extends AbstractXulRenderer
 	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$grid  = $data->xulControl->grid;
-		$cells = $engine->renderChildren($element, $data);
+		$cells = static::renderChildren($engine, $element, $data);
 
 		$grid->addRow(static::getParsedAttributes($element, $data));
 

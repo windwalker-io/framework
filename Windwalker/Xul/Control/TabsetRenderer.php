@@ -38,7 +38,7 @@ class TabsetRenderer extends AbstractXulRenderer
 
 		$html = \JHtmlBootstrap::startTabSet($tabsetName, array('active' => XmlHelper::get($element, 'active')));
 
-		$html .= $e = $engine->renderChildren($element, $data);
+		$html .= $e = static::renderChildren($engine, $element, $data);
 
 		$html .= \JHtmlBootstrap::endTabSet();
 

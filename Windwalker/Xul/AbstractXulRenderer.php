@@ -24,6 +24,7 @@ abstract class AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
@@ -63,6 +64,7 @@ abstract class AbstractXulRenderer
 	 * prepareRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
@@ -78,6 +80,7 @@ abstract class AbstractXulRenderer
 	 *
 	 * @param string            $html
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
@@ -91,13 +94,13 @@ abstract class AbstractXulRenderer
 	/**
 	 * renderChildren
 	 *
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
-	 * @throws \DomainException
 	 * @return  string
 	 */
-	protected static function renderChildren($element, $data)
+	public static function renderChildren(XulEngine $engine, $element, $data)
 	{
 		$html = new HtmlElements;
 
@@ -125,30 +128,16 @@ abstract class AbstractXulRenderer
 					$class = 'Html';
 				}
 
-				$handler = XmlHelper::get($child, 'handler');
+				$renderer = XmlHelper::get($child, 'renderer');
 
-				if ($handler && is_subclass_of($handler, __CLASS__))
-				{
-					$renderer = $handler;
-				}
-				else
+				if (!$renderer || !is_subclass_of($renderer, __CLASS__))
 				{
 					$prefix = $data->xulControl->classPrefix;
 
-					$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . $prefix . ucfirst($class) . 'Renderer';
-
-					if (!class_exists($renderer))
-					{
-						$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . ucfirst($class) . 'Renderer';
-					}
-
-					if (!class_exists($renderer))
-					{
-						throw new \DomainException(sprintf('Xul tag: "%s" do not support.', $name));
-					}
+					$renderer = $engine->findRenderer($class, $ns, $prefix);
 				}
 
-				$html[] = call_user_func_array(array($renderer, 'render'), array($name, $child, $data));
+				$html[] = call_user_func_array(array($renderer, 'render'), array($name, $engine, $child, $data));
 			}
 		}
 		else

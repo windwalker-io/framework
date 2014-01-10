@@ -38,7 +38,7 @@ class TabRenderer extends AbstractXulRenderer
 
 		$html = \JHtmlBootstrap::addTab($data->tabSetName, $tabName, \JText::_($label));
 
-		$html .= $engine->renderChildren($element, $data);
+		$html .= static::renderChildren($engine, $element, $data);
 
 		$html .= \JHtmlBootstrap::endTab();
 

@@ -36,7 +36,7 @@ class ColRenderer extends AbstractXulRenderer
 	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		// Handle title
-		$title = XmlHelper::get($element, 'title', (string) $engine->renderChildren($element, $data));
+		$title = XmlHelper::get($element, 'title', (string) static::renderChildren($engine, $element, $data));
 
 		$element['title'] = trim($title);
 

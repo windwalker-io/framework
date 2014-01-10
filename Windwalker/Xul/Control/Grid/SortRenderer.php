@@ -39,6 +39,6 @@ class SortRenderer extends AbstractXulRenderer
 			throw new \InvalidArgumentException('"sort" tag need field');
 		}
 
-		return $data->grid->sortTitle($engine->renderChildren($element, $data), $field);
+		return $data->grid->sortTitle(static::renderChildren($engine, $element, $data), $field);
 	}
 }

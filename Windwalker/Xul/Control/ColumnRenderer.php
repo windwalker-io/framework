@@ -24,6 +24,7 @@ class ColumnRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *

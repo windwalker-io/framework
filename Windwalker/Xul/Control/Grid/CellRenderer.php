@@ -49,7 +49,7 @@ class CellRenderer extends AbstractXulRenderer
 
 		if (!$field)
 		{
-			$ele[0] = (string) $engine->renderChildren($element, $data);
+			$ele[0] = (string) static::renderChildren($engine, $element, $data);
 
 			return $ele;
 		}

@@ -34,7 +34,7 @@ class BodyRenderer extends AbstractXulRenderer
 	 */
 	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
-		$rows = $engine->renderChildren($element, $data);
+		$rows = static::renderChildren($engine, $element, $data);
 
 		$gridHelper = $data->grid;
 		$grid       = $data->xulControl->grid;

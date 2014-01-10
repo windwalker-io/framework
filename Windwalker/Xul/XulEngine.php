@@ -9,9 +9,6 @@
 namespace Windwalker\Xul;
 
 use Windwalker\Data\Data;
-use Windwalker\Helper\StringHelper;
-use Windwalker\Helper\XmlHelper;
-use Windwalker\Html\HtmlElements;
 use Windwalker\View\Engine\AbstractEngine;
 use Windwalker\Xul\Html\HtmlRenderer;
 
@@ -26,6 +23,13 @@ class XulEngine extends AbstractEngine
 	 * @var  string  Property layoutExt.
 	 */
 	protected $layoutExt = 'xml';
+
+	/**
+	 * @var  array  Property handler.
+	 */
+	protected $renderers = array(
+		'control:form' => 'FlowerXulControlForm'
+	);
 
 	/**
 	 * execute
@@ -56,73 +60,113 @@ class XulEngine extends AbstractEngine
 	}
 
 	/**
-	 * renderChildren
+	 * registerRenderer
 	 *
-	 * @param \SimpleXmlElement $element
-	 * @param mixed             $data
+	 * @param string $name
+	 * @param string $renderer
+	 * @param string $namespace
+	 * @param string $prefix
+	 *
+	 * @throws \InvalidArgumentException
+	 * @return  $this
+	 */
+	public function registerRenderer($name, $renderer, $namespace = 'control', $prefix = null)
+	{
+		$alias = $this->regularizeAlias($name, $namespace, $prefix);
+
+		if (!is_string($renderer))
+		{
+			throw new \InvalidArgumentException('Renderer should be a static class name string.');
+		}
+
+		$this->renderers[$alias] = $renderer;
+
+		return $this;
+	}
+
+	/**
+	 * findRenderer
+	 *
+	 * @param string $namespace
+	 * @param string $name
+	 * @param string $prefix
 	 *
 	 * @throws \DomainException
 	 * @return  string
 	 */
-	public function renderChildren($element, $data)
+	public function findRenderer($name, $namespace = 'control', $prefix = null)
 	{
-		$html = new HtmlElements;
+		// Find from renderer alias
+		$renderer = $this->resolveAlias($name, $namespace, $prefix);
 
-		if (!($data instanceof Data))
+		$prefix = $prefix ? $prefix . '\\' : '';
+
+		// Find from Joomla component
+		if (!class_exists($renderer))
 		{
-			$data = new Data($data);
-		}
+			$component = '';
 
-		$data = clone $data;
-
-		$children = $element->xpath('*');
-
-		if (count($children))
-		{
-			foreach ($children as $child)
+			if (!empty($this->data->view->prefix))
 			{
-				$namespaces    = $child->getNamespaces();
-				$name = $class = $child->getName();
-
-				$ns = 'Control';
-
-				if (array_key_exists('html', $namespaces))
-				{
-					$ns    = 'Html';
-					$class = 'Html';
-				}
-
-				$handler = XmlHelper::get($child, 'handler');
-
-				if ($handler && is_subclass_of($handler, __CLASS__))
-				{
-					$renderer = $handler;
-				}
-				else
-				{
-					$prefix = $data->xulControl->classPrefix;
-
-					$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . $prefix . ucfirst($class) . 'Renderer';
-
-					if (!class_exists($renderer))
-					{
-						$renderer = '\\Windwalker\\Xul\\' . $ns . '\\' . ucfirst($class) . 'Renderer';
-					}
-
-					if (!class_exists($renderer))
-					{
-						throw new \DomainException(sprintf('Xul tag: "%s" do not support.', $name));
-					}
-				}
-
-				$html[] = call_user_func_array(array($renderer, 'render'), array($name, $this, $child, $data));
+				$component = $this->data->view->prefix;
 			}
-		}
-		else
-		{
-			$html = StringHelper::parseVariable((string) $element, $data);
+
+			$renderer = '\\' . ucfirst($component) . '\\Xul\\' . $namespace . '\\' . $prefix . ucfirst($name) . 'Renderer';
 		}
 
-		return $html;
+		// Find from windwalker
+		if (!class_exists($renderer))
+		{
+			$renderer = '\\Windwalker\\Xul\\' . $namespace . '\\' . $prefix . ucfirst($name) . 'Renderer';
+		}
+
+		if (!class_exists($renderer))
+		{
+			$renderer = '\\Windwalker\\Xul\\' . $namespace . '\\' . ucfirst($name) . 'Renderer';
+		}
+
+		if (!class_exists($renderer))
+		{
+			throw new \DomainException(sprintf('Xul tag: "%s" do not support.', $name));
+		}
+
+		return $renderer;
+	}
+
+	/**
+	 * resolveAlias
+	 *
+	 * @param $namespace
+	 * @param $name
+	 * @param $prefix
+	 *
+	 * @return  string
+	 */
+	protected function resolveAlias($name, $namespace = 'control', $prefix = null)
+	{
+		$alias = $this->regularizeAlias($name, $namespace, $prefix);
+
+		if (!empty($this->renderers[$alias]))
+		{
+			return $this->renderers[$alias];
+		}
+
+		return null;
+	}
+
+	protected function regularizeAlias($name, $namespace = 'control', $prefix = null)
+	{
+		$alias = array();
+
+		$alias[] = strtolower($namespace);
+
+		if ($prefix)
+		{
+			$alias[] = strtolower(trim($prefix, '\\'));
+		}
+
+		$alias[] = strtolower($name);
+
+		return implode(':', $alias);
 	}
 }

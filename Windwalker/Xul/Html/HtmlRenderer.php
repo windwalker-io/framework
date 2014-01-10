@@ -38,6 +38,6 @@ class HtmlRenderer extends AbstractXulRenderer
 
 		$attributes = static::replaceVariable($attributes, $data);
 
-		return new HtmlElement($name, $engine->renderChildren($element, $data), $attributes);
+		return new HtmlElement($name, static::renderChildren($engine, $element, $data), $attributes);
 	}
 }

@@ -34,7 +34,7 @@ class HeadRenderer extends AbstractXulRenderer
 	 */
 	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
-		$cols = $engine->renderChildren($element, $data);
+		$cols = static::renderChildren($engine, $element, $data);
 
 		$gridHelper = $data->grid;
 		$grid       = $data->xulControl->grid;

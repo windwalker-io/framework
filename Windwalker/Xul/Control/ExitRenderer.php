@@ -32,6 +32,6 @@ class ExitRenderer extends AbstractXulRenderer
 	 */
 	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
-		exit($engine->renderChildren($element, $data));
+		exit(static::renderChildren($engine, $element, $data));
 	}
 }

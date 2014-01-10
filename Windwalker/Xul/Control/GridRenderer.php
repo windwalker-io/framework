@@ -39,9 +39,9 @@ class GridRenderer extends AbstractXulRenderer
 		$data->xulControl->columnNum    = 0;
 		$data->xulControl->column       = array();
 		$data->xulControl->grid = $grid = new JGrid($tableOption);
-		$data->xulControl->classPrefix  = 'Grid\\';
+		$data->xulControl->classPrefix  = 'Grid';
 
-		$html = $engine->renderChildren($element, $data);
+		$html = static::renderChildren($engine, $element, $data);
 
 		return $grid;
 	}

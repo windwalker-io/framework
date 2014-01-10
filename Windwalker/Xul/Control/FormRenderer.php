@@ -55,7 +55,7 @@ class FormRenderer extends AbstractXulRenderer
 		$footer .= JHtml::_('form.token');
 
 		// Wrap inputs
-		$children  = $engine->renderChildren($element, $data);
+		$children  = static::renderChildren($engine, $element, $data);
 		$children .= HtmlBuilder::create('div', $footer, array('id' => 'hidden-inputs'));
 
 		return HtmlBuilder::create($name, $children, $attributes);

@@ -83,6 +83,7 @@ class HtmlView extends AbstractHtmlView
 		$data = $this->data;
 
 		$data->view = new Data;
+		$data->view->prefix   = $this->prefix;
 		$data->view->option   = $this->option;
 		$data->view->name     = $this->getName();
 		$data->view->viewItem = $this->viewItem;

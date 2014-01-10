@@ -33,7 +33,7 @@ class BlockRenderer extends AbstractXulRenderer
 	 */
 	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
-		$html = $engine->renderChildren($element, $data);
+		$html = static::renderChildren($engine, $element, $data);
 
 		if (XmlHelper::getBool($element, 'display', true))
 		{
