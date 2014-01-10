@@ -48,6 +48,19 @@ class FlowerModelSakuras extends ListModel
 	}
 
 	/**
+	 * populateState
+	 *
+	 * @param null $ordering
+	 * @param null $direction
+	 *
+	 * @return  void
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		parent::populateState('sakura.catid, sakura.ordering', 'ASC');
+	}
+
+	/**
 	 * getListQuery
 	 *
 	 * @return \JDatabaseQuery
@@ -56,44 +69,14 @@ class FlowerModelSakuras extends ListModel
 	{
 		$query = parent::getListQuery();
 
-		$ordering    = $this->state->get('list.ordering',    'sakura.ordering');
-		$direction   = $this->state->get('list.direction',   'ASC');
-		$orderCol    = $this->state->get('list.orderCol',    $this->orderCol);
-
-		$filters  = $this->state->get('filter', array());
-		$searches = $this->state->get('search', array());
-
 		// Build filter query
 		$this->processFilters($query);
 
 		// Build search query
 		$this->processSearches($query);
 
-		// Published
-		if (!isset($filters['sakura.published']))
-		{
-			$query->where($query->quoteName('sakura.published') . ' >= 0');
-		}
-
 		// Ordering
-		$ordering = explode(',', $ordering);
-
-		$ordering = array_map(
-			function($value) use($query)
-			{
-				$value = explode(' ', trim($value));
-
-				if (isset($value[1]))
-				{
-					return $query->qn($value[0]) . ' ' . $value[1];
-				}
-
-				return $query->qn($value[0]);
-			},
-			$ordering
-		);
-
-		$ordering = implode(', ', $ordering);
+		$this->processOrdering($query);
 
 		// Build query
 		// ========================================================================
@@ -109,13 +92,31 @@ class FlowerModelSakuras extends ListModel
 			->leftJoin('#__viewlevels  AS viewlevel ON sakura.access     = viewlevel.id')
 			->leftJoin('#__languages   AS lang      ON sakura.language   = lang.lang_code')
 			// ->where("")
-			->order($ordering . ' ' . $direction)
 			;
 
 		// Debug here
 		\AK::show((string) $query);
 
 		return $query;
+	}
+
+	/**
+	 * processFilters
+	 *
+	 * @param JDatabaseQuery $query
+	 * @param array          $filters
+	 *
+	 * @return  JDatabaseQuery
+	 */
+	protected function processFilters(\JDatabaseQuery $query, $filters = array())
+	{
+		// Published
+		if (!isset($filters['sakura.published']))
+		{
+			$query->where($query->quoteName('sakura.published') . ' >= 0');
+		}
+
+		return parent::processFilters($query, $filters);
 	}
 
 	/**
@@ -138,13 +139,5 @@ class FlowerModelSakuras extends ListModel
 	 */
 	protected function configureSearches($searchHelper)
 	{
-		$searchHelper->setHandler(
-			'sakura.title',
-			function($query, $field, $value)
-			{
-				return $query->quoteName($field) . ' LIKE ' . $query->quote($value . '%');
-			}
-		);
 	}
-
 }

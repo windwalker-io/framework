@@ -28,7 +28,7 @@ class SearchHelper extends AbstractFilterHelper
 	public function execute(\JDatabaseQuery $query, $searches = array())
 	{
 		$searchValue = array();
-		\AK::show($searches);
+
 		foreach ($searches as $field => $value)
 		{
 			if (!empty($this->handler[$field]) && is_callable($this->handler[$field]))

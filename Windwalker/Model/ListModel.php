@@ -9,9 +9,11 @@
 namespace Windwalker\Model;
 
 use Joomla\DI\Container as JoomlaContainer;
+use Windwalker\Helper\PathHelper;
 use Windwalker\Model\Filter\FilterHelper;
 use Windwalker\Model\Filter\FilterProvider;
 use Windwalker\Model\Filter\SearchHelper;
+use Windwalker\Model\Helper\AdminListHelper;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -69,6 +71,13 @@ class ListModel extends FormModel
 	 * @var string
 	 */
 	protected $orderCol = null;
+
+	/**
+	 * Property searchFields.
+	 *
+	 * @var array
+	 */
+	protected $searchFields = array();
 
 	/**
 	 * Constructor
@@ -366,42 +375,17 @@ class ListModel extends FormModel
 			// Receive & set filters
 			if ($filters = $app->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array'))
 			{
-				$filterValue = array();
+				$filters = AdminListHelper::handleFilters($filters, $this->filterFields);
 
-				foreach ($filters as $name => $value)
-				{
-					if (in_array($name, $this->filterFields) && $value !== '')
-					{
-						$filterValue[$name] = $value;
-					}
-				}
-
-				$this->state->set('filter', $filterValue);
+				$this->state->set('filter', $filters);
 			}
 
 			// Receive & set searches
 			if ($searches = $app->getUserStateFromRequest($this->context . '.search', 'search', array(), 'array'))
 			{
-				// Convert search field to array
-				if (!empty($searches['field']) && !empty($searches['index']))
-				{
-					$searches[$searches['field']] = $searches['index'];
-				}
+				$searches = AdminListHelper::handleSearches($searches, $this->filterFields, $this->getSearchFields());
 
-				unset($searches['field']);
-				unset($searches['index']);
-
-				$searchValue = array();
-
-				foreach ($searches as $name => $value)
-				{
-					if (in_array($name, $this->filterFields)  && $value)
-					{
-						$searchValue[$name] = $value;
-					}
-				}
-
-				$this->state->set('search', $searchValue);
+				$this->state->set('search', $searches);
 			}
 
 			$limit = 0;
@@ -415,42 +399,15 @@ class ListModel extends FormModel
 					switch ($name)
 					{
 						case 'fullordering':
-							$orderingParts = explode(',', $value);
+							$orderConfig = array(
+								'ordering'  => $ordering,
+								'direction' => $direction
+							);
 
-							$ordering = array();
+							$orderConfig = AdminListHelper::handleFullordering($value, $orderConfig, $this->filterFields);
 
-							foreach ($orderingParts as $i => $order)
-							{
-								$order = explode(' ', trim($order));
-
-								if (count($order) == 2)
-								{
-									list($col, $dir) = $order;
-								}
-								else
-								{
-									$col = $order[0];
-									$dir = '';
-								}
-
-								if (in_array($col, $this->filterFields))
-								{
-									$ordering[] = $dir ? $col . ' ' . strtoupper($dir) : $col;
-								}
-							}
-
-							$last = array_pop($ordering);
-
-							$last = explode(' ', $last);
-
-							if (isset($last[1]) && in_array(strtoupper($last[1]), array('ASC', 'DESC')))
-							{
-								$this->state->set('list.direction', $last[1]);
-							}
-
-							$ordering[] = $last[0];
-
-							$this->state->set('list.ordering', implode(', ', $ordering));
+							$this->state->set('list.direction', $orderConfig['direction']);
+							$this->state->set('list.ordering',  $orderConfig['ordering']);
 							break;
 
 						case 'ordering':
@@ -592,6 +549,78 @@ class ListModel extends FormModel
 	protected function configureSearches($searchHelper)
 	{
 		// Override this method.
+	}
+
+	/**
+	 * processOrdering
+	 *
+	 * @param \JDatabaseQuery $query
+	 * @param null            $ordering
+	 * @param null            $direction
+	 *
+	 * @return  void
+	 */
+	protected function processOrdering(\JDatabaseQuery $query, $ordering = null, $direction = null)
+	{
+		$ordering  = $ordering  ? : $this->state->get('list.ordering',  'ordering' /*$this->Viewitem . '.ordering'*/);
+		$direction = $direction ? : $this->state->get('list.direction', 'ASC');
+		$ordering  = explode(',', $ordering);
+
+		// Add quote
+		$ordering = array_map(
+			function($value) use($query)
+			{
+				$value = explode(' ', trim($value));
+
+				// $value[1] is direction
+				if (isset($value[1]))
+				{
+					return $query->quoteName($value[0]) . ' ' . $value[1];
+				}
+
+				return $query->quoteName($value[0]);
+			},
+			$ordering
+		);
+
+		$ordering = implode(', ', $ordering);
+
+		$query->order($ordering . ' ' . $direction);
+	}
+
+	/**
+	 * getFullSearchFields
+	 *
+	 * @return  array
+	 */
+	public function getSearchFields()
+	{
+		if ($this->searchFields)
+		{
+			return $this->searchFields;
+		}
+
+		$file    = PathHelper::get($this->option) . '/model/form/' . $this->name . '/filter.xml';
+		$xml     = simplexml_load_file($file);
+		$field   = $xml->xpath('//fields[@name="search"]/field[@name="field"]');
+
+		$options = $field[0]->option;
+
+		$fields = array();
+
+		foreach ($options as $option)
+		{
+			$attr = $option->attributes();
+
+			if ('*' == (string) $attr['value'])
+			{
+				continue;
+			}
+
+			$fields[] = (string) $attr['value'];
+		}
+
+		return $this->searchFields = $fields;
 	}
 
 	/**

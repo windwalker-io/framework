@@ -5,62 +5,137 @@ namespace Windwalker\Model\Helper;
 abstract class AdminListHelper
 {
 	/**
-	 * populateFilter
+	 * handleFilters
 	 *
-	 * @param array            $filters
-	 * @param \JRegistry       $state
-	 * @param \JApplicationCms $app
+	 * @param array  $filters
+	 * @param array  $filterFields
 	 *
-	 * @return void
+	 * @return array
 	 */
-	public static function populateFilter($filters, \JRegistry $state, \JApplicationCms $app = null)
+	public static function handleFilters($filters, array $filterFields = array())
 	{
 		$filterValue = array();
 
 		foreach ($filters as $name => $value)
 		{
-			$filterValue[$name] = $value;
+			if (in_array($name, $filterFields) && $value !== '')
+			{
+				$filterValue[$name] = $value;
+			}
 		}
 
-		$state->set('filter', $filterValue);
+		return $filterValue;
 	}
 
 	/**
-	 * populateFullordering
+	 * handleFilters
 	 *
-	 * @param            $value
-	 * @param \JRegistry $state
+	 * @param array $searches
+	 * @param array $filterFields
+	 * @param array $searchFields
 	 *
-	 * @return void
+	 * @return array
 	 */
-	public static function populateFullordering($value, \JRegistry $state)
+	public static function handleSearches($searches, array $filterFields = array(), $searchFields = array())
 	{
-		$orderingParts = explode(' ', $value);
-
-		if (count($orderingParts) >= 2)
+		// Convert search field to array
+		if (!empty($searches['field']) && !empty($searches['index']))
 		{
-			// Latest part will be considered the direction
-			$fullDirection = end($orderingParts);
-
-			if (in_array(strtoupper($fullDirection), array('ASC', 'DESC', '')))
+			// If field is '*', we copy index value to all fields.
+			if ($searches['field'] == '*')
 			{
-				$state->set('list.direction', $fullDirection);
+				foreach ($searchFields as $field)
+				{
+					$searches[$field] = $searches['index'];
+				}
 			}
 
-			unset($orderingParts[count($orderingParts) - 1]);
-
-			// The rest will be the ordering
-			$fullOrdering = implode(' ', $orderingParts);
-
-			if (in_array($fullOrdering, $this->filterFields))
+			// If field not '*', just set one field.
+			else
 			{
-				$state->set('list.ordering', $fullOrdering);
+				$searches[$searches['field']] = $searches['index'];
 			}
 		}
-		else
+
+		// Unset field and index but keep other fields.
+		unset($searches['field']);
+		unset($searches['index']);
+
+		$searchValue = array();
+
+		// Let's build search array.
+		foreach ($searches as $name => $value)
 		{
-			$state->set('list.ordering', $ordering);
-			$state->set('list.direction', $direction);
+			if (in_array($name, $filterFields)  && $value)
+			{
+				$searchValue[$name] = $value;
+			}
 		}
+
+		return $searchValue;
+	}
+
+	/**
+	 * handleFilters
+	 *
+	 * @param array $value
+	 * @param array $orderConfig
+	 * @param array $filterFields
+	 *
+	 * @return array
+	 */
+	public static function handleFullordering($value, $orderConfig, array $filterFields = array())
+	{
+		if (!$orderConfig)
+		{
+			$orderConfig = array(
+				'ordering'  => null,
+				'direction' => null
+			);
+		}
+
+		$orderingParts = explode(',', $value);
+
+		$ordering = array();
+
+		foreach ($orderingParts as $order)
+		{
+			$order = explode(' ', trim($order));
+
+			if (count($order) == 2)
+			{
+				list($col, $dir) = $order;
+			}
+			else
+			{
+				$col = $order[0];
+				$dir = '';
+			}
+
+			if (in_array($col, $filterFields))
+			{
+				$ordering[] = $dir ? $col . ' ' . strtoupper($dir) : $col;
+			}
+		}
+
+		if (!count($ordering))
+		{
+			return $orderConfig;
+		}
+
+		$last = array_pop($ordering);
+
+		$last = explode(' ', $last);
+
+		if (isset($last[1]) && in_array(strtoupper($last[1]), array('ASC', 'DESC')))
+		{
+			$orderConfig['direction'] = $last[1];
+		}
+
+		$ordering[] = $last[0];
+
+		$orderConfig['ordering'] = implode(', ', $ordering);
+
+		return $orderConfig;
 	}
 }
