@@ -10,6 +10,7 @@ namespace Windwalker\Xul\Control;
 
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 use Windwalker\Xul\Html\HtmlRenderer;
 
 /**
@@ -29,7 +30,7 @@ class ColumnRenderer extends AbstractXulRenderer
 	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		if (!isset($data->view->colSpan))
 		{
@@ -67,6 +68,6 @@ class ColumnRenderer extends AbstractXulRenderer
 
 		$element['class'] = isset($element['class']) ? $colClass . ' ' . $element['class'] : $colClass;
 
-		return HtmlRenderer::render('div', $element, $data);
+		return HtmlRenderer::render('div', $engine, $element, $data);
 	}
 }

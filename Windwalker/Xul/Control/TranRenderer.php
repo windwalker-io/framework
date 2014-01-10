@@ -10,6 +10,7 @@ namespace Windwalker\Xul\Control;
 
 use JText;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class ColumnRenderer
@@ -22,12 +23,14 @@ class TranRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		return JText::_((string) $element);
 	}

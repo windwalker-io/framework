@@ -12,6 +12,7 @@ use JGrid;
 use Windwalker\Data\Data;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class TableRenderer
@@ -24,12 +25,14 @@ class GridRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$tableOption = XmlHelper::getAttributes($element);
 
@@ -38,7 +41,7 @@ class GridRenderer extends AbstractXulRenderer
 		$data->xulControl->grid = $grid = new JGrid($tableOption);
 		$data->xulControl->classPrefix  = 'Grid\\';
 
-		$html = static::renderChildren($element, $data);
+		$html = $engine->renderChildren($element, $data);
 
 		return $grid;
 	}

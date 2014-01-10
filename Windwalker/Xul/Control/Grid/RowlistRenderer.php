@@ -16,6 +16,7 @@ use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Html\HtmlElements;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class TableRenderer
@@ -28,12 +29,14 @@ class RowlistRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$itemsKey = XmlHelper::get($element, 'data', 'items');
 
@@ -51,7 +54,7 @@ class RowlistRenderer extends AbstractXulRenderer
 			// Prepare item for GridHelper
 			$data->grid->setItem($item, $i);
 
-			$rows[] = RowRenderer::render('row', $element, $data);
+			$rows[] = RowRenderer::render('row', $engine, $element, $data);
 		}
 
 		return $rows;

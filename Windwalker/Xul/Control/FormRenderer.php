@@ -12,6 +12,7 @@ use JHtml;
 use Windwalker\Html\HtmlBuilder;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 use Windwalker\Xul\Html\HtmlRenderer;
 
 /**
@@ -31,7 +32,7 @@ class FormRenderer extends AbstractXulRenderer
 	 * @throws \UnexpectedValueException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		XmlHelper::def($element, 'action',  $data->uri);
 		XmlHelper::def($element, 'method',  'post');
@@ -54,7 +55,7 @@ class FormRenderer extends AbstractXulRenderer
 		$footer .= JHtml::_('form.token');
 
 		// Wrap inputs
-		$children  = static::renderChildren($element, $data);
+		$children  = $engine->renderChildren($element, $data);
 		$children .= HtmlBuilder::create('div', $footer, array('id' => 'hidden-inputs'));
 
 		return HtmlBuilder::create($name, $children, $attributes);

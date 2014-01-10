@@ -10,6 +10,7 @@ namespace Windwalker\Xul\Control;
 
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 use Windwalker\Xul\Html\HtmlRenderer;
 
 /**
@@ -23,14 +24,16 @@ class BlockRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
-		$html = static::renderChildren($element, $data);
+		$html = $engine->renderChildren($element, $data);
 
 		if (XmlHelper::getBool($element, 'display', true))
 		{

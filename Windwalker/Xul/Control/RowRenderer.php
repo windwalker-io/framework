@@ -11,6 +11,7 @@ namespace Windwalker\Xul\Control;
 use Windwalker\Data\Data;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 use Windwalker\Xul\Html\HtmlRenderer;
 
 /**
@@ -24,12 +25,14 @@ class RowRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$rowClass = XmlHelper::getBool($element, 'fluid', true) ? 'row-fluid' : 'row';
 
@@ -42,7 +45,7 @@ class RowRenderer extends AbstractXulRenderer
 
 		$data->view->colSpan = 12;
 
-		$html = HtmlRenderer::render('div', $element, $data);
+		$html = HtmlRenderer::render('div', $engine, $element, $data);
 
 		unset($data->view->colSpan);
 

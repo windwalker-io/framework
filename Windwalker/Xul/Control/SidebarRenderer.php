@@ -11,10 +11,9 @@ namespace Windwalker\Xul\Control;
 use JText;
 use Windwalker\Helper\ArrayHelper;
 use Windwalker\Helper\XmlHelper;
-use Windwalker\Html\HtmlBuilder;
 use Windwalker\Html\HtmlElement;
 use Windwalker\Html\HtmlElements;
-use Windwalker\Xul\Html\HtmlRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class ColumnRenderer
@@ -33,7 +32,7 @@ class SidebarRenderer extends ColumnRenderer
 	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$dataKey = XmlHelper::get($element, 'data');
 
@@ -56,6 +55,6 @@ class SidebarRenderer extends ColumnRenderer
 			throw new \LogicException('Please put "sidebar" tag in "row" tag.');
 		}
 
-		return parent::doRender($name, $element, $data);
+		return parent::doRender($name, $engine, $element, $data);
 	}
 }

@@ -52,7 +52,7 @@ class XulEngine extends AbstractEngine
 
 		$data->xulControl = new Data;
 
-		return HtmlRenderer::render('div', $xml, $data);
+		return HtmlRenderer::render('div', $this, $xml, $data);
 	}
 
 	/**
@@ -64,7 +64,7 @@ class XulEngine extends AbstractEngine
 	 * @throws \DomainException
 	 * @return  string
 	 */
-	protected static function renderChildren($element, $data)
+	public function renderChildren($element, $data)
 	{
 		$html = new HtmlElements;
 
@@ -115,7 +115,7 @@ class XulEngine extends AbstractEngine
 					}
 				}
 
-				$html[] = call_user_func_array(array($renderer, 'render'), array($name, $child, $data));
+				$html[] = call_user_func_array(array($renderer, 'render'), array($name, $this, $child, $data));
 			}
 		}
 		else

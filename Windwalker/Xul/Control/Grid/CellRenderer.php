@@ -15,6 +15,7 @@ use Windwalker\Helper\ArrayHelper;
 use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class TableRenderer
@@ -27,12 +28,14 @@ class CellRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$field = XmlHelper::get($element, 'field');
 
@@ -46,7 +49,7 @@ class CellRenderer extends AbstractXulRenderer
 
 		if (!$field)
 		{
-			$ele[0] = (string) static::renderChildren($element, $data);
+			$ele[0] = (string) $engine->renderChildren($element, $data);
 
 			return $ele;
 		}

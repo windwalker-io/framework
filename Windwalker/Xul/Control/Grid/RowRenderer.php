@@ -14,6 +14,7 @@ use Windwalker\Data\Data;
 use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class TableRenderer
@@ -26,15 +27,17 @@ class RowRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$grid  = $data->xulControl->grid;
-		$cells = static::renderChildren($element, $data);
+		$cells = $engine->renderChildren($element, $data);
 
 		$grid->addRow(static::getParsedAttributes($element, $data));
 

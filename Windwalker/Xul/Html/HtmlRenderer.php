@@ -12,6 +12,7 @@ use Windwalker\Html\HtmlBuilder;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Html\HtmlElement;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class HtmlRenderer
@@ -24,17 +25,19 @@ class HtmlRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$attributes = XmlHelper::getAttributes($element);
 
 		$attributes = static::replaceVariable($attributes, $data);
 
-		return new HtmlElement($name, static::renderChildren($element, $data), $attributes);
+		return new HtmlElement($name, $engine->renderChildren($element, $data), $attributes);
 	}
 }

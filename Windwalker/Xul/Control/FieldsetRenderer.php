@@ -11,6 +11,7 @@ namespace Windwalker\Xul\Control;
 use Windwalker\Html\HtmlBuilder;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class FieldsetRenderer
@@ -29,7 +30,7 @@ class FieldsetRenderer extends AbstractXulRenderer
 	 * @throws \UnexpectedValueException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$formVar  = XmlHelper::get($element, 'form', 'form');
 		$fieldset = XmlHelper::get($element, 'name');

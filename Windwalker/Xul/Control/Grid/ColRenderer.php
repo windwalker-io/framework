@@ -13,6 +13,7 @@ use JText;
 use Windwalker\Data\Data;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class TableRenderer
@@ -25,15 +26,17 @@ class ColRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		// Handle title
-		$title = XmlHelper::get($element, 'title', (string) static::renderChildren($element, $data));
+		$title = XmlHelper::get($element, 'title', (string) $engine->renderChildren($element, $data));
 
 		$element['title'] = trim($title);
 

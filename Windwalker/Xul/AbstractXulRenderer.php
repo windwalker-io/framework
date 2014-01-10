@@ -9,7 +9,6 @@
 namespace Windwalker\Xul;
 
 use Windwalker\Data\Data;
-use Windwalker\Debugger\Debugger;
 use Windwalker\Helper\StringHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Html\HtmlElements;
@@ -30,31 +29,32 @@ abstract class AbstractXulRenderer
 	 *
 	 * @return  mixed
 	 */
-	public static function render($name, \SimpleXmlElement $element, $data)
+	public static function render($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
-		$result = static::prepareRender($name, $element, $data);
+		$result = static::prepareRender($name, $engine, $element, $data);
 
 		if (!$result)
 		{
 			return false;
 		}
 
-		$html = static::doRender($name, $element, $data);
+		$html = static::doRender($name, $engine, $element, $data);
 
-		return static::postRender($html, $name, $element, $data);
+		return static::postRender($html, $name, $engine, $element, $data);
 	}
 
 	/**
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
 	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		throw new \LogicException('Please override render() method in your renderer');
 	}
@@ -68,7 +68,7 @@ abstract class AbstractXulRenderer
 	 *
 	 * @return  bool
 	 */
-	protected static function prepareRender($name, \SimpleXmlElement $element, $data)
+	protected static function prepareRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		return true;
 	}
@@ -83,7 +83,7 @@ abstract class AbstractXulRenderer
 	 *
 	 * @return  mixed
 	 */
-	protected static function postRender($html, $name, \SimpleXmlElement $element, $data)
+	protected static function postRender($html, $name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		return $html;
 	}

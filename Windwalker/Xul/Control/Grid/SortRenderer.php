@@ -10,6 +10,7 @@ namespace Windwalker\Xul\Control\Grid;
 
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class SortRenderer
@@ -22,12 +23,14 @@ class SortRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$field = XmlHelper::get($element, 'field');
 
@@ -36,6 +39,6 @@ class SortRenderer extends AbstractXulRenderer
 			throw new \InvalidArgumentException('"sort" tag need field');
 		}
 
-		return $data->grid->sortTitle(static::renderChildren($element, $data), $field);
+		return $data->grid->sortTitle($engine->renderChildren($element, $data), $field);
 	}
 }

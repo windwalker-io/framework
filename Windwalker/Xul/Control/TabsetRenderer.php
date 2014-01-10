@@ -10,6 +10,7 @@ namespace Windwalker\Xul\Control;
 
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class TabsetHandler
@@ -22,12 +23,14 @@ class TabsetRenderer extends AbstractXulRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$tabsetName = XmlHelper::get($element, 'name', 'my');
 
@@ -35,7 +38,7 @@ class TabsetRenderer extends AbstractXulRenderer
 
 		$html = \JHtmlBootstrap::startTabSet($tabsetName, array('active' => XmlHelper::get($element, 'active')));
 
-		$html .= $e = static::renderChildren($element, $data);
+		$html .= $e = $engine->renderChildren($element, $data);
 
 		$html .= \JHtmlBootstrap::endTabSet();
 

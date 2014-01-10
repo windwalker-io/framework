@@ -10,6 +10,7 @@ namespace Windwalker\Xul\Control;
 
 use Windwalker\Helper\XmlHelper;
 use Windwalker\View\Layout\FileLayout;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class CallRenderer
@@ -22,12 +23,14 @@ class LayoutRenderer extends CallRenderer
 	 * doRender
 	 *
 	 * @param string            $name
+	 * @param XulEngine         $engine
 	 * @param \SimpleXmlElement $element
 	 * @param mixed             $data
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected static function doRender($name, \SimpleXmlElement $element, $data)
+	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
 		$layoutName = XmlHelper::get($element, 'name');
 
