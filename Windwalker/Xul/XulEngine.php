@@ -22,7 +22,7 @@ class XulEngine extends AbstractEngine
 	/**
 	 * @var  string  Property layoutExt.
 	 */
-	protected $layoutExt = 'xml';
+	protected $layoutExt = 'xul';
 
 	/**
 	 * @var  array  Property handler.

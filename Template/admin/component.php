@@ -1,22 +1,14 @@
 <?php
 
-use Windwalker\Component\Component;
-use Windwalker\Helper\LanguageHelper;
+use Flower\Component\FlowerComponent as FlowerComponentBase;
 
 /**
  * Class FlowerComponent
  *
  * @since 1.0
  */
-final class FlowerComponent extends Component
+final class FlowerComponent extends FlowerComponentBase
 {
-	/**
-	 * Property name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'Flower';
-
 	/**
 	 * Property defaultController.
 	 *
@@ -31,9 +23,6 @@ final class FlowerComponent extends Component
 	 */
 	protected function prepare()
 	{
-		// Load language
-		$lang = $this->container->get('language');
-
-		LanguageHelper::loadAll($lang->getTag(), $this->option);
+		parent::prepare();
 	}
 }

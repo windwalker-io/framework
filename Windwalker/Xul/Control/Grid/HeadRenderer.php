@@ -42,7 +42,7 @@ class HeadRenderer extends AbstractXulRenderer
 
 		foreach ($cols as $key => $value)
 		{
-			$attribs = static::getParsedAttributes($value, $data);
+			$attribs = XmlHelper::getAttributes($element);
 
 			$title = XmlHelper::get($value, 'title');
 

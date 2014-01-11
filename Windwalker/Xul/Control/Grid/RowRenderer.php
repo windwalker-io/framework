@@ -39,13 +39,13 @@ class RowRenderer extends AbstractXulRenderer
 		$grid  = $data->xulControl->grid;
 		$cells = static::renderChildren($engine, $element, $data);
 
-		$grid->addRow(static::getParsedAttributes($element, $data));
+		$grid->addRow(XmlHelper::getAttributes($element));
 
 		foreach ($cells as $key => $cell)
 		{
 			$content = StringHelper::parseVariable($cell, $data);
 
-			$attribs = static::getParsedAttributes($cell, $data);
+			$attribs = XmlHelper::getAttributes($element);
 
 			$grid->setRowCell($key, $content, $attribs);
 		}
