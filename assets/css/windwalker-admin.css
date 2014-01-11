@@ -1,13 +1,30 @@
 /*!
  * Windwalker CSS
  *
- * Copyright 2013 Asikart.com
- * License GNU General Public License version 2 or later; see LICENSE.txt, see LICENSE.php
+ * Copyright 2014 Asikart.com
+ * License GNU General Public License version 2 or later; see LICENSE.txt, see LICENSE
  *
- * Generator: AKHelper
  * Author: Asika
  */
 
+/* For 2.0
+---------------------------------------------------------------- */
+
+/* Search tools */
+.js-stools .search-field.btn-wrapper
+{
+	margin: 0;
+}
+
+.search-field #search_field
+{
+	margin: 0;
+	margin-right: 5px;
+}
+
+
+/* 1.0 Legacy
+----------------------------------------------------------------  */
 
 /* FORM */
 .joomla25 .control-group {
@@ -81,10 +98,3 @@
     margin-top: 5px;
 }
 
-
-
-
-/* Joomla! 3.0 */
-.joomla30 input.required {
-    background-color: #d5eeff;
-}

@@ -95,7 +95,7 @@ class FlowerModelSakuras extends ListModel
 			;
 
 		// Debug here
-		\AK::show((string) $query);
+		// \AK::show((string) $query);
 
 		return $query;
 	}

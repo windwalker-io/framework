@@ -2,7 +2,7 @@
 <form>
 	<fields name="search">
 		<field name="field"
-			type="list"
+			type="hidden"
 			default="title"
 			label="JSEARCH_FILTER_LABEL"
 			labelclass="pull-left"
