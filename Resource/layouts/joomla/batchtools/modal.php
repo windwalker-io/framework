@@ -4,7 +4,7 @@ defined('JPATH_BASE') or die;
 
 $data = $displayData['view'];
 
-$textPrefix = JArrayHelper::getValue($displayData, 'text_prefix', 'LIB_WINDWALKER');
+$textPrefix = $data->view->option ? : 'LIB_WINDWALKER';
 
 $task = JArrayHelper::getValue($displayData, 'task_prefix', '');
 ?>

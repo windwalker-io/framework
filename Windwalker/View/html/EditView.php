@@ -16,7 +16,7 @@ use Windwalker\Model\Model;
  *
  * @since 1.0
  */
-class FormView extends ItemHtmlView
+class EditView extends ItemHtmlView
 {
 	/**
 	 * Method to instantiate the view.
@@ -78,22 +78,16 @@ class FormView extends ItemHtmlView
 	 *
 	 * @return  void
 	 */
-	protected function setTitle($title = null, $icons = 'stack')
+	protected function setTitle($title = null, $icons = 'pencil-2')
 	{
-		$title = $title ? : \JText::_($this->textPrefix . '_' . strtoupper($this->getName()) . '_' . strtoupper($this->getLayout()) . '_TITLE');
+		if (!$title)
+		{
+			$name = \JText::_($this->textPrefix . '_VIEW_' . strtoupper($this->getName()));
 
-		parent::setTitle($title, 'stack article');
-	}
+			$title = \JText::sprintf('LIB_WINDWALKER_TITLE_ITEM_EDIT', $name);
+		}
 
-	protected function addToolbar2()
-	{
-		\JToolbarHelper::title(ucfirst($this->viewItem) . ' Edit');
-
-		\JToolbarHelper::apply($this->viewItem . '.edit.apply');
-		\JToolbarHelper::save($this->viewItem . '.edit.save');
-		\JToolbarHelper::save2new($this->viewItem . '.edit.save2new');
-		\JToolbarHelper::save2copy($this->viewItem . '.edit.save2copy');
-		\JToolbarHelper::cancel($this->viewItem . '.edit.cancel');
+		parent::setTitle($title, 'pencil-2 article');
 	}
 
 	/**

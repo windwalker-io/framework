@@ -26,8 +26,6 @@ $user = $container->get('user');
 
 // Set order script.
 $grid->registerTableSort();
-
-echo $this->loadTemplate('test');
 ?>
 
 <!-- LIST TABLE -->

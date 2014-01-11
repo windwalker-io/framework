@@ -107,7 +107,12 @@ class GridView extends ListHtmlView
 	 */
 	protected function setTitle($title = null, $icons = 'stack')
 	{
-		$title = $title ? : \JText::_($this->textPrefix . '_' . strtoupper($this->getName()) . '_TITLE');
+		if (!$title)
+		{
+			$name = \JText::_($this->textPrefix . '_VIEW_' . strtoupper($this->getName()));
+
+			$title = \JText::sprintf('LIB_WINDWALKER_TITLE_LIST', $name);
+		}
 
 		parent::setTitle($title, 'stack article');
 	}

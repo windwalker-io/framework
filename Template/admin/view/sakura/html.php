@@ -3,7 +3,7 @@
 use Joomla\DI\Container;
 use Windwalker\Model\Model;
 use Windwalker\View\Engine\PhpEngine;
-use Windwalker\View\Html\FormView;
+use Windwalker\View\Html\EditView;
 use Windwalker\Xul\XulEngine;
 
 /**
@@ -11,7 +11,7 @@ use Windwalker\Xul\XulEngine;
  *
  * @since 1.0
  */
-class FlowerViewSakuraHtml extends FormView
+class FlowerViewSakuraHtml extends EditView
 {
 	/**
 	 * Method to instantiate the view.

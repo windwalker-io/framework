@@ -1,6 +1,7 @@
 <?php
 
 use Windwalker\Component\Component;
+use Windwalker\Helper\LanguageHelper;
 
 /**
  * Class FlowerComponent
@@ -28,25 +29,11 @@ final class FlowerComponent extends Component
 	 *
 	 * @return void
 	 */
-	protected function prepareAll()
+	protected function prepare()
 	{
-	}
+		// Load language
+		$lang = $this->container->get('language');
 
-	/**
-	 * initAdmin
-	 *
-	 * @return void
-	 */
-	protected function prepareAdmin()
-	{
-	}
-
-	/**
-	 * initSite
-	 *
-	 * @return void
-	 */
-	protected function prepareSite()
-	{
+		LanguageHelper::loadAll($lang->getTag(), $this->option);
 	}
 }

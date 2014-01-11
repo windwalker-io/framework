@@ -35,8 +35,10 @@ abstract class FlowerHelper
 		{
 			if ($folder->isDir() && $inflector->isPlural($view = $folder->getBasename()))
 			{
+				$name = \JText::_('COM_FLOWER_VIEW_' . strtoupper($view));
+
 				JHtmlSidebar::addEntry(
-					JText::_('COM_FLOWER_' . strtoupper($view) . '_TITLE'),
+					JText::sprintf('LIB_WINDWALKER_TITLE_ITEM_EDIT', $name),
 					'index.php?option=com_flower&view=' . $view,
 					($vName == $view)
 				);

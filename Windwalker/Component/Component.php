@@ -10,6 +10,7 @@ namespace Windwalker\Component;
 
 use Windwalker\Controller\Controller;
 use Windwalker\DI\Container;
+use Windwalker\Helper\LanguageHelper;
 use Windwalker\Object\Object;
 
 /**
@@ -142,8 +143,6 @@ class Component
 
 		$controller->setComponentPath(JPATH_BASE . '/components/' . $this->option);
 
-		// echo get_class($controller);
-
 		return $controller->setContainer($this->container)
 			->execute();
 	}
@@ -155,48 +154,6 @@ class Component
 	 */
 	protected function prepare()
 	{
-		$this->prepareAll();
-
-		// Init for administrator
-		if ($this->application->isAdmin())
-		{
-			$this->prepareAdmin();
-		}
-		// Init for frontend
-		else
-		{
-			$this->prepareSite();
-		}
-	}
-
-	/**
-	 * prepareAll
-	 *
-	 * @return  void
-	 */
-	protected function prepareAll()
-	{
-		// Please override this method.
-	}
-
-	/**
-	 * prepareAdmin
-	 *
-	 * @return  void
-	 */
-	protected function prepareAdmin()
-	{
-		// Please override this method.
-	}
-
-	/**
-	 * prepareSite
-	 *
-	 * @return  void
-	 */
-	protected function prepareSite()
-	{
-		// Please override this method.
 	}
 
 	/**
