@@ -2,6 +2,7 @@
 
 use Joomla\DI\Container;
 use Windwalker\Model\Model;
+use Windwalker\View\Engine\PhpEngine;
 use Windwalker\View\Html\GridView;
 use Windwalker\Xul\XulEngine;
 
@@ -13,22 +14,37 @@ use Windwalker\Xul\XulEngine;
 class FlowerViewSakurasHtml extends GridView
 {
 	/**
-	 * @var  string  Property prefix.
+	 * Property prefix.
+	 *
+	 * @var  string
 	 */
 	protected $prefix = 'flower';
 
 	/**
-	 * @var  string  Property option.
+	 * Property option.
+	 *
+	 * @var  string
 	 */
 	protected $option = 'com_flower';
 
 	/**
-	 * @var  string  Property viewItem.
+	 * Property textPrefix.
+	 *
+	 * @var string
+	 */
+	protected $textPrefix = 'COM_FLOWER';
+
+	/**
+	 * Property viewItem.
+	 *
+	 * @var  string
 	 */
 	protected $viewItem = 'sakura';
 
 	/**
-	 * @var  string  Property viewList.
+	 * Property viewList.
+	 *
+	 * @var  string
 	 */
 	protected $viewList = 'sakuras';
 
@@ -46,7 +62,7 @@ class FlowerViewSakurasHtml extends GridView
 			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering'
 		);
 
-		$this->engine = new XulEngine;
+		$this->engine = new PhpEngine;
 
 		parent::__construct($model, $container, $config, $paths);
 	}

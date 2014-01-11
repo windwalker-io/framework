@@ -8,6 +8,7 @@
 
 namespace Windwalker\Xul\Control;
 
+use JHtmlBootstrap;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
 use Windwalker\Xul\XulEngine;
@@ -36,11 +37,11 @@ class TabRenderer extends AbstractXulRenderer
 
 		$label = $element['label'] ? (string) $element['label'] : $data->view->option . '_EDIT_FIELDS_' . $tabName;
 
-		$html = \JHtmlBootstrap::addTab($data->tabSetName, $tabName, \JText::_($label));
+		$html = JHtmlBootstrap::addTab($data->tabSetName, $tabName, \JText::_($label));
 
 		$html .= static::renderChildren($engine, $element, $data);
 
-		$html .= \JHtmlBootstrap::endTab();
+		$html .= JHtmlBootstrap::endTab();
 
 		return $html;
 	}

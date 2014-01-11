@@ -5,28 +5,27 @@ $form = $data->form;
 $item = $data->item;
 $data->asset = $container->get('helper.asset');
 $data->uri   = JURI::getInstance();
+
+$tabs = array(
+	'tab_basic',
+	'tab_advanced',
+	'tab_rules'
+)
 ?>
 
 <form action="<?php echo JURI::getInstance(); ?>"  method="post" name="adminForm" id="adminForm"
 	class="form-validate" enctype="multipart/form-data">
-	<?php
-	foreach ($form->getFieldsets() as $key => $fieldset)
-		:
+
+	<?php echo JHtmlBootstrap::startTabSet('sakuraEditTab', array('active' => 'tab_basic')); ?>
+
+		<?php
+		foreach ($tabs as $tab)
+		{
+			echo $this->loadTemplate('tab', array('tab' => $tab));
+		}
 		?>
-		<fieldset>
-			<legend><?php echo !empty($fieldset->label) ? JText::_($fieldset->label) : JText::_('COM_FLOWER_EDIT_FIELDSET_' . $fieldset->name); ?></legend>
 
-			<?php
-			foreach ($form->getFieldset($fieldset->name) as $field)
-			{
-				echo $field->getControlGroup();
-			}
-			?>
-
-		</fieldset>
-	<?php
-	endforeach;
-	?>
+	<?php echo JHtmlBootstrap::endTabSet(); ?>
 
 	<!-- Hidden Inputs -->
 	<div id="hidden-inputs">

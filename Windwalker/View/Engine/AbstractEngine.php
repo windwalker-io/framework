@@ -111,7 +111,7 @@ abstract class AbstractEngine implements EngineInterface, ContainerAwareInterfac
 		$template       = $container->get('app')->getTemplate();
 
 		// Create the template file name based on the layout
-		$file = $this->layout = isset($tpl) ? $layout . '_' . $tpl : $layout;
+		$file = isset($tpl) ? $layout . '_' . $tpl : $layout;
 
 		// Clean the file name
 		$file = preg_replace('/[^A-Z0-9_\.-]/i', '', $file);
@@ -153,9 +153,6 @@ abstract class AbstractEngine implements EngineInterface, ContainerAwareInterfac
 		}
 
 		$output = $this->execute($templateFile, $data);
-
-		// Fall back to last layout
-		$this->layout = $layout;
 
 		return $output;
 	}

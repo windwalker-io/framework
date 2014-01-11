@@ -28,7 +28,7 @@ class PhpEngine extends AbstractEngine
 	 */
 	protected function execute($templateFile, $data = null)
 	{
-		$data = $this->data;
+		$data = $this->data->bind((array) $data);
 
 		// Start capturing output into a buffer
 		ob_start();
