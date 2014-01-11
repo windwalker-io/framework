@@ -1,5 +1,6 @@
 <?php
 
+use Windwalker\Model\Filter\FilterHelper;
 use Windwalker\Model\ListModel;
 
 /**
@@ -54,7 +55,7 @@ class FlowerModelSakuras extends ListModel
 	/**
 	 * configureFilters
 	 *
-	 * @param \Windwalker\Model\Filter\FilterHelper $filterHelper
+	 * @param FilterHelper $filterHelper
 	 *
 	 * @return  void
 	 */

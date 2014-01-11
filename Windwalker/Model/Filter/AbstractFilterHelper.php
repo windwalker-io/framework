@@ -15,6 +15,8 @@ namespace Windwalker\Model\Filter;
  */
 abstract class AbstractFilterHelper implements FilterHelperInterface
 {
+	const SKIP = false;
+
 	/**
 	 * Property handler.
 	 *
