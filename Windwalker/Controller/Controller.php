@@ -8,13 +8,13 @@
 
 namespace Windwalker\Controller;
 
-use Whoops\Handler\PrettyPageHandler;
-use Windwalker\Controller\Helper\ControllerHelper;
-use Windwalker\Debugger\Debugger;
-use Windwalker\DI\Container;
+use JApplicationCms;
+use JInput;
 use Joomla\DI\Container as JoomlaContainer;
 use Joomla\DI\ContainerAwareInterface;
+
 use Windwalker\Model\Model;
+use Windwalker\DI\Container;
 
 /**
  * Class Controller
@@ -26,7 +26,7 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	/**
 	 * The application object.
 	 *
-	 * @var    \JApplicationCms
+	 * @var    JApplicationCms
 	 * @since  12.1
 	 */
 	protected $app = null;
@@ -83,12 +83,11 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput            $input  The input object.
-	 * @param   \JApplicationCms   $app    The application object.
-	 *
-	 * @since  12.1
+	 * @param   JInput          $input  The input object.
+	 * @param   JApplicationCms $app    The application object.
+	 * @param   array           $config Config.
 	 */
-	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
+	public function __construct(JInput $input = null, JApplicationCms $app = null, $config = array())
 	{
 		if (!$this->prefix && !empty($config['prefix']))
 		{
@@ -158,17 +157,18 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	/**
 	 * Fetch HMVC result.
 	 *
-	 * @param string        $prefix
-	 * @param string        $name
-	 * @param \JInput|array $input
+	 * @param string       $prefix
+	 * @param string       $name
+	 * @param JInput|array $input
 	 *
 	 * @return mixed
 	 */
 	public function fetch($prefix, $name, $input = null)
 	{
-		if (!($input instanceof \JInput))
+		if (!($input instanceof JInput))
 		{
-			$newInput = new \JInput($_REQUEST);
+			// Renew a input
+			$newInput = new JInput($_REQUEST);
 
 			foreach ($input as $field => $value)
 			{
@@ -181,7 +181,8 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 		$input->set('task', $name);
 		$input->set('hmvc', true);
 
-		$controller = ControllerHelper::getController($prefix, $input, $this->app)
+		$resolver   = $this->container->get('controller.resolver');
+		$controller = $resolver->getController($prefix, $input, $this->app)
 			->setComponentPath($this->componentPath)
 			->setContainer($this->container);
 

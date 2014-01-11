@@ -8,7 +8,7 @@
 
 namespace Windwalker\Component;
 
-use Windwalker\Controller\Helper\ControllerHelper;
+use Windwalker\Controller\Controller;
 use Windwalker\DI\Container;
 use Windwalker\Object\Object;
 
@@ -136,8 +136,9 @@ class Component
 	 */
 	protected function doExecute()
 	{
-		/** @var $controller \Windwalker\Controller\Controller */
-		$controller = ControllerHelper::getController($this->name, $this->input, $this->application);
+		/** @var $controller Controller */
+		$resolver   = $this->container->get('controller.resolver');
+		$controller = $resolver->getController($this->name, $this->input, $this->application);
 
 		$controller->setComponentPath(JPATH_BASE . '/components/' . $this->option);
 
@@ -227,6 +228,39 @@ class Component
 		// Register form and fields
 		\JForm::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
 		\JForm::addFormPath(WINDWALKER_SOURCE . '/Form/Forms');
+	}
+
+	/**
+	 * Register (map) a task to a method in the class.
+	 *
+	 * @param   string  $task        The task.
+	 * @param   string  $controller  The name of the method in the derived class to perform for this task.
+	 *
+	 * @return  Component  A JControllerLegacy object to support chaining.
+	 *
+	 * @since   12.2
+	 */
+	public function registerTask($task, $controller)
+	{
+		$this->container->get('controller.resolver')->registerTask($task, $controller);
+
+		return $this;
+	}
+
+	/**
+	 * Unregister (unmap) a task in the class.
+	 *
+	 * @param   string  $task  The task.
+	 *
+	 * @return  Component  This object to support chaining.
+	 *
+	 * @since   12.2
+	 */
+	public function unregisterTask($task)
+	{
+		$this->container->get('controller.resolver')->unregisterTask($task);
+
+		return $this;
 	}
 
 	/**

@@ -56,7 +56,19 @@ class ComponentProvider implements ServiceProviderInterface
 		$container->alias('component', ucfirst($name) . 'Component')
 			->share(ucfirst($name) . 'Component', $this->component);
 
-		// Helpers
+		// ControllerResolver
+		$resolverClass = '\\Windwalker\\Controller\\Resolver\\ControllerResolver';
+
+		$container->alias('controller.resolver', $resolverClass)
+			->share(
+				$resolverClass,
+				function($container) use($resolverClass)
+				{
+					return new $resolverClass($this->component->getApplication(), $container);
+				}
+			);
+
+		// Asset Helper
 		$container->extend(
 			'\\Windwalker\\Helper\\AssetHelper',
 			function($asset, $container) use($name)
