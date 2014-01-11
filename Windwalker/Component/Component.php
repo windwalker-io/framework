@@ -127,7 +127,9 @@ class Component
 
 		$this->prepare();
 
-		return $this->doExecute();
+		$result = $this->doExecute();
+
+		return $this->postExecute($result);
 	}
 
 	/**
@@ -145,6 +147,18 @@ class Component
 
 		return $controller->setContainer($this->container)
 			->execute();
+	}
+
+	/**
+	 * postExecute
+	 *
+	 * @param mixed $result
+	 *
+	 * @return  mixed
+	 */
+	protected function postExecute($result)
+	{
+		return $result;
 	}
 
 	/**

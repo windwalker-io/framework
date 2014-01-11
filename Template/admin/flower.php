@@ -8,16 +8,8 @@
 
 include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
 
-// Legacy
-define('AKDEBUG', true);
-
-if (JDEBUG)
-{
-	\Windwalker\Debugger\Debugger::registerWhoops();
-}
-
 JLoader::registerPrefix('Flower', JPATH_COMPONENT);
 JLoader::registerNamespace('Flower', JPATH_COMPONENT . '/src');
 JLoader::register('FlowerComponent', JPATH_COMPONENT . '/component.php');
 
-echo $component = with(new FlowerComponent)->execute();
+echo with(new FlowerComponent)->execute();
