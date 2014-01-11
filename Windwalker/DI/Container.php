@@ -132,4 +132,27 @@ class Container extends JoomlaContainer
 
 		return call_user_func($raw['callback'], $this);
 	}
+
+	/**
+	 * dump
+	 *
+	 * @return  array
+	 */
+	public function dump()
+	{
+		$storage = array();
+
+		foreach ($this->instances as $key => $data)
+		{
+			if (is_object($data))
+			{
+				$storage[$key] = get_class($data);
+			}
+		}
+
+		return array(
+			'aliases' => $this->aliases,
+			'data'    => $storage
+		);
+	}
 }

@@ -8,12 +8,19 @@
 
 namespace Windwalker\Model;
 
+use JDatabaseQuery;
+use JFactory;
+use JPagination;
+use JPluginHelper;
+
 use Joomla\DI\Container as JoomlaContainer;
+
 use Windwalker\Helper\PathHelper;
 use Windwalker\Model\Filter\FilterHelper;
 use Windwalker\Model\Filter\FilterProvider;
 use Windwalker\Model\Filter\SearchHelper;
 use Windwalker\Model\Helper\AdminListHelper;
+use Windwalker\Model\Helper\QueryHelper;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -45,7 +52,7 @@ class ListModel extends FormModel
 	/**
 	 * An internal cache for the last query used.
 	 *
-	 * @var    \JDatabaseQuery
+	 * @var    JDatabaseQuery
 	 * @since  12.2
 	 */
 	protected $query = array();
@@ -97,12 +104,22 @@ class ListModel extends FormModel
 
 		if (!$this->filterFields)
 		{
-			$this->filterFields = \JArrayHelper::getValue($config, 'filter_fields', null);
+			$this->filterFields = \JArrayHelper::getValue($config, 'filter_fields', array());
+
+			$this->filterFields[] = '*';
 		}
 
-		parent::__construct($config, $container, $state, $db);
+		// Guess name for container
+		if (!$this->name)
+		{
+			$this->name = \JArrayHelper::getValue($config, 'name', $this->getName());
+		}
 
-		$this->container->registerServiceProvider(new FilterProvider($this->name));
+		$container = $container ? : $this->getContainer();
+
+		$container->registerServiceProvider(new FilterProvider($this->name));
+
+		parent::__construct($config, $container, $state, $db);
 	}
 
 	/**
@@ -110,7 +127,7 @@ class ListModel extends FormModel
 	 *
 	 * This method ensures that the query is constructed only once for a given state of the model.
 	 *
-	 * @return  \JDatabaseQuery  A JDatabaseQuery object
+	 * @return  JDatabaseQuery  A JDatabaseQuery object
 	 *
 	 * @since   12.2
 	 */
@@ -164,13 +181,49 @@ class ListModel extends FormModel
 	/**
 	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
 	 *
-	 * @return  \JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
-	 *
-	 * @since   12.2
+	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
 	 */
 	protected function getListQuery()
 	{
-		$query = $this->db->getQuery(true);
+		$query       = $this->db->getQuery(true);
+		$queryHelper = $this->container->get('model.sakuras.helper.query');
+
+		// Build filter query
+		$this->processFilters($query);
+
+		// Build search query
+		$this->processSearches($query);
+
+		// Ordering
+		$this->processOrdering($query);
+
+		// Custom Where
+		foreach ((array) $this->state->get('query.where', array()) as $k => $v)
+		{
+			$query->where($v);
+		}
+
+		// Custom Having
+		foreach ((array) $this->state->get('query.having', array()) as $k => $v)
+		{
+			$query->having($v);
+		}
+
+		// Build query
+		// ========================================================================
+
+		// Get select columns
+		$select = $this->state->get('query.select');
+
+		if (!$select)
+		{
+			$select = $queryHelper->getSelectFields(QueryHelper::COLS_WITH_FIRST | QueryHelper::COLS_PREFIX_WITH_FIRST);
+		}
+
+		$query->select($select);
+
+		// Build Selected tables query
+		$queryHelper->registerQueryTables($query);
 
 		return $query;
 	}
@@ -178,7 +231,7 @@ class ListModel extends FormModel
 	/**
 	 * Method to get a JPagination object for the data set.
 	 *
-	 * @return  \JPagination  A JPagination object for the data set.
+	 * @return  JPagination  A JPagination object for the data set.
 	 *
 	 * @since   12.2
 	 */
@@ -195,7 +248,7 @@ class ListModel extends FormModel
 
 		// Create the pagination object.
 		$limit = (int) $this->state->get('list.limit') - (int) $this->state->get('list.links');
-		$page  = new \JPagination($this->getTotal(), $this->getStart(), $limit);
+		$page  = new JPagination($this->getTotal(), $this->getStart(), $limit);
 
 		// Add the object to the internal cache.
 		$this->cache[$store] = $page;
@@ -219,12 +272,7 @@ class ListModel extends FormModel
 	protected function getStoreId($id = '')
 	{
 		// Add the list state to the store id.
-		$id .= ':' . $this->state->get('list.start');
-		$id .= ':' . $this->state->get('list.limit');
-		$id .= ':' . $this->state->get('list.ordering');
-		$id .= ':' . $this->state->get('list.direction');
-		$id .= ':' . serialize($this->state->get('filter', array()));
-		$id .= ':' . serialize($this->state->get('search', array()));
+		$id .= ':' . json_encode($this->state);
 
 		return md5($this->context . ':' . $id);
 	}
@@ -321,6 +369,30 @@ class ListModel extends FormModel
 	}
 
 	/**
+	 * getQuery
+	 *
+	 * @return  JDatabaseQuery
+	 */
+	public function getQuery()
+	{
+		return $this->query;
+	}
+
+	/**
+	 * setQuery
+	 *
+	 * @param   JDatabaseQuery $query
+	 *
+	 * @return  ListModel  Return self to support chaining.
+	 */
+	public function setQuery($query)
+	{
+		$this->query = $query;
+
+		return $this;
+	}
+
+	/**
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return	mixed	The data for the form.
@@ -370,12 +442,12 @@ class ListModel extends FormModel
 		// If the context is set, assume that stateful lists are used.
 		if ($this->context)
 		{
-			$app = \JFactory::getApplication();
+			$app = JFactory::getApplication();
 
 			// Receive & set filters
 			if ($filters = $app->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array'))
 			{
-				$filters = AdminListHelper::handleFilters($filters, $this->filterFields);
+				$filters = AdminListHelper::handleFilters((array) $filters, $this->filterFields);
 
 				$this->state->set('filter', $filters);
 			}
@@ -464,7 +536,7 @@ class ListModel extends FormModel
 	protected function preprocessForm(\JForm $form, $data, $group = 'content')
 	{
 		// Import the appropriate plugin group.
-		\JPluginHelper::importPlugin($group);
+		JPluginHelper::importPlugin($group);
 
 		// Get the dispatcher.
 		$dispatcher = $this->getContainer()->get('event.dispatcher');
@@ -488,12 +560,12 @@ class ListModel extends FormModel
 	/**
 	 * processFilters
 	 *
-	 * @param \JDatabaseQuery $query
-	 * @param array           $filters
+	 * @param JDatabaseQuery $query
+	 * @param array          $filters
 	 *
-	 * @return  \JDatabaseQuery
+	 * @return  JDatabaseQuery
 	 */
-	protected function processFilters(\JDatabaseQuery $query, $filters = array())
+	protected function processFilters(JDatabaseQuery $query, $filters = array())
 	{
 		$filters = $filters ? : $this->state->get('filter', array());
 
@@ -521,12 +593,12 @@ class ListModel extends FormModel
 	/**
 	 * processSearches
 	 *
-	 * @param \JDatabaseQuery $query
-	 * @param array           $searches
+	 * @param JDatabaseQuery $query
+	 * @param array          $searches
 	 *
-	 * @return  \JDatabaseQuery
+	 * @return  JDatabaseQuery
 	 */
-	protected function processSearches(\JDatabaseQuery $query, $searches = array())
+	protected function processSearches(JDatabaseQuery $query, $searches = array())
 	{
 		$searches = $searches ? : $this->state->get('search', array());
 
@@ -554,13 +626,13 @@ class ListModel extends FormModel
 	/**
 	 * processOrdering
 	 *
-	 * @param \JDatabaseQuery $query
-	 * @param null            $ordering
-	 * @param null            $direction
+	 * @param JDatabaseQuery $query
+	 * @param null           $ordering
+	 * @param null           $direction
 	 *
 	 * @return  void
 	 */
-	protected function processOrdering(\JDatabaseQuery $query, $ordering = null, $direction = null)
+	protected function processOrdering(JDatabaseQuery $query, $ordering = null, $direction = null)
 	{
 		$ordering  = $ordering  ? : $this->state->get('list.ordering',  'ordering' /*$this->Viewitem . '.ordering'*/);
 		$direction = $direction ? : $this->state->get('list.direction', 'ASC');
@@ -641,7 +713,7 @@ class ListModel extends FormModel
 	 */
 	public function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $resetPage = true)
 	{
-		$app = \JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$input     = $app->input;
 		$old_state = $app->getUserState($key);
 		$cur_state = (!is_null($old_state)) ? $old_state : $default;

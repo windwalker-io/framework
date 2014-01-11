@@ -39,7 +39,7 @@ abstract class AbstractHtmlView extends AbstractView
 	 * @var    \SplPriorityQueue
 	 * @since  12.1
 	 */
-	protected $paths;
+	protected $paths = null;
 
 	/**
 	 * @var  string  Property viewList.

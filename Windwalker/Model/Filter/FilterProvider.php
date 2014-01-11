@@ -44,16 +44,24 @@ class FilterProvider implements ServiceProviderInterface
 	 */
 	public function register(Container $container)
 	{
+		// QueryHelper
+		$class = '\\Windwalker\\Model\\Helper\\QueryHelper';
+
+		$container->alias('model.' . $this->name . '.helper.query', $class)
+			->buildSharedObject($class);
+
 		// Filter
 		$filterClass = '\\Windwalker\\Model\\Filter\\FilterHelper';
 
 		$container->alias('model.' . $this->name . '.filter', $filterClass)
+			->alias('model.' . $this->name . '.helper.filter', $filterClass)
 			->buildSharedObject($filterClass);
 
 		// Search
 		$searchClass = '\\Windwalker\\Model\\Filter\\SearchHelper';
 
 		$container->alias('model.' . $this->name . '.search', $searchClass)
+			->alias('model.' . $this->name . '.helper.search', $filterClass)
 			->buildSharedObject($searchClass);
 	}
 }

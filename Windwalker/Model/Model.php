@@ -98,6 +98,12 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 
 		$this->option = 'com_' . $this->component;
 
+		// Guess name
+		if (!$this->name)
+		{
+			$this->name = \JArrayHelper::getValue($config, 'name', $this->getName());
+		}
+
 		// Register the paths for the form
 		$this->registerTablePaths($config);
 
