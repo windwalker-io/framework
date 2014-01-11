@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <page xmlns:html="http://dev.w3.org/html5/html-author">
-	<html:div id="flower" class="windwalker sakuras tablelist">
+	<html:div id="flower" class="windwalker sakuras tablelist row-fluid">
 		<form id="adminForm" type="grid">
 			<row>
 				<sidebar name="sakura-sidebar" span="2" title="JOPTION_MENUS" />

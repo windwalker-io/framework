@@ -62,7 +62,7 @@ class FlowerViewSakurasHtml extends GridView
 			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering'
 		);
 
-		$this->engine = new PhpEngine;
+		$this->engine = new XulEngine;
 
 		parent::__construct($model, $container, $config, $paths);
 	}

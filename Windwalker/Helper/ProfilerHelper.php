@@ -30,7 +30,7 @@ class ProfilerHelper
 	 *
 	 * @var mixed
 	 */
-	protected static $stateBuffer;
+	protected static $stateBuffer = array();
 
 	/**
 	 * A helper to add JProfiler log mark. Need to trun on the debug mode.
@@ -56,11 +56,10 @@ class ProfilerHelper
 
 		if (!isset(self::$profiler[$namespace]))
 		{
-			jimport('joomla.error.profiler');
 			self::$profiler[$namespace] = JProfiler::getInstance($namespace);
 
 			// Get last page logs.
-			self::$stateBuffer = $app->getUserState('windwalker.system.profiler.' . $namespace);
+			self::$stateBuffer[$namespace] = $app->getUserState('windwalker.system.profiler.' . $namespace);
 		}
 
 		self::$profiler[$namespace]->mark($text);
@@ -104,7 +103,7 @@ class ProfilerHelper
 		$buffer = $buffer ? $buffer : 'No Profiler data.';
 
 		// Get last page logs
-		$state_buffer = self::$stateBuffer;
+		$state_buffer = \JArrayHelper::getValue(self::$stateBuffer, $namespace);
 
 		if ($state_buffer)
 		{

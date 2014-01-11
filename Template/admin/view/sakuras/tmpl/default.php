@@ -22,7 +22,7 @@ $listDirn = 'asc';
 $originalOrders = [];
 ?>
 
-<div id="flower" class="windwalker sakuras tablelist">
+<div id="flower" class="windwalker sakuras tablelist row-fluid">
 	<form action="<?php echo JURI::getInstance(); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
 		<?php if (!empty($this->data->sidebar)): ?>
