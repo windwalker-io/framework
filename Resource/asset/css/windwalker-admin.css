@@ -1,0 +1,57 @@
+/**
+ * Windwalker CSS
+ *
+ * Copyright 2014 Asikart.com
+ * License GNU General Public License version 2 or later; see LICENSE.txt, see LICENSE
+ *
+ * Author: Asika
+ */
+
+/* Search tools */
+.js-stools .search-field.btn-wrapper
+{
+	margin: 0;
+}
+
+.search-field #search_field
+{
+	margin: 0;
+	margin-right: 5px;
+}
+
+/* FORM */
+.control-group .star {
+    color: red;
+}
+
+#editor-xtd-buttons {
+    float: none;
+}
+
+.wf_editor_toggle,
+.mceEditor {
+    float: left;
+    width: 100%;
+}
+
+/* MODAL */
+.admin div.modal,
+.admin div.modal-body,
+.windwalker div.modal,
+.windwalker div.modal-body{
+    overflow: visible;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* TABLE LIST */
+.quick-edit-hover:hover {
+    background-color: yellow ;
+}
+
+.quick-edit-selected {
+    border: 1px solid blue !important;
+}
+

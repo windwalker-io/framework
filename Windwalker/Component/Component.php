@@ -112,7 +112,7 @@ class Component
 
 		$this->container = $container ?: Container::getInstance($this->option);
 
-		$this->prepare();
+		$this->init();
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Component
 	{
 		$this->loadConfiguration();
 
-		$this->init();
+		$this->prepare();
 
 		return $this->doExecute();
 	}
@@ -152,8 +152,50 @@ class Component
 	 *
 	 * @return void
 	 */
-	protected function init()
+	protected function prepare()
 	{
+		$this->prepareAll();
+
+		// Init for administrator
+		if ($this->application->isAdmin())
+		{
+			$this->prepareAdmin();
+		}
+		// Init for frontend
+		else
+		{
+			$this->prepareSite();
+		}
+	}
+
+	/**
+	 * prepareAll
+	 *
+	 * @return  void
+	 */
+	protected function prepareAll()
+	{
+		// Please override this method.
+	}
+
+	/**
+	 * prepareAdmin
+	 *
+	 * @return  void
+	 */
+	protected function prepareAdmin()
+	{
+		// Please override this method.
+	}
+
+	/**
+	 * prepareSite
+	 *
+	 * @return  void
+	 */
+	protected function prepareSite()
+	{
+		// Please override this method.
 	}
 
 	/**
@@ -161,7 +203,7 @@ class Component
 	 *
 	 * @return void
 	 */
-	protected function prepare()
+	protected function init()
 	{
 		$this->path['self']          = JPATH_BASE . '/components/' . strtolower($this->option);
 		$this->path['site']          = JPATH_ROOT . '/components/' . strtolower($this->option);

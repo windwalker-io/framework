@@ -7,6 +7,11 @@
  */
 
 // No direct access
+use Windwalker\DI\Container;
+use Windwalker\Helper\HtmlHelper;
+use Windwalker\Helper\LanguageHelper;
+use Windwalker\Helper\ModalHelper;
+
 defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('list');
@@ -306,9 +311,9 @@ class JFormFieldItemlist extends JFormFieldList
 		}
 
 		// Prepare Script & Styles
-		$doc = JFactory::getDocument();
-		AKHelper::_('include.sortedStyle', 'includes/css', $quickadd_handler);
-		AKHelper::_('include.addJS', 'quickadd.js', 'ww');
+		/** @var Windwalker\Helper\AssetHelper $asset */
+		$asset = Container::getInstance($quickadd_handler)->get('helper.asset');
+		$asset->addJs('js/quickadd.js');
 
 		// Set AKQuickAddOption
 		$config['task']             = $task;
@@ -321,7 +326,7 @@ class JFormFieldItemlist extends JFormFieldList
 		$config['value_field']      = $value_field;
 		$config['joomla3']          = (JVERSION >= 3);
 
-		$config = AKHelper::_('html.getJSObject', $config);
+		$config = HtmlHelper::getJSObject($config);
 
 		$script = <<<QA
         window.addEvent('domready', function(){
@@ -330,11 +335,13 @@ class JFormFieldItemlist extends JFormFieldList
         });
 QA;
 
-		$doc->addScriptDeclaration($script);
+		$asset->internalJS($script);
 
 		// Load Language & Form
-		AKHelper::_('lang.loadLanguage', $this->extension, null);
-		$content = AKHelper::_('ui.getQuickaddForm', $qid, $formpath);
+		LanguageHelper::loadLanguage('com_' . $this->component, null);
+
+		$formpath = str_replace(JPATH_ROOT, '', $formpath);
+		$content  = ModalHelper::getQuickaddForm($qid, $formpath, (string) $this->element['extension']);
 
 		// Prepare HTML
 		$html         = '';
@@ -345,8 +352,8 @@ QA;
 		$footer = "<button class=\"btn delicious\" type=\"button\" onclick=\"$$('#{$qid} input', '#{$qid} select').set('value', '');AKQuickAdd.closeModal('{$qid}');\" data-dismiss=\"modal\">" . JText::_('JCANCEL') . "</button>";
 		$footer .= "<button class=\"btn btn-primary delicious blue\" type=\"submit\" onclick=\"AKQuickAdd.submit('{$qid}', event);\">" . JText::_('JSUBMIT') . "</button>";
 
-		$html .= AKHelper::_('ui.modalLink', JText::_($button_title), $qid, array('class' => $button_class, 'icon' => 'icon-new icon-white'));
-		$html .= AKHelper::_('ui.renderModal', $qid, $content, array('title' => JText::_($modal_title), 'footer' => $footer));
+		$html .= ModalHelper::modalLink(JText::_($button_title), $qid, array('class' => $button_class, 'icon' => 'icon-new icon-white'));
+		$html .= ModalHelper::renderModal($qid, $content, array('title' => JText::_($modal_title), 'footer' => $footer));
 
 		return $html;
 	}

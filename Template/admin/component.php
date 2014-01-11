@@ -28,22 +28,8 @@ final class FlowerComponent extends Component
 	 *
 	 * @return void
 	 */
-	protected function init()
+	protected function prepareAll()
 	{
-		parent::init();
-
-		// Init for both
-
-		// Init for administrator
-		if ($this->application->isAdmin())
-		{
-			$this->initAdmin();
-		}
-		// Init for frontend
-		else
-		{
-			$this->initSite();
-		}
 	}
 
 	/**
@@ -51,7 +37,7 @@ final class FlowerComponent extends Component
 	 *
 	 * @return void
 	 */
-	private function initAdmin()
+	protected function prepareAdmin()
 	{
 	}
 
@@ -60,7 +46,7 @@ final class FlowerComponent extends Component
 	 *
 	 * @return void
 	 */
-	private function initSite()
+	protected function prepareSite()
 	{
 	}
 }

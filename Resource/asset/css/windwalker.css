@@ -1,0 +1,35 @@
+/**
+ * Windwalker CSS
+ *
+ * Copyright 2013 Asikart.com
+ * License GNU General Public License version 2 or later; see LICENSE.txt, see LICENSE.php
+ *
+ * Generator: AKHelper
+ * Author: Asika
+ */
+
+
+/* FORM */
+.control-group .star {
+    color: red;
+}
+
+#editor-xtd-buttons {
+    float: none;
+}
+
+.wf_editor_toggle,
+.mceEditor {
+    float: left;
+    width: 100%;
+}
+
+
+/* TABLE LIST */
+.quick-edit-hover:hover {
+    background-color: yellow ;
+}
+
+.quick-edit-selected {
+    border: 1px solid blue !important;
+}

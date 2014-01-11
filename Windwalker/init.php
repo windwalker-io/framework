@@ -28,3 +28,8 @@ define('WINDWALKER_SOURCE', __DIR__);
 $container = Container::getInstance();
 
 $container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);
+
+// Include global asset
+$asset = $container->get('helper.asset');
+
+$asset->windwalker();
