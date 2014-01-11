@@ -70,10 +70,11 @@ abstract class AbstractListController extends AbstractAdminController
 	 * @param null  $name
 	 * @param null  $prefix
 	 * @param array $config
+	 * @param bool  $forceNew
 	 *
 	 * @return mixed
 	 */
-	public function getModel($name = null, $prefix = null, $config = array())
+	public function getModel($name = null, $prefix = null, $config = array(), $forceNew = false)
 	{
 		if (!$name)
 		{

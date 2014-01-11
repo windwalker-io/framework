@@ -38,7 +38,7 @@ abstract class AdminModel extends CrudModel
 	 */
 	public function __construct($config = array(), JoomlaContainer $container = null, \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
-		parent::__construct($config, $state, $db);
+		parent::__construct($config, $container, $state, $db);
 
 		if (!$this->reorderConditions)
 		{
