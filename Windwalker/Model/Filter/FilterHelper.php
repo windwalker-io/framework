@@ -28,7 +28,7 @@ class FilterHelper extends AbstractFilterHelper
 		foreach ($filters as $field => $value)
 		{
 			// If handler is FALSE, means skip this field.
-			if (array_key_exists($field, $this->handler) && $this->handler[$field] === false)
+			if (array_key_exists($field, $this->handler) && $this->handler[$field] === static::SKIP)
 			{
 				continue;
 			}
