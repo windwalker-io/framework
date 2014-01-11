@@ -1,7 +1,5 @@
 <?php
 
-use Joomla\DI\Container;
-use Windwalker\Model\Helper\QueryHelper;
 use Windwalker\Model\ListModel;
 
 /**
@@ -44,7 +42,7 @@ class FlowerModelSakuras extends ListModel
 	 */
 	protected function processFilters(\JDatabaseQuery $query, $filters = array())
 	{
-		// Published
+		// If no state filter, set published >= 0
 		if (!isset($filters['sakura.published']))
 		{
 			$query->where($query->quoteName('sakura.published') . ' >= 0');

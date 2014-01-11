@@ -27,6 +27,12 @@ class FilterHelper extends AbstractFilterHelper
 	{
 		foreach ($filters as $field => $value)
 		{
+			// If handler is FALSE, means skip this field.
+			if (array_key_exists($field, $this->handler) && $this->handler[$field] === false)
+			{
+				continue;
+			}
+
 			if (!empty($this->handler[$field]) && is_callable($this->handler[$field]))
 			{
 				call_user_func_array($this->handler[$field], array($query, $field, $value));

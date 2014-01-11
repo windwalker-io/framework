@@ -40,19 +40,14 @@ abstract class AbstractFilterHelper implements FilterHelperInterface
 	/**
 	 * setHandler
 	 *
-	 * @param string   $name
-	 * @param callback $handler
+	 * @param string           $name
+	 * @param callable|boolean $handler
 	 *
 	 * @throws \InvalidArgumentException
 	 * @return  AbstractFilterHelper
 	 */
 	public function setHandler($name, $handler)
 	{
-		if (!is_callable($handler))
-		{
-			throw new \InvalidArgumentException('Query handler should be callable.');
-		}
-
 		$this->handler[$name] = $handler;
 
 		return $this;
