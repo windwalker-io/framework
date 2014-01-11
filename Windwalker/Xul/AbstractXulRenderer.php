@@ -117,6 +117,12 @@ abstract class AbstractXulRenderer
 		{
 			foreach ($children as $child)
 			{
+				// Replace all attributes with variable.
+				foreach ($child->attributes() as $key => $attr)
+				{
+					$child[$key] = StringHelper::parseVariable((string) $attr, $data);
+				}
+
 				$namespaces    = $child->getNamespaces();
 				$name = $class = $child->getName();
 

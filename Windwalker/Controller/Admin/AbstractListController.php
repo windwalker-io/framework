@@ -27,8 +27,9 @@ abstract class AbstractListController extends AbstractAdminController
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput           $input  The input object.
-	 * @param   \JApplicationCms  $app    The application object.
+	 * @param \JInput          $input   The input object.
+	 * @param \JApplicationCms $app     The application object.
+	 * @param array            $config  Config.
 	 *
 	 * @since  12.1
 	 */

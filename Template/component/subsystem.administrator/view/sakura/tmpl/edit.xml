@@ -9,13 +9,11 @@
 					active="basic">
 				<tab name="basic">
 					<row class="yoo">
-						<column name="left"
-								span="8">
+						<column name="left" span="8">
 							<fieldset name="information"/>
 							<fieldset name="text"/>
 						</column>
-						<column name="right"
-								span="4">
+						<column name="right" span="4">
 							<fieldset name="publish"/>
 						</column>
 					</row>
@@ -23,8 +21,7 @@
 				<tab name="advanced">
 					<row>
 						<column name="left">
-							<fieldset name="created"
-									  class="span8"/>
+							<fieldset name="created" class="span8"/>
 						</column>
 					</row>
 				</tab>

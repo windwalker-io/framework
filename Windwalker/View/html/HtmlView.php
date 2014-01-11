@@ -88,6 +88,12 @@ class HtmlView extends AbstractHtmlView
 		$data->view->name     = $this->getName();
 		$data->view->viewItem = $this->viewItem;
 		$data->view->viewList = $this->viewList;
+
+		$uri = \JUri::getInstance();
+		$data->uri = new Data;
+		$data->uri->path = $uri->toString(array('path', 'query', 'fragment'));
+		$data->uri->base = \JUri::base(true);
+		$data->uri->root = \JUri::root(true);
 	}
 
 	/**

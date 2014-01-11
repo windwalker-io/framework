@@ -34,7 +34,7 @@ class FormRenderer extends AbstractXulRenderer
 	 */
 	protected static function doRender($name, XulEngine $engine, \SimpleXmlElement $element, $data)
 	{
-		XmlHelper::def($element, 'action',  $data->uri);
+		XmlHelper::def($element, 'action',  $data->uri->path);
 		XmlHelper::def($element, 'method',  'post');
 		XmlHelper::def($element, 'id',      $data->view->name . '-form');
 		XmlHelper::def($element, 'name',    'adminForm');
@@ -42,8 +42,6 @@ class FormRenderer extends AbstractXulRenderer
 		XmlHelper::def($element, 'enctype', 'multipart/form-data');
 
 		$attributes = XmlHelper::getAttributes($element);
-
-		$attributes = static::replaceVariable($attributes, $data);
 
 		$footerHandler = XmlHelper::get($element, 'type', 'default');
 		$footerHandler = array(__CLASS__, 'render' . ucfirst($footerHandler) . 'Footer');

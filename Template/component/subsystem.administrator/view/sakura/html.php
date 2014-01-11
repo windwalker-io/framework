@@ -23,7 +23,7 @@ class FlowerViewSakuraHtml extends FormView
 	 */
 	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
 	{
-		$this->engine = new PhpEngine;
+		$this->engine = new XulEngine;
 
 		parent::__construct($model, $container, $config, $paths);
 	}

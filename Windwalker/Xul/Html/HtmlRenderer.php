@@ -36,8 +36,6 @@ class HtmlRenderer extends AbstractXulRenderer
 	{
 		$attributes = XmlHelper::getAttributes($element);
 
-		$attributes = static::replaceVariable($attributes, $data);
-
 		return new HtmlElement($name, static::renderChildren($engine, $element, $data), $attributes);
 	}
 }
