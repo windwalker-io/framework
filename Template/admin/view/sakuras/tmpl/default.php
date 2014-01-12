@@ -11,11 +11,9 @@ use Windwalker\View\Layout\FileLayout;
 /**
  * Prepare data for this template.
  *
- * @var Windwalker\DI\Container       $container
- * @var Windwalker\Helper\AssetHelper $asset
+ * @var Windwalker\DI\Container $container
  */
 $container = $this->getContainer();
-$data->asset = $container->get('helper.asset');
 ?>
 
 <div id="flower" class="windwalker sakuras tablelist row-fluid">

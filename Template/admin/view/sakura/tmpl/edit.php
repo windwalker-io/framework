@@ -1,11 +1,23 @@
 <?php
+/**
+ * @package     Joomla.Administrator
+ * @subpackage  com_flower
+ * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 
+/**
+ * Prepare data for this template.
+ *
+ * @var $container Windwalker\DI\Container
+ * @var $data      Windwalker\Data\Data
+ * @var $item      \stdClass
+ */
 $container = $this->getContainer();
-$form = $data->form;
-$item = $data->item;
-$data->asset = $container->get('helper.asset');
-$data->uri   = JURI::getInstance();
+$form      = $data->form;
+$item      = $data->item;
 
+// Setting tabset
 $tabs = array(
 	'tab_basic',
 	'tab_advanced',
@@ -21,7 +33,7 @@ $tabs = array(
 			<?php
 			foreach ($tabs as $tab)
 			{
-				echo $this->loadTemplate('tab', array('tab' => $tab));
+				echo $this->loadTemplate($tab, array('tab' => $tab));
 			}
 			?>
 

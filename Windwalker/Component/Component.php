@@ -10,7 +10,6 @@ namespace Windwalker\Component;
 
 use Windwalker\Controller\Controller;
 use Windwalker\DI\Container;
-use Windwalker\Helper\LanguageHelper;
 use Windwalker\Object\Object;
 
 /**

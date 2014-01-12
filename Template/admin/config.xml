@@ -51,7 +51,7 @@
     </fieldset>
     
     <fieldset name="item">
-        
+
         <field name="link_titles" type="list"
             description="JGLOBAL_LINKED_TITLES_DESC"
             label="JGLOBAL_LINKED_TITLES_LABEL"
@@ -60,7 +60,7 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        
+
         <field name="link_titles_in_list" type="list"
             description="COM_FLOWER_LINKED_TITLES_IN_LIST_DESC"
             label="COM_FLOWER_LINKED_TITLES_IN_LIST"
@@ -74,7 +74,7 @@
             description="JGLOBAL_SHOW_INTRO_DESC"
             label="JGLOBAL_SHOW_INTRO_LABEL"
             default="1"
-        >            
+        >
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>
@@ -130,10 +130,10 @@
             <option value="4">J4</option>
             <option value="5">J5</option>
         </field>
-        
-        
+
+
         <field type="spacer" hr="true" />
-        
+
 
         <field name="num_leading_articles" type="text"
             description="JGLOBAL_NUM_LEADING_ARTICLES_DESC"
@@ -179,7 +179,7 @@
             label="JGLOBAL_ARTICLE_ORDER_LABEL"
             default="a.created"
         >
-            
+
             <option value="a.created ">COM_FLOWER_CREATED</option>
             <option value="a.publish_up">COM_FLOWER_PUBLISH_UP</option>
             <option value="a.publish_down">COM_FLOWER_PUBLISHED_DOWN</option>
@@ -187,7 +187,7 @@
             <option value="a.title">JGLOBAL_TITLE</option>
             <option value="a.ordering">JGLOBAL_ORDERING</option>
         </field>
-        
+
         <field name="order_dir" type="list"
             label="COM_FLOWER_ORDER_DIR"
             default="DESC"
@@ -201,7 +201,7 @@
             label="JGLOBAL_PAGINATION_LABEL"
             default="1"
         >
-            
+
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
             <option value="2">JGLOBAL_AUTO</option>
@@ -215,20 +215,24 @@
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>
-        
+
     </fieldset>
 
-    <fieldset name="permissions"
-        description="JCONFIG_PERMISSIONS_DESC"
-        label="JCONFIG_PERMISSIONS_LABEL"
-    >
+	<fieldset
+		name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+		description="JCONFIG_PERMISSIONS_DESC"
+		>
 
-        <field name="rules" type="rules"
-            component="com_flower"
-            filter="rules"
-            validate="rules"
-            label="JCONFIG_PERMISSIONS_LABEL"
-            section="component" />
-    </fieldset>
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			class="inputbox"
+			validate="rules"
+			filter="rules"
+			component="com_flower"
+			section="component" />
+	</fieldset>
 
 </config>

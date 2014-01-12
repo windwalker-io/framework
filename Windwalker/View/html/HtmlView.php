@@ -82,6 +82,7 @@ class HtmlView extends AbstractHtmlView
 
 		$data = $this->data;
 
+		// View data
 		$data->view = new Data;
 		$data->view->prefix   = $this->prefix;
 		$data->view->option   = $this->option;
@@ -89,11 +90,15 @@ class HtmlView extends AbstractHtmlView
 		$data->view->viewItem = $this->viewItem;
 		$data->view->viewList = $this->viewList;
 
+		// Uri data
 		$uri = \JUri::getInstance();
 		$data->uri = new Data;
 		$data->uri->path = $uri->toString(array('path', 'query', 'fragment'));
 		$data->uri->base = \JUri::base(true);
 		$data->uri->root = \JUri::root(true);
+
+		// Asset data
+		$data->asset = $this->container->get('helper.asset');
 	}
 
 	/**

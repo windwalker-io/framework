@@ -14,15 +14,11 @@ use Windwalker\Data\Data;
  * @var $container Windwalker\DI\Container
  * @var $data      Windwalker\Data\Data
  * @var $grid      Windwalker\View\Helper\GridHelper
+ * @var $date      \JDate
  */
 $container = $this->getContainer();
 $grid      = $data->grid;
-
-// Prepare some API objects
-$app  = $container->get('app');
-$date = $container->get('date');
-$doc  = $container->get('document');
-$user = $container->get('user');
+$date      = $container->get('date');
 
 // Set order script.
 $grid->registerTableSort();
