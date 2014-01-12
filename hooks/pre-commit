@@ -27,6 +27,8 @@ echo "Site copied" ;
 rm -rf Template/component
 mkdir -p Template/component
 
+
+# Move admin subsystem folders
 cp -rf Template/admin/ Template/component/init.administrator
 
 mkdir Template/component/subsystem.administrator
@@ -35,9 +37,10 @@ mv Template/component/init.administrator/model      Template/component/subsystem
 mv Template/component/init.administrator/view       Template/component/subsystem.administrator
 mv Template/component/init.administrator/table      Template/component/subsystem.administrator
 mv Template/component/init.administrator/sql        Template/component/subsystem.administrator
-mv Template/component/init.administrator/image      Template/component/subsystem.administrator
+mv Template/component/init.administrator/languages  Template/component/subsystem.administrator
 
 
+# Move site subsystem folders
 cp -rf Template/site/ Template/component/init.site
 
 mkdir Template/component/subsystem.site
