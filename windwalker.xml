@@ -8,15 +8,16 @@
 	<author>Asika</author>
 	<authorEmail>asika32764@gmail.com</authorEmail>
 	<authorUrl>http://asikart.com</authorUrl>
-	<version>3.3.8</version>
+	<version>3.4.0</version>
 	<newversion>2.0.0-alpha</newversion>
 	<description>LIB_WINDWALKER_XML_DESC</description>
 
 	<files>
 		<!-- 2.0 -->
-		<folder>Windwalker</folder>
-		<folder>Template</folder>
 		<folder>language</folder>
+		<folder>Resource</folder>
+		<folder>Template</folder>
+		<folder>Windwalker</folder>
 		<file>windwalker.xml</file>
 		<file>index.html</file>
 

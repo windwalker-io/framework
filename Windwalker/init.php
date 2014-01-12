@@ -33,3 +33,10 @@ $container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);
 $asset = $container->get('helper.asset');
 
 $asset->windwalker();
+
+// Load language
+$lang = JFactory::getLanguage();
+$lang->load('lib_windwalker', JPATH_BASE, null, false, false)
+|| $lang->load('lib_windwalker', WINDWALKER, null, false, false)
+|| $lang->load('lib_windwalker', JPATH_BASE, $lang->getDefault(), false, false)
+|| $lang->load('lib_windwalker', WINDWALKER, $lang->getDefault(), false, false);
