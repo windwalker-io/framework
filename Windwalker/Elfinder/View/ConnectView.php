@@ -45,7 +45,7 @@ class ConnectView extends AbstractJsonView
 		// Set E_ALL for debuging
 		error_reporting($config->get('error_reporting', 0));
 
-		$elfinder_path = AKPATH_ASSETS . '/js/elfinder/php/';
+		$elfinder_path = WINDWALKER . '/assets/js/elfinder/php/';
 
 		include_once $elfinder_path . 'elFinderConnector.class.php';
 		include_once $elfinder_path . 'elFinder.class.php';
