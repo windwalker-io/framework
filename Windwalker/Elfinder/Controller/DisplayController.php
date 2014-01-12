@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Controller\Elfinder;
+namespace Windwalker\Elfinder\Controller;
 
 use Windwalker\Controller\Controller;
 use Windwalker\Elfinder\View\DisplayView;

@@ -57,7 +57,7 @@ class DisplayView extends AbstractHtmlView
 
 		$com_option = $this->option ? : $input->get('option');
 		$config     = new JRegistry($this->data->config);
-		
+
 		// Script
 		$this->displayScript($com_option, $config);
 

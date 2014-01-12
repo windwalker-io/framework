@@ -1,12 +1,12 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Controller\Elfinder;
+namespace Windwalker\Elfinder\Controller;
 
 use Windwalker\Controller\Controller;
 use Windwalker\Elfinder\View\ConnectView;

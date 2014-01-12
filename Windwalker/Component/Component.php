@@ -199,6 +199,11 @@ class Component
 		// Register form and fields
 		\JForm::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
 		\JForm::addFormPath(WINDWALKER_SOURCE . '/Form/Forms');
+
+		// Register elFinder controllers
+		// @TODO: Should use event listener
+		$this->registerTask('finder.elfinder.display', '\\Windwalker\\Elfinder\\Controller\\DisplayController');
+		$this->registerTask('finder.elfinder.connect', '\\Windwalker\\Elfinder\\Controller\\ConnectController');
 	}
 
 	/**
