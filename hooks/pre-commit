@@ -23,6 +23,7 @@ mkdir Template/site
 cp -rf ../../components/com_$COM/* Template/site
 echo "Site copied" ;
 
+
 # Set Template
 rm -rf Template/component
 mkdir -p Template/component

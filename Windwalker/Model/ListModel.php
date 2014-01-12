@@ -189,7 +189,7 @@ class ListModel extends FormModel
 	protected function getListQuery()
 	{
 		$query       = $this->db->getQuery(true);
-		$queryHelper = $this->container->get('model.sakuras.helper.query');
+		$queryHelper = $this->container->get('model.' . $this->getName() . '.helper.query');
 
 		// Build filter query
 		$this->processFilters($query);

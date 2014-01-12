@@ -27,9 +27,7 @@ class XulEngine extends AbstractEngine
 	/**
 	 * @var  array  Property handler.
 	 */
-	protected $renderers = array(
-		'control:form' => 'FlowerXulControlForm'
-	);
+	protected $renderers = array();
 
 	/**
 	 * execute
