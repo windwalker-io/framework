@@ -127,21 +127,17 @@ $grid->registerTableSort();
 
 		<!--TITLE-->
 		<td class="n/owrap has-context quick-edit-wrap">
+			<div class="item-title">
+				<!-- Checkout -->
+				<?php echo $grid->checkoutButton(); ?>
 
-			<div class="pull-left fltlft">
+				<!-- Title -->
+				<?php echo $grid->editTitle(); ?>
+			</div>
 
-				<div class="item-title">
-					<!-- Checkout -->
-					<?php echo $grid->checkoutButton(); ?>
-
-					<!-- Title -->
-					<?php echo $grid->editTitle(); ?>
-				</div>
-
-				<!-- Sub Title -->
-				<div class="small">
-					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-				</div>
+			<!-- Sub Title -->
+			<div class="small">
+				<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 			</div>
 		</td>
 
