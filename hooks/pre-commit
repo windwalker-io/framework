@@ -37,7 +37,7 @@ mv Template/component/init.administrator/model      Template/component/subsystem
 mv Template/component/init.administrator/view       Template/component/subsystem.administrator
 mv Template/component/init.administrator/table      Template/component/subsystem.administrator
 mv Template/component/init.administrator/sql        Template/component/subsystem.administrator
-mv Template/component/init.administrator/languages  Template/component/subsystem.administrator
+mv Template/component/init.administrator/language   Template/component/subsystem.administrator
 
 
 # Move site subsystem folders
