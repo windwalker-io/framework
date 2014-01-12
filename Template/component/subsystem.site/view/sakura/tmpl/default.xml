@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="COM_FLOWER_SAKURA_VIEW_DEFAULT_TITLE" option="COM_FLOWER_SAKURA_VIEW_DEFAULT_OPTION">
+        <help
+            key = "JHELP_MENUS_MENU_ITEM_ARTICLE_SINGLE_ARTICLE"
+        />
+        <message>
+            <![CDATA[COM_FLOWER_ITEM_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+
+    <!-- Add fields to the request variables for the layout. -->
+    <fields name="request">
+        <fieldset name="request"
+            addfieldpath="/administrator/components/com_flower/model/field">
+
+            <field name="id" type="sakura_modal"
+                label="COM_FLOWER_SELECT_SAKURA"
+                required="true"
+                description="CCOM_FLOWER_SELECT_SAKURA_DESC"
+            />
+        </fieldset>
+    </fields>
+
+    <!-- Add fields to the parameters object for the layout. -->
+    <fields name="params">
+
+        <!-- Basic options. -->
+        <fieldset name="basic"
+            label="COM_FLOWER_ITEM_SETTINGS">
+
+            <field name="link_titles" type="list"
+                description="JGLOBAL_LINKED_TITLES_DESC"
+                label="JGLOBAL_LINKED_TITLES_LABEL"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            
+            <field name="link_titles_in_list" type="list"
+                description="COM_FLOWER_LINKED_TITLES_IN_LIST_DESC"
+                label="COM_FLOWER_LINKED_TITLES_IN_LIST"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field name="show_intro" type="list"
+                description="JGLOBAL_SHOW_INTRO_DESC"
+                label="JGLOBAL_SHOW_INTRO_LABEL"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+
+            <field name="show_noauth" type="list"
+                description="JGLOBAL_SHOW_UNAUTH_LINKS_DESC"
+                label="JGLOBAL_SHOW_UNAUTH_LINKS_LABEL"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+        </fieldset>
+    </fields>
+</metadata>

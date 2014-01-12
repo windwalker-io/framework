@@ -8,6 +8,7 @@
 
 namespace Windwalker\Model;
 
+use JArrayHelper;
 use JDatabaseQuery;
 use JFactory;
 use JPagination;
@@ -15,6 +16,7 @@ use JPluginHelper;
 
 use Joomla\DI\Container as JoomlaContainer;
 
+use JTable;
 use Windwalker\Helper\PathHelper;
 use Windwalker\Helper\ProfilerHelper;
 use Windwalker\Model\Filter\FilterHelper;
@@ -93,19 +95,19 @@ class ListModel extends FormModel
 	 * @param   array              $config    An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 * @param   JoomlaContainer    $container Service container.
 	 * @param   \JRegistry         $state     The model state.
-	 * @param   \JDatabaseDriver   $db        The database adpater.
+	 * @param   \JDatabaseDriver   $db        The database adapter.
 	 */
 	public function __construct($config = array(), JoomlaContainer $container = null, \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
 		// These need before parent constructor.
 		if (!$this->orderCol)
 		{
-			$this->orderCol = \JArrayHelper::getValue($config, 'order_column', null);
+			$this->orderCol = JArrayHelper::getValue($config, 'order_column', null);
 		}
 
 		if (!$this->filterFields)
 		{
-			$this->filterFields = \JArrayHelper::getValue($config, 'filter_fields', array());
+			$this->filterFields = JArrayHelper::getValue($config, 'filter_fields', array());
 
 			$this->filterFields[] = '*';
 		}
@@ -113,7 +115,7 @@ class ListModel extends FormModel
 		// Guess name for container
 		if (!$this->name)
 		{
-			$this->name = \JArrayHelper::getValue($config, 'name', $this->getName());
+			$this->name = JArrayHelper::getValue($config, 'name', $this->getName());
 		}
 
 		$container = $container ? : $this->getContainer();

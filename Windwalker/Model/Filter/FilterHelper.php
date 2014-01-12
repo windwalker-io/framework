@@ -67,7 +67,7 @@ class FilterHelper extends AbstractFilterHelper
 		 */
 		return function(\JDatabaseQuery $query, $field, $value)
 		{
-			if ($value !== '' && $value != '*')
+			if ($value !== '' && $value !== null && $value !== false && $value != '*')
 			{
 				$query->where($query->quoteName($field) . ' = ' . $query->quote($value));
 			}

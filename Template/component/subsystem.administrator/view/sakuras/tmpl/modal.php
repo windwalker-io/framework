@@ -43,22 +43,22 @@ $function = $input->get('function', 'jSelectArticle');
 				</th>
 
 				<!--CATEGORY-->
-				<th width="10%" class="center">
+				<th class="center">
 					<?php echo $grid->sortTitle('JCATEGORY', 'category.title'); ?>
 				</th>
 
 				<!--ACCESS VIEW LEVEL-->
-				<th width="5%" class="center">
+				<th class="center">
 					<?php echo $grid->sortTitle('JGRID_HEADING_ACCESS', 'viewlevel.title'); ?>
 				</th>
 
 				<!--CREATED-->
-				<th width="10%" class="center">
+				<th class="center">
 					<?php echo $grid->sortTitle('JDATE', 'sakura.created'); ?>
 				</th>
 
 				<!--LANGUAGE-->
-				<th width="5%" class="center">
+				<th class="center">
 					<?php echo $grid->sortTitle('JGRID_HEADING_LANGUAGE', 'lang.title'); ?>
 				</th>
 
@@ -98,11 +98,6 @@ $function = $input->get('function', 'jSelectArticle');
 								>
 								<?php echo $this->escape($item->title); ?>
 							</a>
-						</div>
-
-						<!-- Sub Title -->
-						<div class="small">
-							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 						</div>
 					</td>
 

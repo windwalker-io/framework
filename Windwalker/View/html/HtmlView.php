@@ -68,6 +68,9 @@ class HtmlView extends AbstractHtmlView
 	 */
 	protected function setTitle($title = null, $icons = 'stack')
 	{
+		$doc = $this->container->get('document');
+		$doc->setTitle($title);
+
 		\JToolbarHelper::title($title, $icons);
 	}
 
