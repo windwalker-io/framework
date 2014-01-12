@@ -9,6 +9,7 @@
 namespace Windwalker\Controller\Elfinder;
 
 use Windwalker\Controller\Controller;
+use Windwalker\Elfinder\View\DisplayView;
 
 /**
  * Class DisplayerController
@@ -20,17 +21,21 @@ class DisplayController extends Controller
 	/**
 	 * doExecute
 	 *
+	 * @throws \UnexpectedValueException
 	 * @return mixed
 	 */
 	protected function doExecute()
 	{
-		$viewName = '\\Windwalker\\Elfinder\\View\\DisplayView';
+		$config = array(
+			'option' => $this->input->get('option'),
+			'name'   => 'elfinder'
+		);
 
-		$view = $this->container->buildObject($viewName);
+		$view = new DisplayView(null, $this->container, $config);
 
 		if (!($view instanceof \JView))
 		{
-			throw new \UnexpectedValueException(sprintf('Elfinder view: %s not found.', $viewName));
+			throw new \UnexpectedValueException(sprintf('Elfinder view: %s not found.', 'DisplayView'));
 		}
 
 		$view->getData()->config = array();

@@ -67,7 +67,7 @@ abstract class AbstractJsonView extends AbstractView
 	 * @since   12.1
 	 * @throws  \RuntimeException
 	 */
-	public function render()
+	public function doRender()
 	{
 		return $this->data->toString('json');
 	}

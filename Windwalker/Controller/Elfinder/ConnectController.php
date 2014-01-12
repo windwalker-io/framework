@@ -9,6 +9,7 @@
 namespace Windwalker\Controller\Elfinder;
 
 use Windwalker\Controller\Controller;
+use Windwalker\Elfinder\View\ConnectView;
 
 /**
  * Class ConnnectController
@@ -26,13 +27,11 @@ class ConnectController extends Controller
 	 */
 	protected function doExecute()
 	{
-		$viewName = '\\Windwalker\\Elfinder\\View\\ConnectView';
-
-		$view = $this->container->buildObject($viewName);
+		$view = new ConnectView(null, $this->container);
 
 		if (!($view instanceof \JView))
 		{
-			throw new \UnexpectedValueException(sprintf('Elfinder view: %s not found.', $viewName));
+			throw new \UnexpectedValueException(sprintf('Elfinder view: %s not found.', 'ConnectView'));
 		}
 
 		$view->setConfig(array());
@@ -40,4 +39,3 @@ class ConnectController extends Controller
 		return $view->render();
 	}
 }
- 

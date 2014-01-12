@@ -71,7 +71,7 @@ abstract class AbstractHtmlView extends AbstractView
 			$this->engine = $config['engine'];
 		}
 
-		parent::__construct($model);
+		parent::__construct($model, $container, $config);
 
 		// Setup dependencies.
 		$this->paths = $paths ? : $this->loadPaths();

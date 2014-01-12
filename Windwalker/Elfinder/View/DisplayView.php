@@ -8,6 +8,8 @@
 
 namespace Windwalker\Elfinder\View;
 
+use JRegistry;
+use JURI;
 use Windwalker\View\Html\AbstractHtmlView;
 
 /**
@@ -54,8 +56,8 @@ class DisplayView extends AbstractHtmlView
 		$lang_code  = str_replace('-', '_', $lang_code);
 
 		$com_option = $this->option ? : $input->get('option');
-		$config     = new \JRegistry($this->data->config);
-
+		$config     = new JRegistry($this->data->config);
+		
 		// Script
 		$this->displayScript($com_option, $config);
 
@@ -64,7 +66,7 @@ class DisplayView extends AbstractHtmlView
 		$modal      = ($input->get('tmpl') == 'component') ? : false;
 		$root       = $config->get('root', $input->get('root', '/'));
 		$start_path = $config->get('start_path', $input->get('start_path', '/'));
-		$site_root  = \JURI::root(true) . '/';
+		$site_root  = JURI::root(true) . '/';
 
 		$toolbar = $config->get('toolbar', $this->defaultToolbar);
 		$toolbar = json_encode($toolbar);

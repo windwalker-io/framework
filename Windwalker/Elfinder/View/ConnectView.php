@@ -8,6 +8,11 @@
 
 namespace Windwalker\Elfinder\View;
 
+use elFinder;
+use elFinderConnector;
+use JPath;
+use JURI;
+use Windwalker\Registry\Registry;
 use Windwalker\View\Json\AbstractJsonView;
 
 /**
@@ -29,13 +34,13 @@ class ConnectView extends AbstractJsonView
 	 *
 	 * @return string|void
 	 */
-	public function render()
+	public function doRender()
 	{
 		// Init some API objects
 		// ================================================================================
 		$container  = $this->getContainer();
 		$input      = $container->get('input');
-		$config     = new \JRegistry($this->config);
+		$config     = new Registry($this->config);
 
 		// Set E_ALL for debuging
 		error_reporting($config->get('error_reporting', 0));
@@ -81,13 +86,13 @@ class ConnectView extends AbstractJsonView
 					'driver'        => 'LocalFileSystem',
 
 					// Path to files (REQUIRED)
-					'path'          => \JPath::clean(JPATH_ROOT . '/' . $root, '/'),
-					'startPath'     => \JPath::clean(JPATH_ROOT . '/' . $root . '/' . $start_path . '/'),
-					'URL'           => \JPath::clean(\JURI::root(true) . '/' . $root . '/' . $start_path, '/'), // URL to files (REQUIRED)
-					'tmbPath'       => \JPath::clean(JPATH_ROOT . '/cache/windwalker-finder-thumb'),
-					'tmbURL'        => \JURI::root(true) . '/cache/windwalker-finder-thumb',
+					'path'          => JPath::clean(JPATH_ROOT . '/' . $root, '/'),
+					'startPath'     => JPath::clean(JPATH_ROOT . '/' . $root . '/' . $start_path . '/'),
+					'URL'           => JPath::clean(JURI::root(true) . '/' . $root . '/' . $start_path, '/'), // URL to files (REQUIRED)
+					'tmbPath'       => JPath::clean(JPATH_ROOT . '/cache/windwalker-finder-thumb'),
+					'tmbURL'        => JURI::root(true) . '/cache/windwalker-finder-thumb',
 					// 'tmbSize'       => 128,
-					'tmp'           => \JPath::clean(JPATH_ROOT . '/cache/windwalker-finder-temp'),
+					'tmp'           => JPath::clean(JPATH_ROOT . '/cache/windwalker-finder-temp'),
 
 					// Disable and hide dot starting files (OPTIONAL)
 					'accessControl' => 'access',
@@ -106,7 +111,7 @@ class ConnectView extends AbstractJsonView
 		}
 
 		// Run elFinder
-		$connector = new \elFinderConnector(new \elFinder($opts));
+		$connector = new elFinderConnector(new elFinder($opts));
 		$connector->run();
 
 		exit();
