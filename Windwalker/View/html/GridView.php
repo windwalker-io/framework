@@ -239,7 +239,8 @@ class GridView extends ListHtmlView
 			'view_name' => $this->getName(),
 			'view_item' => $this->viewItem,
 			'view_list' => $this->viewList,
-			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering'
+			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering',
+			'order_table_id' => $this->viewItem . 'List'
 		);
 
 		$config['fields'] = !empty($config['fields']) ? $config['fields'] : $this->configureFields();

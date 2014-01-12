@@ -6,6 +6,9 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+JHtmlBootstrap::tooltip();
+JHtmlFormbehavior::chosen('select');
+
 /**
  * Prepare data for this template.
  *

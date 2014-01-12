@@ -111,7 +111,7 @@ class GridHelper
 	 *
 	 * @return bool
 	 */
-	public function registerTableSort($task = null, $tableId = 'TableList')
+	public function registerTableSort($task = null, $tableId = null)
 	{
 		if (!$this->state->get('list.saveorder', false))
 		{
@@ -121,6 +121,7 @@ class GridHelper
 		$option    = $this->config->get('option');
 		$task      = $task ? : $this->config->get('view_list') . '.state.reorder';
 		$listDirn  = $this->state->get('list.direction');
+		$tableId   = $tableId ? : $this->config->get('order_table_id', 'TableList');
 
 		$saveOrderingUrl = 'index.php?option=' . $option . '&task=' . $task . '&tmpl=component';
 

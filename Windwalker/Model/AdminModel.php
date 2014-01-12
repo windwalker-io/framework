@@ -8,7 +8,10 @@
 
 namespace Windwalker\Model;
 
+use JFactory;
+use JFilterOutput;
 use Joomla\DI\Container as JoomlaContainer;
+use JTable;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -44,6 +47,30 @@ abstract class AdminModel extends CrudModel
 		{
 			$this->reorderConditions = \JArrayHelper::getValue($config, 'reorder_conditions', array('catid'));
 		}
+	}
+
+	/**
+	 * save
+	 *
+	 * @param array $data
+	 *
+	 * @return  bool
+	 */
+	public function save($data)
+	{
+		$result = parent::save($data);
+
+		if ($result && $this->state->get('order.position') == 'first')
+		{
+			// Do reorder
+			$pk = $this->state->get($this->getName() . '.id');
+
+			$this->reorder(array($pk), array(0));
+
+			$this->state->set('order.position', null);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -206,6 +233,114 @@ abstract class AdminModel extends CrudModel
 	}
 
 	/**
+	 * Prepare and sanitise the table data prior to saving.
+	 *
+	 * @param   JTable  $table  A reference to a JTable object.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.2
+	 */
+	protected function prepareTable($table)
+	{
+		$date = JFactory::getDate('now', JFactory::getConfig()->get('offset'));
+		$user = $this->container->get('user');
+
+		// Alias
+		if (property_exists($table, 'alias'))
+		{
+			if (!$table->alias)
+			{
+				$table->alias = JFilterOutput::stringURLSafe(trim($table->title));
+			}
+			else
+			{
+				$table->alias = JFilterOutput::stringURLSafe(trim($table->alias));
+			}
+
+			if (!$table->alias)
+			{
+				$table->alias = JFilterOutput::stringURLSafe($date->toSql(true));
+			}
+		}
+
+		// Created date
+		if (property_exists($table, 'created') && !$table->created)
+		{
+			$table->created = $date->toSql(true);
+		}
+
+		// Publish_up date
+		if (property_exists($table, 'publish_up') && !$table->publish_up)
+		{
+			$table->publish_up = $date->toSql(true);
+		}
+
+		// Modified date
+		if (property_exists($table, 'modified') && $table->id)
+		{
+			$table->modified = $date->toSql(true);
+		}
+
+		// Created user
+		if (property_exists($table, 'created_by') && !$table->created_by)
+		{
+			$table->created_by = $user->get('id');
+		}
+
+		// Modified user
+		if (property_exists($table, 'modified_by') && $table->id)
+		{
+			$table->modified_by = $user->get('id');
+		}
+
+		// Set Ordering or Nested ordering
+		if (property_exists($table, 'ordering'))
+		{
+			if (empty($table->id))
+			{
+				$this->setOrderPosition($table);
+			}
+		}
+	}
+
+	/**
+	 * Method to set new item ordering as first or last.
+	 *
+	 * @param   JTable $table    Item table to save.
+	 * @param   string $position 'first' or other are last.
+	 *
+	 * @return  void
+	 */
+	public function setOrderPosition($table, $position = null)
+	{
+		if ($position == 'first')
+		{
+			if (!$table->ordering)
+			{
+				$table->ordering = 1;
+
+				$this->state->set('order.position', 'first');
+			}
+		}
+		else
+		{
+			// Set ordering to the last item if not set
+			if (empty($table->ordering))
+			{
+				$query = $this->db->getQuery(true)
+					->select('MAX(ordering)')
+					->from($table->getTableName())
+					->where($this->getReorderConditions($table));
+
+				$max = $this->db->setQuery($query)->loadResult();
+
+				$table->ordering = $max + 1;
+			}
+		}
+	}
+
+	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
 	 * @param   JTable  $table  A JTable object.
@@ -224,7 +359,7 @@ abstract class AdminModel extends CrudModel
 		{
 			if (property_exists($table, $field))
 			{
-				$condition = $this->db->quoteName($field) . '=' . $this->db->quote($table->$field);
+				$condition[] = $this->db->quoteName($field) . '=' . $this->db->quote($table->$field);
 			}
 		}
 

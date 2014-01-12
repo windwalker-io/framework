@@ -16,6 +16,7 @@ use JPluginHelper;
 use Joomla\DI\Container as JoomlaContainer;
 
 use Windwalker\Helper\PathHelper;
+use Windwalker\Helper\ProfilerHelper;
 use Windwalker\Model\Filter\FilterHelper;
 use Windwalker\Model\Filter\FilterProvider;
 use Windwalker\Model\Filter\SearchHelper;
@@ -224,6 +225,9 @@ class ListModel extends FormModel
 
 		// Build Selected tables query
 		$queryHelper->registerQueryTables($query);
+
+		// Debug
+		ProfilerHelper::mark((string) $query);
 
 		return $query;
 	}
@@ -439,6 +443,10 @@ class ListModel extends FormModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		// Set default ordering
+		$this->state->set('list.direction', $direction);
+		$this->state->set('list.ordering',  $ordering);
+
 		// If the context is set, assume that stateful lists are used.
 		if ($this->context)
 		{

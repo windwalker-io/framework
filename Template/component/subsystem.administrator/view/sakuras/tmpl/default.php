@@ -8,6 +8,11 @@
 
 use Windwalker\View\Layout\FileLayout;
 
+JHtmlBootstrap::tooltip();
+JHtmlFormbehavior::chosen('select');
+JHtmlBehavior::multiselect('adminForm');
+JHtmlDropdown::init();
+
 /**
  * Prepare data for this template.
  *

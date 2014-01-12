@@ -168,6 +168,30 @@ class ToolbarHelper
 	}
 
 	/**
+	 * Writes a common 'delete' button for a list of records.
+	 *
+	 * @param   string  $task  An override for the task.
+	 * @param   string  $alt   An override for the alt text.
+	 * @param   string  $msg   Postscript for the 'are you sure' message.
+	 *
+	 * @return  void
+	 */
+	public static function deleteList($task = 'remove', $alt = 'JTOOLBAR_DELETE', $msg = '')
+	{
+		$bar = JToolbar::getInstance('toolbar');
+
+		// Add a delete button.
+		if ($msg)
+		{
+			$bar->appendButton('Confirm', $msg, 'delete', $alt, $task, true);
+		}
+		else
+		{
+			$bar->appendButton('Standard', 'delete', $alt, $task, true);
+		}
+	}
+
+	/**
 	 * duplicate
 	 *
 	 * @param string $task

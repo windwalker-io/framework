@@ -116,8 +116,5 @@ class ReorderController extends AbstractUpdateStateController
 	public function redirect($url, $msg = null, $type = 'message')
 	{
 		jexit($msg);
-
-		// parent::redirect($url, $msg, $type);
 	}
-
 }

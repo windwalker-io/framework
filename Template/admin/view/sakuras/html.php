@@ -84,9 +84,15 @@ class FlowerViewSakurasHtml extends GridView
 	 *
 	 * @return  array
 	 */
-	protected function configToolbar($buttonSet = array(), $canDo = null)
+	protected function configureToolbar($buttonSet = array(), $canDo = null)
 	{
 		$buttonSet = parent::configureToolbar($buttonSet, $canDo);
+
+		if (JDEBUG)
+		{
+			$buttonSet['trash']['access']  = false;
+			$buttonSet['delete']['access'] = true;
+		}
 
 		return $buttonSet;
 	}

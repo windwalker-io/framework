@@ -2,7 +2,10 @@
 
 namespace Windwalker\Model;
 
+use JFactory;
+use JFilterOutput;
 use Joomla\DI\Container as JoomlaContainer;
+use JTable;
 
 /**
  * Class CrudModel
@@ -170,7 +173,9 @@ class CrudModel extends FormModel
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array  $data  The form data.
+	 * @param   array $data The form data.
+	 *
+	 * @throws \Exception
 	 *
 	 * @return  boolean  True on success, False on error.
 	 *
@@ -257,7 +262,7 @@ class CrudModel extends FormModel
 	 */
 	protected function prepareTable($table)
 	{
-		// Derived class will provide its own implementation if required.
+		// Please override this method.
 	}
 
 	/**
