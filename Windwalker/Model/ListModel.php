@@ -17,6 +17,7 @@ use JPluginHelper;
 use Joomla\DI\Container as JoomlaContainer;
 
 use JTable;
+use Windwalker\Debugger\Debugger;
 use Windwalker\Helper\PathHelper;
 use Windwalker\Helper\ProfilerHelper;
 use Windwalker\Model\Filter\FilterHelper;
@@ -278,6 +279,7 @@ class ListModel extends FormModel
 	protected function getStoreId($id = '')
 	{
 		// Add the list state to the store id.
+		$id .= ':' . json_encode($this->filterFields);
 		$id .= ':' . json_encode($this->state);
 
 		return md5($this->context . ':' . $id);

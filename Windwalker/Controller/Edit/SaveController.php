@@ -172,7 +172,7 @@ class SaveController extends AbstractItemController
 		$this->releaseEditId($this->context, $this->recordId);
 		$this->app->setUserState($this->context . '.data', null);
 
-		$this->app->redirect(\JRoute::_($this->getRedirectListUrl(), false));
+		$this->redirectToList();
 
 		return $return;
 	}

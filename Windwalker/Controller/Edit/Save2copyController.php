@@ -36,4 +36,16 @@ class Save2copyController extends ApplyController
 		// Reset the ID and then treat the request as for Apply.
 		$this->data[$this->key] = 0;
 	}
+
+	/**
+	 * doExecute
+	 *
+	 * @return  mixed
+	 */
+	protected function doExecute()
+	{
+		$this->input->set('jform', $this->data);
+
+		return $this->fetch($this->prefix, $this->name . '.edit.save', $this->input);
+	}
 }

@@ -13,6 +13,16 @@ use Windwalker\Model\Exception\ValidateFailException;
 class Save2newController extends SaveController
 {
 	/**
+	 * doExecute
+	 *
+	 * @return  mixed
+	 */
+	protected function doExecute()
+	{
+		return $this->fetch($this->prefix, $this->name . '.edit.save');
+	}
+
+	/**
 	 * postExecute
 	 *
 	 * @param null $return
@@ -26,7 +36,9 @@ class Save2newController extends SaveController
 		$this->app->setUserState($this->context . '.data', null);
 
 		// Redirect back to the edit screen.
-		$this->app->redirect(\JRoute::_($this->getRedirectItemUrl(null, $this->urlVar), false));
+		$this->input->set('layout', 'edit');
+
+		$this->redirectToItem();
 
 		return $return;
 	}
