@@ -330,8 +330,14 @@ abstract class AdminModel extends CrudModel
 			{
 				$query = $this->db->getQuery(true)
 					->select('MAX(ordering)')
-					->from($table->getTableName())
-					->where($this->getReorderConditions($table));
+					->from($table->getTableName());
+
+				$condition = $this->getReorderConditions($table);
+
+				if (!empty($condition))
+				{
+					$query->where($this->getReorderConditions($table));
+				}
 
 				$max = $this->db->setQuery($query)->loadResult();
 

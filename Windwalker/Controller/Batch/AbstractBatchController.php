@@ -1,4 +1,10 @@
 <?php
+/**
+ * Part of Windwalker project.
+ *
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
+ */
 
 namespace Windwalker\Controller\Batch;
 
@@ -93,7 +99,8 @@ abstract class AbstractBatchController extends AbstractListController
 	/**
 	 * doBatch
 	 *
-	 * @return bool
+	 * @throws \Exception
+	 * @return array
 	 */
 	protected function doBatch()
 	{
@@ -178,7 +185,7 @@ abstract class AbstractBatchController extends AbstractListController
 	/**
 	 * postBatch
 	 *
-	 * @param $result
+	 * @param array $result
 	 *
 	 * @return mixed
 	 */

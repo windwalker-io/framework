@@ -163,7 +163,7 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	 *
 	 * @return mixed
 	 */
-	public function fetch($prefix, $name, $input = null)
+	public function fetch($prefix, $name, $input = array())
 	{
 		if (!($input instanceof JInput))
 		{

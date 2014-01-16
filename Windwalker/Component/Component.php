@@ -254,7 +254,7 @@ class Component
 		$user	= $this->container->get('user');
 		$result	= new Object;
 
-		$path = JPATH_ADMINISTRATOR . '/components/com_' . $this->name . '/access.xml';
+		$path = JPATH_ADMINISTRATOR . '/components/' . strtolower($this->option) . '/access.xml';
 
 		if (!$id && !$categoryId)
 		{

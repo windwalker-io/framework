@@ -8,11 +8,15 @@
 
 namespace Windwalker\Controller\Ajax;
 
+use JForm;
+use JLoader;
+use JTable;
 use Windwalker\Controller\DisplayController;
 use Windwalker\Helper\ArrayHelper;
 use Windwalker\Helper\LanguageHelper;
 use Windwalker\Model\CrudModel;
 use Windwalker\Model\Exception\ValidateFailException;
+use Windwalker\Registry\Registry;
 
 /**
  * Class QuickaddController
@@ -30,7 +34,7 @@ class QuickaddController extends DisplayController
 	{
 		// Init Variables
 		$data   = $this->input->get($this->input->get('formctrl'), array(), 'array');
-		$result = new \JRegistry;
+		$result = new Registry;
 		$result->set('Result', false);
 
 		$model_name = $this->input->get('model_name');
@@ -38,10 +42,10 @@ class QuickaddController extends DisplayController
 		$extension  = $this->input->get('extension');
 
 		// Include Needed Classes
-		\JLoader::registerPrefix(ucfirst($component), JPATH_BASE . "/components/com_{$component}");
-		\JForm::addFormPath(JPATH_BASE . "/components/com_{$component}/models/forms");
-		\JForm::addFieldPath(JPATH_BASE . "/components/com_{$component}/models/fields");
-		\JTable::addIncludePath(JPATH_BASE . "/components/com_{$component}/tables");
+		JLoader::registerPrefix(ucfirst($component), JPATH_BASE . "/components/com_{$component}");
+		JForm::addFormPath(JPATH_BASE . "/components/com_{$component}/models/forms");
+		JForm::addFieldPath(JPATH_BASE . "/components/com_{$component}/models/fields");
+		JTable::addIncludePath(JPATH_BASE . "/components/com_{$component}/tables");
 		LanguageHelper::loadLanguage($extension, null);
 
 		// Get Model
@@ -61,7 +65,6 @@ class QuickaddController extends DisplayController
 			$fields_name = $model->getFieldsName();
 			$data        = ArrayHelper::pivotToTwoDimension($data, $fields_name);
 		}
-
 
 		// Check for validation errors.
 		try
