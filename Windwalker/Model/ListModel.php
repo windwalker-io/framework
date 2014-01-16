@@ -522,6 +522,10 @@ class ListModel extends FormModel
 				}
 			}
 
+			// Fill the limits and start
+			$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'uint');
+			$this->state->set('list.limit', $limit);
+
 			$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
 			$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
 			$this->state->set('list.start', $limitstart);
