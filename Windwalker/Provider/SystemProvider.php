@@ -72,7 +72,10 @@ class SystemProvider implements ServiceProviderInterface
 		);
 
 		// Helpers
-		$container->alias('helper.asset', '\\Windwalker\\Helper\\AssetHelper')
-			->buildSharedObject('\\Windwalker\\Helper\\AssetHelper');
+		if (\JFactory::getApplication() instanceof \JApplicationCms)
+		{
+			$container->alias('helper.asset', '\\Windwalker\\Helper\\AssetHelper')
+				->buildSharedObject('\\Windwalker\\Helper\\AssetHelper');
+		}
 	}
 }

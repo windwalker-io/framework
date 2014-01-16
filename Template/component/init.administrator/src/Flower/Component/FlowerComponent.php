@@ -41,6 +41,11 @@ abstract class FlowerComponent extends Component
 
 		LanguageHelper::loadAll($lang->getTag(), $this->option);
 
+		// Load asset
+		$asset = $this->container->get('helper.asset');
+
+		$asset->windwalker();
+
 		parent::prepare();
 	}
 
