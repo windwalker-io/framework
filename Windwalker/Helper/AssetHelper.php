@@ -22,9 +22,16 @@ class AssetHelper implements ContainerAwareInterface
 	/**
 	 * Property paths.
 	 *
-	 * @var string
+	 * @var \SplPriorityQueue
 	 */
-	protected $paths;
+	protected $paths = null;
+
+	/**
+	 * Property cache.
+	 *
+	 * @var  array
+	 */
+	protected $cache = array();
 
 	/**
 	 * Property name.
@@ -69,7 +76,10 @@ class AssetHelper implements ContainerAwareInterface
 	protected $jquery = false;
 
 	/**
-	 * @param $paths
+	 * Constructor.
+	 *
+	 * @param string             $name
+	 * @param \SplPriorityQueue  $paths
 	 */
 	public function __construct($name = 'windwalker', $paths = null)
 	{
@@ -354,6 +364,8 @@ class AssetHelper implements ContainerAwareInterface
 			return false;
 		}
 
+		$foundpath = str_replace(array('/', '\\'), '/', $foundpath);
+
 		// Get SUM
 		if (!JDEBUG)
 		{
@@ -378,7 +390,7 @@ class AssetHelper implements ContainerAwareInterface
 		}
 		else
 		{
-			$sum = md5(uniqid());
+			$sum = null;
 		}
 
 		// Build path

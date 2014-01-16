@@ -334,7 +334,8 @@ abstract class AdminModel extends CrudModel
 
 				$condition = $this->getReorderConditions($table);
 
-				if (!empty($condition))
+				// Condition should be an array.
+				if (count($condition))
 				{
 					$query->where($this->getReorderConditions($table));
 				}

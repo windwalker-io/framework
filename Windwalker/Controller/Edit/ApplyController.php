@@ -36,8 +36,6 @@ class ApplyController extends AbstractItemController
 	 */
 	protected function postExecute($return = null)
 	{
-		show($this->model);die;
-
 		// Set the record data in the session.
 		$this->recordId = $this->model->getState()->get($this->getName() . '.id');
 		$this->holdEditId($this->context, $this->recordId);
