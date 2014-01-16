@@ -8,9 +8,11 @@
 
 namespace Windwalker\Data\DataMapper;
 
+use Exception;
 use JArrayHelper;
 use JDatabaseDriver;
 use JFactory;
+
 use Windwalker\Data\Data;
 use Windwalker\Data\DataSet;
 use Windwalker\Data\NullData;
@@ -55,11 +57,22 @@ class DataMapper
 	 *
 	 * @param string          $table
 	 * @param JDatabaseDriver $db
+	 *
+	 * @throws Exception
 	 */
 	public function __construct($table = null, JDatabaseDriver $db = null)
 	{
 		$this->db    = $db ? : JFactory::getDbo();
-		$this->table = $table;
+
+		if (!$this->table)
+		{
+			$this->table = $table;
+		}
+
+		if (!$this->table)
+		{
+			throw new Exception('Hey, please give me a table name~!');
+		}
 	}
 
 	/**
@@ -92,7 +105,7 @@ class DataMapper
 		}
 
 		// Build query
-		$query->select($this->table)
+		$query->select('*')
 			->from($this->table);
 
 		$this->db->setQuery($query, $start, $limit);
@@ -126,7 +139,7 @@ class DataMapper
 	 *
 	 * @param array|DataSet $dataset
 	 *
-	 * @throws \Exception
+	 * @throws  Exception
 	 * @return  bool|mixed
 	 */
 	public function insert($dataset)
@@ -168,7 +181,7 @@ class DataMapper
 
 			$result = $this->db->setQuery($query)->execute();
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$this->db->transactionRollback();
 
@@ -222,7 +235,7 @@ class DataMapper
 	 * @param array|DataSet $dataset
 	 * @param string[]      $conditions
 	 *
-	 * @throws \Exception
+	 * @throws  Exception
 	 * @return  bool
 	 */
 	public function update($dataset, $conditions = null)
@@ -301,11 +314,11 @@ class DataMapper
 
 				if (!$this->db->setQuery($query)->execute())
 				{
-					throw new \Exception('Update fail');
+					throw new Exception('Update fail');
 				}
 			}
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$this->db->transactionRollback();
 
@@ -454,5 +467,29 @@ class DataMapper
 	public function getPrimaryKey()
 	{
 		return $this->primaryKey ? : 'id';
+	}
+
+	/**
+	 * getTable
+	 *
+	 * @return  string
+	 */
+	public function getTable()
+	{
+		return $this->table;
+	}
+
+	/**
+	 * setTable
+	 *
+	 * @param   string $table
+	 *
+	 * @return  DataMapper  Return self to support chaining.
+	 */
+	public function setTable($table)
+	{
+		$this->table = $table;
+
+		return $this;
 	}
 }
