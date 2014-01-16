@@ -18,6 +18,7 @@ use Joomla\DI\Container as JoomlaContainer;
 
 use JTable;
 use Windwalker\Debugger\Debugger;
+use Windwalker\DI\Container;
 use Windwalker\Helper\PathHelper;
 use Windwalker\Helper\ProfilerHelper;
 use Windwalker\Model\Filter\FilterHelper;
@@ -585,7 +586,7 @@ class ListModel extends FormModel
 	{
 		$filters = $filters ? : $this->state->get('filter', array());
 
-		$filterHelper = $this->container->get('model.' . strtolower($this->name) . '.filter');
+		$filterHelper = $this->container->get('model.' . strtolower($this->name) . '.filter', Container::FORCE_NEW);
 
 		$this->configureFilters($filterHelper);
 
@@ -618,7 +619,7 @@ class ListModel extends FormModel
 	{
 		$searches = $searches ? : $this->state->get('search', array());
 
-		$searchHelper = $this->container->get('model.' . strtolower($this->name) . '.search');
+		$searchHelper = $this->container->get('model.' . strtolower($this->name) . '.search', Container::FORCE_NEW);
 
 		$this->configureSearches($searchHelper);
 

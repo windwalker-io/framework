@@ -17,6 +17,8 @@ use Joomla\DI\Container as JoomlaContainer;
  */
 class Container extends JoomlaContainer
 {
+	const FORCE_NEW = true;
+
 	/**
 	 * Property instance.
 	 *

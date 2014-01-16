@@ -1,5 +1,6 @@
 <?php
 
+use Windwalker\DI\Container;
 use Windwalker\Model\Filter\FilterHelper;
 use Windwalker\Model\ListModel;
 
@@ -20,7 +21,7 @@ class FlowerModelSakuras extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$queryHelper = $this->container->get('model.sakuras.helper.query');
+		$queryHelper = $this->container->get('model.sakuras.helper.query', Container::FORCE_NEW);
 
 		$queryHelper->addTable('sakura', '#__flower_sakuras')
 			->addTable('category',  '#__categories', 'sakura.catid      = category.id')
