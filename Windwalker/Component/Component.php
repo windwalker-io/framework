@@ -178,6 +178,7 @@ class Component
 	 */
 	protected function init()
 	{
+		// We build component path constant, helpe us get path easily.
 		$this->path['self']          = JPATH_BASE . '/components/' . strtolower($this->option);
 		$this->path['site']          = JPATH_ROOT . '/components/' . strtolower($this->option);
 		$this->path['administrator'] = JPATH_ROOT . '/administrator/components/' . strtolower($this->option);
@@ -186,15 +187,21 @@ class Component
 		define(strtoupper($this->name) . '_SITE',  $this->path['site']);
 		define(strtoupper($this->name) . '_ADMIN', $this->path['administrator']);
 
+		// Register some useful object for this component.
 		$this->container->registerServiceProvider(new ComponentProvider($this->name, $this));
 
 		$task       = $this->input->getWord('task');
 		$controller = $this->input->getWord('controller');
 
+		// Prepare default controller
 		if (!$task && !$controller)
 		{
-			$this->input->set('task',       $this->defaultController);
-			$this->input->set('controller', $this->defaultController);
+			// If we got view, set it to display controller.
+			$view = $this->input->get('view');
+			$task = $view ? $view . '.display' : $this->defaultController;
+
+			$this->input->set('task',       $task);
+			$this->input->set('controller', $task);
 		}
 
 		// Register form and fields
