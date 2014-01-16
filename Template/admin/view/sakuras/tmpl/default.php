@@ -9,7 +9,7 @@
 use Windwalker\View\Layout\FileLayout;
 
 JHtmlBootstrap::tooltip();
-JHtmlFormbehavior::chosen('select');
+// JHtmlFormbehavior::chosen('select');
 JHtmlBehavior::multiselect('adminForm');
 JHtmlDropdown::init();
 

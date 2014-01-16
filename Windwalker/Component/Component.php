@@ -138,9 +138,11 @@ class Component
 	 */
 	protected function doExecute()
 	{
+		$task = $this->input->get('task', $this->input->get('controller'));
+
 		/** @var $controller Controller */
 		$resolver   = $this->container->get('controller.resolver');
-		$controller = $resolver->getController($this->name, $this->input, $this->application);
+		$controller = $resolver->getController($this->name, $task, $this->input);
 
 		$controller->setComponentPath(JPATH_BASE . '/components/' . $this->option);
 

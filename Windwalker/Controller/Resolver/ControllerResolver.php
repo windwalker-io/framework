@@ -8,6 +8,7 @@
 
 namespace Windwalker\Controller\Resolver;
 
+use JInput;
 use Windwalker\DI\Container;
 use Windwalker\Controller\Controller;
 
@@ -56,43 +57,32 @@ class ControllerResolver
 	/**
 	 * Method to parse a controller from task string.
 	 *
-	 * @param   string        $prefix The class name prefix
-	 * @param   \JInput       $input  Input request.
+	 * @param   string  $prefix The class name prefix
+	 * @param   string  $task   The key to get controller.
+	 * @param   JInput  $input  Input request.
 	 *
+	 * @throws \InvalidArgumentException
 	 * @throws \RuntimeException
 	 * @throws \Exception
 	 *
 	 * @return  Controller  A JController object
 	 */
-	public function getController($prefix, $input)
+	public function getController($prefix, $task, $input)
 	{
-		if ($controllerTask = $input->get('controller'))
+		if (!trim($task))
 		{
-			// Temporary solution
-			if (strpos($controllerTask, '/') !== false)
-			{
-				$tasks = explode('/', $controllerTask);
-			}
-			else
-			{
-				$tasks = explode('.', $controllerTask);
-			}
+			throw new \InvalidArgumentException('No task.');
+		}
+
+		// Toolbar expects old style but we are using new style
+		// Remove when toolbar can handle either directly
+		if (strpos($task, '/') !== false)
+		{
+			$tasks = explode('/', $task);
 		}
 		else
 		{
-			// Checking for old MVC task
-			$task = $input->get('task');
-
-			// Toolbar expects old style but we are using new style
-			// Remove when toolbar can handle either directly
-			if (strpos($task, '/') !== false)
-			{
-				$tasks = explode('/', $task);
-			}
-			else
-			{
-				$tasks = explode('.', $task);
-			}
+			$tasks = explode('.', $task);
 		}
 
 		if (!count($tasks) || empty($tasks[0]))

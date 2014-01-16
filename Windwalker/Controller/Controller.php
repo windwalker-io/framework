@@ -178,11 +178,10 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 			$input = $newInput;
 		}
 
-		$input->set('task', $name);
 		$input->set('hmvc', true);
 
 		$resolver   = $this->container->get('controller.resolver');
-		$controller = $resolver->getController($prefix, $input, $this->app)
+		$controller = $resolver->getController($prefix, $name, $input)
 			->setComponentPath($this->componentPath)
 			->setContainer($this->container);
 
