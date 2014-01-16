@@ -1,4 +1,10 @@
 <?php
+/**
+ * Part of Windwalker project.
+ *
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
+ */
 
 namespace Windwalker\Controller\Edit;
 
@@ -15,23 +21,15 @@ class Save2copyController extends ApplyController
 	/**
 	 * preSaveHook
 	 *
+	 * @throws \Exception
 	 * @return void
 	 */
 	protected function preSaveHook()
 	{
-		// Check-in the original row.
-		// if (property_exists($this->table, 'checked_out'))
-		if (false)
-		{
-			try
-			{
-				$this->model->checkin($this->data[$this->key]);
-			}
-			catch (\Exception $e)
-			{
-				throw new \Exception(\JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $e->getMessage()));
-			}
-		}
+		// Attempt to check-in the current record.
+		$data = array('cid' => array($this->recordId), 'quiet' => true);
+
+		$this->fetch($this->prefix, $this->viewList . '.check.checkin', $data);
 
 		// Reset the ID and then treat the request as for Apply.
 		$this->data[$this->key] = 0;

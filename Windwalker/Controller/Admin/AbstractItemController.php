@@ -18,14 +18,14 @@ abstract class AbstractItemController extends AbstractAdminController
 	/**
 	 * Property recordId.
 	 *
-	 * @var
+	 * @var mixed
 	 */
 	protected $recordId;
 
 	/**
 	 * Property data.
 	 *
-	 * @var
+	 * @var array
 	 */
 	protected $data;
 

@@ -1,4 +1,5 @@
-<?php
+*/
+
 
 namespace Windwalker\Controller\Edit;
 

@@ -8,7 +8,7 @@
 
 namespace Windwalker\Controller\Admin;
 
-use Windwalker\Model\Model;
+use Windwalker\Model\CrudModel;
 use Windwalker\Table\Table;
 
 /**
@@ -64,7 +64,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	/**
 	 * Property model.
 	 *
-	 * @var Model
+	 * @var CrudModel
 	 */
 	protected $model;
 
@@ -97,6 +97,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	/**
 	 * prepareExecute
 	 *
+	 * @throws \UnexpectedValueException
 	 * @return void
 	 */
 	protected function prepareExecute()
@@ -106,6 +107,12 @@ abstract class AbstractAdminController extends AbstractRedirectController
 		$this->lang  = \JFactory::getLanguage();
 		$this->model = $this->getModel();
 		$this->table = $this->model->getTable();
+
+		// Determine model
+		if (!($this->model instanceof CrudModel))
+		{
+			throw new \UnexpectedValueException(sprintf('% model need extend to CrudModel', $this->name));
+		}
 
 		// Determine the name of the primary key for the data.
 		if (empty($key))

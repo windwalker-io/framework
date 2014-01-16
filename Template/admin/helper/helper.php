@@ -38,7 +38,7 @@ abstract class FlowerHelper
 				$name = \JText::_('COM_FLOWER_VIEW_' . strtoupper($view));
 
 				JHtmlSidebar::addEntry(
-					JText::sprintf('LIB_WINDWALKER_TITLE_ITEM_EDIT', $name),
+					JText::sprintf('LIB_WINDWALKER_TITLE_LIST', $name),
 					'index.php?option=com_flower&view=' . $view,
 					($vName == $view)
 				);

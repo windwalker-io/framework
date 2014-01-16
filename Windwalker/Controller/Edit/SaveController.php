@@ -1,7 +1,14 @@
 <?php
+/**
+ * Part of Windwalker project.
+ *
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
+ */
 
 namespace Windwalker\Controller\Edit;
 
+use JArrayHelper;
 use Windwalker\Controller\Admin\AbstractItemController;
 use Windwalker\Model\Exception\ValidateFailException;
 
@@ -15,7 +22,7 @@ class SaveController extends AbstractItemController
 	/**
 	 * Property lang.
 	 *
-	 * @var
+	 * @var \JLanguage
 	 */
 	protected $lang;
 
@@ -30,8 +37,8 @@ class SaveController extends AbstractItemController
 	{
 		parent::__construct($input, $app, $config);
 
-		$this->key    = \JArrayHelper::getValue($config, 'key');
-		$this->urlVar = \JArrayHelper::getValue($config, 'urlVar');
+		$this->key    = JArrayHelper::getValue($config, 'key');
+		$this->urlVar = JArrayHelper::getValue($config, 'urlVar');
 	}
 
 	/**
@@ -93,7 +100,7 @@ class SaveController extends AbstractItemController
 			$this->app->setUserState($this->context . '.data', $this->data);
 
 			// Redirect back to the edit screen.
-			$this->app->redirect(\JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false));
+			$this->redirectToItem($this->recordId, $this->urlVar);
 
 			return false;
 		}
@@ -103,7 +110,7 @@ class SaveController extends AbstractItemController
 		{
 			$this->setMessage($e->getMessage(), 'error');
 
-			$this->app->redirect(\JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false));
+			$this->redirectToItem($this->recordId, $this->urlVar);
 
 			return false;
 		}
@@ -114,13 +121,12 @@ class SaveController extends AbstractItemController
 	/**
 	 * doSave
 	 *
-	 * @return bool
+	 * @throws \Exception
+	 * @return array
 	 */
 	protected function doSave()
 	{
-		$data = $this->data;
 		$key  = $this->key;
-
 
 		// Access check.
 		if (!$this->allowSave($this->data, $key))
@@ -178,7 +184,9 @@ class SaveController extends AbstractItemController
 	}
 
 	/**
-	 * @return string
+	 * getKey
+	 *
+	 * @return  mixed
 	 */
 	public function getKey()
 	{
@@ -186,7 +194,11 @@ class SaveController extends AbstractItemController
 	}
 
 	/**
+	 * setKey
+	 *
 	 * @param string $key
+	 *
+	 * @return  $this
 	 */
 	public function setKey($key)
 	{
@@ -196,7 +208,9 @@ class SaveController extends AbstractItemController
 	}
 
 	/**
-	 * @return string
+	 * getUrlVar
+	 *
+	 * @return  mixed
 	 */
 	public function getUrlVar()
 	{
@@ -204,7 +218,11 @@ class SaveController extends AbstractItemController
 	}
 
 	/**
+	 * setUrlVar
+	 *
 	 * @param string $urlVar
+	 *
+	 * @return  $this
 	 */
 	public function setUrlVar($urlVar)
 	{
@@ -216,8 +234,8 @@ class SaveController extends AbstractItemController
 	/**
 	 * postSaveHook
 	 *
-	 * @param $model
-	 * @param $validData
+	 * @param \Windwalker\Model\CrudModel $model
+	 * @param array                       $validData
 	 *
 	 * @return void
 	 */
