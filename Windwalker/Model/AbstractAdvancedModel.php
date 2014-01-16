@@ -10,11 +10,16 @@ namespace Windwalker\Model;
 abstract class AbstractAdvancedModel extends Model
 {
 	/**
-	 * Context string for the model type.  This is used to handle uniqueness
-	 * when dealing with the getStoreId() method and caching data structures.
+	 * Property viewItem.
 	 *
-	 * @var    string
-	 * @since  12.2
+	 * @var  string
 	 */
-	protected $context = '';
+	protected $viewItem = null;
+
+	/**
+	 * Property viewList.
+	 *
+	 * @var  string
+	 */
+	protected $viewList = null;
 }

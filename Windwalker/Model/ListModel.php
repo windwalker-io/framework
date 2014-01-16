@@ -125,6 +125,39 @@ class ListModel extends FormModel
 		$container->registerServiceProvider(new FilterProvider($this->name));
 
 		parent::__construct($config, $container, $state, $db);
+
+		// Guess the item view as the context.
+		if (empty($this->viewList))
+		{
+			$this->viewList = $this->getName();
+		}
+
+		// Guess the list view as the plural of the item view.
+		if (empty($this->viewItem))
+		{
+			$inflector = \JStringInflector::getInstance();
+
+			$this->viewItem = $inflector->toSingular($this->viewList);
+		}
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  \JTable  A JTable object
+	 *
+	 * @since   3.2
+	 * @throws  \Exception
+	 */
+	public function getTable($name = '', $prefix = '', $options = array())
+	{
+		$name = $name ? : $this->viewItem;
+
+		return parent::getTable($name, $prefix, $options);
 	}
 
 	/**
@@ -284,6 +317,59 @@ class ListModel extends FormModel
 		$id .= ':' . json_encode($this->state);
 
 		return md5($this->context . ':' . $id);
+	}
+
+	/**
+	 * Gets an array of objects from the results of database query.
+	 *
+	 * @param   string   $query       The query.
+	 * @param   integer  $limitstart  Offset.
+	 * @param   integer  $limit       The number of records.
+	 *
+	 * @return  array  An array of results.
+	 *
+	 * @since   12.2
+	 * @throws  \RuntimeException
+	 */
+	public function getList($query, $limitstart = 0, $limit = 0)
+	{
+		$this->db->setQuery($query, $limitstart, $limit);
+
+		$result = $this->db->loadObjectList();
+
+		return $result;
+	}
+
+	/**
+	 * Returns a record count for the query.
+	 *
+	 * @param   \JDatabaseQuery|string  $query  The query.
+	 *
+	 * @return  integer  Number of rows for query.
+	 *
+	 * @since   12.2
+	 */
+	public function getListCount($query)
+	{
+		// Use fast COUNT(*) on JDatabaseQuery objects if there no GROUP BY or HAVING clause:
+		if ($query instanceof \JDatabaseQuery
+			&& $query->type == 'select'
+			&& $query->group === null
+			&& $query->having === null)
+		{
+			$query = clone $query;
+			$query->clear('select')->clear('order')->select('COUNT(*)');
+
+			$this->db->setQuery($query);
+
+			return (int) $this->db->loadResult();
+		}
+
+		// Otherwise fall back to inefficient way of counting all results.
+		$this->db->setQuery($query);
+		$this->db->execute();
+
+		return (int) $this->db->getNumRows();
 	}
 
 	/**

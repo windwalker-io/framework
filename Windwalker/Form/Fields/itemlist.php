@@ -203,7 +203,7 @@ class JFormFieldItemlist extends JFormFieldList
 		}
 
 		// Ordering
-		$order    = $nested ? 'lft, ordering' : 'ordering';
+		$order    = $nested ? 'lft' : 'id';
 		$order    = $this->ordering_field ? $this->ordering_field : $order;
 		$ordering = $ordering ? $ordering : $order;
 

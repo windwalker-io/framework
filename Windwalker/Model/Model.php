@@ -268,59 +268,6 @@ class Model extends \JModelDatabase implements ContainerAwareInterface
 	}
 
 	/**
-	 * Gets an array of objects from the results of database query.
-	 *
-	 * @param   string   $query       The query.
-	 * @param   integer  $limitstart  Offset.
-	 * @param   integer  $limit       The number of records.
-	 *
-	 * @return  array  An array of results.
-	 *
-	 * @since   12.2
-	 * @throws  \RuntimeException
-	 */
-	public function getList($query, $limitstart = 0, $limit = 0)
-	{
-		$this->db->setQuery($query, $limitstart, $limit);
-
-		$result = $this->db->loadObjectList();
-
-		return $result;
-	}
-
-	/**
-	 * Returns a record count for the query.
-	 *
-	 * @param   \JDatabaseQuery|string  $query  The query.
-	 *
-	 * @return  integer  Number of rows for query.
-	 *
-	 * @since   12.2
-	 */
-	public function getListCount($query)
-	{
-		// Use fast COUNT(*) on JDatabaseQuery objects if there no GROUP BY or HAVING clause:
-		if ($query instanceof \JDatabaseQuery
-			&& $query->type == 'select'
-			&& $query->group === null
-			&& $query->having === null)
-		{
-			$query = clone $query;
-			$query->clear('select')->clear('order')->select('COUNT(*)');
-
-			$this->db->setQuery($query);
-
-			return (int) $this->db->loadResult();
-		}
-
-		// Otherwise fall back to inefficient way of counting all results.
-		$this->db->setQuery($query);
-		$this->db->execute();
-
-		return (int) $this->db->getNumRows();
-	}
-
-	/**
 	 * Method to test whether a record can be deleted.
 	 *
 	 * @param   object  $record  A record object.

@@ -31,7 +31,17 @@ class FlowerModelSakuras extends ListModel
 
 		$this->filterFields = array_merge($this->filterFields, $queryHelper->getFilterFields());
 
-		parent::populateState('sakura.catid, sakura.ordering', 'ASC');
+		// Build ordering prefix
+		if (!$ordering)
+		{
+			$table = $this->getTable('Sakura');
+
+			$ordering = property_exists($table, 'ordering') ? 'sakura.ordering' : 'sakura.id';
+
+			$ordering = property_exists($table, 'catid') ? 'sakura.catid, ' . $ordering : $ordering;
+		}
+
+		parent::populateState($ordering, 'ASC');
 	}
 
 	/**

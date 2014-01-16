@@ -47,6 +47,20 @@ abstract class AdminModel extends CrudModel
 		{
 			$this->reorderConditions = \JArrayHelper::getValue($config, 'reorder_conditions', array('catid'));
 		}
+
+		// Guess the item view as the context.
+		if (empty($this->viewItem))
+		{
+			$this->viewItem = $this->getName();
+		}
+
+		// Guess the list view as the plural of the item view.
+		if (empty($this->viewList))
+		{
+			$inflector = \JStringInflector::getInstance();
+
+			$this->viewList = $inflector->toPlural($this->viewItem);
+		}
 	}
 
 	/**

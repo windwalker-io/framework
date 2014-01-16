@@ -44,18 +44,6 @@
 			<option>JOPTION_SELECT_CATEGORY</option>
 		</field>
 
-		<field name="parent_id"
-			type="sakura_list"
-			label="COM_FLOWER_PARENT_ITEM"
-			description="COM_FLOWER_PARENT_ITEM_DESC"
-			labelclass="control-label"
-			class="input-xlarge inputbox"
-			access="true"
-			>
-			<option>JSELECT</option>
-			<option value="1">JLIB_HTML_ADD_TO_ROOT</option>
-		</field>
-
 		<field name="task"
 			type="radio"
 			label="JLIB_RULES_ACTION"
