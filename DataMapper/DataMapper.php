@@ -99,9 +99,23 @@ class DataMapper
 		$conditions = (array) $conditions;
 
 		// Where conditions
-		if (count($conditions))
+		foreach ($conditions as $key => $value)
 		{
-			$query->where($conditions);
+			if (empty($value))
+			{
+				continue;
+			}
+
+			if ((is_array($value) || is_object($value)))
+			{
+				$value = array_map(array($query, 'quote'), (array) $value);
+
+				$query->where($query->quoteName($key) . new \JDatabaseQueryElement('IN ()', $value, ','));
+			}
+			else
+			{
+				$query->where($query->quoteName($key) . ' = ' . $query->quote($value));
+			}
 		}
 
 		// Build query
@@ -111,6 +125,19 @@ class DataMapper
 		$this->db->setQuery($query, $start, $limit);
 
 		return new DataSet($this->db->loadObjectList(null, '\\Windwalker\\Data\\Data'));
+	}
+
+	/**
+	 * findAll
+	 *
+	 * @param int $start
+	 * @param int $limit
+	 *
+	 * @return  DataSet
+	 */
+	public function findAll($start = null, $limit = null)
+	{
+		return $this->find(array(), $start, $limit);
 	}
 
 	/**
