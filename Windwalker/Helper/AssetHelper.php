@@ -334,7 +334,7 @@ class AssetHelper implements ContainerAwareInterface
 		$foundpath = '';
 		$sum       = '';
 
-		foreach ($this->paths as $path)
+		foreach (clone $this->paths as $path)
 		{
 			$path = str_replace(array('{name}', '{type}'), array($name, $type), $path);
 

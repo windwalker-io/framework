@@ -34,7 +34,7 @@ class QuickaddController extends DisplayController
 	{
 		// Init Variables
 		$data   = $this->input->get($this->input->get('formctrl'), array(), 'array');
-		$result = new Registry;
+		$result = new \JRegistry;
 		$result->set('Result', false);
 
 		$model_name = $this->input->get('model_name');
@@ -96,6 +96,14 @@ class QuickaddController extends DisplayController
 		{
 			// Get the validation messages.
 			$errors   = $e->getErrors();
+
+			$errors = array_map(
+				function($error)
+				{
+					return (string) $error->getMessage();
+				},
+				$errors
+			);
 
 			$result->set('errorMsg', $errors);
 
