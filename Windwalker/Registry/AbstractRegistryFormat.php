@@ -42,7 +42,7 @@ abstract class AbstractRegistryFormat
 		// Only instantiate the object if it doesn't already exist.
 		if (!isset(self::$instances[$type]))
 		{
-			$class = '\\Joomla\\Registry\\Format\\' . ucfirst($type);
+			$class = '\\Windwalker\\Registry\\Format\\' . ucfirst($type);
 
 			if (!class_exists($class))
 			{

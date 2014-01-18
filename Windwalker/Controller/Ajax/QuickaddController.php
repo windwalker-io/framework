@@ -34,7 +34,7 @@ class QuickaddController extends DisplayController
 	{
 		// Init Variables
 		$data   = $this->input->get($this->input->get('formctrl'), array(), 'array');
-		$result = new \JRegistry;
+		$result = new Registry;
 		$result->set('Result', false);
 
 		$model_name = $this->input->get('model_name');
