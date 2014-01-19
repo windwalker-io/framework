@@ -85,8 +85,8 @@ class XulEngine extends AbstractEngine
 	/**
 	 * findRenderer
 	 *
-	 * @param string $namespace
 	 * @param string $name
+	 * @param string $namespace
 	 * @param string $prefix
 	 *
 	 * @throws \DomainException
@@ -134,9 +134,9 @@ class XulEngine extends AbstractEngine
 	/**
 	 * resolveAlias
 	 *
-	 * @param $namespace
-	 * @param $name
-	 * @param $prefix
+	 * @param string $name
+	 * @param string $namespace
+	 * @param string $prefix
 	 *
 	 * @return  string
 	 */
@@ -152,6 +152,15 @@ class XulEngine extends AbstractEngine
 		return null;
 	}
 
+	/**
+	 * regularizeAlias
+	 *
+	 * @param string $name
+	 * @param string $namespace
+	 * @param string $prefix
+	 *
+	 * @return  string
+	 */
 	protected function regularizeAlias($name, $namespace = 'control', $prefix = null)
 	{
 		$alias = array();

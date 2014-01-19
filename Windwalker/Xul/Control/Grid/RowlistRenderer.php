@@ -12,7 +12,7 @@ use JGrid;
 use JText;
 use Windwalker\Data\Data;
 use Windwalker\Helper\ArrayHelper;
-use Windwalker\Helper\StringHelper;
+use Windwalker\String\String;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Html\HtmlElements;
 use Windwalker\Xul\AbstractXulRenderer;

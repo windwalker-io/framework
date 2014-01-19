@@ -8,7 +8,7 @@
 
 namespace Windwalker\Xul\Control;
 
-use Windwalker\Helper\StringHelper;
+use Windwalker\String\String;
 use Windwalker\Html\HtmlBuilder;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
@@ -50,7 +50,7 @@ class FieldsetRenderer extends AbstractXulRenderer
 
 		$option = $data->view->option ? : 'LIB_WINDWALKER';
 		$label  = XmlHelper::get($element, 'label', $option . '_EDIT_FIELDSET_' . $fieldset);
-		$label  = StringHelper::parseVariable($label, $data);
+		$label  = String::parseVariable($label, $data);
 		$html   = '<legend>' . \JText::_(strtoupper($label)) . '</legend>';
 
 		foreach ($form->getFieldset($fieldset) as $field)

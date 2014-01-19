@@ -3,7 +3,7 @@
 	<fields name="search">
 		<field name="field"
 			type="hidden"
-			default="title"
+			default="*"
 			label="JSEARCH_FILTER_LABEL"
 			labelclass="pull-left"
 			class="input-small"

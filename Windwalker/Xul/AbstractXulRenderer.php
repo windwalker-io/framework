@@ -9,7 +9,7 @@
 namespace Windwalker\Xul;
 
 use Windwalker\Data\Data;
-use Windwalker\Helper\StringHelper;
+use Windwalker\String\String;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Html\HtmlElements;
 
@@ -120,7 +120,7 @@ abstract class AbstractXulRenderer
 				// Replace all attributes with variable.
 				foreach ($child->attributes() as $key => $attr)
 				{
-					$child[$key] = StringHelper::parseVariable((string) $attr, $data);
+					$child[$key] = String::parseVariable((string) $attr, $data);
 				}
 
 				$namespaces    = $child->getNamespaces();
@@ -148,7 +148,7 @@ abstract class AbstractXulRenderer
 		}
 		else
 		{
-			$html = StringHelper::parseVariable((string) $element, $data);
+			$html = String::parseVariable((string) $element, $data);
 		}
 
 		return $html;
@@ -166,7 +166,7 @@ abstract class AbstractXulRenderer
 	{
 		foreach ($attributes as &$attr)
 		{
-			$attr = StringHelper::parseVariable($attr, $data);
+			$attr = String::parseVariable($attr, $data);
 		}
 
 		return $attributes;

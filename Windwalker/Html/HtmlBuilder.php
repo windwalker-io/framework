@@ -8,7 +8,7 @@
 
 namespace Windwalker\Html;
 
-use Windwalker\Helper\StringHelper;
+use Windwalker\String\String;
 
 // No direct access
 defined('_JEXEC') or die;
@@ -49,7 +49,7 @@ class HtmlBuilder
 		{
 			if ($value !== null && $value !== false && $value !== '')
 			{
-				$tag .= ' ' . $key . '=' . StringHelper::quote($value, '""');
+				$tag .= ' ' . $key . '=' . String::quote($value, '""');
 			}
 		}
 

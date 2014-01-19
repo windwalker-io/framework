@@ -6,14 +6,17 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Helper;
+namespace Windwalker\String;
+
+use JString;
+use Windwalker\Helper\ArrayHelper;
 
 /**
- * Class StringHelper
+ * Class String
  *
  * @since 1.0
  */
-class StringHelper
+class String extends JString
 {
 	/**
 	 * quote

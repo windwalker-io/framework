@@ -11,7 +11,7 @@ namespace Windwalker\Xul\Control\Grid;
 use JGrid;
 use JText;
 use Windwalker\Data\Data;
-use Windwalker\Helper\StringHelper;
+use Windwalker\String\String;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
 use Windwalker\Xul\XulEngine;
@@ -43,7 +43,7 @@ class RowRenderer extends AbstractXulRenderer
 
 		foreach ($cells as $key => $cell)
 		{
-			$content = StringHelper::parseVariable($cell, $data);
+			$content = String::parseVariable($cell, $data);
 
 			$attribs = XmlHelper::getAttributes($element);
 

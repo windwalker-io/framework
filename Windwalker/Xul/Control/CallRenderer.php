@@ -10,7 +10,7 @@ namespace Windwalker\Xul\Control;
 
 use Windwalker\Helper\ArrayHelper;
 use Windwalker\Helper\CallableHelper;
-use Windwalker\Helper\StringHelper;
+use Windwalker\String\String;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Xul\AbstractXulRenderer;
 use Windwalker\Xul\XulEngine;
@@ -123,7 +123,7 @@ class CallRenderer extends AbstractXulRenderer
 					$arg = false;
 				}
 
-				$return[] = StringHelper::parseVariable((string) $arg, $data);
+				$return[] = String::parseVariable((string) $arg, $data);
 			}
 		}
 

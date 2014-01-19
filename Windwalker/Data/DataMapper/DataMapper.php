@@ -16,6 +16,8 @@ use JFactory;
 use Windwalker\Data\Data;
 use Windwalker\Data\DataSet;
 use Windwalker\Data\NullData;
+use Windwalker\String\Compare\EqCompare;
+use Windwalker\String\Compare\StringCompare;
 
 /**
  * Class DataMapper
@@ -106,7 +108,19 @@ class DataMapper
 				continue;
 			}
 
-			if ((is_array($value) || is_object($value)))
+			if ($value instanceof StringCompare)
+			{
+				if (!is_numeric($key))
+				{
+					$value->setCompare1($key);
+				}
+
+				$value->setCompare1Quote("``")
+					->setCompare2Quote("''");
+
+				$query->where((string) $value);
+			}
+			elseif ((is_array($value) || is_object($value)))
 			{
 				$value = array_map(array($query, 'quote'), (array) $value);
 
@@ -283,7 +297,7 @@ class DataMapper
 		$sameCondition = JArrayHelper::isAssociative($conditions);
 
 		// Get condition fields.
-		$condFields = $sameCondition ? array_keys($conditions) : $conditions;
+		$condFields = $this->getCondFields($conditions, $sameCondition);
 
 		// Get table fields
 		$fields = $this->getFields();
@@ -304,6 +318,11 @@ class DataMapper
 
 			foreach ($dataset as $data)
 			{
+				if (!($data instanceof Data))
+				{
+					$data = new Data($data);
+				}
+
 				// Reset query and re add values.
 				$query->clear('where')
 					->clear('set');
@@ -328,14 +347,50 @@ class DataMapper
 				{
 					foreach ($conditions as $key => $value)
 					{
-						$query->where($query->quoteName($key) . ' = ' . $query->quote($value));
+						// Handle Compare object
+						if (!($value instanceof StringCompare))
+						{
+							$value = new EqCompare($key, $value);
+						}
+
+						if (!is_numeric($key))
+						{
+							$value->setCompare1($key);
+						}
+
+						$value->setCompare1Quote("``")
+							->setCompare2Quote("''");
+
+						$query->where((string) $value);
 					}
+
+					if (!$this->db->setQuery($query)->execute())
+					{
+						throw new Exception('Update fail');
+					}
+
+					break;
 				}
 				else
 				{
 					foreach ($conditions as $condition)
 					{
-						$query->where($query->quoteName($condition) . ' = ' . $query->quote($data->$condition));
+						// Handle Compare object
+						if (!($condition instanceof StringCompare))
+						{
+							$condition = new EqCompare($condition, $data->$condition);
+						}
+						else
+						{
+							$key = $condition->getCompare1();
+
+							$condition->setCompare2($data->$key);
+						}
+
+						$condition->setCompare1Quote("``")
+							->setCompare2Quote("''");
+
+						$query->where((string) $condition);
 					}
 				}
 
@@ -454,7 +509,19 @@ class DataMapper
 		// Where conditions
 		foreach ($conditions as $key => $value)
 		{
-			if (is_array($value) || is_object($value))
+			if ($value instanceof StringCompare)
+			{
+				if (!is_numeric($key))
+				{
+					$value->setCompare1($key);
+				}
+
+				$value->setCompare1Quote("``")
+					->setCompare2Quote("''");
+
+				$query->where((string) $value);
+			}
+			elseif (is_array($value) || is_object($value))
 			{
 				$value = array_map(array($query, 'quote'), (array) $value);
 
@@ -518,5 +585,28 @@ class DataMapper
 		$this->table = $table;
 
 		return $this;
+	}
+
+	/**
+	 * getCondFields
+	 *
+	 * @param array $conditions
+	 * @param bool  $sameCondition
+	 *
+	 * @return  array
+	 */
+	protected function getCondFields($conditions, $sameCondition = true)
+	{
+		$conditions = $sameCondition ? array_keys($conditions) : $conditions;
+
+		foreach ($conditions as &$condition)
+		{
+			if ($condition instanceof StringCompare)
+			{
+				$condition = $condition->getCompare1();
+			}
+		}
+
+		return $conditions;
 	}
 }

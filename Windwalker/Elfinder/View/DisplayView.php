@@ -77,7 +77,7 @@ class DisplayView extends AbstractHtmlView
 		{
 			$onlymimes = is_array($onlymimes) ? $onlymimes : explode(',', $onlymimes);
 			$onlymimes = array_map('trim', $onlymimes);
-			$onlymimes = array_map(array('\\Windwalker\\Helper\\StringHelper', 'quote'), $onlymimes);
+			$onlymimes = array_map(array('\\Windwalker\\String\\String', 'quote'), $onlymimes);
 			$onlymimes = implode(',', $onlymimes);
 		}
 
