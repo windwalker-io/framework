@@ -12,6 +12,24 @@ use Windwalker\Model\ListModel;
 class FlowerModelSakuras extends ListModel
 {
 	/**
+	 * configureTables
+	 *
+	 * @return  void
+	 */
+	protected function configureTables()
+	{
+		$queryHelper = $this->getContainer()->get('model.sakuras.helper.query', Container::FORCE_NEW);
+
+		$queryHelper->addTable('sakura', '#__flower_sakuras')
+			->addTable('category',  '#__categories', 'sakura.catid      = category.id')
+			->addTable('user',      '#__users',      'sakura.created_by = user.id')
+			->addTable('viewlevel', '#__viewlevels', 'sakura.access     = viewlevel.id')
+			->addTable('lang',      '#__languages',  'sakura.language   = lang.lang_code');
+
+		$this->filterFields = array_merge($this->filterFields, $queryHelper->getFilterFields());
+	}
+
+	/**
 	 * populateState
 	 *
 	 * @param null $ordering
@@ -21,16 +39,6 @@ class FlowerModelSakuras extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$queryHelper = $this->container->get('model.sakuras.helper.query', Container::FORCE_NEW);
-
-		$queryHelper->addTable('sakura', '#__flower_sakuras')
-			->addTable('category',  '#__categories', 'sakura.catid      = category.id')
-			->addTable('user',      '#__users',      'sakura.created_by = user.id')
-			->addTable('viewlevel', '#__viewlevels', 'sakura.access     = viewlevel.id')
-			->addTable('lang',      '#__languages',  'sakura.language   = lang.lang_code');
-
-		$this->filterFields = array_merge($this->filterFields, $queryHelper->getFilterFields());
-
 		// Build ordering prefix
 		if (!$ordering)
 		{

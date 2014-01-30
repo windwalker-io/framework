@@ -85,6 +85,23 @@ class QueryHelper
 	}
 
 	/**
+	 * removeTable
+	 *
+	 * @param string $alias
+	 *
+	 * @return  $this
+	 */
+	public function removeTable($alias)
+	{
+		if (!empty($this->tables[$alias]))
+		{
+			unset($this->tables[$alias]);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * getFilterFields
 	 *
 	 * @param int $prefixFirst

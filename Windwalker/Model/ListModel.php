@@ -120,9 +120,11 @@ class ListModel extends FormModel
 			$this->name = JArrayHelper::getValue($config, 'name', $this->getName());
 		}
 
-		$container = $container ? : $this->getContainer();
+		$this->container = $container ? : $this->getContainer();
 
-		$container->registerServiceProvider(new FilterProvider($this->name));
+		$this->container->registerServiceProvider(new FilterProvider($this->name));
+
+		$this->configureTables();
 
 		parent::__construct($config, $container, $state, $db);
 
@@ -534,6 +536,8 @@ class ListModel extends FormModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$config = $this->getContainer()->get('joomla.config');
+
 		// Set default ordering
 		$this->state->set('list.direction', $direction);
 		$this->state->set('list.ordering',  $ordering);
@@ -610,7 +614,7 @@ class ListModel extends FormModel
 			}
 
 			// Fill the limits and start
-			$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'uint');
+			$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $config->get('list_limit'), 'uint');
 			$this->state->set('list.limit', $limit);
 
 			$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
@@ -838,5 +842,49 @@ class ListModel extends FormModel
 		}
 
 		return $new_state;
+	}
+
+	/**
+	 * configureTables
+	 *
+	 * @return  void
+	 */
+	protected function configureTables()
+	{
+	}
+
+	/**
+	 * addTable
+	 *
+	 * @param string $alias
+	 * @param string $table
+	 * @param mixed  $condition
+	 * @param string $joinType
+	 *
+	 * @return  ListModel
+	 */
+	public function addTable($alias, $table, $condition = null, $joinType = 'LEFT')
+	{
+		$queryHelper = $this->getContainer()->get('model.' . $this->name . '.helper.query');
+
+		$queryHelper->addTable($alias, $table, $condition, $joinType);
+
+		return $this;
+	}
+
+	/**
+	 * removeTable
+	 *
+	 * @param string $alias
+	 *
+	 * @return  $this
+	 */
+	public function removeTable($alias)
+	{
+		$queryHelper = $this->getContainer()->get('model.' . $this->name . '.helper.query');
+
+		$queryHelper->removeTable($alias);
+
+		return $this;
 	}
 }
