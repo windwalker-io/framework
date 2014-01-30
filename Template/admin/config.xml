@@ -45,7 +45,7 @@
         <field name="limit"
             type="text"
             default="20"
-            label="數量"
+            label="Number"
         />
         
     </fieldset>

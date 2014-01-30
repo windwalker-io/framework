@@ -233,11 +233,12 @@ class JFormFieldModal extends JFormField
 			return;
 		}
 
+		$task             = $this->getElement('task', $this->view_item . '.ajax.quickadd');
 		$quickadd         = $this->getElement('quickadd', false);
 		$table_name       = $this->getElement('table', '#__' . $this->component . '_' . $this->view_list);
 		$key_field        = $this->getElement('key_field', 'id');
 		$value_field      = $this->getElement('value_field', 'title');
-		$formpath         = $this->getElement('quickadd_formpath', "administrator/components/{$this->extension}/models/forms/{$this->view_item}.xml");
+		$formpath         = $this->getElement('quickadd_formpath', "administrator/components/{$this->extension}/model/form/{$this->view_item}.xml");
 		$quickadd_handler = $this->getElement('quickadd_handler', $this->extension);
 		$title            = $this->getElement('quickadd_label', 'LIB_WINDWALKER_QUICKADD_TITLE');
 
@@ -254,6 +255,7 @@ class JFormFieldModal extends JFormField
 		$asset->addJs('js/quickadd.js');
 
 		// Set AKQuickAddOption
+		$config['task']             = $task;
 		$config['quickadd_handler'] = $quickadd_handler;
 		$config['extension']        = $this->extension;
 		$config['component']        = $this->component;

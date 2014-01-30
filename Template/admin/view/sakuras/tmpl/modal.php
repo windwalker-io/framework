@@ -32,7 +32,7 @@ $function = $input->get('function', 'jSelectArticle');
 <div id="flower" class="windwalker sakuras tablelist row-fluid">
 	<form action="<?php echo JURI::getInstance(); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
-		<?php echo (new FileLayout('joomla.searchtools.default'))->render(array('view' => $this->data)); ?>
+		<?php echo with(new FileLayout('joomla.searchtools.default'))->render(array('view' => $this->data)); ?>
 
 		<table id="sakuraList" class="adminlist table table-striped modal-list">
 			<thead>
