@@ -64,7 +64,7 @@ class ComponentProvider implements ServiceProviderInterface
 				$resolverClass,
 				function($container) use($resolverClass)
 				{
-					return new $resolverClass($this->component->getApplication(), $container);
+					return new $resolverClass($container->get('app'), $container);
 				}
 			);
 
