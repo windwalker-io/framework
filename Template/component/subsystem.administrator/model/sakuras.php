@@ -63,7 +63,7 @@ class FlowerModelSakuras extends ListModel
 	protected function processFilters(\JDatabaseQuery $query, $filters = array())
 	{
 		// If no state filter, set published >= 0
-		if (!isset($filters['sakura.published']))
+		if (!isset($filters['sakura.published']) && property_exists($this->getTable(), 'published'))
 		{
 			$query->where($query->quoteName('sakura.published') . ' >= 0');
 		}
