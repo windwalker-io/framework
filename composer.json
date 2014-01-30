@@ -1,0 +1,16 @@
+{
+	"name"             : "asika/windwalker",
+	"description"      : "Rapido de la vento viro.",
+	"require"          : {
+	},
+	"require-dev"      : {
+	},
+	"license"          : "GNU Lesser General Public License",
+	"authors"          : [
+		{
+			"name" : "Simon Asika",
+			"email": "asika32764@gmail.com"
+		}
+	],
+	"minimum-stability": "alpha"
+}

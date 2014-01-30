@@ -136,7 +136,7 @@ class ControllerResolver
 			return $this->taskMapper[$key];
 		}
 
-		$controllerName = '\\' . ucfirst($prefix) . 'Controller' . $name . str_replace('.', '', $task);
+		$controllerName = ucfirst($prefix) . 'Controller' . $name . str_replace('.', '', $task);
 
 		if (!class_exists($controllerName))
 		{

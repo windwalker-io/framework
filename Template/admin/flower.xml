@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component"
-	version="3.1"
+	version="3.2"
 	method="upgrade">
 	<name>com_flower</name>
 	<creationDate>2014-1-11</creationDate>
@@ -49,7 +49,7 @@
 
 		<!-- Submenu
 			Note that all & must be escaped to &amp; for the file to be valid
-			XML and be parsed by the installer-->
+			XML and be parsed by the installer
 		<submenu>
 
 			<menu link="option=com_flower&amp;view=sakuras"
@@ -59,6 +59,7 @@
 				view="categories">jcategories
 			</menu>
 		</submenu>
+		-->
 
 		<files folder="admin">
 			<filename>access.xml</filename>

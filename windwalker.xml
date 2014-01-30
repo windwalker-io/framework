@@ -17,7 +17,11 @@
 		<folder>language</folder>
 		<folder>Resource</folder>
 		<folder>Template</folder>
+		<folder>vendor</folder>
 		<folder>Windwalker</folder>
+		<file>.gitignore</file>
+		<file>composer.json</file>
+		<file>composer.lock</file>
 		<file>windwalker.xml</file>
 		<file>index.html</file>
 
