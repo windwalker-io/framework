@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace GeneratorBundle\Command\Controller;
+namespace GeneratorBundle\Controller;
 
 use Windwalker\Console\Controller\Controller as ConsoleController;
 
@@ -17,6 +17,13 @@ use Windwalker\Console\Controller\Controller as ConsoleController;
  */
 class GeneratorController extends ConsoleController
 {
+	/**
+	 * Property task.
+	 *
+	 * @var  string
+	 */
+	protected $task = null;
+
 	/**
 	 * Property type.
 	 *
@@ -85,25 +92,35 @@ class GeneratorController extends ConsoleController
 	 */
 	public function execute()
 	{
-		$input = $this->input;
+		$config = array();
 
 		// Prepare basic data.
 		$element = $this->getOrClose(0, 'Please enter extension element.');
 
 		list($extension, $name, $element, $group) = $this->extractElement($element);
 
-		$this->element = $element;
-		$this->type    = $extension;
-		$this->name    = $name;
-		$this->group   = $group;
-		$this->client  = $this->command->getOption('c');
+		$this->element  = $config['element']   = $element;
+		$this->type     = $config['extension'] = $extension;
+		$this->name     = $config['name']      = $name;
+		$this->group    = $config['group']     = $group;
+		$this->template = $config['template']  = $this->command->getOption('t');
+		$this->client   = $config['client']    = $this->command->getOption('c');
 
 		if ($this->client == 'admin')
 		{
-			$this->client = 'administrator';
+			$this->client = $config['client'] = 'administrator';
 		}
 
+		// Get Handler
+		$task = array_map('ucfirst', explode('.', $this->getTask()));
+		$task = implode('\\', $task);
 
+		$class  = 'GeneratorBundle\\Controller\\';
+		$class .= ucfirst($this->type) . '\\' . $task . 'Controller';
+
+		$controller = new $class($this->command, $config);
+
+		show($controller);
 	}
 
 	/**
@@ -159,5 +176,29 @@ class GeneratorController extends ConsoleController
 		}
 
 		return $this->extMapper[$prefix];
+	}
+
+	/**
+	 * getTask
+	 *
+	 * @return  string
+	 */
+	public function getTask()
+	{
+		return $this->task;
+	}
+
+	/**
+	 * setTask
+	 *
+	 * @param   string $task
+	 *
+	 * @return  GeneratorController  Return self to support chaining.
+	 */
+	public function setTask($task)
+	{
+		$this->task = $task;
+
+		return $this;
 	}
 }

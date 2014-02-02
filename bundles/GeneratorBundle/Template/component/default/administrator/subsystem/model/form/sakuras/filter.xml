@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="search">
+		<field name="field"
+			type="hidden"
+			default="*"
+			label="JSEARCH_FILTER_LABEL"
+			labelclass="pull-left"
+			class="input-small"
+			>
+			<option value="*">JALL</option>
+			<option value="sakura.title">JGLOBAL_TITLE</option>
+			<option value="category.title">JCATEGORY</option>
+		</field>
+
+		<field
+			name="index"
+			type="text"
+			label="JSEARCH_FILTER_LABEL"
+			hint="JSEARCH_FILTER"
+			/>
+
+		<!-- For multiple search
+		<fieldset name="multisearch">
+			<field
+				name="sakura.title"
+				type="text"
+				label="Title"
+				hint="JSEARCH_FILTER"
+				/>
+
+			<field
+				name="category.title"
+				type="text"
+				label="Category"
+				hint="JSEARCH_FILTER"
+				/>
+		</fieldset>
+		-->
+	</fields>
+
+	<!-- Filter -->
+	<fields name="filter">
+		<field
+			type="note"
+			label="COM_FLOWER_FILTER_NOTE_GENERAL"
+			/>
+
+		<field
+			name="sakura.published"
+			type="list"
+			label="JSTATUS"
+			default=""
+			onchange="this.form.submit();"
+			>
+			<option></option>
+			<option>JOPTION_SELECT_PUBLISHED</option>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+			<option value="-2">JTRASHED</option>
+			<option value="*">JALL</option>
+		</field>
+
+		<field
+			name="sakura.catid"
+			type="category"
+			default=""
+			label="JCATEGORY"
+			extension="com_flower"
+			onchange="this.form.submit();"
+			>
+			<option></option>
+			<option>JOPTION_SELECT_CATEGORY</option>
+		</field>
+	</fields>
+
+	<fields name="list">
+		<field
+			name="fullordering"
+			type="list"
+			label="COM_CONTENT_LIST_FULL_ORDERING"
+			description="COM_CONTENT_LIST_FULL_ORDERING_DESC"
+			onchange="this.form.submit();"
+			default="a.title ASC"
+			>
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="sakura.catid, sakura.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+			<option value="sakura.catid, sakura.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+			<option value="sakura.published ASC">JSTATUS_ASC</option>
+			<option value="sakura.published DESC">JSTATUS_DESC</option>
+			<option value="sakura.title ASC">JGLOBAL_TITLE_ASC</option>
+			<option value="sakura.title DESC">JGLOBAL_TITLE_DESC</option>
+			<option value="category.title ASC">JCATEGORY_ASC</option>
+			<option value="category.title DESC">JCATEGORY_DESC</option>
+			<option value="sakura.access ASC">JGRID_HEADING_ACCESS_ASC</option>
+			<option value="sakura.access DESC">JGRID_HEADING_ACCESS_DESC</option>
+			<option value="sakura.created_by ASC">JAUTHOR_ASC</option>
+			<option value="sakura.created_by DESC">JAUTHOR_DESC</option>
+			<option value="sakura.language ASC">JGRID_HEADING_LANGUAGE_ASC</option>
+			<option value="sakura.language DESC">JGRID_HEADING_LANGUAGE_DESC</option>
+			<option value="sakura.created ASC">JDATE_ASC</option>
+			<option value="sakura.created DESC">JDATE_DESC</option>
+			<option value="sakura.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="sakura.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+
+		<field
+			name="limit"
+			type="limitbox"
+			class="inputbox input-mini"
+			default="25"
+			label="COM_CONTENT_LIST_LIMIT"
+			description="COM_CONTENT_LIST_LIMIT_DESC"
+			onchange="this.form.submit();"
+			/>
+	</fields>
+</form>

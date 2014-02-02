@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component"
+	version="3.2"
+	method="upgrade">
+	<name>com_flower</name>
+	<creationDate>2014-1-11</creationDate>
+	<copyright>Copyright (C) 2014. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<author>Asika</author>
+	<authorEmail>asika32764@gmail.com</authorEmail>
+	<authorUrl>http://asikart.com</authorUrl>
+	<version>1.0.0</version>
+	<description>COM_FLOWER_XML_DESCRIPTION</description>
+
+	<scriptfile>install.php</scriptfile>
+
+	<!-- do not re install sql when generator working.
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.sql</file>
+		  </sql>
+	</install>
+	-->
+
+	<uninstall>
+		<sql>
+			<file driver="mysql"
+				charset="utf8">sql/uninstall.sql
+			</file>
+		</sql>
+	</uninstall>
+
+	<files folder="../site">
+		<filename>componenet.php</filename>
+		<filename>flower.php</filename>
+		<filename>index.html</filename>
+		<filename>router.php</filename>
+		<folder>asset</folder>
+		<folder>controller</folder>
+		<folder>helper</folder>
+		<folder>images</folder>
+		<folder>model</folder>
+		<folder>sql</folder>
+		<folder>view</folder>
+	</files>
+
+	<administration>
+		<menu>COM_FLOWER</menu>
+
+		<!-- Submenu
+			Note that all & must be escaped to &amp; for the file to be valid
+			XML and be parsed by the installer
+		<submenu>
+
+			<menu link="option=com_flower&amp;view=sakuras"
+				view="sakuras">com_flower_sakuras
+			</menu>
+			<menu link="option=com_categories&amp;extension=com_flower"
+				view="categories">jcategories
+			</menu>
+		</submenu>
+		-->
+
+		<files folder="admin">
+			<filename>access.xml</filename>
+			<filename>component.php</filename>
+			<filename>config.xml</filename>
+			<filename>flower.php</filename>
+			<filename>index.html</filename>
+			<filename>install.php</filename>
+			<folder>asset</folder>
+			<folder>controller</folder>
+			<folder>helper</folder>
+			<folder>helpers</folder>
+			<folder>images</folder>
+			<folder>language</folder>
+			<folder>model</folder>
+			<folder>sql</folder>
+			<folder>src</folder>
+			<folder>table</folder>
+			<folder>view</folder>
+		</files>
+	</administration>
+
+	<modules>
+		<!--<module>mod_flower</module>-->
+	</modules>
+
+	<plugins>
+		<!--<plugin>plg_system_flower</plugin>-->
+	</plugins>
+
+	<!--
+	<updateservers>
+		<server type="extension" priority="1" name="Asikart Flower Component">http://update.asikart.com/component/com_flower.xml</server>
+	</updateservers>
+	-->
+
+</extension>
+

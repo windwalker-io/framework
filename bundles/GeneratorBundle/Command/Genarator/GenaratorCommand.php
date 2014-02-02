@@ -63,6 +63,12 @@ class GenaratorCommand extends Command
 			null,
 			'Site or administrator (admin)',
 			Option::IS_GLOBAL
+		)
+		->addOption(
+			array('t', 'tmpl'),
+			'default',
+			'Using template.',
+			Option::IS_GLOBAL
 		);
 	}
 

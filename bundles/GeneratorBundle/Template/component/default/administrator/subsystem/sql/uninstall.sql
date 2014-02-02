@@ -1,0 +1,1 @@
+DROP TABLE  `#__flower_sakuras`

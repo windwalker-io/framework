@@ -8,7 +8,7 @@
 
 namespace GeneratorBundle\Command\Genarator\Project\Init;
 
-use GeneratorBundle\Command\Controller\GeneratorController;
+use GeneratorBundle\Controller\GeneratorController;
 use Windwalker\Console\Command\Command;
 
 defined('WINDWALKER') or die;
@@ -69,6 +69,6 @@ class InitCommand extends Command
 	{
 		$generator = new GeneratorController($this);
 
-		$generator->execute();
+		$generator->setTask('project.init')->execute();
 	}
 }
