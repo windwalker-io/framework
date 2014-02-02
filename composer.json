@@ -1,6 +1,14 @@
 {
 	"name"             : "asika/windwalker",
 	"description"      : "Rapido de la vento viro.",
+	"license"          : "GNU Lesser General Public License",
+	"minimum-stability": "beta",
+	"authors"          : [
+		{
+			"name" : "Simon Asika",
+			"email": "asika32764@gmail.com"
+		}
+	],
 	"require"          : {
 		"asika/joomla-console" : "~1.0",
 		"joomla/registry"      : "~1.0",
@@ -8,19 +16,18 @@
 	},
 	"require-dev"      : {
 	},
-	"license"          : "GNU Lesser General Public License",
-	"authors"          : [
-		{
-			"name" : "Simon Asika",
-			"email": "asika32764@gmail.com"
-		}
-	],
 	"autoload" : {
 		"psr-0" : {
-			"" : "../../cli/windwalker"
+			"" : "../../cli/windwalker",
+			"Windwalker" : ""
 		}
 	},
-	"minimum-stability": "beta",
+	"scripts": {
+		"post-install-cmd": [
+			"Windwalker\\System\\Installer\\ComposerInstaller::install"
+		],
+		"post-update-cmd": []
+	},
 	"bin": [
 		"Windwalker/init.php"
 	],
