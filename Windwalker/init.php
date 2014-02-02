@@ -24,6 +24,8 @@ define('WINDWALKER', dirname(__DIR__));
 
 define('WINDWALKER_SOURCE', __DIR__);
 
+define('WINDWALKER_BUNDLE', dirname(WINDWALKER) . '/windwalker-bundles');
+
 // Register global provider
 $container = Container::getInstance();
 

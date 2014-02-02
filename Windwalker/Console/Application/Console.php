@@ -8,13 +8,14 @@
 
 namespace Windwalker\Console\Application;
 
-use Windwalker\Bundle\Generator\GeneratorBundle;
 use Windwalker\Console\Descriptor\OptionDescriptor;
 use Joomla\Application\Cli\CliOutput;
 use Joomla\Console\Console as JoomlaConsole;
 use Joomla\Application\Cli\Output;
 use Joomla\Input;
 use Joomla\Registry\Registry;
+use Windwalker\Filesystem\Path\PathCollection;
+use Windwalker\Filesystem\Path\PathLocator;
 
 /**
  * Class Console
@@ -96,7 +97,28 @@ class Console extends JoomlaConsole
 			// Do nothing
 		}
 
-		GeneratorBundle::registerCommands($this);
+		$paths = new PathCollection(
+			array(
+				new PathLocator(WINDWALKER . '/bundles'),
+				new PathLocator(WINDWALKER_BUNDLE),
+			)
+		);
+
+		$bundles = $paths->findAll('Bundle$');
+
+		foreach ($bundles as $bundle)
+		{
+			$bundleName = $bundle->getBasename();
+
+			echo $class = $bundleName . '\\' . $bundleName;
+
+			\JLoader::registerNamespace($bundleName, dirname((string) $bundle));
+
+			if (class_exists($class) && is_subclass_of($class, 'Windwalker\\Bundle\\AbstractBundle'))
+			{
+				$class::registerCommands($this);
+			}
+		}
 
 		$context = get_class($this->defaultCommand);
 

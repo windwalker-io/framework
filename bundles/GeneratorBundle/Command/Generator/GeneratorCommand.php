@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Bundle\Generator\Command\Generator;
+namespace GeneratorBundle\Command\Generator;
 
 use Windwalker\Console\Command\Command;
 
