@@ -157,7 +157,7 @@ TMPL;
 
 		@$name       = $this->input->args[0] ? : exit("Please enter command name");
 		@$namespace  = $this->input->args[1] ? : exit("Please enter command namespace");
-		$description = $this->getOption('d', $name);
+		$description = $this->getOption('d') ? : $name;
 
 		if (!$name || !$namespace)
 		{

@@ -6,18 +6,20 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace GeneratorBundle\Command\Project;
+namespace GeneratorBundle\Command\Genarator;
 
+use Joomla\Console\Option\Option;
 use Windwalker\Console\Command\Command;
+use Windwalker\DI\Container;
 
 defined('WINDWALKER') or die;
 
 /**
- * Class Project
+ * Class Genarator
  *
  * @since  2.0
  */
-class ProjectCommand extends Command
+class GenaratorCommand extends Command
 {
 	/**
 	 * An enabled flag.
@@ -31,21 +33,21 @@ class ProjectCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $name = 'project';
+	protected $name = 'generator';
 
 	/**
 	 * The command description.
 	 *
 	 * @var  string
 	 */
-	protected $description = 'Project operating.';
+	protected $description = 'Extension generator.';
 
 	/**
 	 * The usage to tell user how to use this command.
 	 *
 	 * @var string
 	 */
-	protected $usage = 'project <cmd><command></cmd> <option>[option]</option>';
+	protected $usage = 'generator <cmd><command></cmd> <option>[option]</option>';
 
 	/**
 	 * Configure command information.
@@ -54,9 +56,14 @@ class ProjectCommand extends Command
 	 */
 	public function configure()
 	{
-		// $this->addArgument();
-
 		parent::configure();
+
+		$this->addOption(
+			array('c', 'client'),
+			null,
+			'Site or administrator (admin)',
+			Option::IS_GLOBAL
+		);
 	}
 
 	/**

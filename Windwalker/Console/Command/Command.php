@@ -12,6 +12,7 @@ use Joomla\Console\Command\AbstractCommand;
 use Joomla\Console\Command\Command as JoomlaCommand;
 use Joomla\Application\Cli\CliOutput;
 use Joomla\Input;
+use Windwalker\Console\OptionSet\OptionSet;
 
 /**
  * Base JCommand class.
@@ -34,6 +35,8 @@ abstract class Command extends JoomlaCommand
 	 */
 	public function __construct($name = null, Input\Cli $input = null, CliOutput $output = null, AbstractCommand $parent = null)
 	{
+		$this->globalOptions = OptionSet::getInstance();
+
 		parent::__construct($name, $input, $output, $parent);
 
 		$ref = new \ReflectionClass($this);
@@ -50,7 +53,7 @@ abstract class Command extends JoomlaCommand
 
 			$name = ucfirst($dir->getBasename());
 
-			$class = $ref->getNamespaceName() . '\\' . $name . "\\" . $name;
+			$class = $ref->getNamespaceName() . '\\' . $name . "\\" . $name . 'Command';
 
 			if (class_exists($class) && $class::$isEnabled)
 			{
@@ -71,5 +74,26 @@ abstract class Command extends JoomlaCommand
 		$context = get_class($this);
 
 		\JFactory::getApplication()->triggerEvent('onConsoleLoadCommand', array($context, $this));
+	}
+
+	/**
+	 * getOrClose
+	 *
+	 * @param int    $arg
+	 * @param string $msg
+	 *
+	 * @return  string
+	 */
+	public function getOrClose($arg, $msg = '')
+	{
+		if (isset($this->input->args[$arg]))
+		{
+			return $this->input->args[$arg];
+		}
+
+		$this->out()->out($msg)
+			->out()->out('Usage:')->out($this->usage);
+
+		$this->application->close();
 	}
 }

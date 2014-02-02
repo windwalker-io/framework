@@ -6,18 +6,18 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace GeneratorBundle\Command\Controller;
+namespace GeneratorBundle\Command\Genarator\Project;
 
 use Windwalker\Console\Command\Command;
 
 defined('WINDWALKER') or die;
 
 /**
- * Class Controller
+ * Class Project
  *
  * @since  2.0
  */
-class ControllerCommand extends Command
+class ProjectCommand extends Command
 {
 	/**
 	 * An enabled flag.
@@ -31,21 +31,21 @@ class ControllerCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $name = 'controller';
+	protected $name = 'project';
 
 	/**
 	 * The command description.
 	 *
 	 * @var  string
 	 */
-	protected $description = 'Setting controllers.';
+	protected $description = '';
 
 	/**
 	 * The usage to tell user how to use this command.
 	 *
 	 * @var string
 	 */
-	protected $usage = 'init <cmd><command></cmd> <option>[option]</option>';
+	protected $usage = 'project <cmd><command></cmd> <option>[option]</option>';
 
 	/**
 	 * Configure command information.

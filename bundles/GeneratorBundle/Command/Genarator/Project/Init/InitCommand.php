@@ -6,18 +6,19 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace GeneratorBundle\Command\Template;
+namespace GeneratorBundle\Command\Genarator\Project\Init;
 
+use GeneratorBundle\Command\Controller\GeneratorController;
 use Windwalker\Console\Command\Command;
 
 defined('WINDWALKER') or die;
 
 /**
- * Class Template
+ * Class Init
  *
  * @since  2.0
  */
-class TemplateCommand extends Command
+class InitCommand extends Command
 {
 	/**
 	 * An enabled flag.
@@ -31,14 +32,14 @@ class TemplateCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $name = 'template';
+	protected $name = 'init';
 
 	/**
 	 * The command description.
 	 *
 	 * @var  string
 	 */
-	protected $description = 'Setting Templates.';
+	protected $description = 'Init a new project';
 
 	/**
 	 * The usage to tell user how to use this command.
@@ -66,6 +67,8 @@ class TemplateCommand extends Command
 	 */
 	protected function doExecute()
 	{
-		return parent::doExecute();
+		$generator = new GeneratorController($this);
+
+		$generator->execute();
 	}
 }

@@ -12,6 +12,7 @@
 	"require"          : {
 		"asika/joomla-console" : "~1.0",
 		"joomla/registry"      : "~1.0",
+		"joomla/controller"    : "~1.0",
 		"filp/whoops"          : "1.*"
 	},
 	"require-dev"      : {
