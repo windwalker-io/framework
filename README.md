@@ -8,6 +8,19 @@ This is the version 2 repository, all folder with lower case is legacy code, all
 
 The version 2 is still work in process.
 
+## Installation Via Composer
+
+``` bash
+cd /your/joomla/dir
+composer create-project asika/windwalker libraries/windwalker dev-staging -s dev
+```
+
+## Build a new extension (Work in process)
+
+``` bash
+php bin/windwalker project init com_flower sakura.sakuras -c admin
+```
+
 ## About
 Author
 :   [Simon Asika](mailto://asika@asikart.com)
