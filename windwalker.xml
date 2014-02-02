@@ -14,6 +14,7 @@
 
 	<files>
 		<!-- 2.0 -->
+		<folder>bin</folder>
 		<folder>language</folder>
 		<folder>Resource</folder>
 		<folder>Template</folder>

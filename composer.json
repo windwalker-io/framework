@@ -2,6 +2,9 @@
 	"name"             : "asika/windwalker",
 	"description"      : "Rapido de la vento viro.",
 	"require"          : {
+		"asika/joomla-console" : "~1.0",
+		"filp/whoops": "1.*",
+		"squizlabs/php_codesniffer" : "*"
 	},
 	"require-dev"      : {
 	},
@@ -12,5 +15,16 @@
 			"email": "asika32764@gmail.com"
 		}
 	],
-	"minimum-stability": "alpha"
+	"autoload" : {
+		"psr-0" : {
+			"" : "../../cli/windwalker"
+		}
+	},
+	"minimum-stability": "beta",
+	"bin": [
+		"Windwalker/init.php"
+	],
+	"config": {
+		"bin-dir": "../../bin"
+	}
 }

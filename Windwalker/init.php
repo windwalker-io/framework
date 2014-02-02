@@ -27,7 +27,14 @@ define('WINDWALKER_SOURCE', __DIR__);
 // Register global provider
 $container = Container::getInstance();
 
-$container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);
+if (defined('WINDWALKER_CONSOLE'))
+{
+	$container->registerServiceProvider(new \Windwalker\Provider\ConsoleProvider);
+}
+else
+{
+	$container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);
+}
 
 // Load language
 $lang = JFactory::getLanguage();
