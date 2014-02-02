@@ -6,6 +6,9 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+// Load Composer
+include_once dirname(__DIR__) . '/vendor/autoload.php';
+
 // Load Joomla framework
 JLoader::registerNamespace('Joomla', JPATH_LIBRARIES . '/framework');
 

@@ -14,6 +14,7 @@ use Joomla\Console\Console as JoomlaConsole;
 use Joomla\Application\Cli\Output;
 use Joomla\Input;
 use Joomla\Registry\Registry;
+use Windwalker\DI\Container;
 use Windwalker\Filesystem\Path\PathCollection;
 use Windwalker\Filesystem\Path\PathLocator;
 
@@ -51,6 +52,13 @@ class Console extends JoomlaConsole
 	protected $version = '2.0';
 
 	/**
+	 * Property container.
+	 *
+	 * @var Container
+	 */
+	protected $container;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param   Input\Cli  $input   An optional argument to provide dependency injection for the application's
@@ -68,6 +76,8 @@ class Console extends JoomlaConsole
 	public function __construct(Input\Cli $input = null, Registry $config = null, CliOutput $output = null)
 	{
 		$this->loadDispatcher();
+
+		$input = $input ? : $this->getContainer()->get('input');
 
 		\JFactory::$application = $this;
 
@@ -97,27 +107,9 @@ class Console extends JoomlaConsole
 			// Do nothing
 		}
 
-		$paths = new PathCollection(
-			array(
-				new PathLocator(WINDWALKER . '/bundles'),
-				new PathLocator(WINDWALKER_BUNDLE),
-			)
-		);
-
-		$bundles = $paths->findAll('Bundle$');
-
-		foreach ($bundles as $bundle)
+		foreach ($this->get('bundle') as $bundle)
 		{
-			$bundleName = $bundle->getBasename();
-
-			$class = $bundleName . '\\' . $bundleName;
-
-			\JLoader::registerNamespace($bundleName, dirname((string) $bundle));
-
-			if (class_exists($class) && is_subclass_of($class, 'Windwalker\\Bundle\\AbstractBundle'))
-			{
-				$class::registerCommands($this);
-			}
+			$bundle::registerCommands($this);
 		}
 
 		$context = get_class($this->defaultCommand);
@@ -163,5 +155,69 @@ class Console extends JoomlaConsole
 		}
 
 		return null;
+	}
+
+	/**
+	 * isSite
+	 *
+	 * @return  bool
+	 */
+	public function isSite()
+	{
+		return true;
+	}
+
+	/**
+	 * isAdmin
+	 *
+	 * @return  bool
+	 */
+	public function isAdmin()
+	{
+		return false;
+	}
+
+	/**
+	 * enqueueMessage
+	 *
+	 * @param string $msg
+	 * @param string $type
+	 *
+	 * @return  $this
+	 */
+	public function enqueueMessage($msg, $type = 'message')
+	{
+		$this->out($msg);
+
+		return $this;
+	}
+
+	/**
+	 * getContainer
+	 *
+	 * @return Container
+	 */
+	public function getContainer()
+	{
+		if (!$this->container)
+		{
+			$this->container = Container::getInstance();
+		}
+
+		return $this->container;
+	}
+
+	/**
+	 * setContainer
+	 *
+	 * @param Container $container
+	 *
+	 * @return Console
+	 */
+	public function setContainer(Container $container)
+	{
+		$this->container = $container;
+
+		return $this;
 	}
 }

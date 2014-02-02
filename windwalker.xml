@@ -24,6 +24,7 @@
 		<file>.gitignore</file>
 		<file>composer.json</file>
 		<file>composer.lock</file>
+		<file>config.dist.json</file>
 		<file>windwalker.xml</file>
 		<file>index.html</file>
 

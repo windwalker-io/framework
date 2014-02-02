@@ -29,13 +29,43 @@ define('WINDWALKER_BUNDLE', dirname(WINDWALKER) . '/windwalker-bundles');
 // Register global provider
 $container = Container::getInstance();
 
+$container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);
+
 if (defined('WINDWALKER_CONSOLE'))
 {
-	$container->registerServiceProvider(new \Windwalker\Provider\ConsoleProvider);
+	$container->registerServiceProvider(new \Windwalker\Provider\CliProvider);
 }
 else
 {
-	$container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);
+	$container->registerServiceProvider(new \Windwalker\Provider\WebProvider);
+}
+
+// Register bundles
+$paths = new \Windwalker\Filesystem\Path\PathCollection(
+	array(
+		WINDWALKER . '/bundles',
+		WINDWALKER_BUNDLE,
+	)
+);
+
+$bundles = $paths->findAll('Bundle$');
+
+$config = $container->get('windwalker.config');
+
+foreach ($bundles as $bundle)
+{
+	$bundleName = $bundle->getBasename();
+
+	$class = $bundleName . '\\' . $bundleName;
+
+	\JLoader::registerNamespace($bundleName, dirname((string) $bundle));
+
+	if (class_exists($class) && is_subclass_of($class, 'Windwalker\\Bundle\\AbstractBundle'))
+	{
+		$config->set('bundle.' . $bundleName, $class);
+
+		$class::registerProvider($container);
+	}
 }
 
 // Load language

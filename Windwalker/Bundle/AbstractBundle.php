@@ -81,6 +81,17 @@ class AbstractBundle implements ContainerAwareInterface
 	}
 
 	/**
+	 * registerProvider
+	 *
+	 * @param JoomlaContainer $container
+	 *
+	 * @return  void
+	 */
+	public static function registerProvider(JoomlaContainer $container)
+	{
+	}
+
+	/**
 	 * registerCommands
 	 *
 	 * @param Console $console

@@ -35,10 +35,8 @@ require_once JPATH_LIBRARIES . '/cms.php';
 
 restore_exception_handler();
 
+// Windwalker init
 include_once WINDWALKER_CONSOLE . '/../Windwalker/init.php';
-
-// Composer autoload
-include_once WINDWALKER_CONSOLE . '/../vendor/autoload.php';
 
 // Import the configuration.
 require_once JPATH_CONFIGURATION . '/configuration.php';
@@ -46,12 +44,6 @@ require_once JPATH_CONFIGURATION . '/configuration.php';
 // System configuration.
 $config = new JConfig;
 
-use Joomla\Console\Output\Stdout;
-use Windwalker\Console\Application\Console;
-
-$console = new Console(null, null, new Stdout);
-
-JFactory::$application = $console;
-
-$console->setDescription(null)
+\Windwalker\DI\Container::getInstance()->get('app')
+	->setDescription(null)
 	->execute();

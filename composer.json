@@ -3,7 +3,8 @@
 	"description"      : "Rapido de la vento viro.",
 	"require"          : {
 		"asika/joomla-console" : "~1.0",
-		"filp/whoops": "1.*"
+		"joomla/registry"      : "~1.0",
+		"filp/whoops"          : "1.*"
 	},
 	"require-dev"      : {
 	},

@@ -4,6 +4,7 @@ namespace Windwalker\Provider;
 
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
+use Joomla\Registry\Registry;
 
 /**
  * Class SystemProvider
@@ -26,29 +27,16 @@ class SystemProvider implements ServiceProviderInterface
 		// Global Config
 		$container->share('joomla.config', array('JFactory', 'getConfig'));
 
-		// Application
-		$container->alias('app', 'JApplicationCms')
-			->share('JApplicationCms', array('JFactory', 'getApplication'));
+		// Windwalker Config
+		$container->share('windwalker.config', array($this, 'loadConfig'));
 
 		// Database
 		$container->alias('db', 'JDatabaseDriver')
 			->share('JDatabaseDriver', array('JFactory', 'getDbo'));
 
-		// Document
-		$container->alias('document', 'JDocumentHtml')
-			->share('JDocumentHtml', array('JFactory', 'getDocument'));
-
 		// Language
 		$container->alias('language', 'JLanguage')
 			->share('JLanguage', array('JFactory', 'getLanguage'));
-
-		// User
-		$container->alias('user', 'JUser')
-			->share('JUser', \JFactory::getUser());
-
-		// Input
-		$container->alias('input', 'JInput')
-			->share('JInput', \JFactory::getApplication()->input);
 
 		// Dispatcher
 		$container->alias('event.dispatcher', 'JEventDispatcher')
@@ -70,12 +58,24 @@ class SystemProvider implements ServiceProviderInterface
 				return new \SplPriorityQueue;
 			}
 		);
+	}
 
-		// Helpers
-		if (\JFactory::getApplication() instanceof \JApplicationCms)
+	/**
+	 * loadConfig
+	 *
+	 * @return  Registry
+	 */
+	public function loadConfig()
+	{
+		$file = WINDWALKER . '/config.json';
+
+		if (!is_file($file))
 		{
-			$container->alias('helper.asset', '\\Windwalker\\Helper\\AssetHelper')
-				->buildSharedObject('\\Windwalker\\Helper\\AssetHelper');
+			\JFile::copy(WINDWALKER . '/config.dist.json', $file);
 		}
+
+		$config = new Registry;
+
+		return $config->loadFile($file, 'json');
 	}
 }
