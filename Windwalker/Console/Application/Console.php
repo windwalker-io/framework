@@ -8,6 +8,7 @@
 
 namespace Windwalker\Console\Application;
 
+use Windwalker\Bundle\Generator\GeneratorBundle;
 use Windwalker\Console\Descriptor\OptionDescriptor;
 use Joomla\Application\Cli\CliOutput;
 use Joomla\Console\Console as JoomlaConsole;
@@ -95,29 +96,11 @@ class Console extends JoomlaConsole
 			// Do nothing
 		}
 
-		// Find commands in cli
-		$dirs = new \DirectoryIterator(WINDWALKER_SOURCE . '/Console/Command');
-
-		foreach ($dirs as $dir)
-		{
-			if (!$dir->isDir())
-			{
-				continue;
-			}
-
-			$name = ucfirst($dir->getBasename());
-
-			$class = "Windwalker\\Console\\Command\\" . $name . "\\" . $name;
-
-			if (class_exists($class))
-			{
-				$this->defaultCommand->addArgument(new $class(null, $this->input, $this->output));
-			}
-		}
+		GeneratorBundle::registerCommands($this);
 
 		$context = get_class($this->defaultCommand);
 
-		$this->triggerEvent('onConsoleLoadCommand', array($context, $this->defaultCommand));
+		$this->triggerEvent('onWindwalkerLoadCommand', array($context, $this->defaultCommand));
 	}
 
 	/**
