@@ -110,7 +110,7 @@ class Console extends JoomlaConsole
 		{
 			$bundleName = $bundle->getBasename();
 
-			echo $class = $bundleName . '\\' . $bundleName;
+			$class = $bundleName . '\\' . $bundleName;
 
 			\JLoader::registerNamespace($bundleName, dirname((string) $bundle));
 
