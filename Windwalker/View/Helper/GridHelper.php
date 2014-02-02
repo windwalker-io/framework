@@ -11,7 +11,7 @@ namespace Windwalker\View\Helper;
 use JHtml;
 use JText;
 use Windwalker\Data\Data;
-use Windwalker\Registry\Registry;
+use Joomla\Registry\Registry;
 
 /**
  * Class GridHelper

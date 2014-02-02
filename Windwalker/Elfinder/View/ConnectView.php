@@ -12,7 +12,7 @@ use elFinder;
 use elFinderConnector;
 use JPath;
 use JURI;
-use Windwalker\Registry\Registry;
+use Joomla\Registry\Registry;
 use Windwalker\View\Json\AbstractJsonView;
 
 /**

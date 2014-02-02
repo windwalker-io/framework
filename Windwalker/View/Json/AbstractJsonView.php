@@ -10,7 +10,7 @@ namespace Windwalker\View\Json;
 
 use Joomla\DI\Container;
 use Windwalker\Model\Model;
-use Windwalker\Registry\Registry;
+use Joomla\Registry\Registry;
 use Windwalker\View\AbstractView;
 
 defined('JPATH_PLATFORM') or die;

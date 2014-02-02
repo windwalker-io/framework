@@ -16,7 +16,7 @@ use Windwalker\Helper\ArrayHelper;
 use Windwalker\Helper\LanguageHelper;
 use Windwalker\Model\CrudModel;
 use Windwalker\Model\Exception\ValidateFailException;
-use Windwalker\Registry\Registry;
+use Joomla\Registry\Registry;
 
 /**
  * Class QuickaddController
