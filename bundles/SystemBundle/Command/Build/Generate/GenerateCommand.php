@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace SystemBundle\Command\Build\GenerateCommand;
+namespace SystemBundle\Command\Build\Generate;
 
 use Windwalker\Console\Command\Command;
 

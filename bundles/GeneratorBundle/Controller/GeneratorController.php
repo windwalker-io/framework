@@ -8,6 +8,8 @@
 
 namespace GeneratorBundle\Controller;
 
+use GeneratorBundle\Prompter\ElementPrompter;
+use Joomla\Registry\Registry;
 use Windwalker\Console\Controller\Controller as ConsoleController;
 
 /**
@@ -95,7 +97,8 @@ class GeneratorController extends ConsoleController
 		$config = array();
 
 		// Prepare basic data.
-		$element = $this->getOrClose(0, 'Please enter extension element.');
+		$command = $this->command;
+		$element = $command->getArgument(0, new ElementPrompter('Please enter extension element: '));
 
 		list($extension, $name, $element, $group) = $this->extractElement($element);
 
@@ -118,9 +121,11 @@ class GeneratorController extends ConsoleController
 		$class  = 'GeneratorBundle\\Controller\\';
 		$class .= ucfirst($this->type) . '\\' . $task . 'Controller';
 
-		$controller = new $class($this->command, $config);
+		$controller = new $class($this->command, new Registry($config));
 
-		show($controller);
+		$controller->execute();
+
+		// show($controller);
 	}
 
 	/**
@@ -136,7 +141,7 @@ class GeneratorController extends ConsoleController
 	{
 		$prefix = substr($element, 0, 4);
 
-		$ext = static::getExtType($prefix);
+		$ext = $this->getExtType($prefix);
 
 		$group = '';
 		$name = substr($element, 4);

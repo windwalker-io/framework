@@ -10,13 +10,14 @@ namespace GeneratorBundle\Action\Component;
 
 use GeneratorBundle\Action\Action;
 use GeneratorBundle\Controller\TaskController;
+use Windwalker\String\String;
 
 /**
- * Class CopyBasefilesAction
+ * Class ConvertTemplateAction
  *
  * @since 1.0
  */
-class CopyBasefilesAction extends Action
+class ConvertTemplateAction extends Action
 {
 	/**
 	 * execute
@@ -28,8 +29,22 @@ class CopyBasefilesAction extends Action
 	 */
 	public function execute(TaskController $controller, $replace = array())
 	{
-		print_r($controller->config);
+		show($replace);
 
-		// TODO: Implement execute() method.
+		show($controller->config);
+
+		$config = $controller->config;
+
+		$copyOperator = $this->container->get('operator.copy');
+
+		$replace = array_flip($replace);
+
+		foreach ($replace as &$val)
+		{
+			$val = '{{' . $val . '}}';
+		}
+
+		// Flip src and dest because we want to convert template.
+		$copyOperator->copy($config->get('dir.dest'), $config->get('dir.src'), $replace);
 	}
 }

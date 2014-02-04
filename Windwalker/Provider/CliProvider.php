@@ -27,8 +27,8 @@ class CliProvider implements ServiceProviderInterface
 	public function register(Container $container)
 	{
 		// Application
-		$container->alias('app', 'Windwalker\\Console\\Console')
-			->share('Windwalker\\Console\\Console',
+		$container->alias('app', 'Windwalker\\Console\\Application\\Console')
+			->share('Windwalker\\Console\\Application\\Console',
 				function($container)
 				{
 					return new Console(null, $container->get('windwalker.config'), new Stdout);

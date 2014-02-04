@@ -6,20 +6,19 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace GeneratorBundle\Command\Genarator;
+namespace GeneratorBundle\Command\Generator\Template\Convert;
 
-use Joomla\Console\Option\Option;
+use GeneratorBundle\Controller\GeneratorController;
 use Windwalker\Console\Command\Command;
-use Windwalker\DI\Container;
 
 defined('WINDWALKER') or die;
 
 /**
- * Class Genarator
+ * Class Convert
  *
  * @since  2.0
  */
-class GenaratorCommand extends Command
+class ConvertCommand extends Command
 {
 	/**
 	 * An enabled flag.
@@ -33,21 +32,21 @@ class GenaratorCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $name = 'generator';
+	protected $name = 'convert';
 
 	/**
 	 * The command description.
 	 *
 	 * @var  string
 	 */
-	protected $description = 'Extension generator.';
+	protected $description = 'convert';
 
 	/**
 	 * The usage to tell user how to use this command.
 	 *
 	 * @var string
 	 */
-	protected $usage = 'generator <cmd><command></cmd> <option>[option]</option>';
+	protected $usage = 'convert <cmd><command></cmd> <option>[option]</option>';
 
 	/**
 	 * Configure command information.
@@ -56,20 +55,9 @@ class GenaratorCommand extends Command
 	 */
 	public function configure()
 	{
-		parent::configure();
+		// $this->addArgument();
 
-		$this->addOption(
-			array('c', 'client'),
-			null,
-			'Site or administrator (admin)',
-			Option::IS_GLOBAL
-		)
-		->addOption(
-			array('t', 'tmpl'),
-			'default',
-			'Using template.',
-			Option::IS_GLOBAL
-		);
+		parent::configure();
 	}
 
 	/**
@@ -79,6 +67,8 @@ class GenaratorCommand extends Command
 	 */
 	protected function doExecute()
 	{
-		return parent::doExecute();
+		$generator = new GeneratorController($this);
+
+		$generator->setTask('template.convert')->execute();
 	}
 }

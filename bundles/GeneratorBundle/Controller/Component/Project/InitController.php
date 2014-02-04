@@ -10,6 +10,7 @@ namespace GeneratorBundle\Controller\Component\Project;
 
 
 use GeneratorBundle\Action\Component\CopyBasefilesAction;
+use GeneratorBundle\Controller\Component\ComponentController;
 use GeneratorBundle\Controller\TaskController;
 use LogicException;
 use RuntimeException;
@@ -19,7 +20,7 @@ use RuntimeException;
  *
  * @since 1.0
  */
-class InitController extends TaskController
+class InitController extends ComponentController
 {
 	/**
 	 * Execute the controller.

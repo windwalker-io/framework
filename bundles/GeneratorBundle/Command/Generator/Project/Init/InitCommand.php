@@ -6,18 +6,19 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace GeneratorBundle\Command\Genarator\Project;
+namespace GeneratorBundle\Command\Generator\Project\Init;
 
+use GeneratorBundle\Controller\GeneratorController;
 use Windwalker\Console\Command\Command;
 
 defined('WINDWALKER') or die;
 
 /**
- * Class Project
+ * Class Init
  *
  * @since  2.0
  */
-class ProjectCommand extends Command
+class InitCommand extends Command
 {
 	/**
 	 * An enabled flag.
@@ -31,21 +32,21 @@ class ProjectCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $name = 'project';
+	protected $name = 'init';
 
 	/**
 	 * The command description.
 	 *
 	 * @var  string
 	 */
-	protected $description = '';
+	protected $description = 'Init a new project';
 
 	/**
 	 * The usage to tell user how to use this command.
 	 *
 	 * @var string
 	 */
-	protected $usage = 'project <cmd><command></cmd> <option>[option]</option>';
+	protected $usage = 'init <cmd><command></cmd> <option>[option]</option>';
 
 	/**
 	 * Configure command information.
@@ -66,6 +67,8 @@ class ProjectCommand extends Command
 	 */
 	protected function doExecute()
 	{
-		return parent::doExecute();
+		$generator = new GeneratorController($this);
+
+		$generator->setTask('project.init')->execute();
 	}
 }

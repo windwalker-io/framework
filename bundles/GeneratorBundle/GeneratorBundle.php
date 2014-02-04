@@ -10,6 +10,8 @@ namespace GeneratorBundle;
 
 use Windwalker\Bundle\AbstractBundle;
 
+define('GENERATOR_BUNDLE_PATH', __DIR__);
+
 /**
  * Class ComponentBuilderBundle
  *

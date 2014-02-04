@@ -9,9 +9,11 @@
 namespace GeneratorBundle\Controller;
 
 use GeneratorBundle\Action\Action;
+use GeneratorBundle\Provider\ServiceProvider;
 use Joomla\Registry\Registry;
 use Windwalker\Console\Command\Command;
 use Windwalker\Console\Controller\Controller;
+use Windwalker\DI\Container;
 
 /**
  * Class TaskController
@@ -25,7 +27,14 @@ abstract class TaskController extends Controller
 	 *
 	 * @var Registry
 	 */
-	protected $config;
+	public $config;
+
+	/**
+	 * Property replace.
+	 *
+	 * @var  array
+	 */
+	public $replace = array();
 
 	/**
 	 * Constructor.
@@ -33,9 +42,17 @@ abstract class TaskController extends Controller
 	 * @param   Command   $command
 	 * @param   Registry  $config
 	 */
-	public function __construct(Command $command, $config = null)
+	public function __construct(Command $command, Registry $config = null)
 	{
-		$this->config = new Registry($config);
+		$this->config = $config ? : new Registry($config);
+
+		// Set basic dir.
+		$config->set('basic_dir.dest', JPATH_BASE);
+
+		$config->set('basic_dir.src', dirname(__DIR__) . '/Template');
+
+		// Set provider
+		Container::getInstance()->registerServiceProvider(new ServiceProvider);
 
 		parent::__construct($command);
 	}
@@ -49,7 +66,7 @@ abstract class TaskController extends Controller
 	 */
 	public function doAction(Action $action)
 	{
-		$action->execute($this);
+		$action->execute($this, $this->replace);
 
 		return $this;
 	}

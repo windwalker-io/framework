@@ -57,7 +57,7 @@ abstract class Command extends JoomlaCommand
 
 			if (class_exists($class) && $class::$isEnabled)
 			{
-				$this->addArgument(new $class);
+				$this->addCommand(new $class);
 			}
 		}
 	}
