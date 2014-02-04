@@ -10,7 +10,7 @@
 		}
 	],
 	"require"          : {
-		"asika/joomla-console" : "~1.0",
+		"asika/joomla-console" : "dev-master",
 		"joomla/registry"      : "~1.0",
 		"joomla/controller"    : "~1.0",
 		"filp/whoops"          : "1.*"

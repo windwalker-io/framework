@@ -25,4 +25,9 @@ abstract class Action
 	 * @return  void
 	 */
 	abstract public function execute(TaskController $controller);
+
+	public function copy($src, $dest)
+	{
+
+	}
 }

@@ -28,6 +28,8 @@ BIN;
 	/**
 	 * install
 	 *
+	 * @param CommandEvent $event
+	 *
 	 * @return  void
 	 */
 	public static function install(CommandEvent $event)
@@ -36,14 +38,24 @@ BIN;
 
 		$io = $event->getIO();
 
+		// Create console file.
 		$io->write('Writing console file to bin.');
 
 		file_put_contents($windPath . '/../../bin/windwalker', static::$binFile);
 
+		// Config file
 		$io->write('Prepare config file.');
 
 		copy($windPath . '/config.dist.json', $windPath . 'config.json');
 
+		// Bundles dir
+		$bundlesDir = dirname($windPath) . '/windwalker-bundles';
+
+		$io->write('Create bundle folder: ' . $bundlesDir);
+
+		mkdir($bundlesDir);
+
+		// Complete
 		$io->write('Install complete.');
 	}
 }

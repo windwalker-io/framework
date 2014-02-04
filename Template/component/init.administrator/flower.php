@@ -7,9 +7,20 @@
  */
 
 include_once JPATH_LIBRARIES . '/windwalker/Windwalker/init.php';
+include_once __DIR__ . '/component.php';
 
-JLoader::registerPrefix('Flower', JPATH_COMPONENT);
+
+// Legacy
+define('AKDEBUG', true);
+
+if (JDEBUG)
+{
+	\Windwalker\Debugger\Debugger::registerWhoops();
+}
+
+JLoader::registerPrefix('Flower', JPATH_COMPONENT_ADMINISTRATOR);
 JLoader::registerNamespace('Flower', JPATH_COMPONENT_ADMINISTRATOR . '/src');
-JLoader::register('FlowerComponent', JPATH_COMPONENT . '/component.php');
 
-echo with(new FlowerComponent)->execute();
+// use Flower\Component\FlowerComponent;
+
+echo $component = with(new FlowerComponent)->execute();

@@ -1,35 +1,50 @@
 <?php
 
-use Joomla\DI\Container;
-use Windwalker\Model\Model;
-use Windwalker\View\Engine\PhpEngine;
-use Windwalker\View\Html\EditView;
-use Windwalker\Xul\XulEngine;
+use Windwalker\Data\Data;
+use Windwalker\Data\NullData;
+use Windwalker\View\Html\HtmlView;
 
 /**
  * Class SakurasHtmlView
  *
  * @since 1.0
  */
-class FlowerViewSakuraHtml extends EditView
+class FlowerViewSakuraHtml extends HtmlView
 {
-	/**
-	 * Method to instantiate the view.
-	 *
-	 * @param Model            $model     The model object.
-	 * @param Container        $container DI Container.
-	 * @param array            $config    View config.
-	 * @param SplPriorityQueue $paths     Paths queue.
-	 */
-	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
+	public function render()
 	{
-		$this->engine = new PhpEngine;
+		$data  = $this->getData();
+		$model = $this->getModel();
+		$input = $this->getContainer()->get('input');
 
-		parent::__construct($model, $container, $config, $paths);
+		$model->getState()->set('sakura.id', $input->get('id'));
+
+		$data->item = new Data($model->getItem()) ?: new NullData;
+		$data->form = $model->getForm();
+
+		$this->addToolbar();
+
+		return parent::render();
 	}
 
-	protected function prepareRender()
+	protected function addToolbar()
 	{
-		parent::prepareRender();
+		$input = $this->getContainer()->get('input');
+
+		$input->set('hidemainmenu', true);
+
+		JToolbarHelper::title('Sakura Edit');
+
+		JToolbarHelper::apply('sakura.edit.apply');
+		JToolbarHelper::save('sakura.edit.save');
+		JToolbarHelper::save2new('sakura.edit.save2new');
+		JToolbarHelper::save2copy('sakura.edit.save2copy');
+		JToolbarHelper::cancel('sakura.edit.cancel');
+
+//		JToolBarHelper::apply($this->item_name . '.apply');
+//		JToolBarHelper::save($this->item_name . '.save');
+//		JToolBarHelper::custom($this->item_name . '.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+//		JToolBarHelper::custom($this->item_name . '.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+//		JToolBarHelper::cancel($this->item_name . '.cancel');
 	}
 }

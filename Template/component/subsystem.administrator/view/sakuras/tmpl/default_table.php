@@ -13,14 +13,17 @@ use Windwalker\Data\Data;
  *
  * @var $container Windwalker\DI\Container
  * @var $data      Windwalker\Data\Data
- * @var $asset     Windwalker\Helper\AssetHelper
  * @var $grid      Windwalker\View\Helper\GridHelper
- * @var $date      \JDate
  */
 $container = $this->getContainer();
-$asset     = $container->get('helper.asset');
+$data      = $this->getData();
 $grid      = $data->grid;
-$date      = $container->get('date');
+
+// Prepare some API objects
+$app  = $container->get('app');
+$date = $container->get('date');
+$doc  = $container->get('document');
+$user = $container->get('user');
 
 // Set order script.
 $grid->registerTableSort();
@@ -125,17 +128,21 @@ $grid->registerTableSort();
 
 		<!--TITLE-->
 		<td class="n/owrap has-context quick-edit-wrap">
-			<div class="item-title">
-				<!-- Checkout -->
-				<?php echo $grid->checkoutButton(); ?>
 
-				<!-- Title -->
-				<?php echo $grid->editTitle(); ?>
-			</div>
+			<div class="pull-left fltlft">
 
-			<!-- Sub Title -->
-			<div class="small">
-				<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+				<div class="item-title">
+					<!-- Checkout -->
+					<?php echo $grid->checkoutButton(); ?>
+
+					<!-- Title -->
+					<?php echo $grid->editTitle(); ?>
+				</div>
+
+				<!-- Sub Title -->
+				<div class="small">
+					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+				</div>
 			</div>
 		</td>
 

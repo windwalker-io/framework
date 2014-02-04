@@ -1,7 +1,6 @@
 <?php
 
-use Windwalker\DI\Container;
-use Windwalker\Model\Filter\FilterHelper;
+use Windwalker\Helper\QueryHelper;
 use Windwalker\Model\ListModel;
 
 /**
@@ -12,84 +11,131 @@ use Windwalker\Model\ListModel;
 class FlowerModelSakuras extends ListModel
 {
 	/**
-	 * configureTables
+	 * Constructor.
 	 *
-	 * @return  void
+	 * @param    array  $config  An optional associative array of configuration settings.
+	 *
+	 * @see      JController
+	 * @since    1.6
 	 */
-	protected function configureTables()
+	public function __construct($config = array(), \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
-		$queryHelper = $this->getContainer()->get('model.sakuras.helper.query', Container::FORCE_NEW);
+		// Set query tables
+		// ========================================================================
+		$config['tables'] = array(
+			'sakura'    => '#__flower_sakuras',
+			'category'  => '#__categories',
+			'user'      => '#__users',
+			'viewlevel' => '#__viewlevels',
+			'lang'      => '#__languages'
+		);
 
-		$queryHelper->addTable('sakura', '#__flower_sakuras')
-			->addTable('category',  '#__categories', 'sakura.catid      = category.id')
-			->addTable('user',      '#__users',      'sakura.created_by = user.id')
-			->addTable('viewlevel', '#__viewlevels', 'sakura.access     = viewlevel.id')
-			->addTable('lang',      '#__languages',  'sakura.language   = lang.lang_code');
-
-		$this->filterFields = array_merge($this->filterFields, $queryHelper->getFilterFields());
-	}
-
-	/**
-	 * populateState
-	 *
-	 * @param null $ordering
-	 * @param null $direction
-	 *
-	 * @return  void
-	 */
-	protected function populateState($ordering = null, $direction = null)
-	{
-		// Build ordering prefix
-		if (!$ordering)
+		// Set filter fields
+		// ========================================================================
+		if (empty($config['filter_fields']))
 		{
-			$table = $this->getTable('Sakura');
+			$config['filter_fields'] = array(
+				'filter_order_Dir', 'filter_order', '*'
+			);
 
-			$ordering = property_exists($table, 'ordering') ? 'sakura.ordering' : 'sakura.id';
-
-			$ordering = property_exists($table, 'catid') ? 'sakura.catid, ' . $ordering : $ordering;
+			$config['filter_fields'] = QueryHelper::mergeFilterFields(null, $config['filter_fields'], $config['tables']);
 		}
 
-		parent::populateState($ordering, 'ASC');
+		$this->config = $config;
+
+		parent::__construct($config, $state, $db);
 	}
 
 	/**
-	 * processFilters
+	 * getListQuery
 	 *
-	 * @param JDatabaseQuery $query
-	 * @param array          $filters
-	 *
-	 * @return  JDatabaseQuery
+	 * @return \JDatabaseQuery
 	 */
-	protected function processFilters(\JDatabaseQuery $query, $filters = array())
+	public function getListQuery()
 	{
-		// If no state filter, set published >= 0
-		if (!isset($filters['sakura.published']) && property_exists($this->getTable(), 'published'))
+		$query = parent::getListQuery();
+
+		$ordering    = $this->state->get('list.ordering',    'sakura.ordering');
+		$direction   = $this->state->get('list.direction',   'ASC');
+		$orderCol    = $this->state->get('list.orderCol',    $this->orderCol);
+
+		$filters  = $this->state->get('filter', array());
+		$searches = $this->state->get('search', array());
+
+		// Build filter query
+		foreach ($filters as $name => $value)
+		{
+			if ($value !== '' && $value != '*')
+			{
+				$query->where($query->quoteName($name) . ' = ' . $query->quote($value));
+			}
+		}
+
+		// Build search query
+		$searchValue = array();
+
+		array_walk(
+			$searches,
+			function($value, $key) use (&$searchValue, $query)
+			{
+				if ($value && $key != '*')
+				{
+					$searchValue[] = $query->quoteName($key) . ' LIKE ' . $query->quote('%' . $value . '%');
+				}
+			}
+		);
+
+		if (count($searchValue))
+		{
+			$query->where(new JDatabaseQueryElement('()', $searchValue, " \nOR "));
+		}
+
+		// Published
+		if (empty($filters['sakura.published']))
 		{
 			$query->where($query->quoteName('sakura.published') . ' >= 0');
 		}
 
-		return parent::processFilters($query, $filters);
-	}
+		// Ordering
+		$ordering = explode(',', $ordering);
 
-	/**
-	 * configureFilters
-	 *
-	 * @param FilterHelper $filterHelper
-	 *
-	 * @return  void
-	 */
-	protected function configureFilters($filterHelper)
-	{
-	}
+		$ordering = array_map(
+			function($value) use($query)
+			{
+				$value = explode(' ', trim($value));
 
-	/**
-	 * configureSearches
-	 *
-	 * @param \Windwalker\Model\Filter\SearchHelper $searchHelper
-	 *
-	 * @return  void
-	 */
-	protected function configureSearches($searchHelper)
-	{
+				if (isset($value[1]))
+				{
+					return $query->qn($value[0]) . ' ' . $value[1];
+				}
+
+				return $query->qn($value[0]);
+			},
+			$ordering
+		);
+
+		$ordering = implode(', ', $ordering);
+
+		// Build query
+		// ========================================================================
+
+		// Get select columns
+		$select = QueryHelper::getSelectList($this->db, $this->config['tables'], true);
+
+		// Build query
+		$query->select($select)
+			->from('#__flower_sakuras AS sakura')
+			->leftJoin('#__categories  AS category  ON sakura.catid      = category.id')
+			->leftJoin('#__users       AS user      ON sakura.created_by = user.id')
+			->leftJoin('#__viewlevels  AS viewlevel ON sakura.access     = viewlevel.id')
+			->leftJoin('#__languages   AS lang      ON sakura.language   = lang.lang_code')
+			// ->where("")
+			->order($ordering . ' ' . $direction)
+			;
+
+		// Debug here
+		// \AK::show((string) $query);
+
+		return $query;
 	}
 }

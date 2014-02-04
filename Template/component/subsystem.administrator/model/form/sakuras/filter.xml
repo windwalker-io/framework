@@ -2,8 +2,8 @@
 <form>
 	<fields name="search">
 		<field name="field"
-			type="hidden"
-			default="*"
+			type="list"
+			default="title"
 			label="JSEARCH_FILTER_LABEL"
 			labelclass="pull-left"
 			class="input-small"
@@ -42,14 +42,8 @@
 	<!-- Filter -->
 	<fields name="filter">
 		<field
-			type="note"
-			label="COM_FLOWER_FILTER_NOTE_GENERAL"
-			/>
-
-		<field
 			name="sakura.published"
 			type="list"
-			label="JSTATUS"
 			default=""
 			onchange="this.form.submit();"
 			>
@@ -65,7 +59,6 @@
 			name="sakura.catid"
 			type="category"
 			default=""
-			label="JCATEGORY"
 			extension="com_flower"
 			onchange="this.form.submit();"
 			>

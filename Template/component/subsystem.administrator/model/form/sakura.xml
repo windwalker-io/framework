@@ -1,190 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset name="information"
-		align="left"
-		horz="true">
+		<fieldset name="information"
+		          align="left"
+		          horz="true">
 
-		<field name="title"
-			type="text"
-			label="JGLOBAL_TITLE"
-			description="JFIELD_TITLE_DESC"
-			required="true"
-			class="input-xxlarge"
-			/>
+			<field name="title"
+			       type="text"
+			       label="JGLOBAL_TITLE"
+			       description="JFIELD_TITLE_DESC"
+			       required="true"
+			       size="50"
+			       labelclass=""
+			       class="input-xlarge"
+					/>
 
-		<field name="alias"
-			type="text"
-			label="JFIELD_ALIAS_LABEL"
-			description="JFIELD_ALIAS_DESC"
-			/>
+			<field name="alias"
+			       type="text"
+			       label="JFIELD_ALIAS_LABEL"
+			       description="JFIELD_ALIAS_DESC"
+			       size="50"
+			       labelclass=""
+					/>
 
-		<field name="parent_id"
-			type="sakura_modal"
-			label="COM_FLOWER_PARENT_ITEM"
-			description="COM_FLOWER_PARENT_ITEM_DESC"
-			show_root="true"
-			class="input-xlarge"
-			access="true"
-			/>
+			<field name="parent_id"
+			       type="sakura_modal"
+			       label="COM_FLOWER_PARENT_ITEM"
+			       description="COM_FLOWER_PARENT_ITEM_DESC"
+			       labelclass=""
+			       show_root="true"
+			       class="input-xlarge"
+			       access="true"
+					/>
 
-		<field name="catid"
-			type="categoryadd"
-			label="JCATEGORY"
-			description="JFIELD_CATEGORY_DESC"
-			extension="com_flower"
-			quickadd="true"
-			>
-			<option value="0">COM_FLOWER_TITLE_UNCATEGORISED</option>
-		</field>
+			<field name="catid"
+			       type="categoryadd"
+			       label="JCATEGORY"
+			       description="JFIELD_CATEGORY_DESC"
+			       extension="com_flower"
+			       labelclass=""
+			       quickadd="true"
+					>
+				<option value="0">COM_FLOWER_TITLE_UNCATEGORISED</option>
+			</field>
 
-		<field name="images"
-			type="finder"
-			label="COM_FLOWER_IMAGES"
-			description="COM_FLOWER_IMAGES_DESC"
-			preview="true"
-			/>
+			<field name="images"
+			       type="finder"
+			       label="COM_FLOWER_IMAGES"
+			       description="COM_FLOWER_IMAGES_DESC"
+			       labelclass=""
+			       preview="true"
+					/>
 
-		<field name="url"
-			type="uri"
-			label="COM_FLOWER_URL"
-			description="COM_FLOWER_URL_DESC"
-			class="input-xlarge"
-			/>
-	</fieldset>
+			<field name="url"
+			       type="text"
+			       label="COM_FLOWER_URL"
+			       description="COM_FLOWER_URL_DESC"
+			       size="60"
+			       labelclass=""
+					/>
+		</fieldset>
 
-	<fieldset
-		name="publish"
-		align="right"
-		horz="true">
+		<fieldset name="publish"
+		          align="right"
+		          horz="true">
+			<field name="published"
+			       type="list"
+			       label="JSTATUS"
+			       description="JFIELD_PUBLISHED_DESC"
+			       class="inputbox"
+			       size="1"
+			       default="1"
+			       labelclass=""
+					>
+				<option value="1">JPUBLISHED</option>
+				<option value="0">JUNPUBLISHED</option>
+			</field>
 
-		<field name="published"
-			type="list"
-			label="JSTATUS"
-			description="JFIELD_PUBLISHED_DESC"
-			class="chzn-color-state"
-			size="1"
-			default="1"
-			>
-			<option value="1">JPUBLISHED</option>
-			<option value="0">JUNPUBLISHED</option>
-		</field>
+			<field name="id"
+			       type="text"
+			       default="0"
+			       label="JGLOBAL_FIELD_ID_LABEL"
+			       readonly="true"
+			       class="readonly"
+			       description="JGLOBAL_FIELD_ID_DESC"
+			       labelclass=""
+					/>
 
-		<field name="id"
-			type="text"
-			default="0"
-			label="JGLOBAL_FIELD_ID_LABEL"
-			readonly="true"
-			class="readonly"
-			description="JGLOBAL_FIELD_ID_DESC"
-			/>
+			<field name="created_by"
+			       type="user"
+			       label="COM_FLOWER_CREATED_BY"
+			       description="COM_FLOWER_CREATED_BY_DESC"
+			       labelclass=""
+					/>
 
-		<field name="created_by"
-			type="user"
-			label="COM_FLOWER_CREATED_BY"
-			description="COM_FLOWER_CREATED_BY_DESC"
-			/>
+			<field name="created"
+			       type="calendar"
+			       label="COM_FLOWER_CREATED"
+			       description="COM_FLOWER_CREATED_DESC"
+			       labelclass=""
+					/>
 
-		<field name="created"
-			type="calendar"
-			label="COM_FLOWER_CREATED"
-			description="COM_FLOWER_CREATED_DESC"
-			/>
+			<field name="publish_up"
+			       type="calendar"
+			       label="COM_FLOWER_PUBLISH_UP"
+			       description="COM_FLOWER_PUBLISH_UP_DESC"
+			       labelclass=""
+					/>
 
-		<field name="publish_up"
-			type="calendar"
-			label="COM_FLOWER_PUBLISH_UP"
-			description="COM_FLOWER_PUBLISH_UP_DESC"
-			/>
+			<field name="publish_down"
+			       type="calendar"
+			       label="COM_FLOWER_PUBLISHED_DOWN"
+			       description="COM_FLOWER_PUBLISH_DOWN_DESC"
+			       labelclass=""
+					/>
 
-		<field name="publish_down"
-			type="calendar"
-			label="COM_FLOWER_PUBLISHED_DOWN"
-			description="COM_FLOWER_PUBLISH_DOWN_DESC"
-			/>
 
-	</fieldset>
+		</fieldset>
 
-	<fieldset name="text"
-		align="left">
-		<field name="introtext"
-			type="editor"
-			label="COM_FLOWER_INTROTEXT"
-			description="COM_FLOWER_INTROTEXT_DESC"
-			filter="raw"
-			buttons="true"
-			hide="readmore,pagebreak,article"
-			/>
+		<fieldset name="text"
+		          align="left">
+			<field name="introtext"
+			       type="editor"
+			       label="COM_FLOWER_INTROTEXT"
+			       description="COM_FLOWER_INTROTEXT_DESC"
+			       filter="raw"
+			       buttons="true"
+			       hide="readmore,pagebreak,article"
+			       labelclass=""
+					/>
 
-		<field name="fulltext"
-			type="editor"
-			label="COM_FLOWER_FULLTEXT"
-			description="COM_FLOWER_FULLTEXT_DESC"
-			filter="raw"
-			buttons="true"
-			hide="readmore,pagebreak,article"
-			/>
+			<field name="fulltext"
+			       type="editor"
+			       label="COM_FLOWER_FULLTEXT"
+			       description="COM_FLOWER_FULLTEXT_DESC"
+			       filter="raw"
+			       buttons="true"
+			       hide="readmore,pagebreak,article"
+			       labelclass=""
+					/>
 
-		<field name="checked_out"
-			type="hidden"
-			filter="unset"/>
+			<field name="checked_out"
+			       type="hidden"
+			       filter="unset"/>
+			<field name="checked_out_time"
+			       type="hidden"
+			       filter="unset"/>
 
-		<field name="checked_out_time"
-			type="hidden"
-			filter="unset"/>
+		</fieldset>
 
-	</fieldset>
+		<fieldset name="created">
+			<field name="access"
+			       type="accesslevel"
+			       label="JFIELD_ACCESS_LABEL"
+			       description="JFIELD_ACCESS_DESC"
+			       labelclass=""
+					/>
 
-	<fieldset name="created">
-		<field name="access"
-			type="accesslevel"
-			label="JFIELD_ACCESS_LABEL"
-			description="JFIELD_ACCESS_DESC"
-			/>
+			<field name="language"
+			       type="language"
+			       label="JGRID_HEADING_LANGUAGE"
+			       description="JGRID_HEADING_LANGUAGE"
+			       labelclass=""
+					>
+				<option value="*">JALL</option>
+			</field>
+		</fieldset>
 
-		<field name="language"
-			type="language"
-			label="JGRID_HEADING_LANGUAGE"
-			description="JGRID_HEADING_LANGUAGE"
-			>
-			<option value="*">JALL</option>
-		</field>
-	</fieldset>
 
-	<!-- Need this field as child of root node for access setting. -->
+	<!-- Need this field br child of root node for access setting. -->
 	<field name="asset_id"
-		type="hidden"
-		filter="unset"/>
+	       type="hidden"
+	       filter="unset"/>
 
 	<fieldset name="rules">
 		<field name="rules"
-			type="rules"
-			translate_label="false"
-			class="inputbox"
-			filter="rules"
-			component="com_flower"
-			section="sakura"
-			validate="rules"
-			/>
+		       type="rules"
+		       label=""
+		       translate_label="false"
+		       class="inputbox"
+		       filter="rules"
+		       component="com_flower"
+		       section="sakura"
+		       validate="rules"
+				/>
 	</fieldset>
 
 	<!-- For Quick Ajax AddNew -->
 	<fieldset name="quickadd">
 		<field name="title"
-			type="text"
-			label="JGLOBAL_TITLE"
-			description="JFIELD_TITLE_DESC"
-			required="true"
-			size="50"
-			labelclass=""
-			class="input-xlarge"
+			   type="text"
+			   label="JGLOBAL_TITLE"
+			   description="JFIELD_TITLE_DESC"
+			   required="true"
+			   size="50"
+			   labelclass=""
+			   class="input-xlarge"
 			/>
 
 		<field name="catid"
-			type="category"
-			label="JCATEGORY"
-			description="JFIELD_CATEGORY_DESC"
-			extension="com_flower"
-			labelclass=""
+			   type="category"
+			   label="JCATEGORY"
+			   description="JFIELD_CATEGORY_DESC"
+			   extension="com_flower"
+			   labelclass=""
 			>
 			<option value="0">COM_FLOWER_TITLE_UNCATEGORISED</option>
 		</field>

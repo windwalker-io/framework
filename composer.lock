@@ -3,21 +3,21 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ab7472a06a35fd4bffcdf93580703ea5",
+    "hash": "bddee7ae7cb6d4a74955aab0d0efe920",
     "packages": [
         {
             "name": "asika/joomla-console",
-            "version": "1.0-beta1",
+            "version": "dev-master",
             "target-dir": "Joomla/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asika32764/joomla-framework-console.git",
-                "reference": "5879d6edd234dcf312be95697514f8085640fafe"
+                "reference": "a60f14a6f2f1b0c1cca75db03e7f749eae69d33a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asika32764/joomla-framework-console/zipball/5879d6edd234dcf312be95697514f8085640fafe",
-                "reference": "5879d6edd234dcf312be95697514f8085640fafe",
+                "url": "https://api.github.com/repos/asika32764/joomla-framework-console/zipball/a60f14a6f2f1b0c1cca75db03e7f749eae69d33a",
+                "reference": "a60f14a6f2f1b0c1cca75db03e7f749eae69d33a",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
                 "framework",
                 "joomla"
             ],
-            "time": "2014-01-30 06:13:55"
+            "time": "2014-02-04 04:07:42"
         },
         {
             "name": "filp/whoops",
@@ -677,9 +677,9 @@
 
     ],
     "minimum-stability": "beta",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "asika/joomla-console": 20
+    },
     "platform": [
 
     ],
