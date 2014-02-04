@@ -58,6 +58,16 @@ class SystemProvider implements ServiceProviderInterface
 				return new \SplPriorityQueue;
 			}
 		);
+
+		// Detect deferent environment
+		if (defined('WINDWALKER_CONSOLE'))
+		{
+			$container->registerServiceProvider(new CliProvider);
+		}
+		else
+		{
+			$container->registerServiceProvider(new WebProvider);
+		}
 	}
 
 	/**

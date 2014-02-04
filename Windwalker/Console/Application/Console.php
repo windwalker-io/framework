@@ -8,15 +8,14 @@
 
 namespace Windwalker\Console\Application;
 
-use Windwalker\Console\Descriptor\OptionDescriptor;
 use Joomla\Application\Cli\CliOutput;
-use Joomla\Console\Console as JoomlaConsole;
 use Joomla\Application\Cli\Output;
+use Joomla\Console\Console as JoomlaConsole;
 use Joomla\Input;
 use Joomla\Registry\Registry;
+
 use Windwalker\DI\Container;
-use Windwalker\Filesystem\Path\PathCollection;
-use Windwalker\Filesystem\Path\PathLocator;
+use Windwalker\Console\Descriptor\OptionDescriptor;
 
 /**
  * Class Console
@@ -83,7 +82,15 @@ class Console extends JoomlaConsole
 
 		parent::__construct($input, $config, $output);
 
-		$descriptorHelper = $this->defaultCommand->getArgument('help')
+		$this->defaultCommand
+			->setHelp(
+<<<HELP
+Welcome to Windwalker Console.
+
+HELP
+			);
+
+		$descriptorHelper = $this->defaultCommand->getChild('help')
 			->getDescriptor();
 
 		$descriptorHelper->setOptionDescriptor(new OptionDescriptor);

@@ -31,15 +31,6 @@ $container = Container::getInstance();
 
 $container->registerServiceProvider(new \Windwalker\Provider\SystemProvider);
 
-if (defined('WINDWALKER_CONSOLE'))
-{
-	$container->registerServiceProvider(new \Windwalker\Provider\CliProvider);
-}
-else
-{
-	$container->registerServiceProvider(new \Windwalker\Provider\WebProvider);
-}
-
 // Register bundles
 $paths = new \Windwalker\Filesystem\Path\PathCollection(
 	array(
