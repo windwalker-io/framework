@@ -16,20 +16,19 @@ use CodeGenerator\Controller\TaskController;
  *
  * @since 1.0
  */
-class CopyBasefilesAction extends AbstractAction
+class CopyAllAction extends AbstractAction
 {
 	/**
-	 * execute
+	 * doExecute
 	 *
-	 * @param TaskController $controller
-	 * @param array          $replace
-	 *
-	 * @return  void
+	 * @return  mixed
 	 */
-	public function execute(TaskController $controller, $replace = array())
+	public function doExecute()
 	{
-		print_r($controller->config);
+		$copyOperator = $this->container->get('operator.copy');
 
-		// TODO: Implement execute() method.
+		$config = $this->config;
+
+		$copyOperator->copy($config->get('dir.src'), $config->get('dir.dest'), $config->get('replace'));
 	}
 }

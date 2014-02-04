@@ -2,7 +2,7 @@
 	"name"             : "asika/windwalker",
 	"description"      : "Rapido de la vento viro.",
 	"license"          : "GNU Lesser General Public License",
-	"minimum-stability": "dev",
+	"minimum-stability": "beta",
 	"authors"          : [
 		{
 			"name" : "Simon Asika",
@@ -11,9 +11,9 @@
 	],
 	"require"          : {
 		"asika/joomla-console" : "dev-master",
+		"asika/php-code-generator" : "dev-master",
 		"joomla/controller"    : "~1.0",
 		"joomla/registry"      : "~1.0",
-		"joomla/controller"    : "~1.0",
 		"filp/whoops"          : "1.*"
 	},
 	"require-dev"      : {

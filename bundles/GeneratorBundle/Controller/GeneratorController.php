@@ -10,9 +10,9 @@ namespace GeneratorBundle\Controller;
 
 use CodeGenerator\Controller\GeneratorController as CodeGeneratorController;
 use CodeGenerator\IO\IOInterface;
-
 use GeneratorBundle\Prompter\ElementPrompter;
 use GeneratorBundle\Provider\GeneratorBundleProvider;
+use GeneratorBundle\Provider\OperatorProvider;
 use Joomla\Registry\Registry;
 use Windwalker\DI\Container;
 use Windwalker\Console\Command\Command;
@@ -106,6 +106,8 @@ class GeneratorController extends CodeGeneratorController
 		$io->setCommand($command);
 
 		parent::__construct($container, $io);
+
+		$container->registerServiceProvider(new OperatorProvider($command));
 	}
 
 	/**

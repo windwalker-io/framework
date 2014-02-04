@@ -9,7 +9,7 @@
 namespace GeneratorBundle\Controller\Component\Project;
 
 
-use GeneratorBundle\Action\Component\CopyBasefilesAction;
+use GeneratorBundle\Action\Component\CopyAllAction;
 use GeneratorBundle\Controller\Component\ComponentController;
 use LogicException;
 use RuntimeException;
@@ -33,6 +33,6 @@ class InitController extends ComponentController
 	 */
 	public function doExecute()
 	{
-		$this->doAction(new CopyBasefilesAction);
+		$this->doAction(new CopyAllAction);
 	}
 }

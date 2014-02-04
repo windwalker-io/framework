@@ -8,7 +8,6 @@
 
 namespace GeneratorBundle\Action\Component;
 
-use CodeGenerator\Controller\TaskController;
 use GeneratorBundle\Action\AbstractAction;
 use Joomla\Filesystem\Folder;
 
@@ -20,20 +19,17 @@ use Joomla\Filesystem\Folder;
 class ConvertTemplateAction extends AbstractAction
 {
 	/**
-	 * execute
+	 * doExecute
 	 *
-	 * @param TaskController $controller
-	 * @param array          $replace
-	 *
-	 * @return  void
+	 * @return  mixed|void
 	 */
-	public function execute(TaskController $controller, $replace = array())
+	public function doExecute()
 	{
-		$config = $controller->config;
+		$config = $this->config;
 
 		$convertOperator = $this->container->get('operator.convert');
 
-		$replace = array_flip($replace);
+		$replace = array_flip($this->replace);
 
 		foreach ($replace as &$val)
 		{
