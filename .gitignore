@@ -4,3 +4,6 @@
 # Composer #
 vendor/*
 !vendor/index.html
+
+# Windwalker #
+config.json

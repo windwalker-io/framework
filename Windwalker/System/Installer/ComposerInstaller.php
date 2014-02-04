@@ -46,14 +46,17 @@ BIN;
 		// Config file
 		$io->write('Prepare config file.');
 
-		copy($windPath . '/config.dist.json', $windPath . 'config.json');
+		copy($windPath . '/config.dist.json', $windPath . '/config.json');
 
 		// Bundles dir
 		$bundlesDir = dirname($windPath) . '/windwalker-bundles';
 
-		$io->write('Create bundle folder: ' . $bundlesDir);
+		if (!is_dir($bundlesDir))
+		{
+			$io->write('Create bundle folder: ' . $bundlesDir);
 
-		mkdir($bundlesDir);
+			mkdir($bundlesDir);
+		}
 
 		// Complete
 		$io->write('Install complete.');
