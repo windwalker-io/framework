@@ -2,7 +2,7 @@
 	"name"             : "asika/windwalker",
 	"description"      : "Rapido de la vento viro.",
 	"license"          : "GNU Lesser General Public License",
-	"minimum-stability": "beta",
+	"minimum-stability": "dev",
 	"authors"          : [
 		{
 			"name" : "Simon Asika",
@@ -11,6 +11,7 @@
 	],
 	"require"          : {
 		"asika/joomla-console" : "dev-master",
+		"joomla/controller"    : "~1.0",
 		"joomla/registry"      : "~1.0",
 		"joomla/controller"    : "~1.0",
 		"filp/whoops"          : "1.*"
@@ -20,7 +21,8 @@
 	"autoload" : {
 		"psr-0" : {
 			"" : "../../cli/windwalker",
-			"Windwalker" : ""
+			"Windwalker" : "",
+			"CodeGenerator" : "vendor/asika/php-code-generator/src"
 		}
 	},
 	"scripts": {

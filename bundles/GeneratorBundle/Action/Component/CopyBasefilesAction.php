@@ -8,15 +8,15 @@
 
 namespace GeneratorBundle\Action\Component;
 
-use GeneratorBundle\Action\Action;
-use GeneratorBundle\Controller\TaskController;
+use GeneratorBundle\Action\AbstractAction;
+use CodeGenerator\Controller\TaskController;
 
 /**
  * Class CopyBasefilesAction
  *
  * @since 1.0
  */
-class CopyBasefilesAction extends Action
+class CopyBasefilesAction extends AbstractAction
 {
 	/**
 	 * execute

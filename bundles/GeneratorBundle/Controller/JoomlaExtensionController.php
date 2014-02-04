@@ -8,8 +8,11 @@
 
 namespace GeneratorBundle\Controller;
 
+use CodeGenerator\Controller\TaskController;
+use CodeGenerator\IO\IOInterface;
 use Joomla\Registry\Registry;
 use Windwalker\Console\Command\Command;
+use Windwalker\DI\Container;
 use Windwalker\Helper\PathHelper;
 
 /**
@@ -22,10 +25,13 @@ abstract class JoomlaExtensionController extends TaskController
 	/**
 	 * Constructor.
 	 *
-	 * @param   Command   $command
-	 * @param   Registry  $config
+	 * @param   \Windwalker\DI\Container      $container
+	 * @param   \CodeGenerator\IO\IOInterface $io
+	 * @param   Registry                      $config
+	 *
+	 * @internal param \Windwalker\Console\Command\Command $command
 	 */
-	public function __construct(Command $command, Registry $config = null)
+	public function __construct(Container $container, IOInterface $io, Registry $config = null)
 	{
 		$this->replace['extension.element.lower'] = strtolower($config['element']);
 		$this->replace['extension.element.upper'] = strtoupper($config['element']);
@@ -47,6 +53,6 @@ abstract class JoomlaExtensionController extends TaskController
 
 		$config->set('dir.src', $config->get('dir.tmpl') . '/' . $config['client']);
 
-		parent::__construct($command, $config);
+		parent::__construct($container, $io, $config);
 	}
 }

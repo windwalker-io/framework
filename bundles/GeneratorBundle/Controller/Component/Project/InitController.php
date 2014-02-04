@@ -11,7 +11,6 @@ namespace GeneratorBundle\Controller\Component\Project;
 
 use GeneratorBundle\Action\Component\CopyBasefilesAction;
 use GeneratorBundle\Controller\Component\ComponentController;
-use GeneratorBundle\Controller\TaskController;
 use LogicException;
 use RuntimeException;
 
@@ -32,7 +31,7 @@ class InitController extends ComponentController
 	 * @throws  LogicException
 	 * @throws  RuntimeException
 	 */
-	public function execute()
+	public function doExecute()
 	{
 		$this->doAction(new CopyBasefilesAction);
 	}

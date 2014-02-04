@@ -8,17 +8,16 @@
 
 namespace GeneratorBundle\Action\Component;
 
-use GeneratorBundle\Action\Action;
-use GeneratorBundle\Controller\TaskController;
+use CodeGenerator\Controller\TaskController;
+use GeneratorBundle\Action\AbstractAction;
 use Joomla\Filesystem\Folder;
-use Windwalker\String\String;
 
 /**
  * Class ConvertTemplateAction
  *
  * @since 1.0
  */
-class ConvertTemplateAction extends Action
+class ConvertTemplateAction extends AbstractAction
 {
 	/**
 	 * execute

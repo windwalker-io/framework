@@ -8,16 +8,21 @@
 
 namespace GeneratorBundle\Controller;
 
+use CodeGenerator\Controller\GeneratorController as CodeGeneratorController;
+use CodeGenerator\IO\IOInterface;
+
 use GeneratorBundle\Prompter\ElementPrompter;
+use GeneratorBundle\Provider\GeneratorBundleProvider;
 use Joomla\Registry\Registry;
-use Windwalker\Console\Controller\Controller as ConsoleController;
+use Windwalker\DI\Container;
+use Windwalker\Console\Command\Command;
 
 /**
  * Class GeneratorController
  *
  * @since 1.0
  */
-class GeneratorController extends ConsoleController
+class GeneratorController extends CodeGeneratorController
 {
 	/**
 	 * Property task.
@@ -82,6 +87,28 @@ class GeneratorController extends ConsoleController
 	);
 
 	/**
+	 * constructor.
+	 *
+	 * @param Command     $command
+	 * @param Container   $container
+	 * @param IOInterface $io
+	 */
+	public function __construct(Command $command, Container $container = null, IOInterface $io = null)
+	{
+		$this->command = $command;
+
+		$container = $container ? : Container::getInstance();
+
+		$container->registerServiceProvider(new GeneratorBundleProvider($command));
+
+		$io = $io ? : $container->get('io');
+
+		$io->setCommand($command);
+
+		parent::__construct($container, $io);
+	}
+
+	/**
 	 * Execute the controller.
 	 *
 	 * @return  boolean  True if controller finished execution, false if the controller did not
@@ -121,7 +148,7 @@ class GeneratorController extends ConsoleController
 		$class  = 'GeneratorBundle\\Controller\\';
 		$class .= ucfirst($this->type) . '\\' . $task . 'Controller';
 
-		$controller = new $class($this->command, new Registry($config));
+		$controller = new $class($this->container, $this->io, new Registry($config));
 
 		$controller->execute();
 

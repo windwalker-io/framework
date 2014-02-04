@@ -8,10 +8,13 @@
 
 namespace GeneratorBundle\Controller\Component;
 
+use CodeGenerator\IO\IOInterface;
 use GeneratorBundle\Controller\JoomlaExtensionController;
+
 use Joomla\Console\Prompter\TextPrompter;
 use Joomla\Registry\Registry;
-use Windwalker\Console\Command\Command;
+
+use Windwalker\DI\Container;
 use Windwalker\Helper\PathHelper;
 
 /**
@@ -24,12 +27,13 @@ abstract class ComponentController extends JoomlaExtensionController
 	/**
 	 * Constructor.
 	 *
-	 * @param   Command   $command
-	 * @param   Registry  $config
+	 * @param Container   $container
+	 * @param IOInterface $io
+	 * @param Registry    $config
 	 */
-	public function __construct(Command $command, Registry $config = null)
+	public function __construct(Container $container, IOInterface $io, Registry $config = null)
 	{
-		$ctrl = $command->getArgument(1);
+		$ctrl = $io->getArgument(1);
 
 		$ctrl = explode('.', $ctrl);
 
@@ -55,7 +59,7 @@ abstract class ComponentController extends JoomlaExtensionController
 		$this->replace['controller.item.name.upper'] = strtoupper($itemName);
 		$this->replace['controller.item.name.cap']   = ucfirst($itemName);
 
-		parent::__construct($command, $config);
+		parent::__construct($container, $io, $config);
 
 		// Load config json
 		$this->config->loadFile(__DIR__ . '/config.json');
