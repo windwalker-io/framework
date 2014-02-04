@@ -56,6 +56,9 @@ abstract class ComponentController extends JoomlaExtensionController
 		$this->replace['controller.item.name.cap']   = ucfirst($itemName);
 
 		parent::__construct($command, $config);
+
+		// Load config json
+		$this->config->loadFile(__DIR__ . '/config.json');
 	}
 
 	/**

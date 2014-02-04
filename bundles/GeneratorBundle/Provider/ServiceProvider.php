@@ -29,7 +29,17 @@ class ServiceProvider implements ServiceProviderInterface
 	 */
 	public function register(Container $container)
 	{
-		$container->alias('operator.copy', '\\GeneratorBundle\\FileOperator\\CopyOperator')
-			->buildSharedObject('\\GeneratorBundle\\FileOperator\\CopyOperator');
+		$operators = array(
+			'copy',
+			'convert'
+		);
+
+		foreach ($operators as $operator)
+		{
+			$class = '\\GeneratorBundle\\FileOperator\\' . ucfirst($operator) . 'Operator';
+
+			$container->alias('operator.' . $operator, $class)
+				->buildSharedObject($class);
+		}
 	}
 }

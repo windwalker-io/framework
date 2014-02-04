@@ -10,6 +10,7 @@ namespace GeneratorBundle\Action\Component;
 
 use GeneratorBundle\Action\Action;
 use GeneratorBundle\Controller\TaskController;
+use Joomla\Filesystem\Folder;
 use Windwalker\String\String;
 
 /**
@@ -29,13 +30,9 @@ class ConvertTemplateAction extends Action
 	 */
 	public function execute(TaskController $controller, $replace = array())
 	{
-		show($replace);
-
-		show($controller->config);
-
 		$config = $controller->config;
 
-		$copyOperator = $this->container->get('operator.copy');
+		$convertOperator = $this->container->get('operator.convert');
 
 		$replace = array_flip($replace);
 
@@ -45,6 +42,12 @@ class ConvertTemplateAction extends Action
 		}
 
 		// Flip src and dest because we want to convert template.
-		$copyOperator->copy($config->get('dir.dest'), $config->get('dir.src'), $replace);
+		$src  = $config->get('dir.dest');
+		$dest = $config->get('dir.src');
+
+		// Remove dir first
+		Folder::delete($dest);
+
+		$convertOperator->copy($src, $dest, $replace);
 	}
 }

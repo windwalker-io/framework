@@ -7,6 +7,7 @@
  */
 
 namespace GeneratorBundle\FileOperator;
+
 use Joomla\Filesystem\File;
 use Windwalker\String\String;
 
@@ -50,16 +51,16 @@ class CopyOperator extends AbstractFileOperator
 	/**
 	 * copyFile
 	 *
-	 * @param       $src
-	 * @param       $dest
-	 * @param array $replace
+	 * @param string $src
+	 * @param string $dest
+	 * @param array  $replace
 	 *
 	 * @return  void
 	 */
 	protected function copyFile($src, $dest, $replace = array())
 	{
 		// Replace dest file name.
-		$dest = strtr($dest, $replace);
+		$dest = String::parseVariable($dest, $replace);
 
 		if (is_file($dest))
 		{
@@ -67,7 +68,7 @@ class CopyOperator extends AbstractFileOperator
 		}
 		else
 		{
-			$content = strtr(file_get_contents($src), $replace);
+			$content = String::parseVariable(file_get_contents($src), $replace);
 
 			if (File::write($dest, $content))
 			{
@@ -76,6 +77,15 @@ class CopyOperator extends AbstractFileOperator
 		}
 	}
 
+	/**
+	 * copyDir
+	 *
+	 * @param string $src
+	 * @param string $dest
+	 * @param array  $replace
+	 *
+	 * @return  void
+	 */
 	protected function copyDir($src, $dest, $replace = array())
 	{
 		$dir = new \RecursiveDirectoryIterator($src);
@@ -120,6 +130,4 @@ class CopyOperator extends AbstractFileOperator
 
 		return $this;
 	}
-
-
 }
