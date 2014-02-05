@@ -8,13 +8,10 @@
 
 namespace GeneratorBundle\Controller\Component\Project;
 
-
 use GeneratorBundle\Action\Component\CopyAllAction;
 use GeneratorBundle\Action\Component\CopyLanguageAction;
 use GeneratorBundle\Action\Component\ImportSqlAction;
 use GeneratorBundle\Controller\Component\ComponentController;
-use LogicException;
-use RuntimeException;
 
 /**
  * Class InitController
@@ -30,8 +27,8 @@ class InitController extends ComponentController
 	 *                   finish execution. A controller might return false if some precondition for
 	 *                   the controller to run has not been satisfied.
 	 *
-	 * @throws  LogicException
-	 * @throws  RuntimeException
+	 * @throws  \LogicException
+	 * @throws  \RuntimeException
 	 */
 	public function doExecute()
 	{

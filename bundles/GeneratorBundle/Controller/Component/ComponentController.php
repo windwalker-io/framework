@@ -33,7 +33,7 @@ abstract class ComponentController extends JoomlaExtensionController
 	 */
 	public function __construct(Container $container, IOInterface $io, Registry $config = null)
 	{
-		$ctrl = $io->getArgument(1);
+		$ctrl = $config['ctrl'] ? : $io->getArgument(1);
 
 		$ctrl = explode('.', $ctrl);
 
@@ -46,7 +46,7 @@ abstract class ComponentController extends JoomlaExtensionController
 
 		if (empty($ctrl[1]))
 		{
-			$ctrl[1] = $prompter->ask('Please enter controller list name: ', 'items');
+			$ctrl[1] = $ctrl[0] . 's';
 		}
 
 		list($itemName, $listName) = $ctrl;

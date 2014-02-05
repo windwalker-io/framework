@@ -28,8 +28,8 @@ class ImportSqlAction extends AbstractAction
 	public function doExecute()
 	{
 		// Load SQL file.
-		$installFile   = file_get_contents($this->config['dir.src'] . '/sql/install.sql');
-		$uninstallFile = file_get_contents($this->config['dir.src'] . '/sql/uninstall.sql');
+		@$installFile   = file_get_contents($this->config['dir.src'] . '/sql/install.sql');
+		@$uninstallFile = file_get_contents($this->config['dir.src'] . '/sql/uninstall.sql');
 
 		$installSql   = String::parseVariable($installFile, $this->config['replace']);
 		$uninstallSql = String::parseVariable($uninstallFile, $this->config['replace']);
@@ -39,7 +39,11 @@ class ImportSqlAction extends AbstractAction
 
 		$db = Container::getInstance()->get('db');
 
-		if (!$db->setQuery('SELECT * FROM ' . $db->quoteName($table) . ' LIMIT 1')->loadResult())
+		try
+		{
+			$db->getTableColumns($table);
+		}
+		catch (\RuntimeException $e)
 		{
 			// Import sql
 			$this->executeSql($installSql);
@@ -48,13 +52,13 @@ class ImportSqlAction extends AbstractAction
 		if (!strpos($installSql, $table))
 		{
 			// Write SQL file to project.
-			$fp = fopen($this->config['dir.dest'] . '/sql/install.sql', 'a+');
-			fputs($fp, "\n\n\n" . $installSql);
-			fclose($fp);
+			@$fp = fopen($this->config['dir.dest'] . '/sql/install.sql', 'a+');
+			@fputs($fp, "\n\n\n" . $installSql);
+			@fclose($fp);
 
-			$fp = fopen($this->config['dir.dest'] . '/sql/uninstall.sql', 'a+');
-			fputs($fp, "\n\n" . $uninstallSql);
-			fclose($fp);
+			@$fp = fopen($this->config['dir.dest'] . '/sql/uninstall.sql', 'a+');
+			@fputs($fp, "\n\n" . $uninstallSql);
+			@fclose($fp);
 		}
 	}
 

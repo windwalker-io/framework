@@ -27,7 +27,14 @@ class CopyLanguageAction extends AbstractAction
 	 */
 	public function doExecute()
 	{
-		$lanDir = new \DirectoryIterator($this->config['dir.src'] . '/language');
+		try
+		{
+			$lanDir = new \DirectoryIterator($this->config['dir.src'] . '/language');
+		}
+		catch (\UnexpectedValueException $e)
+		{
+			return;
+		}
 
 		// Each languages
 		foreach ($lanDir as $dir)
@@ -96,7 +103,15 @@ class CopyLanguageAction extends AbstractAction
 	 */
 	protected function findIniBySuffix($dir, $suffix = 'main')
 	{
-		$files = new \FilesystemIterator($this->config['dir.src'] . '/language/' . $dir);
+		try
+		{
+			$files = new \FilesystemIterator($this->config['dir.src'] . '/language/' . $dir);
+		}
+		catch (\UnexpectedValueException $e)
+		{
+			exit('No such file: ' . $this->config['dir.src'] . '/language' . $dir);
+		}
+
 
 		foreach ($files as $file)
 		{
