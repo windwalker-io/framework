@@ -1,175 +1,99 @@
 <?php
 
-use Windwalker\View\Helper\GridHelper;
-use Windwalker\View\Html\HtmlView;
+use Joomla\DI\Container;
+use Windwalker\Model\Model;
+use Windwalker\View\Engine\PhpEngine;
+use Windwalker\View\Html\GridView;
+use Windwalker\Xul\XulEngine;
 
 /**
  * Class SakurasHtmlView
  *
  * @since 1.0
  */
-class FlowerViewSakurasHtml extends HtmlView
+class FlowerViewSakurasHtml extends GridView
 {
 	/**
-	 * Items cache.
+	 * Property prefix.
 	 *
-	 * @var array
+	 * @var  string
 	 */
-	protected $items = null;
+	protected $prefix = 'flower';
 
 	/**
-	 * Pagination cache.
+	 * Property option.
 	 *
-	 * @var object
-	 */
-	protected $pagination = null;
-
-	/**
-	 * Model state.
-	 *
-	 * @var JRegistry
-	 */
-	protected $state = null;
-
-	/**
-	 * Component option name.
-	 *
-	 * @var string
+	 * @var  string
 	 */
 	protected $option = 'com_flower';
 
 	/**
-	 * List name.
+	 * Property textPrefix.
 	 *
 	 * @var string
-	 */
-	protected $list_name = 'sakuras';
-
-	/**
-	 * Item name.
-	 *
-	 * @var string
-	 */
-	protected $item_name = 'sakura';
-
-	/**
-	 * The prefix to use with controller messages.
-	 *
-	 * @var     string
 	 */
 	protected $textPrefix = 'COM_FLOWER';
 
 	/**
-	 * render
+	 * Property viewItem.
 	 *
-	 * @return string
+	 * @var  string
 	 */
-	public function render()
+	protected $viewItem = 'sakura';
+
+	/**
+	 * Property viewList.
+	 *
+	 * @var  string
+	 */
+	protected $viewList = 'sakuras';
+
+	/**
+	 * Method to instantiate the view.
+	 *
+	 * @param Model            $model     The model object.
+	 * @param Container        $container DI Container.
+	 * @param array            $config    View config.
+	 * @param SplPriorityQueue $paths     Paths queue.
+	 */
+	public function __construct(Model $model = null, Container $container = null, $config = array(), \SplPriorityQueue $paths = null)
 	{
-		$data             = $this->getData();
-		$data->items      = $this->get('Items');
-		$data->pagination = $this->get('Pagination');
-		$data->state      = $this->get('State');
-		$data->filterForm = $this->get('FilterForm');
-		$data->batchForm  = $this->get('BatchForm');
-		$data->grid       = $this->getGridHelper();
+		$config['grid'] = array(
+			'orderCol'  => $this->viewItem . '.catid, ' . $this->viewItem . '.ordering'
+		);
 
-		if ($errors = $data->state->get('errors'))
-		{
-			$this->flash($errors);
-		}
+		$this->engine = new PhpEngine;
 
-		// We don't need toolbar in the modal window.
-		if ($this->getLayout() !== 'modal')
-		{
-			$this->addToolbar();
-			$data->sidebar = JHtmlSidebar::render();
-		}
-
-		return parent::render();
+		parent::__construct($model, $container, $config, $paths);
 	}
 
 	/**
-	 * getGridHelper
+	 * render
 	 *
-	 * @return GridHelper
+	 * @return void
 	 */
-	public function getGridHelper()
+	protected function prepareData()
 	{
-		$config = array(
-			'option'    => $this->option,
-			'name'      => $this->getName(),
-			'view_item' => $this->item_name,
-			'view_list' => $this->list_name,
-			'orderCol'  => 'sakura.catid, sakura.ordering',
-			'field'     => array(
-				'ordering'    => 'ordering'
-			)
-		);
-
-		return new GridHelper($this->data, $config);
 	}
 
-	protected function addToolbar()
+	/**
+	 * configToolbar
+	 *
+	 * @param array $buttonSet
+	 * @param null  $canDo
+	 *
+	 * @return  array
+	 */
+	protected function configureToolbar($buttonSet = array(), $canDo = null)
 	{
-		FlowerHelper::addSubmenu($this->getName());
+		$buttonSet = parent::configureToolbar($buttonSet, $canDo);
 
-		$app          = JFactory::getApplication();
-		$canDo        = FlowerHelper::getActions($this->option);
-		$user         = JFactory::getUser();
-
-		$filter_state = (array) $this->data->state->get('filter');
-
-		JToolbarHelper::title(JText::_($this->textPrefix . '_' . strtoupper($this->getName()) . '_TITLE'), 'stack article');
-
-		// Get the toolbar object instance
-		$bar = JToolBar::getInstance('toolbar');
-
-		if ($canDo->get('core.create'))
+		if (JDEBUG)
 		{
-			JToolBarHelper::addNew($this->item_name . '.add');
+			$buttonSet['trash']['access']  = false;
+			$buttonSet['delete']['access'] = true;
 		}
 
-		if ($canDo->get('core.edit'))
-		{
-			JToolBarHelper::editList($this->item_name . '.edit');
-		}
-
-		if ($canDo->get('core.create'))
-		{
-			JToolBarHelper::custom($this->list_name . '.batch.copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_DUPLICATE', true);
-		}
-
-		if ($canDo->get('core.edit.state'))
-		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publish($this->list_name . '.state.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublish($this->list_name . '.state.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolbarHelper::checkin($this->list_name . '.check.checkin');
-
-			JToolBarHelper::divider();
-		}
-
-		// if ((JArrayHelper::getValue($filter_state, 'a.published') == -2 && $canDo->get('core.delete')) || $this->get('no_trash') || AKDEBUG)
-		{
-			JToolbarHelper::deleteList(JText::_('LIB_WINDWALKER_TOOLBAR_CONFIRM_DELETE'), $this->list_name . '.state.delete');
-		}
-		// elseif ($canDo->get('core.edit.state'))
-		{
-			JToolbarHelper::trash($this->list_name . '.state.trash');
-		}
-
-		// Add a batch modal button
-		$batch = AKHelper::_('path.get', null, $this->option) . '/views/' . $this->list_name . '/tmpl/default_batch.php';
-
-		if ($canDo->get('core.edit'))
-		{
-			AKToolbarHelper::modal('JTOOLBAR_BATCH', 'batchModal');
-		}
-
-		if ($canDo->get('core.admin') && $app->isAdmin())
-		{
-			AKToolBarHelper::preferences($this->option);
-		}
+		return $buttonSet;
 	}
 }

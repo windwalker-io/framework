@@ -29,6 +29,6 @@ class CopyAllAction extends AbstractAction
 
 		$config = $this->config;
 
-		$copyOperator->copy($config->get('dir.src'), $config->get('dir.dest'), $config->get('replace'));
+		$copyOperator->copy($config['dir.src'], $config['dir.dest'], (array) $config['replace']);
 	}
 }

@@ -37,8 +37,8 @@ class ConvertTemplateAction extends AbstractAction
 		}
 
 		// Flip src and dest because we want to convert template.
-		$src  = $config->get('dir.dest');
-		$dest = $config->get('dir.src');
+		$src  = $this->config['dir.src'];
+		$dest = $this->config['dir.dest'];
 
 		// Remove dir first
 		Folder::delete($dest);

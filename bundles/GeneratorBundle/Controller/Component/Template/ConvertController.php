@@ -25,6 +25,13 @@ class ConvertController extends ComponentController
 	 */
 	protected function doExecute()
 	{
+		// Flip src and dest because we want to convert template.
+		$dest = $this->config->get('dir.dest');
+		$src  = $this->config->get('dir.src');
+
+		$this->config->set('dir.dest', $src);
+		$this->config->set('dir.src',  $dest);
+
 		$this->doAction(new Action\Component\ConvertTemplateAction);
 
 		return true;

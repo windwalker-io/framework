@@ -9,6 +9,7 @@
 namespace GeneratorBundle\Action;
 
 use CodeGenerator\Action\Action;
+use CodeGenerator\Controller\TaskController;
 use Windwalker\DI\Container;
 
 /**

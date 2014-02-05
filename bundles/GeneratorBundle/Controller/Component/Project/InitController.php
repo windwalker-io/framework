@@ -10,6 +10,7 @@ namespace GeneratorBundle\Controller\Component\Project;
 
 
 use GeneratorBundle\Action\Component\CopyAllAction;
+use GeneratorBundle\Action\Component\ImportSqlAction;
 use GeneratorBundle\Controller\Component\ComponentController;
 use LogicException;
 use RuntimeException;
@@ -34,5 +35,10 @@ class InitController extends ComponentController
 	public function doExecute()
 	{
 		$this->doAction(new CopyAllAction);
+
+		if ($this->config['client'] == 'administrator')
+		{
+			$this->doAction(new ImportSqlAction);
+		}
 	}
 }

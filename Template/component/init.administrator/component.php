@@ -1,21 +1,23 @@
 <?php
+/**
+ * @package     Joomla.Administrator
+ * @subpackage  com_flower
+ * @copyright   Copyright (C) 2014 Asikart. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 
-use Windwalker\Component\Component;
+use Flower\Component\FlowerComponent as FlowerComponentBase;
+
+// No direct access
+defined('_JEXEC') or die;
 
 /**
  * Class FlowerComponent
  *
  * @since 1.0
  */
-final class FlowerComponent extends Component
+final class FlowerComponent extends FlowerComponentBase
 {
-	/**
-	 * Property name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'Flower';
-
 	/**
 	 * Property defaultController.
 	 *
@@ -28,39 +30,8 @@ final class FlowerComponent extends Component
 	 *
 	 * @return void
 	 */
-	protected function init()
+	protected function prepare()
 	{
-		parent::init();
-
-		// Init for both
-
-		// Init for administrator
-		if ($this->application->isAdmin())
-		{
-			$this->initAdmin();
-		}
-		// Init for frontend
-		else
-		{
-			$this->initSite();
-		}
-	}
-
-	/**
-	 * initAdmin
-	 *
-	 * @return void
-	 */
-	private function initAdmin()
-	{
-	}
-
-	/**
-	 * initSite
-	 *
-	 * @return void
-	 */
-	private function initSite()
-	{
+		parent::prepare();
 	}
 }

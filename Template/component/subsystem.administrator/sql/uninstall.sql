@@ -1,1 +1,1 @@
-DROP TABLE  `#__flower_sakuras`
+DROP TABLE  `#__flower_sakuras`;

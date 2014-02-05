@@ -8,16 +8,14 @@
 
 namespace GeneratorBundle\FileOperator;
 
-use CodeGenerator\FileOperator\CopyOperator as CodeGeneratorCopyOperator;
 use Joomla\Filesystem\File;
-use Windwalker\String\String;
 
 /**
- * Class CopyOperator
+ * Class ConvertOperator
  *
  * @since 1.0
  */
-class CopyOperator extends CodeGeneratorCopyOperator
+class ConvertOperator extends CopyOperator
 {
 	/**
 	 * copyFile
@@ -31,7 +29,7 @@ class CopyOperator extends CodeGeneratorCopyOperator
 	protected function copyFile($src, $dest, $replace = array())
 	{
 		// Replace dest file name.
-		$dest = String::parseVariable($dest, $replace);
+		$dest = strtr($dest, $replace);
 
 		if (is_file($dest))
 		{
@@ -39,7 +37,7 @@ class CopyOperator extends CodeGeneratorCopyOperator
 		}
 		else
 		{
-			$content = String::parseVariable(file_get_contents($src), $replace);
+			$content = strtr(file_get_contents($src), $replace);
 
 			if (File::write($dest, $content))
 			{

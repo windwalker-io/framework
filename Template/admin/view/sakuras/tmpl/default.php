@@ -8,30 +8,20 @@
 
 use Windwalker\View\Layout\FileLayout;
 
+JHtmlBootstrap::tooltip();
+JHtmlFormbehavior::chosen('select');
+JHtmlBehavior::multiselect('adminForm');
+JHtmlDropdown::init();
+
 /**
  * Prepare data for this template.
  *
- * @var $container Windwalker\DI\Container
- * @var $asset     Windwalker\Helper\AssetHelper
+ * @var Windwalker\DI\Container $container
  */
 $container = $this->getContainer();
-$asset     = $container->get('helper.asset');
-
-$asset->addCSS('main.css')
-	->addJS('main.js')
-	->internalCSS('body{}')
-	->internalCSS('body{}')
-	->internalJS('function yoo(){}')
-	->internalJS('function yoo(){}');
-
-$listOrder = 'id';
-$listDirn = 'asc';
-$originalOrders = [];
-
-echo \Windwalker\Helper\LanguageHelper::translate('反引號 英文', 'zh-tw', 'en');
 ?>
 
-<div id="flower" class="windwalker sakuras tablelist">
+<div id="flower" class="windwalker sakuras tablelist row-fluid">
 	<form action="<?php echo JURI::getInstance(); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
 		<?php if (!empty($this->data->sidebar)): ?>
@@ -44,19 +34,16 @@ echo \Windwalker\Helper\LanguageHelper::translate('反引號 英文', 'zh-tw', '
 		<div id="j-main-container">
 		<?php endif;?>
 
-			<?php echo (new FileLayout('joomla.searchtools.default'))->render(array('view' => $this->data)); ?>
+			<?php echo with(new FileLayout('joomla.searchtools.default'))->render(array('view' => $this->data)); ?>
 
 			<?php echo $this->loadTemplate('table'); ?>
 
-			<?php echo (new FileLayout('joomla.batchtools.modal'))->render(array('view' => $this->data, 'task_prefix' => 'sakuras.')); ?>
+			<?php echo with(new FileLayout('joomla.batchtools.modal'))->render(array('view' => $this->data, 'task_prefix' => 'sakuras.')); ?>
 
 			<!-- Hidden Inputs -->
 			<div id="hidden-inputs">
 				<input type="hidden" name="task" value="" />
 				<input type="hidden" name="boxchecked" value="0" />
-				<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-				<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-				<input type="hidden" name="original_order_values" value="<?php echo implode($originalOrders, ','); ?>" />
 				<?php echo JHtml::_('form.token'); ?>
 			</div>
 
