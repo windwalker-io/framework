@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <fieldset name="component"
+        label="{{extension.element.upper}}_COMPONENT_LABEL"
+        description="{{extension.element.upper}}_COMPONENT_DESC"
+        addfieldpath="administrator/components/{{extension.element.lower}}/model/field"
+    >
+
+        <field name="{{controller.item.name.lower}}_list"
+             type="{{controller.item.name.lower}}_list"
+             default="5"
+             extension="{{extension.element.lower}}"
+             view_list="{{controller.list.name.lower}}"
+             view_item="{{controller.item.name.lower}}"
+             label="{{extension.element.upper}}_SELECT_{{controller.item.name.upper}}"
+             description="{{extension.element.upper}}_SELECT_{{controller.item.name.upper}}_DESC"
+             quickadd="true"
+        >
+            <option>JOPTION_DO_NOT_USE</option>
+         </field>
+
+        <field name="{{controller.item.name.lower}}_modal"
+             type="{{controller.item.name.lower}}_modal"
+             default="7"
+             extension="{{extension.element.lower}}"
+             view_list="{{controller.list.name.lower}}"
+             view_item="{{controller.item.name.lower}}"
+             label="{{extension.element.upper}}_SELECT_{{controller.item.name.upper}}"
+             description="{{extension.element.upper}}_SELECT_{{controller.item.name.upper}}_DESC"
+             quickadd="true"
+        />
+
+        <field name="finder"
+            type="finder"
+            default=""
+            handler="{{extension.element.lower}}"
+            root="images"
+            start_path=""
+            label="Finder"
+            description="{{extension.element.upper}}_SELECT_{{controller.item.name.upper}}_DESC"
+            preview="true"
+            onlyimage="true"
+        />
+
+        <field name="limit"
+            type="text"
+            default="20"
+            label="Number"
+        />
+        
+    </fieldset>
+    
+    <fieldset name="item">
+
+        <field name="link_titles" type="list"
+            description="JGLOBAL_LINKED_TITLES_DESC"
+            label="JGLOBAL_LINKED_TITLES_LABEL"
+            default="1"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="link_titles_in_list" type="list"
+            description="{{extension.element.upper}}_LINKED_TITLES_IN_LIST_DESC"
+            label="{{extension.element.upper}}_LINKED_TITLES_IN_LIST"
+            default="1"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="show_intro" type="list"
+            description="JGLOBAL_SHOW_INTRO_DESC"
+            label="JGLOBAL_SHOW_INTRO_LABEL"
+            default="1"
+        >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+
+        <field name="show_noauth" type="list"
+            description="JGLOBAL_SHOW_UNAUTH_LINKS_DESC"
+            label="JGLOBAL_SHOW_UNAUTH_LINKS_LABEL"
+            default="1"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+    </fieldset>
+    
+    <fieldset name="category">
+
+        <field name="show_category_title" type="list"
+            label="JGLOBAL_SHOW_CATEGORY_TITLE"
+            description="JGLOBAL_SHOW_CATEGORY_TITLE_DESC"
+            default="1"
+        >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+
+        <field name="show_description" type="list"
+            description="JGLOBAL_SHOW_CATEGORY_DESCRIPTION_DESC"
+            label="JGLOBAL_SHOW_CATEGORY_DESCRIPTION_LABEL"
+            default="1"
+        >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+
+        <field name="show_description_image" type="list"
+            description="JGLOBAL_SHOW_CATEGORY_IMAGE_DESC"
+            label="JGLOBAL_SHOW_CATEGORY_IMAGE_LABEL"
+            default="1"
+        >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+
+        <field name="maxLevel" type="list"
+            description="JGLOBAL_MAXLEVEL_DESC"
+            label="JGLOBAL_MAXLEVEL_LABEL"
+            default="-1"
+        >
+            <option value="-1">JALL</option>
+            <option value="1">J1</option>
+            <option value="2">J2</option>
+            <option value="3">J3</option>
+            <option value="4">J4</option>
+            <option value="5">J5</option>
+        </field>
+
+
+        <field type="spacer" hr="true" />
+
+
+        <field name="num_leading_articles" type="text"
+            description="JGLOBAL_NUM_LEADING_ARTICLES_DESC"
+            label="JGLOBAL_NUM_LEADING_ARTICLES_LABEL"
+            size="3"
+            default="1"
+        />
+
+        <field name="num_intro_articles" type="text"
+            description="JGLOBAL_NUM_INTRO_ARTICLES_DESC"
+            label="JGLOBAL_NUM_INTRO_ARTICLES_LABEL"
+            size="3"
+            default="4"
+        />
+
+        <field name="num_columns" type="list"
+            description="JGLOBAL_NUM_COLUMNS_DESC"
+            label="JGLOBAL_NUM_COLUMNS_LABEL"
+            default="2"
+        >
+            <option value="1">J1</option>
+            <option value="2">J2</option>
+            <option value="3">J3</option>
+            <option value="4">J4</option>
+            <option value="5">J6</option>
+        </field>
+
+        <field name="num_links" type="text"
+            description="JGLOBAL_NUM_LINKS_DESC"
+            label="JGLOBAL_NUM_LINKS_LABEL"
+            size="3"
+            default="4"
+        />
+
+        <field
+        name="spacer1"
+        type="spacer"
+        hr="true"
+        />
+
+        <field name="orderby" type="list"
+            description="JGLOBAL_ARTICLE_ORDER_DESC"
+            label="JGLOBAL_ARTICLE_ORDER_LABEL"
+            default="a.created"
+        >
+
+            <option value="a.created ">{{extension.element.upper}}_CREATED</option>
+            <option value="a.publish_up">{{extension.element.upper}}_PUBLISH_UP</option>
+            <option value="a.publish_down">{{extension.element.upper}}_PUBLISHED_DOWN</option>
+            <option value="a.modified">{{extension.element.upper}}_MODIFIED</option>
+            <option value="a.title">JGLOBAL_TITLE</option>
+            <option value="a.ordering">JGLOBAL_ORDERING</option>
+        </field>
+
+        <field name="order_dir" type="list"
+            label="{{extension.element.upper}}_ORDER_DIR"
+            default="DESC"
+        >
+            <option value="ASC">{{extension.element.upper}}_ORDER_DIR_ASC</option>
+            <option value="DESC">{{extension.element.upper}}_ORDER_DIR_DESC</option>
+        </field>
+
+        <field name="show_pagination" type="list"
+            description="JGLOBAL_PAGINATION_DESC"
+            label="JGLOBAL_PAGINATION_LABEL"
+            default="1"
+        >
+
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+            <option value="2">JGLOBAL_AUTO</option>
+        </field>
+
+        <field name="show_pagination_results" type="list"
+            label="JGLOBAL_PAGINATION_RESULTS_LABEL"
+            description="JGLOBAL_PAGINATION_RESULTS_DESC"
+            default="1"
+        >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+
+    </fieldset>
+
+	<fieldset
+		name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+		description="JCONFIG_PERMISSIONS_DESC"
+		>
+
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			class="inputbox"
+			validate="rules"
+			filter="rules"
+			component="{{extension.element.lower}}"
+			section="component" />
+	</fieldset>
+
+</config>

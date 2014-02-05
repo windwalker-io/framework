@@ -45,7 +45,7 @@ class ImportSqlAction extends AbstractAction
 			$this->executeSql($installSql);
 		}
 
-		if (!strpos($table, $installSql))
+		if (!strpos($installSql, $table))
 		{
 			// Write SQL file to project.
 			$fp = fopen($this->config['dir.dest'] . '/sql/install.sql', 'a+');

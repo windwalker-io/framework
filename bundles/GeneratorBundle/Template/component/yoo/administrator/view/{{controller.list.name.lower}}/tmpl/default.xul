@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<page xmlns:html="http://dev.w3.org/html5/html-author">
+	<html:div id="{{extension.name.lower}}" class="windwalker {{controller.list.name.lower}} tablelist row-fluid">
+		<form id="adminForm" type="grid">
+			<row>
+				<sidebar name="{{controller.item.name.lower}}-sidebar" span="2" title="JOPTION_MENUS" />
+				<column>
+					<layout name="joomla.searchtools.default"/>
+
+					<grid class="table table-striped adminlist" id="TableList">
+						<!-- TABLE HEADER -->
+						<head>
+							<!--SORT-->
+							<col width="1%" class="nowrap center hidden-phone">
+								<call data="grid" method="orderTitle"/>
+							</col>
+
+							<!--CHECKBOX-->
+							<col width="1%" class="center">
+								<call static="JHtmlGrid::checkAll"/>
+							</col>
+
+							<!--STATUS-->
+							<col width="5%" class="nowrap center">
+								<sort field="{{controller.item.name.lower}}.published">JSTATUS</sort>
+							</col>
+
+							<!--TITLE-->
+							<col class="center">
+								<sort field="{{controller.item.name.lower}}.title">JGLOBAL_TITLE</sort>
+							</col>
+
+							<!--CATEGORY-->
+							<col width="10%" sort="true" class="center">
+								<sort field="category.title">JCATEGORY</sort>
+							</col>
+
+							<!--ACCESS VIEW LEVEL-->
+							<col width="5%" sort="true" class="center">
+								<sort field="viewlevel.title">JGRID_HEADING_ACCESS</sort>
+							</col>
+
+							<!--CREATED-->
+							<col width="10%" sort="true" class="center">
+								<sort field="{{controller.item.name.lower}}.created">JDATE</sort>
+							</col>
+
+							<!--USER-->
+							<col width="10%" sort="true" class="center">
+								<sort field="user.name">JAUTHOR</sort>
+							</col>
+
+							<!--LANGUAGE-->
+							<col width="5%" sort="true" class="center">
+								<sort field="lang.title">JGRID_HEADING_LANGUAGE</sort>
+							</col>
+
+							<!--ID-->
+							<col width="1%" sort="true" class="nowrap center">
+								<sort field="{{controller.item.name.lower}}.id">JGRID_HEADING_ID</sort>
+							</col>
+						</head>
+						<body>
+							<rowlist data="items" class="{{controller.item.name.lower}}-row" sortable-group-id="{{ grid.current.catid }}">
+								<!--SORT-->
+								<cell class="order nowrap center hidden-phone">
+									<call data="grid" method="dragSort"/>
+								</cell>
+
+								<!--CHECKBOX-->
+								<cell class="center">
+									<call data="grid" method="checkbox"/>
+								</cell>
+
+								<!--STATUS-->
+								<cell class="center">
+									<html:div class="btn-group">
+										<call data="grid" method="published"/>
+									</html:div>
+								</cell>
+
+								<!--TITLE-->
+								<cell class="has-context quick-edit-wrap">
+									<html:div class="item-title">
+										<call data="grid" method="checkoutButton"/>
+
+										<call data="grid" method="editTitle"/>
+									</html:div>
+
+									<html:div class="small item-alias">
+										<call static="JText::sprintf">
+											<argument>JGLOBAL_LIST_ALIAS</argument>
+											<argument data="grid.current.alias" />
+										</call>
+									</html:div>
+								</cell>
+
+								<!--CATEGORY-->
+								<cell class="center" field="category_title"/>
+
+								<!--ACCESS VIEW LEVEL-->
+								<cell class="center" field="viewlevel_title"/>
+
+								<!--CREATED-->
+								<cell class="center"><call data="grid" method="createdDate"/></cell>
+
+								<!--USER-->
+								<cell class="center" field="user_name"/>
+
+								<!--LANGUAGE-->
+								<cell class="center"><call data="grid" method="language"/></cell>
+
+								<!--ID-->
+								<cell class="center" field="id"/>
+							</rowlist>
+						</body>
+					</grid>
+
+					<html:div class="pagination pagination-toolbar">
+						<call data="pagination" method="getListFooter"/>
+					</html:div>
+
+					<layout name="joomla.batchtools.modal">
+						<data key="text_prefix">{{controller.list.name.lower}}.</data>
+					</layout>
+				</column>
+			</row>
+
+		</form>
+	</html:div>
+
+	<block>
+		<call data="grid" method="registerTableSort"></call>
+	</block>
+</page>

@@ -1,0 +1,1 @@
+DROP TABLE  `#__{{extension.name.lower}}_{{controller.list.name.lower}}`;

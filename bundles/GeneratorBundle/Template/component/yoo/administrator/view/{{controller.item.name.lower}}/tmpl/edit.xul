@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<page xmlns:html="http://dev.w3.org/html5/html-author">
+	<html:div id="{{extension.name.lower}}"
+			  class="windwalker {{controller.item.name.lower}} edit-form row-fluid"
+		>
+		<form id="adminForm"
+			  type="edit">
+			<tabset name="{{controller.item.name.lower}}-edit"
+					active="basic">
+				<tab name="basic">
+					<row class="yoo">
+						<column name="left" span="8">
+							<fieldset name="information" class="form-horizontal"/>
+							<fieldset name="text" class="form-horizontal"/>
+						</column>
+						<column name="right" span="4">
+							<fieldset name="publish" class="form-horizontal"/>
+						</column>
+					</row>
+				</tab>
+				<tab name="advanced">
+					<row>
+						<column name="left" span="8">
+							<fieldset name="created" class="form-horizontal"/>
+						</column>
+					</row>
+				</tab>
+				<tab name="rules">
+					<row>
+						<column>
+							<fieldset name="rules" class="form-horizontal"/>
+						</column>
+					</row>
+				</tab>
+			</tabset>
+		</form>
+	</html:div>
+
+	<block display="false">
+		<call static="JHtmlFormbehavior::chosen">
+			<argument>select</argument>
+		</call>
+	</block>
+</page>

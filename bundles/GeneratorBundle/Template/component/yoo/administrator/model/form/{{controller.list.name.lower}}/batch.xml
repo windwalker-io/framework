@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<!-- Batch -->
+	<fields name="batch">
+		<field name="access"
+			type="accesslevel"
+			label="JLIB_HTML_BATCH_ACCESS_LABEL"
+			description="JLIB_HTML_BATCH_ACCESS_LABEL_DESC"
+			labelclass="control-label"
+			class="input-xlarge inputbox"
+			>
+			<option>JLIB_HTML_BATCH_NOCHANGE</option>
+		</field>
+
+		<field name="language"
+			type="contentlanguage"
+			label="JLIB_HTML_BATCH_LANGUAGE_LABEL"
+			description="JLIB_HTML_BATCH_LANGUAGE_LABEL_DESC"
+			labelclass="control-label"
+			class="input-xlarge inputbox"
+			>
+			<option>JLIB_HTML_BATCH_LANGUAGE_NOCHANGE</option>
+		</field>
+
+		<field name="created_by"
+			type="winduser"
+			label="JAUTHOR"
+			description="JLIB_HTML_BATCH_USER_LABEL_DESC"
+			labelclass="control-label"
+			class="input-xlarge inputbox"
+			>
+			<option>JSELECT</option>
+		</field>
+
+		<field name="catid"
+			type="category"
+			label="JLIB_HTML_BATCH_MENU_LABEL"
+			description=""
+			extension="{{extension.element.lower}}"
+			labelclass="control-label"
+			class="input-xlarge inputbox"
+			action="true"
+			>
+			<option>JOPTION_SELECT_CATEGORY</option>
+		</field>
+
+		<field name="task"
+			type="radio"
+			label="JLIB_RULES_ACTION"
+			description=""
+			labelclass="control-label"
+			class="combo btn-group"
+			default="{{controller.list.name.lower}}.batch.move"
+			>
+			<option value="{{controller.list.name.lower}}.batch.move">JLIB_HTML_BATCH_MOVE</option>
+			<option value="{{controller.list.name.lower}}.batch.copy">JLIB_HTML_BATCH_COPY</option>
+		</field>
+	</fields>
+</form>

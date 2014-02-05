@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component"
+	version="3.2"
+	method="upgrade">
+	<name>{{extension.element.lower}}</name>
+	<creationDate>2014-1-11</creationDate>
+	<copyright>Copyright (C) 2014. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<author>Asika</author>
+	<authorEmail>asika32764@gmail.com</authorEmail>
+	<authorUrl>http://asikart.com</authorUrl>
+	<version>1.0.0</version>
+	<description>{{extension.element.upper}}_XML_DESCRIPTION</description>
+
+	<scriptfile>install.php</scriptfile>
+
+	<!-- do not re install sql when generator working.
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.sql</file>
+		  </sql>
+	</install>
+	-->
+
+	<uninstall>
+		<sql>
+			<file driver="mysql"
+				charset="utf8">sql/uninstall.sql
+			</file>
+		</sql>
+	</uninstall>
+
+	<files folder="../site">
+		<filename>componenet.php</filename>
+		<filename>{{extension.name.lower}}.php</filename>
+		<filename>index.html</filename>
+		<filename>router.php</filename>
+		<folder>asset</folder>
+		<folder>controller</folder>
+		<folder>helper</folder>
+		<folder>images</folder>
+		<folder>model</folder>
+		<folder>sql</folder>
+		<folder>view</folder>
+	</files>
+
+	<administration>
+		<menu>{{extension.element.upper}}</menu>
+
+		<!-- Submenu
+			Note that all & must be escaped to &amp; for the file to be valid
+			XML and be parsed by the installer
+		<submenu>
+
+			<menu link="option={{extension.element.lower}}&amp;view={{controller.list.name.lower}}"
+				view="{{controller.list.name.lower}}">{{extension.element.lower}}_{{controller.list.name.lower}}
+			</menu>
+			<menu link="option=com_categories&amp;extension={{extension.element.lower}}"
+				view="categories">jcategories
+			</menu>
+		</submenu>
+		-->
+
+		<files folder="admin">
+			<filename>access.xml</filename>
+			<filename>component.php</filename>
+			<filename>config.xml</filename>
+			<filename>{{extension.name.lower}}.php</filename>
+			<filename>index.html</filename>
+			<filename>install.php</filename>
+			<folder>asset</folder>
+			<folder>controller</folder>
+			<folder>helper</folder>
+			<folder>helpers</folder>
+			<folder>images</folder>
+			<folder>language</folder>
+			<folder>model</folder>
+			<folder>sql</folder>
+			<folder>src</folder>
+			<folder>table</folder>
+			<folder>view</folder>
+		</files>
+	</administration>
+
+	<modules>
+		<!--<module>mod_{{extension.name.lower}}</module>-->
+	</modules>
+
+	<plugins>
+		<!--<plugin>plg_system_{{extension.name.lower}}</plugin>-->
+	</plugins>
+
+	<!--
+	<updateservers>
+		<server type="extension" priority="1" name="Asikart {{extension.name.cap}} Component">http://update.asikart.com/component/{{extension.element.lower}}.xml</server>
+	</updateservers>
+	-->
+
+</extension>
+
