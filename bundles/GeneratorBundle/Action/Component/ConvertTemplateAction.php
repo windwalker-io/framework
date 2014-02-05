@@ -25,10 +25,7 @@ class ConvertTemplateAction extends AbstractAction
 	 */
 	public function doExecute()
 	{
-		$config = $this->config;
-
-		$convertOperator = $this->container->get('operator.convert');
-
+		// Flip replace array because we want to convert template.
 		$replace = array_flip($this->replace);
 
 		foreach ($replace as &$val)
@@ -43,6 +40,6 @@ class ConvertTemplateAction extends AbstractAction
 		// Remove dir first
 		Folder::delete($dest);
 
-		$convertOperator->copy($src, $dest, $replace);
+		$this->container->get('operator.convert')->copy($src, $dest, $replace);
 	}
 }
