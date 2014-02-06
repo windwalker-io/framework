@@ -69,6 +69,6 @@ class InitCommand extends Command
 	{
 		$generator = new GeneratorController($this);
 
-		$generator->setTask('project.init')->execute();
+		$generator->setTask('init')->execute();
 	}
 }

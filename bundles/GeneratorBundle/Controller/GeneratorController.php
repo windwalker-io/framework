@@ -125,6 +125,8 @@ class GeneratorController extends CodeGeneratorController
 	{
 		$config = array();
 
+		$this->out()->out('Start generating...')->out();
+
 		// Prepare basic data.
 		$command = $this->command;
 		$element = $command->getArgument(0, new ElementPrompter('Please enter extension element: '));
@@ -150,11 +152,16 @@ class GeneratorController extends CodeGeneratorController
 		$class  = 'GeneratorBundle\\Controller\\';
 		$class .= ucfirst($this->type) . '\\' . $task . 'Controller';
 
+		if (!class_exists($class))
+		{
+			throw new \RuntimeException(sprintf('Action %s of %s not support.', $this->type, $this->getTask()));
+		}
+
 		$controller = new $class($this->container, $this->io, new Registry($config));
 
 		$controller->execute();
 
-		// show($controller);
+		$this->out()->out('Template generated.');
 	}
 
 	/**

@@ -46,7 +46,9 @@ class ImportSqlAction extends AbstractAction
 		catch (\RuntimeException $e)
 		{
 			// Import sql
+			$this->controller->out('Importing SQL to table: ' . $table);
 			$this->executeSql($installSql);
+			$this->controller->out('Imported');
 		}
 
 		if (!strpos($installSql, $table))

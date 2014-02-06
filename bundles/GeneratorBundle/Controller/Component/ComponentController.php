@@ -33,32 +33,6 @@ abstract class ComponentController extends JoomlaExtensionController
 	 */
 	public function __construct(Container $container, IOInterface $io, Registry $config = null)
 	{
-		$ctrl = $config['ctrl'] ? : $io->getArgument(1);
-
-		$ctrl = explode('.', $ctrl);
-
-		$prompter = new TextPrompter;
-
-		if (empty($ctrl[0]))
-		{
-			$ctrl[0] = $prompter->ask('Please enter controller item name: ', 'item');
-		}
-
-		if (empty($ctrl[1]))
-		{
-			$ctrl[1] = $ctrl[0] . 's';
-		}
-
-		list($itemName, $listName) = $ctrl;
-
-		$this->replace['controller.list.name.lower'] = strtolower($listName);
-		$this->replace['controller.list.name.upper'] = strtoupper($listName);
-		$this->replace['controller.list.name.cap']   = ucfirst($listName);
-
-		$this->replace['controller.item.name.lower'] = strtolower($itemName);
-		$this->replace['controller.item.name.upper'] = strtoupper($itemName);
-		$this->replace['controller.item.name.cap']   = ucfirst($itemName);
-
 		parent::__construct($container, $io, $config);
 
 		// Load config json

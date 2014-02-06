@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.2"
+	type="plugin"
+	group="{{plugin.group.lower}}"
+	method="upgrade">
+	<name>{{extension.element.lower}}</name>
+	<author>Asika</author>
+	<creationDate>2014-02-06</creationDate>
+	<copyright>Copyright (C) 2014 Asikart.com</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>asika@asikart.com</authorEmail>
+	<authorUrl>http://asikart.com</authorUrl>
+	<version>1.0</version>
+	<description>{{extension.element.upper}}_XML_DESCRIPTION</description>
+
+	<scriptfile>install.php</scriptfile>
+
+	<!-- plugin {{plugin.group.lower}} now has no sql file
+	<install>
+    	<sql>
+        	<file driver="mysql" charset="utf8">sql/install.sql</file>
+  		</sql>
+    </install>
+	
+	
+	<uninstall>
+    	<sql>
+        	<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+  		</sql>
+    </uninstall>
+	-->
+
+	<files>
+		<filename plugin="{{extension.name.lower}}">{{extension.name.lower}}.php</filename>
+		<filename>index.html</filename>
+		<filename>install.php</filename>
+		<folder>language</folder>
+		<folder>lib</folder>
+	</files>
+
+	<config>
+		<fields name="params">
+
+			<fieldset name="basic">
+				<field name="field1"
+					type="text"
+					description="{{extension.name.cap}} field 1"
+					label="{{extension.name.cap}} field 1"
+					/>
+			</fieldset>
+
+			<fieldset name="advanced">
+				<field name="include_path"
+					type="text"
+					label="{{extension.element.upper}}_INCLUDE_PATH"
+					default="easyset"
+					/>
+			</fieldset>
+
+		</fields>
+	</config>
+
+	<!--<updateservers>
+		<server type="collection">http://{{extension.name.lower}}.com/list.xml</server>
+		<server type="extension" priority="1" name="Asikart {{extension.name.cap}} Plugin">http://update.asikart.com/plugins/plg_{{extension.name.lower}}.xml</server>
+	</updateservers>-->
+
+</extension>

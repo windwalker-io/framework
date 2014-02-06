@@ -6,19 +6,16 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace GeneratorBundle\Controller\Component\Project;
+namespace GeneratorBundle\Controller\Plugin;
 
-use GeneratorBundle\Action\Component\CopyAllAction;
-use GeneratorBundle\Action\Component\CopyLanguageAction;
-use GeneratorBundle\Action\Component\ImportSqlAction;
-use GeneratorBundle\Controller\Component\ComponentController;
+use GeneratorBundle\Action;
 
 /**
- * Class InitController
+ * Class AddController
  *
  * @since 1.0
  */
-class InitController extends ComponentController
+class InitController extends PluginController
 {
 	/**
 	 * Execute the controller.
@@ -27,18 +24,12 @@ class InitController extends ComponentController
 	 *                   finish execution. A controller might return false if some precondition for
 	 *                   the controller to run has not been satisfied.
 	 *
+	 * @since   1.0
 	 * @throws  \LogicException
 	 * @throws  \RuntimeException
 	 */
-	public function doExecute()
+	public function execute()
 	{
-		$this->doAction(new CopyAllAction);
-
-		if ($this->config['client'] == 'administrator')
-		{
-			$this->doAction(new ImportSqlAction);
-
-			$this->doAction(new CopyLanguageAction);
-		}
+		$this->doAction(new Action\CopyAllAction);
 	}
 }
