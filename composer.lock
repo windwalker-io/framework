@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/asika32764/joomla-framework-console.git",
-                "reference": "a60f14a6f2f1b0c1cca75db03e7f749eae69d33a"
+                "reference": "bc42f7c121f451d0b7fe5989e6507d66c2656a07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asika32764/joomla-framework-console/zipball/a60f14a6f2f1b0c1cca75db03e7f749eae69d33a",
-                "reference": "a60f14a6f2f1b0c1cca75db03e7f749eae69d33a",
+                "url": "https://api.github.com/repos/asika32764/joomla-framework-console/zipball/bc42f7c121f451d0b7fe5989e6507d66c2656a07",
+                "reference": "bc42f7c121f451d0b7fe5989e6507d66c2656a07",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
                 "framework",
                 "joomla"
             ],
-            "time": "2014-02-04 04:07:42"
+            "time": "2014-02-06 12:38:09"
         },
         {
             "name": "asika/php-code-generator",
@@ -53,12 +53,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/asika32764/php-code-generator.git",
-                "reference": "98a364b5c5d6370f6da3e8b3253a1a568d2dddc6"
+                "reference": "cc2603d0b6636115fd88b72596e7c353c3df5376"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asika32764/php-code-generator/zipball/98a364b5c5d6370f6da3e8b3253a1a568d2dddc6",
-                "reference": "98a364b5c5d6370f6da3e8b3253a1a568d2dddc6",
+                "url": "https://api.github.com/repos/asika32764/php-code-generator/zipball/cc2603d0b6636115fd88b72596e7c353c3df5376",
+                "reference": "cc2603d0b6636115fd88b72596e7c353c3df5376",
                 "shasum": ""
             },
             "require": {
@@ -82,7 +82,7 @@
                 }
             ],
             "description": "PHP Code generator",
-            "time": "2014-02-04 14:34:27"
+            "time": "2014-02-05 19:35:39"
         },
         {
             "name": "filp/whoops",

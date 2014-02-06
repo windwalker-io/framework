@@ -83,7 +83,7 @@ class Console extends JoomlaConsole
 
 		parent::__construct($input, $config, $output);
 
-		$this->defaultCommand
+		$this->rootCommand
 			->setHelp(
 <<<HELP
 Welcome to Windwalker Console.
@@ -91,7 +91,7 @@ Welcome to Windwalker Console.
 HELP
 			);
 
-		$descriptorHelper = $this->defaultCommand->getChild('help')
+		$descriptorHelper = $this->rootCommand->getChild('help')
 			->getDescriptor();
 
 		$descriptorHelper->setOptionDescriptor(new OptionDescriptor)
@@ -121,9 +121,9 @@ HELP
 			$bundle::registerCommands($this);
 		}
 
-		$context = get_class($this->defaultCommand);
+		$context = get_class($this->rootCommand);
 
-		$this->triggerEvent('onWindwalkerLoadCommand', array($context, $this->defaultCommand));
+		$this->triggerEvent('onWindwalkerLoadCommand', array($context, $this->rootCommand));
 	}
 
 	/**
