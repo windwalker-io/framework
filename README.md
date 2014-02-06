@@ -4,6 +4,14 @@
 
 **Windwalker** is a RAD framework of Joomla! CMS.
 
+We provides modern functions and interfaces help developer quickly create extensions.
+Windwalker contains single action controller(Joomla new MVC), XUL engine, console interface, Dependency Injection,
+DataMapper and code generator.
+
+Hope our framework bring you a joy time :)
+
+### Version 1 and 2
+
 This is the version 2 repository, all folder with lower case is legacy code, all folders with capitals is for version 2 and follows PSR-0 naming standard.
 
 The version 2 is still work in process.
@@ -15,10 +23,10 @@ cd /your/joomla/dir
 composer create-project asika/windwalker libraries/windwalker dev-staging -s dev
 ```
 
-## Build a new extension (Work in process)
+## Generate a new extension
 
 ``` bash
-php bin/windwalker project init com_flower sakura.sakuras -c admin
+php bin/windwalker init com_flower sakura.sakuras -c admin
 ```
 
 ## About
