@@ -27,6 +27,13 @@ class SaveController extends AbstractItemController
 	protected $lang;
 
 	/**
+	 * Property allowReturn.
+	 *
+	 * @var  boolean
+	 */
+	protected $allowReturn = true;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param \JInput          $input

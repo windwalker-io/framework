@@ -109,8 +109,11 @@ class ControllerResolver
 			'option' => 'com_' . strtolower($prefix)
 		);
 
+		// Using delegator to create controller.
+		$delegator = $this->getDelegator($config);
+
 		/** @var $controller Controller */
-		$controller = new $controllerName($input, $this->application, $config);
+		$controller = $delegator->getController($controllerName, $input, $this->application, $config);
 
 		return $controller;
 	}
@@ -192,5 +195,52 @@ class ControllerResolver
 		unset($this->taskMapper[strtolower($task)]);
 
 		return $this;
+	}
+
+	/**
+	 * getDelegator
+	 *
+	 * @param array $config
+	 *
+	 * @return  mixed
+	 *
+	 * @throws \LogicException
+	 */
+	public function getDelegator($config)
+	{
+		$defaultDelegator = '\\Windwalker\\Controller\\Resolver\\ControllerDelegator';
+
+		$key = $config['prefix'] . '.' . $config['name'] . '.controller.delegator';
+
+		try
+		{
+			// Find from container
+			$delegator = $this->container->get($key);
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			// Find from component.
+			$class = ucfirst($config['prefix']) . 'Controller' . ucfirst($config['name']) . 'Delegator';
+
+			if (class_exists($class))
+			{
+				if (!is_subclass_of($class, $defaultDelegator))
+				{
+					throw new \LogicException(sprintf('%s should extends from %', $class, $defaultDelegator));
+				}
+
+				$delegator = new $class;
+			}
+			else
+			{
+				// Find from windwalker
+				$delegator = new $defaultDelegator;
+			}
+
+			$this->container->alias($key, $class)
+				->share($class, $defaultDelegator);
+		}
+
+		return $delegator;
 	}
 }

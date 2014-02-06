@@ -30,4 +30,11 @@ class PublishController extends AbstractUpdateStateController
 	 * @var string
 	 */
 	protected $actionText = 'PUBLISHED';
+
+	/**
+	 * Property allowReturn.
+	 *
+	 * @var  boolean
+	 */
+	protected $allowReturn = true;
 }

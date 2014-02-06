@@ -30,4 +30,11 @@ class UnpublishController extends AbstractUpdateStateController
 	 * @var string
 	 */
 	protected $actionText = 'UNPUBLISHED';
+
+	/**
+	 * Property allowReturn.
+	 *
+	 * @var  boolean
+	 */
+	protected $allowReturn = true;
 }

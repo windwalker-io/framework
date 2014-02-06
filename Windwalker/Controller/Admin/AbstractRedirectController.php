@@ -3,6 +3,7 @@
 namespace Windwalker\Controller\Admin;
 
 use Windwalker\Controller\Controller;
+use Windwalker\Helper\UriHelper;
 
 /**
  * Class AbstractRedirectController
@@ -21,6 +22,13 @@ abstract class AbstractRedirectController extends Controller
 		'layout',
 		'return'
 	);
+
+	/**
+	 * Property allowReturn.
+	 *
+	 * @var  boolean
+	 */
+	protected $allowReturn = false;
 
 	/**
 	 * Property viewItem.
@@ -50,7 +58,12 @@ abstract class AbstractRedirectController extends Controller
 
 		if (!empty($config['allow_url_params']) && is_array($config['allow_url_params']))
 		{
-			array_merge($this->allowUrlParams, $config['allow_url_params']);
+			$this->allowUrlParams = array_merge($this->allowUrlParams, $config['allow_url_params']);
+		}
+
+		if (!empty($config['allow_return']))
+		{
+			$this->allowReturn = $config['allow_return'];
 		}
 	}
 
@@ -107,10 +120,17 @@ abstract class AbstractRedirectController extends Controller
 	{
 		$this->setMessage($msg, $type);
 
-		if (!$this->input->get('hmvc') && $this->input->get('redirect', true))
+		if ($this->input->get('hmvc') || !$this->input->get('redirect', true))
 		{
-			$this->app->redirect($url);
+			return;
 		}
+
+		if ($this->input->get('return') && $this->allowReturn)
+		{
+			$url = UriHelper::base64('decode', $this->input->get('return'));
+		}
+
+		$this->app->redirect($url);
 	}
 
 	/**

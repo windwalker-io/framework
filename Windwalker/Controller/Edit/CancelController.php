@@ -20,6 +20,13 @@ defined('_JEXEC') or die;
 class CancelController extends AbstractItemController
 {
 	/**
+	 * Property allowReturn.
+	 *
+	 * @var  boolean
+	 */
+	protected $allowReturn = true;
+
+	/**
 	 * Generic method to cancel
 	 *
 	 * @return  boolean  True on success.

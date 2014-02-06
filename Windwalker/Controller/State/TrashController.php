@@ -30,4 +30,11 @@ class TrashController extends AbstractUpdateStateController
 	 * @var string
 	 */
 	protected $actionText = 'TRASHED';
+
+	/**
+	 * Property allowReturn.
+	 *
+	 * @var  boolean
+	 */
+	protected $allowReturn = true;
 }

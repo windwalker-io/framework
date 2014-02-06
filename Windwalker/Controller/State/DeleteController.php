@@ -26,6 +26,13 @@ class DeleteController extends AbstractUpdateStateController
 	protected $actionText = 'DELETED';
 
 	/**
+	 * Property allowReturn.
+	 *
+	 * @var  boolean
+	 */
+	protected $allowReturn = true;
+
+	/**
 	 * doUpdate
 	 *
 	 * @throws \InvalidArgumentException
