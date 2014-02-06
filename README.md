@@ -26,7 +26,7 @@ composer create-project asika/windwalker libraries/windwalker dev-staging -s dev
 ## Generate a new extension
 
 ``` bash
-php bin/windwalker init com_flower sakura.sakuras -c admin
+php bin/windwalker generator init com_flower sakura.sakuras -c admin
 ```
 
 ## About
