@@ -36,6 +36,11 @@ class ConvertTemplateAction extends AbstractAction
 		$src  = $this->config['dir.src'];
 		$dest = $this->config['dir.dest'];
 
+		if (!is_dir($src))
+		{
+			throw new \RuntimeException(sprintf('Extension "%s" in %s not exists', $this->config['element'], $this->config['client']));
+		}
+
 		// Remove dir first
 		Folder::delete($dest);
 

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module"
+	version="3.2"
+	{{module.client}}
+	method="upgrade">
+	<name>{{extension.element.lower}}</name>
+	<author>Asika</author>
+	<creationDate>2014-02-06</creationDate>
+	<copyright>Copyright (C) 2014 Asikart.com</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>asika@asikart.com</authorEmail>
+	<authorUrl>http://asikart.com</authorUrl>
+	<version>1.0</version>
+	<description>{{extension.element.upper}}_INSTALL_DESC</description>
+
+	<scriptfile>install.php</scriptfile>
+
+	<!-- module {{extension.name.lower}} now has no sql file
+	<install>
+    	<sql>
+        	<file driver="mysql" charset="utf8">sql/install.sql</file>
+  		</sql>
+    </install>
+	
+	
+	<uninstall>
+    	<sql>
+        	<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+  		</sql>
+    </uninstall>
+	-->
+
+	<files>
+		<filename module="{{extension.element.lower}}">{{extension.element.lower}}.php</filename>
+		<folder>tmpl</folder>
+		<folder>language</folder>
+		<folder>model</folder>
+		<folder>helper</folder>
+		<filename>index.html</filename>
+		<filename>{{extension.element.lower}}.xml</filename>
+		<filename>helper.php</filename>
+		<filename>install.php</filename>
+	</files>
+
+	<help key="JHELP_EXTENSIONS_MODULE_MANAGER_FOOTER"/>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+
+				<field
+					name="catid"
+					type="category"
+					description="JGLOBAL_CHOOSE_CATEGORY_DESC"
+					extension="com_{{extension.name.lower}}"
+					label="JGLOBAL_CHOOSE_CATEGORY_LABEL"
+					required="true"
+					multiple="true"
+					size="10"
+					default="1"
+					>
+					<option value="1">JALL</option>
+				</field>
+
+				<field
+					type="spacer"
+					hr="true"
+					/>
+
+				<field
+					name="orderby"
+					type="list"
+					description="JGLOBAL_ARTICLE_ORDER_DESC"
+					label="JGLOBAL_ARTICLE_ORDER_LABEL"
+					default="item.created"
+					>
+					<option value="item.created">JGLOBAL_CREATED_DATE</option>
+					<option value="item.publish_up">{{extension.element.upper}}_PUBLISH_UP</option>
+					<option value="item.publish_down">{{extension.element.upper}}_PUBLISH_DOWN</option>
+					<option value="item.modified">JGLOBAL_FIELD_MODIFIED_LABEL</option>
+					<option value="item.title">JGLOBAL_TITLE</option>
+					<option value="item.ordering">JGLOBAL_ORDERING</option>
+				</field>
+
+				<field
+					name="order_dir"
+					type="list"
+					label="JFIELD_ORDERING_LABEL"
+					description="JFIELD_ORDERING_DESC"
+					default="DESC"
+					>
+					<option value="ASC">{{extension.element.upper}}_ORDER_DIR_ASC</option>
+					<option value="DESC">{{extension.element.upper}}_ORDER_DIR_DESC</option>
+				</field>
+
+			</fieldset>
+
+			<fieldset name="advanced">
+
+				<field
+					name="layout"
+					type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL"
+					description="JFIELD_ALT_MODULE_LAYOUT_DESC"
+					/>
+
+				<field
+					name="moduleclass_sfx"
+					type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC"
+					/>
+
+				<field
+					name="cache"
+					type="list"
+					default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL"
+					description="COM_MODULES_FIELD_CACHING_DESC"
+					>
+					<option
+						value="1">JGLOBAL_USE_GLOBAL
+					</option>
+					<option
+						value="0">COM_MODULES_FIELD_VALUE_NOCACHING
+					</option>
+				</field>
+
+				<field
+					name="cache_time"
+					type="text"
+					default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+					description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+					/>
+
+				<field
+					name="cachemode"
+					type="hidden"
+					default="static"
+					>
+					<option value="static"></option>
+				</field>
+
+			</fieldset>
+		</fields>
+	</config>
+
+
+	<updateservers>
+		<!--<server type="collection">http://example.com/list.xml</server>-->
+		<server type="extension"
+			priority="1"
+			name="Asikart {{extension.name.cap}} Module">http://update.asikart.com/module/{{extension.element.lower}}.xml
+		</server>
+	</updateservers>
+
+
+</extension>
