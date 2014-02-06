@@ -39,7 +39,7 @@ class InitCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $description = 'Init a new project';
+	protected $description = 'Init a new extension.';
 
 	/**
 	 * The usage to tell user how to use this command.

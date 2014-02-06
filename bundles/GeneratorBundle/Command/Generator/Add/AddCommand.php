@@ -38,7 +38,7 @@ class AddCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $description = 'add';
+	protected $description = 'Add new controller view model system classes(only component).';
 
 	/**
 	 * The usage to tell user how to use this command.

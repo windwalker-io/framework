@@ -39,7 +39,7 @@ class SubsystemCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $description = 'subsystem';
+	protected $description = 'Sub system contains item and list two controller to support CRUD a table.';
 
 	/**
 	 * The usage to tell user how to use this command.

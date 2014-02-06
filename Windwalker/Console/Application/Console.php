@@ -14,6 +14,7 @@ use Joomla\Console\Console as JoomlaConsole;
 use Joomla\Input;
 use Joomla\Registry\Registry;
 
+use Windwalker\Console\Descriptor\CommandDescriptor;
 use Windwalker\DI\Container;
 use Windwalker\Console\Descriptor\OptionDescriptor;
 
@@ -93,7 +94,8 @@ HELP
 		$descriptorHelper = $this->defaultCommand->getChild('help')
 			->getDescriptor();
 
-		$descriptorHelper->setOptionDescriptor(new OptionDescriptor);
+		$descriptorHelper->setOptionDescriptor(new OptionDescriptor)
+			->setCommandDescriptor(new CommandDescriptor);
 
 		$this->loadFirstlevelCommands();
 	}

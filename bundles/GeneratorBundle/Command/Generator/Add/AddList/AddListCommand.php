@@ -39,7 +39,7 @@ class AddListCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $description = 'list';
+	protected $description = 'Add a plural controller to show list page.';
 
 	/**
 	 * The usage to tell user how to use this command.

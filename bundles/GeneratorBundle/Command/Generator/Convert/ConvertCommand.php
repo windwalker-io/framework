@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace GeneratorBundle\Command\Generator\Template\Convert;
+namespace GeneratorBundle\Command\Generator\Convert;
 
 use GeneratorBundle\Controller\GeneratorController;
 use Windwalker\Console\Command\Command;
@@ -39,7 +39,7 @@ class ConvertCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $description = 'convert';
+	protected $description = 'Convert an extension back to a template.';
 
 	/**
 	 * The usage to tell user how to use this command.

@@ -39,7 +39,7 @@ class AddItemCommand extends Command
 	 *
 	 * @var  string
 	 */
-	protected $description = 'item';
+	protected $description = 'Add a singular MVC group for item CRUD.';
 
 	/**
 	 * The usage to tell user how to use this command.
