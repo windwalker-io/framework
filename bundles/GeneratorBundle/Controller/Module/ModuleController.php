@@ -29,6 +29,8 @@ abstract class ModuleController extends JoomlaExtensionController
 	 */
 	public function __construct(Container $container, IOInterface $io, Registry $config = null)
 	{
+		$config['client'] = $config['client'] ? : 'site';
+
 		$this->replace['module.client'] = 'client="' . $config['client'] . '"';
 
 		parent::__construct($container, $io, $config);
