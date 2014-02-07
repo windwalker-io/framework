@@ -94,27 +94,26 @@ class Mod{{extension.name.cap}}Model extends \JModelDatabase
 			'cat'  => '#__categories'
 		);
 
-		$select = Mod{{extension.name.cap}}Helper::getSelectList($table);
-
-		// Load Data
-		$items = array();
-
-		$query->select($select)
-			->from('#__{{extension.name.lower}}_{{controller.list.name.lower}} AS item')
-			->join('LEFT', '#__categories AS cat ON item.catid = cat.id')
-			->order("{$order} {$dir}");
-
-		$items = $db->setQuery($query)->loadObjectList();
-
-		// Handle Data
-		if ($items)
+		try
 		{
+			$select = Mod{{extension.name.cap}}Helper::getSelectList($table);
+
+			// Load Data
+			$items = array();
+
+			$query->select($select)
+				->from('#__{{extension.name.lower}}_{{controller.list.name.lower}} AS item')
+				->join('LEFT', '#__categories AS cat ON item.catid = cat.id')
+				->order("{$order} {$dir}");
+
+			$items = (array) $db->setQuery($query)->loadObjectList();
+
 			foreach ($items as $key => &$item)
 			{
 				$item->link = JRoute::_("index.php?option=com_{{extension.name.lower}}&view={{controller.item.name.lower}}&id={$item->id}&alias={$item->alias}&catid={$item->catid}");
 			}
 		}
-		else
+		catch (\RuntimeException $e)
 		{
 			$items = range(1, 5);
 
