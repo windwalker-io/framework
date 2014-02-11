@@ -1,0 +1,21 @@
+{
+	"name": "asika/windwalker-middleware",
+	"type": "windwalker-package",
+	"description": "Windwalker Middleware package",
+	"keywords": ["windwalker", "framework", "middleware"],
+	"homepage": "https://github.com/asika32764/windwalker-middleware",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"joomla/test": "1.0-beta2"
+	},
+	"minimum-stability" : "beta",
+	"target-dir": "Windwalker/Middleware",
+	"autoload": {
+		"psr-0": {
+			"Windwalker\\Middleware": ""
+		}
+	}
+}
