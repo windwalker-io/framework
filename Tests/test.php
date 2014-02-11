@@ -6,9 +6,13 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+use Windwalker\Middleware\CallbackMiddleware;
+use Windwalker\Middleware\Chain\ChainBuilder;
+use Windwalker\Middleware\Middleware;
+
 include dirname(__DIR__) . '/vendor/autoload.php';
 
-class TestA extends \Windwalker\Middleware\Middleware
+class TestA extends Middleware
 {
 	/**
 	 * call
@@ -25,7 +29,7 @@ class TestA extends \Windwalker\Middleware\Middleware
 	}
 }
 
-class TestB extends \Windwalker\Middleware\Middleware
+class TestB extends Middleware
 {
 	/**
 	 * call
@@ -46,7 +50,7 @@ class TestB extends \Windwalker\Middleware\Middleware
 //$b = new TestB;
 //
 //$a->setNext($b);
-//$b->setNext(new \Windwalker\Middleware\CallbackMiddleware(
+//$b->setNext(new CallbackMiddleware(
 //	function($next)
 //	{
 //		echo "CCCC\n";
@@ -56,7 +60,7 @@ class TestB extends \Windwalker\Middleware\Middleware
 //
 //$a->call();
 
-$c = new \Windwalker\Middleware\Chain\MiddlewareChain;
+$c = new ChainBuilder;
 
 $c->add('TestA')
 	->add(new TestB);

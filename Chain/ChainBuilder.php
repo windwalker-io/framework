@@ -13,11 +13,11 @@ use Windwalker\Middleware\EndMiddleware;
 use Windwalker\Middleware\MiddlewareInterface;
 
 /**
- * Class MiddlewareChain
+ * Class ChainBuilder
  *
  * @since 1.0
  */
-class MiddlewareChain
+class ChainBuilder
 {
 	/**
 	 * Property stack.
@@ -34,7 +34,7 @@ class MiddlewareChain
 	 * @throws  \LogicException
 	 * @throws  \InvalidArgumentException
 	 *
-	 * @return  MiddlewareChain
+	 * @return  ChainBuilder
 	 */
 	public function add($element)
 	{
