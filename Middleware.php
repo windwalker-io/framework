@@ -13,19 +13,19 @@ namespace Windwalker\Middleware;
  *
  * @since 1.0
  */
-abstract class Middleware implements MiddleInterface
+abstract class Middleware implements MiddlewareInterface
 {
 	/**
 	 * Property next.
 	 *
-	 * @var  object
+	 * @var  MiddlewareInterface
 	 */
 	protected $next = null;
 
 	/**
 	 * getNext
 	 *
-	 * @return  object
+	 * @return  MiddlewareInterface
 	 */
 	public function getNext()
 	{
@@ -41,6 +41,11 @@ abstract class Middleware implements MiddleInterface
 	 */
 	public function setNext($object)
 	{
+		if (!($object instanceof MiddlewareInterface) && is_callable($object))
+		{
+			$object = new CallbackMiddleware($object);
+		}
+
 		$this->next = $object;
 
 		return $this;

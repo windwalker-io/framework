@@ -9,11 +9,11 @@
 namespace Windwalker\Middleware;
 
 /**
- * Class MiddleInterface
+ * Class MiddlewareInterface
  *
  * @since 1.0
  */
-interface MiddleInterface
+interface MiddlewareInterface
 {
 	/**
 	 * call
