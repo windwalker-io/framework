@@ -175,17 +175,18 @@ We can using `ChainBuilder` to chaining multiple middlewares.
 ``` php
 use Windwalker\Middleware\Chain\ChainBuilder;
 
-$c = new ChainBuilder;
+$chain = new ChainBuilder;
 
-$c->add('TestA')
-	->add(new TestB)
-	->add(function($next)
+$chain
+    ->add('TestA')
+    ->add(new TestB)
+    ->add(function($next)
     {
         echo ">>>CCCC\n";
         echo "<<<CCCC\n";
     });
 
-$c->call();
+$chain->call();
 ```
 
 The result still:
