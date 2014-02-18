@@ -1,6 +1,6 @@
 <?php
 
-use Windwalker\Data\DataMapper;
+use Windwalker\DataMapper\DataMapper;
 
 include_once __DIR__ . '/init.php';
 

@@ -2,7 +2,7 @@
 
 include_once __DIR__ . '/init.php';
 
-$dm = new \Windwalker\Data\DataMapper('#__datamapper');
+$dm = new \Windwalker\DataMapper\DataMapper('#__datamapper');
 
 $dataset = new \Windwalker\Data\DataSet;
 
