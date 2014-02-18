@@ -6,11 +6,11 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Data\Joomla;
+namespace Windwalker\Data\DataMapper;
 
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\Query\QueryElement;
-use Windwalker\Data\DataMapper\AbstractDataMapper;
+use Windwalker\Data\Database\DatabaseFactory;
 
 /**
  * Class DataMapper
@@ -27,9 +27,9 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Constructor
 	 *
-	 * @param null                            $table
-	 * @param string                          $pk
-	 * @param \Joomla\Database\DatabaseDriver $db
+	 * @param null           $table
+	 * @param string         $pk
+	 * @param DatabaseDriver $db
 	 */
 	public function __construct($table = null, $pk = 'id', DatabaseDriver $db = null)
 	{
@@ -147,6 +147,67 @@ class DataMapper extends AbstractDataMapper
 		$this->db->transactionCommit();
 
 		return $dataset;
+	}
+
+	/**
+	 * doUpdateAll
+	 *
+	 * @param $data
+	 * @param $conditions
+	 *
+	 * @throws \Exception
+	 * @return  mixed
+	 */
+	protected function doUpdateAll($data, $conditions)
+	{
+		$this->db->transactionStart();
+
+		$query = $this->db->getQuery(true);
+
+		// Loop every conditions.
+		foreach ($conditions as $key => $value)
+		{
+			if (empty($value))
+			{
+				continue;
+			}
+
+			// If is array or object, we use "IN" condition.
+			if ((is_array($value) || is_object($value)))
+			{
+				$value = array_map(array($query, 'quote'), (array) $value);
+
+				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
+			}
+			// Otherwise, we use equal condition.
+			else
+			{
+				$query->where($query->format('%n = %q', $key, $value));
+			}
+		}
+
+		// Build update values.
+		foreach ((array) $data as $field => $value)
+		{
+			$query->set($query->format('%n = %q', $field, $value));
+		}
+
+		$query->update($this->table);
+
+		try
+		{
+			$result = (boolean) $this->db->setQuery($query)->execute();
+		}
+		catch (\Exception $e)
+		{
+			$this->db->transactionRollback();
+
+			throw $e;
+		}
+
+		$this->db->transactionCommit();
+
+		return $result;
 	}
 
 	/**

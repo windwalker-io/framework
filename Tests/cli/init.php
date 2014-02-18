@@ -6,10 +6,10 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-include __DIR__ . '/../vendor/autoload.php';
+include __DIR__ . '/../../vendor/autoload.php';
 
 // Make the database driver.
-$db = \Windwalker\Data\Joomla\DatabaseFactory::getDbo(
+$db = \Windwalker\Data\Database\DatabaseFactory::getDbo(
 	array(
 		'driver' => 'mysql',
 		'host'   => 'localhost',

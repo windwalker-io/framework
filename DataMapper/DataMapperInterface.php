@@ -77,6 +77,16 @@ interface DataMapperInterface
 	public function update($dataset);
 
 	/**
+	 * UpdateAll
+	 *
+	 * @param $data
+	 * @param $conditions
+	 *
+	 * @return  mixed
+	 */
+	public function UpdateAll($data, $conditions = array());
+
+	/**
 	 * updateOne
 	 *
 	 * @param Data|array $data

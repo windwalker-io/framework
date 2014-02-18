@@ -244,6 +244,26 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
+	 * updateAll
+	 *
+	 * @param object $data
+	 * @param array  $conditions
+	 *
+	 * @return  mixed
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function updateAll($data, $conditions = array())
+	{
+		if (!($data instanceof $this->dataClass))
+		{
+			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
+		}
+
+		return $this->doUpdateAll($data, $conditions);
+	}
+
+	/**
 	 * save
 	 *
 	 * @param DataSet|array $dataset
@@ -349,6 +369,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @return  mixed
 	 */
 	abstract protected function doUpdate($dataset);
+
+	/**
+	 * doUpdateAll
+	 *
+	 * @param $data
+	 * @param $conditions
+	 *
+	 * @return  mixed
+	 */
+	abstract protected function doUpdateAll($data, $conditions);
 
 	/**
 	 * doDelete
