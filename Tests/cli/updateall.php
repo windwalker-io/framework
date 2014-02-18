@@ -10,7 +10,8 @@ $data = new \Windwalker\Data\Data(
 	]
 );
 
-
-$result = $dm->updateAll($data, ['id' => [2,3,4,5]]);
+$result = $dm->updateAll($data, [
+	'id' => new \Windwalker\Data\Compare\GteCompare('id', 5)
+]);
 
 print_r($result);

@@ -9,7 +9,9 @@
 namespace Windwalker\Data\DataMapper;
 
 use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Database\Query\QueryElement;
+use Windwalker\Data\Compare\StringCompare;
 use Windwalker\Data\Database\DatabaseFactory;
 
 /**
@@ -52,27 +54,8 @@ class DataMapper extends AbstractDataMapper
 	{
 		$query = $this->db->getQuery(true);
 
-		// Loop every conditions.
-		foreach ($conditions as $key => $value)
-		{
-			if (empty($value))
-			{
-				continue;
-			}
-
-			// If is array or object, we use "IN" condition.
-			if ((is_array($value) || is_object($value)))
-			{
-				$value = array_map(array($query, 'quote'), (array) $value);
-
-				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
-			}
-			// Otherwise, we use equal condition.
-			else
-			{
-				$query->where($query->quoteName($key) . ' = ' . $query->quote($value));
-			}
-		}
+		// Conditions.
+		$this->buildConditions($query, $conditions);
 
 		// Loop ordering
 		foreach ($orders as $order)
@@ -164,27 +147,8 @@ class DataMapper extends AbstractDataMapper
 
 		$query = $this->db->getQuery(true);
 
-		// Loop every conditions.
-		foreach ($conditions as $key => $value)
-		{
-			if (empty($value))
-			{
-				continue;
-			}
-
-			// If is array or object, we use "IN" condition.
-			if ((is_array($value) || is_object($value)))
-			{
-				$value = array_map(array($query, 'quote'), (array) $value);
-
-				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
-			}
-			// Otherwise, we use equal condition.
-			else
-			{
-				$query->where($query->format('%n = %q', $key, $value));
-			}
-		}
+		// Conditions.
+		$this->buildConditions($query, $conditions);
 
 		// Build update values.
 		foreach ((array) $data as $field => $value)
@@ -221,21 +185,8 @@ class DataMapper extends AbstractDataMapper
 	{
 		$query = $this->db->getQuery(true);
 
-		// Where conditions
-		foreach ($conditions as $key => $value)
-		{
-			// Using IN if is array or object
-			if (is_array($value) || is_object($value))
-			{
-				$value = array_map(array($query, 'quote'), (array) $value);
-
-				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
-			}
-			else
-			{
-				$query->where($query->quoteName($key) . ' = ' . $query->quote($value));
-			}
-		}
+		// Conditions.
+		$this->buildConditions($query, $conditions);
 
 		$query->delete($this->table);
 
@@ -264,5 +215,71 @@ class DataMapper extends AbstractDataMapper
 		$this->db = $db;
 
 		return $this;
+	}
+
+	/**
+	 * buildConditions
+	 *
+	 * @param DatabaseQuery &$query
+	 * @param array         $conditions
+	 *
+	 * @return  DatabaseQuery
+	 */
+	public function buildConditions(DatabaseQuery &$query, array $conditions)
+	{
+		foreach ($conditions as $key => $value)
+		{
+			if (empty($value))
+			{
+				continue;
+			}
+
+			// If using Compare class, we convert it to string
+			if ($value instanceof StringCompare)
+			{
+				$query->where((string) $this->buildCompare($key, $value));
+			}
+			// If is array or object, we use "IN" condition.
+			elseif (is_array($value) || is_object($value))
+			{
+				$value = array_map(array($query, 'quote'), (array) $value);
+
+				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
+			}
+			// Otherwise, we use equal condition.
+			else
+			{
+				$query->where($query->format('%n = %q', $key, $value));
+			}
+		}
+
+		return $query;
+	}
+
+	/**
+	 * buildCompare
+	 *
+	 * @param string|int    $key
+	 * @param StringCompare $value
+	 *
+	 * @return  string
+	 */
+	public function buildCompare($key, StringCompare $value)
+	{
+		$query = $this->db->getQuery(true);
+
+		if (!is_numeric($key))
+		{
+			$value->setCompare1($key);
+		}
+
+		$value->setHandler(
+			function($compare1, $compare2, $operator) use ($query)
+			{
+				return $query->format('%n ' . $operator . ' %q', $compare1, $compare2);
+			}
+		);
+
+		return (string) $value;
 	}
 }
