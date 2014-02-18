@@ -1,4 +1,4 @@
-![ASIKART_logo_new_550.png](http://doc.asikart.com/images/combuilder/ASIKART_logo_new_550.png)
+![windwalker-logo-500-2](https://f.cloud.github.com/assets/1639206/2192348/7c01df60-9865-11e3-941c-01b0983adebd.png)
 
 ## Introduction
 
