@@ -40,6 +40,11 @@ class DataSet extends \ArrayObject implements DatasetInterface
 
 		foreach ($dataset as $data)
 		{
+			if (!($data instanceof Data))
+			{
+				$data = new Data($data);
+			}
+
 			$this[] = $data;
 		}
 

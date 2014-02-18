@@ -64,28 +64,26 @@ interface DataMapperInterface
 	 *
 	 * @return  mixed
 	 */
-	public function insertOne($data);
+	public function createOne($data);
 
 	/**
 	 * update
 	 *
 	 * @param array|DataSet $dataset
-	 * @param string[]      $conditions
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @return  bool
 	 */
-	public function update($dataset, $conditions = null);
+	public function update($dataset);
 
 	/**
 	 * updateOne
 	 *
 	 * @param Data|array $data
-	 * @param array      $conditions
 	 *
 	 * @return  bool
 	 */
-	public function updateOne($data, $conditions = null);
+	public function updateOne($data);
 	/**
 	 * save
 	 *
@@ -100,10 +98,8 @@ interface DataMapperInterface
 	 * delete
 	 *
 	 * @param array  $conditions
-	 * @param string $glue
 	 *
 	 * @return  mixed
 	 */
 	public function delete($conditions);
 }
- 

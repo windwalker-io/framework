@@ -10,7 +10,6 @@ namespace Windwalker\Data\Joomla;
 
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\Query\QueryElement;
-use Windwalker\Data\Data;
 use Windwalker\Data\DataMapper\AbstractDataMapper;
 
 /**
@@ -93,11 +92,30 @@ class DataMapper extends AbstractDataMapper
 	 *
 	 * @param $dataset
 	 *
+	 * @throws \Exception
 	 * @return  mixed
 	 */
 	protected function doCreate($dataset)
 	{
-		// TODO: Implement doCreate() method.
+		$this->db->transactionStart();
+
+		try
+		{
+			foreach ($dataset as &$data)
+			{
+				$this->db->insertObject($this->table, $data, $this->getPrimaryKey());
+			}
+		}
+		catch (\Exception $e)
+		{
+			$this->db->transactionRollback();
+
+			throw $e;
+		}
+
+		$this->db->transactionCommit();
+
+		return $dataset;
 	}
 
 	/**
@@ -108,33 +126,59 @@ class DataMapper extends AbstractDataMapper
 	 *
 	 * @return  mixed
 	 */
-	protected function doUpdate($dataset, $conditions)
+	protected function doUpdate($dataset)
 	{
-		// TODO: Implement doUpdate() method.
+		$this->db->transactionStart();
+
+		try
+		{
+			foreach ($dataset as &$data)
+			{
+				$this->db->updateObject($this->table, $data, $this->getPrimaryKey());
+			}
+		}
+		catch (\Exception $e)
+		{
+			$this->db->transactionRollback();
+
+			throw $e;
+		}
+
+		$this->db->transactionCommit();
+
+		return $dataset;
 	}
 
 	/**
 	 * doDelete
 	 *
-	 * @param $conditions
+	 * @param array $conditions
 	 *
 	 * @return  mixed
 	 */
 	protected function doDelete($conditions)
 	{
-		// TODO: Implement doDelete() method.
-	}
+		$query = $this->db->getQuery(true);
 
-	/**
-	 * insertOne
-	 *
-	 * @param Data|array|object $data
-	 *
-	 * @return  mixed
-	 */
-	public function insertOne($data)
-	{
-		// TODO: Implement insertOne() method.
+		// Where conditions
+		foreach ($conditions as $key => $value)
+		{
+			// Using IN if is array or object
+			if (is_array($value) || is_object($value))
+			{
+				$value = array_map(array($query, 'quote'), (array) $value);
+
+				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
+			}
+			else
+			{
+				$query->where($query->quoteName($key) . ' = ' . $query->quote($value));
+			}
+		}
+
+		$query->delete($this->table);
+
+		return (boolean) $this->db->setQuery($query)->execute();
 	}
 
 	/**

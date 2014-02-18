@@ -64,7 +64,7 @@ abstract class DatabaseFactory
 	{
 		$dbFactory = \Joomla\Database\DatabaseFactory::getInstance();
 
-		$option['driver'] = empty($option['driver']) ? $option['driver'] : 'mysql';
+		$option['driver'] = !empty($option['driver']) ? $option['driver'] : 'mysql';
 
 		return $dbFactory->getDriver($option['driver'], $option);
 	}

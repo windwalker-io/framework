@@ -157,18 +157,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @param array|DataSet $dataset
 	 *
 	 * @throws \UnexpectedValueException
-	 * @return  bool|mixed
+	 * @throws \InvalidArgumentException
+	 * @return  mixed
 	 */
 	public function create($dataset)
 	{
-		if (!count($dataset))
-		{
-			return false;
-		}
-
 		if (!($dataset instanceof $this->datasetClass))
 		{
-			$dataset = $this->bindDataset(new $this->datasetClass, $dataset);
+			throw new \InvalidArgumentException('DataSet object should be: ' . $this->datasetClass);
 		}
 
 		$dataset = $this->doCreate($dataset);
@@ -184,18 +180,19 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	/**
 	 * insertOne
 	 *
-	 * @param Data|array|object $data
+	 * @param object $data
 	 *
+	 * @throws \InvalidArgumentException
 	 * @return  mixed
 	 */
 	public function createOne($data)
 	{
 		if (!($data instanceof $this->dataClass))
 		{
-			$data = $this->bindData(new $this->dataClass, $data);
+			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
 		}
 
-		$dataset = $this->create(array($data));
+		$dataset = $this->create($this->bindDataset(array($data)));
 
 		return $dataset[0];
 	}
@@ -204,37 +201,46 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * update
 	 *
 	 * @param array|DataSet $dataset
-	 * @param string[]      $conditions
 	 *
-	 * @throws  Exception
+	 * @throws \UnexpectedValueException
+	 * @throws \InvalidArgumentException
 	 * @return  bool
 	 */
-	public function update($dataset, $conditions = null)
+	public function update($dataset)
 	{
-		if (!count($dataset))
+		if (!($dataset instanceof $this->datasetClass))
 		{
-			return false;
+			throw new \InvalidArgumentException('DataSet object should be: ' . $this->datasetClass);
 		}
 
-		return $this->doUpdate($dataset, $conditions);
+		$dataset = $this->doUpdate($dataset);
+
+		if (!($dataset instanceof $this->datasetClass))
+		{
+			throw new \UnexpectedValueException('Return value should be: ' . $this->datasetClass);
+		}
+
+		return $dataset;
 	}
 
 	/**
 	 * updateOne
 	 *
 	 * @param Data|array $data
-	 * @param array      $conditions
 	 *
+	 * @throws \InvalidArgumentException
 	 * @return  bool
 	 */
-	public function updateOne($data, $conditions = null)
+	public function updateOne($data)
 	{
 		if (!($data instanceof $this->dataClass))
 		{
-			$data = $this->bindData(new $this->dataClass, $data);
+			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
 		}
 
-		return $this->update(array($data), $conditions);
+		$dataset = $this->update($this->bindDataset(array($data)));
+
+		return $dataset[0];
 	}
 
 	/**
@@ -259,7 +265,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		{
 			if (!($data instanceof $this->dataClass))
 			{
-				$data = $this->bindData(new $this->dataClass, $data);
+				$data = $this->bindData($data);
 			}
 
 			$update = true;
@@ -342,7 +348,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  mixed
 	 */
-	abstract protected function doUpdate($dataset, $conditions);
+	abstract protected function doUpdate($dataset);
 
 	/**
 	 * doDelete
