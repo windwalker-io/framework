@@ -13,7 +13,7 @@ namespace Windwalker\Data;
  *
  * @since 1.0
  */
-class Data extends \JData implements NullDataInterface
+class Data extends Data
 {
 	/**
 	 * isNull
