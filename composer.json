@@ -15,7 +15,7 @@
 	"minimum-stability" : "beta",
 	"autoload": {
 		"psr-4": {
-			"Windwalker\\Data": "src/"
+			"Windwalker\\Data\\": ""
 		}
 	}
 }
