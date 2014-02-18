@@ -8,7 +8,7 @@
 
 include_once __DIR__ . '/init.php';
 
-$dm = new \Windwalker\Data\DataMapper\DataMapper('#__flower_sakuras');
+$dm = new \Windwalker\Data\DataMapper('#__flower_sakuras');
 
 $result = $dm->findOne(null, 'title desc');
 

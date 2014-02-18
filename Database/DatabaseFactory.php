@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Data\Database;
+namespace Windwalker\DataMapper\Database;
 
 use Joomla\Database\DatabaseDriver;
 

@@ -1,6 +1,6 @@
 <?php
 
-use Windwalker\Data\DataMapper\DataMapper;
+use Windwalker\Data\DataMapper;
 
 include_once __DIR__ . '/init.php';
 
@@ -13,7 +13,7 @@ $data = new \Windwalker\Data\Data(
 );
 
 $result = $dm->updateAll($data, [
-	'id' => new \Windwalker\Data\Compare\GteCompare('id', 5)
+	'id' => new \Windwalker\DataMapper\Compare\GteCompare('id', 5)
 ]);
 
 print_r($result);

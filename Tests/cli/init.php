@@ -9,7 +9,7 @@
 include __DIR__ . '/../../vendor/autoload.php';
 
 // Make the database driver.
-$db = \Windwalker\Data\Database\DatabaseFactory::getDbo(
+$db = \Windwalker\DataMapper\Database\DatabaseFactory::getDbo(
 	array(
 		'driver' => 'mysql',
 		'host'   => 'localhost',

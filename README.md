@@ -17,7 +17,7 @@ Add `"asika/windwalker-middleware": "dev-master"` to the require block in your c
 ### Prepare Database object
 
 ``` php
-use Windwalker\Data\Database\DatabaseFactory;
+use Windwalker\DataMapper\Database\DatabaseFactory;
 
 // Make the database driver.
 $db = DatabaseFactory::getDbo(
@@ -43,7 +43,7 @@ See Joomla Database: https://github.com/joomla-framework/database
 ## Create a DataMapper
 
 ``` php
-use Windwalker\Data\DataMapper\DataMapper;
+use Windwalker\DataMapper\DataMapper;
 
 $fooMapper = new DataMapper('#__foo');
 
@@ -209,7 +209,9 @@ Delete rows by conditions.
 $boolean = $fooMapper->delete(array('author' => 'Jean Grey'));
 ```
 
+## Using Data and DataSet
 
+Please see: https://github.com/windwalker-framework/data
 
 
 

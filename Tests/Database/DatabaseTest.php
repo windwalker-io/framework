@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Data\Tests\Database;
+namespace Windwalker\DataMapper\Tests\Database;
 
 
 class DatabaseTest extends \SQLiteDatabase

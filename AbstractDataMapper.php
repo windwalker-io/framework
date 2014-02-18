@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Data\DataMapper;
+namespace Windwalker\DataMapper;
 
 use Windwalker\Data\Data;
 use Windwalker\Data\DataInterface;

@@ -6,13 +6,13 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Data\DataMapper;
+namespace Windwalker\DataMapper;
 
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Database\Query\QueryElement;
-use Windwalker\Data\Compare\StringCompare;
-use Windwalker\Data\Database\DatabaseFactory;
+use Windwalker\DataMapper\Compare\StringCompare;
+use Windwalker\DataMapper\Database\DatabaseFactory;
 
 /**
  * Class DataMapper
