@@ -1,8 +1,10 @@
 <?php
 
+use Windwalker\Data\DataMapper\DataMapper;
+
 include_once __DIR__ . '/init.php';
 
-$dm = new \Windwalker\Data\DataMapper\DataMapper('#__datamapper');
+$dm = new DataMapper('#__datamapper');
 
 $data = new \Windwalker\Data\Data(
 	[

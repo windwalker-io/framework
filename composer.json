@@ -10,7 +10,7 @@
 	},
 	"require-dev": {
 		"joomla/test": "~1.0",
-		"joomla/data": "~1.0"
+		"joomla/database": "~1.0"
 	},
 	"minimum-stability" : "beta",
 	"autoload": {
