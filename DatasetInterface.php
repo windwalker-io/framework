@@ -6,10 +6,19 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-include_once __DIR__ . '/init.php';
+namespace Windwalker\Data;
 
-$dm = new \Windwalker\Data\Joomla\DataMapper('#__flower_sakuras');
-
-$result = $dm->findOne(null, 'title desc');
-
-print_r($result);
+/**
+ * Interface DataInterface
+ */
+interface DatasetInterface
+{
+	/**
+	 * bind
+	 *
+	 * @param $dataset
+	 *
+	 * @return  mixed
+	 */
+	public function bind($dataset);
+}

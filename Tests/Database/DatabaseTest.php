@@ -6,10 +6,11 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-include_once __DIR__ . '/init.php';
+namespace Windwalker\Data\Tests\Database;
 
-$dm = new \Windwalker\Data\Joomla\DataMapper('#__flower_sakuras');
 
-$result = $dm->findOne(null, 'title desc');
+class DatabaseTest extends \SQLiteDatabase
+{
 
-print_r($result);
+}
+ 

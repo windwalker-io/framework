@@ -8,13 +8,41 @@
 
 namespace Windwalker\Data;
 
-use JDataSet;
-
 /**
  * Class DataSet
  *
  * @since 1.0
  */
-class DataSet extends JDataSet
+class DataSet extends \ArrayObject implements DatasetInterface
 {
+	/**
+	 * bind
+	 *
+	 * @param array $dataset
+	 *
+	 * @throws \InvalidArgumentException
+	 * @return  mixed
+	 */
+	public function bind($dataset)
+	{
+		if ($dataset instanceof \Traversable)
+		{
+			$dataset = iterator_to_array($dataset);
+		}
+		elseif (is_object($dataset))
+		{
+			$dataset = array($dataset);
+		}
+		elseif (!is_array($dataset))
+		{
+			throw new \InvalidArgumentException('Need an array or object');
+		}
+
+		foreach ($dataset as $data)
+		{
+			$this[] = $data;
+		}
+
+		return $this;
+	}
 }
