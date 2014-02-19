@@ -13,7 +13,7 @@ namespace Windwalker\DataMapper\Compare;
  *
  * @since 1.0
  */
-class GteCompare extends StringCompare
+class GteCompare extends Compare
 {
 	/**
 	 * Property operator.
@@ -21,4 +21,14 @@ class GteCompare extends StringCompare
 	 * @var  string
 	 */
 	protected $operator = '>=';
+
+	/**
+	 * compare
+	 *
+	 * @return  mixed
+	 */
+	public function compare()
+	{
+		return ($this->compare1 >= $this->compare2);
+	}
 }
