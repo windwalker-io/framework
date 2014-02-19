@@ -20,7 +20,7 @@ The version 2 is still work in process.
 
 ``` bash
 cd /your/joomla/dir
-composer create-project asika/windwalker libraries/windwalker dev-staging -s dev
+composer create-project ventoviro/windwalker libraries/windwalker dev-staging -s dev
 ```
 
 ## Generate a new extension
