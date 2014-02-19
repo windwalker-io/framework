@@ -221,4 +221,18 @@ class DataMapper extends AbstractDataMapper
 
 		return $this;
 	}
+
+	/**
+	 * getFields
+	 *
+	 * @param $table
+	 *
+	 * @return  array
+	 */
+	protected function getFields($table = null)
+	{
+		$table = $table ? : $this->table;
+
+		return array_keys($this->queryHelper->getColumns($table));
+	}
 }

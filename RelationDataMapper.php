@@ -9,8 +9,7 @@
 namespace Windwalker\DataMapper;
 
 use Joomla\Database\DatabaseDriver;
-use Joomla\Database\Query\QueryElement;
-use Windwalker\Compare\Compare;
+use Joomla\Utilities\ArrayHelper;
 use Windwalker\DataMapper\Database\DatabaseFactory;
 use Windwalker\DataMapper\Database\QueryHelper;
 
@@ -161,7 +160,7 @@ class RelationDataMapper extends DataMapper
 		$query = $this->db->getQuery(true);
 
 		// Conditions.
-		$this->buildConditions($query, $conditions);
+		$query = QueryHelper::buildWheres($query, $conditions);
 
 		// Loop ordering
 		foreach ($orders as $order)
@@ -188,7 +187,20 @@ class RelationDataMapper extends DataMapper
 	 */
 	protected function doCreate($dataset)
 	{
-		// TODO: Implement doCreate() method.
+		$dataset = parent::doCreate($dataset);
+
+		foreach ($this->mappers as $alias => $mapper)
+		{
+			foreach ($dataset as &$data)
+			{
+				if ($data->$alias)
+				{
+					$data->$alias = $this->createOne($this->bindData($data->alias));
+				}
+			}
+		}
+
+		return $dataset;
 	}
 
 	/**
@@ -201,7 +213,20 @@ class RelationDataMapper extends DataMapper
 	 */
 	protected function doUpdate($dataset)
 	{
-		// TODO: Implement doUpdate() method.
+		$dataset = parent::doCreate($dataset);
+
+		foreach ($this->mappers as $alias => $mapper)
+		{
+			foreach ($dataset as &$data)
+			{
+				if ($data->$alias)
+				{
+					$data->$alias = $this->updateOne($this->bindData($data->alias));
+				}
+			}
+		}
+
+		return $dataset;
 	}
 
 	/**
@@ -210,11 +235,12 @@ class RelationDataMapper extends DataMapper
 	 * @param $data
 	 * @param $conditions
 	 *
+	 * @throws \LogicException
 	 * @return  mixed
 	 */
 	protected function doUpdateAll($data, $conditions)
 	{
-		// TODO: Implement doUpdateAll() method.
+		throw new \LogicException('RelationDataMapper not support UpdateAll() yet.');
 	}
 
 	/**
