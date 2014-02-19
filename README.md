@@ -2,12 +2,12 @@
 
 ## Installation via Composer
 
-Add `"asika/windwalker-middleware": "dev-master"` to the require block in your composer.json, make sure you have "minimum-stability": "dev" and then run composer install.
+Add `"ventoviro/windwalker-middleware": "dev-master"` to the require block in your composer.json, make sure you have "minimum-stability": "dev" and then run composer install.
 
 ``` json
 {
     "require": {
-        "windwalker/datamapper": "dev-master"
+        "ventoviro/windwalker-datamapper": "dev-master"
     }
 }
 ```
