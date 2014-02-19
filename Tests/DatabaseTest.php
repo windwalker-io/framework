@@ -26,6 +26,13 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 	protected static $dbo = null;
 
 	/**
+	 * Property db.
+	 *
+	 * @var  DatabaseDriver
+	 */
+	protected $db = null;
+
+	/**
 	 * setUpBeforeClass
 	 *
 	 * @return  void
@@ -69,6 +76,21 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 */
 	public static function tearDownAfterClass()
+	{
+		if (!self::$dbo)
+		{
+			return;
+		}
+
+		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . DB_DBNAME)->execute();
+
+		self::$dbo = null;
+	}
+
+	/**
+	 * Destruct.
+	 */
+	public function __destruct()
 	{
 		if (!self::$dbo)
 		{

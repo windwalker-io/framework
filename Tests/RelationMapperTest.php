@@ -1,6 +1,8 @@
 <?php
 namespace Windwalker\DataMapper\Tests;
 
+use Windwalker\Compare\GteCompare;
+use Windwalker\Data\DataSet;
 use Windwalker\DataMapper\RelationDataMapper;
 
 /**
@@ -21,25 +23,71 @@ class RelationDataMapperTest extends DatabaseTest
 	{
 		parent::setUp();
 
-		$this->object = new RelationDataMapper;
+		$this->db = static::$dbo;
+
+		$this->object = new RelationDataMapper('cont', 'ww_content');
+
+		$this->object
+			->addTable('cat', 'ww_categories', 'cont.catid = cat.id', 'LEFT')
+			->addTable('user', 'ww_users', 'cont.created_by = user.id', 'LEFT');
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::find
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		$this->db = null;
+	}
+
+	/**
+	 * @covers Windwalker\DataMapper\RelationDataMapper::find
 	 * @todo   Implement testFind().
 	 */
 	public function testFind()
 	{
-		$query = self::$dbo->getQuery(true);
-
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$dataset = $this->object->find(
+			array(
+				'cont.access' => 1,
+				new GteCompare('cat.id', 25)
+			),
+			'cont.title DESC',
+			1,
+			3
 		);
+
+		$sql = <<<SQL
+SELECT `cont`.`id` AS `id`,
+	`cont`.`title` AS `title`,
+	`cont`.`catid` AS `catid`,
+	`cont`.`created` AS `created`,
+	`cont`.`created_by` AS `created_by`,
+	`cont`.`access` AS `access`,
+	`cat`.`id` AS `cat_id`,
+	`cat`.`parent_id` AS `cat_parent_id`,
+	`cat`.`title` AS `cat_title`,
+	`user`.`id` AS `user_id`,
+	`user`.`name` AS `user_name`,
+	`user`.`username` AS `user_username`
+FROM `ww_content` AS `cont`
+	LEFT JOIN `ww_categories` AS `cat` ON cont.catid = cat.id
+	LEFT JOIN `ww_users` AS `user` ON cont.created_by = user.id
+WHERE cont.access = 1
+	AND cat.id >= 25
+ORDER BY cont.title DESC
+LIMIT 1, 3
+SQL;
+
+		$items = $this->db->setQuery($sql)->loadObjectList(null, 'Windwalker\\Data\\Data');
+
+		$items = new DataSet($items);
+
+		$this->assertEquals($dataset, $items);
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::findAll
+	 * @covers Windwalker\DataMapper\RelationDataMapper::findAll
 	 * @todo   Implement testFindAll().
 	 */
 	public function testFindAll()
@@ -51,19 +99,47 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::findOne
+	 * @covers Windwalker\DataMapper\RelationDataMapper::findOne
 	 * @todo   Implement testFindOne().
 	 */
 	public function testFindOne()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$data = $this->object->findOne(
+			array(
+				'cont.access' => 1,
+				new GteCompare('cat.id', 25)
+			),
+			'cont.title DESC'
 		);
+
+		$sql = <<<SQL
+SELECT `cont`.`id` AS `id`,
+	`cont`.`title` AS `title`,
+	`cont`.`catid` AS `catid`,
+	`cont`.`created` AS `created`,
+	`cont`.`created_by` AS `created_by`,
+	`cont`.`access` AS `access`,
+	`cat`.`id` AS `cat_id`,
+	`cat`.`parent_id` AS `cat_parent_id`,
+	`cat`.`title` AS `cat_title`,
+	`user`.`id` AS `user_id`,
+	`user`.`name` AS `user_name`,
+	`user`.`username` AS `user_username`
+FROM `ww_content` AS `cont`
+	LEFT JOIN `ww_categories` AS `cat` ON cont.catid = cat.id
+	LEFT JOIN `ww_users` AS `user` ON cont.created_by = user.id
+WHERE cont.access = 1
+	AND cat.id >= 25
+ORDER BY cont.title DESC
+SQL;
+
+		$item = $this->db->setQuery($sql)->loadObject('Windwalker\\Data\\Data');
+
+		$this->assertEquals($data, $item);
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::create
+	 * @covers Windwalker\DataMapper\RelationDataMapper::create
 	 * @todo   Implement testCreate().
 	 */
 	public function testCreate()
@@ -75,7 +151,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::createOne
+	 * @covers Windwalker\DataMapper\RelationDataMapper::createOne
 	 * @todo   Implement testCreateOne().
 	 */
 	public function testCreateOne()
@@ -87,7 +163,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::update
+	 * @covers Windwalker\DataMapper\RelationDataMapper::update
 	 * @todo   Implement testUpdate().
 	 */
 	public function testUpdate()
@@ -99,7 +175,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::updateOne
+	 * @covers Windwalker\DataMapper\RelationDataMapper::updateOne
 	 * @todo   Implement testUpdateOne().
 	 */
 	public function testUpdateOne()
@@ -111,7 +187,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::updateAll
+	 * @covers Windwalker\DataMapper\RelationDataMapper::updateAll
 	 * @todo   Implement testUpdateAll().
 	 */
 	public function testUpdateAll()
@@ -123,7 +199,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::save
+	 * @covers Windwalker\DataMapper\RelationDataMapper::save
 	 * @todo   Implement testSave().
 	 */
 	public function testSave()
@@ -135,7 +211,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::delete
+	 * @covers Windwalker\DataMapper\RelationDataMapper::delete
 	 * @todo   Implement testDelete().
 	 */
 	public function testDelete()
@@ -147,7 +223,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getPrimaryKey
+	 * @covers Windwalker\DataMapper\RelationDataMapper::getPrimaryKey
 	 * @todo   Implement testGetPrimaryKey().
 	 */
 	public function testGetPrimaryKey()
@@ -159,7 +235,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getTable
+	 * @covers Windwalker\DataMapper\RelationDataMapper::getTable
 	 * @todo   Implement testGetTable().
 	 */
 	public function testGetTable()
@@ -171,7 +247,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::setTable
+	 * @covers Windwalker\DataMapper\RelationDataMapper::setTable
 	 * @todo   Implement testSetTable().
 	 */
 	public function testSetTable()
@@ -183,7 +259,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getDataClass
+	 * @covers Windwalker\DataMapper\RelationDataMapper::getDataClass
 	 * @todo   Implement testGetDataClass().
 	 */
 	public function testGetDataClass()
@@ -195,7 +271,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::setDataClass
+	 * @covers Windwalker\DataMapper\RelationDataMapper::setDataClass
 	 * @todo   Implement testSetDataClass().
 	 */
 	public function testSetDataClass()
@@ -207,7 +283,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getDatasetClass
+	 * @covers Windwalker\DataMapper\RelationDataMapper::getDatasetClass
 	 * @todo   Implement testGetDatasetClass().
 	 */
 	public function testGetDatasetClass()
@@ -219,7 +295,7 @@ class RelationDataMapperTest extends DatabaseTest
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::setDatasetClass
+	 * @covers Windwalker\DataMapper\RelationDataMapper::setDatasetClass
 	 * @todo   Implement testSetDatasetClass().
 	 */
 	public function testSetDatasetClass()

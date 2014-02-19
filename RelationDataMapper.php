@@ -56,12 +56,12 @@ class RelationDataMapper extends DataMapper
 
 		$this->pk = $pk;
 
+		$this->queryHelper = $queryHelper ? : new QueryHelper($this->db);
+
 		if ($table)
 		{
 			$this->addTable($alias, $table);
 		}
-
-		$this->queryHelper = $queryHelper ? : new QueryHelper($this->db);
 	}
 
 	/**
