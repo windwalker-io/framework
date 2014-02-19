@@ -13,7 +13,7 @@ namespace Windwalker\DataMapper\Compare;
  *
  * @since 1.0
  */
-class StringCompare
+class Compare
 {
 	/**
 	 * Property operator.
@@ -122,7 +122,7 @@ class StringCompare
 	 *
 	 * @param   string $compare2
 	 *
-	 * @return  StringCompare  Return self to support chaining.
+	 * @return  Compare  Return self to support chaining.
 	 */
 	public function setCompare2($compare2)
 	{
@@ -146,7 +146,7 @@ class StringCompare
 	 *
 	 * @param   string $compare1
 	 *
-	 * @return  StringCompare  Return self to support chaining.
+	 * @return  Compare  Return self to support chaining.
 	 */
 	public function setCompare1($compare1)
 	{
@@ -169,6 +169,16 @@ class StringCompare
 		$this->compare2 = $compare1;
 
 		return $this;
+	}
+
+	/**
+	 * compare
+	 *
+	 * @return  boolean
+	 */
+	public function compare()
+	{
+		return eval('$this->compare1 ' . $this->operator . ' $this->compare2');
 	}
 
 	/**
@@ -214,7 +224,7 @@ class StringCompare
 	 *
 	 * @param   callable $handler
 	 *
-	 * @return  StringCompare  Return self to support chaining.
+	 * @return  Compare  Return self to support chaining.
 	 */
 	public function setHandler($handler)
 	{

@@ -13,7 +13,7 @@ namespace Windwalker\DataMapper\Compare;
  *
  * @since 1.0
  */
-class NotinCompare extends StringCompare
+class NotinCompare extends InCompare
 {
 	/**
 	 * Property operator.
@@ -21,4 +21,14 @@ class NotinCompare extends StringCompare
 	 * @var  string
 	 */
 	protected $operator = 'NOT IN';
+
+	/**
+	 * compare
+	 *
+	 * @return  mixed
+	 */
+	public function compare()
+	{
+		return !parent::compare();
+	}
 }
