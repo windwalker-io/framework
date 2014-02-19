@@ -8,12 +8,13 @@ $dm = new DataMapper('#__datamapper');
 
 $data = new \Windwalker\Data\Data(
 	[
-		'year' => 20
+		'year' => 20,
+		'foo' => 2345
 	]
 );
 
 $result = $dm->updateAll($data, [
-	'id' => new \Windwalker\DataMapper\Compare\GteCompare('id', 5)
+	'id' => new \Windwalker\Compare\GteCompare('id', 5)
 ]);
 
 print_r($result);

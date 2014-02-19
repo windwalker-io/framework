@@ -343,13 +343,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * doFind
 	 *
 	 * @param $conditions
-	 * @param $order
+	 * @param $orders
 	 * @param $start
 	 * @param $limit
 	 *
 	 * @return  mixed
 	 */
-	abstract protected function doFind(array $conditions, array $order, $start, $limit);
+	abstract protected function doFind(array $conditions, array $orders, $start, $limit);
 
 	/**
 	 * doCreate

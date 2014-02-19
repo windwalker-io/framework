@@ -9,6 +9,7 @@
 namespace Windwalker\DataMapper\Database;
 
 use Joomla\Database\DatabaseDriver;
+use Windwalker\DataMapper\Database\DatabaseCommand;
 
 /**
  * Class DatabaseFactory
@@ -25,9 +26,17 @@ abstract class DatabaseFactory
 	protected static $db = null;
 
 	/**
-	 * getDb
+	 * Property command.
+	 *
+	 * @var  DatabaseCommand
+	 */
+	protected static $command = null;
+
+	/**
+	 * getDbo
 	 *
 	 * @param array $option
+	 * @param bool  $forceNew
 	 *
 	 * @return  DatabaseDriver
 	 */
@@ -51,6 +60,35 @@ abstract class DatabaseFactory
 	public static function setDbo(DatabaseDriver $db)
 	{
 		self::$db = $db;
+	}
+
+	/**
+	 * getCommand
+	 *
+	 * @param bool $forceNew
+	 *
+	 * @return  DatabaseCommand
+	 */
+	public static function getCommand($forceNew = false)
+	{
+		if (!self::$command || $forceNew)
+		{
+			self::$command = new DatabaseCommand(static::getDbo());
+		}
+
+		return self::$command;
+	}
+
+	/**
+	 * setCommand
+	 *
+	 * @param   DatabaseCommand $command
+	 *
+	 * @return  DatabaseFactory  Return self to support chaining.
+	 */
+	public static function setCommand(DatabaseCommand $command)
+	{
+		self::$command = $command;
 	}
 
 	/**

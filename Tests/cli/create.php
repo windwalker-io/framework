@@ -11,7 +11,8 @@ foreach (range(1, 5) as $row)
 		[
 			'title' => uniqid(),
 			'year' => rand(20, 100),
-			'text' => str_repeat(md5(uniqid()), rand(1, 20))
+			'text' => str_repeat(md5(uniqid()), rand(1, 20)),
+			'foo'  => 123123
 		]
 	);
 

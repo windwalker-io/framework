@@ -9,10 +9,9 @@
 namespace Windwalker\DataMapper;
 
 use Joomla\Database\DatabaseDriver;
-use Joomla\Database\DatabaseQuery;
-use Joomla\Database\Query\QueryElement;
-use Windwalker\DataMapper\Compare\StringCompare;
 use Windwalker\DataMapper\Database\DatabaseFactory;
+use Windwalker\DataMapper\Database\QueryHelper;
+use Windwalker\DataMapper\Entity\Entity;
 
 /**
  * Class DataMapper
@@ -27,15 +26,24 @@ class DataMapper extends AbstractDataMapper
 	protected $db;
 
 	/**
+	 * Property queryHelper.
+	 *
+	 * @var  QueryHelper
+	 */
+	protected $queryHelper = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param null           $table
 	 * @param string         $pk
 	 * @param DatabaseDriver $db
 	 */
-	public function __construct($table = null, $pk = 'id', DatabaseDriver $db = null)
+	public function __construct($table = null, $pk = 'id', DatabaseDriver $db = null, QueryHelper $queryHelper = null)
 	{
 		$this->db = $db ? : DatabaseFactory::getDbo();
+
+		$this->queryHelper = $queryHelper ? : new QueryHelper($this->db);
 
 		parent::__construct($table, $pk);
 	}
@@ -55,7 +63,7 @@ class DataMapper extends AbstractDataMapper
 		$query = $this->db->getQuery(true);
 
 		// Conditions.
-		$this->buildConditions($query, $conditions);
+		QueryHelper::buildWheres($query, $conditions);
 
 		// Loop ordering
 		foreach ($orders as $order)
@@ -86,7 +94,13 @@ class DataMapper extends AbstractDataMapper
 		{
 			foreach ($dataset as &$data)
 			{
-				$this->db->insertObject($this->table, $data, $this->getPrimaryKey());
+				$entity = new Entity($this->getFields($this->table), $data);
+
+				$pk = $this->getPrimaryKey();
+
+				$this->db->insertObject($this->table, $entity, $pk);
+
+				$data->$pk = $entity->$pk;
 			}
 		}
 		catch (\Exception $e)
@@ -117,7 +131,9 @@ class DataMapper extends AbstractDataMapper
 		{
 			foreach ($dataset as &$data)
 			{
-				$this->db->updateObject($this->table, $data, $this->getPrimaryKey());
+				$entity = new Entity($this->getFields($this->table), $data);
+
+				$this->db->updateObject($this->table, $entity, $this->getPrimaryKey());
 			}
 		}
 		catch (\Exception $e)
@@ -145,22 +161,11 @@ class DataMapper extends AbstractDataMapper
 	{
 		$this->db->transactionStart();
 
-		$query = $this->db->getQuery(true);
-
-		// Conditions.
-		$this->buildConditions($query, $conditions);
-
-		// Build update values.
-		foreach ((array) $data as $field => $value)
-		{
-			$query->set($query->format('%n = %q', $field, $value));
-		}
-
-		$query->update($this->table);
+		$command = DatabaseFactory::getCommand();
 
 		try
 		{
-			$result = (boolean) $this->db->setQuery($query)->execute();
+			$result = (boolean) $command->updateBatch($this->table, $data, $conditions);
 		}
 		catch (\Exception $e)
 		{
@@ -186,7 +191,7 @@ class DataMapper extends AbstractDataMapper
 		$query = $this->db->getQuery(true);
 
 		// Conditions.
-		$this->buildConditions($query, $conditions);
+		QueryHelper::buildWheres($query, $conditions);
 
 		$query->delete($this->table);
 
@@ -215,71 +220,5 @@ class DataMapper extends AbstractDataMapper
 		$this->db = $db;
 
 		return $this;
-	}
-
-	/**
-	 * buildConditions
-	 *
-	 * @param DatabaseQuery &$query
-	 * @param array         $conditions
-	 *
-	 * @return  DatabaseQuery
-	 */
-	public function buildConditions(DatabaseQuery &$query, array $conditions)
-	{
-		foreach ($conditions as $key => $value)
-		{
-			if (empty($value))
-			{
-				continue;
-			}
-
-			// If using Compare class, we convert it to string
-			if ($value instanceof StringCompare)
-			{
-				$query->where((string) $this->buildCompare($key, $value));
-			}
-			// If is array or object, we use "IN" condition.
-			elseif (is_array($value) || is_object($value))
-			{
-				$value = array_map(array($query, 'quote'), (array) $value);
-
-				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
-			}
-			// Otherwise, we use equal condition.
-			else
-			{
-				$query->where($query->format('%n = %q', $key, $value));
-			}
-		}
-
-		return $query;
-	}
-
-	/**
-	 * buildCompare
-	 *
-	 * @param string|int    $key
-	 * @param StringCompare $value
-	 *
-	 * @return  string
-	 */
-	public function buildCompare($key, StringCompare $value)
-	{
-		$query = $this->db->getQuery(true);
-
-		if (!is_numeric($key))
-		{
-			$value->setCompare1($key);
-		}
-
-		$value->setHandler(
-			function($compare1, $compare2, $operator) use ($query)
-			{
-				return $query->format('%n ' . $operator . ' %q', $compare1, $compare2);
-			}
-		);
-
-		return (string) $value;
 	}
 }
