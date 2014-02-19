@@ -1,6 +1,7 @@
 {
 	"name"             : "windwalker/framework",
 	"description"      : "Rapido de la vento viro.",
+	"homepage"         : "https://github.com/ventoviro/windwalker",
 	"license"          : "GNU Lesser General Public License",
 	"minimum-stability": "beta",
 	"authors"          : [
