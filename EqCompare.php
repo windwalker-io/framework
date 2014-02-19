@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\DataMapper\Compare;
+namespace Windwalker\Compare;
 
 /**
  * Class EqCompare
