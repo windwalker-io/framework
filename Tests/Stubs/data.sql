@@ -161,6 +161,20 @@ INSERT INTO `ww_content` (`id`, `title`, `catid`, `created`, `created_by`, `acce
 (69, 'Quick Icons', 25, '2012-01-17 03:27:39', 144, 1),
 (70, 'Smart Search', 67, '2012-01-17 03:42:36', 144, 1);
 
+CREATE TABLE IF NOT EXISTS `ww_content2` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `content_id` varchar(255) NOT NULL DEFAULT '',
+  `mark` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
+
+INSERT INTO `ww_content2` (`id`, `content_id`, `mark`) VALUES
+(1, 6, 'flower'),
+(2, 7, 'sakura'),
+(3, 8, 'rose'),
+(4, 9, 'sunflower'),
+(5, 10, 'plum');
+
 CREATE TABLE IF NOT EXISTS `ww_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',

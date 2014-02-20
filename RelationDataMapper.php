@@ -179,31 +179,6 @@ class RelationDataMapper extends DataMapper
 	}
 
 	/**
-	 * doCreate
-	 *
-	 * @param $dataset
-	 *
-	 * @return  mixed
-	 */
-	protected function doCreate($dataset)
-	{
-		$dataset = parent::doCreate($dataset);
-
-		foreach ($this->mappers as $alias => $mapper)
-		{
-			foreach ($dataset as &$data)
-			{
-				if ($data->$alias)
-				{
-					$data->$alias = $this->createOne($this->bindData($data->alias));
-				}
-			}
-		}
-
-		return $dataset;
-	}
-
-	/**
 	 * doUpdate
 	 *
 	 * @param $dataset
@@ -213,20 +188,7 @@ class RelationDataMapper extends DataMapper
 	 */
 	protected function doUpdate($dataset)
 	{
-		$dataset = parent::doCreate($dataset);
-
-		foreach ($this->mappers as $alias => $mapper)
-		{
-			foreach ($dataset as &$data)
-			{
-				if ($data->$alias)
-				{
-					$data->$alias = $this->updateOne($this->bindData($data->alias));
-				}
-			}
-		}
-
-		return $dataset;
+		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
 	}
 
 	/**
@@ -240,7 +202,7 @@ class RelationDataMapper extends DataMapper
 	 */
 	protected function doUpdateAll($data, $conditions)
 	{
-		throw new \LogicException('RelationDataMapper not support UpdateAll() yet.');
+		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
 	}
 
 	/**
@@ -252,6 +214,6 @@ class RelationDataMapper extends DataMapper
 	 */
 	protected function doDelete($conditions)
 	{
-		// TODO: Implement doDelete() method.
+		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
 	}
 }

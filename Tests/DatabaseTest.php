@@ -120,4 +120,57 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 
 		parent::setUp();
 	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		$this->db = null;
+	}
+
+	/**
+	 * loadToDataset
+	 *
+	 * @param mixed  $query
+	 * @param string $class
+	 *
+	 * @return  mixed
+	 */
+	protected function loadToDataset($query, $class = 'Windwalker\\Data\\DataSet', $dataClass = 'Windwalker\\Data\\Data')
+	{
+		$dataset = $this->db->setQuery($query)->loadObjectList(null, $dataClass);
+
+		return new $class($dataset);
+	}
+
+	/**
+	 * loadToData
+	 *
+	 * @param mixed  $query
+	 * @param string $dataClass
+	 *
+	 * @return  mixed
+	 */
+	protected function loadToData($query, $dataClass = 'Windwalker\\Data\\Data')
+	{
+		$data = $this->db->setQuery($query)->loadObject($dataClass);
+
+		return $data;
+	}
+
+	/**
+	 * show
+	 *
+	 * @return  void
+	 */
+	protected function show()
+	{
+		foreach (func_get_args() as $key => $arg)
+		{
+			echo sprintf("\n[Value %d]\n", $key + 1);
+			print_r($arg);
+		}
+	}
 }

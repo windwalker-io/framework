@@ -65,9 +65,14 @@ class QueryHelper
 		$tableStorage['name'] = $table;
 		$tableStorage['join']  = strtoupper($joinType);
 
+		if (is_array($condition))
+		{
+			$condition = array($condition);
+		}
+
 		if ($condition)
 		{
-			$condition = (string) new QueryElement('ON', (array) $condition, ' AND ');
+			$condition = (string) new QueryElement('ON', $condition, ' AND ');
 		}
 		else
 		{

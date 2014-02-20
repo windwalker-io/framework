@@ -2,6 +2,7 @@
 namespace Windwalker\DataMapper\Tests;
 
 use Windwalker\Compare\GteCompare;
+
 use Windwalker\Data\DataSet;
 use Windwalker\DataMapper\RelationDataMapper;
 
@@ -28,17 +29,8 @@ class RelationDataMapperTest extends DatabaseTest
 		$this->object = new RelationDataMapper('cont', 'ww_content');
 
 		$this->object
-			->addTable('cat', 'ww_categories', 'cont.catid = cat.id', 'LEFT')
-			->addTable('user', 'ww_users', 'cont.created_by = user.id', 'LEFT');
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		$this->db = null;
+			->addTable('cat',  'ww_categories', 'cont.catid = cat.id',       'LEFT')
+			->addTable('user', 'ww_users',      'cont.created_by = user.id', 'LEFT');
 	}
 
 	/**
@@ -136,173 +128,5 @@ SQL;
 		$item = $this->db->setQuery($sql)->loadObject('Windwalker\\Data\\Data');
 
 		$this->assertEquals($data, $item);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::create
-	 * @todo   Implement testCreate().
-	 */
-	public function testCreate()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::createOne
-	 * @todo   Implement testCreateOne().
-	 */
-	public function testCreateOne()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::update
-	 * @todo   Implement testUpdate().
-	 */
-	public function testUpdate()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::updateOne
-	 * @todo   Implement testUpdateOne().
-	 */
-	public function testUpdateOne()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::updateAll
-	 * @todo   Implement testUpdateAll().
-	 */
-	public function testUpdateAll()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::save
-	 * @todo   Implement testSave().
-	 */
-	public function testSave()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::delete
-	 * @todo   Implement testDelete().
-	 */
-	public function testDelete()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::getPrimaryKey
-	 * @todo   Implement testGetPrimaryKey().
-	 */
-	public function testGetPrimaryKey()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::getTable
-	 * @todo   Implement testGetTable().
-	 */
-	public function testGetTable()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::setTable
-	 * @todo   Implement testSetTable().
-	 */
-	public function testSetTable()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::getDataClass
-	 * @todo   Implement testGetDataClass().
-	 */
-	public function testGetDataClass()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::setDataClass
-	 * @todo   Implement testSetDataClass().
-	 */
-	public function testSetDataClass()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::getDatasetClass
-	 * @todo   Implement testGetDatasetClass().
-	 */
-	public function testGetDatasetClass()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @covers Windwalker\DataMapper\RelationDataMapper::setDatasetClass
-	 * @todo   Implement testSetDatasetClass().
-	 */
-	public function testSetDatasetClass()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
 	}
 }
