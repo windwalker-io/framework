@@ -240,13 +240,7 @@ FROM #__foo AS foo
 ### Using OR Condition
 
 ``` php
-use Joomla\Database\Query\QueryElement;
-
-$conditions = array('category.lft >= foo.lft', 'category.rgt <= foo.rgt');
-
-$conditions = new QueryElement('()', $conditions, 'OR');
-
-$fooMapper->addTable('category', '#__categories', (string) $conditions, 'LEFT');
+$fooMapper->addTable('category', '#__categories', 'category.lft >= foo.lft' OR category.rgt <= foo.rgt', 'LEFT');
 ```
 
 ## Compare objects
