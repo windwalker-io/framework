@@ -56,25 +56,31 @@ Find method will fetch rows from table, and return `DataSet` class.
 
 ### find()
 
-Get `id = 1` record
+Get id = 1 record
 
 ``` php
 $fooSet = $fooMapper->find(array('id' => 1));
 ```
 
-Fetch `published = 1`, and sort by `date`
+Fetch published = 1, and sort by `date`
 
 ``` php
 $fooSet = $fooMapper->find(array('published' => 1), 'date');
 ```
 
-Fetch `published = 1, language = en-US`, sort by `date` DESC and start with `30`, limit `10`.
+Fetch published = 1, language = en-US, sort by `date` DESC and start with `30`, limit `10`.
 
 ``` php
 $fooSet = $fooMapper->find(array('published' => 1, 'language' => 'en-US'), 'date DESC', 30, 10);
 ```
 
-### findOne
+Using array, will be `IN` condition:
+
+``` php
+$fooSet = $fooMapper->find(array('id' => array(1,2,3))); // WHERE id IN (1,2,3)
+```
+
+### findOne()
 
 Just return one row.
 
@@ -82,7 +88,7 @@ Just return one row.
 $foo = $dooMapper->findOne(array('published' => 1), 'date');
 ```
 
-### findAll
+### findAll()
 
 Equal to `find(array(), $order, $start, $limit)`.
 
@@ -175,7 +181,7 @@ $dataset = new DataSet(array($data1, $data2));
 $fooMapper->update($dataset);
 ```
 
-### updateOne
+### updateOne()
 
 Just update one row.
 
@@ -187,7 +193,7 @@ $data->title = 'Foo';
 $fooMapper->updateOne($data);
 ```
 
-### updateAll
+### updateAll()
 
 UpdateAll is different from update method, we just send one data object, but using conditions as where
 to update every row match these conditions. We don't need primary key for updateAll().
@@ -209,9 +215,93 @@ Delete rows by conditions.
 $boolean = $fooMapper->delete(array('author' => 'Jean Grey'));
 ```
 
+## Join Tables
+
+Using `RelationDataMapper` to join tables.
+
+``` php
+$fooMapper = new RelationDataMapper('foo', '#__foo');
+
+$fooMapper->addTable('author', '#__users', 'foo.user_id = author.id', 'LEFT')
+    ->addTable('category', '#__categories', array('category.lft >= foo.lft', 'category.rgt <= foo.rgt'), 'INNER');
+
+// Don't forget add alias on where conditions.
+$dataset = $fooMapper->find(array('foo.id' => 5));
+```
+
+The Join query will be:
+
+``` sql
+FROM #__foo AS foo
+    LEFT JOIN #__users AS author ON foo.user_id = author.id
+    INNER JOIN #__categories AS category ON category.lft >= foo.lft AND category.rgt <= foo.rgt
+```
+
+### Using OR Condition
+
+``` php
+use Joomla\Database\Query\QueryElement;
+
+$conditions = array('category.lft >= foo.lft', 'category.rgt <= foo.rgt');
+
+$conditions = new QueryElement('()', $conditions, 'OR');
+
+$fooMapper->addTable('category', '#__categories', (string) $conditions, 'LEFT');
+```
+
+## Compare objects
+
+Using Compare objects help us set some where conditions which hard to use array to defind.
+
+``` php
+$fooSet = $fooMapper->find(
+    array(
+        new GteCompare('id', 5),
+        new NeqCompare('name' => 'bar')
+        new LtCompare('published', 1),
+        new NinCompare('catid', array(1,2,3,4,5))
+    )
+);
+```
+
+This will generate where conditions like below:
+
+``` sql
+WHERE `id` >= '5'
+    AND `name` != 'bar'
+    AND `published` < '1'
+    AND `catid` NOT IN (1,2,3,4,5)
+```
+
+### Abailable compares:
+
+- EqCompare  : Equal
+- NeqCompare : Not Equal
+- GtCompare  : Greater than
+- GteCompare : Greate than or Equal
+- LtCompare  : Less than
+- LteCompare : Less than or Equal
+- InCompare  : In
+- NinCompare : Not In
+
+### Custom Compare
+
+``` php
+echo (string) new Compare('title', '%flower%', 'LIKE');
+```
+
+Will be
+
+``` sql
+`title` LIKE `%flower%`
+```
+
+See: https://github.com/ventoviro/windwalker-compare
+
+
 ## Using Data and DataSet
 
-Please see: https://github.com/windwalker-framework/data
+See: https://github.com/windwalker-framework/data
 
 
 

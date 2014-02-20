@@ -49,18 +49,15 @@ class RelationDataMapper extends DataMapper
 	 * @param DatabaseDriver $db          Database adapter.
 	 * @param QueryHelper    $queryHelper Query helper object.
 	 */
-	public function __construct($alias = null, $table = null, $pk = 'id', DatabaseDriver $db = null, QueryHelper $queryHelper = null)
+	public function __construct($alias, $table, $pk = 'id', DatabaseDriver $db = null, QueryHelper $queryHelper = null)
 	{
 		$this->db = $db ? : DatabaseFactory::getDbo();
 
-		$this->pk = $pk;
+		$this->pk = $pk ? : $alias . '.' . $pk;
 
 		$this->queryHelper = $queryHelper ? : new QueryHelper($this->db);
 
-		if ($table && $alias)
-		{
-			$this->addTable($alias, $table);
-		}
+		$this->addTable($alias, $table);
 
 		$this->configure();
 	}
