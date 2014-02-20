@@ -439,7 +439,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @param $dataset
 	 * @param $conditions
 	 *
-	 * @return  void
+	 * @return  mixed
 	 */
 	abstract protected function doFlush($dataset, array $conditions);
 

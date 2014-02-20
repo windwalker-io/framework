@@ -19,7 +19,7 @@ else
 }
 
 // Make the database driver.
-$db = \Windwalker\DataMapper\Database\DatabaseFactory::getDbo(
+\Windwalker\DataMapper\Database\DatabaseFactory::getDbo(
 	array(
 		'driver'   => 'mysql',
 		'host'     => DB_HOST,

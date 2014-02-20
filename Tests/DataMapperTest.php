@@ -131,14 +131,14 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testFlush()
 	{
-		$mapper = new DataMapper('ww_content_ww');
+		$mapper = new DataMapper('ww_content_tags');
 
 		$dataset = new DataSet;
 
-		$dataset[] = new Data(array('tag_id' => 1));
-		$dataset[] = new Data(array('tag_id' => 2));
-		$dataset[] = new Data(array('tag_id' => 4));
-		$dataset[] = new Data(array('tag_id' => 5));
+		$dataset[] = new Data(array('content_id' => 4, 'tag_id' => 1));
+		$dataset[] = new Data(array('content_id' => 4, 'tag_id' => 2));
+		$dataset[] = new Data(array('content_id' => 4, 'tag_id' => 4));
+		$dataset[] = new Data(array('content_id' => 4, 'tag_id' => 5));
 
 		$mapper->flush($dataset, array('content_id' => 4));
 
