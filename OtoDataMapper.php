@@ -197,28 +197,51 @@ class OtoDataMapper extends DataMapper
 	}
 
 	/**
-	 * doUpdateAll
-	 *
-	 * @param $data
-	 * @param $conditions
-	 *
-	 * @throws \LogicException
-	 * @return  mixed
-	 */
-	protected function doUpdateAll($data, $conditions)
-	{
-		throw new \LogicException(sprintf('%s do not support %s().', __CLASS__, __METHOD__));
-	}
-
-	/**
 	 * doDelete
 	 *
-	 * @param $conditions
+	 * @param array $conditions
 	 *
+	 * @throws \Exception
 	 * @return  mixed
 	 */
 	protected function doDelete($conditions)
 	{
-		// TODO: Implement doDelete() method.
+		$dataset = $this->find($conditions);
+
+		$this->db->transactionStart(true);
+
+		try
+		{
+			// Loop each data.
+			foreach ($dataset as &$data)
+			{
+				// Loop the relation mapper.
+				foreach ($this->relations as $field => $relation)
+				{
+					// Prepare sub conditions
+					$subConditions = array();
+
+					// Find relation data to this field.
+					foreach ($relation['relations'] as $left => $right)
+					{
+						$subConditions[$right] = $data->$left;
+					}
+
+					$relation['table']->delete($subConditions);
+				}
+
+				parent::doDelete($conditions);
+			}
+		}
+		catch (\Exception $e)
+		{
+			$this->db->transactionRollback(true);
+
+			throw $e;
+		}
+
+		$this->db->transactionCommit(true);
+
+		return true;
 	}
 }

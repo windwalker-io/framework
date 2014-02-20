@@ -233,27 +233,36 @@ SQL
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::save
-	 * @todo   Implement testSave().
-	 */
-	public function testSave()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::delete
 	 * @todo   Implement testDelete().
 	 */
 	public function testDelete()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$dataset = $this->object->find(array(new Compare('title', 'Rose%', 'LIKE')));
+
+		$this->object->delete(array(new Compare('title', 'Rose%', 'LIKE')));
+
+		$ids = implode(',', ArrayHelper::getColumn((array) $dataset, 'id'));
+
+		$compareContent = $this->db->setQuery(
+			<<<SQL
+SELECT *
+FROM ww_content
+WHERE id IN ({$ids})
+SQL
+		)->loadObjectList();
+
+		$compareContent2 = $this->db->setQuery(
+			<<<SQL
+SELECT *
+FROM ww_content2
+WHERE content_id IN ({$ids})
+SQL
+		)->loadObjectList();
+
+		$this->assertEmpty($compareContent, 'Records not deleted.');
+
+		$this->assertEmpty($compareContent2, 'Records not deleted.');
 	}
 
 	/**

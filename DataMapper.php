@@ -184,6 +184,7 @@ class DataMapper extends AbstractDataMapper
 	 *
 	 * @param array $conditions
 	 *
+	 * @throws \Exception
 	 * @return  mixed
 	 */
 	protected function doDelete($conditions)
@@ -195,7 +196,22 @@ class DataMapper extends AbstractDataMapper
 
 		$query->delete($this->table);
 
-		return (boolean) $this->db->setQuery($query)->execute();
+		$this->db->transactionStart(true);
+
+		try
+		{
+			$result = (boolean) $this->db->setQuery($query)->execute();
+		}
+		catch (\Exception $e)
+		{
+			$this->db->transactionRollback(true);
+
+			throw $e;
+		}
+
+		$this->db->transactionCommit(true);
+
+		return $result;
 	}
 
 	/**
