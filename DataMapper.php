@@ -157,7 +157,7 @@ class DataMapper extends AbstractDataMapper
 	 * @throws \Exception
 	 * @return  mixed
 	 */
-	protected function doUpdateAll($data, $conditions)
+	protected function doUpdateAll($data, array $conditions)
 	{
 		$this->db->transactionStart(true);
 
@@ -180,6 +180,43 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
+	 * doFlush
+	 *
+	 * @param mixed $dataset
+	 * @param array $conditions
+	 *
+	 * @throws \Exception
+	 * @return  boolean
+	 */
+	protected function doFlush($dataset, array $conditions)
+	{
+		$this->db->transactionStart(true);
+
+		try
+		{
+			if (!$this->delete($conditions))
+			{
+				throw new \Exception(sprintf('Delete row fail when updating relations table: %s', $this->table));
+			}
+
+			if (!$this->create($dataset))
+			{
+				throw new \Exception(sprintf('Insert row fail when updating relations table: %s', $this->table));
+			}
+		}
+		catch (\Exception $e)
+		{
+			$this->db->transactionRollback(true);
+
+			throw $e;
+		}
+
+		$this->db->transactionCommit(true);
+
+		return true;
+	}
+
+	/**
 	 * doDelete
 	 *
 	 * @param array $conditions
@@ -187,7 +224,7 @@ class DataMapper extends AbstractDataMapper
 	 * @throws \Exception
 	 * @return  mixed
 	 */
-	protected function doDelete($conditions)
+	protected function doDelete(array $conditions)
 	{
 		$query = $this->db->getQuery(true);
 

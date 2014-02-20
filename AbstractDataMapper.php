@@ -158,7 +158,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			return $dataset[0];
 		}
 
-		// Return NULL dataset
 		return new $this->datasetClass;
 	}
 
@@ -272,6 +271,34 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		return $this->doUpdateAll($data, $conditions);
+	}
+
+	/**
+	 * flush
+	 *
+	 * @param mixed $dataset
+	 * @param array $conditions
+	 *
+	 * @return  mixed
+	 */
+	public function flush($dataset, $conditions = array())
+	{
+		if (!($dataset instanceof $this->datasetClass))
+		{
+			$dataset = $this->bindDataset($dataset);
+		}
+
+		// Guessing primary key
+		if (!is_array($conditions) && !is_object($conditions))
+		{
+			$primaryKey = $this->getPrimaryKey();
+
+			$conditions = array($primaryKey => $conditions);
+		}
+
+		$conditions = (array) $conditions;
+
+		return $this->doFlush($dataset, $conditions);
 	}
 
 	/**
@@ -404,7 +431,17 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  mixed
 	 */
-	abstract protected function doUpdateAll($data, $conditions);
+	abstract protected function doUpdateAll($data, array $conditions);
+
+	/**
+	 * doFlush
+	 *
+	 * @param $dataset
+	 * @param $conditions
+	 *
+	 * @return  void
+	 */
+	abstract protected function doFlush($dataset, array $conditions);
 
 	/**
 	 * doDelete
@@ -413,7 +450,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  mixed
 	 */
-	abstract protected function doDelete($conditions);
+	abstract protected function doDelete(array $conditions);
 
 	/**
 	 * getPrimaryKey

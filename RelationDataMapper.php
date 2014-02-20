@@ -202,7 +202,7 @@ class RelationDataMapper extends DataMapper
 	 * @throws \LogicException
 	 * @return  mixed
 	 */
-	protected function doUpdateAll($data, $conditions)
+	protected function doUpdateAll($data, array $conditions)
 	{
 		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
 	}
@@ -214,7 +214,7 @@ class RelationDataMapper extends DataMapper
 	 *
 	 * @return  mixed
 	 */
-	protected function doDelete($conditions)
+	protected function doDelete(array $conditions)
 	{
 		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
 	}

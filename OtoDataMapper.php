@@ -204,7 +204,7 @@ class OtoDataMapper extends DataMapper
 	 * @throws \Exception
 	 * @return  mixed
 	 */
-	protected function doDelete($conditions)
+	protected function doDelete(array $conditions)
 	{
 		$dataset = $this->find($conditions);
 

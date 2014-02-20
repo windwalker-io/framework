@@ -175,6 +175,41 @@ INSERT INTO `ww_content2` (`id`, `content_id`, `mark`) VALUES
 (4, 9, 'sunflower'),
 (5, 10, 'plum');
 
+CREATE TABLE IF NOT EXISTS `ww_tags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
+
+INSERT INTO `ww_tags` (`id`, `title`) VALUES
+(1, 'flower'),
+(2, 'sakura'),
+(3, 'rose'),
+(4, 'sunflower'),
+(5, 'plum');
+
+CREATE TABLE IF NOT EXISTS `ww_content_tags` (
+  `content_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `tag_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `misc` varchar(255) NOT NULL DEFAULT ''
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
+
+INSERT INTO `ww_content_tags` (`content_id`, `tag_id`, `misc`) VALUES
+(1, 1, 'aaa'),
+(2, 1, 'bbb'),
+(3, 2, 'ccc'),
+(2, 4, 'ddd'),
+(4, 1, 'eee'),
+(4, 2, 'fff'),
+(4, 3, 'ggg'),
+(4, 4, 'hhh'),
+(4, 5, 'iii'),
+(6, 2, 'jjj'),
+(6, 5, 'kkk'),
+(7, 1, 'lll'),
+(7, 4, 'mmm');
+
+
 CREATE TABLE IF NOT EXISTS `ww_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
