@@ -240,7 +240,12 @@ FROM #__foo AS foo
 ### Using OR Condition
 
 ``` php
-$fooMapper->addTable('category', '#__categories', 'category.lft >= foo.lft' OR category.rgt <= foo.rgt', 'LEFT');
+$fooMapper->addTable(
+    'category',
+    '#__categories',
+    'category.lft >= foo.lft OR category.rgt <= foo.rgt',
+    'LEFT'
+);
 ```
 
 ## Compare objects
