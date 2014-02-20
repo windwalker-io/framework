@@ -9,33 +9,32 @@
 namespace Windwalker\DataMapper;
 
 use Joomla\Database\DatabaseDriver;
-use Joomla\Utilities\ArrayHelper;
 use Windwalker\DataMapper\Database\DatabaseFactory;
 use Windwalker\DataMapper\Database\QueryHelper;
 
 /**
- * Class RelationDataMapper
+ * Relation Database Mapper.
  *
- * @since 1.0
+ * Provides join functions help ue select multiple tables.
  */
 class RelationDataMapper extends DataMapper
 {
 	/**
-	 * Property mappers.
+	 * The mappers.
 	 *
 	 * @var  array
 	 */
 	protected $mappers = array();
 
 	/**
-	 * Property select.
+	 * Select columns.
 	 *
 	 * @var  array
 	 */
 	protected $select = array();
 
 	/**
-	 * Property selectType.
+	 * Select type.
 	 *
 	 * @var  int
 	 */
@@ -44,11 +43,11 @@ class RelationDataMapper extends DataMapper
 	/**
 	 * Constructor.
 	 *
-	 * @param string         $alias
-	 * @param mixed          $table
-	 * @param string         $pk
-	 * @param DatabaseDriver $db
-	 * @param QueryHelper    $queryHelper
+	 * @param string         $alias       Table alias.
+	 * @param string         $table       Table name.
+	 * @param string|array   $pk          Primary key.
+	 * @param DatabaseDriver $db          Database adapter.
+	 * @param QueryHelper    $queryHelper Query helper object.
 	 */
 	public function __construct($alias = null, $table = null, $pk = 'id', DatabaseDriver $db = null, QueryHelper $queryHelper = null)
 	{
@@ -58,7 +57,7 @@ class RelationDataMapper extends DataMapper
 
 		$this->queryHelper = $queryHelper ? : new QueryHelper($this->db);
 
-		if ($table)
+		if ($table && $alias)
 		{
 			$this->addTable($alias, $table);
 		}
@@ -67,14 +66,18 @@ class RelationDataMapper extends DataMapper
 	}
 
 	/**
-	 * addTable
+	 * Add a join table.
 	 *
-	 * @param string $alias
-	 * @param string $table
-	 * @param mixed  $conditions
-	 * @param string $joinType
+	 * @param string $alias      Table alias.
+	 * @param string $table      Table name.
+	 * @param mixed  $conditions Join conditions, can be string, array or Compare object.
+	 *                           Example:
+	 *                           - `a.id = b.catid` => 'ON a.id = b.catid'
+	 *                           - `array('a.lft <= b.lft', 'a.rgt >= b.rgt')` => 'ON a.lft <= b.lft AND a.rgt >= b.rgt'
+	 *                           - `new EqCompare('a.id', 'b.catid')` => 'ON a.id = b.catid'
+	 * @param string $joinType   Which join type we use for this table, default is LEFT.
 	 *
-	 * @return  RelationDataMapper
+	 * @return  RelationDataMapper Return self to support chaining.
 	 */
 	public function addTable($alias, $table, $conditions = null, $joinType = 'LEFT')
 	{
@@ -86,11 +89,11 @@ class RelationDataMapper extends DataMapper
 	}
 
 	/**
-	 * removeTable
+	 * Remove a join table.
 	 *
-	 * @param string $alias
+	 * @param string $alias Using alias to remove.
 	 *
-	 * @return  $this
+	 * @return RelationDataMapper Return self to support chaining.
 	 */
 	public function removeTable($alias)
 	{
@@ -100,9 +103,9 @@ class RelationDataMapper extends DataMapper
 	}
 
 	/**
-	 * getSelect
+	 * Get select columns.
 	 *
-	 * @return  array
+	 * @return array|string Select columns.
 	 */
 	public function getSelect()
 	{
@@ -110,9 +113,9 @@ class RelationDataMapper extends DataMapper
 	}
 
 	/**
-	 * setSelect
+	 * Set select columns.
 	 *
-	 * @param   array $select
+	 * @param array|string $select Select columns.
 	 *
 	 * @return  RelationDataMapper  Return self to support chaining.
 	 */
@@ -124,9 +127,9 @@ class RelationDataMapper extends DataMapper
 	}
 
 	/**
-	 * getSelectType
+	 * Get select type.
 	 *
-	 * @return  int
+	 * @return int Select type.
 	 */
 	public function getSelectType()
 	{
@@ -134,11 +137,16 @@ class RelationDataMapper extends DataMapper
 	}
 
 	/**
-	 * setSelectType
+	 * Set select type.
 	 *
-	 * @param   int $selectType
+	 * @param int $selectType Select type: `QueryHelper::COLS_WITH_FIRST` or `QueryHelper::COLS_PREFIX_WITH_FIRST`.
 	 *
-	 * @return  RelationDataMapper  Return self to support chaining.
+	 *                        - COLS_WITH_FIRST        => Means first table use `alias`.`field` AS `field`
+	 *                        - COLS_PREFIX_WITH_FIRST => Means first use  `alias`.`field` AS `alias_field`
+	 *
+	 *                        You can use `QueryHelper::COLS_WITH_FIRST | QueryHelper::COLS_PREFIX_WITH_FIRST` to enable both.
+	 *
+	 * @return RelationDataMapper  Return self to support chaining.
 	 */
 	public function setSelectType($selectType)
 	{
@@ -148,14 +156,14 @@ class RelationDataMapper extends DataMapper
 	}
 
 	/**
-	 * doFind
+	 * Do find action.
 	 *
-	 * @param $conditions
-	 * @param $order
-	 * @param $start
-	 * @param $limit
+	 * @param array   $conditions Where conditions, you can use array or Compare object.
+	 * @param array   $orders     Order sort, can ba string, array or object.
+	 * @param integer $start      Limit start number.
+	 * @param integer $limit      Limit rows.
 	 *
-	 * @return  mixed
+	 * @return  mixed Found rows data set.
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
@@ -178,44 +186,5 @@ class RelationDataMapper extends DataMapper
 		$this->queryHelper->registerQueryTables($query);
 
 		return $this->db->setQuery($query, $start, $limit)->loadObjectList();
-	}
-
-	/**
-	 * doUpdate
-	 *
-	 * @param $dataset
-	 * @param $conditions
-	 *
-	 * @return  mixed
-	 */
-	protected function doUpdate($dataset, array $condFields)
-	{
-		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
-	}
-
-	/**
-	 * doUpdateAll
-	 *
-	 * @param $data
-	 * @param $conditions
-	 *
-	 * @throws \LogicException
-	 * @return  mixed
-	 */
-	protected function doUpdateAll($data, array $conditions)
-	{
-		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
-	}
-
-	/**
-	 * doDelete
-	 *
-	 * @param $conditions
-	 *
-	 * @return  mixed
-	 */
-	protected function doDelete(array $conditions)
-	{
-		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
 	}
 }

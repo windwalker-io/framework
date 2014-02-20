@@ -8,58 +8,58 @@
 
 namespace Windwalker\DataMapper;
 
-use Windwalker\Data\Data;
 use Windwalker\Data\DataInterface;
-use Windwalker\Data\DataSet;
 use Windwalker\Data\DatasetInterface;
 
 /**
- * Class AbstractDataMapper
+ * Abstract DataMapper.
  *
- * @since 1.0
+ * The class can implement by any database system.
  */
 abstract class AbstractDataMapper implements DataMapperInterface
 {
 	/**
-	 * Property table.
+	 * Table name.
 	 *
 	 * @var  string
 	 */
 	protected $table = null;
 
 	/**
-	 * Property primaryKey.
+	 * Primary key.
 	 *
-	 * @var  string
+	 * @var  array
 	 */
 	protected $pk = null;
 
 	/**
-	 * Property fields.
+	 * Table fields.
 	 *
 	 * @var  array
 	 */
 	protected $fields = null;
 
 	/**
-	 * Property dataClass.
+	 * Data object class.
 	 *
 	 * @var  string
 	 */
 	protected $dataClass = 'Windwalker\\Data\\Data';
 
 	/**
-	 * Property datasetClass.
+	 * Data set object class.
 	 *
 	 * @var  string
 	 */
 	protected $datasetClass = 'Windwalker\\Data\\DataSet';
 
 	/**
-	 * Constructor
+	 * Init this class.
 	 *
-	 * @param string $table
-	 * @param string $pk
+	 * We don't dependency on database in abstract class, that means you can use other data provider.
+	 *
+	 * @param string $table Table name.
+	 * @param string $pk    The primary key.
 	 *
 	 * @throws \Exception
 	 */
@@ -77,27 +77,40 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		$this->pk = $pk;
 
+		// Set some custom configuration.
 		$this->configure();
 	}
 
 	/**
-	 * configure
+	 * This method can be override by sub class to prepare come custom setting.
 	 *
 	 * @return  void
 	 */
 	protected function configure()
 	{
+		// Override this method to to something.
 	}
 
 	/**
-	 * find
+	 * Find records and return data set.
 	 *
-	 * @param mixed $conditions
-	 * @param null  $order
-	 * @param null  $start
-	 * @param null  $limit
+	 * Example:
+	 * - `$mapper->find(array('id' => 5), 'date', 20, 10);`
+	 * - `$mapper->find(null, 'id', 0, 1);`
 	 *
-	 * @return  DataSet
+	 * @param mixed   $conditions Where conditions, you can use array or Compare object.
+	 *                            Example:
+	 *                            - `array('id' => 5)` => id = 5
+	 *                            - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+	 * @param mixed   $order      Order sort, can ba string, array or object.
+	 *                            Example:
+	 *                            - `id ASC` => ORDER BY id ASC
+	 *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+	 * @param integer $start      Limit start number.
+	 * @param integer $limit      Limit rows.
+	 *
+	 * @return mixed Found rows data set.
 	 */
 	public function find($conditions = array(), $order = null, $start = null, $limit = null)
 	{
@@ -131,13 +144,18 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * findAll
+	 * Find records without where conditions and return data set.
 	 *
-	 * @param null $order
-	 * @param int  $start
-	 * @param int  $limit
+	 * Same as `$mapper->find(null, 'id', $start, $limit);`
 	 *
-	 * @return  mixed
+	 * @param mixed   $order Order sort, can ba string, array or object.
+	 *                       Example:
+	 *                       - 'id ASC' => ORDER BY id ASC
+	 *                       - array('catid DESC', 'id') => ORDER BY catid DESC, id
+	 * @param integer $start Limit start number.
+	 * @param integer $limit Limit rows.
+	 *
+	 * @return mixed Found rows data set.
 	 */
 	public function findAll($order = null, $start = null, $limit = null)
 	{
@@ -145,12 +163,21 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * findOne
+	 * Find one record and return a data.
 	 *
-	 * @param mixed $conditions
-	 * @param       $order
+	 * Same as `$mapper->find($conditions, 'id', 0, 1);`
 	 *
-	 * @return  mixed
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
+	 *                          Example:
+	 *                          - `array('id' => 5)` => id = 5
+	 *                          - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+	 * @param mixed $order      Order sort, can ba string, array or object.
+	 *                          Example:
+	 *                          - `id ASC` => ORDER BY id ASC
+	 *                          - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+	 *
+	 * @return mixed Found row data.
 	 */
 	public function findOne($conditions = array(), $order = null)
 	{
@@ -165,13 +192,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * insert
+	 * Create records by data set.
 	 *
-	 * @param array|DataSet $dataset
+	 * @param mixed $dataset The data set contains data we want to store.
 	 *
 	 * @throws \UnexpectedValueException
 	 * @throws \InvalidArgumentException
-	 * @return  mixed
+	 * @return  mixed  Data set data with inserted id.
 	 */
 	public function create($dataset)
 	{
@@ -191,12 +218,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * insertOne
+	 * Create one record by data object.
 	 *
-	 * @param object $data
+	 * @param mixed $data Send a data in and store.
 	 *
 	 * @throws \InvalidArgumentException
-	 * @return  mixed
+	 * @return  mixed Data with inserted id.
 	 */
 	public function createOne($data)
 	{
@@ -211,13 +238,15 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * update
+	 * Update records by data set. Every data depend on this table's primary key to update itself.
 	 *
-	 * @param array|DataSet $dataset
+	 * @param mixed $dataset    Data set contain data we want to update.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
 	 * @throws \UnexpectedValueException
 	 * @throws \InvalidArgumentException
-	 * @return  bool
+	 * @return  mixed Updated data set.
 	 */
 	public function update($dataset, $condFields = null)
 	{
@@ -240,12 +269,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * updateOne
+	 * Same as update(), just update one row.
 	 *
-	 * @param Data|array $data
+	 * @param mixed $data       The data we want to update.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
 	 * @throws \InvalidArgumentException
-	 * @return  bool
+	 * @return  mixed Updated data.
 	 */
 	public function updateOne($data, $condFields = null)
 	{
@@ -260,14 +291,20 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * updateAll
+	 * Using one data to update multiple rows, filter by where conditions.
+	 * Example:
+	 * `$mapper->updateAll(new Data(array('published' => 0)), array('date' => '2014-03-02'))`
+	 * Means we make every records which date is 2014-03-02 unpublished.
 	 *
-	 * @param object $data
-	 * @param array  $conditions
-	 *
-	 * @return  mixed
+	 * @param mixed $data       The data we want to update to every rows.
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
+	 *                          Example:
+	 *                          - `array('id' => 5)` => id = 5
+	 *                          - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
 	 *
 	 * @throws \InvalidArgumentException
+	 * @return  mixed Updated data set.
 	 */
 	public function updateAll($data, $conditions = array())
 	{
@@ -280,12 +317,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * flush
+	 * Flush records, will delete all by conditions then recreate new.
 	 *
-	 * @param mixed $dataset
-	 * @param array $conditions
+	 * @param mixed $dataset    Data set contain data we want to update.
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
+	 *                          Example:
+	 *                          - `array('id' => 5)` => id = 5
+	 *                          - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
 	 *
-	 * @return  mixed
+	 * @return  mixed Updated data set.
 	 */
 	public function flush($dataset, $conditions = array())
 	{
@@ -294,26 +335,29 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			$dataset = $this->bindDataset($dataset);
 		}
 
-		// Guessing primary key
+		// Handling conditions
 		if (!is_array($conditions) && !is_object($conditions))
 		{
-			$primaryKey = $this->getPrimaryKey();
+			$conditions = array();
 
-			$conditions = array($primaryKey => $conditions);
+			foreach ((array) $this->getPrimaryKey() as $field)
+			{
+				$conditions[$field] = $conditions;
+			}
 		}
 
-		$conditions = (array) $conditions;
-
-		return $this->doFlush($dataset, $conditions);
+		return $this->doFlush($dataset, (array) $conditions);
 	}
 
 	/**
-	 * save
+	 * Save will auto detect is conditions matched in data or not.
+	 * If matched, using update, otherwise we will create it as new record.
 	 *
-	 * @param DataSet|array $dataset
-	 * @param array         $condFields
+	 * @param mixed $dataset    The data set contains data we want to save.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
-	 * @return  DataSet|array
+	 * @return  mixed Saved data set.
 	 */
 	public function save($dataset, $condFields = null)
 	{
@@ -364,26 +408,31 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * saveOne
+	 * Save only one row.
 	 *
-	 * @param mixed $data
-	 * @param array $conditions
+	 * @param mixed $data       The data we want to save.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
-	 * @return  mixed
+	 * @return  mixed Saved data.
 	 */
-	public function saveOne($data, $conditions = array())
+	public function saveOne($data, $condFields = null)
 	{
-		$dataset = $this->save($this->bindDataset(array($data)), $conditions);
+		$dataset = $this->save($this->bindDataset(array($data)), $condFields);
 
 		return $dataset[0];
 	}
 
 	/**
-	 * delete
+	 * Delete records by where conditions.
 	 *
-	 * @param array  $conditions
+	 * @param mixed   $conditions Where conditions, you can use array or Compare object.
+	 *                            Example:
+	 *                            - `array('id' => 5)` => id = 5
+	 *                            - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
 	 *
-	 * @return  mixed
+	 * @return  boolean Will be always true.
 	 */
 	public function delete($conditions)
 	{
@@ -404,69 +453,70 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * doFind
+	 * Do find action, this method should be override by sub class.
 	 *
-	 * @param $conditions
-	 * @param $orders
-	 * @param $start
-	 * @param $limit
+	 * @param array   $conditions Where conditions, you can use array or Compare object.
+	 * @param array   $orders     Order sort, can ba string, array or object.
+	 * @param integer $start      Limit start number.
+	 * @param integer $limit      Limit rows.
 	 *
-	 * @return  mixed
+	 * @return  mixed Found rows data set.
 	 */
 	abstract protected function doFind(array $conditions, array $orders, $start, $limit);
 
 	/**
-	 * doCreate
+	 * Do create action, this method should be override by sub class.
 	 *
-	 * @param $dataset
+	 * @param mixed $dataset The data set contains data we want to store.
 	 *
-	 * @return  mixed
+	 * @return  mixed  Data set data with inserted id.
 	 */
 	abstract protected function doCreate($dataset);
 
 	/**
-	 * doUpdate
+	 * Do update action, this method should be override by sub class.
 	 *
-	 * @param $dataset
-	 * @param $conditions
+	 * @param mixed $dataset    Data set contain data we want to update.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
-	 * @return  mixed
+	 * @return  mixed Updated data set.
 	 */
 	abstract protected function doUpdate($dataset, array $condFields);
 
 	/**
-	 * doUpdateAll
+	 * Do updateAll action, this method should be override by sub class.
 	 *
-	 * @param $data
-	 * @param $conditions
+	 * @param mixed $data       The data we want to update to every rows.
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
 	 *
-	 * @return  mixed
+	 * @return  mixed Updated data set.
 	 */
 	abstract protected function doUpdateAll($data, array $conditions);
 
 	/**
-	 * doFlush
+	 * Do flush action, this method should be override by sub class.
 	 *
-	 * @param $dataset
-	 * @param $conditions
+	 * @param mixed $dataset    Data set contain data we want to update.
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
 	 *
-	 * @return  mixed
+	 * @return  mixed Updated data set.
 	 */
 	abstract protected function doFlush($dataset, array $conditions);
 
 	/**
-	 * doDelete
+	 * Do delete action, this method should be override by sub class.
 	 *
-	 * @param $conditions
+	 * @param mixed   $conditions Where conditions, you can use array or Compare object.
 	 *
-	 * @return  mixed
+	 * @return  boolean Will be always true.
 	 */
 	abstract protected function doDelete(array $conditions);
 
 	/**
-	 * getPrimaryKey
+	 * Get primary key.
 	 *
-	 * @return  string
+	 * @return  array|string Primary key.
 	 */
 	public function getPrimaryKey()
 	{
@@ -474,9 +524,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * getTable
+	 * Get table name.
 	 *
-	 * @return  string
+	 * @return  string Table name.
 	 */
 	public function getTable()
 	{
@@ -484,9 +534,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * setTable
+	 * Set table name.
 	 *
-	 * @param   string $table
+	 * @param   string $table Table name.
 	 *
 	 * @return  AbstractDataMapper  Return self to support chaining.
 	 */
@@ -498,11 +548,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * bindData
+	 * Bind a record into data.
 	 *
-	 * @param object $data
+	 * @param mixed $data The data we want to bind.
 	 *
-	 * @return  mixed
+	 * @return  object
 	 *
 	 * @throws \UnexpectedValueException
 	 */
@@ -524,11 +574,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * bindDataset
+	 * Bind records into data set.
 	 *
-	 * @param array  $dataset
+	 * @param mixed $dataset Data set we want to bind.
 	 *
-	 * @return  mixed
+	 * @return  object Data set object.
 	 *
 	 * @throws \UnexpectedValueException
 	 * @throws \InvalidArgumentException
@@ -564,9 +614,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * getDataClass
+	 * Get data class.
 	 *
-	 * @return  string
+	 * @return  string Dat class.
 	 */
 	public function getDataClass()
 	{
@@ -574,9 +624,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * setDataClass
+	 * Set data class.
 	 *
-	 * @param   string $dataClass
+	 * @param   string $dataClass Data class.
 	 *
 	 * @return  AbstractDataMapper  Return self to support chaining.
 	 */
@@ -588,9 +638,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * getDatasetClass
+	 * Get data set class.
 	 *
-	 * @return  string
+	 * @return  string Data set class.
 	 */
 	public function getDatasetClass()
 	{
@@ -598,9 +648,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
-	 * setDatasetClass
+	 * Set Data set class.
 	 *
-	 * @param   string $datasetClass
+	 * @param   string $datasetClass Dat set class.
 	 *
 	 * @return  AbstractDataMapper  Return self to support chaining.
 	 */

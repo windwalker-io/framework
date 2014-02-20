@@ -14,30 +14,31 @@ use Windwalker\DataMapper\Database\QueryHelper;
 use Windwalker\DataMapper\Entity\Entity;
 
 /**
- * Class DataMapper
+ * Main Database Mapper class.
  */
 class DataMapper extends AbstractDataMapper
 {
 	/**
-	 * Property db.
+	 * Joomla DB adapter.
 	 *
 	 * @var DatabaseDriver
 	 */
 	protected $db;
 
 	/**
-	 * Property queryHelper.
+	 * Query helper.
 	 *
 	 * @var  QueryHelper
 	 */
 	protected $queryHelper = null;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
-	 * @param null           $table
-	 * @param string         $pk
-	 * @param DatabaseDriver $db
+	 * @param string         $table       Table name.
+	 * @param string|array   $pk          Primary key.
+	 * @param DatabaseDriver $db          Database adapter.
+	 * @param QueryHelper    $queryHelper Query helper object.
 	 */
 	public function __construct($table = null, $pk = 'id', DatabaseDriver $db = null, QueryHelper $queryHelper = null)
 	{
@@ -49,14 +50,14 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * doFind
+	 * Do find action.
 	 *
-	 * @param array $conditions
-	 * @param array $orders
-	 * @param int   $start
-	 * @param int   $limit
+	 * @param array   $conditions Where conditions, you can use array or Compare object.
+	 * @param array   $orders     Order sort, can ba string, array or object.
+	 * @param integer $start      Limit start number.
+	 * @param integer $limit      Limit rows.
 	 *
-	 * @return  mixed|void
+	 * @return  mixed Found rows data set.
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
@@ -79,12 +80,12 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * doCreate
+	 * Do create action.
 	 *
-	 * @param $dataset
+	 * @param mixed $dataset The data set contains data we want to store.
 	 *
 	 * @throws \Exception
-	 * @return  mixed
+	 * @return  mixed  Data set data with inserted id.
 	 */
 	protected function doCreate($dataset)
 	{
@@ -116,12 +117,14 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * doUpdate
+	 * Do update action.
 	 *
-	 * @param $dataset
-	 * @param $conditions
+	 * @param mixed $dataset    Data set contain data we want to update.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
-	 * @return  mixed
+	 * @throws \Exception
+	 * @return  mixed Updated data set.
 	 */
 	protected function doUpdate($dataset, array $condFields)
 	{
@@ -149,13 +152,13 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * doUpdateAll
+	 * Do updateAll action.
 	 *
-	 * @param $data
-	 * @param $conditions
+	 * @param mixed $data       The data we want to update to every rows.
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
 	 *
 	 * @throws \Exception
-	 * @return  mixed
+	 * @return  mixed Updated data set.
 	 */
 	protected function doUpdateAll($data, array $conditions)
 	{
@@ -180,13 +183,13 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * doFlush
+	 * Do flush action, this method should be override by sub class.
 	 *
-	 * @param mixed $dataset
-	 * @param array $conditions
+	 * @param mixed $dataset    Data set contain data we want to update.
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
 	 *
 	 * @throws \Exception
-	 * @return  boolean
+	 * @return  mixed Updated data set.
 	 */
 	protected function doFlush($dataset, array $conditions)
 	{
@@ -217,12 +220,12 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * doDelete
+	 * Do delete action, this method should be override by sub class.
 	 *
-	 * @param array $conditions
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
 	 *
 	 * @throws \Exception
-	 * @return  mixed
+	 * @return  boolean Will be always true.
 	 */
 	protected function doDelete(array $conditions)
 	{
@@ -252,9 +255,9 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * getDb
+	 * Get DB adapter.
 	 *
-	 * @return  \Joomla\Database\DatabaseDriver
+	 * @return  \Joomla\Database\DatabaseDriver Db adapter.
 	 */
 	public function getDb()
 	{
@@ -262,9 +265,9 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * setDb
+	 * Set db adapter.
 	 *
-	 * @param   \Joomla\Database\DatabaseDriver $db
+	 * @param   \Joomla\Database\DatabaseDriver $db Db adapter.
 	 *
 	 * @return  DataMapper  Return self to support chaining.
 	 */
@@ -276,9 +279,9 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * getFields
+	 * Get table fields.
 	 *
-	 * @param $table
+	 * @param string $table Table name.
 	 *
 	 * @return  array
 	 */

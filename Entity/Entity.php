@@ -11,9 +11,8 @@ namespace Windwalker\DataMapper\Entity;
 use Windwalker\Data\Data;
 
 /**
- * Class Entity
- *
- * @since 1.0
+ * Entity is a Data object sub class, we can set fields of this object
+ * then help us filter non necessary values to prevent error when inserting to database.
  */
 class Entity extends Data
 {
@@ -34,15 +33,15 @@ class Entity extends Data
 	}
 
 	/**
-	 * addFields
+	 * Add a field to this entity.
 	 *
-	 * @param array $array
+	 * @param array $fields Fields array.
 	 *
-	 * @return  $this
+	 * @return  Entity Return self to support chaining.
 	 */
-	public function addFields($array)
+	public function addFields($fields)
 	{
-		foreach ($array as $field)
+		foreach ($fields as $field)
 		{
 			$this->addField($field);
 		}
@@ -51,11 +50,11 @@ class Entity extends Data
 	}
 
 	/**
-	 * addField
+	 * Add a field.
 	 *
-	 * @param string $field
+	 * @param string $field Field name.
 	 *
-	 * @return  $this
+	 * @return  Entity Return self to support chaining.
 	 */
 	public function addField($field)
 	{
@@ -65,11 +64,11 @@ class Entity extends Data
 	}
 
 	/**
-	 * removeField
+	 * Remove field from this entity.
 	 *
-	 * @param string $field
+	 * @param string $field Field name.
 	 *
-	 * @return  $this
+	 * @return  Entity Return self to support chaining.
 	 */
 	public function removeField($field)
 	{
@@ -79,12 +78,12 @@ class Entity extends Data
 	}
 
 	/**
-	 * set
+	 * Set a value to entity. If property not exists, will not set it in.
 	 *
-	 * @param string $field
-	 * @param mixed  $value
+	 * @param string $field Field name.
+	 * @param mixed  $value Value.
 	 *
-	 * @return  $this|Data
+	 * @return  Entity Return self to support chaining.
 	 */
 	public function set($field, $value = null)
 	{
@@ -97,15 +96,15 @@ class Entity extends Data
 	}
 
 	/**
-	 * set
+	 * Magic method to set property.
 	 *
-	 * @param string $field
-	 * @param mixed  $value
+	 * @param string $field Field name.
+	 * @param mixed  $value Value.
 	 *
-	 * @return  Data
+	 * @return  void
 	 */
 	public function __set($field, $value = null)
 	{
-		return $this->$field = $value;
+		$this->$field = $value;
 	}
 }

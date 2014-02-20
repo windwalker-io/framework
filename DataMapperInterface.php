@@ -8,8 +8,6 @@
 
 namespace Windwalker\DataMapper;
 
-use Windwalker\Data\DataSet;
-
 /**
  * DataMapper Interface
  */
@@ -34,7 +32,7 @@ interface DataMapperInterface
 	 * @param integer $start      Limit start number.
 	 * @param integer $limit      Limit rows.
 	 *
-	 * @return mixed
+	 * @return mixed Found rows data set.
 	 */
 	public function find($conditions = array(), $order = null, $start = null, $limit = null);
 
@@ -50,7 +48,7 @@ interface DataMapperInterface
 	 * @param integer $start Limit start number.
 	 * @param integer $limit Limit rows.
 	 *
-	 * @return mixed
+	 * @return mixed Found rows data set.
 	 */
 	public function findAll($order = null, $start = null, $limit = null);
 
@@ -69,7 +67,7 @@ interface DataMapperInterface
 	 *                          - `id ASC` => ORDER BY id ASC
 	 *                          - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
 	 *
-	 * @return mixed
+	 * @return mixed Found row data.
 	 */
 	public function findOne($conditions = array(), $order = null);
 
@@ -94,9 +92,10 @@ interface DataMapperInterface
 	/**
 	 * Update records by data set. Every data depend on this table's primary key to update itself.
 	 *
-	 * @param mixed $dataset Data set contain data we want to update.
+	 * @param mixed $dataset    Data set contain data we want to update.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
-	 * @throws  \Exception
 	 * @return  mixed Updated data set.
 	 */
 	public function update($dataset, $condFields = null);
@@ -115,25 +114,41 @@ interface DataMapperInterface
 	 *                          - `new GteCompare('id', 20)` => 'id >= 20'
 	 *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
 	 *
-	 * @return  mixed
+	 * @return  mixed Updated data set.
 	 */
 	public function UpdateAll($data, $conditions = array());
 
 	/**
 	 * Same as update(), just update one row.
 	 *
-	 * @param mixed $data The data we want to update.
+	 * @param mixed $data       The data we want to update.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
 	 * @return  mixed Updated data.
 	 */
 	public function updateOne($data, $condFields = null);
 
 	/**
+	 * Flush records, will delete all by conditions then recreate new.
+	 *
+	 * @param mixed $dataset    Data set contain data we want to update.
+	 * @param mixed $conditions Where conditions, you can use array or Compare object.
+	 *                          Example:
+	 *                          - `array('id' => 5)` => id = 5
+	 *                          - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+	 *
+	 * @return  mixed Updated data set.
+	 */
+	public function flush($dataset, $conditions = array());
+
+	/**
 	 * Save will auto detect is conditions matched in data or not.
 	 * If matched, using update, otherwise we will create it as new record.
 	 *
 	 * @param mixed $dataset    The data set contains data we want to save.
-	 * @param mixed $condFields The where condition tell us record exists or not, if not set,
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
 	 *                          will use primary key instead.
 	 *
 	 * @return  mixed Saved data set.
@@ -141,21 +156,26 @@ interface DataMapperInterface
 	public function save($dataset, $condFields = null);
 
 	/**
-	 * saveOne
+	 * Save only one row.
 	 *
-	 * @param mixed $data
-	 * @param array $conditions
+	 * @param mixed $data       The data we want to save.
+	 * @param array $condFields The where condition tell us record exists or not, if not set,
+	 *                          will use primary key instead.
 	 *
-	 * @return  mixed
+	 * @return  mixed Saved data.
 	 */
-	public function saveOne($data, $conditions = array());
+	public function saveOne($data, $condFields = null);
 
 	/**
-	 * delete
+	 * Delete records by where conditions.
 	 *
-	 * @param array  $conditions
+	 * @param mixed   $conditions Where conditions, you can use array or Compare object.
+	 *                            Example:
+	 *                            - `array('id' => 5)` => id = 5
+	 *                            - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
 	 *
-	 * @return  mixed
+	 * @return  boolean Will be always true.
 	 */
 	public function delete($conditions);
 }
