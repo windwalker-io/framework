@@ -164,7 +164,7 @@ INSERT INTO `ww_content` (`id`, `title`, `catid`, `created`, `created_by`, `acce
 CREATE TABLE IF NOT EXISTS `ww_content2` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `content_id` varchar(255) NOT NULL DEFAULT '',
-  `mark` int(10) unsigned NOT NULL DEFAULT '0',
+  `mark` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
 

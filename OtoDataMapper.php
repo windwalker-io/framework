@@ -8,6 +8,8 @@
 
 namespace Windwalker\DataMapper;
 
+use Windwalker\DataMapper\Database\QueryHelper;
+
 /**
  * Class OtoDataMapper
  *
@@ -50,6 +52,43 @@ class OtoDataMapper extends DataMapper
 		);
 
 		return $this;
+	}
+
+	/**
+	 * doFind
+	 *
+	 * @param array $conditions
+	 * @param array $orders
+	 * @param int   $start
+	 * @param int   $limit
+	 *
+	 * @return  mixed|void
+	 */
+	protected function doFind(array $conditions, array $orders, $start, $limit)
+	{
+		// Do find first
+		$dataset = parent::doFind($conditions, $orders, $start, $limit);
+
+		// Loop the relation mapper.
+		foreach ($this->relations as $field => $relation)
+		{
+			// Loop each data.
+			foreach ($dataset as &$data)
+			{
+				// Prepare sub conditions
+				$conditions = array();
+
+				// Find relation data to this field.
+				foreach ($relation['relations'] as $left => $right)
+				{
+					$conditions[$right] = $data->$left;
+				}
+
+				$data->$field = $relation['table']->findOne($conditions);
+			}
+		}
+
+		return $dataset;
 	}
 
 	/**
@@ -114,18 +153,45 @@ class OtoDataMapper extends DataMapper
 	 */
 	protected function doUpdate($dataset)
 	{
-		$dataset = parent::doCreate($dataset);
+		$this->db->transactionStart(true);
 
-		foreach ($this->mappers as $alias => $mapper)
+		try
 		{
-			foreach ($dataset as &$data)
+			// Do create first
+			$dataset = parent::doUpdate($dataset);
+
+			// Loop the relation mapper.
+			foreach ($this->relations as $field => $relation)
 			{
-				if ($data->$alias)
+				// Loop each data.
+				foreach ($dataset as &$data)
 				{
-					$data->$alias = $this->updateOne($this->bindData($data->alias));
+					// If relation field exists, push the foreign key and save.
+					if ($data->$field)
+					{
+						if (!is_array($data->$field) && !is_object($data->$field))
+						{
+							throw new \InvalidArgumentException(sprintf('Saving relations %s::$%s need array or object.', get_class($data), $field));
+						}
+
+						foreach ($relation['relations'] as $left => $right)
+						{
+							$data->$field->$right = $data->$left;
+						}
+
+						$data->$field = $relation['table']->saveOne($this->bindData($data->$field));
+					}
 				}
 			}
 		}
+		catch (\Exception $e)
+		{
+			$this->db->transactionRollback(true);
+
+			throw $e;
+		}
+
+		$this->db->transactionCommit(true);
 
 		return $dataset;
 	}
@@ -141,7 +207,7 @@ class OtoDataMapper extends DataMapper
 	 */
 	protected function doUpdateAll($data, $conditions)
 	{
-		throw new \LogicException('RelationDataMapper not support UpdateAll() yet.');
+		throw new \LogicException(sprintf('%s do not support %s().', __CLASS__, __METHOD__));
 	}
 
 	/**

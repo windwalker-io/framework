@@ -1,6 +1,8 @@
 <?php
 namespace Windwalker\DataMapper\Tests;
 
+use Joomla\Utilities\ArrayHelper;
+use Windwalker\Compare\Compare;
 use Windwalker\Compare\EqCompare;
 use Windwalker\Data\Data;
 use Windwalker\Data\DataSet;
@@ -38,10 +40,24 @@ class OtoDataMapperTest extends DatabaseTest
 	 */
 	public function testFind()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$dataset = $this->object->find(array('id' => array(5, 6)));
+
+		$compareContents = $this->loadToDataset(
+<<<SQL
+SELECT *
+FROM ww_content
+WHERE id IN(5, 6)
+SQL
 		);
+
+		$cMapper = new DataMapper('ww_content2');
+
+		foreach ($compareContents as $compareContent)
+		{
+			$compareContent->b = $cMapper->findOne(array('content_id' => $compareContent->id));
+		}
+
+		$this->assertEquals($compareContents, $dataset, 'Record not matches.');
 	}
 
 	/**
@@ -62,10 +78,22 @@ class OtoDataMapperTest extends DatabaseTest
 	 */
 	public function testFindOne()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$data = $this->object->findOne(array('id' => array(5, 6)));
+
+		$compareContent = $this->loadToData(
+			<<<SQL
+SELECT *
+FROM ww_content
+WHERE id IN(5, 6)
+LIMIT 1
+SQL
 		);
+
+		$cMapper = new DataMapper('ww_content2');
+
+		$compareContent->b = $cMapper->findOne(array('content_id' => $compareContent->id));
+
+		$this->assertEquals($compareContent, $data, 'Record not matches.');
 	}
 
 	/**
@@ -83,22 +111,73 @@ class OtoDataMapperTest extends DatabaseTest
 			)
 		);
 
-		$dataset = new DataSet(array($data1));
+		$data2 = new Data;
+		$data2->title = 'Flower2';
+		$data2->catid = 10;
+		$data2->b     = new Data(
+			array(
+				'mark' => 'Sakura2'
+			)
+		);
+
+		$dataset = new DataSet(array($data1, $data2));
 
 		$this->object->create($dataset);
 
-		$compareContent = $this->loadToData(
+		$compareContent = $this->db->setQuery(
 <<<SQL
 SELECT *
 FROM ww_content
-WHERE title = 'Flower'
+WHERE title LIKE 'Flower%'
+SQL
+		)->loadObjectList();
+
+		$this->assertNotEmpty($compareContent, 'Record not inserted.');
+
+		$ids = implode(',', ArrayHelper::getColumn($compareContent, 'id'));
+
+		$compareContent2 = $this->db->setQuery(
+<<<SQL
+SELECT *
+FROM ww_content2
+WHERE content_id IN ({$ids})
+SQL
+		)->loadObjectList();
+
+		$this->assertNotEmpty($compareContent2, 'Record not inserted.');
+
+		$this->assertEquals($compareContent2[0]->mark, 'Sakura', 'Content2 value wrong');
+	}
+
+	/**
+	 * @covers Windwalker\DataMapper\AbstractDataMapper::createOne
+	 * @todo   Implement testCreateOne().
+	 */
+	public function testCreateOne()
+	{
+		$data = new Data;
+		$data->title = 'Flower3';
+		$data->catid = 10;
+		$data->b     = new Data(
+			array(
+				'mark' => 'Sakura3'
+			)
+		);
+
+		$this->object->createOne($data);
+
+		$compareContent = $this->loadToData(
+			<<<SQL
+SELECT *
+FROM ww_content
+WHERE title = 'Flower3'
 SQL
 		);
 
 		$this->assertNotEmpty($compareContent, 'Record not inserted.');
 
 		$compareContent2 = $this->loadToData(
-<<<SQL
+			<<<SQL
 SELECT *
 FROM ww_content2
 WHERE content_id = {$compareContent->id}
@@ -109,27 +188,24 @@ SQL
 	}
 
 	/**
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::createOne
-	 * @todo   Implement testCreateOne().
-	 */
-	public function testCreateOne()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::update
 	 * @todo   Implement testUpdate().
 	 */
 	public function testUpdate()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$dataset = $this->object->find(array(new Compare('title', 'Flower%', 'LIKE')), null, 0, 2);
+
+		$dataset[0]->title   = 'Rose 1';
+		$dataset[0]->b->mark = 5566;
+		$dataset[1]->title   = 'Rose 2';
+
+		$this->object->update($dataset);
+
+		$updatedSet = $this->object->find(array(new Compare('title', 'Rose%', 'LIKE')));
+
+		$this->assertEquals(count($updatedSet), 2, 'Updated row count wrong');
+
+		$this->assertEquals($updatedSet[0]->b->mark, 5566, 'content2 not updated.');
 	}
 
 	/**
