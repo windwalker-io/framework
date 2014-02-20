@@ -105,6 +105,16 @@ interface DataMapperInterface
 	public function save($dataset, $conditions = null);
 
 	/**
+	 * saveOne
+	 *
+	 * @param mixed $data
+	 * @param array $conditions
+	 *
+	 * @return  mixed
+	 */
+	public function saveOne($data, $conditions = array());
+
+	/**
 	 * delete
 	 *
 	 * @param array  $conditions

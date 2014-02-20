@@ -2,6 +2,9 @@
 namespace Windwalker\DataMapper\Tests;
 
 use Windwalker\Compare\EqCompare;
+use Windwalker\Data\Data;
+use Windwalker\Data\DataSet;
+use Windwalker\DataMapper\DataMapper;
 use Windwalker\DataMapper\OtoDataMapper;
 
 /**
@@ -24,9 +27,9 @@ class OtoDataMapperTest extends DatabaseTest
 
 		$this->db = static::$dbo;
 
-		$this->object = new OtoDataMapper('a', 'ww_content');
+		$this->object = new OtoDataMapper('ww_content');
 
-		$this->object->addTable('b', 'ww_content2', new EqCompare('a.id', 'b.content_id'), 'INNER');
+		$this->object->addRelation('b', new DataMapper('ww_content2'), array('id' => 'content_id'));
 	}
 
 	/**
@@ -35,23 +38,10 @@ class OtoDataMapperTest extends DatabaseTest
 	 */
 	public function testFind()
 	{
-		$result = $this->object->find(array('a.id' => array(6,7,8)), 'a.title', 0, 2);
-
-		$compare = $this->loadToDataset(
-<<<SQL
-SELECT a.*,
-	b.id AS b_id,
-	b.content_id AS b_content_id,
-	b.mark AS b_mark
-FROM ww_content AS a
-	INNER JOIN ww_content2 AS b ON a.id = b.content_id
-WHERE a.id IN(6,7,8)
-ORDER BY a.title
-LIMIT 2;
-SQL
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
 		);
-
-		$this->assertEquals($compare, $result);
 	}
 
 	/**
@@ -72,22 +62,10 @@ SQL
 	 */
 	public function testFindOne()
 	{
-		$result = $this->object->findOne(array('a.id' => array(6,7,8)), 'a.id DESC');
-
-		$compare = $this->loadToData(
-			<<<SQL
-SELECT a.*,
-	b.id AS b_id,
-	b.content_id AS b_content_id,
-	b.mark AS b_mark
-FROM ww_content AS a
-	INNER JOIN ww_content2 AS b ON a.id = b.content_id
-WHERE a.id IN(6,7,8)
-ORDER BY a.id DESC
-SQL
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
 		);
-
-		$this->assertEquals($compare, $result);
 	}
 
 	/**
@@ -96,10 +74,38 @@ SQL
 	 */
 	public function testCreate()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$data1 = new Data;
+		$data1->title = 'Flower';
+		$data1->catid = 10;
+		$data1->b     = new Data(
+			array(
+				'mark' => 'Sakura'
+			)
 		);
+
+		$dataset = new DataSet(array($data1));
+
+		$this->object->create($dataset);
+
+		$compareContent = $this->loadToData(
+<<<SQL
+SELECT *
+FROM ww_content
+WHERE title = 'Flower'
+SQL
+		);
+
+		$this->assertNotEmpty($compareContent, 'Record not inserted.');
+
+		$compareContent2 = $this->loadToData(
+<<<SQL
+SELECT *
+FROM ww_content2
+WHERE content_id = {$compareContent->id}
+SQL
+		);
+
+		$this->assertNotEmpty($compareContent2, 'Record not inserted.');
 	}
 
 	/**

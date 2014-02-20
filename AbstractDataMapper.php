@@ -76,6 +76,17 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		$this->pk = $pk;
+
+		$this->configure();
+	}
+
+	/**
+	 * configure
+	 *
+	 * @return  void
+	 */
+	protected function configure()
+	{
 	}
 
 	/**
@@ -317,6 +328,21 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$this->update($updateDataset, $conditions);
 
 		return $dataset;
+	}
+
+	/**
+	 * saveOne
+	 *
+	 * @param mixed $data
+	 * @param array $conditions
+	 *
+	 * @return  mixed
+	 */
+	public function saveOne($data, $conditions = array())
+	{
+		$dataset = $this->save($this->bindDataset(array($data)), $conditions);
+
+		return $dataset[0];
 	}
 
 	/**

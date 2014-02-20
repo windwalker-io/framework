@@ -88,7 +88,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doCreate($dataset)
 	{
-		$this->db->transactionStart();
+		$this->db->transactionStart(true);
 
 		try
 		{
@@ -105,12 +105,12 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback();
+			$this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit();
+		$this->db->transactionCommit(true);
 
 		return $dataset;
 	}
@@ -125,7 +125,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doUpdate($dataset)
 	{
-		$this->db->transactionStart();
+		$this->db->transactionStart(true);
 
 		try
 		{
@@ -138,12 +138,12 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback();
+			$this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit();
+		$this->db->transactionCommit(true);
 
 		return $dataset;
 	}
@@ -159,7 +159,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doUpdateAll($data, $conditions)
 	{
-		$this->db->transactionStart();
+		$this->db->transactionStart(true);
 
 		$command = DatabaseFactory::getCommand();
 
@@ -169,12 +169,12 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback();
+			$this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit();
+		$this->db->transactionCommit(true);
 
 		return $result;
 	}
@@ -233,6 +233,6 @@ class DataMapper extends AbstractDataMapper
 	{
 		$table = $table ? : $this->table;
 
-		return array_keys($this->queryHelper->getColumns($table));
+		return array_keys(DatabaseFactory::getCommand()->getColumns($table));
 	}
 }

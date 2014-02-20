@@ -62,6 +62,8 @@ class RelationDataMapper extends DataMapper
 		{
 			$this->addTable($alias, $table);
 		}
+
+		$this->configure();
 	}
 
 	/**
