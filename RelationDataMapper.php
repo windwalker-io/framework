@@ -188,7 +188,7 @@ class RelationDataMapper extends DataMapper
 	 *
 	 * @return  mixed
 	 */
-	protected function doUpdate($dataset)
+	protected function doUpdate($dataset, array $condFields)
 	{
 		throw new \LogicException(__CLASS__ . ' do not support ' . __METHOD__ . '().');
 	}

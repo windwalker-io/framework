@@ -151,14 +151,14 @@ class OtoDataMapper extends DataMapper
 	 *
 	 * @return  mixed
 	 */
-	protected function doUpdate($dataset)
+	protected function doUpdate($dataset, array $condFields)
 	{
 		$this->db->transactionStart(true);
 
 		try
 		{
 			// Do create first
-			$dataset = parent::doUpdate($dataset);
+			$dataset = parent::doUpdate($dataset, $condFields);
 
 			// Loop the relation mapper.
 			foreach ($this->relations as $field => $relation)

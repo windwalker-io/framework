@@ -123,7 +123,7 @@ class DataMapper extends AbstractDataMapper
 	 *
 	 * @return  mixed
 	 */
-	protected function doUpdate($dataset)
+	protected function doUpdate($dataset, array $condFields)
 	{
 		$this->db->transactionStart(true);
 
@@ -133,7 +133,7 @@ class DataMapper extends AbstractDataMapper
 			{
 				$entity = new Entity($this->getFields($this->table), $data);
 
-				$this->db->updateObject($this->table, $entity, $this->getPrimaryKey());
+				$this->db->updateObject($this->table, $entity, $condFields);
 			}
 		}
 		catch (\Exception $e)

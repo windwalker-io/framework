@@ -101,12 +101,15 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function find($conditions = array(), $order = null, $start = null, $limit = null)
 	{
-		// Guessing primary key
+		// Handling conditions
 		if (!is_array($conditions) && !is_object($conditions))
 		{
-			$primaryKey = $this->getPrimaryKey();
+			$conditions = array();
 
-			$conditions = array($primaryKey => $conditions);
+			foreach ((array) $this->getPrimaryKey() as $field)
+			{
+				$conditions[$field] = $conditions;
+			}
 		}
 
 		$conditions = (array) $conditions;
@@ -216,14 +219,17 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @throws \InvalidArgumentException
 	 * @return  bool
 	 */
-	public function update($dataset)
+	public function update($dataset, $condFields = null)
 	{
 		if (!($dataset instanceof $this->datasetClass))
 		{
 			throw new \InvalidArgumentException('DataSet object should be: ' . $this->datasetClass);
 		}
 
-		$dataset = $this->doUpdate($dataset);
+		// Handling conditions
+		$condFields = $condFields ? : $this->getPrimaryKey();
+
+		$dataset = $this->doUpdate($dataset, (array) $condFields);
 
 		if (!($dataset instanceof $this->datasetClass))
 		{
@@ -241,14 +247,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @throws \InvalidArgumentException
 	 * @return  bool
 	 */
-	public function updateOne($data)
+	public function updateOne($data, $condFields = null)
 	{
 		if (!($data instanceof $this->dataClass))
 		{
 			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
 		}
 
-		$dataset = $this->update($this->bindDataset(array($data)));
+		$dataset = $this->update($this->bindDataset(array($data)), $condFields);
 
 		return $dataset[0];
 	}
@@ -305,16 +311,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * save
 	 *
 	 * @param DataSet|array $dataset
-	 * @param array         $conditions
+	 * @param array         $condFields
 	 *
 	 * @return  DataSet|array
 	 */
-	public function save($dataset, $conditions = null)
+	public function save($dataset, $condFields = null)
 	{
 		// Handling conditions
-		$conditions = $conditions ? : $this->getPrimaryKey();
+		$condFields = $condFields ? : $this->getPrimaryKey();
 
-		$conditions = (array) $conditions;
+		$condFields = (array) $condFields;
 
 		$createDataset = new $this->datasetClass;
 		$updateDataset = new $this->datasetClass;
@@ -329,7 +335,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			$update = true;
 
 			// If one field not matched, use insert.
-			foreach ($conditions as $field)
+			foreach ($condFields as $field)
 			{
 				if (!$data->$field)
 				{
@@ -352,7 +358,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		$this->create($createDataset);
 
-		$this->update($updateDataset, $conditions);
+		$this->update($updateDataset, $condFields);
 
 		return $dataset;
 	}
@@ -384,7 +390,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		// Handling conditions
 		if (!is_array($conditions) && !is_object($conditions))
 		{
-			$conditions = array($this->getPrimaryKey() => $conditions);
+			$conditions = array();
+
+			foreach ((array) $this->getPrimaryKey() as $field)
+			{
+				$conditions[$field] = $conditions;
+			}
 		}
 
 		$conditions = (array) $conditions;
@@ -421,7 +432,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  mixed
 	 */
-	abstract protected function doUpdate($dataset);
+	abstract protected function doUpdate($dataset, array $condFields);
 
 	/**
 	 * doUpdateAll
