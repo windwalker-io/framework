@@ -256,7 +256,7 @@ Using Compare objects help us set some where conditions which hard to use array 
 $fooSet = $fooMapper->find(
     array(
         new GteCompare('id', 5),
-        new NeqCompare('name' => 'bar')
+        new NeqCompare('name', 'bar')
         new LtCompare('published', 1),
         new NinCompare('catid', array(1,2,3,4,5))
     )
