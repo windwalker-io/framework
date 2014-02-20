@@ -11,16 +11,14 @@ namespace Windwalker\DataMapper\Database;
 use Joomla\Database\DatabaseDriver;
 
 /**
- * Class DatabaseCommand
- *
- * @since 1.0
+ * Some Useful function for database operation.
  */
 class DatabaseCommand
 {
 	/**
-	 * Property db.
+	 * Database adapter.
 	 *
-	 * @var  null
+	 * @var  DatabaseDriver
 	 */
 	protected $db = null;
 
@@ -34,7 +32,7 @@ class DatabaseCommand
 	/**
 	 * Constructor.
 	 *
-	 * @param DatabaseDriver $db
+	 * @param DatabaseDriver $db Database adapter.
 	 */
 	public function __construct(DatabaseDriver $db)
 	{
@@ -42,13 +40,17 @@ class DatabaseCommand
 	}
 
 	/**
-	 * updateBatch
+	 * Batch update some data.
 	 *
-	 * @param string $table
-	 * @param string $data
-	 * @param array  $conditions
+	 * @param string $table      Table name.
+	 * @param string $data       Data you want to update.
+	 * @param mixed  $conditions Where conditions, you can use array or Compare object.
+	 *                           Example:
+	 *                           - `array('id' => 5)` => id = 5
+	 *                           - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                           - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
 	 *
-	 * @return  bool|mixed
+	 * @return  boolean True if update success.
 	 */
 	public function updateBatch($table, $data, $conditions = array())
 	{
@@ -85,11 +87,11 @@ class DatabaseCommand
 	}
 
 	/**
-	 * getColumns
+	 * Get table columns.
 	 *
-	 * @param string $table
+	 * @param string $table Table name.
 	 *
-	 * @return  array
+	 * @return  array Table columns with type.
 	 */
 	public function getColumns($table)
 	{
@@ -102,9 +104,9 @@ class DatabaseCommand
 	}
 
 	/**
-	 * getDb
+	 * Get db object.
 	 *
-	 * @return  null
+	 * @return  DatabaseDriver Database adapter.
 	 */
 	public function getDb()
 	{
@@ -112,9 +114,9 @@ class DatabaseCommand
 	}
 
 	/**
-	 * setDb
+	 * Set db object
 	 *
-	 * @param   null $db
+	 * @param   DatabaseDriver $db  Database adapter.
 	 *
 	 * @return  DatabaseCommand  Return self to support chaining.
 	 */

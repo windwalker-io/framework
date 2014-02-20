@@ -9,12 +9,9 @@
 namespace Windwalker\DataMapper\Database;
 
 use Joomla\Database\DatabaseDriver;
-use Windwalker\DataMapper\Database\DatabaseCommand;
 
 /**
  * Class DatabaseFactory
- *
- * @since 1.0
  */
 abstract class DatabaseFactory
 {
