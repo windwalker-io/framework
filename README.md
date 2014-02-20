@@ -274,14 +274,14 @@ WHERE `id` >= '5'
 
 ### Abailable compares:
 
-- EqCompare  : Equal
-- NeqCompare : Not Equal
-- GtCompare  : Greater than
-- GteCompare : Greate than or Equal
-- LtCompare  : Less than
-- LteCompare : Less than or Equal
-- InCompare  : In
-- NinCompare : Not In
+- EqCompare  : Equal `=`
+- NeqCompare : Not Equal `!=`
+- GtCompare  : Greater than `>`
+- GteCompare : Greate than or Equal `>=`
+- LtCompare  : Less than `<`
+- LteCompare : Less than or Equal `<=`
+- InCompare  : In `IN`
+- NinCompare : Not In `NOT IN`
 
 ### Custom Compare
 
