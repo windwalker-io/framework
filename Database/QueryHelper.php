@@ -191,10 +191,16 @@ class QueryHelper
 				continue;
 			}
 
-			// If using Compare class, we convert it to string
+			// If using Compare class, we convert it to string.
 			if ($value instanceof Compare)
 			{
 				$query->where((string) static::buildCompare($key, $value, $query));
+			}
+
+			// If key is numeric, just send value to query where.
+			elseif (is_numeric($key))
+			{
+				$query->where((string) $value);
 			}
 
 			// If is array or object, we use "IN" condition.
