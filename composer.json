@@ -1,0 +1,23 @@
+{
+	"name": "windwalker/database",
+	"type": "windwalker-package",
+	"description": "Windwalker Database package",
+	"keywords": ["windwalker", "framework", "database"],
+	"homepage": "https://github.com/windwalker-framework/database",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/compare": "dev-master",
+		"joomla/database": "~1.0"
+	},
+	"require-dev": {
+		"joomla/test": "~1.0",
+		"joomla/database": "~1.0"
+	},
+	"minimum-stability" : "beta",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\DataMapper\\": ""
+		}
+	}
+}
