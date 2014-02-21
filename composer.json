@@ -6,12 +6,14 @@
 	"homepage": "https://github.com/windwalker-framework/windwalker-database",
 	"license": "GPL-2.0+",
 	"require": {
-		"php": ">=5.3.10"
+		"php": ">=5.3.10",
+		"windwalker/compare": "dev-master",
+		"joomla/database": "~1.0"
 	},
 	"require-dev": {
 		"joomla/test": "~1.0"
 	},
-	"minimum-stability" : "beta",
+	"minimum-stability" : "dev",
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\Database\\": ""
