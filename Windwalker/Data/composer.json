@@ -1,0 +1,20 @@
+{
+	"name": "windwalker/data",
+	"type": "windwalker-package",
+	"description": "Windwalker Data package",
+	"keywords": ["windwalker", "framework", "data"],
+	"homepage": "https://github.com/windwalker-framework/data",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"joomla/test": "~1.0"
+	},
+	"minimum-stability" : "beta",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Data\\": ""
+		}
+	}
+}
