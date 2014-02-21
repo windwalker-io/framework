@@ -8,14 +8,13 @@
 	"require": {
 		"php": ">=5.3.10",
 		"windwalker/data": "dev-master",
-		"windwalker/compare": "dev-master",
-		"joomla/utilities": "~1.0"
+		"joomla/utilities": "~1.0",
+		"windwalker/database" : "dev-master#70a0d6d1c51f376e699c1b3a13e7fd90349e1241"
 	},
 	"require-dev": {
-		"joomla/test": "~1.0",
-		"joomla/database": "~1.0"
+		"joomla/test": "~1.0"
 	},
-	"minimum-stability" : "beta",
+	"minimum-stability" : "dev",
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\DataMapper\\": ""
