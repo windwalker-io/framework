@@ -1,0 +1,23 @@
+{
+	"name": "windwalker/datamapper",
+	"type": "windwalker-package",
+	"description": "Windwalker DataMapper package",
+	"keywords": ["windwalker", "framework", "datamapper"],
+	"homepage": "https://github.com/windwalker-framework/datamapper",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/data": "dev-master",
+		"joomla/utilities": "~1.0"
+	},
+	"require-dev": {
+		"joomla/test": "~1.0",
+		"windwalker/database" : "dev-master"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\DataMapper\\": ""
+		}
+	}
+}
