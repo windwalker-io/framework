@@ -9,8 +9,8 @@
 namespace Windwalker\DataMapper;
 
 use Joomla\Database\DatabaseDriver;
-use Windwalker\DataMapper\Database\DatabaseFactory;
-use Windwalker\DataMapper\Database\QueryHelper;
+use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\QueryHelper;
 use Windwalker\DataMapper\Entity\Entity;
 
 /**

@@ -17,7 +17,7 @@ Add `"ventoviro/windwalker-middleware": "dev-master"` to the require block in yo
 ### Prepare Database object
 
 ``` php
-use Windwalker\DataMapper\Database\DatabaseFactory;
+use Windwalker\Database\DatabaseFactory;
 
 // Make the database driver.
 $db = DatabaseFactory::getDbo(

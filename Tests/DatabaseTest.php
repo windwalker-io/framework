@@ -9,7 +9,7 @@
 namespace Windwalker\DataMapper\Tests;
 
 use Joomla\Database\DatabaseDriver;
-use Windwalker\DataMapper\Database\DatabaseFactory;
+use Windwalker\Database\DatabaseFactory;
 
 /**
  * Class DatabaseTestCase

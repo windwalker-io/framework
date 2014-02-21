@@ -8,7 +8,7 @@
 
 namespace Windwalker\DataMapper;
 
-use Windwalker\DataMapper\Database\QueryHelper;
+use Windwalker\Database\QueryHelper;
 
 /**
  * Class OtoDataMapper
