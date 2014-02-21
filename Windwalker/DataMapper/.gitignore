@@ -1,0 +1,7 @@
+# System Files #
+.*
+phpunit.xml
+
+# Composer #
+composer.lock
+vendor/*
