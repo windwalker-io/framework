@@ -11,13 +11,12 @@
 		"joomla/database": "~1.0"
 	},
 	"require-dev": {
-		"joomla/test": "~1.0",
-		"joomla/database": "~1.0"
+		"joomla/test": "~1.0"
 	},
 	"minimum-stability" : "beta",
 	"autoload": {
 		"psr-4": {
-			"Windwalker\\DataMapper\\": ""
+			"Windwalker\\Database\\": ""
 		}
 	}
 }
