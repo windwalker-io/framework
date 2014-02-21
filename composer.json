@@ -1,41 +1,22 @@
 {
-	"name"             : "windwalker/framework",
-	"description"      : "Rapido de la vento viro.",
-	"homepage"         : "https://github.com/ventoviro/windwalker",
-	"license"          : "GNU Lesser General Public License",
+	"name": "windwalker/framework",
+	"description": "Rapido de la vento viro.",
+	"homepage": "https://github.com/ventoviro/windwalker",
+	"license": "GNU Lesser General Public License",
 	"minimum-stability": "beta",
-	"authors"          : [
+	"authors": [
 		{
-			"name" : "Simon Asika",
+			"name": "Simon Asika",
 			"email": "asika32764@gmail.com"
 		}
 	],
-	"require"          : {
-		"asika/joomla-console" : "dev-master",
-		"asika/php-code-generator" : "dev-master",
-		"joomla/controller"    : "~1.0",
-		"joomla/registry"      : "~1.0",
-		"filp/whoops"          : "1.*"
+	"require": {
 	},
-	"require-dev"      : {
+	"require-dev": {
 	},
-	"autoload" : {
-		"psr-0" : {
-			"" : "../../cli/windwalker",
-			"Windwalker" : "",
-			"CodeGenerator" : "vendor/asika/php-code-generator/src"
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\": "src/"
 		}
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"Windwalker\\System\\Installer\\ComposerInstaller::install"
-		],
-		"post-update-cmd": []
-	},
-	"bin": [
-		"Windwalker/init.php"
-	],
-	"config": {
-		"bin-dir": "../../bin"
 	}
 }

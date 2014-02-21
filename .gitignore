@@ -3,7 +3,6 @@
 
 # Composer #
 vendor/*
-!vendor/index.html
 
-# Windwalker #
-config.json
+# Test #
+phpunit.xml
