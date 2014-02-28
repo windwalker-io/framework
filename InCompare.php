@@ -44,6 +44,35 @@ class InCompare extends Compare
 	}
 
 	/**
+	 * toString
+	 *
+	 * @return  string
+	 */
+	public function toString()
+	{
+		if (is_callable($this->handler))
+		{
+			return call_user_func_array($this->handler, array($this->compare1, $this->compare2, $this->operator));
+		}
+
+		$return = '';
+
+		if ($this->compare1)
+		{
+			$return .= $this->compare1 . ' ';
+		}
+
+		$return .= $this->operator;
+
+		if ($this->compare2)
+		{
+			$return .= ' (' . implode(',', $this->compare2) . ')';
+		}
+
+		return $return;
+	}
+
+	/**
 	 * getSeparator
 	 *
 	 * @return  string
