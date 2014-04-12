@@ -8,12 +8,10 @@
 
 namespace Windwalker\Data;
 
-use Traversable;
-
 /**
  * Class Data
  */
-class Data implements \IteratorAggregate
+class Data implements \IteratorAggregate, \ArrayAccess, \Countable
 {
 	/**
 	 * Constrictor.
@@ -134,10 +132,69 @@ class Data implements \IteratorAggregate
 	/**
 	 * Retrieve an external iterator
 	 *
-	 * @return Traversable An instance of an object implementing Iterator or Traversable
+	 * @return \Traversable An instance of an object implementing Iterator or Traversable
 	 */
 	public function getIterator()
 	{
 		return new \ArrayIterator($this);
+	}
+
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return isset($this->$offset);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->$offset;
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->$offset = $value;
+	}
+
+	/**
+	 * Unset a propeerty.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		unset($this->$offset);
+	}
+
+	/**
+	 * Count this object.
+	 *
+	 * @return  int
+	 */
+	public function count()
+	{
+		return count(get_object_vars($this));
 	}
 }
