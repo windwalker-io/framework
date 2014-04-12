@@ -9,7 +9,7 @@
 namespace Windwalker\Data;
 
 /**
- * Class Data
+ * Data object to store values.
  */
 class Data implements \IteratorAggregate, \ArrayAccess, \Countable
 {
