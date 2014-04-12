@@ -12,10 +12,9 @@
 		"joomla/test": "1.0-beta2"
 	},
 	"minimum-stability" : "beta",
-	"target-dir": "Windwalker/Middleware",
 	"autoload": {
-		"psr-0": {
-			"Windwalker\\Middleware": ""
+		"psr-4": {
+			"Windwalker\\Middleware\\": ""
 		}
 	}
 }

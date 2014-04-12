@@ -10,7 +10,7 @@ make sure you have `"minimum-stability": "dev"` and then run `composer install`.
 ``` json
 {
     "require": {
-        "asika/windwalker-middleware": "dev-master"
+        "asika/windwalker-middleware": "~1.0"
     }
 }
 ```
