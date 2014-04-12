@@ -190,7 +190,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			return $dataset[0];
 		}
 
-		return new $this->datasetClass;
+		return new $this->dataClass;
 	}
 
 	/**
