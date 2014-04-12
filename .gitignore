@@ -3,6 +3,7 @@
 
 # Composer #
 vendor/*
+composer.lock
 
 # Test #
 phpunit.xml
