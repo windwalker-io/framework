@@ -117,7 +117,7 @@ INSERT INTO `ww_content` (`id`, `title`, `catid`, `created`, `created_by`, `acce
 (24, 'Joomla!', 19, '2011-01-01 00:00:01', 144, 1),
 (25, 'Koala', 72, '2011-01-01 00:00:01', 144, 1),
 (26, 'Language Switcher', 67, '2011-01-01 00:00:01', 144, 1),
-(27, 'Latest Articles Module', 64, '2011-01-01 00:00:01', 144, 1),
+(27, 'Latest Articles Module', 64, '2011-01-01 00:00:01', 256, 1),
 (28, 'Login Module', 65, '2011-01-01 00:00:01', 144, 1),
 (29, 'Menu Module', 75, '2011-01-01 00:00:01', 144, 1),
 (30, 'Most Read Content', 64, '2011-01-01 00:00:01', 144, 1),

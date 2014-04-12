@@ -59,10 +59,17 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testFindOne()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		// Test find by primary key
+		$data = $this->object->findOne(3);
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $data, 'Return not Data object.');
+
+		$this->assertEquals($data->title, 'Article Categories Module', 'Title not matched');
+
+		// Test find by other key
+		$data = $this->object->findOne(array('catid' => 64, 'created_by' => 256));
+
+		$this->assertEquals($data->title, 'Latest Articles Module', 'Title not matched');
 	}
 
 	/**
