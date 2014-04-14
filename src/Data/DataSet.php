@@ -115,11 +115,11 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	/**
 	 * Get the data store for iterate.
 	 *
-	 * @return  array The data to be iterator.
+	 * @return  \Traversable The data to be iterator.
 	 */
 	public function getIterator()
 	{
-		return $this->data;
+		return new \ArrayIterator($this->data);
 	}
 
 	/**
