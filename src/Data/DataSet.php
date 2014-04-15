@@ -84,7 +84,7 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 			return null;
 		}
 
-		return $this->$offset;
+		return $this->data[$offset];
 	}
 
 	/**
@@ -97,7 +97,14 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function offsetSet($offset, $value)
 	{
-		$this->data[$offset] = $value;
+		if ($offset)
+		{
+			$this->data[$offset] = $value;
+		}
+		else
+		{
+			array_push($this->data, $value);
+		}
 	}
 
 	/**
@@ -164,5 +171,15 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function jsonSerialize()
 	{
 		return json_encode($this->data);
+	}
+
+	/**
+	 * isNull
+	 *
+	 * @return  boolean
+	 */
+	public function isNull()
+	{
+		return empty($this->data);
 	}
 }

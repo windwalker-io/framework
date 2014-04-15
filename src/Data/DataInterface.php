@@ -22,4 +22,11 @@ interface DataInterface
 	 * @return  mixed
 	 */
 	public function bind($values, $replaceNulls = false);
+
+	/**
+	 * isNull
+	 *
+	 * @return  boolean
+	 */
+	public function isNull();
 }

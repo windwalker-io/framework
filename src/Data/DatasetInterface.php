@@ -21,4 +21,11 @@ interface DatasetInterface
 	 * @return  mixed
 	 */
 	public function bind($dataset);
+
+	/**
+	 * isNull
+	 *
+	 * @return  boolean
+	 */
+	public function isNull();
 }

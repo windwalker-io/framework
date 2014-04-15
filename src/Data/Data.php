@@ -11,7 +11,7 @@ namespace Windwalker\Data;
 /**
  * Data object to store values.
  */
-class Data implements \IteratorAggregate, \ArrayAccess, \Countable
+class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countable
 {
 	/**
 	 * Constrictor.
@@ -196,5 +196,15 @@ class Data implements \IteratorAggregate, \ArrayAccess, \Countable
 	public function count()
 	{
 		return count(get_object_vars($this));
+	}
+
+	/**
+	 * isNull
+	 *
+	 * @return  boolean
+	 */
+	public function isNull()
+	{
+		return (boolean) !count($this);
 	}
 }
