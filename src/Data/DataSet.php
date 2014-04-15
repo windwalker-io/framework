@@ -21,6 +21,19 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * @var  array
 	 */
 	protected $data = array();
+	
+	/**
+	 * Constructor.
+	 *
+	 * @param mixed $data
+	 */
+	public function __construct($data = null)
+	{
+		if ($data)
+		{
+			$this->bind($data);
+		}
+	}
 
 	/**
 	 * Bind data array into self.
