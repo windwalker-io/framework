@@ -10,6 +10,8 @@ namespace Windwalker\Data;
 
 /**
  * Data object to store values.
+ *
+ * @since 2.0
  */
 class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countable
 {
@@ -27,12 +29,12 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
-	 * bind
+	 * Bind the data into this object.
 	 *
-	 * @param      $values
-	 * @param bool $replaceNulls
+	 * @param   mixed    $values       The data array or object.
+	 * @param   boolean  $replaceNulls Replace null or not.
 	 *
-	 * @return  $this
+	 * @return  Data Return self to support chaining.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
@@ -72,12 +74,12 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
-	 * set
+	 * Set value.
 	 *
-	 * @param string $field
-	 * @param mixed  $value
+	 * @param string $field The field to set.
+	 * @param mixed  $value The value to set.
 	 *
-	 * @return  Data
+	 * @return  Data Return self to support chaining.
 	 */
 	public function set($field, $value = null)
 	{
@@ -87,12 +89,12 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
-	 * get
+	 * Get value.
 	 *
-	 * @param string $field
-	 * @param mixed  $default
+	 * @param string $field   The field to get.
+	 * @param mixed  $default The default value if not exists.
 	 *
-	 * @return  mixed
+	 * @return  mixed The value we want ot get.
 	 */
 	public function get($field, $default = null)
 	{
@@ -105,24 +107,24 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
-	 * set
+	 * Set value.
 	 *
-	 * @param string $field
-	 * @param mixed  $value
+	 * @param string $field The field to set.
+	 * @param mixed  $value The value to set.
 	 *
-	 * @return  Data
+	 * @return  void
 	 */
 	public function __set($field, $value = null)
 	{
-		return $this->set($field, $value);
+		$this->set($field, $value);
 	}
 
 	/**
-	 * get
+	 * Get value.
 	 *
-	 * @param string $field
+	 * @param string $field The field to get.
 	 *
-	 * @return  mixed
+	 * @return  mixed The value we want ot get.
 	 */
 	public function __get($field)
 	{
@@ -177,7 +179,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
-	 * Unset a propeerty.
+	 * Unset a property.
 	 *
 	 * @param mixed $offset Offset key to unset.
 	 *
@@ -199,7 +201,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
-	 * isNull
+	 * Is this object empty?
 	 *
 	 * @return  boolean
 	 */

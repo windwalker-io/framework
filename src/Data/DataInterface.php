@@ -9,22 +9,24 @@
 namespace Windwalker\Data;
 
 /**
- * Interface DataInterface
+ * The Data Interface
+ *
+ * @since 2.0
  */
 interface DataInterface
 {
 	/**
-	 * bind
+	 * Bind the data into this object.
 	 *
-	 * @param      $values
-	 * @param bool $replaceNulls
+	 * @param   mixed    $values       The data array or object.
+	 * @param   boolean  $replaceNulls Replace null or not.
 	 *
-	 * @return  mixed
+	 * @return  Data Return self to support chaining.
 	 */
 	public function bind($values, $replaceNulls = false);
 
 	/**
-	 * isNull
+	 * Is this object empty?
 	 *
 	 * @return  boolean
 	 */

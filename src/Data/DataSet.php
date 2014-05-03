@@ -38,7 +38,7 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	/**
 	 * Bind data array into self.
 	 *
-	 * @param array $dataset An aray of multiple data.
+	 * @param array $dataset An array of multiple data.
 	 *
 	 * @throws \InvalidArgumentException
 	 * @return  DataSet Return self to support chaining.
@@ -155,8 +155,6 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * @param   string  $property  The name of the property.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function __unset($property)
 	{
@@ -200,8 +198,6 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * Clears the objects in the data set.
 	 *
 	 * @return  DataSet  Returns itself to allow chaining.
-	 *
-	 * @since   1.0
 	 */
 	public function clear()
 	{
@@ -297,9 +293,9 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	}
 
 	/**
-	 * isNull
+	 * Is this data set empty?
 	 *
-	 * @return  boolean
+	 * @return  boolean Tru if empty.
 	 */
 	public function isNull()
 	{

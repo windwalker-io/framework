@@ -14,18 +14,18 @@ namespace Windwalker\Data;
 interface DatasetInterface
 {
 	/**
-	 * bind
+	 * Bind an array contains multiple data into this object.
 	 *
-	 * @param $dataset
+	 * @param   array    $dataset      The data array or object.
 	 *
-	 * @return  mixed
+	 * @return  Data Return self to support chaining.
 	 */
 	public function bind($dataset);
 
 	/**
-	 * isNull
+	 * Is this data set empty?
 	 *
-	 * @return  boolean
+	 * @return  boolean Tru if empty.
 	 */
 	public function isNull();
 }
