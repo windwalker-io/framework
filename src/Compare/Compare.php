@@ -9,46 +9,46 @@
 namespace Windwalker\Compare;
 
 /**
- * Class AbstractCompare
+ * The compare object.
  *
- * @since 1.0
+ * @since 2.0
  */
 class Compare
 {
 	/**
-	 * Property operator.
+	 * Operator symbol.
 	 *
 	 * @var  string
 	 */
 	protected $operator = '';
 
 	/**
-	 * Property compare1.
+	 * Compare 1, at left.
 	 *
 	 * @var  string
 	 */
 	protected $compare1;
 
 	/**
-	 * Property compare2.
+	 * Compare 2, at right.
 	 *
 	 * @var  string
 	 */
 	protected $compare2;
 
 	/**
-	 * Property handler.
+	 * The compare callback.
 	 *
 	 * @var  callable
 	 */
 	protected $handler = null;
 
 	/**
-	 * Constractor.
+	 * Constructor.
 	 *
-	 * @param string $compare1
-	 * @param string $compare2
-	 * @param null   $operator
+	 * @param string $compare1 Compare 1, at left.
+	 * @param string $compare2 Compare 2, at right.
+	 * @param null   $operator The operator symbol.
 	 */
 	public function __construct($compare1 = null, $compare2 = null, $operator = null)
 	{
@@ -59,7 +59,7 @@ class Compare
 	}
 
 	/**
-	 * toString
+	 * Convert to string.
 	 *
 	 * @return  string
 	 */
@@ -88,7 +88,7 @@ class Compare
 	}
 
 	/**
-	 * __toString
+	 * Magic method to convert this to string.
 	 *
 	 * @return  string
 	 */
@@ -103,12 +103,10 @@ class Compare
 			echo '<pre>' . $e . '</pre>';
 			exit;
 		}
-
-		return '';
 	}
 
 	/**
-	 * getCompare2
+	 * Compare 2 getter.
 	 *
 	 * @return  string
 	 */
@@ -118,9 +116,9 @@ class Compare
 	}
 
 	/**
-	 * setCompare2
+	 * Compare 2 setter.
 	 *
-	 * @param   string $compare2
+	 * @param   string $compare2 Compare 2.
 	 *
 	 * @return  Compare  Return self to support chaining.
 	 */
@@ -132,7 +130,7 @@ class Compare
 	}
 
 	/**
-	 * getCompare1
+	 * Compare 1 getter.
 	 *
 	 * @return  string
 	 */
@@ -142,9 +140,9 @@ class Compare
 	}
 
 	/**
-	 * setCompare1
+	 * Compare 1 setter.
 	 *
-	 * @param   string $compare1
+	 * @param   string $compare1 Compare 1.
 	 *
 	 * @return  Compare  Return self to support chaining.
 	 */
@@ -156,9 +154,9 @@ class Compare
 	}
 
 	/**
-	 * flipCompare
+	 * Flip compares.
 	 *
-	 * @return  $this
+	 * @return  Compare  Return self to support chaining.
 	 */
 	public function flipCompare()
 	{
@@ -172,17 +170,21 @@ class Compare
 	}
 
 	/**
-	 * compare
+	 * Do compare.
 	 *
-	 * @return  boolean
+	 * @return  boolean  The result of compare.
 	 */
 	public function compare()
 	{
-		return eval('$this->compare1 ' . $this->operator . ' $this->compare2');
+		$result = false;
+
+		eval('$result = $this->compare1 ' . $this->operator . ' $this->compare2');
+
+		return $result;
 	}
 
 	/**
-	 * getOperator
+	 * Operator getter.
 	 *
 	 * @return  string
 	 */
@@ -192,12 +194,12 @@ class Compare
 	}
 
 	/**
-	 * quote
+	 * Quote our compare string.
 	 *
-	 * @param string $string
-	 * @param string $quote
+	 * @param   string $string The string to quote.
+	 * @param   string $quote  The quote symbol.
 	 *
-	 * @return  string
+	 * @return  string Quoted string.
 	 */
 	public function quote($string, $quote = "''")
 	{
@@ -210,7 +212,7 @@ class Compare
 	}
 
 	/**
-	 * getHandler
+	 * Get handler.
 	 *
 	 * @return  callable
 	 */
@@ -220,9 +222,9 @@ class Compare
 	}
 
 	/**
-	 * setHandler
+	 * Ser handler.
 	 *
-	 * @param   callable $handler
+	 * @param   callable $handler The compare handler.
 	 *
 	 * @return  Compare  Return self to support chaining.
 	 */

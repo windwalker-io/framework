@@ -11,21 +11,21 @@ namespace Windwalker\Compare;
 /**
  * Class LtCompare
  *
- * @since 1.0
+ * @since 2.0
  */
 class LtCompare extends Compare
 {
 	/**
-	 * Property operator.
+	 * Operator symbol.
 	 *
 	 * @var  string
 	 */
 	protected $operator = '<';
 
 	/**
-	 * compare
+	 * Do compare.
 	 *
-	 * @return  mixed
+	 * @return  boolean  The result of compare.
 	 */
 	public function compare()
 	{

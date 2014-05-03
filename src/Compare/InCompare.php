@@ -11,28 +11,28 @@ namespace Windwalker\Compare;
 /**
  * Class InCompare
  *
- * @since 1.0
+ * @since 2.0
  */
 class InCompare extends Compare
 {
 	/**
-	 * Property operator.
+	 * Operator symbol.
 	 *
 	 * @var  string
 	 */
 	protected $operator = 'IN';
 
 	/**
-	 * Property separator.
+	 * The separator symbol.
 	 *
 	 * @var  string
 	 */
 	protected $separator = ',';
 
 	/**
-	 * compare
+	 * Do compare.
 	 *
-	 * @return  mixed
+	 * @return  boolean  The result of compare.
 	 */
 	public function compare()
 	{
