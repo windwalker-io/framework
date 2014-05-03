@@ -9,18 +9,18 @@
 namespace Windwalker\Middleware;
 
 /**
- * Class EndMiddleware
+ * End Middleware, this object will not do anything.
  *
- * @since 1.0
+ * @since 2.0
  */
 class EndMiddleware extends Middleware
 {
 	/**
-	 * setNext
+	 * Set next middleware.
 	 *
-	 * @param object $object
+	 * @param   object $object The middleware object.
 	 *
-	 * @return  EndMiddleware
+	 * @return  EndMiddleware  Return self to support chaining.
 	 */
 	public function setNext($object)
 	{
@@ -28,9 +28,9 @@ class EndMiddleware extends Middleware
 	}
 
 	/**
-	 * getNext
+	 * Get next middleware.
 	 *
-	 * @return  null
+	 * @return  mixed
 	 */
 	public function getNext()
 	{
@@ -38,12 +38,11 @@ class EndMiddleware extends Middleware
 	}
 
 	/**
-	 * call
+	 * Call next middleware.
 	 *
-	 * @return  void
+	 * @return  mixed
 	 */
 	public function call()
 	{
 	}
 }
- 

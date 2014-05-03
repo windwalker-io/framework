@@ -9,23 +9,23 @@
 namespace Windwalker\Middleware;
 
 /**
- * Class Middleware
+ * Basic Middleware class.
  *
- * @since 1.0
+ * @since 2.0
  */
 abstract class Middleware implements MiddlewareInterface
 {
 	/**
-	 * Property next.
+	 * THe next middleware.
 	 *
 	 * @var  MiddlewareInterface
 	 */
 	protected $next = null;
 
 	/**
-	 * getNext
+	 * Get next middleware.
 	 *
-	 * @return  MiddlewareInterface
+	 * @return  mixed
 	 */
 	public function getNext()
 	{
@@ -33,9 +33,9 @@ abstract class Middleware implements MiddlewareInterface
 	}
 
 	/**
-	 * setNext
+	 * Set next middleware.
 	 *
-	 * @param   object $object
+	 * @param   object $object The middleware object.
 	 *
 	 * @return  Middleware  Return self to support chaining.
 	 */

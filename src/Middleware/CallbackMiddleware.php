@@ -9,14 +9,14 @@
 namespace Windwalker\Middleware;
 
 /**
- * Class CallbackMiddleware
+ * Callback Middleware
  *
- * @since 1.0
+ * @since 2.0
  */
 class CallbackMiddleware extends Middleware
 {
 	/**
-	 * Property handler.
+	 * The callback handler.
 	 *
 	 * @var  callable
 	 */
@@ -25,8 +25,8 @@ class CallbackMiddleware extends Middleware
 	/**
 	 * Constructor.
 	 *
-	 * @param callable $handler
-	 * @param object   $next
+	 * @param callable $handler The callback handler.
+	 * @param object   $next    Next middleware.
 	 */
 	public function __construct($handler = null, $next = null)
 	{
@@ -35,7 +35,7 @@ class CallbackMiddleware extends Middleware
 	}
 
 	/**
-	 * call
+	 * Call next middleware.
 	 *
 	 * @return  mixed
 	 */
@@ -45,9 +45,9 @@ class CallbackMiddleware extends Middleware
 	}
 
 	/**
-	 * getHandler
+	 * Get callback handler.
 	 *
-	 * @return  callable
+	 * @return  callable The callback handler.
 	 */
 	public function getHandler()
 	{
@@ -55,9 +55,9 @@ class CallbackMiddleware extends Middleware
 	}
 
 	/**
-	 * setHandler
+	 * Set callback handler.
 	 *
-	 * @param   callable $handler
+	 * @param   callable $handler The callback handler.
 	 *
 	 * @return  CallbackMiddleware  Return self to support chaining.
 	 */

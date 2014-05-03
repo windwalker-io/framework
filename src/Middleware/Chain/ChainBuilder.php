@@ -13,28 +13,29 @@ use Windwalker\Middleware\EndMiddleware;
 use Windwalker\Middleware\MiddlewareInterface;
 
 /**
- * Class ChainBuilder
+ * The Chain Builder
  *
- * @since 1.0
+ * @since 2.0
  */
 class ChainBuilder
 {
 	/**
-	 * Property stack.
+	 * The middleware chain.
 	 *
 	 * @var  MiddlewareInterface[]
 	 */
 	protected $stack = array();
 
 	/**
-	 * add
+	 * Add a middleware into chain.
 	 *
-	 * @param mixed $element
+	 * @param mixed $element The middleware, can be a object, class name, callback, or middleware object.
+	 *                       These type will all convert to middleware object and store in chain.
 	 *
 	 * @throws  \LogicException
 	 * @throws  \InvalidArgumentException
 	 *
-	 * @return  ChainBuilder
+	 * @return  ChainBuilder Return self to support chaining.
 	 */
 	public function add($element)
 	{
@@ -111,4 +112,3 @@ class ChainBuilder
 		return $this->stack[0]->call();
 	}
 }
- 
