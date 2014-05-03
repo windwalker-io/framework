@@ -4,8 +4,7 @@ Windwalker Middleware is a simple & elegant PHP Middleware library help you inte
 
 ## Installation via Composer
 
-Add "asika/windwalker-middleware": "dev-master" to the require block in your composer.json,
-make sure you have `"minimum-stability": "dev"` and then run `composer install`.
+Add "asika/windwalker-middleware": "1.0.*" to the require block in your composer.json.
 
 ``` json
 {

@@ -2,7 +2,7 @@
 
 ## Installation via Composer
 
-Add `"ventoviro/windwalker-middleware": "dev-master"` to the require block in your composer.json, make sure you have "minimum-stability": "dev" and then run composer install.
+Add `"ventoviro/windwalker-middleware": "1.0.*"` to the require block in your composer.json.
 
 ``` json
 {
