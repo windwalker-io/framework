@@ -7,12 +7,12 @@
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
-		"windwalker/data": "dev-master",
+		"windwalker/data": "1.*",
 		"joomla/utilities": "~1.0"
 	},
 	"require-dev": {
 		"joomla/test": "~1.0",
-		"windwalker/database" : "dev-master"
+		"windwalker/database" : "1.*"
 	},
 	"minimum-stability" : "dev",
 	"autoload": {

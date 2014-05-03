@@ -7,7 +7,7 @@
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
-		"windwalker/compare": "dev-master",
+		"windwalker/compare": "1.*",
 		"joomla/database": "~1.0"
 	},
 	"require-dev": {
