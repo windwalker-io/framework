@@ -7,7 +7,7 @@ Add `"ventoviro/windwalker-middleware": "dev-master"` to the require block in yo
 ``` json
 {
     "require": {
-        "ventoviro/windwalker-datamapper": "dev-master"
+        "ventoviro/windwalker-datamapper": "1.0.*"
     }
 }
 ```

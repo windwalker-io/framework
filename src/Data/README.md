@@ -7,7 +7,7 @@ Add `"ventoviro/windwalker-data": "dev-master"` to the require block in your com
 ``` json
 {
     "require": {
-        "ventoviro/windwalker-data": "dev-master"
+        "ventoviro/windwalker-data": "1.0.*"
     }
 }
 ```
