@@ -1,49 +1,28 @@
-![windwalker-logo-500-2](https://f.cloud.github.com/assets/1639206/2192348/7c01df60-9865-11e3-941c-01b0983adebd.png)
+![windwalker-logo-500](https://cloud.githubusercontent.com/assets/1639206/2870854/176b987a-d2e4-11e3-8be6-9f70304a8499.png)
 
 ## Introduction
 
-**Windwalker** is a RAD framework of Joomla! CMS.
+**Windwalker** is a New PHP framework. It based on Joomla and is core of [Windwalker RAD framework](https://github.com/ventoviro/windwalker-joomla-rad).
 
-We provides modern functions and interfaces help developer quickly create extensions.
-Windwalker contains single action controller(Joomla new MVC), XUL engine, console interface, Dependency Injection,
-DataMapper and code generator.
+## Packages
 
-Hope our framework bring you a joy time :)
+There is some useful package has ready, please try it:
 
-### Version 1 and 2
+- [Data](https://github.com/ventoviro/windwalker/tree/staging/src/Data)
+- [DataMapper](https://github.com/ventoviro/windwalker-datamapper)
+- [Compare](https://github.com/ventoviro/windwalker-compare)
+- [Middleware](https://github.com/ventoviro/windwalker-middleware)
 
-This is the version 2 repository, all folder with lower case is legacy code, all folders with capitals is for version 2 and follows PSR-0 naming standard.
+### Documentation
 
-The version 2 is still work in process.
+Please see `README` of every package.
 
 ## Installation Via Composer
 
 ``` bash
-cd /your/joomla/dir
-composer create-project ventoviro/windwalker libraries/windwalker dev-staging -s dev
+{
+    "require" : {
+        "windwalker/framework" : "1.0.*"
+    }
+}
 ```
-
-## Generate a new extension
-
-``` bash
-php bin/windwalker generator init com_flower sakura.sakuras -c admin
-```
-
-## About
-Author
-:   [Simon Asika](mailto://asika@asikart.com)
-
-Joomla!CMS version
-:   3.2 and newer
-
-First release
-:   2012-05-05
-
-## All extensions created by Windwalker
-
-- Asikart Quickicons: https://github.com/asikart/quickicons
-- Asikart Quickcontent: https://github.com/asikart/quickcontent
-- Remote and Local Image Manager: https://github.com/asikart/remoteimage
-- ACE x Markdown Editor: https://github.com/asikart/ace-markdown-editor
-- Asikart UserXTD: https://github.com/asikart/userxtd
-
