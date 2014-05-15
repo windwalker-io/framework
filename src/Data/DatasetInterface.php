@@ -9,14 +9,16 @@
 namespace Windwalker\Data;
 
 /**
- * Interface DataInterface
+ * The DataSet Interface
+ * 
+ * @sine 1.0
  */
 interface DatasetInterface
 {
 	/**
 	 * Bind an array contains multiple data into this object.
 	 *
-	 * @param   array    $dataset      The data array or object.
+	 * @param   array  $dataset  The data array or object.
 	 *
 	 * @return  Data Return self to support chaining.
 	 */
@@ -25,7 +27,7 @@ interface DatasetInterface
 	/**
 	 * Is this data set empty?
 	 *
-	 * @return  boolean Tru if empty.
+	 * @return  boolean True if empty.
 	 */
 	public function isNull();
 }
