@@ -289,7 +289,7 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function jsonSerialize()
 	{
-		return json_encode($this->data);
+		return $this->data;
 	}
 
 	/**
