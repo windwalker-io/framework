@@ -13,7 +13,7 @@ include_once __DIR__ . '/../vendor/autoload.php';
 define('JPATH_ROOT', realpath(__DIR__ . '/..'));
 
 /**
- * Class Build
+ * Class Build to build subtrees.
  *
  * @since 1.0
  */
@@ -61,12 +61,9 @@ class Build extends AbstractCliApplication
 	);
 
 	/**
-	 * Method to run the application routines.  Most likely you will want to instantiate a controller
-	 * and execute it, or perform some sort of task directly.
+	 * Method to run this application.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	protected function doExecute()
 	{
@@ -100,6 +97,14 @@ class Build extends AbstractCliApplication
 		$this->out()->out('Split finish.');
 	}
 
+	/**
+	 * Split Git subTree.
+	 *
+	 * @param string $subtree
+	 * @param string $namespace
+	 *
+	 * @return  void
+	 */
 	protected function splitTree($subtree, $namespace)
 	{
 		$this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
