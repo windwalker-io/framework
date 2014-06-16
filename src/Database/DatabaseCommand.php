@@ -81,7 +81,7 @@ class DatabaseCommand
 			return false;
 		}
 
-		$query->update($table)->where($conditions);
+		$query->update($table);
 
 		return $this->db->setQuery($query)->execute();
 	}
