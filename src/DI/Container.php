@@ -134,7 +134,8 @@ class Container
 			$newInstanceArgs = $this->getMethodArgs($constructor);
 
 			// Create a callable for the dataStore
-			$callback = function () use ($reflection, $newInstanceArgs) {
+			$callback = function () use ($reflection, $newInstanceArgs)
+			{
 				return $reflection->newInstanceArgs($newInstanceArgs);
 			};
 		}
@@ -177,7 +178,7 @@ class Container
 	 * @param   string    $key       The unique identifier for the Closure or property.
 	 * @param   \Closure  $callable  A Closure to wrap the original service Closure.
 	 *
-	 * @return  void
+	 * @return  Container
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
@@ -191,11 +192,14 @@ class Container
 			throw new \InvalidArgumentException(sprintf('The requested key %s does not exist to extend.', $key));
 		}
 
-		$closure = function ($c) use($callable, $raw) {
+		$closure = function ($c) use($callable, $raw)
+		{
 			return $callable($raw['callback']($c), $c);
 		};
 
 		$this->set($key, $closure, $raw['shared']);
+
+		return $this;
 	}
 
 	/**
