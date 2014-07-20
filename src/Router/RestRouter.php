@@ -1,8 +1,8 @@
 <?php
 /**
- * Part of the Joomla Framework Router Package
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -35,6 +35,20 @@ class RestRouter extends Router
 		'HEAD' => 'Head',
 		'OPTIONS' => 'Options'
 	);
+
+	/**
+	 * Property method.
+	 *
+	 * @var  string
+	 */
+	protected $method = null;
+
+	/**
+	 * Property customMethod.
+	 *
+	 * @var  string
+	 */
+	protected $customMethod = null;
 
 	/**
 	 * Get the property to allow or not method in POST request
@@ -70,13 +84,68 @@ class RestRouter extends Router
 	 *
 	 * @param   boolean  $value  A boolean to allow or not method in POST request
 	 *
-	 * @return  void
+	 * @return  RestRouter
 	 *
 	 * @since   1.0
 	 */
 	public function setMethodInPostRequest($value)
 	{
 		$this->methodInPostRequest = $value;
+
+		return $this;
+	}
+
+	/**
+	 * getCustomMethod
+	 *
+	 * @return  string
+	 */
+	public function getCustomMethod()
+	{
+		return $this->customMethod;
+	}
+
+	/**
+	 * setCustomMethod
+	 *
+	 * @param   string $customMethod
+	 *
+	 * @return  RestRouter  Return self to support chaining.
+	 */
+	public function setCustomMethod($customMethod)
+	{
+		$this->customMethod = strtoupper($customMethod);
+
+		return $this;
+	}
+
+	/**
+	 * getMethod
+	 *
+	 * @return  string
+	 */
+	public function getMethod()
+	{
+		if (!$this->method)
+		{
+			$this->method = strtoupper($_SERVER['REQUEST_METHOD']);
+		}
+
+		return $this->method;
+	}
+
+	/**
+	 * setMethod
+	 *
+	 * @param   string $method
+	 *
+	 * @return  RestRouter  Return self to support chaining.
+	 */
+	public function setMethod($method)
+	{
+		$this->method = strtoupper($method);
+
+		return $this;
 	}
 
 	/**
@@ -90,16 +159,16 @@ class RestRouter extends Router
 	protected function fetchControllerSuffix()
 	{
 		// Validate that we have a map to handle the given HTTP method.
-		if (!isset($this->suffixMap[$this->input->getMethod()]))
+		if (!isset($this->suffixMap[$this->getMethod()]))
 		{
-			throw new \RuntimeException(sprintf('Unable to support the HTTP method `%s`.', $this->input->getMethod()), 404);
+			throw new \RuntimeException(sprintf('Unable to support the HTTP method `%s`.', $this->getMethod()), 404);
 		}
 
 		// Check if request method is POST
-		if ( $this->methodInPostRequest == true && strcmp(strtoupper($this->input->server->getMethod()), 'POST') === 0)
+		if ( $this->methodInPostRequest == true && strcmp(strtoupper($this->getMethod()), 'POST') === 0)
 		{
 			// Get the method from input
-			$postMethod = $this->input->get->getWord('_method');
+			$postMethod = $this->getCustomMethod();
 
 			// Validate that we have a map to handle the given HTTP method from input
 			if ($postMethod && isset($this->suffixMap[strtoupper($postMethod)]))
@@ -108,7 +177,7 @@ class RestRouter extends Router
 			}
 		}
 
-		return ucfirst($this->suffixMap[$this->input->getMethod()]);
+		return ucfirst($this->suffixMap[$this->getMethod()]);
 	}
 
 	/**

@@ -11,7 +11,8 @@
 		}
 	],
 	"require": {
-		"joomla/utilities": "~1.0"
+		"joomla/utilities": "~1.0",
+		"joomla/registry": "1.*"
 	},
 	"require-dev": {
 		"joomla/test": "~1.0",

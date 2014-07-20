@@ -1,14 +1,12 @@
 <?php
 /**
- * Part of the Joomla Framework Router Package
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Windwalker\Router;
-
-use Joomla\Input\Input;
 
 /**
  * A path router.
@@ -34,14 +32,6 @@ class Router
 	protected $default;
 
 	/**
-	 * An input object from which to derive the route.
-	 *
-	 * @var    Input
-	 * @since  1.0
-	 */
-	protected $input;
-
-	/**
 	 * An array of rules, each rule being an associative array('regex'=> $regex, 'vars' => $vars, 'controller' => $controller)
 	 * for routing the request.
 	 *
@@ -51,16 +41,19 @@ class Router
 	protected $maps = array();
 
 	/**
+	 * Property requests.
+	 *
+	 * @var  array
+	 */
+	protected $requests = array();
+
+	/**
 	 * Constructor.
 	 *
-	 * @param   Input  $input  An optional input object from which to derive the route.  If none
-	 *                         is given than the input from the application object will be used.
-	 *
-	 * @since   1.0
+	 * @since  1.0
 	 */
-	public function __construct(Input $input = null)
+	public function __construct()
 	{
-		$this->input = ($input === null) ? new Input : $input;
 	}
 
 	/**
@@ -257,13 +250,10 @@ class Router
 				// We are only going to set them if they don't already exist to avoid overwriting things.
 				foreach ($rule['vars'] as $i => $var)
 				{
-					$this->input->def($var, $matches[$i + 1]);
-
-					// Don't forget to do an explicit set on the GET superglobal.
-					$this->input->get->def($var, $matches[$i + 1]);
+					$this->setRequest($var, $matches[$i + 1]);
 				}
 
-				$this->input->def('_rawRoute', $route);
+				$this->setRequest('_rawRoute', $route);
 
 				break;
 			}
@@ -276,5 +266,30 @@ class Router
 		}
 
 		return $controller;
+	}
+
+	/**
+	 * setRequest
+	 *
+	 * @param string $name
+	 * @param string $value
+	 *
+	 * @return  Router
+	 */
+	protected function setRequest($name, $value)
+	{
+		$this->requests[$name] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * getRequests
+	 *
+	 * @return  array
+	 */
+	public function getRequests()
+	{
+		return $this->requests;
 	}
 }
