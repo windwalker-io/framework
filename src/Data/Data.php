@@ -83,6 +83,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function set($field, $value = null)
 	{
+		if (strpos($field, "\0") === 0)
+		{
+			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
+		}
+		
 		$this->$field = $value;
 
 		return $this;
@@ -98,6 +103,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function get($field, $default = null)
 	{
+		if (strpos($field, "\0") === 0)
+		{
+			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
+		}
+		
 		if (isset($this->$field))
 		{
 			return $this->$field;
@@ -162,6 +172,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function offsetGet($offset)
 	{
+		if (strpos($offset, "\0") === 0)
+		{
+			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
+		}
+		
 		return $this->$offset;
 	}
 
@@ -175,6 +190,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function offsetSet($offset, $value)
 	{
+		if (strpos($offset, "\0") === 0)
+		{
+			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
+		}
+		
 		$this->$offset = $value;
 	}
 
@@ -187,6 +207,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function offsetUnset($offset)
 	{
+		if (strpos($offset, "\0") === 0)
+		{
+			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
+		}
+		
 		unset($this->$offset);
 	}
 
