@@ -11,11 +11,11 @@
 		}
 	],
 	"require": {
+		"joomla/database" : "~1.0"
 	},
 	"require-dev": {
 		"joomla/test": "~1.0",
 		"joomla/application": "~1.0",
-		"joomla/database" : "~1.0",
 		"joomla/utilities": "~1.0"
 	},
 	"suggest": {
