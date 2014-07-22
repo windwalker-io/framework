@@ -9,22 +9,14 @@
 namespace Windwalker\Router;
 
 /**
- * RESTful Web application router class for the Joomla Framework.
- *
- * @since  1.0
+ * RESTful Web application router class.
  */
-class RestRouter extends Router
+class RestRouter extends SingleActionRouter
 {
 	/**
-	 * @var     boolean  A boolean allowing to pass _method as parameter in POST requests
+	 * An array of HTTP Method => controller suffix pairs for routing the request.
 	 *
-	 * @since  1.0
-	 */
-	protected $methodInPostRequest = false;
-
-	/**
-	 * @var    array  An array of HTTP Method => controller suffix pairs for routing the request.
-	 * @since  1.0
+	 * @var  array
 	 */
 	protected $suffixMap = array(
 		'GET' => 'Get',
@@ -37,13 +29,6 @@ class RestRouter extends Router
 	);
 
 	/**
-	 * Property method.
-	 *
-	 * @var  string
-	 */
-	protected $method = null;
-
-	/**
 	 * Property customMethod.
 	 *
 	 * @var  string
@@ -51,15 +36,20 @@ class RestRouter extends Router
 	protected $customMethod = null;
 
 	/**
+	 * A boolean allowing to pass _method as parameter in POST requests
+	 *
+	 * @var  boolean
+	 */
+	protected $allowCustomMethod = false;
+
+	/**
 	 * Get the property to allow or not method in POST request
 	 *
 	 * @return  boolean
-	 *
-	 * @since   1.0
 	 */
-	public function isMethodInPostRequest()
+	public function isAllowCustomMethod()
 	{
-		return $this->methodInPostRequest;
+		return $this->allowCustomMethod;
 	}
 
 	/**
@@ -69,8 +59,6 @@ class RestRouter extends Router
 	 * @param   string  $suffix  The class suffix to use when fetching the controller name for a given request.
 	 *
 	 * @return  Router  Returns itself to support chaining.
-	 *
-	 * @since   1.0
 	 */
 	public function setHttpMethodSuffix($method, $suffix)
 	{
@@ -85,12 +73,10 @@ class RestRouter extends Router
 	 * @param   boolean  $value  A boolean to allow or not method in POST request
 	 *
 	 * @return  RestRouter
-	 *
-	 * @since   1.0
 	 */
-	public function setMethodInPostRequest($value)
+	public function allowCustomMethod($value)
 	{
-		$this->methodInPostRequest = $value;
+		$this->allowCustomMethod = $value;
 
 		return $this;
 	}
@@ -120,35 +106,6 @@ class RestRouter extends Router
 	}
 
 	/**
-	 * getMethod
-	 *
-	 * @return  string
-	 */
-	public function getMethod()
-	{
-		if (!$this->method)
-		{
-			$this->method = strtoupper($_SERVER['REQUEST_METHOD']);
-		}
-
-		return $this->method;
-	}
-
-	/**
-	 * setMethod
-	 *
-	 * @param   string $method
-	 *
-	 * @return  RestRouter  Return self to support chaining.
-	 */
-	public function setMethod($method)
-	{
-		$this->method = strtoupper($method);
-
-		return $this;
-	}
-
-	/**
 	 * Get the controller class suffix string.
 	 *
 	 * @return  string
@@ -165,7 +122,7 @@ class RestRouter extends Router
 		}
 
 		// Check if request method is POST
-		if ( $this->methodInPostRequest == true && strcmp(strtoupper($this->getMethod()), 'POST') === 0)
+		if ( $this->allowCustomMethod == true && strcmp(strtoupper($this->getMethod()), 'POST') === 0)
 		{
 			// Get the method from input
 			$postMethod = $this->getCustomMethod();
@@ -190,7 +147,7 @@ class RestRouter extends Router
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
 	 */
-	protected function parseRoute($route)
+	public function parseRoute($route)
 	{
 		$name = parent::parseRoute($route);
 
