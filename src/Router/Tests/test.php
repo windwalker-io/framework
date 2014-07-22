@@ -18,15 +18,15 @@ $router
 	->addRoute('aaa', 'aaa/bbb/:id', array('_controller' => 'Goo\\Foo\\Get'), ['get', 'post'])
 	->setMethod('post');
 
-$v = $router->parseRoute('/');
+$v = $router->match('/');
 */
 
 
-$router = new \Windwalker\Router\SingleActionRouter;
+$router = new \Windwalker\Router\RestRouter;
 
 $router->addMap('aaa/bbb/:id', 'Foo\\Yoo\\');
 
-$v = $router->setMethod('GET')->parseRoute('aaa/bbb/34');
+$v = $router->setMethod('GET')->match('aaa/bbb/34');
 
 
 /*

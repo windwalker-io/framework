@@ -147,9 +147,9 @@ class RestRouter extends SingleActionRouter
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function parseRoute($route)
+	public function match($route)
 	{
-		$name = parent::parseRoute($route);
+		$name = parent::match($route);
 
 		// Append the HTTP method based suffix.
 		$name .= $this->fetchControllerSuffix();

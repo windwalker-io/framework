@@ -67,12 +67,14 @@ class Route
 	/**
 	 * Class init.
 	 *
+	 * @param string       $name
 	 * @param string       $pattern
 	 * @param array        $variables
 	 * @param array|string $allowMethods
 	 */
-	public function __construct($pattern, $variables, $allowMethods = array())
+	public function __construct($name, $pattern, $variables, $allowMethods = array())
 	{
+		$this->name = $name;
 		$this->pattern = $pattern;
 		$this->variables = $variables;
 

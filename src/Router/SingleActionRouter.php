@@ -13,7 +13,7 @@ namespace Windwalker\Router;
  *
  * @since 1.0
  */
-class SingleActionRouter extends AbstractRouter
+class SingleActionRouter extends Router
 {
 	/**
 	 * Property requests.
@@ -23,21 +23,30 @@ class SingleActionRouter extends AbstractRouter
 	protected $requests = array();
 
 	/**
+	 * Class init.
+	 *
+	 * @param array $routes
+	 */
+	public function __construct(array $routes = array())
+	{
+		$this->addMaps($routes);
+	}
+
+	/**
 	 * addRoute
 	 *
 	 * @param string $pattern
 	 * @param string $controller
-	 * @param array  $method
 	 *
 	 * @throws  \LogicException
 	 * @throws  \InvalidArgumentException
-	 * @return  AbstractRouter
+	 * @return  Router
 	 */
-	public function addMap($pattern, $controller, $method = array())
+	public function addMap($pattern, $controller = null)
 	{
 		if (!is_string($controller))
 		{
-			throw new \InvalidArgumentException('Please give me controller name.');
+			throw new \InvalidArgumentException('Please give me controller name string. ' . ucfirst(gettype($controller)) . ' given.');
 		}
 
 		if ($pattern instanceof Route)
@@ -45,23 +54,7 @@ class SingleActionRouter extends AbstractRouter
 			throw new \LogicException('Do not use Route object in ' . get_called_class());
 		}
 
-		$route = new Route($pattern, array('_controller' => $controller), $method);
-
-		return parent::addRoute($route);
-	}
-
-	/**
-	 * addRoute
-	 *
-	 * @param Route $route
-	 *
-	 * @return  void|AbstractRouter
-	 *
-	 * @throws \LogicException
-	 */
-	public function addRoute(Route $route)
-	{
-		throw new \LogicException('Do not use addRoute() in ' . get_called_class());
+		return parent::addRoute(null, $pattern, array('_controller' => $controller));
 	}
 
 	/**
@@ -72,9 +65,9 @@ class SingleActionRouter extends AbstractRouter
 	 * @throws  \UnexpectedValueException
 	 * @return  array|boolean
 	 */
-	public function parseRoute($route)
+	public function match($route)
 	{
-		$vars = parent::parseRoute($route);
+		$vars = parent::match($route);
 
 		if (!array_key_exists('_controller', $vars))
 		{
