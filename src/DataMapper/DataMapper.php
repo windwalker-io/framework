@@ -8,9 +8,10 @@
 
 namespace Windwalker\DataMapper;
 
-use Joomla\Database\DatabaseDriver;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\QueryHelper;
+use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
 use Windwalker\DataMapper\Entity\Entity;
 
 /**
@@ -21,30 +22,20 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Joomla DB adapter.
 	 *
-	 * @var DatabaseDriver
+	 * @var DatabaseAdapter
 	 */
-	protected $db;
-
-	/**
-	 * Query helper.
-	 *
-	 * @var  QueryHelper
-	 */
-	protected $queryHelper = null;
+	protected $db = null;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string         $table       Table name.
-	 * @param string|array   $pk          Primary key.
-	 * @param DatabaseDriver $db          Database adapter.
-	 * @param QueryHelper    $queryHelper Query helper object.
+	 * @param string                   $table       Table name.
+	 * @param string|array             $pk          Primary key.
+	 * @param DatabaseAdapterInterface $db          Database adapter.
 	 */
-	public function __construct($table = null, $pk = 'id', DatabaseDriver $db = null, QueryHelper $queryHelper = null)
+	public function __construct($table = null, $pk = 'id', DatabaseAdapterInterface $db = null)
 	{
-		$this->db = $db ? : DatabaseFactory::getDbo();
-
-		$this->queryHelper = $queryHelper ? : new QueryHelper($this->db);
+		$this->db = $db ? : DatabaseAdapter::getInstance();
 
 		parent::__construct($table, $pk);
 	}
@@ -61,22 +52,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
-		$query = $this->db->getQuery(true);
-
-		// Conditions.
-		QueryHelper::buildWheres($query, $conditions);
-
-		// Loop ordering
-		foreach ($orders as $order)
-		{
-			$query->order($order);
-		}
-
-		// Build query
-		$query->select('*')
-			->from($this->table);
-
-		return $this->db->setQuery($query, $start, $limit)->loadObjectList();
+		return $this->db->find($this->table, $conditions, $orders, $start, $limit);
 	}
 
 	/**
@@ -99,7 +75,7 @@ class DataMapper extends AbstractDataMapper
 
 				$pk = $this->getPrimaryKey();
 
-				$this->db->insertObject($this->table, $entity, $pk);
+				$this->db->create($this->table, $entity, $pk);
 
 				$data->$pk = $entity->$pk;
 			}
@@ -136,7 +112,7 @@ class DataMapper extends AbstractDataMapper
 			{
 				$entity = new Entity($this->getFields($this->table), $data);
 
-				$this->db->updateObject($this->table, $entity, $condFields);
+				$this->db->updateOne($this->table, $entity, $condFields);
 			}
 		}
 		catch (\Exception $e)
@@ -164,11 +140,9 @@ class DataMapper extends AbstractDataMapper
 	{
 		$this->db->transactionStart(true);
 
-		$command = DatabaseFactory::getCommand();
-
 		try
 		{
-			$result = (boolean) $command->updateBatch($this->table, $data, $conditions);
+			$result = $this->db->updateAll($this->table, $data, $conditions);
 		}
 		catch (\Exception $e)
 		{
@@ -229,18 +203,11 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doDelete(array $conditions)
 	{
-		$query = $this->db->getQuery(true);
-
-		// Conditions.
-		QueryHelper::buildWheres($query, $conditions);
-
-		$query->delete($this->table);
-
 		$this->db->transactionStart(true);
 
 		try
 		{
-			$result = (boolean) $this->db->setQuery($query)->execute();
+			$result = $this->db->delete($this->table, $conditions);
 		}
 		catch (\Exception $e)
 		{
@@ -289,6 +256,6 @@ class DataMapper extends AbstractDataMapper
 	{
 		$table = $table ? : $this->table;
 
-		return array_keys(DatabaseFactory::getCommand()->getColumns($table));
+		return $this->db->getFields($table);
 	}
 }
