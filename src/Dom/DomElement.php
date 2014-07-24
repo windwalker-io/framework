@@ -8,7 +8,7 @@
 
 namespace Windwalker\Dom;
 
-use Windwalker\Dom\Builder\XmlBuilder;
+use Windwalker\Dom\Builder\DomBuilder;
 
 /**
  * Class XmlElement
@@ -61,7 +61,7 @@ class DomElement implements \ArrayAccess
 	 */
 	public function toString($forcePair = false)
 	{
-		return XmlBuilder::create($this->name, $this->content, $this->attribs, $forcePair);
+		return DomBuilder::create($this->name, $this->content, $this->attribs, $forcePair);
 	}
 
 	/**
