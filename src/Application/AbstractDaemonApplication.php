@@ -8,8 +8,8 @@
 
 namespace Windwalker\Application;
 
+use Windwalker\IO\Cli\IOInterface;
 use Windwalker\Registry\Registry;
-use Windwalker\Input\CliInput;
 use Psr\Log\LoggerAwareInterface;
 
 /**
@@ -99,17 +99,15 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	/**
 	 * Class constructor.
 	 *
-	 * @param   CliInput  $input   An optional argument to provide dependency injection for the application's
-	 *                             input object.  If the argument is a InputCli object that object will become
-	 *                             the application's input object, otherwise a default input object is created.
-	 * @param   Registry  $config  An optional argument to provide dependency injection for the application's
-	 *                             config object.  If the argument is a Registry object that object will become
-	 *                             the application's config object, otherwise a default config object is created.
+	 * @param   IOInterface $io      An optional argument to provide dependency injection for the application's
+	 *                               IO object.
+	 * @param   Registry    $config  An optional argument to provide dependency injection for the application's
+	 *                               config object.  If the argument is a Registry object that object will become
+	 *                               the application's config object, otherwise a default config object is created.
 	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @throws \RuntimeException
 	 */
-	public function __construct(CliInput $input = null, Registry $config = null)
+	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
 		// Verify that the process control extension for PHP is available.
 		// @codeCoverageIgnoreStart
@@ -131,7 +129,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		// @codeCoverageIgnoreEnd
 
 		// Call the parent constructor.
-		parent::__construct($input, $config);
+		parent::__construct($io, $config);
 
 		// Set some system limits.
 		@set_time_limit($this->config->get('max_execution_time', 0));
@@ -306,11 +304,11 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		 */
 
 		// The application executable daemon.  This string is used in generating startup scripts.
-		$tmp = (string) $this->config->get('application_executable', basename($this->input->executable));
+		$tmp = (string) $this->config->get('application_executable', basename($this->io->getCalledScript()));
 		$this->config->set('application_executable', $tmp);
 
 		// The home directory of the daemon.
-		$tmp = (string) $this->config->get('application_directory', dirname($this->input->executable));
+		$tmp = (string) $this->config->get('application_directory', dirname($this->io->getCalledScript()));
 		$this->config->set('application_directory', $tmp);
 
 		// The pid file location.  This defaults to a path inside the /tmp directory.
@@ -530,7 +528,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		try
 		{
 			// Check if we should run in the foreground.
-			if (!$this->input->get('f'))
+			if (!$this->io->getOption('f'))
 			{
 				// Detach from the terminal.
 				$this->detach();

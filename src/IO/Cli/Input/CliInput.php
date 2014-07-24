@@ -6,16 +6,17 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Input;
+namespace Windwalker\IO\Cli\Input;
 
 use Joomla\Filter\InputFilter;
+use Windwalker\IO\Input;
 
 /**
  * Windwalker Input CLI Class
  *
  * @since  1.0
  */
-class CliInput extends Input
+class CliInput extends Input implements CliInputInterface
 {
 	/**
 	 * The executable that was called to run the CLI script.
@@ -23,7 +24,7 @@ class CliInput extends Input
 	 * @var    string
 	 * @since  1.0
 	 */
-	public $executable;
+	public $calledScript;
 
 	/**
 	 * The additional arguments passed to the script that are not associated
@@ -46,14 +47,12 @@ class CliInput extends Input
 	 *
 	 * @param   array       $source Optional source data.
 	 * @param   InputFilter $filter The input filter object.
-	 * @param   resource    $stream The input stream.
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($source = null, InputFilter $filter = null, $stream = STDIN)
+	public function __construct($source = null, InputFilter $filter = null)
 	{
 		$this->filter = $filter ? : new InputFilter;
-		$this->inputStream = $stream;
 
 		// Get the command line options
 		$this->parseArguments();
@@ -77,7 +76,7 @@ class CliInput extends Input
 		unset($inputs['server']);
 
 		// Serialize the executable, args, options, data, and inputs.
-		return serialize(array($this->executable, $this->args, $this->options, $this->data, $inputs));
+		return serialize(array($this->calledScript, $this->args, $this->options, $this->data, $inputs));
 	}
 
 	/**
@@ -108,7 +107,7 @@ class CliInput extends Input
 	public function unserialize($input)
 	{
 		// Unserialize the executable, args, options, data, and inputs.
-		list($this->executable, $this->args, $this->options, $this->data, $this->inputs) = unserialize($input);
+		list($this->calledScript, $this->args, $this->options, $this->data, $this->inputs) = unserialize($input);
 
 		// Load the filter.
 		if (isset($this->options['filter']))
@@ -162,7 +161,7 @@ class CliInput extends Input
 		$args = $_SERVER['argv'];
 
 		// Set the path used for program execution and remove it form the program arguments.
-		$this->executable = array_shift($args);
+		$this->calledScript = array_shift($args);
 
 		// We use a for loop because in some cases we need to look ahead.
 		for ($i = 0; $i < count($args); $i++)
@@ -258,6 +257,30 @@ class CliInput extends Input
 	public function setInputStream($inputStream)
 	{
 		$this->inputStream = $inputStream;
+
+		return $this;
+	}
+
+	/**
+	 * getCalledScript
+	 *
+	 * @return  string
+	 */
+	public function getCalledScript()
+	{
+		return $this->calledScript;
+	}
+
+	/**
+	 * setCalledScript
+	 *
+	 * @param   string $calledScript
+	 *
+	 * @return  CliInput  Return self to support chaining.
+	 */
+	public function setCalledScript($calledScript)
+	{
+		$this->calledScript = $calledScript;
 
 		return $this;
 	}

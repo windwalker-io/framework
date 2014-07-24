@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Application\Cli;
+namespace Windwalker\IO\Cli\Output;
 
 /**
  * Class CliOutputInterface

@@ -8,9 +8,8 @@
 
 namespace Windwalker\Application;
 
-use Windwalker\Application\Cli\CliOutput;
-use Windwalker\Application\Cli\CliOutputInterface;
-use Windwalker\Input\CliInput;
+use Windwalker\IO\Cli\IO;
+use Windwalker\IO\Cli\IOInterface;
 use Windwalker\Registry\Registry;
 
 /**
@@ -21,32 +20,24 @@ use Windwalker\Registry\Registry;
 abstract class AbstractCliApplication extends AbstractApplication
 {
 	/**
-	 * @var    CliOutput  Output object
-	 * @since  1.0
-	 */
-	protected $output;
-
-	/**
-	 * Property input.
+	 * Property io.
 	 *
-	 * @var CliInput
+	 * @var  IOInterface
 	 */
-	protected $input;
+	protected $io = null;
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param   CliInput            $input   An optional argument to provide dependency injection for the application's
-	 *                                       input object.  If the argument is a InputCli object that object will become
-	 *                                       the application's input object, otherwise a default input object is created.
-	 * @param   Registry            $config  An optional argument to provide dependency injection for the application's
-	 *                                       config object.  If the argument is a Registry object that object will become
-	 *                                       the application's config object, otherwise a default config object is created.
-	 * @param   CliOutputInterface  $output  The output handler.
+	 * @param   IOInterface $io     An optional argument to provide dependency injection for the application's
+	 *                              IO object.
+	 * @param   Registry   $config  An optional argument to provide dependency injection for the application's
+	 *                              config object.  If the argument is a Registry object that object will become
+	 *                              the application's config object, otherwise a default config object is created.
 	 *
 	 * @since   1.0
 	 */
-	public function __construct(CliInput $input = null, Registry $config = null, CliOutputInterface $output = null)
+	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
 		// Close the application if we are not executed from the command line.
 		if (!defined('STDOUT') || !defined('STDIN') || !isset($_SERVER['argv']))
@@ -54,10 +45,10 @@ abstract class AbstractCliApplication extends AbstractApplication
 			$this->close();
 		}
 
-		$this->output = ($output instanceof CliOutputInterface) ? $output : new CliOutput;
+		$this->io     = $io instanceof IOInterface  ? $io     : new IO;
+		$this->config = $config instanceof Registry ? $config : new Registry;
 
-		// Call the constructor as late as possible (it runs `initialise`).
-		parent::__construct($input instanceof CliInput ? $input : new CliInput, $config);
+		$this->initialise();
 
 		// Set the execution datetime and timestamp;
 		$this->set('execution.datetime', gmdate('Y-m-d H:i:s'));
@@ -65,18 +56,6 @@ abstract class AbstractCliApplication extends AbstractApplication
 
 		// Set the current directory.
 		$this->set('cwd', getcwd());
-	}
-
-	/**
-	 * Get an output object.
-	 *
-	 * @return  CliOutput
-	 *
-	 * @since   1.0
-	 */
-	public function getOutput()
-	{
-		return $this->output;
 	}
 
 	/**
@@ -92,7 +71,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 */
 	public function out($text = '', $nl = true)
 	{
-		$this->output->out($text, $nl);
+		$this->io->out($text, $nl);
 
 		return $this;
 	}
@@ -107,6 +86,30 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 */
 	public function in()
 	{
-		return $this->input->in();
+		return $this->io->in();
+	}
+
+	/**
+	 * getIo
+	 *
+	 * @return  IOInterface
+	 */
+	public function getIo()
+	{
+		return $this->io;
+	}
+
+	/**
+	 * setIo
+	 *
+	 * @param   IOInterface $io
+	 *
+	 * @return  AbstractCliApplication  Return self to support chaining.
+	 */
+	public function setIo($io)
+	{
+		$this->io = $io;
+
+		return $this;
 	}
 }
