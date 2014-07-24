@@ -8,7 +8,7 @@
 
 namespace Windwalker\IO\Cli\Input;
 
-use Joomla\Filter\InputFilter;
+use Windwalker\Filter\Filter;
 use Windwalker\IO\Input;
 
 /**
@@ -45,14 +45,14 @@ class CliInput extends Input implements CliInputInterface
 	/**
 	 * Constructor.
 	 *
-	 * @param   array       $source Optional source data.
-	 * @param   InputFilter $filter The input filter object.
+	 * @param   array  $source Optional source data.
+	 * @param   Filter $filter The input filter object.
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($source = null, InputFilter $filter = null)
+	public function __construct($source = null, Filter $filter = null)
 	{
-		$this->filter = $filter ? : new InputFilter;
+		$this->filter = $filter ? : new Filter;
 
 		// Get the command line options
 		$this->parseArguments();

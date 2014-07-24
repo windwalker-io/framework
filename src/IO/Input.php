@@ -8,7 +8,7 @@
 
 namespace Windwalker\IO;
 
-use Joomla\Filter\InputFilter;
+use Windwalker\Filter\Filter;
 
 /**
  * Class Input
@@ -44,14 +44,14 @@ class Input
 	/**
 	 * Constructor.
 	 *
-	 * @param   array       $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   InputFilter $filter The input filter object.
+	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   Filter $filter The input filter object.
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($source = null, InputFilter $filter = null)
+	public function __construct($source = null, Filter $filter = null)
 	{
-		$this->filter = $filter ? : new InputFilter;
+		$this->filter = $filter ? : new Filter;
 
 		if (is_null($source))
 		{
