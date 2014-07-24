@@ -8,7 +8,10 @@
 
 namespace Windwalker\Application;
 
-use Joomla\Uri\Uri;
+use Windwalker\Application\Response\ResponseInterface;
+use Windwalker\Application\Web\WebClientInterface;
+use Windwalker\Uri\Uri;
+use Windwalker\Application\Helper\ApplicationHelper;
 use Windwalker\Application\Response\Response;
 use Windwalker\Application\Web\WebClient;
 use Windwalker\Input\Input;
@@ -21,30 +24,6 @@ use Windwalker\Registry\Registry;
  */
 abstract class AbstractWebApplication extends AbstractApplication
 {
-	/**
-	 * Character encoding string.
-	 *
-	 * @var    string
-	 * @since  1.0
-	 */
-	public $charSet = 'utf-8';
-
-	/**
-	 * Response mime type.
-	 *
-	 * @var    string
-	 * @since  1.0
-	 */
-	public $mimeType = 'text/html';
-
-	/**
-	 * The body modified date for response headers.
-	 *
-	 * @var    \DateTime
-	 * @since  1.0
-	 */
-	public $modifiedDate;
-
 	/**
 	 * The application client object.
 	 *
@@ -62,35 +41,23 @@ abstract class AbstractWebApplication extends AbstractApplication
 	protected $response;
 
 	/**
-	 * The application session object.
-	 *
-	 * @var    Session
-	 * @since  1.0
-	 * @deprecated  2.0  The joomla/session package will no longer be required by this class
-	 */
-	private $session;
-
-	/**
 	 * Class constructor.
 	 *
-	 * @param   Input          $input   An optional argument to provide dependency injection for the application's
-	 *                                  input object.  If the argument is a Input object that object will become
-	 *                                  the application's input object, otherwise a default input object is created.
-	 * @param   Registry       $config  An optional argument to provide dependency injection for the application's
-	 *                                  config object.  If the argument is a Registry object that object will become
-	 *                                  the application's config object, otherwise a default config object is created.
-	 * @param   Web\WebClient  $client  An optional argument to provide dependency injection for the application's
-	 *                                  client object.  If the argument is a Web\WebClient object that object will become
-	 *                                  the application's client object, otherwise a default client object is created.
-	 *
-	 * @since   1.0
+	 * @param   Input                $input    An optional argument to provide dependency injection for the application's
+	 *                                         input object.  If the argument is a Input object that object will become
+	 *                                         the application's input object, otherwise a default input object is created.
+	 * @param   Registry             $config   An optional argument to provide dependency injection for the application's
+	 *                                         config object.  If the argument is a Registry object that object will become
+	 *                                         the application's config object, otherwise a default config object is created.
+	 * @param   WebClientInterface   $client   An optional argument to provide dependency injection for the application's
+	 *                                         client object.  If the argument is a Web\WebClient object that object will become
+	 *                                         the application's client object, otherwise a default client object is created.
+	 * @param   ResponseInterface    $response The response object.
 	 */
-	public function __construct(Input $input = null, Registry $config = null, WebClient $client = null)
+	public function __construct(Input $input = null, Registry $config = null, WebClientInterface $client = null, ResponseInterface $response = null)
 	{
-		$this->client = $client instanceof WebClient ? $client : new WebClient;
-
-		// Setup the response object.
-		$this->response = new Response;
+		$this->client   = $client   instanceof WebClientInterface ? $client   : new WebClient;
+		$this->response = $response instanceof ResponseInterface  ? $response : new Response;
 
 		// Call the constructor as late as possible (it runs `initialise`).
 		parent::__construct($input, $config);
@@ -119,12 +86,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 
 		// @event onAfterExecute
 
-		// If gzip compression is enabled in configuration and the server is compliant, compress the output.
-		if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler'))
-		{
-			$this->compress();
-		}
-
 		// @event onBeforeRespond
 
 		// Send the application response.
@@ -133,50 +94,33 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// @event onAfterRespond
 	}
 
-
-
 	/**
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
 	 * application output data.
 	 *
-	 * @return  void
+	 * @param   boolean $returnBody
 	 *
-	 * @since   1.0
+	 * @return  string
 	 */
-	protected function respond()
+	public function respond($returnBody = false)
 	{
-		// Send the content-type header.
-		$this->setHeader('Content-Type', $this->mimeType . '; charset=' . $this->charSet);
-
-		// If the response is set to uncachable, we need to set some appropriate headers so browsers don't cache the response.
-		if (!$this->response->cachable)
+		// If gzip compression is enabled in configuration and the server is compliant, compress the output.
+		if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler'))
 		{
-			// Expires in the past.
-			$this->setHeader('Expires', 'Mon, 1 Jan 2001 00:00:00 GMT', true);
-
-			// Always modified.
-			$this->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT', true);
-			$this->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0', false);
-
-			// HTTP 1.0
-			$this->setHeader('Pragma', 'no-cache');
-		}
-		else
-		{
-			// Expires.
-			$this->setHeader('Expires', gmdate('D, d M Y H:i:s', time() + 900) . ' GMT');
-
-			// Last modified.
-			if ($this->modifiedDate instanceof \DateTime)
-			{
-				$this->modifiedDate->setTimezone(new \DateTimeZone('UTC'));
-				$this->setHeader('Last-Modified', $this->modifiedDate->format('D, d M Y H:i:s') . ' GMT');
-			}
+			$this->response->compress($this->client->getEncodings());
 		}
 
-		$this->sendHeaders();
+		return $this->response->respond($returnBody);
+	}
 
-		echo $this->getBody();
+	/**
+	 * __toString
+	 *
+	 * @return  string
+	 */
+	public function __toString()
+	{
+		return $this->respond(true);
 	}
 
 	/**
@@ -212,7 +156,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		 */
 		if (!preg_match('#^[a-z]+\://#i', $url))
 		{
-			// Get a JURI instance for the requested URI.
+			// Get a URI instance for the requested URI.
 			$uri = new Uri($this->get('uri.request'));
 
 			// Get a base URL to prepend from the requested URI.
@@ -234,17 +178,17 @@ abstract class AbstractWebApplication extends AbstractApplication
 		}
 
 		// If the headers have already been sent we need to send the redirect statement via JavaScript.
-		if ($this->checkHeadersSent())
+		if ($this->response->checkHeadersSent())
 		{
 			echo "<script>document.location.href='$url';</script>\n";
 		}
 		else
 		{
 			// We have to use a JavaScript redirect here because MSIE doesn't play nice with utf-8 URLs.
-			if (($this->client->engine == Web\WebClient::TRIDENT) && !String::is_ascii($url))
+			if (($this->client->getEngine() == Web\WebClient::TRIDENT) && !ApplicationHelper::isAscii($url))
 			{
 				$html = '<html><head>';
-				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->charSet . '" />';
+				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->response->getCharSet() . '" />';
 				$html .= '<script>document.location.href=\'' . $url . '\';</script>';
 				$html .= '</head><body></body></html>';
 
@@ -253,14 +197,34 @@ abstract class AbstractWebApplication extends AbstractApplication
 			else
 			{
 				// All other cases use the more efficient HTTP header for redirection.
-				$this->header($moved ? 'HTTP/1.1 301 Moved Permanently' : 'HTTP/1.1 303 See other');
-				$this->header('Location: ' . $url);
-				$this->header('Content-Type: text/html; charset=' . $this->charSet);
+				$this->response->header($moved ? 'HTTP/1.1 301 Moved Permanently' : 'HTTP/1.1 303 See other');
+				$this->response->header('Location: ' . $url);
+				$this->response->header('Content-Type: text/html; charset=' . $this->response->getCharSet());
 			}
 		}
 
 		// Close the application after the redirect.
 		$this->close();
+	}
+
+	/**
+	 * Method to set a response header.  If the replace flag is set then all headers
+	 * with the given name will be replaced by the new one.  The headers are stored
+	 * in an internal array to be sent when the site is sent to the browser.
+	 *
+	 * @param   string   $name     The name of the header to set.
+	 * @param   string   $value    The value of the header to set.
+	 * @param   boolean  $replace  True to replace any headers with the same name.
+	 *
+	 * @return  Response  Instance of $this to allow chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function setHeader($name, $value, $replace = false)
+	{
+		$this->response->setHeader($name, $value, $replace);
+
+		return $this;
 	}
 
 	/**
@@ -272,21 +236,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function sendHeaders()
 	{
-		if (!$this->checkHeadersSent())
-		{
-			foreach ($this->response->getHeaders() as $header)
-			{
-				if ('status' == strtolower($header['name']))
-				{
-					// 'status' headers indicate an HTTP status, and need to be handled slightly differently
-					$this->header(ucfirst(strtolower($header['name'])) . ': ' . $header['value'], null, (int) $header['value']);
-				}
-				else
-				{
-					$this->header($header['name'] . ': ' . $header['value']);
-				}
-			}
-		}
+		$this->response->sendHeaders();
 
 		return $this;
 	}
@@ -347,95 +297,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 	}
 
 	/**
-	 * Method to check the current client connection status to ensure that it is alive.  We are
-	 * wrapping this to isolate the connection_status() function from our code base for testing reasons.
-	 *
-	 * @return  boolean  True if the connection is valid and normal.
-	 *
-	 * @codeCoverageIgnore
-	 * @see     connection_status()
-	 * @since   1.0
-	 */
-	protected function checkConnectionAlive()
-	{
-		return (connection_status() === CONNECTION_NORMAL);
-	}
-
-	/**
-	 * Method to check to see if headers have already been sent.  We are wrapping this to isolate the
-	 * headers_sent() function from our code base for testing reasons.
-	 *
-	 * @return  boolean  True if the headers have already been sent.
-	 *
-	 * @codeCoverageIgnore
-	 * @see     headers_sent()
-	 * @since   1.0
-	 */
-	protected function checkHeadersSent()
-	{
-		return headers_sent();
-	}
-
-	/**
-	 * Method to detect the requested URI from server environment variables.
-	 *
-	 * @return  string  The requested URI
-	 *
-	 * @since   1.0
-	 */
-	protected function detectRequestUri()
-	{
-		// First we need to detect the URI scheme.
-		if ($this->isSSLConnection())
-		{
-			$scheme = 'https://';
-		}
-		else
-		{
-			$scheme = 'http://';
-		}
-
-		/*
-		 * There are some differences in the way that Apache and IIS populate server environment variables.  To
-		 * properly detect the requested URI we need to adjust our algorithm based on whether or not we are getting
-		 * information from Apache or IIS.
-		 */
-
-		// If PHP_SELF and REQUEST_URI are both populated then we will assume "Apache Mode".
-		if (!empty($_SERVER['PHP_SELF']) && !empty($_SERVER['REQUEST_URI']))
-		{
-			// The URI is built from the HTTP_HOST and REQUEST_URI environment variables in an Apache environment.
-			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-		}
-		else
-			// If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
-		{
-			// IIS uses the SCRIPT_NAME variable instead of a REQUEST_URI variable... thanks, MS
-			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
-
-			// If the QUERY_STRING variable exists append it to the URI string.
-			if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']))
-			{
-				$uri .= '?' . $_SERVER['QUERY_STRING'];
-			}
-		}
-
-		return trim($uri);
-	}
-
-	/**
-	 * Determine if we are using a secure (SSL) connection.
-	 *
-	 * @return  boolean  True if using SSL, false if not.
-	 *
-	 * @since   1.0
-	 */
-	public function isSSLConnection()
-	{
-		return (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off');
-	}
-
-	/**
 	 * Method to load the system URI strings for the application.
 	 *
 	 * @param   string  $requestUri  An optional request URI to use instead of detecting one from the
@@ -447,48 +308,16 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	protected function loadSystemUris($requestUri = null)
 	{
-		// Set the request URI.
-		// @codeCoverageIgnoreStart
-		if (!empty($requestUri))
+		if ($this->get('site_uri'))
 		{
-			$this->set('uri.request', $requestUri);
+			$uri = new Uri($this->get('site_uri'));
 		}
 		else
 		{
-			$this->set('uri.request', $this->detectRequestUri());
+			$uri = $this->client->getSystemUri($requestUri);
 		}
 
-		// @codeCoverageIgnoreEnd
-
-		// Check to see if an explicit base URI has been set.
-		$siteUri = trim($this->get('site_uri'));
-
-		if ($siteUri != '')
-		{
-			$uri = new Uri($siteUri);
-		}
-		else
-			// No explicit base URI was set so we need to detect it.
-		{
-			// Start with the requested URI.
-			$uri = new Uri($this->get('uri.request'));
-
-			// If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
-			if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI']))
-			{
-				// We aren't expecting PATH_INFO within PHP_SELF so this should work.
-				$uri->setPath(rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
-			}
-			else
-				// Pretty much everything else should be handled with SCRIPT_NAME.
-			{
-				$uri->setPath(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
-			}
-
-			// Clear the unused parts of the requested URI.
-			$uri->setQuery(null);
-			$uri->setFragment(null);
-		}
+		$this->set('uri.request', $uri->getOriginal());
 
 		// Get the host and path from the URI.
 		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));

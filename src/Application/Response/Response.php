@@ -8,8 +8,12 @@
 
 namespace Windwalker\Application\Response;
 
-
-class Response
+/**
+ * Class Response
+ *
+ * @since 1.0
+ */
+class Response implements ResponseInterface
 {
 	/**
 	 * Property cachable.
@@ -33,14 +37,93 @@ class Response
 	protected $body = null;
 
 	/**
+	 * Property mimeType.
+	 *
+	 * @var string
+	 */
+	protected $mimeType = 'utf-8';
+
+	/**
+	 * Property charSet.
+	 *
+	 * @var string
+	 */
+	protected $charSet = 'text/html';
+
+	/**
+	 * The body modified date for response headers.
+	 *
+	 * @var \DateTime
+	 */
+	protected $modifiedDate = null;
+
+	/**
+	 * Method to send the application response to the client.  All headers will be sent prior to the main
+	 * application output data.
+	 *
+	 * @param   boolean $returnBody
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	public function respond($returnBody = false)
+	{
+		// Send the content-type header.
+		$this->setHeader('Content-Type', $this->mimeType . '; charset=' . $this->charSet);
+
+		// If the response is set to uncachable, we need to set some appropriate headers so browsers don't cache the response.
+		if (!$this->isCachable())
+		{
+			// Expires in the past.
+			$this->setHeader('Expires', 'Mon, 1 Jan 2001 00:00:00 GMT', true);
+
+			// Always modified.
+			$this->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT', true);
+			$this->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0', false);
+
+			// HTTP 1.0
+			$this->setHeader('Pragma', 'no-cache');
+		}
+		else
+		{
+			// Expires.
+			$this->setHeader('Expires', gmdate('D, d M Y H:i:s', time() + 900) . ' GMT');
+
+			// Last modified.
+			if ($this->modifiedDate instanceof \DateTime)
+			{
+				$this->modifiedDate->setTimezone(new \DateTimeZone('UTC'));
+
+				$this->setHeader('Last-Modified', $this->modifiedDate->format('D, d M Y H:i:s') . ' GMT');
+			}
+		}
+
+		$this->sendHeaders();
+
+		if ($returnBody)
+		{
+			return $this->getBody();
+		}
+		else
+		{
+			echo $this->getBody();
+		}
+
+		return '';
+	}
+
+	/**
 	 * Checks the accept encoding of the browser and compresses the data before
 	 * sending it to the client if possible.
+	 *
+	 * @param string $encodings
 	 *
 	 * @return  void
 	 *
 	 * @since   1.0
 	 */
-	protected function compress()
+	public function compress($encodings)
 	{
 		// Supported compression encodings.
 		$supported = array(
@@ -50,7 +133,7 @@ class Response
 		);
 
 		// Get the supported encoding.
-		$encodings = array_intersect($this->client->encodings, array_keys($supported));
+		$encodings = array_intersect($encodings, array_keys($supported));
 
 		// If no supported encoding is detected do nothing and return.
 		if (empty($encodings))
@@ -226,7 +309,7 @@ class Response
 	 */
 	public function setBody($content)
 	{
-		$this->response->body = array((string) $content);
+		$this->body = array((string) $content);
 
 		return $this;
 	}
@@ -280,9 +363,137 @@ class Response
 	 * @see     header()
 	 * @since   1.0
 	 */
-	protected function header($string, $replace = true, $code = null)
+	public function header($string, $replace = true, $code = null)
 	{
 		header($string, $replace, $code);
+	}
+
+	/**
+	 * Send the response headers.
+	 *
+	 * @return  Response  Instance of $this to allow chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function sendHeaders()
+	{
+		if (!$this->checkHeadersSent())
+		{
+			foreach ($this->getHeaders() as $header)
+			{
+				if ('status' == strtolower($header['name']))
+				{
+					// 'status' headers indicate an HTTP status, and need to be handled slightly differently
+					$this->header(ucfirst(strtolower($header['name'])) . ': ' . $header['value'], null, (int) $header['value']);
+				}
+				else
+				{
+					$this->header($header['name'] . ': ' . $header['value']);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Method to check to see if headers have already been sent.  We are wrapping this to isolate the
+	 * headers_sent() function from our code base for testing reasons.
+	 *
+	 * @return  boolean  True if the headers have already been sent.
+	 *
+	 * @codeCoverageIgnore
+	 * @see     headers_sent()
+	 * @since   1.0
+	 */
+	public function checkHeadersSent()
+	{
+		return headers_sent();
+	}
+
+	/**
+	 * Method to check the current client connection status to ensure that it is alive.  We are
+	 * wrapping this to isolate the connection_status() function from our code base for testing reasons.
+	 *
+	 * @return  boolean  True if the connection is valid and normal.
+	 *
+	 * @codeCoverageIgnore
+	 * @see     connection_status()
+	 * @since   1.0
+	 */
+	public function checkConnectionAlive()
+	{
+		return (connection_status() === CONNECTION_NORMAL);
+	}
+
+	/**
+	 * getMimeType
+	 *
+	 * @return  string
+	 */
+	public function getMimeType()
+	{
+		return $this->mimeType;
+	}
+
+	/**
+	 * setMimeType
+	 *
+	 * @param   string $mimeType
+	 *
+	 * @return  Response  Return self to support chaining.
+	 */
+	public function setMimeType($mimeType)
+	{
+		$this->mimeType = $mimeType;
+
+		return $this;
+	}
+
+	/**
+	 * getCharSet
+	 *
+	 * @return  string
+	 */
+	public function getCharSet()
+	{
+		return $this->charSet;
+	}
+
+	/**
+	 * setCharSet
+	 *
+	 * @param   string $charSet
+	 *
+	 * @return  Response  Return self to support chaining.
+	 */
+	public function setCharSet($charSet)
+	{
+		$this->charSet = $charSet;
+
+		return $this;
+	}
+
+	/**
+	 * getModifiedDate
+	 *
+	 * @return  \DateTime
+	 */
+	public function getModifiedDate()
+	{
+		return $this->modifiedDate;
+	}
+
+	/**
+	 * setModifiedDate
+	 *
+	 * @param   \DateTime $modifiedDate
+	 *
+	 * @return  Response  Return self to support chaining.
+	 */
+	public function setModifiedDate($modifiedDate)
+	{
+		$this->modifiedDate = $modifiedDate;
+
+		return $this;
 	}
 }
  
