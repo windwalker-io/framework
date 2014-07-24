@@ -10,11 +10,11 @@ namespace Windwalker\Application;
 
 use Windwalker\Application\Response\ResponseInterface;
 use Windwalker\Application\Web\WebClientInterface;
+use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
 use Windwalker\Application\Response\Response;
 use Windwalker\Application\Web\WebClient;
-use Windwalker\Input\Input;
 use Windwalker\Registry\Registry;
 
 /**
