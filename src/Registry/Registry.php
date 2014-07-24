@@ -107,7 +107,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Check if a registry path exists.
 	 *
-	 * @param   string  $path  Registry path (e.g. joomla.content.showauthor)
+	 * @param   string  $path  Registry path (e.g. foo.content.showauthor)
 	 *
 	 * @return  boolean
 	 *
@@ -148,7 +148,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Get a registry value.
 	 *
-	 * @param   string  $path     Registry path (e.g. joomla.content.showauthor)
+	 * @param   string  $path     Registry path (e.g. foo.content.showauthor)
 	 * @param   mixed   $default  Optional default value, returned if the internal value is null.
 	 *
 	 * @return  mixed  Value of entry or null
@@ -343,7 +343,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Set a registry value.
 	 *
-	 * @param   string  $path   Registry Path (e.g. joomla.content.showauthor)
+	 * @param   string  $path   Registry Path (e.g. foo.content.showauthor)
 	 * @param   mixed   $value  Value of entry
 	 *
 	 * @return  mixed  The value of the that has been set.

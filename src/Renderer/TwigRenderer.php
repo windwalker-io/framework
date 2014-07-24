@@ -39,7 +39,7 @@ class TwigRenderer extends AbstractRenderer
 	/**
 	 * Property config.
 	 *
-	 * @var  \Joomla\Registry\Registry|array
+	 * @var  \Windwalker\Registry\Registry|array
 	 */
 	protected $config = array(
 		'debug' => FORMOSA_DEBUG

@@ -1,8 +1,8 @@
 <?php
 /**
- * Part of the Joomla Framework Input Package
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -35,16 +35,25 @@ class CliInput extends Input
 	public $args = array();
 
 	/**
+	 * Property inputStream.
+	 *
+	 * @var  resource
+	 */
+	protected $inputStream = STDIN;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   array       $source Optional source data.
 	 * @param   InputFilter $filter The input filter object.
+	 * @param   resource    $stream The input stream.
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($source = null, InputFilter $filter = null)
+	public function __construct($source = null, InputFilter $filter = null, $stream = STDIN)
 	{
 		$this->filter = $filter ? : new InputFilter;
+		$this->inputStream = $stream;
 
 		// Get the command line options
 		$this->parseArguments();
@@ -217,5 +226,39 @@ class CliInput extends Input
 				$this->args[] = $arg;
 			}
 		}
+	}
+
+	/**
+	 * Get a value from standard input.
+	 *
+	 * @return  string  The input string from standard input.
+	 */
+	public function in()
+	{
+		return rtrim(fread($this->inputStream, 8192), "\n\r");
+	}
+
+	/**
+	 * getInputStream
+	 *
+	 * @return  resource
+	 */
+	public function getInputStream()
+	{
+		return $this->inputStream;
+	}
+
+	/**
+	 * setInputStream
+	 *
+	 * @param   resource $inputStream
+	 *
+	 * @return  CliInput  Return self to support chaining.
+	 */
+	public function setInputStream($inputStream)
+	{
+		$this->inputStream = $inputStream;
+
+		return $this;
 	}
 }

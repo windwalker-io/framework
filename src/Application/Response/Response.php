@@ -176,7 +176,7 @@ class Response implements ResponseInterface
 
 				// Set the encoding headers.
 				$this->setHeader('Content-Encoding', $encoding);
-				$this->setHeader('X-Content-Encoded-By', 'Joomla');
+				$this->setHeader('X-Content-Encoded-By', 'Windwalker');
 
 				// Replace the output with the encoded data.
 				$this->setBody($gzdata);

@@ -1,8 +1,8 @@
 <?php
 /**
- * Part of the Joomla Framework Session Package
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -15,7 +15,6 @@ use Windwalker\Session\Database\AbstractDatabaseAdapter;
  *
  * @see    http://www.php.net/manual/en/function.session-set-save-handler.php
  * @since  1.0
- * @deprecated  The joomla/session package is deprecated
  */
 class DatabaseHandler extends AbstractHandler
 {
