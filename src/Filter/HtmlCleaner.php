@@ -16,15 +16,21 @@ namespace Windwalker\Filter;
  *
  * @since  1.0
  */
-class InputFilter
+class HtmlCleaner
 {
+	const USE_WHITE_LIST = 0;
+
+	const USE_BACK_LIST = 1;
+
+	const ONLY_ESSENTIAL = 0;
+
 	/**
 	 * The array of permitted tags (white list).
 	 *
 	 * @var    array
 	 * @since  1.0
 	 */
-	public $tagsArray;
+	public $tagsArray = array();
 
 	/**
 	 * The array of permitted tag attributes (white list).
@@ -32,7 +38,7 @@ class InputFilter
 	 * @var    array
 	 * @since  1.0
 	 */
-	public $attrArray;
+	public $attrArray = array();
 
 	/**
 	 * The method for sanitising tags: WhiteList method = 0 (default), BlackList method = 1
@@ -40,7 +46,7 @@ class InputFilter
 	 * @var    integer
 	 * @since  1.0
 	 */
-	public $tagsMethod;
+	public $tagsMethod = self::USE_WHITE_LIST;
 
 	/**
 	 * The method for sanitising attributes: WhiteList method = 0 (default), BlackList method = 1
@@ -48,7 +54,7 @@ class InputFilter
 	 * @var    integer
 	 * @since  1.0
 	 */
-	public $attrMethod;
+	public $attrMethod = self::USE_WHITE_LIST;
 
 	/**
 	 * A flag for XSS checks. Only auto clean essentials = 0, Allow clean blacklisted tags/attr = 1
@@ -114,7 +120,7 @@ class InputFilter
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($tagsArray = array(), $attrArray = array(), $tagsMethod = 0, $attrMethod = 0, $xssAuto = 1)
+	public function __construct($tagsArray = array(), $attrArray = array(), $tagsMethod = self::USE_WHITE_LIST, $attrMethod = self::USE_WHITE_LIST, $xssAuto = 1)
 	{
 		// Make sure user defined arrays are in lowercase
 		$tagsArray = array_map('strtolower', (array) $tagsArray);
@@ -613,5 +619,77 @@ class InputFilter
 		}
 
 		return $return;
+	}
+
+	/**
+	 * getTagsMethod
+	 *
+	 * @return  int
+	 */
+	public function getTagsMethod()
+	{
+		return $this->tagsMethod;
+	}
+
+	/**
+	 * setTagsMethod
+	 *
+	 * @param   int $tagsMethod
+	 *
+	 * @return  HtmlCleaner  Return self to support chaining.
+	 */
+	public function setTagsMethod($tagsMethod)
+	{
+		$this->tagsMethod = $tagsMethod;
+
+		return $this;
+	}
+
+	/**
+	 * getAttrMethod
+	 *
+	 * @return  int
+	 */
+	public function getAttrMethod()
+	{
+		return $this->attrMethod;
+	}
+
+	/**
+	 * setAttrMethod
+	 *
+	 * @param   int $attrMethod
+	 *
+	 * @return  HtmlCleaner  Return self to support chaining.
+	 */
+	public function setAttrMethod($attrMethod)
+	{
+		$this->attrMethod = $attrMethod;
+
+		return $this;
+	}
+
+	/**
+	 * getXssAuto
+	 *
+	 * @return  int
+	 */
+	public function getXssMethod()
+	{
+		return $this->xssAuto;
+	}
+
+	/**
+	 * setXssAuto
+	 *
+	 * @param   int $xssAuto
+	 *
+	 * @return  HtmlCleaner  Return self to support chaining.
+	 */
+	public function setXssMethod($xssAuto)
+	{
+		$this->xssAuto = $xssAuto;
+
+		return $this;
 	}
 }

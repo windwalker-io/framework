@@ -8,8 +8,7 @@
 
 namespace Windwalker\Filter;
 
-use Joomla\Language\Language;
-use Joomla\String\String;
+use Windwalker\Filter\Unicode\UnicodeHelper;
 
 /**
  * JFilterOutput
@@ -29,9 +28,7 @@ class OutputFilter
 	 * @param   mixed    $exclude_keys  An optional string single field name or array of field names not
 	 *                                  to be parsed (eg, for a textarea)
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @return  object
 	 */
 	public static function objectHTMLSafe(&$mixed, $quote_style = ENT_QUOTES, $exclude_keys = '')
 	{
@@ -56,6 +53,8 @@ class OutputFilter
 				$mixed->$k = htmlspecialchars($v, $quote_style, 'UTF-8');
 			}
 		}
+
+		return $mixed;
 	}
 
 	/**
@@ -64,8 +63,6 @@ class OutputFilter
 	 * @param   string  $input  String to process
 	 *
 	 * @return  string  Processed string
-	 *
-	 * @since   1.0
 	 */
 	public static function linkXHTMLSafe($input)
 	{
@@ -98,11 +95,10 @@ class OutputFilter
 		// Remove any '-' from the string since they will be used as concatenaters
 		$str = str_replace('-', ' ', $string);
 
-		$lang = Language::getInstance();
-		$str = $lang->transliterate($str);
+		$str = UnicodeHelper::latinToAscii($str);
 
 		// Trim white spaces at beginning and end of alias and make lowercase
-		$str = trim(String::strtolower($str));
+		$str = trim(UnicodeHelper::strtolower($str));
 
 		// Remove any duplicate whitespace, and ensure all characters are alphanumeric
 		$str = preg_replace('/(\s|[^A-Za-z0-9\-])+/', '-', $str);
@@ -139,7 +135,7 @@ class OutputFilter
 		$str = str_replace('?', '', $str);
 
 		// Trim white spaces at beginning and end of alias and make lowercase
-		$str = trim(String::strtolower($str));
+		$str = trim(UnicodeHelper::strtolower($str));
 
 		// Remove any duplicate whitespace and replace whitespaces by hyphens
 		$str = preg_replace('#\x20+#', '-', $str);
@@ -153,10 +149,6 @@ class OutputFilter
 	 * @param   string  $text  Text to process
 	 *
 	 * @return  string  Processed string.
-	 *
-	 * @since   1.0
-	 *
-	 * @todo There must be a better way???
 	 */
 	public static function ampReplace($text)
 	{
@@ -176,8 +168,6 @@ class OutputFilter
 	 * @param   string  &$text  Text to clean
 	 *
 	 * @return  string  Cleaned text.
-	 *
-	 * @since   1.0
 	 */
 	public static function cleanText(&$text)
 	{
@@ -200,8 +190,6 @@ class OutputFilter
 	 * @param   string  $string  Sting to be cleaned.
 	 *
 	 * @return  string  Cleaned string
-	 *
-	 * @since   1.0
 	 */
 	public static function stripImages($string)
 	{
@@ -214,11 +202,33 @@ class OutputFilter
 	 * @param   string  $string  Sting to be cleaned.
 	 *
 	 * @return  string  Cleaned string
-	 *
-	 * @since   1.0
 	 */
 	public static function stripIframes($string)
 	{
 		return preg_replace('#(<[/]?iframe.*>)#U', '', $string);
+	}
+
+	/**
+	 * stripScript
+	 *
+	 * @param string $string
+	 *
+	 * @return  mixed
+	 */
+	public static function stripScript($string)
+	{
+		return preg_replace("'<script[^>]*>.*?</script>'si", '', $string);
+	}
+
+	/**
+	 * stripStyle
+	 *
+	 * @param string $string
+	 *
+	 * @return  mixed
+	 */
+	public static function stripStyle($string)
+	{
+		return preg_replace("'<style[^>]*>.*?</style>'si", '', $string);
 	}
 }

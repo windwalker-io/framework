@@ -9,7 +9,6 @@
 namespace Windwalker\Filter;
 
 use Windwalker\Filter\Type\AbstractFilterType;
-use Windwalker\Filter\Type\FilterTypeInterface;
 
 /**
  * Class Filter
@@ -48,20 +47,20 @@ class Filter
 	protected $defaultHandler = null;
 
 	/**
-	 * Property inputFilter.
+	 * Property htmlCleaner.
 	 *
-	 * @var  InputFilter
+	 * @var  HtmlCleaner
 	 */
-	protected $inputFilter = null;
+	protected $htmlCleaner = null;
 
 	/**
 	 * Class init.
 	 *
-	 * @param $inputFilter
+	 * @param $htmlCleaner
 	 */
-	public function __construct(InputFilter $inputFilter = null)
+	public function __construct(HtmlCleaner $htmlCleaner = null)
 	{
-		$this->inputFilter = $inputFilter ? : new InputFilter;
+		$this->htmlCleaner = $htmlCleaner ? : new HtmlCleaner;
 	}
 
 	/**
@@ -130,25 +129,25 @@ class Filter
 	}
 
 	/**
-	 * getInputFilter
+	 * gethtmlCleaner
 	 *
-	 * @return  \Windwalker\Filter\InputFilter
+	 * @return  \Windwalker\Filter\HtmlCleaner
 	 */
-	public function getInputFilter()
+	public function getHtmlCleaner()
 	{
-		return $this->inputFilter;
+		return $this->htmlCleaner;
 	}
 
 	/**
-	 * setInputFilter
+	 * sethtmlCleaner
 	 *
-	 * @param   \Windwalker\Filter\InputFilter $inputFilter
+	 * @param   \Windwalker\Filter\HtmlCleaner $htmlCleaner
 	 *
 	 * @return  Filter  Return self to support chaining.
 	 */
-	public function setInputFilter($inputFilter)
+	public function setHtmlCleaner($htmlCleaner)
 	{
-		$this->inputFilter = $inputFilter;
+		$this->htmlCleaner = $htmlCleaner;
 
 		return $this;
 	}
@@ -184,7 +183,7 @@ class Filter
 	 */
 	protected function loadDefaultHandlers()
 	{
-		$filter = $this->inputFilter;
+		$filter = $this->htmlCleaner;
 
 		// INT / INTEGER
 		$this->handlers[static::INTEGER] = $this->handlers['INT'] = function($source)
