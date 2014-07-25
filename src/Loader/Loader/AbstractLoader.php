@@ -64,13 +64,16 @@ abstract class AbstractLoader
 	 * normalizePath
 	 *
 	 * @param string $path
+	 * @param bool   $endSlash
 	 *
 	 * @return  string
 	 */
-	public static function normalizePath($path)
+	public static function normalizePath($path, $endSlash = true)
 	{
 		$path = rtrim($path, '/') . DIRECTORY_SEPARATOR;
-		$path = rtrim($path, DIRECTORY_SEPARATOR) . '/';
+		$path = rtrim($path, DIRECTORY_SEPARATOR);
+
+		$path = $endSlash ? $path . DIRECTORY_SEPARATOR : $path;
 
 		return $path;
 	}

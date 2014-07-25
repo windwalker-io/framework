@@ -55,6 +55,34 @@ class ClassLoader
 	}
 
 	/**
+	 * register
+	 *
+	 * @return  ClassLoader
+	 */
+	public function register()
+	{
+		$this->files->register();
+		$this->psr0->register();
+		$this->psr4->register();
+
+		return $this;
+	}
+
+	/**
+	 * unregister
+	 *
+	 * @return  $this
+	 */
+	public function unregister()
+	{
+		$this->files->unregister();
+		$this->psr0->unregister();
+		$this->psr4->unregister();
+
+		return $this;
+	}
+
+	/**
 	 * addPsr0
 	 *
 	 * @param string|array $class

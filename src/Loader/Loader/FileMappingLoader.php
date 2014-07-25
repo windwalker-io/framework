@@ -34,7 +34,7 @@ class FileMappingLoader extends AbstractLoader
 	{
 		$class = static::normalizeClass($class);
 
-		$path = static::normalizePath($path);
+		$path = static::normalizePath($path, false);
 
 		$this->maps[$class] = $path;
 
@@ -50,9 +50,14 @@ class FileMappingLoader extends AbstractLoader
 	 */
 	public function loadClass($className)
 	{
-		if (in_array($className, $this->maps))
+		foreach ($this->maps as $name => $path)
 		{
-			require $this->maps[$className];
+			if (strtolower($name) == strtolower($className))
+			{
+				require $this->maps[$name];
+
+				break;
+			}
 		}
 
 		return $this;

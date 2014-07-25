@@ -16,7 +16,7 @@ namespace Windwalker\Loader\Loader;
  *
  * @since 1.0
  */
-class Psr0Loader
+class Psr0Loader extends AbstractLoader
 {
 	/**
 	 * Property fileExtension.
@@ -61,11 +61,11 @@ class Psr0Loader
 	public function addNamespace($prefix, $path)
 	{
 		// normalize namespace prefix
-		$prefix = trim($prefix, '\\') . '\\';
+		$prefix = trim($prefix, '\\');
 
 		// normalize the base directory with a trailing separator
 		$path = rtrim($path, '/') . DIRECTORY_SEPARATOR;
-		$path = rtrim($path, DIRECTORY_SEPARATOR) . '/';
+		$path = rtrim($path, DIRECTORY_SEPARATOR);
 
 		$this->namespaces[$prefix] = $path;
 
@@ -118,30 +118,6 @@ class Psr0Loader
 	public function getFileExtension()
 	{
 		return $this->fileExtension;
-	}
-
-	/**
-	 * Installs this class loader on the SPL autoload stack.
-	 *
-	 * @return Psr0Loader
-	 */
-	public function register()
-	{
-		spl_autoload_register(array($this, 'loadClass'));
-
-		return $this;
-	}
-
-	/**
-	 * Uninstalls this class loader from the SPL autoloader stack.
-	 *
-	 * @return Psr0Loader
-	 */
-	public function unregister()
-	{
-		spl_autoload_unregister(array($this, 'loadClass'));
-
-		return $this;
 	}
 
 	/**

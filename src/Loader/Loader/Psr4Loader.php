@@ -16,7 +16,7 @@ namespace Windwalker\Loader\Loader;
  *
  * @since 1.0
  */
-class Psr4Loader
+class Psr4Loader extends AbstractLoader
 {
 	/**
 	 * An associative array where the key is a namespace prefix and the value
@@ -25,18 +25,6 @@ class Psr4Loader
 	 * @var array
 	 */
 	protected $prefixes = array();
-
-	/**
-	 * Register loader with SPL autoloader stack.
-	 *
-	 * @return Psr4Loader
-	 */
-	public function register()
-	{
-		spl_autoload_register(array($this, 'loadClass'));
-
-		return $this;
-	}
 
 	/**
 	 * Adds a base directory for a namespace prefix.
