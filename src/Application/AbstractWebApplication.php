@@ -269,7 +269,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function getBody($asArray = false)
 	{
-		return $this->getBody($asArray);
+		return $this->response->getBody($asArray);
 	}
 
 	/**

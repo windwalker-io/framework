@@ -629,7 +629,7 @@ class Session implements \IteratorAggregate
 			$cookie = $this->getCookie();
 
 
-			if (is_null($cookie[$session_name]))
+			if (empty($cookie[$session_name]))
 			{
 				$session_clean = isset($_GET[$session_name]) ? $_GET[$session_name] :  false;
 
