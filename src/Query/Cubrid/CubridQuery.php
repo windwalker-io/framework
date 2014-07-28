@@ -6,23 +6,23 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Query\Mysql;
+namespace Windwalker\Query\Cubrid;
 
 use Windwalker\Query\Query;
 
 /**
- * Class MysqlQuery
+ * Class CubridQuery
  *
  * @since 1.0
  */
-class MysqlQuery extends Query
+class CubridQuery extends Query
 {
 	/**
 	 * Property name.
 	 *
 	 * @var  string
 	 */
-	protected $name = 'mysql';
+	protected $name = 'cubrid';
 
 	/**
 	 * The character(s) used to quote SQL statement names such as table names or field names,
@@ -43,17 +43,5 @@ class MysqlQuery extends Query
 	 * @since  1.0
 	 */
 	protected $nullDate = '0000-00-00 00:00:00';
-
-	/**
-	 * If no connection set, we escape it with default function.
-	 *
-	 * @param string $text
-	 *
-	 * @return  string
-	 */
-	protected function escapeWithNoConnection($text)
-	{
-		return mysql_real_escape_string($text);
-	}
 }
  

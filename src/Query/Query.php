@@ -13,7 +13,7 @@ namespace Windwalker\Query;
  *
  * @since 1.0
  */
-abstract class AbstractQuery
+class Query implements QueryInterface
 {
 	/**
 	 * Property name.
@@ -214,18 +214,27 @@ abstract class AbstractQuery
 	protected $dateFormat = 'Y-m-d H:i:s';
 
 	/**
-	 * Property nullDate.
+	 * The null or zero representation of a timestamp for the database driver.  This should be
+	 * defined in child classes to hold the appropriate value for the engine.
 	 *
-	 * @var  string
+	 * @var    string
+	 * @since  1.0
 	 */
-	protected $nullDate = '';
+	protected $nullDate = '0000-00-00 00:00:00';
 
 	/**
 	 * Property nameQuote.
 	 *
 	 * @var  string
 	 */
-	protected $nameQuote = '';
+	protected $nameQuote = '"';
+
+	/**
+	 * Property expression.
+	 *
+	 * @var  QueryExpression
+	 */
+	protected $expression = null;
 
 	/**
 	 * Class constructor.
@@ -391,15 +400,7 @@ abstract class AbstractQuery
 		}
 
 		// Process Limit
-		if ($this->limit > 0 || $this->offset > 0)
-		{
-			$query .= ' LIMIT ' . (int) $this->limit;
-
-			if ($this->offset > 0)
-			{
-				$query .= ', ' . (int) $this->offset;
-			}
-		}
+		$query = $this->processLimit($query, $this->limit, $this->offset);
 
 		return $query;
 	}
@@ -451,28 +452,9 @@ abstract class AbstractQuery
 	}
 
 	/**
-	 * Casts a value to a char.
-	 *
-	 * Ensure that the value is properly quoted before passing to the method.
-	 *
-	 * Usage:
-	 * $query->select($query->castAsChar('a'));
-	 *
-	 * @param   string  $value  The value to cast as a char.
-	 *
-	 * @return  string  Returns the cast value.
-	 *
-	 * @since   1.0
-	 */
-	public function castAsChar($value)
-	{
-		return $value;
-	}
-
-	/**
 	 * Clear data from the query or a specific clause of the query.
 	 *
-	 * @param   string  $clause  Optionally, the name of the clause to clear, or nothing to clear the whole query.
+	 * @param   string|array  $clause  Optionally, the name of the clause to clear, or nothing to clear the whole query.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
@@ -481,6 +463,16 @@ abstract class AbstractQuery
 	public function clear($clause = null)
 	{
 		$this->sql = null;
+
+		if (is_array($clause))
+		{
+			foreach ($clause as $clause)
+			{
+				$this->clear($clause);
+			}
+
+			return $this;
+		}
 
 		switch ($clause)
 		{
@@ -611,46 +603,6 @@ abstract class AbstractQuery
 	}
 
 	/**
-	 * Concatenates an array of column names or values.
-	 *
-	 * Usage:
-	 * $query->select($query->concatenate(array('a', 'b')));
-	 *
-	 * @param   array   $values     An array of values to concatenate.
-	 * @param   string  $separator  As separator to place between each value.
-	 *
-	 * @return  string  The concatenated values.
-	 *
-	 * @since   1.0
-	 */
-	public function concatenate($values, $separator = null)
-	{
-		if ($separator)
-		{
-			return 'CONCATENATE(' . implode(' || ' . $this->quote($separator) . ' || ', $values) . ')';
-		}
-		else
-		{
-			return 'CONCATENATE(' . implode(' || ', $values) . ')';
-		}
-	}
-
-	/**
-	 * Gets the current date and time.
-	 *
-	 * Usage:
-	 * $query->where('published_up < '.$query->currentTimestamp());
-	 *
-	 * @return  string
-	 *
-	 * @since   1.0
-	 */
-	public function currentTimestamp()
-	{
-		return 'CURRENT_TIMESTAMP()';
-	}
-
-	/**
 	 * Returns a PHP date() function compliant date format for the database driver.
 	 *
 	 * This method is provided for use where the query object is passed to a function for modification.
@@ -678,7 +630,7 @@ abstract class AbstractQuery
 	 */
 	public function dump()
 	{
-		return '<pre class="jdatabasequery">' . $this . '</pre>';
+		return '<pre class="windwalker-db-query">' . $this . '</pre>';
 	}
 
 	/**
@@ -857,20 +809,13 @@ abstract class AbstractQuery
 	 *
 	 * @return  string
 	 */
-	public function express($name)
+	public function expression($name)
 	{
 		$args = func_get_args();
 
-		array_shift($args);
-
 		$expression = $this->getExpression();
 
-		if (is_callable(array($expression, $name)))
-		{
-			return call_user_func_array(array($expression, $name), $args);
-		}
-
-		return sprintf('%s(%s)', strtoupper($name), implode(', ', $args));
+		return call_user_func_array(array($expression, 'buildExpression'), $args);
 	}
 
 	/**
@@ -1017,25 +962,6 @@ abstract class AbstractQuery
 	}
 
 	/**
-	 * Get the length of a string in bytes.
-	 *
-	 * Note, use 'charLength' to find the number of characters in a string.
-	 *
-	 * Usage:
-	 * query->where($query->length('a').' > 3');
-	 *
-	 * @param   string  $value  The string to measure.
-	 *
-	 * @return  integer
-	 *
-	 * @since   1.0
-	 */
-	public function length($value)
-	{
-		return 'LENGTH(' . $value . ')';
-	}
-
-	/**
 	 * Get the null or zero representation of a timestamp for the database driver.
 	 *
 	 * This method is provided for use where the query object is passed to a function for modification.
@@ -1103,6 +1029,34 @@ abstract class AbstractQuery
 		$this->offset = (int) $offset;
 
 		return $this;
+	}
+
+	/**
+	 * Method to modify a query already in string format with the needed
+	 * additions to make the query limited to a particular number of
+	 * results, or start at a particular offset.
+	 *
+	 * @param   string   $query   The query in string format
+	 * @param   integer  $limit   The limit for the result set
+	 * @param   integer  $offset  The offset for the result set
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	public function processLimit($query, $limit, $offset = 0)
+	{
+		if ($limit > 0 || $offset > 0)
+		{
+			$query .= ' LIMIT ' . (int) $limit;
+
+			if ($offset > 0)
+			{
+				$query .= ', ' . (int) $offset;
+			}
+		}
+
+		return $query;
 	}
 
 	/**
@@ -1619,8 +1573,10 @@ abstract class AbstractQuery
 		$args = array_slice(func_get_args(), 1);
 		array_unshift($args, null);
 
+		$expression = $this->getExpression();
+
 		$i = 1;
-		$func = function ($match) use ($query, $args, &$i)
+		$func = function ($match) use ($query, $args, &$i, $expression)
 		{
 			if (isset($match[6]) && $match[6] == '%')
 			{
@@ -1631,7 +1587,7 @@ abstract class AbstractQuery
 			switch ($match[5])
 			{
 				case 't':
-					return $query->currentTimestamp();
+					return $expression->current_timestamp();
 					break;
 
 				case 'z':
@@ -1688,51 +1644,51 @@ abstract class AbstractQuery
 
 				// Dates
 				case 'y':
-					return $query->year($query->quote($replacement));
+					return $expression->year($query->quote($replacement));
 					break;
 
 				case 'Y':
-					return $query->year($query->quoteName($replacement));
+					return $expression->year($query->quoteName($replacement));
 					break;
 
 				case 'm':
-					return $query->month($query->quote($replacement));
+					return $expression->month($query->quote($replacement));
 					break;
 
 				case 'M':
-					return $query->month($query->quoteName($replacement));
+					return $expression->month($query->quoteName($replacement));
 					break;
 
 				case 'd':
-					return $query->day($query->quote($replacement));
+					return $expression->day($query->quote($replacement));
 					break;
 
 				case 'D':
-					return $query->day($query->quoteName($replacement));
+					return $expression->day($query->quoteName($replacement));
 					break;
 
 				case 'h':
-					return $query->hour($query->quote($replacement));
+					return $expression->hour($query->quote($replacement));
 					break;
 
 				case 'H':
-					return $query->hour($query->quoteName($replacement));
+					return $expression->hour($query->quoteName($replacement));
 					break;
 
 				case 'i':
-					return $query->minute($query->quote($replacement));
+					return $expression->minute($query->quote($replacement));
 					break;
 
 				case 'I':
-					return $query->minute($query->quoteName($replacement));
+					return $expression->minute($query->quoteName($replacement));
 					break;
 
 				case 's':
-					return $query->second($query->quote($replacement));
+					return $expression->second($query->quote($replacement));
 					break;
 
 				case 'S':
-					return $query->second($query->quoteName($replacement));
+					return $expression->second($query->quoteName($replacement));
 					break;
 			}
 
@@ -1766,11 +1722,32 @@ abstract class AbstractQuery
 	/**
 	 * getExpression
 	 *
-	 * @return  string
+	 * @return  QueryExpression
 	 */
 	public function getExpression()
 	{
-		return __NAMESPACE__ . '\\' . ucfirst($this->getName()) . '\\' . ucfirst($this->getName()) . 'Expression';
+		if ($this->expression)
+		{
+			return $this->expression;
+		}
+
+		$class = __NAMESPACE__ . '\\' . ucfirst($this->getName()) . '\\' . ucfirst($this->getName()) . 'Expression';
+
+		return $this->expression = new $class($this);
+	}
+
+	/**
+	 * setExpression
+	 *
+	 * @param   \Windwalker\Query\QueryExpression $expression
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setExpression(QueryExpression $expression)
+	{
+		$this->expression = $expression;
+
+		return $this;
 	}
 }
  

@@ -6,16 +6,16 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Query\Mysql;
+namespace Windwalker\Query\Cubrid;
 
 use Windwalker\Query\QueryExpression;
 
 /**
- * Class MysqlExpression
+ * Class CubridExpression
  *
  * @since 1.0
  */
-class MysqlExpression extends QueryExpression
+class CubridExpression extends QueryExpression
 {
 	/**
 	 * Concatenates an array of column names or values.
@@ -31,19 +31,28 @@ class MysqlExpression extends QueryExpression
 	{
 		if ($separator)
 		{
-			$concat_string = 'CONCAT_WS(' . $this->query->quote($separator);
-
-			foreach ($values as $value)
-			{
-				$concat_string .= ', ' . $value;
-			}
-
-			return $concat_string . ')';
+			return implode(' || ' . $this->query->quote($separator) . ' || ', $values);
 		}
 		else
 		{
 			return 'CONCAT(' . implode(',', $values) . ')';
 		}
+	}
+
+	/**
+	 * Casts a value to a char.
+	 *
+	 * Ensure that the value is properly quoted before passing to the method.
+	 *
+	 * @param   string  $value  The value to cast as a char.
+	 *
+	 * @return  string  Returns the cast value.
+	 *
+	 * @since   1.0
+	 */
+	public function cast_as_char($value)
+	{
+		return "CAST(" . $value . " AS CHAR)";
 	}
 }
  
