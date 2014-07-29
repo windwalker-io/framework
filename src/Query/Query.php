@@ -1101,6 +1101,11 @@ class Query implements QueryInterface
 	 */
 	public function quote($text, $escape = true)
 	{
+		if (is_numeric($text) || is_null($text))
+		{
+			return $text;
+		}
+
 		if (is_array($text) || is_object($text))
 		{
 			$text = (array) $text;

@@ -51,11 +51,14 @@ class MysqlTable extends DatabaseTable
 	 */
 	public function getColumnDetails($full = false)
 	{
-		$query = MysqlQueryBuilder::showTableColumn($this->db->quoteName($this->table), $full);
+		$query = MysqlQueryBuilder::showTableColumns($this->table, $full);
 
 		return $this->db->setQuery($query)->loadAll('Field');
 	}
 
-
+	public function addColumn($name, $type = 'text', $unsigned = true, $notNull = false, $default = '', $position = null, $comment = '')
+	{
+		$query = MysqlQueryBuilder::addColumn($this->table, $name, $type, $unsigned, $notNull, $default, $position, $comment);
+	}
 }
  

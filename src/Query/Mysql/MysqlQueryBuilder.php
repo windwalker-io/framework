@@ -158,29 +158,82 @@ class MysqlQueryBuilder
 	}
 
 	/**
+	 * alterColumn
+	 *
+	 * @param string $operation
+	 * @param string $table
+	 * @param string $column
+	 * @param string $type
+	 * @param bool   $unsigned
+	 * @param bool   $notNull
+	 * @param null   $default
+	 * @param null   $position
+	 * @param string $comment
+	 *
+	 * @return  string
+	 */
+	public static function alterColumn($operation, $table, $column, $type = 'text', $unsigned = true, $notNull = false, $default = null,
+		$position = null, $comment = '')
+	{
+		$query = static::getQuery();
+
+		$column = $query->quoteName((array) $column);
+
+		return static::build(
+			'ALTER TABLE',
+			$query->quoteName($table),
+			$operation,
+			implode(' ', $column),
+			$type ? : 'text',
+			$unsigned ? 'UNSIGNED' : null,
+			$notNull ? 'NOT NULL' : null,
+			!is_null($default) ? 'DEFAULT ' . $query->quote($default) : null,
+			$comment ? 'COMMENT ' . $query->quote($comment) : null,
+			static::handleColumnPosition($position)
+		);
+	}
+
+	/**
+	 * Add column
+	 *
+	 * @param string $table
+	 * @param string $column
+	 * @param string $type
+	 * @param bool   $unsigned
+	 * @param bool   $notNull
+	 * @param string $default
+	 * @param string $position
+	 * @param string $comment
+	 *
+	 * @return  string
+	 */
+	public static function addColumn($table, $column, $type = 'text', $unsigned = true, $notNull = false, $default = null,
+		$position = null, $comment = '')
+	{
+		return static::alterColumn('ADD', $table, $column, $type, $unsigned, $notNull, $default, $position, $comment);
+	}
+
+	/**
 	 * changeColumn
 	 *
 	 * @param string $table
 	 * @param string $oldColumn
 	 * @param string $newColumn
-	 * @param string $definition
+	 * @param string $type
+	 * @param bool   $unsigned
+	 * @param bool   $notNull
+	 * @param null   $default
 	 * @param string $position
+	 * @param string $comment
 	 *
 	 * @return  string
 	 */
-	public static function changeColumn($table, $oldColumn, $newColumn, $definition, $position = null)
+	public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text', $unsigned = true, $notNull = false, $default = null,
+		$position = null, $comment = '')
 	{
-		$query = static::getQuery();
+		$column = array($oldColumn, $newColumn);
 
-		return static::build(
-			'ALTER TABLE',
-			$query->quoteName($table),
-			'CHANGE',
-			$query->quoteName($oldColumn),
-			$query->quoteName($newColumn),
-			$definition,
-			static::handleColumnPosition($position)
-		);
+		return static::alterColumn('ADD', $table, $column, $type, $unsigned, $notNull, $default, $position, $comment);
 	}
 
 	/**
@@ -188,23 +241,19 @@ class MysqlQueryBuilder
 	 *
 	 * @param string $table
 	 * @param string $column
-	 * @param string $definition
+	 * @param string $type
+	 * @param bool   $unsigned
+	 * @param bool   $notNull
+	 * @param null   $default
 	 * @param string $position
+	 * @param string $comment
 	 *
 	 * @return  string
 	 */
-	public static function modifyColumn($table, $column, $definition, $position = null)
+	public static function modifyColumn($table, $column, $type = 'text', $unsigned = true, $notNull = false, $default = null,
+		$position = null, $comment = '')
 	{
-		$query = static::getQuery();
-
-		return static::build(
-			'ALTER TABLE',
-			$query->quoteName($table),
-			'MODIFY',
-			$query->quoteName($column),
-			$definition,
-			static::handleColumnPosition($position)
-		);
+		return static::alterColumn('MODIFY', $table, $column, $type, $unsigned, $notNull, $default, $position, $comment);
 	}
 
 	/**
@@ -334,6 +383,11 @@ class MysqlQueryBuilder
 	protected function handleColumnPosition($position)
 	{
 		$query = static::getQuery();
+
+		if (!$position)
+		{
+			return null;
+		}
 
 		$posColumn = '';
 

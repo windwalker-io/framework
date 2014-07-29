@@ -14,6 +14,7 @@ use Psr\Log\LogLevel;
 use Windwalker\Database\Command\DatabaseReader;
 use Windwalker\Database\Command\DatabaseTable;
 use Windwalker\Database\Command\DatabaseWriter;
+use Windwalker\Database\DataIterator;
 use Windwalker\Query\Query;
 
 /**
@@ -242,6 +243,15 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	abstract public function getReader();
 
 	/**
+	 * getTable
+	 *
+	 * @param string $name
+	 *
+	 * @return  DatabaseTable
+	 */
+	abstract public function getTable($name);
+
+	/**
 	 * getWriter
 	 *
 	 * @return  DatabaseWriter
@@ -257,13 +267,16 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	}
 
 	/**
-	 * getTable
+	 * getIterator
 	 *
-	 * @param string $name
+	 * @param string $class
 	 *
-	 * @return  DatabaseTable
+	 * @return  DataIterator
 	 */
-	abstract public function getTable($name);
+	public function getIterator($class = '\\stdClass')
+	{
+		return $this->getReader()->getIterator($class);
+	}
 
 	/**
 	 * Gets the name of the database used by this conneciton.
