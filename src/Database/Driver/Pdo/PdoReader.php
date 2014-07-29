@@ -19,13 +19,6 @@ use Windwalker\Query\Query;
 class PdoReader extends DatabaseReader
 {
 	/**
-	 * Property resource.
-	 *
-	 * @var  \PDOStatement
-	 */
-	protected $resource = null;
-
-	/**
 	 * Method to fetch a row from the result set cursor as an array.
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
@@ -60,7 +53,7 @@ class PdoReader extends DatabaseReader
 	 */
 	public function fetchObject($class = '\\stdClass')
 	{
-		return $this->resource->fetchObject($class);
+		return $this->db->getCursor()->fetchObject($class);
 	}
 
 	/**
@@ -76,7 +69,7 @@ class PdoReader extends DatabaseReader
 	 */
 	public function fetch($type = \PDO::FETCH_ASSOC, $ori = null, $offset = 0)
 	{
-		return $this->resource->fetch($type);
+		return $this->db->getCursor()->fetch($type);
 	}
 
 	/**
@@ -92,7 +85,7 @@ class PdoReader extends DatabaseReader
 	 */
 	public function fetchAll($type = \PDO::FETCH_ASSOC, $args = null, $ctorArgs = null)
 	{
-		return $this->resource->fetchAll($type);
+		return $this->db->getCursor()->fetchAll($type);
 	}
 
 	/**
@@ -102,7 +95,20 @@ class PdoReader extends DatabaseReader
 	 */
 	public function count()
 	{
-		return $this->resource->rowCount();
+		return $this->db->getCursor()->rowCount();
+	}
+
+	/**
+	 * Get the number of affected rows for the previous executed SQL statement.
+	 * Only applicable for DELETE, INSERT, or UPDATE statements.
+	 *
+	 * @return  integer  The number of affected rows.
+	 *
+	 * @since   1.0
+	 */
+	public function countAffected()
+	{
+		return $this->db->getCursor()->rowCount();
 	}
 }
  

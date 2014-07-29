@@ -20,20 +20,35 @@ class MysqlDriver extends PdoDriver
 	protected $name = 'mysql';
 
 	/**
-	 * getTable
+	 * Select a database for use.
 	 *
-	 * @param string $name
+	 * @param   string  $database  The name of the database to select for use.
 	 *
-	 * @return  MysqlTable
+	 * @return  boolean  True if the database was successfully selected.
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
 	 */
-	public function getTable($name)
+	public function select($database)
 	{
-		if (empty($this->tables[$name]))
-		{
-			$this->tables[$name] = new MysqlTable($name, $this);
-		}
+		$this->connect();
 
-		return $this->tables[$name];
+		$this->setQuery('USE ' . $this->quoteName($database))->execute();
+
+		return $this;
+	}
+
+	/**
+	 * Method to get an array of all tables in the database.
+	 *
+	 * @return  array  An array of all the tables in the database.
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
+	 */
+	public function getTableList()
+	{
+		return $this->setQuery('SHOW TABLES')->loadColumn();
 	}
 }
  

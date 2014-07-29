@@ -11,7 +11,7 @@ namespace Windwalker\Database\Driver;
 /**
  * DatabseAwareTrait
  */
-trait DatabseAwareTrait
+trait DatabaseAwareTrait
 {
 	/**
 	 * Property db.

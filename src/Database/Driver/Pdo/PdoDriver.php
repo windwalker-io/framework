@@ -9,6 +9,9 @@
 namespace Windwalker\Database\Driver\Pdo;
 
 use Windwalker\Database\Command\DatabaseReader;
+use Windwalker\Database\Command\DatabaseTable;
+use Windwalker\Database\Command\DatabaseTransaction;
+use Windwalker\Database\Command\DatabaseWriter;
 use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Query\Query\PreparableInterface;
 use Windwalker\Query\Query;
@@ -18,7 +21,7 @@ use Windwalker\Query\Query;
  *
  * @since 1.0
  */
-abstract class PdoDriver extends DatabaseDriver
+class PdoDriver extends DatabaseDriver
 {
 	/**
 	 * The name of the database driver.
@@ -289,10 +292,66 @@ abstract class PdoDriver extends DatabaseDriver
 		if ($cursor instanceof \PDOStatement)
 		{
 			$cursor->closeCursor();
+
 			$cursor = null;
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Get the current query object or a new Query object.
+	 *
+	 * @param   boolean  $new  False to return the current query object, True to return a new Query object.
+	 *
+	 * @return  Query  The current query object or a new object extending the Query class.
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
+	 */
+	public function getQuery($new = false)
+	{
+		if ($new)
+		{
+			// Derive the class name from the driver.
+			$class = '\\Windwalker\\Query\\' . ucfirst($this->options['driver']) . '\\' . ucfirst($this->options['driver']) . 'Query';
+
+			// Make sure we have a query class for this driver.
+			if (!class_exists($class))
+			{
+				return parent::getQuery($new);
+			}
+
+			return new $class($this->getConnection());
+		}
+		else
+		{
+			return $this->query;
+		}
+	}
+
+	/**
+	 * getTable
+	 *
+	 * @param string $name
+	 *
+	 * @return  DatabaseTable
+	 */
+	public function getTable($name)
+	{
+		if (empty($this->tables[$name]))
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTable', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
+
+			if (!class_exists($class))
+			{
+				return parent::getTransaction($name);
+			}
+
+			$this->tables[$name] = new $class($name, $this);
+		}
+
+		return $this->tables[$name];
 	}
 
 	/**
@@ -311,10 +370,77 @@ abstract class PdoDriver extends DatabaseDriver
 
 		if (!$this->reader)
 		{
-			$this->reader = new PdoReader($this);
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sReader', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
+
+			if (!class_exists($class))
+			{
+				return parent::getReader();
+			}
+
+			$this->reader = new $class($this);
 		}
 
 		return $this->reader;
+	}
+
+	/**
+	 * getWriter
+	 *
+	 * @return  DatabaseWriter
+	 */
+	public function getWriter()
+	{
+		if (!$this->writer)
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sWriter', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
+
+			if (!class_exists($class))
+			{
+				return parent::getWriter();
+			}
+
+			$this->writer = new $class($this);
+		}
+
+		return $this->writer;
+	}
+
+	/**
+	 * getWriter
+	 *
+	 * @param boolean $nested
+	 *
+	 * @return  DatabaseTransaction
+	 */
+	public function getTransaction($nested = true)
+	{
+		if (!$this->transaction)
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTransaction', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
+
+			if (!class_exists($class))
+			{
+				return parent::getTransaction($nested);
+			}
+
+			$this->transaction = new $class($this, $nested);
+		}
+
+		return $this->transaction;
+	}
+
+	/**
+	 * Method to get an array of all tables in the database.
+	 *
+	 * @throws \LogicException
+	 *
+	 * @return  array  An array of all the tables in the database.
+	 *
+	 * @since   1.0
+	 */
+	public function getTableList()
+	{
+		throw new \LogicException('Please run SQL to get tables if you are using PdoDriver');
 	}
 }
  

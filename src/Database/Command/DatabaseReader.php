@@ -9,8 +9,7 @@
 namespace Windwalker\Database\Command;
 
 use Windwalker\Database\DataIterator;
-use Windwalker\Database\Driver\DatabaseDriver;
-use Windwalker\Database\Driver\DatabseAwareTrait;
+use Windwalker\Database\Driver\DatabaseAwareTrait;
 use Windwalker\Query\Query;
 
 /**
@@ -20,30 +19,7 @@ use Windwalker\Query\Query;
  */
 abstract class DatabaseReader
 {
-	use DatabseAwareTrait;
-
-	/**
-	 * Property resource.
-	 *
-	 * @var  resource
-	 */
-	protected $resource = null;
-
-	/**
-	 * setDb
-	 *
-	 * @param   DatabaseDriver $db
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setDb($db)
-	{
-		$this->db = $db;
-
-		$this->resource = $this->db->getCursor();
-
-		return $this;
-	}
+	use DatabaseAwareTrait;
 
 	/**
 	 * setQuery
@@ -312,6 +288,11 @@ abstract class DatabaseReader
 		return $array;
 	}
 
+	/**
+	 * count
+	 *
+	 * @return  mixed
+	 */
 	abstract public function count();
 
 	/**
@@ -342,6 +323,16 @@ abstract class DatabaseReader
 	 * @since   1.0
 	 */
 	abstract public function fetchObject($class = '\\stdClass');
+
+	/**
+	 * Get the number of affected rows for the previous executed SQL statement.
+	 * Only applicable for DELETE, INSERT, or UPDATE statements.
+	 *
+	 * @return  integer  The number of affected rows.
+	 *
+	 * @since   1.0
+	 */
+	abstract public function countAffected();
 
 	/**
 	 * freeResult

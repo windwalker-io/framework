@@ -9,6 +9,7 @@
 namespace Windwalker\Query\Mysql;
 
 use Windwalker\Query\Query;
+use Windwalker\Query\QueryElement;
 
 /**
  * Class MysqlQueryBuilder
@@ -34,38 +35,36 @@ class MysqlQueryBuilder
 	/**
 	 * showDatabases
 	 *
-	 * @param string $like
+	 * @param string $where
 	 *
 	 * @return  string
 	 */
-	public static function showDatabases($like = null)
+	public static function showDatabases($where = null)
 	{
-		$query = static::getQuery();
+		$where ? new QueryElement('WHERE', $where, 'AND') : null;
 
-		$like = $like ? ' LIKE ' . $query->quote($like) : null;
-
-		return 'SHOW DATABASES' . $like;
+		return 'SHOW DATABASES' . $where;
 	}
 
 	/**
 	 * showTableColumn
 	 *
-	 * @param string $table
-	 * @param bool   $full
-	 * @param string $like
+	 * @param string       $table
+	 * @param bool         $full
+	 * @param string|array $where
 	 *
 	 * @return  string
 	 */
-	public static function showTableColumns($table, $full = false, $like = null)
+	public static function showTableColumns($table, $full = false, $where = null)
 	{
 		$query = static::getQuery();
 
 		return static::build(
 			'SHOW',
 			$full ? 'FULL' : false,
-			'sCOLUMNS FROM',
+			'COLUMNS FROM',
 			$query->quoteName($table),
-			$like ? 'LIKE ' . $query->quote($like) : null
+			$where ? new QueryElement('WHERE', $where, 'AND') : null
 		);
 	}
 
@@ -88,6 +87,25 @@ class MysqlQueryBuilder
 			'TABLES FROM',
 			$query->quoteName($dbname),
 			$like ? 'LIKE ' . $query->quote($like) : null
+		);
+	}
+
+	/**
+	 * dropTable
+	 *
+	 * @param string $db
+	 * @param bool   $ifExist
+	 *
+	 * @return  string
+	 */
+	public static function dropDatabase($db, $ifExist = false)
+	{
+		$query = static::getQuery();
+
+		return static::build(
+			'DROP DATABASE',
+			$ifExist ? 'IF EXISTS' : null,
+			$query->quoteName($db)
 		);
 	}
 
@@ -158,6 +176,27 @@ class MysqlQueryBuilder
 	}
 
 	/**
+	 * dropTable
+	 *
+	 * @param string $table
+	 * @param bool   $ifExist
+	 * @param string $option
+	 *
+	 * @return  string
+	 */
+	public static function dropTable($table, $ifExist = false, $option = '')
+	{
+		$query = static::getQuery();
+
+		return static::build(
+			'DROP TABLE',
+			$ifExist ? 'IF EXISTS' : null,
+			$query->quoteName($table),
+			$option
+		);
+	}
+
+	/**
 	 * alterColumn
 	 *
 	 * @param string $operation
@@ -172,7 +211,7 @@ class MysqlQueryBuilder
 	 *
 	 * @return  string
 	 */
-	public static function alterColumn($operation, $table, $column, $type = 'text', $unsigned = true, $notNull = false, $default = null,
+	public static function alterColumn($operation, $table, $column, $type = 'text', $unsigned = false, $notNull = false, $default = null,
 		$position = null, $comment = '')
 	{
 		$query = static::getQuery();
@@ -207,7 +246,7 @@ class MysqlQueryBuilder
 	 *
 	 * @return  string
 	 */
-	public static function addColumn($table, $column, $type = 'text', $unsigned = true, $notNull = false, $default = null,
+	public static function addColumn($table, $column, $type = 'text', $unsigned = false, $notNull = false, $default = null,
 		$position = null, $comment = '')
 	{
 		return static::alterColumn('ADD', $table, $column, $type, $unsigned, $notNull, $default, $position, $comment);
@@ -228,12 +267,12 @@ class MysqlQueryBuilder
 	 *
 	 * @return  string
 	 */
-	public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text', $unsigned = true, $notNull = false, $default = null,
+	public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text', $unsigned = false, $notNull = false, $default = null,
 		$position = null, $comment = '')
 	{
 		$column = array($oldColumn, $newColumn);
 
-		return static::alterColumn('ADD', $table, $column, $type, $unsigned, $notNull, $default, $position, $comment);
+		return static::alterColumn('CHANGE', $table, $column, $type, $unsigned, $notNull, $default, $position, $comment);
 	}
 
 	/**
@@ -250,10 +289,27 @@ class MysqlQueryBuilder
 	 *
 	 * @return  string
 	 */
-	public static function modifyColumn($table, $column, $type = 'text', $unsigned = true, $notNull = false, $default = null,
+	public static function modifyColumn($table, $column, $type = 'text', $unsigned = false, $notNull = false, $default = null,
 		$position = null, $comment = '')
 	{
 		return static::alterColumn('MODIFY', $table, $column, $type, $unsigned, $notNull, $default, $position, $comment);
+	}
+
+	/**
+	 * dropColumn
+	 *
+	 * @param string $column
+	 *
+	 * @return  string
+	 */
+	public static function dropColumn($column)
+	{
+		$query = static::getQuery();
+
+		return static::build(
+			'ALTER TABLE DROP',
+			$query->quoteName($column)
+		);
 	}
 
 	/**

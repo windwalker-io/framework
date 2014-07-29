@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Windwalker\Database\Command\DatabaseReader;
 use Windwalker\Database\Command\DatabaseTable;
+use Windwalker\Database\Command\DatabaseTransaction;
 use Windwalker\Database\Command\DatabaseWriter;
 use Windwalker\Database\DataIterator;
 use Windwalker\Query\Query;
@@ -43,7 +44,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * The database connection resource.
 	 *
-	 * @var    resource
+	 * @var    resource|object
 	 * @since  1.0
 	 */
 	protected $connection;
@@ -59,7 +60,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * The database connection cursor from the last query.
 	 *
-	 * @var    resource
+	 * @var    resource|object
 	 * @since  1.0
 	 */
 	protected $cursor;
@@ -113,30 +114,6 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	protected $errorMsg;
 
 	/**
-	 * DatabaseDriver instances container.
-	 *
-	 * @var    array
-	 * @since  1.0
-	 */
-	protected static $instances = array();
-
-	/**
-	 * The minimum supported database version.
-	 *
-	 * @var    string
-	 * @since  1.0
-	 */
-	protected static $dbMinimum;
-
-	/**
-	 * The depth of the current transaction.
-	 *
-	 * @var    integer
-	 * @since  1.0
-	 */
-	protected $transactionDepth = 0;
-
-	/**
 	 * A logger.
 	 *
 	 * @var    LoggerInterface
@@ -164,6 +141,13 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * @var DatabaseTable[]
 	 */
 	protected $tables = array();
+
+	/**
+	 * Property transaction.
+	 *
+	 * @var DatabaseTransaction
+	 */
+	protected $transaction;
 
 	/**
 	 * Constructor.
@@ -210,6 +194,51 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	}
 
 	/**
+	 * Execute the SQL statement.
+	 *
+	 * @return  mixed  A database cursor resource on success, boolean false on failure.
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
+	 */
+	public function execute()
+	{
+		$this->connect();
+
+		if (!is_object($this->connection))
+		{
+			throw new \RuntimeException('Database disconnected.');
+		}
+
+		// Take a local copy so that we don't modify the original query and cause issues later
+		$sql = $this->replacePrefix((string) $this->query);
+
+		// Increment the query counter.
+		$this->count++;
+
+		// If debugging is enabled then let's log the query.
+		if ($this->debug)
+		{
+			// Add the query to the object queue.
+			$this->log(LogLevel::DEBUG, 'Executed: {sql}', array('sql' => $sql));
+		}
+
+		try
+		{
+			$this->doExecute();
+		}
+		catch (\RuntimeException $e)
+		{
+			// Throw the normal query exception.
+			$this->log(LogLevel::ERROR, 'Database query failed (error #{code}): {message}', array('code' => $e->getCode(), 'message' => $e->getMessage()));
+
+			throw $e;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * connect
 	 *
 	 * @return  static
@@ -226,6 +255,67 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	abstract public function disconnect();
 
 	/**
+	 * Set the connection to use UTF-8 character encoding.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   1.0
+	 */
+	abstract public function setUTF();
+
+	/**
+	 * Execute the SQL statement.
+	 *
+	 * @return  mixed  A database cursor resource on success, boolean false on failure.
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
+	 */
+	abstract protected function doExecute();
+
+	/**
+	 * Select a database for use.
+	 *
+	 * @param   string  $database  The name of the database to select for use.
+	 *
+	 * @return  boolean  True if the database was successfully selected.
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
+	 */
+	abstract public function select($database);
+
+	/**
+	 * Get the version of the database connector
+	 *
+	 * @return  string  The database connector version.
+	 *
+	 * @since   1.0
+	 */
+	abstract public function getVersion();
+
+	/**
+	 * Method to free up the memory used for the result set.
+	 *
+	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  static
+	 *
+	 * @since   1.0
+	 */
+	abstract public function freeResult($cursor = null);
+
+	/**
+	 * Method to get an array of all tables in the database.
+	 *
+	 * @return  array  An array of all the tables in the database.
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
+	 */
+	abstract public function getTableList();
+
+	/**
 	 * getCursor
 	 *
 	 * @return  resource
@@ -233,85 +323,6 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	public function getCursor()
 	{
 		return $this->cursor;
-	}
-
-	/**
-	 * getReader
-	 *
-	 * @return  DatabaseReader
-	 */
-	abstract public function getReader();
-
-	/**
-	 * getTable
-	 *
-	 * @param string $name
-	 *
-	 * @return  DatabaseTable
-	 */
-	abstract public function getTable($name);
-
-	/**
-	 * getWriter
-	 *
-	 * @return  DatabaseWriter
-	 */
-	public function getWriter()
-	{
-		if (!$this->writer)
-		{
-			$this->writer = new DatabaseWriter($this);
-		}
-
-		return $this->writer;
-	}
-
-	/**
-	 * getIterator
-	 *
-	 * @param string $class
-	 *
-	 * @return  DataIterator
-	 */
-	public function getIterator($class = '\\stdClass')
-	{
-		return $this->getReader()->getIterator($class);
-	}
-
-	/**
-	 * Gets the name of the database used by this conneciton.
-	 *
-	 * @return  string
-	 *
-	 * @since   1.0
-	 */
-	protected function getDatabase()
-	{
-		return $this->database;
-	}
-
-	/**
-	 * Returns a PHP date() function compliant date format for the database driver.
-	 *
-	 * @return  string  The format string.
-	 *
-	 * @since   1.0
-	 */
-	public function getDateFormat()
-	{
-		return 'Y-m-d H:i:s';
-	}
-
-	/**
-	 * Get the common table prefix for the database driver.
-	 *
-	 * @return  string  The common database table prefix.
-	 *
-	 * @since   1.0
-	 */
-	public function getPrefix()
-	{
-		return $this->tablePrefix;
 	}
 
 	/**
@@ -347,6 +358,121 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	}
 
 	/**
+	 * getTable
+	 *
+	 * @param string $name
+	 *
+	 * @return  DatabaseTable
+	 */
+	public function getTable($name)
+	{
+		if (empty($this->tables[$name]))
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTable', ucfirst($this->name), ucfirst($this->name));
+
+			$this->tables[$name] = new $class($name, $this);
+		}
+
+		return $this->tables[$name];
+	}
+
+	/**
+	 * getReader
+	 *
+	 * @param Query $query
+	 *
+	 * @return  DatabaseReader
+	 */
+	public function getReader($query = null)
+	{
+		if ($query)
+		{
+			$this->setQuery($query)->execute();
+		}
+
+		if (!$this->reader)
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sReader', ucfirst($this->name), ucfirst($this->name));
+
+			$this->reader = new $class($this);
+		}
+
+		return $this->reader;
+	}
+
+	/**
+	 * getWriter
+	 *
+	 * @return  DatabaseWriter
+	 */
+	public function getWriter()
+	{
+		if (!$this->writer)
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sWriter', ucfirst($this->name), ucfirst($this->name));
+
+			$this->writer = new $class($this);
+		}
+
+		return $this->writer;
+	}
+
+	/**
+	 * getWriter
+	 *
+	 * @param boolean $nested
+	 *
+	 * @return  DatabaseTransaction
+	 */
+	public function getTransaction($nested = true)
+	{
+		if (!$this->transaction)
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTransaction', ucfirst($this->name), ucfirst($this->name));
+
+			$this->transaction = new $class($this, $nested);
+		}
+
+		return $this->transaction;
+	}
+
+	/**
+	 * getIterator
+	 *
+	 * @param string $class
+	 *
+	 * @return  DataIterator
+	 */
+	public function getIterator($class = '\\stdClass')
+	{
+		return $this->getReader()->getIterator($class);
+	}
+
+	/**
+	 * Gets the name of the database used by this conneciton.
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	public function getDatabase()
+	{
+		return $this->database;
+	}
+
+	/**
+	 * Get the common table prefix for the database driver.
+	 *
+	 * @return  string  The common database table prefix.
+	 *
+	 * @since   1.0
+	 */
+	public function getPrefix()
+	{
+		return $this->tablePrefix;
+	}
+
+	/**
 	 * Determine whether or not the database engine supports UTF-8 character encoding.
 	 *
 	 * @return  boolean  True if the database engine supports UTF-8 character encoding.
@@ -357,26 +483,6 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	{
 		return $this->utf;
 	}
-
-	/**
-	 * Get the version of the database connector
-	 *
-	 * @return  string  The database connector version.
-	 *
-	 * @since   1.0
-	 */
-	abstract public function getVersion();
-
-	/**
-	 * Method to free up the memory used for the result set.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  static
-	 *
-	 * @since   1.0
-	 */
-	abstract public function freeResult($cursor = null);
 
 	/**
 	 * Logs a message.
@@ -518,16 +624,62 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	}
 
 	/**
-	 * Select a database for use.
+	 * Splits a string of multiple queries into an array of individual queries.
 	 *
-	 * @param   string  $database  The name of the database to select for use.
+	 * @param   string  $sql  Input SQL string with which to split into individual queries.
 	 *
-	 * @return  boolean  True if the database was successfully selected.
+	 * @return  array  The queries from the input string separated into an array.
 	 *
 	 * @since   1.0
-	 * @throws  \RuntimeException
 	 */
-	abstract public function select($database);
+	public static function splitSql($sql)
+	{
+		$start = 0;
+		$open = false;
+		$char = '';
+		$end = strlen($sql);
+		$queries = array();
+
+		for ($i = 0; $i < $end; $i++)
+		{
+			$current = substr($sql, $i, 1);
+
+			if (($current == '"' || $current == '\''))
+			{
+				$n = 2;
+
+				while (substr($sql, $i - $n + 1, 1) == '\\' && $n < $i)
+				{
+					$n++;
+				}
+
+				if ($n % 2 == 0)
+				{
+					if ($open)
+					{
+						if ($current == $char)
+						{
+							$open = false;
+							$char = '';
+						}
+					}
+					else
+					{
+						$open = true;
+						$char = $current;
+					}
+				}
+			}
+
+			if (($current == ';' && !$open) || $i == $end - 1)
+			{
+				$queries[] = substr($sql, $start, ($i - $start + 1));
+				$start = $i + 1;
+			}
+		}
+
+		return $queries;
+	}
 
 	/**
 	 * Sets the database debugging state for the driver.
@@ -560,70 +712,6 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 
 		return $this;
 	}
-
-	/**
-	 * Set the connection to use UTF-8 character encoding.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   1.0
-	 */
-	abstract public function setUTF();
-
-	/**
-	 * Execute the SQL statement.
-	 *
-	 * @return  mixed  A database cursor resource on success, boolean false on failure.
-	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
-	 */
-	public function execute()
-	{
-		$this->connect();
-
-		if (!is_object($this->connection))
-		{
-			throw new \RuntimeException('Database disconnected.');
-		}
-
-		// Take a local copy so that we don't modify the original query and cause issues later
-		$sql = $this->replacePrefix((string) $this->query);
-
-		// Increment the query counter.
-		$this->count++;
-
-		// If debugging is enabled then let's log the query.
-		if ($this->debug)
-		{
-			// Add the query to the object queue.
-			$this->log(LogLevel::DEBUG, 'Executed: {sql}', array('sql' => $sql));
-		}
-
-		try
-		{
-			$this->doExecute();
-		}
-		catch (\RuntimeException $e)
-		{
-			// Throw the normal query exception.
-			$this->log(LogLevel::ERROR, 'Database query failed (error #{code}): {message}', array('code' => $e->getCode(), 'message' => $e->getMessage()));
-
-			throw $e;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Execute the SQL statement.
-	 *
-	 * @return  mixed  A database cursor resource on success, boolean false on failure.
-	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
-	 */
-	abstract protected function doExecute();
 
 	/**
 	 * loadAll
@@ -744,7 +832,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 */
 	public function q($text, $escape = true)
 	{
-		return $this->quote($text);
+		return $this->quote($text, $escape);
 	}
 
 	/**
@@ -770,7 +858,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 */
 	public function e($text, $extra = true)
 	{
-		return $this->escape($text);
+		return $this->escape($text, $extra);
 	}
 }
  
