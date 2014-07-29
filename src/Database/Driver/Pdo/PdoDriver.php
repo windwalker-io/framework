@@ -6,18 +6,19 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Database\Pdo;
+namespace Windwalker\Database\Driver\Pdo;
 
-use Psr\Log\LogLevel;
-use Windwalker\Database\DatabaseDriver;
+use Windwalker\Database\Command\DatabaseReader;
+use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Query\Query\PreparableInterface;
+use Windwalker\Query\Query;
 
 /**
  * Class PdoDriver
  *
  * @since 1.0
  */
-class PdoDriver extends DatabaseDriver
+abstract class PdoDriver extends DatabaseDriver
 {
 	/**
 	 * The name of the database driver.
@@ -25,23 +26,15 @@ class PdoDriver extends DatabaseDriver
 	 * @var    string
 	 * @since  1.0
 	 */
-	public $name = 'pdo';
+	protected $name = 'pdo';
 
 	/**
 	 * The prepared statement.
 	 *
-	 * @var    \PdoStatement
+	 * @var    \PDOStatement
 	 * @since  1.0
 	 */
-	protected $prepared;
-
-	/**
-	 * Contains the current query execution status
-	 *
-	 * @var    array
-	 * @since  1.0
-	 */
-	protected $executed = false;
+	protected $cursor;
 
 	/**
 	 * The database connection resource.
@@ -50,6 +43,13 @@ class PdoDriver extends DatabaseDriver
 	 * @since  1.0
 	 */
 	protected $connection;
+
+	/**
+	 * Property reader.
+	 *
+	 * @var  PdoReader
+	 */
+	protected $reader = null;
 
 	/**
 	 * Constructor.
@@ -103,7 +103,7 @@ class PdoDriver extends DatabaseDriver
 		}
 		catch (\PDOException $e)
 		{
-			throw new \RuntimeException('Could not connect to PDO: ' . $e->getMessage() . '. DSN: ' . $dsn, 2, $e);
+			throw new \RuntimeException('Could not connect to PDO: ' . $e->getMessage() . '. DSN: ' . $dsn, $e->getCode(), $e);
 		}
 
 		$this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -143,6 +143,28 @@ class PdoDriver extends DatabaseDriver
 		$this->connect();
 
 		return $this->connection->getAttribute($key);
+	}
+
+	/**
+	 * Sets an attribute on the PDO database handle.
+	 * http://www.php.net/manual/en/pdo.setattribute.php
+	 *
+	 * Usage: $db->setOption(PDO::ATTR_CASE, PDO::CASE_UPPER);
+	 *
+	 * @param   integer  $key    One of the PDO::ATTR_* Constants
+	 * @param   mixed    $value  One of the associated PDO Constants
+	 *                           related to the particular attribute
+	 *                           key.
+	 *
+	 * @return boolean
+	 *
+	 * @since  1.0
+	 */
+	public function setOption($key, $value)
+	{
+		$this->connect();
+
+		return $this->connection->setAttribute($key, $value);
 	}
 
 	/**
@@ -188,13 +210,12 @@ class PdoDriver extends DatabaseDriver
 	 */
 	public function setQuery($query, $driverOptions = array())
 	{
-		$this->connect();
+		$this->connect()->freeResult();
 
-		$this->freeResult();
+		$query = $this->replacePrefix((string) $query);
 
-		$sql = $this->replacePrefix((string) $query);
-
-		$this->prepared = $this->connection->prepare($sql, $driverOptions);
+		// Set query string into PDO, but keep query object in $this->query that we can bind params when execute().
+		$this->cursor = $this->connection->prepare($query, $driverOptions);
 
 		// Store reference to the DatabaseQuery instance:
 		parent::setQuery($query);
@@ -218,85 +239,52 @@ class PdoDriver extends DatabaseDriver
 	 * Execute the SQL statement.
 	 *
 	 * @throws \RuntimeException
-	 * @throws \PDOException
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
 	 * @since   1.0
 	 */
-	public function execute()
+	public function doExecute()
 	{
-		$this->connect();
-
-		if (!is_object($this->connection))
-		{
-			throw new \RuntimeException('Database disconnected.');
-		}
-
-		// Take a local copy so that we don't modify the original query and cause issues later
-		$sql = $this->replacePrefix((string) $this->sql);
-
-		// Increment the query counter.
-		$this->count++;
-
-		// If debugging is enabled then let's log the query.
-		if ($this->debug)
-		{
-			// Add the query to the object queue.
-			$this->log(LogLevel::DEBUG, '{sql}', array('sql' => $sql, 'category' => 'databasequery', 'trace' => debug_backtrace()));
-		}
-
-		// Execute the query.
-		$this->executed = false;
-
-		if (!($this->prepared instanceof \PDOStatement))
+		if (!($this->cursor instanceof \PDOStatement))
 		{
 			throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');
 		}
 
 		// Bind the variables:
-		if ($this->sql instanceof PreparableInterface)
+		if ($this->query instanceof PreparableInterface)
 		{
-			$bounded =& $this->sql->getBounded();
+			$bounded =& $this->query->getBounded();
 
-			foreach ($bounded as $key => $obj)
+			foreach ($bounded as $key => $data)
 			{
-				$this->prepared->bindParam($key, $obj->value, $obj->dataType, $obj->length, $obj->driverOptions);
+				$this->cursor->bindParam($key, $data->value, $data->dataType, $data->length, $data->driverOptions);
 			}
 		}
 
 		try
 		{
-			$this->prepared->execute();
+			$this->cursor->execute();
 		}
 		catch (\PDOException $e)
 		{
-			// Get the error number and message before we execute any more queries.
-			$errorNum = (int) $this->prepared->errorCode();
-			$errorMsg = (string) 'SQL: ' . implode(", ", $this->prepared->errorInfo());
-
-			// Throw the normal query exception.
-			$this->log(LogLevel::ERROR, 'Database query failed (error #{code}): {message}', array('code' => $errorNum, 'message' => $errorMsg));
-
-			throw $e;
+			throw new \RuntimeException('SQL: ' . implode(", ", $this->cursor->errorInfo()), $this->cursor->errorCode(), $e);
 		}
 
-		return $this->prepared;
+		return $this;
 	}
-
-
 
 	/**
 	 * Method to free up the memory used for the result set.
 	 *
 	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
 	 *
-	 * @return  void
+	 * @return  static
 	 *
 	 * @since   1.0
 	 */
 	public function freeResult($cursor = null)
 	{
-		$this->executed = false;
+		$cursor = $cursor ? : $this->cursor;
 
 		if ($cursor instanceof \PDOStatement)
 		{
@@ -304,11 +292,29 @@ class PdoDriver extends DatabaseDriver
 			$cursor = null;
 		}
 
-		if ($this->prepared instanceof \PDOStatement)
+		return $this;
+	}
+
+	/**
+	 * getReader
+	 *
+	 * @param Query $query
+	 *
+	 * @return  DatabaseReader
+	 */
+	public function getReader($query = null)
+	{
+		if ($query)
 		{
-			$this->prepared->closeCursor();
-			$this->prepared = null;
+			$this->setQuery($query)->execute();
 		}
+
+		if (!$this->reader)
+		{
+			$this->reader = new PdoReader($this);
+		}
+
+		return $this->reader;
 	}
 }
  

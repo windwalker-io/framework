@@ -6,10 +6,14 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Database;
+namespace Windwalker\Database\Driver;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Windwalker\Database\Command\DatabaseReader;
+use Windwalker\Database\Command\DatabaseTable;
+use Windwalker\Database\Command\DatabaseWriter;
 use Windwalker\Query\Query;
 
 /**
@@ -81,7 +85,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * @var    mixed
 	 * @since  1.0
 	 */
-	protected $sql;
+	protected $query;
 
 	/**
 	 * The common database table prefix.
@@ -138,6 +142,27 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * @since  1.0
 	 */
 	protected $logger;
+
+	/**
+	 * Property reader.
+	 *
+	 * @var  DatabaseReader
+	 */
+	protected $reader = null;
+
+	/**
+	 * Property writer.
+	 *
+	 * @var DatabaseWriter
+	 */
+	protected $writer;
+
+	/**
+	 * Property table.
+	 *
+	 * @var DatabaseTable[]
+	 */
+	protected $tables = array();
 
 	/**
 	 * Constructor.
@@ -198,6 +223,47 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * @since   1.0
 	 */
 	abstract public function disconnect();
+
+	/**
+	 * getCursor
+	 *
+	 * @return  resource
+	 */
+	public function getCursor()
+	{
+		return $this->cursor;
+	}
+
+	/**
+	 * getReader
+	 *
+	 * @return  DatabaseReader
+	 */
+	abstract public function getReader();
+
+	/**
+	 * getWriter
+	 *
+	 * @return  DatabaseWriter
+	 */
+	public function getWriter()
+	{
+		if (!$this->writer)
+		{
+			$this->writer = new DatabaseWriter($this);
+		}
+
+		return $this->writer;
+	}
+
+	/**
+	 * getTable
+	 *
+	 * @param string $name
+	 *
+	 * @return  DatabaseTable
+	 */
+	abstract public function getTable($name);
 
 	/**
 	 * Gets the name of the database used by this conneciton.
@@ -263,7 +329,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 		}
 		else
 		{
-			return $this->sql;
+			return $this->query;
 		}
 	}
 
@@ -293,7 +359,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
 	 *
-	 * @return  void
+	 * @return  static
 	 *
 	 * @since   1.0
 	 */
@@ -325,13 +391,15 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param   LoggerInterface  $logger  A PSR-3 compliant logger.
 	 *
-	 * @return  void
+	 * @return  static
 	 *
 	 * @since   1.0
 	 */
 	public function setLogger(LoggerInterface $logger)
 	{
 		$this->logger = $logger;
+
+		return $this;
 	}
 
 	/**
@@ -475,7 +543,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 */
 	public function setQuery($query)
 	{
-		$this->sql = $query;
+		$this->query = $query;
 
 		return $this;
 	}
@@ -497,6 +565,199 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * @since   1.0
 	 * @throws  \RuntimeException
 	 */
-	abstract public function execute();
+	public function execute()
+	{
+		$this->connect();
+
+		if (!is_object($this->connection))
+		{
+			throw new \RuntimeException('Database disconnected.');
+		}
+
+		// Take a local copy so that we don't modify the original query and cause issues later
+		$sql = $this->replacePrefix((string) $this->query);
+
+		// Increment the query counter.
+		$this->count++;
+
+		// If debugging is enabled then let's log the query.
+		if ($this->debug)
+		{
+			// Add the query to the object queue.
+			$this->log(LogLevel::DEBUG, 'Executed: {sql}', array('sql' => $sql));
+		}
+
+		try
+		{
+			$this->doExecute();
+		}
+		catch (\RuntimeException $e)
+		{
+			// Throw the normal query exception.
+			$this->log(LogLevel::ERROR, 'Database query failed (error #{code}): {message}', array('code' => $e->getCode(), 'message' => $e->getMessage()));
+
+			throw $e;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Execute the SQL statement.
+	 *
+	 * @return  mixed  A database cursor resource on success, boolean false on failure.
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
+	 */
+	abstract protected function doExecute();
+
+	/**
+	 * loadAll
+	 *
+	 * @param string $key
+	 * @param string $class
+	 *
+	 * @return  mixed
+	 */
+	public function loadAll($key = null, $class = '\\stdClass')
+	{
+		if (strtolower($class) == 'array')
+		{
+			return $this->getReader()->loadAssocList($key);
+		}
+
+		return $this->getReader()->loadObjectList($key, $class);
+	}
+
+	/**
+	 * loadOne
+	 *
+	 * @param string $class
+	 *
+	 * @return  mixed
+	 */
+	public function loadOne($class = '\\stdClass')
+	{
+		if (strtolower($class) == 'array')
+		{
+			return $this->getReader()->loadAssoc();
+		}
+
+		return $this->getReader()->loadObject($class);
+	}
+
+	/**
+	 * loadResult
+	 *
+	 * @return  mixed
+	 */
+	public function loadResult()
+	{
+		return $this->getReader()->loadResult();
+	}
+
+	/**
+	 * loadColumn
+	 *
+	 * @return  mixed
+	 */
+	public function loadColumn()
+	{
+		return $this->getReader()->loadColumn();
+	}
+
+	/**
+	 * getIndependentQuery
+	 *
+	 * @return  Query
+	 */
+	private function getIndependentQuery()
+	{
+		static $query;
+
+		if (!$query)
+		{
+			$query = $this->getQuery(true);
+		}
+
+		return $query;
+	}
+
+	/**
+	 * quoteName
+	 *
+	 * @param string $text
+	 *
+	 * @return  mixed
+	 */
+	public function quoteName($text)
+	{
+		return $this->getIndependentQuery()->quoteName($text);
+	}
+
+	/**
+	 * qn
+	 *
+	 * @param string $text
+	 *
+	 * @return  mixed
+	 */
+	public function qn($text)
+	{
+		return $this->quoteName($text);
+	}
+
+	/**
+	 * quote
+	 *
+	 * @param string $text
+	 * @param bool   $escape
+	 *
+	 * @return  string
+	 */
+	public function quote($text, $escape = true)
+	{
+		return $this->getIndependentQuery()->quote($text, $escape);
+	}
+
+	/**
+	 * q
+	 *
+	 * @param string $text
+	 * @param bool   $escape
+	 *
+	 * @return  string
+	 */
+	public function q($text, $escape = true)
+	{
+		return $this->quote($text);
+	}
+
+	/**
+	 * escape
+	 *
+	 * @param string $text
+	 * @param bool   $extra
+	 *
+	 * @return  string
+	 */
+	public function escape($text, $extra = true)
+	{
+		return $this->getIndependentQuery()->escape($text, $extra);
+	}
+
+	/**
+	 * e
+	 *
+	 * @param string $text
+	 * @param bool   $extra
+	 *
+	 * @return  string
+	 */
+	public function e($text, $extra = true)
+	{
+		return $this->escape($text);
+	}
 }
  
