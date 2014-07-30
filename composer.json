@@ -18,11 +18,17 @@
 		"phpunit/phpunit": "4.*",
 		"phpunit/dbunit": "1.*",
 		"phpunit/phpunit-mock-objects": "2.*",
-		"phpunit/phpunit-skeleton-generator": "2.*"
+		"phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl"
 	},
 	"suggest": {
 		"symfony/yaml": "Install 2.* if you require YAML support."
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/ventoviro/phpunit-skeleton-generator"
+		}
+	],
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\": "src/"

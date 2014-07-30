@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of windwalker project. 
+ * Part of windwalker project.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -73,14 +73,17 @@ class GenTest extends AbstractCliApplication
 		$autoload = WINDWALKER_ROOT . '/vendor/autoload.php';
 
 		$command = sprintf(
-			'php %s/vendor/phpunit/phpunit-skeleton-generator/phpunit-skelgen --bootstrap="%s" %s %s %s %s',
-			WINDWALKER_ROOT,
+			'vendor/phpunit/phpunit-skeleton-generator/phpunit-skelgen generate-test --bootstrap="%s" %s %s %s %s',
 			$autoload,
-			$classPath,
 			$class,
-			$testFile,
-			$realTestClass
+			$classPath,
+			$realTestClass,
+			$testFile
 		);
+
+		$command = 'php ' . WINDWALKER_ROOT . '/' . $command;
+
+		\Windwalker\Filesystem\Folder::create(dirname($testFile));
 
 		$this->exec($command);
 	}
