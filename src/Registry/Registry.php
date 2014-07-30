@@ -28,11 +28,12 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Constructor
 	 *
-	 * @param   mixed  $data  The data to bind to the new Registry object.
+	 * @param   mixed   $data   The data to bind to the new Registry object.
+	 * @param   string  $format The format of input, only work when first argument is string.
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($data = null)
+	public function __construct($data = null, $format = 'json')
 	{
 		// Instantiate the internal data object.
 		$this->data = new \stdClass;
@@ -44,7 +45,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 		}
 		elseif (!empty($data) && is_string($data))
 		{
-			$this->loadString($data);
+			$this->loadString($data, $format);
 		}
 	}
 
@@ -522,5 +523,50 @@ class Registry implements \JsonSerializable, \ArrayAccess
 		}
 
 		return $array;
+	}
+
+	/**
+	 * Dump to on dimension array.
+	 *
+	 * @param string $separator The key separator.
+	 *
+	 * @return  string[] Dumped array.
+	 */
+	public function toOneDimension($separator = '.')
+	{
+		$array = array();
+
+		$this->asOneDimension($separator, $this->data, $array);
+
+		return $array;
+	}
+
+	/**
+	 * Method to recursively convert data to one dimension array.
+	 *
+	 * @param string        $separator The key separator.
+	 * @param array|object  $data      Data source of this scope.
+	 * @param array         &$array    The result array, it is pass by reference.
+	 * @param string        $prefix    Last level key prefix.
+	 *
+	 * @return  void
+	 */
+	protected function asOneDimension($separator = '.', $data = null, &$array = array(), $prefix = '')
+	{
+		$data = (array) $data;
+
+		foreach ($data as $k => $v)
+		{
+			$key = $prefix ? $prefix . $separator . $k : $k;
+
+			if (is_object($v) || is_array($v))
+			{
+				$this->asOneDimension($separator, $v, $array, $key);
+			}
+			else
+			{
+				$array[$key] = $v;
+			}
+		}
 	}
 }
