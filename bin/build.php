@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-use Joomla\Application\AbstractCliApplication;
+use Windwalker\Application\AbstractCliApplication;
 
 include_once __DIR__ . '/../vendor/autoload.php';
 
@@ -67,9 +67,9 @@ class Build extends AbstractCliApplication
 	 */
 	protected function doExecute()
 	{
-		$this->tag = $tag = $this->getArgument(0) or $this->stop('Please give me tag name.');
+		$this->tag = $tag = $this->io->getArgument(0) or $this->stop('Please give me tag name.');
 
-		$test = $this->input->get('t') ?: $this->input->get('test');
+		$test = $this->io->getOption('t') ?: $this->io->getOption('test');
 
 		$this->master = $master = $test ? 'test' : 'master';
 
@@ -151,24 +151,6 @@ class Build extends AbstractCliApplication
 		$return = exec(trim($command), $this->lastOutput, $this->lastReturn);
 
 		$this->out($return);
-	}
-
-	/**
-	 * getArgument
-	 *
-	 * @param integer $offset
-	 * @param mixed   $default
-	 *
-	 * @return  mixed
-	 */
-	protected function getArgument($offset, $default = null)
-	{
-		if (! empty($this->input->args[$offset]))
-		{
-			return $this->input->args[$offset];
-		}
-
-		return $default;
 	}
 
 	/**

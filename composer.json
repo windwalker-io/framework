@@ -15,8 +15,10 @@
 	},
 	"require-dev": {
 		"joomla/test": "~1.0",
-		"joomla/application": "~1.0",
-		"joomla/utilities": "~1.0"
+		"phpunit/phpunit": "4.*",
+		"phpunit/dbunit": "1.*",
+		"phpunit/phpunit-mock-objects": "2.*",
+		"phpunit/phpunit-skeleton-generator": "2.*"
 	},
 	"suggest": {
 		"symfony/yaml": "Install 2.* if you require YAML support."

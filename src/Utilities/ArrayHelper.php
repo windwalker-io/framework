@@ -574,5 +574,92 @@ class ArrayHelper
 
 		return false;
 	}
+
+	/**
+	 * Get data from array or object by path.
+	 *
+	 * Example: `ArrayHelper::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
+	 *
+	 * @param mixed $data      An array or object to get value.
+	 * @param mixed $arguments The arguments path.
+	 *
+	 * @return  mixed Found value, null if not exists.
+	 */
+	public static function getByPath($data, $arguments)
+	{
+		if (empty($arguments))
+		{
+			return null;
+		}
+
+		$args = is_array($arguments) ? $arguments : explode('.', $arguments);
+
+		$dataTmp = $data;
+
+		foreach ($args as $arg)
+		{
+			if (is_object($dataTmp) && !empty($dataTmp->$arg))
+			{
+				$dataTmp = $dataTmp->$arg;
+			}
+			elseif (is_array($dataTmp) && !empty($dataTmp[$arg]))
+			{
+				$dataTmp = $dataTmp[$arg];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		return $dataTmp;
+	}
+
+	/**
+	 * array_merge_recursive does indeed merge arrays, but it converts values with duplicate
+	 * keys to arrays rather than overwriting the value in the first array with the duplicate
+	 * value in the second array, as array_merge does. I.e., with array_merge_recursive,
+	 * this happens (documented behavior):
+	 *
+	 * array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
+	 *     => array('key' => array('org value', 'new value'));
+	 *
+	 * array_merge_recursive_distinct does not change the datatypes of the values in the arrays.
+	 * Matching keys' values in the second array overwrite those in the first array, as is the
+	 * case with array_merge, i.e.:
+	 *
+	 * array_merge_recursive_distinct(array('key' => 'org value'), array('key' => 'new value'));
+	 *     => array('key' => array('new value'));
+	 *
+	 * Parameters are passed by reference, though only for performance reasons. They're not
+	 * altered by this function.
+	 *
+	 * @param  array    &$array1   Array to be merge.
+	 * @param  array    &$array2   Array to be merge.
+	 * @param  boolean  $recursive Recursive merge, default is true.
+	 *
+	 * @return array Merged array.
+	 *
+	 * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
+	 * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
+	 */
+	public static function merge(array &$array1, array &$array2, $recursive = true)
+	{
+		$merged = $array1;
+
+		foreach ($array2 as $key => &$value)
+		{
+			if ($recursive && is_array($value) && isset($merged[$key]) && is_array($merged[$key]))
+			{
+				$merged[$key] = static::merge($merged [$key], $value);
+			}
+			else
+			{
+				$merged[$key] = $value;
+			}
+		}
+
+		return $merged;
+	}
 }
  

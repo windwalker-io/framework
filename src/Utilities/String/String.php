@@ -11,6 +11,8 @@ namespace Windwalker\Utilities\String;
 // PHP mbstring and iconv local configuration
 
 // Check if mbstring extension is loaded and attempt to load it if not present except for windows
+use Windwalker\Utilities\ArrayHelper;
+
 if (extension_loaded('mbstring'))
 {
 	// Make sure to suppress the output in case ini_set is disabled
@@ -66,6 +68,68 @@ abstract class String
 			array(' (%d)', '(%d)'),
 		),
 	);
+
+	/**
+	 * Quote a string.
+	 *
+	 * @param   string $string The string to quote.
+	 * @param   string $quote  The quote symbol.
+	 *
+	 * @return  string Quoted string.
+	 */
+	public static function quote($string, $quote = "''")
+	{
+		if (empty($quote[1]))
+		{
+			$quote[1] = $quote[0];
+		}
+
+		return $quote[0] . $string . $quote[1];
+	}
+
+	/**
+	 * Back quote a string.
+	 *
+	 * @param   string $string The string to quote.
+	 *
+	 * @return  string Quoted string.
+	 */
+	public static function backquote($string)
+	{
+		return static::quote($string, '``');
+	}
+
+	/**
+	 * Parse variable and replace it. This method is a simple template engine.
+	 *
+	 * Example: The {{ foo.bar.yoo }} will be replace to value of `$data['foo']['bar']['yoo']`
+	 *
+	 * @param   string $string The template to replace.
+	 * @param   array  $data   The data to find.
+	 * @param   array  $tags   The variable tags.
+	 *
+	 * @return  string Replaced template.
+	 */
+	public static function parseVariable($string, $data = array(), $tags = array('{{', '}}'))
+	{
+		return preg_replace_callback(
+			'/\{\{\s*(.+?)\s*\}\}/',
+			function($match) use ($data)
+			{
+				$return = ArrayHelper::getByPath($data, $match[1]);
+
+				if (is_array($return) || is_object($return))
+				{
+					return print_r($return, 1);
+				}
+				else
+				{
+					return $return;
+				}
+			},
+			$string
+		);
+	}
 
 	/**
 	 * Increments a trailing number in a string.

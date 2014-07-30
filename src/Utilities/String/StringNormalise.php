@@ -159,4 +159,22 @@ abstract class StringNormalise
 
 		return $input;
 	}
+
+	/**
+	 * Convert to standard PSR-0 class name.
+	 *
+	 * @param   string $class The class name string.
+	 *
+	 * @return  string Normalised class name.
+	 */
+	public static function toClassNamespace($class)
+	{
+		$class = trim($class, '\\');
+
+		$class = str_replace(array('\\', '/'), ' ', $class);
+
+		$class = ucwords($class);
+
+		return str_replace(' ', '\\', $class);
+	}
 }
