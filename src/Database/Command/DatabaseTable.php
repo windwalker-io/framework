@@ -39,6 +39,22 @@ abstract class DatabaseTable
 	}
 
 	/**
+	 * create
+	 *
+	 * @param string $columns
+	 * @param array  $pks
+	 * @param array  $keys
+	 * @param bool   $ifNotExists
+	 * @param string $engine
+	 * @param int    $autoIncrement
+	 * @param string $defaultCharset
+	 *
+	 * @return  $this
+	 */
+	abstract public function create($columns, $pks = array(), $keys = array(), $ifNotExists = true, $engine = 'InnoDB',
+		$autoIncrement = null, $defaultCharset = 'utf8');
+
+	/**
 	 * rename
 	 *
 	 * @param string $newName

@@ -8,6 +8,7 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
+use Windwalker\Database\Command\DatabaseDatabase;
 use Windwalker\Database\Command\DatabaseReader;
 use Windwalker\Database\Command\DatabaseTable;
 use Windwalker\Database\Command\DatabaseTransaction;
@@ -227,18 +228,6 @@ class PdoDriver extends DatabaseDriver
 	}
 
 	/**
-	 * Set the connection to use UTF-8 character encoding.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   1.0
-	 */
-	public function setUTF()
-	{
-		return false;
-	}
-
-	/**
 	 * Execute the SQL statement.
 	 *
 	 * @throws \RuntimeException
@@ -317,12 +306,12 @@ class PdoDriver extends DatabaseDriver
 			$class = '\\Windwalker\\Query\\' . ucfirst($this->options['driver']) . '\\' . ucfirst($this->options['driver']) . 'Query';
 
 			// Make sure we have a query class for this driver.
-			if (!class_exists($class))
+			if (class_exists($class))
 			{
-				return parent::getQuery($new);
+				return new $class($this->getConnection());
 			}
 
-			return new $class($this->getConnection());
+			return parent::getQuery($new);
 		}
 		else
 		{
@@ -343,15 +332,35 @@ class PdoDriver extends DatabaseDriver
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTable', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
 
-			if (!class_exists($class))
+			if (class_exists($class))
 			{
-				return parent::getTransaction($name);
+				$this->tables[$name] = new $class($name, $this);
 			}
-
-			$this->tables[$name] = new $class($name, $this);
 		}
 
-		return $this->tables[$name];
+		return parent::getTable($name);
+	}
+
+	/**
+	 * getTable
+	 *
+	 * @param string $name
+	 *
+	 * @return  DatabaseDatabase
+	 */
+	public function getDatabase($name)
+	{
+		if (empty($this->databases[$name]))
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
+
+			if (class_exists($class))
+			{
+				$this->databases[$name] = new $class($name, $this);
+			}
+		}
+
+		return parent::getDatabase($name);
 	}
 
 	/**
@@ -372,15 +381,13 @@ class PdoDriver extends DatabaseDriver
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sReader', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
 
-			if (!class_exists($class))
+			if (class_exists($class))
 			{
-				return parent::getReader();
+				$this->reader = new $class($this);
 			}
-
-			$this->reader = new $class($this);
 		}
 
-		return $this->reader;
+		return parent::getReader();
 	}
 
 	/**
@@ -394,15 +401,13 @@ class PdoDriver extends DatabaseDriver
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sWriter', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
 
-			if (!class_exists($class))
+			if (class_exists($class))
 			{
-				return parent::getWriter();
+				$this->writer = new $class($this);
 			}
-
-			$this->writer = new $class($this);
 		}
 
-		return $this->writer;
+		return parent::getWriter();
 	}
 
 	/**
@@ -418,29 +423,33 @@ class PdoDriver extends DatabaseDriver
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTransaction', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
 
-			if (!class_exists($class))
+			if (class_exists($class))
 			{
-				return parent::getTransaction($nested);
+				$this->transaction = new $class($this, $nested);
 			}
-
-			$this->transaction = new $class($this, $nested);
 		}
 
-		return $this->transaction;
+		return parent::getTransaction($nested);
 	}
 
 	/**
-	 * Method to get an array of all tables in the database.
+	 * getDatabaseList
 	 *
 	 * @throws \LogicException
-	 *
-	 * @return  array  An array of all the tables in the database.
-	 *
-	 * @since   1.0
+	 * @return  mixed
 	 */
-	public function getTableList()
+	public function listDatabases()
 	{
-		throw new \LogicException('Please run SQL to get tables if you are using PdoDriver');
+		$builder = sprintf('Windwalker\\Query\\%s\\%sQueryBuilder', $this->options['driver'], $this->options['driver']);
+
+		if (!class_exists($builder))
+		{
+			throw new \LogicException($builder . ' not found, you should implement ' . __METHOD__ . ' in current deriver class.');
+		}
+
+		/** @var $builder \Windwalker\Query\QueryBuilderInterface */
+
+		return $this->setQuery($builder::showDatabases())->loadColumn();
 	}
 }
  

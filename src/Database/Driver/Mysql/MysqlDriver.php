@@ -37,18 +37,5 @@ class MysqlDriver extends PdoDriver
 
 		return $this;
 	}
-
-	/**
-	 * Method to get an array of all tables in the database.
-	 *
-	 * @return  array  An array of all the tables in the database.
-	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
-	 */
-	public function getTableList()
-	{
-		return $this->setQuery('SHOW TABLES')->loadColumn();
-	}
 }
  

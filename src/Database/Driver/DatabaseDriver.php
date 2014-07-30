@@ -11,6 +11,7 @@ namespace Windwalker\Database\Driver;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Windwalker\Database\Command\DatabaseDatabase;
 use Windwalker\Database\Command\DatabaseReader;
 use Windwalker\Database\Command\DatabaseTable;
 use Windwalker\Database\Command\DatabaseTransaction;
@@ -98,22 +99,6 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	protected $tablePrefix;
 
 	/**
-	 * True if the database engine supports UTF-8 character encoding.
-	 *
-	 * @var    boolean
-	 * @since  1.0
-	 */
-	protected $utf = true;
-
-	/**
-	 * The database error message.
-	 *
-	 * @var    string
-	 * @since  1.0
-	 */
-	protected $errorMsg;
-
-	/**
 	 * A logger.
 	 *
 	 * @var    LoggerInterface
@@ -141,6 +126,13 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * @var DatabaseTable[]
 	 */
 	protected $tables = array();
+
+	/**
+	 * Property databases.
+	 *
+	 * @var  DatabaseDatabase[]
+	 */
+	protected $databases = array();
 
 	/**
 	 * Property transaction.
@@ -255,15 +247,6 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	abstract public function disconnect();
 
 	/**
-	 * Set the connection to use UTF-8 character encoding.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   1.0
-	 */
-	abstract public function setUTF();
-
-	/**
 	 * Execute the SQL statement.
 	 *
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
@@ -306,14 +289,11 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	abstract public function freeResult($cursor = null);
 
 	/**
-	 * Method to get an array of all tables in the database.
+	 * getDatabaseList
 	 *
-	 * @return  array  An array of all the tables in the database.
-	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @return  mixed
 	 */
-	abstract public function getTableList();
+	abstract public function listDatabases();
 
 	/**
 	 * getCursor
@@ -374,6 +354,25 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 		}
 
 		return $this->tables[$name];
+	}
+
+	/**
+	 * getTable
+	 *
+	 * @param string $name
+	 *
+	 * @return  DatabaseDatabase
+	 */
+	public function getDatabase($name)
+	{
+		if (empty($this->databases[$name]))
+		{
+			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->name), ucfirst($this->name));
+
+			$this->databases[$name] = new $class($name, $this);
+		}
+
+		return $this->databases[$name];
 	}
 
 	/**
@@ -455,7 +454,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @since   1.0
 	 */
-	public function getDatabase()
+	public function getCurrentDatabase()
 	{
 		return $this->database;
 	}
@@ -470,18 +469,6 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	public function getPrefix()
 	{
 		return $this->tablePrefix;
-	}
-
-	/**
-	 * Determine whether or not the database engine supports UTF-8 character encoding.
-	 *
-	 * @return  boolean  True if the database engine supports UTF-8 character encoding.
-	 *
-	 * @since   1.0
-	 */
-	public function hasUTFSupport()
-	{
-		return $this->utf;
 	}
 
 	/**

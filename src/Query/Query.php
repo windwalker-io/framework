@@ -466,9 +466,9 @@ class Query implements QueryInterface
 
 		if (is_array($clause))
 		{
-			foreach ($clause as $clause)
+			foreach ($clause as $clau)
 			{
-				$this->clear($clause);
+				$this->clear($clau);
 			}
 
 			return $this;

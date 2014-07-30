@@ -26,6 +26,29 @@ class MysqlTable extends DatabaseTable
 	protected static $columnCache = array();
 
 	/**
+	 * create
+	 *
+	 * @param string $columns
+	 * @param array  $pks
+	 * @param array  $keys
+	 * @param bool   $ifNotExists
+	 * @param string $engine
+	 * @param int    $autoIncrement
+	 * @param string $defaultCharset
+	 *
+	 * @return  $this
+	 */
+	public function create($columns, $pks = array(), $keys = array(), $ifNotExists = true, $engine = 'InnoDB',
+		$autoIncrement = null, $defaultCharset = 'utf8')
+	{
+		$query = MysqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $ifNotExists, $engine, $autoIncrement, $defaultCharset);
+
+		$this->db->setQuery($query)->execute();
+
+		return $this;
+	}
+
+	/**
 	 * rename
 	 *
 	 * @param string $newName
@@ -142,13 +165,15 @@ class MysqlTable extends DatabaseTable
 	 * @param null   $position
 	 * @param string $comment
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
 	public function addColumn($name, $type = 'text', $unsigned = false, $notNull = false, $default = '', $position = null, $comment = '')
 	{
 		$query = MysqlQueryBuilder::addColumn($this->table, $name, $type, $unsigned, $notNull, $default, $position, $comment);
 
-		return $this->db->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
+
+		return $this;
 	}
 
 	/**
@@ -162,7 +187,9 @@ class MysqlTable extends DatabaseTable
 	{
 		$query = MysqlQueryBuilder::dropColumn($name);
 
-		return $this->db->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
+
+		return $this;
 	}
 
 	/**
@@ -179,7 +206,9 @@ class MysqlTable extends DatabaseTable
 	{
 		$query = MysqlQueryBuilder::addIndex($this->table, $type, $name, $columns, $comment);
 
-		return $this->db->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
+
+		return $this;
 	}
 
 	/**
@@ -194,7 +223,9 @@ class MysqlTable extends DatabaseTable
 	{
 		$query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);
 
-		return $this->db->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
+
+		return $this;
 	}
 
 	/**

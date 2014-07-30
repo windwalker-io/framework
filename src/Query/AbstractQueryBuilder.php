@@ -13,23 +13,54 @@ namespace Windwalker\Query;
  *
  * @since 1.0
  */
-abstract class AbstractQueryBuilder
+abstract class AbstractQueryBuilder implements QueryBuilderInterface
 {
 	/**
 	 * Property query.
 	 *
-	 * @var  null|Query
+	 * @var  Query
 	 */
-	protected $query = null;
+	public static $query = null;
 
 	/**
-	 * Class init.
+	 * build
 	 *
-	 * @param Query $query
+	 * @return  string
 	 */
-	public function __construct(Query $query)
+	public static function build()
 	{
-		$this->query = $query;
+		$args = func_get_args();
+
+		$sql = array();
+
+		foreach ($args as $arg)
+		{
+			if ($arg === '' || $arg === null || $arg === false)
+			{
+				continue;
+			}
+
+			$sql[] = $arg;
+		}
+
+		return implode(' ', $args);
+	}
+
+	/**
+	 * getQuery
+	 *
+	 * @param bool $new
+	 *
+	 * @return  Query
+	 */
+	public static function getQuery($new = false)
+	{
+		if (!static::$query || $new)
+		{
+			static::$query = new Query;
+		}
+
+		return static::$query;
 	}
 }
  

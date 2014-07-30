@@ -8,6 +8,7 @@
 
 namespace Windwalker\Query\Mysql;
 
+use Windwalker\Query\AbstractQueryBuilder;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
 
@@ -16,7 +17,7 @@ use Windwalker\Query\QueryElement;
  *
  * @since 1.0
  */
-class MysqlQueryBuilder
+abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 {
 	const PRIMARY  = 'PRIMARY KEY';
 	const INDEX    = 'INDEX';
@@ -24,13 +25,6 @@ class MysqlQueryBuilder
 	const SPATIAL  = 'SPATIAL';
 	const FULLTEXT = 'UNIQUE';
 	const FOREIGN  = 'FOREIGN KEY';
-
-	/**
-	 * Property query.
-	 *
-	 * @var  Query
-	 */
-	public static $query = null;
 
 	/**
 	 * showDatabases
@@ -44,6 +38,48 @@ class MysqlQueryBuilder
 		$where ? new QueryElement('WHERE', $where, 'AND') : null;
 
 		return 'SHOW DATABASES' . $where;
+	}
+
+	/**
+	 * createDatabase
+	 *
+	 * @param string $name
+	 * @param bool   $isNotExists
+	 * @param string $charset
+	 * @param string $collate
+	 *
+	 * @return  string
+	 */
+	public static function createDatabase($name, $isNotExists = false, $charset = null, $collate = null)
+	{
+		$query = static::getQuery();
+
+		return static::build(
+			'CREATE DATABASE',
+			$isNotExists ? 'IF NOT EXISTS' : null,
+			$query->quoteName($name),
+			$charset ? 'CHARACTER SET=' . $query->quote($charset) : null,
+			$collate ? 'COLLATE=' . $query->quote($collate) : null
+		);
+	}
+
+	/**
+	 * dropTable
+	 *
+	 * @param string $db
+	 * @param bool   $ifExist
+	 *
+	 * @return  string
+	 */
+	public static function dropDatabase($db, $ifExist = false)
+	{
+		$query = static::getQuery();
+
+		return static::build(
+			'DROP DATABASE',
+			$ifExist ? 'IF EXISTS' : null,
+			$query->quoteName($db)
+		);
 	}
 
 	/**
@@ -73,39 +109,20 @@ class MysqlQueryBuilder
 	 *
 	 * @param string $dbname
 	 * @param bool   $full
-	 * @param string $like
+	 * @param string $where
 	 *
 	 * @return  string
 	 */
-	public static function showDbTables($dbname, $full = false, $like = null)
+	public static function showDbTables($dbname, $full = false, $where = null)
 	{
 		$query = static::getQuery();
 
 		return static::build(
 			'SHOW',
 			$full ? 'FULL' : false,
-			'TABLES FROM',
+			'TABLE STATUS FROM',
 			$query->quoteName($dbname),
-			$like ? 'LIKE ' . $query->quote($like) : null
-		);
-	}
-
-	/**
-	 * dropTable
-	 *
-	 * @param string $db
-	 * @param bool   $ifExist
-	 *
-	 * @return  string
-	 */
-	public static function dropDatabase($db, $ifExist = false)
-	{
-		$query = static::getQuery();
-
-		return static::build(
-			'DROP DATABASE',
-			$ifExist ? 'IF EXISTS' : null,
-			$query->quoteName($db)
+			$where ? new QueryElement('WHERE', $where, 'AND') : null
 		);
 	}
 
@@ -460,20 +477,25 @@ class MysqlQueryBuilder
 	}
 
 	/**
-	 * getQuery
+	 * replace
 	 *
-	 * @param bool $new
+	 * @param string $name
+	 * @param array  $columns
+	 * @param array  $values
 	 *
-	 * @return  Query
+	 * @return  string
 	 */
-	public static function getQuery($new = false)
+	public static function replace($name, $columns = array(), $values = array())
 	{
-		if (!static::$query || $new)
-		{
-			static::$query = new MysqlQuery;
-		}
+		$query = new MysqlQuery;
 
-		return static::$query;
+		$query = (string) $query->insert($query->quoteName($name))
+			->columns($query->quoteName($columns))
+			->values($query->quote($values));
+
+		$query = substr(trim($query), 6);
+
+		return 'REPLACE' . $query;
 	}
 }
  
