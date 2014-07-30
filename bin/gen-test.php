@@ -70,15 +70,19 @@ class GenTest extends AbstractCliApplication
 		$testFile = $testPath . DIRECTORY_SEPARATOR . $testClass . '.php';
 		$realTestClass = 'Windwalker\\' . ucfirst($package) . '\\Tests\\' . $testClass;
 
+		$autoload = WINDWALKER_ROOT . '/vendor/autoload.php';
+
 		$command = sprintf(
-			' %s %s %s %s',
+			'php %s/vendor/phpunit/phpunit-skeleton-generator/phpunit-skelgen --bootstrap="%s" %s %s %s %s',
+			WINDWALKER_ROOT,
+			$autoload,
 			$classPath,
 			$class,
-			$realTestClass,
-			$testFile
+			$testFile,
+			$realTestClass
 		);
 
-		$this->out($command);
+		$this->exec($command);
 	}
 
 	protected function getPackagePath($class, $classPath)
