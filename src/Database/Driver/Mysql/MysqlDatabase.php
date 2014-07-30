@@ -26,6 +26,18 @@ class MysqlDatabase extends DatabaseDatabase
 	protected static $tablesCache = array();
 
 	/**
+	 * select
+	 *
+	 * @return  static
+	 */
+	public function select()
+	{
+		$this->db->setQuery('USE ' . $this->db->quoteName($this->database))->execute();
+
+		return $this;
+	}
+
+	/**
 	 * createDatabase
 	 *
 	 * @param bool   $ifNotExists

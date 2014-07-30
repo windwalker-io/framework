@@ -39,6 +39,13 @@ abstract class DatabaseDatabase
 	}
 
 	/**
+	 * select
+	 *
+	 * @return  static
+	 */
+	abstract public function select();
+
+	/**
 	 * createDatabase
 	 *
 	 * @param string $name

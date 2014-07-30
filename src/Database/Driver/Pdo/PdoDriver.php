@@ -190,16 +190,16 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param   string $database The name of the database to select for use.
 	 *
-	 * @return  boolean  True if the database was successfully selected.
+	 * @return  static
 	 *
 	 * @since   1.0
 	 * @throws  \RuntimeException
 	 */
 	public function select($database)
 	{
-		$this->connect();
+		$this->getDatabase($database)->select();
 
-		return true;
+		return $this;
 	}
 
 	/**
@@ -259,7 +259,7 @@ class PdoDriver extends DatabaseDriver
 		}
 		catch (\PDOException $e)
 		{
-			throw new \RuntimeException('SQL: ' . implode(", ", $this->cursor->errorInfo()), $this->cursor->errorCode(), $e);
+			throw new \RuntimeException('SQL: ' . $e->getMessage(), (int) $e->getCode(), $e);
 		}
 
 		return $this;

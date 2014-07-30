@@ -17,25 +17,27 @@ use Windwalker\Database\Driver\Pdo\PdoDriver;
  */
 class MysqlDriver extends PdoDriver
 {
+	/**
+	 * Property name.
+	 *
+	 * @var  string
+	 */
 	protected $name = 'mysql';
 
 	/**
-	 * Select a database for use.
+	 * Constructor.
 	 *
-	 * @param   string  $database  The name of the database to select for use.
-	 *
-	 * @return  boolean  True if the database was successfully selected.
+	 * @param   \PDO  $connection The pdo connection object.
+	 * @param   array $options    List of options used to configure the connection
 	 *
 	 * @since   1.0
-	 * @throws  \RuntimeException
 	 */
-	public function select($database)
+	public function __construct(\PDO $connection = null, $options = array())
 	{
-		$this->connect();
+		$options['driver'] = 'mysql';
+		$options['charset'] = (isset($options['charset'])) ? $options['charset'] : 'utf8';
 
-		$this->setQuery('USE ' . $this->quoteName($database))->execute();
-
-		return $this;
+		parent::__construct($connection, $options);
 	}
 }
  
