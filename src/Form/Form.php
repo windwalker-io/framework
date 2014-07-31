@@ -8,6 +8,8 @@
 
 namespace Windwalker\Form;
 
+use Windwalker\Form\Exception\FormValidFailException;
+use Windwalker\Form\Exception\ValidateFailException;
 use Windwalker\Form\Field\FieldHelper;
 use Windwalker\Form\Field\FieldInterface;
 
@@ -126,22 +128,9 @@ class Form implements \IteratorAggregate
 	 */
 	public function addField($field)
 	{
-		if ($field instanceof \SimpleXMLElement)
-		{
-			$field = FieldHelper::createByXml($field, $this->fieldNamespaces);
-		}
-		elseif (is_string($field))
-		{
-			$xml = new \SimpleXMLElement($field);
+		$field = FieldHelper::createField($field, $this->fieldNamespaces);
 
-			$field = FieldHelper::createByXml($xml, $this->fieldNamespaces);
-		}
-		elseif (!($field instanceof FieldInterface))
-		{
-			throw new \InvalidArgumentException(__CLASS__ . '::addField() need FieldInterface or SimpleXMLElement.');
-		}
-
-		$group = $field->getGroup();
+		$group    = $field->getGroup();
 		$fieldset = $field->getFieldset();
 
 		if ($group && !in_array($group, $this->groups))
@@ -179,7 +168,7 @@ class Form implements \IteratorAggregate
 	/**
 	 * Retrieve an external iterator
 	 *
-	 * @return \Traversable|FieldInterface[] An instance of an object implementing Iterator or Traversable
+	 * @return \Iterator|FieldInterface[] An instance of an object implementing Iterator or Traversable
 	 */
 	public function getIterator()
 	{
@@ -271,7 +260,7 @@ class Form implements \IteratorAggregate
 	 * @param string $fieldset
 	 * @param string $group
 	 *
-	 * @return  array
+	 * @return  FieldInterface[]
 	 */
 	public function getFields($fieldset = null, $group = null)
 	{
@@ -364,6 +353,129 @@ class Form implements \IteratorAggregate
 		}
 
 		return $default;
+	}
+
+	/**
+	 * bind
+	 *
+	 * @param array $data
+	 *
+	 * @return  $this
+	 */
+	public function bind($data)
+	{
+		foreach ($this->fields as $name => $field)
+		{
+			$value = FormHelper::getByPath($data, $name);
+
+			$field->setValue($value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * validate
+	 *
+	 * @throws  FormValidFailException
+	 * @return  boolean
+	 */
+	public function validate()
+	{
+		$failFields = array();
+
+		foreach ($this->fields as $field)
+		{
+			try
+			{
+				$field->validate();
+			}
+			catch (ValidateFailException $e)
+			{
+				$failFields[] = $e;
+			}
+		}
+
+		if ($failFields)
+		{
+			throw new FormValidFailException($failFields, 'Validate fail.');
+		}
+
+		return true;
+	}
+
+	/**
+	 * prepareView
+	 *
+	 * @param string $fieldset
+	 * @param string $group
+	 *
+	 * @return  array
+	 */
+	public function prepareView($fieldset = null, $group = null)
+	{
+		$views = array();
+
+		foreach ($this->getFields($fieldset, $group) as $field)
+		{
+			$views[$field->getName(true)] = array(
+				'label' => $field->getLabel(),
+				'value' => $field->renderView()
+			);
+		}
+
+		return $views;
+	}
+
+	/**
+	 * prepareStore
+	 *
+	 * @param string $fieldset
+	 * @param string $group
+	 *
+	 * @return  void
+	 */
+	public function prepareStore($fieldset = null, $group = null)
+	{
+		foreach ($this->getFields($fieldset, $group) as $field)
+		{
+			$field->prepareStore();
+		}
+	}
+
+	/**
+	 * renderField
+	 *
+	 * @param string $name
+	 * @param string $group
+	 *
+	 * @return  string
+	 */
+	public function renderField($name, $group = '')
+	{
+		$field = $this->getField($name, $group);
+
+		return $field->render();
+	}
+
+	/**
+	 * renderFields
+	 *
+	 * @param string $fieldset
+	 * @param string $group
+	 *
+	 * @return  string
+	 */
+	public function renderFields($fieldset = null, $group = null)
+	{
+		$output = '';
+
+		foreach ($this->getFields($fieldset, $group) as $field)
+		{
+			$output .= "\n" . $field->render();
+		}
+
+		return $output;
 	}
 
 	/**

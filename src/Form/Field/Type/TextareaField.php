@@ -8,22 +8,15 @@
 
 namespace Windwalker\Form\Field\Type;
 
-use Windwalker\Form\Field\AbstractField;
+use Windwalker\Dom\HtmlElement;
 
 /**
- * The TextField class.
+ * The TextareaField class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class TextField extends AbstractField
+class TextareaField extends TextField
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'text';
-
 	/**
 	 * prepareRenderInput
 	 *
@@ -33,16 +26,27 @@ class TextField extends AbstractField
 	 */
 	public function prepareAttributes(&$attrs)
 	{
-		$attrs['type']     = 'text';
 		$attrs['name']     = $this->getFieldName();
 		$attrs['id']       = $this->getAttribute('id', $this->getId());
 		$attrs['class']    = $this->getAttribute('class');
-		$attrs['size']     = $this->getAttribute('size');
-		$attrs['maxlength'] = $this->getAttribute('size');
 		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
-		$attrs['value']    = $this->getValue();
+
+		$attrs['cols'] = $this->getAttribute('cols');
+		$attrs['rows'] = $this->getAttribute('rows');
+	}
+
+	/**
+	 * buildInput
+	 *
+	 * @param array $attrs
+	 *
+	 * @return  mixed
+	 */
+	public function buildInput($attrs)
+	{
+		return new HtmlElement('textarea', $this->getValue(), $attrs);
 	}
 }
  

@@ -9,6 +9,8 @@
 namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\SimpleXml\XmlHelper;
+use Windwalker\Form\Filter\InputFiler;
+use Windwalker\Form\Rule\Rule;
 
 /**
  * The FieldHelper class.
@@ -17,6 +19,36 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
  */
 class FieldHelper
 {
+	/**
+	 * createField
+	 *
+	 * @param string|FieldInterface|\SimpleXMLElement $field
+	 * @param                                         $namespaces
+	 *
+	 * @throws \InvalidArgumentException
+	 * @return  FieldInterface
+	 *
+	 */
+	public static function createField($field, \SplPriorityQueue $namespaces)
+	{
+		if ($field instanceof \SimpleXMLElement)
+		{
+			$field = FieldHelper::createByXml($field, $namespaces);
+		}
+		elseif (is_string($field))
+		{
+			$xml = new \SimpleXMLElement($field);
+
+			$field = FieldHelper::createByXml($xml, $namespaces);
+		}
+		elseif (!($field instanceof FieldInterface))
+		{
+			throw new \InvalidArgumentException(__CLASS__ . '::addField() need FieldInterface or SimpleXMLElement.');
+		}
+
+		return $field;
+	}
+
 	/**
 	 * createByXml
 	 *
@@ -31,7 +63,14 @@ class FieldHelper
 
 		$type = XmlHelper::get($xml, 'type', 'text');
 
-		$class = static::findFieldClass($type, $namespaces);
+		if (class_exists($type))
+		{
+			$class = $type;
+		}
+		else
+		{
+			$class = static::findFieldClass($type, $namespaces);
+		}
 
 		if (!$class)
 		{
@@ -68,6 +107,54 @@ class FieldHelper
 		}
 
 		return false;
+	}
+
+	/**
+	 * createFilter
+	 *
+	 * @param string $filter
+	 *
+	 * @return  bool|InputFiler
+	 */
+	public static function createFilter($filter)
+	{
+		if (class_exists($filter))
+		{
+			  return new $filter;
+		}
+
+		$class = 'Windwalker\\Form\\Filter\\' . ucfirst($filter) . ' Filter';
+
+		if (class_exists($class))
+		{
+			return new $class;
+		}
+
+		return new InputFiler($filter);
+	}
+
+	/**
+	 * createRule
+	 *
+	 * @param string $rule
+	 *
+	 * @return  Rule
+	 */
+	public static function createRule($rule)
+	{
+		if (class_exists($rule))
+		{
+			return new $rule;
+		}
+
+		$class = 'Windwalker\\Form\\Rule\\' . ucfirst($rule) . ' Rule';
+
+		if (class_exists($class))
+		{
+			return new $class;
+		}
+
+		return new Rule;
 	}
 }
  

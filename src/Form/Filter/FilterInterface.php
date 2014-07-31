@@ -6,15 +6,22 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Itertor;
+namespace Windwalker\Form\Filter;
 
 /**
- * The GroupIterator class.
- * 
+ * Interface FilterInterface
+ *
  * @since  {DEPLOY_VERSION}
  */
-class GroupIterator
+interface FilterInterface
 {
-
+	/**
+	 * clean
+	 *
+	 * @param string $text
+	 *
+	 * @return  mixed
+	 */
+	public function clean($text);
 }
  

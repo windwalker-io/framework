@@ -8,7 +8,12 @@
 
 namespace Windwalker\Form\Field;
 
+use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\SimpleXml\XmlHelper;
+use Windwalker\Form\Exception\FieldRequiredFailException;
+use Windwalker\Form\Exception\FieldValidateFailException;
+use Windwalker\Form\Filter\FilterInterface;
+use Windwalker\Form\Rule\RuleInterface;
 
 /**
  * The AbstractField class.
@@ -17,6 +22,13 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
  */
 abstract class AbstractField implements FieldInterface
 {
+	/**
+	 * Property type.
+	 *
+	 * @var  string
+	 */
+	protected $type = '';
+
 	/**
 	 * Property name.
 	 *
@@ -53,6 +65,13 @@ abstract class AbstractField implements FieldInterface
 	protected $control = null;
 
 	/**
+	 * Property label.
+	 *
+	 * @var string
+	 */
+	protected $label;
+
+	/**
 	 * Property value.
 	 *
 	 * @var  mixed
@@ -67,12 +86,68 @@ abstract class AbstractField implements FieldInterface
 	protected $attributes = array();
 
 	/**
+	 * Property required.
+	 *
+	 * @var  boolean
+	 */
+	protected $required = false;
+
+	/**
+	 * Property rule.
+	 *
+	 * @var  string|RuleInterface
+	 */
+	protected $rule = null;
+
+	/**
+	 * Property filter.
+	 *
+	 * @var  string|FilterInterface
+	 */
+	protected $filter = null;
+
+	/**
+	 * Property attrs.
+	 *
+	 * @var  array
+	 */
+	protected $attrs = array();
+
+	/**
+	 * The value of false.
+	 *
+	 * @var  array
+	 */
+	protected $falseValue = array(
+		'disabled',
+		'false',
+		'null',
+		'0',
+		'no',
+		'none'
+	);
+
+	/**
+	 * The value of true.
+	 *
+	 * @var  array
+	 */
+	protected $trueValue = array(
+		'true',
+		'yes',
+		'1'
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $name
+	 * @param string $label
 	 * @param array  $attributes
+	 * @param string $filter
+	 * @param string $rule
 	 */
-	public function __construct($name, $attributes = array())
+	public function __construct($name, $label = null, $attributes = array(), $filter = null, $rule = null)
 	{
 		if ($name instanceof \SimpleXMLElement)
 		{
@@ -81,23 +156,64 @@ abstract class AbstractField implements FieldInterface
 		else
 		{
 			$this->name = $name;
+			$this->label = $label;
 
 			$this->attributes = $attributes;
 		}
-	}
 
-	public function initialise()
-	{
+		$this->filter = $this->getAttribute('filter');
+
+		$this->required = $this->getAttribute('required', false);
 	}
 
 	/**
-	 * validate
+	 * getInput
 	 *
-	 * @return  boolean
+	 * @return  string
 	 */
-	public function validate()
+	public function renderInput()
 	{
-		return true;
+		$attrs = array();
+
+		$this->prepareAttributes($attrs);
+
+		return $this->buildInput($attrs);
+	}
+
+	/**
+	 * buildInput
+	 *
+	 * @param array $attrs
+	 *
+	 * @return  mixed
+	 */
+	public function buildInput($attrs)
+	{
+		return new HtmlElement('input', null, $attrs);
+	}
+
+	/**
+	 * prepareRenderInput
+	 *
+	 * @param array $attrs
+	 *
+	 * @return  array
+	 */
+	abstract public function prepareAttributes(&$attrs);
+
+	/**
+	 * getLabel
+	 *
+	 * @return  string
+	 */
+	public function renderLabel()
+	{
+		$attrs['id']    = $this->getAttribute('labelId', $this->getId() . '-label');
+		$attrs['class'] = $this->getAttribute('labelClass');
+		$attrs['for']   = $this->getAttribute('for', $this->getId());
+		$attrs['title'] = $this->getAttribute('description');
+
+		return (string) new HtmlElement('label', $this->getLabel(), $attrs);
 	}
 
 	/**
@@ -108,6 +224,104 @@ abstract class AbstractField implements FieldInterface
 	public function renderView()
 	{
 		return $this->value;
+	}
+
+	/**
+	 * render
+	 *
+	 * @return  string
+	 */
+	public function render()
+	{
+		$label = $this->renderLabel();
+		$input = $this->renderInput();
+
+		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
+		$attrs['class'] = $this->getAttribute('controlClass');
+
+		return new HtmlElement('div', $label . ' ' . $input, $attrs);
+	}
+
+	/**
+	 * getLabel
+	 *
+	 * @return  mixed
+	 */
+	public function getLabel()
+	{
+		return $this->label;
+	}
+
+	/**
+	 * getId
+	 *
+	 * @return  string
+	 */
+	public function getId()
+	{
+		$control = $this->control ? $this->control . '.' : '';
+
+		return str_replace('.', '-', $control . $this->getName());
+	}
+
+	/**
+	 * validate
+	 *
+	 * @throws \Windwalker\Form\Exception\FieldRequiredFailException
+	 * @throws \Windwalker\Form\Exception\FieldValidateFailException
+	 * @return  boolean
+	 */
+	public function validate()
+	{
+		$this->filter();
+
+		if ($this->required && !$this->checkRequired())
+		{
+			throw new FieldRequiredFailException($this, sprintf('Field %s value empty', $this->getName(true)));
+		}
+
+		if ($this->rule && !$this->checkRule())
+		{
+			throw new FieldValidateFailException($this, sprintf('Field %s rule not valid', $this->getName(true)));
+		}
+
+		return true;
+	}
+
+	/**
+	 * checkRequired
+	 *
+	 * @return  mixed
+	 */
+	public function checkRequired()
+	{
+		$value = (string) $this->value;
+
+		if ($this->value && $value === '0')
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * checkRule
+	 *
+	 * @return  mixed
+	 */
+	public function checkRule()
+	{
+		return $this->getRule()->test($this->value);
+	}
+
+	/**
+	 * prepareStore
+	 *
+	 * @return  void
+	 */
+	public function prepareStore()
+	{
 	}
 
 	/**
@@ -237,7 +451,7 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function getValue()
 	{
-		return $this->value;
+		return $this->value ? : $this->getAttribute('default');
 	}
 
 	/**
@@ -255,6 +469,64 @@ abstract class AbstractField implements FieldInterface
 	}
 
 	/**
+	 * Method to set property rule
+	 *
+	 * @param   string|\Windwalker\Form\Rule\RuleInterface $rule
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setRule($rule)
+	{
+		$this->rule = $rule;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Rule
+	 *
+	 * @return  string|\Windwalker\Form\Rule\RuleInterface
+	 */
+	public function getRule()
+	{
+		if (!($this->rule instanceof RuleInterface))
+		{
+			$this->rule = FieldHelper::createRule($this->rule);
+		}
+
+		return $this->rule;
+	}
+
+	/**
+	 * Method to set property filter
+	 *
+	 * @param   string|\Windwalker\Form\Filter\FilterInterface $filter
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setFilter($filter)
+	{
+		$this->filter = $filter;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Filter
+	 *
+	 * @return  string|\Windwalker\Form\Filter\FilterInterface
+	 */
+	public function getFilter()
+	{
+		if (!($this->filter instanceof FilterInterface))
+		{
+			$this->filter = FieldHelper::createFilter($this->filter);
+		}
+
+		return $this->filter;
+	}
+
+	/**
 	 * handleXml
 	 *
 	 * @param \SimpleXMLElement $xml
@@ -264,6 +536,8 @@ abstract class AbstractField implements FieldInterface
 	protected function handleXml(\SimpleXMLElement $xml)
 	{
 		$this->name = XmlHelper::get($xml, 'name');
+		$this->label = XmlHelper::get($xml, 'label');
+
 		$this->attributes = XmlHelper::getAttributes($xml);
 
 		$form = $xml;
@@ -292,6 +566,30 @@ abstract class AbstractField implements FieldInterface
 	}
 
 	/**
+	 * Method to get property Control
+	 *
+	 * @return  string
+	 */
+	public function getControl()
+	{
+		return $this->control;
+	}
+
+	/**
+	 * Method to set property control
+	 *
+	 * @param   string $control
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setControl($control)
+	{
+		$this->control = $control;
+
+		return $this;
+	}
+
+	/**
 	 * getAttribute
 	 *
 	 * @param string $name
@@ -317,27 +615,86 @@ abstract class AbstractField implements FieldInterface
 		return $this->attributes[$name] = $value;
 	}
 
+
 	/**
-	 * Method to get property Control
+	 * Get attribute. Alias of `getAttribute()`.
 	 *
-	 * @return  string
+	 * @param string  $attr    The attribute name.
+	 * @param mixed   $default The default value.
+	 *
+	 * @return mixed The return value of this attribute.
 	 */
-	public function getControl()
+	public function get($attr, $default = null)
 	{
-		return $this->control;
+		return $this->getAttribute($attr, $default);
 	}
 
 	/**
-	 * Method to set property control
+	 * Method to convert some string like `true`, `1`, `yes` to boolean TRUE,
+	 * and `no`, `false`, `disabled`, `null`, `none`, `0` string to boolean FALSE.
 	 *
-	 * @param   string $control
+	 * @param string  $attr    The attribute name.
+	 * @param mixed   $default The default value.
 	 *
-	 * @return  static  Return self to support chaining.
+	 * @return mixed The return value of this attribute.
 	 */
-	public function setControl($control)
+	public function getBool($attr, $default = null)
 	{
-		$this->control = $control;
+		$value = $this->getAttribute($attr, $default);
 
-		return $this;
+		if (in_array((string) $value, $this->falseValue) || !$value)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Just an alias of `getBool()` but FALSE will return TRUE.
+	 *
+	 * @param string  $attr    The attribute name.
+	 * @param mixed   $default The default value.
+	 *
+	 * @return mixed The return value of this attribute.
+	 */
+	public function getFalse($attr, $default = null)
+	{
+		return !$this->getBool($attr, $default);
+	}
+
+	/**
+	 * Get all attributes.
+	 *
+	 * @param \SimpleXMLElement $xml A SimpleXMLElement object.
+	 *
+	 * @return  array The return values of all attributes.
+	 */
+	public function getAttributes(\SimpleXMLElement $xml)
+	{
+		return $this->attributes;
+	}
+
+	/**
+	 * If this attribute not exists, use this value as default, or we use original value from xml.
+	 *
+	 * @param string            $attr    The attribute name.
+	 * @param string            $value   The value to set as default.
+	 *
+	 * @return  void
+	 */
+	public function def($attr, $value)
+	{
+		$this->attributes[$attr] = isset($this->attributes[$attr]) ? $this->attributes[$attr] : (string) $value;
+	}
+
+	/**
+	 * filter
+	 *
+	 * @return  static
+	 */
+	public function filter()
+	{
+		$this->value = $this->getFilter()->clean($this->value);
 	}
 }

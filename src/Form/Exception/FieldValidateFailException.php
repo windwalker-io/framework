@@ -6,23 +6,14 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Rule;
-
+namespace Windwalker\Form\Exception;
 
 /**
- * Interface RuleInterface
- *
+ * The FieldValidateFailException class.
+ * 
  * @since  {DEPLOY_VERSION}
  */
-interface RuleInterface
+class FieldValidateFailException extends AbstractFieldStoreException
 {
-	/**
-	 * test
-	 *
-	 * @param mixed $value
-	 *
-	 * @return  boolean
-	 */
-	public function test($value);
 }
  

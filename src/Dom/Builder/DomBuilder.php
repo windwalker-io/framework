@@ -41,7 +41,7 @@ class DomBuilder
 
 		if ($content)
 		{
-			$tag .= '>' . PHP_EOL . "\t" . $content . PHP_EOL . '</' . $name . '>';
+			$tag .= '>' . $content . '</' . $name . '>';
 		}
 		else
 		{

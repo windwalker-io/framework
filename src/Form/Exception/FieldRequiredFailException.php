@@ -6,15 +6,14 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Itertor;
+namespace Windwalker\Form\Exception;
 
 /**
- * The FieldsetIterator class.
+ * The EmptyValueException class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class FieldsetIterator
+class FieldRequiredFailException extends AbstractFieldStoreException
 {
-
 }
  

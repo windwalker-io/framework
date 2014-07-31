@@ -20,7 +20,21 @@ interface FieldInterface
 	 *
 	 * @return  string
 	 */
-	public function getInput();
+	public function renderInput();
+
+	/**
+	 * getLabel
+	 *
+	 * @return  string
+	 */
+	public function renderLabel();
+
+	/**
+	 * getLabel
+	 *
+	 * @return  mixed
+	 */
+	public function getLabel();
 
 	/**
 	 * validate
@@ -35,6 +49,13 @@ interface FieldInterface
 	 * @return  string
 	 */
 	public function renderView();
+
+	/**
+	 * render
+	 *
+	 * @return  string
+	 */
+	public function render();
 
 	/**
 	 * Method to get property Name
@@ -65,6 +86,15 @@ interface FieldInterface
 	 * @return  null
 	 */
 	public function getValue();
+
+	/**
+	 * Method to set property value
+	 *
+	 * @param   null $value
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setValue($value);
 
 	/**
 	 * Method to get property Control
@@ -100,5 +130,12 @@ interface FieldInterface
 	 * @return  mixed
 	 */
 	public function setAttribute($name, $value);
+
+	/**
+	 * prepareStore
+	 *
+	 * @return  void
+	 */
+	public function prepareStore();
 }
  
