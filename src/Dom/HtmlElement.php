@@ -15,7 +15,7 @@ use Windwalker\Dom\Builder\HtmlBuilder;
  *
  * @since 2.0
  */
-class HtmlElement extends XmlElement
+class HtmlElement extends DomElement
 {
 	/**
 	 * toString

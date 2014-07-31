@@ -21,24 +21,53 @@ class FieldHelper
 	 * createByXml
 	 *
 	 * @param \SimpleXmlElement $xml
+	 * @param \SplPriorityQueue $namespaces
 	 *
 	 * @return  FieldInterface
 	 */
-	public static function createByXml(\SimpleXmlElement $xml)
+	public static function createByXml(\SimpleXmlElement $xml, \SplPriorityQueue $namespaces)
 	{
-		$classTmpl = 'Windwalker\\Form\\Field\\%sField';
+		$classTmpl = 'Windwalker\\Form\\Field\\Type\\';
 
 		$type = XmlHelper::get($xml, 'type', 'text');
 
-		$class = sprintf($classTmpl, ucfirst($type));
+		$class = static::findFieldClass($type, $namespaces);
+
+		if (!$class)
+		{
+			$class = $classTmpl . ucfirst($type) . 'Field';
+		}
 
 		if (!class_exists($class))
 		{
 			// Fallback to TextField
-			$class = sprintf($classTmpl, 'Text');
+			$class = $classTmpl . 'TextField';
 		}
 
 		return new $class($xml);
+	}
+
+	/**
+	 * findFieldClass
+	 *
+	 * @param string            $name
+	 * @param \SplPriorityQueue $namespaces
+	 *
+	 * @return  string|bool
+	 */
+	protected static function findFieldClass($name, \SplPriorityQueue $namespaces)
+	{
+		foreach ($namespaces as $namespace)
+		{
+			$class = trim($namespace, '\\') . '\\' . ucfirst($name) . 'Field';
+
+			if (class_exists($class))
+			{
+				return $class;
+			}
+		}
+
+		return false;
 	}
 }
  

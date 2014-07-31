@@ -46,6 +46,13 @@ abstract class AbstractField implements FieldInterface
 	protected $fieldset = null;
 
 	/**
+	 * Property control.
+	 *
+	 * @var  string
+	 */
+	protected $control = null;
+
+	/**
 	 * Property value.
 	 *
 	 * @var  mixed
@@ -79,14 +86,44 @@ abstract class AbstractField implements FieldInterface
 		}
 	}
 
+	public function initialise()
+	{
+	}
+
+	/**
+	 * validate
+	 *
+	 * @return  boolean
+	 */
+	public function validate()
+	{
+		return true;
+	}
+
+	/**
+	 * renderView
+	 *
+	 * @return  string
+	 */
+	public function renderView()
+	{
+		return $this->value;
+	}
+
 	/**
 	 * Method to get property Name
 	 *
-	 * @return  null
+	 * @param bool $withGroup
+	 *
+	 * @return  string
 	 */
-	public function getName()
+	public function getName($withGroup = false)
 	{
-		return $this->name;
+		$group = $withGroup ? $this->getGroup() : '';
+
+		$group = $group ? $group . '.' : '';
+
+		return $group . $this->name;
 	}
 
 	/**
@@ -110,6 +147,24 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function getFieldName()
 	{
+		if (!$this->fieldName)
+		{
+			// prevent '..'
+			$names = array_values(array_filter(explode('.', $this->getName(true)), 'strlen'));
+
+			$control = $this->control ? $this->control : array_shift($names);
+
+			$names = array_map(
+				function ($value)
+				{
+					return '[' . $value . ']';
+				}
+				, $names
+			);
+
+			$this->fieldName = $control . implode('', $names);
+		}
+
 		return $this->fieldName;
 	}
 
@@ -247,5 +302,42 @@ abstract class AbstractField implements FieldInterface
 	public function getAttribute($name, $default = null)
 	{
 		return isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
+	}
+
+	/**
+	 * getAttribute
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 *
+	 * @return  mixed
+	 */
+	public function setAttribute($name, $value)
+	{
+		return $this->attributes[$name] = $value;
+	}
+
+	/**
+	 * Method to get property Control
+	 *
+	 * @return  string
+	 */
+	public function getControl()
+	{
+		return $this->control;
+	}
+
+	/**
+	 * Method to set property control
+	 *
+	 * @param   string $control
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setControl($control)
+	{
+		$this->control = $control;
+
+		return $this;
 	}
 }

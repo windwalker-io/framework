@@ -8,6 +8,7 @@
 
 namespace Windwalker\Form\Field\Type;
 
+use Windwalker\Dom\HtmlElement;
 use Windwalker\Form\Field\AbstractField;
 
 /**
@@ -17,6 +18,20 @@ use Windwalker\Form\Field\AbstractField;
  */
 class TextField extends AbstractField
 {
+	/**
+	 * getInput
+	 *
+	 * @return  string
+	 */
+	public function getInput()
+	{
+		// $attrs = $this->attributes;
 
+		$attrs['name'] = $this->getFieldName();
+		$attrs['class'] = $this->getAttribute('class');
+		$attrs['type'] = 'text';
+
+		return (string) new HtmlElement('input', null, $attrs);
+	}
 }
  
