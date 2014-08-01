@@ -54,4 +54,4 @@ trait DatabaseAwareTrait
 		return $this;
 	}
 }
- 
+

@@ -328,4 +328,4 @@ class FileStorage extends AbstractCacheStorage
 		return $this->denyAccess = $bool;
 	}
 }
- 
+

@@ -24,4 +24,4 @@ interface CliOutputInterface
 	 */
 	public function out($text = '');
 }
- 
+

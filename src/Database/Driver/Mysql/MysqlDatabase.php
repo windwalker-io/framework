@@ -135,4 +135,4 @@ class MysqlDatabase extends DatabaseDatabase
 		return $this->db->setQuery($query)->loadOne();
 	}
 }
- 
+

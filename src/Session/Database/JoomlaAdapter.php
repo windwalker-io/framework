@@ -123,4 +123,4 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
 		return (boolean) $this->db->execute();
 	}
 }
- 
+

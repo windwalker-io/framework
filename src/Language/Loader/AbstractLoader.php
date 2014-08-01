@@ -32,4 +32,4 @@ abstract class AbstractLoader implements LoaderInterface
 		return $this->name;
 	}
 }
- 
+

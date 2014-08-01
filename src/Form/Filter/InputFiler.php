@@ -111,4 +111,4 @@ class InputFiler implements FilterInterface
 		return $this;
 	}
 }
- 
+

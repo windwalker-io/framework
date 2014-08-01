@@ -26,4 +26,4 @@ interface DispatcherAwareInterface
 	 */
 	public function triggerEvent($event);
 }
- 
+

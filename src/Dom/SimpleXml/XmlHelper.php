@@ -145,4 +145,4 @@ class XmlHelper
 		$xml[$attr] = isset($xml[$attr]) ? $xml[$attr] : (string) $value;
 	}
 }
- 
+

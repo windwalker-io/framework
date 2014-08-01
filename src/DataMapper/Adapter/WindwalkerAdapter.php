@@ -193,4 +193,4 @@ class WindwalkerAdapter extends DatabaseAdapter
 		return $this;
 	}
 }
- 
+

@@ -61,4 +61,4 @@ interface CliInputInterface
 	 */
 	public function getCalledScript();
 }
- 
+

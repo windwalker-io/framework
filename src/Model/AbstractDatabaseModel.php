@@ -59,4 +59,4 @@ abstract class AbstractDatabaseModel extends AbstractModel
 		$this->db = $db;
 	}
 }
- 
+

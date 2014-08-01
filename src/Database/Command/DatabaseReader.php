@@ -346,4 +346,4 @@ abstract class DatabaseReader
 		return $this;
 	}
 }
- 
+

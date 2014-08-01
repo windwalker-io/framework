@@ -250,4 +250,4 @@ class PdoAdapter extends AbstractDatabaseAdapter
 		return '';
 	}
 }
- 
+

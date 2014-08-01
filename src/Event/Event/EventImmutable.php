@@ -101,4 +101,4 @@ class EventImmutable extends Event
 		return $this->arguments;
 	}
 }
- 
+

@@ -267,4 +267,4 @@ class QueryExpression
 		return $value;
 	}
 }
- 
+

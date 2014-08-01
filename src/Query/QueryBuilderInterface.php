@@ -149,4 +149,4 @@ interface QueryBuilderInterface
 	 */
 	public static function getQuery($new = false);
 }
- 
+

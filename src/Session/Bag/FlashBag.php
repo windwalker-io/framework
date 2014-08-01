@@ -64,4 +64,4 @@ class FlashBag extends SessionBag implements FlashBagInterface
 		return isset($this->data[$type]) ? $this->data[$type] : array();
 	}
 }
- 
+

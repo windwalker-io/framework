@@ -173,4 +173,4 @@ abstract class DatabaseTable
 	 */
 	abstract public function getIndexes();
 }
- 
+

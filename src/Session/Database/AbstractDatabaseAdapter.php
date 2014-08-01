@@ -108,4 +108,4 @@ abstract class AbstractDatabaseAdapter
 		return $this;
 	}
 }
- 
+

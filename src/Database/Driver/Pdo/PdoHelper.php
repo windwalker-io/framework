@@ -326,4 +326,4 @@ class PdoHelper
 		return isset(self::$options[$name]) ? self::$options[$name] : $default;
 	}
 }
- 
+

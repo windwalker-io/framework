@@ -38,4 +38,4 @@ class JsonFormat extends AbstractFormat
 		return $this->toOneDimension($array);
 	}
 }
- 
+

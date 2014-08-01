@@ -56,4 +56,4 @@ class MysqlQuery extends Query
 		return mysql_real_escape_string($text);
 	}
 }
- 
+

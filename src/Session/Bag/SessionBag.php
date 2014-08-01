@@ -106,4 +106,4 @@ class SessionBag implements SessionBagInterface
 		return $this;
 	}
 }
- 
+

@@ -22,4 +22,4 @@ interface LocaliseInterface
 	 */
 	public function getPluralSuffix($count = 1);
 }
- 
+

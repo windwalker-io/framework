@@ -195,4 +195,4 @@ class OracleQuery extends Query
 		return $this;
 	}
 }
- 
+

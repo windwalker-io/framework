@@ -497,4 +497,4 @@ class Dispatcher
 		return $event;
 	}
 }
- 
+

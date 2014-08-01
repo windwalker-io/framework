@@ -229,4 +229,4 @@ interface ResponseInterface
 	 */
 	public function setModifiedDate($modifiedDate);
 }
- 
+

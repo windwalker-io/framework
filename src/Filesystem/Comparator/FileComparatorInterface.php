@@ -13,4 +13,4 @@ interface FileComparatorInterface
 {
 	public function compare($current, $key, $iterator);
 }
- 
+

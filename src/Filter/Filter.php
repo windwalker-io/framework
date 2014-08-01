@@ -317,4 +317,4 @@ class Filter
 		};
 	}
 }
- 
+

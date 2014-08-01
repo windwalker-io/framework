@@ -45,4 +45,4 @@ class StringHandler implements DataHandlerInterface
 		return $data;
 	}
 }
- 
+

@@ -31,4 +31,4 @@ class ApplicationHelper
 		return (preg_match('/(?:[^\x00-\x7F])/', $string) !== 1);
 	}
 }
- 
+

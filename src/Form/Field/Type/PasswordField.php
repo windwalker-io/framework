@@ -37,4 +37,4 @@ class PasswordField extends TextField
 		$attrs['type'] = 'password';
 	}
 }
- 
+

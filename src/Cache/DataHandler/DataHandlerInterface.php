@@ -31,4 +31,4 @@ interface DataHandlerInterface
 	 */
 	public function decode($data);
 }
- 
+

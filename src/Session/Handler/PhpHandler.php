@@ -35,4 +35,4 @@ class PhpHandler extends \SessionHandler implements HandlerInterface
 		return true;
 	}
 }
- 
+

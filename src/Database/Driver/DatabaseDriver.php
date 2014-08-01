@@ -848,4 +848,4 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 		return $this->escape($text, $extra);
 	}
 }
- 
+

@@ -69,4 +69,4 @@ abstract class LanguageNormalize
 		return strtoupper($key);
 	}
 }
- 
+

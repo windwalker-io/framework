@@ -111,4 +111,4 @@ class WincacheStorage extends AbstractCacheStorage
 		return $this;
 	}
 }
- 
+

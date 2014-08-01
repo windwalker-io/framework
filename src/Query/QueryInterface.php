@@ -539,4 +539,4 @@ interface QueryInterface
 	 */
 	public function format($format);
 }
- 
+

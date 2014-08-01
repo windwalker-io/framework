@@ -18,4 +18,4 @@ use Windwalker\Query\QueryExpression;
 class OracleExpression extends QueryExpression
 {
 }
- 
+

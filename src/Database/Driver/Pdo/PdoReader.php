@@ -111,4 +111,4 @@ class PdoReader extends DatabaseReader
 		return $this->db->getCursor()->rowCount();
 	}
 }
- 
+

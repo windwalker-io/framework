@@ -38,4 +38,4 @@ class YamlFormat extends AbstractFormat
 		return $this->toOneDimension($array);
 	}
 }
- 
+

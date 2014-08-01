@@ -105,4 +105,4 @@ interface WebClientInterface
 	 */
 	public function isSSLConnection();
 }
- 
+

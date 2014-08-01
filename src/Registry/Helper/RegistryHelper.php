@@ -52,4 +52,4 @@ class RegistryHelper
 		return isset($array[$name]) ? $array[$name] : $default;
 	}
 }
- 
+

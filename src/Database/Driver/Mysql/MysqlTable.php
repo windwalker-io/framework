@@ -241,4 +241,4 @@ class MysqlTable extends DatabaseTable
 		return $this->db->loadAll();
 	}
 }
- 
+

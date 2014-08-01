@@ -63,4 +63,4 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
 		return static::$query;
 	}
 }
- 
+

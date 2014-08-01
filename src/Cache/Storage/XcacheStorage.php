@@ -108,4 +108,4 @@ class XcacheStorage extends AbstractCacheStorage
 		return $this;
 	}
 }
- 
+

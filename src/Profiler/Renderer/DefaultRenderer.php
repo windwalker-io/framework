@@ -57,4 +57,4 @@ class DefaultRenderer implements ProfilerRendererInterface
 		return $render;
 	}
 }
- 
+

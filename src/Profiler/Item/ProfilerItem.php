@@ -86,4 +86,4 @@ class ProfilerItem implements ProfilerItemInterface
 		return $megaBytes ? $this->memory / 1048576 : $this->memory;
 	}
 }
- 
+

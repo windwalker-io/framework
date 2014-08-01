@@ -65,4 +65,4 @@ interface SessionBagInterface
 	 */
 	public function clean();
 }
- 
+

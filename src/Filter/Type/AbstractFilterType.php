@@ -36,4 +36,4 @@ abstract class AbstractFilterType
 		return $this->filter($source);
 	}
 }
- 
+

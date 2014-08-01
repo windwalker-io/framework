@@ -36,4 +36,4 @@ class EmailField extends TextField
 		$attrs['class'] = 'validate-email ' . $attrs['class'];
 	}
 }
- 
+

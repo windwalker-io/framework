@@ -30,4 +30,4 @@ class PdoWriter extends DatabaseWriter
 		return @$this->db->getConnection()->lastInsertId();
 	}
 }
- 
+

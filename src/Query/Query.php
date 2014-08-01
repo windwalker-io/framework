@@ -1755,4 +1755,4 @@ class Query implements QueryInterface
 		return $this;
 	}
 }
- 
+

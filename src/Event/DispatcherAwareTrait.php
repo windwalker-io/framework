@@ -61,4 +61,4 @@ trait DispatcherAwareTrait
 
 		return $this;
 	}
-} 
+}

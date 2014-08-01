@@ -205,4 +205,4 @@ abstract class AbstractApplication implements LoggerAwareInterface
 		return $this;
 	}
 }
- 
+

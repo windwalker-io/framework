@@ -331,4 +331,4 @@ class Filesystem
 		return $recursive ? new \RecursiveIteratorIterator($iterator) : $iterator;
 	}
 }
- 
+

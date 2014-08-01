@@ -30,4 +30,4 @@ class SimpleCliOutput extends AbstractCliOutput
 		return $this;
 	}
 }
- 
+

@@ -142,4 +142,4 @@ class XcacheHandler extends AbstractHandler
 		return true;
 	}
 }
- 
+

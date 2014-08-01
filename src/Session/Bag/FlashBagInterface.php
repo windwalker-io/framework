@@ -39,4 +39,4 @@ interface FlashBagInterface extends SessionBagInterface
 	 */
 	public function getType($type);
 }
- 
+

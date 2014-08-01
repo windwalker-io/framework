@@ -57,4 +57,4 @@ trait ContainerAwareTrait
 
 		return $this;
 	}
-} 
+}

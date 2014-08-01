@@ -68,4 +68,4 @@ class CallbackMiddleware extends Middleware
 		return $this;
 	}
 }
- 
+

@@ -134,4 +134,4 @@ class DataIterator implements \Countable, \Iterator
 		$this->reader->count();
 	}
 }
- 
+

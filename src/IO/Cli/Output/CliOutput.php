@@ -87,4 +87,4 @@ class CliOutput extends AbstractCliOutput
 		throw new \RuntimeException('A ColorProcessorInterface object has not been set.');
 	}
 }
- 
+

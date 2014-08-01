@@ -134,4 +134,4 @@ class SqliteQuery extends Query
 		return $this;
 	}
 }
- 
+

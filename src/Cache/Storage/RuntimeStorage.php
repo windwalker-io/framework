@@ -104,4 +104,4 @@ class RuntimeStorage extends AbstractCacheStorage
 		return $this;
 	}
 }
- 
+

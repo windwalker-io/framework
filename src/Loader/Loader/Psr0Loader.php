@@ -154,4 +154,4 @@ class Psr0Loader extends AbstractLoader
 		return $this;
 	}
 }
- 
+

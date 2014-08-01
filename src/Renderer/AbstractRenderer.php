@@ -140,4 +140,4 @@ abstract class AbstractRenderer implements RendererInterface
 		$this->paths->insert($path, $priority);
 	}
 }
- 
+

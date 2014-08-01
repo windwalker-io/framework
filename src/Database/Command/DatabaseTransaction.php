@@ -96,4 +96,4 @@ abstract class DatabaseTransaction
 		return $this;
 	}
 }
- 
+

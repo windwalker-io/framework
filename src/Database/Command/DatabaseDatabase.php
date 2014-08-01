@@ -102,4 +102,4 @@ abstract class DatabaseDatabase
 	 */
 	abstract public function getTableDetail($table, $full = true);
 }
- 
+

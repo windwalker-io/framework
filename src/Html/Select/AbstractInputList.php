@@ -142,4 +142,4 @@ class AbstractInputList extends HtmlElement
 		return $this;
 	}
 }
- 
+

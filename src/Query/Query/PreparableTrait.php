@@ -97,4 +97,4 @@ trait PreparableTrait
 			}
 		}
 	}
-} 
+}

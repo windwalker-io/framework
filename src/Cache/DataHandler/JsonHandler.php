@@ -39,4 +39,4 @@ class JsonHandler implements DataHandlerInterface
 		return json_decode($data);
 	}
 }
- 
+

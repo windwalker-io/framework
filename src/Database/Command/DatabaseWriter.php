@@ -335,4 +335,4 @@ abstract class DatabaseWriter
 	 */
 	abstract public function insertId();
 }
- 
+

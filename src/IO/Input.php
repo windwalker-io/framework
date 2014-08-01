@@ -342,4 +342,4 @@ class Input
 		}
 	}
 }
- 
+

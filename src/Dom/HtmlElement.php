@@ -29,4 +29,4 @@ class HtmlElement extends DomElement
 		return HtmlBuilder::create($this->name, $this->content, $this->attribs, $forcePair);
 	}
 }
- 
+

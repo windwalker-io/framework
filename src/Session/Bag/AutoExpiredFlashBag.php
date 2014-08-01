@@ -117,4 +117,4 @@ class AutoExpiredFlashBag extends FlashBag
 		return isset($this->data['last'][$type]) ? $this->data['last'][$type] : array();
 	}
 }
- 
+

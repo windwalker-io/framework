@@ -16,4 +16,4 @@ namespace Windwalker\Language\Localise;
 class ZhCNLocalise extends ZhTWLocalise
 {
 }
- 
+

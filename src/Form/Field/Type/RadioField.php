@@ -44,4 +44,4 @@ class RadioField extends ListField
 		return new RadioList($this->getFieldName(), $options, $this->attributes, $this->getValue());
 	}
 }
- 
+

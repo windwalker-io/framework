@@ -42,4 +42,4 @@ abstract class AbstractHandler implements HandlerInterface
 		session_set_save_handler($this, true);
 	}
 }
- 
+

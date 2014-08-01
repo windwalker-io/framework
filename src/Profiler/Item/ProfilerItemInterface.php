@@ -36,4 +36,4 @@ interface ProfilerItemInterface
 	 */
 	public function getMemory($megaBytes = false);
 }
- 
+

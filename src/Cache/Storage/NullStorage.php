@@ -78,4 +78,4 @@ class NullStorage extends AbstractCacheStorage
 		return $this;
 	}
 }
- 
+

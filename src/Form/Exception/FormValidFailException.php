@@ -78,4 +78,4 @@ class FormValidFailException extends ValidateFailException
 		return $this;
 	}
 }
- 
+

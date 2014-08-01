@@ -98,4 +98,4 @@ abstract class AbstractCacheStorage implements CacheStorageInterface
 		return $this;
 	}
 }
- 
+

@@ -78,4 +78,4 @@ abstract class AbstractLoader
 		return $path;
 	}
 }
- 
+

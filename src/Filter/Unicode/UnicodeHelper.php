@@ -620,4 +620,4 @@ abstract class UnicodeHelper
 		}
 	}
 }
- 
+

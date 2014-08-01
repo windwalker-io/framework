@@ -39,4 +39,4 @@ class SerializeHandler implements DataHandlerInterface
 		return unserialize($data);
 	}
 }
- 
+

@@ -96,4 +96,4 @@ abstract class AbstractView implements ViewInterface
 		return $this;
 	}
 }
- 
+

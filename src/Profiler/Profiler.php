@@ -386,4 +386,4 @@ class Profiler implements ProfilerInterface
 		return count($this->items);
 	}
 }
- 
+

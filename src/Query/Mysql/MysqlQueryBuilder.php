@@ -498,4 +498,4 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 		return 'REPLACE' . $query;
 	}
 }
- 
+

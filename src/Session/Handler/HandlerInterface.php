@@ -27,4 +27,4 @@ interface HandlerInterface extends \SessionHandlerInterface
 	 */
 	public function register();
 }
- 
+
