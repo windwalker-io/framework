@@ -41,4 +41,4 @@ class FakePasswordPrompter extends PasswordPrompter
 		return false;
 	}
 }
- 
+

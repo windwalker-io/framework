@@ -193,4 +193,4 @@ class CallbackPrompter extends AbstractPrompter
 		return $this;
 	}
 }
- 
+

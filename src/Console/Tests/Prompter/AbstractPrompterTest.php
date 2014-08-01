@@ -71,4 +71,4 @@ abstract class AbstractPrompterTest extends \PHPUnit_Framework_TestCase
 		return $this->memory;
 	}
 }
- 
+
