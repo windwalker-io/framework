@@ -29,5 +29,21 @@ class SimpleCliOutput extends AbstractCliOutput
 
 		return $this;
 	}
+
+	/**
+	 * Write a string to standard error output.
+	 *
+	 * @param   string   $text  The text to display.
+	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
+	 *
+	 * @since   1.0
+	 * @return $this
+	 */
+	public function err($text = '', $nl = true)
+	{
+		fwrite($this->errorStream, $text . ($nl ? "\n" : null));
+
+		return $this;
+	}
 }
 

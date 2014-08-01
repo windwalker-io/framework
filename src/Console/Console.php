@@ -24,22 +24,13 @@ use Windwalker\Registry\Registry;
 class Console extends AbstractCliApplication
 {
 	/**
-	 * The application cli input object.
-	 *
-	 * @var    Input\Cli
-	 *
-	 * @since  1.0
-	 */
-	public $input = null;
-
-	/**
 	 * The Console title.
 	 *
 	 * @var  string
 	 *
 	 * @since  1.0
 	 */
-	protected $name = 'Joomla! Console';
+	protected $name = 'Windwalker! Console';
 
 	/**
 	 * Version of this application.
@@ -78,10 +69,12 @@ class Console extends AbstractCliApplication
 	protected $autoExit;
 
 	/**
+	 * Class init.
+	 *
 	 * @param   IOInterface $io      The Input and output handler.
 	 * @param   Registry    $config  Application's config object.
 	 */
-	public function __construct(IOInterface $io, Registry $config = null)
+	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
 		parent::__construct($io, $config);
 
@@ -122,9 +115,9 @@ class Console extends AbstractCliApplication
 	{
 		$command  = $this->getRootCommand();
 
-		if ((!$command->getHandler() && !count($this->io)))
+		if ((!$command->getHandler() && !count($this->io->getArguments())))
 		{
-			array_unshift($this->input->args, 'help');
+			$this->io->unshiftArgument('help');
 		}
 
 		try
@@ -166,7 +159,7 @@ class Console extends AbstractCliApplication
 	 */
 	public function registerRootCommand()
 	{
-		$this->rootCommand = new RootCommand(null, $this->input, $this->output);
+		$this->rootCommand = new RootCommand(null, $this->io);
 
 		$this->rootCommand->setApplication($this)
 			->addCommand(new HelpCommand);
@@ -185,7 +178,7 @@ class Console extends AbstractCliApplication
 	 */
 	public function register($name)
 	{
-		return $this->addCommand(new Command($name, $this->input, $this->output));
+		return $this->addCommand(new Command($name, $this->io));
 	}
 
 	/**
@@ -332,6 +325,13 @@ class Console extends AbstractCliApplication
 		return $this;
 	}
 
+	/**
+	 * setUsage
+	 *
+	 * @param string $usage
+	 *
+	 * @return  $this
+	 */
 	public function setUsage($usage)
 	{
 		$this->getRootCommand()->setUsage($usage);
@@ -339,6 +339,13 @@ class Console extends AbstractCliApplication
 		return $this;
 	}
 
+	/**
+	 * setHelp
+	 *
+	 * @param string $help
+	 *
+	 * @return  $this
+	 */
 	public function setHelp($help)
 	{
 		$this->getRootCommand()->setHelp($help);

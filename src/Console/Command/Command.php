@@ -53,7 +53,7 @@ class Command extends AbstractCommand
 
 		if ($this->getOption('no-ansi'))
 		{
-			$this->output->getProcessor()->noColors = true;
+			$this->io->useColor(false);
 		}
 
 		return parent::execute();

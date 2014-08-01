@@ -8,14 +8,12 @@
 
 namespace Windwalker\Console\Command;
 
-use Joomla\Application\AbstractCliApplication;
-use Joomla\Application\Cli\Output\Stdout;
-use Joomla\Application\Cli\CliOutput;
+use Windwalker\Application\AbstractCliApplication;
 use Windwalker\Console\Exception\CommandNotFoundException;
 use Windwalker\Console\Option\Option;
 use Windwalker\Console\Option\OptionSet;
-use Windwalker\Console\Prompter\PrompterInterface;
-use Joomla\Input;
+use Windwalker\IO\Cli\IO;
+use Windwalker\IO\Cli\IOInterface;
 
 /**
  * Abstract Console class.
@@ -36,20 +34,11 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * The Cli input object.
 	 *
-	 * @var Input\Cli
+	 * @var IOInterface
 	 *
 	 * @since  1.0
 	 */
-	protected $input;
-
-	/**
-	 * The cli output object.
-	 *
-	 * @var CliOutput
-	 *
-	 * @since  1.0
-	 */
-	protected $output;
+	protected $io;
 
 	/**
 	 * Console(Argument) name.
@@ -63,7 +52,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * The children(SubCommends) storage.
 	 *
-	 * @var array
+	 * @var AbstractCommand[]
 	 *
 	 * @since  1.0
 	 */
@@ -136,19 +125,17 @@ abstract class AbstractCommand implements \ArrayAccess
 	 * Console constructor.
 	 *
 	 * @param   string           $name    Console name.
-	 * @param   Input\Cli        $input   Cli input object.
-	 * @param   CliOutput        $output  Cli output object.
+	 * @param   IOInterface      $io      Cli input object.
 	 * @param   AbstractCommand  $parent  Parent Console.
 	 *
 	 * @throws \LogicException
 	 *
 	 * @since  1.0
 	 */
-	public function __construct($name = null, Input\Cli $input = null, CliOutput $output = null, AbstractCommand $parent = null)
+	public function __construct($name = null, IOInterface $io = null, AbstractCommand $parent = null)
 	{
-		$this->name   = $name   ?: $this->name;
-		$this->input  = $input  ?: new Input\Cli;
-		$this->output = $output ?: new Stdout;
+		$this->name   = $name ?: $this->name;
+		$this->io     = $io ?: new IO;
 		$this->parent = $parent;
 
 		$this->options       = new OptionSet;
@@ -171,9 +158,9 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function execute()
 	{
-		if (count($this->children) && count($this->input->args))
+		if (count($this->children) && count($this->io->getArguments()))
 		{
-			$name = $this->input->args[0];
+			$name = $this->io->getArgument(0);
 
 			try
 			{
@@ -238,16 +225,15 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * Execute the sub command.
 	 *
-	 * @param   string     $name    The command name.
-	 * @param   Input\Cli  $input   The Cli Input object.
-	 * @param   CliOutput  $output  The Cli output object.
+	 * @param   string      $name    The command name.
+	 * @param   IOInterface $io      The Cli IO object.
 	 *
 	 * @throws  CommandNotFoundException
 	 * @return  mixed
 	 *
 	 * @since  1.0
 	 */
-	protected function executeSubCommand($name, Input\Cli $input = null, CliOutput $output = null)
+	protected function executeSubCommand($name, IOInterface $io = null)
 	{
 		if (empty($this->children[$name]))
 		{
@@ -258,21 +244,14 @@ abstract class AbstractCommand implements \ArrayAccess
 		$subCommand = $this->children[$name];
 
 		// Remove first argument and send it to child
-		if (!$input)
+		if (!$io)
 		{
-			$input = $this->input;
+			$io = $this->io;
 
-			array_shift($input->args);
+			$io->shiftArgument();
 		}
 
-		$subCommand->setInput($input);
-
-		if (!$output)
-		{
-			$output = $this->output;
-		}
-
-		$subCommand->setOutput($output);
+		$subCommand->setIO($io);
 
 		if (!$subCommand->getApplication())
 		{
@@ -283,59 +262,27 @@ abstract class AbstractCommand implements \ArrayAccess
 	}
 
 	/**
-	 * Input setter.
+	 * Method to get property Io
 	 *
-	 * @param   Input\Cli  $input  The Cli Input object.
-	 *
-	 * @return  AbstractCommand  Return this object to support chaining.
-	 *
-	 * @since  1.0
+	 * @return  \Windwalker\IO\Cli\IOInterface
 	 */
-	public function setInput(Input\Cli $input)
+	public function getIo()
 	{
-		$this->input = $input;
+		return $this->io;
+	}
+
+	/**
+	 * Method to set property io
+	 *
+	 * @param   \Windwalker\IO\Cli\IOInterface $io
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setIo($io)
+	{
+		$this->io = $io;
 
 		return $this;
-	}
-
-	/**
-	 * Get Input object.
-	 *
-	 * @return Input\Cli
-	 *
-	 * @since  1.0
-	 */
-	public function getInput()
-	{
-		return $this->input;
-	}
-
-	/**
-	 * Output setter.
-	 *
-	 * @param   CliOutput  $output  The Cli Output object.
-	 *
-	 * @return  AbstractCommand  Return this object to support chaining.
-	 *
-	 * @since  1.0
-	 */
-	public function setOutput(CliOutput $output)
-	{
-		$this->output = $output;
-
-		return $this;
-	}
-
-	/**
-	 * Get Output object.
-	 *
-	 * @return CliOutput
-	 *
-	 * @since  1.0
-	 */
-	public function getOutput()
-	{
-		return $this->output;
 	}
 
 	/**
@@ -383,12 +330,12 @@ abstract class AbstractCommand implements \ArrayAccess
 	{
 		if (!($command instanceof AbstractCommand))
 		{
-			$command = new static($command, $this->input, $this->output, $this);
+			$command = new static($command, $this->io, $this);
 		}
 
 		// Set argument detail
 		$command->setApplication($this->application)
-			->setInput($this->input);
+			->setIO($this->io);
 
 		if ($description !== null)
 		{
@@ -432,11 +379,11 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function getArgument($offset, $default = null)
 	{
-		$args = $this->input->args;
+		$value = $this->io->getArgument($offset);
 
-		if (isset($args[$offset]))
+		if (!is_null($value))
 		{
-			return $args[$offset];
+			return $value;
 		}
 
 		if (is_callable($default))
@@ -445,25 +392,6 @@ abstract class AbstractCommand implements \ArrayAccess
 		}
 
 		return $default;
-	}
-
-	/**
-	 * Alias of addCommand for legacy.
-	 *
-	 * @param   string|AbstractCommand  $argument     The argument name or Console object.
-	 *                                                If we just send a string, the object will auto create.
-	 * @param   null                    $description  Console description.
-	 * @param   array                   $options      Console options.
-	 * @param   \Closure                $code         The closure to execute.
-	 *
-	 * @return  AbstractCommand  Return this object to support chaining.
-	 *
-	 * @since      1.0
-	 * @deprecated This method will be removed.
-	 */
-	public function addArgument($argument, $description = null, $options = array(), \Closure $code = null)
-	{
-		return $this->addCommand($argument, $description, $options, $code);
 	}
 
 	/**
@@ -567,7 +495,7 @@ abstract class AbstractCommand implements \ArrayAccess
 			$option = new Option($option, $default, $description, $global);
 		}
 
-		$option->setInput($this->input);
+		$option->setIO($this->io);
 
 		$name   = $option->getName();
 		$global = $option->isGlobal();
@@ -620,7 +548,7 @@ abstract class AbstractCommand implements \ArrayAccess
 
 		if ($option instanceof Option)
 		{
-			$option->setInput($this->input);
+			$option->setIO($this->io);
 
 			return $option->getValue();
 		}
@@ -971,7 +899,7 @@ EOF;
 	 */
 	public function out($text = '', $nl = true)
 	{
-		$this->output->out($text, $nl);
+		$this->io->out($text, $nl);
 
 		return $this;
 	}
@@ -988,14 +916,7 @@ EOF;
 	 */
 	public function err($text = '', $nl = true)
 	{
-		if ($this->output instanceof \Windwalker\Console\Output\Stdout)
-		{
-			$this->output->err($text, $nl);
-		}
-		else
-		{
-			$this->output->out($text, $nl);
-		}
+		$this->io->out($text, $nl);
 
 		return $this;
 	}

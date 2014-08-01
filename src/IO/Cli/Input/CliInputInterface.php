@@ -45,6 +45,15 @@ interface CliInputInterface
 	public function set($name, $value);
 
 	/**
+	 * Gets an array of values from the request.
+	 *
+	 * @return  mixed  The filtered input data.
+	 *
+	 * @since   1.0
+	 */
+	public function all();
+
+	/**
 	 * getArgument
 	 *
 	 * @param integer $offset

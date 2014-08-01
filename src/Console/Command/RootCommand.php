@@ -8,7 +8,6 @@
 
 namespace Windwalker\Console\Command;
 
-use Joomla\Application\Cli\ColorStyle;
 use Windwalker\Console;
 use Windwalker\Console\Option\Option;
 
@@ -55,9 +54,7 @@ HELP
 			);
 
 		// Add a style <option> & <cmd>
-		$this->output
-			->getProcessor()
-			->addStyle('option', new ColorStyle('cyan',    '', array('bold')))
-			->addStyle('cmd',    new Colorstyle('magenta', '', array('bold')));
+		$this->io->addColor('option', 'cyan',    '', array('bold'))
+			->addColor('cmd', 'magenta', '', array('bold'));
 	}
 }

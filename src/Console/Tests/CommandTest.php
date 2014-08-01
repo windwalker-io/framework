@@ -12,10 +12,8 @@ use Windwalker\Console\Command\Command;
 use Windwalker\Console\Command\RootCommand;
 use Windwalker\Console\Console;
 use Windwalker\Console\Option\Option;
-use Windwalker\Console\Tests\Output\TestStdout;
+use Windwalker\Console\Tests\Mock\MockIO;
 use Windwalker\Console\Tests\Stubs\FooCommand;
-use Joomla\Input;
-use Joomla\Test\TestHelper;
 
 /**
  * Class CommandTest
@@ -42,7 +40,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$command = new RootCommand('default', null, new TestStdout);
+		$command = new RootCommand('default', new MockIO);
 
 		$command
 			->addCommand(
@@ -71,58 +69,6 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	public function testExecute()
 	{
 		$this->assertEquals(123, $this->instance->execute(), 'Return code is not match.');
-	}
-
-	/**
-	 * Test the input setter.
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::setInput
-	 */
-	public function testSetInput()
-	{
-		// Using mock to make sure we get same object.
-		$mockInput = $this->getMock('Joomla\Input\Cli', array('test'), array(), '', false);
-		$mockInput
-			->expects($this->any())
-			->method('test')
-			->will(
-				$this->returnValue('ok')
-			);
-
-		$this->instance->setInput($mockInput);
-
-		$input = TestHelper::getValue($this->instance, 'input');
-		$this->assertEquals('ok', $input->test());
-	}
-
-	/**
-	 * Test the output setter
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::setOutput
-	 */
-	public function testSetOutput()
-	{
-		// Using mock to make sure we get same object.
-		$mockOutput = $this->getMock('Joomla\Application\Cli\Output\Stdout', array('test'), array(), '', false);
-		$mockOutput
-			->expects($this->any())
-			->method('test')
-			->will(
-				$this->returnValue('ok')
-			);
-
-		$this->instance->setOutput($mockOutput);
-
-		$output = TestHelper::getValue($this->instance, 'output');
-		$this->assertEquals('ok', $output->test());
 	}
 
 	/**
@@ -195,7 +141,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(65, $command->execute(), 'Wrong exit code returned.');
 
 		// Test option
-		$this->instance->getInput()->set('a', 1);
+		$this->instance->getIO()->setOption('a', 1);
 
 		$this->assertEquals(56, $command->execute(), 'Wrong exit code returned.');
 
@@ -203,7 +149,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 		$this->instance->addCommand(new FooCommand);
 
 		$this->assertInstanceOf(
-			'Joomla\\Console\\Tests\\Stubs\\FooCommand',
+			'Windwalker\\Console\\Tests\\Stubs\\FooCommand',
 			$this->instance->getChild('foo'),
 			'Argument not FooCommand.'
 		);
@@ -234,13 +180,13 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getChildren
 	 */
-	public function testgetChildren()
+	public function testGetChildren()
 	{
 		$args = $this->instance->getChildren();
 
 		$this->assertInternalType('array', $args, 'Return not array');
 
-		$this->assertInstanceOf('Joomla\\Console\\Command\\AbstractCommand', array_shift($args), 'Array element not Command object');
+		$this->assertInstanceOf('Windwalker\\Console\\Command\\AbstractCommand', array_shift($args), 'Array element not Command object');
 	}
 
 	/**
@@ -263,7 +209,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 			Option::IS_GLOBAL
 		);
 
-		$cmd->getInput()->set('y', 1);
+		$cmd->getIO()->setOption('y', 1);
 
 		$this->assertSame(1, (int) $cmd->getOption('y'), 'Option value not matched.');
 
@@ -279,7 +225,11 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 		// Test for children
 		$bbb = $cmd->getChild('foo/aaa/bbb');
 
-		$this->assertInstanceOf('Joomla\\Console\\Option\\Option', $bbb->getOptionSet(true)->offsetGet('y'), 'Sub command "bbb" should have global option');
+		$this->assertInstanceOf(
+			'Windwalker\\Console\\Option\\Option',
+			$bbb->getOptionSet(true)->offsetGet('y'),
+			'Sub command "bbb" should have global option'
+		);
 	}
 
 	/**
@@ -301,12 +251,11 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 			'Make return uppercase'
 		);
 
-
 		$array = $this->instance->getOptions();
 
 		$this->assertInternalType('array', $array);
 
-		$this->assertInstanceOf('Joomla\\Console\\Option\\Option', array_shift($array), 'Array element not Option object');
+		$this->assertInstanceOf('Windwalker\\Console\\Option\\Option', array_shift($array), 'Array element not Option object');
 	}
 
 	/**
@@ -320,7 +269,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetArgument()
 	{
-		$this->instance->getInput()->args = array('flower', 'sakura');
+		$this->instance->getIO()->setArguments(array('flower', 'sakura'));
 
 		$this->assertEquals('flower', $this->instance->getArgument(0), 'First arg not matched.');
 
@@ -361,7 +310,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInternalType('array', $array);
 
-		$this->assertInstanceOf('Joomla\\Console\\Option\\Option', array_shift($array), 'Array element not Option object');
+		$this->assertInstanceOf('Windwalker\\Console\\Option\\Option', array_shift($array), 'Array element not Option object');
 	}
 
 	/**
@@ -487,7 +436,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->setApplication(new Console);
 
-		$this->assertInstanceOf('Joomla\\Console\\Console', $this->instance->getApplication(), 'Returned not Console object.');
+		$this->assertInstanceOf('Windwalker\\Console\\Console', $this->instance->getApplication(), 'Returned not Console object.');
 	}
 
 	/**
@@ -539,15 +488,15 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 Did you mean one of these?
     yoo';
 
-		$this->instance->getInput()->args = array('yo');
+		$this->instance->getIO()->setArguments(array('yo'));
 
-		$this->instance->getInput()->set('no-ansi', 1);
+		$this->instance->getIO()->setOption('no-ansi', 1);
 
 		$this->instance->execute();
 
 		$this->assertEquals(
 			str_replace(array("\n", "\r"), '', trim($compare)),
-			str_replace(array("\n", "\r"), '', trim($this->instance->getOutput()->getOutput()))
+			str_replace(array("\n", "\r"), '', trim($this->instance->getIO()->getOutputStream()))
 		);
 	}
 
@@ -579,11 +528,11 @@ Did you mean one of these?
 	 */
 	public function testOut()
 	{
-		$this->instance->getOutput()->setOutput('');
+		$this->instance->getIO()->getOutput()->outpur = '';
 
 		$this->instance->out('gogo', false);
 
-		$this->assertEquals('gogo', $this->instance->getOutput()->getOutput());
+		$this->assertEquals('gogo', $this->instance->getIO()->getOutputStream());
 	}
 
 	/**
@@ -597,11 +546,11 @@ Did you mean one of these?
 	 */
 	public function testErr()
 	{
-		$this->instance->getOutput()->setOutput('');
+		$this->instance->getIO()->outputStream = '';
 
 		$this->instance->err('errrr', false);
 
-		$this->assertEquals('errrr', $this->instance->getOutput()->getOutput());
+		$this->assertEquals('errrr', $this->instance->getIO()->getOutputStream());
 	}
 
 	/**

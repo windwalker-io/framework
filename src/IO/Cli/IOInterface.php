@@ -13,7 +13,7 @@ namespace Windwalker\IO\Cli;
  *
  * @since 1.0
  */
-interface IOInterface extends \ArrayAccess
+interface IOInterface
 {
 	/**
 	 * Write a string to standard output
@@ -30,6 +30,15 @@ interface IOInterface extends \ArrayAccess
 	 * @return  string  The input string from standard input.
 	 */
 	public function in();
+
+	/**
+	 * Write a string to standard error output.
+	 *
+	 * @param   string   $text  The text to display.
+	 *
+	 * @return  IOInterface
+	 */
+	public function err($text = '');
 
 	/**
 	 * Gets a value from the input data.
@@ -56,6 +65,13 @@ interface IOInterface extends \ArrayAccess
 	public function setOption($name, $value);
 
 	/**
+	 * getOptions
+	 *
+	 * @return  string[]
+	 */
+	public function getOptions();
+
+	/**
 	 * getArgument
 	 *
 	 * @param integer $offset
@@ -76,10 +92,86 @@ interface IOInterface extends \ArrayAccess
 	public function setArgument($offset, $value);
 
 	/**
+	 * getArguments
+	 *
+	 * @return  string[]
+	 */
+	public function getArguments();
+
+	/**
+	 * shiftArgument
+	 *
+	 * @return  string
+	 */
+	public function shiftArgument();
+
+	/**
+	 * unshiftArgument
+	 *
+	 * @param string $arg
+	 *
+	 * @return  IOInterface
+	 */
+	public function unshiftArgument($arg);
+
+	/**
+	 * popArgument
+	 *
+	 * @return  string
+	 */
+	public function popArgument();
+
+	/**
+	 * pushArgument
+	 *
+	 * @param string $arg
+	 *
+	 * @return  IOInterface
+	 */
+	public function pushArgument($arg);
+
+	/**
+	 * set Arguments
+	 *
+	 * @param array $args
+	 *
+	 * @return  IO
+	 */
+	public function setArguments(array $args);
+
+	/**
 	 * getExecuted
 	 *
 	 * @return  mixed
 	 */
 	public function getCalledScript();
+
+	/**
+	 * addColor
+	 *
+	 * @param   string $name    The color name.
+	 * @param   string $fg      Foreground color.
+	 * @param   string $bg      Background color.
+	 * @param   array  $options Style options.
+	 *
+	 * @return  static
+	 */
+	public function addColor($name, $fg, $bg, $options = array());
+
+	/**
+	 * useColor
+	 *
+	 * @param boolean $bool
+	 *
+	 * @return  IOInterface
+	 */
+	public function useColor($bool = true);
+
+	/**
+	 * __clone
+	 *
+	 * @return  void
+	 */
+	public function __clone();
 }
 

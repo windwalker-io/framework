@@ -16,7 +16,7 @@ use Windwalker\IO\Cli\Color\ColorProcessorInterface;
  *
  * @since 1.0
  */
-class CliOutput extends AbstractCliOutput
+class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
 {
 	/**
 	 * Color processing object
@@ -49,6 +49,22 @@ class CliOutput extends AbstractCliOutput
 	public function out($text = '', $nl = true)
 	{
 		fwrite($this->outputStream, $this->getProcessor()->process($text) . ($nl ? "\n" : null));
+
+		return $this;
+	}
+
+	/**
+	 * Write a string to standard error output.
+	 *
+	 * @param   string   $text  The text to display.
+	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
+	 *
+	 * @since   1.0
+	 * @return $this
+	 */
+	public function err($text = '', $nl = true)
+	{
+		fwrite($this->errorStream, $this->processor->process($text) . ($nl ? "\n" : null));
 
 		return $this;
 	}

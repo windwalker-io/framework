@@ -20,7 +20,7 @@ class Input
 	/**
 	 * Filter object to use.
 	 *
-	 * @var    \Joomla\Filter\InputFilter
+	 * @var    \Windwalker\Filter\Filter
 	 * @since  1.0
 	 */
 	protected $filter = null;

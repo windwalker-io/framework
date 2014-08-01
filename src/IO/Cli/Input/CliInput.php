@@ -96,6 +96,18 @@ class CliInput extends Input implements CliInputInterface
 	}
 
 	/**
+	 * Gets an array of values from the request.
+	 *
+	 * @return  mixed  The filtered input data.
+	 *
+	 * @since   1.0
+	 */
+	public function all()
+	{
+		return $this->getArray();
+	}
+
+	/**
 	 * Method to unserialize the input.
 	 *
 	 * @param   string  $input  The serialized input.
@@ -116,7 +128,7 @@ class CliInput extends Input implements CliInputInterface
 		}
 		else
 		{
-			$this->filter = new InputFilter;
+			$this->filter = new Filter;
 		}
 	}
 

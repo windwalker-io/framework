@@ -23,6 +23,13 @@ abstract class AbstractCliOutput implements CliOutputInterface
 	protected $outputStream = STDOUT;
 
 	/**
+	 * Property errorStream.
+	 *
+	 * @var  resource
+	 */
+	protected $errorStream = STDERR;
+
+	/**
 	 * getOutStream
 	 *
 	 * @return  resource
@@ -37,11 +44,35 @@ abstract class AbstractCliOutput implements CliOutputInterface
 	 *
 	 * @param   resource $outStream
 	 *
-	 * @return  AbstractCliOutput  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setOutputStream($outStream)
 	{
 		$this->outputStream = $outStream;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property ErrorStream
+	 *
+	 * @return  resource
+	 */
+	public function getErrorStream()
+	{
+		return $this->errorStream;
+	}
+
+	/**
+	 * Method to set property errorStream
+	 *
+	 * @param   resource $errorStream
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setErrorStream($errorStream)
+	{
+		$this->errorStream = $errorStream;
 
 		return $this;
 	}

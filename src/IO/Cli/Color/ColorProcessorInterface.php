@@ -18,11 +18,23 @@ interface ColorProcessorInterface
 	/**
 	 * Process the provided output into a string.
 	 *
-	 * @param   mixed
+	 * @param   string $output
 	 *
 	 * @return  string
 	 *
-	 * @since   1.1.0
+	 * @since   1.0
 	 */
 	public function process($output);
+
+	/**
+	 * Add a style.
+	 *
+	 * @param   string      $name   The style name.
+	 * @param   ColorStyle  $style  The color style.
+	 *
+	 * @return  ColorProcessor  Instance of $this to allow chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function addStyle($name, ColorStyle $style);
 }

@@ -8,7 +8,8 @@
 
 namespace Windwalker\Console\Option;
 
-use Joomla\Input\Cli as Input;
+use Windwalker\IO\Cli\IO;
+use Windwalker\IO\Cli\IOInterface;
 
 /**
  * The cli option class.
@@ -69,11 +70,11 @@ class Option
 	/**
 	 * Cli Input object.
 	 *
-	 * @var Input
+	 * @var IOInterface
 	 *
 	 * @since  1.0
 	 */
-	protected $input;
+	protected $io;
 
 	/**
 	 * The option value cache.
@@ -226,32 +227,32 @@ class Option
 	/**
 	 * Get Cli Input object.
 	 *
-	 * @return  Input  The Cli Input object.
+	 * @return  IOInterface  The Cli IO object.
 	 *
 	 * @since   1.0
 	 */
-	public function getInput()
+	public function getIO()
 	{
-		if (!$this->input)
+		if (!$this->io)
 		{
-			$this->input = new Input;
+			$this->io = new IO;
 		}
 
-		return $this->input;
+		return $this->io;
 	}
 
 	/**
 	 * Set Cli Input object.
 	 *
-	 * @param   Input  $input  The Cli Input object.
+	 * @param   IOInterface  $io  The Cli IO object.
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
 	 * @since   1.0
 	 */
-	public function setInput(Input $input)
+	public function setIO(IOInterface $io)
 	{
-		$this->input = $input;
+		$this->io = $io;
 
 		return $this;
 	}
@@ -265,20 +266,20 @@ class Option
 	 */
 	public function getValue()
 	{
-		$input = $this->getInput();
+		$io = $this->getIO();
 
 		$name = $this->name;
 
-		if ($input->getString($name))
+		if ($io->getOption($name))
 		{
-			return $input->getString($name);
+			return $io->getOption($name);
 		}
 
 		foreach ($this->alias as $alias)
 		{
-			if ($input->getString($alias))
+			if ($io->getOption($alias))
 			{
-				return $input->getString($alias);
+				return $io->getOption($alias);
 			}
 		}
 
