@@ -13,7 +13,7 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
 use Windwalker\Form\Exception\FieldRequiredFailException;
 use Windwalker\Form\Exception\FieldValidateFailException;
 use Windwalker\Form\Filter\FilterInterface;
-use Windwalker\Form\Rule\RuleInterface;
+use Windwalker\Validator\ValidatorInterface;
 
 /**
  * The AbstractField class.
@@ -93,11 +93,11 @@ abstract class AbstractField implements FieldInterface
 	protected $required = false;
 
 	/**
-	 * Property rule.
+	 * Property $validator.
 	 *
-	 * @var  string|RuleInterface
+	 * @var  string|ValidatorInterface
 	 */
-	protected $rule = null;
+	protected $validator = null;
 
 	/**
 	 * Property filter.
@@ -145,9 +145,9 @@ abstract class AbstractField implements FieldInterface
 	 * @param string $label
 	 * @param array  $attributes
 	 * @param string $filter
-	 * @param string $rule
+	 * @param string $validator
 	 */
-	public function __construct($name, $label = null, $attributes = array(), $filter = null, $rule = null)
+	public function __construct($name, $label = null, $attributes = array(), $filter = null, $validator = null)
 	{
 		if ($name instanceof \SimpleXMLElement)
 		{
@@ -161,7 +161,9 @@ abstract class AbstractField implements FieldInterface
 			$this->attributes = $attributes;
 		}
 
-		$this->filter = $this->getAttribute('filter');
+		$this->filter = $filter ? : $this->getAttribute('filter');
+
+		$this->validator = $validator ? : $validator;
 
 		$this->required = $this->getAttribute('required', false);
 	}
@@ -280,7 +282,7 @@ abstract class AbstractField implements FieldInterface
 			throw new FieldRequiredFailException($this, sprintf('Field %s value empty', $this->getName(true)));
 		}
 
-		if ($this->rule && !$this->checkRule())
+		if ($this->validator && !$this->checkRule())
 		{
 			throw new FieldValidateFailException($this, sprintf('Field %s rule not valid', $this->getName(true)));
 		}
@@ -312,7 +314,17 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function checkRule()
 	{
-		return $this->getRule()->test($this->value);
+		return $this->getValidator()->validate($this->value);
+	}
+
+	/**
+	 * filter
+	 *
+	 * @return  static
+	 */
+	public function filter()
+	{
+		$this->value = $this->getFilter()->clean($this->value);
 	}
 
 	/**
@@ -471,13 +483,13 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Method to set property rule
 	 *
-	 * @param   string|\Windwalker\Form\Rule\RuleInterface $rule
+	 * @param   string|ValidatorInterface $validator
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setRule($rule)
+	public function setValidator($validator)
 	{
-		$this->rule = $rule;
+		$this->validator = $validator;
 
 		return $this;
 	}
@@ -485,16 +497,16 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Method to get property Rule
 	 *
-	 * @return  string|\Windwalker\Form\Rule\RuleInterface
+	 * @return  ValidatorInterface
 	 */
-	public function getRule()
+	public function getValidator()
 	{
-		if (!($this->rule instanceof RuleInterface))
+		if (!($this->validator instanceof ValidatorInterface))
 		{
-			$this->rule = FieldHelper::createRule($this->rule);
+			$this->validator = FieldHelper::createValidator($this->validator);
 		}
 
-		return $this->rule;
+		return $this->validator;
 	}
 
 	/**
@@ -686,15 +698,5 @@ abstract class AbstractField implements FieldInterface
 	public function def($attr, $value)
 	{
 		$this->attributes[$attr] = isset($this->attributes[$attr]) ? $this->attributes[$attr] : (string) $value;
-	}
-
-	/**
-	 * filter
-	 *
-	 * @return  static
-	 */
-	public function filter()
-	{
-		$this->value = $this->getFilter()->clean($this->value);
 	}
 }

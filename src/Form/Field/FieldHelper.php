@@ -10,7 +10,8 @@ namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\SimpleXml\XmlHelper;
 use Windwalker\Form\Filter\InputFiler;
-use Windwalker\Form\Rule\Rule;
+use Windwalker\Validator\Rule\NoneValidator;
+use Windwalker\Validator\ValidatorInterface;
 
 /**
  * The FieldHelper class.
@@ -138,23 +139,23 @@ class FieldHelper
 	 *
 	 * @param string $rule
 	 *
-	 * @return  Rule
+	 * @return  ValidatorInterface
 	 */
-	public static function createRule($rule)
+	public static function createValidator($rule)
 	{
 		if (class_exists($rule))
 		{
 			return new $rule;
 		}
 
-		$class = 'Windwalker\\Form\\Rule\\' . ucfirst($rule) . ' Rule';
+		$class = 'Windwalker\\Validator\\Rule\\' . ucfirst($rule) . ' Validator';
 
 		if (class_exists($class))
 		{
 			return new $class;
 		}
 
-		return new Rule;
+		return new NoneValidator;
 	}
 }
  

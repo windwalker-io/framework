@@ -6,25 +6,28 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Rule;
+namespace Windwalker\Validator;
 
 /**
- * The NullRule class.
+ * The ValidatorInterface class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class Rule implements RuleInterface
+interface ValidatorInterface
 {
 	/**
-	 * test
+	 * Test this value.
 	 *
 	 * @param mixed $value
 	 *
 	 * @return  boolean
 	 */
-	public function test($value)
-	{
-		return true;
-	}
+	public function validate($value);
+
+	/**
+	 * Get error message.
+	 *
+	 * @return  string
+	 */
+	public function getError();
 }
- 

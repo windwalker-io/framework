@@ -6,23 +6,26 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Rule;
+namespace Windwalker\Validator\Rule;
 
+use Windwalker\Validator\AbstractValidator;
 
 /**
- * Interface RuleInterface
- *
+ * The NoneValidator class.
+ * 
  * @since  {DEPLOY_VERSION}
  */
-interface RuleInterface
+class NoneValidator extends AbstractValidator
 {
 	/**
-	 * test
+	 * Test value and return boolean
 	 *
 	 * @param mixed $value
 	 *
 	 * @return  boolean
 	 */
-	public function test($value);
+	protected function test($value)
+	{
+		return true;
+	}
 }
- 
