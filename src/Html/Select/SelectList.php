@@ -31,6 +31,12 @@ class SelectList extends HtmlElement
 	 * @var  Option[]
 	 */
 	protected $content;
+	/**
+	 * Property multiple.
+	 *
+	 * @var  bool
+	 */
+	protected $multiple;
 
 	/**
 	 * Constructor
@@ -39,13 +45,14 @@ class SelectList extends HtmlElement
 	 * @param mixed|null $options
 	 * @param array      $attribs
 	 * @param mixed      $selected
-	 *
-	 * @throws \InvalidArgumentException
+	 * @param bool       $multiple
 	 */
-	public function __construct($name, $options, $attribs = array(), $selected = null)
+	public function __construct($name, $options, $attribs = array(), $selected = null, $multiple = false)
 	{
 		$attribs['name'] = $name;
-		$attribs['selected'] = $selected ? 'selected' : '';
+
+		$this->selected = $selected;
+		$this->multiple = $multiple;
 
 		parent::__construct('select', $options, $attribs);
 	}
@@ -61,6 +68,11 @@ class SelectList extends HtmlElement
 	{
 		$this->prepareOptions();
 
+		if ($this->multiple)
+		{
+			$this->setAttribute('multiple', 'true');
+		}
+
 		return parent::toString($forcePair);
 	}
 
@@ -71,14 +83,48 @@ class SelectList extends HtmlElement
 	 */
 	protected function prepareOptions()
 	{
-		foreach ($this->content as $option)
+		foreach ($this->content as $name => &$option)
 		{
-			if ($option->getValue() == $this->getSelected())
+			// Array means it is a group
+			if (is_array($option))
 			{
-				$option['selected'] = 'selected';
+				foreach ($option as &$opt)
+				{
+					if ($this->checkSelected($opt->getValue()))
+					{
+						$opt['selected'] = 'selected';
+					}
+				}
 
-				break;
+				$option = new HtmlElement('optgroup', $option, array('label' => $name));
 			}
+			// not array means it is an option
+			else
+			{
+				if ($this->checkSelected($option->getValue()))
+				{
+					$option['selected'] = 'selected';
+				}
+			}
+		}
+	}
+
+	/**
+	 * checkSelected
+	 *
+	 * @param mixed $value
+	 *
+	 * @return  bool
+	 */
+	protected function checkSelected($value)
+	{
+		if ($this->multiple)
+		{
+			return in_array($value, (array) $this->getSelected());
+		}
+		else
+		{
+			return $value == $this->getSelected();
 		}
 	}
 

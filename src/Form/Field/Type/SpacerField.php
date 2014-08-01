@@ -19,6 +19,13 @@ use Windwalker\Form\Field\AbstractField;
 class SpacerField extends AbstractField
 {
 	/**
+	 * Property type.
+	 *
+	 * @var  string
+	 */
+	protected $type = 'spacer';
+
+	/**
 	 * prepareRenderInput
 	 *
 	 * @param array $attrs

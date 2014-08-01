@@ -16,6 +16,13 @@ namespace Windwalker\Form\Field\Type;
 class EmailField extends TextField
 {
 	/**
+	 * Property type.
+	 *
+	 * @var  string
+	 */
+	protected $type = 'email';
+
+	/**
 	 * prepareAttributes
 	 *
 	 * @param array $attrs

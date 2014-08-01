@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project.
+ * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later;
@@ -15,17 +15,17 @@ use Windwalker\Html\Select\SelectList;
 
 /**
  * The ListField class.
- *
+ * 
  * @since  {DEPLOY_VERSION}
  */
-class ListField extends AbstractField
+class GrouplistField extends AbstractField
 {
 	/**
 	 * Property type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'list';
+	protected $type = 'grouplist';
 
 	/**
 	 * Property options.
@@ -79,7 +79,7 @@ class ListField extends AbstractField
 	{
 		$options = $this->getOptions();
 
-		return new SelectList($this->getFieldName(), $options, $this->attributes, $this->getValue(), $this->getBool('multiple'));
+		return new SelectList($this->getFieldName(), $options, $this->attributes, $this->getValue());
 	}
 
 	/**
@@ -167,21 +167,5 @@ class ListField extends AbstractField
 			$this->options = $options;
 		}
 	}
-
-	/**
-	 * getValue
-	 *
-	 * @return  array
-	 */
-	public function getValue()
-	{
-		$value = parent::getValue();
-
-		if ($this->getBool('multiple') && is_string($value))
-		{
-			$value = explode(',', $value);
-		}
-
-		return $value;
-	}
 }
+ 
