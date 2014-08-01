@@ -8,7 +8,7 @@
 
 use Windwalker\Application\AbstractCliApplication;
 
-include_once __DIR__ . '/../../../autoload.php';
+include_once __DIR__ . '/../vendor/autoload.php';
 
 define('WINDWALKER_ROOT', realpath(__DIR__ . '/..'));
 

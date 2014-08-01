@@ -13,7 +13,7 @@ namespace Windwalker\IO\Cli;
  *
  * @since 1.0
  */
-interface IOInterface
+interface IOInterface extends \ArrayAccess
 {
 	/**
 	 * Write a string to standard output
