@@ -11,6 +11,7 @@ namespace Windwalker\Form\Field;
 use Windwalker\Dom\SimpleXml\XmlHelper;
 use Windwalker\Form\Filter\InputFiler;
 use Windwalker\Validator\Rule\NoneValidator;
+use Windwalker\Validator\Rule\RegexValidator;
 use Windwalker\Validator\ValidatorInterface;
 
 /**
@@ -139,10 +140,16 @@ class FieldHelper
 	 *
 	 * @param string $rule
 	 *
+	 * @throws \InvalidArgumentException
 	 * @return  ValidatorInterface
 	 */
 	public static function createValidator($rule)
 	{
+		if (!$rule)
+		{
+			return new NoneValidator;
+		}
+
 		if (class_exists($rule))
 		{
 			return new $rule;
@@ -155,7 +162,12 @@ class FieldHelper
 			return new $class;
 		}
 
-		return new NoneValidator;
+		if (is_string($rule))
+		{
+			return new RegexValidator($rule);
+		}
+
+		throw new \InvalidArgumentException(sprintf('Validator %s is not exists.', $rule));
 	}
 }
  

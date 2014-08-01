@@ -239,7 +239,7 @@ abstract class AbstractField implements FieldInterface
 		$input = $this->renderInput();
 
 		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
-		$attrs['class'] = $this->getAttribute('controlClass');
+		$attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
 
 		return new HtmlElement('div', $label . ' ' . $input, $attrs);
 	}

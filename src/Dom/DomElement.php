@@ -47,6 +47,11 @@ class DomElement implements \ArrayAccess
 	 */
 	public function __construct($name, $content = null, $attribs = array())
 	{
+		if (is_array($content))
+		{
+			$content = new DomElements($content);
+		}
+
 		$this->name    = $name;
 		$this->attribs = $attribs;
 		$this->content = $content;

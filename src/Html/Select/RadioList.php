@@ -9,14 +9,15 @@
 namespace Windwalker\Html\Select;
 
 use Windwalker\Dom\HtmlElement;
+use Windwalker\Dom\HtmlElements;
 use Windwalker\Html\Option;
 
 /**
- * The SelectList class.
+ * The RadioList class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class SelectList extends HtmlElement
+class RadioList extends HtmlElement
 {
 	/**
 	 * Property selected.
@@ -39,15 +40,54 @@ class SelectList extends HtmlElement
 	 * @param mixed|null $options
 	 * @param array      $attribs
 	 * @param mixed      $selected
-	 *
-	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($name, $options, $attribs = array(), $selected = null)
 	{
 		$attribs['name'] = $name;
 		$attribs['selected'] = $selected ? 'selected' : '';
 
-		parent::__construct('select', $options, $attribs);
+		parent::__construct('div', $options, $attribs);
+	}
+
+	/**
+	 * prepareOptions
+	 *
+	 * @return  void
+	 */
+	protected function prepareOptions()
+	{
+		foreach ($this->content as &$option)
+		{
+			if ($option->getValue() == $this->getSelected())
+			{
+				$option['checked'] = 'checked';
+			}
+
+			$attrs = $option->getAttributes();
+
+			$label = $this->createLabel($option);
+
+			$attrs['type'] = 'radio';
+			$input = new HtmlElement('input', '', $attrs);
+
+			$option = new HtmlElements(array($label, $input));
+		}
+	}
+
+	/**
+	 * createLabel
+	 *
+	 * @param Option $option
+	 *
+	 * @return  Htmlelement
+	 */
+	protected function createLabel($option)
+	{
+		$attrs = $option->getAttributes();
+		$attrs['id'] = $option->getAttribute('id') . '-label';
+		$attrs['for'] = $option->getAttribute('id');
+
+		return new HtmlElement('label', $option->getContent(), $attrs);
 	}
 
 	/**
@@ -62,24 +102,6 @@ class SelectList extends HtmlElement
 		$this->prepareOptions();
 
 		return parent::toString($forcePair);
-	}
-
-	/**
-	 * prepareOptions
-	 *
-	 * @return  void
-	 */
-	protected function prepareOptions()
-	{
-		foreach ($this->content as $option)
-		{
-			if ($option->getValue() == $this->getSelected())
-			{
-				$option['selected'] = 'selected';
-
-				break;
-			}
-		}
 	}
 
 	/**
