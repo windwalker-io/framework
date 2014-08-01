@@ -33,6 +33,8 @@ class Newline extends AbstractCliApplication
 
 		$dirs = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root));
 
+		$count = 0;
+
 		foreach ($dirs as $file)
 		{
 			/** @var $file \SplFileInfo */
@@ -52,7 +54,9 @@ class Newline extends AbstractCliApplication
 				continue;
 			}
 
-			$this->out('Found end not new line: ' . $file);
+			$count++;
+
+			$this->out('Add new line to: ' . $file);
 
 			switch ($lastChar)
 			{
@@ -67,6 +71,15 @@ class Newline extends AbstractCliApplication
 			}
 
 			file_put_contents($file, $content);
+		}
+
+		if ($count)
+		{
+			$this->out($count . ' files add new line.');
+		}
+		else
+		{
+			$this->out('No file found.');
 		}
 	}
 }
