@@ -321,7 +321,7 @@ class PdoHelper
 	 *
 	 * @return  mixed
 	 */
-	protected function getOption($name, $default = null)
+	protected static function getOption($name, $default = null)
 	{
 		return isset(self::$options[$name]) ? self::$options[$name] : $default;
 	}

@@ -58,7 +58,7 @@ class RestRouter extends SingleActionRouter
 	 * @param   string  $method  The HTTP method for which to set the class suffix.
 	 * @param   string  $suffix  The class suffix to use when fetching the controller name for a given request.
 	 *
-	 * @return  Router  Returns itself to support chaining.
+	 * @return  static  Returns itself to support chaining.
 	 */
 	public function setHttpMethodSuffix($method, $suffix)
 	{
@@ -72,7 +72,7 @@ class RestRouter extends SingleActionRouter
 	 *
 	 * @param   boolean  $value  A boolean to allow or not method in POST request
 	 *
-	 * @return  RestRouter
+	 * @return  static
 	 */
 	public function allowCustomMethod($value)
 	{
@@ -96,7 +96,7 @@ class RestRouter extends SingleActionRouter
 	 *
 	 * @param   string $customMethod
 	 *
-	 * @return  RestRouter  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setCustomMethod($customMethod)
 	{

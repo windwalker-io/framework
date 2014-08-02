@@ -61,31 +61,6 @@ abstract class DatabaseAdapter
 	}
 
 	/**
-	 * Get DB adapter.
-	 *
-	 * @return  DatabaseAdapter Db adapter.
-	 */
-	public function getDb()
-	{
-		return $this->db;
-	}
-
-	/**
-	 * Set db adapter.
-	 *
-	 * @param   DatabaseAdapter $db Db adapter.
-	 *
-	 * @return  DatabaseAdapter  Return self to support chaining.
-	 */
-	public function setDb($db)
-	{
-		$this->db = $db;
-
-		return $this;
-	}
-
-
-	/**
 	 * Do find action.
 	 *
 	 * @param string  $table      The table name.

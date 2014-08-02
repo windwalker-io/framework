@@ -226,7 +226,7 @@ class Router
 	 *
 	 * @param   string $method
 	 *
-	 * @return  Router  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setMethod($method)
 	{

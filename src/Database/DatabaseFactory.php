@@ -80,7 +80,7 @@ abstract class DatabaseFactory
 		// Create our new Driver connector based on the options given.
 		try
 		{
-			$instance = new $class($options);
+			$instance = new $class(null, $options);
 		}
 		catch (\RuntimeException $e)
 		{

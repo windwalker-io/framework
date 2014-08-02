@@ -15,31 +15,14 @@ use Windwalker\Registry\Registry;
  *
  * @since 1.0
  */
-abstract class AbstractModel implements ModelInterface, \ArrayAccess
+abstract class AbstractModel implements ModelInterface
 {
-	/**
-	 * Property cache.
-	 *
-	 * @var  array
-	 */
-	protected $cache = array();
-
 	/**
 	 * The model state.
 	 *
-	 * @var    Registry
+	 * @var  Registry
 	 */
 	protected $state;
-
-	/**
-	 * Property magicMethodPrefix.
-	 *
-	 * @var  array
-	 */
-	protected $magicMethodPrefix = array(
-		'get',
-		'load'
-	);
 
 	/**
 	 * Instantiate the model.
@@ -49,38 +32,6 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	public function __construct(Registry $state = null)
 	{
 		$this->state = ($state instanceof Registry) ? $state : new Registry;
-	}
-
-	/**
-	 * __call
-	 *
-	 * @param string $name
-	 * @param array  $args
-	 *
-	 * @return  mixed
-	 *
-	 * @throws \InvalidArgumentException
-	 */
-	public function __call($name, $args = array())
-	{
-		$allow = false;
-
-		foreach ($this->magicMethodPrefix as $prefix)
-		{
-			if (substr($name, 0, $prefix) == $prefix)
-			{
-				$allow = true;
-
-				break;
-			}
-		}
-
-		if (!$allow)
-		{
-			throw new \InvalidArgumentException(sprintf("Method %s::%s not found.", get_called_class(), $name));
-		}
-
-		return null;
 	}
 
 	/**
@@ -131,120 +82,6 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 		$this->state->set($key, $value);
 
 		return $this;
-	}
-
-	/**
-	 * getStoredId
-	 *
-	 * @param string $id
-	 *
-	 * @return  string
-	 */
-	public function getStoredId($id = null)
-	{
-		$id = $id . json_encode($this->state->toArray());
-
-		return md5($id);
-	}
-
-	/**
-	 * getCache
-	 *
-	 * @param string $id
-	 *
-	 * @return  mixed
-	 */
-	protected function getCache($id = null)
-	{
-		$id = $this->getStoredId($id);
-
-		if (empty($this->cache[$id]))
-		{
-			return null;
-		}
-
-		return $this->cache[$id];
-	}
-
-	/**
-	 * setCache
-	 *
-	 * @param string $id
-	 * @param mixed  $item
-	 *
-	 * @return  mixed
-	 */
-	protected function setCache($id = null, $item = null)
-	{
-		$id = $this->getStoredId($id);
-
-		$this->cache[$id] = $item;
-
-		return $item;
-	}
-
-	/**
-	 * hasCache
-	 *
-	 * @param string $id
-	 *
-	 * @return  bool
-	 */
-	protected function hasCache($id = null)
-	{
-		$id = $this->getStoredId($id);
-
-		return !empty($this->cache[$id]);
-	}
-
-	/**
-	 * Whether a offset exists
-	 *
-	 * @param mixed $offset An offset to check for.
-	 *
-	 * @return boolean True on success or false on failure.
-	 *                 The return value will be casted to boolean if non-boolean was returned.
-	 */
-	public function offsetExists($offset)
-	{
-		return (boolean) ($this->state->get($offset) !== null);
-	}
-
-	/**
-	 * Offset to retrieve
-	 *
-	 * @param mixed $offset The offset to retrieve.
-	 *
-	 * @return mixed Can return all value types.
-	 */
-	public function offsetGet($offset)
-	{
-		return $this->state->get($offset);
-	}
-
-	/**
-	 * Offset to set
-	 *
-	 * @param mixed $offset The offset to assign the value to.
-	 * @param mixed $value  The value to set.
-	 *
-	 * @return void
-	 */
-	public function offsetSet($offset, $value)
-	{
-		$this->state->set($offset, $value);
-	}
-
-	/**
-	 * Offset to unset
-	 *
-	 * @param mixed $offset The offset to unset.
-	 *
-	 * @return void
-	 */
-	public function offsetUnset($offset)
-	{
-		$this->state->set($offset, null);
 	}
 }
 
