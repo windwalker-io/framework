@@ -92,7 +92,7 @@ class CallbackPrompter extends AbstractPrompter
 				return $value;
 			}
 
-			$this->io->out($this->noValidMessage);
+			$this->io->out()->out($this->noValidMessage);
 		}
 
 		if ($this->failToClose)

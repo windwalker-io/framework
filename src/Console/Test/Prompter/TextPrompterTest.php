@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Prompter;
+namespace Windwalker\Console\Test\Prompter;
 
 use Windwalker\Console\Command\Command;
 use Windwalker\Console\Prompter\AbstractPrompter;

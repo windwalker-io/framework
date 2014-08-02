@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Prompter\Stubs;
+namespace Windwalker\Console\Test\Prompter\Stubs;
 
 use Windwalker\Console\Prompter\PasswordPrompter;
 

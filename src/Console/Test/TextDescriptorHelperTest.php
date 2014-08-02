@@ -6,15 +6,15 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests;
+namespace Windwalker\Console\Test;
 
 use Windwalker\Console\Console;
 use Windwalker\Console\Descriptor\Text\TextCommandDescriptor;
 use Windwalker\Console\Descriptor\Text\TextDescriptorHelper;
 use Windwalker\Console\Descriptor\Text\TextOptionDescriptor;
-use Windwalker\Console\Tests\Mock\MockIO;
-use Windwalker\Console\Tests\Output\TestStdout;
-use Windwalker\Console\Tests\Stubs\FooCommand;
+use Windwalker\Console\Test\Mock\MockIO;
+use Windwalker\Console\Test\Output\TestStdout;
+use Windwalker\Console\Test\Stubs\FooCommand;
 
 /**
  * Class TextDescriptorHelperTest

@@ -6,16 +6,16 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Prompter;
+namespace Windwalker\Console\Test\Prompter;
 
-use Windwalker\Console\Prompter\ValidatePrompter;
+use Windwalker\Console\Prompter\NotNullPrompter;
 
 /**
  * Class ValidatePrompterTest
  *
  * @since  1.0
  */
-class ValidatePrompterTest extends AbstractPrompterTest
+class NotNullPrompterTest extends AbstractPrompterTest
 {
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -29,7 +29,9 @@ class ValidatePrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
-		$this->instance = $prompter = new ValidatePrompter('Tell me something: ', null, array('flower', 'sakura', 'rose'), null, $this->output);
+		$this->instance = $prompter = new NotNullPrompter('Tell me something: ', null, null, $this->io);
+
+		$this->setStream(" ");
 	}
 
 	/**
@@ -41,13 +43,7 @@ class ValidatePrompterTest extends AbstractPrompterTest
 	 */
 	public function testAsk()
 	{
-		$this->setStream("4\n5\n6");
-
-		$this->assertEquals($this->instance->ask(null, 'sakura'), 'sakura', 'Should validate fail and return default.');
-
-		$this->setStream("4\n5\n6");
-
-		$this->assertNull($this->instance->ask(null), 'Should validate fail and get NULL.');
+		$this->assertEquals($this->instance->ask('Tell me something: ', 'sakura'), 'sakura', 'Should validate fail and return default.');
 
 		$this->setStream('sakura');
 

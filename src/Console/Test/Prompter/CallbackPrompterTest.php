@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Prompter;
+namespace Windwalker\Console\Test\Prompter;
 
 use Windwalker\Console\Prompter\CallbackPrompter;
 
@@ -29,7 +29,9 @@ class CallbackPrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
-		$this->instance = $prompter = new CallbackPrompter(null, null, null, $this->io);
+		$this->instance = $prompter = new CallbackPrompter(null, null, $this->io);
+
+		$this->setStream('');
 	}
 
 	/**

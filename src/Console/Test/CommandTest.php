@@ -6,14 +6,14 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests;
+namespace Windwalker\Console\Test;
 
 use Windwalker\Console\Command\Command;
 use Windwalker\Console\Command\RootCommand;
 use Windwalker\Console\Console;
 use Windwalker\Console\Option\Option;
-use Windwalker\Console\Tests\Mock\MockIO;
-use Windwalker\Console\Tests\Stubs\FooCommand;
+use Windwalker\Console\Test\Mock\MockIO;
+use Windwalker\Console\Test\Stubs\FooCommand;
 
 /**
  * Class CommandTest
@@ -149,7 +149,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 		$this->instance->addCommand(new FooCommand);
 
 		$this->assertInstanceOf(
-			'Windwalker\\Console\\Tests\\Stubs\\FooCommand',
+			'Windwalker\\Console\\Test\\Stubs\\FooCommand',
 			$this->instance->getChild('foo'),
 			'Argument not FooCommand.'
 		);

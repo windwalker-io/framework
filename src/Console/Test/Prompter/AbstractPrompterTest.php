@@ -6,11 +6,10 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Prompter;
+namespace Windwalker\Console\Test\Prompter;
 
 use Windwalker\Console\Prompter\AbstractPrompter;
-use Windwalker\Console\Tests\Mock\MockIO;
-use Windwalker\Console\Tests\Output\TestStdout;
+use Windwalker\Console\Test\Mock\MockIO;
 
 /**
  * Class AbstractPrompterTest

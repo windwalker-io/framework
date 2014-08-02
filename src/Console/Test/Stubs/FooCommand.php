@@ -6,10 +6,10 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Stubs;
+namespace Windwalker\Console\Test\Stubs;
 
 use Windwalker\Console\Command\Command;
-use Windwalker\Console\Tests\Stubs\Foo\AaaCommand;
+use Windwalker\Console\Test\Stubs\Foo\AaaCommand;
 
 /**
  * Class FooCommand

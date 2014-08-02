@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests;
+namespace Windwalker\Console\Test;
 
 use Windwalker\Console\Option\Option;
 use Windwalker\Console\Option\OptionSet;

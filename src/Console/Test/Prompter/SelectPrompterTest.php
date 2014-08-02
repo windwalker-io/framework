@@ -6,8 +6,12 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Prompter;
+namespace Windwalker\Console\Test\Prompter;
 
+use Windwalker\Console\IO\IO;
+use Windwalker\Console\Prompter\CallbackPrompter;
+use Windwalker\Console\Prompter\NotNullPrompter;
+use Windwalker\Console\Prompter\PasswordPrompter;
 use Windwalker\Console\Prompter\SelectPrompter;
 
 /**
@@ -36,7 +40,7 @@ class SelectPrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
-		$this->instance = $prompter = new SelectPrompter(null, null, $this->options, $this->io);
+		$this->instance = $prompter = new SelectPrompter(null, $this->options, false, $this->io);
 	}
 
 	/**

@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Stubs\Foo\Aaa;
+namespace Windwalker\Console\Test\Stubs\Foo\Aaa;
 
 use Windwalker\Console\Command\Command;
 

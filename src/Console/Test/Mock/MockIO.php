@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Console\Tests\Mock;
+namespace Windwalker\Console\Test\Mock;
 
 use Windwalker\Console\IO\IO;
 use Windwalker\IO\Cli\Input\CliInputInterface;

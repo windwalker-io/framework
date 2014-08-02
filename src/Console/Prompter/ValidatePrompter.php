@@ -30,13 +30,13 @@ class ValidatePrompter extends CallbackPrompter
 	 * Constructor.
 	 *
 	 * @param   string       $question  The question you want to ask.
-	 * @param   $default     $default   The default value.
 	 * @param   array        $options   The option list to validate input.
+	 * @param   $default     $default   The default value.
 	 * @param   IOInterface  $io        The input object.
 	 *
 	 * @since   1.0
 	 */
-	function __construct($question = null, $default = null, $options = array(), IOInterface $io = null)
+	function __construct($question = null, $options = array(),$default = null, IOInterface $io = null)
 	{
 		$this->options = $options;
 

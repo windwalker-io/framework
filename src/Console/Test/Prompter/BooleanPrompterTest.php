@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests\Prompter;
+namespace Windwalker\Console\Test\Prompter;
 
 use Windwalker\Console\Prompter\BooleanPrompter;
 
@@ -29,7 +29,7 @@ class BooleanPrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
-		$this->instance = $prompter = new BooleanPrompter('True or False [Y/n]: ', null, null, $this->io);
+		$this->instance = $prompter = new BooleanPrompter('True or False [Y/n]: ', null, $this->io);
 	}
 
 	/**

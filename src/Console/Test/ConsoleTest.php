@@ -6,13 +6,12 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Console\Tests;
+namespace Windwalker\Console\Test;
 
 use Windwalker\Console\Console;
-use Windwalker\Console\IO\IO;
-use Windwalker\Console\Tests\Mock\MockIO;
-use Windwalker\Console\Tests\Output\TestStdout;
-use Windwalker\Console\Tests\Stubs\FooCommand;
+use Windwalker\Console\Test\Mock\MockIO;
+use Windwalker\Console\Test\Mock\MockLogger;
+use Windwalker\Console\Test\Stubs\FooCommand;
 use Joomla\Test\TestHelper;
 
 /**
@@ -30,6 +29,32 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 * @since 1.0
 	 */
 	public $instance;
+
+	/**
+	 * testGetAndSetLogger
+	 *
+	 * @return  void
+	 */
+	public function testGetAndSetLogger()
+	{
+		$this->assertInstanceOf('Psr\\Log\\NullLogger', $this->instance->getLogger());
+
+		$this->instance->setLogger(new MockLogger);
+
+		$this->assertInstanceOf('Windwalker\\Console\\Test\\Mock\\MockLogger', $this->instance->getLogger());
+	}
+
+	/**
+	 * testGetAndSetConfig
+	 *
+	 * @return  void
+	 */
+	public function testGetAndSetConfig()
+	{
+		$this->instance->set('park.flower', 'sakura');
+
+		$this->assertEquals($this->instance->get('park.flower'), 'sakura', 'Config data not matched.');
+	}
 
 	/**
 	 * Set up test.
@@ -122,6 +147,8 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf('Windwalker\\Registry\\Registry', TestHelper::getValue($console, 'config'));
 	}
+
+
 
 	/**
 	 * Test doExecute.
@@ -251,7 +278,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	public function testsetHandler()
+	public function testSetHandler()
 	{
 		$this->instance->setHandler(
 			function($command)
@@ -264,4 +291,6 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(221, $this->instance->getRootCommand()->setIO(new MockIO)->execute());
 	}
+
+
 }

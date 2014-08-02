@@ -114,8 +114,6 @@ abstract class AbstractPrompter implements PrompterInterface
 
 		$value = $this->io->in();
 
-		$this->io->out();
-
 		return $value;
 	}
 

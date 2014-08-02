@@ -12,7 +12,6 @@ use Windwalker\Console\Command\AbstractCommand;
 use Windwalker\Console\Command\Command;
 use Windwalker\Console\Command\RootCommand;
 use Windwalker\Console\Command\HelpCommand;
-use Windwalker\Application\AbstractCliApplication;
 use Windwalker\Console\IO\IO;
 use Windwalker\Console\IO\IOInterface;
 use Windwalker\Registry\Registry;
@@ -22,7 +21,7 @@ use Windwalker\Registry\Registry;
  *
  * @since  1.0
  */
-class Console extends AbstractCliApplication
+class Console extends AbstractConsole
 {
 	/**
 	 * The Console title.
