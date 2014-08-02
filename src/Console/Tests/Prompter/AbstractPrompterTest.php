@@ -8,6 +8,8 @@
 
 namespace Windwalker\Console\Tests\Prompter;
 
+use Windwalker\Console\Prompter\AbstractPrompter;
+use Windwalker\Console\Tests\Mock\MockIO;
 use Windwalker\Console\Tests\Output\TestStdout;
 
 /**
@@ -20,7 +22,7 @@ abstract class AbstractPrompterTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test instance.
 	 *
-	 * @var Prompter
+	 * @var AbstractPrompter
 	 */
 	protected $instance;
 
@@ -34,15 +36,13 @@ abstract class AbstractPrompterTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Property output.
 	 *
-	 * @var TestStdout
+	 * @var MockIO
 	 */
-	protected $output;
+	protected $io;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
-	 *
-	 * @throws LogicException
 	 *
 	 * @return void
 	 *
@@ -50,7 +50,7 @@ abstract class AbstractPrompterTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->output = new TestStdout;
+		$this->io = new MockIO;
 	}
 
 	/**
@@ -66,7 +66,7 @@ abstract class AbstractPrompterTest extends \PHPUnit_Framework_TestCase
 		fputs($this->memory, $text);
 		rewind($this->memory);
 
-		$this->instance->setInputStream($this->memory);
+		$this->instance->getIO()->setInputStream($this->memory);
 
 		return $this->memory;
 	}

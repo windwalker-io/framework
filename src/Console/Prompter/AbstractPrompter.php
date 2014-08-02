@@ -8,8 +8,8 @@
 
 namespace Windwalker\Console\Prompter;
 
-use Joomla\Application\Cli\Output\Stdout;
-use Joomla\Input;
+use Windwalker\Console\IO\IO;
+use Windwalker\Console\IO\IOInterface;
 
 /**
  * Prompter class.
@@ -30,20 +30,11 @@ abstract class AbstractPrompter implements PrompterInterface
 	/**
 	 * The input object.
 	 *
-	 * @var  Input\Cli
+	 * @var  IOInterface
 	 *
 	 * @since  1.0
 	 */
-	protected $input = null;
-
-	/**
-	 * Output object.
-	 *
-	 * @var  Stdout
-	 *
-	 * @since  1.0
-	 */
-	protected $output = null;
+	protected $io = null;
 
 	/**
 	 * The default value.
@@ -66,19 +57,29 @@ abstract class AbstractPrompter implements PrompterInterface
 	/**
 	 * Constructor.
 	 *
-	 * @param   string     $question  The question you want to ask.
-	 * @param   $default   $default   The default value.
-	 * @param   Input\Cli  $input     The input object.
-	 * @param   Stdout     $output    The output object.
+	 * @param   string       $question  The question you want to ask.
+	 * @param   $default     $default   The default value.
+	 * @param   IOInterface  $io        The input object.
 	 *
 	 * @since   1.0
 	 */
-	function __construct($question = null, $default = null, Input\Cli $input = null, Stdout $output = null)
+	function __construct($question = null, $default = null, IOInterface $io = null)
 	{
-		$this->input    = $input  ? : new Input\Cli;
-		$this->output   = $output ? : new Stdout;
+		$this->io = $io ? : new IO;
 		$this->question = $question;
 		$this->default  = $default;
+
+		$this->preprocess();
+	}
+
+	/**
+	 * Method to initialise something customize.
+	 *
+	 * @return  void
+	 */
+	protected function preprocess()
+	{
+		// Override this method to initialise something.
 	}
 
 	/**
@@ -108,100 +109,14 @@ abstract class AbstractPrompter implements PrompterInterface
 
 		if ($question)
 		{
-			$this->output->out()->out($question, false);
+			$this->io->out()->out($question, false);
 		}
 
-		$value = rtrim(fread($this->inputStream, 8192), "\n\r");
+		$value = $this->io->in();
 
-		$this->output->out();
+		$this->io->out();
 
 		return $value;
-	}
-
-	/**
-	 * Get input object.
-	 *
-	 * @return  Input\Cli
-	 *
-	 * @since   1.0
-	 */
-	public function getInput()
-	{
-		return $this->input;
-	}
-
-	/**
-	 * Set input object.
-	 *
-	 * @param   Input\Cli  $input  The input object.
-	 *
-	 * @return  AbstractPrompter  Return self to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function setInput($input)
-	{
-		$this->input = $input;
-
-		return $this;
-	}
-
-	/**
-	 * Get output object.
-	 *
-	 * @return  Stdout
-	 *
-	 * @since   1.0
-	 */
-	public function getOutput()
-	{
-		return $this->output;
-	}
-
-	/**
-	 * Set output object.
-	 *
-	 * @param   Stdout  $output  The output object.
-	 *
-	 * @return  AbstractPrompter  Return self to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function setOutput($output)
-	{
-		$this->output = $output;
-
-		return $this;
-	}
-
-	/**
-	 * Get input stream resource.
-	 *
-	 * @return  resource  The input stream resource.
-	 *
-	 * @since   1.0
-	 */
-	public function getInputStream()
-	{
-		return $this->inputStream;
-	}
-
-	/**
-	 * Set input stream resource, default is STDIN.
-	 *
-	 * Replace this resource help us easily test this class.
-	 *
-	 * @param   resource  $inputStream  The input stream resource.
-	 *
-	 * @return  AbstractPrompter  Return self to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function setInputStream($inputStream)
-	{
-		$this->inputStream = $inputStream;
-
-		return $this;
 	}
 
 	/**
@@ -217,5 +132,29 @@ abstract class AbstractPrompter implements PrompterInterface
 	public function __invoke($msg = null, $default = null)
 	{
 		return $this->ask($msg, $default);
+	}
+
+	/**
+	 * Method to get property Io
+	 *
+	 * @return  \Windwalker\Console\IO\IOInterface
+	 */
+	public function getIO()
+	{
+		return $this->io;
+	}
+
+	/**
+	 * Method to set property io
+	 *
+	 * @param   \Windwalker\Console\IO\IOInterface $io
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setIO($io)
+	{
+		$this->io = $io;
+
+		return $this;
 	}
 }

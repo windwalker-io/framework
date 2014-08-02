@@ -54,7 +54,7 @@ class SelectPrompter extends ValidatePrompter
 	 */
 	public function ask($msg = '', $default = null)
 	{
-		$this->output->out("\n\n" . $this->renderList());
+		$this->io->out("\n\n" . $this->renderList());
 
 		return parent::ask($msg, $default);
 	}

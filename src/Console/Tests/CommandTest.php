@@ -496,7 +496,7 @@ Did you mean one of these?
 
 		$this->assertEquals(
 			str_replace(array("\n", "\r"), '', trim($compare)),
-			str_replace(array("\n", "\r"), '', trim($this->instance->getIO()->getOutputStream()))
+			str_replace(array("\n", "\r"), '', trim($this->instance->getIO()->getTestOutput()))
 		);
 	}
 
@@ -532,7 +532,7 @@ Did you mean one of these?
 
 		$this->instance->out('gogo', false);
 
-		$this->assertEquals('gogo', $this->instance->getIO()->getOutputStream());
+		$this->assertEquals('gogo', $this->instance->getIO()->getTestOutput());
 	}
 
 	/**
@@ -550,7 +550,7 @@ Did you mean one of these?
 
 		$this->instance->err('errrr', false);
 
-		$this->assertEquals('errrr', $this->instance->getIO()->getOutputStream());
+		$this->assertEquals('errrr', $this->instance->getIO()->getTestOutput());
 	}
 
 	/**

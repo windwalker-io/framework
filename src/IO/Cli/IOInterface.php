@@ -99,79 +99,10 @@ interface IOInterface
 	public function getArguments();
 
 	/**
-	 * shiftArgument
-	 *
-	 * @return  string
-	 */
-	public function shiftArgument();
-
-	/**
-	 * unshiftArgument
-	 *
-	 * @param string $arg
-	 *
-	 * @return  IOInterface
-	 */
-	public function unshiftArgument($arg);
-
-	/**
-	 * popArgument
-	 *
-	 * @return  string
-	 */
-	public function popArgument();
-
-	/**
-	 * pushArgument
-	 *
-	 * @param string $arg
-	 *
-	 * @return  IOInterface
-	 */
-	public function pushArgument($arg);
-
-	/**
-	 * set Arguments
-	 *
-	 * @param array $args
-	 *
-	 * @return  IO
-	 */
-	public function setArguments(array $args);
-
-	/**
 	 * getExecuted
 	 *
 	 * @return  mixed
 	 */
 	public function getCalledScript();
-
-	/**
-	 * addColor
-	 *
-	 * @param   string $name    The color name.
-	 * @param   string $fg      Foreground color.
-	 * @param   string $bg      Background color.
-	 * @param   array  $options Style options.
-	 *
-	 * @return  static
-	 */
-	public function addColor($name, $fg, $bg, $options = array());
-
-	/**
-	 * useColor
-	 *
-	 * @param boolean $bool
-	 *
-	 * @return  IOInterface
-	 */
-	public function useColor($bool = true);
-
-	/**
-	 * __clone
-	 *
-	 * @return  void
-	 */
-	public function __clone();
 }
 

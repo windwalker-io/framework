@@ -142,9 +142,9 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	public function testSetAndGeTInput()
+	public function testSetAndGetIO()
 	{
-		$this->assertEquals($this->instance->getInput(), $this->command->getInput(), 'Input not the same instance.');
+		$this->assertEquals($this->instance->getIO(), $this->command->getIO(), 'IO not the same instance.');
 	}
 
 	/**
@@ -162,7 +162,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	{
 		foreach ($inputs as $key => $vals)
 		{
-			$this->instance->getInput()->set($key, 1);
+			$this->instance->getIO()->setOption($key, 1);
 
 			foreach ($vals as $val)
 			{
@@ -171,7 +171,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 		}
 
 		// Filter
-		$this->instance->getInput()->set('y', 'flower sakura');
+		$this->instance->getIO()->setOption('y', 'flower sakura');
 
 		$this->assertEquals('flower sakura', $this->instance->getValue('y'), 'Default input filter should string.');
 	}

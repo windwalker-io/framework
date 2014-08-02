@@ -8,9 +8,6 @@
 
 namespace Windwalker\IO\Cli;
 
-use Windwalker\IO\Cli\Color\ColorProcessor;
-use Windwalker\IO\Cli\Color\ColorStyle;
-use Windwalker\IO\Cli\Color\NoColorProcessor;
 use Windwalker\IO\Cli\Input\CliInput;
 use Windwalker\IO\Cli\Input\CliInputInterface;
 use Windwalker\IO\Cli\Output\CliOutput;
@@ -152,54 +149,6 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	}
 
 	/**
-	 * shiftArgument
-	 *
-	 * @return  string
-	 */
-	public function shiftArgument()
-	{
-		return array_shift($this->input->args);
-	}
-
-	/**
-	 * unshiftArgument
-	 *
-	 * @param string $arg
-	 *
-	 * @return  IOInterface
-	 */
-	public function unshiftArgument($arg)
-	{
-		array_unshift($this->input->args, $arg);
-
-		return $this;
-	}
-
-	/**
-	 * pushArgument
-	 *
-	 * @param string $arg
-	 *
-	 * @return  IOInterface
-	 */
-	public function pushArgument($arg)
-	{
-		array_push($this->input->args, $arg);
-
-		return $this;
-	}
-
-	/**
-	 * popArgument
-	 *
-	 * @return  string
-	 */
-	public function popArgument()
-	{
-		return array_pop($this->input->args);
-	}
-
-	/**
 	 * getInput
 	 *
 	 * @return  CliInput|CliInputInterface
@@ -275,75 +224,6 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	public function getArguments()
 	{
 		return $this->input->args;
-	}
-
-	/**
-	 * set Arguments
-	 *
-	 * @param array $args
-	 *
-	 * @return  IO
-	 */
-	public function setArguments(array $args)
-	{
-		$this->input->args = $args;
-
-		return $this;
-	}
-
-	/**
-	 * addColor
-	 *
-	 * @param   string $name    The color name.
-	 * @param   string $fg      Foreground color.
-	 * @param   string $bg      Background color.
-	 * @param   array  $options Style options.
-	 *
-	 * @return  static
-	 */
-	public function addColor($name, $fg, $bg, $options = array())
-	{
-		if ($this->output instanceof ColorfulOutputInterface)
-		{
-			$this->output->getProcessor()->addStyle($name, new ColorStyle($fg, $bg, $options));
-		}
-
-		return $this;
-	}
-
-	/**
-	 * useColor
-	 *
-	 * @param boolean $bool
-	 *
-	 * @return  IOInterface
-	 */
-	public function useColor($bool = true)
-	{
-		if ($this->output instanceof ColorfulOutputInterface)
-		{
-			if ($bool)
-			{
-				$this->output->setProcessor(new ColorProcessor);
-			}
-			else
-			{
-				$this->output->setProcessor(new NoColorProcessor);
-			}
-		}
-
-		return $this;
-	}
-
-	/**
-	 * __clone
-	 *
-	 * @return  void
-	 */
-	public function __clone()
-	{
-		$this->input = clone $this->input;
-		$this->output = clone $this->output;
 	}
 
 	/**

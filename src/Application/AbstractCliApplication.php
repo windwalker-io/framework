@@ -24,7 +24,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *
 	 * @var  IOInterface
 	 */
-	protected $io = null;
+	public $io = null;
 
 	/**
 	 * Class constructor.

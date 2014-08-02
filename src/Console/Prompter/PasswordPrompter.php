@@ -8,9 +8,6 @@
 
 namespace Windwalker\Console\Prompter;
 
-use Joomla\Input;
-use Joomla\Application\Cli\Output\Stdout;
-
 /**
  * A password prompter supports hidden input.
  *
@@ -57,22 +54,15 @@ class PasswordPrompter extends CallbackPrompter
 	protected $hiddenExe = null;
 
 	/**
-	 * Constructor.
+	 * Initialise this class.
 	 *
-	 * @param   string     $question  The question you want to ask.
-	 * @param   $default   $default   The default value.
-	 * @param   Input\Cli  $input     The input object.
-	 * @param   Stdout     $output    The output object.
-	 *
-	 * @since   1.0
+	 * @return  void
 	 */
-	function __construct($question = null, $default = null,  Input\Cli $input = null, Stdout $output = null)
+	protected function preprocess()
 	{
 		$this->win = defined('PHP_WINDOWS_VERSION_BUILD');
 
 		$this->hiddenExe = __DIR__ . '/../bin/hiddeninput.exe';
-
-		parent::__construct($question, $default, $input, $output);
 	}
 
 	/**
@@ -109,12 +99,12 @@ class PasswordPrompter extends CallbackPrompter
 		{
 			if ($question)
 			{
-				$this->output->out()->out($question, false);
+				$this->io->out()->out($question, false);
 			}
 
 			$value = rtrim(shell_exec($this->hiddenExe));
 
-			$this->output->out();
+			$this->io->out();
 
 			return $value;
 		}
@@ -124,7 +114,7 @@ class PasswordPrompter extends CallbackPrompter
 		{
 			if ($question)
 			{
-				$this->output->out()->out($question, false);
+				$this->io->out()->out($question, false);
 			}
 
 			// Get stty setting
@@ -141,7 +131,7 @@ class PasswordPrompter extends CallbackPrompter
 				throw new \RuntimeException('Cannot get input value.');
 			}
 
-			$this->output->out();
+			$this->io->out();
 
 			return rtrim($value);
 		}
@@ -157,7 +147,7 @@ class PasswordPrompter extends CallbackPrompter
 				throw new \RuntimeException("Can't invoke shell");
 			}
 
-			$this->output->out();
+			$this->io->out();
 
 			// Using read to write password
 			$read = sprintf('read -s -p "%s" mypassword && echo $mypassword', $question);
@@ -167,7 +157,7 @@ class PasswordPrompter extends CallbackPrompter
 
 			$value = rtrim(shell_exec($command));
 
-			$this->output->out();
+			$this->io->out();
 
 			return $value;
 		}

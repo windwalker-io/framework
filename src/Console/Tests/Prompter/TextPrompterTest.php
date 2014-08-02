@@ -8,6 +8,8 @@
 
 namespace Windwalker\Console\Tests\Prompter;
 
+use Windwalker\Console\Command\Command;
+use Windwalker\Console\Prompter\AbstractPrompter;
 use Windwalker\Console\Prompter\TextPrompter;
 
 /**
@@ -29,7 +31,7 @@ class TextPrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
-		$this->instance = $prompter = new TextPrompter('Tell me something: ', null, null, $this->output);
+		$this->instance = $prompter = new TextPrompter('Tell me something: ', null, $this->io);
 	}
 
 	/**
@@ -43,10 +45,10 @@ class TextPrompterTest extends AbstractPrompterTest
 	{
 		$this->setStream("y");
 
-		$in = $this->instance->ask();
+		$this->instance->ask();
 
 		$this->assertEquals(
-			trim($this->output->getOutput()),
+			trim($this->io->getTestOutput()),
 			trim('Tell me something: ')
 		);
 
@@ -60,16 +62,16 @@ class TextPrompterTest extends AbstractPrompterTest
 		$this->assertEquals($in, 'n');
 
 		// Set as default in command getArgument
-		$command = new \Windwalker\Console\Command\Command('test', $prompter->getInput(), $this->output);
+		$command = new Command('test', $prompter->getIO());
 
 		$this->setStream("fly");
 
-		$this->output->setOutput('');
+		$this->io->setTestOutput('');
 
 		$in = $command->getArgument(9, $this->instance);
 
 		$this->assertEquals(
-			trim($this->output->getOutput()),
+			trim($this->io->getTestOutput()),
 			trim('Tell me something: ')
 		);
 

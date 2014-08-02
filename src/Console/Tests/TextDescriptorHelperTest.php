@@ -12,6 +12,7 @@ use Windwalker\Console\Console;
 use Windwalker\Console\Descriptor\Text\TextCommandDescriptor;
 use Windwalker\Console\Descriptor\Text\TextDescriptorHelper;
 use Windwalker\Console\Descriptor\Text\TextOptionDescriptor;
+use Windwalker\Console\Tests\Mock\MockIO;
 use Windwalker\Console\Tests\Output\TestStdout;
 use Windwalker\Console\Tests\Stubs\FooCommand;
 
@@ -81,7 +82,7 @@ Available commands:
 
 foo help';
 
-		$console = new Console(null, null, new TestStdout);
+		$console = new Console(new MockIO);
 
 		$console->setName('Test Console')
 			->setVersion('1.2.3')

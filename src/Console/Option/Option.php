@@ -8,8 +8,8 @@
 
 namespace Windwalker\Console\Option;
 
-use Windwalker\IO\Cli\IO;
-use Windwalker\IO\Cli\IOInterface;
+use Windwalker\Console\IO\IO;
+use Windwalker\Console\IO\IOInterface;
 
 /**
  * The cli option class.

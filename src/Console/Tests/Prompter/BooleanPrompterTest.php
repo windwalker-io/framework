@@ -29,7 +29,7 @@ class BooleanPrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
-		$this->instance = $prompter = new BooleanPrompter('True or False [Y/n]: ', null, null, $this->output);
+		$this->instance = $prompter = new BooleanPrompter('True or False [Y/n]: ', null, null, $this->io);
 	}
 
 	/**

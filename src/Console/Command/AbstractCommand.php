@@ -12,8 +12,8 @@ use Windwalker\Application\AbstractCliApplication;
 use Windwalker\Console\Exception\CommandNotFoundException;
 use Windwalker\Console\Option\Option;
 use Windwalker\Console\Option\OptionSet;
-use Windwalker\IO\Cli\IO;
-use Windwalker\IO\Cli\IOInterface;
+use Windwalker\Console\IO\IO;
+use Windwalker\Console\IO\IOInterface;
 
 /**
  * Abstract Console class.
@@ -266,7 +266,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  \Windwalker\IO\Cli\IOInterface
 	 */
-	public function getIo()
+	public function getIO()
 	{
 		return $this->io;
 	}
@@ -278,7 +278,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setIo($io)
+	public function setIO($io)
 	{
 		$this->io = $io;
 

@@ -296,4 +296,28 @@ class CliInput extends Input implements CliInputInterface
 
 		return $this;
 	}
+
+	/**
+	 * setOutStream
+	 *
+	 * @param   resource $outStream
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setOutputStream($outStream)
+	{
+
+	}
+
+	/**
+	 * Method to set property errorStream
+	 *
+	 * @param   resource $errorStream
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setErrorStream($errorStream)
+	{
+
+	}
 }

@@ -8,8 +8,8 @@
 
 namespace Windwalker\Console\Tests\Mock;
 
+use Windwalker\Console\IO\IO;
 use Windwalker\IO\Cli\Input\CliInputInterface;
-use Windwalker\IO\Cli\IO;
 use Windwalker\IO\Cli\Output\CliOutputInterface;
 
 /**
@@ -35,9 +35,19 @@ class MockIO extends IO
 	 *
 	 * @return  mixed
 	 */
-	public function getOutputStream()
+	public function getTestOutput()
 	{
 		return $this->output->output;
+	}
+
+	/**
+	 * getOutputStream
+	 *
+	 * @return  mixed
+	 */
+	public function setTestOutput($output)
+	{
+		return $this->output->output = $output;
 	}
 
 	/**

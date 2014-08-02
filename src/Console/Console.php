@@ -13,7 +13,8 @@ use Windwalker\Console\Command\Command;
 use Windwalker\Console\Command\RootCommand;
 use Windwalker\Console\Command\HelpCommand;
 use Windwalker\Application\AbstractCliApplication;
-use Windwalker\IO\Cli\IOInterface;
+use Windwalker\Console\IO\IO;
+use Windwalker\Console\IO\IOInterface;
 use Windwalker\Registry\Registry;
 
 /**
@@ -76,6 +77,8 @@ class Console extends AbstractCliApplication
 	 */
 	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
+		$io = $io ? : new IO;
+
 		parent::__construct($io, $config);
 
 		$this->registerRootCommand();

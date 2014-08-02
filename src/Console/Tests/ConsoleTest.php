@@ -9,9 +9,10 @@
 namespace Windwalker\Console\Tests;
 
 use Windwalker\Console\Console;
+use Windwalker\Console\IO\IO;
+use Windwalker\Console\Tests\Mock\MockIO;
 use Windwalker\Console\Tests\Output\TestStdout;
 use Windwalker\Console\Tests\Stubs\FooCommand;
-use Joomla\Input;
 use Joomla\Test\TestHelper;
 
 /**
@@ -39,12 +40,12 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$input = new Input\Cli;
+		$io = new MockIO;
 
-		$input->args = array('foo');
+		$io->setArguments(array('foo'));
 
 		/** @var $console Console */
-		$console = new Console($input, null, new TestStdout);
+		$console = new Console($io);
 
 		$console->setName('Test Console')
 			->setVersion('1.2.3')
@@ -65,11 +66,11 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->addCommand(new FooCommand);
 
-		$this->instance->input->args = array('foo', 'aaa', 'bbb');
+		$this->instance->io->setArguments(array('foo', 'aaa', 'bbb'));
 
 		$code = $this->instance->execute();
 
-		$output = $this->instance->getOutput()->getOutput();
+		$output = $this->instance->io->getTestOutput();
 
 		$this->assertEquals(99, $code, 'return code not matched.');
 
@@ -115,11 +116,11 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testConstruct()
 	{
-		$console = new Console(null, null, new TestStdout);
+		$console = new Console(new MockIO);
 
-		$this->assertInstanceOf('Joomla\\Input\\Cli', $console->input);
+		$this->assertInstanceOf('Windwalker\\Console\\IO\\IO', $console->io);
 
-		$this->assertInstanceOf('Joomla\\Registry\\Registry', TestHelper::getValue($console, 'config'));
+		$this->assertInstanceOf('Windwalker\\Registry\\Registry', TestHelper::getValue($console, 'config'));
 	}
 
 	/**
@@ -148,7 +149,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRegisterRootCommand()
 	{
-		$this->assertInstanceOf('Joomla\\Console\\Command\\RootCommand', $this->instance->getRootCommand(), 'Default Command wrong');
+		$this->assertInstanceOf('Windwalker\\Console\\Command\\RootCommand', $this->instance->getRootCommand(), 'Default Command wrong');
 	}
 
 	/**
@@ -162,7 +163,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->register('bar');
 
-		$this->assertInstanceOf('Joomla\\Console\\Command\\Command', $this->instance->getRootCommand()->getChild('bar'), 'Need Command instance');
+		$this->assertInstanceOf('Windwalker\\Console\\Command\\Command', $this->instance->getRootCommand()->getChild('bar'), 'Need Command instance');
 	}
 
 	/**
@@ -261,6 +262,6 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf('\Closure', $this->instance->getRootCommand()->getHandler(), 'Code need to be a closure.');
 
-		$this->assertEquals(221, $this->instance->getRootCommand()->setInput(new Input\Cli)->execute());
+		$this->assertEquals(221, $this->instance->getRootCommand()->setIO(new MockIO)->execute());
 	}
 }

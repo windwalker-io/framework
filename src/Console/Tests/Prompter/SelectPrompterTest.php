@@ -36,7 +36,7 @@ class SelectPrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
-		$this->instance = $prompter = new SelectPrompter(null, null, $this->options, null, $this->output);
+		$this->instance = $prompter = new SelectPrompter(null, null, $this->options, $this->io);
 	}
 
 	/**
@@ -77,7 +77,7 @@ EOF;
 
 		$this->assertEquals(
 			str_replace(PHP_EOL, "\n", trim($outputCompare)),
-			str_replace(PHP_EOL, "\n", trim($this->output->getOutput()))
+			str_replace(PHP_EOL, "\n", trim($this->io->getTestOutput()))
 		);
 
 		// Default value

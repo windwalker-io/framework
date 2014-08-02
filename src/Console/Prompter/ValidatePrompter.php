@@ -8,8 +8,7 @@
 
 namespace Windwalker\Console\Prompter;
 
-use Joomla\Input;
-use Joomla\Application\Cli\Output\Stdout;
+use Windwalker\Console\IO\IOInterface;
 
 /**
  * A text prompter but we can set an array to validate input value.
@@ -30,19 +29,18 @@ class ValidatePrompter extends CallbackPrompter
 	/**
 	 * Constructor.
 	 *
-	 * @param   string     $question  The question you want to ask.
-	 * @param   $default   $default   The default value.
-	 * @param   array      $options   The option list to validate input.
-	 * @param   Input\Cli  $input     The input object.
-	 * @param   Stdout     $output    The output object.
+	 * @param   string       $question  The question you want to ask.
+	 * @param   $default     $default   The default value.
+	 * @param   array        $options   The option list to validate input.
+	 * @param   IOInterface  $io        The input object.
 	 *
 	 * @since   1.0
 	 */
-	function __construct($question = null, $default = null, $options = array(), Input\Cli $input = null, Stdout $output = null)
+	function __construct($question = null, $default = null, $options = array(), IOInterface $io = null)
 	{
 		$this->options = $options;
 
-		parent::__construct($question, $default, $input, $output);
+		parent::__construct($question, $default, $io);
 	}
 
 	/**
