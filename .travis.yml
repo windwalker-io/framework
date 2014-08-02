@@ -1,8 +1,9 @@
 language: php
 
 php:
-  - 5.3
+  # - 5.3
   - 5.4
+  - 5.5
 
 services:
   - memcached # will start memcached
@@ -15,9 +16,6 @@ before_install:
 
 before_script:
   - composer update --dev
-  - pyrus channel-discover pear.phpunit.de
-  - pyrus install --force phpunit/DbUnit
-  - pyrus install -f pear/PHP_CodeSniffer
   - phpenv rehash
 #  - mysql -e 'create database joomla_ut;'
 #  - mysql joomla_ut < src/Joomla/Database/Tests/Stubs/mysql.sql
@@ -26,6 +24,4 @@ before_script:
   - phpenv config-add build/travis/phpenv/memcached.ini
 
 script:
-  - ant composervalidate
-  - ant travis-phpcs
   - phpunit --configuration phpunit.travis.xml

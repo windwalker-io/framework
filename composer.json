@@ -30,6 +30,9 @@
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\": "src/"
-		}
+		},
+		"files": [
+			"src/PHP/methods.php"
+		]
 	}
 }
