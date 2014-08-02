@@ -59,7 +59,7 @@ class Benchmark
 	 *
 	 * @var integer
 	 */
-	protected $fold = 0;
+	protected $fold = 1;
 
 	/**
 	 * Class init.
