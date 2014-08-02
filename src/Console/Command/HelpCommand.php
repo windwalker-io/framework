@@ -69,7 +69,7 @@ class HelpCommand extends Command
 	 */
 	protected function doExecute()
 	{
-		$args = $this->input->args;
+		$args = $this->io->getArguments();
 
 		$command = $this->getDescribedCommand($args);
 

@@ -8,7 +8,7 @@
 
 namespace Windwalker\Console\Command;
 
-use Windwalker\Application\AbstractCliApplication;
+use Windwalker\Console\Console;
 use Windwalker\Console\Exception\CommandNotFoundException;
 use Windwalker\Console\Option\Option;
 use Windwalker\Console\Option\OptionSet;
@@ -25,7 +25,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * Console application.
 	 *
-	 * @var  AbstractCliApplication
+	 * @var  Console
 	 *
 	 * @since  1.0
 	 */
@@ -731,7 +731,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * Get the application.
 	 *
-	 * @return AbstractCliApplication  Console application.
+	 * @return Console  Console application.
 	 *
 	 * @since  1.0
 	 */
@@ -743,7 +743,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * Set the application.
 	 *
-	 * @param   AbstractCliApplication  $application  Application object.
+	 * @param   Console  $application  Application object.
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *

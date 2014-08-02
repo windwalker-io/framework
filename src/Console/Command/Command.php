@@ -45,10 +45,10 @@ class Command extends AbstractCommand
 	 */
 	public function execute()
 	{
-		if (count($this->input->args) && $this->input->args[0] != 'help'
+		if (count($this->io->getArguments()) && $this->io->getArgument(0) != 'help'
 			&& $this->getOption('h') && !$this->getParent())
 		{
-			array_unshift($this->input->args, 'help');
+			$this->io->unshiftArgument('help');
 		}
 
 		if ($this->getOption('no-ansi'))
@@ -68,7 +68,7 @@ class Command extends AbstractCommand
 	 */
 	protected function doExecute()
 	{
-		$this->input->args = array($this->name);
+		$this->io->setArguments(array($this->name));
 
 		$output = $this->application
 			->getRootCommand()
@@ -99,7 +99,7 @@ class Command extends AbstractCommand
 	{
 		if (!($command instanceof AbstractCommand))
 		{
-			$command = new self($command, $this->input, $this->output, $this);
+			$command = new self($command, $this->io, $this);
 		}
 
 		return parent::addCommand($command, $description, $options, $code);
