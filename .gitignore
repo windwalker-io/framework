@@ -1,5 +1,6 @@
 # Development system files #
 .*
+!/.travis.yml
 
 # Composer #
 vendor/*
