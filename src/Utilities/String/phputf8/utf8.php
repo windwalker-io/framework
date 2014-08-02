@@ -1,24 +1,10 @@
 <?php
 /**
-* This is the dynamic loader for the library. It checks whether you have
-* the mbstring extension available and includes relevant files
-* on that basis, falling back to the native (as in written in PHP) version
-* if mbstring is unavailabe.
-*
-* It's probably easiest to use this, if you don't want to understand
-* the dependencies involved, in conjunction with PHP versions etc. At
-* the same time, you might get better performance by managing loading
-* yourself. The smartest way to do this, bearing in mind performance,
-* is probably to "load on demand" - i.e. just before you use these
-* functions in your code, load the version you need.
-*
-* It makes sure the the following functions are available;
-* utf8_strlen, utf8_strpos, utf8_strrpos, utf8_substr,
-* utf8_strtolower, utf8_strtoupper
-* Other functions in the ./native directory depend on these
-* six functions being available
-* @package utf8
-*/
+ * Part of Windwalker project.
+ *
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
 
 /**
 * Put the current directory in this constant

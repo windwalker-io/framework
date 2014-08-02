@@ -1,9 +1,9 @@
 <?php
 /**
- * Part of the Joomla Framework Console Package
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Console\Test\Stubs\Foo\Aaa;

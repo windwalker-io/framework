@@ -1,11 +1,10 @@
 <?php
 /**
-* PCRE Regular expressions for UTF-8. Note this file is not actually used by
-* the rest of the library but these regular expressions can be useful to have
-* available.
-* @see http://www.w3.org/International/questions/qa-forms-utf-8
-* @package utf8
-*/
+ * Part of Windwalker project.
+ *
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
 
 //--------------------------------------------------------------------
 /**
