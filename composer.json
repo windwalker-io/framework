@@ -14,10 +14,8 @@
 		"joomla/database" : "~1.0"
 	},
 	"require-dev": {
-		"joomla/test": "~1.0",
 		"phpunit/phpunit": "4.*",
 		"phpunit/dbunit": "1.*",
-		"phpunit/phpunit-mock-objects": "2.*",
 		"phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl"
 	},
 	"suggest": {
