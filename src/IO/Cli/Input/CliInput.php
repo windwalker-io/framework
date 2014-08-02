@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\IO\Cli\Input;
@@ -96,6 +96,18 @@ class CliInput extends Input implements CliInputInterface
 	}
 
 	/**
+	 * Gets an array of values from the request.
+	 *
+	 * @return  mixed  The filtered input data.
+	 *
+	 * @since   1.0
+	 */
+	public function all()
+	{
+		return $this->getArray();
+	}
+
+	/**
 	 * Method to unserialize the input.
 	 *
 	 * @param   string  $input  The serialized input.
@@ -116,7 +128,7 @@ class CliInput extends Input implements CliInputInterface
 		}
 		else
 		{
-			$this->filter = new InputFilter;
+			$this->filter = new Filter;
 		}
 	}
 
@@ -283,5 +295,29 @@ class CliInput extends Input implements CliInputInterface
 		$this->calledScript = $calledScript;
 
 		return $this;
+	}
+
+	/**
+	 * setOutStream
+	 *
+	 * @param   resource $outStream
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setOutputStream($outStream)
+	{
+
+	}
+
+	/**
+	 * Method to set property errorStream
+	 *
+	 * @param   resource $errorStream
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setErrorStream($errorStream)
+	{
+
 	}
 }

@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Utilities;
@@ -11,19 +11,12 @@ namespace Windwalker\Utilities;
 use Windwalker\Utilities\String\String;
 
 /**
- * Class ArrayHelper
+ * The ArrayHelper class.
  *
- * @since 1.0
+ * @since  {DEPLOY_VERSION}
  */
-class ArrayHelper
+abstract class ArrayHelper
 {
-	/**
-	 * Private constructor to prevent instantiation of this class
-	 */
-	private function __construct()
-	{
-	}
-
 	/**
 	 * Function to convert array to integer values
 	 *
@@ -580,19 +573,20 @@ class ArrayHelper
 	 *
 	 * Example: `ArrayHelper::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
 	 *
-	 * @param mixed $data      An array or object to get value.
-	 * @param mixed $arguments The arguments path.
+	 * @param mixed  $data      An array or object to get value.
+	 * @param mixed  $paths     The key path.
+	 * @param string $separator Separator of paths.
 	 *
 	 * @return  mixed Found value, null if not exists.
 	 */
-	public static function getByPath($data, $arguments)
+	public static function getByPath($data, $paths, $separator = '.')
 	{
-		if (empty($arguments))
+		if (empty($paths))
 		{
 			return null;
 		}
 
-		$args = is_array($arguments) ? $arguments : explode('.', $arguments);
+		$args = is_array($paths) ? $paths : explode($separator, $paths);
 
 		$dataTmp = $data;
 
@@ -662,4 +656,4 @@ class ArrayHelper
 		return $merged;
 	}
 }
- 
+

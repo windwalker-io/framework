@@ -1,18 +1,10 @@
 <?php
 /**
-* Tools for validing a UTF-8 string is well formed.
-* The Original Code is Mozilla Communicator client code.
-* The Initial Developer of the Original Code is
-* Netscape Communications Corporation.
-* Portions created by the Initial Developer are Copyright (C) 1998
-* the Initial Developer. All Rights Reserved.
-* Ported to PHP by Henri Sivonen (http://hsivonen.iki.fi)
-* Slight modifications to fit with phputf8 library by Harry Fuecks (hfuecks gmail com)
-* @see http://lxr.mozilla.org/seamonkey/source/intl/uconv/src/nsUTF8ToUnicode.cpp
-* @see http://lxr.mozilla.org/seamonkey/source/intl/uconv/src/nsUnicodeToUTF8.cpp
-* @see http://hsivonen.iki.fi/php-utf8/
-* @package utf8
-*/
+ * Part of Windwalker project.
+ *
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
 
 //--------------------------------------------------------------------
 /**

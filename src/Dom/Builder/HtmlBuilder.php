@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Dom\Builder;
@@ -38,6 +38,6 @@ class HtmlBuilder extends DomBuilder
 	{
 		$paired = $forcePair ? : !in_array(strtolower($name), static::$unpairedElements);
 
-		return static::create($name, $content, $attribs, $paired);
+		return parent::create($name, $content, $attribs, $paired);
 	}
 }

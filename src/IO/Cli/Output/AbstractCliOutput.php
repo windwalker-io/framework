@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\IO\Cli\Output;
@@ -23,6 +23,13 @@ abstract class AbstractCliOutput implements CliOutputInterface
 	protected $outputStream = STDOUT;
 
 	/**
+	 * Property errorStream.
+	 *
+	 * @var  resource
+	 */
+	protected $errorStream = STDERR;
+
+	/**
 	 * getOutStream
 	 *
 	 * @return  resource
@@ -37,7 +44,7 @@ abstract class AbstractCliOutput implements CliOutputInterface
 	 *
 	 * @param   resource $outStream
 	 *
-	 * @return  AbstractCliOutput  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setOutputStream($outStream)
 	{
@@ -45,5 +52,29 @@ abstract class AbstractCliOutput implements CliOutputInterface
 
 		return $this;
 	}
+
+	/**
+	 * Method to get property ErrorStream
+	 *
+	 * @return  resource
+	 */
+	public function getErrorStream()
+	{
+		return $this->errorStream;
+	}
+
+	/**
+	 * Method to set property errorStream
+	 *
+	 * @param   resource $errorStream
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setErrorStream($errorStream)
+	{
+		$this->errorStream = $errorStream;
+
+		return $this;
+	}
 }
- 
+

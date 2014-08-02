@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\IO\Cli;
@@ -32,6 +32,15 @@ interface IOInterface
 	public function in();
 
 	/**
+	 * Write a string to standard error output.
+	 *
+	 * @param   string   $text  The text to display.
+	 *
+	 * @return  IOInterface
+	 */
+	public function err($text = '');
+
+	/**
 	 * Gets a value from the input data.
 	 *
 	 * @param   string  $name     Name of the value to get.
@@ -56,6 +65,13 @@ interface IOInterface
 	public function setOption($name, $value);
 
 	/**
+	 * getOptions
+	 *
+	 * @return  string[]
+	 */
+	public function getOptions();
+
+	/**
 	 * getArgument
 	 *
 	 * @param integer $offset
@@ -76,10 +92,17 @@ interface IOInterface
 	public function setArgument($offset, $value);
 
 	/**
+	 * getArguments
+	 *
+	 * @return  string[]
+	 */
+	public function getArguments();
+
+	/**
 	 * getExecuted
 	 *
 	 * @return  mixed
 	 */
 	public function getCalledScript();
 }
- 
+

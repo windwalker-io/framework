@@ -1,12 +1,10 @@
 <?php
 /**
-* Utilities for processing "special" characters in UTF-8. "Special" largely means anything which would
-* be regarded as a non-word character, like ASCII control characters and punctuation. This has a "Roman"
-* bias - it would be unaware of modern Chinese "punctuation" characters for example.
-* Note: requires utils/unicode.php to be loaded
-* @package utf8
-* @see utf8_is_valid
-*/
+ * Part of Windwalker project.
+ *
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
 
 //--------------------------------------------------------------------
 /**

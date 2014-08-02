@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\IO\Cli;
@@ -12,13 +12,14 @@ use Windwalker\IO\Cli\Input\CliInput;
 use Windwalker\IO\Cli\Input\CliInputInterface;
 use Windwalker\IO\Cli\Output\CliOutput;
 use Windwalker\IO\Cli\Output\CliOutputInterface;
+use Windwalker\IO\Cli\Output\ColorfulOutputInterface;
 
 /**
- * Class IO
+ * The IO class.
  *
- * @since 1.0
+ * @since  {DEPLOY_VERSION}
  */
-class IO implements IOInterface
+class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {
 	/**
 	 * Property input.
@@ -30,12 +31,12 @@ class IO implements IOInterface
 	/**
 	 * Property output.
 	 *
-	 * @var  CliOutputInterface
+	 * @var  CliOutputInterface|ColorfulOutputInterface
 	 */
 	protected $output = null;
 
 	/**
-	 * Clas init.
+	 * Class init.
 	 *
 	 * @param CliInputInterface   $input
 	 * @param CliOutputInterface  $output
@@ -49,7 +50,7 @@ class IO implements IOInterface
 	/**
 	 * Write a string to standard output
 	 *
-	 * @param   string $text The text to display.
+	 * @param   string   $text  The text to display.
 	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
 	 * @return  IO  Instance of $this to allow chaining.
@@ -69,6 +70,22 @@ class IO implements IOInterface
 	public function in()
 	{
 		return $this->input->in();
+	}
+
+	/**
+	 * Write a string to standard error output.
+	 *
+	 * @param   string   $text  The text to display.
+	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
+	 *
+	 * @since   1.0
+	 * @return $this
+	 */
+	public function err($text = '', $nl = true)
+	{
+		$this->output->err($text, $nl);
+
+		return $this;
 	}
 
 	/**
@@ -134,7 +151,7 @@ class IO implements IOInterface
 	/**
 	 * getInput
 	 *
-	 * @return  CliInputInterface
+	 * @return  CliInput|CliInputInterface
 	 */
 	public function getInput()
 	{
@@ -158,7 +175,7 @@ class IO implements IOInterface
 	/**
 	 * getOutput
 	 *
-	 * @return  CliOutputInterface
+	 * @return  CliOutputInterface|ColorfulOutputInterface
 	 */
 	public function getOutput()
 	{
@@ -188,5 +205,130 @@ class IO implements IOInterface
 	{
 		return $this->input->getCalledScript();
 	}
+
+	/**
+	 * getOptions
+	 *
+	 * @return  string[]
+	 */
+	public function getOptions()
+	{
+		return $this->input->all();
+	}
+
+	/**
+	 * getArguments
+	 *
+	 * @return  string[]
+	 */
+	public function getArguments()
+	{
+		return $this->input->args;
+	}
+
+	/**
+	 * Set value to property
+	 *
+	 * @param mixed $offset Property key.
+	 * @param mixed $value  Property value to set.
+	 *
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->input->getArgument($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Key to unset.
+	 *
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		unset($this->input->args[$offset]);
+	}
+
+	/**
+	 * Property is exist or not.
+	 *
+	 * @param mixed $offset Property key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return isset($this->input->args[$offset]);
+	}
+
+	/**
+	 * Get a value of property.
+	 *
+	 * @param mixed $offset Property key.
+	 *
+	 * @return  mixed The value of this property.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->getArgument($offset);
+	}
+
+	/**
+	 * Get the data store for iterate.
+	 *
+	 * @return  \Traversable The data to be iterator.
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->input->args);
+	}
+
+	/**
+	 * Serialize data.
+	 *
+	 * @return  string Serialized data string.
+	 */
+	public function serialize()
+	{
+		return serialize($this->input);
+	}
+
+	/**
+	 * Unserialize the data.
+	 *
+	 * @param string $serialized THe serialized data string.
+	 *
+	 * @return  IO Support chaining.
+	 */
+	public function unserialize($serialized)
+	{
+		$this->input = unserialize($serialized);
+
+		return $this;
+	}
+
+	/**
+	 * Count data.
+	 *
+	 * @return  int
+	 */
+	public function count()
+	{
+		return count($this->input->args);
+	}
+
+	/**
+	 * Serialize to json format.
+	 *
+	 * @return  string Encoded json string.
+	 */
+	public function jsonSerialize()
+	{
+		return array(
+			'arguments' => $this->input->args,
+			'options' => $this->input->all()
+		);
+	}
 }
- 

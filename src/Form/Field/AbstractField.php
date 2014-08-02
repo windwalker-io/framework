@@ -1,0 +1,702 @@
+<?php
+/**
+ * Part of Windwalker project. 
+ *
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
+
+namespace Windwalker\Form\Field;
+
+use Windwalker\Dom\HtmlElement;
+use Windwalker\Dom\SimpleXml\XmlHelper;
+use Windwalker\Form\Exception\FieldRequiredFailException;
+use Windwalker\Form\Exception\FieldValidateFailException;
+use Windwalker\Form\Filter\FilterInterface;
+use Windwalker\Validator\ValidatorInterface;
+
+/**
+ * The AbstractField class.
+ * 
+ * @since  {DEPLOY_VERSION}
+ */
+abstract class AbstractField implements FieldInterface
+{
+	/**
+	 * Property type.
+	 *
+	 * @var  string
+	 */
+	protected $type = '';
+
+	/**
+	 * Property name.
+	 *
+	 * @var  string
+	 */
+	protected $name = null;
+
+	/**
+	 * Property fieldName.
+	 *
+	 * @var  string
+	 */
+	protected $fieldName = null;
+
+	/**
+	 * Property group.
+	 *
+	 * @var  string
+	 */
+	protected $group = null;
+
+	/**
+	 * Property fieldset.
+	 *
+	 * @var  string
+	 */
+	protected $fieldset = null;
+
+	/**
+	 * Property control.
+	 *
+	 * @var  string
+	 */
+	protected $control = null;
+
+	/**
+	 * Property label.
+	 *
+	 * @var string
+	 */
+	protected $label;
+
+	/**
+	 * Property value.
+	 *
+	 * @var  mixed
+	 */
+	protected $value = null;
+
+	/**
+	 * Property attributes.
+	 *
+	 * @var  string[]
+	 */
+	protected $attributes = array();
+
+	/**
+	 * Property required.
+	 *
+	 * @var  boolean
+	 */
+	protected $required = false;
+
+	/**
+	 * Property $validator.
+	 *
+	 * @var  string|ValidatorInterface
+	 */
+	protected $validator = null;
+
+	/**
+	 * Property filter.
+	 *
+	 * @var  string|FilterInterface
+	 */
+	protected $filter = null;
+
+	/**
+	 * Property attrs.
+	 *
+	 * @var  array
+	 */
+	protected $attrs = array();
+
+	/**
+	 * The value of false.
+	 *
+	 * @var  array
+	 */
+	protected $falseValue = array(
+		'disabled',
+		'false',
+		'null',
+		'0',
+		'no',
+		'none'
+	);
+
+	/**
+	 * The value of true.
+	 *
+	 * @var  array
+	 */
+	protected $trueValue = array(
+		'true',
+		'yes',
+		'1'
+	);
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $name
+	 * @param string $label
+	 * @param array  $attributes
+	 * @param string $filter
+	 * @param string $validator
+	 */
+	public function __construct($name, $label = null, $attributes = array(), $filter = null, $validator = null)
+	{
+		if ($name instanceof \SimpleXMLElement)
+		{
+			$this->handleXml($name);
+		}
+		else
+		{
+			$this->name = $name;
+			$this->label = $label;
+
+			$this->attributes = $attributes;
+		}
+
+		$this->filter = $filter ? : $this->getAttribute('filter');
+
+		$this->validator = $validator ? : $validator;
+
+		$this->required = $this->getAttribute('required', false);
+	}
+
+	/**
+	 * getInput
+	 *
+	 * @return  string
+	 */
+	public function renderInput()
+	{
+		$attrs = array();
+
+		$this->prepareAttributes($attrs);
+
+		return $this->buildInput($attrs);
+	}
+
+	/**
+	 * buildInput
+	 *
+	 * @param array $attrs
+	 *
+	 * @return  mixed
+	 */
+	public function buildInput($attrs)
+	{
+		return new HtmlElement('input', null, $attrs);
+	}
+
+	/**
+	 * prepareRenderInput
+	 *
+	 * @param array $attrs
+	 *
+	 * @return  array
+	 */
+	abstract public function prepareAttributes(&$attrs);
+
+	/**
+	 * getLabel
+	 *
+	 * @return  string
+	 */
+	public function renderLabel()
+	{
+		$attrs['id']    = $this->getAttribute('labelId', $this->getId() . '-label');
+		$attrs['class'] = $this->getAttribute('labelClass');
+		$attrs['for']   = $this->getAttribute('for', $this->getId());
+		$attrs['title'] = $this->getAttribute('description');
+
+		return (string) new HtmlElement('label', $this->getLabel(), $attrs);
+	}
+
+	/**
+	 * renderView
+	 *
+	 * @return  string
+	 */
+	public function renderView()
+	{
+		return $this->value;
+	}
+
+	/**
+	 * render
+	 *
+	 * @return  string
+	 */
+	public function render()
+	{
+		$label = $this->renderLabel();
+		$input = $this->renderInput();
+
+		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
+		$attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
+
+		return new HtmlElement('div', $label . ' ' . $input, $attrs);
+	}
+
+	/**
+	 * getLabel
+	 *
+	 * @return  mixed
+	 */
+	public function getLabel()
+	{
+		return $this->label;
+	}
+
+	/**
+	 * getId
+	 *
+	 * @return  string
+	 */
+	public function getId()
+	{
+		$control = $this->control ? $this->control . '.' : '';
+
+		return str_replace('.', '-', $control . $this->getName());
+	}
+
+	/**
+	 * validate
+	 *
+	 * @throws \Windwalker\Form\Exception\FieldRequiredFailException
+	 * @throws \Windwalker\Form\Exception\FieldValidateFailException
+	 * @return  boolean
+	 */
+	public function validate()
+	{
+		$this->filter();
+
+		if ($this->required && !$this->checkRequired())
+		{
+			throw new FieldRequiredFailException($this, sprintf('Field %s value empty', $this->getName(true)));
+		}
+
+		if ($this->validator && !$this->checkRule())
+		{
+			throw new FieldValidateFailException($this, sprintf('Field %s rule not valid', $this->getName(true)));
+		}
+
+		return true;
+	}
+
+	/**
+	 * checkRequired
+	 *
+	 * @return  mixed
+	 */
+	public function checkRequired()
+	{
+		$value = (string) $this->value;
+
+		if ($this->value && $value === '0')
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * checkRule
+	 *
+	 * @return  mixed
+	 */
+	public function checkRule()
+	{
+		return $this->getValidator()->validate($this->value);
+	}
+
+	/**
+	 * filter
+	 *
+	 * @return  static
+	 */
+	public function filter()
+	{
+		$this->value = $this->getFilter()->clean($this->value);
+	}
+
+	/**
+	 * prepareStore
+	 *
+	 * @return  void
+	 */
+	public function prepareStore()
+	{
+	}
+
+	/**
+	 * Method to get property Name
+	 *
+	 * @param bool $withGroup
+	 *
+	 * @return  string
+	 */
+	public function getName($withGroup = false)
+	{
+		$group = $withGroup ? $this->getGroup() : '';
+
+		$group = $group ? $group . '.' : '';
+
+		return $group . $this->name;
+	}
+
+	/**
+	 * Method to set property name
+	 *
+	 * @param   null $name
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property FieldName
+	 *
+	 * @return  null
+	 */
+	public function getFieldName()
+	{
+		if (!$this->fieldName)
+		{
+			// prevent '..'
+			$names = array_values(array_filter(explode('.', $this->getName(true)), 'strlen'));
+
+			$control = $this->control ? $this->control : array_shift($names);
+
+			$names = array_map(
+				function ($value)
+				{
+					return '[' . $value . ']';
+				}
+				, $names
+			);
+
+			$this->fieldName = $control . implode('', $names);
+		}
+
+		return $this->fieldName;
+	}
+
+	/**
+	 * Method to set property fieldName
+	 *
+	 * @param   null $fieldName
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setFieldName($fieldName)
+	{
+		$this->fieldName = $fieldName;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Group
+	 *
+	 * @return  null
+	 */
+	public function getGroup()
+	{
+		return $this->group;
+	}
+
+	/**
+	 * Method to set property group
+	 *
+	 * @param   null $group
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setGroup($group)
+	{
+		$this->group = $group;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Fieldset
+	 *
+	 * @return  null
+	 */
+	public function getFieldset()
+	{
+		return $this->fieldset;
+	}
+
+	/**
+	 * Method to set property fieldset
+	 *
+	 * @param   null $fieldset
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setFieldset($fieldset)
+	{
+		$this->fieldset = $fieldset;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Value
+	 *
+	 * @return  null
+	 */
+	public function getValue()
+	{
+		return $this->value ? : $this->getAttribute('default');
+	}
+
+	/**
+	 * Method to set property value
+	 *
+	 * @param   null $value
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setValue($value)
+	{
+		$this->value = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Method to set property rule
+	 *
+	 * @param   string|ValidatorInterface $validator
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setValidator($validator)
+	{
+		$this->validator = $validator;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Rule
+	 *
+	 * @return  ValidatorInterface
+	 */
+	public function getValidator()
+	{
+		if (!($this->validator instanceof ValidatorInterface))
+		{
+			$this->validator = FieldHelper::createValidator($this->validator);
+		}
+
+		return $this->validator;
+	}
+
+	/**
+	 * Method to set property filter
+	 *
+	 * @param   string|\Windwalker\Form\Filter\FilterInterface $filter
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setFilter($filter)
+	{
+		$this->filter = $filter;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Filter
+	 *
+	 * @return  string|\Windwalker\Form\Filter\FilterInterface
+	 */
+	public function getFilter()
+	{
+		if (!($this->filter instanceof FilterInterface))
+		{
+			$this->filter = FieldHelper::createFilter($this->filter);
+		}
+
+		return $this->filter;
+	}
+
+	/**
+	 * handleXml
+	 *
+	 * @param \SimpleXMLElement $xml
+	 *
+	 * @return  void
+	 */
+	protected function handleXml(\SimpleXMLElement $xml)
+	{
+		$this->name = XmlHelper::get($xml, 'name');
+		$this->label = XmlHelper::get($xml, 'label');
+
+		$this->attributes = XmlHelper::getAttributes($xml);
+
+		$form = $xml;
+
+		$group = array();
+
+		while ($parent = $form->xpath('..'))
+		{
+			$parent = $parent[0];
+
+			$name = $parent->getName();
+
+			if ($name == 'fieldset')
+			{
+				$this->fieldset = (string) $parent['name'];
+			}
+			elseif ($name == 'group')
+			{
+				array_unshift($group, (string) $parent['name']);
+			}
+
+			$form = $parent;
+		}
+
+		$this->group = implode('.', $group);
+	}
+
+	/**
+	 * Method to get property Control
+	 *
+	 * @return  string
+	 */
+	public function getControl()
+	{
+		return $this->control;
+	}
+
+	/**
+	 * Method to set property control
+	 *
+	 * @param   string $control
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setControl($control)
+	{
+		$this->control = $control;
+
+		return $this;
+	}
+
+	/**
+	 * getAttribute
+	 *
+	 * @param string $name
+	 * @param mixed  $default
+	 *
+	 * @return  mixed
+	 */
+	public function getAttribute($name, $default = null)
+	{
+		return isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
+	}
+
+	/**
+	 * getAttribute
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 *
+	 * @return  mixed
+	 */
+	public function setAttribute($name, $value)
+	{
+		return $this->attributes[$name] = $value;
+	}
+
+
+	/**
+	 * Get attribute. Alias of `getAttribute()`.
+	 *
+	 * @param string  $attr    The attribute name.
+	 * @param mixed   $default The default value.
+	 *
+	 * @return mixed The return value of this attribute.
+	 */
+	public function get($attr, $default = null)
+	{
+		return $this->getAttribute($attr, $default);
+	}
+
+	/**
+	 * Method to convert some string like `true`, `1`, `yes` to boolean TRUE,
+	 * and `no`, `false`, `disabled`, `null`, `none`, `0` string to boolean FALSE.
+	 *
+	 * @param string  $attr    The attribute name.
+	 * @param mixed   $default The default value.
+	 *
+	 * @return mixed The return value of this attribute.
+	 */
+	public function getBool($attr, $default = null)
+	{
+		$value = $this->getAttribute($attr, $default);
+
+		if (in_array((string) $value, $this->falseValue) || !$value)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Just an alias of `getBool()` but FALSE will return TRUE.
+	 *
+	 * @param string  $attr    The attribute name.
+	 * @param mixed   $default The default value.
+	 *
+	 * @return mixed The return value of this attribute.
+	 */
+	public function getFalse($attr, $default = null)
+	{
+		return !$this->getBool($attr, $default);
+	}
+
+	/**
+	 * Get all attributes.
+	 *
+	 * @param \SimpleXMLElement $xml A SimpleXMLElement object.
+	 *
+	 * @return  array The return values of all attributes.
+	 */
+	public function getAttributes(\SimpleXMLElement $xml)
+	{
+		return $this->attributes;
+	}
+
+	/**
+	 * If this attribute not exists, use this value as default, or we use original value from xml.
+	 *
+	 * @param string            $attr    The attribute name.
+	 * @param string            $value   The value to set as default.
+	 *
+	 * @return  void
+	 */
+	public function def($attr, $value)
+	{
+		$this->attributes[$attr] = isset($this->attributes[$attr]) ? $this->attributes[$attr] : (string) $value;
+	}
+}
