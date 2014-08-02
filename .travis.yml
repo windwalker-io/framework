@@ -29,3 +29,5 @@ script:
   - ant composervalidate
   - ant travis-phpcs
   - phpunit --configuration phpunit.travis.xml
+  
+#test
