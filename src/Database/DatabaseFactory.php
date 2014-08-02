@@ -8,7 +8,7 @@
 
 namespace Windwalker\Database;
 
-use Joomla\Database\DatabaseDriver;
+use Windwalker\Database\Driver\DatabaseDriver;
 
 /**
  * Class DatabaseFactory
@@ -21,13 +21,6 @@ abstract class DatabaseFactory
 	 * @var DatabaseDriver
 	 */
 	protected static $db = null;
-
-	/**
-	 * Property command.
-	 *
-	 * @var  DatabaseCommand
-	 */
-	protected static $command = null;
 
 	/**
 	 * getDbo
@@ -60,47 +53,40 @@ abstract class DatabaseFactory
 	}
 
 	/**
-	 * getCommand
-	 *
-	 * @param bool $forceNew
-	 *
-	 * @return  DatabaseCommand
-	 */
-	public static function getCommand($forceNew = false)
-	{
-		if (!self::$command || $forceNew)
-		{
-			self::$command = new DatabaseCommand(static::getDbo());
-		}
-
-		return self::$command;
-	}
-
-	/**
-	 * setCommand
-	 *
-	 * @param   DatabaseCommand $command
-	 *
-	 * @return  DatabaseFactory  Return self to support chaining.
-	 */
-	public static function setCommand(DatabaseCommand $command)
-	{
-		self::$command = $command;
-	}
-
-	/**
 	 * createDbo
 	 *
-	 * @param array $option
+	 * @param array  $options
+	 *
+	 * @throws  \RuntimeException
 	 *
 	 * @return  DatabaseDriver
 	 */
-	public static function createDbo(array $option)
+	public static function createDbo(array $options)
 	{
-		$dbFactory = \Joomla\Database\DatabaseFactory::getInstance();
+		// Sanitize the database connector options.
+		$options['driver']   = preg_replace('/[^A-Z0-9_\.-]/i', '', $options['driver']);
+		$options['database'] = (isset($options['database'])) ? $options['database'] : null;
+		$options['select']   = (isset($options['select'])) ? $options['select'] : true;
 
-		$option['driver'] = !empty($option['driver']) ? $option['driver'] : 'mysql';
+		// Derive the class name from the driver.
+		$class = '\\Windwalker\\Database\\Driver\\' . ucfirst(strtolower($options['driver'])) . '\\' . ucfirst(strtolower($options['driver'])) . 'Driver';
 
-		return $dbFactory->getDriver($option['driver'], $option);
+		// If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
+		if (!class_exists($class))
+		{
+			throw new \RuntimeException(sprintf('Unable to load Database Driver: %s', $options['driver']));
+		}
+
+		// Create our new Driver connector based on the options given.
+		try
+		{
+			$instance = new $class($options);
+		}
+		catch (\RuntimeException $e)
+		{
+			throw new \RuntimeException(sprintf('Unable to connect to the Database: %s', $e->getMessage()));
+		}
+
+		return $instance;
 	}
 }
