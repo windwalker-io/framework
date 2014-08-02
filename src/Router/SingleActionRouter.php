@@ -40,7 +40,7 @@ class SingleActionRouter extends Router
 	 *
 	 * @throws  \LogicException
 	 * @throws  \InvalidArgumentException
-	 * @return  Router
+	 * @return  static
 	 */
 	public function addMap($pattern, $controller = null)
 	{
@@ -98,7 +98,7 @@ class SingleActionRouter extends Router
 	 *
 	 * @param   array $requests
 	 *
-	 * @return  SingleActionRouter  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setRequests($requests)
 	{

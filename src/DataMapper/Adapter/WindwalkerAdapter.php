@@ -8,10 +8,9 @@
 
 namespace Windwalker\DataMapper\Adapter;
 
-use Joomla\Database\DatabaseDriver;
 use Windwalker\Database\DatabaseFactory;
-use Windwalker\Database\QueryHelper;
-use Windwalker\DataMapper\Entity\Entity;
+use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Query\QueryHelper;
 
 /**
  * Class JoomlaDatabaseAdapter
@@ -66,9 +65,10 @@ class WindwalkerAdapter extends DatabaseAdapter
 
 		// Build query
 		$query->select('*')
-			->from($table);
+			->from($table)
+			->limit($start, $limit);
 
-		return $this->db->setQuery($query, $start, $limit)->loadObjectList();
+		return $this->db->setQuery($query)->loadAll();
 	}
 
 	/**
@@ -82,7 +82,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 */
 	public function create($table, $data, $pk = null)
 	{
-		return $this->db->insertObject($table, $data, $pk);
+		return $this->db->getWriter()->insertOne($table, $data, $pk);
 	}
 
 	/**
@@ -98,7 +98,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 */
 	public function updateOne($table, $data, array $condFields = array())
 	{
-		return $this->db->updateObject($table, $data, $condFields = array());
+		return $this->db->getWriter()->updateOne($table, $data, $condFields = array());
 	}
 
 	/**
@@ -113,9 +113,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 */
 	public function updateAll($table, $data, array $conditions = array())
 	{
-		$command = DatabaseFactory::getCommand();
-
-		return (boolean) $command->updateBatch($table, $data, $conditions);
+		return (boolean) $this->db->getWriter()->updateBatch($table, $data, $conditions);
 	}
 
 	/**
@@ -148,7 +146,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 */
 	public function getFields($table)
 	{
-		return array_keys(DatabaseFactory::getCommand()->getColumns($table));
+		return $this->db->getTable($table)->getColumns();
 	}
 
 	/**
@@ -160,7 +158,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 */
 	public function transactionStart($asSavePoint = false)
 	{
-		$this->db->transactionStart($asSavePoint);
+		$this->db->getTransaction()->start();
 
 		return $this;
 	}
@@ -174,7 +172,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 */
 	public function transactionCommit($asSavePoint = false)
 	{
-		$this->db->transactionCommit($asSavePoint);
+		$this->db->getTransaction()->commit($asSavePoint);
 
 		return $this;
 	}
@@ -188,7 +186,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 */
 	public function transactionRollback($asSavePoint = false)
 	{
-		$this->db->transactionRollback($asSavePoint);
+		$this->db->getTransaction()->rollback($asSavePoint);
 
 		return $this;
 	}

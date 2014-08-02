@@ -23,6 +23,25 @@ interface LanguageInterface
 	public function translate($key);
 
 	/**
+	 * plural
+	 *
+	 * @param string $string
+	 * @param int    $count
+	 *
+	 * @return  string
+	 */
+	public function plural($string, $count = 1);
+
+	/**
+	 * sprintf
+	 *
+	 * @param string $key
+	 *
+	 * @return  mixed
+	 */
+	public function sprintf($key);
+
+	/**
 	 * exists
 	 *
 	 * @param string $key
