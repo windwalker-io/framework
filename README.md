@@ -13,6 +13,12 @@ There is some useful package has ready, please try it:
 - [Compare](https://github.com/ventoviro/windwalker-compare)
 - [Middleware](https://github.com/ventoviro/windwalker-middleware)
 
+## More of 2.0
+
+2.0 is in work process now. We want to create a lighting, fully decoupled, powerful and easy using PHP framework.
+
+Coming soon~!
+
 ### Documentation
 
 Please see `README` of every package.
