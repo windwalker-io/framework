@@ -17,7 +17,7 @@ There is some useful package has ready, please try it:
 
 2.0 is in work process now. We want to create a lighting, fully decoupled, powerful and easy using PHP framework.
 
-Coming soon~!
+Please wait and see.
 
 ### Documentation
 
