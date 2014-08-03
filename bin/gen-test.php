@@ -63,12 +63,12 @@ class GenTest extends AbstractCliApplication
 
 		$packagePath = WINDWALKER_ROOT . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $package;
 		$classPath = ReflectionHelper::getPath($class);
-		$testPath = $packagePath . DIRECTORY_SEPARATOR . 'Tests';
+		$testPath = $packagePath . DIRECTORY_SEPARATOR . 'Test';
 
 		$testClass = $this->io->getArgument(2, ReflectionHelper::getShortName($class) . 'Test');
 		$testClass = StringNormalise::toClassNamespace($testClass);
 		$testFile = $testPath . DIRECTORY_SEPARATOR . $testClass . '.php';
-		$realTestClass = 'Windwalker\\' . ucfirst($package) . '\\Tests\\' . $testClass;
+		$realTestClass = 'Windwalker\\' . ucfirst($package) . '\\Test\\' . $testClass;
 
 		$autoload = WINDWALKER_ROOT . '/vendor/autoload.php';
 

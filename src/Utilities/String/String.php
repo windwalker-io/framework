@@ -70,6 +70,35 @@ abstract class String
 	);
 
 	/**
+	 * isEmptyString
+	 *
+	 * @param string $string
+	 *
+	 * @return  boolean
+	 */
+	public static function isEmpty($string)
+	{
+		if (is_array($string) || is_object($string))
+		{
+			return empty($string);
+		}
+
+		$string = (string) $string;
+
+		return !(boolean) strlen($string);
+	}
+
+	/**
+	 * isZero
+	 *
+	 * @return  boolean
+	 */
+	public static function isZero()
+	{
+
+	}
+
+	/**
 	 * Quote a string.
 	 *
 	 * @param   string $string The string to quote.
