@@ -8,8 +8,6 @@
 
 namespace Windwalker\Crypt\Cipher;
 
-use Windwalker\Crypt\KeyInterface;
-
 /**
  * Interface CipherInterface
  *
@@ -20,27 +18,30 @@ interface CipherInterface
 	/**
 	 * Method to decrypt a data string.
 	 *
-	 * @param   string        $data  The encrypted string to decrypt.
-	 * @param   KeyInterface  $key   The key object to use for decryption.
+	 * @param   string  $data     The encrypted string to decrypt.
+	 * @param   string  $private  The private key.
+	 * @param   string  $public   The public key.
+	 *
+	 * @internal param \Windwalker\Crypt\KeyInterface $key The key object to use for decryption.
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since   1.0
-	 * @throws  \InvalidArgumentException
+	 * @since    1.0
 	 */
-	public function decrypt($data, KeyInterface $key);
+	public function decrypt($data, $private = null, $public = null);
 
 	/**
 	 * Method to encrypt a data string.
 	 *
-	 * @param   string        $data  The data string to encrypt.
-	 * @param   KeyInterface  $key   The key object to use for decryption.
+	 * @param   string  $data     The data string to encrypt.
+	 * @param   string  $private  The private key.
+	 * @param   string  $public   The public key.
 	 *
 	 * @return  string  The encrypted data string.
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function encrypt($data, KeyInterface $key);
+	public function encrypt($data, $private = null, $public = null);
 }
  

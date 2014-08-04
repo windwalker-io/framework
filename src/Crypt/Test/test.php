@@ -6,15 +6,13 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-include_once __DIR__ . '/../../../../../autoload.php';
+include_once __DIR__ . '/../../../vendor/autoload.php';
 
-$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+$crypt = new \Windwalker\Crypt\Crypt(new \Windwalker\Crypt\Cipher\BlowfishCipher, 'asad', 'Ohhh');
 
-$iv = '321';
+echo $pass = $crypt->encrypt('Windwalker');
+echo "\n\n";
 
-$key = new \Windwalker\Crypt\Key('blowfish', md5('123'), $iv);
+$crypt = new \Windwalker\Crypt\Crypt(new \Windwalker\Crypt\Cipher\BlowfishCipher, 'asad');
 
-$crypt = new \Windwalker\Crypt\Crypt(new \Windwalker\Crypt\Cipher\BlowfishCipher, $key);
-
-echo $crypt->encrypt('Windwalker');
+echo $crypt->decrypt($pass);

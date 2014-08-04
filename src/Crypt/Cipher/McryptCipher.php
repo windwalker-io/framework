@@ -32,6 +32,13 @@ abstract class McryptCipher implements CipherInterface
 	protected $mode;
 
 	/**
+	 * Property iv.
+	 *
+	 * @var string
+	 */
+	protected $iv;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since   1.0
@@ -48,18 +55,31 @@ abstract class McryptCipher implements CipherInterface
 	/**
 	 * Method to decrypt a data string.
 	 *
-	 * @param   string        $data  The encrypted string to decrypt.
-	 * @param   KeyInterface  $key   The key object to use for decryption.
+	 * @param   string  $data     The encrypted string to decrypt.
+	 * @param   string  $private  The private key.
+	 * @param   string  $public   The public key.
+	 *
+	 * @internal param \Windwalker\Crypt\KeyInterface $key The key object to use for decryption.
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since   1.0
-	 * @throws  \InvalidArgumentException
+	 * @since    1.0
 	 */
-	public function decrypt($data, KeyInterface $key)
+	public function decrypt($data, $private = null, $public = null)
 	{
+		$data = base64_decode($data);
+
+		if (!$public)
+		{
+			$ivSize = $this->getIVSize();
+
+			$public = substr($data, 0, $ivSize);
+
+			$data = substr($data, $ivSize);
+		}
+
 		// Decrypt the data.
-		$decrypted = trim(mcrypt_decrypt($this->type, $key->getPrivate(), $data, $this->mode, $key->getPublic()));
+		$decrypted = trim(mcrypt_decrypt($this->type, $private, $data, $this->mode, $public));
 
 		return $decrypted;
 	}
@@ -67,20 +87,50 @@ abstract class McryptCipher implements CipherInterface
 	/**
 	 * Method to encrypt a data string.
 	 *
-	 * @param   string        $data  The data string to encrypt.
-	 * @param   KeyInterface  $key   The key object to use for encryption.
+	 * @param   string  $data     The data string to encrypt.
+	 * @param   string  $private  The private key.
+	 * @param   string  $public   The public key.
 	 *
 	 * @return  string  The encrypted data string.
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function encrypt($data, KeyInterface $key)
+	public function encrypt($data, $private = null, $public = null)
 	{
-		// Encrypt the data.
-		$encrypted = mcrypt_encrypt($this->type, $key->getPrivate(), $data, $this->mode, $key->getPublic());
+		$public = $this->getIVKey();
 
-		return $encrypted;
+		// Encrypt the data.
+		$encrypted = mcrypt_encrypt($this->type, $private, $data, $this->mode, $public);
+
+		return base64_encode($public . $encrypted);
+	}
+
+	/**
+	 * getIVKey
+	 *
+	 * @return  string
+	 */
+	public function getIVKey()
+	{
+		if (!$this->iv)
+		{
+			$ivSize = $this->getIVSize();
+
+			$this->iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
+		}
+
+		return $this->iv;
+	}
+
+	/**
+	 * getIVSize
+	 *
+	 * @return  integer
+	 */
+	public function getIVSize()
+	{
+		return mcrypt_get_iv_size($this->type, $this->mode);
 	}
 }
  
