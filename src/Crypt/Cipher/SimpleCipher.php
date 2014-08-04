@@ -44,11 +44,9 @@ class SimpleCipher implements CipherInterface
 			}
 		}
 
-		$data = $this->doDecrypt($data, $public);
+		$key = sha1($public . $private);
 
-		$data = base64_decode($data);
-
-		return $this->doDecrypt($data, $private);
+		return $this->doDecrypt($data, $key);
 	}
 
 	protected function doDecrypt($data, $key)
@@ -86,11 +84,9 @@ class SimpleCipher implements CipherInterface
 	{
 		$public = $public ? : $this->getRandomKey(static::DEFAULT_RANDOM_BYTE_LENGTH);
 
-		$data = $this->doEncrypt($data, $private);
+		$key = sha1($public . $private);
 
-		$data = base64_encode($data);
-
-		return $public . $this->doEncrypt($data, $public);
+		return $public . $this->doEncrypt($data, $key);
 	}
 
 	/**
