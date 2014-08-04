@@ -6,16 +6,14 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Crypt\Password;
-
-use Windwalker\Crypt\Crypt;
+namespace Windwalker\Crypt;
 
 /**
  * The SimplePassword class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class SimplePassword
+class Password
 {
 	/**
 	 * Property salt.
@@ -52,7 +50,7 @@ class SimplePassword
 	 */
 	public function create($password)
 	{
-		$salt = $this->salt ? : Crypt::genRandomBytes(16);
+		$salt = $this->salt ? : CryptHelper::genRandomBytes(16);
 
 		$salt64 = substr(str_replace('+', '.', base64_encode($salt)), 0, 22);
 

@@ -8,8 +8,6 @@
 
 namespace Windwalker\Crypt\Cipher;
 
-use Windwalker\Crypt\KeyInterface;
-
 /**
  * The McryptCipher class.
  * 
@@ -67,8 +65,6 @@ abstract class McryptCipher implements CipherInterface
 	 */
 	public function decrypt($data, $private = null, $public = null)
 	{
-		$data = base64_decode($data);
-
 		if (!$public)
 		{
 			$ivSize = $this->getIVSize();
@@ -76,6 +72,15 @@ abstract class McryptCipher implements CipherInterface
 			$public = substr($data, 0, $ivSize);
 
 			$data = substr($data, $ivSize);
+		}
+		else
+		{
+			$ivSize = $this->getIVSize();
+
+			if (substr($data, 0, $ivSize) === $public)
+			{
+				$data = substr($data, $ivSize);
+			}
 		}
 
 		// Decrypt the data.
@@ -103,7 +108,7 @@ abstract class McryptCipher implements CipherInterface
 		// Encrypt the data.
 		$encrypted = mcrypt_encrypt($this->type, $private, $data, $this->mode, $public);
 
-		return base64_encode($public . $encrypted);
+		return $public . $encrypted;
 	}
 
 	/**

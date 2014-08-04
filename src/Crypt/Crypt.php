@@ -25,13 +25,6 @@ class Crypt
 	protected $cipher;
 
 	/**
-	 * Property key.
-	 *
-	 * @var  KeyInterface
-	 */
-	protected $key;
-
-	/**
 	 * Property public.
 	 *
 	 * @var  string
@@ -58,7 +51,7 @@ class Crypt
 	{
 		$this->cipher = $cipher;
 		$this->public = $public;
-		$this->private  = $private ? : md5('ɹǝʞlɐʍpuıʍ');
+		$this->private  = $private;
 
 		if (!is_string($this->private))
 		{
@@ -70,164 +63,53 @@ class Crypt
 	 * encrypt
 	 *
 	 * @param string $string
+	 * @param string $private
+	 * @param string $public
 	 *
 	 * @return  string
 	 */
-	public function encrypt($string)
+	public function encrypt($string, $private = null, $public = null)
 	{
-		return $this->cipher->encrypt($string, $this->private, $this->public);
+		$private = $private ? : $this->getPrivate();
+		$public  = $public  ? : $this->getPublic();
+
+		$encrypted = $this->cipher->encrypt($string, $private, $public);
+
+		return base64_encode($encrypted);
 	}
 
 	/**
 	 * decrypt
 	 *
 	 * @param string $string
+	 * @param string $private
+	 * @param string $public
 	 *
 	 * @return  string
 	 */
-	public function decrypt($string)
+	public function decrypt($string, $private = null, $public = null)
 	{
-		return $this->cipher->decrypt($string, $this->private, $this->public);
+		$string = base64_decode(str_replace(' ', '+', $string));
+
+		$private = $private ? : $this->getPrivate();
+		$public  = $public  ? : $this->getPublic();
+
+		return $this->cipher->decrypt($string, $private, $public);
 	}
 
 	/**
-	 * Generate random bytes.
+	 * match
 	 *
-	 * @param   integer  $length  Length of the random data to generate
+	 * @param string $hash
+	 * @param string $string
+	 * @param string $private
+	 * @param string $public
 	 *
-	 * @return  string  Random binary data
-	 *
-	 * @since   1.0
+	 * @return  boolean
 	 */
-	public static function genRandomBytes($length = 16)
+	public function verify($hash, $string, $private = null, $public = null)
 	{
-		$sslStr = '';
-
-		/*
-		 * If a secure randomness generator exists use it.
-		 */
-		if (function_exists('openssl_random_pseudo_bytes'))
-		{
-			$sslStr = openssl_random_pseudo_bytes($length, $strong);
-
-			if ($strong)
-			{
-				return $sslStr;
-			}
-		}
-
-		/*
-		 * Collect any entropy available in the system along with a number
-		 * of time measurements of operating system randomness.
-		 */
-		$bitsPerRound = 2;
-		$maxTimeMicro = 400;
-		$shaHashLength = 20;
-		$randomStr = '';
-		$total = $length;
-
-		// Check if we can use /dev/urandom.
-		$urandom = false;
-		$handle = null;
-
-		if (@is_readable('/dev/urandom'))
-		{
-			$handle = @fopen('/dev/urandom', 'rb');
-
-			if ($handle)
-			{
-				$urandom = true;
-			}
-		}
-
-		while ($length > strlen($randomStr))
-		{
-			$bytes = ($total > $shaHashLength)? $shaHashLength : $total;
-			$total -= $bytes;
-			/*
-			 * Collect any entropy available from the PHP system and filesystem.
-			 * If we have ssl data that isn't strong, we use it once.
-			 */
-			$entropy = rand() . uniqid(mt_rand(), true) . $sslStr;
-			$entropy .= implode('', @fstat(fopen(__FILE__, 'r')));
-			$entropy .= memory_get_usage();
-			$sslStr = '';
-
-			if ($urandom)
-			{
-				stream_set_read_buffer($handle, 0);
-				$entropy .= @fread($handle, $bytes);
-			}
-			else
-			{
-				/*
-				 * There is no external source of entropy so we repeat calls
-				 * to mt_rand until we are assured there's real randomness in
-				 * the result.
-				 *
-				 * Measure the time that the operations will take on average.
-				 */
-				$samples = 3;
-				$duration = 0;
-
-				for ($pass = 0; $pass < $samples; ++$pass)
-				{
-					$microStart = microtime(true) * 1000000;
-					$hash = sha1(mt_rand(), true);
-
-					for ($count = 0; $count < 50; ++$count)
-					{
-						$hash = sha1($hash, true);
-					}
-
-					$microEnd = microtime(true) * 1000000;
-					$entropy .= $microStart . $microEnd;
-
-					if ($microStart >= $microEnd)
-					{
-						$microEnd += 1000000;
-					}
-
-					$duration += $microEnd - $microStart;
-				}
-
-				$duration = $duration / $samples;
-
-				/*
-				 * Based on the average time, determine the total rounds so that
-				 * the total running time is bounded to a reasonable number.
-				 */
-				$rounds = (int) (($maxTimeMicro / $duration) * 50);
-
-				/*
-				 * Take additional measurements. On average we can expect
-				 * at least $bitsPerRound bits of entropy from each measurement.
-				 */
-				$iter = $bytes * (int) ceil(8 / $bitsPerRound);
-
-				for ($pass = 0; $pass < $iter; ++$pass)
-				{
-					$microStart = microtime(true);
-					$hash = sha1(mt_rand(), true);
-
-					for ($count = 0; $count < $rounds; ++$count)
-					{
-						$hash = sha1($hash, true);
-					}
-
-					$entropy .= $microStart . microtime(true);
-				}
-			}
-
-			$randomStr .= sha1($entropy, true);
-		}
-
-		if ($urandom)
-		{
-			@fclose($handle);
-		}
-
-		return substr($randomStr, 0, $length);
+		return ($string === $this->decrypt($hash, $private, $public));
 	}
 
 	/**
@@ -261,6 +143,11 @@ class Crypt
 	 */
 	public function getPrivate()
 	{
+		if (!$this->private)
+		{
+			$this->private = md5('To be, or not to be, that is the question.');
+		}
+
 		return $this->private;
 	}
 
