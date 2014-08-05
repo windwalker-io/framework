@@ -110,7 +110,7 @@ class RestRouter extends SingleActionRouter
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	protected function fetchControllerSuffix()
@@ -144,7 +144,7 @@ class RestRouter extends SingleActionRouter
 	 *
 	 * @return  string  The controller name for the given route excluding prefix.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 */
 	public function match($route)

@@ -14,7 +14,7 @@ use Windwalker\Cache\Item\CacheItemInterface;
 /**
  * Class RuntimeStorage
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class RuntimeStorage extends AbstractCacheStorage
 {

@@ -18,7 +18,7 @@ use Windwalker\Cache\Storage\RuntimeStorage;
 /**
  * Class Cache
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Cache implements CacheInterface
 {

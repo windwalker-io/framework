@@ -13,7 +13,7 @@ use Windwalker\Database\Command\DatabaseTransaction;
 /**
  * Class PdoTransaction
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoTransaction extends DatabaseTransaction
 {

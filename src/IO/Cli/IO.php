@@ -78,7 +78,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	 * @param   string   $text  The text to display.
 	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @return $this
 	 */
 	public function err($text = '', $nl = true)
@@ -96,7 +96,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getOption($name, $default = null)
 	{
@@ -111,7 +111,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	 *
 	 * @return  IO
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setOption($name, $value)
 	{

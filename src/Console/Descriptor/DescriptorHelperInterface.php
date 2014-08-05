@@ -13,7 +13,7 @@ use Windwalker\Console\Command\AbstractCommand;
 /**
  * A descriptor helper to get different descriptor and render it.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 interface DescriptorHelperInterface
 {
@@ -24,7 +24,7 @@ interface DescriptorHelperInterface
 	 *
 	 * @return  string  Return the described text.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function describe(AbstractCommand $command);
 }

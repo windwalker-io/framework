@@ -14,7 +14,7 @@ use Windwalker\Filesystem\Path;
 /**
  * A PathLocator collection class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class PathCollection extends \ArrayObject
 {
@@ -37,7 +37,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @param  array $paths The PathLocator array.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function __construct($paths = array())
 	{
@@ -51,7 +51,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  PathCollection  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function addPaths($paths)
 	{
@@ -77,7 +77,7 @@ class PathCollection extends \ArrayObject
 	 * @throws \InvalidArgumentException
 	 * @return  PathCollection  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function addPath($path, $key = null)
 	{
@@ -117,7 +117,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  PathCollection  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function removePath($key)
 	{
@@ -131,7 +131,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  array  An array includes all path objects.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getPaths()
 	{
@@ -148,7 +148,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  PathLocator  The path which you want.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getPath($key, $default = null)
 	{
@@ -177,7 +177,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  \AppendIterator  Appended iterators.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function appendIterator(\Closure $callback = null)
 	{
@@ -210,7 +210,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  \AppendIterator  An OutterIterator contains all paths' iterator.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getAllChildren($recursive = false)
 	{
@@ -237,7 +237,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  \SplFileInfo  Finded file info object.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function findOne($condition, $recursive = false)
 	{
@@ -268,7 +268,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  \AppendIterator  Finded files or paths iterator.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function find($condition, $recursive = false)
 	{
@@ -321,7 +321,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  PathCollection  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function setPrefix($prefix)
 	{
@@ -340,7 +340,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  PathCollection  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function appendAll($appended)
 	{
@@ -359,7 +359,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  PathCollection  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function prependAll($prepended)
 	{
@@ -378,7 +378,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  array  Raw paths.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function toArray($reindex = false)
 	{
@@ -408,7 +408,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  boolean  Is subdir or not.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function isSubdir($path)
 	{
@@ -431,7 +431,7 @@ class PathCollection extends \ArrayObject
 	 *
 	 * @return  mixed   The filtered input value.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function __call($name, $args)
 	{

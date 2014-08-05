@@ -15,7 +15,7 @@ use Windwalker\Filesystem\Iterator\RecursiveDirectoryIterator;
 /**
  * Class Filesystem
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Filesystem
 {
@@ -215,7 +215,7 @@ class Filesystem
 	 *
 	 * @return  \SplFileInfo  Finded file info object.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public static function findOne($condition, $recursive = false)
 	{
@@ -242,7 +242,7 @@ class Filesystem
 	 *
 	 * @return  \CallbackFilterIterator  Finded files or paths iterator.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public static function find($path, $condition, $recursive = false)
 	{
@@ -288,7 +288,7 @@ class Filesystem
 	 *
 	 * @return  \CallbackFilterIterator  Filtered file or path iteator.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public static function findByCallback($path, \Closure $callback, $recursive = false)
 	{

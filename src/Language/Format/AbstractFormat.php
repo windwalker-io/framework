@@ -13,7 +13,7 @@ use Windwalker\Language\LanguageNormalize;
 /**
  * Class AbstractFormat
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractFormat implements FormatInterface
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Session\Bag;
 /**
  * Class AbstractSessionBag
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class SessionBag implements SessionBagInterface
 {

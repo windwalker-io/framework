@@ -13,7 +13,7 @@ use Windwalker\Profiler\ProfilerInterface;
 /**
  * Class DefaultRenderer
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class DefaultRenderer implements ProfilerRendererInterface
 {

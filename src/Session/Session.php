@@ -23,7 +23,7 @@ use Windwalker\Session\Handler\PhpHandler;
  * Based on the standard PHP session handling mechanism it provides
  * more advanced features such as expire timeouts.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class Session implements \IteratorAggregate
 {
@@ -45,7 +45,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @var    string
 	 * @see    getState()
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $state = 0;
 
@@ -53,7 +53,7 @@ class Session implements \IteratorAggregate
 	 * Maximum age of unused session in minutes
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $expire = 15;
 
@@ -61,7 +61,7 @@ class Session implements \IteratorAggregate
 	 * The session store object.
 	 *
 	 * @var    \Windwalker\Session\Handler\HandlerInterface
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $handler = null;
 
@@ -74,7 +74,7 @@ class Session implements \IteratorAggregate
 	 * - fix_adress
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $security = array('fix_browser');
 
@@ -83,7 +83,7 @@ class Session implements \IteratorAggregate
 	 * Default  false
 	 *
 	 * @var    boolean
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $force_ssl = false;
 
@@ -91,7 +91,7 @@ class Session implements \IteratorAggregate
 	 * The domain to use when setting cookies.
 	 *
 	 * @var    mixed
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $cookie_domain;
 
@@ -99,7 +99,7 @@ class Session implements \IteratorAggregate
 	 * The path to use when setting cookies.
 	 *
 	 * @var    mixed
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $cookie_path;
 
@@ -125,7 +125,7 @@ class Session implements \IteratorAggregate
 	 * @param   FlashBagInterface    $flashBag
 	 * @param   array                $options Optional parameters
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(HandlerInterface $handler = null, SessionBagInterface $bag = null, FlashBagInterface $flashBag = null, array $options = array())
 	{
@@ -163,7 +163,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  mixed   The value of the property
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __get($name)
 	{
@@ -308,7 +308,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  string  The session state
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getState()
 	{
@@ -320,7 +320,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  integer  The session expiration time in minutes
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getExpire()
 	{
@@ -338,7 +338,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  string  The session token
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getToken($forceNew = false)
 	{
@@ -364,7 +364,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hasToken($tCheck, $forceExpire = true)
 	{
@@ -390,7 +390,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  \ArrayIterator  Return an ArrayIterator of $_SESSION.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getIterator()
 	{
@@ -403,7 +403,7 @@ class Session implements \IteratorAggregate
 	 * @throws \RuntimeException
 	 * @return  string  The session name
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getName()
 	{
@@ -420,7 +420,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  string  The session name
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getId()
 	{
@@ -437,7 +437,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function isActive()
 	{
@@ -449,7 +449,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function isNew()
 	{
@@ -468,7 +468,7 @@ class Session implements \IteratorAggregate
 	 * @throws \RuntimeException
 	 * @return  mixed  Value of a variable
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function get($name, $default = null, $namespace = 'default')
 	{
@@ -530,7 +530,7 @@ class Session implements \IteratorAggregate
 	 * @throws \RuntimeException
 	 * @return  boolean  True if the variable exists
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function has($name, $namespace = 'default')
 	{
@@ -551,7 +551,7 @@ class Session implements \IteratorAggregate
 	 * @throws \RuntimeException
 	 * @return  mixed   The value from session or NULL if not set
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clear($name, $namespace = 'default')
 	{
@@ -585,7 +585,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function start()
 	{
@@ -613,7 +613,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean  true on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function doStart()
 	{
@@ -671,7 +671,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @see     session_destroy()
 	 * @see     session_unset()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function destroy()
 	{
@@ -706,7 +706,7 @@ class Session implements \IteratorAggregate
 	 * @return  boolean  True on success
 	 *
 	 * @see     destroy
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function restart()
 	{
@@ -739,7 +739,7 @@ class Session implements \IteratorAggregate
 	 * @throws \RuntimeException
 	 * @return  boolean $result true on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function fork()
 	{
@@ -781,7 +781,7 @@ class Session implements \IteratorAggregate
 	 * @return  void
 	 *
 	 * @see     session_write_close()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function close()
 	{
@@ -793,7 +793,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function setCookieParams()
 	{
@@ -824,7 +824,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  string  Generated token
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function createToken($length = 32)
 	{
@@ -846,7 +846,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function setCounter()
 	{
@@ -863,7 +863,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function setTimers()
 	{
@@ -889,7 +889,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function setOptions(array $options)
 	{
@@ -952,7 +952,7 @@ class Session implements \IteratorAggregate
 	 * @return  boolean  True on success
 	 *
 	 * @see     http://shiflett.org/articles/the-truth-about-sessions
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function validate($restart = false)
 	{

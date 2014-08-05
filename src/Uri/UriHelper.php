@@ -13,7 +13,7 @@ namespace Windwalker\Uri;
  *
  * This class provides an UTF-8 safe version of parse_url().
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class UriHelper
 {
@@ -25,7 +25,7 @@ class UriHelper
 	 * @return  mixed  Associative array or false if badly formed URL.
 	 *
 	 * @see     http://us3.php.net/manual/en/function.parse-url.php
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function parseUrl($url)
 	{

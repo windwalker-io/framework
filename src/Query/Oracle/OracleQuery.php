@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 /**
  * Class OracleQuery
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class OracleQuery extends Query
 {
@@ -23,7 +23,7 @@ class OracleQuery extends Query
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $name = 'oracle';
 
@@ -34,7 +34,7 @@ class OracleQuery extends Query
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $nameQuote = '"';
 
@@ -42,7 +42,7 @@ class OracleQuery extends Query
 	 * Returns the current dateformat
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $dateFormat = 'RRRR-MM-DD HH24:MI:SS';
 
@@ -50,7 +50,7 @@ class OracleQuery extends Query
 	 * The limit for the result set.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $limit;
 
@@ -58,7 +58,7 @@ class OracleQuery extends Query
 	 * The offset for the result set.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $offset;
 
@@ -89,7 +89,7 @@ class OracleQuery extends Query
 	 *
 	 * @return  OracleQuery  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clear($clause = null)
 	{
@@ -116,7 +116,7 @@ class OracleQuery extends Query
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function processLimit($query, $limit, $offset = 0)
 	{
@@ -161,7 +161,7 @@ class OracleQuery extends Query
 	 *
 	 * @return  OracleQuery  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function limit($limit = 0, $offset = 0)
 	{

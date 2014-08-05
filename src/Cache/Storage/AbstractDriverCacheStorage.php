@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Storage;
 /**
  * Class AbstractDriverCacheStorage
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractDriverCacheStorage extends AbstractCacheStorage
 {
@@ -29,7 +29,7 @@ abstract class AbstractDriverCacheStorage extends AbstractCacheStorage
 	 * @param   int    $ttl      The Time To Live (TTL) of an item
 	 * @param   mixed  $options  An options array, or an object that implements \ArrayAccess
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($driver = null, $ttl = null, $options = array())
 	{

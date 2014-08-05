@@ -11,7 +11,7 @@ namespace Windwalker\Compare;
 /**
  * Class NeqCompare
  *
- * @since 2.0
+ * @since {DEPLOY_VERSION}
  */
 class NeqCompare extends Compare
 {

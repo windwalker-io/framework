@@ -13,7 +13,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Class PdoExpression
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoExpression extends QueryExpression
 {

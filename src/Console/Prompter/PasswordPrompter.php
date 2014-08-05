@@ -11,7 +11,7 @@ namespace Windwalker\Console\Prompter;
 /**
  * A password prompter supports hidden input.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class PasswordPrompter extends CallbackPrompter
 {
@@ -20,7 +20,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @var string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected static $shell;
 
@@ -29,7 +29,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @var boolean
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected static $stty;
 
@@ -38,7 +38,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @var  boolean
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $win = false;
 
@@ -49,7 +49,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $hiddenExe = null;
 
@@ -73,7 +73,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function ask($msg = '', $default = null)
 	{
@@ -89,7 +89,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @return  string  The input string from standard input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function in($question = '')
 	{
@@ -170,7 +170,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @throws  \RuntimeException
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function findShell()
 	{
@@ -199,7 +199,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @return  boolean  Stty exists or not.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function findStty()
 	{

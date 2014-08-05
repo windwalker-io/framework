@@ -49,7 +49,7 @@ abstract class AbstractConsole
 	 *                                IO object.
 	 * @param   Registry     $config  An optional argument to provide dependency injection for the config object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
@@ -80,7 +80,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  static  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function out($text = '', $nl = true)
 	{
@@ -94,7 +94,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  string  The input string from standard input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function in()
 	{
@@ -132,7 +132,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function close($message = 0)
 	{
@@ -145,7 +145,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract protected function doExecute();
 
@@ -154,7 +154,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function execute()
 	{
@@ -174,7 +174,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  mixed   The value of the configuration.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function get($key, $default = null)
 	{
@@ -186,7 +186,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  LoggerInterface
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getLogger()
 	{
@@ -208,7 +208,7 @@ abstract class AbstractConsole
 	 * @return  void
 	 *
 	 * @codeCoverageIgnore
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function initialise()
 	{
@@ -222,7 +222,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  mixed   Previous value of the property
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function set($key, $value = null)
 	{
@@ -238,7 +238,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  static  Returns itself to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setConfiguration(Registry $config)
 	{
@@ -254,7 +254,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  static  Returns itself to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setLogger(LoggerInterface $logger)
 	{

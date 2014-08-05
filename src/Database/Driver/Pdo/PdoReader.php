@@ -14,7 +14,7 @@ use Windwalker\Query\Query;
 /**
  * Class PdoReader
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoReader extends DatabaseReader
 {
@@ -23,7 +23,7 @@ class PdoReader extends DatabaseReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function fetchArray()
 	{
@@ -35,7 +35,7 @@ class PdoReader extends DatabaseReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function fetchAssoc()
 	{
@@ -49,7 +49,7 @@ class PdoReader extends DatabaseReader
 	 *
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function fetchObject($class = '\\stdClass')
 	{
@@ -104,7 +104,7 @@ class PdoReader extends DatabaseReader
 	 *
 	 * @return  integer  The number of affected rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function countAffected()
 	{

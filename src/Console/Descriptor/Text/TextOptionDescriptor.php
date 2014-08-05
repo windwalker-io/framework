@@ -14,7 +14,7 @@ use Windwalker\Console\Option\Option;
 /**
  * Class Option AbstractDescriptor
  *
- * @since    1.0
+ * @since    {DEPLOY_VERSION}
  */
 class TextOptionDescriptor extends AbstractDescriptor
 {
@@ -23,7 +23,7 @@ class TextOptionDescriptor extends AbstractDescriptor
 	 *
 	 * @var string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $template = <<<EOF
   <info>%s</info>
@@ -36,7 +36,7 @@ EOF;
 	 *
 	 * @var string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $templateLineBody = '      %s';
 
@@ -48,7 +48,7 @@ EOF;
 	 * @throws  \InvalidArgumentException
 	 * @return  string  Rendered description.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function renderItem($option)
 	{
@@ -90,7 +90,7 @@ EOF;
 	 *
 	 * @return  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function render()
 	{

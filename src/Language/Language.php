@@ -17,7 +17,7 @@ use Windwalker\Language\Localise\LocaliseInterface;
 /**
  * Class Language
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Language implements LanguageInterface
 {

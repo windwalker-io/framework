@@ -11,7 +11,7 @@ namespace Windwalker\Router;
 /**
  * Class Route
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Route
 {

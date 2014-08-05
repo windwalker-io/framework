@@ -11,7 +11,7 @@ namespace Windwalker\Language\Localise;
 /**
  * Class EnGBLocalise
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class EnGBLocalise implements LocaliseInterface
 {

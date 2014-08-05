@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Exception\FilesystemException;
 /**
  * A File handling class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class File
 {
@@ -24,7 +24,7 @@ class File
 	 *
 	 * @return  string  The file name without the extension
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function stripExt($file)
 	{
@@ -39,7 +39,7 @@ class File
 	 *
 	 * @return  string  The sanitised string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function makeSafe($file, array $stripChars = array('#^\.#'))
 	{
@@ -64,7 +64,7 @@ class File
 	 * @throws Exception\FilesystemException
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function copy($src, $dest, $force = false)
 	{
@@ -110,7 +110,7 @@ class File
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 */
 	public static function delete($file)
@@ -146,7 +146,7 @@ class File
 	 * @throws Exception\FilesystemException
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function move($src, $dest, $force = false)
 	{
@@ -185,7 +185,7 @@ class File
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 */
 	public static function write($file, $buffer)
@@ -212,7 +212,7 @@ class File
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 */
 	public static function upload($src, $dest)

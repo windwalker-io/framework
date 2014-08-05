@@ -11,7 +11,7 @@ namespace Windwalker\Profiler\Item;
 /**
  * Class ProfilerItem
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class ProfilerItem implements ProfilerItemInterface
 {

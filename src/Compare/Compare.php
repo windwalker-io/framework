@@ -11,7 +11,7 @@ namespace Windwalker\Compare;
 /**
  * The compare object.
  *
- * @since 2.0
+ * @since {DEPLOY_VERSION}
  */
 class Compare
 {

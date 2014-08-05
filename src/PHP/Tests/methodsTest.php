@@ -9,7 +9,7 @@ namespace Joomla\PHP\Tests;
 /**
  * Tests for the global PHP methods.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class methodsTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +18,7 @@ class methodsTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function testWith()
 	{

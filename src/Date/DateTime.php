@@ -25,7 +25,7 @@ namespace Windwalker\Date;
  * @property-read  string   $week          W - Numeric representation of the day of the week.
  * @property-read  string   $year          Y - A full numeric representation of a year, 4 digits.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class DateTime extends \DateTime
 {
@@ -33,7 +33,7 @@ class DateTime extends \DateTime
 	 * The format string to be applied when using the __toString() magic method.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public static $format = 'Y-m-d H:i:s';
 
@@ -41,7 +41,7 @@ class DateTime extends \DateTime
 	 * Placeholder for a DateTimeZone object with GMT as the time zone.
 	 *
 	 * @var    \DateTimeZone
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected static $gmt;
 
@@ -50,7 +50,7 @@ class DateTime extends \DateTime
 	 * time zone as the time zone.
 	 *
 	 * @var    \DateTimeZone
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected static $stz;
 
@@ -58,7 +58,7 @@ class DateTime extends \DateTime
 	 * The DateTimeZone object for usage in rending dates as strings.
 	 *
 	 * @var    \DateTimeZone
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $tz;
 
@@ -68,7 +68,7 @@ class DateTime extends \DateTime
 	 * @param   string  $date  String in a format accepted by strtotime(), defaults to "now".
 	 * @param   mixed   $tz    Time zone to be used for the date. Might be a string or a DateTimeZone object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($date = 'now', $tz = null)
 	{
@@ -113,7 +113,7 @@ class DateTime extends \DateTime
 	 *
 	 * @return  mixed   A value if the property name is valid, null otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __get($name)
 	{
@@ -186,7 +186,7 @@ class DateTime extends \DateTime
 	 *
 	 * @return  string  The date as a formatted string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __toString()
 	{
@@ -201,7 +201,7 @@ class DateTime extends \DateTime
 	 *
 	 * @return  string   The date string in the specified format format.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function format($format, $local = false)
 	{
@@ -229,7 +229,7 @@ class DateTime extends \DateTime
 	 *
 	 * @return  float  The time offset from GMT either in hours or in seconds.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getOffsetFromGMT($hours = false)
 	{
@@ -243,7 +243,7 @@ class DateTime extends \DateTime
 	 *
 	 * @return  DateTime
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @note    This method can't be type hinted due to a PHP bug: https://bugs.php.net/bug.php?id=61483
 	 */
 	public function setTimezone($tz)
@@ -262,7 +262,7 @@ class DateTime extends \DateTime
 	 * @return  string  The date string in ISO 8601 format.
 	 *
 	 * @link    http://www.ietf.org/rfc/rfc3339.txt
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function toISO8601($local = false)
 	{
@@ -278,7 +278,7 @@ class DateTime extends \DateTime
 	 * @return  string   The date string in RFC 822 format.
 	 *
 	 * @link    http://www.ietf.org/rfc/rfc2822.txt
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function toRFC822($local = false)
 	{
@@ -290,7 +290,7 @@ class DateTime extends \DateTime
 	 *
 	 * @return  integer  The date as a UNIX timestamp.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function toUnix()
 	{

@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\Pdo\PdoDriver;
 /**
  * Class MysqlDriver
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class MysqlDriver extends PdoDriver
 {
@@ -30,7 +30,7 @@ class MysqlDriver extends PdoDriver
 	 * @param   \PDO  $connection The pdo connection object.
 	 * @param   array $options    List of options used to configure the connection
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(\PDO $connection = null, $options = array())
 	{

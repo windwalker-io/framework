@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * Class AbstractQuery
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Query implements QueryInterface
 {
@@ -26,7 +26,7 @@ class Query implements QueryInterface
 	 * The database driver.
 	 *
 	 * @var    \PDO
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $connection = null;
 
@@ -34,7 +34,7 @@ class Query implements QueryInterface
 	 * The SQL query (if a direct query string was provided).
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $sql = null;
 
@@ -42,7 +42,7 @@ class Query implements QueryInterface
 	 * The query type.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $type = '';
 
@@ -50,7 +50,7 @@ class Query implements QueryInterface
 	 * The query element for a generic query (type = null).
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $element = null;
 
@@ -58,7 +58,7 @@ class Query implements QueryInterface
 	 * The select element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $select = null;
 
@@ -66,7 +66,7 @@ class Query implements QueryInterface
 	 * The delete element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $delete = null;
 
@@ -74,7 +74,7 @@ class Query implements QueryInterface
 	 * The update element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $update = null;
 
@@ -82,7 +82,7 @@ class Query implements QueryInterface
 	 * The insert element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $insert = null;
 
@@ -90,7 +90,7 @@ class Query implements QueryInterface
 	 * The from element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $from = null;
 
@@ -98,7 +98,7 @@ class Query implements QueryInterface
 	 * The join element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $join = null;
 
@@ -106,7 +106,7 @@ class Query implements QueryInterface
 	 * The set element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $set = null;
 
@@ -114,7 +114,7 @@ class Query implements QueryInterface
 	 * The where element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $where = null;
 
@@ -122,7 +122,7 @@ class Query implements QueryInterface
 	 * The group by element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $group = null;
 
@@ -130,7 +130,7 @@ class Query implements QueryInterface
 	 * The having element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $having = null;
 
@@ -138,7 +138,7 @@ class Query implements QueryInterface
 	 * The column list for an INSERT statement.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $columns = null;
 
@@ -146,7 +146,7 @@ class Query implements QueryInterface
 	 * The values list for an INSERT statement.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $values = null;
 
@@ -154,7 +154,7 @@ class Query implements QueryInterface
 	 * The order element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $order = null;
 
@@ -162,7 +162,7 @@ class Query implements QueryInterface
 	 * The offset for the result set.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $offset;
 
@@ -170,7 +170,7 @@ class Query implements QueryInterface
 	 * The limit for the result set.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $limit;
 
@@ -178,7 +178,7 @@ class Query implements QueryInterface
 	 * The auto increment insert field element.
 	 *
 	 * @var    object
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $autoIncrementField = null;
 
@@ -186,7 +186,7 @@ class Query implements QueryInterface
 	 * The call element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $call = null;
 
@@ -194,7 +194,7 @@ class Query implements QueryInterface
 	 * The exec element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $exec = null;
 
@@ -202,7 +202,7 @@ class Query implements QueryInterface
 	 * The union element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $union = null;
 
@@ -218,7 +218,7 @@ class Query implements QueryInterface
 	 * defined in child classes to hold the appropriate value for the engine.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $nullDate = '0000-00-00 00:00:00';
 
@@ -241,7 +241,7 @@ class Query implements QueryInterface
 	 *
 	 * @param   \PDO  $connection  The PDO connection object to help us escape string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(\PDO $connection = null)
 	{
@@ -253,7 +253,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string	The completed query.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __toString()
 	{
@@ -265,7 +265,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string	The completed query.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function toString()
 	{
@@ -412,7 +412,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __get($name)
 	{
@@ -433,7 +433,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function call($columns)
 	{
@@ -458,7 +458,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clear($clause = null)
 	{
@@ -586,7 +586,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function columns($columns)
 	{
@@ -610,7 +610,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  The format string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function dateFormat()
@@ -626,7 +626,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function dump()
 	{
@@ -645,7 +645,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function delete($table = null)
 	{
@@ -673,7 +673,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  The escaped string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function escape($text, $extra = false)
@@ -741,7 +741,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function exec($columns)
 	{
@@ -774,7 +774,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 * @throws  \RuntimeException
 	 */
@@ -828,7 +828,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function group($columns)
 	{
@@ -855,7 +855,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function having($conditions, $glue = 'AND')
 	{
@@ -882,7 +882,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function innerJoin($condition)
 	{
@@ -906,7 +906,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function insert($table, $incrementField=false)
 	{
@@ -928,7 +928,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function join($type, $conditions)
 	{
@@ -952,7 +952,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function leftJoin($condition)
 	{
@@ -974,7 +974,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  Null or zero representation of a timestamp.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function nullDate($quoted = true)
@@ -993,7 +993,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function order($columns)
 	{
@@ -1021,7 +1021,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function limit($limit = 0, $offset = 0)
 	{
@@ -1042,7 +1042,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function processLimit($query, $limit, $offset = 0)
 	{
@@ -1069,7 +1069,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function outerJoin($condition)
 	{
@@ -1096,7 +1096,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  The quoted input string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function quote($text, $escape = true)
@@ -1154,7 +1154,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  mixed  The quote wrapped name, same type of $name.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function quoteName($name)
@@ -1211,7 +1211,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  Dot-imploded string of quoted parts.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function quoteNameStr($strArr)
 	{
@@ -1248,7 +1248,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function rightJoin($condition)
 	{
@@ -1271,7 +1271,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function select($columns)
 	{
@@ -1302,7 +1302,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function set($conditions, $glue = ',')
 	{
@@ -1330,7 +1330,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setQuery($sql)
 	{
@@ -1351,7 +1351,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function update($table)
 	{
@@ -1372,7 +1372,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function values($values)
 	{
@@ -1411,7 +1411,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function where($conditions, $glue = 'AND')
 	{
@@ -1434,7 +1434,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __clone()
 	{
@@ -1467,7 +1467,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  mixed    The Query object on success or boolean false on failure.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function union($query, $distinct = false, $glue = '')
 	{
@@ -1515,7 +1515,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  mixed   The Query object on success or boolean false on failure.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function unionDistinct($query, $glue = '')
 	{
@@ -1570,7 +1570,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  Returns a string produced according to the formatting string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function format($format)
 	{

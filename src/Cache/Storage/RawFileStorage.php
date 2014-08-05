@@ -19,7 +19,7 @@ use Windwalker\Cache\Item\CacheItemInterface;
  * - file.locking (boolean) :
  * - file.path              : The path for cache files.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class RawFileStorage extends FileStorage
 {

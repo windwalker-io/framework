@@ -11,7 +11,7 @@ namespace Windwalker\Session\Handler;
 /**
  * Class PhpHandler
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PhpHandler extends \SessionHandler implements HandlerInterface
 {

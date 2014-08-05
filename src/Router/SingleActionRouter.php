@@ -11,7 +11,7 @@ namespace Windwalker\Router;
 /**
  * Class SingleActionRouter
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class SingleActionRouter extends Router
 {

@@ -13,7 +13,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractModel
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractModel implements ModelInterface
 {

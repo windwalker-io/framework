@@ -11,7 +11,7 @@ namespace Windwalker\View;
 /**
  * Class AbstractHtmlView
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class AbstractHtmlView extends AbstractView
 {
@@ -30,7 +30,7 @@ class AbstractHtmlView extends AbstractView
 	 * @return  string  The escaped output.
 	 *
 	 * @see     ViewInterface::escape()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function escape($output)
 	{
@@ -43,7 +43,7 @@ class AbstractHtmlView extends AbstractView
 	 *
 	 * @return  string  The rendered view.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function render()

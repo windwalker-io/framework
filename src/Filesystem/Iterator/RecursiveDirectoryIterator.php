@@ -11,7 +11,7 @@ namespace Windwalker\Filesystem\Iterator;
 /**
  * A Directory iterator extends from SPL RecursiveDirectoryIterator.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
 {
@@ -23,7 +23,7 @@ class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
 	 * @return  \SplFileInfo  The filename, file information, or $this depending on the set flags.
 	 *          See the: http://www.php.net/manual/en/class.filesystemiterator.php#filesystemiterator.constants
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function current()
 	{

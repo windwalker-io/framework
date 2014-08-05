@@ -11,7 +11,7 @@ namespace Windwalker\IO\Cli\Color;
 /**
  * Class ColorStyle
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 final class ColorStyle
 {
@@ -19,7 +19,7 @@ final class ColorStyle
 	 * Known colors
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private static $knownColors = array(
 		'black'   => 0,
@@ -36,7 +36,7 @@ final class ColorStyle
 	 * Known styles
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private static $knownOptions = array(
 		'bold'       => 1,
@@ -49,7 +49,7 @@ final class ColorStyle
 	 * Foreground base value
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private static $fgBase = 30;
 
@@ -57,7 +57,7 @@ final class ColorStyle
 	 * Background base value
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private static $bgBase = 40;
 
@@ -65,7 +65,7 @@ final class ColorStyle
 	 * Foreground color
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private $fgColor = 0;
 
@@ -73,7 +73,7 @@ final class ColorStyle
 	 * Background color
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private $bgColor = 0;
 
@@ -81,7 +81,7 @@ final class ColorStyle
 	 * Array of style options
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private $options = array();
 
@@ -92,7 +92,7 @@ final class ColorStyle
 	 * @param   string  $bg       Background color.
 	 * @param   array   $options  Style options.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 */
 	public function __construct($fg = '', $bg = '', $options = array())
@@ -148,7 +148,7 @@ final class ColorStyle
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __toString()
 	{
@@ -164,7 +164,7 @@ final class ColorStyle
 	 *
 	 * @return  ColorStyle  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public static function fromString($string)
@@ -212,7 +212,7 @@ final class ColorStyle
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getStyle()
 	{
@@ -241,7 +241,7 @@ final class ColorStyle
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getKnownColors()
 	{
@@ -253,7 +253,7 @@ final class ColorStyle
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getKnownOptions()
 	{

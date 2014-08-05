@@ -11,7 +11,7 @@ namespace Windwalker\IO\Cli\Color;
 /**
  * Class ProcessorInterface.
  *
- * @since  1.1.0
+ * @since  {DEPLOY_VERSION}
  */
 interface ColorProcessorInterface
 {
@@ -22,7 +22,7 @@ interface ColorProcessorInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function process($output);
 
@@ -34,7 +34,7 @@ interface ColorProcessorInterface
 	 *
 	 * @return  ColorProcessor  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addStyle($name, ColorStyle $style);
 }

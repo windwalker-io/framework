@@ -13,7 +13,7 @@ namespace Windwalker\Database\Driver\Pdo;
  *
  * @see http://php.net/manual/en/pdo.drivers.php
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoHelper
 {

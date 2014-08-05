@@ -14,7 +14,7 @@ use Windwalker\Cache\Item\CacheItemInterface;
 /**
  * Class RedisStorage
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class RedisStorage extends AbstractDriverCacheStorage
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Registry\Helper;
 /**
  * Class RegistryHelper
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class RegistryHelper
 {

@@ -20,7 +20,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractWebApplication
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractWebApplication extends AbstractApplication
 {
@@ -28,7 +28,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * The application client object.
 	 *
 	 * @var    WebEnvironment
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $environment;
 
@@ -36,7 +36,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * The application response object.
 	 *
 	 * @var    object
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $response;
 
@@ -75,7 +75,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function execute()
 	{
@@ -135,7 +135,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function redirect($url, $moved = false)
 	{
@@ -218,7 +218,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setHeader($name, $value, $replace = false)
 	{
@@ -234,7 +234,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setBody($content)
 	{
@@ -251,7 +251,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  mixed  The response body either as an array or concatenated string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getBody($asArray = false)
 	{
@@ -290,7 +290,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function loadSystemUris($requestUri = null)
 	{

@@ -15,7 +15,7 @@ namespace Windwalker\Query\Query;
  * to retrieve the stored bounded variables on demand prior to
  * query execution.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 interface PreparableInterface
 {
@@ -33,7 +33,7 @@ interface PreparableInterface
 	 *
 	 * @return  PreparableInterface
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array());
 
@@ -45,7 +45,7 @@ interface PreparableInterface
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function &getBounded($key = null);
 }

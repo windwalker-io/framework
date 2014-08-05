@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Path\PathCollection;
 /**
  * A Path handling class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class Path
 {
@@ -24,7 +24,7 @@ class Path
 	 *
 	 * @return  boolean  True if path can have mode changed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function canChmod($path)
 	{
@@ -52,7 +52,7 @@ class Path
 	 *
 	 * @return  boolean  True if successful [one fail means the whole operation failed].
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function setPermissions($path, $filemode = '0644', $foldermode = '0755')
 	{
@@ -117,7 +117,7 @@ class Path
 	 *
 	 * @return  string  Filesystem permissions.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function getPermissions($path)
 	{
@@ -155,7 +155,7 @@ class Path
 	 * @throws \Exception
 	 * @return  string  A cleaned version of the path or exit on error.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function check($path, $root)
 	{
@@ -182,7 +182,7 @@ class Path
 	 *
 	 * @return  string  The cleaned path.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \UnexpectedValueException If $path is not a string.
 	 */
 	public static function clean($path, $ds = DIRECTORY_SEPARATOR)
@@ -216,7 +216,7 @@ class Path
 	 *
 	 * @return  mixed   The full path and file name for the target file, or boolean false if the file is not found in any of the paths.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function find($paths, $file)
 	{

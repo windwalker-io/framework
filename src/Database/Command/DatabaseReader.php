@@ -15,7 +15,7 @@ use Windwalker\Query\Query;
 /**
  * Class DatabaseReader
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class DatabaseReader
 {
@@ -54,7 +54,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function loadResult()
@@ -83,7 +83,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function loadColumn($offset = 0)
@@ -110,7 +110,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function loadArray()
@@ -137,7 +137,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed   The return value or null if the query failed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function loadArrayList($key = null)
@@ -171,7 +171,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function loadAssoc()
@@ -197,7 +197,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed   The return value or null if the query failed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function loadAssocList($key = null)
@@ -232,7 +232,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function loadObject($class = 'stdClass')
@@ -260,7 +260,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function loadObjectList($key = null, $class = 'stdClass')
@@ -300,7 +300,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function fetchArray();
 
@@ -309,7 +309,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function fetchAssoc();
 
@@ -320,7 +320,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function fetchObject($class = '\\stdClass');
 
@@ -330,7 +330,7 @@ abstract class DatabaseReader
 	 *
 	 * @return  integer  The number of affected rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function countAffected();
 

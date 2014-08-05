@@ -13,7 +13,7 @@ namespace Windwalker\Utilities\Test;
  *
  * @note  This class is based on Joomla Test package.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class TestHelper
 {
@@ -28,7 +28,7 @@ class TestHelper
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function assignMockCallbacks(\PHPUnit_Framework_MockObject_MockObject $mockObject, \PHPUnit_Framework_TestCase $test, $array)
 	{
@@ -61,7 +61,7 @@ class TestHelper
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function assignMockReturns(\PHPUnit_Framework_MockObject_MockObject $mockObject, \PHPUnit_Framework_TestCase $test, $array)
 	{
@@ -81,7 +81,7 @@ class TestHelper
 	 *
 	 * @return  mixed  The value of the property.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException if property not available.
 	 */
 	public static function getValue($object, $propertyName)
@@ -121,7 +121,7 @@ class TestHelper
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function invoke($object, $methodName)
 	{
@@ -149,7 +149,7 @@ class TestHelper
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function setValue($object, $propertyName, $value)
 	{

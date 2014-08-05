@@ -74,6 +74,13 @@ interface EnvironmentInterface
 	public function getEncodings();
 
 	/**
+	 * getUserAgent
+	 *
+	 * @return  string
+	 */
+	public function getUserAgent();
+
+	/**
 	 * setUserAgent
 	 *
 	 * @param   string $userAgent
@@ -94,7 +101,7 @@ interface EnvironmentInterface
 	 *
 	 * @return  boolean  True if using SSL, false if not.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function isSSLConnection();
 }

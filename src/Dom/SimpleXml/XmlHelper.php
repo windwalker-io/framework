@@ -11,7 +11,7 @@ namespace Windwalker\Dom\SimpleXml;
 /**
  * Simple Xml Helper to get attributes from \SimpleXMLElement
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class XmlHelper
 {

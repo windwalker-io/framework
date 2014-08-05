@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\DatabaseDriver;
 /**
  * Class DatabaseDatabase
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class DatabaseDatabase
 {
@@ -79,7 +79,7 @@ abstract class DatabaseDatabase
 	 *
 	 * @return  array  An array of all the tables in the database.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function getTables($refresh = false);
 

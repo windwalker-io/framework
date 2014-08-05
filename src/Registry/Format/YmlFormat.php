@@ -11,7 +11,7 @@ namespace Windwalker\Registry\Format;
 /**
  * YAML format proxy.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class YmlFormat extends YamlFormat
 {

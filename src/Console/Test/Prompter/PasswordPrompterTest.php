@@ -13,7 +13,7 @@ use Windwalker\Console\Test\Prompter\Stubs\FakePasswordPrompter;
 /**
  * Class PasswordPrompterTest
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class PasswordPrompterTest extends AbstractPrompterTest
 {
@@ -23,7 +23,7 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function setUp()
 	{
@@ -37,7 +37,7 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testAsk()
 	{

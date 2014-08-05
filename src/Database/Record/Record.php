@@ -14,7 +14,7 @@ use Windwalker\Query\Query;
 /**
  * Class Table
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Record implements \IteratorAggregate
 {
@@ -22,7 +22,7 @@ class Record implements \IteratorAggregate
 	 * Name of the database table to model.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $table = '';
 
@@ -30,7 +30,7 @@ class Record implements \IteratorAggregate
 	 * Name of the primary key fields in the table.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $keys = array();
 
@@ -38,7 +38,7 @@ class Record implements \IteratorAggregate
 	 * Indicates that the primary keys autoincrement.
 	 *
 	 * @var    boolean
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $autoIncrement = true;
 
@@ -46,7 +46,7 @@ class Record implements \IteratorAggregate
 	 * The fields of the database table.
 	 *
 	 * @var    \stdClass
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $data = null;
 
@@ -54,7 +54,7 @@ class Record implements \IteratorAggregate
 	 * DatabaseDriver object.
 	 *
 	 * @var    DatabaseDriver
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $db;
 
@@ -68,7 +68,7 @@ class Record implements \IteratorAggregate
 	 *                                  compose the primary key.
 	 * @param   DatabaseDriver  $db     DatabaseDriver object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($table, $keys, DatabaseDriver $db)
 	{
@@ -112,7 +112,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 */
 	public function __set($key, $value)
@@ -134,7 +134,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 */
 	public function __get($key)
@@ -161,7 +161,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function save($src, $ignore = '')
 	{
@@ -186,7 +186,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 */
 	public function bind($src, $ignore = array())
@@ -235,7 +235,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 * @throws  \UnexpectedValueException
 	 * @throws  \InvalidArgumentException
@@ -326,7 +326,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \UnexpectedValueException
 	 */
 	public function delete($pKey = null)
@@ -359,7 +359,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function reset()
 	{
@@ -382,7 +382,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function check()
 	{
@@ -400,7 +400,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function store($updateNulls = false)
 	{
@@ -422,7 +422,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  boolean  True if the primary key(s) have been set.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hasPrimaryKey()
 	{
@@ -469,7 +469,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function appendPrimaryKeys(Query $query, $pk = null)
 	{
@@ -505,7 +505,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  mixed  Array of primary key field names or string containing the first primary key field.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getKeyName($multiple = false)
 	{
@@ -532,7 +532,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  mixed  An array of the field names, or false if an error occurs.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \UnexpectedValueException
 	 */
 	public function getFields()
@@ -560,7 +560,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getTableName()
 	{
@@ -572,7 +572,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  \ArrayIterator
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getIterator()
 	{
@@ -584,7 +584,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  \ArrayIterator
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __clone()
 	{

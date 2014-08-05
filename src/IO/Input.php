@@ -13,7 +13,7 @@ use Windwalker\Filter\Filter;
 /**
  * Class Input
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Input
 {
@@ -21,7 +21,7 @@ class Input
 	 * Filter object to use.
 	 *
 	 * @var    \Windwalker\Filter\Filter
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $filter = null;
 
@@ -29,7 +29,7 @@ class Input
 	 * Input data.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $data = array();
 
@@ -37,7 +37,7 @@ class Input
 	 * Input objects
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $inputs = array();
 
@@ -47,7 +47,7 @@ class Input
 	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 * @param   Filter $filter The input filter object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($source = null, Filter $filter = null)
 	{
@@ -70,7 +70,7 @@ class Input
 	 *
 	 * @return  Input  The request input object
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __get($name)
 	{
@@ -105,7 +105,7 @@ class Input
 	 *
 	 * @return  integer  The number of variables in the input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @see     Countable::count()
 	 */
 	public function count()
@@ -122,7 +122,7 @@ class Input
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function get($name, $default = null, $filter = 'cmd')
 	{
@@ -144,7 +144,7 @@ class Input
 	 *
 	 * @return  mixed  The filtered input data.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getArray(array $vars = array(), $datasource = null)
 	{
@@ -196,7 +196,7 @@ class Input
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function set($name, $value)
 	{
@@ -211,7 +211,7 @@ class Input
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function def($name, $value)
 	{
@@ -231,7 +231,7 @@ class Input
 	 *
 	 * @return  mixed   The filtered input value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __call($name, $arguments)
 	{
@@ -255,7 +255,7 @@ class Input
 	 *
 	 * @return  string   The request method.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getMethod()
 	{
@@ -269,7 +269,7 @@ class Input
 	 *
 	 * @return  string  The serialized input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function serialize()
 	{
@@ -292,7 +292,7 @@ class Input
 	 *
 	 * @return  Input  The input object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function unserialize($input)
 	{
@@ -315,7 +315,7 @@ class Input
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function loadAllInputs()
 	{

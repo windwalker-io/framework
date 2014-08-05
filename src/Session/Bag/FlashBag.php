@@ -11,7 +11,7 @@ namespace Windwalker\Session\Bag;
 /**
  * Class FlashBag
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class FlashBag extends SessionBag implements FlashBagInterface
 {

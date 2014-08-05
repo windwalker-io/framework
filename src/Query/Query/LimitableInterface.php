@@ -15,7 +15,7 @@ namespace Windwalker\Query\Query;
  * to retrieve the stored bounded variables on demand prior to
  * query execution.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 interface LimitableInterface
 {
@@ -32,7 +32,7 @@ interface LimitableInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function processLimit($query, $limit, $offset = 0);
 
@@ -48,7 +48,7 @@ interface LimitableInterface
 	 *
 	 * @return  LimitableInterface  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setLimit($limit = 0, $offset = 0);
 }

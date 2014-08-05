@@ -18,14 +18,14 @@ class BlowfishCipher extends McryptCipher
 	/**
 	 * @var    integer  The mcrypt cipher constant.
 	 * @see    http://www.php.net/manual/en/mcrypt.ciphers.php
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $type = MCRYPT_BLOWFISH;
 
 	/**
 	 * @var    integer  The mcrypt block cipher mode.
 	 * @see    http://www.php.net/manual/en/mcrypt.constants.php
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $mode = MCRYPT_MODE_CBC;
 }

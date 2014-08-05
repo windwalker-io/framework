@@ -18,7 +18,7 @@ if (!function_exists('with'))
 	 *
 	 * @param   mixed  $object  The object to return.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @return mixed
 	 */
@@ -34,7 +34,7 @@ if (!function_exists('with'))
  * @param   mixed  $data   The variable you want to dump.
  * @param   int    $level  The level number to limit recursive loop.
  *
- * @since   2.0
+ * @since   {DEPLOY_VERSION}
  *
  * @return  string  Dumped data.
  */
@@ -139,7 +139,7 @@ if (!function_exists('show'))
 	 * @param   mixed  $data   Array or Object to dump.
 	 * @param   int    $level  The level number to limit recursive loop.
 	 *
-	 * @since   2.0
+	 * @since   {DEPLOY_VERSION}
 	 *
 	 * @return  void
 	 */

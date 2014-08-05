@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Path\PathCollection;
 /**
  * Tests for the PathCollection class.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class PathCollectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +28,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  setUpReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function setUp()
 	{
@@ -40,7 +40,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getPathData()
 	{
@@ -82,7 +82,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getIteratorData()
 	{
@@ -128,7 +128,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  nameReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getIteratorRecursiveData()
 	{
@@ -174,7 +174,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  test__constructReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function test__construct()
 	{
@@ -196,7 +196,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider  getPathData
 	 * 
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testAddPaths($paths, $expects)
 	{
@@ -216,7 +216,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  addPathReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testAddPath()
 	{
@@ -236,7 +236,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  removePathReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testRemovePath()
 	{
@@ -262,7 +262,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider  getPathData
 	 * 
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testGetPaths($paths, $expects)
 	{
@@ -284,7 +284,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  getPathReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testGetPath()
 	{
@@ -308,7 +308,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider  getIteratorData
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testGetIterator($paths, $expects, $rescursive)
 	{
@@ -337,7 +337,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  testDiresctoryIteratorReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testGetDiresctoryIterator()
 	{
@@ -353,7 +353,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  setPrefixReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetPrefix()
 	{
@@ -386,7 +386,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  findReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function find()
 	{
@@ -402,7 +402,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  findAllReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function findAll()
 	{
@@ -418,7 +418,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  toArrayReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function toArray()
 	{
@@ -434,7 +434,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  getFilesReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getFiles($rescursive = false)
 	{
@@ -450,7 +450,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  getFoldersReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getFolders($rescursive)
 	{
@@ -466,7 +466,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  appendAllReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function appendAll()
 	{
@@ -482,7 +482,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  string  prependAllReturn
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function prependAll()
 	{

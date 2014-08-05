@@ -16,7 +16,7 @@ use Windwalker\Console\IO\IOInterface;
  *
  * Help us show dialog to ask use questions.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractPrompter implements PrompterInterface
 {
@@ -32,7 +32,7 @@ abstract class AbstractPrompter implements PrompterInterface
 	 *
 	 * @var  IOInterface
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $io = null;
 
@@ -50,7 +50,7 @@ abstract class AbstractPrompter implements PrompterInterface
 	 *
 	 * @var  resource
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $inputStream = STDIN;
 
@@ -61,7 +61,7 @@ abstract class AbstractPrompter implements PrompterInterface
 	 * @param   $default     $default   The default value.
 	 * @param   IOInterface  $io        The input object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	function __construct($question = null, $default = null, IOInterface $io = null)
 	{
@@ -90,7 +90,7 @@ abstract class AbstractPrompter implements PrompterInterface
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function ask($msg = '', $default = '');
 
@@ -101,7 +101,7 @@ abstract class AbstractPrompter implements PrompterInterface
 	 *
 	 * @return  string  The input string from standard input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function in($question = null)
 	{
@@ -125,7 +125,7 @@ abstract class AbstractPrompter implements PrompterInterface
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __invoke($msg = null, $default = null)
 	{

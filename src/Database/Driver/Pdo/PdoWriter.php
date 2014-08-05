@@ -13,7 +13,7 @@ use Windwalker\Database\Command\DatabaseWriter;
 /**
  * Class PdoWriter
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoWriter extends DatabaseWriter
 {
@@ -22,7 +22,7 @@ class PdoWriter extends DatabaseWriter
 	 *
 	 * @return  string  The value of the auto-increment field from the last inserted row.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function insertId()
 	{

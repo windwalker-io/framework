@@ -11,7 +11,7 @@ namespace Windwalker\Controller;
 /**
  * Class AbstractController
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractController implements ControllerInterface
 {
@@ -94,7 +94,7 @@ abstract class AbstractController implements ControllerInterface
 	 *
 	 * @return  string  The serialized controller.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function serialize()
 	{

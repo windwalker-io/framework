@@ -11,7 +11,7 @@ namespace Windwalker\Registry\Format;
 /**
  * XML format handler for Registry.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class XmlFormat implements FormatInterface
 {
@@ -25,7 +25,7 @@ class XmlFormat implements FormatInterface
 	 *
 	 * @return  string  XML formatted string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function objectToString($object, $options = array())
 	{
@@ -49,7 +49,7 @@ class XmlFormat implements FormatInterface
 	 *
 	 * @return  object   Data object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function stringToObject($data, array $options = array())
 	{

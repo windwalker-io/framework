@@ -14,7 +14,7 @@ use Windwalker\Query\QueryHelper;
 /**
  * Class DatabaseWriter
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class DatabaseWriter
 {
@@ -30,7 +30,7 @@ abstract class DatabaseWriter
 	 * @throws \InvalidArgumentException
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function insertOne($table, $data, $key = null)
 	{
@@ -105,7 +105,7 @@ abstract class DatabaseWriter
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function updateOne($table, $data, $key, $updateNulls = false)
 	{
@@ -331,7 +331,7 @@ abstract class DatabaseWriter
 	 *
 	 * @return  string  The value of the auto-increment field from the last inserted row.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function insertId();
 }

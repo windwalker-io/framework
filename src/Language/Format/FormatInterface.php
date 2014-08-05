@@ -11,7 +11,7 @@ namespace Windwalker\Language\Format;
 /**
  * Class FormatInterface
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 interface FormatInterface
 {

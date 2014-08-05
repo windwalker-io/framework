@@ -15,7 +15,7 @@ use Windwalker\Registry\Registry;
 /**
  * Base class for a Joomla! command line application.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractCliApplication extends AbstractApplication
 {
@@ -35,7 +35,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *                              config object.  If the argument is a Registry object that object will become
 	 *                              the application's config object, otherwise a default config object is created.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
@@ -67,7 +67,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 * @return  AbstractCliApplication  Instance of $this to allow chaining.
 	 *
 	 * @codeCoverageIgnore
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function out($text = '', $nl = true)
 	{
@@ -82,7 +82,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 * @return  string  The input string from standard input.
 	 *
 	 * @codeCoverageIgnore
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function in()
 	{

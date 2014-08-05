@@ -11,7 +11,7 @@ namespace Windwalker\Compare;
 /**
  * Class GteCompare
  *
- * @since 2.0
+ * @since {DEPLOY_VERSION}
  */
 class GteCompare extends Compare
 {

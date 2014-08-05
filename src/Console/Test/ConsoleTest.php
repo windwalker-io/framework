@@ -17,7 +17,7 @@ use Windwalker\Utilities\Test\TestHelper;
 /**
  * Class ConsoleTest
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class ConsoleTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +26,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @var Console
 	 *
-	 * @since 1.0
+	 * @since {DEPLOY_VERSION}
 	 */
 	public $instance;
 
@@ -61,7 +61,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function setUp()
 	{
@@ -85,7 +85,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testNestedCall()
 	{
@@ -107,7 +107,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetAutoExit()
 	{
@@ -123,7 +123,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testAddCommand()
 	{
@@ -137,7 +137,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testConstruct()
 	{
@@ -155,7 +155,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testDoExecute()
 	{
@@ -172,7 +172,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testRegisterRootCommand()
 	{
@@ -184,7 +184,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testRegister()
 	{
@@ -198,7 +198,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testGetName()
 	{
@@ -210,7 +210,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetName()
 	{
@@ -224,7 +224,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testGetVersion()
 	{
@@ -236,7 +236,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetVersion()
 	{
@@ -250,7 +250,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testGetDescription()
 	{
@@ -262,7 +262,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetDescription()
 	{
@@ -276,7 +276,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetHandler()
 	{

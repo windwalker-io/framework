@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\Pdo\PdoReader;
 /**
  * Class MysqlReader
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class MysqlReader extends PdoReader
 {

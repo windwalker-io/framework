@@ -25,7 +25,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array The converted array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function toInteger($array, $default = null)
 	{
@@ -60,7 +60,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  object   The object mapped from the given array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function toObject(array $array, $class = 'stdClass')
 	{
@@ -91,7 +91,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  string   The string mapped from the given array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function toString(array $array, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false)
 	{
@@ -127,7 +127,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array    The array mapped from the given object
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function fromObject($p_obj, $recurse = true, $regex = null)
 	{
@@ -150,7 +150,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  The array mapped from the given object
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	private static function arrayFromObject($item, $recurse, $regex)
 	{
@@ -198,7 +198,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  Column of values from the source array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function getColumn(array $array, $index)
 	{
@@ -229,7 +229,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  mixed  The value from the source array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function getValue(array $array, $name, $default = null, $type = '')
 	{
@@ -317,7 +317,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  The inverted array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function invert(array $array)
 	{
@@ -350,7 +350,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  boolean  True if the array is an associative array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function isAssociative($array)
 	{
@@ -376,7 +376,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  An array of arrays pivoted either on the value of the keys, or an individual key of an object or array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function pivot(array $source, $key = null)
 	{
@@ -454,7 +454,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  The sorted array of objects
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function sortObjects(array $a, $k, $direction = 1, $caseSensitive = true, $locale = false)
 	{
@@ -530,7 +530,7 @@ abstract class ArrayHelper
 	 * @return  array
 	 *
 	 * @see     http://php.net/manual/en/function.array-unique.php
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function arrayUnique(array $array)
 	{
@@ -551,7 +551,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  mixed    Returns the matching array $key if found, otherwise false.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function arraySearch($needle, array $haystack, $caseSensitive = true)
 	{

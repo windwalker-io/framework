@@ -14,7 +14,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
 /**
  * Class MysqlTable
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class MysqlTable extends DatabaseTable
 {
@@ -69,7 +69,7 @@ class MysqlTable extends DatabaseTable
 	 *
 	 * @return  static  Returns this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function lock()
@@ -98,7 +98,7 @@ class MysqlTable extends DatabaseTable
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function truncate()

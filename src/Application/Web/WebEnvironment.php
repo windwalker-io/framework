@@ -13,7 +13,7 @@ use Windwalker\Uri\Uri;
 /**
  * Class to model a Web Client.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class WebEnvironment implements EnvironmentInterface
 {
@@ -44,7 +44,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The detected platform on which the web client runs.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $platform;
 
@@ -52,7 +52,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * True if the web client is a mobile device.
 	 *
 	 * @var    boolean
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $mobile = false;
 
@@ -60,7 +60,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The detected rendering engine used by the web client.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $engine;
 
@@ -68,7 +68,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The detected browser used by the web client.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $browser;
 
@@ -76,7 +76,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The detected browser version used by the web client.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $browserVersion;
 
@@ -84,7 +84,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The priority order detected accepted languages for the client.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $languages = array();
 
@@ -92,7 +92,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The priority order detected accepted encodings for the client.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $encodings = array();
 
@@ -100,7 +100,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The web client's user agent string.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $userAgent;
 
@@ -108,7 +108,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The web client's accepted encoding string.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $acceptEncoding;
 
@@ -116,7 +116,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * The web client's accepted languages string.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $acceptLanguage;
 
@@ -124,7 +124,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * True if the web client is a robot.
 	 *
 	 * @var    boolean
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $robot = false;
 
@@ -132,7 +132,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * An array of flags determining whether or not a detection routine has been run.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $detection = array();
 
@@ -150,7 +150,7 @@ class WebEnvironment implements EnvironmentInterface
 	 * @param   string  $acceptEncoding  The optional client accept encoding string to parse.
 	 * @param   string  $acceptLanguage  The optional client accept language string to parse.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($userAgent = null, $acceptEncoding = null, $acceptLanguage = null)
 	{
@@ -229,7 +229,7 @@ class WebEnvironment implements EnvironmentInterface
 	 *
 	 * @return  string  The requested URI
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function detectRequestUri()
 	{
@@ -278,7 +278,7 @@ class WebEnvironment implements EnvironmentInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function detectBrowser($userAgent)
 	{
@@ -363,7 +363,7 @@ class WebEnvironment implements EnvironmentInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function detectEncoding($acceptEncoding)
 	{
@@ -381,7 +381,7 @@ class WebEnvironment implements EnvironmentInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function detectEngine($userAgent)
 	{
@@ -427,7 +427,7 @@ class WebEnvironment implements EnvironmentInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function detectLanguage($acceptLanguage)
 	{
@@ -445,7 +445,7 @@ class WebEnvironment implements EnvironmentInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function detectPlatform($userAgent)
 	{
@@ -538,7 +538,7 @@ class WebEnvironment implements EnvironmentInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function detectRobot($userAgent)
 	{
@@ -719,7 +719,7 @@ class WebEnvironment implements EnvironmentInterface
 	 *
 	 * @return  boolean  True if using SSL, false if not.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function isSSLConnection()
 	{

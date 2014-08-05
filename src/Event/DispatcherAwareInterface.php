@@ -22,7 +22,7 @@ interface DispatcherAwareInterface
 	 *
 	 * @return  EventInterface  The event after being passed through all listeners.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function triggerEvent($event);
 }

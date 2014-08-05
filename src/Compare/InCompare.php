@@ -11,7 +11,7 @@ namespace Windwalker\Compare;
 /**
  * Class InCompare
  *
- * @since 2.0
+ * @since {DEPLOY_VERSION}
  */
 class InCompare extends Compare
 {

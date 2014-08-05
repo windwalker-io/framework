@@ -13,7 +13,7 @@ use Windwalker\Registry\Helper\RegistryHelper;
 /**
  * JSON format handler for Registry.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class JsonFormat implements FormatInterface
 {

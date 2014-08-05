@@ -13,7 +13,7 @@ use Windwalker\Dom\Builder\DomBuilder;
 /**
  * Class XmlElement
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class DomElement implements \ArrayAccess
 {

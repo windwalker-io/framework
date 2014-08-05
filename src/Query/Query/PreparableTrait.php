@@ -11,7 +11,7 @@ namespace Windwalker\Query\Query;
 /**
  * Class PreparableTrait
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 trait PreparableTrait
 {
@@ -19,7 +19,7 @@ trait PreparableTrait
 	 * Holds key / value pair of bound objects.
 	 *
 	 * @var    mixed
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $bounded = array();
 
@@ -37,7 +37,7 @@ trait PreparableTrait
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
 	{
@@ -81,7 +81,7 @@ trait PreparableTrait
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function &getBounded($key = null)
 	{

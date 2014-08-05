@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\DatabaseDriver;
 /**
  * Class DatabaseTransaction
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class DatabaseTransaction
 {
@@ -27,7 +27,7 @@ abstract class DatabaseTransaction
 	 * The depth of the current transaction.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $depth = 0;
 

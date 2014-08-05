@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\DatabaseAwareTrait;
 /**
  * Class DatabaseTable
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class DatabaseTable
 {
@@ -68,7 +68,7 @@ abstract class DatabaseTable
 	 *
 	 * @return  static  Returns this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	abstract public function lock();
@@ -87,7 +87,7 @@ abstract class DatabaseTable
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	abstract public function truncate();

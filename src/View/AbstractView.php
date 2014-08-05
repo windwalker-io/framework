@@ -11,7 +11,7 @@ namespace Windwalker\View;
 /**
  * Class AbstractView
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractView implements ViewInterface
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Filter\Type;
 /**
  * Class AbstractFilterType
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractFilterType
 {

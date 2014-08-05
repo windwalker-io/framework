@@ -13,7 +13,7 @@ use Windwalker\Data\Data;
 /**
  * Class PhpRenderer
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PhpRenderer extends AbstractRenderer
 {

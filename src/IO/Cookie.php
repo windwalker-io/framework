@@ -13,7 +13,7 @@ use Windwalker\Filter\Filter;
 /**
  * Joomla! Input Cookie Class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class CookieInput extends Input
 {
@@ -23,7 +23,7 @@ class CookieInput extends Input
 	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 * @param   Filter $filter The input filter object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($source = null, Filter $filter = null)
 	{
@@ -68,7 +68,7 @@ class CookieInput extends Input
 	 *
 	 * @link    http://www.ietf.org/rfc/rfc2109.txt
 	 * @see     setcookie()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function set($name, $value, $expire = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
 	{

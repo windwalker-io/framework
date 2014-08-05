@@ -11,7 +11,7 @@ namespace Windwalker\Registry\Format;
 /**
  * PHP class format handler for Registry
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class PhpFormat implements FormatInterface
 {

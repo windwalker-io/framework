@@ -14,7 +14,7 @@ use Windwalker\Query\Query\PreparableTrait;
 /**
  * Class SqliteQuery
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class SqliteQuery extends Query
 {
@@ -24,7 +24,7 @@ class SqliteQuery extends Query
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $name = 'sqlite';
 
@@ -35,7 +35,7 @@ class SqliteQuery extends Query
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $nameQuote = '`';
 
@@ -49,7 +49,7 @@ class SqliteQuery extends Query
 	 *
 	 * @return  string  The escaped string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function escape($text, $extra = false)
 	{
@@ -73,7 +73,7 @@ class SqliteQuery extends Query
 	 *
 	 * @return  SqliteQuery  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clear($clause = null)
 	{
@@ -100,7 +100,7 @@ class SqliteQuery extends Query
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function processLimit($query, $limit, $offset = 0)
 	{
@@ -124,7 +124,7 @@ class SqliteQuery extends Query
 	 *
 	 * @return  SqliteQuery  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function limit($limit = 0, $offset = 0)
 	{

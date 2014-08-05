@@ -11,7 +11,7 @@ namespace Windwalker\Dom\Builder;
 /**
  * Class XmlBuilder
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class DomBuilder
 {

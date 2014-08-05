@@ -14,7 +14,7 @@ use Windwalker\IO\Input;
 /**
  * Windwalker Input CLI Class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class CliInput extends Input implements CliInputInterface
 {
@@ -22,7 +22,7 @@ class CliInput extends Input implements CliInputInterface
 	 * The executable that was called to run the CLI script.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $calledScript;
 
@@ -31,7 +31,7 @@ class CliInput extends Input implements CliInputInterface
 	 * with a specific argument name.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $args = array();
 
@@ -48,7 +48,7 @@ class CliInput extends Input implements CliInputInterface
 	 * @param   array  $source Optional source data.
 	 * @param   Filter $filter The input filter object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($source = null, Filter $filter = null)
 	{
@@ -63,7 +63,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  string  The serialized input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function serialize()
 	{
@@ -88,7 +88,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function get($name, $default = null, $filter = 'string')
 	{
@@ -100,7 +100,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  mixed  The filtered input data.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function all()
 	{
@@ -114,7 +114,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  Input  The input object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function unserialize($input)
 	{
@@ -165,7 +165,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function parseArguments()
 	{

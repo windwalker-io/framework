@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * Class QueryBuilder
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 interface QueryBuilderInterface
 {

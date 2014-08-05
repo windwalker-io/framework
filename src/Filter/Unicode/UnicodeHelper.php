@@ -11,7 +11,7 @@ namespace Windwalker\Filter\Unicode;
 /**
  * Class UnicodeHelper
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class UnicodeHelper
 {

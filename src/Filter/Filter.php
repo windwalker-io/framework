@@ -13,7 +13,7 @@ use Windwalker\Filter\Type\AbstractFilterType;
 /**
  * Class Filter
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Filter
 {

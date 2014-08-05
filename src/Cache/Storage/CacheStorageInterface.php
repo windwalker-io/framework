@@ -13,7 +13,7 @@ use Windwalker\Cache\Item\CacheItemInterface;
 /**
  * Class CacheStorageInterface
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 interface CacheStorageInterface
 {

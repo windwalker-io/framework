@@ -15,7 +15,7 @@ use Windwalker\Registry\Helper\RegistryHelper;
 /**
  * YAML format handler for Registry.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class YamlFormat implements FormatInterface
 {
@@ -42,7 +42,7 @@ class YamlFormat implements FormatInterface
 	 *
 	 * @return  string  YAML formatted string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	static public function objectToString($object, $options = array())
 	{
@@ -63,7 +63,7 @@ class YamlFormat implements FormatInterface
 	 *
 	 * @return  object  Data object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	static public function stringToObject($data, array $options = array())
 	{

@@ -11,7 +11,7 @@ namespace Windwalker\Language\Loader;
 /**
  * Class PhpLoader
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PhpLoader extends FileLoader
 {

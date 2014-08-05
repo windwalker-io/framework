@@ -18,7 +18,7 @@ use Windwalker\Console\IO\IOInterface;
 /**
  * Abstract Console class.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractCommand implements \ArrayAccess
 {
@@ -27,7 +27,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var  Console
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $application;
 
@@ -36,7 +36,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var IOInterface
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $io;
 
@@ -45,7 +45,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $name;
 
@@ -54,7 +54,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var AbstractCommand[]
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $children = array();
 
@@ -63,7 +63,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var OptionSet
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $options = null;
 
@@ -72,7 +72,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var OptionSet
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $globalOptions = null;
 
@@ -81,7 +81,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $description;
 
@@ -90,7 +90,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $help;
 
@@ -99,7 +99,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $usage = '%s <cmd><command></cmd> <option>[option]</option>';
 
@@ -108,7 +108,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var  callable
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $handler;
 
@@ -117,7 +117,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @var AbstractCommand
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $parent;
 
@@ -130,7 +130,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @throws \LogicException
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function __construct($name = null, IOInterface $io = null, AbstractCommand $parent = null)
 	{
@@ -154,7 +154,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  mixed  Executed result or exit code.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function execute()
 	{
@@ -204,7 +204,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return mixed
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function doExecute()
 	{
@@ -216,7 +216,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function configure()
 	{
@@ -231,7 +231,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 * @throws  CommandNotFoundException
 	 * @return  mixed
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function executeSubCommand($name, IOInterface $io = null)
 	{
@@ -292,7 +292,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function setParent(AbstractCommand $parent = null)
 	{
@@ -306,7 +306,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getParent()
 	{
@@ -324,7 +324,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addCommand($command, $description = null, $options = array(), \Closure $code = null)
 	{
@@ -405,7 +405,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addChild($argument, $description = null, $options = array(), \Closure $code = null)
 	{
@@ -419,7 +419,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand|null  Return command or null.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getChild($path)
 	{
@@ -447,7 +447,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return array  children.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getChildren()
 	{
@@ -461,7 +461,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setChildren($children)
 	{
@@ -486,7 +486,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addOption($option, $default = null, $description = null, $global = false)
 	{
@@ -534,7 +534,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  mixed  The option value we want to get or default value if option not exists.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getOption($name, $default = null)
 	{
@@ -565,7 +565,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  mixed  The options array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getOptions($global = false)
 	{
@@ -579,7 +579,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  mixed  The options array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getOptionSet($global = false)
 	{
@@ -591,7 +591,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return array  The options array.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getAllOptions()
 	{
@@ -605,7 +605,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function setOptions($options)
 	{
@@ -628,7 +628,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setOptionAlias($aliases, $name, $global = false)
 	{
@@ -649,7 +649,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return string  Console description.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getDescription()
 	{
@@ -663,7 +663,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setDescription($description)
 	{
@@ -677,7 +677,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return string  Console name.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getName()
 	{
@@ -691,7 +691,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setName($name)
 	{
@@ -705,7 +705,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  \Closure  Console execute code.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getHandler()
 	{
@@ -719,7 +719,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setHandler($handler = null)
 	{
@@ -733,7 +733,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return Console  Console application.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getApplication()
 	{
@@ -747,7 +747,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setApplication($application)
 	{
@@ -761,7 +761,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return string  Help of this Command.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getHelp()
 	{
@@ -775,7 +775,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setHelp($help)
 	{
@@ -789,7 +789,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return string  Usage of this command.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getUsage()
 	{
@@ -803,7 +803,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setUsage($usage)
 	{
@@ -820,7 +820,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function renderAlternatives($wrongName, $exception)
 	{
@@ -868,7 +868,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function renderException($exception)
 	{
@@ -895,7 +895,7 @@ EOF;
 	 *
 	 * @return  AbstractCommand  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function out($text = '', $nl = true)
 	{
@@ -912,7 +912,7 @@ EOF;
 	 *
 	 * @return  AbstractCommand  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function err($text = '', $nl = true)
 	{
@@ -928,7 +928,7 @@ EOF;
 	 *
 	 * @return  string  The input string from standard input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function in($question = '')
 	{
@@ -948,7 +948,7 @@ EOF;
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function offsetSet($offset, $value)
 	{
@@ -962,7 +962,7 @@ EOF;
 	 *
 	 * @return  boolean  True if command exists.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function offsetExists($offset)
 	{
@@ -976,7 +976,7 @@ EOF;
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function offsetUnset($offset)
 	{
@@ -990,7 +990,7 @@ EOF;
 	 *
 	 * @return  AbstractCommand|null  Return command object if found.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function offsetGet($offset)
 	{

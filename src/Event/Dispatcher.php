@@ -21,7 +21,7 @@ class Dispatcher
 	 *
 	 * @var    EventInterface[]
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $events = array();
 
@@ -29,7 +29,7 @@ class Dispatcher
 	 * A regular expression that will filter listener method names.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 * @deprecated
 	 */
 	protected $listenerFilter;
@@ -40,7 +40,7 @@ class Dispatcher
 	 *
 	 * @var    ListenersPriorityQueue[]
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $listeners = array();
 
@@ -52,7 +52,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setEvent(EventInterface $event)
 	{
@@ -68,7 +68,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since       1.0
+	 * @since       {DEPLOY_VERSION}
 	 * @deprecated  Incorporate a method in your listener object such as `getEvents` to feed into the `setListener` method.
 	 */
 	public function setListenerFilter($regex)
@@ -85,7 +85,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addEvent(EventInterface $event)
 	{
@@ -104,7 +104,7 @@ class Dispatcher
 	 *
 	 * @return  boolean  True if the listener has the given event, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hasEvent($event)
 	{
@@ -124,7 +124,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface|mixed  The event of the default value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getEvent($name, $default = null)
 	{
@@ -144,7 +144,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function removeEvent($event)
 	{
@@ -166,7 +166,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface[]  The registered event.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getEvents()
 	{
@@ -178,7 +178,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface[]  The old events.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clearEvents()
 	{
@@ -193,7 +193,7 @@ class Dispatcher
 	 *
 	 * @return  integer  The number of registered events.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function countEvents()
 	{
@@ -213,7 +213,7 @@ class Dispatcher
 	 *
 	 * @throws  \InvalidArgumentException
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addListener($listener, array $events = array())
 	{
@@ -281,7 +281,7 @@ class Dispatcher
 	 *
 	 * @return  mixed  The listener priority or null if the listener doesn't exist.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getListenerPriority($listener, $event)
 	{
@@ -305,7 +305,7 @@ class Dispatcher
 	 *
 	 * @return  object[]  An array of registered listeners sorted according to their priorities.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getListeners($event)
 	{
@@ -331,7 +331,7 @@ class Dispatcher
 	 *
 	 * @return  boolean  True if the listener is registered, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hasListener($listener, $event = null)
 	{
@@ -370,7 +370,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function removeListener($listener, $event = null)
 	{
@@ -406,7 +406,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clearListeners($event = null)
 	{
@@ -438,7 +438,7 @@ class Dispatcher
 	 *
 	 * @return  integer  The number of registered listeners for the given event.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function countListeners($event)
 	{
@@ -457,7 +457,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface  The event after being passed through all listeners.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function triggerEvent($event)
 	{

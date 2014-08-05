@@ -14,7 +14,7 @@ namespace Windwalker\Uri;
  * This class parses a URI and provides a common interface for the Windwalker framework
  * to access and manipulate a URI.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class Uri extends AbstractUri
 {
@@ -27,7 +27,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  string  Previous value for the query variable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setVar($name, $value)
 	{
@@ -48,7 +48,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function delVar($name)
 	{
@@ -69,7 +69,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setQuery($query)
 	{
@@ -99,7 +99,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setScheme($scheme)
 	{
@@ -113,7 +113,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setUser($user)
 	{
@@ -127,7 +127,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setPass($pass)
 	{
@@ -141,7 +141,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setHost($host)
 	{
@@ -155,7 +155,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setPort($port)
 	{
@@ -169,7 +169,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setPath($path)
 	{
@@ -184,7 +184,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setFragment($anchor)
 	{

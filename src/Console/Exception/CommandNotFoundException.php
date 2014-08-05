@@ -13,7 +13,7 @@ use Windwalker\Console\Command\AbstractCommand;
 /**
  * Command not found exception.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class CommandNotFoundException extends \RuntimeException
 {
@@ -22,7 +22,7 @@ class CommandNotFoundException extends \RuntimeException
 	 *
 	 * @var AbstractCommand
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 */
 	protected $command;
@@ -32,7 +32,7 @@ class CommandNotFoundException extends \RuntimeException
 	 *
 	 * @var string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $argument;
 
@@ -43,7 +43,7 @@ class CommandNotFoundException extends \RuntimeException
 	 * @param   AbstractCommand  $command   Current command to provide information for debug.
 	 * @param   string           $argument  The last argument to auto complete.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function __construct($message, AbstractCommand $command, $argument)
 	{
@@ -60,7 +60,7 @@ class CommandNotFoundException extends \RuntimeException
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setArgument($argument)
 	{
@@ -72,7 +72,7 @@ class CommandNotFoundException extends \RuntimeException
 	 *
 	 * @return string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getChild()
 	{
@@ -86,7 +86,7 @@ class CommandNotFoundException extends \RuntimeException
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setCommand($command)
 	{
@@ -98,7 +98,7 @@ class CommandNotFoundException extends \RuntimeException
 	 *
 	 * @return AbstractCommand  $command  Current command to provide information for debug.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getCommand()
 	{

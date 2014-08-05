@@ -14,7 +14,7 @@ use Windwalker\Session\Database\AbstractDatabaseAdapter;
  * Database session storage handler for PHP
  *
  * @see    http://www.php.net/manual/en/function.session-set-save-handler.php
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class DatabaseHandler extends AbstractHandler
 {
@@ -31,7 +31,7 @@ class DatabaseHandler extends AbstractHandler
 	 * @param  AbstractDatabaseAdapter $db
 	 *
 	 * @throws \RuntimeException
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(AbstractDatabaseAdapter $db)
 	{
@@ -68,7 +68,7 @@ class DatabaseHandler extends AbstractHandler
 	 *
 	 * @return  string  The session data.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function read($id)
 	{
@@ -90,7 +90,7 @@ class DatabaseHandler extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function write($id, $data)
 	{
@@ -111,7 +111,7 @@ class DatabaseHandler extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function destroy($id)
 	{
@@ -132,7 +132,7 @@ class DatabaseHandler extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function gc($lifetime = 1440)
 	{

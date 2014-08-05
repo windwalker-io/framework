@@ -14,7 +14,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
 /**
  * Class MysqlDatabase
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class MysqlDatabase extends DatabaseDatabase
 {
@@ -94,7 +94,7 @@ class MysqlDatabase extends DatabaseDatabase
 	 *
 	 * @return  array  An array of all the tables in the database.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getTables($refresh = false)
 	{

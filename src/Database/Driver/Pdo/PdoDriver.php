@@ -20,7 +20,7 @@ use Windwalker\Query\Query;
 /**
  * Class PdoDriver
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoDriver extends DatabaseDriver
 {
@@ -28,7 +28,7 @@ class PdoDriver extends DatabaseDriver
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $name = 'pdo';
 
@@ -36,7 +36,7 @@ class PdoDriver extends DatabaseDriver
 	 * The prepared statement.
 	 *
 	 * @var    \PDOStatement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $cursor;
 
@@ -44,7 +44,7 @@ class PdoDriver extends DatabaseDriver
 	 * The database connection resource.
 	 *
 	 * @var    \PDO
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $connection;
 
@@ -61,7 +61,7 @@ class PdoDriver extends DatabaseDriver
 	 * @param   \PDO  $connection The pdo connection object.
 	 * @param   array $options    List of options used to configure the connection
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(\PDO $connection = null, $options = array())
 	{
@@ -121,7 +121,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function disconnect()
 	{
@@ -140,7 +140,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getOption($key)
 	{
@@ -162,7 +162,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return boolean
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function setOption($key, $value)
 	{
@@ -176,7 +176,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  string  The database connector version.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getVersion()
 	{
@@ -192,7 +192,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function select($database)
@@ -210,7 +210,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  PdoDriver  This object to support method chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setQuery($query, $driverOptions = array())
 	{
@@ -233,7 +233,7 @@ class PdoDriver extends DatabaseDriver
 	 * @throws \RuntimeException
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function doExecute()
 	{
@@ -272,7 +272,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function freeResult($cursor = null)
 	{
@@ -295,7 +295,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  Query  The current query object or a new object extending the Query class.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function getQuery($new = false)

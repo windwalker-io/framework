@@ -16,7 +16,7 @@ use Windwalker\Filter\Filter;
  * This class decodes a JSON string from the raw request data and makes it available via
  * the standard Input interface.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class JsonInput extends Input
 {
@@ -24,7 +24,7 @@ class JsonInput extends Input
 	 * The raw JSON string from the request.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private $raw;
 
@@ -34,7 +34,7 @@ class JsonInput extends Input
 	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 * @param   Filter $filter The input filter object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(array $source = null, Filter $filter = null)
 	{
@@ -67,7 +67,7 @@ class JsonInput extends Input
 	 *
 	 * @return  string  The raw JSON string from the request.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getRaw()
 	{

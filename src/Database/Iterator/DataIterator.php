@@ -13,7 +13,7 @@ use Windwalker\Database\Command\DatabaseReader;
 /**
  * Class DataIterator
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class DataIterator implements \Countable, \Iterator
 {
@@ -61,7 +61,7 @@ class DataIterator implements \Countable, \Iterator
 	/**
 	 * Database iterator destructor.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __destruct()
 	{
