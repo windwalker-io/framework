@@ -29,6 +29,8 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
+		return;
+
 		$this->instance = $prompter = new FakePasswordPrompter(null, null, $this->io);
 	}
 
@@ -44,6 +46,8 @@ class PasswordPrompterTest extends AbstractPrompterTest
 		if (defined('PHP_WINDOWS_VERSION_BUILD'))
 		{
 			$this->markTestSkipped('This test is not supported on Windows');
+			
+			return;
 		}
 
 		$this->setStream("1234qwer\n");
