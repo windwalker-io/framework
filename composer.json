@@ -34,5 +34,10 @@
 		"files": [
 			"src/PHP/methods.php"
 		]
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-staging": "2.0-dev"
+		}
 	}
 }
