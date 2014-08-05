@@ -315,16 +315,19 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	/**
 	 * dropColumn
 	 *
+	 * @param string $table
 	 * @param string $column
 	 *
 	 * @return  string
 	 */
-	public static function dropColumn($column)
+	public static function dropColumn($table, $column)
 	{
 		$query = static::getQuery();
 
 		return static::build(
-			'ALTER TABLE DROP',
+			'ALTER TABLE',
+			$query->quoteName($table),
+			'DROP',
 			$query->quoteName($column)
 		);
 	}
