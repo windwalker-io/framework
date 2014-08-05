@@ -72,7 +72,6 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @codeCoverageIgnore
 	 * @since   1.0
 	 */
 	public function close($message = 0)
@@ -148,7 +147,6 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @codeCoverageIgnore
 	 * @since   1.0
 	 */
 	protected function initialise()
