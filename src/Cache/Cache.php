@@ -31,7 +31,7 @@ class Cache implements CacheInterface
 	/**
 	 * Property handler.
 	 *
-	 * @var  null
+	 * @var  DataHandlerInterface
 	 */
 	protected $handler = null;
 
