@@ -94,7 +94,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *
 	 * @return  IOInterface
 	 */
-	public function getIo()
+	public function getIO()
 	{
 		return $this->io;
 	}
@@ -106,7 +106,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *
 	 * @return  AbstractCliApplication  Return self to support chaining.
 	 */
-	public function setIo($io)
+	public function setIO($io)
 	{
 		$this->io = $io;
 

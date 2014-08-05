@@ -9,12 +9,12 @@
 namespace Windwalker\Application;
 
 use Windwalker\Application\Response\ResponseInterface;
-use Windwalker\Application\Web\WebClientInterface;
+use Windwalker\Application\Web\EnvironmentInterface;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
 use Windwalker\Application\Response\Response;
-use Windwalker\Application\Web\WebClient;
+use Windwalker\Application\Web\WebEnvironment;
 use Windwalker\Registry\Registry;
 
 /**
@@ -27,10 +27,10 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * The application client object.
 	 *
-	 * @var    Web\WebClient
+	 * @var    WebEnvironment
 	 * @since  1.0
 	 */
-	public $client;
+	public $environment;
 
 	/**
 	 * The application response object.
@@ -38,26 +38,26 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @var    object
 	 * @since  1.0
 	 */
-	protected $response;
+	public $response;
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param   Input                $input    An optional argument to provide dependency injection for the application's
-	 *                                         input object.  If the argument is a Input object that object will become
-	 *                                         the application's input object, otherwise a default input object is created.
-	 * @param   Registry             $config   An optional argument to provide dependency injection for the application's
-	 *                                         config object.  If the argument is a Registry object that object will become
-	 *                                         the application's config object, otherwise a default config object is created.
-	 * @param   WebClientInterface   $client   An optional argument to provide dependency injection for the application's
-	 *                                         client object.  If the argument is a Web\WebClient object that object will become
-	 *                                         the application's client object, otherwise a default client object is created.
-	 * @param   ResponseInterface    $response The response object.
+	 * @param   Input                  $input        An optional argument to provide dependency injection for the application's
+	 *                                               input object.  If the argument is a Input object that object will become
+	 *                                               the application's input object, otherwise a default input object is created.
+	 * @param   Registry               $config       An optional argument to provide dependency injection for the application's
+	 *                                               config object.  If the argument is a Registry object that object will become
+	 *                                               the application's config object, otherwise a default config object is created.
+	 * @param   EnvironmentInterface   $environment  An optional argument to provide dependency injection for the application's
+	 *                                               client object.  If the argument is a Web\WebEnvironment object that object will become
+	 *                                               the application's client object, otherwise a default client object is created.
+	 * @param   ResponseInterface      $response     The response object.
 	 */
-	public function __construct(Input $input = null, Registry $config = null, WebClientInterface $client = null, ResponseInterface $response = null)
+	public function __construct(Input $input = null, Registry $config = null, EnvironmentInterface $environment = null, ResponseInterface $response = null)
 	{
-		$this->client   = $client   instanceof WebClientInterface ? $client   : new WebClient;
-		$this->response = $response instanceof ResponseInterface  ? $response : new Response;
+		$this->environment = $environment   instanceof EnvironmentInterface ? $environment   : new WebEnvironment;
+		$this->response    = $response      instanceof ResponseInterface    ? $response      : new Response;
 
 		// Call the constructor as late as possible (it runs `initialise`).
 		parent::__construct($input, $config);
@@ -107,7 +107,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// If gzip compression is enabled in configuration and the server is compliant, compress the output.
 		if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler'))
 		{
-			$this->response->compress($this->client->getEncodings());
+			$this->response->compress($this->environment->getEncodings());
 		}
 
 		return $this->response->respond($returnBody);
@@ -185,7 +185,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		else
 		{
 			// We have to use a JavaScript redirect here because MSIE doesn't play nice with utf-8 URLs.
-			if (($this->client->getEngine() == Web\WebClient::TRIDENT) && !ApplicationHelper::isAscii($url))
+			if (($this->environment->getEngine() == WebEnvironment::TRIDENT) && !ApplicationHelper::isAscii($url))
 			{
 				$html = '<html><head>';
 				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->response->getCharSet() . '" />';
@@ -223,20 +223,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 	public function setHeader($name, $value, $replace = false)
 	{
 		$this->response->setHeader($name, $value, $replace);
-
-		return $this;
-	}
-
-	/**
-	 * Send the response headers.
-	 *
-	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function sendHeaders()
-	{
-		$this->response->sendHeaders();
 
 		return $this;
 	}
@@ -314,7 +300,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		}
 		else
 		{
-			$uri = $this->client->getSystemUri($requestUri);
+			$uri = $this->environment->getSystemUri($requestUri);
 		}
 
 		$this->set('uri.request', $uri->getOriginal());

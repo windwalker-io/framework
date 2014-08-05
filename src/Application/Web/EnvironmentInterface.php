@@ -13,7 +13,7 @@ use Windwalker\Uri\Uri;
 /**
  * Interface WebClientInterface
  */
-interface WebClientInterface
+interface EnvironmentInterface
 {
 	/**
 	 * getSystemUri
@@ -74,18 +74,11 @@ interface WebClientInterface
 	public function getEncodings();
 
 	/**
-	 * getUserAgent
-	 *
-	 * @return  string
-	 */
-	public function getUserAgent();
-
-	/**
 	 * setUserAgent
 	 *
 	 * @param   string $userAgent
 	 *
-	 * @return  WebClient  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setUserAgent($userAgent);
 

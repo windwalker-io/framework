@@ -15,7 +15,7 @@ use Windwalker\Uri\Uri;
  *
  * @since  1.0
  */
-class WebClient implements WebClientInterface
+class WebEnvironment implements EnvironmentInterface
 {
 	const WINDOWS = 1;
 	const WINDOWS_PHONE = 2;
@@ -41,73 +41,97 @@ class WebClient implements WebClientInterface
 	const ANDROIDTABLET = 22;
 
 	/**
-	 * @var    integer  The detected platform on which the web client runs.
+	 * The detected platform on which the web client runs.
+	 *
+	 * @var    integer
 	 * @since  1.0
 	 */
 	protected $platform;
 
 	/**
-	 * @var    boolean  True if the web client is a mobile device.
+	 * True if the web client is a mobile device.
+	 *
+	 * @var    boolean
 	 * @since  1.0
 	 */
 	protected $mobile = false;
 
 	/**
-	 * @var    integer  The detected rendering engine used by the web client.
+	 * The detected rendering engine used by the web client.
+	 *
+	 * @var    integer
 	 * @since  1.0
 	 */
 	protected $engine;
 
 	/**
-	 * @var    integer  The detected browser used by the web client.
+	 * The detected browser used by the web client.
+	 *
+	 * @var    integer
 	 * @since  1.0
 	 */
 	protected $browser;
 
 	/**
-	 * @var    string  The detected browser version used by the web client.
+	 * The detected browser version used by the web client.
+	 *
+	 * @var    string
 	 * @since  1.0
 	 */
 	protected $browserVersion;
 
 	/**
-	 * @var    array  The priority order detected accepted languages for the client.
+	 * The priority order detected accepted languages for the client.
+	 *
+	 * @var    array
 	 * @since  1.0
 	 */
 	protected $languages = array();
 
 	/**
-	 * @var    array  The priority order detected accepted encodings for the client.
+	 * The priority order detected accepted encodings for the client.
+	 *
+	 * @var    array
 	 * @since  1.0
 	 */
 	protected $encodings = array();
 
 	/**
-	 * @var    string  The web client's user agent string.
+	 * The web client's user agent string.
+	 *
+	 * @var    string
 	 * @since  1.0
 	 */
 	protected $userAgent;
 
 	/**
-	 * @var    string  The web client's accepted encoding string.
+	 * The web client's accepted encoding string.
+	 *
+	 * @var    string
 	 * @since  1.0
 	 */
 	protected $acceptEncoding;
 
 	/**
-	 * @var    string  The web client's accepted languages string.
+	 * The web client's accepted languages string.
+	 *
+	 * @var    string
 	 * @since  1.0
 	 */
 	protected $acceptLanguage;
 
 	/**
-	 * @var    boolean  True if the web client is a robot.
+	 * True if the web client is a robot.
+	 *
+	 * @var    boolean
 	 * @since  1.0
 	 */
 	protected $robot = false;
 
 	/**
-	 * @var    array  An array of flags determining whether or not a detection routine has been run.
+	 * An array of flags determining whether or not a detection routine has been run.
+	 *
+	 * @var    array
 	 * @since  1.0
 	 */
 	protected $detection = array();

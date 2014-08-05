@@ -119,7 +119,7 @@ class Response implements ResponseInterface
 	 *
 	 * @param string $encodings
 	 *
-	 * @return  void
+	 * @return  static
 	 *
 	 * @since   1.0
 	 */
@@ -138,13 +138,13 @@ class Response implements ResponseInterface
 		// If no supported encoding is detected do nothing and return.
 		if (empty($encodings))
 		{
-			return;
+			return $this;
 		}
 
 		// Verify that headers have not yet been sent, and that our connection is still alive.
 		if ($this->checkHeadersSent() || !$this->checkConnectionAlive())
 		{
-			return;
+			return $this;
 		}
 
 		// Iterate through the encodings and attempt to compress the data using any found supported encodings.
@@ -153,26 +153,20 @@ class Response implements ResponseInterface
 			if (($supported[$encoding] == 'gz') || ($supported[$encoding] == 'deflate'))
 			{
 				// Verify that the server supports gzip compression before we attempt to gzip encode the data.
-				// @codeCoverageIgnoreStart
 				if (!extension_loaded('zlib') || ini_get('zlib.output_compression'))
 				{
 					continue;
 				}
-
-				// @codeCoverageIgnoreEnd
 
 				// Attempt to gzip encode the data with an optimal level 4.
 				$data = $this->getBody();
 				$gzdata = gzencode($data, 4, ($supported[$encoding] == 'gz') ? FORCE_GZIP : FORCE_DEFLATE);
 
 				// If there was a problem encoding the data just try the next encoding scheme.
-				// @codeCoverageIgnoreStart
 				if ($gzdata === false)
 				{
 					continue;
 				}
-
-				// @codeCoverageIgnoreEnd
 
 				// Set the encoding headers.
 				$this->setHeader('Content-Encoding', $encoding);
@@ -185,6 +179,8 @@ class Response implements ResponseInterface
 				break;
 			}
 		}
+
+		return $this;
 	}
 
 	/**
@@ -357,7 +353,7 @@ class Response implements ResponseInterface
 	 * @param   integer  $code     Forces the HTTP response code to the specified value. Note that
 	 *                             this parameter only has an effect if the string is not empty.
 	 *
-	 * @return  void
+	 * @return  static
 	 *
 	 * @codeCoverageIgnore
 	 * @see     header()
@@ -366,6 +362,8 @@ class Response implements ResponseInterface
 	public function header($string, $replace = true, $code = null)
 	{
 		header($string, $replace, $code);
+
+		return $this;
 	}
 
 	/**
