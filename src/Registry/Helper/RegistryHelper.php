@@ -51,5 +51,34 @@ class RegistryHelper
 	{
 		return isset($array[$name]) ? $array[$name] : $default;
 	}
+
+	/**
+	 * Utility function to map an array to a stdClass object.
+	 *
+	 * @param   array   $array  The array to map.
+	 * @param   string  $class  Name of the class to create
+	 *
+	 * @return  object   The object mapped from the given array
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public static function toObject($array, $class = 'stdClass')
+	{
+		$obj = new $class;
+
+		foreach ($array as $k => $v)
+		{
+			if (is_array($v))
+			{
+				$obj->$k = self::toObject($v, $class);
+			}
+			else
+			{
+				$obj->$k = $v;
+			}
+		}
+
+		return $obj;
+	}
 }
 

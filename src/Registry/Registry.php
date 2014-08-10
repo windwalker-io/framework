@@ -196,6 +196,18 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	}
 
 	/**
+	 * Clear all data.
+	 *
+	 * @return  static
+	 */
+	public function clear()
+	{
+		$this->data = new \stdClass;
+
+		return $this;
+	}
+
+	/**
 	 * Load a associative array of values into the default namespace
 	 *
 	 * @param   array  $array  Associative array of value to load
@@ -240,6 +252,13 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 */
 	public function loadFile($file, $format = 'JSON', $options = array())
 	{
+		if (strtolower($format) == 'php')
+		{
+			$data = include $file;
+
+			return $this->loadArray($data, $format, $options);
+		}
+
 		$data = file_get_contents($file);
 
 		return $this->loadString($data, $format, $options);
@@ -277,7 +296,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function merge(Registry $source, $recursive = false)
+	public function merge(Registry $source, $recursive = true)
 	{
 		$this->bindData($this->data, $source->toArray(), $recursive, false);
 
@@ -400,13 +419,15 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Transforms a namespace to an object
 	 *
+	 * @param   string  $class  The class of object.
+	 *
 	 * @return  object   An an object holding the namespace data
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function toObject()
+	public function toObject($class = '\stdClass')
 	{
-		return $this->data;
+		return RegistryHelper::toObject($this->data, $class);
 	}
 
 	/**
@@ -532,11 +553,11 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  string[] Dumped array.
 	 */
-	public function toOneDimension($separator = '.')
+	public function flatten($separator = '.')
 	{
 		$array = array();
 
-		$this->asOneDimension($separator, $this->data, $array);
+		$this->toFlatten($separator, $this->data, $array);
 
 		return $array;
 	}
@@ -551,7 +572,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  void
 	 */
-	protected function asOneDimension($separator = '.', $data = null, &$array = array(), $prefix = '')
+	protected function toFlatten($separator = '.', $data = null, &$array = array(), $prefix = '')
 	{
 		$data = (array) $data;
 
@@ -561,7 +582,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 
 			if (is_object($v) || is_array($v))
 			{
-				$this->asOneDimension($separator, $v, $array, $key);
+				$this->toFlatten($separator, $v, $array, $key);
 			}
 			else
 			{
