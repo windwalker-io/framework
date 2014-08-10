@@ -465,7 +465,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	protected function getFormatClass($format)
 	{
 		// Return a namespace in a given format
-		$class = __NAMESPACE__ . '\\Format\\' . ucfirst($format) . 'Format';
+		$class = __NAMESPACE__ . '\\Format\\' . ucfirst(strtolower($format)) . 'Format';
 
 		if (!class_exists($class))
 		{
