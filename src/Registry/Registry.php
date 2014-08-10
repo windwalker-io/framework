@@ -70,7 +70,14 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 */
 	public function __toString()
 	{
-		return $this->toString();
+		try
+		{
+			return $this->toString();
+		}
+		catch (\Exception $e)
+		{
+			return (string) $e;
+		}
 	}
 
 	/**
