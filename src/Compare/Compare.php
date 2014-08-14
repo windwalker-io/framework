@@ -61,30 +61,33 @@ class Compare
 	/**
 	 * Convert to string.
 	 *
+	 * @param string $quote1 Quote compare1.
+	 * @param string $quote2 Quote compare2.
+	 *
 	 * @return  string
 	 */
-	public function toString()
+	public function toString($quote1 = null, $quote2 = null)
 	{
 		if (is_callable($this->handler))
 		{
-			return call_user_func_array($this->handler, array($this->compare1, $this->compare2, $this->operator));
+			return call_user_func_array($this->handler, array($this->compare1, $this->compare2, $this->operator, $quote1, $quote2));
 		}
 
-		$return = '';
+		$return = array();
 
 		if ($this->compare1)
 		{
-			$return .= $this->compare1 . ' ';
+			$return[] = $quote1 ? $this->quote($this->compare1, $quote1) : $this->compare1;
 		}
 
-		$return .= $this->operator;
+		$return[] = $this->operator;
 
 		if ($this->compare2)
 		{
-			$return .= ' ' . $this->compare2;
+			$return[] = $quote2 ? $this->quote($this->compare2, $quote2) : $this->compare2;
 		}
 
-		return $return;
+		return implode(' ', $return);
 	}
 
 	/**
@@ -100,8 +103,7 @@ class Compare
 		}
 		catch (\Exception $e)
 		{
-			echo '<pre>' . $e . '</pre>';
-			exit;
+			return '<pre>' . $e . '</pre>';
 		}
 	}
 
@@ -154,11 +156,11 @@ class Compare
 	}
 
 	/**
-	 * Flip compares.
+	 * Swap compares.
 	 *
 	 * @return  Compare  Return self to support chaining.
 	 */
-	public function flipCompare()
+	public function swap()
 	{
 		$compare1 = $this->compare1;
 
@@ -172,15 +174,13 @@ class Compare
 	/**
 	 * Do compare.
 	 *
+	 * @param bool $strict Use strict compare.
+	 *
 	 * @return  boolean  The result of compare.
 	 */
-	public function compare()
+	public function compare($strict = false)
 	{
-		$result = false;
-
-		eval('$result = $this->compare1 ' . $this->operator . ' $this->compare2');
-
-		return $result;
+		return CompareHelper::compare($this->compare1, $this->operator, $this->compare2, $strict);
 	}
 
 	/**
@@ -191,6 +191,20 @@ class Compare
 	public function getOperator()
 	{
 		return $this->operator;
+	}
+
+	/**
+	 * Method to set property operator
+	 *
+	 * @param   string $operator
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setOperator($operator)
+	{
+		$this->operator = $operator;
+
+		return $this;
 	}
 
 	/**

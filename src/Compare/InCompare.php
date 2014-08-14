@@ -32,44 +32,69 @@ class InCompare extends Compare
 	/**
 	 * Do compare.
 	 *
+	 * @param bool $strict Use strict compare.
+	 *
 	 * @return  boolean  The result of compare.
 	 */
-	public function compare()
+	public function compare($strict = false)
 	{
-		$compare2 = is_string($this->compare2) ? explode($this->separator, $this->compare2) : (array) $this->compare2;
+		$compare2 = $this->compare2;
 
-		$compare2 = array_map('trim', $compare2);
+		if (is_string($this->compare2))
+		{
+			$compare2 = explode($this->separator, $this->compare2);
 
-		return in_array($this->compare1, $compare2);
+			$compare2 = array_map('trim', $compare2);
+		}
+
+		return CompareHelper::compare($this->compare1, $this->operator, $compare2, $strict);
 	}
 
 	/**
-	 * toString
+	 * Convert to string.
+	 *
+	 * @param string $quote1 Quote compare1.
+	 * @param string $quote2 Quote compare2.
 	 *
 	 * @return  string
 	 */
-	public function toString()
+	public function toString($quote1 = null, $quote2 = null)
 	{
 		if (is_callable($this->handler))
 		{
-			return call_user_func_array($this->handler, array($this->compare1, $this->compare2, $this->operator));
+			return call_user_func_array($this->handler, array($this->compare1, $this->compare2, $this->operator, $quote1, $quote2));
 		}
 
-		$return = '';
+		$return = array();
 
 		if ($this->compare1)
 		{
-			$return .= $this->compare1 . ' ';
+			$return[] = $quote1 ? $this->quote($this->compare1, $quote1) : $this->compare1;
 		}
 
-		$return .= $this->operator;
+		$return[] = $this->operator;
 
 		if ($this->compare2)
 		{
-			$return .= ' (' . implode(',', $this->compare2) . ')';
+			$compare2 = $this->compare2;
+
+			if (is_string($compare2))
+			{
+				$compare2 = explode($this->separator, $this->compare2);
+			}
+
+			$compare2 = array_map(
+				function ($value) use ($quote2)
+				{
+					return $this->quote($value, $quote2);
+				},
+				$compare2
+			);
+
+			$return[] = '(' . implode($this->separator, $compare2) . ')';
 		}
 
-		return $return;
+		return implode(' ', $return);
 	}
 
 	/**
