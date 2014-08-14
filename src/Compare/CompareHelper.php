@@ -99,7 +99,7 @@ class CompareHelper
 	 */
 	protected static function toArray($array)
 	{
-		if ($array instanceof \Iterator)
+		if ($array instanceof \Traversable)
 		{
 			$array = iterator_to_array($array);
 		}
