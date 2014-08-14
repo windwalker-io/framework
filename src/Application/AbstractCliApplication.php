@@ -66,7 +66,6 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *
 	 * @return  AbstractCliApplication  Instance of $this to allow chaining.
 	 *
-	 * @codeCoverageIgnore
 	 * @since   {DEPLOY_VERSION}
 	 */
 	public function out($text = '', $nl = true)
@@ -81,7 +80,6 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *
 	 * @return  string  The input string from standard input.
 	 *
-	 * @codeCoverageIgnore
 	 * @since   {DEPLOY_VERSION}
 	 */
 	public function in()
