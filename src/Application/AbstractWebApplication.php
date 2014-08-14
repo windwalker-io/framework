@@ -8,13 +8,13 @@
 
 namespace Windwalker\Application;
 
-use Windwalker\Application\Response\ResponseInterface;
-use Windwalker\Application\Web\EnvironmentInterface;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
-use Windwalker\Application\Response\Response;
+use Windwalker\Application\Web\Response;
 use Windwalker\Application\Web\WebEnvironment;
+use Windwalker\Application\Web\ResponseInterface;
+use Windwalker\Application\Web\EnvironmentInterface;
 use Windwalker\Registry\Registry;
 
 /**
@@ -308,12 +308,13 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// Get the host and path from the URI.
 		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
 		$path = rtrim($uri->toString(array('path')), '/\\');
+		$script = trim($_SERVER['SCRIPT_NAME'], '/');
 
 		// Check if the path includes "index.php".
-		if (strpos($path, 'index.php') !== false)
+		if (strpos($path, $script) === 0)
 		{
 			// Remove the index.php portion of the path.
-			$path = substr_replace($path, '', strpos($path, 'index.php'), 9);
+			$path = substr_replace($path, '', strpos($path, $script), strlen($script));
 			$path = rtrim($path, '/\\');
 		}
 
@@ -323,7 +324,16 @@ abstract class AbstractWebApplication extends AbstractApplication
 		$this->set('uri.base.path', $path . '/');
 
 		// Set the extended (non-base) part of the request URI as the route.
-		$this->set('uri.route', substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full'))));
+		$route = substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full')));
+
+		$file = array_pop(explode('/', $script));
+
+		if (substr($route, 0, strlen($file)) == $file)
+		{
+			$route = trim(substr($route, strlen($file)), '/');
+		}
+
+		$this->set('uri.route', $route);
 
 		// Get an explicitly set media URI is present.
 		$mediaURI = trim($this->get('media_uri'));
@@ -350,6 +360,30 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$this->set('uri.media.full', $this->get('uri.base.full') . 'media/');
 			$this->set('uri.media.path', $this->get('uri.base.path') . 'media/');
 		}
+	}
+
+	/**
+	 * Method to get property Environment
+	 *
+	 * @return  \Windwalker\Application\Web\WebEnvironment
+	 */
+	public function getEnvironment()
+	{
+		return $this->environment;
+	}
+
+	/**
+	 * Method to set property environment
+	 *
+	 * @param   \Windwalker\Application\Web\WebEnvironment $environment
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setEnvironment($environment)
+	{
+		$this->environment = $environment;
+
+		return $this;
 	}
 }
 

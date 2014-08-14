@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Application\Response;
+namespace Windwalker\Application\Web;
 
 /**
  * Class Response
@@ -41,14 +41,14 @@ class Response implements ResponseInterface
 	 *
 	 * @var string
 	 */
-	protected $mimeType = 'utf-8';
+	protected $mimeType = 'text/html';
 
 	/**
 	 * Property charSet.
 	 *
 	 * @var string
 	 */
-	protected $charSet = 'text/html';
+	protected $charSet = 'utf-8';
 
 	/**
 	 * The body modified date for response headers.
