@@ -217,6 +217,11 @@ class Compare
 	 */
 	public function quote($string, $quote = "''")
 	{
+		if (!$quote && $quote != '0')
+		{
+			return $string;
+		}
+
 		if (empty($quote[1]))
 		{
 			$quote[1] = $quote[0];
