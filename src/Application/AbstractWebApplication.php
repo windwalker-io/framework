@@ -326,7 +326,9 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// Set the extended (non-base) part of the request URI as the route.
 		$route = substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full')));
 
-		$file = array_pop(explode('/', $script));
+		// Only variables should be passed by reference so we use two lines.
+		$file = explode('/', $script);
+		$file = array_pop($file);
 
 		if (substr($route, 0, strlen($file)) == $file)
 		{

@@ -95,7 +95,9 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->setResponse(new MockResponse);
 
+		ob_start();
 		$this->instance->execute();
+		ob_end_clean();
 
 		$this->assertEquals('Hello World', $this->instance->getBody());
 
