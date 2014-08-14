@@ -17,6 +17,8 @@ use Psr\Log\LoggerAwareInterface;
  *
  * @see    http://www.php.net/manual/en/book.pcntl.php
  * @see    http://php.net/manual/en/features.commandline.php
+ *
+ * @note   This is a class forked from Joomla Framework: https://github.com/joomla-framework/application/blob/master/src/AbstractDaemonApplication.php
  * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractDaemonApplication extends AbstractCliApplication implements LoggerAwareInterface

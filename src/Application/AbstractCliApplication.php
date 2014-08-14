@@ -29,11 +29,11 @@ abstract class AbstractCliApplication extends AbstractApplication
 	/**
 	 * Class constructor.
 	 *
-	 * @param   IOInterface $io     An optional argument to provide dependency injection for the application's
-	 *                              IO object.
-	 * @param   Registry   $config  An optional argument to provide dependency injection for the application's
-	 *                              config object.  If the argument is a Registry object that object will become
-	 *                              the application's config object, otherwise a default config object is created.
+	 * @param   IOInterface $io      An optional argument to provide dependency injection for the application's
+	 *                               IO object.
+	 * @param   Registry    $config  An optional argument to provide dependency injection for the application's
+	 *                               config object.  If the argument is a Registry object that object will become
+	 *                               the application's config object, otherwise a default config object is created.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
