@@ -8,11 +8,15 @@
 
 namespace Windwalker\Event;
 
-
 use Windwalker\Event\Event\Event;
 use Windwalker\Event\Event\EventInterface;
-use Windwalker\Event\Listener\ListenersPriorityQueue;
+use Windwalker\Event\Listener\ListenersQueue;
 
+/**
+ * The Dispatcher class.
+ *
+ * @since  {DEPLOY_VERSION}
+ */
 class Dispatcher
 {
 	/**
@@ -38,7 +42,7 @@ class Dispatcher
 	 * An array of ListenersPriorityQueue indexed
 	 * by the event names.
 	 *
-	 * @var    ListenersPriorityQueue[]
+	 * @var    ListenersQueue[]
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
@@ -57,23 +61,6 @@ class Dispatcher
 	public function setEvent(EventInterface $event)
 	{
 		$this->events[$event->getName()] = $event;
-
-		return $this;
-	}
-
-	/**
-	 * Sets a regular expression to filter the class methods when adding a listener.
-	 *
-	 * @param   string  $regex  A regular expression (for example '^on' will only register methods starting with "on").
-	 *
-	 * @return  Dispatcher  This method is chainable.
-	 *
-	 * @since       {DEPLOY_VERSION}
-	 * @deprecated  Incorporate a method in your listener object such as `getEvents` to feed into the `setListener` method.
-	 */
-	public function setListenerFilter($regex)
-	{
-		$this->listenerFilter = $regex;
 
 		return $this;
 	}
@@ -233,14 +220,14 @@ class Dispatcher
 
 			if (is_string($events))
 			{
-				$events = array($events => ListenersPriorityQueue::NORMAL);
+				$events = array($events => ListenersQueue::NORMAL);
 			}
 
 			foreach ($events as $name => $priority)
 			{
 				if (!isset($this->listeners[$name]))
 				{
-					$this->listeners[$name] = new ListenersPriorityQueue;
+					$this->listeners[$name] = new ListenersQueue;
 				}
 
 				$this->listeners[$name]->add($listener, $priority);
@@ -262,10 +249,10 @@ class Dispatcher
 			// Retain this inner code after removal of the outer `if`.
 			if (!isset($this->listeners[$event]))
 			{
-				$this->listeners[$event] = new ListenersPriorityQueue;
+				$this->listeners[$event] = new ListenersQueue;
 			}
 
-			$priority = isset($events[$event]) ? $events[$event] : ListenersPriorityQueue::NORMAL;
+			$priority = isset($events[$event]) ? $events[$event] : ListenersQueue::NORMAL;
 
 			$this->listeners[$event]->add($listener, $priority);
 		}

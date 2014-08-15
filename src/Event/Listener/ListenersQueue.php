@@ -13,7 +13,7 @@ namespace Windwalker\Event\Listener;
  *
  * @since {DEPLOY_VERSION}
  */
-class ListenersPriorityQueue implements \IteratorAggregate, \Countable
+class ListenersQueue implements \IteratorAggregate, \Countable
 {
 	const MIN = -3;
 	const LOW = -2;
