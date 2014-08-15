@@ -9,7 +9,7 @@
 namespace Windwalker\DI;
 
 /**
- * Class ContainerAwareTrait
+ * Container Aware Trait
  *
  * @since {DEPLOY_VERSION}
  */
