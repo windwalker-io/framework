@@ -91,11 +91,13 @@ abstract class String
 	/**
 	 * isZero
 	 *
+	 * @param string $string
+	 *
 	 * @return  boolean
 	 */
-	public static function isZero()
+	public static function isZero($string)
 	{
-
+		return $string === '0' || $string === 0;
 	}
 
 	/**
@@ -108,6 +110,11 @@ abstract class String
 	 */
 	public static function quote($string, $quote = "''")
 	{
+		if (!strlen($quote))
+		{
+			return $string;
+		}
+
 		if (empty($quote[1]))
 		{
 			$quote[1] = $quote[0];
@@ -873,14 +880,16 @@ abstract class String
 	{
 		if (is_string($source))
 		{
+			$function = function_exists('mb_iconv') ? 'mb_iconv' : 'iconv';
+
 			switch (ICONV_IMPL)
 			{
 				case 'glibc':
-					return @iconv($from_encoding, $to_encoding . '//TRANSLIT,IGNORE', $source);
+					return @$function($from_encoding, $to_encoding . '//TRANSLIT,IGNORE', $source);
 
 				case 'libiconv':
 				default:
-					return iconv($from_encoding, $to_encoding . '//IGNORE//TRANSLIT', $source);
+					return $function($from_encoding, $to_encoding . '//IGNORE//TRANSLIT', $source);
 			}
 		}
 
