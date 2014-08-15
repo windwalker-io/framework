@@ -82,6 +82,7 @@ class GenTest extends AbstractCliApplication
 		);
 
 		$command = 'php ' . WINDWALKER_ROOT . '/' . $command;
+		$command = str_replace('\\', '\\\\', $command);
 
 		\Windwalker\Filesystem\Folder::create(dirname($testFile));
 

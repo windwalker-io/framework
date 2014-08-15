@@ -11,7 +11,9 @@ namespace Windwalker\DI;
 use Windwalker\DI\Exception\DependencyResolutionException;
 
 /**
- * Class Container
+ * The DI Container.
+ *
+ * @note This class is based on Joomla Container.
  *
  * @since {DEPLOY_VERSION}
  */
@@ -26,18 +28,10 @@ class Container
 	protected $aliases = array();
 
 	/**
-	 * Holds the shared instances.
-	 *
-	 * @var    array  $instances
-	 * @since  {DEPLOY_VERSION}
-	 */
-	protected $instances = array();
-
-	/**
 	 * Holds the keys, their callbacks, and whether or not
 	 * the item is meant to be a shared resource.
 	 *
-	 * @var    array  $dataStore
+	 * @var    DataStore[]
 	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $dataStore = array();
@@ -99,7 +93,7 @@ class Container
 	}
 
 	/**
-	 * Build an object of class $key;
+	 * Create an object of class $key;
 	 *
 	 * @param   string   $key     The class name to build.
 	 * @param   boolean  $shared  True to create a shared resource.
@@ -109,7 +103,7 @@ class Container
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function buildObject($key, $shared = false)
+	public function createObject($key, $shared = false)
 	{
 		try
 		{
@@ -125,7 +119,8 @@ class Container
 		// If there are no parameters, just return a new object.
 		if (is_null($constructor))
 		{
-			$callback = function () use ($key) {
+			$callback = function () use ($key)
+			{
 				return new $key;
 			};
 		}
@@ -144,7 +139,7 @@ class Container
 	}
 
 	/**
-	 * Convenience method for building a shared object.
+	 * Convenience method for creating a shared object.
 	 *
 	 * @param   string  $key  The class name to build.
 	 *
@@ -152,9 +147,9 @@ class Container
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function buildSharedObject($key)
+	public function createSharedObject($key)
 	{
-		return $this->buildObject($key, true);
+		return $this->createObject($key, true);
 	}
 
 	/**
@@ -185,19 +180,19 @@ class Container
 	 */
 	public function extend($key, \Closure $callable)
 	{
-		$raw = $this->getRaw($key);
+		$store = $this->getRaw($key);
 
-		if (is_null($raw))
+		if (is_null($store))
 		{
 			throw new \InvalidArgumentException(sprintf('The requested key %s does not exist to extend.', $key));
 		}
 
-		$closure = function ($c) use($callable, $raw)
+		$closure = function ($container) use($callable, $store)
 		{
-			return $callable($raw['callback']($c), $c);
+			return $callable($store->get($container), $container);
 		};
 
-		$this->set($key, $closure, $raw['shared']);
+		$this->set($key, $closure, $store->isShared());
 
 		return $this;
 	}
@@ -233,12 +228,13 @@ class Container
 				}
 				else
 				{
-					$depObject = $this->buildObject($dependencyClassName);
+					$depObject = $this->createObject($dependencyClassName);
 				}
 
 				if ($depObject instanceof $dependencyClassName)
 				{
 					$methodArgs[] = $depObject;
+
 					continue;
 				}
 			}
@@ -247,6 +243,7 @@ class Container
 			if ($param->isOptional())
 			{
 				$methodArgs[] = $param->getDefaultValue();
+
 				continue;
 			}
 
@@ -273,24 +270,12 @@ class Container
 	 */
 	public function set($key, $value, $shared = false, $protected = false)
 	{
-		if (isset($this->dataStore[$key]) && $this->dataStore[$key]['protected'] === true)
+		if (isset($this->dataStore[$key]) && $this->dataStore[$key]->isProtected())
 		{
 			throw new \OutOfBoundsException(sprintf('Key %s is protected and can\'t be overwritten.', $key));
 		}
 
-		// If the provided $value is not a closure, make it one now for easy resolution.
-		if (!is_callable($value))
-		{
-			$value = function () use ($value) {
-				return $value;
-			};
-		}
-
-		$this->dataStore[$key] = array(
-			'callback' => $value,
-			'shared' => $shared,
-			'protected' => $protected
-		);
+		$this->dataStore[$key] = new DataStore($value, $shared, $protected);
 
 		return $this;
 	}
@@ -340,24 +325,14 @@ class Container
 	 */
 	public function get($key, $forceNew = false)
 	{
-		$raw = $this->getRaw($key);
+		$store = $this->getRaw($key);
 
-		if (is_null($raw))
+		if (is_null($store))
 		{
 			throw new \InvalidArgumentException(sprintf('Key %s has not been registered with the container.', $key));
 		}
 
-		if ($raw['shared'])
-		{
-			if (!isset($this->instances[$key]) || $forceNew)
-			{
-				$this->instances[$key] = $raw['callback']($this);
-			}
-
-			return $this->instances[$key];
-		}
-
-		return call_user_func($raw['callback'], $this);
+		return $store->get($this, $forceNew);
 	}
 
 	/**
@@ -379,7 +354,7 @@ class Container
 	 *
 	 * @param   string  $key  The key for which to get the stored item.
 	 *
-	 * @return  mixed
+	 * @return  DataStore
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */

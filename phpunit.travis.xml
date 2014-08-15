@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php" colors="false">
+<phpunit bootstrap="vendor/autoload.php" colors="false"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	strict="true"
+	verbose="true"
+	>
+	<php>
+		<ini name="error_reporting" value="32767" />
+	</php>
 	<testsuites>
 		<testsuite name="Unit">
 			<directory>src/*/Test</directory>
