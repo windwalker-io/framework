@@ -44,7 +44,7 @@ class Query implements QueryInterface
 	 * @var    string
 	 * @since  {DEPLOY_VERSION}
 	 */
-	protected $type = '';
+	protected $type = null;
 
 	/**
 	 * The query element for a generic query (type = null).
@@ -1382,13 +1382,13 @@ class Query implements QueryInterface
 		{
 			if (is_array($value) || is_object($value))
 			{
-				$value = implode(', ', $value);
+				$value = implode(',', $value);
 			}
 		}
 
 		if (is_null($this->values))
 		{
-			$this->values = new QueryElement('()', $values, '),(');
+			$this->values = new QueryElement('()', $values, '),' . PHP_EOL . '(');
 		}
 		else
 		{
@@ -1737,6 +1737,11 @@ class Query implements QueryInterface
 		}
 
 		$class = __NAMESPACE__ . '\\' . ucfirst($this->getName()) . '\\' . ucfirst($this->getName()) . 'Expression';
+
+		if (!class_exists($class))
+		{
+			$class = __NAMESPACE__ . '\\' . 'QueryExpression';
+		}
 
 		return $this->expression = new $class($this);
 	}
