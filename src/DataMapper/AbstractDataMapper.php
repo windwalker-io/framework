@@ -204,17 +204,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function create($dataset)
 	{
-		if (!($dataset instanceof $this->datasetClass))
+		if (!($dataset instanceof \Traversable) && !is_array($dataset))
 		{
-			throw new \InvalidArgumentException('DataSet object should be: ' . $this->datasetClass);
+			throw new \InvalidArgumentException('DataSet object should be instance of a Traversable');
 		}
 
 		$dataset = $this->doCreate($dataset);
-
-		if (!($dataset instanceof $this->datasetClass))
-		{
-			throw new \UnexpectedValueException('Return value should be: ' . $this->datasetClass);
-		}
 
 		return $dataset;
 	}
@@ -229,11 +224,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function createOne($data)
 	{
-		if (!($data instanceof $this->dataClass))
-		{
-			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
-		}
-
 		$dataset = $this->create($this->bindDataset(array($data)));
 
 		return $dataset[0];

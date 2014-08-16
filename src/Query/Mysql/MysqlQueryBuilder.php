@@ -500,5 +500,22 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 
 		return 'REPLACE' . $query;
 	}
+
+	/**
+	 * getQuery
+	 *
+	 * @param bool $new
+	 *
+	 * @return  Query
+	 */
+	public static function getQuery($new = false)
+	{
+		if (!static::$query || $new)
+		{
+			static::$query = new MysqlQuery;
+		}
+
+		return static::$query;
+	}
 }
 

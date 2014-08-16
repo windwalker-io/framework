@@ -103,11 +103,12 @@ interface QueryBuilderInterface
 	/**
 	 * dropColumn
 	 *
+	 * @param string $table
 	 * @param string $column
 	 *
 	 * @return  string
 	 */
-	public static function dropColumn($column);
+	public static function dropColumn($table, $column);
 
 	/**
 	 * addIndex

@@ -67,7 +67,7 @@ abstract class DatabaseWriter
 		// Create the base insert statement.
 		$query->insert($query->quoteName($table))
 			->columns($fields)
-			->values($values);
+			->values(array($values));
 
 		// Set the query and execute the insert.
 		if (!$this->db->setQuery($query)->execute())

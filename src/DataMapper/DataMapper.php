@@ -71,6 +71,11 @@ class DataMapper extends AbstractDataMapper
 		{
 			foreach ($dataset as &$data)
 			{
+				if (!($data instanceof $this->dataClass))
+				{
+					$data = $this->bindData($data);
+				}
+
 				$entity = new Entity($this->getFields($this->table), $data);
 
 				$pk = $this->getPrimaryKey();
