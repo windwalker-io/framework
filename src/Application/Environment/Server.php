@@ -23,6 +23,13 @@ class Server implements ServerInterface
 	protected $os;
 
 	/**
+	 * Property uname.
+	 *
+	 * @var  string
+	 */
+	protected $uname = PHP_OS;
+
+	/**
 	 * getOS
 	 *
 	 * @see  https://gist.github.com/asika32764/90e49a82c124858c9e1a
@@ -34,7 +41,7 @@ class Server implements ServerInterface
 		if (!$this->os)
 		{
 			// Detect the native operating system type.
-			$this->os = strtoupper(substr(PHP_OS, 0, 3));
+			$this->os = strtoupper(substr($this->uname, 0, 3));
 		}
 
 		return $this->os;
@@ -51,16 +58,6 @@ class Server implements ServerInterface
 	}
 
 	/**
-	 * isMac
-	 *
-	 * @return  bool
-	 */
-	public function isMac()
-	{
-		return $this->getOS() == 'MAC';
-	}
-
-	/**
 	 * isUnix
 	 *
 	 * @see  https://gist.github.com/asika32764/90e49a82c124858c9e1a
@@ -73,10 +70,13 @@ class Server implements ServerInterface
 			'CYG',
 			'DAR',
 			'FRE',
+			'HP-',
+			'IRI',
 			'LIN',
 			'NET',
 			'OPE',
-			'MAC'
+			'SUN',
+			'UNI'
 		);
 
 		return in_array($this->getOS(), $unames);
@@ -90,5 +90,43 @@ class Server implements ServerInterface
 	public function isLinux()
 	{
 		return $this->getOS() == 'LIN';
+	}
+
+	/**
+	 * Method to set property os
+	 *
+	 * @param   string $os
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setOS($os)
+	{
+		$this->os = $os;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Uname
+	 *
+	 * @return  string
+	 */
+	public function getUname()
+	{
+		return $this->uname;
+	}
+
+	/**
+	 * Method to set property uname
+	 *
+	 * @param   string $uname
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setUname($uname)
+	{
+		$this->uname = $uname;
+
+		return $this;
 	}
 }

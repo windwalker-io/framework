@@ -23,13 +23,6 @@ interface ServerInterface
 	public function isWin();
 
 	/**
-	 * isMac
-	 *
-	 * @return  bool
-	 */
-	public function isMac();
-
-	/**
 	 * isUnix
 	 *
 	 * @see  https://gist.github.com/asika32764/90e49a82c124858c9e1a
