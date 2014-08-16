@@ -14,7 +14,7 @@
 		<const name="DB_HOST" value="localhost" />
 		<const name="DB_USER" value="user" />
 		<const name="DB_PASSWD" value="ut1234" />
-		<const name="DB_DBNAME" value="windwalker_datamapper" />
+		<const name="DB_DBNAME" value="windwalker_dbtest" />
 		-->
 	</php>
 	<testsuites>
