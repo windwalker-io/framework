@@ -787,7 +787,7 @@ class Query implements QueryInterface
 				throw new \InvalidArgumentException('Invalid subquery.');
 			}
 
-			$tables = '( ' . (string) $tables . ' ) AS ' . $this->quoteName($subQueryAlias);
+			$tables = PHP_EOL . '(' . trim((string) $tables) . ') AS ' . $subQueryAlias;
 		}
 
 		if (is_null($this->from))

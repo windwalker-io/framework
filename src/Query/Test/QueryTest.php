@@ -57,38 +57,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Method to test __toString().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Query\Query::__toString
-	 * @TODO   Implement test__toString().
-	 */
-	public function test__toString()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * Method to test toString().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Query\Query::toString
-	 * @TODO   Implement testToString().
-	 */
-	public function testToString()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
 	 * Method to test __get().
 	 *
 	 * @return void
@@ -366,6 +334,21 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->from('foo');
 
 		$this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo', trim((string) $query));
+
+		// Subquery
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo AS a')
+			->from($query, 'b');
+
+		$this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo AS a,' . PHP_EOL . '(SELECT *' . PHP_EOL . 'FROM foo) AS b', trim((string) $query));
+
+		// Array
+		$query = $this->getQuery()
+			->select('*')
+			->from(array('foo', 'bar'));
+
+		$this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo,bar', trim((string) $query));
 	}
 
 	/**
