@@ -5,9 +5,15 @@
 	convertWarningsToExceptions="true"
 	strict="true"
 	verbose="true"
+	syntaxCheck="true"
 	>
 	<php>
 		<ini name="error_reporting" value="32767" />
+
+		<const name="DB_HOST" value="localhost" />
+		<const name="DB_USER" value="root" />
+		<const name="DB_PASSWD" value="" />
+		<const name="DB_DBNAME" value="windwalker_datamapper" />
 	</php>
 	<testsuites>
 		<testsuite name="Unit">

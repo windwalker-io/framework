@@ -5,6 +5,7 @@
 	convertWarningsToExceptions="true"
 	strict="true"
 	verbose="true"
+	syntaxCheck="true"
 	>
 	<php>
 		<ini name="error_reporting" value="32767" />
