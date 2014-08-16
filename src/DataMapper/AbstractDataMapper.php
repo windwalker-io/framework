@@ -242,20 +242,15 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function update($dataset, $condFields = null)
 	{
-		if (!($dataset instanceof $this->datasetClass))
+		if (!($dataset instanceof \Traversable) && !is_array($dataset))
 		{
-			throw new \InvalidArgumentException('DataSet object should be: ' . $this->datasetClass);
+			throw new \InvalidArgumentException('DataSet object should be instance of a Traversable');
 		}
 
 		// Handling conditions
 		$condFields = $condFields ? : $this->getPrimaryKey();
 
 		$dataset = $this->doUpdate($dataset, (array) $condFields);
-
-		if (!($dataset instanceof $this->datasetClass))
-		{
-			throw new \UnexpectedValueException('Return value should be: ' . $this->datasetClass);
-		}
 
 		return $dataset;
 	}
@@ -272,11 +267,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function updateOne($data, $condFields = null)
 	{
-		if (!($data instanceof $this->dataClass))
-		{
-			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
-		}
-
 		$dataset = $this->update($this->bindDataset(array($data)), $condFields);
 
 		return $dataset[0];

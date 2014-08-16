@@ -112,6 +112,7 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testCreate()
 	{
+		// Create from array
 		$dataset = array(
 			array('title' => 'Sakura'),
 			array('title' => 'Peony'),
@@ -125,6 +126,27 @@ class DataMapperTest extends DatabaseTest
 		$this->assertEquals(array('Sunflower', 'Peony', 'Sakura'), $newDataset->title);
 
 		$this->assertEquals(86, $returns[0]->id, 'Inserted id not matched.');
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $returns[0], 'Return not Data object.');
+
+		// Create from DataSet
+		$dataset = new DataSet(
+			array(
+				new Data(array('title' => 'Sakura2')),
+				new Data(array('title' => 'Peony2')),
+				new Data(array('title' => 'Sunflower2'))
+			)
+		);
+
+		$returns = $this->instance->create($dataset);
+
+		$newDataset = $this->loadToDataset('SELECT * FROM ww_flower ORDER BY id DESC LIMIT 3');
+
+		$this->assertEquals(array('Sunflower2', 'Peony2', 'Sakura2'), $newDataset->title);
+
+		$this->assertEquals(89, $returns[0]->id, 'Inserted id not matched.');
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $returns[0], 'Return not Data object.');
 	}
 
 	/**
@@ -136,6 +158,7 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testCreateOne()
 	{
+		// Create from array
 		$data = array(
 			'title' => 'Foo flower',
 			'state' => 1
@@ -143,8 +166,25 @@ class DataMapperTest extends DatabaseTest
 
 		$newData = $this->instance->createOne($data);
 
-		$this->assertEquals(89, $newData->id);
-		$this->assertEquals(89, $this->loadToData('SELECT * FROM ww_flower ORDER BY id DESC LIMIT 1')->id);
+		$this->assertEquals(92, $newData->id);
+		$this->assertEquals(92, $this->loadToData('SELECT * FROM ww_flower ORDER BY id DESC LIMIT 1')->id);
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $newData, 'Return not Data object.');
+
+		// Create from Data
+		$data = new Data(
+			array(
+				'title' => 'Foo flower',
+				'state' => 1
+			)
+		);
+
+		$newData = $this->instance->createOne($data);
+
+		$this->assertEquals(93, $newData->id);
+		$this->assertEquals(93, $this->loadToData('SELECT * FROM ww_flower ORDER BY id DESC LIMIT 1')->id);
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $newData, 'Return not Data object.');
 	}
 
 	/**
@@ -156,10 +196,37 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testUpdate()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		// Update from array
+		$dataset = array(
+			array('id' => 1, 'state' => 1),
+			array('id' => 2, 'state' => 1),
+			array('id' => 3, 'state' => 1)
 		);
+
+		$returns = $this->instance->update($dataset, 'id');
+
+		$updateDataset = $this->loadToDataset('SELECT * FROM ww_flower LIMIT 3');
+
+		$this->assertEquals(array(1, 1, 1), $updateDataset->state);
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $returns[0], 'Return not Data object.');
+
+		// Use from DataSet
+		$dataset = new DataSet(
+			array(
+				new Data(array('id' => 1, 'state' => 0)),
+				new Data(array('id' => 2, 'state' => 0)),
+				new Data(array('id' => 3, 'state' => 0))
+			)
+		);
+
+		$returns = $this->instance->update($dataset, 'id');
+
+		$updateDataset = $this->loadToDataset('SELECT * FROM ww_flower LIMIT 3');
+
+		$this->assertEquals(array(0, 0, 0), $updateDataset->state);
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $returns[0], 'Return not Data object.');
 	}
 
 	/**
@@ -168,14 +235,26 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::updateOne
-	 * @TODO   Implement testUpdateOne().
 	 */
 	public function testUpdateOne()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		// Update from array
+		$data = array('id' => 10, 'params' => '{}');
+
+		$updateData = $this->instance->updateOne($data);
+
+		$this->assertEquals('{}', $this->loadToData('SELECT * FROM ww_flower WHERE id = 10 LIMIT 1')->params);
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $updateData, 'Return not Data object.');
+
+		// Update from Data
+		$data = new Data(array('id' => 11, 'params' => '{}'));
+
+		$updateData = $this->instance->updateOne($data);
+
+		$this->assertEquals('{}', $this->loadToData('SELECT * FROM ww_flower WHERE id = 11 LIMIT 1')->params);
+
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $updateData, 'Return not Data object.');
 	}
 
 	/**
@@ -184,7 +263,6 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::updateAll
-	 * @TODO   Implement testUpdateAll().
 	 */
 	public function testUpdateAll()
 	{
