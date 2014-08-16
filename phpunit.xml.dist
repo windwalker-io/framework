@@ -8,6 +8,13 @@
 	>
 	<php>
 		<ini name="error_reporting" value="32767" />
+
+		<!-- These constants help setup environment configurations for running optional tests.
+		<const name="DB_HOST" value="localhost" />
+		<const name="DB_USER" value="user" />
+		<const name="DB_PASSWD" value="ut1234" />
+		<const name="DB_DBNAME" value="windwalker_datamapper" />
+		-->
 	</php>
 	<testsuites>
 		<testsuite name="Unit">

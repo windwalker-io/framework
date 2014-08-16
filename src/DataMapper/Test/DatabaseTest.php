@@ -6,10 +6,12 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\DataMapper\Tests;
+namespace Windwalker\DataMapper\Test;
 
-use Joomla\Database\DatabaseDriver;
 use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 
 /**
  * Class DatabaseTestCase
@@ -49,13 +51,23 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		$db = self::$dbo = DatabaseFactory::getDbo();
+		// Use factory create dbo, only create once and will be singleton.
+		$db = self::$dbo = DatabaseFactory::getDbo(
+				array(
+					'driver'   => 'mysql',
+					'host'     => DB_HOST,
+					'user'     => DB_USER,
+					'password' => DB_PASSWD
+				)
+			);
 
-		$db->setQuery('CREATE DATABASE IF NOT EXISTS ' . DB_DBNAME)->execute();
+		DatabaseAdapter::setInstance(new WindwalkerAdapter($db));
+
+		$db->setQuery('CREATE DATABASE IF NOT EXISTS ' . $db->quoteName(DB_DBNAME))->execute();
 
 		$db->select(DB_DBNAME);
 
-		$queries = file_get_contents(__DIR__ . '/Stubs/data.sql');
+		$queries = file_get_contents(__DIR__ . '/Stub/data.sql');
 
 		$queries = $db->splitSql($queries);
 
@@ -82,7 +94,7 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . DB_DBNAME)->execute();
+		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(DB_DBNAME))->execute();
 
 		self::$dbo = null;
 	}
@@ -97,7 +109,7 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . DB_DBNAME)->execute();
+ 		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(DB_DBNAME))->execute();
 
 		self::$dbo = null;
 	}
@@ -135,12 +147,13 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @param mixed  $query
 	 * @param string $class
+	 * @param string $dataClass
 	 *
 	 * @return  mixed
 	 */
 	protected function loadToDataset($query, $class = 'Windwalker\\Data\\DataSet', $dataClass = 'Windwalker\\Data\\Data')
 	{
-		$dataset = $this->db->setQuery($query)->loadObjectList(null, $dataClass);
+		$dataset = $this->db->setQuery($query)->loadAll(null, $dataClass);
 
 		return new $class($dataset);
 	}
@@ -155,7 +168,7 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function loadToData($query, $dataClass = 'Windwalker\\Data\\Data')
 	{
-		$data = $this->db->setQuery($query)->loadObject($dataClass);
+		$data = $this->db->setQuery($query)->loadOne($dataClass);
 
 		return $data;
 	}
