@@ -61,6 +61,14 @@ class DataMapperTest extends DatabaseTest
 		$this->assertEquals(array(1, 1, 1), $dataset->state);
 		$this->assertEquals(array(82, 79, 77), $dataset->ordering);
 		$this->assertEquals(array('Violet', 'red', 'pink'), $dataset->title);
+
+		$datamapper = new DataMapper('ww_flower');
+
+		$datamapper->setSelectFields(array('id', 'state'));
+
+		$dataset = $datamapper->find(array('state' => 1), 'ordering DESC', 2, 3);
+
+		$this->assertEquals(array(null, null, null), $dataset->catid);
 	}
 
 	/**
@@ -72,7 +80,7 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testFindAll()
 	{
-		$dataset = $this->instance->findAll('catid', 0, 3);
+		$dataset = $this->instance->findAll('catid, ordering', 0, 3);
 
 		$this->assertEquals(array(3, 4, 7), $dataset->id);
 		$this->assertEquals(array('Anemone', 'Apple Blossom', 'Baby\'s Breath'), $dataset->title);
@@ -101,6 +109,18 @@ class DataMapperTest extends DatabaseTest
 		$data = $this->instance->findOne(array('title' => 'Freesia', 'state' => 1));
 
 		$this->assertTrue($data->isNull());
+	}
+
+	/**
+	 * testFindColumn
+	 *
+	 * @return  void
+	 */
+	public function testFindColumn()
+	{
+		$columns = $this->instance->findColumn('id', array(), 'catid, ordering', 0, 3);
+
+		$this->assertEquals(array(3, 4, 7), $columns);
 	}
 
 	/**
@@ -266,10 +286,13 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testUpdateAll()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$data = array('state' => 0);
+
+		$this->instance->updateAll($data, array('id' => array(4, 5, 6)));
+
+		$dataset = $this->loadToDataset('SELECT * FROM ww_flower WHERE id IN(4, 5, 6)');
+
+		$this->assertEquals(array(0, 0, 0), $dataset->state);
 	}
 
 	/**
@@ -278,14 +301,25 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::flush
-	 * @TODO   Implement testFlush().
 	 */
 	public function testFlush()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		// Prepare test data
+		$this->db->setQuery('UPDATE ww_flower SET catid = 3 WHERE id IN (6, 7, 8)')->execute();
+
+		$dataset = array(
+			array('title' => 'Baby\'s Breath2', 'catid' => 3),
+			array('title' => 'Bachelor Button2', 'catid' => 3),
+			array('title' => 'Begonia2', 'catid' => 3),
 		);
+
+		// Delete all catid = 3 and re insert them.
+		$returns = $this->instance->flush($dataset, array('catid' => 3));
+
+		$newDataset = $this->loadToDataset('SELECT * FROM ww_flower WHERE catid = 3');
+
+		$this->assertEquals(array('Baby\'s Breath2', 'Bachelor Button2', 'Begonia2'), $newDataset->title);
+		$this->assertEquals(array(94, 95, 96), $returns->id);
 	}
 
 	/**
@@ -294,14 +328,22 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::save
-	 * @TODO   Implement testSave().
 	 */
 	public function testSave()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$dataset = array(
+			array('title' => 'Sunflower', 'catid' => 5),
+			array('id' => 15, 'title' => 'striped2', 'catid' => 5),
 		);
+
+		$returns = $this->instance->save($dataset, 'id');
+
+		$returns = new DataSet($returns);
+
+		$newDataset = $this->loadToDataset('SELECT * FROM ww_flower WHERE catid = 5');
+
+		$this->assertEquals(array(97, 15), $returns->id, 'Inserted ID not matched');
+		$this->assertEquals(array(5, 5), $newDataset->catid, 'New catid should be 5');
 	}
 
 	/**
@@ -310,14 +352,22 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::saveOne
-	 * @TODO   Implement testSaveOne().
 	 */
 	public function testSaveOne()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$data = array('title' => 'Sakura', 'catid' => 6);
+
+		$return = $this->instance->saveOne($data, 'id');
+
+		$this->assertEquals('Sakura', $this->db->setQuery('SELECT title FROM ww_flower WHERE catid = 6')->loadResult());
+		$this->assertEquals(98, $return->id);
+
+		$data = array('id' => 15, 'title' => 'striped3', 'catid' => 6);
+
+		$return = $this->instance->saveOne($data, 'id');
+
+		$this->assertEquals('striped3', $this->db->setQuery('SELECT title FROM ww_flower WHERE id = 15')->loadResult());
+		$this->assertEquals(15, $return->id);
 	}
 
 	/**
@@ -326,14 +376,12 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::delete
-	 * @TODO   Implement testDelete().
 	 */
 	public function testDelete()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->delete(array('id' => 16));
+
+		$this->assertFalse($this->loadToData('SELECT * FROM ww_flower WHERE id = 16'));
 	}
 
 	/**
@@ -342,14 +390,14 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::getPrimaryKey
-	 * @TODO   Implement testGetPrimaryKey().
 	 */
 	public function testGetPrimaryKey()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('id', $this->instance->getPrimaryKey());
+
+		$mapper = new DataMapper('ww_flower', array('a', 'b'));
+
+		$this->assertEquals(array('a', 'b'), $mapper->getPrimaryKey());
 	}
 
 	/**
@@ -358,14 +406,10 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::getTable
-	 * @TODO   Implement testGetTable().
 	 */
 	public function testGetTable()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('ww_flower', $this->instance->getTable());
 	}
 
 	/**
@@ -374,14 +418,12 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::setTable
-	 * @TODO   Implement testSetTable().
 	 */
 	public function testSetTable()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->setTable('ww_categories');
+
+		$this->assertEquals(array('Foo', 'Bar'), $this->instance->findAll()->title);
 	}
 
 	/**
@@ -390,30 +432,19 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::getDataClass
-	 * @TODO   Implement testGetDataClass().
 	 */
-	public function testGetDataClass()
+	public function testGetAndSetDataClass()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+		$this->instance->setDataClass('stdClass');
 
-	/**
-	 * Method to test setDataClass().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::setDataClass
-	 * @TODO   Implement testSetDataClass().
-	 */
-	public function testSetDataClass()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('stdClass', $this->instance->getDataClass());
+
+		// If we use DataSet, all stdClass will be auto convert to Data
+		$this->assertInstanceOf('Windwalker\\Data\\Data', $this->instance->findOne());
+
+		$this->instance->setDatasetClass('ArrayObject');
+
+		$this->assertInstanceOf('stdClass', $this->instance->findOne());
 	}
 
 	/**
@@ -422,30 +453,14 @@ class DataMapperTest extends DatabaseTest
 	 * @return void
 	 *
 	 * @covers Windwalker\DataMapper\AbstractDataMapper::getDatasetClass
-	 * @TODO   Implement testGetDatasetClass().
 	 */
-	public function testGetDatasetClass()
+	public function testGetAndSetDatasetClass()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+		$this->instance->setDatasetClass('ArrayObject');
 
-	/**
-	 * Method to test setDatasetClass().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::setDatasetClass
-	 * @TODO   Implement testSetDatasetClass().
-	 */
-	public function testSetDatasetClass()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('ArrayObject', $this->instance->getDatasetClass());
+
+		$this->assertInstanceOf('ArrayObject', $this->instance->findAll('id', 0, 2));
 	}
 
 	/**

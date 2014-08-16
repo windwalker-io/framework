@@ -48,14 +48,15 @@ class QueryHelper
 	/**
 	 * addTable
 	 *
-	 * @param string $alias
-	 * @param string $table
-	 * @param mixed  $condition
-	 * @param string $joinType
+	 * @param string  $alias
+	 * @param string  $table
+	 * @param mixed   $condition
+	 * @param string  $joinType
+	 * @param boolean $prefix
 	 *
 	 * @return  QueryHelper
 	 */
-	public function addTable($alias, $table, $condition = null, $joinType = 'LEFT')
+	public function addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
 	{
 		$tableStorage = array();
 
@@ -80,6 +81,7 @@ class QueryHelper
 		$condition = preg_replace('/\s(?=\s)/', '', $condition);
 
 		$tableStorage['condition'] = trim($condition);
+		$tableStorage['prefix'] = $prefix;
 
 		$this->tables[$alias] = $tableStorage;
 
@@ -106,11 +108,9 @@ class QueryHelper
 	/**
 	 * getFilterFields
 	 *
-	 * @param int $prefixFirst
-	 *
 	 * @return  array
 	 */
-	public function getSelectFields($prefixFirst = self::COLS_WITH_FIRST)
+	public function getSelectFields()
 	{
 		$fields = array();
 
@@ -118,25 +118,28 @@ class QueryHelper
 
 		foreach ($this->tables as $alias => $table)
 		{
-			$columns = DatabaseFactory::getCommand()->getColumns($table['name']);
+			$columns = $this->db->getTable($table['name'])->getColumns();
 
-			foreach ($columns as $column => $var)
+			foreach ($columns as $column)
 			{
+				$prefix = $table['prefix'];
+
 				if ($i === 0)
 				{
-					if ($prefixFirst & self::COLS_WITH_FIRST)
-					{
-						$fields[] = $this->db->quoteName("{$alias}.{$column}", $column);
-					}
-
-					if ($prefixFirst & self::COLS_PREFIX_WITH_FIRST)
-					{
-						$fields[] = $this->db->quoteName("{$alias}.{$column}", "{$alias}_{$column}");
-					}
+					$prefix = $prefix === null ? false : true;
 				}
 				else
 				{
-					$fields[] = $this->db->quoteName("{$alias}.{$column}", "{$alias}_{$column}");
+					$prefix = $prefix === null ? true : false;
+				}
+
+				if ($prefix === true)
+				{
+					$fields[] = $this->db->quoteName("{$alias}.{$column} AS {$alias}_{$column}");
+				}
+				else
+				{
+					$fields[] = $this->db->quoteName("{$alias}.{$column}", $column);
 				}
 			}
 

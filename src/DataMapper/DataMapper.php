@@ -8,8 +8,6 @@
 
 namespace Windwalker\DataMapper;
 
-use Windwalker\Database\DatabaseFactory;
-use Windwalker\Database\QueryHelper;
 use Windwalker\DataMapper\Adapter\DatabaseAdapter;
 use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
 use Windwalker\DataMapper\Entity\Entity;
@@ -52,7 +50,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
-		return $this->db->find($this->table, $conditions, $orders, $start, $limit);
+		return $this->db->find($this->table, $this->selectFields, $conditions, $orders, $start, $limit);
 	}
 
 	/**
@@ -65,7 +63,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doCreate($dataset)
 	{
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
@@ -87,12 +85,12 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
 		return $dataset;
 	}
@@ -109,7 +107,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doUpdate($dataset, array $condFields)
 	{
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
@@ -127,12 +125,12 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
 		return $dataset;
 	}
@@ -148,7 +146,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doUpdateAll($data, array $conditions)
 	{
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
@@ -156,12 +154,12 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
 		return $result;
 	}
@@ -177,7 +175,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doFlush($dataset, array $conditions)
 	{
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
@@ -193,14 +191,14 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
-		return true;
+		return $dataset;
 	}
 
 	/**
@@ -213,7 +211,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doDelete(array $conditions)
 	{
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
@@ -221,12 +219,12 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
 		return $result;
 	}

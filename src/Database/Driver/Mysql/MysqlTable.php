@@ -23,7 +23,7 @@ class MysqlTable extends DatabaseTable
 	 *
 	 * @var array
 	 */
-	protected static $columnCache = array();
+	protected $columnCache = array();
 
 	/**
 	 * create
@@ -117,12 +117,12 @@ class MysqlTable extends DatabaseTable
 	 */
 	public function getColumns($refresh = false)
 	{
-		if (empty(static::$columnCache) || $refresh)
+		if (empty($this->columnCache) || $refresh)
 		{
-			static::$columnCache = array_keys($this->getColumnDetails());
+			$this->columnCache = array_keys($this->getColumnDetails());
 		}
 
-		return static::$columnCache;
+		return $this->columnCache;
 	}
 
 	/**

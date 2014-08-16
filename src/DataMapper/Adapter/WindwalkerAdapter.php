@@ -8,6 +8,7 @@
 
 namespace Windwalker\DataMapper\Adapter;
 
+use Windwalker\Data\DataSet;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Query\QueryHelper;
@@ -42,15 +43,16 @@ class WindwalkerAdapter extends DatabaseAdapter
 	/**
 	 * Do find action.
 	 *
-	 * @param string  $table      The table name.
-	 * @param array   $conditions Where conditions, you can use array or Compare object.
-	 * @param array   $orders     Order sort, can ba string, array or object.
-	 * @param integer $start      Limit start number.
-	 * @param integer $limit      Limit rows.
+	 * @param string|DataSet  $table      The table name, if is a DataSet, means it use join tables.
+	 * @param string          $select     The select fields, default is '*'.
+	 * @param array           $conditions Where conditions, you can use array or Compare object.
+	 * @param array           $orders     Order sort, can ba string, array or object.
+	 * @param integer         $start      Limit start number.
+	 * @param integer         $limit      Limit rows.
 	 *
 	 * @return  mixed Found rows data set.
 	 */
-	public function find($table, array $conditions = array(), array $orders = array(), $start = 0, $limit = null)
+	public function find($table, $select = null, array $conditions = array(), array $orders = array(), $start = 0, $limit = null)
 	{
 		$query = $this->db->getQuery(true);
 
@@ -63,9 +65,29 @@ class WindwalkerAdapter extends DatabaseAdapter
 			$query->order($order);
 		}
 
+		// Select single table or joins.
+		if ($table instanceof DataSet)
+		{
+			$queryHelper = clone $this->queryHelper;
+
+			foreach ($table as $tableData)
+			{
+				$queryHelper->addTable($tableData->alias, $tableData->table, $tableData->conditions, $tableData->joinType);
+			}
+
+			$query = $queryHelper->registerQueryTables($query);
+
+			$select = $select ? : $queryHelper->getSelectFields();
+		}
+		else
+		{
+			$query->from($table);
+
+			$select = $select ? : '*';
+		}
+
 		// Build query
-		$query->select('*')
-			->from($table)
+		$query->select($select)
 			->limit($start, $limit);
 
 		return $this->db->setQuery($query)->loadAll();
