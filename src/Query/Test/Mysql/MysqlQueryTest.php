@@ -318,7 +318,10 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 		$pdo = new \PDO('mysql:user=root;');
 		$query = new Query($pdo);
 
-		$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $query->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
+		if (method_exists($pdo, 'quote'))
+		{
+			$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $query->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
+		}
 	}
 
 	/**
