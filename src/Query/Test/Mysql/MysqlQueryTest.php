@@ -34,7 +34,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = $this->getQuery();
+		$this->instance = new MysqlQuery(new \PDO('mysql:user=root;'));
 	}
 
 	/**
@@ -303,7 +303,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		/* TODO: Mysql_real_escape_string() is deprecated, remove this method and this test.
+		/* TODO: Mysql_real_escape_string() is deprecated
 		try
 		{
 			$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
@@ -315,10 +315,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 		*/
 
 		// Use Pdo object to escape.
-		$pdo = new \PDO('mysql:user=root;');
-		$query = new Query($pdo);
-
-		$this->assertEquals('\'foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0\'', $pdo->quote("foo \"'_-!@#$%^&*() \n \t \r \0"));
+		$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 	}
 
 	/**

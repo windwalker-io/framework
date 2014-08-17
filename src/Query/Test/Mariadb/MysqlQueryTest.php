@@ -34,7 +34,7 @@ class MariaQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = $this->getQuery();
+		$this->instance = new MariadbQuery(new \PDO('mysql:user=root;'));
 	}
 
 	/**
@@ -303,20 +303,19 @@ class MariaQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
+		/* TODO: Mysql_real_escape_string() is deprecated
 		try
 		{
 			$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 		}
 		catch (\PHPUnit_Framework_Error_Deprecated $e)
 		{
-			// The Mariadb_real_escape_string() is deprecated, so we ignore it if in strict mode.
+			// The mysql_real_escape_string() is deprecated, so we ignore it if in strict mode.
 		}
+		*/
 
 		// Use Pdo object to escape.
-		$pdo = new \PDO('mysql:user=root;');
-		$query = new Query($pdo);
-
-		$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $query->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
+		$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 	}
 
 	/**
