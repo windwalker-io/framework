@@ -207,6 +207,14 @@ class Query implements QueryInterface
 	protected $union = null;
 
 	/**
+	 * The unionAll element.
+	 *
+	 * @var    QueryElement
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $unionAll = null;
+
+	/**
 	 * Property dateFormat.
 	 *
 	 * @var  string
@@ -819,6 +827,16 @@ class Query implements QueryInterface
 	}
 
 	/**
+	 * Alias of expression()
+	 *
+	 * @return  mixed
+	 */
+	public function expr()
+	{
+		return call_user_func_array(array($this, 'expression'), func_get_args());
+	}
+
+	/**
 	 * Add a grouping column to the GROUP clause of the query.
 	 *
 	 * Usage:
@@ -878,15 +896,16 @@ class Query implements QueryInterface
 	 * Usage:
 	 * $query->innerJoin('b ON b.id = a.id')->innerJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function innerJoin($condition)
+	public function innerJoin($table, $condition = array())
 	{
-		$this->join('INNER', $condition);
+		$this->join('INNER', $table, $condition);
 
 		return $this;
 	}
@@ -924,20 +943,26 @@ class Query implements QueryInterface
 	 * $query->join('INNER', 'b ON b.id = a.id);
 	 *
 	 * @param   string  $type        The type of join. This string is prepended to the JOIN keyword.
-	 * @param   string  $conditions  A string or array of conditions.
+	 * @param   string  $table       The table name with alias.
+	 * @param   array   $conditions  A string or array of conditions.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function join($type, $conditions)
+	public function join($type, $table, $conditions = array())
 	{
 		if (is_null($this->join))
 		{
 			$this->join = array();
 		}
 
-		$this->join[] = new QueryElement(strtoupper($type) . ' JOIN', $conditions);
+		if (is_string($table))
+		{
+			$table = $table . ($conditions ? ' ON ' . implode(' AND ', (array) $conditions) : '');
+		}
+
+		$this->join[] = new QueryElement(strtoupper($type) . ' JOIN', (array) $table);
 
 		return $this;
 	}
@@ -948,15 +973,16 @@ class Query implements QueryInterface
 	 * Usage:
 	 * $query->leftJoin('b ON b.id = a.id')->leftJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function leftJoin($condition)
+	public function leftJoin($table, $condition = array())
 	{
-		$this->join('LEFT', $condition);
+		$this->join('LEFT', $table, $condition);
 
 		return $this;
 	}
@@ -1065,15 +1091,16 @@ class Query implements QueryInterface
 	 * Usage:
 	 * $query->outerJoin('b ON b.id = a.id')->outerJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function outerJoin($condition)
+	public function outerJoin($table, $condition = array())
 	{
-		$this->join('OUTER', $condition);
+		$this->join('OUTER', $table, $condition);
 
 		return $this;
 	}
@@ -1244,15 +1271,16 @@ class Query implements QueryInterface
 	 * Usage:
 	 * $query->rightJoin('b ON b.id = a.id')->rightJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function rightJoin($condition)
+	public function rightJoin($table, $condition = array())
 	{
-		$this->join('RIGHT', $condition);
+		$this->join('RIGHT', $table, $condition);
 
 		return $this;
 	}
@@ -1440,7 +1468,7 @@ class Query implements QueryInterface
 	{
 		foreach ($this as $k => $v)
 		{
-			if ($k === 'db')
+			if ($k === 'connection')
 			{
 				continue;
 			}
@@ -1463,14 +1491,15 @@ class Query implements QueryInterface
 	 *
 	 * @param   mixed    $query     The Query object or string to union.
 	 * @param   boolean  $distinct  True to only return distinct rows from the union.
-	 * @param   string   $glue      The glue by which to join the conditions.
 	 *
 	 * @return  mixed    The Query object on success or boolean false on failure.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function union($query, $distinct = false, $glue = '')
+	public function union($query, $distinct = false)
 	{
+		$this->type = 'union';
+
 		// Clear any ORDER BY clause in UNION query
 		// See http://dev.mysql.com/doc/refman/5.0/en/union.html
 		if (!is_null($this->order))
@@ -1481,13 +1510,13 @@ class Query implements QueryInterface
 		// Set up the DISTINCT flag, the name with parentheses, and the glue.
 		if ($distinct)
 		{
-			$name = 'UNION DISTINCT ()';
+			$name = '()';
 			$glue = ')' . PHP_EOL . 'UNION DISTINCT (';
 		}
 		else
 		{
+			$name = '()';
 			$glue = ')' . PHP_EOL . 'UNION (';
-			$name = 'UNION ()';
 		}
 
 		// Get the QueryElement if it does not exist
@@ -1511,18 +1540,54 @@ class Query implements QueryInterface
 	 * $query->unionDistinct('SELECT name FROM  #__foo')
 	 *
 	 * @param   mixed   $query  The Query object or string to union.
-	 * @param   string  $glue   The glue by which to join the conditions.
 	 *
 	 * @return  mixed   The Query object on success or boolean false on failure.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function unionDistinct($query, $glue = '')
+	public function unionDistinct($query)
 	{
 		$distinct = true;
 
 		// Apply the distinct flag to the union.
-		return $this->union($query, $distinct, $glue);
+		return $this->union($query, $distinct);
+	}
+
+	/**
+	 * Add a query to UNION ALL with the current query.
+	 * Multiple unions each require separate statements and create an array of unions.
+	 *
+	 * Usage:
+	 * $query->unionAll('SELECT name FROM  #__foo')
+	 * $query->unionAll(array('SELECT name FROM  #__foo','SELECT name FROM  #__bar'))
+	 *
+	 * @param   mixed  $query  The Query object or string to union.
+	 *
+	 * @return  mixed  The Query object on success or boolean false on failure.
+	 *
+	 * @see     union
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function unionAll($query)
+	{
+		$this->type = 'union';
+
+		$glue = ')' . PHP_EOL . 'UNION ALL (';
+
+		// Get the JDatabaseQueryElement if it does not exist
+		if (is_null($this->unionAll))
+		{
+			$this->union = new QueryElement('()', $query, $glue);
+		}
+
+		// Otherwise append the second UNION.
+		else
+		{
+			$this->union->append($query);
+		}
+
+		return $this;
 	}
 
 	/**

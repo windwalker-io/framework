@@ -179,13 +179,14 @@ interface QueryInterface
 	 * Usage:
 	 * $query->innerJoin('b ON b.id = a.id')->innerJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function innerJoin($condition);
+	public function innerJoin($table, $condition = array());
 
 	/**
 	 * Add a table name to the INSERT clause of the query.
@@ -213,13 +214,14 @@ interface QueryInterface
 	 * $query->join('INNER', 'b ON b.id = a.id);
 	 *
 	 * @param   string  $type        The type of join. This string is prepended to the JOIN keyword.
+	 * @param   string  $table       The table name with alias.
 	 * @param   string  $conditions  A string or array of conditions.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function join($type, $conditions);
+	public function join($type, $table, $conditions);
 
 	/**
 	 * Add a LEFT JOIN clause to the query.
@@ -227,13 +229,14 @@ interface QueryInterface
 	 * Usage:
 	 * $query->leftJoin('b ON b.id = a.id')->leftJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function leftJoin($condition);
+	public function leftJoin($table, $condition = array());
 
 	/**
 	 * Get the null or zero representation of a timestamp for the database driver.
@@ -290,13 +293,14 @@ interface QueryInterface
 	 * Usage:
 	 * $query->outerJoin('b ON b.id = a.id')->outerJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function outerJoin($condition);
+	public function outerJoin($table, $condition = array());
 
 	/**
 	 * Method to quote and optionally escape a string to database requirements for insertion into the database.
@@ -350,13 +354,14 @@ interface QueryInterface
 	 * Usage:
 	 * $query->rightJoin('b ON b.id = a.id')->rightJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function rightJoin($condition);
+	public function rightJoin($table, $condition = array());
 
 	/**
 	 * Add a single column, or array of columns to the SELECT clause of the query.
@@ -467,13 +472,12 @@ interface QueryInterface
 	 *
 	 * @param   mixed    $query     The Query object or string to union.
 	 * @param   boolean  $distinct  True to only return distinct rows from the union.
-	 * @param   string   $glue      The glue by which to join the conditions.
 	 *
 	 * @return  mixed    The Query object on success or boolean false on failure.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function union($query, $distinct = false, $glue = '');
+	public function union($query, $distinct = false);
 
 	/**
 	 * Add a query to UNION DISTINCT with the current query. Simply a proxy to Union with the Distinct clause.
@@ -482,13 +486,30 @@ interface QueryInterface
 	 * $query->unionDistinct('SELECT name FROM  #__foo')
 	 *
 	 * @param   mixed   $query  The Query object or string to union.
-	 * @param   string  $glue   The glue by which to join the conditions.
 	 *
 	 * @return  mixed   The Query object on success or boolean false on failure.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function unionDistinct($query, $glue = '');
+	public function unionDistinct($query);
+
+	/**
+	 * Add a query to UNION ALL with the current query.
+	 * Multiple unions each require separate statements and create an array of unions.
+	 *
+	 * Usage:
+	 * $query->unionAll('SELECT name FROM  #__foo')
+	 * $query->unionAll(array('SELECT name FROM  #__foo','SELECT name FROM  #__bar'))
+	 *
+	 * @param   mixed  $query  The Query object or string to union.
+	 *
+	 * @return  mixed  The Query object on success or boolean false on failure.
+	 *
+	 * @see     union
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function unionAll($query);
 
 	/**
 	 * Find and replace sprintf-like tokens in a format string.

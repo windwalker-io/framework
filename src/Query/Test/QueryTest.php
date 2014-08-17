@@ -78,14 +78,15 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::call
-	 * @TODO   Implement testCall().
 	 */
 	public function testCall()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->call(array('foo', 'bar'));
+
+		$sql = 'CALL foo,bar';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -314,10 +315,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExec()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->exec('foo');
+
+		$this->assertEquals('EXEC foo', trim($query));
 	}
 
 	/**
@@ -364,6 +365,18 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Method to test expression().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Query\Query::expression
+	 */
+	public function testExpr()
+	{
+		$this->assertEquals('FOO(flower, sakura)', $this->instance->expr('FOO', 'flower', 'sakura'));
+	}
+
+	/**
 	 * Method to test group().
 	 *
 	 * @return void
@@ -406,10 +419,51 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testInnerJoin()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		// Add one join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->innerJoin('bar AS b', 'a.id = b.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add multiple conditions
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->innerJoin('bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Use array
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->innerJoin(
+				array(
+					'bar AS b ON a.id = b.aid',
+					'yoo AS y ON a.id = y.aid'
+				)
+			);
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add two join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->innerJoin('bar AS b', 'a.id = b.aid')
+			->innerJoin('yoo AS y', 'a.id = y.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid INNER JOIN yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -418,14 +472,17 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::insert
-	 * @TODO   Implement testInsert().
 	 */
 	public function testInsert()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->insert('foo')
+			->columns('a, b, c')
+			->values('1, 2, 3');
+
+		$sql = 'INSERT INTO foo (a, b, c) VALUES  (1, 2, 3)';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -434,14 +491,43 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::join
-	 * @TODO   Implement testJoin().
 	 */
 	public function testJoin()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		// Add one join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->join('LEFT', 'bar AS b', 'a.id = b.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add multiple conditions
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->join('RIGHT', 'bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Use array
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->join('INNER',
+				array(
+					'bar AS b ON a.id = b.aid',
+					'yoo AS y ON a.id = y.aid'
+				)
+			);
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -450,14 +536,54 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::leftJoin
-	 * @TODO   Implement testLeftJoin().
 	 */
 	public function testLeftJoin()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		// Add one join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->leftJoin('bar AS b', 'a.id = b.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add multiple conditions
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->leftJoin('bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Use array
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->leftJoin(
+				array(
+					'bar AS b ON a.id = b.aid',
+					'yoo AS y ON a.id = y.aid'
+				)
+			);
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add two join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->leftJoin('bar AS b', 'a.id = b.aid')
+			->leftJoin('yoo AS y', 'a.id = y.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid LEFT JOIN yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -466,14 +592,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::nullDate
-	 * @TODO   Implement testNullDate().
 	 */
 	public function testNullDate()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals($this->instance->quote('0000-00-00 00:00:00'), $this->instance->nullDate());
+
+		$this->assertEquals('0000-00-00 00:00:00', $this->instance->nullDate(false));
 	}
 
 	/**
@@ -482,14 +606,28 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::order
-	 * @TODO   Implement testOrder().
 	 */
 	public function testOrder()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order(array('id DESC', 'catid'));
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id DESC,catid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -498,14 +636,30 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::limit
-	 * @TODO   Implement testLimit().
 	 */
 	public function testLimit()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id')
+			->limit(3);
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id')
+			->limit(0, 3);
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -514,14 +668,28 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::processLimit
-	 * @TODO   Implement testProcessLimit().
 	 */
 	public function testProcessLimit()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 3)));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 0, 3)));
 	}
 
 	/**
@@ -530,14 +698,54 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::outerJoin
-	 * @TODO   Implement testOuterJoin().
 	 */
 	public function testOuterJoin()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		// Add one join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->outerJoin('bar AS b', 'a.id = b.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add multiple conditions
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->outerJoin('bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Use array
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->outerJoin(
+				array(
+					'bar AS b ON a.id = b.aid',
+					'yoo AS y ON a.id = y.aid'
+				)
+			);
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add two join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->outerJoin('bar AS b', 'a.id = b.aid')
+			->outerJoin('yoo AS y', 'a.id = y.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid OUTER JOIN yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -546,14 +754,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::quote
-	 * @TODO   Implement testQuote().
 	 */
 	public function testQuote()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals("'foo'", $this->instance->quote('foo'));
 	}
 
 	/**
@@ -562,14 +766,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::q
-	 * @TODO   Implement testQ().
 	 */
 	public function testQ()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals("'foo'", $this->instance->q('foo'));
 	}
 
 	/**
@@ -578,14 +778,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::quoteName
-	 * @TODO   Implement testQuoteName().
 	 */
 	public function testQuoteName()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('"foo"', $this->instance->quoteName('foo'));
 	}
 
 	/**
@@ -594,14 +790,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::qn
-	 * @TODO   Implement testQn().
 	 */
 	public function testQn()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('"foo"', $this->instance->qn('foo'));
 	}
 
 	/**
@@ -610,14 +802,54 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::rightJoin
-	 * @TODO   Implement testRightJoin().
 	 */
 	public function testRightJoin()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		// Add one join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->rightJoin('bar AS b', 'a.id = b.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add multiple conditions
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->rightJoin('bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Use array
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->rightJoin(
+				array(
+					'bar AS b ON a.id = b.aid',
+					'yoo AS y ON a.id = y.aid'
+				)
+			);
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		// Add two join
+		$query = $this->getQuery()
+			->select('a.*, b.*')
+			->from('foo AS a')
+			->rightJoin('bar AS b', 'a.id = b.aid')
+			->rightJoin('yoo AS y', 'a.id = y.aid');
+
+		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid RIGHT JOIN yoo AS y ON a.id = y.aid';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -626,14 +858,28 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::select
-	 * @TODO   Implement testSelect().
 	 */
 	public function testSelect()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		$query = $this->getQuery()
+			->select(array('a.*', 'a.id'))
+			->from('foo AS a')
+			->where('a = b')
+			->order('id');
+
+		$sql = 'SELECT a.*,a.id FROM foo AS a WHERE a = b ORDER BY id';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -642,14 +888,25 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::set
-	 * @TODO   Implement testSet().
 	 */
 	public function testSet()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->update('foo')
+			->set('a = b')
+			->set('c = d');
+
+		$sql = 'UPDATE foo SET a = b , c = d';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		$query = $this->getQuery()
+			->update('foo')
+			->set(array('a = b', 'c = d'));
+
+		$sql = 'UPDATE foo SET a = b , c = d';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -658,14 +915,14 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::setQuery
-	 * @TODO   Implement testSetQuery().
 	 */
 	public function testSetQuery()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery();
+
+		$query->setQuery('SELECT foo');
+
+		$this->assertEquals('SELECT foo', (string) $query);
 	}
 
 	/**
@@ -674,14 +931,29 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::update
-	 * @TODO   Implement testUpdate().
 	 */
 	public function testUpdate()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->update('foo')
+			->set('a = b')
+			->set('c = d')
+			->where('id = 1');
+
+		$sql = 'UPDATE foo SET a = b , c = d WHERE id = 1';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		$query = $this->getQuery()
+			->update('foo AS a')
+			->set('a = b')
+			->set('c = d')
+			->leftJoin('bar AS b ON a.id = b.aid')
+			->where('id = 1');
+
+		$sql = 'UPDATE foo AS a LEFT JOIN bar AS b ON a.id = b.aid SET a = b , c = d WHERE id = 1';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -733,14 +1005,34 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::where
-	 * @TODO   Implement testWhere().
 	 */
 	public function testWhere()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		$query = $this->getQuery()
+			->update('foo')
+			->set('a = b')
+			->set('c = d')
+			->where('id = 1');
+
+		$sql = 'UPDATE foo SET a = b , c = d WHERE id = 1';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		$query = $this->getQuery()
+			->delete('foo')
+			->where('flower = "sakura"');
+
+		$this->assertEquals('DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"', trim((string) $query));
 	}
 
 	/**
@@ -749,7 +1041,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::__clone
-	 * @TODO   Implement test__clone().
 	 */
 	public function test__clone()
 	{
@@ -765,14 +1056,28 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::union
-	 * @TODO   Implement testUnion().
 	 */
 	public function testUnion()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$query = $this->getQuery();
+
+		$query->union(
+			$this->getQuery()
+				->select('*')
+				->from('foo')
+				->where('a = b')
+				->order('id')
+		)->union(
+			$this->getQuery()
+				->select('*')
+				->from('foo')
+				->where('a = b')
+				->order('id')
 		);
+
+		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ( SELECT * FROM foo WHERE a = b ORDER BY id)';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -781,14 +1086,58 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::unionDistinct
-	 * @TODO   Implement testUnionDistinct().
 	 */
 	public function testUnionDistinct()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->getQuery();
+
+		$query->unionDistinct(
+			$this->getQuery()
+				->select('*')
+				->from('foo')
+				->where('a = b')
+				->order('id')
+		)->union(
+				$this->getQuery()
+					->select('*')
+					->from('foo')
+					->where('a = b')
+					->order('id')
+			);
+
+		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION DISTINCT ( SELECT * FROM foo WHERE a = b ORDER BY id)';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+	}
+
+	/**
+	 * Method to test union().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Query\Query::union
+	 */
+	public function testUnionAll()
+	{
+		$query = $this->getQuery();
+
+		$query->unionAll(
+			$this->getQuery()
+				->select('*')
+				->from('foo')
+				->where('a = b')
+				->order('id')
+		)->union(
+				$this->getQuery()
+					->select('*')
+					->from('foo')
+					->where('a = b')
+					->order('id')
+			);
+
+		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ALL ( SELECT * FROM foo WHERE a = b ORDER BY id)';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
 
 	/**
@@ -797,14 +1146,23 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::format
-	 * @TODO   Implement testFormat().
 	 */
 	public function testFormat()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$result = $this->instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
+
+		$sql = 'SELECT ' . $this->instance->qn('foo') . ' FROM ' . $this->instance->qn('#__bar') .
+			' WHERE ' . $this->instance->qn('id') . ' = 10';
+
+		$this->assertEquals($sql, $result);
+
+		$result = $this->instance->format('SELECT %n FROM %n WHERE %n = %t OR %3$n = %Z', 'id', '#__foo', 'date');
+
+		$sql = 'SELECT ' . $this->instance->qn('id') . ' FROM ' . $this->instance->qn('#__foo') .
+			' WHERE ' . $this->instance->qn('date') . ' = ' . $this->instance->expression('current_timestamp') .
+			' OR ' . $this->instance->qn('date') . ' = ' . $this->instance->nullDate(true);
+
+		$this->assertEquals($sql, $result);
 	}
 
 	/**
@@ -813,14 +1171,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::getName
-	 * @TODO   Implement testGetName().
 	 */
 	public function testGetName()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('', $this->instance->getName());
 	}
 
 	/**
@@ -829,14 +1183,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Query::getExpression
-	 * @TODO   Implement testGetExpression().
 	 */
 	public function testGetExpression()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf('Windwalker\\Query\\QueryExpression', $this->instance->getExpression());
 	}
 
 	/**
