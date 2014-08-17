@@ -34,7 +34,9 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new MysqlQuery(new \PDO('mysql:user=root;'));
+		$pdo = defined('DB_USER') ? new \PDO('mysql:host=localhost;', DB_USER, DB_PASSWD) : null;
+
+		$this->instance = new MysqlQuery($pdo);
 	}
 
 	/**

@@ -17,7 +17,7 @@ use Windwalker\Utilities\Test\TestHelper;
  *
  * @since {DEPLOY_VERSION}
  */
-class MariaQueryTest extends \PHPUnit_Framework_TestCase
+class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
@@ -34,7 +34,9 @@ class MariaQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new MariadbQuery(new \PDO('mysql:user=root;'));
+		$pdo = defined('DB_USER') ? new \PDO('mysql:host=localhost;', DB_USER, DB_PASSWD) : null;
+
+		$this->instance = new MariadbQuery($pdo);
 	}
 
 	/**
