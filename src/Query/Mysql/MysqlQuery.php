@@ -53,7 +53,7 @@ class MysqlQuery extends Query
 	 */
 	protected function escapeWithNoConnection($text)
 	{
-		$text = addcslashes($text);
+		$text = addslashes($text);
 
 		return str_replace(array("\n", "\r"), array("\\n", "\\r"), $text);
 	}
