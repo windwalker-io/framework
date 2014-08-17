@@ -123,25 +123,25 @@ class OracleQuery extends Query
 		// Check if we need to mangle the query.
 		if ($limit || $offset)
 		{
-			$query = "SELECT joomla2.*
+			$query = "SELECT windwalker2.*
 		              FROM (
-		                  SELECT joomla1.*, ROWNUM AS joomla_db_rownum
+		                  SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum
 		                  FROM (
 		                      " . $query . "
-		                  ) joomla1
-		              ) joomla2";
+		                  ) windwalker1
+		              ) windwalker2";
 
 			// Check if the limit value is greater than zero.
 			if ($limit > 0)
 			{
-				$query .= ' WHERE joomla2.joomla_db_rownum BETWEEN ' . ($offset + 1) . ' AND ' . ($offset + $limit);
+				$query .= ' WHERE windwalker2.windwalker_db_rownum BETWEEN ' . ($offset + 1) . ' AND ' . ($offset + $limit);
 			}
 			else
 			{
 				// Check if there is an offset and then use this.
 				if ($offset)
 				{
-					$query .= ' WHERE joomla2.joomla_db_rownum > ' . ($offset + 1);
+					$query .= ' WHERE windwalker2.windwalker_db_rownum > ' . ($offset + 1);
 				}
 			}
 		}

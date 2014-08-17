@@ -6,22 +6,23 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Query\Test;
+namespace Windwalker\Query\Test\Pdo;
 
+use Windwalker\Query\Pdo\PdoQuery;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Test\TestHelper;
 
 /**
- * Test class of Query
+ * Test class of PdoQuery
  *
  * @since {DEPLOY_VERSION}
  */
-class QueryTest extends \PHPUnit_Framework_TestCase
+class PdoQueryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var Query
+	 * @var PdoQuery
 	 */
 	protected $instance;
 
@@ -33,17 +34,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Query;
-	}
-
-	/**
-	 * getQuery
-	 *
-	 * @return  Query
-	 */
-	protected function getQuery()
-	{
-		return new Query;
+		$this->instance = $this->getQuery();
 	}
 
 	/**
@@ -54,6 +45,16 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
+	}
+
+	/**
+	 * getQuery
+	 *
+	 * @return  PdoQuery
+	 */
+	protected function getQuery()
+	{
+		return new PdoQuery;
 	}
 
 	/**
@@ -302,7 +303,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		$this->assertEquals('foo \"\\\'_-!@#$%^&*()', $this->instance->escape("foo \"'_-!@#$%^&*()"));
+		$this->assertEquals('foo \\"\\\'_-!@#$%^&*() ' . "\n \t \r" . ' \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 	}
 
 	/**
@@ -776,6 +777,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
+	 * @covers Windwalker\Query\Query::quoteName
 	 * @covers Windwalker\Query\Query::qn
 	 */
 	public function testQuoteName()
@@ -1055,12 +1057,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 				->where('a = b')
 				->order('id')
 		)->union(
-			$this->getQuery()
-				->select('*')
-				->from('foo')
-				->where('a = b')
-				->order('id')
-		);
+				$this->getQuery()
+					->select('*')
+					->from('foo')
+					->where('a = b')
+					->order('id')
+			);
 
 		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ( SELECT * FROM foo WHERE a = b ORDER BY id)';
 

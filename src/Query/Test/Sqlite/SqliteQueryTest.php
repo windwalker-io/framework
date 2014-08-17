@@ -6,22 +6,23 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Query\Test;
+namespace Windwalker\Query\Test\Sqlite;
 
+use Windwalker\Query\Sqlite\SqliteQuery;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Test\TestHelper;
 
 /**
- * Test class of Query
+ * Test class of SqliteQuery
  *
  * @since {DEPLOY_VERSION}
  */
-class QueryTest extends \PHPUnit_Framework_TestCase
+class SqliteQueryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var Query
+	 * @var SqliteQuery
 	 */
 	protected $instance;
 
@@ -33,17 +34,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Query;
-	}
-
-	/**
-	 * getQuery
-	 *
-	 * @return  Query
-	 */
-	protected function getQuery()
-	{
-		return new Query;
+		$this->instance = $this->getQuery();
 	}
 
 	/**
@@ -54,6 +45,16 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
+	}
+
+	/**
+	 * getQuery
+	 *
+	 * @return  SqliteQuery
+	 */
+	protected function getQuery()
+	{
+		return new SqliteQuery;
 	}
 
 	/**
@@ -302,7 +303,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		$this->assertEquals('foo \"\\\'_-!@#$%^&*()', $this->instance->escape("foo \"'_-!@#$%^&*()"));
+		$this->assertEquals('foo "\'\'_-!@#$%^&*() ' . "\n \t \r" . ' ', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 	}
 
 	/**
@@ -776,11 +777,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
+	 * @covers Windwalker\Query\Query::quoteName
 	 * @covers Windwalker\Query\Query::qn
 	 */
 	public function testQuoteName()
 	{
-		$this->assertEquals('"foo"', $this->instance->quoteName('foo'));
+		$this->assertEquals('`foo`', $this->instance->quoteName('foo'));
 	}
 
 	/**
@@ -1055,12 +1057,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 				->where('a = b')
 				->order('id')
 		)->union(
-			$this->getQuery()
-				->select('*')
-				->from('foo')
-				->where('a = b')
-				->order('id')
-		);
+				$this->getQuery()
+					->select('*')
+					->from('foo')
+					->where('a = b')
+					->order('id')
+			);
 
 		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ( SELECT * FROM foo WHERE a = b ORDER BY id)';
 
@@ -1161,7 +1163,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetName()
 	{
-		$this->assertEquals('', $this->instance->getName());
+		$this->assertEquals('sqlite', $this->instance->getName());
 	}
 
 	/**

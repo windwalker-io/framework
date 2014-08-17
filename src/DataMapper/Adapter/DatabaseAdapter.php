@@ -157,4 +157,3 @@ abstract class DatabaseAdapter
 	 */
 	abstract public function transactionRollback($asSavePoint = false);
 }
-

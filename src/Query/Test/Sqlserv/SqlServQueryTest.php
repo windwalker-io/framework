@@ -6,22 +6,23 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Query\Test;
+namespace Windwalker\Query\Test\Sqlserv;
 
+use Windwalker\Query\Sqlserv\SqlservQuery;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Test\TestHelper;
 
 /**
- * Test class of Query
+ * Test class of SqlservQuery
  *
  * @since {DEPLOY_VERSION}
  */
-class QueryTest extends \PHPUnit_Framework_TestCase
+class SqlservQueryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var Query
+	 * @var SqlservQuery
 	 */
 	protected $instance;
 
@@ -33,17 +34,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Query;
-	}
-
-	/**
-	 * getQuery
-	 *
-	 * @return  Query
-	 */
-	protected function getQuery()
-	{
-		return new Query;
+		$this->instance = $this->getQuery();
 	}
 
 	/**
@@ -54,6 +45,16 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
+	}
+
+	/**
+	 * getQuery
+	 *
+	 * @return  SqlservQuery
+	 */
+	protected function getQuery()
+	{
+		return new SqlservQuery;
 	}
 
 	/**
@@ -302,7 +303,21 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		$this->assertEquals('foo \"\\\'_-!@#$%^&*()', $this->instance->escape("foo \"'_-!@#$%^&*()"));
+		$this->assertEquals('foo "\'\'_-!@#$%^&*() ' . "\n \t \r" . ' \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
+
+		// Use Pdo object to escape.
+		try
+		{
+			$pdo = new \PDO('mssql:user=root;');
+
+			$query = new Query($pdo);
+
+			$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $query->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
+		}
+		catch (\PDOException $e)
+		{
+			// Driver not found, ignore this test.
+		}
 	}
 
 	/**
@@ -594,9 +609,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testNullDate()
 	{
-		$this->assertEquals($this->instance->quote('0000-00-00 00:00:00'), $this->instance->nullDate());
+		$this->assertEquals($this->instance->quote('1900-01-01 00:00:00'), $this->instance->nullDate());
 
-		$this->assertEquals('0000-00-00 00:00:00', $this->instance->nullDate(false));
+		$this->assertEquals('1900-01-01 00:00:00', $this->instance->nullDate(false));
 	}
 
 	/**
@@ -776,11 +791,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
+	 * @covers Windwalker\Query\Query::quoteName
 	 * @covers Windwalker\Query\Query::qn
 	 */
 	public function testQuoteName()
 	{
-		$this->assertEquals('"foo"', $this->instance->quoteName('foo'));
+		$this->assertEquals('[foo]', $this->instance->quoteName('foo'));
 	}
 
 	/**
@@ -1055,12 +1071,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 				->where('a = b')
 				->order('id')
 		)->union(
-			$this->getQuery()
-				->select('*')
-				->from('foo')
-				->where('a = b')
-				->order('id')
-		);
+				$this->getQuery()
+					->select('*')
+					->from('foo')
+					->where('a = b')
+					->order('id')
+			);
 
 		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ( SELECT * FROM foo WHERE a = b ORDER BY id)';
 
@@ -1161,7 +1177,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetName()
 	{
-		$this->assertEquals('', $this->instance->getName());
+		$this->assertEquals('sqlserv', $this->instance->getName());
 	}
 
 	/**

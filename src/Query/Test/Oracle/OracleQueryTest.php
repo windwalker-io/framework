@@ -6,22 +6,23 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Query\Test;
+namespace Windwalker\Query\Test\Oracle;
 
+use Windwalker\Query\Oracle\OracleQuery;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Test\TestHelper;
 
 /**
- * Test class of Query
+ * Test class of OracleQuery
  *
  * @since {DEPLOY_VERSION}
  */
-class QueryTest extends \PHPUnit_Framework_TestCase
+class OracleQueryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var Query
+	 * @var OracleQuery
 	 */
 	protected $instance;
 
@@ -33,17 +34,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Query;
-	}
-
-	/**
-	 * getQuery
-	 *
-	 * @return  Query
-	 */
-	protected function getQuery()
-	{
-		return new Query;
+		$this->instance = $this->getQuery();
 	}
 
 	/**
@@ -54,6 +45,16 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
+	}
+
+	/**
+	 * getQuery
+	 *
+	 * @return  OracleQuery
+	 */
+	protected function getQuery()
+	{
+		return new OracleQuery;
 	}
 
 	/**
@@ -257,7 +258,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDateFormat()
 	{
-		$this->assertEquals('Y-m-d H:i:s', $this->instance->dateFormat());
+		$this->assertEquals('RRRR-MM-DD HH24:MI:SS', $this->instance->dateFormat());
 	}
 
 	/**
@@ -302,7 +303,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		$this->assertEquals('foo \"\\\'_-!@#$%^&*()', $this->instance->escape("foo \"'_-!@#$%^&*()"));
+		$this->assertEquals('foo "\'\'_-!@#$%^&*() \n' . " \t " . '\r \000', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 	}
 
 	/**
@@ -645,9 +646,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->order('id')
 			->limit(3);
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
+		$sql = 'SELECT windwalker2.* FROM ( SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum FROM ( SELECT * FROM foo
+		WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum BETWEEN 1 AND 3';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress((string) $query));
 
 		$query = $this->getQuery()
 			->select('*')
@@ -656,9 +658,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->order('id')
 			->limit(0, 3);
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+		$sql = 'SELECT windwalker2.* FROM ( SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum FROM
+		( SELECT * FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum > 4';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress((string) $query));
 	}
 
 	/**
@@ -676,7 +679,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->where('a = b')
 			->order('id');
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
+		$sql = 'SELECT windwalker2.* FROM ( SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum FROM
+		( SELECT * FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum BETWEEN 1 AND 3';
 
 		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 3)));
 
@@ -686,7 +690,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->where('a = b')
 			->order('id');
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+		$sql = 'SELECT windwalker2.* FROM ( SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum FROM ( SELECT *
+		FROM foo WHERE a = b ORDER BY id ) windwalker1 ) windwalker2 WHERE windwalker2.windwalker_db_rownum > 4';
 
 		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 0, 3)));
 	}
@@ -776,6 +781,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
+	 * @covers Windwalker\Query\Query::quoteName
 	 * @covers Windwalker\Query\Query::qn
 	 */
 	public function testQuoteName()
@@ -1055,12 +1061,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 				->where('a = b')
 				->order('id')
 		)->union(
-			$this->getQuery()
-				->select('*')
-				->from('foo')
-				->where('a = b')
-				->order('id')
-		);
+				$this->getQuery()
+					->select('*')
+					->from('foo')
+					->where('a = b')
+					->order('id')
+			);
 
 		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ( SELECT * FROM foo WHERE a = b ORDER BY id)';
 
@@ -1161,7 +1167,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetName()
 	{
-		$this->assertEquals('', $this->instance->getName());
+		$this->assertEquals('oracle', $this->instance->getName());
 	}
 
 	/**

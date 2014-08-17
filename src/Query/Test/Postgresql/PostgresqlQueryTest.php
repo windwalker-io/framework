@@ -6,22 +6,23 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Query\Test;
+namespace Windwalker\Query\Test\Postgresql;
 
+use Windwalker\Query\Postgresql\PostgresqlQuery;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Test\TestHelper;
 
 /**
- * Test class of Query
+ * Test class of PostgresqlQuery
  *
  * @since {DEPLOY_VERSION}
  */
-class QueryTest extends \PHPUnit_Framework_TestCase
+class PostgresqlQueryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var Query
+	 * @var PostgresqlQuery
 	 */
 	protected $instance;
 
@@ -33,17 +34,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Query;
-	}
-
-	/**
-	 * getQuery
-	 *
-	 * @return  Query
-	 */
-	protected function getQuery()
-	{
-		return new Query;
+		$this->instance = $this->getQuery();
 	}
 
 	/**
@@ -54,6 +45,16 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
+	}
+
+	/**
+	 * getQuery
+	 *
+	 * @return  PostgresqlQuery
+	 */
+	protected function getQuery()
+	{
+		return new PostgresqlQuery;
 	}
 
 	/**
@@ -302,7 +303,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		$this->assertEquals('foo \"\\\'_-!@#$%^&*()', $this->instance->escape("foo \"'_-!@#$%^&*()"));
+		$this->assertEquals('foo \\"\\\'_-!@#$%^&*() ' . "\n \t \r" . ' \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 	}
 
 	/**
@@ -594,9 +595,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testNullDate()
 	{
-		$this->assertEquals($this->instance->quote('0000-00-00 00:00:00'), $this->instance->nullDate());
+		$this->assertEquals($this->instance->quote('1970-01-01 00:00:00'), $this->instance->nullDate());
 
-		$this->assertEquals('0000-00-00 00:00:00', $this->instance->nullDate(false));
+		$this->assertEquals('1970-01-01 00:00:00', $this->instance->nullDate(false));
 	}
 
 	/**
@@ -656,7 +657,18 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->order('id')
 			->limit(0, 3);
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id OFFSET 3';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id')
+			->limit(2, 3);
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 2 OFFSET 3';
 
 		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
@@ -686,9 +698,19 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->where('a = b')
 			->order('id');
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id OFFSET 3';
 
 		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 0, 3)));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 2 OFFSET 3';
+
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 2, 3)));
 	}
 
 	/**
@@ -776,6 +798,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
+	 * @covers Windwalker\Query\Query::quoteName
 	 * @covers Windwalker\Query\Query::qn
 	 */
 	public function testQuoteName()
@@ -938,9 +961,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->leftJoin('bar AS b ON a.id = b.aid')
 			->where('id = 1');
 
-		$sql = 'UPDATE foo AS a LEFT JOIN bar AS b ON a.id = b.aid SET a = b , c = d WHERE id = 1';
+		$sql = 'UPDATE foo AS a SET a = b , c = d FROM bar AS b WHERE id = 1 AND a.id = b.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress((string) $query));
 	}
 
 	/**
@@ -1055,12 +1078,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 				->where('a = b')
 				->order('id')
 		)->union(
-			$this->getQuery()
-				->select('*')
-				->from('foo')
-				->where('a = b')
-				->order('id')
-		);
+				$this->getQuery()
+					->select('*')
+					->from('foo')
+					->where('a = b')
+					->order('id')
+			);
 
 		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ( SELECT * FROM foo WHERE a = b ORDER BY id)';
 
@@ -1161,7 +1184,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetName()
 	{
-		$this->assertEquals('', $this->instance->getName());
+		$this->assertEquals('postgresql', $this->instance->getName());
 	}
 
 	/**

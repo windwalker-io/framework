@@ -106,7 +106,7 @@ class SqlservQuery extends Query
 					$elements = $this->insert->getElements();
 					$tableName = array_shift($elements);
 
-					$query .= 'VALUES ';
+					$query .= ' VALUES ';
 					$query .= (string) $this->values;
 
 					if ($this->autoIncrementField)

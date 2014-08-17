@@ -11,7 +11,7 @@ namespace Windwalker\DataMapper\Adapter;
 use Windwalker\Data\DataSet;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\DatabaseDriver;
-use Windwalker\Query\QueryHelper;
+use Windwalker\Database\Query\QueryHelper;
 
 /**
  * Class JoomlaDatabaseAdapter

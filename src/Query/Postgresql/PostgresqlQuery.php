@@ -101,7 +101,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function __toString()
+	public function toString()
 	{
 		$query = '';
 
@@ -216,7 +216,7 @@ class PostgresqlQuery extends Query
 				break;
 
 			default:
-				$query = parent::__toString();
+				$query = parent::toString();
 				break;
 		}
 

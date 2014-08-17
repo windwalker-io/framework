@@ -9,7 +9,7 @@
 namespace Windwalker\Database\Command;
 
 use Windwalker\Database\Driver\DatabaseAwareTrait;
-use Windwalker\Query\QueryHelper;
+use Windwalker\Database\Query\QueryHelper;
 
 /**
  * Class DatabaseWriter
