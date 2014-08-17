@@ -107,6 +107,9 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 		$this->instance[1]->foo = 'one';
 
 		$this->assertEquals(array('zero', 'one'), $this->instance->foo);
+
+		// Get empty
+		$this->assertEquals(array('sakura', null), $this->instance->flower);
 	}
 
 	/**

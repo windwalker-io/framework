@@ -136,7 +136,9 @@ class DataMapperTest extends DatabaseTest
 		$dataset = array(
 			array('title' => 'Sakura'),
 			array('title' => 'Peony'),
-			array('title' => 'Sunflower')
+
+			// DataMapper should remove non-necessary field
+			array('title' => 'Sunflower', 'anim' => 'bird')
 		);
 
 		$returns = $this->instance->create($dataset);

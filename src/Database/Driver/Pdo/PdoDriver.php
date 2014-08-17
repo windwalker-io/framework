@@ -259,7 +259,7 @@ class PdoDriver extends DatabaseDriver
 		}
 		catch (\PDOException $e)
 		{
-			throw new \RuntimeException('SQL: ' . $e->getMessage(), (int) $e->getCode(), $e);
+			throw new \RuntimeException($e->getMessage() . "\nSQL: " . $this->query, (int) $e->getCode(), $e);
 		}
 
 		return $this;

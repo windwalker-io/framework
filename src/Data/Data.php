@@ -67,7 +67,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 			}
 
 			// Set the property.
-			$this->$field = $value;
+			$this->set($field, $value);
 		}
 
 		return $this;
