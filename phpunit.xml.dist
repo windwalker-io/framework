@@ -4,7 +4,6 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	strict="true"
-	verbose="true"
 	syntaxCheck="true"
 	>
 	<php>
