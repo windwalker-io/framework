@@ -27,6 +27,20 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	protected $instance;
 
 	/**
+	 * Property escapeString.
+	 *
+	 * @var  string
+	 */
+	protected $escapeString = "foo \"'_-!@#$%^&*() \n \t \r \0";
+
+	/**
+	 * Property pdo.
+	 *
+	 * @var \PDO
+	 */
+	protected $pdo;
+
+	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -34,9 +48,9 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$pdo = defined('DB_USER') ? new \PDO('mysql:host=localhost;', DB_USER, DB_PASSWD) : null;
+		$this->pdo = defined('DB_USER') ? new \PDO('mysql:host=localhost;', DB_USER, DB_PASSWD) : null;
 
-		$this->instance = new MysqlQuery($pdo);
+		$this->instance = new MysqlQuery($this->pdo);
 	}
 
 	/**
@@ -305,19 +319,12 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		/* TODO: Mysql_real_escape_string() is deprecated
-		try
-		{
-			$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
-		}
-		catch (\PHPUnit_Framework_Error_Deprecated $e)
-		{
-			// The mysql_real_escape_string() is deprecated, so we ignore it if in strict mode.
-		}
-		*/
+		$query = $this->getQuery();
+
+		$this->assertEquals(trim($this->pdo->quote($this->escapeString), "'"), $query->escape($this->escapeString));
 
 		// Use Pdo object to escape.
-		$this->assertEquals('foo \"\\\'_-!@#$%^&*() \n ' . "\t" . ' \r \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
+		$this->assertEquals(trim($this->pdo->quote($this->escapeString), "'"), $this->instance->escape($this->escapeString));
 	}
 
 	/**

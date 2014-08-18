@@ -719,7 +719,14 @@ class Query implements QueryInterface
 	 */
 	protected function escapeWithNoConnection($text)
 	{
-		return addslashes($text);
+		if (is_int($text) || is_float($text))
+		{
+			return $text;
+		}
+
+		$text = str_replace("'", "''", $text);
+
+		return addcslashes($text, "\000\n\r\\\032");
 	}
 
 	/**

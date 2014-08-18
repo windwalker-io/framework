@@ -303,7 +303,7 @@ class PostgresqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		$this->assertEquals('foo \\"\\\'_-!@#$%^&*() ' . "\n \t \r" . ' \0', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
+		$this->assertEquals('foo "\'\'_-!@#$%^&*() \n' . " \t " . '\r \000', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 	}
 
 	/**
