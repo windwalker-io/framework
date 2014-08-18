@@ -8,6 +8,8 @@
 
 namespace Windwalker\Query\Test\Mysql;
 
+use Windwalker\Query\Mysql\MysqlQueryBuilder;
+
 /**
  * Test class of MysqlQueryBuilder
  *
@@ -21,14 +23,14 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showDatabases
-	 * @TODO   Implement testShowDatabases().
 	 */
 	public function testShowDatabases()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$expected = "SHOW DATABASES WHERE a = b";
+
+		$actual = MysqlQueryBuilder::showDatabases('a = b');
+
+		$this->assertEquals(\SqlFormatter::compress($expected), \SqlFormatter::compress($actual));
 	}
 
 	/**
@@ -37,13 +39,34 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::createDatabase
-	 * @TODO   Implement testCreateDatabase().
 	 */
 	public function testCreateDatabase()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "CREATE DATABASE `foo`";
+
+		$actual = MysqlQueryBuilder::createDatabase('foo');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "CREATE DATABASE IF NOT EXISTS `foo`";
+
+		$actual = MysqlQueryBuilder::createDatabase('foo', true);
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "CREATE DATABASE IF NOT EXISTS `foo` CHARACTER SET='utf8' COLLATE='bar'";
+
+		$actual = MysqlQueryBuilder::createDatabase('foo', true, 'utf8', 'bar');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -53,13 +76,25 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropDatabase
-	 * @TODO   Implement testDropDatabase().
 	 */
 	public function testDropDatabase()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "DROP DATABASE `foo`";
+
+		$actual = MysqlQueryBuilder::dropDatabase('foo');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "DROP DATABASE IF EXISTS `foo`";
+
+		$actual = MysqlQueryBuilder::dropDatabase('foo', true);
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -69,13 +104,25 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showTableColumns
-	 * @TODO   Implement testShowTableColumns().
 	 */
 	public function testShowTableColumns()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "SHOW COLUMNS FROM `foo`";
+
+		$actual = MysqlQueryBuilder::showTableColumns('foo');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "SHOW FULL COLUMNS FROM `foo` WHERE a = b";
+
+		$actual = MysqlQueryBuilder::showTableColumns('foo', true, 'a = b');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -85,13 +132,25 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showDbTables
-	 * @TODO   Implement testShowDbTables().
 	 */
 	public function testShowDbTables()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "SHOW TABLE STATUS FROM `foo`";
+
+		$actual = MysqlQueryBuilder::showDbTables('foo');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "SHOW FULL TABLE STATUS FROM `foo` WHERE a = b";
+
+		$actual = MysqlQueryBuilder::showDbTables('foo', true, 'a = b');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -101,13 +160,61 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::createTable
-	 * @TODO   Implement testCreateTable().
 	 */
 	public function testCreateTable()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = <<<SQL
+CREATE TABLE IF NOT EXISTS `foo` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
+  `name` varchar(255) NOT NULL COMMENT 'Member Name',
+  `email` varchar(255) NOT NULL COMMENT 'Member email',
+  PRIMARY KEY (`id`),
+  KEY `idx_alias` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
+SQL;
+
+		$columns = array(
+			'id' => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
+			'name' => array('varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''),
+			'email' => "varchar(255) NOT NULL COMMENT 'Member email'"
+		);
+
+		$keys = array(
+			array('type' => 'KEY', 'name' => 'idx_alias', 'columns' => 'email')
+		);
+
+		$actual = MysqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = <<<SQL
+CREATE TABLE `foo` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
+  `name` varchar(255) NOT NULL COMMENT 'Member Name',
+  `email` varchar(255) NOT NULL COMMENT 'Member email',
+  PRIMARY KEY (`id`, `email`),
+  UNIQUE KEY `idx_alias` (`email`, `id`)
+) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
+SQL;
+
+		$columns = array(
+			'id' => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
+			'name' => array('varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''),
+			'email' => "varchar(255) NOT NULL COMMENT 'Member email'"
+		);
+
+		$keys = array(
+			array('type' => 'UNIQUE KEY', 'name' => 'idx_alias', 'columns' => array('email', 'id'))
+		);
+
+		$actual = MysqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -117,13 +224,25 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropTable
-	 * @TODO   Implement testDropTable().
 	 */
 	public function testDropTable()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "DROP TABLE `foo`";
+
+		$actual = MysqlQueryBuilder::dropTable('foo');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "DROP TABLE IF EXISTS `foo`";
+
+		$actual = MysqlQueryBuilder::dropTable('foo', true);
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -133,13 +252,25 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::alterColumn
-	 * @TODO   Implement testAlterColumn().
 	 */
 	public function testAlterColumn()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "ALTER TABLE `foo` MODIFY `bar` int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
+
+		$actual = MysqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "ALTER TABLE `foo` CHANGE `bar` `yoo` text AFTER `id`";
+
+		$actual = MysqlQueryBuilder::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', false, false, null, 'AFTER id', null);
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -149,13 +280,16 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::addColumn
-	 * @TODO   Implement testAddColumn().
 	 */
 	public function testAddColumn()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "ALTER TABLE `foo` ADD `bar` int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
+
+		$actual = MysqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -165,13 +299,16 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::changeColumn
-	 * @TODO   Implement testChangeColumn().
 	 */
 	public function testChangeColumn()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "ALTER TABLE `foo` CHANGE `bar` `yoo` int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
+
+		$actual = MysqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', true, true, '1', 'FIRST', 'Test');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -181,13 +318,16 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::modifyColumn
-	 * @TODO   Implement testModifyColumn().
 	 */
 	public function testModifyColumn()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "ALTER TABLE `foo` MODIFY `bar` int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
+
+		$actual = MysqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -197,13 +337,16 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropColumn
-	 * @TODO   Implement testDropColumn().
 	 */
 	public function testDropColumn()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "ALTER TABLE `foo` DROP `bar`";
+
+		$actual = MysqlQueryBuilder::dropColumn('foo', 'bar');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -213,13 +356,25 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::addIndex
-	 * @TODO   Implement testAddIndex().
 	 */
 	public function testAddIndex()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "ALTER TABLE `foo` ADD KEY `idx_alias` (`alias`, `name`) COMMENT 'Test Index'";
+
+		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', array('alias', 'name'), 'Test Index');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "ALTER TABLE `foo` ADD KEY `idx_alias` (`alias`) COMMENT 'Test Index'";
+
+		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', 'alias', 'Test Index');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -229,13 +384,25 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::buildIndexDeclare
-	 * @TODO   Implement testBuildIndexDeclare().
 	 */
 	public function testBuildIndexDeclare()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "`idx_alias` (`alias`)";
+
+		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
+		);
+
+		$expected = "`idx_alias` (`alias`, `name`)";
+
+		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'));
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -245,13 +412,16 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropIndex
-	 * @TODO   Implement testDropIndex().
 	 */
 	public function testDropIndex()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "ALTER TABLE `foo` DROP INDEX `bar`";
+
+		$actual = MysqlQueryBuilder::dropIndex('foo', 'INDEX', 'bar');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -261,13 +431,16 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::build
-	 * @TODO   Implement testBuild().
 	 */
 	public function testBuild()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "FLOWER SAKURA SUNFLOWER OLIVE";
+
+		$actual = MysqlQueryBuilder::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -277,13 +450,16 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::replace
-	 * @TODO   Implement testReplace().
 	 */
 	public function testReplace()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$expected = "REPLACE INTO `foo` (a,b) VALUES (c, d, e), (f, g, h)";
+
+		$actual = MysqlQueryBuilder::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
+
+		$this->assertEquals(
+			\SqlFormatter::compress($expected),
+			\SqlFormatter::compress($actual)
 		);
 	}
 
@@ -293,13 +469,13 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::getQuery
-	 * @TODO   Implement testGetQuery().
 	 */
 	public function testGetQuery()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf('Windwalker\\Query\\Mysql\\MysqlQuery', MysqlQueryBuilder::getQuery());
+
+		$this->assertSame(MysqlQueryBuilder::getQuery(), MysqlQueryBuilder::getQuery());
+
+		$this->assertNotSame(MysqlQueryBuilder::getQuery(), MysqlQueryBuilder::getQuery(true));
 	}
 }

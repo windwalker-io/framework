@@ -59,7 +59,7 @@ class MysqlQuery extends Query
 		return str_replace(
 			array('\\', "\0", "\n", "\r", "'", '"', "\x1a"),
 			array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'),
-			"foo \"'_-!@#$%^&*() \n \t \r \0"
+			$text
 		);
 	}
 }

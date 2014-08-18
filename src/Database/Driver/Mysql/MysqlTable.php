@@ -31,17 +31,17 @@ class MysqlTable extends DatabaseTable
 	 * @param string $columns
 	 * @param array  $pks
 	 * @param array  $keys
+	 * @param int    $autoIncrement
 	 * @param bool   $ifNotExists
 	 * @param string $engine
-	 * @param int    $autoIncrement
 	 * @param string $defaultCharset
 	 *
 	 * @return  $this
 	 */
-	public function create($columns, $pks = array(), $keys = array(), $ifNotExists = true, $engine = 'InnoDB',
-		$autoIncrement = null, $defaultCharset = 'utf8')
+	public function create($columns, $pks = array(), $keys = array(), $autoIncrement = null, $ifNotExists = true,
+		$engine = 'InnoDB', $defaultCharset = 'utf8')
 	{
-		$query = MysqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $ifNotExists, $engine, $autoIncrement, $defaultCharset);
+		$query = MysqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $autoIncrement, $ifNotExists, $engine, $defaultCharset);
 
 		$this->db->setQuery($query)->execute();
 

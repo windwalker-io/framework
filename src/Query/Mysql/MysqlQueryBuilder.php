@@ -35,9 +35,9 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	 */
 	public static function showDatabases($where = null)
 	{
-		$where ? new QueryElement('WHERE', $where, 'AND') : null;
+		$where = $where ? new QueryElement('WHERE', $where, 'AND') : null;
 
-		return 'SHOW DATABASES' . $where;
+		return 'SHOW DATABASES ' . $where;
 	}
 
 	/**
@@ -129,19 +129,20 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	/**
 	 * createTable
 	 *
-	 * @param string        $name
-	 * @param array         $columns
-	 * @param array|string  $pks
-	 * @param array         $keys
-	 * @param bool          $ifNotExists
-	 * @param string        $engine
-	 * @param null          $autoIncrement
-	 * @param string        $defaultCharset
+	 * @param string       $name
+	 * @param array        $columns
+	 * @param array|string $pks
+	 * @param array        $keys
+	 * @param null         $autoIncrement
+	 * @param bool         $ifNotExists
+	 * @param string       $engine
+	 * @param string       $defaultCharset
 	 *
+	 * @throws \InvalidArgumentException
 	 * @return  string
 	 */
-	public static function createTable($name, $columns, $pks = array(), $keys = array(), $ifNotExists = true, $engine = 'InnoDB',
-		$autoIncrement = null, $defaultCharset = 'utf8')
+	public static function createTable($name, $columns, $pks = array(), $keys = array(), $autoIncrement = null,
+		$ifNotExists = true, $engine = 'InnoDB', $defaultCharset = 'utf8')
 	{
 		$query = static::getQuery();
 		$cols = array();
@@ -154,6 +155,11 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 			array_unshift($details, $query->quoteName($cName));
 
 			$cols[] = call_user_func_array(array(get_called_class(), 'build'), $details);
+		}
+
+		if (!is_array($keys))
+		{
+			throw new \InvalidArgumentException('Keys should be an array');
 		}
 
 		if ($pks)
@@ -173,6 +179,11 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 				'name' => null,
 				'columns' => array()
 			);
+
+			if (!is_array($key))
+			{
+				throw new \InvalidArgumentException('Every key data should be an array with "type", "name", "columns"');
+			}
 
 			$define = array_merge($define, $key);
 
@@ -456,7 +467,7 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	 *
 	 * @return  string
 	 */
-	protected function handleColumnPosition($position)
+	protected static function handleColumnPosition($position)
 	{
 		$query = static::getQuery();
 
@@ -493,8 +504,8 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 		$query = new MysqlQuery;
 
 		$query = (string) $query->insert($query->quoteName($name))
-			->columns($query->quoteName($columns))
-			->values($query->quote($values));
+			->columns($columns)
+			->values($values);
 
 		$query = substr(trim($query), 6);
 
