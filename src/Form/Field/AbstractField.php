@@ -165,7 +165,7 @@ abstract class AbstractField implements FieldInterface
 
 		$this->validator = $validator ? : $validator;
 
-		$this->required = $this->getAttribute('required', false);
+		$this->required = $this->getBool('required', false);
 	}
 
 	/**
