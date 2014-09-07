@@ -68,28 +68,17 @@ abstract class AbstractDatabaseCase extends \PHPUnit_Framework_TestCase
 	 */
 	public static function setUpBeforeClass()
 	{
-		$const = 'WINDWALKER_TEST_DB_DSN_' . strtoupper(static::$driver);
-
-		// First let's look to see if we have a DSN defined or in the environment variables.
-		if (defined($const) || getenv($const))
-		{
-			$dsn = defined($const) ? constant($const) : getenv($const);
-		}
-		else
-		{
-			return;
-		}
-
 		if (!static::$driver)
 		{
 			throw new \LogicException('static::$driver variable is empty.');
 		}
 
-		// Parse DSN to array
-		$dsn = str_replace(';', "\n", $dsn);
-		$dsn = parse_ini_string($dsn);
+		static::$dsn = $dsn = DsnResolver::getDsn(static::$driver);
 
-		static::$dsn = $dsn;
+		if (!$dsn)
+		{
+			return;
+		}
 
 		static::$dbname = $dbname = isset($dsn['dbname']) ? $dsn['dbname'] : null;
 

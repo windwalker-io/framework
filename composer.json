@@ -34,6 +34,9 @@
 		},
 		"files": [
 			"src/PHP/methods.php"
+		],
+		"classmap": [
+			"src/Compat/JsonSerializable.php"
 		]
 	},
 	"extra": {

@@ -8,6 +8,7 @@
 
 namespace Windwalker\Query\Test\Mysql;
 
+use Windwalker\Database\Test\DsnResolver;
 use Windwalker\Query\Mysql\MysqlQuery;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Test\TestHelper;
@@ -48,7 +49,12 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->pdo = defined('DB_USER') ? new \PDO('mysql:host=localhost;', DB_USER, DB_PASSWD) : null;
+		$dsn = DsnResolver::getDsn('mysql');
+
+		if ($dsn)
+		{
+			$this->pdo = new \PDO('mysql:host=localhost;', $dsn['user'], $dsn['pass']);
+		}
 
 		$this->instance = new MysqlQuery($this->pdo);
 	}

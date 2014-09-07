@@ -167,11 +167,13 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('FLOWER = SAKURA', $this->instance->toString());
 
+		$self = $this->instance;
+
 		$this->instance->setHandler(
-			function ($compare1, $compare2, $operator, $quote1, $quote2)
+			function ($compare1, $compare2, $operator, $quote1, $quote2) use ($self)
 			{
 				return strtoupper(
-					$this->instance->quote($compare1, $quote1) . ' ' . $operator . ' ' . $this->instance->quote($compare2, $quote2)
+					$self->quote($compare1, $quote1) . ' ' . $operator . ' ' . $self->quote($compare2, $quote2)
 				);
 			}
 		);

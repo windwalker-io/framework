@@ -96,5 +96,7 @@ trait PreparableTrait
 				return $this->bounded[$key];
 			}
 		}
+
+		return null;
 	}
 }

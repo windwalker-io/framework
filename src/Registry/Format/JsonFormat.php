@@ -60,6 +60,13 @@ class JsonFormat implements FormatInterface
 		$depth  = RegistryHelper::getValue($options, 'depth', 512);
 		$option = RegistryHelper::getValue($options, 'options', 0);
 
-		return json_decode(trim($data), $assoc, $depth, $option);
+		if (PHP_VERSION >= 5.4)
+		{
+			return json_decode(trim($data), $assoc, $depth, $option);
+		}
+		else
+		{
+			return json_decode(trim($data), $assoc, $depth);
+		}
 	}
 }

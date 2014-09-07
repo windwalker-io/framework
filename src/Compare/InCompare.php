@@ -83,10 +83,12 @@ class InCompare extends Compare
 				$compare2 = explode($this->separator, $this->compare2);
 			}
 
+			$self = $this;
+
 			$compare2 = array_map(
-				function ($value) use ($quote2)
+				function ($value) use ($quote2, $self)
 				{
-					return $this->quote($value, $quote2);
+					return $self->quote($value, $quote2);
 				},
 				$compare2
 			);

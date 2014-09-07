@@ -211,12 +211,9 @@ class MysqlDriverTest extends AbstractMysqlTest
 	public function testGetTransaction()
 	{
 		// Test no nested
-		$trans = $this->db->getTransaction(false);
+		$trans = $this->db->getTransaction(true);
 
-		$this->assertFalse($trans->getNested());
-
-		// Fallback
-		$trans->setNested(true);
+		$this->assertTrue($trans->getNested());
 
 		// Test get
 		$trans = $this->db->getTransaction();
