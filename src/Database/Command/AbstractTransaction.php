@@ -16,7 +16,7 @@ use Windwalker\Database\Driver\DatabaseDriver;
  *
  * @since {DEPLOY_VERSION}
  */
-abstract class DatabaseTransaction
+abstract class AbstractTransaction
 {
 	use DatabaseAwareTrait
 	{

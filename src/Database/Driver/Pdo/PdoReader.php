@@ -8,7 +8,7 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
-use Windwalker\Database\Command\DatabaseReader;
+use Windwalker\Database\Command\AbstractReader;
 use Windwalker\Query\Query;
 
 /**
@@ -16,7 +16,7 @@ use Windwalker\Query\Query;
  *
  * @since {DEPLOY_VERSION}
  */
-class PdoReader extends DatabaseReader
+class PdoReader extends AbstractReader
 {
 	/**
 	 * Method to fetch a row from the result set cursor as an array.

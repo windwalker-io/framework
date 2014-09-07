@@ -17,7 +17,7 @@ use Windwalker\Query\Query;
  *
  * @since {DEPLOY_VERSION}
  */
-abstract class DatabaseReader
+abstract class AbstractReader
 {
 	use DatabaseAwareTrait;
 

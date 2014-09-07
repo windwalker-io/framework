@@ -8,7 +8,7 @@
 
 namespace Windwalker\Database\Driver\Mysql;
 
-use Windwalker\Database\Command\DatabaseTable;
+use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 
 /**
@@ -16,7 +16,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
  *
  * @since {DEPLOY_VERSION}
  */
-class MysqlTable extends DatabaseTable
+class MysqlTable extends AbstractTable
 {
 	/**
 	 * A cache to store Table columns.

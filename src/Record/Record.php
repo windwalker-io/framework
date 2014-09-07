@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Database\Record;
+namespace Windwalker\Record;
 
 use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Query\Query;
@@ -148,14 +148,14 @@ class Record implements \IteratorAggregate
 	}
 
 	/**
-	 * Method to provide a shortcut to binding, checking and storing a AbstractDatabaseTable
+	 * Method to provide a shortcut to binding, checking and storing a AbstractTable
 	 * instance to the database table.  The method will check a row in once the
 	 * data has been stored and if an ordering filter is present will attempt to
 	 * reorder the table rows based on the filter.  The ordering filter is an instance
 	 * property name.  The rows that will be reordered are those whose value matches
-	 * the AbstractDatabaseTable instance for the property specified.
+	 * the AbstractTable instance for the property specified.
 	 *
-	 * @param   mixed  $src     An associative array or object to bind to the AbstractDatabaseTable instance.
+	 * @param   mixed  $src     An associative array or object to bind to the AbstractTable instance.
 	 * @param   mixed  $ignore  An optional array or space separated list of properties
 	 *                          to ignore while binding.
 	 *
@@ -177,11 +177,11 @@ class Record implements \IteratorAggregate
 	}
 
 	/**
-	 * Method to bind an associative array or object to the AbstractDatabaseTable instance.  This
+	 * Method to bind an associative array or object to the AbstractTable instance.  This
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed  $src     An associative array or object to bind to the AbstractDatabaseTable instance.
+	 * @param   mixed  $src     An associative array or object to bind to the AbstractTable instance.
 	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  $this  Method allows chaining
@@ -227,7 +227,7 @@ class Record implements \IteratorAggregate
 
 	/**
 	 * Method to load a row from the database by primary key and bind the fields
-	 * to the AbstractDatabaseTable instance properties.
+	 * to the AbstractTable instance properties.
 	 *
 	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
 	 *                           set the instance property value is used.
@@ -375,7 +375,7 @@ class Record implements \IteratorAggregate
 	}
 
 	/**
-	 * Method to perform sanity checks on the AbstractDatabaseTable instance properties to ensure
+	 * Method to perform sanity checks on the AbstractTable instance properties to ensure
 	 * they are safe to store in the database.  Child classes should override this
 	 * method to make sure the data they are storing in the database is safe and
 	 * as expected before storage.
@@ -390,11 +390,11 @@ class Record implements \IteratorAggregate
 	}
 
 	/**
-	 * Method to store a row in the database from the AbstractDatabaseTable instance properties.
+	 * Method to store a row in the database from the AbstractTable instance properties.
 	 * If a primary key value is set the row with that primary key value will be
 	 * updated with the instance property values.  If no primary key value is set
 	 * a new row will be inserted into the database with the properties from the
-	 * AbstractDatabaseTable instance.
+	 * AbstractTable instance.
 	 *
 	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *

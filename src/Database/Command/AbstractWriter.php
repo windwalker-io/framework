@@ -16,7 +16,7 @@ use Windwalker\Database\Query\QueryHelper;
  *
  * @since {DEPLOY_VERSION}
  */
-abstract class DatabaseWriter
+abstract class AbstractWriter
 {
 	use DatabaseAwareTrait;
 

@@ -11,12 +11,12 @@ namespace Windwalker\Database\Driver;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Windwalker\Database\Command\DatabaseDatabase;
-use Windwalker\Database\Command\DatabaseReader;
-use Windwalker\Database\Command\DatabaseTable;
-use Windwalker\Database\Command\DatabaseTransaction;
-use Windwalker\Database\Command\DatabaseWriter;
-use Windwalker\Database\DataIterator;
+use Windwalker\Database\Command\AbstractDatabase;
+use Windwalker\Database\Command\AbstractReader;
+use Windwalker\Database\Command\AbstractTable;
+use Windwalker\Database\Command\AbstractTransaction;
+use Windwalker\Database\Command\AbstractWriter;
+use Windwalker\Database\Iterator\DataIterator;
 use Windwalker\Query\Query;
 
 /**
@@ -109,35 +109,35 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * Property reader.
 	 *
-	 * @var  DatabaseReader
+	 * @var  AbstractReader
 	 */
 	protected $reader = null;
 
 	/**
 	 * Property writer.
 	 *
-	 * @var DatabaseWriter
+	 * @var AbstractWriter
 	 */
 	protected $writer;
 
 	/**
 	 * Property table.
 	 *
-	 * @var DatabaseTable[]
+	 * @var AbstractTable[]
 	 */
 	protected $tables = array();
 
 	/**
 	 * Property databases.
 	 *
-	 * @var  DatabaseDatabase[]
+	 * @var  AbstractDatabase[]
 	 */
 	protected $databases = array();
 
 	/**
 	 * Property transaction.
 	 *
-	 * @var DatabaseTransaction
+	 * @var AbstractTransaction
 	 */
 	protected $transaction;
 
@@ -342,7 +342,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param string $name
 	 *
-	 * @return  DatabaseTable
+	 * @return  AbstractTable
 	 */
 	public function getTable($name)
 	{
@@ -361,7 +361,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param string $name
 	 *
-	 * @return  DatabaseDatabase
+	 * @return  AbstractDatabase
 	 */
 	public function getDatabase($name)
 	{
@@ -380,7 +380,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param Query $query
 	 *
-	 * @return  DatabaseReader
+	 * @return  AbstractReader
 	 */
 	public function getReader($query = null)
 	{
@@ -402,7 +402,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * getWriter
 	 *
-	 * @return  DatabaseWriter
+	 * @return  AbstractWriter
 	 */
 	public function getWriter()
 	{
@@ -421,7 +421,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param boolean $nested
 	 *
-	 * @return  DatabaseTransaction
+	 * @return  AbstractTransaction
 	 */
 	public function getTransaction($nested = true)
 	{
@@ -858,4 +858,3 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 		return $this->escape($text, $extra);
 	}
 }
-

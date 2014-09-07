@@ -8,14 +8,14 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
-use Windwalker\Database\Command\DatabaseTransaction;
+use Windwalker\Database\Command\AbstractTransaction;
 
 /**
  * Class PdoTransaction
  *
  * @since {DEPLOY_VERSION}
  */
-class PdoTransaction extends DatabaseTransaction
+class PdoTransaction extends AbstractTransaction
 {
 	/**
 	 * start

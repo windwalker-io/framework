@@ -16,7 +16,7 @@ use Windwalker\Database\Driver\DatabaseAwareTrait;
  *
  * @since {DEPLOY_VERSION}
  */
-abstract class DatabaseTable
+abstract class AbstractTable
 {
 	use DatabaseAwareTrait
 	{

@@ -8,14 +8,14 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
-use Windwalker\Database\Command\DatabaseWriter;
+use Windwalker\Database\Command\AbstractWriter;
 
 /**
  * Class PdoWriter
  *
  * @since {DEPLOY_VERSION}
  */
-class PdoWriter extends DatabaseWriter
+class PdoWriter extends AbstractWriter
 {
 	/**
 	 * Method to get the auto-incremented value from the last INSERT statement.

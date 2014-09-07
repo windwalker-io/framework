@@ -8,7 +8,7 @@
 
 namespace Windwalker\Database\Iterator;
 
-use Windwalker\Database\Command\DatabaseReader;
+use Windwalker\Database\Command\AbstractReader;
 
 /**
  * Class DataIterator
@@ -20,7 +20,7 @@ class DataIterator implements \Countable, \Iterator
 	/**
 	 * Property reader.
 	 *
-	 * @var  DatabaseReader
+	 * @var  AbstractReader
 	 */
 	protected $reader = null;
 
@@ -47,10 +47,10 @@ class DataIterator implements \Countable, \Iterator
 	/**
 	 * Constructor.
 	 *
-	 * @param DatabaseReader $reader
-	 * @param string         $class
+	 * @param AbstractReader $reader
+	 * @param string                 $class
 	 */
-	public function __construct(DatabaseReader $reader, $class = '\\stdClass')
+	public function __construct(AbstractReader $reader, $class = '\\stdClass')
 	{
 		$this->reader = $reader;
 		$this->class = $class;

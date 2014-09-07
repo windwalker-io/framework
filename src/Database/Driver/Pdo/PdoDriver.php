@@ -8,11 +8,11 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
-use Windwalker\Database\Command\DatabaseDatabase;
-use Windwalker\Database\Command\DatabaseReader;
-use Windwalker\Database\Command\DatabaseTable;
-use Windwalker\Database\Command\DatabaseTransaction;
-use Windwalker\Database\Command\DatabaseWriter;
+use Windwalker\Database\Command\AbstractDatabase;
+use Windwalker\Database\Command\AbstractReader;
+use Windwalker\Database\Command\AbstractTable;
+use Windwalker\Database\Command\AbstractTransaction;
+use Windwalker\Database\Command\AbstractWriter;
 use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Query\Query\PreparableInterface;
 use Windwalker\Query\Query;
@@ -338,7 +338,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param string $name
 	 *
-	 * @return  DatabaseTable
+	 * @return  AbstractTable
 	 */
 	public function getTable($name)
 	{
@@ -360,7 +360,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param string $name
 	 *
-	 * @return  DatabaseDatabase
+	 * @return  AbstractDatabase
 	 */
 	public function getDatabase($name)
 	{
@@ -382,7 +382,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param Query $query
 	 *
-	 * @return  DatabaseReader
+	 * @return  AbstractReader
 	 */
 	public function getReader($query = null)
 	{
@@ -407,7 +407,7 @@ class PdoDriver extends DatabaseDriver
 	/**
 	 * getWriter
 	 *
-	 * @return  DatabaseWriter
+	 * @return  AbstractWriter
 	 */
 	public function getWriter()
 	{
@@ -429,7 +429,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param boolean $nested
 	 *
-	 * @return  DatabaseTransaction
+	 * @return  AbstractTransaction
 	 */
 	public function getTransaction($nested = true)
 	{
@@ -466,4 +466,3 @@ class PdoDriver extends DatabaseDriver
 		return $this->setQuery($builder::showDatabases())->loadColumn();
 	}
 }
-
