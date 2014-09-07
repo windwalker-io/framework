@@ -49,6 +49,13 @@ class PdoDriver extends DatabaseDriver
 	protected $connection;
 
 	/**
+	 * Property driverOptions.
+	 *
+	 * @var mixed
+	 */
+	protected $driverOptions;
+
+	/**
 	 * Property reader.
 	 *
 	 * @var  PdoReader
@@ -127,7 +134,7 @@ class PdoDriver extends DatabaseDriver
 	{
 		$this->freeResult();
 
-		unset($this->connection);
+		$this->connection = null;
 	}
 
 	/**
@@ -197,6 +204,8 @@ class PdoDriver extends DatabaseDriver
 	 */
 	public function select($database)
 	{
+		$this->database = $database;
+
 		$this->getDatabase($database)->select();
 
 		return $this;
@@ -216,10 +225,7 @@ class PdoDriver extends DatabaseDriver
 	{
 		$this->connect()->freeResult();
 
-		$query = $this->replacePrefix((string) $query);
-
-		// Set query string into PDO, but keep query object in $this->query that we can bind params when execute().
-		$this->cursor = $this->connection->prepare($query, $driverOptions);
+		$this->driverOptions = $driverOptions;
 
 		// Store reference to the DatabaseQuery instance:
 		parent::setQuery($query);
@@ -237,6 +243,12 @@ class PdoDriver extends DatabaseDriver
 	 */
 	public function doExecute()
 	{
+		// Replace prefix
+		$query = $this->replacePrefix((string) $this->query);
+
+		// Set query string into PDO, but keep query object in $this->query that we can bind params when execute().
+		$this->cursor = $this->connection->prepare($query, $this->driverOptions);
+
 		if (!($this->cursor instanceof \PDOStatement))
 		{
 			throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');

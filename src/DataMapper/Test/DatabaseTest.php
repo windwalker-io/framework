@@ -1,38 +1,30 @@
 <?php
 /**
- * Part of Windwalker project.
+ * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\DataMapper\Test;
 
-use Windwalker\Database\DatabaseFactory;
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Test\AbstractDatabaseCase;
 use Windwalker\DataMapper\Adapter\DatabaseAdapter;
 use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 
 /**
- * Class DatabaseTestCase
- *
- * @since 1.0
+ * The DatabaseTest class.
+ * 
+ * @since  {DEPLOY_VERSION}
  */
-abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
+abstract class DatabaseTest extends AbstractDatabaseCase
 {
 	/**
-	 * Property db.
+	 * Property driver.
 	 *
-	 * @var  DatabaseDriver
+	 * @var  string
 	 */
-	protected static $dbo = null;
-
-	/**
-	 * Property db.
-	 *
-	 * @var  DatabaseDriver
-	 */
-	protected $db = null;
+	protected static $driver = 'mysql';
 
 	/**
 	 * setUpBeforeClass
@@ -41,105 +33,12 @@ abstract class DatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public static function setUpBeforeClass()
 	{
-		// First let's look to see if we have a DSN defined or in the environment variables.
-		if (defined('DB_HOST') || getenv('DB_HOST'))
+		parent::setUpBeforeClass();
+
+		if (static::$dbo)
 		{
-			$dsn = defined('DB_HOST') ? DB_HOST : getenv('DB_HOST');
+			DatabaseAdapter::setInstance(new WindwalkerAdapter(static::$dbo));
 		}
-		else
-		{
-			return;
-		}
-
-		// Use factory create dbo, only create once and will be singleton.
-		$db = self::$dbo = DatabaseFactory::getDbo(
-				array(
-					'driver'   => 'mysql',
-					'host'     => DB_HOST,
-					'user'     => DB_USER,
-					'password' => DB_PASSWD
-				)
-			);
-
-		DatabaseAdapter::setInstance(new WindwalkerAdapter($db));
-
-		$db->setQuery('CREATE DATABASE IF NOT EXISTS ' . $db->quoteName(DB_DBNAME))->execute();
-
-		$db->select(DB_DBNAME);
-
-		$queries = file_get_contents(__DIR__ . '/Stub/data.sql');
-
-		$queries = $db->splitSql($queries);
-
-		foreach ($queries as $query)
-		{
-			$query = trim($query);
-
-			if ($query)
-			{
-				$db->setQuery($query)->execute();
-			}
-		}
-	}
-
-	/**
-	 * tearDownAfterClass
-	 *
-	 * @return  void
-	 */
-	public static function tearDownAfterClass()
-	{
-		if (!self::$dbo)
-		{
-			return;
-		}
-
-		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(DB_DBNAME))->execute();
-
-		self::$dbo = null;
-	}
-
-	/**
-	 * Destruct.
-	 */
-	public function __destruct()
-	{
-		if (!self::$dbo)
-		{
-			return;
-		}
-
- 		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(DB_DBNAME))->execute();
-
-		self::$dbo = null;
-	}
-
-	/**
-	 * Sets up the fixture.
-	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function setUp()
-	{
-		if (empty(static::$dbo))
-		{
-			$this->markTestSkipped('There is no database driver.');
-		}
-
-		parent::setUp();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		$this->db = null;
 	}
 
 	/**

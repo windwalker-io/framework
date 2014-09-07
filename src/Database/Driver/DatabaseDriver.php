@@ -164,7 +164,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * getConnection
 	 *
-	 * @return  resource
+	 * @return  resource|object
 	 */
 	public function getConnection()
 	{

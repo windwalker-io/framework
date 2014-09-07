@@ -16,28 +16,46 @@ use Windwalker\Database\Driver\DatabaseDriver;
 abstract class DatabaseFactory
 {
 	/**
-	 * Property db.
+	 * The default DB object.
 	 *
 	 * @var DatabaseDriver
 	 */
 	protected static $db = null;
 
 	/**
+	 * Property instances.
+	 *
+	 * @var  array
+	 */
+	protected static $instances = array();
+
+	/**
 	 * getDbo
 	 *
-	 * @param array $option
-	 * @param bool  $forceNew
+	 * @param string $driver
+	 * @param array  $option
+	 * @param bool   $forceNew
 	 *
+	 * @throws \InvalidArgumentException
 	 * @return  DatabaseDriver
 	 */
-	public static function getDbo($option = array(), $forceNew = false)
+	public static function getDbo($driver, $option = array(), $forceNew = false)
 	{
-		if (!self::$db || $forceNew)
+		$option['driver'] = $driver;
+
+		// Create new instance if this driver not exists.
+		if (empty(self::$instances[$driver]) || $forceNew)
 		{
-			self::$db = static::createDbo($option);
+			self::$instances[$driver] = static::createDbo($option);
 		}
 
-		return self::$db;
+		// Set default DB object.
+		if (!self::$db)
+		{
+			self::$db = self::$instances[$driver];
+		}
+
+		return self::$instances[$driver];
 	}
 
 	/**

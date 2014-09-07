@@ -9,12 +9,12 @@
 	<php>
 		<ini name="error_reporting" value="32767" />
 
-		<!-- These constants help setup environment configurations for running optional tests.
-		<const name="DB_HOST" value="localhost" />
-		<const name="DB_USER" value="user" />
-		<const name="DB_PASSWD" value="ut1234" />
-		<const name="DB_DBNAME" value="windwalker_dbtest" />
-		-->
+		<!--<const name="WINDWALKER_TEST_DB_DRIVERS" value="mysql, postgresql, oracle, mssql, sqlite" />-->
+		<const name="WINDWALKER_TEST_DB_DSN_MYSQL"      value="host=localhost;dbname=windwalker_test;user=root;pass=ut1234" />
+		<const name="WINDWALKER_TEST_DB_DSN_POSTGRESQL" value="host=localhost;dbname=windwalker_test;user=root;pass=ut1234" />
+		<const name="WINDWALKER_TEST_DB_DSN_ORACLE"     value="host=localhost;port=5432;dbname=windwalker_test;user=root;pass=ut1234" />
+		<const name="WINDWALKER_TEST_DB_DSN_MSSQL"      value="host=localhost;port=1521;dbname=windwalker_test;user=root;pass=ut1234" />
+		<const name="WINDWALKER_TEST_DB_DSN_SQLITE"     value="host=localhost;dbname=windwalker_test;user=root;pass=ut1234" />
 	</php>
 	<testsuites>
 		<testsuite name="Unit">
