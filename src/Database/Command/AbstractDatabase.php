@@ -18,12 +18,19 @@ use Windwalker\Database\Driver\DatabaseDriver;
  */
 abstract class AbstractDatabase
 {
-	use DatabaseAwareTrait
-	{
-		DatabaseAwareTrait::__construct as doConstruct;
-	}
-
+	/**
+	 * Property database.
+	 *
+	 * @var  string
+	 */
 	protected $database = null;
+
+	/**
+	 * Property driver.
+	 *
+	 * @var  \Windwalker\Database\Driver\DatabaseDriver
+	 */
+	protected $db;
 
 	/**
 	 * Constructor.
@@ -35,7 +42,7 @@ abstract class AbstractDatabase
 	{
 		$this->database = $database;
 
-		$this->doConstruct($db);
+		$this->db = $db;
 	}
 
 	/**
@@ -122,6 +129,30 @@ abstract class AbstractDatabase
 	public function setName($name)
 	{
 		$this->database = $name;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Db
+	 *
+	 * @return  \Windwalker\Database\Driver\DatabaseDriver
+	 */
+	public function getDriver()
+	{
+		return $this->db;
+	}
+
+	/**
+	 * Method to set property db
+	 *
+	 * @param   \Windwalker\Database\Driver\DatabaseDriver $db
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDriver($db)
+	{
+		$this->db = $db;
 
 		return $this;
 	}

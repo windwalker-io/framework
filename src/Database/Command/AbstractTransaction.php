@@ -18,10 +18,12 @@ use Windwalker\Database\Driver\DatabaseDriver;
  */
 abstract class AbstractTransaction
 {
-	use DatabaseAwareTrait
-	{
-		DatabaseAwareTrait::__construct as doConstruct;
-	}
+	/**
+	 * Property driver.
+	 *
+	 * @var  \Windwalker\Database\Driver\DatabaseDriver
+	 */
+	protected $db;
 
 	/**
 	 * The depth of the current transaction.
@@ -48,7 +50,7 @@ abstract class AbstractTransaction
 	{
 		$this->nested = $nested;
 
-		$this->doConstruct($db);
+		$this->db = $db;
 	}
 
 	/**
@@ -87,7 +89,7 @@ abstract class AbstractTransaction
 	 *
 	 * @param   boolean $nested
 	 *
-	 * @return  DatabaseTransaction  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setNested($nested)
 	{
@@ -95,5 +97,28 @@ abstract class AbstractTransaction
 
 		return $this;
 	}
-}
 
+	/**
+	 * Method to get property Db
+	 *
+	 * @return  \Windwalker\Database\Driver\DatabaseDriver
+	 */
+	public function getDriver()
+	{
+		return $this->db;
+	}
+
+	/**
+	 * Method to set property db
+	 *
+	 * @param   \Windwalker\Database\Driver\DatabaseDriver $db
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDriver($db)
+	{
+		$this->db = $db;
+
+		return $this;
+	}
+}

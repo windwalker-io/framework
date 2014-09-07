@@ -9,6 +9,7 @@
 namespace Windwalker\Database\Command;
 
 use Windwalker\Database\Driver\DatabaseAwareTrait;
+use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
 
 /**
@@ -18,7 +19,22 @@ use Windwalker\Database\Query\QueryHelper;
  */
 abstract class AbstractWriter
 {
-	use DatabaseAwareTrait;
+	/**
+	 * Property driver.
+	 *
+	 * @var  \Windwalker\Database\Driver\DatabaseDriver
+	 */
+	protected $db;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DatabaseDriver $db
+	 */
+	public function __construct(DatabaseDriver $db)
+	{
+		$this->db = $db;
+	}
 
 	/**
 	 * Inserts a row into a table based on an object's properties.
@@ -327,6 +343,19 @@ abstract class AbstractWriter
 	}
 
 	/**
+	 * Get the number of affected rows for the previous executed SQL statement.
+	 * Only applicable for DELETE, INSERT, or UPDATE statements.
+	 *
+	 * @return  integer  The number of affected rows.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function countAffected()
+	{
+		return $this->db->getReader()->countAffected();
+	}
+
+	/**
 	 * Method to get the auto-incremented value from the last INSERT statement.
 	 *
 	 * @return  string  The value of the auto-increment field from the last inserted row.
@@ -334,5 +363,28 @@ abstract class AbstractWriter
 	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function insertId();
-}
 
+	/**
+	 * Method to get property Db
+	 *
+	 * @return  \Windwalker\Database\Driver\DatabaseDriver
+	 */
+	public function getDriver()
+	{
+		return $this->db;
+	}
+
+	/**
+	 * Method to set property db
+	 *
+	 * @param   \Windwalker\Database\Driver\DatabaseDriver $db
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDriver($db)
+	{
+		$this->db = $db;
+
+		return $this;
+	}
+}

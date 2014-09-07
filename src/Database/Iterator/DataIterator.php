@@ -29,7 +29,7 @@ class DataIterator implements \Countable, \Iterator
 	 *
 	 * @var  int
 	 */
-	protected $key = 0;
+	protected $key = -1;
 
 	/**
 	 * Property current.
@@ -37,6 +37,7 @@ class DataIterator implements \Countable, \Iterator
 	 * @var object
 	 */
 	protected $current;
+
 	/**
 	 * Property class.
 	 *
@@ -48,7 +49,7 @@ class DataIterator implements \Countable, \Iterator
 	 * Constructor.
 	 *
 	 * @param AbstractReader $reader
-	 * @param string                 $class
+	 * @param string         $class
 	 */
 	public function __construct(AbstractReader $reader, $class = '\\stdClass')
 	{

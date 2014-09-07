@@ -8,6 +8,7 @@
 
 namespace Windwalker\Database\Command;
 
+use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Database\Iterator\DataIterator;
 use Windwalker\Database\Driver\DatabaseAwareTrait;
 use Windwalker\Query\Query;
@@ -19,7 +20,22 @@ use Windwalker\Query\Query;
  */
 abstract class AbstractReader
 {
-	use DatabaseAwareTrait;
+	/**
+	 * Property driver.
+	 *
+	 * @var  \Windwalker\Database\Driver\DatabaseDriver
+	 */
+	protected $db;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DatabaseDriver $db
+	 */
+	public function __construct(DatabaseDriver $db)
+	{
+		$this->db = $db;
+	}
 
 	/**
 	 * setQuery
@@ -342,6 +358,30 @@ abstract class AbstractReader
 	public function freeResult()
 	{
 		$this->db->freeResult();
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Db
+	 *
+	 * @return  \Windwalker\Database\Driver\DatabaseDriver
+	 */
+	public function getDriver()
+	{
+		return $this->db;
+	}
+
+	/**
+	 * Method to set property db
+	 *
+	 * @param   \Windwalker\Database\Driver\DatabaseDriver $db
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDriver($db)
+	{
+		$this->db = $db;
 
 		return $this;
 	}
