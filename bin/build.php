@@ -53,10 +53,10 @@ class Build extends AbstractCliApplication
 	 * @var  array
 	 */
 	protected $subtrees = array(
-		'data'       => 'Data',
-		'datamapper' => 'DataMapper',
-		'middleware' => 'Middleware',
-		'compare'    => 'Compare',
+//		'data'       => 'Data',
+//		'datamapper' => 'DataMapper',
+//		'middleware' => 'Middleware',
+//		'compare'    => 'Compare',
 		'database'   => 'Database'
 	);
 
@@ -81,7 +81,7 @@ class Build extends AbstractCliApplication
 
 		$this->exec('git merge staging');
 
-		if (!$this->tag)
+		if ($this->tag)
 		{
 			$this->exec('git tag -d ' . $tag);
 
@@ -110,19 +110,25 @@ class Build extends AbstractCliApplication
 	 */
 	protected function splitTree($subtree, $namespace)
 	{
+		// Do split
 		$this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
 
-		$this->exec(sprintf('git branch -D master-%s', $subtree));
+		// Create a new branch
+		$this->exec(sprintf('git branch -D %s-%s', $this->master, $subtree));
 
+		// Add remote repo
 		$this->exec(sprintf('git remote add %s git@github.com:ventoviro/windwalker-%s.git', $subtree, $subtree));
 
+		/*
+		// Fetch remote
 		$this->exec(sprintf('git fetch %s', $subtree));
 
-		$this->exec(sprintf('git checkout -b master-%s --track %s/master', $subtree, $subtree));
+		$this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->master, $subtree, $subtree, $this->master));
 
 		$this->exec(sprintf('git merge sub-%s', $subtree));
+		*/
 
-		$this->exec(sprintf('git push %s master-%s:master', $subtree, $subtree));
+		$this->exec(sprintf('git push %s %s-%s:%s -f', $subtree, $this->master, $subtree, $this->master));
 
 		if ($this->tag)
 		{
