@@ -67,7 +67,7 @@ class Build extends AbstractCliApplication
 	 */
 	protected function doExecute()
 	{
-		$this->tag = $tag = $this->io->getArgument(0) or $this->stop('Please give me tag name.');
+		$this->tag = $tag = $this->io->getArgument(0);
 
 		$test = $this->io->getOption('t') ?: $this->io->getOption('test');
 
@@ -81,11 +81,14 @@ class Build extends AbstractCliApplication
 
 		$this->exec('git merge staging');
 
-		$this->exec('git tag -d ' . $tag);
+		if (!$this->tag)
+		{
+			$this->exec('git tag -d ' . $tag);
 
-		$this->exec('git push origin :refs/tags/' . $tag);
+			$this->exec('git push origin :refs/tags/' . $tag);
 
-		$this->exec('git tag ' . $tag);
+			$this->exec('git tag ' . $tag);
+		}
 
 		$this->exec(sprintf('git push origin %s %s:%s staging:staging', $tag, $master, $master));
 
@@ -121,9 +124,12 @@ class Build extends AbstractCliApplication
 
 		$this->exec(sprintf('git push %s master-%s:master', $subtree, $subtree));
 
-		$this->exec(sprintf('git tag -d %s', $this->tag));
+		if ($this->tag)
+		{
+			$this->exec(sprintf('git tag -d %s', $this->tag));
 
-		$this->exec(sprintf('git tag %s', $this->tag));
+			$this->exec(sprintf('git tag %s', $this->tag));
+		}
 
 		$this->exec(sprintf('git push %s %s', $subtree, $this->tag));
 
