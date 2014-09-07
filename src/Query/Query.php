@@ -253,7 +253,7 @@ class Query implements QueryInterface
 	 */
 	public function __construct(\PDO $connection = null)
 	{
-		$this->connection = $connection;
+		$this->connection = $connection ? : ConnectionContainer::getConnection($this->name);
 	}
 
 	/**

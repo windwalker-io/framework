@@ -65,7 +65,7 @@ abstract class DatabaseFactory
 	 *
 	 * @return  void
 	 */
-	public static function setDbo(DatabaseDriver $db)
+	public static function setDefaultDbo(DatabaseDriver $db)
 	{
 		self::$db = $db;
 	}
