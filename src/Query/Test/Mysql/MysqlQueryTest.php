@@ -327,6 +327,11 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$query = $this->getQuery();
 
+		if (!$this->pdo)
+		{
+			return;
+		}
+
 		$this->assertEquals(trim($this->pdo->quote($this->escapeString), "'"), $query->escape($this->escapeString));
 
 		// Use Pdo object to escape.
