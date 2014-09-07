@@ -1831,5 +1831,28 @@ class Query implements QueryInterface
 
 		return $this;
 	}
-}
 
+	/**
+	 * Method to get property Connection
+	 *
+	 * @return  \PDO
+	 */
+	public function getConnection()
+	{
+		return $this->connection;
+	}
+
+	/**
+	 * Method to set property connection
+	 *
+	 * @param   \PDO $connection
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setConnection($connection)
+	{
+		$this->connection = $connection;
+
+		return $this;
+	}
+}

@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Database;
+namespace Windwalker\Database\Iterator;
 
 use Windwalker\Database\Command\DatabaseReader;
 

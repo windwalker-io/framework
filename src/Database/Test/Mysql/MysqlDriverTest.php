@@ -27,6 +27,13 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	protected static $driver = 'mysql';
 
 	/**
+	 * Property quote.
+	 *
+	 * @var  array
+	 */
+	protected static $quote = array('`', '`');
+
+	/**
 	 * Property db.
 	 *
 	 * @var MysqlDriver
@@ -142,15 +149,15 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	}
 
 	/**
-	 * Method to test doExecute().
+	 * Method to test execute().
 	 *
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::doExecute
 	 */
-	public function testDoExecute()
+	public function testExecute()
 	{
-		$this->db->setQuery('INSERT INTO `ww_flower` (`catid`) VALUES ("3")');
+		$this->db->setQuery('INSERT INTO `#__flower` (`catid`) VALUES ("3")');
 
 		$this->db->execute();
 
@@ -178,14 +185,18 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getTable
-	 * @TODO   Implement testGetTable().
 	 */
 	public function testGetTable()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$table = $this->db->getTable('#__flower');
+		$driver = ucfirst(static::$driver);
+
+		$this->assertInstanceOf(
+			sprintf('Windwalker\\Database\\Driver\\%s\\%sTable', $driver, $driver),
+			$table
 		);
+
+		$this->assertEquals('#__flower', $table->getName());
 	}
 
 	/**
@@ -194,14 +205,18 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getDatabase
-	 * @TODO   Implement testGetDatabase().
 	 */
 	public function testGetDatabase()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$database = $this->db->getDatabase(static::$dbname);
+		$driver = ucfirst(static::$driver);
+
+		$this->assertInstanceOf(
+			sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', $driver, $driver),
+			$database
 		);
+
+		$this->assertEquals(static::$dbname, $database->getName());
 	}
 
 	/**
@@ -210,13 +225,15 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getReader
-	 * @TODO   Implement testGetReader().
 	 */
 	public function testGetReader()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$reader = $this->db->getReader();
+		$driver = ucfirst(static::$driver);
+
+		$this->assertInstanceOf(
+			sprintf('Windwalker\\Database\\Driver\\%s\\%sReader', $driver, $driver),
+			$reader
 		);
 	}
 
@@ -226,13 +243,15 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getWriter
-	 * @TODO   Implement testGetWriter().
 	 */
 	public function testGetWriter()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$writer = $this->db->getWriter();
+		$driver = ucfirst(static::$driver);
+
+		$this->assertInstanceOf(
+			sprintf('Windwalker\\Database\\Driver\\%s\\%sWriter', $driver, $driver),
+			$writer
 		);
 	}
 
@@ -242,13 +261,24 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getTransaction
-	 * @TODO   Implement testGetTransaction().
 	 */
 	public function testGetTransaction()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		// Test no nested
+		$trans = $this->db->getTransaction(false);
+
+		$this->assertFalse($trans->getNested());
+
+		// Fallback
+		$trans->setNested(true);
+
+		// Test get
+		$trans = $this->db->getTransaction();
+		$driver = ucfirst(static::$driver);
+
+		$this->assertInstanceOf(
+			sprintf('Windwalker\\Database\\Driver\\%s\\%sTransaction', $driver, $driver),
+			$trans
 		);
 	}
 
@@ -258,14 +288,14 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::listDatabases
-	 * @TODO   Implement testListDatabases().
 	 */
 	public function testListDatabases()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$dbs = $this->db->setQuery('SHOW DATABASES')->loadColumn();
+
+		$dbList = $this->db->listDatabases();
+
+		$this->assertEquals($dbs, $dbList);
 	}
 
 	/**
@@ -274,14 +304,10 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::getConnection
-	 * @TODO   Implement testGetConnection().
 	 */
 	public function testGetConnection()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf('PDO', $this->db->getConnection());
 	}
 
 	/**
@@ -290,25 +316,8 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::setConnection
-	 * @TODO   Implement testSetConnection().
 	 */
 	public function testSetConnection()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * Method to test execute().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Database\Driver\DatabaseDriver::execute
-	 * @TODO   Implement testExecute().
-	 */
-	public function testExecute()
 	{
 		// Remove the following lines when you implement this test.
 		$this->markTestIncomplete(
@@ -322,14 +331,10 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::getCursor
-	 * @TODO   Implement testGetCursor().
 	 */
 	public function testGetCursor()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf('PDOStatement', $this->db->getCursor());
 	}
 
 	/**
@@ -338,13 +343,12 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::getIterator
-	 * @TODO   Implement testGetIterator().
 	 */
 	public function testGetIterator()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$this->assertInstanceOf(
+			sprintf('Windwalker\\Database\\Iterator\\DataIterator'),
+			$this->db->setQuery('SELECT * FROM #__flower')->getIterator()
 		);
 	}
 
@@ -354,14 +358,10 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::getCurrentDatabase
-	 * @TODO   Implement testGetCurrentDatabase().
 	 */
 	public function testGetCurrentDatabase()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals(static::$dbname, $this->db->getCurrentDatabase());
 	}
 
 	/**
@@ -370,14 +370,10 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::getPrefix
-	 * @TODO   Implement testGetPrefix().
 	 */
 	public function testGetPrefix()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals(static::$dsn['prefix'], $this->db->getPrefix());
 	}
 
 	/**
@@ -386,7 +382,6 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::log
-	 * @TODO   Implement testLog().
 	 */
 	public function testLog()
 	{
@@ -418,13 +413,12 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::replacePrefix
-	 * @TODO   Implement testReplacePrefix().
 	 */
 	public function testReplacePrefix()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$this->assertEquals(
+			'SELECT * FROM ' . static::$dsn['prefix'] . 'flower WHERE id = 1',
+			$this->db->replacePrefix('SELECT * FROM #__flower WHERE id = 1')
 		);
 	}
 
@@ -434,13 +428,20 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::splitSql
-	 * @TODO   Implement testSplitSql().
 	 */
 	public function testSplitSql()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$sql = <<<SQL
+SELECT * FROM ww_flower WHERE id = 1;
+SELECT * FROM ww_flower WHERE id = 2;
+SELECT * FROM ww_flower WHERE id = 3;
+SQL;
+
+		$sqls = $this->db->splitSql($sql);
+
+		$this->assertEquals(
+			'SELECT * FROM ww_flower WHERE id = 3;',
+			trim($sqls[2])
 		);
 	}
 
@@ -466,14 +467,24 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::loadAll
-	 * @TODO   Implement testLoadAll().
 	 */
 	public function testLoadAll()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->db->getQuery(true);
+
+		$query->select('*')
+			->from('#__flower')
+			->limit(3);
+
+		$items = $this->db->setQuery($query)->loadAll();
+
+		$this->assertEquals(1, $items[0]->id);
+		$this->assertEquals('Amaryllis', $items[1]->title);
+		$this->assertEquals(3, $items[2]->ordering);
+
+		$items = $this->db->setQuery($query)->loadAll('title', 'assoc');
+
+		$this->assertEquals('Amaryllis', $items['Amaryllis']['title']);
 	}
 
 	/**
@@ -482,14 +493,22 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::loadOne
-	 * @TODO   Implement testLoadOne().
 	 */
 	public function testLoadOne()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->db->getQuery(true);
+
+		$query->select('*')
+			->from('#__flower')
+			->where('id = 4');
+
+		$item = $this->db->setQuery($query)->loadOne();
+
+		$this->assertEquals('Apple Blossom', $item->title);
+
+		$item = $this->db->setQuery($query)->loadOne('assoc');
+
+		$this->assertEquals('Apple Blossom', $item['title']);
 	}
 
 	/**
@@ -498,14 +517,18 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::loadResult
-	 * @TODO   Implement testLoadResult().
 	 */
 	public function testLoadResult()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->db->getQuery(true);
+
+		$query->select('title')
+			->from('#__flower')
+			->where('id = 5');
+
+		$item = $this->db->setQuery($query)->loadResult();
+
+		$this->assertEquals('Aster', $item);
 	}
 
 	/**
@@ -514,14 +537,18 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::loadColumn
-	 * @TODO   Implement testLoadColumn().
 	 */
 	public function testLoadColumn()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->db->getQuery(true);
+
+		$query->select('title')
+			->from('#__flower')
+			->where('ordering < 10');
+
+		$items = $this->db->setQuery($query)->loadColumn();
+
+		$this->assertEquals('Bachelor Button', $items[7]);
 	}
 
 	/**
@@ -530,13 +557,14 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::quoteName
-	 * @TODO   Implement testQuoteName().
 	 */
 	public function testQuoteName()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$name = '#__flower';
+
+		$this->assertEquals(
+			static::$quote[0] . $name . static::$quote[1],
+			$this->db->quoteName($name)
 		);
 	}
 
@@ -546,13 +574,14 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::qn
-	 * @TODO   Implement testQn().
 	 */
 	public function testQn()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$name = '#__flower';
+
+		$this->assertEquals(
+			static::$quote[0] . $name . static::$quote[1],
+			$this->db->qn($name)
 		);
 	}
 
@@ -562,13 +591,14 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::quote
-	 * @TODO   Implement testQuote().
 	 */
 	public function testQuote()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$text = "Simon can't fly.\nSakura is flower.";
+
+		$this->assertEquals(
+			"'" . $this->db->escape($text) . "'",
+			$this->db->quote($text)
 		);
 	}
 
@@ -578,13 +608,14 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::q
-	 * @TODO   Implement testQ().
 	 */
 	public function testQ()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$text = "Simon can't fly.\nSakura is flower.";
+
+		$this->assertEquals(
+			"'" . $this->db->escape($text) . "'",
+			$this->db->q($text)
 		);
 	}
 
@@ -594,13 +625,14 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::escape
-	 * @TODO   Implement testEscape().
 	 */
 	public function testEscape()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$string = "foo \"'_-!@#$%^&*() \n \t \r \0";
+
+		$this->assertEquals(
+			$this->db->getQuery(true)->escape($string, true),
+			$this->db->escape($string)
 		);
 	}
 
@@ -610,13 +642,14 @@ class MysqlDriverTest extends AbstractDatabaseCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\DatabaseDriver::e
-	 * @TODO   Implement testE().
 	 */
 	public function testE()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$string = "foo \"'_-!@#$%^&*() \n \t \r \0";
+
+		$this->assertEquals(
+			$this->db->getQuery(true)->escape($string, true),
+			$this->db->e($string)
 		);
 	}
 

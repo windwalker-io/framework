@@ -172,5 +172,29 @@ abstract class DatabaseTable
 	 * @return  mixed
 	 */
 	abstract public function getIndexes();
+
+	/**
+	 * Method to get property Table
+	 *
+	 * @return  string
+	 */
+	public function getName()
+	{
+		return $this->table;
+	}
+
+	/**
+	 * Method to set property table
+	 *
+	 * @param   null|string $table
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setName($table)
+	{
+		$this->table = $table;
+
+		return $this;
+	}
 }
 

@@ -101,5 +101,29 @@ abstract class DatabaseDatabase
 	 * @return  mixed
 	 */
 	abstract public function getTableDetail($table, $full = true);
+
+	/**
+	 * Method to get property Table
+	 *
+	 * @return  string
+	 */
+	public function getName()
+	{
+		return $this->database;
+	}
+
+	/**
+	 * Method to set property table
+	 *
+	 * @param   string $name
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setName($name)
+	{
+		$this->database = $name;
+
+		return $this;
+	}
 }
 

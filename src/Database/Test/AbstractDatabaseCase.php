@@ -40,11 +40,25 @@ abstract class AbstractDatabaseCase extends \PHPUnit_Framework_TestCase
 	protected static $driver = null;
 
 	/**
+	 * Property quote.
+	 *
+	 * @var  array
+	 */
+	protected static $quote = array('"', '"');
+
+	/**
 	 * Property dbname.
 	 *
 	 * @var string
 	 */
 	protected static $dbname = '';
+
+	/**
+	 * Property dsn.
+	 *
+	 * @var array
+	 */
+	protected static $dsn = array();
 
 	/**
 	 * setUpBeforeClass
@@ -75,11 +89,21 @@ abstract class AbstractDatabaseCase extends \PHPUnit_Framework_TestCase
 		$dsn = str_replace(';', "\n", $dsn);
 		$dsn = parse_ini_string($dsn);
 
+		static::$dsn = $dsn;
+
 		static::$dbname = $dbname = isset($dsn['dbname']) ? $dsn['dbname'] : null;
 
 		if (!$dbname)
 		{
 			throw new \LogicException(sprintf('No dbname in %s DSN', static::$driver));
+		}
+
+		// Id db exists, return.
+		if (static::$dbo)
+		{
+			static::$dbo->select($dbname);
+
+			return;
 		}
 
 		// Use factory create dbo, only create once and will be singleton.
@@ -89,7 +113,8 @@ abstract class AbstractDatabaseCase extends \PHPUnit_Framework_TestCase
 				'host'     => isset($dsn['host']) ? $dsn['host'] : null,
 				'user'     => isset($dsn['user']) ? $dsn['user'] : null,
 				'password' => isset($dsn['pass']) ? $dsn['pass'] : null,
-				'port'     => isset($dsn['port']) ? $dsn['port'] : null
+				'port'     => isset($dsn['port']) ? $dsn['port'] : null,
+				'prefix'   => isset($dsn['prefix']) ? $dsn['prefix'] : null,
 			)
 		);
 
@@ -169,5 +194,6 @@ abstract class AbstractDatabaseCase extends \PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
+		$this->db = null;
 	}
 }

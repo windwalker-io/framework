@@ -712,6 +712,11 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	{
 		if (strtolower($class) == 'array')
 		{
+			return $this->getReader()->loadArrayList($key);
+		}
+
+		if (strtolower($class) == 'assoc')
+		{
 			return $this->getReader()->loadAssocList($key);
 		}
 
@@ -728,6 +733,11 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	public function loadOne($class = '\\stdClass')
 	{
 		if (strtolower($class) == 'array')
+		{
+			return $this->getReader()->loadArray();
+		}
+
+		if (strtolower($class) == 'assoc')
 		{
 			return $this->getReader()->loadAssoc();
 		}

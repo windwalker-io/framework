@@ -320,6 +320,8 @@ class PdoDriver extends DatabaseDriver
 			// Make sure we have a query class for this driver.
 			if (class_exists($class))
 			{
+				$this->connect();
+
 				return new $class($this->getConnection());
 			}
 
