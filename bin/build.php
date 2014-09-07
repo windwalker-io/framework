@@ -53,11 +53,17 @@ class Build extends AbstractCliApplication
 	 * @var  array
 	 */
 	protected $subtrees = array(
-//		'data'       => 'Data',
-//		'datamapper' => 'DataMapper',
-//		'middleware' => 'Middleware',
-//		'compare'    => 'Compare',
-		'database'   => 'Database'
+		'application' => 'Application',
+		'compare'    => 'Compare',
+		'compat'     => 'Compat',
+		// 'console'    => 'Console',
+		'controller' => 'Controller',
+		'data'       => 'Data',
+		'datamapper' => 'DataMapper',
+		'database'   => 'Database',
+		'middleware' => 'Middleware',
+		'query'      => 'Query',
+		'registry'   => 'Registry'
 	);
 
 	/**
