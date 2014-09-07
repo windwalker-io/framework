@@ -128,16 +128,16 @@ class Build extends AbstractCliApplication
 		$this->exec(sprintf('git merge sub-%s', $subtree));
 		*/
 
-		$this->exec(sprintf('git push %s %s-%s:%s -f', $subtree, $this->master, $subtree, $this->master));
+		$this->exec(sprintf('git push %s sub-%s:%s -f', $subtree, $subtree, $this->master));
 
 		if ($this->tag)
 		{
 			$this->exec(sprintf('git tag -d %s', $this->tag));
 
 			$this->exec(sprintf('git tag %s', $this->tag));
-		}
 
-		$this->exec(sprintf('git push %s %s', $subtree, $this->tag));
+			$this->exec(sprintf('git push %s %s', $subtree, $this->tag));
+		}
 
 		$this->exec('git checkout ' . $this->master);
 	}
