@@ -316,6 +316,14 @@ class MysqlTableTest extends AbstractMysqlTest
 		try
 		{
 			$this->db->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
+		}
+		catch (\Exception $e)
+		{
+			// Do nothing
+		}
+
+		try
+		{
 			$this->db->setQuery(MysqlQueryBuilder::dropDatabase('#__wind', true))->execute();
 		}
 		catch (\Exception $e)
@@ -336,6 +344,14 @@ class MysqlTableTest extends AbstractMysqlTest
 		try
 		{
 			static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase('#__cloud', true))->execute();
+		}
+		catch (\Exception $e)
+		{
+			// Do nothing
+		}
+
+		try
+		{
 			static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase('#__wind', true))->execute();
 		}
 		catch (\Exception $e)
