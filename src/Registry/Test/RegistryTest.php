@@ -357,11 +357,11 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	{
 		$registry = new Registry($this->getTestData());
 
-		$this->assertStringEqualsFile(__DIR__ . '/Stubs/flower.json', $registry->toString('json'));
-		$this->assertStringEqualsFile(__DIR__ . '/Stubs/flower.yml', $registry->toString('yaml'));
-		$this->assertStringEqualsFile(__DIR__ . '/Stubs/flower.ini', $registry->toString('ini'));
-		$this->assertStringEqualsFile(__DIR__ . '/Stubs/flower.xml', $registry->toString('xml'));
-		$this->assertStringEqualsFile(__DIR__ . '/Stubs/flower.php', $registry->toString('php'));
+		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.json'), $this->clean($registry->toString('json')));
+		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.yml'), $this->clean($registry->toString('yaml')));
+		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.ini'), $this->clean($registry->toString('ini')));
+		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.xml'), $this->clean($registry->toString('xml')));
+		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.php'), $this->clean($registry->toString('php')));
 	}
 
 	/**
@@ -380,5 +380,31 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		$flatted = $this->instance->flatten('/');
 
 		$this->assertEquals($flatted['pos1/sunflower'], 'sakura');
+	}
+
+	/**
+	 * loadFile
+	 *
+	 * @param string $file
+	 *
+	 * @return  string
+	 */
+	protected function loadFile($file)
+	{
+		$text = file_get_contents($file);
+
+		return $this->clean($text);
+	}
+
+	/**
+	 * clean
+	 *
+	 * @param string $text
+	 *
+	 * @return  string
+	 */
+	protected function clean($text)
+	{
+		return trim(preg_replace('/\s+/', ' ', $text));
 	}
 }
