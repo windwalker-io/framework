@@ -133,7 +133,7 @@ class Build extends AbstractCliApplication
 		{
 			$this->exec(sprintf('git fetch %s', $subtree));
 
-			$this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->master, $subtree, $subtree, $this->master));
+			$this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->branch, $subtree, $subtree, $this->branch));
 
 			$this->exec(sprintf('git merge sub-%s', $subtree));
 		}
