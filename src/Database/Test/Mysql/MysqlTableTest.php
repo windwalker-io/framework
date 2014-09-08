@@ -313,10 +313,8 @@ class MysqlTableTest extends AbstractMysqlTest
 	 */
 	public function __destruct()
 	{
-		$this->db->select(static::$dbname);
-
-		$this->db->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
-		$this->db->setQuery(MysqlQueryBuilder::dropDatabase('#__wind', true))->execute();
+		$this->db->setQuery(MysqlQueryBuilder::dropTable(static::$dbname . '.#__cloud', true))->execute();
+		$this->db->setQuery(MysqlQueryBuilder::dropDatabase(static::$dbname . '.#__wind', true))->execute();
 
 		parent::__destruct();
 	}
@@ -328,10 +326,8 @@ class MysqlTableTest extends AbstractMysqlTest
 	 */
 	public static function tearDownAfterClass()
 	{
-		static::$dbo->select(static::$dbname);
-
-		static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase('#__cloud', true))->execute();
-		static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase('#__wind', true))->execute();
+		static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase(static::$dbname . '.#__cloud', true))->execute();
+		static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase(static::$dbname . '.#__wind', true))->execute();
 
 		parent::tearDownAfterClass();
 	}
