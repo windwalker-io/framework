@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
 
 /**
- * Class JoomlaDatabaseAdapter
+ * Class WindwalkerAdapter
  *
  * @since 1.0
  */
@@ -213,4 +213,3 @@ class WindwalkerAdapter extends DatabaseAdapter
 		return $this;
 	}
 }
-

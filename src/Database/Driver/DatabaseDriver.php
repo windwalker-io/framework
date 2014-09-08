@@ -857,4 +857,14 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	{
 		return $this->escape($text, $extra);
 	}
+
+	/**
+	 * Method to get property Name
+	 *
+	 * @return  string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
 }

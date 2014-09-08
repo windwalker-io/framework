@@ -19,10 +19,6 @@ use Windwalker\Query\QueryElement;
  */
 class QueryHelper
 {
-	const COLS_WITH_FIRST = 1;
-
-	const COLS_PREFIX_WITH_FIRST = 2;
-
 	/**
 	 * Property db.
 	 *
