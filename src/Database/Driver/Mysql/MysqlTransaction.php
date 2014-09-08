@@ -17,7 +17,6 @@ use Windwalker\Database\Driver\Pdo\PdoTransaction;
  */
 class MysqlTransaction extends PdoTransaction
 {
-
 	/**
 	 * start
 	 *
