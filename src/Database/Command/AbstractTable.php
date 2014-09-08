@@ -59,11 +59,12 @@ abstract class AbstractTable
 	/**
 	 * rename
 	 *
-	 * @param string $newName
+	 * @param string  $newName
+	 * @param boolean $returnNew
 	 *
 	 * @return  $this
 	 */
-	abstract public function rename($newName);
+	abstract public function rename($newName, $returnNew = true);
 
 	/**
 	 * Locks a table in the database.

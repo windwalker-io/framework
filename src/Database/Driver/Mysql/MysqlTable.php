@@ -51,15 +51,21 @@ class MysqlTable extends AbstractTable
 	/**
 	 * rename
 	 *
-	 * @param string $newName
+	 * @param string  $newName
+	 * @param boolean $returnNew
 	 *
 	 * @return  $this
 	 */
-	public function rename($newName)
+	public function rename($newName, $returnNew = true)
 	{
 		$this->db->setQuery('RENAME TABLE ' . $this->db->quoteName($this->table) . ' TO ' . $this->db->quoteName($newName));
 
 		$this->db->execute();
+
+		if ($returnNew)
+		{
+			return $this->db->getTable($newName);
+		}
 
 		return $this;
 	}
@@ -185,7 +191,7 @@ class MysqlTable extends AbstractTable
 	 */
 	public function dropColumn($name)
 	{
-		$query = MysqlQueryBuilder::dropColumn($name);
+		$query = MysqlQueryBuilder::dropColumn($this->table, $name);
 
 		$this->db->setQuery($query)->execute();
 
