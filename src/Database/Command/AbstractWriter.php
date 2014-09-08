@@ -39,16 +39,16 @@ abstract class AbstractWriter
 	/**
 	 * Inserts a row into a table based on an object's properties.
 	 *
-	 * @param   string $table The name of the database table to insert into.
-	 * @param   array  $data  A reference to an object whose public properties match the table fields.
-	 * @param   string $key   The name of the primary key. If provided the object property is updated.
+	 * @param   string $table  The name of the database table to insert into.
+	 * @param   array  &$data  A reference to an object whose public properties match the table fields.
+	 * @param   string $key    The name of the primary key. If provided the object property is updated.
 	 *
 	 * @throws \InvalidArgumentException
 	 * @return  static
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function insertOne($table, $data, $key = null)
+	public function insertOne($table, &$data, $key = null)
 	{
 		$fields = array();
 		$values = array();
@@ -61,8 +61,14 @@ abstract class AbstractWriter
 		$query = $this->db->getQuery(true);
 
 		// Iterate over the object variables to build the query fields and values.
-		foreach ((array) $data as $k => $v)
+		foreach (get_object_vars((object) $data) as $k => $v)
 		{
+			// Convert stringable object
+			if (is_object($v) && is_callable(array($v, '__toString')))
+			{
+				$v = (string) $v;
+			}
+
 			// Only process non-null scalars.
 			if (is_array($v) or is_object($v) or $v === null)
 			{
@@ -138,8 +144,14 @@ abstract class AbstractWriter
 		$query->update($query->quoteName($table));
 
 		// Iterate over the object variables to build the query fields/value pairs.
-		foreach ((array) $data as $k => $v)
+		foreach (get_object_vars((object) $data) as $k => $v)
 		{
+			// Convert stringable object
+			if (is_object($v) && is_callable(array($v, '__toString')))
+			{
+				$v = (string) $v;
+			}
+
 			// Only process scalars that are not internal fields.
 			if (is_array($v) || is_object($v) || $k[0] == '_')
 			{
@@ -185,16 +197,16 @@ abstract class AbstractWriter
 	/**
 	 * save
 	 *
-	 * @param   string  $table       The name of the database table to update.
-	 * @param   array   $data        A reference to an object whose public properties match the table fields.
-	 * @param   string  $key         The name of the primary key.
-	 * @param   boolean $updateNulls True to update null fields or false to ignore them.
+	 * @param   string  $table        The name of the database table to update.
+	 * @param   array   &$data        A reference to an object whose public properties match the table fields.
+	 * @param   string  $key          The name of the primary key.
+	 * @param   boolean $updateNulls  True to update null fields or false to ignore them.
 	 *
 	 * @return  bool|static
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function saveOne($table, $data, $key, $updateNulls = false)
+	public function saveOne($table, &$data, $key, $updateNulls = false)
 	{
 		if (is_array($key) || is_object($key))
 		{
@@ -203,11 +215,11 @@ abstract class AbstractWriter
 
 		if (is_array($data))
 		{
-			$id = $data[$key];
+			$id = isset($data[$key]) ? $data[$key] : null;
 		}
 		else
 		{
-			$id = $data->$key;
+			$id = isset($data->$key) ? $data->$key : null;
 		}
 
 		if ($id)
@@ -221,16 +233,16 @@ abstract class AbstractWriter
 	/**
 	 * insertMultiple
 	 *
-	 * @param   string $table   The name of the database table to update.
-	 * @param   array  $dataSet A reference to an object whose public properties match the table fields.
-	 * @param   array  $key     The name of the primary key.
+	 * @param   string $table    The name of the database table to update.
+	 * @param   array  &$dataSet A reference to an object whose public properties match the table fields.
+	 * @param   array  $key      The name of the primary key.
 	 *
 	 * @throws \InvalidArgumentException
 	 * @return  mixed
 	 */
-	public function insertMultiple($table, $dataSet, $key = null)
+	public function insertMultiple($table, &$dataSet, $key = null)
 	{
-		if (!is_array($dataSet) || !($dataSet instanceof \Traversable))
+		if (!is_array($dataSet) && !($dataSet instanceof \Traversable))
 		{
 			throw new \InvalidArgumentException('The data set to store should be array or \Traversable');
 		}
@@ -256,7 +268,7 @@ abstract class AbstractWriter
 	 */
 	public function updateMultiple($table, $dataSet, $key, $updateNulls = false)
 	{
-		if (!is_array($dataSet) || !($dataSet instanceof \Traversable))
+		if (!is_array($dataSet) && !($dataSet instanceof \Traversable))
 		{
 			throw new \InvalidArgumentException('The data set to store should be array or \Traversable');
 		}
@@ -282,7 +294,7 @@ abstract class AbstractWriter
 	 */
 	public function saveMultiple($table, $dataSet, $key, $updateNulls = false)
 	{
-		if (!is_array($dataSet) || !($dataSet instanceof \Traversable))
+		if (!is_array($dataSet) && !($dataSet instanceof \Traversable))
 		{
 			throw new \InvalidArgumentException('The data set to store should be array or \Traversable');
 		}
@@ -362,7 +374,10 @@ abstract class AbstractWriter
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	abstract public function insertId();
+	public function insertId()
+	{
+		return $this->db->getReader()->insertId();
+	}
 
 	/**
 	 * Method to get property Db

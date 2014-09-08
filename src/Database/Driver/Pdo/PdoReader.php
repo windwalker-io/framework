@@ -110,5 +110,18 @@ class PdoReader extends AbstractReader
 	{
 		return $this->db->getCursor()->rowCount();
 	}
+
+	/**
+	 * Method to get the auto-incremented value from the last INSERT statement.
+	 *
+	 * @return  string  The value of the auto-increment field from the last inserted row.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function insertId()
+	{
+		// Error suppress this to prevent PDO warning us that the driver doesn't support this operation.
+		return @$this->db->getConnection()->lastInsertId();
+	}
 }
 

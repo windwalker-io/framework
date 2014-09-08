@@ -351,6 +351,15 @@ abstract class AbstractReader
 	abstract public function countAffected();
 
 	/**
+	 * Method to get the auto-incremented value from the last INSERT statement.
+	 *
+	 * @return  string  The value of the auto-increment field from the last inserted row.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	abstract public function insertId();
+
+	/**
 	 * freeResult
 	 *
 	 * @return  $this
