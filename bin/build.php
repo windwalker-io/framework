@@ -38,7 +38,7 @@ class Build extends AbstractCliApplication
 	 *
 	 * @var  string
 	 */
-	protected $master = null;
+	protected $branch = null;
 
 	/**
 	 * Property tag.
@@ -75,15 +75,15 @@ class Build extends AbstractCliApplication
 	{
 		$this->tag = $tag = $this->io->getArgument(0);
 
-		$test = $this->io->getOption('t') ?: $this->io->getOption('test');
+		$branch = $this->io->getOption('b') ?: $this->io->getOption('branch', 'test');
 
-		$this->master = $master = $test ? 'test' : 'master';
+		$this->branch = $branch;
 
 		$this->exec('git fetch origin');
 
-		$this->exec('git branch -D ' . $master);
+		$this->exec('git branch -D ' . $branch);
 
-		$this->exec('git checkout -b ' . $master);
+		$this->exec('git checkout -b ' . $branch);
 
 		$this->exec('git merge staging');
 
@@ -96,7 +96,7 @@ class Build extends AbstractCliApplication
 			$this->exec('git tag ' . $tag);
 		}
 
-		$this->exec(sprintf('git push origin %s %s:%s staging:staging', $tag, $master, $master));
+		$this->exec(sprintf('git push origin %s %s:%s staging:staging', $tag, $branch, $branch));
 
 		foreach ($this->subtrees as $subtree => $namespace)
 		{
@@ -120,21 +120,25 @@ class Build extends AbstractCliApplication
 		$this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
 
 		// Create a new branch
-		$this->exec(sprintf('git branch -D %s-%s', $this->master, $subtree));
+		$this->exec(sprintf('git branch -D %s-%s', $this->branch, $subtree));
 
 		// Add remote repo
 		$this->exec(sprintf('git remote add %s git@github.com:ventoviro/windwalker-%s.git', $subtree, $subtree));
 
-		/*
-		// Fetch remote
-		$this->exec(sprintf('git fetch %s', $subtree));
+		$force = $this->io->getOption('f') ? : $this->io->getOption('force', false);
 
-		$this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->master, $subtree, $subtree, $this->master));
+		$force = $force ? ' -f' : false;
 
-		$this->exec(sprintf('git merge sub-%s', $subtree));
-		*/
+		if (!$force)
+		{
+			$this->exec(sprintf('git fetch %s', $subtree));
 
-		$this->exec(sprintf('git push %s sub-%s:%s -f', $subtree, $subtree, $this->master));
+			$this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->master, $subtree, $subtree, $this->master));
+
+			$this->exec(sprintf('git merge sub-%s', $subtree));
+		}
+
+		$this->exec(sprintf('git push %s sub-%s:%s ' . $force, $subtree, $subtree, $this->branch));
 
 		if ($this->tag)
 		{
@@ -145,7 +149,7 @@ class Build extends AbstractCliApplication
 			$this->exec(sprintf('git push %s %s', $subtree, $this->tag));
 		}
 
-		$this->exec('git checkout ' . $this->master);
+		$this->exec('git checkout ' . $this->branch);
 	}
 
 	/**
