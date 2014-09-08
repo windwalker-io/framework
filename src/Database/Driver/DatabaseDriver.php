@@ -386,7 +386,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	{
 		if ($query)
 		{
-			$this->setQuery($query)->execute();
+			$this->setQuery($query);
 		}
 
 		if (!$this->reader)

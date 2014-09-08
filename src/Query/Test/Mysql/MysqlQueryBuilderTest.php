@@ -144,9 +144,9 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "SHOW FULL TABLE STATUS FROM `foo` WHERE a = b";
+		$expected = "SHOW TABLE STATUS FROM `foo` WHERE a = b";
 
-		$actual = MysqlQueryBuilder::showDbTables('foo', true, 'a = b');
+		$actual = MysqlQueryBuilder::showDbTables('foo', 'a = b');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),

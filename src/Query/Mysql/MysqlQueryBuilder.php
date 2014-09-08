@@ -108,18 +108,16 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	 * showDbTables
 	 *
 	 * @param string $dbname
-	 * @param bool   $full
 	 * @param string $where
 	 *
 	 * @return  string
 	 */
-	public static function showDbTables($dbname, $full = false, $where = null)
+	public static function showDbTables($dbname, $where = null)
 	{
 		$query = static::getQuery();
 
 		return static::build(
 			'SHOW',
-			$full ? 'FULL' : false,
 			'TABLE STATUS FROM',
 			$query->quoteName($dbname),
 			$where ? new QueryElement('WHERE', $where, 'AND') : null

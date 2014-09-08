@@ -55,29 +55,32 @@ abstract class AbstractDatabase
 	/**
 	 * createDatabase
 	 *
-	 * @param string $name
+	 * @param bool   $ifNotExists
+	 * @param string $charset
+	 * @param string $collate
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
-	abstract public function create($name);
+	abstract public function create($ifNotExists = false, $charset = null, $collate = null);
 
 	/**
 	 * dropDatabase
 	 *
 	 * @param bool $ifExists
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
 	abstract public function drop($ifExists = false);
 
 	/**
 	 * renameDatabase
 	 *
-	 * @param string $newName
+	 * @param string  $newName
+	 * @param boolean $returnNew
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
-	abstract public function rename($newName);
+	abstract public function rename($newName, $returnNew = true);
 
 	/**
 	 * Method to get an array of all tables in the database.
@@ -93,21 +96,18 @@ abstract class AbstractDatabase
 	/**
 	 * getTableDetails
 	 *
-	 * @param bool $full
-	 *
 	 * @return  mixed
 	 */
-	abstract public function getTableDetails($full = true);
+	abstract public function getTableDetails();
 
 	/**
 	 * getTableDetail
 	 *
 	 * @param bool $table
-	 * @param bool $full
 	 *
 	 * @return  mixed
 	 */
-	abstract public function getTableDetail($table, $full = true);
+	abstract public function getTableDetail($table);
 
 	/**
 	 * Method to get property Table
