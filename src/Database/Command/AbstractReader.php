@@ -52,6 +52,18 @@ abstract class AbstractReader
 	}
 
 	/**
+	 * execute
+	 *
+	 * @return  static
+	 */
+	public function execute()
+	{
+		$this->db->execute();
+
+		return $this;
+	}
+
+	/**
 	 * getIterator
 	 *
 	 * @param string $class

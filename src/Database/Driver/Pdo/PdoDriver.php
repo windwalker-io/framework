@@ -388,7 +388,7 @@ class PdoDriver extends DatabaseDriver
 	{
 		if ($query)
 		{
-			$this->setQuery($query)->execute();
+			$this->setQuery($query);
 		}
 
 		if (!$this->reader)

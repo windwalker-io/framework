@@ -27,7 +27,7 @@ class MysqlReaderTest extends AbstractMysqlTest
 	 */
 	public function testFetchArray()
 	{
-		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10');
+		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10')->execute();
 
 		$item = $reader->fetchArray();
 
@@ -47,7 +47,7 @@ class MysqlReaderTest extends AbstractMysqlTest
 	 */
 	public function testFetchAssoc()
 	{
-		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10');
+		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10')->execute();
 
 		$item = $reader->fetchAssoc();
 
@@ -67,7 +67,7 @@ class MysqlReaderTest extends AbstractMysqlTest
 	 */
 	public function testFetchObject()
 	{
-		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10');
+		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10')->execute();
 
 		$item = $reader->fetchObject();
 
@@ -88,7 +88,7 @@ class MysqlReaderTest extends AbstractMysqlTest
 	public function testFetch()
 	{
 		/** @var $reader PdoReader */
-		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10');
+		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10')->execute();
 
 		$item = $reader->fetch(\PDO::FETCH_OBJ);
 
@@ -110,7 +110,7 @@ class MysqlReaderTest extends AbstractMysqlTest
 	public function testFetchAll()
 	{
 		/** @var $reader PdoReader */
-		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10');
+		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10')->execute();
 
 		$items = $reader->fetchAll(\PDO::FETCH_OBJ);
 
@@ -129,7 +129,7 @@ class MysqlReaderTest extends AbstractMysqlTest
 	public function testCount()
 	{
 		/** @var $reader PdoReader */
-		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10');
+		$reader = $this->db->getReader('SELECT * FROM #__flower LIMIT 10')->execute();
 
 		$reader->fetchAll(\PDO::FETCH_OBJ);
 

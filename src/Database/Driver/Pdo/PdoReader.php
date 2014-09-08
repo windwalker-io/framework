@@ -75,9 +75,9 @@ class PdoReader extends AbstractReader
 	/**
 	 * fetchAll
 	 *
-	 * @param int  $type
-	 * @param null $args
-	 * @param null $ctorArgs
+	 * @param int   $type
+	 * @param array $args
+	 * @param array $ctorArgs
 	 *
 	 * @see http://php.net/manual/en/pdostatement.fetchall.php
 	 *
