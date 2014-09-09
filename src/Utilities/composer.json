@@ -1,0 +1,19 @@
+{
+	"name": "windwalker/utilities",
+	"type": "windwalker-package",
+	"description": "Windwalker Utilities package",
+	"keywords": ["windwalker", "framework", "utilities"],
+	"homepage": "https://github.com/windwalker-framework/utilities",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Utilities\\": ""
+		}
+	}
+}

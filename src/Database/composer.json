@@ -3,15 +3,13 @@
 	"type": "windwalker-package",
 	"description": "Windwalker Database package",
 	"keywords": ["windwalker", "framework", "database"],
-	"homepage": "https://github.com/windwalker-framework/windwalker-database",
+	"homepage": "https://github.com/ventovire/windwalker-database",
 	"license": "GPL-2.0+",
 	"require": {
-		"php": ">=5.3.10",
-		"windwalker/compare": "1.*",
-		"joomla/database": "~1.0"
+		"php": ">=5.3.10"
 	},
 	"require-dev": {
-		"joomla/test": "~1.0"
+		"windwalker/utiliities" : "dev-master"
 	},
 	"minimum-stability" : "dev",
 	"autoload": {
