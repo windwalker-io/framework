@@ -10,6 +10,7 @@
 	},
 	"require-dev": {
 		"windwalker/utilities": "dev-master",
+		"windwalker/database": "dev-master",
 		"jdorn/sql-formatter" : "1.*"
 	},
 	"minimum-stability" : "dev",

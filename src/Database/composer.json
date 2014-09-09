@@ -14,6 +14,9 @@
 		"windwalker/utilities" : "dev-master",
 		"windwalker/compare" : "dev-master"
 	},
+	"suggest": {
+		"windwalker/compare": "Install 2.* if you want to use Compare object."
+	},
 	"minimum-stability" : "dev",
 	"autoload": {
 		"psr-4": {
