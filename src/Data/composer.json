@@ -9,7 +9,7 @@
 		"php": ">=5.3.10"
 	},
 	"require-dev": {
-		"windwalker/utiliities": "dev-master"
+		"windwalker/utilities": "dev-master"
 	},
 	"minimum-stability" : "dev",
 	"autoload": {
