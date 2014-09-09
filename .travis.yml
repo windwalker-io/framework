@@ -25,4 +25,5 @@ before_script:
 
 script:
   - phpunit --configuration phpunit.travis.xml
+  - chmod +x build/subtree/*
   - sh -e build/subtree/test-subtree.sh
