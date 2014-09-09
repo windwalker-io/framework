@@ -6,10 +6,13 @@
 	"homepage": "https://github.com/ventovire/windwalker-database",
 	"license": "GPL-2.0+",
 	"require": {
-		"php": ">=5.3.10"
+		"php": ">=5.3.10",
+		"psr/log" : "1.*",
+		"windwalker/query" : "dev-master"
 	},
 	"require-dev": {
-		"windwalker/utilities" : "dev-master"
+		"windwalker/utilities" : "dev-master",
+		"windwalker/compare" : "dev-master"
 	},
 	"minimum-stability" : "dev",
 	"autoload": {
