@@ -38,14 +38,14 @@ $items = $db->setQuery('SELECT * FROM `foo`')->loadAll();
 
 ### DB Object is Singleton
 
-We can always get only one DB object, it can make sure we have only one connection at one time.
+We always get only one DB object, it can make sure we have only one connection at one time.
 
 ``` php
 // Same as previous DB object
 $db = DatabaseFactory::getDbo();
 ```
 
-But every database driver can has one object, this allow us to operate multiple DB connections to different DB services.
+Every database driver has one object, this allow us to operate multiple DB connections to different DB services.
 
 ``` php
 // Get other driver
@@ -64,12 +64,15 @@ If we want to change default Dbo to Sqlite, just do this:
 
 ``` php
 $sqlite = DatabaseFactory::getDbo('sqlite');
+
 DatabaseFactory::setDefaultDbo($sqlite);
 ```
 
 ## Simple Query Access
 
 ### Execute A Query
+
+This is an example of insert data.
 
 ``` php
 $db = DatabaseFactory::getDbo();
@@ -85,7 +88,7 @@ $db->execute();
 
 #### loadAll
 
-Load all data as objects.
+Using the query we set to load all data as objects, wrap it by an array.
 
 ``` php
 $db = DatabaseFactory::getDbo();
@@ -104,27 +107,31 @@ We can set object class to store records:
 ``` php
 $items = $db->loadAll(null, 'Windwalker\\Data\\Data');
 
-// This value will be bool(true)
+// bool(true)
 var_dump($items[0] instanceof \Windwalker\Data\Data);
 ```
 
-We can load records as hash array or associative array:
+We can load records as hash array or associative array.
+
+- `assoc`: Returns an array indexed by column name as returned in your result set
+- `array`: Returns an array indexed by column number as returned in your result set, starting at column 0
+- See: PHP.net [PDOStatement::fetch](http://php.net/manual/en/pdostatement.fetch.php)
 
 ``` php
-// Every record will be a hash array
+// Every record will be a hash array, same as PDO::fetch(PDO::FETCH_ASSOC)
 $items = $db->loadAll(null, 'array');
 
-// Every record will be key-valued:
+// Every record will be key-valued, same as PDO::fetch(PDO::FETCH_NUM)
 $items = $db->loadAll(null, 'assoc');
 ```
 
-Use a column values as array index. For example, we can use id as array indexes:
+Use column values as array index. For example, we can use id as array indexes:
 
 ``` php
 $items = $db->loadAll('id');
 
 // True
-$items[11]->id == 11;
+($items[11]->id == 11);
 ```
 
 #### loadOne
@@ -141,14 +148,65 @@ $db->setQuery($sql);
 $item = $db->loadOne();
 ```
 
-The `$item` will be a `stdClass` object or `false` (If not found any records).
+The `$item` will be a `stdClass` object or `false` (If no any records found).
 
-We can also use other object class:
+We can also use other object class to wrap our data:
 
 ``` php
 $item = $db->loadAll('Windwalker\\Data\\Data');
 
-// This value will be bool(true)
+// bool(true)
 var_dump($item instanceof \Windwalker\Data\Data);
 ```
+
+Aslo, we can get this data as hash array or associative array:
+
+``` php
+// Hash array
+$item = $db->loadAll('array');
+
+// Associative array
+$item = $db->loadAll('assoc');
+```
+
+## Using Reader
+
+Reader is a command object that help us read records from database, this is a simple example to use Reader.
+
+``` php
+$reader = $db->getReader();
+
+$items = $reader->setQuery($sql)->loadObjectList();
+
+// OR
+
+$items = $db->getReader($sql)->loadObjectList();
+```
+
+### loadObjectList()
+
+Return an array, every element is a record and wrap with an object. This method is same as `$db->loadAll()`, we can set index
+ column and object class:
+
+``` php
+$reader = $db->getReader($sql);
+
+$items = $reader->loadObjectList();
+$items = $reader->loadObjectList('id');
+$items = $reader->loadObjectList('id', 'MyObject');
+```
+
+### loadObject()
+
+Return only one record and wrap with an object.  This method is same as `$db->loadOne()`, we can set index
+column and object class:
+
+``` php
+$reader = $db->getReader($sql);
+
+$item = $reader->loadObject();
+$item = $reader->loadObject('MyObject');
+```
+
+
 
