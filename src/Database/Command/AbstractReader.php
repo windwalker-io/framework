@@ -220,7 +220,6 @@ abstract class AbstractReader
 	 * of ['field_name' => 'row_value'].  The array of rows can optionally be keyed by a field name, but defaults to
 	 * a sequential numeric array.
 	 *
-	 *
 	 * @param   string  $key  The name of a field on which to key the result array.
 	 *
 	 * @return  mixed   The return value or null if the query failed.
