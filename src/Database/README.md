@@ -181,7 +181,7 @@ $items = $reader->loadAssocList();
 $items = $reader->loadAssocList('id'); // Use id as index
 ```
 
-### loadAssocList()
+### loadAssoc()
 
 Returns an associative array indexed by column name.
 
