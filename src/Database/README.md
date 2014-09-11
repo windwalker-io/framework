@@ -1,5 +1,7 @@
 # Windwalker Database Package
 
+Windwalker database package is a DB operation wrapper, provide us an advanced way to access database and store data.
+
 ## Installation via Composer
 
 Add this dependency in your `composer.json` file.
@@ -7,7 +9,7 @@ Add this dependency in your `composer.json` file.
 ``` json
 {
     "require": {
-        "ventoviro/windwalker-database" : "2.0.*"
+        "windwalker/database" : "2.0.*"
     }
 }
 ```
@@ -15,8 +17,6 @@ Add this dependency in your `composer.json` file.
 > Note: Before stable version released, you have to use `dev-master` as the version, and make sure the `minimum-stability` is `dev`.
 
 ## Getting Started
-
-Windwalker database package is a DB operation wrapper, provide us an advanced way to access database and store data.
 
 ### Create A DatabaseDriver
 
@@ -68,6 +68,32 @@ $sqlite = DatabaseFactory::getDbo('sqlite');
 DatabaseFactory::setDefaultDbo($sqlite);
 ```
 
+### Using My Connection Resource
+
+If you are already have a DB connection, you can pass it into Windwalker DB object that we can make sure there are
+only one connection at one time:
+
+``` php
+// Create your own DB connection
+$pdo = new PDO($dsn, $user, $pass);
+
+// Add it to options resource index
+$options = array(
+    'resource' => $pdo
+);
+
+$db = DatabaseFactory::getDbo('mysql', $options);
+
+// bool(true)
+var_dump($db->getConnection() === $pdo);
+```
+
+Also, you can set connection at runtime:
+
+``` php
+$db->setConnection($resource);
+```
+
 ## Execute A Query
 
 This is an example of insert data.
@@ -82,145 +108,11 @@ $db->setQuery($sql);
 $db->execute();
 ```
 
-## Using Reader
+## Fetch records
 
-Reader is a command object that help us read records from database, this is a simple example to use Reader.
+### Fetch multiple rows
 
-``` php
-$reader = $db->getReader();
-
-$items = $reader->setQuery($sql)->loadObjectList();
-
-// OR
-
-$items = $db->getReader($sql)->loadObjectList();
-```
-
-### loadObjectList()
-
-Return an array, every element is a record and wrap with an object. This method is same as `$db->loadAll()`:
-
-``` php
-$sql = 'SELECT * FROM foo_table WHERE state = 1';
-
-$reader = $db->getReader($sql);
-
-$items = $reader->loadObjectList();
-```
-
-The return value is an array contains all records we found, every record will be an `stdClass` object.
-
-We can set object class to store records:
-
-``` php
-$items = $reader->loadObjectList(null, 'Windwalker\\Data\\Data');
-
-// bool(true)
-var_dump($items[0] instanceof \Windwalker\Data\Data);
-```
-
-Use column values as array index. For example, we can use id as array indexes:
-
-``` php
-$items = $reader->loadObjectList('id');
-
-// True
-($items[11]->id == 11);
-```
-
-### loadObject()
-
-Return only one record and wrap with an object.  This method is same as `$db->loadOne()`:
-
-``` php
-$sql = 'SELECT * FROM foo_table WHERE id = 1';
-
-$reader = $db->getReader($sql);
-
-$item = $reader->loadObject();
-```
-
-The `$item` will be a `stdClass`  object or `false` (If no any records found). we can set object class:
-
-``` php
-$item = $reader->loadObject('MyObject');
-```
-
-Then the object will be an instance of `MyObject`.
-
-### loadArrayList()
-
-Same as `$db->loadAll('array')`, returns an array and every element is an array indexed by column number as
-returned in your result set, starting at column 0, we can set a column as index:
-
-``` php
-$reader = $db->getReader($sql);
-
-$items = $reader->loadArrayList();
-$items = $reader->loadArrayList('id'); // Use id as index
-```
-
-### loadArray()
-
-Returns an array indexed by column number as returned in your result set, starting at column 0:
-
-``` php
-$reader = $db->getReader($sql);
-
-$item = $reader->loadArray();
-```
-
-### loadAssocList()
-
-Returns an array and every element is an associative array indexed by column name.
-
-``` php
-$reader = $db->getReader($sql);
-
-$items = $reader->loadAssocList();
-$items = $reader->loadAssocList('id'); // Use id as index
-```
-
-### loadAssoc()
-
-Returns an associative array indexed by column name.
-
-``` php
-$reader = $db->getReader($sql);
-
-$item = $reader->loadAssoc();
-```
-
-### loadColumn()
-
-Fetch values of a column field, please select only one column in this query:
-
-``` php
-$titles = $db->getReader('SELECT title FROM article_table')->loadColumn();
-```
-
-### loadResult()
-
-Fetch only one cell as a value:
-
-``` php
-// Get article id = 3 title
-$title = $db->getReader('SELECT title FROM article_table WHERE id = 3')->loadResult();
-
-// Get total hits
-$sum = $db->getReader('SELECT SUM(hits) FROM article_table')->loadResult();
-
-// Get a value
-$id = $db->getReader('SELECT LAST_INSERT_ID()')->loadResult();
-```
-
-> See: [PHP.net / PDOStatement::fetch](http://php.net/manual/en/pdostatement.fetch.php)
-
-### Quick Fetch From Driver
-
-#### DatabaseDriver::loadAll()
-
-Using a query we set into DB object to fetch records.
+This will fetch multiple rows from table, and every record will be an object.
 
 ``` php
 $sql = 'SELECT * FROM foo_table WHERE state = 1';
@@ -229,48 +121,132 @@ $db->setQuery($sql);
 
 $items = $db->loadAll();
 
-// Same as $reader->loadObjectList('id')
-$items = $db->loadAll('id');
-
-// Same as $reader->loadObjectList(null, 'MyObject')
+// Custom object class
 $items = $db->loadAll(null, 'MyObject');
 
-// Same as $reader->loadArrayList()
+// Record as array with number as indexes
 $items = $db->loadAll(null, 'array');
 
-// Same as $reader->loadAssocList()
+// Record as array with column name as indexes
 $items = $db->loadAll(null, 'assoc');
+
+// Use id column as $items index
+$items = $db->loadAll('id', 'assoc');
 ```
 
-The return value is an array contains all records we found.
-
-#### DatabaseDriver::loadOne()
-
-We can only get first record and ignore others:
+### Fetch one rows
 
 ``` php
+$sql = 'SELECT * FROM foo_table WHERE id = 3';
+
 $db->setQuery($sql);
 
 $item = $db->loadOne();
 
-// Same as $reader->loadObject(null, 'MyObject')
-$item = $db->loadOne('MyObject');
+// Custom object class
+$items = $db->loadAll('MyObject');
 
-// Same as $reader->loadArray()
-$item = $db->loadOne('array');
+// Record as array with number as indexes
+$items = $db->loadAll('array');
 
-// Same as $reader->loadAssoc()
-$item = $db->loadOne('assoc');
+// Record as array with column name as indexes
+$items = $db->loadAll('assoc');
 ```
 
-The `$item` will be a record or `false` (If no any records found).
+## Table Prefix
 
-#### DatabaseDriver::loadColumn()
+Add `prefix` in options when you create DB object, then DB object will auto replace all `#__` with prefix in every query:
 
-Same as `$db->getReader($sql)->loadColumn()`.
+``` php
+$options = array(
+    'host'     => 'localhost',
+    'user'     => 'db_user',
+    'password' => 'db_pass',
+    'database' => 'my_dbname',
+    'prefix'   => 'foo_'
+);
 
-#### DatabaseDriver::loadResult()
+$db = DatabaseFactory::getDbo('mysql', $options);
 
-Same as `$db->getReader($sql)->loadResult()`.
+$items = $db->setQuery('SELECT * FROM #__articles')->loadAll();
 
+// The query will be `SELECT * FROM foo_articles`
+```
+
+## Iterating Over Results
+
+``` php
+$iterator = $db->setQuery('SELECT * FROM #__articles WHERE state = 1')->getIterator();
+
+foreach ($iterator as $row)
+{
+    // Deal with $row
+}
+```
+
+It allows also to count the results.
+
+``` php
+$count = count($iterator);
+```
+
+## Using Command
+
+Database Command is some powerful tool set help us operate database, here is commands documents:
+
+- [Reader Command](docs/reader.md)
+- [Writer Command](docs/writer.md)
+- [Transaction Command](docs/transaction.md)
+- [Database Command](docs/database.md)
+- [Table Command](docs/table.md)
+
+## Logging
+
+`Database\DatabaseDriver` implements the `Psr\Log\LoggerAwareInterface` so is ready for intergrating with a logging package that supports that standard.
+
+Drivers log all errors with a log level of `LogLevel::ERROR`.
+
+If debugging is enabled (using `setDebug(true)`), all queries are logged with a log level of `LogLevel::DEBUG`. The context of the log include:
+
+* **sql** : The query that was executed.
+* **category** : A value of "databasequery" is used.
+
+### An example to log error by Monolog
+
+Add this to `composer.json` require block.
+
+``` json
+"monolog/monolog" : "1.*"
+```
+
+Then we push Monolog into Database instance.
+
+``` php
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Processor\PsrLogMessageProcessor;
+
+// Create logger object
+$logger = new Logger('sql');
+
+// Push logger handler, use DEBUG level that we can log all information
+$logger->pushHandler(new StreamHandler('path/to/log/sql.log', Logger::DEBUG));
+
+// Use PSR-3 logger processor that we can replace {sql} with context like array('sql' => 'XXX')
+$logger->pushProcessor(new PsrLogMessageProcessor);
+
+// Push into DB
+$db->setLogger($logger);
+$db->setDebug(true);
+
+// Do something
+$db->setQuery('A WRONG QUERY')->execute();
+```
+
+This is the log file:
+
+```
+[2014-07-29 07:25:22] sql.DEBUG: A WRONG QUERY {"sql":"A WRONG QUERY","category":"databasequery","trace":[...]} []
+[2014-07-29 07:36:01] sql.ERROR: Database query failed (error #42000): SQL: 42000, 1064, You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'A WRONG QUERY' at line 1 {"code":42000,"message":"SQL: 42000, 1064, You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'A WRONG QUERY' at line 1"} []
+```
 
