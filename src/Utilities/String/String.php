@@ -24,10 +24,21 @@ if (extension_loaded('mbstring'))
 // Same for iconv
 if (function_exists('iconv'))
 {
-	// These are settings that can be set inside code
-	iconv_set_encoding("internal_encoding", "UTF-8");
-	iconv_set_encoding("input_encoding", "UTF-8");
-	iconv_set_encoding("output_encoding", "UTF-8");
+	/*
+	 * A workaround to avoid warning in PHP 5.6
+	 * See also: https://github.com/zendframework/zf2/pull/6219
+	 */
+	if (PHP_VERSION_ID < 50600)
+	{
+		// These are settings that can be set inside code
+		iconv_set_encoding("internal_encoding", "UTF-8");
+		iconv_set_encoding("input_encoding", "UTF-8");
+		iconv_set_encoding("output_encoding", "UTF-8");
+	}
+	else
+	{
+		@ini_set('default_charset', 'UTF-8');
+	}
 }
 
 /**
