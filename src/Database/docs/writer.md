@@ -109,3 +109,16 @@ $db->getWriter()->updateBatch('#__articles', $data, $conditions);
 
 // Same as `UPDATE #__articles SET state = 0 WHERE author = 15 AND updated < "2014-03-02" AND catid IN(1, 2, 3);`
 ```
+
+## Save & SaveMultiple
+
+`save()` and `saveMultiple()` will auto check the primary exists or not. If primary key exists, it will use `update`,
+if not exists, it will use `insert` to store data.
+
+## insertId()
+
+Get the last inserted id.
+
+## countAffected()
+
+Count the affected rows of last query.

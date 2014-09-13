@@ -190,3 +190,15 @@ Same as `$db->getReader($sql)->loadColumn()`.
 ### DatabaseDriver::loadResult()
 
 Same as `$db->getReader($sql)->loadResult()`.
+
+## count()
+
+Count the total found rows of last query.
+
+## countAffected()
+
+Count the affected rows of last query.
+
+## insertId()
+
+Get the last inserted id.
