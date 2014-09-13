@@ -84,11 +84,11 @@ class MysqlTableTest extends AbstractMysqlTest
 	 *
 	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::create
 	 */
-	public function testCreate()
+	public function testDoCreate()
 	{
 		$table = $this->db->getTable('#__cloud');
 
-		$table->create(
+		$table->doCreate(
 			array(
 				'id' => 'int(11) UNSIGNED NOT NULL',
 				'name' => 'varchar(255) NOT NULL'

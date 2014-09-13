@@ -25,6 +25,22 @@ class MysqlTable extends AbstractTable
 	 */
 	protected $columnCache = array();
 
+	protected $columns = array();
+
+	protected $indexes = array();
+
+	public function create($ifNotExists = true)
+	{
+		$columns = array();
+
+		foreach ($this->columns as $column)
+		{
+			$columns[$column[1]] = MysqlQueryBuilder::build();
+		}
+
+		$this->doCreate();
+	}
+
 	/**
 	 * create
 	 *
@@ -38,12 +54,94 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @return  $this
 	 */
-	public function create($columns, $pks = array(), $keys = array(), $autoIncrement = null, $ifNotExists = true,
+	public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null, $ifNotExists = true,
 		$engine = 'InnoDB', $defaultCharset = 'utf8')
 	{
 		$query = MysqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $autoIncrement, $ifNotExists, $engine, $defaultCharset);
 
 		$this->db->setQuery($query)->execute();
+
+		return $this;
+	}
+
+	/**
+	 * addColumn
+	 *
+	 * @param string $name
+	 * @param string $type
+	 * @param bool   $unsigned
+	 * @param bool   $notNull
+	 * @param string $default
+	 * @param null   $position
+	 * @param string $comment
+	 *
+	 * @return  static
+	 */
+	public function addColumn($name, $type = 'text', $unsigned = false, $notNull = false, $default = '', $position = null, $comment = '')
+	{
+		// $query = MysqlQueryBuilder::addColumn($this->table, $name, $type, $unsigned, $notNull, $default, $position, $comment);
+
+		$this->columns[] = array($this->table, $name, $type, $unsigned, $notNull, $default, $position, $comment);
+
+		// $this->db->setQuery($query)->execute();
+
+		return $this;
+	}
+
+	/**
+	 * dropColumn
+	 *
+	 * @param string $name
+	 *
+	 * @return  mixed
+	 */
+	public function dropColumn($name)
+	{
+		// $query = MysqlQueryBuilder::dropColumn($this->table, $name);
+
+		$this->columns[] = array($this->table, $name);
+
+		// $this->db->setQuery($query)->execute();
+
+		return $this;
+	}
+
+	/**
+	 * addIndex
+	 *
+	 * @param string  $type
+	 * @param string  $name
+	 * @param array   $columns
+	 * @param string  $comment
+	 *
+	 * @return  mixed
+	 */
+	public function addIndex($type, $name = null, $columns = array(), $comment = null)
+	{
+		// $query = MysqlQueryBuilder::addIndex($this->table, $type, $name, $columns, $comment);
+
+		$this->indexes[] = array($this->table, $type, $name, $columns, $comment);
+
+		// $this->db->setQuery($query)->execute();
+
+		return $this;
+	}
+
+	/**
+	 * dropIndex
+	 *
+	 * @param string  $type
+	 * @param string  $name
+	 *
+	 * @return  mixed
+	 */
+	public function dropIndex($type, $name)
+	{
+		// $query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);
+
+		$this->indexes[] = array($this->table, $type, $name);
+
+		// $this->db->setQuery($query)->execute();
 
 		return $this;
 	}
@@ -158,80 +256,6 @@ class MysqlTable extends AbstractTable
 		$query = MysqlQueryBuilder::showTableColumns($this->table, $full, 'Field = ' . $this->db->quote($column));
 
 		return $this->db->setQuery($query)->loadOne();
-	}
-
-	/**
-	 * addColumn
-	 *
-	 * @param string $name
-	 * @param string $type
-	 * @param bool   $unsigned
-	 * @param bool   $notNull
-	 * @param string $default
-	 * @param null   $position
-	 * @param string $comment
-	 *
-	 * @return  static
-	 */
-	public function addColumn($name, $type = 'text', $unsigned = false, $notNull = false, $default = '', $position = null, $comment = '')
-	{
-		$query = MysqlQueryBuilder::addColumn($this->table, $name, $type, $unsigned, $notNull, $default, $position, $comment);
-
-		$this->db->setQuery($query)->execute();
-
-		return $this;
-	}
-
-	/**
-	 * dropColumn
-	 *
-	 * @param string $name
-	 *
-	 * @return  mixed
-	 */
-	public function dropColumn($name)
-	{
-		$query = MysqlQueryBuilder::dropColumn($this->table, $name);
-
-		$this->db->setQuery($query)->execute();
-
-		return $this;
-	}
-
-	/**
-	 * addIndex
-	 *
-	 * @param string  $type
-	 * @param string  $name
-	 * @param array   $columns
-	 * @param string  $comment
-	 *
-	 * @return  mixed
-	 */
-	public function addIndex($type, $name = null, $columns = array(), $comment = null)
-	{
-		$query = MysqlQueryBuilder::addIndex($this->table, $type, $name, $columns, $comment);
-
-		$this->db->setQuery($query)->execute();
-
-		return $this;
-	}
-
-	/**
-	 * dropIndex
-	 *
-	 * @param string  $type
-	 * @param string  $name
-	 *
-	 * @return  mixed
-	 */
-	public function dropIndex($type, $name)
-	{
-		$query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);
-
-		$this->db->setQuery($query)->execute();
-
-		return $this;
 	}
 
 	/**

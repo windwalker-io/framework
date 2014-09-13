@@ -18,7 +18,26 @@ use Windwalker\Database\Driver\DatabaseAwareTrait;
  */
 abstract class AbstractTable
 {
+	/**
+	 * Property table.
+	 *
+	 * @var  string
+	 */
 	protected $table = null;
+
+	/**
+	 * Property schema.
+	 *
+	 * @var  array
+	 */
+	protected $schema = array();
+
+	/**
+	 * Property queries.
+	 *
+	 * @var  array
+	 */
+	protected $queries = array();
 
 	/**
 	 * Property driver.
@@ -53,7 +72,7 @@ abstract class AbstractTable
 	 *
 	 * @return  $this
 	 */
-	abstract public function create($columns, $pks = array(), $keys = array(), $autoIncrement = null,
+	abstract public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null,
 		$ifNotExists = true, $engine = 'InnoDB', $defaultCharset = 'utf8');
 
 	/**
