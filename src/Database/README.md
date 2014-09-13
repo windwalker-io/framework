@@ -21,6 +21,8 @@ Add this dependency in your `composer.json` file.
 ### Create A DatabaseDriver
 
 ``` php
+use Windwalker\Database\DatabaseFactory;
+
 $options = array(
     'host'     => 'localhost',
     'user'     => 'db_user',
@@ -94,6 +96,16 @@ Also, you can set connection at runtime:
 $db->setConnection($resource);
 ```
 
+The other way:
+
+``` php
+use Windwalker\Database\Driver\Mysql\MysqlDriver;
+
+$db = new MysqlDriver($pdo);
+
+DatabaseFactory::setDbo('mysql', $db);
+```
+
 ## Execute A Query
 
 This is an example of insert data.
@@ -120,7 +132,11 @@ $sql = 'SELECT * FROM foo_table WHERE state = 1';
 $db->setQuery($sql);
 
 $items = $db->loadAll();
+```
 
+Customize:
+
+``` php
 // Custom object class
 $items = $db->loadAll(null, 'MyObject');
 
@@ -134,7 +150,7 @@ $items = $db->loadAll(null, 'assoc');
 $items = $db->loadAll('id', 'assoc');
 ```
 
-### Fetch one rows
+### Fetch one row
 
 ``` php
 $sql = 'SELECT * FROM foo_table WHERE id = 3';
