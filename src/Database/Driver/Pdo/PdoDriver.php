@@ -362,8 +362,10 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  AbstractDatabase
 	 */
-	public function getDatabase($name)
+	public function getDatabase($name = null)
 	{
+		$name = $name ? : $this->database;
+
 		if (empty($this->databases[$name]))
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->options['driver']), ucfirst($this->options['driver']));

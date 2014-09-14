@@ -62,6 +62,47 @@ abstract class AbstractTable
 	/**
 	 * create
 	 *
+	 * @param bool  $ifNotExists
+	 * @param array $options
+	 *
+	 * @return  static
+	 */
+	abstract public function create($ifNotExists = true, $options = array());
+
+	/**
+	 * update
+	 *
+	 * @return  static
+	 */
+	abstract public function update();
+
+	/**
+	 * save
+	 *
+	 * @param bool  $ifNotExists
+	 * @param array $options
+	 *
+	 * @return  static
+	 */
+	abstract public function save($ifNotExists = true, $options = array());
+
+	/**
+	 * reset
+	 *
+	 * @return  static
+	 */
+	abstract public function reset();
+
+	/**
+	 * exists
+	 *
+	 * @return  boolean
+	 */
+	abstract public function exists();
+
+	/**
+	 * create
+	 *
 	 * @param string $columns
 	 * @param array  $pks
 	 * @param array  $keys
@@ -147,15 +188,15 @@ abstract class AbstractTable
 	 *
 	 * @param string $name
 	 * @param string $type
-	 * @param bool   $unsigned
-	 * @param bool   $notNull
+	 * @param bool   $signed
+	 * @param bool   $allowNull
 	 * @param string $default
-	 * @param null   $position
 	 * @param string $comment
+	 * @param array  $options
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
-	abstract public function addColumn($name, $type = 'text', $unsigned = false, $notNull = false, $default = '', $position = null, $comment = '');
+	abstract public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array());
 
 	/**
 	 * dropColumn
@@ -169,14 +210,15 @@ abstract class AbstractTable
 	/**
 	 * addIndex
 	 *
-	 * @param string  $type
-	 * @param string  $name
-	 * @param array   $columns
-	 * @param string  $comment
+	 * @param string $type
+	 * @param string $name
+	 * @param array  $columns
+	 * @param string $comment
+	 * @param array  $options
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
-	abstract public function addIndex($type, $name = null, $columns = array(), $comment = null);
+	abstract public function addIndex($type, $name = null, $columns = array(), $comment = null, $options = array());
 
 	/**
 	 * dropIndex
@@ -184,14 +226,14 @@ abstract class AbstractTable
 	 * @param string  $type
 	 * @param string  $name
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
 	abstract public function dropIndex($type, $name);
 
 	/**
 	 * getIndexes
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
 	abstract public function getIndexes();
 

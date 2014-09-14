@@ -8,6 +8,8 @@
 
 namespace Windwalker\Database\Test\Mysql;
 
+use Windwalker\Database\Command\Table\Column;
+use Windwalker\Database\Command\Table\Key;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 
 /**
@@ -75,6 +77,33 @@ class MysqlTableTest extends AbstractMysqlTest
 		$this->markTestIncomplete(
 			'This test has not been implemented yet.'
 		);
+	}
+
+	/**
+	 * Method to test create().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::create
+	 */
+	public function testCreate()
+	{
+		$table = $this->db->getTable('#__cloud');
+
+		$table->addColumn('id', 'int(11)', Column::UNSIGNED, Column::NOT_NULL, '', 'PK', array('primary' => true))
+			->addColumn('name', 'varchar(255)', Column::SIGNED, Column::NOT_NULL, '', 'Name')
+			->addColumn('alias', 'varchar(255)', Column::SIGNED, Column::NOT_NULL, '', 'Alias')
+			->addIndex(Key::TYPE_INDEX, 'idx_name', 'name', 'Test')
+			->addIndex(Key::TYPE_UNIQUE, 'idx_alias', 'alias', 'Alias Index')
+			->create();
+
+		$columns = $table->getColumnDetails(true);
+
+		$this->assertEquals('int(11) unsigned', $columns['id']->Type);
+		$this->assertEquals('varchar(255)', $columns['name']->Type);
+		$this->assertEquals('UNI', $columns['alias']->Key);
+
+		static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
 	}
 
 	/**
@@ -229,7 +258,8 @@ class MysqlTableTest extends AbstractMysqlTest
 	{
 		$table = $this->db->getTable('#__categories');
 
-		$table->addColumn('state', 'int(1)', true, false, 0, 'AFTER ordering', 'State');
+		$table->addColumn('state', 'int(1)', Column::SIGNED, Column::NOT_NULL, 0, 'State', array('position' => 'AFTER ordering'))
+			->save();
 
 		$columns = $table->getColumns(true);
 
@@ -281,7 +311,8 @@ class MysqlTableTest extends AbstractMysqlTest
 	{
 		$table = $this->db->getTable('#__categories');
 
-		$table->addIndex('key', 'idx_ordering', array('ordering', 'id'));
+		$table->addIndex('key', 'idx_ordering', array('ordering', 'id'))
+			->save();
 
 		$indexes = $table->getIndexes();
 
@@ -324,7 +355,7 @@ class MysqlTableTest extends AbstractMysqlTest
 
 		try
 		{
-			$this->db->setQuery(MysqlQueryBuilder::dropDatabase('#__wind', true))->execute();
+			$this->db->setQuery(MysqlQueryBuilder::dropTable('#__wind', true))->execute();
 		}
 		catch (\Exception $e)
 		{
@@ -343,7 +374,7 @@ class MysqlTableTest extends AbstractMysqlTest
 	{
 		try
 		{
-			static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase('#__cloud', true))->execute();
+			static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
 		}
 		catch (\Exception $e)
 		{
@@ -352,7 +383,7 @@ class MysqlTableTest extends AbstractMysqlTest
 
 		try
 		{
-			static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase('#__wind', true))->execute();
+			static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__wind', true))->execute();
 		}
 		catch (\Exception $e)
 		{

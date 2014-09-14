@@ -175,7 +175,8 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 			$define = array(
 				'type' => 'KEY',
 				'name' => null,
-				'columns' => array()
+				'columns' => array(),
+				'comment' => ''
 			);
 
 			if (!is_array($key))

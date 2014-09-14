@@ -165,5 +165,17 @@ class MysqlDatabase extends AbstractDatabase
 
 		return $table;
 	}
+
+	/**
+	 * tableExists
+	 *
+	 * @param string $table
+	 *
+	 * @return  boolean
+	 */
+	public function tableExists($table)
+	{
+		return (bool) $this->getTableDetail($table);
+	}
 }
 

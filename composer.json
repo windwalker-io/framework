@@ -17,7 +17,9 @@
 		"phpunit/phpunit": "3.*",
 		"phpunit/dbunit": "1.*",
 		"phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl",
-		"jdorn/sql-formatter" : "1.*"
+		"jdorn/sql-formatter" : "1.*",
+
+		"robmorgan/phinx": "*"
 	},
 	"suggest": {
 		"symfony/yaml": "Install 2.* if you require YAML support."

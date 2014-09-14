@@ -9,6 +9,8 @@
 namespace Windwalker\Database\Driver\Mysql;
 
 use Windwalker\Database\Command\AbstractTable;
+use Windwalker\Database\Command\Table\Column;
+use Windwalker\Database\Command\Table\Key;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 
 /**
@@ -25,20 +27,171 @@ class MysqlTable extends AbstractTable
 	 */
 	protected $columnCache = array();
 
+	/**
+	 * Property columns.
+	 *
+	 * @var  Column[]
+	 */
 	protected $columns = array();
 
+	/**
+	 * Property indexes.
+	 *
+	 * @var  Key[]
+	 */
 	protected $indexes = array();
 
-	public function create($ifNotExists = true)
+	/**
+	 * Property primary.
+	 *
+	 * @var  array
+	 */
+	protected $primary = array();
+
+	/**
+	 * create
+	 *
+	 * @param bool  $ifNotExists
+	 * @param array $options
+	 *
+	 * @return  static
+	 */
+	public function create($ifNotExists = true, $options = array())
 	{
+		$defaultOptions = array(
+			'auto_increment' => 1,
+			'engine' => 'InnoDB',
+			'default_charset' => 'utf8'
+		);
+
+		$options = array_merge($defaultOptions, $options);
+
 		$columns = array();
 
 		foreach ($this->columns as $column)
 		{
-			$columns[$column[1]] = MysqlQueryBuilder::build();
+			$columns[$column->getName()] = MysqlQueryBuilder::build(
+				$column->getType(),
+				$column->getSigned() ? '' : 'UNSIGNED',
+				$column->getAllowNull() ? '' : 'NOT NULL',
+				$column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : '',
+				$column->getAutoIncrement() ? 'AUTO_INCREMENT' : '',
+				$column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : ''
+			);
 		}
 
-		$this->doCreate();
+		$keys = array();
+
+		foreach ($this->indexes as $index)
+		{
+			$keys[$index->getName()] = array(
+				'type' => $index->getType(),
+				'name' => $index->getName(),
+				'columns' => $index->getColumns(),
+				'comment' => $index->getComment() ? 'COMMENT ' . $this->db->quote($index->getComment()) : ''
+			);
+		}
+
+		$this->doCreate($columns, $this->primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['default_charset']);
+
+		return $this;
+	}
+
+	/**
+	 * update
+	 *
+	 * @return  static
+	 */
+	public function update()
+	{
+		foreach ($this->columns as $column)
+		{
+			$query = MysqlQueryBuilder::addColumn(
+				$this->table,
+				$column->getName(),
+				$column->getType(),
+				!$column->getSigned(),
+				!$column->getAllowNull(),
+				$column->getDefault(),
+				$column->getPosition(),
+				$column->getComment()
+			);
+
+			$this->db->setQuery($query)->execute();
+		}
+
+		foreach ($this->indexes as $index)
+		{
+			$query = MysqlQueryBuilder::addIndex(
+				$this->table,
+				$index->getType(),
+				$index->getName(),
+				$index->getColumns(),
+				$index->getComment()
+			);
+
+			$this->db->setQuery($query)->execute();
+		}
+
+		return $this;
+	}
+
+	/**
+	 * save
+	 *
+	 * @param bool  $ifNotExists
+	 * @param array $options
+	 *
+	 * @return  $this
+	 */
+	public function save($ifNotExists = true, $options = array())
+	{
+		if ($this->exists())
+		{
+			$this->update();
+		}
+		else
+		{
+			$this->create($ifNotExists, $options);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * reset
+	 *
+	 * @return  static
+	 */
+	public function reset()
+	{
+		$this->columns = array();
+		$this->primary = array();
+		$this->indexes = array();
+
+		return $this;
+	}
+
+	/**
+	 * exists
+	 *
+	 * @return  boolean
+	 */
+	public function exists()
+	{
+		$database = $this->db->getDatabase();
+
+		return $database->tableExists($this->table);
+	}
+
+	/**
+	 * getDetail
+	 *
+	 * @return  array|boolean
+	 */
+	public function getDetail()
+	{
+		return $this->db->getDatabase()->getTableDetail($this->table);
 	}
 
 	/**
@@ -69,19 +222,48 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @param string $name
 	 * @param string $type
-	 * @param bool   $unsigned
-	 * @param bool   $notNull
+	 * @param bool   $signed
+	 * @param bool   $allowNull
 	 * @param string $default
-	 * @param null   $position
 	 * @param string $comment
+	 * @param array  $options
 	 *
 	 * @return  static
 	 */
-	public function addColumn($name, $type = 'text', $unsigned = false, $notNull = false, $default = '', $position = null, $comment = '')
+	public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
+		$defaultOptions = array(
+			'primary' => false,
+			'auto_increment' => false,
+			'position' => null
+		);
+
+		$options = array_merge($defaultOptions, $options);
+
+		if ($options['primary'])
+		{
+			$options['auto_increment'] = true;
+
+			$signed = false;
+			$allowNull = false;
+
+			$this->primary[] = $name;
+		}
+
+		$column = new Column;
+
+		$column->setName($name)
+			->setType($type)
+			->setSigned($signed)
+			->setAllowNull($allowNull)
+			->setDefault($default)
+			->setComment($comment)
+			->setAutoIncrement($options['auto_increment'])
+			->setPosition($options['position']);
+
 		// $query = MysqlQueryBuilder::addColumn($this->table, $name, $type, $unsigned, $notNull, $default, $position, $comment);
 
-		$this->columns[] = array($this->table, $name, $type, $unsigned, $notNull, $default, $position, $comment);
+		$this->columns[] = $column;
 
 		// $this->db->setQuery($query)->execute();
 
@@ -97,11 +279,9 @@ class MysqlTable extends AbstractTable
 	 */
 	public function dropColumn($name)
 	{
-		// $query = MysqlQueryBuilder::dropColumn($this->table, $name);
+		$query = MysqlQueryBuilder::dropColumn($this->table, $name);
 
-		$this->columns[] = array($this->table, $name);
-
-		// $this->db->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
 
 		return $this;
 	}
@@ -109,20 +289,34 @@ class MysqlTable extends AbstractTable
 	/**
 	 * addIndex
 	 *
-	 * @param string  $type
-	 * @param string  $name
-	 * @param array   $columns
-	 * @param string  $comment
+	 * @param string       $type
+	 * @param string       $name
+	 * @param array|string $columns
+	 * @param string       $comment
+	 * @param array        $options
 	 *
+	 * @throws  \InvalidArgumentException
 	 * @return  mixed
 	 */
-	public function addIndex($type, $name = null, $columns = array(), $comment = null)
+	public function addIndex($type, $name = null, $columns = array(), $comment = null, $options = array())
 	{
-		// $query = MysqlQueryBuilder::addIndex($this->table, $type, $name, $columns, $comment);
+		if (!$columns)
+		{
+			throw new \InvalidArgumentException('No columns given.');
+		}
 
-		$this->indexes[] = array($this->table, $type, $name, $columns, $comment);
+		$columns = (array) $columns;
 
-		// $this->db->setQuery($query)->execute();
+		$name = $name ? : $columns[0];
+
+		$index = new Key;
+
+		$index->setName($name)
+			->setType($type)
+			->setColumns($columns)
+			->setComment($comment);
+
+		$this->indexes[] = $index;
 
 		return $this;
 	}
@@ -137,11 +331,9 @@ class MysqlTable extends AbstractTable
 	 */
 	public function dropIndex($type, $name)
 	{
-		// $query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);
+		$query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);
 
-		$this->indexes[] = array($this->table, $type, $name);
-
-		// $this->db->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
 
 		return $this;
 	}
@@ -269,6 +461,30 @@ class MysqlTable extends AbstractTable
 		$this->db->setQuery('SHOW KEYS FROM ' . $this->db->quoteName($this->table));
 
 		return $this->db->loadAll();
+	}
+
+	/**
+	 * Method to get property Primary
+	 *
+	 * @return  array
+	 */
+	public function getPrimary()
+	{
+		return $this->primary;
+	}
+
+	/**
+	 * Method to set property primary
+	 *
+	 * @param   array $primary
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setPrimary($primary)
+	{
+		$this->primary = (array) $primary;
+
+		return $this;
 	}
 }
 

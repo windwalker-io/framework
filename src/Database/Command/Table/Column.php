@@ -16,6 +16,26 @@ namespace Windwalker\Database\Command\Table;
 class Column
 {
 	/**
+	 * @var boolean
+	 */
+	const SIGNED = true;
+
+	/**
+	 * @var boolean
+	 */
+	const UNSIGNED = false;
+
+	/**
+	 * @var boolean
+	 */
+	const ALLOW_NULL = true;
+
+	/**
+	 * @var boolean
+	 */
+	const NOT_NULL = false;
+
+	/**
 	 * Property name.
 	 *
 	 * @var  string
@@ -30,18 +50,18 @@ class Column
 	protected $type;
 
 	/**
-	 * Property unsigned.
+	 * Property signed.
 	 *
 	 * @var  bool
 	 */
-	protected $unsigned;
+	protected $signed;
 
 	/**
-	 * Property notNull.
+	 * Property nallowNull.
 	 *
 	 * @var  bool
 	 */
-	protected $notNull;
+	protected $allowNull;
 
 	/**
 	 * Property default.
@@ -65,6 +85,13 @@ class Column
 	protected $comment;
 
 	/**
+	 * Property autoIncrement.
+	 *
+	 * @var  boolean
+	 */
+	protected $autoIncrement = false;
+
+	/**
 	 * Class init.
 	 *
 	 * @param string $name
@@ -75,7 +102,7 @@ class Column
 	 * @param null   $position
 	 * @param string $comment
 	 */
-	public function __construct($name, $type = 'text', $unsigned = false, $notNull = false, $default = '', $position = null, $comment = '')
+	public function __construct($name = null, $type = 'text', $unsigned = false, $notNull = false, $default = '', $position = null, $comment = '')
 	{
 		$this->name = $name;
 		$this->type = $type;
@@ -106,6 +133,174 @@ class Column
 	public function setName($name)
 	{
 		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Type
+	 *
+	 * @return  string
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * Method to set property type
+	 *
+	 * @param   string $type
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setType($type)
+	{
+		$this->type = $type;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Position
+	 *
+	 * @return  string
+	 */
+	public function getPosition()
+	{
+		return $this->position;
+	}
+
+	/**
+	 * Method to set property position
+	 *
+	 * @param   string $position
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setPosition($position)
+	{
+		$this->position = $position;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Comment
+	 *
+	 * @return  string
+	 */
+	public function getComment()
+	{
+		return $this->comment;
+	}
+
+	/**
+	 * Method to set property comment
+	 *
+	 * @param   string $comment
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setComment($comment)
+	{
+		$this->comment = $comment;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Signed
+	 *
+	 * @return  boolean
+	 */
+	public function getSigned()
+	{
+		return $this->signed;
+	}
+
+	/**
+	 * Method to set property signed
+	 *
+	 * @param   boolean $signed
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setSigned($signed)
+	{
+		$this->signed = $signed;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property AllowNull
+	 *
+	 * @return  boolean
+	 */
+	public function getAllowNull()
+	{
+		return $this->allowNull;
+	}
+
+	/**
+	 * Method to set property allowNull
+	 *
+	 * @param   boolean $allowNull
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setAllowNull($allowNull)
+	{
+		$this->allowNull = $allowNull;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Default
+	 *
+	 * @return  string
+	 */
+	public function getDefault()
+	{
+		return $this->default;
+	}
+
+	/**
+	 * Method to set property default
+	 *
+	 * @param   string $default
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDefault($default)
+	{
+		$this->default = $default;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property AutoIncrement
+	 *
+	 * @return  boolean
+	 */
+	public function getAutoIncrement()
+	{
+		return $this->autoIncrement;
+	}
+
+	/**
+	 * Method to set property autoIncrement
+	 *
+	 * @param   boolean $autoIncrement
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setAutoIncrement($autoIncrement)
+	{
+		$this->autoIncrement = $autoIncrement;
 
 		return $this;
 	}

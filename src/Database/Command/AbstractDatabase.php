@@ -110,6 +110,15 @@ abstract class AbstractDatabase
 	abstract public function getTableDetail($table);
 
 	/**
+	 * tableExists
+	 *
+	 * @param string $table
+	 *
+	 * @return  boolean
+	 */
+	abstract public function tableExists($table);
+
+	/**
 	 * Method to get property Table
 	 *
 	 * @return  string

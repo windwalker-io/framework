@@ -363,8 +363,10 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  AbstractDatabase
 	 */
-	public function getDatabase($name)
+	public function getDatabase($name = null)
 	{
+		$name = $name ? : $this->database;
+
 		if (empty($this->databases[$name]))
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->name), ucfirst($this->name));
