@@ -332,7 +332,7 @@ class MysqlTableTest extends AbstractMysqlTest
 	{
 		$table = $this->db->getTable('#__categories');
 
-		$table->dropIndex('key', 'idx_ordering');
+		$table->dropIndex(Key::TYPE_INDEX, 'idx_ordering');
 
 		$indexes = $table->getIndexes();
 
