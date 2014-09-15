@@ -30,7 +30,7 @@ class Console extends AbstractConsole
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	protected $name = 'Windwalker! Console';
+	protected $name = 'Windwalker Console';
 
 	/**
 	 * Version of this application.
