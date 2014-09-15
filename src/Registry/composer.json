@@ -6,8 +6,7 @@
 	"homepage": "https://github.com/ventoviro/windwalker-registry",
 	"license": "GPL-2.0+",
 	"require": {
-		"php": ">=5.3.10",
-		"windwalker/compat" : "dev-master"
+		"php": ">=5.3.10"
 	},
 	"require-dev": {
 		"windwalker/utilities": "dev-master",
@@ -20,6 +19,9 @@
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\Registry\\": ""
-		}
+		},
+		"classmap": [
+			"Compat/JsonSerializable.php"
+		]
 	}
 }

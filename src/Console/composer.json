@@ -7,11 +7,11 @@
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
-		"windwalker/application": "~1.0"
+		"windwalker/io" : "dev-master",
+		"windwalker/registry" : "dev-master"
 	},
 	"require-dev": {
-		"symfony/yaml": "~2.0",
-		"windwalker/utilities": "~1.0"
+		"windwalker/utilities": "dev-master"
 	},
 	"minimum-stability" : "dev",
 	"autoload": {

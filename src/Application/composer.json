@@ -8,7 +8,8 @@
 	"require": {
 		"php": ">=5.3.10",
 		"windwalker/io": "dev-master",
-		"windwalker/registry": "dev-master"
+		"windwalker/registry": "dev-master",
+		"windwalker/filter" : "dev-master"
 	},
 	"require-dev": {
 		"windwalker/utilities": "dev-master"

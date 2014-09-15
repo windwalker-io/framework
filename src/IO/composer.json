@@ -11,6 +11,9 @@
 	"require-dev": {
 		"windwalker/utilities": "dev-master"
 	},
+	"suggest": {
+		"windwalker/filter": "Install 2.* if you require filter support."
+	},
 	"minimum-stability" : "dev",
 	"autoload": {
 		"psr-4": {

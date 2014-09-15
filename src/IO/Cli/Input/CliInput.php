@@ -8,7 +8,7 @@
 
 namespace Windwalker\IO\Cli\Input;
 
-use Windwalker\Filter\Filter;
+use Windwalker\IO\Filter\NullFilter;
 use Windwalker\IO\Input;
 
 /**
@@ -46,13 +46,12 @@ class CliInput extends Input implements CliInputInterface
 	 * Constructor.
 	 *
 	 * @param   array  $source Optional source data.
-	 * @param   Filter $filter The input filter object.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function __construct($source = null, Filter $filter = null)
+	public function __construct($source = null)
 	{
-		$this->filter = $filter ? : new Filter;
+		$this->filter = new NullFilter;
 
 		// Get the command line options
 		$this->parseArguments();
@@ -128,7 +127,7 @@ class CliInput extends Input implements CliInputInterface
 		}
 		else
 		{
-			$this->filter = new Filter;
+			$this->filter = new NullFilter;
 		}
 	}
 

@@ -9,6 +9,7 @@
 namespace Windwalker\IO;
 
 use Windwalker\Filter\Filter;
+use Windwalker\IO\Filter\NullFilter;
 
 /**
  * Class Input
@@ -51,7 +52,14 @@ class Input
 	 */
 	public function __construct($source = null, Filter $filter = null)
 	{
-		$this->filter = $filter ? : new Filter;
+		if ($filter)
+		{
+			$this->filter = $filter;
+		}
+		else
+		{
+			$this->filter = class_exists('Windwalker\\Filter\\Filter') ? new Filter : new NullFilter;
+		}
 
 		if (is_null($source))
 		{
