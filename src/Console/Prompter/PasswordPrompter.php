@@ -16,6 +16,15 @@ namespace Windwalker\Console\Prompter;
 class PasswordPrompter extends CallbackPrompter
 {
 	/**
+	 * Returning message if valid fail.
+	 *
+	 * @var  string
+	 *
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $noValidMessage = '  Not a valid password.';
+
+	/**
 	 * Which shell we use.
 	 *
 	 * @var string
@@ -63,6 +72,14 @@ class PasswordPrompter extends CallbackPrompter
 		$this->win = defined('PHP_WINDOWS_VERSION_BUILD');
 
 		$this->hiddenExe = __DIR__ . '/../bin/hiddeninput.exe';
+
+		// Default handler
+		$closure = function($value)
+		{
+			return (bool) $value;
+		};
+
+		$this->setHandler($closure);
 	}
 
 	/**
@@ -77,7 +94,7 @@ class PasswordPrompter extends CallbackPrompter
 	 */
 	public function ask($msg = '', $default = null)
 	{
-		return $this->in($msg) ? : $default;
+		return parent::ask($msg, $default);
 	}
 
 	/**
@@ -93,7 +110,7 @@ class PasswordPrompter extends CallbackPrompter
 	 */
 	public function in($question = '')
 	{
-		$question ? : $this->question;
+		$question = $question ? : $this->question;
 
 		if ($this->win)
 		{

@@ -134,8 +134,8 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function __construct($name = null, IOInterface $io = null, AbstractCommand $parent = null)
 	{
-		$this->name   = $name ?: $this->name;
-		$this->io     = $io ?: new IO;
+		$this->name   = $name ? : $this->name;
+		$this->io     = $io ? : new IO;
 		$this->parent = $parent;
 
 		$this->options       = new OptionSet;
@@ -251,12 +251,8 @@ abstract class AbstractCommand implements \ArrayAccess
 			$io->shiftArgument();
 		}
 
-		$subCommand->setIO($io);
-
-		if (!$subCommand->getApplication())
-		{
-			$subCommand->setApplication($this->application);
-		}
+		$subCommand->setIO($io)
+			->setApplication($this->application);
 
 		return $subCommand->execute();
 	}
@@ -318,15 +314,15 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @param   string|AbstractCommand  $command      The argument name or Console object.
 	 *                                                If we just send a string, the object will auto create.
-	 * @param   null                    $description  Console description.
-	 * @param   array                   $options      Console options.
-	 * @param   \Closure                $code         The closure to execute.
+	 * @param   string                  $description  Console description.
+	 * @param   Option[]                $options      Console options.
+	 * @param   \Closure                $handler      The closure to execute.
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function addCommand($command, $description = null, $options = array(), \Closure $code = null)
+	public function addCommand($command, $description = null, $options = array(), \Closure $handler = null)
 	{
 		if (!($command instanceof AbstractCommand))
 		{
@@ -347,9 +343,9 @@ abstract class AbstractCommand implements \ArrayAccess
 			$command->setOptions($options);
 		}
 
-		if ($code)
+		if ($handler)
 		{
-			$command->setHandler($code);
+			$command->setHandler($handler);
 		}
 
 		// Set parent
@@ -399,17 +395,17 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @param   string|AbstractCommand  $argument     The argument name or Console object.
 	 *                                                If we just send a string, the object will auto create.
-	 * @param   null                    $description  Console description.
-	 * @param   array                   $options      Console options.
-	 * @param   \Closure                $code         The closure to execute.
+	 * @param   string                  $description  Console description.
+	 * @param   Option[]                $options      Console options.
+	 * @param   \Closure                $handler      The closure to execute.
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function addChild($argument, $description = null, $options = array(), \Closure $code = null)
+	public function addChild($argument, $description = null, $options = array(), \Closure $handler = null)
 	{
-		return $this->addCommand($argument, $description, $options, $code);
+		return $this->addCommand($argument, $description, $options, $handler);
 	}
 
 	/**
