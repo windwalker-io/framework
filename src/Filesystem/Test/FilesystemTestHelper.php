@@ -46,7 +46,7 @@ class FilesystemTestHelper
 			$paths[$key] = Path::clean($path);
 		}
 
-		return $paths;
+		return sort($paths);
 	}
 
 	/**
