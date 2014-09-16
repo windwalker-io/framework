@@ -18,7 +18,7 @@ class CallbackFilterIterator extends \FilterIterator
 	 *
 	 * @var  callable
 	 */
-	protected $callback;
+	protected $callback = null;
 
 	/**
 	 * Class init.

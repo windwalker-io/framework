@@ -11,6 +11,11 @@ namespace Windwalker\Filesystem;
 use Windwalker\Filesystem\Comparator\FileComparatorInterface;
 use Windwalker\Filesystem\Iterator\RecursiveDirectoryIterator;
 
+if (!class_exists('CallbackFilterIterator'))
+{
+	include_once __DIR__ . '/Iterator/CallbackFilterIterator.php';
+}
+
 /**
  * Class Filesystem
  *

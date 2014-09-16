@@ -9,6 +9,7 @@
 namespace Windwalker\Console\Test\Prompter;
 
 use Windwalker\Console\Test\Prompter\Stubs\FakePasswordPrompter;
+use Windwalker\Test\TestEnvironment;
 
 /**
  * Class PasswordPrompterTest
@@ -41,7 +42,7 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	 */
 	public function testAsk()
 	{
-		if (defined('PHP_WINDOWS_VERSION_BUILD'))
+		if (TestEnvironment::isWindows())
 		{
 			$this->markTestSkipped('This test is not supported on Windows');
 		}

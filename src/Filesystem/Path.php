@@ -113,37 +113,43 @@ class Path
 	/**
 	 * Get the permissions of the file/folder at a give path.
 	 *
-	 * @param   string  $path  The path of a file/folder.
+	 * @param   string   $path      The path of a file/folder.
+	 * @param   boolean  $toString  Convert permission number to string.
 	 *
 	 * @return  string  Filesystem permissions.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public static function getPermissions($path)
+	public static function getPermissions($path, $toString = false)
 	{
 		$path = self::clean($path);
 		$mode = @ decoct(@ fileperms($path) & 0777);
+
+		if (!$toString)
+		{
+			return $mode;
+		}
 
 		if (strlen($mode) < 3)
 		{
 			return '---------';
 		}
 
-		$parsed_mode = '';
+		$parsedMode = '';
 
 		for ($i = 0; $i < 3; $i++)
 		{
 			// Read
-			$parsed_mode .= ($mode{$i} & 04) ? "r" : "-";
+			$parsedMode .= ($mode{$i} & 04) ? "r" : "-";
 
 			// Write
-			$parsed_mode .= ($mode{$i} & 02) ? "w" : "-";
+			$parsedMode .= ($mode{$i} & 02) ? "w" : "-";
 
 			// Execute
-			$parsed_mode .= ($mode{$i} & 01) ? "x" : "-";
+			$parsedMode .= ($mode{$i} & 01) ? "x" : "-";
 		}
 
-		return $parsed_mode;
+		return $parsedMode;
 	}
 
 	/**
@@ -161,14 +167,14 @@ class Path
 	{
 		if (strpos($path, '..') !== false)
 		{
-			throw new \Exception('JPath::check Use of relative paths not permitted', 20);
+			throw new \Exception(__CLASS__ . '::check Use of relative paths not permitted', 20);
 		}
 
 		$path = self::clean($path);
 
 		if (($root != '') && strpos($path, self::clean($root)) !== 0)
 		{
-			throw new \Exception('JPath::check Snooping out of bounds @ ' . $path, 20);
+			throw new \Exception(__CLASS__ . '::check Snooping out of bounds @ ' . $path, 20);
 		}
 
 		return $path;
@@ -189,7 +195,7 @@ class Path
 	{
 		if (!is_string($path))
 		{
-			throw new \UnexpectedValueException('JPath::clean $path is not a string.');
+			throw new \UnexpectedValueException(__CLASS__ . '::clean $path is not a string.');
 		}
 
 		$path = trim($path);
