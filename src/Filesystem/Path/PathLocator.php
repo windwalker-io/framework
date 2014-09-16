@@ -11,6 +11,11 @@ namespace Windwalker\Filesystem\Path;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Path;
 
+if (!class_exists('CallbackFilterIterator'))
+{
+	include_once __DIR__ . '/../Iterator/CallbackFilterIterator.php';
+}
+
 /**
  * A Path locator class
  *
@@ -184,7 +189,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 		$path = $this->removeDots($path);
 
 		// If set to return string, compact it.
-		if($returnString == true)
+		if ($returnString == true)
 		{
 			$path = $this->compact($path);
 		}

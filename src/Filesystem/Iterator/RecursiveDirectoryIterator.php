@@ -31,7 +31,7 @@ class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
 
 		$endletters = DIRECTORY_SEPARATOR . '.';
 
-		if(substr($name, -2) == $endletters)
+		if (substr($name, -2) == $endletters)
 		{
 			$name = substr($name, 0, -2);
 		}

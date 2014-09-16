@@ -234,6 +234,8 @@ class Path
 			return ($current->getBasename() == $file);
 		};
 
-		return (new PathCollection($paths))->findOne($filter);
+		$collection = new PathCollection($paths);
+
+		return $collection->findOne($filter);
 	}
 }

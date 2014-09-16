@@ -6,6 +6,8 @@
  * @license    GNU General Public License version 2 or later;
  */
 
+namespace Windwalker\Filesystem\Test;
+
 use Windwalker\Filesystem\Path;
 use Windwalker\Filesystem\Path\PathLocator;
 use Windwalker\Filesystem\Path\PathCollection;
@@ -17,6 +19,11 @@ use Windwalker\Filesystem\Path\PathCollection;
  */
 class PathCollectionTest extends \PHPUnit_Framework_TestCase
 {
+	/**
+	 * Property collection.
+	 *
+	 * @var PathCollection
+	 */
 	public $collection;
 	
 	/**
@@ -361,14 +368,14 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 		
 		$this->collection->addPath('joomla/dir/foo/bar', 'foo');
 		$this->collection->addPath('joomla/dir/yoo/hoo', 'yoo');
-		
+
 		$this->collection->setPrefix('/var/www');
-		
+
 		$expects = array(
 			Path::clean('/var/www/joomla/dir/foo/bar'),
 			Path::clean('/var/www/joomla/dir/yoo/hoo'),
 		);
-		
+
 		$paths = array(
 			(string) $this->collection->getPath('foo'),
 			(string) $this->collection->getPath('yoo')

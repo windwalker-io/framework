@@ -9,26 +9,25 @@
 namespace Windwalker\Filesystem\Path;
 
 use Windwalker\Filesystem\Filesystem;
+use Windwalker\Filesystem\Iterator\ArrayObject;
 use Windwalker\Filesystem\Path;
+
+if (!class_exists('CallbackFilterIterator'))
+{
+	include_once __DIR__ . '/../Iterator/CallbackFilterIterator.php';
+}
 
 /**
  * A PathLocator collection class
  *
  * @since  {DEPLOY_VERSION}
  */
-class PathCollection extends \ArrayObject
+class PathCollection extends ArrayObject
 {
 	/**
 	 * Paths bag.
 	 *
 	 * @var PathLocator[]
-	 */
-	protected $paths = array();
-
-	/**
-	 * Paths bag.
-	 *
-	 * @var array
 	 */
 	protected $storage = array();
 
@@ -181,7 +180,7 @@ class PathCollection extends \ArrayObject
 	 */
 	protected function appendIterator(\Closure $callback = null)
 	{
-		$iterator = new \AppendIterator();
+		$iterator = new \AppendIterator;
 
 		$paths = (array) parent::getArrayCopy();
 
@@ -325,7 +324,7 @@ class PathCollection extends \ArrayObject
 	 */
 	public function setPrefix($prefix)
 	{
-		foreach ($this->paths as &$path)
+		foreach ($this->storage as &$path)
 		{
 			$path->setPrefix((string) $prefix);
 		}
