@@ -62,7 +62,7 @@ class FolderTest extends AbstractFilesystemTest
 		}
 		else
 		{
-			$this->assertEquals(0775, Path::getPermissions(static::$dest . '/yoo'));
+			$this->assertEquals(775, Path::getPermissions(static::$dest . '/yoo'));
 		}
 	}
 
