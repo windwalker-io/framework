@@ -61,11 +61,13 @@ class Build extends AbstractCliApplication
 		'data'       => 'Data',
 		'datamapper' => 'DataMapper',
 		'database'   => 'Database',
+		'filesystem' => 'Filesystem',
 		'filter'     => 'Filter',
 		'io'         => 'IO',
 		'middleware' => 'Middleware',
 		'query'      => 'Query',
 		'registry'   => 'Registry',
+		'test'       => 'Test',
 		'utilities'  => 'Utilities',
 	);
 

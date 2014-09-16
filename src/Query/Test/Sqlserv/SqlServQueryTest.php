@@ -10,7 +10,7 @@ namespace Windwalker\Query\Test\Sqlserv;
 
 use Windwalker\Query\Sqlserv\SqlservQuery;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of SqlservQuery

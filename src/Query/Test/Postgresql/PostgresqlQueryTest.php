@@ -10,7 +10,7 @@ namespace Windwalker\Query\Test\Postgresql;
 
 use Windwalker\Query\Postgresql\PostgresqlQuery;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of PostgresqlQuery

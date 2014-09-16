@@ -9,7 +9,7 @@
 namespace Windwalker\Application\Test;
 
 use Windwalker\Application\Test\Stub\StubCli;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of AbstractCliApplication

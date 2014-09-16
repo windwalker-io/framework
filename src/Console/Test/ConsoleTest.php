@@ -12,7 +12,7 @@ use Windwalker\Console\Console;
 use Windwalker\Console\Test\Mock\MockIO;
 use Windwalker\Console\Test\Mock\MockLogger;
 use Windwalker\Console\Test\Stubs\FooCommand;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Class ConsoleTest

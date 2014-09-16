@@ -9,7 +9,7 @@
 namespace Windwalker\Query\Test;
 
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of Query

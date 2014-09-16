@@ -3,14 +3,14 @@
 	"type": "windwalker-package",
 	"description": "Windwalker Data package",
 	"keywords": ["windwalker", "framework", "data"],
-	"homepage": "https://github.com/windwalker-framework/data",
+	"homepage": "https://github.com/ventoviro/windwalker-data",
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
-		"windwalker/compat" : "dev-master"
+		"windwalker/compat" : "~2.0"
 	},
 	"require-dev": {
-		"windwalker/utilities": "dev-master"
+		"windwalker/test": "~2.0"
 	},
 	"minimum-stability" : "dev",
 	"autoload": {

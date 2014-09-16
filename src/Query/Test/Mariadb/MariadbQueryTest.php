@@ -10,7 +10,7 @@ namespace Windwalker\Query\Test\Mariadb;
 
 use Windwalker\Query\Mariadb\MariadbQuery;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of MariadbQuery

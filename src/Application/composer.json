@@ -7,12 +7,12 @@
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
-		"windwalker/io": "dev-master",
-		"windwalker/registry": "dev-master",
-		"windwalker/filter" : "dev-master"
+		"windwalker/io": "~2.0",
+		"windwalker/registry": "~2.0",
+		"windwalker/filter" : "~2.0"
 	},
 	"require-dev": {
-		"windwalker/utilities": "dev-master"
+		"windwalker/test": "~2.0"
 	},
 	"minimum-stability" : "dev",
 	"autoload": {

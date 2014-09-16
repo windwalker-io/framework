@@ -10,7 +10,7 @@ namespace Windwalker\Query\Test\Oracle;
 
 use Windwalker\Query\Oracle\OracleQuery;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of OracleQuery

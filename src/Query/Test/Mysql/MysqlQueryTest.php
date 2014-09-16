@@ -11,7 +11,7 @@ namespace Windwalker\Query\Test\Mysql;
 use Windwalker\Database\Test\DsnResolver;
 use Windwalker\Query\Mysql\MysqlQuery;
 use Windwalker\Query\Query;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of MysqlQuery

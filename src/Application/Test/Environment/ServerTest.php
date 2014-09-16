@@ -9,7 +9,7 @@
 namespace Windwalker\Application\Test\Environment;
 
 use Windwalker\Application\Environment\Server;
-use Windwalker\Utilities\Test\TestHelper;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of Server

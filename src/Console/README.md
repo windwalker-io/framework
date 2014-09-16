@@ -525,13 +525,13 @@ We can using `Command` without `Console` or `CliApplicaion`, please see [Command
 
 ## Installation via Composer
 
-Add `"windwalker/application": "dev-master"` to the require block in your composer.json,
+Add `"windwalker/application": "~2.0"` to the require block in your composer.json,
 make sure you have `"minimum-stability": "dev"` and then run composer install.
 
 ``` json
 {
     "require": {
-        "asika/windwalker-console": "dev-master"
+        "asika/windwalker-console": "~2.0"
     },
     "minimum-stability": "dev"
 }
@@ -541,5 +541,5 @@ Alternatively, you can simply run the following from the command line:
 
 ```
 composer init --stability="dev"
-composer require asika/windwalker-console "dev-master"
+composer require asika/windwalker-console "~2.0"
 ```
