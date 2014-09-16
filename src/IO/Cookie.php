@@ -9,11 +9,11 @@
 namespace Windwalker\IO;
 
 /**
- * Joomla! Input Cookie Class
+ * Windwalker Input Cookie Class
  *
  * @since  {DEPLOY_VERSION}
  */
-class CookieInput extends Input
+class Cookie extends Input
 {
 	/**
 	 * Prepare source.

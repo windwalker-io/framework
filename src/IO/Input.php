@@ -14,6 +14,30 @@ use Windwalker\IO\Filter\NullFilter;
 /**
  * Class Input
  *
+ * @property-read    Input       $get
+ * @property-read    Input       $post
+ * @property-read    Input       $request
+ * @property-read    Input       $server
+ * @property-read    FilesInput  $files
+ * @property-read    Cookie      $cookie
+ *
+ * @method      integer  getInt()       getInt($name, $default = null)    Get a signed integer.
+ * @method      integer  getUint()      getUint($name, $default = null)   Get an unsigned integer.
+ * @method      float    getFloat()     getFloat($name, $default = null)  Get a floating-point number.
+ * @method      boolean  getBool()      getBool($name, $default = null)   Get a boolean.
+ * @method      boolean  getBoolean()   getBoolean($name, $default = null)   Get a boolean.
+ * @method      string   getWord()      getWord($name, $default = null)
+ * @method      string   getAlnum()     getAlnum($name, $default = null)
+ * @method      string   getCmd()       getCmd($name, $default = null)
+ * @method      string   getBase64()    getBase64($name, $default = null)
+ * @method      string   getString()    getString($name, $default = null)
+ * @method      string   getHtml()      getHtml($name, $default = null)
+ * @method      string   getPath()      getPath($name, $default = null)
+ * @method      string   getUsername()  getUsername($name, $default = null)
+ * @method      string   getEmail()     getEmail($name, $default = null)
+ * @method      string   getUrl()       getUrl($name, $default = null)
+ * @method      string   getRaw()       getRaw($name, $default = null)
+ *
  * @since {DEPLOY_VERSION}
  */
 class Input
@@ -99,7 +123,12 @@ class Input
 			return $this->inputs[$name];
 		}
 
-		$className = __NAMESPACE__ . ucfirst($name);
+		$className = __NAMESPACE__ . '\\' . ucfirst($name) . 'Input';
+
+		if (!class_exists($className))
+		{
+			$className = __NAMESPACE__ . '\\' . ucfirst($name);
+		}
 
 		if (class_exists($className))
 		{
@@ -241,6 +270,71 @@ class Input
 		}
 
 		$this->data[$name] = $value;
+	}
+
+	/**
+	 * Check if a value name exists.
+	 *
+	 * @param   string  $name  Value name
+	 *
+	 * @return  boolean
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function exists($name)
+	{
+		return isset($this->data[$name]);
+	}
+
+	/**
+	 * extract
+	 *
+	 * @param   string $name
+	 *
+	 * @return  static
+	 */
+	public function extract($name)
+	{
+		return new static($this->get($name, array(), 'raw'));
+	}
+
+	/**
+	 * getByPath
+	 *
+	 * @param   string  $paths
+	 * @param   mixed   $default
+	 * @param   string  $filter
+	 *
+	 * @return  array|null
+	 */
+	public function getByPath($paths, $default = null, $filter = 'cmd')
+	{
+		if (empty($paths))
+		{
+			return null;
+		}
+
+		$args = is_array($paths) ? $paths : explode('.', $paths);
+
+		$dataTmp = $this->data;
+
+		foreach ($args as $arg)
+		{
+			if (is_object($dataTmp) && !empty($dataTmp->$arg))
+			{
+				$dataTmp = $dataTmp->$arg;
+			}
+			elseif (is_array($dataTmp) && !empty($dataTmp[$arg]))
+			{
+				$dataTmp = $dataTmp[$arg];
+			}
+			else
+			{
+				return $default;
+			}
+		}
+
+		return $this->filter->clean($dataTmp, $filter);
 	}
 
 	/**
