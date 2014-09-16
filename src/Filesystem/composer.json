@@ -1,9 +1,9 @@
 {
-	"name": "windwalker/utilities",
+	"name": "windwalker/filesystem",
 	"type": "windwalker-package",
-	"description": "Windwalker Utilities package",
-	"keywords": ["windwalker", "framework", "utilities"],
-	"homepage": "https://github.com/ventoviro/windwalker-utilities",
+	"description": "Windwalker Filesystem package",
+	"keywords": ["windwalker", "framework", "filesystem"],
+	"homepage": "https://github.com/ventoviro/windwalker-filesystem",
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10"
