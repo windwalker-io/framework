@@ -9,7 +9,7 @@
 namespace Windwalker\Filter;
 
 /**
- * JFilterInput is a class for filtering input from any data source
+ * Html Cleaner object.
  *
  * Forked from the php input filter library by: Daniel Morris <dan@rootcube.com>
  * Original Contributors: Gianpaolo Racca, Ghislain Picard, Marco Wandschneider, Chris Tobin and Andrew Eddie.
@@ -120,7 +120,7 @@ class HtmlCleaner
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function __construct($tagsArray = array(), $attrArray = array(), $tagsMethod = self::USE_WHITE_LIST, $attrMethod = self::USE_WHITE_LIST, $xssAuto = 1)
+	public function __construct($tagsArray = array(), $attrArray = array(), $tagsMethod = self::USE_BACK_LIST, $attrMethod = self::USE_BACK_LIST, $xssAuto = 1)
 	{
 		// Make sure user defined arrays are in lowercase
 		$tagsArray = array_map('strtolower', (array) $tagsArray);

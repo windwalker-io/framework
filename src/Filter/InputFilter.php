@@ -8,7 +8,7 @@
 
 namespace Windwalker\Filter;
 
-use Windwalker\Filter\Type\AbstractFilterType;
+use Windwalker\Filter\Cleaner\CleanerInterface;
 
 /**
  * Class Filter
@@ -30,12 +30,14 @@ class InputFilter
 	const ARRAY_TYPE = 'ARRAY';
 	const PATH = 'PATH';
 	const USERNAME = 'USERNAME';
+	const EMAIL = 'EMAIL';
+	const URL = 'URL';
 	const RAW = 'RAW';
 
 	/**
 	 * Property handlers.
 	 *
-	 * @var  callable[]
+	 * @var  CleanerInterface[]|callable[]
 	 */
 	protected $handlers = array();
 
@@ -61,6 +63,8 @@ class InputFilter
 	public function __construct(HtmlCleaner $htmlCleaner = null)
 	{
 		$this->htmlCleaner = $htmlCleaner ? : new HtmlCleaner;
+
+		$this->loadDefaultHandlers();
 	}
 
 	/**
@@ -74,9 +78,16 @@ class InputFilter
 	public function clean($source, $filter = 'string')
 	{
 		// Find handler to filter this text
-		if (is_callable($filter))
+		if ($filter instanceof \Closure)
 		{
 			return $filter($source);
+		}
+
+		$filter = strtoupper($filter);
+
+		if (!empty($this->handlers[$filter]) && $this->handlers[$filter] instanceof CleanerInterface)
+		{
+			return $this->handlers[$filter]->clean($source);
 		}
 		elseif (!empty($this->handlers[$filter]) && is_callable($this->handlers[$filter]))
 		{
@@ -104,23 +115,23 @@ class InputFilter
 	 */
 	public function getHandler($name)
 	{
-		return $this->handlers[$name];
+		return $this->handlers[strtoupper($name)];
 	}
 
 	/**
 	 * setHandlers
 	 *
-	 * @param   string      $name
-	 * @param   \callable[] $handler
+	 * @param   string                         $name
+	 * @param   CleanerInterface[]|\callable[] $handler
 	 *
 	 * @throws  \InvalidArgumentException
-	 * @return  Filter  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setHandler($name, $handler)
 	{
-		if (is_object($handler) && !($handler instanceof AbstractFilterType) && !($handler instanceof \Closure))
+		if (is_object($handler) && !($handler instanceof CleanerInterface) && !($handler instanceof \Closure))
 		{
-			throw new \InvalidArgumentException('Object filter handler should extends AbstractFilterType or be a Closure.');
+			throw new \InvalidArgumentException('Object filter handler should extends CleanerInterface or be a Closure.');
 		}
 
 		$this->handlers[strtoupper($name)] = $handler;
@@ -143,7 +154,7 @@ class InputFilter
 	 *
 	 * @param   \Windwalker\Filter\HtmlCleaner $htmlCleaner
 	 *
-	 * @return  Filter  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setHtmlCleaner($htmlCleaner)
 	{
@@ -167,7 +178,7 @@ class InputFilter
 	 *
 	 * @param   callable $defaultHandler
 	 *
-	 * @return  Filter  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setDefaultHandler($defaultHandler)
 	{
@@ -191,7 +202,7 @@ class InputFilter
 			// Only use the first integer value
 			preg_match('/-?[0-9]+/', (string) $source, $matches);
 
-			return isset($matches[0]) ? abs((int) $matches[0]) : null;
+			return isset($matches[0]) ? (int) $matches[0] : null;
 		};
 
 		// UINT
@@ -231,7 +242,7 @@ class InputFilter
 		};
 
 		// CMD
-		$this->handlers[static::UINT] = function($source)
+		$this->handlers[static::CMD] = function($source)
 		{
 			$result = (string) preg_replace('/[^A-Z0-9_\.-]/i', '', $source);
 
@@ -275,6 +286,18 @@ class InputFilter
 		$this->handlers[static::USERNAME] = function($source)
 		{
 			return (string) preg_replace('/[\x00-\x1F\x7F<>"\'%&]/', '', $source);
+		};
+
+		// EMAIL
+		$this->handlers[static::EMAIL] = function($source)
+		{
+			return (string) filter_var($source, FILTER_SANITIZE_EMAIL);
+		};
+
+		// HTML
+		$this->handlers[static::URL] = function($source)
+		{
+			return (string) filter_var($source, FILTER_SANITIZE_URL, FILTER_FLAG_QUERY_REQUIRED | FILTER_FLAG_PATH_REQUIRED);
 		};
 
 		// RAW
