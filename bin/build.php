@@ -78,7 +78,7 @@ class Build extends AbstractCliApplication
 	 */
 	protected function doExecute()
 	{
-		$this->tag = $tag = $this->io->getArgument(0);
+		$this->tag = $tag = $this->io->getOption('t') ? : $this->io->getOption('tag');
 
 		$branch = $this->io->getOption('b') ?: $this->io->getOption('branch', 'test');
 
@@ -103,8 +103,15 @@ class Build extends AbstractCliApplication
 
 		$this->exec(sprintf('git push origin %s %s:%s staging:staging', $tag, $branch, $branch));
 
+		$allows = $this->io->getArguments();
+
 		foreach ($this->subtrees as $subtree => $namespace)
 		{
+			if ($allows && !in_array($subtree, $allows))
+			{
+				continue;
+			}
+
 			$this->splitTree($subtree, $namespace);
 		}
 
@@ -121,6 +128,9 @@ class Build extends AbstractCliApplication
 	 */
 	protected function splitTree($subtree, $namespace)
 	{
+		$this->out()->out(sprintf('@ Start subtree split (%s)', $subtree))
+			->out('---------------------------------------');
+
 		// Do split
 		$this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
 
@@ -174,6 +184,11 @@ class Build extends AbstractCliApplication
 		$command = sprintf('%s %s %s', $command, $arguments, $options);
 
 		$this->out('>> ' . $command);
+
+		if ($this->io->getOption('dry-run'))
+		{
+			return '';
+		}
 
 		$return = exec(trim($command), $this->lastOutput, $this->lastReturn);
 

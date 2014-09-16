@@ -9,8 +9,8 @@
 		"php": ">=5.3.10"
 	},
 	"require-dev": {
-		"windwalker/test": "~2.0",
-		"windwalker/database": "~2.0",
+		"windwalker/test": "~2.0-beta2",
+		"windwalker/database": "~2.0-beta2",
 		"jdorn/sql-formatter" : "1.*"
 	},
 	"minimum-stability" : "dev",
