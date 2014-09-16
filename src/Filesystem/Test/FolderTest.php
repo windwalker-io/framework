@@ -54,7 +54,7 @@ class FolderTest extends AbstractFilesystemTest
 
 		$this->assertTrue(is_dir(static::$dest . '/foo/bar'));
 
-		Folder::create(static::$dest . '/yoo', 775);
+		Folder::create(static::$dest . '/yoo', 0775);
 
 		if (TestEnvironment::isWindows())
 		{
@@ -62,7 +62,7 @@ class FolderTest extends AbstractFilesystemTest
 		}
 		else
 		{
-			$this->assertEquals(775, Path::getPermissions(static::$dest . '/yoo'));
+			$this->assertEquals(0775, Path::getPermissions(static::$dest . '/yoo'));
 		}
 	}
 

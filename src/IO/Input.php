@@ -396,7 +396,7 @@ class Input
 		unset($inputs['server']);
 
 		// Serialize the options, data, and inputs.
-		return serialize(array($this->options, $this->data, $inputs));
+		return serialize(array($this->data, $inputs));
 	}
 
 	/**
@@ -410,18 +410,10 @@ class Input
 	 */
 	public function unserialize($input)
 	{
-		// Unserialize the options, data, and inputs.
-		list($this->options, $this->data, $this->inputs) = unserialize($input);
+		// Unserialize the data, and inputs.
+		list($this->data, $this->inputs) = unserialize($input);
 
-		// Load the filter.
-		if (isset($this->options['filter']))
-		{
-			$this->filter = $this->options['filter'];
-		}
-		else
-		{
-			$this->filter = new InputFilter;
-		}
+		$this->filter = new InputFilter;
 	}
 
 	/**

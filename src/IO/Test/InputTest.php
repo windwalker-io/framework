@@ -9,8 +9,6 @@
 namespace Windwalker\IO\Test;
 
 use Windwalker\Filter\InputFilter;
-use Windwalker\IO\Cookie;
-use Windwalker\IO\CookieInput;
 use Windwalker\IO\Input;
 use Windwalker\Test\TestHelper;
 
@@ -477,10 +475,12 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSerialize()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$instance = $this->newInstance(array('foo' => 'bar123'));
+
+		$input = unserialize(serialize($instance));
+
+		$this->assertEquals('bar123', $input->get('foo'));
+		$this->assertEquals('123', $input->getInt('foo'));
 	}
 
 	/**

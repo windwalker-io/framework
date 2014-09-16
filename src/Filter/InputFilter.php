@@ -15,7 +15,7 @@ use Windwalker\Filter\Cleaner\CleanerInterface;
  *
  * @since {DEPLOY_VERSION}
  */
-class InputFilter
+class InputFilter implements \Serializable
 {
 	const INTEGER = 'INTEGER';
 	const UINT = 'UINT';
@@ -338,6 +338,40 @@ class InputFilter
 				}
 			}
 		};
+	}
+
+	/**
+	 * Method to serialize the Filter.
+	 *
+	 * @return  string  The serialized Filter.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function serialize()
+	{
+		$this->handlers = null;
+		$this->defaultHandler = null;
+
+		// Serialize the options, data, and inputs.
+		return serialize($this->htmlCleaner);
+	}
+
+	/**
+	 * Method to unserialize the Filter.
+	 *
+	 * @param   string  $input  The serialized Filter.
+	 *
+	 * @return  static  The Filter object.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function unserialize($input)
+	{
+		$htmlCleaner = unserialize($input);
+
+		$this->htmlCleaner = $htmlCleaner;
+
+		$this->loadDefaultHandlers();
 	}
 }
 
