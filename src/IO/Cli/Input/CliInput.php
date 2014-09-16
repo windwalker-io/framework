@@ -43,16 +43,14 @@ class CliInput extends Input implements CliInputInterface
 	protected $inputStream = STDIN;
 
 	/**
-	 * Constructor.
+	 * Prepare source.
 	 *
-	 * @param   array  $source Optional source data.
+	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @return  void
 	 */
-	public function __construct($source = null)
+	protected function prepareSource($source = null)
 	{
-		$this->filter = new NullFilter;
-
 		// Get the command line options
 		$this->parseArguments();
 	}
@@ -294,29 +292,5 @@ class CliInput extends Input implements CliInputInterface
 		$this->calledScript = $calledScript;
 
 		return $this;
-	}
-
-	/**
-	 * setOutStream
-	 *
-	 * @param   resource $outStream
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setOutputStream($outStream)
-	{
-
-	}
-
-	/**
-	 * Method to set property errorStream
-	 *
-	 * @param   resource $errorStream
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setErrorStream($errorStream)
-	{
-
 	}
 }

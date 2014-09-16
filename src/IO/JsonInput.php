@@ -8,8 +8,6 @@
 
 namespace Windwalker\IO;
 
-use Windwalker\Filter\Filter;
-
 /**
  * Windwalker Input JSON Class
  *
@@ -26,17 +24,16 @@ class JsonInput extends Input
 	 * @var    string
 	 * @since  {DEPLOY_VERSION}
 	 */
-	private $raw;
+	protected $raw;
 
 	/**
-	 * Constructor.
+	 * Prepare source.
 	 *
-	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   Filter $filter The input filter object.
+	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @return  void
 	 */
-	public function __construct(array $source = null, Filter $filter = null)
+	protected function prepareSource($source = null)
 	{
 		if (is_null($source))
 		{

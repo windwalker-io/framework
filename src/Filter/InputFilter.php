@@ -15,7 +15,7 @@ use Windwalker\Filter\Type\AbstractFilterType;
  *
  * @since {DEPLOY_VERSION}
  */
-class Filter
+class InputFilter
 {
 	const INTEGER = 'INTEGER';
 	const UINT = 'UINT';

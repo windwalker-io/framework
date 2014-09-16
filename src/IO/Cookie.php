@@ -8,8 +8,6 @@
 
 namespace Windwalker\IO;
 
-use Windwalker\Filter\Filter;
-
 /**
  * Joomla! Input Cookie Class
  *
@@ -18,17 +16,14 @@ use Windwalker\Filter\Filter;
 class CookieInput extends Input
 {
 	/**
-	 * Constructor.
+	 * Prepare source.
 	 *
-	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   Filter $filter The input filter object.
+	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @return  void
 	 */
-	public function __construct($source = null, Filter $filter = null)
+	protected function prepareSource($source = null)
 	{
-		$this->filter = $filter ? : new Filter;
-
 		$this->data = &$_COOKIE;
 	}
 

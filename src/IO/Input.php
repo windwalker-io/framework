@@ -8,7 +8,7 @@
 
 namespace Windwalker\IO;
 
-use Windwalker\Filter\Filter;
+use Windwalker\Filter\InputFilter;
 use Windwalker\IO\Filter\NullFilter;
 
 /**
@@ -21,7 +21,7 @@ class Input
 	/**
 	 * Filter object to use.
 	 *
-	 * @var    \Windwalker\Filter\Filter
+	 * @var    \Windwalker\Filter\InputFilter
 	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $filter = null;
@@ -45,12 +45,12 @@ class Input
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   Filter $filter The input filter object.
+	 * @param   array       $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   InputFilter $filter  The input filter object.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function __construct($source = null, Filter $filter = null)
+	public function __construct($source = null, InputFilter $filter = null)
 	{
 		if ($filter)
 		{
@@ -58,9 +58,21 @@ class Input
 		}
 		else
 		{
-			$this->filter = class_exists('Windwalker\\Filter\\Filter') ? new Filter : new NullFilter;
+			$this->filter = class_exists('Windwalker\\Filter\\InputFilter') ? new InputFilter : new NullFilter;
 		}
 
+		$this->prepareSource($source);
+	}
+
+	/**
+	 * Prepare source.
+	 *
+	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 *
+	 * @return  void
+	 */
+	protected function prepareSource($source = null)
+	{
 		if (is_null($source))
 		{
 			$this->data = &$_REQUEST;
@@ -105,7 +117,7 @@ class Input
 			return $this->inputs[$name];
 		}
 
-		// TODO throw an exception
+		return null;
 	}
 
 	/**
@@ -314,7 +326,7 @@ class Input
 		}
 		else
 		{
-			$this->filter = new \Joomla\Filter\InputFilter;
+			$this->filter = new InputFilter;
 		}
 	}
 
@@ -350,4 +362,3 @@ class Input
 		}
 	}
 }
-
