@@ -214,9 +214,10 @@ class FilesystemTest extends AbstractFilesystemTest
 	{
 		// String condition
 		$file = Filesystem::findOne(static::$dest, 'file', true, true);
+		$files = Filesystem::find(static::$dest, 'file', true, true);
 
 		$this->assertEquals(
-			Path::clean(__DIR__ . '/dest/file2.txt'),
+			Path::clean((string) $files[0]),
 			Path::clean((string) $file)
 		);
 	}

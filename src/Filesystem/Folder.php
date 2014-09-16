@@ -405,6 +405,8 @@ abstract class Folder
 		{
 			$folders = static::folders($path, false, false);
 
+			sort($folders);
+
 			// First path, index foldernames
 			foreach ($folders as $name)
 			{
