@@ -6,18 +6,18 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Query\Mysql;
+namespace Windwalker\Query\Postgresql;
 
 use Windwalker\Query\AbstractQueryBuilder;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
 
 /**
- * Class MysqlQueryBuilder
+ * Class PostgresqlQueryBuilder
  *
  * @since {DEPLOY_VERSION}
  */
-abstract class MysqlQueryBuilder extends AbstractQueryBuilder
+abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 {
 	const PRIMARY  = 'PRIMARY KEY';
 	const INDEX    = 'INDEX';
@@ -507,7 +507,7 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	 */
 	public static function replace($name, $columns = array(), $values = array())
 	{
-		$query = new MysqlQuery;
+		$query = new PostgresqlQuery;
 
 		$query = (string) $query->insert($query->quoteName($name))
 			->columns($columns)
@@ -529,7 +529,7 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	{
 		if (!static::$query || $new)
 		{
-			static::$query = new MysqlQuery;
+			static::$query = new PostgresqlQuery;
 		}
 
 		return static::$query;

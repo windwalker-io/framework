@@ -107,11 +107,11 @@ abstract class AbstractDatabaseCase extends \PHPUnit_Framework_TestCase
 			)
 		);
 
-		$db->setQuery('CREATE DATABASE IF NOT EXISTS ' . $db->quoteName($dbname))->execute();
+		$db->getDatabase($dbname)->create(true);
 
 		$db->select($dbname);
 
-		$queries = file_get_contents(__DIR__ . '/Stub/data.sql');
+		$queries = file_get_contents(__DIR__ . '/Stub/' . static::$driver . '.sql');
 
 		$queries = $db->splitSql($queries);
 

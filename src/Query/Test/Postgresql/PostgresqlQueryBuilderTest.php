@@ -6,36 +6,36 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Query\Test\Mysql;
+namespace Windwalker\Query\Test\Postgresql;
 
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 
 /**
- * Test class of MysqlQueryBuilder
+ * Test class of PostgresqlQueryBuilder
  *
  * @since {DEPLOY_VERSION}
  */
-class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
+class PostgresqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Property qn.
 	 *
 	 * @var  string
 	 */
-	protected $qn = '`';
+	protected $qn = '"';
 
 	/**
 	 * Method to test showDatabases().
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showDatabases
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::showDatabases
 	 */
 	public function testShowDatabases()
 	{
 		$expected = "SHOW DATABASES WHERE a = b";
 
-		$actual = MysqlQueryBuilder::showDatabases('a = b');
+		$actual = PostgresqlQueryBuilder::showDatabases('a = b');
 
 		$this->assertEquals(\SqlFormatter::compress($expected), \SqlFormatter::compress($actual));
 	}
@@ -45,13 +45,13 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::createDatabase
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::createDatabase
 	 */
 	public function testCreateDatabase()
 	{
 		$expected = "CREATE DATABASE {$this->qn}foo{$this->qn}";
 
-		$actual = MysqlQueryBuilder::createDatabase('foo');
+		$actual = PostgresqlQueryBuilder::createDatabase('foo');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -60,7 +60,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
 		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn}foo{$this->qn}";
 
-		$actual = MysqlQueryBuilder::createDatabase('foo', true);
+		$actual = PostgresqlQueryBuilder::createDatabase('foo', true);
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -69,7 +69,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
 		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn}foo{$this->qn} CHARACTER SET='utf8' COLLATE='bar'";
 
-		$actual = MysqlQueryBuilder::createDatabase('foo', true, 'utf8', 'bar');
+		$actual = PostgresqlQueryBuilder::createDatabase('foo', true, 'utf8', 'bar');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -82,13 +82,13 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropDatabase
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::dropDatabase
 	 */
 	public function testDropDatabase()
 	{
 		$expected = "DROP DATABASE {$this->qn}foo{$this->qn}";
 
-		$actual = MysqlQueryBuilder::dropDatabase('foo');
+		$actual = PostgresqlQueryBuilder::dropDatabase('foo');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -97,7 +97,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
 		$expected = "DROP DATABASE IF EXISTS {$this->qn}foo{$this->qn}";
 
-		$actual = MysqlQueryBuilder::dropDatabase('foo', true);
+		$actual = PostgresqlQueryBuilder::dropDatabase('foo', true);
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -110,13 +110,13 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showTableColumns
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::showTableColumns
 	 */
 	public function testShowTableColumns()
 	{
 		$expected = "SHOW COLUMNS FROM {$this->qn}foo{$this->qn}";
 
-		$actual = MysqlQueryBuilder::showTableColumns('foo');
+		$actual = PostgresqlQueryBuilder::showTableColumns('foo');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -125,7 +125,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
 		$expected = "SHOW FULL COLUMNS FROM {$this->qn}foo{$this->qn} WHERE a = b";
 
-		$actual = MysqlQueryBuilder::showTableColumns('foo', true, 'a = b');
+		$actual = PostgresqlQueryBuilder::showTableColumns('foo', true, 'a = b');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -138,13 +138,13 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showDbTables
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::showDbTables
 	 */
 	public function testShowDbTables()
 	{
 		$expected = "SHOW TABLE STATUS FROM {$this->qn}foo{$this->qn}";
 
-		$actual = MysqlQueryBuilder::showDbTables('foo');
+		$actual = PostgresqlQueryBuilder::showDbTables('foo');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -153,7 +153,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
 		$expected = "SHOW TABLE STATUS FROM {$this->qn}foo{$this->qn} WHERE a = b";
 
-		$actual = MysqlQueryBuilder::showDbTables('foo', 'a = b');
+		$actual = PostgresqlQueryBuilder::showDbTables('foo', 'a = b');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -166,7 +166,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::createTable
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::createTable
 	 */
 	public function testCreateTable()
 	{
@@ -190,7 +190,7 @@ SQL;
 			array('type' => 'KEY', 'name' => 'idx_alias', 'columns' => 'email')
 		);
 
-		$actual = MysqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
+		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -217,7 +217,7 @@ SQL;
 			array('type' => 'UNIQUE KEY', 'name' => 'idx_alias', 'columns' => array('email', 'id'))
 		);
 
-		$actual = MysqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
+		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -230,13 +230,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropTable
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::dropTable
 	 */
 	public function testDropTable()
 	{
 		$expected = "DROP TABLE {$this->qn}foo{$this->qn}";
 
-		$actual = MysqlQueryBuilder::dropTable('foo');
+		$actual = PostgresqlQueryBuilder::dropTable('foo');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -245,7 +245,7 @@ SQL;
 
 		$expected = "DROP TABLE IF EXISTS {$this->qn}foo{$this->qn}";
 
-		$actual = MysqlQueryBuilder::dropTable('foo', true);
+		$actual = PostgresqlQueryBuilder::dropTable('foo', true);
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -258,13 +258,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::alterColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::alterColumn
 	 */
 	public function testAlterColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} MODIFY {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
 
-		$actual = MysqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
+		$actual = PostgresqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -273,7 +273,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} CHANGE {$this->qn}bar{$this->qn} {$this->qn}yoo{$this->qn} text AFTER {$this->qn}id{$this->qn}";
 
-		$actual = MysqlQueryBuilder::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', false, false, null, 'AFTER id', null);
+		$actual = PostgresqlQueryBuilder::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', false, false, null, 'AFTER id', null);
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -286,13 +286,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::addColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::addColumn
 	 */
 	public function testAddColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} ADD {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
 
-		$actual = MysqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
+		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -305,13 +305,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::changeColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::changeColumn
 	 */
 	public function testChangeColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} CHANGE {$this->qn}bar{$this->qn} {$this->qn}yoo{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
 
-		$actual = MysqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', true, true, '1', 'FIRST', 'Test');
+		$actual = PostgresqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -324,13 +324,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::modifyColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::modifyColumn
 	 */
 	public function testModifyColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} MODIFY {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
 
-		$actual = MysqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
+		$actual = PostgresqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -343,13 +343,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::dropColumn
 	 */
 	public function testDropColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} DROP {$this->qn}bar{$this->qn}";
 
-		$actual = MysqlQueryBuilder::dropColumn('foo', 'bar');
+		$actual = PostgresqlQueryBuilder::dropColumn('foo', 'bar');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -362,13 +362,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::addIndex
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::addIndex
 	 */
 	public function testAddIndex()
 	{
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} ADD KEY {$this->qn}idx_alias{$this->qn} ({$this->qn}alias{$this->qn}, {$this->qn}name{$this->qn}) COMMENT 'Test Index'";
 
-		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', array('alias', 'name'), 'Test Index');
+		$actual = PostgresqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', array('alias', 'name'), 'Test Index');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -377,7 +377,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} ADD KEY {$this->qn}idx_alias{$this->qn} ({$this->qn}alias{$this->qn}) COMMENT 'Test Index'";
 
-		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', 'alias', 'Test Index');
+		$actual = PostgresqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', 'alias', 'Test Index');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -390,13 +390,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::buildIndexDeclare
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::buildIndexDeclare
 	 */
 	public function testBuildIndexDeclare()
 	{
 		$expected = "{$this->qn}idx_alias{$this->qn} ({$this->qn}alias{$this->qn})";
 
-		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias');
+		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -405,7 +405,7 @@ SQL;
 
 		$expected = "{$this->qn}idx_alias{$this->qn} ({$this->qn}alias{$this->qn}, {$this->qn}name{$this->qn})";
 
-		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'));
+		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'));
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -418,13 +418,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropIndex
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::dropIndex
 	 */
 	public function testDropIndex()
 	{
 		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} DROP INDEX {$this->qn}bar{$this->qn}";
 
-		$actual = MysqlQueryBuilder::dropIndex('foo', 'INDEX', 'bar');
+		$actual = PostgresqlQueryBuilder::dropIndex('foo', 'INDEX', 'bar');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -437,13 +437,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::build
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::build
 	 */
 	public function testBuild()
 	{
 		$expected = "FLOWER SAKURA SUNFLOWER OLIVE";
 
-		$actual = MysqlQueryBuilder::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
+		$actual = PostgresqlQueryBuilder::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -456,13 +456,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::replace
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::replace
 	 */
 	public function testReplace()
 	{
 		$expected = "REPLACE INTO {$this->qn}foo{$this->qn} (a,b) VALUES (c, d, e), (f, g, h)";
 
-		$actual = MysqlQueryBuilder::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
+		$actual = PostgresqlQueryBuilder::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -475,14 +475,14 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::getQuery
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::getQuery
 	 */
 	public function testGetQuery()
 	{
-		$this->assertInstanceOf('Windwalker\\Query\\Mysql\\MysqlQuery', MysqlQueryBuilder::getQuery());
+		$this->assertInstanceOf('Windwalker\\Query\\Postgresql\\PostgresqlQuery', PostgresqlQueryBuilder::getQuery());
 
-		$this->assertSame(MysqlQueryBuilder::getQuery(), MysqlQueryBuilder::getQuery());
+		$this->assertSame(PostgresqlQueryBuilder::getQuery(), PostgresqlQueryBuilder::getQuery());
 
-		$this->assertNotSame(MysqlQueryBuilder::getQuery(), MysqlQueryBuilder::getQuery(true));
+		$this->assertNotSame(PostgresqlQueryBuilder::getQuery(), PostgresqlQueryBuilder::getQuery(true));
 	}
 }

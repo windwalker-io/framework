@@ -21,6 +21,13 @@ use Windwalker\Utilities\Test\TestHelper;
 class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
+	 * Property qn.
+	 *
+	 * @var  string
+	 */
+	protected $qn = '`';
+	
+	/**
 	 * Test instance.
 	 *
 	 * @var MysqlQuery
@@ -814,7 +821,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testQuoteName()
 	{
-		$this->assertEquals('`foo`', $this->instance->quoteName('foo'));
+		$this->assertEquals("{$this->qn}foo{$this->qn}", $this->instance->quoteName('foo'));
 	}
 
 	/**
