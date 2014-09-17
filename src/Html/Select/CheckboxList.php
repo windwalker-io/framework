@@ -10,6 +10,7 @@ namespace Windwalker\Html\Select;
 
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\HtmlElements;
+use Windwalker\Html\Option;
 
 /**
  * The CheckboxList class.
@@ -32,22 +33,24 @@ class CheckboxList extends AbstractInputList
 	 */
 	protected function prepareOptions()
 	{
-		foreach ($this->content as &$option)
+		parent::prepareOptions();
+
+		// Prepare array name
+		foreach ($this->content as $key => &$option)
 		{
-			if (in_array($option->getValue(), (array) $this->getChecked()))
-			{
-				$option['checked'] = 'checked';
-			}
-
-			$attrs = $option->getAttributes();
-
-			$label = $this->createLabel($option);
-
-			$attrs['type'] = $this->type;
-
-			$input = new HtmlElement('input', '', $attrs);
-
-			$option = new HtmlElements(array($input, $label));
+			$option[0]->setAttribute('name', $option[0]->getAttribute('name') . '[]');
 		}
+	}
+
+	/**
+	 * isChecked
+	 *
+	 * @param  Option $option
+	 *
+	 * @return  bool
+	 */
+	protected function isChecked(Option $option)
+	{
+		return in_array($option->getValue(), (array) $this->getChecked());
 	}
 }

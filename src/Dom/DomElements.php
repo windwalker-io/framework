@@ -165,4 +165,28 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
 
 		return $this;
 	}
+
+	/**
+	 * Method to get property Elements
+	 *
+	 * @return  \mixed[]|HtmlElement[]
+	 */
+	public function getElements()
+	{
+		return $this->elements;
+	}
+
+	/**
+	 * Method to set property elements
+	 *
+	 * @param   \mixed[]|HtmlElement[] $elements
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setElements($elements)
+	{
+		$this->elements = $elements;
+
+		return $this;
+	}
 }
