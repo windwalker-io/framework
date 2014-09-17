@@ -10,8 +10,6 @@ namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\SimpleXml\XmlHelper;
-use Windwalker\Form\Exception\FieldRequiredFailException;
-use Windwalker\Form\Exception\FieldValidateFailException;
 use Windwalker\Form\Filter\FilterInterface;
 use Windwalker\Form\Validate\ValidateResult;
 use Windwalker\Validator\ValidatorInterface;
@@ -264,7 +262,7 @@ abstract class AbstractField implements FieldInterface
 	{
 		$control = $this->control ? $this->control . '.' : '';
 
-		return str_replace('.', '-', $control . $this->getName());
+		return str_replace('.', '-', $control . $this->getName(true));
 	}
 
 	/**
@@ -306,7 +304,7 @@ abstract class AbstractField implements FieldInterface
 	{
 		$value = (string) $this->value;
 
-		if ($this->value && $value === '0')
+		if ($this->value || $value === '0')
 		{
 			return true;
 		}
@@ -332,6 +330,8 @@ abstract class AbstractField implements FieldInterface
 	public function filter()
 	{
 		$this->value = $this->getFilter()->clean($this->value);
+
+		return $this;
 	}
 
 	/**
@@ -368,6 +368,8 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function setName($name)
 	{
+		$this->fieldName = null;
+
 		$this->name = $name;
 
 		return $this;
@@ -376,11 +378,13 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Method to get property FieldName
 	 *
-	 * @return  null
+	 * @param bool $refresh
+	 *
+	 * @return  string
 	 */
-	public function getFieldName()
+	public function getFieldName($refresh = false)
 	{
-		if (!$this->fieldName)
+		if (!$this->fieldName || $refresh)
 		{
 			// Prevent '..'
 			$names = array_values(array_filter(explode('.', $this->getName(true)), 'strlen'));
@@ -434,6 +438,8 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function setGroup($group)
 	{
+		$this->fieldName = null;
+
 		$this->group = $group;
 
 		return $this;

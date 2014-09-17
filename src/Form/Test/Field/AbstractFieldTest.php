@@ -8,7 +8,10 @@
 
 namespace Windwalker\Form\Test\Field;
 
+use Windwalker\Form\Test\Mock\MockFilter;
+use Windwalker\Filter\InputFilter;
 use Windwalker\Form\Test\Stub\StubField;
+use Windwalker\Form\Validate\ValidateResult;
 use Windwalker\Test\TestCase\DomTestCase;
 use Windwalker\Validator\Rule\IpValidator;
 
@@ -83,6 +86,15 @@ HTML;
 
 		$expect = <<<HTML
 <input type="text" name="windwalker[flower]" id="windwalker-flower" class="stub-flower" value="sakura" />
+HTML;
+
+		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
+
+		// Group
+		$this->instance->setGroup('foo.bar');
+
+		$expect = <<<HTML
+<input type="text" name="windwalker[foo][bar][flower]" id="windwalker-foo-bar-flower" class="stub-flower" value="sakura" />
 HTML;
 
 		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
@@ -208,7 +220,9 @@ HTML;
 		);
 
 		$this->assertTrue($field->setValue('123.21.23.156')->validate()->isSuccess());
+
 		$this->assertFalse($field->setValue('/var/foo/bar')->validate()->isSuccess());
+		$this->assertEquals(ValidateResult::STATUS_FAILURE, $field->setValue('/var/foo/bar')->validate()->getResult());
 	}
 
 	/**
@@ -221,10 +235,22 @@ HTML;
 	 */
 	public function testCheckRequired()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$field = new StubField(
+			'flower',
+			'Flower',
+			array(
+				'placeholder' => 'The Flower',
+				'class' => 'stub-flower',
+				'required' => true
+			)
 		);
+
+		$this->assertFalse($field->validate()->isSuccess());
+		$this->assertEquals(ValidateResult::STATUS_REQUIRED, $field->validate()->getResult());
+
+		$field->setValue('123');
+
+		$this->assertTrue($field->validate()->isSuccess());
 	}
 
 	/**
@@ -249,30 +275,26 @@ HTML;
 	 * @return void
 	 *
 	 * @covers Windwalker\Form\Field\AbstractField::filter
-	 * @TODO   Implement testFilter().
 	 */
 	public function testFilter()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$field = new StubField(
+			'flower',
+			'Flower',
+			array(
+				'placeholder' => 'The Flower',
+				'class' => 'stub-flower'
+			),
+			InputFilter::CMD
 		);
-	}
 
-	/**
-	 * Method to test prepareStore().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Form\Field\AbstractField::prepareStore
-	 * @TODO   Implement testPrepareStore().
-	 */
-	public function testPrepareStore()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$field->setValue('abc foo_bar-yoo<div>data</div>456:789');
+
+		$this->assertEquals('abcfoo_bar-yoodivdatadiv456789', $field->filter()->getValue());
+
+		$field->setFilter(new MockFilter)->setValue('foo');
+
+		$this->assertEquals('abc', $field->filter()->getValue());
 	}
 
 	/**
@@ -281,14 +303,13 @@ HTML;
 	 * @return void
 	 *
 	 * @covers Windwalker\Form\Field\AbstractField::getName
-	 * @TODO   Implement testGetName().
 	 */
 	public function testGetName()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->setControl('windwalker');
+		$this->instance->setValue('sakura');
+
+		$this->assertEquals('flower', $this->instance->getName());
 	}
 
 	/**
@@ -297,14 +318,14 @@ HTML;
 	 * @return void
 	 *
 	 * @covers Windwalker\Form\Field\AbstractField::setName
-	 * @TODO   Implement testSetName().
 	 */
 	public function testSetName()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->setControl('windwalker');
+		$this->instance->setGroup('goo');
+		$this->instance->setName('yoo');
+
+		$this->assertEquals('windwalker-goo-yoo', $this->instance->getId());
 	}
 
 	/**
@@ -313,14 +334,17 @@ HTML;
 	 * @return void
 	 *
 	 * @covers Windwalker\Form\Field\AbstractField::getFieldName
-	 * @TODO   Implement testGetFieldName().
 	 */
 	public function testGetFieldName()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->setControl('windwalker');
+
+		$this->assertEquals('windwalker[flower]', $this->instance->getFieldName());
+
+		$this->instance->setGroup('foo.bar');
+		$this->instance->setName('yoo');
+
+		$this->assertEquals('windwalker[foo][bar][yoo]', $this->instance->getFieldName(true));
 	}
 
 	/**
