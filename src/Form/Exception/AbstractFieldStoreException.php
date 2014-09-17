@@ -14,6 +14,8 @@ use Windwalker\Form\Field\FieldInterface;
  * The AbstractFieldStoreException class.
  * 
  * @since  {DEPLOY_VERSION}
+ *
+ * @deprecated  Do not use exception to handle validate fail anymore.
  */
 class AbstractFieldStoreException extends ValidateFailException
 {
@@ -62,6 +64,5 @@ class AbstractFieldStoreException extends ValidateFailException
 
 		return $this;
 	}
-
 }
 

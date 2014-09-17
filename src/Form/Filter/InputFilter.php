@@ -8,19 +8,19 @@
 
 namespace Windwalker\Form\Filter;
 
-use Windwalker\Filter\Filter;
+use Windwalker\Filter\InputFilter as WindwalkerFilter;
 
 /**
  * The InputFiler class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class InputFiler implements FilterInterface
+class InputFilter implements FilterInterface
 {
 	/**
 	 * Property filter.
 	 *
-	 * @var  Filter
+	 * @var  WindwalkerFilter
 	 */
 	protected static $filter = null;
 
@@ -63,13 +63,13 @@ class InputFiler implements FilterInterface
 	/**
 	 * getFilter
 	 *
-	 * @return  Filter
+	 * @return  WindwalkerFilter
 	 */
 	protected static function getFilter()
 	{
 		if (!static::$filter)
 		{
-			static::$filter = new Filter;
+			static::$filter = new WindwalkerFilter;
 		}
 
 		return static::$filter;
@@ -78,11 +78,11 @@ class InputFiler implements FilterInterface
 	/**
 	 * Method to set property filter
 	 *
-	 * @param   \Windwalker\Filter\Filter $filter
+	 * @param   \Windwalker\Filter\WindwalkerFilter $filter
 	 *
 	 * @return  void
 	 */
-	public static function setFilter(Filter $filter)
+	public static function setFilter(WindwalkerFilter $filter)
 	{
 		self::$filter = $filter;
 	}
@@ -111,4 +111,3 @@ class InputFiler implements FilterInterface
 		return $this;
 	}
 }
-

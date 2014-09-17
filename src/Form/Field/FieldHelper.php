@@ -9,7 +9,7 @@
 namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\SimpleXml\XmlHelper;
-use Windwalker\Form\Filter\InputFiler;
+use Windwalker\Form\Filter\InputFilter;
 use Windwalker\Validator\Rule\NoneValidator;
 use Windwalker\Validator\Rule\RegexValidator;
 use Windwalker\Validator\ValidatorInterface;
@@ -116,7 +116,7 @@ class FieldHelper
 	 *
 	 * @param string $filter
 	 *
-	 * @return  bool|InputFiler
+	 * @return  bool|InputFilter
 	 */
 	public static function createFilter($filter)
 	{
@@ -132,7 +132,7 @@ class FieldHelper
 			return new $class;
 		}
 
-		return new InputFiler($filter);
+		return new InputFilter($filter);
 	}
 
 	/**

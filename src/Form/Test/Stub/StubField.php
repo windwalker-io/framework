@@ -2,32 +2,32 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Field\Type;
+namespace Windwalker\Form\Test\Stub;
 
 use Windwalker\Form\Field\AbstractField;
 
 /**
- * The TextField class.
+ * The StubField class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class TextField extends AbstractField
+class StubField extends AbstractField
 {
 	/**
 	 * Property type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'text';
+	protected $type = 'stub';
 
 	/**
 	 * prepareRenderInput
 	 *
-	 * @param array $attrs
+	 * @param array &$attrs
 	 *
 	 * @return  array
 	 */
@@ -37,7 +37,6 @@ class TextField extends AbstractField
 		$attrs['name']     = $this->getFieldName();
 		$attrs['id']       = $this->getAttribute('id', $this->getId());
 		$attrs['class']    = $this->getAttribute('class');
-		$attrs['placeholder'] = $this->getAttribute('placeholder');
 		$attrs['size']     = $this->getAttribute('size');
 		$attrs['maxlength'] = $this->getAttribute('size');
 		$attrs['readonly'] = $this->getAttribute('readonly');

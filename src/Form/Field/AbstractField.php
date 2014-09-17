@@ -13,6 +13,7 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
 use Windwalker\Form\Exception\FieldRequiredFailException;
 use Windwalker\Form\Exception\FieldValidateFailException;
 use Windwalker\Form\Filter\FilterInterface;
+use Windwalker\Form\Validate\ValidateResult;
 use Windwalker\Validator\ValidatorInterface;
 
 /**
@@ -241,7 +242,7 @@ abstract class AbstractField implements FieldInterface
 		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
 		$attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
 
-		return new HtmlElement('div', $label . ' ' . $input, $attrs);
+		return new HtmlElement('div', $label . $input, $attrs);
 	}
 
 	/**
@@ -271,23 +272,29 @@ abstract class AbstractField implements FieldInterface
 	 *
 	 * @throws \Windwalker\Form\Exception\FieldRequiredFailException
 	 * @throws \Windwalker\Form\Exception\FieldValidateFailException
-	 * @return  boolean
+	 * @return  ValidateResult
 	 */
 	public function validate()
 	{
 		$this->filter();
 
+		$result = new ValidateResult;
+
 		if ($this->required && !$this->checkRequired())
 		{
-			throw new FieldRequiredFailException($this, sprintf('Field %s value empty', $this->getName(true)));
+			return $result->setMessage(sprintf('Field %s value empty', $this->getName(true)))
+				->setResult(ValidateResult::STATUS_REQUIRED)
+				->setField($this);
 		}
 
 		if ($this->validator && !$this->checkRule())
 		{
-			throw new FieldValidateFailException($this, sprintf('Field %s rule not valid', $this->getName(true)));
+			return $result->setMessage(sprintf('Field %s rule not valid', $this->getName(true)))
+				->setResult(ValidateResult::STATUS_FAILURE)
+				->setField($this);
 		}
 
-		return true;
+		return $result;
 	}
 
 	/**
@@ -375,7 +382,7 @@ abstract class AbstractField implements FieldInterface
 	{
 		if (!$this->fieldName)
 		{
-			// prevent '..'
+			// Prevent '..'
 			$names = array_values(array_filter(explode('.', $this->getName(true)), 'strlen'));
 
 			$control = $this->control ? $this->control : array_shift($names);
@@ -384,8 +391,8 @@ abstract class AbstractField implements FieldInterface
 				function ($value)
 				{
 					return '[' . $value . ']';
-				}
-				, $names
+				},
+				$names
 			);
 
 			$this->fieldName = $control . implode('', $names);
@@ -596,6 +603,8 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function setControl($control)
 	{
+		$this->fieldName = null;
+
 		$this->control = $control;
 
 		return $this;

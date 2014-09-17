@@ -45,7 +45,7 @@ abstract class AbstractValidator implements ValidatorInterface
 	 */
 	public function validate($value)
 	{
-		if ($this->test($value))
+		if (!$this->test($value))
 		{
 			$this->setError($this->getMessage());
 
