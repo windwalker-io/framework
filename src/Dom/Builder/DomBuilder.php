@@ -39,7 +39,7 @@ class DomBuilder
 			}
 		}
 
-		if ($content)
+		if ($content !== null)
 		{
 			$tag .= '>' . $content . '</' . $name . '>';
 		}
@@ -58,7 +58,7 @@ class DomBuilder
 	 *
 	 * @return  string
 	 */
-	public function quote($value)
+	public static function quote($value)
 	{
 		return '"' . $value . '"';
 	}

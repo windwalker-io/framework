@@ -21,7 +21,7 @@ class HtmlBuilder extends DomBuilder
 	 * @var  array
 	 */
 	protected static $unpairedElements = array(
-		'img', 'br', 'hr', 'area', 'param', 'wbr', 'base', 'link', 'meta', 'input', 'option'
+		'img', 'br', 'hr', 'area', 'param', 'wbr', 'base', 'link', 'meta', 'input', 'option', 'a'
 	);
 
 	/**

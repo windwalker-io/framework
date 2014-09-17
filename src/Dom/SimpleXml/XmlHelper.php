@@ -21,7 +21,7 @@ class XmlHelper
 	 * @var  array
 	 */
 	static protected $falseValue = array(
-		'disbaled',
+		'disabled',
 		'false',
 		'null',
 		'0',
@@ -145,4 +145,3 @@ class XmlHelper
 		$xml[$attr] = isset($xml[$attr]) ? $xml[$attr] : (string) $value;
 	}
 }
-
