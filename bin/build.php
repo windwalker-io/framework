@@ -86,7 +86,7 @@ class Build extends AbstractCliApplication
 		'test'       => 'Test',
 		// 'uri'        => 'Uri',
 		'utilities'  => 'Utilities',
-		// 'validator'  => 'Validator',
+		'validator'  => 'Validator',
 		// 'view'       => 'View',
 	);
 

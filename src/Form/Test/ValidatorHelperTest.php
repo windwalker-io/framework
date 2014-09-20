@@ -52,7 +52,7 @@ class ValidatorHelperTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf('Windwalker\\Validator\\Rule\\IpValidator', $filter);
 
-		$filter = ValidatorHelper::create('/bar/');
+		$filter = ValidatorHelper::create('bar');
 
 		$this->assertInstanceOf('Windwalker\\Validator\\Rule\\RegexValidator', $filter);
 
