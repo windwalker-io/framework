@@ -12,6 +12,7 @@
 	},
 	"require-dev": {
 		"windwalker/utilities" : "dev-master",
+		"windwalker/test" : "dev-master",
 		"windwalker/compare" : "dev-master"
 	},
 	"suggest": {

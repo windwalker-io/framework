@@ -83,6 +83,7 @@ class Build extends AbstractCliApplication
 		// 'renderer'   => 'Renderer',
 		// 'router'     => 'Router',
 		// 'session'    => 'Session',
+		'string'     => 'String',
 		'test'       => 'Test',
 		'uri'        => 'Uri',
 		'utilities'  => 'Utilities',

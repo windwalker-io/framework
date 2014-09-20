@@ -6,15 +6,15 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Utilities\String;
+namespace Windwalker\String;
 
 
 use InvalidArgumentException;
 
 /**
- * Joomla Framework String Inflector Class
+ * Windwalker Framework String Inflector Class
  *
- * The Inflector transforms words
+ * The Inflector transforms words. This class is based on Joomla String package
  *
  * @since  {DEPLOY_VERSION}
  */

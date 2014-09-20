@@ -6,10 +6,12 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Utilities\String;
+namespace Windwalker\String;
 
 /**
- * Joomla Framework String Normalise Class
+ * Windwalker Framework String Normalise Class
+ *
+ * This class is based on Joomla String package
  *
  * @since  {DEPLOY_VERSION}
  */
