@@ -30,4 +30,21 @@ class BooleanValidator extends RegexValidator
 	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $modifiers = 'i';
+
+	/**
+	 * Test value and return boolean
+	 *
+	 * @param mixed $value
+	 *
+	 * @return  boolean
+	 */
+	protected function test($value)
+	{
+		if (is_bool($value))
+		{
+			return true;
+		}
+
+		return parent::test($value);
+	}
 }
