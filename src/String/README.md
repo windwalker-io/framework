@@ -1,6 +1,6 @@
 # Windwalker String Package
 
-Windwalker String package is provides UTF-8 string operation, it is a Joomla String fork but added more functions.
+Windwalker String package provides UTF-8 string operation, it is a Joomla String fork but added more functions.
 
 ## Installation via Composer
 
