@@ -31,6 +31,8 @@ class FormValidFailException extends ValidateFailException
 	 * @param string                        $message
 	 * @param int                           $code
 	 * @param \Exception                    $previous
+	 *
+	 * @deprecated  Do not use exception to handle validate fail anymore.
 	 */
 	public function __construct($fields, $message = "", $code = 0, \Exception $previous = null)
 	{

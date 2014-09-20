@@ -9,7 +9,7 @@
 namespace Windwalker\Form;
 
 use Windwalker\Dom\SimpleXml\XmlHelper;
-use Windwalker\Form\Field\FieldInterface;
+use Windwalker\Form\Field\AbstractField;
 
 /**
  * The FieldHelper class.
@@ -35,12 +35,12 @@ class FieldHelper extends AbstractFormElementHelper
 	/**
 	 * createField
 	 *
-	 * @param string|FieldInterface|\SimpleXMLElement $field
-	 * @param \SplPriorityQueue                       $namespaces
+	 * @param string|AbstractField|\SimpleXMLElement $field
+	 * @param \SplPriorityQueue                      $namespaces
 	 *
 	 * @throws \InvalidArgumentException
 	 *
-	 * @return  FieldInterface
+	 * @return  AbstractField
 	 */
 	public static function create($field, \SplPriorityQueue $namespaces = null)
 	{
@@ -54,9 +54,9 @@ class FieldHelper extends AbstractFormElementHelper
 
 			$field = static::createByXml($xml, $namespaces);
 		}
-		elseif (!($field instanceof FieldInterface))
+		elseif (!($field instanceof AbstractField))
 		{
-			throw new \InvalidArgumentException('Windwalker\\Form\\Form::addField() need FieldInterface or SimpleXMLElement.');
+			throw new \InvalidArgumentException('Windwalker\\Form\\Form::addField() need AbstractField or SimpleXMLElement.');
 		}
 
 		return $field;
@@ -68,7 +68,7 @@ class FieldHelper extends AbstractFormElementHelper
 	 * @param \SimpleXmlElement $xml
 	 * @param \SplPriorityQueue $namespaces
 	 *
-	 * @return  FieldInterface
+	 * @return  AbstractField
 	 */
 	public static function createByXml(\SimpleXmlElement $xml, \SplPriorityQueue $namespaces = null)
 	{

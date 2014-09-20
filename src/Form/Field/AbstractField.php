@@ -13,7 +13,6 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
 use Windwalker\Form\Filter\FilterInterface;
 use Windwalker\Form\FilterHelper;
 use Windwalker\Form\Validate\ValidateResult;
-use Windwalker\Form\ValidatorHelper;
 use Windwalker\Validator\ValidatorInterface;
 
 /**
@@ -21,7 +20,7 @@ use Windwalker\Validator\ValidatorInterface;
  * 
  * @since  {DEPLOY_VERSION}
  */
-abstract class AbstractField implements FieldInterface
+abstract class AbstractField
 {
 	/**
 	 * Property type.
@@ -164,7 +163,7 @@ abstract class AbstractField implements FieldInterface
 
 		$this->filter = $filter ? : $this->getAttribute('filter');
 
-		$this->validator = $validator ? : $validator;
+		$this->validator = $validator ? : $this->getAttribute('validator');
 
 		$this->required = $this->getBool('required', false);
 	}
@@ -242,7 +241,7 @@ abstract class AbstractField implements FieldInterface
 		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
 		$attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
 
-		return new HtmlElement('div', $label . $input, $attrs);
+		return (string) new HtmlElement('div', $label . $input, $attrs);
 	}
 
 	/**
@@ -282,14 +281,14 @@ abstract class AbstractField implements FieldInterface
 
 		if ($this->required && !$this->checkRequired())
 		{
-			return $result->setMessage(sprintf('Field %s value empty', $this->getName(true)))
+			return $result->setMessage(sprintf('Field %s value not allow empty.', $this->getLabel(true)))
 				->setResult(ValidateResult::STATUS_REQUIRED)
 				->setField($this);
 		}
 
 		if ($this->validator && !$this->checkRule())
 		{
-			return $result->setMessage(sprintf('Field %s rule not valid', $this->getName(true)))
+			return $result->setMessage(sprintf('Field %s validate fail.', $this->getLabel(true)))
 				->setResult(ValidateResult::STATUS_FAILURE)
 				->setField($this);
 		}
@@ -588,7 +587,7 @@ abstract class AbstractField implements FieldInterface
 
 			if ($name == 'fieldset')
 			{
-				$this->fieldset = (string) $parent['name'];
+				$this->fieldset = $this->fieldset ? : (string) $parent['name'];
 			}
 			elseif ($name == 'group')
 			{

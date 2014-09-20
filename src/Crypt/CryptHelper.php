@@ -156,4 +156,3 @@ class CryptHelper
 		return substr($randomStr, 0, $length);
 	}
 }
- 

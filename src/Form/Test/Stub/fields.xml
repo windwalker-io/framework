@@ -1,0 +1,59 @@
+<form>
+	<fieldset name="a">
+		<field
+			name="id"
+			type="text"
+			label="ID"
+			description=""
+			class=""
+			default=""
+			filter="int"
+			/>
+
+		<group name="u">
+			<field
+				name="username"
+				type="text"
+				label="Username"
+				description=""
+				class=""
+				default=""
+				required="true"
+				/>
+		</group>
+	</fieldset>
+
+	<group name="b">
+		<field
+			name="email"
+			type="email"
+			label="Email"
+			description=""
+			class=""
+			default=""
+			required="true"
+			validator="email"
+			/>
+
+		<fieldset name="pf">
+			<field
+				name="password"
+				type="password"
+				label="Password"
+				description=""
+				class=""
+				default=""
+				filter="alnum"
+				/>
+		</fieldset>
+	</group>
+
+	<field
+		name="address"
+		type="text"
+		label="Address"
+		description=""
+		class=""
+		default=""
+		/>
+</form>
