@@ -6,23 +6,23 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Field\Type;
+namespace Windwalker\Form\Field;
 
 use Windwalker\Form\Field\AbstractField;
 
 /**
- * The TextField class.
+ * The CheckboxField class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class TextField extends AbstractField
+class CheckboxField extends AbstractField
 {
 	/**
 	 * Property type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'text';
+	protected $type = 'checkbox';
 
 	/**
 	 * prepareRenderInput
@@ -33,16 +33,16 @@ class TextField extends AbstractField
 	 */
 	public function prepareAttributes(&$attrs)
 	{
-		$attrs['type']     = 'text';
+		$value = $this->getValue();
+
+		$attrs['type']     = 'checkbox';
 		$attrs['name']     = $this->getFieldName();
 		$attrs['id']       = $this->getAttribute('id', $this->getId());
 		$attrs['class']    = $this->getAttribute('class');
-		$attrs['placeholder'] = $this->getAttribute('placeholder');
-		$attrs['size']     = $this->getAttribute('size');
-		$attrs['maxlength'] = $this->getAttribute('size');
 		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
-		$attrs['value']    = $this->getValue();
+		$attrs['value']    = $this->getAttribute('onchange');
+		$attrs['checked']  = $value ? 'true' : null;
 	}
 }

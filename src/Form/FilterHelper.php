@@ -18,6 +18,13 @@ use Windwalker\Form\Filter\DefaultFilter;
 class FilterHelper extends AbstractFormElementHelper
 {
 	/**
+	 * Property fieldNamespaces.
+	 *
+	 * @var  \SplPriorityQueue
+	 */
+	protected static $namespaces = null;
+
+	/**
 	 * Property defaultNamespace.
 	 *
 	 * @var string
@@ -43,7 +50,7 @@ class FilterHelper extends AbstractFormElementHelper
 
 		foreach ($namespaces as $namespace)
 		{
-			$class = trim($namespace, '\\') . '\\' . ucfirst($filter) . ' Filter';
+			$class = trim($namespace, '\\') . '\\' . ucfirst($filter) . 'Filter';
 
 			if (class_exists($class))
 			{

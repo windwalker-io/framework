@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Field\Type;
+namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Form\Field\AbstractField;
@@ -63,4 +63,3 @@ class SpacerField extends AbstractField
 		return new HtmlElement($node, $content, $attrs);
 	}
 }
-

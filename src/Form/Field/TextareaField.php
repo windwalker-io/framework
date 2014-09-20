@@ -6,23 +6,23 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Field\Type;
+namespace Windwalker\Form\Field;
 
-use Windwalker\Form\Field\AbstractField;
+use Windwalker\Dom\HtmlElement;
 
 /**
- * The CheckboxField class.
+ * The TextareaField class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class CheckboxField extends AbstractField
+class TextareaField extends TextField
 {
 	/**
 	 * Property type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'checkbox';
+	protected $type = 'textarea';
 
 	/**
 	 * prepareRenderInput
@@ -33,16 +33,27 @@ class CheckboxField extends AbstractField
 	 */
 	public function prepareAttributes(&$attrs)
 	{
-		$value = $this->getValue();
-
-		$attrs['type']     = 'checkbox';
 		$attrs['name']     = $this->getFieldName();
 		$attrs['id']       = $this->getAttribute('id', $this->getId());
 		$attrs['class']    = $this->getAttribute('class');
 		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
-		$attrs['value']    = $this->getAttribute('onchange');
-		$attrs['checked']  = $value ? 'true' : null;
+
+		$attrs['cols'] = $this->getAttribute('cols');
+		$attrs['rows'] = $this->getAttribute('rows');
+	}
+
+	/**
+	 * buildInput
+	 *
+	 * @param array $attrs
+	 *
+	 * @return  mixed
+	 */
+	public function buildInput($attrs)
+	{
+		return new HtmlElement('textarea', $this->getValue(), $attrs);
 	}
 }
+

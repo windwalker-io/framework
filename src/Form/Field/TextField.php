@@ -6,23 +6,23 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Field\Type;
+namespace Windwalker\Form\Field;
 
 use Windwalker\Form\Field\AbstractField;
 
 /**
- * The HiddenField class.
+ * The TextField class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class HiddenField extends AbstractField
+class TextField extends AbstractField
 {
 	/**
 	 * Property type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'hidden';
+	protected $type = 'text';
 
 	/**
 	 * prepareRenderInput
@@ -33,13 +33,16 @@ class HiddenField extends AbstractField
 	 */
 	public function prepareAttributes(&$attrs)
 	{
-		$attrs['type']     = 'hidden';
+		$attrs['type']     = 'text';
 		$attrs['name']     = $this->getFieldName();
 		$attrs['id']       = $this->getAttribute('id', $this->getId());
 		$attrs['class']    = $this->getAttribute('class');
+		$attrs['placeholder'] = $this->getAttribute('placeholder');
+		$attrs['size']     = $this->getAttribute('size');
+		$attrs['maxlength'] = $this->getAttribute('size');
+		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
 		$attrs['value']    = $this->getValue();
 	}
 }
-

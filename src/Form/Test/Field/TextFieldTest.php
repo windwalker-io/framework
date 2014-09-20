@@ -8,7 +8,7 @@
 
 namespace Windwalker\Form\Test\Field;
 
-use Windwalker\Form\Field\Type\TextField;
+use Windwalker\Form\Field\TextField;
 
 /**
  * Test class of TextField
@@ -50,7 +50,7 @@ class TextFieldTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Field\Type\TextField::prepareAttributes
+	 * @covers Windwalker\Form\Field\TextField::prepareAttributes
 	 * @TODO   Implement testPrepareAttributes().
 	 */
 	public function testPrepareAttributes()

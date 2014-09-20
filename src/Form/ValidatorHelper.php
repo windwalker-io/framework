@@ -20,6 +20,13 @@ use Windwalker\Validator\ValidatorInterface;
 class ValidatorHelper extends AbstractFormElementHelper
 {
 	/**
+	 * Property fieldNamespaces.
+	 *
+	 * @var  \SplPriorityQueue
+	 */
+	protected static $namespaces = null;
+
+	/**
 	 * Property defaultNamespace.
 	 *
 	 * @var string
@@ -50,7 +57,7 @@ class ValidatorHelper extends AbstractFormElementHelper
 
 		foreach ($namespaces as $namespace)
 		{
-			$class = $namespace . '\\' . ucfirst($rule) . ' Validator';
+			$class = $namespace . '\\' . ucfirst($rule) . 'Validator';
 
 			if (class_exists($class))
 			{

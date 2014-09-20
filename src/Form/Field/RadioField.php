@@ -6,23 +6,23 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Field\Type;
+namespace Windwalker\Form\Field;
 
-use Windwalker\Html\Select\CheckboxList;
+use Windwalker\Html\Select\RadioList;
 
 /**
- * The CheckboxesField class.
+ * The RadioField class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class CheckboxesField extends ListField
+class RadioField extends ListField
 {
 	/**
 	 * Property type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'checkboxes';
+	protected $type = 'radio';
 
 	/**
 	 * buildInput
@@ -41,23 +41,7 @@ class CheckboxesField extends ListField
 			$option->setAttribute('name', $this->getFieldName());
 		}
 
-		return new CheckboxList($this->getFieldName(), $options, $attrs, $this->getValue());
-	}
-
-	/**
-	 * getValue
-	 *
-	 * @return  array
-	 */
-	public function getValue()
-	{
-		$value = parent::getValue();
-
-		if (is_string($value))
-		{
-			$value = explode(',', $value);
-		}
-
-		return $value;
+		return new RadioList($this->getFieldName(), $options, $this->attributes, $this->getValue());
 	}
 }
+

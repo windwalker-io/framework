@@ -19,11 +19,18 @@ use Windwalker\Form\Field\FieldInterface;
 class FieldHelper extends AbstractFormElementHelper
 {
 	/**
+	 * Property fieldNamespaces.
+	 *
+	 * @var  \SplPriorityQueue
+	 */
+	protected static $namespaces = null;
+
+	/**
 	 * Property defaultNamespace.
 	 *
 	 * @var string
 	 */
-	protected static $defaultNamespace = 'Windwalker\\Form\\Field\\Type';
+	protected static $defaultNamespace = 'Windwalker\\Form\\Field';
 
 	/**
 	 * createField
@@ -49,7 +56,7 @@ class FieldHelper extends AbstractFormElementHelper
 		}
 		elseif (!($field instanceof FieldInterface))
 		{
-			throw new \InvalidArgumentException(__CLASS__ . '::addField() need FieldInterface or SimpleXMLElement.');
+			throw new \InvalidArgumentException('Windwalker\\Form\\Form::addField() need FieldInterface or SimpleXMLElement.');
 		}
 
 		return $field;
@@ -65,8 +72,6 @@ class FieldHelper extends AbstractFormElementHelper
 	 */
 	public static function createByXml(\SimpleXmlElement $xml, \SplPriorityQueue $namespaces = null)
 	{
-		$classTmpl = 'Windwalker\\Form\\Field\\Type\\';
-
 		$type = XmlHelper::get($xml, 'type', 'text');
 
 		if (class_exists($type))
@@ -78,15 +83,10 @@ class FieldHelper extends AbstractFormElementHelper
 			$class = static::findFieldClass($type, $namespaces);
 		}
 
-		if (!$class)
-		{
-			$class = $classTmpl . ucfirst($type) . 'Field';
-		}
-
 		if (!class_exists($class))
 		{
 			// Fallback to TextField
-			$class = $classTmpl . 'TextField';
+			$class = static::$defaultNamespace . '\\TextField';
 		}
 
 		return new $class($xml);
