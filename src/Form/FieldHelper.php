@@ -6,42 +6,46 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Form\Field;
+namespace Windwalker\Form;
 
 use Windwalker\Dom\SimpleXml\XmlHelper;
-use Windwalker\Form\Filter\InputFilter;
-use Windwalker\Validator\Rule\NoneValidator;
-use Windwalker\Validator\Rule\RegexValidator;
-use Windwalker\Validator\ValidatorInterface;
+use Windwalker\Form\Field\FieldInterface;
 
 /**
  * The FieldHelper class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class FieldHelper
+class FieldHelper extends AbstractFormElementHelper
 {
+	/**
+	 * Property defaultNamespace.
+	 *
+	 * @var string
+	 */
+	protected static $defaultNamespace = 'Windwalker\\Form\\Field\\Type';
+
 	/**
 	 * createField
 	 *
 	 * @param string|FieldInterface|\SimpleXMLElement $field
-	 * @param                                         $namespaces
+	 * @param \SplPriorityQueue                       $namespaces
 	 *
 	 * @throws \InvalidArgumentException
-	 * @return  FieldInterface
 	 *
+	 * @return  FieldInterface
 	 */
-	public static function createField($field, \SplPriorityQueue $namespaces)
+	public static function create($field, \SplPriorityQueue $namespaces = null)
 	{
 		if ($field instanceof \SimpleXMLElement)
 		{
-			$field = FieldHelper::createByXml($field, $namespaces);
+			$field = static::createByXml($field, $namespaces);
 		}
 		elseif (is_string($field))
 		{
 			$xml = new \SimpleXMLElement($field);
 
-			$field = FieldHelper::createByXml($xml, $namespaces);
+			$field = static::createByXml($xml, $namespaces);
 		}
 		elseif (!($field instanceof FieldInterface))
 		{
@@ -59,7 +63,7 @@ class FieldHelper
 	 *
 	 * @return  FieldInterface
 	 */
-	public static function createByXml(\SimpleXmlElement $xml, \SplPriorityQueue $namespaces)
+	public static function createByXml(\SimpleXmlElement $xml, \SplPriorityQueue $namespaces = null)
 	{
 		$classTmpl = 'Windwalker\\Form\\Field\\Type\\';
 
@@ -96,8 +100,10 @@ class FieldHelper
 	 *
 	 * @return  string|bool
 	 */
-	protected static function findFieldClass($name, \SplPriorityQueue $namespaces)
+	protected static function findFieldClass($name, \SplPriorityQueue $namespaces = null)
 	{
+		$namespaces = $namespaces ? : static::getNamespaces();
+
 		foreach ($namespaces as $namespace)
 		{
 			$class = trim($namespace, '\\') . '\\' . ucfirst($name) . 'Field';
@@ -110,64 +116,4 @@ class FieldHelper
 
 		return false;
 	}
-
-	/**
-	 * createFilter
-	 *
-	 * @param string $filter
-	 *
-	 * @return  bool|InputFilter
-	 */
-	public static function createFilter($filter)
-	{
-		if (class_exists($filter))
-		{
-			  return new $filter;
-		}
-
-		$class = 'Windwalker\\Form\\Filter\\' . ucfirst($filter) . ' Filter';
-
-		if (class_exists($class))
-		{
-			return new $class;
-		}
-
-		return new InputFilter($filter);
-	}
-
-	/**
-	 * createRule
-	 *
-	 * @param string $rule
-	 *
-	 * @throws \InvalidArgumentException
-	 * @return  ValidatorInterface
-	 */
-	public static function createValidator($rule)
-	{
-		if (!$rule)
-		{
-			return new NoneValidator;
-		}
-
-		if (class_exists($rule))
-		{
-			return new $rule;
-		}
-
-		$class = 'Windwalker\\Validator\\Rule\\' . ucfirst($rule) . ' Validator';
-
-		if (class_exists($class))
-		{
-			return new $class;
-		}
-
-		if (is_string($rule))
-		{
-			return new RegexValidator($rule);
-		}
-
-		throw new \InvalidArgumentException(sprintf('Validator %s is not exists.', $rule));
-	}
 }
-

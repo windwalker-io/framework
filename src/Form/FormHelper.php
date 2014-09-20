@@ -15,6 +15,13 @@ namespace Windwalker\Form;
  */
 class FormHelper
 {
+	/**
+	 * encode
+	 *
+	 * @param string $html
+	 *
+	 * @return  string
+	 */
 	public static function encode($html)
 	{
 		return htmlentities($html);
@@ -107,4 +114,3 @@ class FormHelper
 		return $dataTmp;
 	}
 }
-

@@ -11,7 +11,9 @@ namespace Windwalker\Form\Field;
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\SimpleXml\XmlHelper;
 use Windwalker\Form\Filter\FilterInterface;
+use Windwalker\Form\FilterHelper;
 use Windwalker\Form\Validate\ValidateResult;
+use Windwalker\Form\ValidatorHelper;
 use Windwalker\Validator\ValidatorInterface;
 
 /**
@@ -101,7 +103,7 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Property filter.
 	 *
-	 * @var  string|FilterInterface
+	 * @var  string|FilterInterface|callable
 	 */
 	protected $filter = null;
 
@@ -329,7 +331,16 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function filter()
 	{
-		$this->value = $this->getFilter()->clean($this->value);
+		$filter = $this->getFilter();
+
+		if (is_callable($filter))
+		{
+			$this->value = call_user_func($filter, $this->value);
+		}
+		else
+		{
+			$this->value = $filter->clean($this->value);
+		}
 
 		return $this;
 	}
@@ -525,7 +536,7 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Method to set property filter
 	 *
-	 * @param   string|\Windwalker\Form\Filter\FilterInterface $filter
+	 * @param   string|FilterInterface|callable $filter
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
@@ -539,13 +550,13 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Method to get property Filter
 	 *
-	 * @return  string|\Windwalker\Form\Filter\FilterInterface
+	 * @return  string|FilterInterface|callable
 	 */
 	public function getFilter()
 	{
-		if (!($this->filter instanceof FilterInterface))
+		if (!($this->filter instanceof FilterInterface) && !is_callable($this->filter))
 		{
-			$this->filter = FieldHelper::createFilter($this->filter);
+			$this->filter = FilterHelper::create($this->filter);
 		}
 
 		return $this->filter;
@@ -693,11 +704,9 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Get all attributes.
 	 *
-	 * @param \SimpleXMLElement $xml A SimpleXMLElement object.
-	 *
 	 * @return  array The return values of all attributes.
 	 */
-	public function getAttributes(\SimpleXMLElement $xml)
+	public function getAttributes()
 	{
 		return $this->attributes;
 	}

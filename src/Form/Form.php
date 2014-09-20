@@ -10,7 +10,7 @@ namespace Windwalker\Form;
 
 use Windwalker\Form\Exception\FormValidFailException;
 use Windwalker\Form\Exception\ValidateFailException;
-use Windwalker\Form\Field\FieldHelper;
+use Windwalker\Form\FieldHelper;
 use Windwalker\Form\Field\FieldInterface;
 
 /**
@@ -55,17 +55,8 @@ class Form implements \IteratorAggregate
 	 */
 	protected $groups = array();
 
-	/**
-	 * Property fieldPaths.
-	 *
-	 * @var \SplPriorityQueue
-	 */
-	protected $fieldNamespaces;
-
 	public function __construct($control = '')
 	{
-		$this->fieldNamespaces = new \SplPriorityQueue;
-
 		$this->control = $control;
 	}
 
@@ -128,7 +119,7 @@ class Form implements \IteratorAggregate
 	 */
 	public function addField($field)
 	{
-		$field = FieldHelper::createField($field, $this->fieldNamespaces);
+		$field = FieldHelper::create($field);
 
 		$group    = $field->getGroup();
 		$fieldset = $field->getFieldset();
@@ -158,9 +149,39 @@ class Form implements \IteratorAggregate
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function addFieldNamespace($ns, $priority = 100)
+	public function addFieldNamespace($ns, $priority = 256)
 	{
-		$this->fieldNamespaces->insert($ns, $priority);
+		FieldHelper::addNamespace($ns, $priority);
+
+		return $this;
+	}
+
+	/**
+	 * Method to set property fieldNamespaces
+	 *
+	 * @param string $ns
+	 * @param int    $priority
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function addFilterNamespace($ns, $priority = 256)
+	{
+		FilterHelper::addNamespace($ns, $priority);
+
+		return $this;
+	}
+
+	/**
+	 * Method to set property fieldNamespaces
+	 *
+	 * @param string $ns
+	 * @param int    $priority
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function addValidatorNamespace($ns, $priority = 256)
+	{
+		ValidatorHelper::addNamespace($ns, $priority);
 
 		return $this;
 	}
