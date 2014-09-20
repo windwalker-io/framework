@@ -14,6 +14,8 @@ namespace Windwalker\Uri;
  * This class parses a URI and provides a common interface for the Windwalker framework
  * to access and manipulate a URI.
  *
+ * This class is a fork from Joomla Uri.
+ *
  * @since  {DEPLOY_VERSION}
  */
 class Uri extends AbstractUri

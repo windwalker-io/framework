@@ -13,6 +13,8 @@ namespace Windwalker\Uri;
  *
  * This class provides an UTF-8 safe version of parse_url().
  *
+ * This class is a fork from Joomla Uri.
+ *
  * @since  {DEPLOY_VERSION}
  */
 class UriHelper

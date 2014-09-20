@@ -13,6 +13,8 @@ namespace Windwalker\Uri;
  *
  * This is an immutable version of the uri class.
  *
+ * This class is a fork from Joomla Uri.
+ *
  * @since  {DEPLOY_VERSION}
  */
 final class UriImmutable extends AbstractUri

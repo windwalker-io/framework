@@ -11,7 +11,7 @@ namespace Windwalker\Uri;
 /**
  * Uri Interface
  *
- * Interface for read-only access to Uris.
+ * Interface for read-only access to Uris. This class is a fork from Joomla Uri.
  *
  * @since  {DEPLOY_VERSION}
  */
