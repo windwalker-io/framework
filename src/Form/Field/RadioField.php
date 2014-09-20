@@ -37,11 +37,10 @@ class RadioField extends ListField
 
 		foreach ($options as $option)
 		{
-			$option->setAttribute('id', $this->getAttribute('id', $this->getId()) . '-' . $option->getValue());
 			$option->setAttribute('name', $this->getFieldName());
 		}
 
-		return new RadioList($this->getFieldName(), $options, $this->attributes, $this->getValue());
+		return new RadioList($this->getFieldName(), $options, $attrs, $this->getValue());
 	}
 }
 

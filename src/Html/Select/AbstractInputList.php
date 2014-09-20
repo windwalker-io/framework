@@ -81,9 +81,13 @@ class AbstractInputList extends HtmlElement
 
 			$attrs['type'] = $this->type;
 			$attrs['name'] = $this->getAttribute('name');
+
 			$attrs['id'] = $option->getAttribute('id');
-			$attrs['id'] = $attrs['id'] ? : strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $attrs['name']), '-'));
-			$attrs['id'] .= '-' . strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $option->getValue()), '-'));
+			$attrs['id'] = $attrs['id'] ? : strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $attrs['name'] ? : 'empty'), '-'));
+			$attrs['id'] .= '-' . strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $option->getValue() ? : 'empty'), '-'));
+
+			// Do not affect source options
+			$option = clone $option;
 
 			$option->setAttributes($attrs);
 

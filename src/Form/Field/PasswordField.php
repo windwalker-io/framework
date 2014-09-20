@@ -23,15 +23,15 @@ class PasswordField extends TextField
 	protected $type = 'password';
 
 	/**
-	 * prepareAttributes
+	 * prepare
 	 *
 	 * @param array $attrs
 	 *
 	 * @return  array|void
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
-		parent::prepareAttributes($attrs);
+		parent::prepare($attrs);
 
 		$attrs['autocomplete'] = $this->getAttribute('autocomplete');
 		$attrs['type'] = 'password';

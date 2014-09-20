@@ -32,7 +32,7 @@ class SpacerField extends AbstractField
 	 *
 	 * @return  array
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
 		$attrs['id']    = $this->getAttribute('id', $this->getId());
 		$attrs['class'] = $this->getAttribute('class');

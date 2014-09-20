@@ -35,11 +35,11 @@ class FormHelper
 	 *
 	 * @return  string[] Dumped array.
 	 */
-	public static function toOneDimension($data, $separator = '.')
+	public static function flatten($data, $separator = '.')
 	{
 		$array = array();
 
-		static::asOneDimension($separator, $data, $array);
+		static::toFlatten($separator, $data, $array);
 
 		return $array;
 	}
@@ -54,7 +54,7 @@ class FormHelper
 	 *
 	 * @return  void
 	 */
-	protected static function asOneDimension($separator = '_', $data = null, &$array = array(), $prefix = '')
+	protected static function toFlatten($separator = '_', $data = null, &$array = array(), $prefix = '')
 	{
 		$data = (array) $data;
 
@@ -64,7 +64,7 @@ class FormHelper
 
 			if (is_object($v) || is_array($v))
 			{
-				static::asOneDimension($separator, $v, $array, $key);
+				static::toFlatten($separator, $v, $array, $key);
 			}
 			else
 			{

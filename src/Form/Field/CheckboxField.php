@@ -31,7 +31,7 @@ class CheckboxField extends AbstractField
 	 *
 	 * @return  array
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
 		$value = $this->getValue();
 

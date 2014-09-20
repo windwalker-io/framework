@@ -9,7 +9,6 @@
 namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\SimpleXml\XmlHelper;
-use Windwalker\Form\Field\AbstractField;
 use Windwalker\Html\Option;
 use Windwalker\Html\Select\SelectList;
 
@@ -56,7 +55,7 @@ class ListField extends AbstractField
 	 *
 	 * @return  array
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
 		$attrs['name']     = $this->getFieldName();
 		$attrs['id']       = $this->getAttribute('id', $this->getId());
@@ -79,7 +78,7 @@ class ListField extends AbstractField
 	{
 		$options = $this->getOptions();
 
-		return new SelectList($this->getFieldName(), $options, $this->attributes, $this->getValue(), $this->getBool('multiple'));
+		return new SelectList($this->getFieldName(), $options, $attrs, $this->getValue(), $this->getBool('multiple'));
 	}
 
 	/**
@@ -106,7 +105,7 @@ class ListField extends AbstractField
 	 * prepareOptions
 	 *
 	 * @param string|\SimpleXMLElement $xml
-	 * @param Option[]            $options
+	 * @param Option[]                 $options
 	 *
 	 * @throws \InvalidArgumentException
 	 * @return  void
@@ -150,7 +149,9 @@ class ListField extends AbstractField
 					{
 						if (!($opt instanceof Option))
 						{
-							throw new \InvalidArgumentException('Please give me Option as options.');
+							throw new \InvalidArgumentException(
+								sprintf('Please give me %s class as option, %s given.', 'Windwalker\\Html\\Option', get_class($opt))
+							);
 						}
 					}
 				}
@@ -159,7 +160,9 @@ class ListField extends AbstractField
 				{
 					if (!($option instanceof Option))
 					{
-						throw new \InvalidArgumentException('Please give me Option as options.');
+						throw new \InvalidArgumentException(
+							sprintf('Please give me %s class as option, %s given.', 'Windwalker\\Html\\Option', get_class($option))
+						);
 					}
 				}
 			}

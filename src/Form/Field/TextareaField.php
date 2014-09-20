@@ -31,7 +31,7 @@ class TextareaField extends TextField
 	 *
 	 * @return  array
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
 		$attrs['name']     = $this->getFieldName();
 		$attrs['id']       = $this->getAttribute('id', $this->getId());

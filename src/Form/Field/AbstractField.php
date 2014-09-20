@@ -178,7 +178,7 @@ abstract class AbstractField implements FieldInterface
 	{
 		$attrs = array();
 
-		$this->prepareAttributes($attrs);
+		$this->prepare($attrs);
 
 		return $this->buildInput($attrs);
 	}
@@ -202,7 +202,7 @@ abstract class AbstractField implements FieldInterface
 	 *
 	 * @return  array
 	 */
-	abstract public function prepareAttributes(&$attrs);
+	abstract public function prepare(&$attrs);
 
 	/**
 	 * getLabel

@@ -37,7 +37,7 @@ class CheckboxesField extends ListField
 
 		foreach ($options as $option)
 		{
-			$option->setAttribute('id', $this->getAttribute('id', $this->getId()) . '-' . $option->getValue());
+			// $option->setAttribute('id', $this->getAttribute('id', $this->getId()) . '-' . $option->getValue());
 			$option->setAttribute('name', $this->getFieldName());
 		}
 

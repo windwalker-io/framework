@@ -8,7 +8,6 @@
 
 namespace Windwalker\Html\Select;
 
-use Windwalker\Dom\DomElements;
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Html\Option;
 

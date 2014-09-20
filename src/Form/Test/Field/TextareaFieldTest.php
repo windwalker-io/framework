@@ -8,7 +8,7 @@
 
 namespace Windwalker\Form\Test\Field;
 
-use Windwalker\Form\Field\TextField;
+use Windwalker\Form\Field\TextareaField;
 use Windwalker\Test\TestCase\DomTestCase;
 
 /**
@@ -16,12 +16,12 @@ use Windwalker\Test\TestCase\DomTestCase;
  *
  * @since {DEPLOY_VERSION}
  */
-class TextFieldTest extends DomTestCase
+class TextareaFieldTest extends DomTestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var TextField
+	 * @var TextareaField
 	 */
 	protected $instance;
 
@@ -33,7 +33,7 @@ class TextFieldTest extends DomTestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new TextField(
+		$this->instance = new TextareaField(
 			'flower',
 			'Flower',
 			array(
@@ -42,13 +42,13 @@ class TextFieldTest extends DomTestCase
 		);
 
 		$this->instance->setAttribute('id',          'test-field');
-		$this->instance->setAttribute('placeholder', 'th');
-		$this->instance->setAttribute('size',        60);
-		$this->instance->setAttribute('maxlength',   10);
 		$this->instance->setAttribute('readonly',    true);
 		$this->instance->setAttribute('disabled',    true);
 		$this->instance->setAttribute('onchange',    'javascript:void(0);');
-		$this->instance->setAttribute('value',       'sakura');
+		$this->instance->setAttribute('cols',        10);
+		$this->instance->setAttribute('rows',        15);
+
+		$this->instance->setValue('sakura');
 	}
 
 	/**
@@ -71,7 +71,7 @@ class TextFieldTest extends DomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<input type="text" name="flower" id="test-field" class="stub-flower" placeholder="th" size="60" maxlength="10" readonly="true" disabled="true" onchange="javascript:void(0);" />
+<textarea name="flower" id="test-field" class="stub-flower" readonly="true" disabled="true" onchange="javascript:void(0);" cols="10" rows="15">sakura</textarea>
 HTML;
 
 		$this->assertDomStringEqualsDomString($html, $this->instance->renderInput());

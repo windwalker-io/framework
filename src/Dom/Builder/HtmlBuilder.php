@@ -25,6 +25,19 @@ class HtmlBuilder extends DomBuilder
 	);
 
 	/**
+	 * Property trueValueMapping.
+	 *
+	 * @var  array
+	 */
+	protected static $trueValueMapping = array(
+		'readonly' => 'true',
+		'disabled' => 'true',
+		'multiple' => 'true',
+		'checked'  => 'checked',
+		'selected' => 'selected'
+	);
+
+	/**
 	 * Create a html element.
 	 *
 	 * @param string $name      Element tag name.
@@ -38,6 +51,25 @@ class HtmlBuilder extends DomBuilder
 	{
 		$paired = $forcePair ? : !in_array(strtolower($name), static::$unpairedElements);
 
+		$attribs = static::mapAttrValues($attribs);
+
 		return parent::create($name, $content, $attribs, $paired);
+	}
+
+	/**
+	 * mapAttrValues
+	 *
+	 * @param array $attribs
+	 *
+	 * @return  mixed
+	 */
+	protected static function mapAttrValues($attribs)
+	{
+		foreach (static::$trueValueMapping as $key => $value)
+		{
+			$attribs[$key] = !empty($attribs[$key]) ? $value : null;
+		}
+
+		return $attribs;
 	}
 }

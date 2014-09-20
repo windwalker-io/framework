@@ -31,7 +31,7 @@ class StubField extends AbstractField
 	 *
 	 * @return  array
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
 		$attrs['type']     = 'text';
 		$attrs['name']     = $this->getFieldName();

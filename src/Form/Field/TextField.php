@@ -31,7 +31,7 @@ class TextField extends AbstractField
 	 *
 	 * @return  array
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
 		$attrs['type']     = 'text';
 		$attrs['name']     = $this->getFieldName();
@@ -39,7 +39,7 @@ class TextField extends AbstractField
 		$attrs['class']    = $this->getAttribute('class');
 		$attrs['placeholder'] = $this->getAttribute('placeholder');
 		$attrs['size']     = $this->getAttribute('size');
-		$attrs['maxlength'] = $this->getAttribute('size');
+		$attrs['maxlength'] = $this->getAttribute('maxlength');
 		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');

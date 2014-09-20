@@ -23,15 +23,15 @@ class EmailField extends TextField
 	protected $type = 'email';
 
 	/**
-	 * prepareAttributes
+	 * prepare
 	 *
 	 * @param array $attrs
 	 *
 	 * @return  array|void
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
-		parent::prepareAttributes($attrs);
+		parent::prepare($attrs);
 
 		$attrs['class'] = 'validate-email ' . $attrs['class'];
 	}

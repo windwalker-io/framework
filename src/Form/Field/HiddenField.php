@@ -31,7 +31,7 @@ class HiddenField extends AbstractField
 	 *
 	 * @return  array
 	 */
-	public function prepareAttributes(&$attrs)
+	public function prepare(&$attrs)
 	{
 		$attrs['type']     = 'hidden';
 		$attrs['name']     = $this->getFieldName();
