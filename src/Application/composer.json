@@ -7,9 +7,10 @@
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
-		"windwalker/io": "dev-master",
-		"windwalker/registry": "dev-master",
-		"windwalker/filter" : "dev-master"
+		"windwalker/io" : "dev-master",
+		"windwalker/registry" : "dev-master",
+		"windwalker/environment" : "dev-master",
+		"windwalker/uri" : "dev-master"
 	},
 	"require-dev": {
 		"windwalker/test": "dev-master"

@@ -34,7 +34,7 @@
 			"Windwalker\\": "src/"
 		},
 		"files": [
-			"src/PHP/methods.php"
+			"src/Utilities/functions.php"
 		],
 		"classmap": [
 			"src/Compat/JsonSerializable.php"

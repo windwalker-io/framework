@@ -6,10 +6,9 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Application\Test\Environment;
+namespace Windwalker\Environment\Test;
 
-use Windwalker\Application\Environment\Server;
-use Windwalker\Test\TestHelper;
+use Windwalker\Environment\Server;
 
 /**
  * Test class of Server

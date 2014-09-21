@@ -8,8 +8,9 @@
 
 namespace Windwalker\Application\Web;
 
-use Windwalker\Application\Environment\Environment;
-use Windwalker\Application\Environment\ServerInterface;
+use Windwalker\Environment\Environment;
+use Windwalker\Environment\ServerInterface;
+use Windwalker\Environment\Web\WebClient;
 
 /**
  * The WebEnvironment class.
@@ -41,7 +42,7 @@ class WebEnvironment extends Environment
 	/**
 	 * Method to get property Client
 	 *
-	 * @return  \Windwalker\Application\Web\WebClient
+	 * @return  WebClient
 	 */
 	public function getClient()
 	{
@@ -51,7 +52,7 @@ class WebEnvironment extends Environment
 	/**
 	 * Method to set property client
 	 *
-	 * @param   \Windwalker\Application\Web\WebClient $client
+	 * @param   WebClient $client
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

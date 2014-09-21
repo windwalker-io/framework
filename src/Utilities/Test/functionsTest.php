@@ -4,14 +4,14 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\PHP\Tests;
+namespace Windwalker\Utilities\Test;
 
 /**
  * Tests for the global PHP methods.
  *
  * @since  {DEPLOY_VERSION}
  */
-class methodsTest extends \PHPUnit_Framework_TestCase
+class FunctionsTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Tests the with method.

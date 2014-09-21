@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Application\Environment;
+namespace Windwalker\Environment;
 
 /**
  * The Environment class.
@@ -35,7 +35,7 @@ class Environment
 	/**
 	 * Method to get property Server
 	 *
-	 * @return  \Windwalker\Application\Environment\ServerInterface
+	 * @return  \Windwalker\Environment\ServerInterface
 	 */
 	public function getServer()
 	{
@@ -45,7 +45,7 @@ class Environment
 	/**
 	 * Method to set property server
 	 *
-	 * @param   \Windwalker\Application\Environment\ServerInterface $server
+	 * @param   \Windwalker\Environment\ServerInterface $server
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

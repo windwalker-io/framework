@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\IOInterface;
 use Windwalker\Registry\Registry;
 
 /**
- * Base class for a Joomla! command line application.
+ * Simple class for a Windwalker command line application.
  *
  * @since  {DEPLOY_VERSION}
  */

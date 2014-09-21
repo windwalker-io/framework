@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Application\Environment;
+namespace Windwalker\Environment;
 
 /**
  * The ServerInterface class.

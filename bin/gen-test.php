@@ -9,7 +9,7 @@
 use Windwalker\Application\AbstractCliApplication;
 use Windwalker\Filesystem\Path;
 use Windwalker\Utilities\Reflection\ReflectionHelper;
-use Windwalker\Utilities\String\StringNormalise;
+use Windwalker\String\StringNormalise;
 
 include_once __DIR__ . '/../vendor/autoload.php';
 

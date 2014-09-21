@@ -8,20 +8,23 @@
 
 namespace Windwalker\Test;
 
+use Windwalker\Environment\PhpEnvironment;
+use Windwalker\Environment\ServerHelper;
+
 /**
  * The TestEnvironment class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class TestEnvironment
+class TestEnvironment extends ServerHelper
 {
 	/**
-	 * isWindows
+	 * isCli
 	 *
 	 * @return  boolean
 	 */
-	public static function isWindows()
+	public static function isCli()
 	{
-		return defined('PHP_WINDOWS_VERSION_BUILD');
+		return PhpEnvironment::isCli();
 	}
 }

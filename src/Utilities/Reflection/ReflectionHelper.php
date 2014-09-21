@@ -8,7 +8,7 @@
 
 namespace Windwalker\Utilities\Reflection;
 
-use Windwalker\Utilities\String\StringNormalise;
+use Windwalker\String\StringNormalise;
 
 /**
  * Reflection Helper

@@ -8,7 +8,7 @@
 
 namespace Windwalker\Application;
 
-use Windwalker\Application\Web\WebClient;
+use Windwalker\Environment\Web\WebClient;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
@@ -39,6 +39,13 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @since  {DEPLOY_VERSION}
 	 */
 	public $response;
+
+	/**
+	 * Property uri.
+	 *
+	 * @var Uri
+	 */
+	protected $uri = null;
 
 	/**
 	 * Class constructor.
@@ -299,7 +306,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		}
 		else
 		{
-			$uri = $this->environment->client->getSystemUri($requestUri);
+			$uri = $this->getSystemUri($requestUri);
 		}
 
 		$this->set('uri.request', $uri->getOriginal());
@@ -361,6 +368,92 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$this->set('uri.media.full', $this->get('uri.base.full') . 'media/');
 			$this->set('uri.media.path', $this->get('uri.base.path') . 'media/');
 		}
+	}
+
+	/**
+	 * getSystemUri
+	 *
+	 * @param string $requestUri
+	 * @param bool   $refresh
+	 *
+	 * @return  Uri
+	 */
+	protected function getSystemUri($requestUri = null, $refresh = false)
+	{
+		if ($this->uri && !$refresh)
+		{
+			return $this->uri;
+		}
+
+		$requestUri = $requestUri ? : $this->detectRequestUri();
+
+		// Start with the requested URI.
+		$uri = new Uri($requestUri);
+
+		// If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
+		if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI']))
+		{
+			// We aren't expecting PATH_INFO within PHP_SELF so this should work.
+			$uri->setPath(rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+		}
+		else
+			// Pretty much everything else should be handled with SCRIPT_NAME.
+		{
+			$uri->setPath(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
+		}
+
+		// Clear the unused parts of the requested URI.
+		$uri->setQuery(null);
+		$uri->setFragment(null);
+
+		return $this->uri = $uri;
+	}
+
+	/**
+	 * Method to detect the requested URI from server environment variables.
+	 *
+	 * @return  string  The requested URI
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function detectRequestUri()
+	{
+		// First we need to detect the URI scheme.
+		if ($this->environment->client->isSSLConnection())
+		{
+			$scheme = 'https://';
+		}
+		else
+		{
+			$scheme = 'http://';
+		}
+
+		/*
+		 * There are some differences in the way that Apache and IIS populate server environment variables.  To
+		 * properly detect the requested URI we need to adjust our algorithm based on whether or not we are getting
+		 * information from Apache or IIS.
+		 */
+
+		// If PHP_SELF and REQUEST_URI are both populated then we will assume "Apache Mode".
+		if (!empty($_SERVER['PHP_SELF']) && !empty($_SERVER['REQUEST_URI']))
+		{
+			// The URI is built from the HTTP_HOST and REQUEST_URI environment variables in an Apache environment.
+			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		}
+		else
+			// If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
+		{
+			// IIS uses the SCRIPT_NAME variable instead of a REQUEST_URI variable... thanks, MS
+			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+
+			// If the QUERY_STRING variable exists append it to the URI string.
+			if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']))
+			{
+				$uri .= '?' . $_SERVER['QUERY_STRING'];
+			}
+		}
+
+		return trim($uri);
 	}
 
 	/**
