@@ -75,7 +75,7 @@ class Build extends AbstractCliApplication
 		// 'language'   => 'Language',
 		// 'loader'     => 'Loader',
 		'middleware' => 'Middleware',
-		// 'model'      => 'Model',
+		'model'      => 'Model',
 		// 'profiler'   => 'Profiler',
 		'query'      => 'Query',
 		// 'record'     => 'Record',
@@ -88,7 +88,7 @@ class Build extends AbstractCliApplication
 		'uri'        => 'Uri',
 		'utilities'  => 'Utilities',
 		'validator'  => 'Validator',
-		// 'view'       => 'View',
+		'view'       => 'View',
 	);
 
 	/**
