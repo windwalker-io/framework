@@ -72,7 +72,7 @@ abstract class AbstractRenderer implements RendererInterface
 	 */
 	public function findFile($file, $ext = '')
 	{
-		$paths = clone $this->paths;
+		$paths = clone $this->getPaths();
 
 		$file = str_replace('.', '/', $file);
 

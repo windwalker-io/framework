@@ -45,6 +45,8 @@ class DomHelper
 
 		$buffer = preg_replace($search, $replace, $buffer);
 
-		return $buffer;
+		$buffer = str_replace(array(' <', '> '), array('<', '>'), $buffer);
+
+		return trim($buffer);
 	}
 }
