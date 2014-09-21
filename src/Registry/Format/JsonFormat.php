@@ -38,10 +38,12 @@ class JsonFormat implements FormatInterface
 			return json_encode($object, $option, $depth);
 		}
 
+		/*
 		if ($depth)
 		{
 			throw new \InvalidArgumentException('Depth in json_encode() only support higher than PHP 5.5');
 		}
+		*/
 
 		return json_encode($object, $option);
 	}

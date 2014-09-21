@@ -127,6 +127,6 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
 		$this->instance->set('foo', 'Sakura');
 
-		$this->assertEquals('Hello Sakura!', $this->instance->render());
+		$this->assertEquals('Hello Sakura!', (string) $this->instance);
 	}
 }

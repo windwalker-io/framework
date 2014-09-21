@@ -1,0 +1,21 @@
+{
+	"name": "windwalker/model",
+	"type": "windwalker-package",
+	"description": "Windwalker Model package",
+	"keywords": ["windwalker", "framework", "model"],
+	"homepage": "https://github.com/ventoviro/windwalker-model",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/registry" : "dev-master"
+	},
+	"require-dev": {
+		"windwalker/test": "dev-master"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Model\\": ""
+		}
+	}
+}

@@ -18,7 +18,7 @@ abstract class AbstractView implements ViewInterface, \ArrayAccess
 	/**
 	 * Property data.
 	 *
-	 * @var  array
+	 * @var  array|\ArrayAccess
 	 */
 	protected $data = array();
 
@@ -94,6 +94,23 @@ abstract class AbstractView implements ViewInterface, \ArrayAccess
 		$this->data = $data;
 
 		return $this;
+	}
+
+	/**
+	 * __toString
+	 *
+	 * @return  string
+	 */
+	public function __toString()
+	{
+		try
+		{
+			return (string) $this->render();
+		}
+		catch (\Exception $e)
+		{
+			return (string) $e;
+		}
 	}
 
 	/**
