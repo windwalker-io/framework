@@ -60,6 +60,16 @@ class PhpHelper
 	}
 
 	/**
+	 * isPHP
+	 *
+	 * @return  boolean
+	 */
+	public static function isPHP()
+	{
+		return !static::isHHVM();
+	}
+
+	/**
 	 * isEmbed
 	 *
 	 * @return  boolean
@@ -72,6 +82,23 @@ class PhpHelper
 				'embed',
 			)
 		);
+	}
+
+	/**
+	 * Get PHP version
+	 *
+	 * @return string
+	 */
+	public function getVersion()
+	{
+		if (static::isHHVM())
+		{
+			return HHVM_VERSION;
+		}
+		else
+		{
+			return PHP_VERSION;
+		}
 	}
 
 	/**
@@ -95,11 +122,21 @@ class PhpHelper
 	}
 
 	/**
+	 * Returns true when the runtime used is PHP and Xdebug is loaded.
+	 *
+	 * @return boolean
+	 */
+	public function hasXdebug()
+	{
+		return static::isPHP() && extension_loaded('xdebug');
+	}
+
+	/**
 	 * supportPcntl
 	 *
 	 * @return  boolean
 	 */
-	public static function supportPcntl()
+	public static function hasPcntl()
 	{
 		return extension_loaded('PCNTL');
 	}
@@ -109,7 +146,7 @@ class PhpHelper
 	 *
 	 * @return  boolean
 	 */
-	public static function supportCurl()
+	public static function hasCurl()
 	{
 		return function_exists('curl_init');
 	}
@@ -119,7 +156,7 @@ class PhpHelper
 	 *
 	 * @return  boolean
 	 */
-	public static function supportMcrypt()
+	public static function hasMcrypt()
 	{
 		return extension_loaded('mcrypt');
 	}
