@@ -1,9 +1,9 @@
 {
-	"name": "windwalker/uri",
+	"name": "windwalker/renderer",
 	"type": "windwalker-package",
-	"description": "Windwalker Uri package",
-	"keywords": ["windwalker", "framework", "uri"],
-	"homepage": "https://github.com/ventoviro/windwalker-uri",
+	"description": "Windwalker Renderer package",
+	"keywords": ["windwalker", "framework", "renderer"],
+	"homepage": "https://github.com/ventoviro/windwalker-renderer",
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
