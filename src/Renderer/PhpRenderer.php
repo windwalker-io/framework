@@ -55,28 +55,37 @@ class PhpRenderer extends AbstractRenderer
 	/**
 	 * Property data.
 	 *
-	 * @var Data
+	 * @var  Data
 	 */
-	protected $data;
+	protected $data = null;
+
+	/**
+	 * Property file.
+	 *
+	 * @var string
+	 */
+	protected $file;
 
 	/**
 	 * render
 	 *
-	 * @param string        $file
-	 * @param array|object  $data
+	 * @param string  $file
+	 * @param Data    $data
 	 *
 	 * @throws  \UnexpectedValueException
 	 * @return  string
 	 */
-	public function render($file, $data = array())
+	public function render($file, $data = null)
 	{
 		$this->data = $data = ($data instanceof Data) ? $data : new Data($data);
+
+		$this->prepareData($data);
 
 		$filePath = $this->findFile($file);
 
 		if (!$filePath)
 		{
-			throw new \UnexpectedValueException(sprintf('File: %s not found', $filePath));
+			throw new \UnexpectedValueException(sprintf('File: %s not found', $file));
 		}
 
 		// Start an output buffer.
@@ -95,16 +104,16 @@ class PhpRenderer extends AbstractRenderer
 		}
 
 		/** @var $parent phpRenderer */
-		$parent = new static($this->paths);
+		$parent = new static($this->paths, $this->config);
 
 		foreach ($this->block as $name => $block)
 		{
 			$parent->setBlock($name, $block);
 		}
 
-		// if ($file == 'html') show($this);die;
+		$output = $parent->render($this->extend, $data);
 
-		return $parent->render($this->extend, $data);
+		return $output;
 	}
 
 	/**
@@ -118,6 +127,34 @@ class PhpRenderer extends AbstractRenderer
 	public function findFile($file, $ext = 'php')
 	{
 		return parent::findFile($file, $ext);
+	}
+
+	/**
+	 * load
+	 *
+	 * @param string $file
+	 * @param array  $data
+	 *
+	 * @return  string
+	 */
+	protected function load($file, $data = null)
+	{
+		$data = $this->data->bind(new Data($data));
+
+		$renderer = new static($this->paths, $this->config);
+
+		return $renderer->render($file, $data);
+	}
+
+	/**
+	 * prepareData
+	 *
+	 * @param   Data &$data
+	 *
+	 * @return  void
+	 */
+	protected function prepareData(&$data)
+	{
 	}
 
 	/**
@@ -151,7 +188,7 @@ class PhpRenderer extends AbstractRenderer
 	 *
 	 * @throws \LogicException
 	 */
-	public function extend($name)
+	protected function extend($name)
 	{
 		if ($this->extend)
 		{
@@ -192,8 +229,10 @@ class PhpRenderer extends AbstractRenderer
 	 * setBlock
 	 *
 	 * @param  string $name
+	 *
+	 * @return void
 	 */
-	public function block($name)
+	protected function block($name)
 	{
 		$this->currentBlock = $name;
 
@@ -208,10 +247,11 @@ class PhpRenderer extends AbstractRenderer
 	 *
 	 * @return  void
 	 */
-	public function endblock()
+	protected function endblock()
 	{
 		$name = $this->getBlockQueue()->pop();
 
+		// If this block name not exists on parent level, we just echo inner content.
 		if (!empty($this->block[$name]))
 		{
 			ob_get_clean();
@@ -238,5 +278,23 @@ class PhpRenderer extends AbstractRenderer
 		}
 
 		return $this->blockQueue;
+	}
+
+	/**
+	 * reset
+	 *
+	 * @return  static
+	 */
+	public function reset()
+	{
+		$this->file   = null;
+		$this->extend = null;
+		$this->parent = null;
+		$this->data   = null;
+		$this->block  = array();
+		$this->blockQueue   = null;
+		$this->currentBlock = null;
+
+		return $this;
 	}
 }

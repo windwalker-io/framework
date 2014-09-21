@@ -14,6 +14,11 @@ use Windwalker\IO\Cli\Output\CliOutput;
 use Windwalker\IO\Cli\Output\CliOutputInterface;
 use Windwalker\IO\Cli\Output\ColorfulOutputInterface;
 
+if (!interface_exists('JsonSerializable'))
+{
+	include_once __DIR__ . '/Compat/JsonSerializable.php';
+}
+
 /**
  * The IO class.
  *

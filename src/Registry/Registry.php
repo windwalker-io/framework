@@ -10,6 +10,11 @@ namespace Windwalker\Registry;
 
 use Windwalker\Registry\Helper\RegistryHelper;
 
+if (!interface_exists('JsonSerializable'))
+{
+	include_once __DIR__ . '/Compat/JsonSerializable.php';
+}
+
 /**
  * Registry class
  *

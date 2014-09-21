@@ -18,7 +18,7 @@
 		"phpunit/dbunit": "1.*",
 		"phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl",
 		"jdorn/sql-formatter" : "1.*",
-		"joomla/string" : "1.*"
+		"twig/twig" : "*"
 	},
 	"suggest": {
 		"symfony/yaml": "Install 2.* if you require YAML support."
@@ -35,9 +35,6 @@
 		},
 		"files": [
 			"src/Utilities/functions.php"
-		],
-		"classmap": [
-			"src/Compat/JsonSerializable.php"
 		]
 	},
 	"extra": {

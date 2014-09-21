@@ -19,9 +19,6 @@
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\Registry\\": ""
-		},
-		"classmap": [
-			"Compat/JsonSerializable.php"
-		]
+		}
 	}
 }
