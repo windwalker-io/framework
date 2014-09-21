@@ -9,11 +9,11 @@
 namespace Windwalker\View;
 
 /**
- * Class AbstractHtmlView
+ * Class HtmlView
  *
  * @since {DEPLOY_VERSION}
  */
-class AbstractHtmlView extends AbstractView
+class SimpleHtmlView extends AbstractView
 {
 	/**
 	 * Property layout.
@@ -57,11 +57,18 @@ class AbstractHtmlView extends AbstractView
 			throw new \RuntimeException(sprintf('Layout: %s Not Found', $layout));
 		}
 
+		if (!is_file($layout))
+		{
+			throw new \RuntimeException(sprintf('Layout: %s not found.', $layout));
+		}
+
+		$data = $this->data;
+
 		// Start an output buffer.
 		ob_start();
 
 		// Load the layout.
-		include realpath($layout);
+		include $layout;
 
 		// Get the layout contents.
 		$output = ob_get_clean();
@@ -84,7 +91,7 @@ class AbstractHtmlView extends AbstractView
 	 *
 	 * @param   string $layout
 	 *
-	 * @return  AbstractHtmlView  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setLayout($layout)
 	{
@@ -93,4 +100,3 @@ class AbstractHtmlView extends AbstractView
 		return $this;
 	}
 }
-

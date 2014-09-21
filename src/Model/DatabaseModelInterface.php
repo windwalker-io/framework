@@ -31,4 +31,3 @@ interface DatabaseModelInterface extends ModelInterface
 	 */
 	public function setDb($db);
 }
- 

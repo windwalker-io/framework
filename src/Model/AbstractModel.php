@@ -15,7 +15,7 @@ use Windwalker\Registry\Registry;
  *
  * @since {DEPLOY_VERSION}
  */
-abstract class AbstractModel implements ModelInterface
+abstract class AbstractModel implements ModelInterface, \ArrayAccess
 {
 	/**
 	 * The model state.
@@ -83,5 +83,56 @@ abstract class AbstractModel implements ModelInterface
 
 		return $this;
 	}
-}
 
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return $this->state->exists($offset);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->state->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->state->set($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		$this->state->set($offset, null);
+	}
+}

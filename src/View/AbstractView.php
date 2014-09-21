@@ -13,7 +13,7 @@ namespace Windwalker\View;
  *
  * @since {DEPLOY_VERSION}
  */
-abstract class AbstractView implements ViewInterface
+abstract class AbstractView implements ViewInterface, \ArrayAccess
 {
 	/**
 	 * Property data.
@@ -29,7 +29,7 @@ abstract class AbstractView implements ViewInterface
 	 */
 	public function __construct($data = array())
 	{
-		$this->data = (array) $data;
+		$this->data = $data;
 	}
 
 	/**
@@ -91,9 +91,63 @@ abstract class AbstractView implements ViewInterface
 	 */
 	public function setData($data)
 	{
-		$this->data = (array) $data;
+		$this->data = $data;
 
 		return $this;
 	}
-}
 
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return isset($this->data[$offset]);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		if ($this->offsetExists($offset))
+		{
+			unset($this->data[$offset]);
+		}
+	}
+}
