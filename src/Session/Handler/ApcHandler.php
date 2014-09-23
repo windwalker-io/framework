@@ -14,7 +14,7 @@ namespace Windwalker\Session\Handler;
  * @see    http://www.php.net/manual/en/function.session-set-save-handler.php
  * @since  {DEPLOY_VERSION}
  */
-class Apc extends AbstractHandler
+class ApcHandler extends AbstractHandler
 {
 	/**
 	 * Constructor

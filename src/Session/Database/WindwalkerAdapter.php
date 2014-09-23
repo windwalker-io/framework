@@ -2,25 +2,25 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Session\Database;
 
-use Joomla\Database\DatabaseDriver;
+use Windwalker\Database\Driver\DatabaseDriver;
 
 /**
- * Class DatabaseAdapter
- *
- * @since {DEPLOY_VERSION}
+ * The WindwalkerAdapter class.
+ * 
+ * @since  {DEPLOY_VERSION}
  */
-class JoomlaAdapter extends AbstractDatabaseAdapter
+class WindwalkerAdapter extends AbstractDatabaseAdapter
 {
 	/**
 	 * Property db.
 	 *
-	 * @var  \Joomla\Database\DatabaseDriver
+	 * @var  \Windwalker\Database\Driver\DatabaseDriver
 	 */
 	protected $db = null;
 
@@ -65,22 +65,22 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
 	 */
 	public function write($id, $data)
 	{
+		$writer = $this->db->getWriter();
+
 		$data = array(
 			$this->options['data_col'] => $data,
 			$this->options['time_col'] => (int) time(),
 			$this->options['id_col'] => $id,
 		);
 
-		$data = (object) $data;
+		$writer->updateOne($this->options['table'], $data, $this->options['id_col']);
 
-		$this->db->updateObject($this->options['table'], $data, $this->options['id_col']);
-
-		if ($this->db->getAffectedRows())
+		if ($writer->countAffected())
 		{
 			return true;
 		}
 
-		$this->db->insertObject($this->options['table'], $data, $this->options['id_col']);
+		$writer->insertOne($this->options['table'], $data, $this->options['id_col']);
 
 		return true;
 	}

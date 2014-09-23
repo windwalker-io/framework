@@ -47,7 +47,7 @@ class JsonView extends AbstractView
 	 */
 	public function render()
 	{
-		if (is_subclass_of($this->data, 'Windwalker\Registry\Registry'))
+		if ($this->data instanceof Registry)
 		{
 			return $this->data->toString('json', array('options' => $this->options, 'depth' => $this->depth));
 		}

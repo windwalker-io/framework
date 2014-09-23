@@ -64,8 +64,9 @@ class DatabaseHandler extends AbstractHandler
 	/**
 	 * Read the data for a particular session identifier from the SessionHandler backend.
 	 *
-	 * @param   string  $id  The session identifier.
+	 * @param   string $id The session identifier.
 	 *
+	 * @throws \Exception
 	 * @return  string  The session data.
 	 *
 	 * @since   {DEPLOY_VERSION}
@@ -78,16 +79,17 @@ class DatabaseHandler extends AbstractHandler
 		}
 		catch (\Exception $e)
 		{
-			return false;
+			throw $e;
 		}
 	}
 
 	/**
 	 * Write session data to the SessionHandler backend.
 	 *
-	 * @param   string  $id    The session identifier.
-	 * @param   string  $data  The session data.
+	 * @param   string $id   The session identifier.
+	 * @param   string $data The session data.
 	 *
+	 * @throws  \Exception
 	 * @return  boolean  True on success, false otherwise.
 	 *
 	 * @since   {DEPLOY_VERSION}
@@ -100,15 +102,16 @@ class DatabaseHandler extends AbstractHandler
 		}
 		catch (\Exception $e)
 		{
-			return false;
+			throw $e;
 		}
 	}
 
 	/**
 	 * Destroy the data for a particular session identifier in the SessionHandler backend.
 	 *
-	 * @param   string  $id  The session identifier.
+	 * @param   string $id The session identifier.
 	 *
+	 * @throws \Exception
 	 * @return  boolean  True on success, false otherwise.
 	 *
 	 * @since   {DEPLOY_VERSION}
@@ -121,15 +124,16 @@ class DatabaseHandler extends AbstractHandler
 		}
 		catch (\Exception $e)
 		{
-			return false;
+			throw $e;
 		}
 	}
 
 	/**
 	 * Garbage collect stale sessions from the SessionHandler backend.
 	 *
-	 * @param   integer  $lifetime  The maximum age of a session.
+	 * @param   integer $lifetime The maximum age of a session.
 	 *
+	 * @throws  \Exception
 	 * @return  boolean  True on success, false otherwise.
 	 *
 	 * @since   {DEPLOY_VERSION}
@@ -145,7 +149,7 @@ class DatabaseHandler extends AbstractHandler
 		}
 		catch (\Exception $e)
 		{
-			return false;
+			throw $e;
 		}
 	}
 

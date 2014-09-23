@@ -8,6 +8,7 @@
 
 namespace Windwalker\Database\Test\Mysql;
 
+use Windwalker\Database\Driver\Mysql\MysqlDriver;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 
 /**
@@ -18,12 +19,28 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
 class MysqlDatabaseTest extends AbstractMysqlTest
 {
 	/**
+	 * testAutoSelect
+	 *
+	 * @return  void
+	 */
+	public function testAutoSelect()
+	{
+		$option = static::$dsn;
+
+		$option['database'] = static::$dsn['dbname'];
+		$option['password'] = static::$dsn['pass'];
+
+		$db = new MysqlDriver(null, $option);
+
+		$db->setQuery('SELECT * FROM #__flower')->loadAll();
+	}
+
+	/**
 	 * Method to test select().
 	 *
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::select
-	 * @TODO   Implement testSelect().
 	 */
 	public function testSelect()
 	{

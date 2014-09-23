@@ -8,6 +8,11 @@
 
 namespace Windwalker\Session\Handler;
 
+if (!class_exists('SessionHandler'))
+{
+	include_once __DIR__ . '/../Compat/SessionHandler.php';
+}
+
 /**
  * Class PhpHandler
  *
