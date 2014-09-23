@@ -13,7 +13,7 @@ namespace Windwalker\Database\Driver\Pdo;
  *
  * @see http://php.net/manual/en/pdo.drivers.php
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoHelper
 {
@@ -249,9 +249,19 @@ class PdoHelper
 			array(
 				'{HOST}'   => static::getOption('host', 'localhost'),
 				'{PORT}'   => static::getOption('port', 5432),
-				'{DBNAME}' => static::getOption('database')
+				'{DBNAME}' => static::getOption('database', 'postgres')
 			)
 		);
+	}
+
+	/**
+	 * Alias of pgsql
+	 *
+	 * @return  array
+	 */
+	protected static function postgresql()
+	{
+		return static::pgsql();
 	}
 
 	/**

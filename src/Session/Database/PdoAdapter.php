@@ -13,7 +13,7 @@ namespace Windwalker\Session\Database;
  *
  * The class is based on Symfony PdoSessionHandler
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoAdapter extends AbstractDatabaseAdapter
 {
@@ -250,4 +250,3 @@ class PdoAdapter extends AbstractDatabaseAdapter
 		return '';
 	}
 }
-

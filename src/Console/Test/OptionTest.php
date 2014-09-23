@@ -14,7 +14,7 @@ use Windwalker\Console\Option\Option;
 /**
  * Class OptionTest
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class OptionTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,7 +38,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function setUp()
 	{
@@ -56,7 +56,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return array
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function optionProvider()
 	{
@@ -82,7 +82,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetAndGetAlias()
 	{
@@ -98,7 +98,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetAndGetDefault()
 	{
@@ -112,7 +112,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetAndGetDescription()
 	{
@@ -126,7 +126,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetAndGetName()
 	{
@@ -140,7 +140,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testSetAndGetIO()
 	{
@@ -156,7 +156,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function testGetValue($inputs)
 	{
@@ -181,7 +181,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testGlobal()
 	{

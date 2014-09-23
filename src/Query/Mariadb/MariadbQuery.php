@@ -13,9 +13,15 @@ use Windwalker\Query\Mysql\MysqlQuery;
 /**
  * Class Mariadb
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class MariadbQuery extends MysqlQuery
 {
+	/**
+	 * Property name.
+	 *
+	 * @var  string
+	 */
+	protected $name = 'mariadb';
 }
 

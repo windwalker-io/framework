@@ -14,7 +14,7 @@ use Windwalker\IO\Cli\Color\ColorProcessorInterface;
 /**
  * Simple Cli Output
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
 {
@@ -22,7 +22,7 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
 	 * Color processing object
 	 *
 	 * @var    ColorProcessorInterface
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $processor;
 
@@ -31,7 +31,7 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
 	 *
 	 * @param   ColorProcessorInterface  $processor  The output processor.
 	 *
-	 * @since   1.1.2
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(ColorProcessorInterface $processor = null)
 	{
@@ -59,7 +59,7 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
 	 * @param   string   $text  The text to display.
 	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @return $this
 	 */
 	public function err($text = '', $nl = true)
@@ -76,7 +76,7 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
 	 *
 	 * @return  CliOutput  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setProcessor(ColorProcessorInterface $processor)
 	{
@@ -90,7 +90,7 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
 	 *
 	 * @return  ColorProcessorInterface
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function getProcessor()

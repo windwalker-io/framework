@@ -32,6 +32,8 @@ class EqualsValidator extends AbstractValidator
 	protected $strict = false;
 
 	/**
+	 * Class init.
+	 *
 	 * @param mixed $compare
 	 * @param bool  $strict
 	 */
@@ -48,7 +50,7 @@ class EqualsValidator extends AbstractValidator
 	 *
 	 * @return  boolean
 	 */
-	public function test($value)
+	protected function test($value)
 	{
 		if ($this->strict)
 		{
@@ -56,7 +58,7 @@ class EqualsValidator extends AbstractValidator
 		}
 		else
 		{
-			return ($this->compare === $value);
+			return ($this->compare == $value);
 		}
 	}
 }

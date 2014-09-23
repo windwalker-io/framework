@@ -15,67 +15,67 @@ namespace Windwalker\Uri;
  *
  * This class should be considered an implementation detail. Typehint against UriInterface.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractUri implements UriInterface
 {
 	/**
 	 * @var    string  Original URI
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $uri = null;
 
 	/**
 	 * @var    string  Protocol
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $scheme = null;
 
 	/**
 	 * @var    string  Host
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $host = null;
 
 	/**
 	 * @var    integer  Port
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $port = null;
 
 	/**
 	 * @var    string  Username
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $user = null;
 
 	/**
 	 * @var    string  Password
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $pass = null;
 
 	/**
 	 * @var    string  Path
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $path = null;
 
 	/**
 	 * @var    string  Query
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $query = null;
 
 	/**
 	 * @var    string  Anchor
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $fragment = null;
 
 	/**
 	 * @var    array  Query variable hash
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $vars = array();
 
@@ -85,7 +85,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @param   string  $uri  The optional URI string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($uri = null)
 	{
@@ -100,7 +100,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __toString()
 	{
@@ -114,7 +114,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string  The rendered URI string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function toString(array $parts = array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment'))
 	{
@@ -141,7 +141,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  boolean  True if the variable exists.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hasVar($name)
 	{
@@ -156,7 +156,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  array   Query variables.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getVar($name, $default = null)
 	{
@@ -175,7 +175,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string   Query string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getQuery($toArray = false)
 	{
@@ -199,7 +199,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string  The URI scheme.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getScheme()
 	{
@@ -212,7 +212,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string  The URI username.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getUser()
 	{
@@ -225,7 +225,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string  The URI password.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getPass()
 	{
@@ -238,7 +238,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string  The URI host.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getHost()
 	{
@@ -251,7 +251,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  integer  The URI port number.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getPort()
 	{
@@ -263,7 +263,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string  The URI path string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getPath()
 	{
@@ -276,7 +276,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string  The URI anchor string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getFragment()
 	{
@@ -288,7 +288,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  boolean  True if using SSL via HTTPS.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function isSSL()
 	{
@@ -303,7 +303,7 @@ abstract class AbstractUri implements UriInterface
 	 * @return  string  The resulting query string.
 	 *
 	 * @see     parse_str()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected static function buildQuery(array $params)
 	{
@@ -317,7 +317,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function parse($uri)
 	{
@@ -379,7 +379,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @return  string  Cleaned and resolved URI path.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function cleanPath($path)
 	{

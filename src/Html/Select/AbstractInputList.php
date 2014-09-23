@@ -65,23 +65,50 @@ class AbstractInputList extends HtmlElement
 	 */
 	protected function prepareOptions()
 	{
-		foreach ($this->content as &$option)
+		foreach ($this->content as $key => &$option)
 		{
-			if ($option->getValue() == $this->getChecked())
+			if (!($option instanceof Option))
+			{
+				throw new \InvalidArgumentException('List item should be an Windwalker\\Html\\Option object.');
+			}
+
+			if ($this->isChecked($option))
 			{
 				$option['checked'] = 'checked';
 			}
 
 			$attrs = $option->getAttributes();
 
+			$attrs['type'] = $this->type;
+			$attrs['name'] = $this->getAttribute('name');
+
+			$attrs['id'] = $option->getAttribute('id');
+			$attrs['id'] = $attrs['id'] ? : strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $attrs['name'] ? : 'empty'), '-'));
+			$attrs['id'] .= '-' . strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $option->getValue() ? : 'empty'), '-'));
+
+			// Do not affect source options
+			$option = clone $option;
+
+			$option->setAttributes($attrs);
+
+			$input = new HtmlElement('input', null, $attrs);
+
 			$label = $this->createLabel($option);
 
-			$attrs['type'] = $this->type;
-
-			$input = new HtmlElement('input', '', $attrs);
-
-			$option = new HtmlElements(array($input, $label));
+			$this->content[$key] = new HtmlElements(array($input, $label));
 		}
+	}
+
+	/**
+	 * isChecked
+	 *
+	 * @param  Option $option
+	 *
+	 * @return  bool
+	 */
+	protected function isChecked(Option $option)
+	{
+		return $option->getValue() == $this->getChecked();
 	}
 
 	/**
@@ -114,6 +141,10 @@ class AbstractInputList extends HtmlElement
 
 		$attrs['id'] = $option->getAttribute('id') . '-label';
 		$attrs['for'] = $option->getAttribute('id');
+		$attrs['value'] = null;
+		$attrs['checked'] = null;
+		$attrs['type'] = null;
+		$attrs['name'] = null;
 
 		return new HtmlElement('label', $option->getContent(), $attrs);
 	}

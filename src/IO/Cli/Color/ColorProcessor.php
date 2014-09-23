@@ -11,7 +11,7 @@ namespace Windwalker\IO\Cli\Color;
 /**
  * Class ColorProcessor.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class ColorProcessor implements ColorProcessorInterface
 {
@@ -19,7 +19,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 * Flag to remove color codes from the output
 	 *
 	 * @var    boolean
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $noColors = false;
 
@@ -27,7 +27,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 * Regex to match tags
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $tagFilter = '/<([a-z=;]+)>(.*?)<\/\\1>/s';
 
@@ -35,7 +35,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 * Regex used for removing color codes
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected static $stripFilter = '/<[\/]?[a-z=;]+>/';
 
@@ -43,14 +43,14 @@ class ColorProcessor implements ColorProcessorInterface
 	 * Array of ColorStyle objects
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $styles = array();
 
 	/**
 	 * Class constructor
 	 *
-	 * @since  1.1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function __construct()
 	{
@@ -65,7 +65,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 *
 	 * @return  ColorProcessor  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addStyle($name, ColorStyle $style)
 	{
@@ -81,7 +81,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function stripColors($string)
 	{
@@ -95,7 +95,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function process($string)
 	{
@@ -132,7 +132,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	private function replaceColors($text, $tag, $match, Colorstyle $style)
 	{
@@ -148,7 +148,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 *
 	 * @return  Stdout  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	private function addPredefinedStyles()
 	{

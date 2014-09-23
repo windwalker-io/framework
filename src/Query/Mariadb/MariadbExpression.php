@@ -8,14 +8,14 @@
 
 namespace Windwalker\Query\Mariadb;
 
-use Windwalker\Query\Mysql\MysqlQuery;
+use Windwalker\Query\Mysql\MysqlExpression;
 
 /**
  * Class MariadbExpression
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
-class MariadbExpression extends MysqlQuery
+class MariadbExpression extends MysqlExpression
 {
 }
 

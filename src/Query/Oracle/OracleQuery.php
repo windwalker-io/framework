@@ -13,17 +13,15 @@ use Windwalker\Query\Query;
 /**
  * Class OracleQuery
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
-class OracleQuery extends Query
+class OracleQuery extends Query implements Query\PreparableInterface
 {
-	use Query\PreparableTrait;
-
 	/**
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $name = 'oracle';
 
@@ -34,7 +32,7 @@ class OracleQuery extends Query
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $nameQuote = '"';
 
@@ -42,7 +40,7 @@ class OracleQuery extends Query
 	 * Returns the current dateformat
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $dateFormat = 'RRRR-MM-DD HH24:MI:SS';
 
@@ -50,7 +48,7 @@ class OracleQuery extends Query
 	 * The limit for the result set.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $limit;
 
@@ -58,9 +56,94 @@ class OracleQuery extends Query
 	 * The offset for the result set.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $offset;
+
+	/**
+	 * Holds key / value pair of bound objects.
+	 *
+	 * @var    mixed
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $bounded = array();
+
+	/**
+	 * Method to add a variable to an internal array that will be bound to a prepared SQL statement before query execution. Also
+	 * removes a variable that has been bounded from the internal bounded array when the passed in value is null.
+	 *
+	 * @param   string|integer  $key            The key that will be used in your SQL query to reference the value. Usually of
+	 *                                          the form ':key', but can also be an integer.
+	 * @param   mixed           &$value         The value that will be bound. The value is passed by reference to support output
+	 *                                          parameters such as those possible with stored procedures.
+	 * @param   integer         $dataType       Constant corresponding to a SQL datatype.
+	 * @param   integer         $length         The length of the variable. Usually required for OUTPUT parameters.
+	 * @param   array           $driverOptions  Optional driver options to be used.
+	 *
+	 * @return  static  Returns this object to allow chaining.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
+	{
+		// Case 1: Empty Key (reset $bounded array)
+		if (empty($key))
+		{
+			$this->bounded = array();
+
+			return $this;
+		}
+
+		// Case 2: Key Provided, null value (unset key from $bounded array)
+		if (is_null($value))
+		{
+			if (isset($this->bounded[$key]))
+			{
+				unset($this->bounded[$key]);
+			}
+
+			return $this;
+		}
+
+		$obj = new \stdClass;
+
+		$obj->value = &$value;
+		$obj->dataType = $dataType;
+		$obj->length = $length;
+		$obj->driverOptions = $driverOptions;
+
+		// Case 3: Simply add the Key/Value into the bounded array
+		$this->bounded[$key] = $obj;
+
+		return $this;
+	}
+
+	/**
+	 * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then that item is
+	 * returned.
+	 *
+	 * @param   mixed  $key  The bounded variable key to retrieve.
+	 *
+	 * @return  mixed
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function &getBounded($key = null)
+	{
+		if (empty($key))
+		{
+			return $this->bounded;
+		}
+		else
+		{
+			if (isset($this->bounded[$key]))
+			{
+				return $this->bounded[$key];
+			}
+		}
+
+		return null;
+	}
 
 	/**
 	 * escape
@@ -89,7 +172,7 @@ class OracleQuery extends Query
 	 *
 	 * @return  OracleQuery  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clear($clause = null)
 	{
@@ -116,32 +199,32 @@ class OracleQuery extends Query
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function processLimit($query, $limit, $offset = 0)
 	{
 		// Check if we need to mangle the query.
 		if ($limit || $offset)
 		{
-			$query = "SELECT joomla2.*
+			$query = "SELECT windwalker2.*
 		              FROM (
-		                  SELECT joomla1.*, ROWNUM AS joomla_db_rownum
+		                  SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum
 		                  FROM (
 		                      " . $query . "
-		                  ) joomla1
-		              ) joomla2";
+		                  ) windwalker1
+		              ) windwalker2";
 
 			// Check if the limit value is greater than zero.
 			if ($limit > 0)
 			{
-				$query .= ' WHERE joomla2.joomla_db_rownum BETWEEN ' . ($offset + 1) . ' AND ' . ($offset + $limit);
+				$query .= ' WHERE windwalker2.windwalker_db_rownum BETWEEN ' . ($offset + 1) . ' AND ' . ($offset + $limit);
 			}
 			else
 			{
 				// Check if there is an offset and then use this.
 				if ($offset)
 				{
-					$query .= ' WHERE joomla2.joomla_db_rownum > ' . ($offset + 1);
+					$query .= ' WHERE windwalker2.windwalker_db_rownum > ' . ($offset + 1);
 				}
 			}
 		}
@@ -161,7 +244,7 @@ class OracleQuery extends Query
 	 *
 	 * @return  OracleQuery  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function limit($limit = 0, $offset = 0)
 	{
@@ -195,4 +278,3 @@ class OracleQuery extends Query
 		return $this;
 	}
 }
-

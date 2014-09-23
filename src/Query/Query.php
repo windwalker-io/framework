@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * Class AbstractQuery
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Query implements QueryInterface
 {
@@ -26,7 +26,7 @@ class Query implements QueryInterface
 	 * The database driver.
 	 *
 	 * @var    \PDO
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $connection = null;
 
@@ -34,7 +34,7 @@ class Query implements QueryInterface
 	 * The SQL query (if a direct query string was provided).
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $sql = null;
 
@@ -42,15 +42,15 @@ class Query implements QueryInterface
 	 * The query type.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
-	protected $type = '';
+	protected $type = null;
 
 	/**
 	 * The query element for a generic query (type = null).
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $element = null;
 
@@ -58,7 +58,7 @@ class Query implements QueryInterface
 	 * The select element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $select = null;
 
@@ -66,7 +66,7 @@ class Query implements QueryInterface
 	 * The delete element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $delete = null;
 
@@ -74,7 +74,7 @@ class Query implements QueryInterface
 	 * The update element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $update = null;
 
@@ -82,7 +82,7 @@ class Query implements QueryInterface
 	 * The insert element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $insert = null;
 
@@ -90,7 +90,7 @@ class Query implements QueryInterface
 	 * The from element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $from = null;
 
@@ -98,7 +98,7 @@ class Query implements QueryInterface
 	 * The join element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $join = null;
 
@@ -106,7 +106,7 @@ class Query implements QueryInterface
 	 * The set element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $set = null;
 
@@ -114,7 +114,7 @@ class Query implements QueryInterface
 	 * The where element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $where = null;
 
@@ -122,7 +122,7 @@ class Query implements QueryInterface
 	 * The group by element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $group = null;
 
@@ -130,7 +130,7 @@ class Query implements QueryInterface
 	 * The having element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $having = null;
 
@@ -138,7 +138,7 @@ class Query implements QueryInterface
 	 * The column list for an INSERT statement.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $columns = null;
 
@@ -146,7 +146,7 @@ class Query implements QueryInterface
 	 * The values list for an INSERT statement.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $values = null;
 
@@ -154,7 +154,7 @@ class Query implements QueryInterface
 	 * The order element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $order = null;
 
@@ -162,7 +162,7 @@ class Query implements QueryInterface
 	 * The offset for the result set.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $offset;
 
@@ -170,7 +170,7 @@ class Query implements QueryInterface
 	 * The limit for the result set.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $limit;
 
@@ -178,7 +178,7 @@ class Query implements QueryInterface
 	 * The auto increment insert field element.
 	 *
 	 * @var    object
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $autoIncrementField = null;
 
@@ -186,7 +186,7 @@ class Query implements QueryInterface
 	 * The call element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $call = null;
 
@@ -194,7 +194,7 @@ class Query implements QueryInterface
 	 * The exec element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $exec = null;
 
@@ -202,9 +202,17 @@ class Query implements QueryInterface
 	 * The union element.
 	 *
 	 * @var    QueryElement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $union = null;
+
+	/**
+	 * The unionAll element.
+	 *
+	 * @var    QueryElement
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $unionAll = null;
 
 	/**
 	 * Property dateFormat.
@@ -218,7 +226,7 @@ class Query implements QueryInterface
 	 * defined in child classes to hold the appropriate value for the engine.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $nullDate = '0000-00-00 00:00:00';
 
@@ -241,11 +249,11 @@ class Query implements QueryInterface
 	 *
 	 * @param   \PDO  $connection  The PDO connection object to help us escape string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(\PDO $connection = null)
 	{
-		$this->connection = $connection;
+		$this->connection = $connection ? : ConnectionContainer::getConnection($this->name);
 	}
 
 	/**
@@ -253,7 +261,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string	The completed query.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __toString()
 	{
@@ -265,7 +273,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string	The completed query.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function toString()
 	{
@@ -412,7 +420,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __get($name)
 	{
@@ -433,7 +441,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function call($columns)
 	{
@@ -458,7 +466,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clear($clause = null)
 	{
@@ -586,7 +594,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function columns($columns)
 	{
@@ -610,7 +618,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  The format string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function dateFormat()
@@ -626,7 +634,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function dump()
 	{
@@ -645,7 +653,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function delete($table = null)
 	{
@@ -673,7 +681,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  The escaped string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function escape($text, $extra = false)
@@ -711,7 +719,14 @@ class Query implements QueryInterface
 	 */
 	protected function escapeWithNoConnection($text)
 	{
-		return addslashes($text);
+		if (is_int($text) || is_float($text))
+		{
+			return $text;
+		}
+
+		$text = str_replace("'", "''", $text);
+
+		return addcslashes($text, "\000\n\r\\\032");
 	}
 
 	/**
@@ -741,7 +756,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function exec($columns)
 	{
@@ -774,7 +789,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 * @throws  \RuntimeException
 	 */
@@ -787,7 +802,7 @@ class Query implements QueryInterface
 				throw new \InvalidArgumentException('Invalid subquery.');
 			}
 
-			$tables = '( ' . (string) $tables . ' ) AS ' . $this->quoteName($subQueryAlias);
+			$tables = PHP_EOL . '(' . trim((string) $tables) . ') AS ' . $subQueryAlias;
 		}
 
 		if (is_null($this->from))
@@ -819,6 +834,16 @@ class Query implements QueryInterface
 	}
 
 	/**
+	 * Alias of expression()
+	 *
+	 * @return  mixed
+	 */
+	public function expr()
+	{
+		return call_user_func_array(array($this, 'expression'), func_get_args());
+	}
+
+	/**
 	 * Add a grouping column to the GROUP clause of the query.
 	 *
 	 * Usage:
@@ -828,7 +853,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function group($columns)
 	{
@@ -855,7 +880,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function having($conditions, $glue = 'AND')
 	{
@@ -878,15 +903,16 @@ class Query implements QueryInterface
 	 * Usage:
 	 * $query->innerJoin('b ON b.id = a.id')->innerJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function innerJoin($condition)
+	public function innerJoin($table, $condition = array())
 	{
-		$this->join('INNER', $condition);
+		$this->join('INNER', $table, $condition);
 
 		return $this;
 	}
@@ -906,7 +932,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function insert($table, $incrementField=false)
 	{
@@ -924,20 +950,26 @@ class Query implements QueryInterface
 	 * $query->join('INNER', 'b ON b.id = a.id);
 	 *
 	 * @param   string  $type        The type of join. This string is prepended to the JOIN keyword.
-	 * @param   string  $conditions  A string or array of conditions.
+	 * @param   string  $table       The table name with alias.
+	 * @param   array   $conditions  A string or array of conditions.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function join($type, $conditions)
+	public function join($type, $table, $conditions = array())
 	{
 		if (is_null($this->join))
 		{
 			$this->join = array();
 		}
 
-		$this->join[] = new QueryElement(strtoupper($type) . ' JOIN', $conditions);
+		if (is_string($table))
+		{
+			$table = $table . ($conditions ? ' ON ' . implode(' AND ', (array) $conditions) : '');
+		}
+
+		$this->join[] = new QueryElement(strtoupper($type) . ' JOIN', (array) $table);
 
 		return $this;
 	}
@@ -948,15 +980,16 @@ class Query implements QueryInterface
 	 * Usage:
 	 * $query->leftJoin('b ON b.id = a.id')->leftJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function leftJoin($condition)
+	public function leftJoin($table, $condition = array())
 	{
-		$this->join('LEFT', $condition);
+		$this->join('LEFT', $table, $condition);
 
 		return $this;
 	}
@@ -974,7 +1007,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  Null or zero representation of a timestamp.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function nullDate($quoted = true)
@@ -993,7 +1026,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function order($columns)
 	{
@@ -1021,7 +1054,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function limit($limit = 0, $offset = 0)
 	{
@@ -1042,7 +1075,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function processLimit($query, $limit, $offset = 0)
 	{
@@ -1065,15 +1098,16 @@ class Query implements QueryInterface
 	 * Usage:
 	 * $query->outerJoin('b ON b.id = a.id')->outerJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function outerJoin($condition)
+	public function outerJoin($table, $condition = array())
 	{
-		$this->join('OUTER', $condition);
+		$this->join('OUTER', $table, $condition);
 
 		return $this;
 	}
@@ -1096,7 +1130,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  The quoted input string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function quote($text, $escape = true)
@@ -1154,7 +1188,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  mixed  The quote wrapped name, same type of $name.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function quoteName($name)
@@ -1211,7 +1245,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  Dot-imploded string of quoted parts.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function quoteNameStr($strArr)
 	{
@@ -1244,15 +1278,16 @@ class Query implements QueryInterface
 	 * Usage:
 	 * $query->rightJoin('b ON b.id = a.id')->rightJoin('c ON c.id = b.id');
 	 *
-	 * @param   string  $condition  The join condition.
+	 * @param array|string $table     The table name with alias.
+	 * @param array|string $condition The join condition.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function rightJoin($condition)
+	public function rightJoin($table, $condition = array())
 	{
-		$this->join('RIGHT', $condition);
+		$this->join('RIGHT', $table, $condition);
 
 		return $this;
 	}
@@ -1271,7 +1306,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function select($columns)
 	{
@@ -1302,7 +1337,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function set($conditions, $glue = ',')
 	{
@@ -1330,7 +1365,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setQuery($sql)
 	{
@@ -1351,7 +1386,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function update($table)
 	{
@@ -1372,7 +1407,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function values($values)
 	{
@@ -1382,13 +1417,13 @@ class Query implements QueryInterface
 		{
 			if (is_array($value) || is_object($value))
 			{
-				$value = implode(', ', $value);
+				$value = implode(',', $value);
 			}
 		}
 
 		if (is_null($this->values))
 		{
-			$this->values = new QueryElement('()', $values, '),(');
+			$this->values = new QueryElement('()', $values, '),' . PHP_EOL . '(');
 		}
 		else
 		{
@@ -1411,7 +1446,7 @@ class Query implements QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function where($conditions, $glue = 'AND')
 	{
@@ -1434,13 +1469,13 @@ class Query implements QueryInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __clone()
 	{
 		foreach ($this as $k => $v)
 		{
-			if ($k === 'db')
+			if ($k === 'connection')
 			{
 				continue;
 			}
@@ -1463,14 +1498,15 @@ class Query implements QueryInterface
 	 *
 	 * @param   mixed    $query     The Query object or string to union.
 	 * @param   boolean  $distinct  True to only return distinct rows from the union.
-	 * @param   string   $glue      The glue by which to join the conditions.
 	 *
 	 * @return  mixed    The Query object on success or boolean false on failure.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function union($query, $distinct = false, $glue = '')
+	public function union($query, $distinct = false)
 	{
+		$this->type = 'union';
+
 		// Clear any ORDER BY clause in UNION query
 		// See http://dev.mysql.com/doc/refman/5.0/en/union.html
 		if (!is_null($this->order))
@@ -1481,13 +1517,13 @@ class Query implements QueryInterface
 		// Set up the DISTINCT flag, the name with parentheses, and the glue.
 		if ($distinct)
 		{
-			$name = 'UNION DISTINCT ()';
+			$name = '()';
 			$glue = ')' . PHP_EOL . 'UNION DISTINCT (';
 		}
 		else
 		{
+			$name = '()';
 			$glue = ')' . PHP_EOL . 'UNION (';
-			$name = 'UNION ()';
 		}
 
 		// Get the QueryElement if it does not exist
@@ -1511,18 +1547,54 @@ class Query implements QueryInterface
 	 * $query->unionDistinct('SELECT name FROM  #__foo')
 	 *
 	 * @param   mixed   $query  The Query object or string to union.
-	 * @param   string  $glue   The glue by which to join the conditions.
 	 *
 	 * @return  mixed   The Query object on success or boolean false on failure.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function unionDistinct($query, $glue = '')
+	public function unionDistinct($query)
 	{
 		$distinct = true;
 
 		// Apply the distinct flag to the union.
-		return $this->union($query, $distinct, $glue);
+		return $this->union($query, $distinct);
+	}
+
+	/**
+	 * Add a query to UNION ALL with the current query.
+	 * Multiple unions each require separate statements and create an array of unions.
+	 *
+	 * Usage:
+	 * $query->unionAll('SELECT name FROM  #__foo')
+	 * $query->unionAll(array('SELECT name FROM  #__foo','SELECT name FROM  #__bar'))
+	 *
+	 * @param   mixed  $query  The Query object or string to union.
+	 *
+	 * @return  mixed  The Query object on success or boolean false on failure.
+	 *
+	 * @see     union
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function unionAll($query)
+	{
+		$this->type = 'union';
+
+		$glue = ')' . PHP_EOL . 'UNION ALL (';
+
+		// Get the JDatabaseQueryElement if it does not exist
+		if (is_null($this->unionAll))
+		{
+			$this->union = new QueryElement('()', $query, $glue);
+		}
+
+		// Otherwise append the second UNION.
+		else
+		{
+			$this->union->append($query);
+		}
+
+		return $this;
 	}
 
 	/**
@@ -1570,7 +1642,7 @@ class Query implements QueryInterface
 	 *
 	 * @return  string  Returns a string produced according to the formatting string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function format($format)
 	{
@@ -1738,6 +1810,11 @@ class Query implements QueryInterface
 
 		$class = __NAMESPACE__ . '\\' . ucfirst($this->getName()) . '\\' . ucfirst($this->getName()) . 'Expression';
 
+		if (!class_exists($class))
+		{
+			$class = __NAMESPACE__ . '\\' . 'QueryExpression';
+		}
+
 		return $this->expression = new $class($this);
 	}
 
@@ -1754,5 +1831,28 @@ class Query implements QueryInterface
 
 		return $this;
 	}
-}
 
+	/**
+	 * Method to get property Connection
+	 *
+	 * @return  \PDO
+	 */
+	public function getConnection()
+	{
+		return $this->connection;
+	}
+
+	/**
+	 * Method to set property connection
+	 *
+	 * @param   \PDO $connection
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setConnection($connection)
+	{
+		$this->connection = $connection;
+
+		return $this;
+	}
+}

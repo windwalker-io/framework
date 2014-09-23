@@ -12,8 +12,9 @@ namespace Windwalker\Form\Exception;
  * Interface ValidateFailException
  *
  * @since  {DEPLOY_VERSION}
+ *
+ * @deprecated  Do not use exception to handle validate fail anymore.
  */
 class ValidateFailException extends \RuntimeException
 {
 }
-

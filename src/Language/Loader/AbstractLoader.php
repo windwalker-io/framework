@@ -11,7 +11,7 @@ namespace Windwalker\Language\Loader;
 /**
  * Class AbstractLoader
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractLoader implements LoaderInterface
 {

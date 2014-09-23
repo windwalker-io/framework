@@ -8,26 +8,13 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
-use Windwalker\Database\Command\DatabaseWriter;
+use Windwalker\Database\Command\AbstractWriter;
 
 /**
  * Class PdoWriter
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
-class PdoWriter extends DatabaseWriter
+class PdoWriter extends AbstractWriter
 {
-	/**
-	 * Method to get the auto-incremented value from the last INSERT statement.
-	 *
-	 * @return  string  The value of the auto-increment field from the last inserted row.
-	 *
-	 * @since   1.0
-	 */
-	public function insertId()
-	{
-		// Error suppress this to prevent PDO warning us that the driver doesn't support this operation.
-		return @$this->db->getConnection()->lastInsertId();
-	}
 }
-

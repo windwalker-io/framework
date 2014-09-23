@@ -9,11 +9,12 @@
 namespace Windwalker\Console\Test\Prompter;
 
 use Windwalker\Console\Test\Prompter\Stubs\FakePasswordPrompter;
+use Windwalker\Test\TestEnvironment;
 
 /**
  * Class PasswordPrompterTest
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class PasswordPrompterTest extends AbstractPrompterTest
 {
@@ -23,7 +24,7 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function setUp()
 	{
@@ -39,11 +40,11 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testAsk()
 	{
-		if (defined('PHP_WINDOWS_VERSION_BUILD'))
+		if (TestEnvironment::isWindows())
 		{
 			$this->markTestSkipped('This test is not supported on Windows');
 			
@@ -52,6 +53,10 @@ class PasswordPrompterTest extends AbstractPrompterTest
 		
 		$this->markTestSkipped('This test is not supported now');
 		
+		return;
+
+		$this->markTestSkipped('This test is not supported now');
+
 		return;
 
 		$this->setStream("1234qwer\n");

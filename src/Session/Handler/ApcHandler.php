@@ -12,9 +12,9 @@ namespace Windwalker\Session\Handler;
  * APC session storage handler for PHP
  *
  * @see    http://www.php.net/manual/en/function.session-set-save-handler.php
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
-class Apc extends AbstractHandler
+class ApcHandler extends AbstractHandler
 {
 	/**
 	 * Constructor
@@ -22,7 +22,7 @@ class Apc extends AbstractHandler
 	 * @throws \RuntimeException
 	 * @internal param array $options Optional parameters
 	 *
-	 * @since    1.0
+	 * @since    {DEPLOY_VERSION}
 	 */
 	public function __construct($options)
 	{
@@ -39,7 +39,7 @@ class Apc extends AbstractHandler
 	 *
 	 * @return boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function isSupported()
 	{
@@ -54,7 +54,7 @@ class Apc extends AbstractHandler
 	 *
 	 * @return  string  The session data.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function read($id)
 	{
@@ -69,7 +69,7 @@ class Apc extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function write($id, $session_data)
 	{
@@ -83,7 +83,7 @@ class Apc extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function destroy($id)
 	{

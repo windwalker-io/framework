@@ -14,7 +14,7 @@ namespace Windwalker\Loader\Loader;
  * @note This class based on PHP-FIG example class.
  *       See: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader-examples.md
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Psr4Loader extends AbstractLoader
 {

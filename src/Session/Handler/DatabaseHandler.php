@@ -14,7 +14,7 @@ use Windwalker\Session\Database\AbstractDatabaseAdapter;
  * Database session storage handler for PHP
  *
  * @see    http://www.php.net/manual/en/function.session-set-save-handler.php
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class DatabaseHandler extends AbstractHandler
 {
@@ -31,7 +31,7 @@ class DatabaseHandler extends AbstractHandler
 	 * @param  AbstractDatabaseAdapter $db
 	 *
 	 * @throws \RuntimeException
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(AbstractDatabaseAdapter $db)
 	{
@@ -64,11 +64,12 @@ class DatabaseHandler extends AbstractHandler
 	/**
 	 * Read the data for a particular session identifier from the SessionHandler backend.
 	 *
-	 * @param   string  $id  The session identifier.
+	 * @param   string $id The session identifier.
 	 *
+	 * @throws \Exception
 	 * @return  string  The session data.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function read($id)
 	{
@@ -78,19 +79,20 @@ class DatabaseHandler extends AbstractHandler
 		}
 		catch (\Exception $e)
 		{
-			return false;
+			throw $e;
 		}
 	}
 
 	/**
 	 * Write session data to the SessionHandler backend.
 	 *
-	 * @param   string  $id    The session identifier.
-	 * @param   string  $data  The session data.
+	 * @param   string $id   The session identifier.
+	 * @param   string $data The session data.
 	 *
+	 * @throws  \Exception
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function write($id, $data)
 	{
@@ -100,18 +102,19 @@ class DatabaseHandler extends AbstractHandler
 		}
 		catch (\Exception $e)
 		{
-			return false;
+			throw $e;
 		}
 	}
 
 	/**
 	 * Destroy the data for a particular session identifier in the SessionHandler backend.
 	 *
-	 * @param   string  $id  The session identifier.
+	 * @param   string $id The session identifier.
 	 *
+	 * @throws \Exception
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function destroy($id)
 	{
@@ -121,18 +124,19 @@ class DatabaseHandler extends AbstractHandler
 		}
 		catch (\Exception $e)
 		{
-			return false;
+			throw $e;
 		}
 	}
 
 	/**
 	 * Garbage collect stale sessions from the SessionHandler backend.
 	 *
-	 * @param   integer  $lifetime  The maximum age of a session.
+	 * @param   integer $lifetime The maximum age of a session.
 	 *
+	 * @throws  \Exception
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function gc($lifetime = 1440)
 	{
@@ -145,7 +149,7 @@ class DatabaseHandler extends AbstractHandler
 		}
 		catch (\Exception $e)
 		{
-			return false;
+			throw $e;
 		}
 	}
 

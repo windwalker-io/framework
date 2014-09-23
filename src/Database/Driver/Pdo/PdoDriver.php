@@ -8,11 +8,11 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
-use Windwalker\Database\Command\DatabaseDatabase;
-use Windwalker\Database\Command\DatabaseReader;
-use Windwalker\Database\Command\DatabaseTable;
-use Windwalker\Database\Command\DatabaseTransaction;
-use Windwalker\Database\Command\DatabaseWriter;
+use Windwalker\Database\Command\AbstractDatabase;
+use Windwalker\Database\Command\AbstractReader;
+use Windwalker\Database\Command\AbstractTable;
+use Windwalker\Database\Command\AbstractTransaction;
+use Windwalker\Database\Command\AbstractWriter;
 use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Query\Query\PreparableInterface;
 use Windwalker\Query\Query;
@@ -20,7 +20,7 @@ use Windwalker\Query\Query;
 /**
  * Class PdoDriver
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PdoDriver extends DatabaseDriver
 {
@@ -28,7 +28,7 @@ class PdoDriver extends DatabaseDriver
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $name = 'pdo';
 
@@ -36,7 +36,7 @@ class PdoDriver extends DatabaseDriver
 	 * The prepared statement.
 	 *
 	 * @var    \PDOStatement
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $cursor;
 
@@ -44,9 +44,16 @@ class PdoDriver extends DatabaseDriver
 	 * The database connection resource.
 	 *
 	 * @var    \PDO
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $connection;
+
+	/**
+	 * Property driverOptions.
+	 *
+	 * @var mixed
+	 */
+	protected $driverOptions;
 
 	/**
 	 * Property reader.
@@ -61,7 +68,7 @@ class PdoDriver extends DatabaseDriver
 	 * @param   \PDO  $connection The pdo connection object.
 	 * @param   array $options    List of options used to configure the connection
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct(\PDO $connection = null, $options = array())
 	{
@@ -121,13 +128,13 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function disconnect()
 	{
 		$this->freeResult();
 
-		unset($this->connection);
+		$this->connection = null;
 	}
 
 	/**
@@ -140,7 +147,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  mixed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getOption($key)
 	{
@@ -162,7 +169,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return boolean
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function setOption($key, $value)
 	{
@@ -176,7 +183,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  string  The database connector version.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getVersion()
 	{
@@ -192,11 +199,13 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function select($database)
 	{
+		$this->database = $database;
+
 		$this->getDatabase($database)->select();
 
 		return $this;
@@ -210,16 +219,13 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  PdoDriver  This object to support method chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setQuery($query, $driverOptions = array())
 	{
 		$this->connect()->freeResult();
 
-		$query = $this->replacePrefix((string) $query);
-
-		// Set query string into PDO, but keep query object in $this->query that we can bind params when execute().
-		$this->cursor = $this->connection->prepare($query, $driverOptions);
+		$this->driverOptions = $driverOptions;
 
 		// Store reference to the DatabaseQuery instance:
 		parent::setQuery($query);
@@ -233,10 +239,16 @@ class PdoDriver extends DatabaseDriver
 	 * @throws \RuntimeException
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function doExecute()
 	{
+		// Replace prefix
+		$query = $this->replacePrefix((string) $this->query);
+
+		// Set query string into PDO, but keep query object in $this->query that we can bind params when execute().
+		$this->cursor = $this->connection->prepare($query, $this->driverOptions);
+
 		if (!($this->cursor instanceof \PDOStatement))
 		{
 			throw new \RuntimeException('PDOStatement not prepared. Maybe you haven\'t set any query');
@@ -259,7 +271,7 @@ class PdoDriver extends DatabaseDriver
 		}
 		catch (\PDOException $e)
 		{
-			throw new \RuntimeException('SQL: ' . $e->getMessage(), (int) $e->getCode(), $e);
+			throw new \RuntimeException($e->getMessage() . "\nSQL: " . $this->query, (int) $e->getCode(), $e);
 		}
 
 		return $this;
@@ -272,7 +284,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function freeResult($cursor = null)
 	{
@@ -295,7 +307,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  Query  The current query object or a new object extending the Query class.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function getQuery($new = false)
@@ -308,6 +320,8 @@ class PdoDriver extends DatabaseDriver
 			// Make sure we have a query class for this driver.
 			if (class_exists($class))
 			{
+				$this->connect();
+
 				return new $class($this->getConnection());
 			}
 
@@ -324,7 +338,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param string $name
 	 *
-	 * @return  DatabaseTable
+	 * @return  AbstractTable
 	 */
 	public function getTable($name)
 	{
@@ -346,10 +360,12 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param string $name
 	 *
-	 * @return  DatabaseDatabase
+	 * @return  AbstractDatabase
 	 */
-	public function getDatabase($name)
+	public function getDatabase($name = null)
 	{
+		$name = $name ? : $this->database;
+
 		if (empty($this->databases[$name]))
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
@@ -368,13 +384,13 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param Query $query
 	 *
-	 * @return  DatabaseReader
+	 * @return  AbstractReader
 	 */
 	public function getReader($query = null)
 	{
 		if ($query)
 		{
-			$this->setQuery($query)->execute();
+			$this->setQuery($query);
 		}
 
 		if (!$this->reader)
@@ -393,7 +409,7 @@ class PdoDriver extends DatabaseDriver
 	/**
 	 * getWriter
 	 *
-	 * @return  DatabaseWriter
+	 * @return  AbstractWriter
 	 */
 	public function getWriter()
 	{
@@ -415,7 +431,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @param boolean $nested
 	 *
-	 * @return  DatabaseTransaction
+	 * @return  AbstractTransaction
 	 */
 	public function getTransaction($nested = true)
 	{
@@ -452,4 +468,3 @@ class PdoDriver extends DatabaseDriver
 		return $this->setQuery($builder::showDatabases())->loadColumn();
 	}
 }
-

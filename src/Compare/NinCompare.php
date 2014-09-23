@@ -11,9 +11,9 @@ namespace Windwalker\Compare;
 /**
  * Class NotinCompare
  *
- * @since 2.0
+ * @since {DEPLOY_VERSION}
  */
-class NotinCompare extends InCompare
+class NinCompare extends InCompare
 {
 	/**
 	 * Operator symbol.
@@ -21,14 +21,4 @@ class NotinCompare extends InCompare
 	 * @var  string
 	 */
 	protected $operator = 'NOT IN';
-
-	/**
-	 * Do compare.
-	 *
-	 * @return  boolean  The result of compare.
-	 */
-	public function compare()
-	{
-		return !parent::compare();
-	}
 }

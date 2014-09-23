@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Path\PathCollection;
 /**
  * A Path handling class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class Path
 {
@@ -24,7 +24,7 @@ class Path
 	 *
 	 * @return  boolean  True if path can have mode changed.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function canChmod($path)
 	{
@@ -52,7 +52,7 @@ class Path
 	 *
 	 * @return  boolean  True if successful [one fail means the whole operation failed].
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function setPermissions($path, $filemode = '0644', $foldermode = '0755')
 	{
@@ -113,37 +113,43 @@ class Path
 	/**
 	 * Get the permissions of the file/folder at a give path.
 	 *
-	 * @param   string  $path  The path of a file/folder.
+	 * @param   string   $path      The path of a file/folder.
+	 * @param   boolean  $toString  Convert permission number to string.
 	 *
 	 * @return  string  Filesystem permissions.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public static function getPermissions($path)
+	public static function getPermissions($path, $toString = false)
 	{
 		$path = self::clean($path);
 		$mode = @ decoct(@ fileperms($path) & 0777);
+
+		if (!$toString)
+		{
+			return $mode;
+		}
 
 		if (strlen($mode) < 3)
 		{
 			return '---------';
 		}
 
-		$parsed_mode = '';
+		$parsedMode = '';
 
 		for ($i = 0; $i < 3; $i++)
 		{
 			// Read
-			$parsed_mode .= ($mode{$i} & 04) ? "r" : "-";
+			$parsedMode .= ($mode{$i} & 04) ? "r" : "-";
 
 			// Write
-			$parsed_mode .= ($mode{$i} & 02) ? "w" : "-";
+			$parsedMode .= ($mode{$i} & 02) ? "w" : "-";
 
 			// Execute
-			$parsed_mode .= ($mode{$i} & 01) ? "x" : "-";
+			$parsedMode .= ($mode{$i} & 01) ? "x" : "-";
 		}
 
-		return $parsed_mode;
+		return $parsedMode;
 	}
 
 	/**
@@ -155,20 +161,20 @@ class Path
 	 * @throws \Exception
 	 * @return  string  A cleaned version of the path or exit on error.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function check($path, $root)
 	{
 		if (strpos($path, '..') !== false)
 		{
-			throw new \Exception('JPath::check Use of relative paths not permitted', 20);
+			throw new \Exception(__CLASS__ . '::check Use of relative paths not permitted', 20);
 		}
 
 		$path = self::clean($path);
 
 		if (($root != '') && strpos($path, self::clean($root)) !== 0)
 		{
-			throw new \Exception('JPath::check Snooping out of bounds @ ' . $path, 20);
+			throw new \Exception(__CLASS__ . '::check Snooping out of bounds @ ' . $path, 20);
 		}
 
 		return $path;
@@ -182,14 +188,14 @@ class Path
 	 *
 	 * @return  string  The cleaned path.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \UnexpectedValueException If $path is not a string.
 	 */
 	public static function clean($path, $ds = DIRECTORY_SEPARATOR)
 	{
 		if (!is_string($path))
 		{
-			throw new \UnexpectedValueException('JPath::clean $path is not a string.');
+			throw new \UnexpectedValueException(__CLASS__ . '::clean $path is not a string.');
 		}
 
 		$path = trim($path);
@@ -216,7 +222,7 @@ class Path
 	 *
 	 * @return  mixed   The full path and file name for the target file, or boolean false if the file is not found in any of the paths.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function find($paths, $file)
 	{
@@ -234,6 +240,8 @@ class Path
 			return ($current->getBasename() == $file);
 		};
 
-		return (new PathCollection($paths))->findOne($filter);
+		$collection = new PathCollection($paths);
+
+		return $collection->findOne($filter);
 	}
 }

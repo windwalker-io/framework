@@ -13,10 +13,16 @@ use Windwalker\Filesystem\Exception\FilesystemException;
 /**
  * A Folder handling class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 abstract class Folder
 {
+	const PATH_ABSOLUTE = 1;
+
+	const PATH_RELATIVE = 2;
+
+	const PATH_BASENAME = 4;
+
 	/**
 	 * Copy a folder.
 	 *
@@ -26,7 +32,7 @@ abstract class Folder
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 */
 	public static function copy($src, $dest, $force = false)
@@ -53,7 +59,7 @@ abstract class Folder
 			throw new FilesystemException('Cannot create destination folder', -1);
 		}
 
-		$sources = static::items($src, true, false);
+		$sources = static::items($src, true, static::PATH_RELATIVE);
 
 		// Walk through the directory copying files and recursing into folders.
 		foreach ($sources as $file)
@@ -82,7 +88,7 @@ abstract class Folder
 	 *
 	 * @return  boolean  True if successful.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 */
 	public static function create($path = '', $mode = 0755)
@@ -165,7 +171,7 @@ abstract class Folder
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 * @throws  \UnexpectedValueException
 	 */
@@ -235,7 +241,7 @@ abstract class Folder
 	 * @throws Exception\FilesystemException
 	 * @return  mixed  Error message on false or boolean true on success.
 	 *
-	 * @since    1.0
+	 * @since    {DEPLOY_VERSION}
 	 */
 	public static function move($src, $dest, $override = false)
 	{
@@ -251,7 +257,7 @@ abstract class Folder
 				throw new FilesystemException('Folder already exists');
 			}
 
-			foreach (static::items($src, true, false) as $item)
+			foreach (static::items($src, true, static::PATH_RELATIVE) as $item)
 			{
 				if (is_file($src . '/' . $item))
 				{
@@ -276,20 +282,29 @@ abstract class Folder
 		return true;
 	}
 
-	public static function files($path, $recursive = false, $fullName = true)
+	public static function files($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
 		$files = array();
 
 		/** @var $file \SplFileInfo */
 		foreach (Filesystem::files($path, $recursive) as $file)
 		{
-			if ($fullName)
+			switch ($pathType)
 			{
-				$name = $file->getPathname();
-			}
-			else
-			{
-				$name = $file->getBasename();
+				case ($pathType === self::PATH_BASENAME):
+					$name = $file->getBasename();
+					break;
+
+				case ($pathType === static::PATH_RELATIVE):
+					$pathLength = strlen($path);
+					$name = $file->getRealPath();
+					$name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
+					break;
+
+				case ($pathType === static::PATH_ABSOLUTE):
+				default:
+					$name = $file->getPathname();
+					break;
 			}
 
 			$files[] = $name;
@@ -298,7 +313,7 @@ abstract class Folder
 		return $files;
 	}
 
-	public static function items($path, $recursive = false, $fullName = true)
+	public static function items($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
 		$files = array();
 		$pathLength = strlen($path);
@@ -306,15 +321,22 @@ abstract class Folder
 		/** @var $file \SplFileInfo */
 		foreach (Filesystem::items($path, $recursive) as $file)
 		{
-			if ($fullName)
+			switch ($pathType)
 			{
-				$name = $file->getPathname();
-			}
-			else
-			{
-				$name = $file->getRealPath();
+				case ($pathType === self::PATH_BASENAME):
+					$name = $file->getBasename();
+					break;
 
-				$name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
+				case ($pathType === static::PATH_RELATIVE):
+					$pathLength = strlen($path);
+					$name = $file->getRealPath();
+					$name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
+					break;
+
+				case ($pathType === static::PATH_ABSOLUTE):
+				default:
+					$name = $file->getPathname();
+					break;
 			}
 
 			$files[] = $name;
@@ -323,23 +345,29 @@ abstract class Folder
 		return $files;
 	}
 
-	public static function folders($path, $recursive = false, $fullName = true)
+	public static function folders($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
 		$files = array();
-		$pathLength = strlen($path);
 
 		/** @var $file \SplFileInfo */
 		foreach (Filesystem::folders($path, $recursive) as $file)
 		{
-			if ($fullName)
+			switch ($pathType)
 			{
-				$name = $file->getPathname();
-			}
-			else
-			{
-				$name = $file->getRealPath();
+				case ($pathType === self::PATH_BASENAME):
+					$name = $file->getBasename();
+					break;
 
-				$name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
+				case ($pathType === static::PATH_RELATIVE):
+					$pathLength = strlen($path);
+					$name = $file->getRealPath();
+					$name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
+					break;
+
+				case ($pathType === static::PATH_ABSOLUTE):
+				default:
+					$name = $file->getPathname();
+					break;
 			}
 
 			$files[] = $name;
@@ -358,29 +386,40 @@ abstract class Folder
 	 *
 	 * @return  array  Folders in the given folder.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function listFolderTree($path, $maxLevel = 3, $level = 0, $parent = 0)
 	{
 		$dirs = array();
 
+		static $index;
+		static $base;
+
 		if ($level == 0)
 		{
-			$GLOBALS['_JFolder_folder_tree_index'] = 0;
+			$index = 0;
+			$base = Path::clean($path);
 		}
 
 		if ($level < $maxLevel)
 		{
 			$folders = static::folders($path, false, false);
 
+			sort($folders);
+
 			// First path, index foldernames
 			foreach ($folders as $name)
 			{
-				$id = ++$GLOBALS['_JFolder_folder_tree_index'];
+				$id = ++$index;
 				$fullName = Path::clean($path . '/' . $name);
 
-				$dirs[] = array('id' => $id, 'parent' => $parent, 'name' => $name, 'fullname' => $fullName,
-					'relname' => str_replace(JPATH_ROOT, '', $fullName));
+				$dirs[] = array(
+					'id' => $id,
+					'parent' => $parent,
+					'name' => $name,
+					'fullname' => $fullName,
+					'relative' => trim(str_replace($base, '', $fullName), DIRECTORY_SEPARATOR)
+				);
 
 				$dirs2 = self::listFolderTree($fullName, $maxLevel, $level + 1, $id);
 
@@ -398,7 +437,7 @@ abstract class Folder
 	 *
 	 * @return  string  The sanitised string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function makeSafe($path)
 	{

@@ -39,7 +39,7 @@ abstract class McryptCipher implements CipherInterface
 	/**
 	 * Constructor.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function __construct()
@@ -61,7 +61,7 @@ abstract class McryptCipher implements CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since    1.0
+	 * @since    {DEPLOY_VERSION}
 	 */
 	public function decrypt($data, $private = null, $public = null)
 	{
@@ -98,7 +98,7 @@ abstract class McryptCipher implements CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 */
 	public function encrypt($data, $private = null, $public = null)

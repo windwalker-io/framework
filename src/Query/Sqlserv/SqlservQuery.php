@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 /**
  * Class SqlservQuery
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class SqlservQuery extends Query
 {
@@ -21,7 +21,7 @@ class SqlservQuery extends Query
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $name = 'sqlserv';
 
@@ -32,7 +32,7 @@ class SqlservQuery extends Query
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $nameQuote = '[]';
 
@@ -41,7 +41,7 @@ class SqlservQuery extends Query
 	 * defined in child classes to hold the appropriate value for the engine.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $nullDate = '1900-01-01 00:00:00';
 
@@ -56,7 +56,7 @@ class SqlservQuery extends Query
 	 *
 	 * @return  string  The escaped string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function escape($text, $extra = false)
 	{
@@ -79,7 +79,7 @@ class SqlservQuery extends Query
 	 *
 	 * @return  string	The completed query.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __toString()
 	{
@@ -106,7 +106,7 @@ class SqlservQuery extends Query
 					$elements = $this->insert->getElements();
 					$tableName = array_shift($elements);
 
-					$query .= 'VALUES ';
+					$query .= ' VALUES ';
 					$query .= (string) $this->values;
 
 					if ($this->autoIncrementField)

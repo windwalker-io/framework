@@ -8,27 +8,22 @@
 
 namespace Windwalker\IO;
 
-use Windwalker\Filter\Filter;
-
 /**
- * Joomla! Input Cookie Class
+ * Windwalker Input Cookie Class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
-class CookieInput extends Input
+class Cookie extends Input
 {
 	/**
-	 * Constructor.
+	 * Prepare source.
 	 *
-	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   Filter $filter The input filter object.
+	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 *
-	 * @since   1.0
+	 * @return  void
 	 */
-	public function __construct($source = null, Filter $filter = null)
+	protected function prepareSource($source = null)
 	{
-		$this->filter = $filter ? : new Filter;
-
 		$this->data = &$_COOKIE;
 	}
 
@@ -68,7 +63,7 @@ class CookieInput extends Input
 	 *
 	 * @link    http://www.ietf.org/rfc/rfc2109.txt
 	 * @see     setcookie()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function set($name, $value, $expire = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
 	{

@@ -8,15 +8,15 @@
 
 namespace Windwalker\Database\Driver\Mysql;
 
-use Windwalker\Database\Command\DatabaseDatabase;
+use Windwalker\Database\Command\AbstractDatabase;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 
 /**
  * Class MysqlDatabase
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
-class MysqlDatabase extends DatabaseDatabase
+class MysqlDatabase extends AbstractDatabase
 {
 	/**
 	 * Property tablesCache.
@@ -74,15 +74,40 @@ class MysqlDatabase extends DatabaseDatabase
 	/**
 	 * renameDatabase
 	 *
-	 * @param string $newName
+	 * @param string  $newName
+	 * @param boolean $returnNew
 	 *
 	 * @return  static
 	 */
-	public function rename($newName)
+	public function rename($newName, $returnNew = true)
 	{
-		$query = 'RENAME ' . $this->db->quoteName($this->database) . ' TO ' . $this->db->quoteName($newName);
+		// Mysql 5.1.7 do not have RENAME DATABASE syntax anymore, so we use rename tables to do that.
+		// @see: http://stackoverflow.com/questions/67093/how-do-i-quickly-rename-a-mysql-database-change-schema-name?page=1&tab=votes#tab-top
+		$newDatabase = $this->db->getDatabase($newName)->create();
 
-		$this->db->setQuery($query)->execute();
+		$tables = $this->db->getReader(MysqlQueryBuilder::showDbTables($this->database))->loadObjectList();
+
+		foreach ($tables as $table)
+		{
+			$name = $table->Name;
+
+			$this->db->setQuery(
+				sprintf(
+					'RENAME TABLE %s.%s TO %s.%s',
+					$this->db->quoteName($this->database),
+					$this->db->quoteName($name),
+					$this->db->quoteName($newName),
+					$this->db->quoteName($name)
+				)
+			)->execute();
+		}
+
+		$this->drop(true);
+
+		if ($returnNew)
+		{
+			return $newDatabase;
+		}
 
 		return $this;
 	}
@@ -94,7 +119,7 @@ class MysqlDatabase extends DatabaseDatabase
 	 *
 	 * @return  array  An array of all the tables in the database.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getTables($refresh = false)
 	{
@@ -109,13 +134,11 @@ class MysqlDatabase extends DatabaseDatabase
 	/**
 	 * getTableDetails
 	 *
-	 * @param bool $full
-	 *
 	 * @return  object[]
 	 */
-	public function getTableDetails($full = true)
+	public function getTableDetails()
 	{
-		$query = MysqlQueryBuilder::showDbTables($this->database, $full);
+		$query = MysqlQueryBuilder::showDbTables($this->database);
 
 		return $this->db->setQuery($query)->loadAll('Name');
 	}
@@ -124,15 +147,35 @@ class MysqlDatabase extends DatabaseDatabase
 	 * getTableDetail
 	 *
 	 * @param bool $table
-	 * @param bool $full
 	 *
 	 * @return  mixed
 	 */
-	public function getTableDetail($table, $full = true)
+	public function getTableDetail($table)
 	{
-		$query = MysqlQueryBuilder::showTableColumns($this->database, $full, 'Field = ' . $this->db->quote($table));
+		$table = $this->db->replacePrefix($table);
 
-		return $this->db->setQuery($query)->loadOne();
+		$query = MysqlQueryBuilder::showDbTables($this->database, 'Name = ' . $this->db->quote($table));
+
+		$table = $this->db->setQuery($query)->loadOne();
+
+		if (!$table)
+		{
+			return false;
+		}
+
+		return $table;
+	}
+
+	/**
+	 * tableExists
+	 *
+	 * @param string $table
+	 *
+	 * @return  boolean
+	 */
+	public function tableExists($table)
+	{
+		return (bool) $this->getTableDetail($table);
 	}
 }
 

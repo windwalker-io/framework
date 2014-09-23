@@ -23,7 +23,7 @@ class CryptHelper
 	 * @note    This code is based on Joomla Crypt.
 	 * @return  string  Random binary data
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function genRandomBytes($length = 16)
 	{
@@ -156,4 +156,3 @@ class CryptHelper
 		return substr($randomStr, 0, $length);
 	}
 }
- 

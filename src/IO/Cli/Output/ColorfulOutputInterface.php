@@ -24,7 +24,7 @@ interface ColorfulOutputInterface
 	 *
 	 * @return  CliOutput  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setProcessor(ColorProcessorInterface $processor);
 
@@ -33,7 +33,7 @@ interface ColorfulOutputInterface
 	 *
 	 * @return  ColorProcessorInterface
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function getProcessor();

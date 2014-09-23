@@ -15,25 +15,25 @@ namespace Windwalker\Query;
  * @property-read  array   $elements  An array of elements.
  * @property-read  string  $glue      Glue piece.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class QueryElement
 {
 	/**
 	 * @var    string  The name of the element.
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $name = null;
 
 	/**
 	 * @var    array  An array of elements.
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $elements = null;
 
 	/**
 	 * @var    string  Glue piece.
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $glue = null;
 
@@ -44,7 +44,7 @@ class QueryElement
 	 * @param   mixed   $elements  String or array.
 	 * @param   string  $glue      The glue for elements.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($name, $elements, $glue = ',')
 	{
@@ -60,7 +60,7 @@ class QueryElement
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __toString()
 	{
@@ -91,7 +91,7 @@ class QueryElement
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function append($elements)
 	{
@@ -110,7 +110,7 @@ class QueryElement
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getElements()
 	{
@@ -123,7 +123,7 @@ class QueryElement
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __clone()
 	{

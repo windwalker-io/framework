@@ -16,7 +16,7 @@ use Windwalker\Profiler\Renderer\ProfilerRendererInterface;
 /**
  * Class Profiler
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Profiler implements ProfilerInterface
 {

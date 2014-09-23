@@ -12,6 +12,8 @@ namespace Windwalker\Form\Exception;
  * The EmptyValueException class.
  * 
  * @since  {DEPLOY_VERSION}
+ *
+ * @deprecated  Do not use exception to handle validate fail anymore.
  */
 class FieldRequiredFailException extends AbstractFieldStoreException
 {

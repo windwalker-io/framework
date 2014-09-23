@@ -13,7 +13,7 @@ use Windwalker\Console\Prompter\PasswordPrompter;
 /**
  * Class Fake Password Prompter
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class FakePasswordPrompter extends PasswordPrompter
 {
@@ -22,7 +22,7 @@ class FakePasswordPrompter extends PasswordPrompter
 	 *
 	 * @return  boolean
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function findStty()
 	{
@@ -34,7 +34,7 @@ class FakePasswordPrompter extends PasswordPrompter
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function findShell()
 	{

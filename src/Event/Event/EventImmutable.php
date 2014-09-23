@@ -11,7 +11,7 @@ namespace Windwalker\Event\Event;
 /**
  * Class EventImmutable
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class EventImmutable extends Event
 {
@@ -31,7 +31,7 @@ class EventImmutable extends Event
 	 *
 	 * @throws  \BadMethodCallException
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($name, array $arguments = array())
 	{
@@ -68,7 +68,7 @@ class EventImmutable extends Event
 	 *
 	 * @return  EventImmutable  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addArgument($name, $value)
 	{
@@ -82,7 +82,7 @@ class EventImmutable extends Event
 	 *
 	 * @return  mixed  The old argument value or null if it is not existing.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function removeArgument($name)
 	{
@@ -94,7 +94,7 @@ class EventImmutable extends Event
 	 *
 	 * @return  array  The old arguments.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clearArguments()
 	{

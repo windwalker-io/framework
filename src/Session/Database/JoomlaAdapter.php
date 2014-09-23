@@ -13,7 +13,7 @@ use Joomla\Database\DatabaseDriver;
 /**
  * Class DatabaseAdapter
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class JoomlaAdapter extends AbstractDatabaseAdapter
 {
@@ -65,22 +65,22 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
 	 */
 	public function write($id, $data)
 	{
-		$query = $this->db->getQuery(true);
-		$query->update($this->db->quoteName($this->options['table']))
-			->set($this->db->quoteName($this->options['data_col']) . ' = ' . $this->db->quote($data))
-			->set($this->db->quoteName($this->options['time_col']) . ' = ' . $this->db->quote((int) time()))
-			->where($this->db->quoteName($this->options['id_col']) . ' = ' . $this->db->quote($id));
+		$data = array(
+			$this->options['data_col'] => $data,
+			$this->options['time_col'] => (int) time(),
+			$this->options['id_col'] => $id,
+		);
 
-		// Try to update the session data in the database table.
-		$this->db->setQuery($query);
+		$data = (object) $data;
 
-		if (!$this->db->execute())
+		$this->db->updateObject($this->options['table'], $data, $this->options['id_col']);
+
+		if ($this->db->getAffectedRows())
 		{
-			return false;
+			return true;
 		}
 
-		// Since $this->db->execute did not throw an exception the query was successful.
-		// Either the data changed, or the data was identical. In either case we are done.
+		$this->db->insertObject($this->options['table'], $data, $this->options['id_col']);
 
 		return true;
 	}
@@ -123,4 +123,3 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
 		return (boolean) $this->db->execute();
 	}
 }
-

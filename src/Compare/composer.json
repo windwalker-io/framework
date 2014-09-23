@@ -1,7 +1,7 @@
 {
 	"name": "windwalker/compare",
 	"type": "windwalker-package",
-	"description": "Windwalker DataMapper package",
+	"description": "Windwalker Compare package",
 	"keywords": ["windwalker", "framework", "compare"],
 	"homepage": "https://github.com/ventoviro/windwalker-compare",
 	"license": "GPL-2.0+",
@@ -9,9 +9,9 @@
 		"php": ">=5.3.10"
 	},
 	"require-dev": {
-		"joomla/test": "~1.0"
+		"windwalker/test": "dev-master"
 	},
-	"minimum-stability" : "beta",
+	"minimum-stability" : "dev",
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\Compare\\": ""

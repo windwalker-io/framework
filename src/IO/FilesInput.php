@@ -8,12 +8,10 @@
 
 namespace Windwalker\IO;
 
-use Windwalker\Filter\Filter;
-
 /**
  * Joomla! Input Files Class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class FilesInput extends Input
 {
@@ -21,22 +19,19 @@ class FilesInput extends Input
 	 * The pivoted data from a $_FILES or compatible array.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $decodedData = array();
 
 	/**
-	 * Constructor.
+	 * Prepare source.
 	 *
-	 * @param   array  $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   Filter $filter The input filter object.
+	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 *
-	 * @since   1.0
+	 * @return  void
 	 */
-	public function __construct($source = null, Filter $filter = null)
+	protected function prepareSource($source = null)
 	{
-		$this->filter = $filter ? : new Filter;
-
 		$this->data = &$_FILES;
 	}
 
@@ -50,7 +45,7 @@ class FilesInput extends Input
 	 * @return  mixed  The filtered input value.
 	 *
 	 * @see     JFilterInput::clean
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function get($name, $default = null, $filter = 'cmd')
 	{
@@ -79,7 +74,7 @@ class FilesInput extends Input
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function decodeData(array $data)
 	{
@@ -106,7 +101,7 @@ class FilesInput extends Input
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function set($name, $value)
 	{

@@ -38,7 +38,7 @@ class Build extends AbstractCliApplication
 	 *
 	 * @var  string
 	 */
-	protected $master = null;
+	protected $branch = null;
 
 	/**
 	 * Property tag.
@@ -53,11 +53,42 @@ class Build extends AbstractCliApplication
 	 * @var  array
 	 */
 	protected $subtrees = array(
-		'data'       => 'Data',
-		'datamapper' => 'DataMapper',
-		'middleware' => 'Middleware',
+		'application' => 'Application',
+		'cache'      => 'Cache',
 		'compare'    => 'Compare',
-		'database'   => 'Database'
+		'console'    => 'Console',
+		'controller' => 'Controller',
+		// 'crypt'      => 'Crypt',
+		'data'       => 'Data',
+		'database'   => 'Database',
+		'datamapper' => 'DataMapper',
+		// 'date'       => 'Date',
+		'di'         => 'DI',
+		'dom'        => 'Dom',
+		'environment' => 'Environment',
+		// 'event'      => 'Event',
+		'filesystem' => 'Filesystem',
+		'filter'     => 'Filter',
+		'form'       => 'Form',
+		'html'       => 'Html',
+		'io'         => 'IO',
+		// 'language'   => 'Language',
+		// 'loader'     => 'Loader',
+		'middleware' => 'Middleware',
+		'model'      => 'Model',
+		// 'profiler'   => 'Profiler',
+		'query'      => 'Query',
+		// 'record'     => 'Record',
+		'registry'   => 'Registry',
+		'renderer'   => 'Renderer',
+		// 'router'     => 'Router',
+		'session'    => 'Session',
+		'string'     => 'String',
+		'test'       => 'Test',
+		'uri'        => 'Uri',
+		'utilities'  => 'Utilities',
+		'validator'  => 'Validator',
+		'view'       => 'View',
 	);
 
 	/**
@@ -67,30 +98,40 @@ class Build extends AbstractCliApplication
 	 */
 	protected function doExecute()
 	{
-		$this->tag = $tag = $this->io->getArgument(0) or $this->stop('Please give me tag name.');
+		$this->tag = $tag = $this->io->getOption('t') ? : $this->io->getOption('tag');
 
-		$test = $this->io->getOption('t') ?: $this->io->getOption('test');
+		$branch = $this->io->getOption('b') ?: $this->io->getOption('branch', 'test');
 
-		$this->master = $master = $test ? 'test' : 'master';
+		$this->branch = $branch;
 
 		$this->exec('git fetch origin');
 
-		$this->exec('git branch -D ' . $master);
+		$this->exec('git branch -D ' . $branch);
 
-		$this->exec('git checkout -b ' . $master);
+		$this->exec('git checkout -b ' . $branch);
 
 		$this->exec('git merge staging');
 
-		$this->exec('git tag -d ' . $tag);
+		if ($this->tag)
+		{
+			$this->exec('git tag -d ' . $tag);
 
-		$this->exec('git push origin :refs/tags/' . $tag);
+			$this->exec('git push origin :refs/tags/' . $tag);
 
-		$this->exec('git tag ' . $tag);
+			$this->exec('git tag ' . $tag);
+		}
 
-		$this->exec(sprintf('git push origin %s %s:%s staging:staging', $tag, $master, $master));
+		$this->exec(sprintf('git push origin %s %s:%s staging:staging', $tag, $branch, $branch));
+
+		$allows = $this->io->getArguments();
 
 		foreach ($this->subtrees as $subtree => $namespace)
 		{
+			if ($allows && !in_array($subtree, $allows))
+			{
+				continue;
+			}
+
 			$this->splitTree($subtree, $namespace);
 		}
 
@@ -107,27 +148,43 @@ class Build extends AbstractCliApplication
 	 */
 	protected function splitTree($subtree, $namespace)
 	{
+		$this->out()->out(sprintf('@ Start subtree split (%s)', $subtree))
+			->out('---------------------------------------');
+
+		// Do split
 		$this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
 
-		$this->exec(sprintf('git branch -D master-%s', $subtree));
+		// Create a new branch
+		$this->exec(sprintf('git branch -D %s-%s', $this->branch, $subtree));
 
+		// Add remote repo
 		$this->exec(sprintf('git remote add %s git@github.com:ventoviro/windwalker-%s.git', $subtree, $subtree));
 
-		$this->exec(sprintf('git fetch %s', $subtree));
+		$force = $this->io->getOption('f') ? : $this->io->getOption('force', false);
 
-		$this->exec(sprintf('git checkout -b master-%s --track %s/master', $subtree, $subtree));
+		$force = $force ? ' -f' : false;
 
-		$this->exec(sprintf('git merge sub-%s', $subtree));
+		if (!$force)
+		{
+			$this->exec(sprintf('git fetch %s', $subtree));
 
-		$this->exec(sprintf('git push %s master-%s:master', $subtree, $subtree));
+			$this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->branch, $subtree, $subtree, $this->branch));
 
-		$this->exec(sprintf('git tag -d %s', $this->tag));
+			$this->exec(sprintf('git merge sub-%s', $subtree));
+		}
 
-		$this->exec(sprintf('git tag %s', $this->tag));
+		$this->exec(sprintf('git push %s sub-%s:%s ' . $force, $subtree, $subtree, $this->branch));
 
-		$this->exec(sprintf('git push %s %s', $subtree, $this->tag));
+		if ($this->tag)
+		{
+			$this->exec(sprintf('git tag -d %s', $this->tag));
 
-		$this->exec('git checkout ' . $this->master);
+			$this->exec(sprintf('git tag %s', $this->tag));
+
+			$this->exec(sprintf('git push %s %s', $subtree, $this->tag));
+		}
+
+		$this->exec('git checkout ' . $this->branch);
 	}
 
 	/**
@@ -147,6 +204,11 @@ class Build extends AbstractCliApplication
 		$command = sprintf('%s %s %s', $command, $arguments, $options);
 
 		$this->out('>> ' . $command);
+
+		if ($this->io->getOption('dry-run'))
+		{
+			return '';
+		}
 
 		$return = exec(trim($command), $this->lastOutput, $this->lastReturn);
 

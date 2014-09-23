@@ -10,10 +10,15 @@ namespace Windwalker\Registry;
 
 use Windwalker\Registry\Helper\RegistryHelper;
 
+if (!interface_exists('JsonSerializable'))
+{
+	include_once __DIR__ . '/Compat/JsonSerializable.php';
+}
+
 /**
  * Registry class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class Registry implements \JsonSerializable, \ArrayAccess
 {
@@ -21,7 +26,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 * Registry Object
 	 *
 	 * @var    object
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $data;
 
@@ -31,7 +36,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 * @param   mixed   $data   The data to bind to the new Registry object.
 	 * @param   string  $format The format of input, only work when first argument is string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($data = null, $format = 'json')
 	{
@@ -54,7 +59,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __clone()
 	{
@@ -66,11 +71,18 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __toString()
 	{
-		return $this->toString();
+		try
+		{
+			return $this->toString();
+		}
+		catch (\Exception $e)
+		{
+			return (string) $e;
+		}
 	}
 
 	/**
@@ -79,7 +91,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  object
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @note    The interface is only present in PHP 5.4 and up.
 	 */
 	public function jsonSerialize()
@@ -95,7 +107,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  mixed  The value set, or the default if the value was not previously set (or null).
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function def($key, $default = '')
 	{
@@ -112,7 +124,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  boolean
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function exists($path)
 	{
@@ -154,7 +166,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  mixed  Value of entry or null
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function get($path, $default = null)
 	{
@@ -196,13 +208,25 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	}
 
 	/**
+	 * Clear all data.
+	 *
+	 * @return  static
+	 */
+	public function clear()
+	{
+		$this->data = new \stdClass;
+
+		return $this;
+	}
+
+	/**
 	 * Load a associative array of values into the default namespace
 	 *
 	 * @param   array  $array  Associative array of value to load
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function loadArray($array)
 	{
@@ -218,7 +242,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function loadObject($object)
 	{
@@ -236,10 +260,17 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function loadFile($file, $format = 'JSON', $options = array())
 	{
+		if (strtolower($format) == 'php')
+		{
+			$data = include $file;
+
+			return $this->loadArray($data, $format, $options);
+		}
+
 		$data = file_get_contents($file);
 
 		return $this->loadString($data, $format, $options);
@@ -254,7 +285,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function loadString($data, $format = 'JSON', $options = array())
 	{
@@ -275,9 +306,9 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function merge(Registry $source, $recursive = false)
+	public function merge(Registry $source, $recursive = true)
 	{
 		$this->bindData($this->data, $source->toArray(), $recursive, false);
 
@@ -291,7 +322,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  boolean  True if the offset exists, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function offsetExists($offset)
 	{
@@ -305,7 +336,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  mixed  The array value if it exists, null otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function offsetGet($offset)
 	{
@@ -320,7 +351,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function offsetSet($offset, $value)
 	{
@@ -334,7 +365,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function offsetUnset($offset)
 	{
@@ -349,7 +380,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  mixed  The value of the that has been set.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function set($path, $value)
 	{
@@ -390,7 +421,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  array  An associative array holding the namespace data
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function toArray()
 	{
@@ -400,13 +431,15 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Transforms a namespace to an object
 	 *
+	 * @param   string  $class  The class of object.
+	 *
 	 * @return  object   An an object holding the namespace data
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public function toObject()
+	public function toObject($class = '\stdClass')
 	{
-		return $this->data;
+		return RegistryHelper::toObject($this->data, $class);
 	}
 
 	/**
@@ -417,7 +450,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  string   Namespace in string format
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function toString($format = 'JSON', $options = array())
 	{
@@ -437,7 +470,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	protected function getFormatClass($format)
 	{
 		// Return a namespace in a given format
-		$class = __NAMESPACE__ . '\\Format\\' . ucfirst($format) . 'Format';
+		$class = __NAMESPACE__ . '\\Format\\' . ucfirst(strtolower($format)) . 'Format';
 
 		if (!class_exists($class))
 		{
@@ -499,7 +532,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  array  Array representation of the input object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function asArray($data)
 	{
@@ -532,11 +565,11 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  string[] Dumped array.
 	 */
-	public function toOneDimension($separator = '.')
+	public function flatten($separator = '.')
 	{
 		$array = array();
 
-		$this->asOneDimension($separator, $this->data, $array);
+		$this->toFlatten($separator, $this->data, $array);
 
 		return $array;
 	}
@@ -551,7 +584,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  void
 	 */
-	protected function asOneDimension($separator = '.', $data = null, &$array = array(), $prefix = '')
+	protected function toFlatten($separator = '.', $data = null, &$array = array(), $prefix = '')
 	{
 		$data = (array) $data;
 
@@ -561,7 +594,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 
 			if (is_object($v) || is_array($v))
 			{
-				$this->asOneDimension($separator, $v, $array, $key);
+				$this->toFlatten($separator, $v, $array, $key);
 			}
 			else
 			{

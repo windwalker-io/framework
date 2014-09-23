@@ -18,7 +18,7 @@ use Windwalker\Cache\Storage\RuntimeStorage;
 /**
  * Class Cache
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class Cache implements CacheInterface
 {
@@ -28,10 +28,11 @@ class Cache implements CacheInterface
 	 * @var  CacheStorageInterface
 	 */
 	protected $storage = null;
+
 	/**
 	 * Property handler.
 	 *
-	 * @var  null
+	 * @var  DataHandlerInterface
 	 */
 	protected $handler = null;
 
@@ -146,6 +147,37 @@ class Cache implements CacheInterface
 		$this->storage->removeItems($keys);
 
 		return $this;
+	}
+
+	/**
+	 * call
+	 *
+	 * @param string   $key
+	 * @param callable $callable
+	 * @param array    $args
+	 *
+	 * @throws \InvalidArgumentException
+	 * @return  mixed
+	 */
+	public function call($key, $callable, $args = array())
+	{
+		$args = (array) $args;
+
+		if (!is_callable($callable))
+		{
+			throw new \InvalidArgumentException('Not a valid callable.');
+		}
+
+		if ($this->storage->exists($key))
+		{
+			return $this->get($key);
+		}
+
+		$value = call_user_func_array($callable, $args);
+
+		$this->set($key, $value);
+
+		return $value;
 	}
 
 	/**

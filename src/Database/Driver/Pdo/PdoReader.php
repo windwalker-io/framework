@@ -8,22 +8,22 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
-use Windwalker\Database\Command\DatabaseReader;
+use Windwalker\Database\Command\AbstractReader;
 use Windwalker\Query\Query;
 
 /**
  * Class PdoReader
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
-class PdoReader extends DatabaseReader
+class PdoReader extends AbstractReader
 {
 	/**
 	 * Method to fetch a row from the result set cursor as an array.
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function fetchArray()
 	{
@@ -35,7 +35,7 @@ class PdoReader extends DatabaseReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function fetchAssoc()
 	{
@@ -49,7 +49,7 @@ class PdoReader extends DatabaseReader
 	 *
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function fetchObject($class = '\\stdClass')
 	{
@@ -75,9 +75,9 @@ class PdoReader extends DatabaseReader
 	/**
 	 * fetchAll
 	 *
-	 * @param int  $type
-	 * @param null $args
-	 * @param null $ctorArgs
+	 * @param int   $type
+	 * @param array $args
+	 * @param array $ctorArgs
 	 *
 	 * @see http://php.net/manual/en/pdostatement.fetchall.php
 	 *
@@ -104,11 +104,24 @@ class PdoReader extends DatabaseReader
 	 *
 	 * @return  integer  The number of affected rows.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function countAffected()
 	{
 		return $this->db->getCursor()->rowCount();
+	}
+
+	/**
+	 * Method to get the auto-incremented value from the last INSERT statement.
+	 *
+	 * @return  string  The value of the auto-increment field from the last inserted row.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function insertId()
+	{
+		// Error suppress this to prevent PDO warning us that the driver doesn't support this operation.
+		return @$this->db->getConnection()->lastInsertId();
 	}
 }
 

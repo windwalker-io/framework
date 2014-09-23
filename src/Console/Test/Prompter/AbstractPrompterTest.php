@@ -14,7 +14,7 @@ use Windwalker\Console\Test\Mock\MockIO;
 /**
  * Class AbstractPrompterTest
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractPrompterTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,7 +45,7 @@ abstract class AbstractPrompterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function setUp()
 	{

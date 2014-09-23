@@ -30,7 +30,7 @@ class MockOutput extends CliOutput
 	 * @param   string   $text  The text to display.
 	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 *
 	 * @return $this
 	 */
@@ -47,7 +47,7 @@ class MockOutput extends CliOutput
 	 * @param   string   $text  The text to display.
 	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 *
 	 * @return $this
 	 */
@@ -63,7 +63,7 @@ class MockOutput extends CliOutput
 	 *
 	 * @return string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getOutput()
 	{
@@ -77,7 +77,7 @@ class MockOutput extends CliOutput
 	 *
 	 * @return $this
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function setOutput($output)
 	{

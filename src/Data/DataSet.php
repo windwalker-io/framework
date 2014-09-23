@@ -8,6 +8,11 @@
 
 namespace Windwalker\Data;
 
+if (!interface_exists('JsonSerializable'))
+{
+	include_once __DIR__ . '/Compat/JsonSerializable.php';
+}
+
 /**
  * The Data set to store multiple data.
  *

@@ -29,7 +29,20 @@ class Entity extends Data
 			$this->addFields($fields);
 		}
 
+		$this->prepare();
+
 		parent::__construct($data);
+
+	}
+
+	/**
+	 * Prepare your logic.
+	 *
+	 * @return  void
+	 */
+	protected function prepare()
+	{
+		// Override this method if you need.
 	}
 
 	/**

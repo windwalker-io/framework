@@ -18,7 +18,7 @@ use Windwalker\Console\Test\Stubs\FooCommand;
 /**
  * Class CommandTest
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class CommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +35,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 */
 	protected function setUp()
@@ -62,7 +62,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::execute
 	 */
@@ -76,7 +76,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getParent
 	 */
@@ -94,7 +94,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::setParent
 	 */
@@ -110,7 +110,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::addCommand
 	 */
@@ -160,7 +160,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getChild
 	 */
@@ -176,7 +176,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getChildren
 	 */
@@ -194,7 +194,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::addOption
 	 */
@@ -237,7 +237,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getOptions
 	 */
@@ -263,7 +263,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getArgument
 	 */
@@ -288,7 +288,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getAllOptions
 	 */
@@ -318,7 +318,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getDescription
 	 */
@@ -334,7 +334,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getName
 	 */
@@ -350,7 +350,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getHandler
 	 */
@@ -370,7 +370,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getHandler
 	 */
@@ -394,7 +394,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getOptionAlias
 	 */
@@ -411,7 +411,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::setOptionAlias
 	 */
@@ -428,7 +428,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getApplication
 	 */
@@ -444,7 +444,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getHelp
 	 */
@@ -460,7 +460,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::getUsage
 	 */
@@ -477,7 +477,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::renderAlternatives
 	 */
@@ -505,7 +505,7 @@ Did you mean one of these?
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::renderException
 	 */
@@ -522,7 +522,7 @@ Did you mean one of these?
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::out
 	 */
@@ -540,7 +540,7 @@ Did you mean one of these?
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @covers Windwalker\Console\Command\AbstractCommand::err
 	 */

@@ -8,56 +8,63 @@
 
 namespace Windwalker\Application;
 
-use Windwalker\Application\Response\ResponseInterface;
-use Windwalker\Application\Web\WebClientInterface;
+use Windwalker\Environment\Web\WebClient;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
-use Windwalker\Application\Response\Response;
-use Windwalker\Application\Web\WebClient;
+use Windwalker\Application\Web\Response;
+use Windwalker\Application\Web\WebEnvironment;
+use Windwalker\Application\Web\ResponseInterface;
 use Windwalker\Registry\Registry;
 
 /**
  * Class AbstractWebApplication
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractWebApplication extends AbstractApplication
 {
 	/**
 	 * The application client object.
 	 *
-	 * @var    Web\WebClient
-	 * @since  1.0
+	 * @var    WebEnvironment
+	 * @since  {DEPLOY_VERSION}
 	 */
-	public $client;
+	public $environment;
 
 	/**
 	 * The application response object.
 	 *
 	 * @var    object
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
-	protected $response;
+	public $response;
+
+	/**
+	 * Property uri.
+	 *
+	 * @var Uri
+	 */
+	protected $uri = null;
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param   Input                $input    An optional argument to provide dependency injection for the application's
-	 *                                         input object.  If the argument is a Input object that object will become
-	 *                                         the application's input object, otherwise a default input object is created.
-	 * @param   Registry             $config   An optional argument to provide dependency injection for the application's
-	 *                                         config object.  If the argument is a Registry object that object will become
-	 *                                         the application's config object, otherwise a default config object is created.
-	 * @param   WebClientInterface   $client   An optional argument to provide dependency injection for the application's
-	 *                                         client object.  If the argument is a Web\WebClient object that object will become
-	 *                                         the application's client object, otherwise a default client object is created.
-	 * @param   ResponseInterface    $response The response object.
+	 * @param   Input              $input        An optional argument to provide dependency injection for the application's
+	 *                                           input object.  If the argument is a Input object that object will become
+	 *                                           the application's input object, otherwise a default input object is created.
+	 * @param   Registry           $config       An optional argument to provide dependency injection for the application's
+	 *                                           config object.  If the argument is a Registry object that object will become
+	 *                                           the application's config object, otherwise a default config object is created.
+	 * @param   WebEnvironment     $environment  An optional argument to provide dependency injection for the application's
+	 *                                           client object.  If the argument is a Web\WebEnvironment object that object will become
+	 *                                           the application's client object, otherwise a default client object is created.
+	 * @param   ResponseInterface  $response     The response object.
 	 */
-	public function __construct(Input $input = null, Registry $config = null, WebClientInterface $client = null, ResponseInterface $response = null)
+	public function __construct(Input $input = null, Registry $config = null, WebEnvironment $environment = null, ResponseInterface $response = null)
 	{
-		$this->client   = $client   instanceof WebClientInterface ? $client   : new WebClient;
-		$this->response = $response instanceof ResponseInterface  ? $response : new Response;
+		$this->environment = $environment instanceof WebEnvironment    ? $environment : new WebEnvironment;
+		$this->response    = $response    instanceof ResponseInterface ? $response    : new Response;
 
 		// Call the constructor as late as possible (it runs `initialise`).
 		parent::__construct($input, $config);
@@ -75,7 +82,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function execute()
 	{
@@ -107,7 +114,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// If gzip compression is enabled in configuration and the server is compliant, compress the output.
 		if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler'))
 		{
-			$this->response->compress($this->client->getEncodings());
+			$this->response->compress($this->environment->client->getEncodings());
 		}
 
 		return $this->response->respond($returnBody);
@@ -135,7 +142,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function redirect($url, $moved = false)
 	{
@@ -185,7 +192,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		else
 		{
 			// We have to use a JavaScript redirect here because MSIE doesn't play nice with utf-8 URLs.
-			if (($this->client->getEngine() == Web\WebClient::TRIDENT) && !ApplicationHelper::isAscii($url))
+			if (($this->environment->client->getEngine() == WebClient::TRIDENT) && !ApplicationHelper::isAscii($url))
 			{
 				$html = '<html><head>';
 				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->response->getCharSet() . '" />';
@@ -218,25 +225,11 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setHeader($name, $value, $replace = false)
 	{
 		$this->response->setHeader($name, $value, $replace);
-
-		return $this;
-	}
-
-	/**
-	 * Send the response headers.
-	 *
-	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function sendHeaders()
-	{
-		$this->response->sendHeaders();
 
 		return $this;
 	}
@@ -248,7 +241,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setBody($content)
 	{
@@ -257,7 +250,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 		return $this;
 	}
 
-
 	/**
 	 * Return the body content
 	 *
@@ -265,7 +257,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  mixed  The response body either as an array or concatenated string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getBody($asArray = false)
 	{
@@ -304,7 +296,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function loadSystemUris($requestUri = null)
 	{
@@ -314,7 +306,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		}
 		else
 		{
-			$uri = $this->client->getSystemUri($requestUri);
+			$uri = $this->getSystemUri($requestUri);
 		}
 
 		$this->set('uri.request', $uri->getOriginal());
@@ -322,12 +314,13 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// Get the host and path from the URI.
 		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
 		$path = rtrim($uri->toString(array('path')), '/\\');
+		$script = trim($_SERVER['SCRIPT_NAME'], '/');
 
 		// Check if the path includes "index.php".
-		if (strpos($path, 'index.php') !== false)
+		if (strpos($path, $script) === 0)
 		{
 			// Remove the index.php portion of the path.
-			$path = substr_replace($path, '', strpos($path, 'index.php'), 9);
+			$path = substr_replace($path, '', strpos($path, $script), strlen($script));
 			$path = rtrim($path, '/\\');
 		}
 
@@ -337,7 +330,18 @@ abstract class AbstractWebApplication extends AbstractApplication
 		$this->set('uri.base.path', $path . '/');
 
 		// Set the extended (non-base) part of the request URI as the route.
-		$this->set('uri.route', substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full'))));
+		$route = substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full')));
+
+		// Only variables should be passed by reference so we use two lines.
+		$file = explode('/', $script);
+		$file = array_pop($file);
+
+		if (substr($route, 0, strlen($file)) == $file)
+		{
+			$route = trim(substr($route, strlen($file)), '/');
+		}
+
+		$this->set('uri.route', $route);
 
 		// Get an explicitly set media URI is present.
 		$mediaURI = trim($this->get('media_uri'));
@@ -365,5 +369,114 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$this->set('uri.media.path', $this->get('uri.base.path') . 'media/');
 		}
 	}
-}
 
+	/**
+	 * getSystemUri
+	 *
+	 * @param string $requestUri
+	 * @param bool   $refresh
+	 *
+	 * @return  Uri
+	 */
+	protected function getSystemUri($requestUri = null, $refresh = false)
+	{
+		if ($this->uri && !$refresh)
+		{
+			return $this->uri;
+		}
+
+		$requestUri = $requestUri ? : $this->detectRequestUri();
+
+		// Start with the requested URI.
+		$uri = new Uri($requestUri);
+
+		// If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
+		if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI']))
+		{
+			// We aren't expecting PATH_INFO within PHP_SELF so this should work.
+			$uri->setPath(rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+		}
+		else
+			// Pretty much everything else should be handled with SCRIPT_NAME.
+		{
+			$uri->setPath(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
+		}
+
+		// Clear the unused parts of the requested URI.
+		$uri->setQuery(null);
+		$uri->setFragment(null);
+
+		return $this->uri = $uri;
+	}
+
+	/**
+	 * Method to detect the requested URI from server environment variables.
+	 *
+	 * @return  string  The requested URI
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function detectRequestUri()
+	{
+		// First we need to detect the URI scheme.
+		if ($this->environment->client->isSSLConnection())
+		{
+			$scheme = 'https://';
+		}
+		else
+		{
+			$scheme = 'http://';
+		}
+
+		/*
+		 * There are some differences in the way that Apache and IIS populate server environment variables.  To
+		 * properly detect the requested URI we need to adjust our algorithm based on whether or not we are getting
+		 * information from Apache or IIS.
+		 */
+
+		// If PHP_SELF and REQUEST_URI are both populated then we will assume "Apache Mode".
+		if (!empty($_SERVER['PHP_SELF']) && !empty($_SERVER['REQUEST_URI']))
+		{
+			// The URI is built from the HTTP_HOST and REQUEST_URI environment variables in an Apache environment.
+			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		}
+		else
+			// If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
+		{
+			// IIS uses the SCRIPT_NAME variable instead of a REQUEST_URI variable... thanks, MS
+			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+
+			// If the QUERY_STRING variable exists append it to the URI string.
+			if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']))
+			{
+				$uri .= '?' . $_SERVER['QUERY_STRING'];
+			}
+		}
+
+		return trim($uri);
+	}
+
+	/**
+	 * Method to get property Environment
+	 *
+	 * @return  \Windwalker\Application\Web\WebEnvironment
+	 */
+	public function getEnvironment()
+	{
+		return $this->environment;
+	}
+
+	/**
+	 * Method to set property environment
+	 *
+	 * @param   \Windwalker\Application\Web\WebEnvironment $environment
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setEnvironment($environment)
+	{
+		$this->environment = $environment;
+
+		return $this;
+	}
+}

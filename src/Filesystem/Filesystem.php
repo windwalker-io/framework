@@ -8,23 +8,27 @@
 
 namespace Windwalker\Filesystem;
 
-use Joomla\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\Comparator\FileComparatorInterface;
 use Windwalker\Filesystem\Iterator\RecursiveDirectoryIterator;
+
+if (!class_exists('CallbackFilterIterator'))
+{
+	include_once __DIR__ . '/Iterator/CallbackFilterIterator.php';
+}
 
 /**
  * Class Filesystem
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
-class Filesystem
+abstract class Filesystem
 {
 	/**
 	 * copy
 	 *
 	 * @param string  $src
-	 * @param string $dest
-	 * @param bool   $force
+	 * @param string  $dest
+	 * @param bool    $force
 	 *
 	 * @return  bool
 	 */
@@ -46,8 +50,8 @@ class Filesystem
 	 * move
 	 *
 	 * @param string  $src
-	 * @param string $dest
-	 * @param bool   $force
+	 * @param string  $dest
+	 * @param bool    $force
 	 *
 	 * @return  bool
 	 */
@@ -91,11 +95,11 @@ class Filesystem
 	 *
 	 * @param   string  $path
 	 * @param   bool    $recursive
-	 * @param   integer $options
+	 * @param   bool    $toArray
 	 *
 	 * @return  \CallbackFilterIterator
 	 */
-	public static function files($path, $recursive = false, $options = null)
+	public static function files($path, $recursive = false, $toArray = false)
 	{
 		/**
 		 * Files callback
@@ -111,7 +115,7 @@ class Filesystem
 			return $current->isFile();
 		};
 
-		return static::findByCallback($path, $callback, $recursive, $options);
+		return static::findByCallback($path, $callback, $recursive, $toArray);
 	}
 
 	/**
@@ -119,11 +123,11 @@ class Filesystem
 	 *
 	 * @param   string  $path
 	 * @param   bool    $recursive
-	 * @param   integer $options
+	 * @param   boolean $toArray
 	 *
 	 * @return  \CallbackFilterIterator
 	 */
-	public static function folders($path, $recursive = false, $options = null)
+	public static function folders($path, $recursive = false, $toArray = false)
 	{
 		/**
 		 * Files callback
@@ -154,7 +158,7 @@ class Filesystem
 			}
 		};
 
-		return static::findByCallback($path, $callback, $recursive, $options);
+		return static::findByCallback($path, $callback, $recursive, $toArray);
 	}
 
 	/**
@@ -162,11 +166,11 @@ class Filesystem
 	 *
 	 * @param   string  $path
 	 * @param   bool    $recursive
-	 * @param   integer $options
+	 * @param   boolean $toArray
 	 *
 	 * @return  \CallbackFilterIterator
 	 */
-	public static function items($path, $recursive = false, $options = null)
+	public static function items($path, $recursive = false, $toArray = false)
 	{
 		/**
 		 * Files callback
@@ -197,13 +201,13 @@ class Filesystem
 			}
 		};
 
-		return static::findByCallback($path, $callback, $recursive, $options);
+		return static::findByCallback($path, $callback, $recursive, $toArray);
 	}
 
 	/**
 	 * Find one file and return.
 	 *
-	 * @param  mixed   $condition     Finding condition, that can be a string, a regex or a callback function.
+	 * @param  mixed    $condition    Finding condition, that can be a string, a regex or a callback function.
 	 *                                Callback example:
 	 *                                <code>
 	 *                                function($current, $key, $iterator)
@@ -211,15 +215,16 @@ class Filesystem
 	 *                                return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
 	 *                                }
 	 *                                </code>
-	 * @param  boolean $recursive     True to resursive.
+	 * @param  boolean  $recursive    True to resursive.
+	 * @param  boolean  $toArray      True to convert iterator to array.
 	 *
 	 * @return  \SplFileInfo  Finded file info object.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
-	public static function findOne($condition, $recursive = false)
+	public static function findOne($condition, $recursive = false, $toArray = false)
 	{
-		$iterator = new \LimitIterator(static::find($condition, $recursive), 0, 1);
+		$iterator = new \LimitIterator(static::find($condition, $recursive, $toArray), 0, 1);
 
 		$iterator->rewind();
 
@@ -229,22 +234,23 @@ class Filesystem
 	/**
 	 * Find all files which matches condition.
 	 *
-	 * @param  string  $path          The directory path.
-	 * @param  mixed   $condition     Finding condition, that can be a string, a regex or a callback function.
-	 *                                Callback example:
-	 *                                <code>
-	 *                                function($current, $key, $iterator)
-	 *                                {
-	 *                                return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
-	 *                                }
-	 *                                </code>
-	 * @param  boolean $recursive     True to resursive.
+	 * @param  string   $path       The directory path.
+	 * @param  mixed    $condition  Finding condition, that can be a string, a regex or a callback function.
+	 *                              Callback example:
+	 *                              <code>
+	 *                              function($current, $key, $iterator)
+	 *                              {
+	 *                              return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
+	 *                              }
+	 *                              </code>
+	 * @param  boolean  $recursive  True to resursive.
+	 * @param  boolean  $toArray    True to convert iterator to array.
 	 *
-	 * @return  \CallbackFilterIterator  Finded files or paths iterator.
+	 * @return  \CallbackFilterIterator  Found files or paths iterator.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
-	public static function find($path, $condition, $recursive = false)
+	public static function find($path, $condition, $recursive = false, $toArray = false)
 	{
 		// If conditions is string or array, we make it to regex.
 		if (!($condition instanceof \Closure) && !($condition instanceof FileComparatorInterface))
@@ -258,23 +264,39 @@ class Filesystem
 				$condition = '/' . (string) $condition . '/';
 			}
 
-			// Create callback
+			/**
+			 * Files callback
+			 *
+			 * @param \SplFileInfo                $current  Current item's value
+			 * @param string                      $key      Current item's key
+			 * @param \RecursiveDirectoryIterator $iterator Iterator being filtered
+			 *
+			 * @return boolean   TRUE to accept the current item, FALSE otherwise
+			 */
 			$condition = function ($current, $key, $iterator) use ($condition)
 			{
 				return @preg_match($condition, $iterator->getFilename()) && !$iterator->isDot();
-			}; // end callback
+			};
 		}
-		// If condition is campare object, wrap it with callback.
+		// If condition is compare object, wrap it with callback.
 		elseif ($condition instanceof FileComparatorInterface)
 		{
-			// Create callback
+			/**
+			 * Files callback
+			 *
+			 * @param \SplFileInfo                $current  Current item's value
+			 * @param string                      $key      Current item's key
+			 * @param \RecursiveDirectoryIterator $iterator Iterator being filtered
+			 *
+			 * @return boolean   TRUE to accept the current item, FALSE otherwise
+			 */
 			$condition = function ($current, $key, $iterator) use ($condition)
 			{
 				return $condition->compare($current, $key, $iterator);
-			}; // end callback
+			};
 		}
 
-		return static::findByCallback($path, $condition, $recursive);
+		return static::findByCallback($path, $condition, $recursive, $toArray);
 	}
 
 	/**
@@ -284,15 +306,23 @@ class Filesystem
 	 *
 	 * @param  string   $path      The directory path.
 	 * @param  \Closure $callback  A callback function to filter file.
-	 * @param  boolean  $recursive True to resursive.
+	 * @param  boolean  $recursive True to recursive.
+	 * @param  boolean  $toArray   True to convert iterator to array.
 	 *
 	 * @return  \CallbackFilterIterator  Filtered file or path iteator.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
-	public static function findByCallback($path, \Closure $callback, $recursive = false)
+	public static function findByCallback($path, \Closure $callback, $recursive = false, $toArray = false)
 	{
-		return new \CallbackFilterIterator(static::createIterator($path, $recursive), $callback);
+		$itarator = new \CallbackFilterIterator(static::createIterator($path, $recursive), $callback);
+
+		if ($toArray)
+		{
+			return static::iteratorToArray($itarator);
+		}
+
+		return $itarator;
 	}
 
 	/**
@@ -329,6 +359,25 @@ class Filesystem
 
 		// If rescurive set to true, use RecursiveIteratorIterator
 		return $recursive ? new \RecursiveIteratorIterator($iterator) : $iterator;
+	}
+
+	/**
+	 * iteratorToArray
+	 *
+	 * @param \Traversable $iterator
+	 *
+	 * @return  array
+	 */
+	public static function iteratorToArray(\Traversable $iterator)
+	{
+		$array = array();
+
+		foreach ($iterator as $key => $file)
+		{
+			$array[] = (string) $file;
+		}
+
+		return $array;
 	}
 }
 

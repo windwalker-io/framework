@@ -3,16 +3,19 @@
 	"type": "windwalker-package",
 	"description": "Windwalker DataMapper package",
 	"keywords": ["windwalker", "framework", "datamapper"],
-	"homepage": "https://github.com/windwalker-framework/datamapper",
+	"homepage": "https://github.com/ventoviro/windwalker-datamapper",
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
-		"windwalker/data": "1.*"
+		"windwalker/data": "dev-master",
+		"windwalker/database": "dev-master"
 	},
 	"require-dev": {
-		"joomla/test": "~1.0",
-		"joomla/utilities": "~1.0",
-		"windwalker/database" : "1.*"
+		"windwalker/test": "dev-master",
+		"windwalker/compare" : "dev-master"
+	},
+	"suggest": {
+		"windwalker/compare": "Install 2.* if you want to use Compare object."
 	},
 	"minimum-stability" : "dev",
 	"autoload": {

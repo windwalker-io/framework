@@ -6,21 +6,21 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Database;
+namespace Windwalker\Database\Iterator;
 
-use Windwalker\Database\Command\DatabaseReader;
+use Windwalker\Database\Command\AbstractReader;
 
 /**
  * Class DataIterator
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class DataIterator implements \Countable, \Iterator
 {
 	/**
 	 * Property reader.
 	 *
-	 * @var  DatabaseReader
+	 * @var  AbstractReader
 	 */
 	protected $reader = null;
 
@@ -29,7 +29,7 @@ class DataIterator implements \Countable, \Iterator
 	 *
 	 * @var  int
 	 */
-	protected $key = 0;
+	protected $key = -1;
 
 	/**
 	 * Property current.
@@ -37,6 +37,7 @@ class DataIterator implements \Countable, \Iterator
 	 * @var object
 	 */
 	protected $current;
+
 	/**
 	 * Property class.
 	 *
@@ -47,10 +48,10 @@ class DataIterator implements \Countable, \Iterator
 	/**
 	 * Constructor.
 	 *
-	 * @param DatabaseReader $reader
+	 * @param AbstractReader $reader
 	 * @param string         $class
 	 */
-	public function __construct(DatabaseReader $reader, $class = '\\stdClass')
+	public function __construct(AbstractReader $reader, $class = '\\stdClass')
 	{
 		$this->reader = $reader;
 		$this->class = $class;
@@ -61,7 +62,7 @@ class DataIterator implements \Countable, \Iterator
 	/**
 	 * Database iterator destructor.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __destruct()
 	{

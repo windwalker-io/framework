@@ -17,14 +17,16 @@ use Psr\Log\LoggerAwareInterface;
  *
  * @see    http://www.php.net/manual/en/book.pcntl.php
  * @see    http://php.net/manual/en/features.commandline.php
- * @since  1.0
+ *
+ * @note   This is a class forked from Joomla Framework: https://github.com/joomla-framework/application/blob/master/src/AbstractDaemonApplication.php
+ * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractDaemonApplication extends AbstractCliApplication implements LoggerAwareInterface
 {
 	/**
 	 * @var    array  The available POSIX signals to be caught by default.
 	 * @see    http://php.net/manual/pcntl.constants.php
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected static $signals = array(
 		'SIGHUP',
@@ -74,25 +76,25 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
 	/**
 	 * @var    boolean  True if the daemon is in the process of exiting.
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $exiting = false;
 
 	/**
 	 * @var    integer  The parent process id.
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $parentId = 0;
 
 	/**
 	 * @var    integer  The process id of the daemon.
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $processId = 0;
 
 	/**
 	 * @var    boolean  True if the daemon is currently running.
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $running = false;
 
@@ -150,7 +152,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @see     pcntl_signal()
 	 * @throws  \RuntimeException
 	 */
@@ -226,7 +228,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  boolean  True if daemon is active.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function isActive()
 	{
@@ -272,7 +274,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  AbstractDaemonApplication  Instance of $this to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function loadConfiguration($data)
 	{
@@ -367,7 +369,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function execute()
 	{
@@ -413,7 +415,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 * @return  void
 	 *
 	 * @codeCoverageIgnore
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function restart()
 	{
@@ -428,7 +430,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 * @return  void
 	 *
 	 * @codeCoverageIgnore
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function stop()
 	{
@@ -442,7 +444,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  boolean  True if identity successfully changed
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @see     posix_setuid()
 	 */
 	protected function changeIdentity()
@@ -506,7 +508,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  boolean
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	protected function daemonize()
@@ -604,7 +606,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	protected function detach()
@@ -639,7 +641,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  integer  The child process id to the parent process, zero to the child process.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	protected function fork()
@@ -677,7 +679,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 * @return  void
 	 *
 	 * @codeCoverageIgnore
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function gc()
 	{
@@ -695,7 +697,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  boolean
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @see     pcntl_signal()
 	 */
 	protected function setupSignalHandlers()
@@ -734,7 +736,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function shutdown($restart = false)
 	{
@@ -788,7 +790,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  boolean
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function writeProcessIdFile()
 	{
@@ -844,7 +846,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function postFork()
 	{
@@ -860,7 +862,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @codeCoverageIgnore
 	 * @see     pcntl_wexitstatus()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function pcntlChildExitStatus($status)
 	{
@@ -877,7 +879,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @codeCoverageIgnore
 	 * @see     pcntl_fork()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function pcntlFork()
 	{
@@ -897,7 +899,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @codeCoverageIgnore
 	 * @see     pcntl_signal()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function pcntlSignal($signal , $handler, $restart = true)
 	{
@@ -916,7 +918,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @codeCoverageIgnore
 	 * @see     pcntl_wait()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function pcntlWait(&$status, $options = 0)
 	{

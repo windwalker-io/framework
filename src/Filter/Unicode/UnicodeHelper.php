@@ -11,7 +11,7 @@ namespace Windwalker\Filter\Unicode;
 /**
  * Class UnicodeHelper
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class UnicodeHelper
 {
@@ -348,6 +348,7 @@ abstract class UnicodeHelper
 		}
 
 		$cnt = count($uni);
+
 		for ($i = 0; $i < $cnt; $i++)
 		{
 			if (isset($UTF8_UPPER_TO_LOWER[$uni[$i]]))
@@ -487,7 +488,7 @@ abstract class UnicodeHelper
 					$out[]  = $in;
 					$mBytes = 1;
 				}
-				else if (0xC0 == (0xE0 & ($in)))
+				elseif (0xC0 == (0xE0 & ($in)))
 				{
 					// First octet of 2 octet sequence
 					$mUcs4  = ($in);
@@ -495,7 +496,7 @@ abstract class UnicodeHelper
 					$mState = 1;
 					$mBytes = 2;
 				}
-				else if (0xE0 == (0xF0 & ($in)))
+				elseif (0xE0 == (0xF0 & ($in)))
 				{
 					// First octet of 3 octet sequence
 					$mUcs4  = ($in);
@@ -503,7 +504,7 @@ abstract class UnicodeHelper
 					$mState = 2;
 					$mBytes = 3;
 				}
-				else if (0xF0 == (0xF8 & ($in)))
+				elseif (0xF0 == (0xF8 & ($in)))
 				{
 					// First octet of 4 octet sequence
 					$mUcs4  = ($in);
@@ -511,7 +512,7 @@ abstract class UnicodeHelper
 					$mState = 3;
 					$mBytes = 4;
 				}
-				else if (0xF8 == (0xFC & ($in)))
+				elseif (0xF8 == (0xFC & ($in)))
 				{
 					/* First octet of 5 octet sequence.
 					*
@@ -526,7 +527,7 @@ abstract class UnicodeHelper
 					$mState = 4;
 					$mBytes = 5;
 				}
-				else if (0xFC == (0xFE & ($in)))
+				elseif (0xFC == (0xFE & ($in)))
 				{
 					// First octet of 6 octet sequence, see comments for 5 octet sequence.
 					$mUcs4  = ($in);

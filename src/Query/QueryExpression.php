@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * Class QueryExpression
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class QueryExpression
 {
@@ -86,7 +86,7 @@ class QueryExpression
 	 *
 	 * @return  string  The concatenated values.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function concatenate($values, $separator = null)
 	{
@@ -105,7 +105,7 @@ class QueryExpression
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function current_timestamp()
 	{
@@ -122,7 +122,7 @@ class QueryExpression
 	 *
 	 * @return  string  Returns string to extract year from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function year($date)
 	{
@@ -139,7 +139,7 @@ class QueryExpression
 	 *
 	 * @return  string  Returns string to extract month from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function month($date)
 	{
@@ -156,7 +156,7 @@ class QueryExpression
 	 *
 	 * @return  string  Returns string to extract day from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function day($date)
 	{
@@ -173,7 +173,7 @@ class QueryExpression
 	 *
 	 * @return  string  Returns string to extract hour from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hour($date)
 	{
@@ -190,7 +190,7 @@ class QueryExpression
 	 *
 	 * @return  string  Returns string to extract minute from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function minute($date)
 	{
@@ -207,7 +207,7 @@ class QueryExpression
 	 *
 	 * @return  string  Returns string to extract second from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function second($date)
 	{
@@ -226,7 +226,7 @@ class QueryExpression
 	 *
 	 * @return  integer
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function length($value)
 	{
@@ -244,7 +244,7 @@ class QueryExpression
 	 *
 	 * @return  string  The required char length call.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function char_length($field, $operator = null, $condition = null)
 	{
@@ -260,7 +260,7 @@ class QueryExpression
 	 *
 	 * @return  string  Returns the cast value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function cast_as_char($value)
 	{

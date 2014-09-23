@@ -25,7 +25,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array The converted array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function toInteger($array, $default = null)
 	{
@@ -60,7 +60,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  object   The object mapped from the given array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function toObject(array $array, $class = 'stdClass')
 	{
@@ -91,7 +91,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  string   The string mapped from the given array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function toString(array $array, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false)
 	{
@@ -127,7 +127,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array    The array mapped from the given object
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function fromObject($p_obj, $recurse = true, $regex = null)
 	{
@@ -150,7 +150,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  The array mapped from the given object
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	private static function arrayFromObject($item, $recurse, $regex)
 	{
@@ -198,7 +198,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  Column of values from the source array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function getColumn(array $array, $index)
 	{
@@ -229,7 +229,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  mixed  The value from the source array
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function getValue(array $array, $name, $default = null, $type = '')
 	{
@@ -317,7 +317,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  The inverted array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function invert(array $array)
 	{
@@ -350,7 +350,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  boolean  True if the array is an associative array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function isAssociative($array)
 	{
@@ -376,7 +376,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  An array of arrays pivoted either on the value of the keys, or an individual key of an object or array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function pivot(array $source, $key = null)
 	{
@@ -454,7 +454,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array  The sorted array of objects
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function sortObjects(array $a, $k, $direction = 1, $caseSensitive = true, $locale = false)
 	{
@@ -530,7 +530,7 @@ abstract class ArrayHelper
 	 * @return  array
 	 *
 	 * @see     http://php.net/manual/en/function.array-unique.php
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function arrayUnique(array $array)
 	{
@@ -551,7 +551,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  mixed    Returns the matching array $key if found, otherwise false.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function arraySearch($needle, array $haystack, $caseSensitive = true)
 	{
@@ -578,6 +578,8 @@ abstract class ArrayHelper
 	 * @param string $separator Separator of paths.
 	 *
 	 * @return  mixed Found value, null if not exists.
+	 *
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function getByPath($data, $paths, $separator = '.')
 	{
@@ -628,11 +630,13 @@ abstract class ArrayHelper
 	 * Parameters are passed by reference, though only for performance reasons. They're not
 	 * altered by this function.
 	 *
-	 * @param  array    &$array1   Array to be merge.
-	 * @param  array    &$array2   Array to be merge.
-	 * @param  boolean  $recursive Recursive merge, default is true.
+	 * @param   array    &$array1   Array to be merge.
+	 * @param   array    &$array2   Array to be merge.
+	 * @param   boolean  $recursive Recursive merge, default is true.
 	 *
-	 * @return array Merged array.
+	 * @return  array Merged array.
+	 *
+	 * @since   {DEPLOY_VERSION}
 	 *
 	 * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
 	 * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
@@ -655,5 +659,185 @@ abstract class ArrayHelper
 
 		return $merged;
 	}
-}
 
+	/**
+	 * setByPath
+	 *
+	 * @param mixed  &$data
+	 * @param string $paths
+	 * @param mixed  $value
+	 * @param string $separator
+	 * @param string $type
+	 *
+	 * @return  boolean
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public static function setByPath(&$data, $paths, $value, $separator = '.', $type = 'array')
+	{
+		if (empty($paths))
+		{
+			return false;
+		}
+
+		$args = is_array($paths) ? $paths : explode($separator, $paths);
+
+		/**
+		 * A closure as inner function to create data store.
+		 *
+		 * @param $type
+		 *
+		 * @return  array
+		 *
+		 * @throws \InvalidArgumentException
+		 */
+		$createStore = function($type)
+		{
+			if (strtolower($type) == 'array')
+			{
+				return array();
+			}
+
+			if (class_exists($type))
+			{
+				return new $type;
+			}
+
+			throw new \InvalidArgumentException(sprintf('Type %s not supported of class not exiists', $type));
+		};
+
+		$dataTmp = $data;
+
+		foreach ($args as $arg)
+		{
+			if (is_object($dataTmp))
+			{
+				if (empty($dataTmp->$arg))
+				{
+					$dataTmp->$arg = $createStore($type);
+				}
+
+				$dataTmp = &$dataTmp->$arg;
+			}
+			elseif (is_array($dataTmp))
+			{
+				if (empty($dataTmp[$arg]))
+				{
+					$dataTmp[$arg] = $createStore($type);
+				}
+
+				$dataTmp = &$dataTmp[$arg];
+			}
+			else
+			{
+				$dataTmp = &$createStore($type);
+			}
+		}
+
+		$dataTmp = $value;
+
+		return true;
+	}
+
+	/**
+	 * Recursive dump variables and limit by level.
+	 *
+	 * @param   mixed  $data   The variable you want to dump.
+	 * @param   int    $level  The level number to limit recursive loop.
+	 *
+	 * @return  string  Dumped data.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public static function dump($data, $level = 5)
+	{
+		static $innerLevel = 1;
+
+		static $tabLevel = 1;
+
+		$self = __FUNCTION__;
+
+		$type       = gettype($data);
+		$tabs       = str_repeat('    ', $tabLevel);
+		$quoteTabes = str_repeat('    ', $tabLevel - 1);
+		$output     = '';
+		$elements   = array();
+
+		$recursiveType = array('object', 'array');
+
+		// Recursive
+		if (in_array($type, $recursiveType))
+		{
+			// If type is object, try to get properties by Reflection.
+			if ($type == 'object')
+			{
+				$output     = get_class($data) . ' ' . ucfirst($type);
+				$ref        = new \ReflectionObject($data);
+				$properties = $ref->getProperties();
+
+				foreach ($properties as $property)
+				{
+					$property->setAccessible(true);
+
+					$pType = $property->getName();
+
+					if ($property->isProtected())
+					{
+						$pType .= ":protected";
+					}
+					elseif ($property->isPrivate())
+					{
+						$pType .= ":" . $property->class . ":private";
+					}
+
+					if ($property->isStatic())
+					{
+						$pType .= ":static";
+					}
+
+					$elements[$pType] = $property->getValue($data);
+				}
+			}
+			// If type is array, just retun it's value.
+			elseif ($type == 'array')
+			{
+				$output   = ucfirst($type);
+				$elements = $data;
+			}
+
+			// Start dumping data
+			if ($level == 0 || $innerLevel < $level)
+			{
+				// Start recursive print
+				$output .= "\n{$quoteTabes}(";
+
+				foreach ($elements as $key => $element)
+				{
+					$output .= "\n{$tabs}[{$key}] => ";
+
+					// Increment level
+					$tabLevel = $tabLevel + 2;
+					$innerLevel++;
+
+					$output  .= in_array(gettype($element), $recursiveType) ? static::$self($element, $level) : $element;
+
+					// Decrement level
+					$tabLevel = $tabLevel - 2;
+					$innerLevel--;
+				}
+
+				$output .= "\n{$quoteTabes})\n";
+			}
+			else
+			{
+				$output .= "\n{$quoteTabes}*MAX LEVEL*\n";
+			}
+		}
+		else
+		{
+			$output = $data;
+		}
+
+		return $output;
+	}
+}

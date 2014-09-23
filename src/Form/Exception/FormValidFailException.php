@@ -12,6 +12,8 @@ namespace Windwalker\Form\Exception;
  * The FormValidFailException class.
  * 
  * @since  {DEPLOY_VERSION}
+ *
+ * @deprecated  Do not use exception to handle validate fail anymore.
  */
 class FormValidFailException extends ValidateFailException
 {
@@ -29,6 +31,8 @@ class FormValidFailException extends ValidateFailException
 	 * @param string                        $message
 	 * @param int                           $code
 	 * @param \Exception                    $previous
+	 *
+	 * @deprecated  Do not use exception to handle validate fail anymore.
 	 */
 	public function __construct($fields, $message = "", $code = 0, \Exception $previous = null)
 	{

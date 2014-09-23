@@ -20,7 +20,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @var  int
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $attempt = 3;
 
@@ -29,7 +29,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @var  boolean
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $failToClose = false;
 
@@ -38,7 +38,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $noValidMessage = '  No value?';
 
@@ -47,7 +47,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $closeMessage = '  Please enter something.';
 
@@ -56,7 +56,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @return  callable  The validate callback.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getHandler()
 	{

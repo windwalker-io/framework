@@ -14,7 +14,7 @@ use Windwalker\Console\IO\IOInterface;
 /**
  * The cli option class.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class Option
 {
@@ -27,7 +27,7 @@ class Option
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $name;
 
@@ -36,7 +36,7 @@ class Option
 	 *
 	 * @var  array
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $alias = array();
 
@@ -45,7 +45,7 @@ class Option
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $description;
 
@@ -54,7 +54,7 @@ class Option
 	 *
 	 * @var  boolean
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $global;
 
@@ -63,7 +63,7 @@ class Option
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $default;
 
@@ -72,7 +72,7 @@ class Option
 	 *
 	 * @var IOInterface
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $io;
 
@@ -81,7 +81,7 @@ class Option
 	 *
 	 * @var string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $value;
 
@@ -94,7 +94,7 @@ class Option
 	 * @param   string   $description  The option description.
 	 * @param   boolean  $global       True is a global option.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($alias, $default = null, $description = null, $global = false)
 	{
@@ -119,7 +119,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setAlias($alias)
 	{
@@ -133,7 +133,7 @@ class Option
 	 *
 	 * @return array  The option alias.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getAlias()
 	{
@@ -147,7 +147,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setDefault($default)
 	{
@@ -161,7 +161,7 @@ class Option
 	 *
 	 * @return string  The default value.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getDefault()
 	{
@@ -175,7 +175,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setDescription($description)
 	{
@@ -189,7 +189,7 @@ class Option
 	 *
 	 * @return  string  The description.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getDescription()
 	{
@@ -203,7 +203,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setName($name)
 	{
@@ -217,7 +217,7 @@ class Option
 	 *
 	 * @return  string  Name of this option.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getName()
 	{
@@ -229,7 +229,7 @@ class Option
 	 *
 	 * @return  IOInterface  The Cli IO object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getIO()
 	{
@@ -248,7 +248,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setIO(IOInterface $io)
 	{
@@ -262,7 +262,7 @@ class Option
 	 *
 	 * @return  mixed  The value of this option.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getValue()
 	{
@@ -291,7 +291,7 @@ class Option
 	 *
 	 * @return  bool  True is a global option.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function isGlobal()
 	{
@@ -305,7 +305,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setGlobal($global)
 	{

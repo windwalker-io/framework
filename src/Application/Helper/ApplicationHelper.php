@@ -11,7 +11,7 @@ namespace Windwalker\Application\Helper;
 /**
  * Class ApplicationHelper
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class ApplicationHelper
 {

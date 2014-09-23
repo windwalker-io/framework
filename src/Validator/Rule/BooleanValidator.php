@@ -19,7 +19,7 @@ class BooleanValidator extends RegexValidator
 	 * The regular expression to use in testing  value.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $regex = '^(?:[01]|true|false)$';
 
@@ -27,7 +27,24 @@ class BooleanValidator extends RegexValidator
 	 * The regular expression modifiers to use when testing value.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $modifiers = 'i';
+
+	/**
+	 * Test value and return boolean
+	 *
+	 * @param mixed $value
+	 *
+	 * @return  boolean
+	 */
+	protected function test($value)
+	{
+		if (is_bool($value))
+		{
+			return true;
+		}
+
+		return parent::test($value);
+	}
 }

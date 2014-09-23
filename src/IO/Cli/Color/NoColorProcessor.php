@@ -19,7 +19,7 @@ class NoColorProcessor extends ColorProcessor
 	 * Flag to remove color codes from the output
 	 *
 	 * @var    boolean
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $noColors = true;
 }

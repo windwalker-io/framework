@@ -64,6 +64,7 @@ abstract class DatabaseAdapter
 	 * Do find action.
 	 *
 	 * @param string  $table      The table name.
+	 * @param string  $select     The select fields, default is '*'.
 	 * @param array   $conditions Where conditions, you can use array or Compare object.
 	 * @param array   $orders     Order sort, can ba string, array or object.
 	 * @param integer $start      Limit start number.
@@ -71,7 +72,7 @@ abstract class DatabaseAdapter
 	 *
 	 * @return  mixed Found rows data set.
 	 */
-	abstract public function find($table, array $conditions = array(), array $orders = array(), $start = 0, $limit = null);
+	abstract public function find($table, $select = '*', array $conditions = array(), array $orders = array(), $start = 0, $limit = null);
 
 	/**
 	 * Do create action.
@@ -156,4 +157,3 @@ abstract class DatabaseAdapter
 	 */
 	abstract public function transactionRollback($asSavePoint = false);
 }
-

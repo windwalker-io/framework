@@ -14,7 +14,7 @@ use Windwalker\Console\Option\OptionSet;
 /**
  * Class OptionSet Test
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class OptionSetTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +23,7 @@ class OptionSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @var Option
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $instance;
 
@@ -32,7 +32,7 @@ class OptionSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @var array
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $options = array();
 
@@ -42,7 +42,7 @@ class OptionSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function setUp()
 	{
@@ -58,7 +58,7 @@ class OptionSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testOffsetGet()
 	{
@@ -70,7 +70,7 @@ class OptionSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testOffsetGetByAlias()
 	{
@@ -84,7 +84,7 @@ class OptionSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testOffsetSet()
 	{
@@ -98,7 +98,7 @@ class OptionSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testOffsetUnset()
 	{
@@ -118,7 +118,7 @@ class OptionSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testOffsetExists()
 	{

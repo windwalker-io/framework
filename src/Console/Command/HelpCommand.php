@@ -17,7 +17,7 @@ use Windwalker\Console\Exception\CommandNotFoundException;
 /**
  * Command to list all arguments.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class HelpCommand extends Command
 {
@@ -26,7 +26,7 @@ class HelpCommand extends Command
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $name = 'help';
 
@@ -35,7 +35,7 @@ class HelpCommand extends Command
 	 *
 	 * @var  DescriptorHelperInterface
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $descriptor;
 
@@ -44,7 +44,7 @@ class HelpCommand extends Command
 	 *
 	 * @var  Command
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $describedCommand;
 
@@ -53,7 +53,7 @@ class HelpCommand extends Command
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function configure()
 	{
@@ -65,7 +65,7 @@ class HelpCommand extends Command
 	 *
 	 * @return int The exit code.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function doExecute()
 	{
@@ -95,7 +95,7 @@ class HelpCommand extends Command
 	 *
 	 * @return  AbstractCommand|null
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 *
 	 * @throws  CommandNotFoundException
 	 */
@@ -124,7 +124,7 @@ class HelpCommand extends Command
 	 *
 	 * @return DescriptorHelperInterface|TextDescriptorHelper
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function getDescriptor()
 	{
@@ -146,7 +146,7 @@ class HelpCommand extends Command
 	 *
 	 * @return  $this
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setDescriptor(DescriptorHelperInterface $descriptor)
 	{

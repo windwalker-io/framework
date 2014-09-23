@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * Class QueryBuilder
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 interface QueryBuilderInterface
 {
@@ -103,11 +103,12 @@ interface QueryBuilderInterface
 	/**
 	 * dropColumn
 	 *
+	 * @param string $table
 	 * @param string $column
 	 *
 	 * @return  string
 	 */
-	public static function dropColumn($column);
+	public static function dropColumn($table, $column);
 
 	/**
 	 * addIndex

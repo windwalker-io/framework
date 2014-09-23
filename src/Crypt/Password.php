@@ -145,4 +145,3 @@ class Password
 		return $this;
 	}
 }
- 

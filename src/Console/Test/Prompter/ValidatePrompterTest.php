@@ -13,7 +13,7 @@ use Windwalker\Console\Prompter\ValidatePrompter;
 /**
  * Class ValidatePrompterTest
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class ValidatePrompterTest extends AbstractPrompterTest
 {
@@ -23,7 +23,7 @@ class ValidatePrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function setUp()
 	{
@@ -37,7 +37,7 @@ class ValidatePrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testAsk()
 	{

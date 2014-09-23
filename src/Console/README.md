@@ -1,6 +1,6 @@
-# The Console Package
+# The Windwalker Console Package
 
-The Joomla Console package provide an elegant and nested command structure for your cli application.
+The Windwalker Console package provide an elegant and nested command structure for your cli application.
 
 ## The Command Calling Flow
 
@@ -40,7 +40,7 @@ return exitCode
 
 ## Initialising Console
 
-Console is extends from [AbstractCliApplication](https://github.com/joomla/joomla-framework/tree/staging/src/Joomla/Application#command-line-applications), help us create a command line application.
+Console is extends from [AbstractCliApplication](https://github.com/ventoviro/windwalker/tree/staging/src/Application#command-line-applications), help us create a command line application.
 
 An example console application skeleton in `cli/console.php` file:
 
@@ -72,7 +72,7 @@ $ php cli/app.php
 By default, the output is:
 
 ``` bash
-Joomla! Console - version: 1.0
+windwalker! Console - version: 1.0
 ------------------------------------------------------------
 
 [console.php Help]
@@ -103,7 +103,7 @@ Available commands:
   help    List all arguments and show usage & manual.
 
 
-Welcome to Joomla! Console.
+Welcome to windwalker! Console.
 ```
 
 ### Set Executing Code for RootCommand
@@ -525,13 +525,13 @@ We can using `Command` without `Console` or `CliApplicaion`, please see [Command
 
 ## Installation via Composer
 
-Add `"joomla/application": "dev-master"` to the require block in your composer.json,
+Add `"windwalker/application": "dev-master"` to the require block in your composer.json,
 make sure you have `"minimum-stability": "dev"` and then run composer install.
 
 ``` json
 {
     "require": {
-        "asika/joomla-console": "dev-master"
+        "asika/windwalker-console": "dev-master"
     },
     "minimum-stability": "dev"
 }
@@ -541,5 +541,5 @@ Alternatively, you can simply run the following from the command line:
 
 ```
 composer init --stability="dev"
-composer require asika/joomla-console "dev-master"
+composer require asika/windwalker-console "dev-master"
 ```

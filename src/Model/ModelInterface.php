@@ -31,4 +31,3 @@ interface ModelInterface
 	 */
 	public function setState(Registry $state);
 }
-

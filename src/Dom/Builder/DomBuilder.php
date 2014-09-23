@@ -11,7 +11,7 @@ namespace Windwalker\Dom\Builder;
 /**
  * Class XmlBuilder
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class DomBuilder
 {
@@ -39,7 +39,7 @@ class DomBuilder
 			}
 		}
 
-		if ($content)
+		if ($content !== null)
 		{
 			$tag .= '>' . $content . '</' . $name . '>';
 		}
@@ -58,7 +58,7 @@ class DomBuilder
 	 *
 	 * @return  string
 	 */
-	public function quote($value)
+	public static function quote($value)
 	{
 		return '"' . $value . '"';
 	}

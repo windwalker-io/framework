@@ -8,13 +8,13 @@
 
 namespace Windwalker\IO\Cli\Input;
 
-use Windwalker\Filter\Filter;
+use Windwalker\IO\Filter\NullFilter;
 use Windwalker\IO\Input;
 
 /**
  * Windwalker Input CLI Class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class CliInput extends Input implements CliInputInterface
 {
@@ -22,7 +22,7 @@ class CliInput extends Input implements CliInputInterface
 	 * The executable that was called to run the CLI script.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $calledScript;
 
@@ -31,7 +31,7 @@ class CliInput extends Input implements CliInputInterface
 	 * with a specific argument name.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $args = array();
 
@@ -43,17 +43,14 @@ class CliInput extends Input implements CliInputInterface
 	protected $inputStream = STDIN;
 
 	/**
-	 * Constructor.
+	 * Prepare source.
 	 *
-	 * @param   array  $source Optional source data.
-	 * @param   Filter $filter The input filter object.
+	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 *
-	 * @since   1.0
+	 * @return  void
 	 */
-	public function __construct($source = null, Filter $filter = null)
+	protected function prepareSource($source = null)
 	{
-		$this->filter = $filter ? : new Filter;
-
 		// Get the command line options
 		$this->parseArguments();
 	}
@@ -63,7 +60,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  string  The serialized input.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function serialize()
 	{
@@ -76,7 +73,7 @@ class CliInput extends Input implements CliInputInterface
 		unset($inputs['server']);
 
 		// Serialize the executable, args, options, data, and inputs.
-		return serialize(array($this->calledScript, $this->args, $this->options, $this->data, $inputs));
+		return serialize(array($this->calledScript, $this->args, $this->filter, $this->data, $inputs));
 	}
 
 	/**
@@ -88,7 +85,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function get($name, $default = null, $filter = 'string')
 	{
@@ -100,7 +97,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  mixed  The filtered input data.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function all()
 	{
@@ -114,22 +111,14 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  Input  The input object.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function unserialize($input)
 	{
 		// Unserialize the executable, args, options, data, and inputs.
-		list($this->calledScript, $this->args, $this->options, $this->data, $this->inputs) = unserialize($input);
+		list($this->calledScript, $this->args, $this->filter, $this->data, $this->inputs) = unserialize($input);
 
-		// Load the filter.
-		if (isset($this->options['filter']))
-		{
-			$this->filter = $this->options['filter'];
-		}
-		else
-		{
-			$this->filter = new Filter;
-		}
+		$this->filter = $this->filter ? : new NullFilter;
 	}
 
 	/**
@@ -165,78 +154,94 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function parseArguments()
 	{
-		// Get the list of argument values from the environment.
-		$args = $_SERVER['argv'];
+		$argv = $_SERVER['argv'];
 
-		// Set the path used for program execution and remove it form the program arguments.
-		$this->calledScript = array_shift($args);
+		$this->calledScript = array_shift($argv);
 
-		// We use a for loop because in some cases we need to look ahead.
-		for ($i = 0; $i < count($args); $i++)
+		$out = array();
+
+		for ($i = 0, $j = count($argv); $i < $j; $i++)
 		{
-			// Get the current argument to analyze.
-			$arg = $args[$i];
+			$arg = $argv[$i];
 
-			// First let's tackle the long argument case.  eg. --foo
-			if (strlen($arg) > 2 && substr($arg, 0, 2) == '--')
+			// --foo --bar=baz
+			if (substr($arg, 0, 2) === '--')
 			{
-				// Attempt to split the thing over equals so we can get the key/value pair if an = was used.
-				$arg = substr($arg, 2);
-				$parts = explode('=', $arg);
-				$this->data[$parts[0]] = true;
+				$eqPos = strpos($arg, '=');
 
-				// Does not have an =, so let's look ahead to the next argument for the value.
-				if (count($parts) == 1 && isset($args[$i + 1]) && preg_match('/^--?.+/', $args[$i + 1]) == 0)
+				// --foo
+				if ($eqPos === false)
 				{
-					$this->data[$parts[0]] = $args[$i + 1];
+					$key = substr($arg, 2);
 
-					// Since we used the next argument, increment the counter so we don't use it again.
-					$i++;
+					// --foo value
+					if ($i + 1 < $j && $argv[$i + 1][0] !== '-')
+					{
+						$value = $argv[$i + 1];
+						$i++;
+					}
+					else
+					{
+						$value = isset($out[$key]) ? $out[$key] : true;
+					}
+					$out[$key] = $value;
 				}
-				elseif (count($parts) == 2)
-				// We have an equals sign so take the second "part" of the argument as the value.
+
+				// --bar=baz
+				else
 				{
-					$this->data[$parts[0]] = $parts[1];
+					$key       = substr($arg, 2, $eqPos - 2);
+					$value     = substr($arg, $eqPos + 1);
+					$out[$key] = $value;
 				}
 			}
 
-			// Next let's see if we are dealing with a "bunch" of short arguments.  eg. -abc
-			elseif (strlen($arg) > 2 && $arg[0] == '-')
-			{
-				// For each of these arguments set the value to TRUE since the flag has been set.
-				for ($j = 1; $j < strlen($arg); $j++)
-				{
-					$this->data[$arg[$j]] = true;
-				}
-			}
-
-			// OK, so it isn't a long argument or bunch of short ones, so let's look and see if it is a single
-			// short argument.  eg. -h
-			elseif (strlen($arg) == 2 && $arg[0] == '-')
-			{
-				// Go ahead and set the value to TRUE and if we find a value later we'll overwrite it.
-				$this->data[$arg[1]] = true;
-
-				// Let's look ahead to see if the next argument is a "value".  If it is, use it for this value.
-				if (isset($args[$i + 1]) && preg_match('/^--?.+/', $args[$i + 1]) == 0)
-				{
-					$this->data[$arg[1]] = $args[$i + 1];
-
-					// Since we used the next argument, increment the counter so we don't use it again.
-					$i++;
-				}
-			}
-
-			// Last but not least, we don't have a key/value based argument so just add it to the arguments list.
+			// -k=value -abc
 			else
 			{
-				$this->args[] = $arg;
+				if (substr($arg, 0, 1) === '-')
+				{
+					// -k=value
+					if (substr($arg, 2, 1) === '=')
+					{
+						$key       = substr($arg, 1, 1);
+						$value     = substr($arg, 3);
+						$out[$key] = $value;
+					}
+					// -abc
+					else
+					{
+						$chars = str_split(substr($arg, 1));
+
+						foreach ($chars as $char)
+						{
+							$key       = $char;
+							$value     = isset($out[$key]) ? $out[$key] : true;
+							$out[$key] = $value;
+						}
+
+						// -a a-value
+						if ((count($chars) === 1) && ($i + 1 < $j) && ($argv[$i + 1][0] !== '-'))
+						{
+							$out[$key] = $argv[$i + 1];
+							$i++;
+						}
+					}
+				}
+
+				// plain-arg
+				else
+				{
+					$this->args[] = $arg;
+				}
 			}
 		}
+
+		$this->data = $out;
 	}
 
 	/**
@@ -295,29 +300,5 @@ class CliInput extends Input implements CliInputInterface
 		$this->calledScript = $calledScript;
 
 		return $this;
-	}
-
-	/**
-	 * setOutStream
-	 *
-	 * @param   resource $outStream
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setOutputStream($outStream)
-	{
-
-	}
-
-	/**
-	 * Method to set property errorStream
-	 *
-	 * @param   resource $errorStream
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setErrorStream($errorStream)
-	{
-
 	}
 }

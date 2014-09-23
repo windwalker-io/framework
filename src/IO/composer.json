@@ -1,0 +1,24 @@
+{
+	"name": "windwalker/io",
+	"type": "windwalker-package",
+	"description": "Windwalker IO package",
+	"keywords": ["windwalker", "framework", "io"],
+	"homepage": "https://github.com/ventoviro/windwalker-io",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"windwalker/test": "dev-master",
+		"windwalker/filter": "dev-master"
+	},
+	"suggest": {
+		"windwalker/filter": "Install 2.* if you require filter support."
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\IO\\": ""
+		}
+	}
+}

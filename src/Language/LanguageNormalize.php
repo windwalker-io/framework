@@ -11,7 +11,7 @@ namespace Windwalker\Language;
 /**
  * Class LanguageNormalize
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class LanguageNormalize
 {

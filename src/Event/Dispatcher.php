@@ -8,11 +8,15 @@
 
 namespace Windwalker\Event;
 
-
 use Windwalker\Event\Event\Event;
 use Windwalker\Event\Event\EventInterface;
-use Windwalker\Event\Listener\ListenersPriorityQueue;
+use Windwalker\Event\Listener\ListenersQueue;
 
+/**
+ * The Dispatcher class.
+ *
+ * @since  {DEPLOY_VERSION}
+ */
 class Dispatcher
 {
 	/**
@@ -21,7 +25,7 @@ class Dispatcher
 	 *
 	 * @var    EventInterface[]
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $events = array();
 
@@ -29,7 +33,7 @@ class Dispatcher
 	 * A regular expression that will filter listener method names.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 * @deprecated
 	 */
 	protected $listenerFilter;
@@ -38,9 +42,9 @@ class Dispatcher
 	 * An array of ListenersPriorityQueue indexed
 	 * by the event names.
 	 *
-	 * @var    ListenersPriorityQueue[]
+	 * @var    ListenersQueue[]
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $listeners = array();
 
@@ -52,28 +56,11 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setEvent(EventInterface $event)
 	{
 		$this->events[$event->getName()] = $event;
-
-		return $this;
-	}
-
-	/**
-	 * Sets a regular expression to filter the class methods when adding a listener.
-	 *
-	 * @param   string  $regex  A regular expression (for example '^on' will only register methods starting with "on").
-	 *
-	 * @return  Dispatcher  This method is chainable.
-	 *
-	 * @since       1.0
-	 * @deprecated  Incorporate a method in your listener object such as `getEvents` to feed into the `setListener` method.
-	 */
-	public function setListenerFilter($regex)
-	{
-		$this->listenerFilter = $regex;
 
 		return $this;
 	}
@@ -85,7 +72,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addEvent(EventInterface $event)
 	{
@@ -104,7 +91,7 @@ class Dispatcher
 	 *
 	 * @return  boolean  True if the listener has the given event, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hasEvent($event)
 	{
@@ -124,7 +111,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface|mixed  The event of the default value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getEvent($name, $default = null)
 	{
@@ -144,7 +131,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function removeEvent($event)
 	{
@@ -166,7 +153,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface[]  The registered event.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getEvents()
 	{
@@ -178,7 +165,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface[]  The old events.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clearEvents()
 	{
@@ -193,7 +180,7 @@ class Dispatcher
 	 *
 	 * @return  integer  The number of registered events.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function countEvents()
 	{
@@ -213,7 +200,7 @@ class Dispatcher
 	 *
 	 * @throws  \InvalidArgumentException
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addListener($listener, array $events = array())
 	{
@@ -233,14 +220,14 @@ class Dispatcher
 
 			if (is_string($events))
 			{
-				$events = array($events => ListenersPriorityQueue::NORMAL);
+				$events = array($events => ListenersQueue::NORMAL);
 			}
 
 			foreach ($events as $name => $priority)
 			{
 				if (!isset($this->listeners[$name]))
 				{
-					$this->listeners[$name] = new ListenersPriorityQueue;
+					$this->listeners[$name] = new ListenersQueue;
 				}
 
 				$this->listeners[$name]->add($listener, $priority);
@@ -262,10 +249,10 @@ class Dispatcher
 			// Retain this inner code after removal of the outer `if`.
 			if (!isset($this->listeners[$event]))
 			{
-				$this->listeners[$event] = new ListenersPriorityQueue;
+				$this->listeners[$event] = new ListenersQueue;
 			}
 
-			$priority = isset($events[$event]) ? $events[$event] : ListenersPriorityQueue::NORMAL;
+			$priority = isset($events[$event]) ? $events[$event] : ListenersQueue::NORMAL;
 
 			$this->listeners[$event]->add($listener, $priority);
 		}
@@ -281,7 +268,7 @@ class Dispatcher
 	 *
 	 * @return  mixed  The listener priority or null if the listener doesn't exist.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getListenerPriority($listener, $event)
 	{
@@ -305,7 +292,7 @@ class Dispatcher
 	 *
 	 * @return  object[]  An array of registered listeners sorted according to their priorities.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getListeners($event)
 	{
@@ -331,7 +318,7 @@ class Dispatcher
 	 *
 	 * @return  boolean  True if the listener is registered, false otherwise.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hasListener($listener, $event = null)
 	{
@@ -370,7 +357,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function removeListener($listener, $event = null)
 	{
@@ -406,7 +393,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function clearListeners($event = null)
 	{
@@ -438,7 +425,7 @@ class Dispatcher
 	 *
 	 * @return  integer  The number of registered listeners for the given event.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function countListeners($event)
 	{
@@ -457,7 +444,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface  The event after being passed through all listeners.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function triggerEvent($event)
 	{

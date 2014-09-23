@@ -14,6 +14,11 @@ use Windwalker\IO\Cli\Color\NoColorProcessor;
 use Windwalker\IO\Cli\IO as WindwalkerIO;
 use Windwalker\IO\Cli\Output\ColorfulOutputInterface;
 
+if (!interface_exists('JsonSerializable'))
+{
+	include_once __DIR__ . '/Compat/JsonSerializable.php';
+}
+
 /**
  * The IO class.
  * 
@@ -210,4 +215,3 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
 		return $this;
 	}
 }
- 

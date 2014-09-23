@@ -11,7 +11,7 @@ namespace Windwalker\Compare;
 /**
  * Class GtCompare
  *
- * @since 2.0
+ * @since {DEPLOY_VERSION}
  */
 class GtCompare extends Compare
 {
@@ -21,14 +21,4 @@ class GtCompare extends Compare
 	 * @var  string
 	 */
 	protected $operator = '>';
-
-	/**
-	 * Do compare.
-	 *
-	 * @return  boolean  The result of compare.
-	 */
-	public function compare()
-	{
-		return ($this->compare1 > $this->compare2);
-	}
 }

@@ -9,7 +9,7 @@
 use Windwalker\Application\AbstractCliApplication;
 use Windwalker\Filesystem\Path;
 use Windwalker\Utilities\Reflection\ReflectionHelper;
-use Windwalker\Utilities\String\StringNormalise;
+use Windwalker\String\StringNormalise;
 
 include_once __DIR__ . '/../vendor/autoload.php';
 
@@ -83,11 +83,25 @@ class GenTest extends AbstractCliApplication
 
 		$command = 'php ' . WINDWALKER_ROOT . '/' . $command;
 
+		if (!defined('PHP_WINDOWS_VERSION_MAJOR'))
+		{
+			// Replace '\' to '\\' in MAC
+			$command = str_replace('\\', '\\\\', $command);
+		}
+
 		\Windwalker\Filesystem\Folder::create(dirname($testFile));
 
 		$this->exec($command);
 	}
 
+	/**
+	 * getPackagePath
+	 *
+	 * @param string $class
+	 * @param string $classPath
+	 *
+	 * @return  void
+	 */
 	protected function getPackagePath($class, $classPath)
 	{
 		$classFile = Path::clean($class) . '.php';

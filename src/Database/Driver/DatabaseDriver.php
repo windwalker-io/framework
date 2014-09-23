@@ -11,18 +11,18 @@ namespace Windwalker\Database\Driver;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Windwalker\Database\Command\DatabaseDatabase;
-use Windwalker\Database\Command\DatabaseReader;
-use Windwalker\Database\Command\DatabaseTable;
-use Windwalker\Database\Command\DatabaseTransaction;
-use Windwalker\Database\Command\DatabaseWriter;
-use Windwalker\Database\DataIterator;
+use Windwalker\Database\Command\AbstractDatabase;
+use Windwalker\Database\Command\AbstractReader;
+use Windwalker\Database\Command\AbstractTable;
+use Windwalker\Database\Command\AbstractTransaction;
+use Windwalker\Database\Command\AbstractWriter;
+use Windwalker\Database\Iterator\DataIterator;
 use Windwalker\Query\Query;
 
 /**
  * Class DatabaseDriver
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class DatabaseDriver implements LoggerAwareInterface
 {
@@ -30,7 +30,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $name;
 
@@ -38,7 +38,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The name of the database.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $database;
 
@@ -46,7 +46,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The database connection resource.
 	 *
 	 * @var    resource|object
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $connection;
 
@@ -54,7 +54,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The number of SQL statements executed by the database driver.
 	 *
 	 * @var    integer
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $count = 0;
 
@@ -62,7 +62,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The database connection cursor from the last query.
 	 *
 	 * @var    resource|object
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $cursor;
 
@@ -70,7 +70,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The database driver debugging state.
 	 *
 	 * @var    boolean
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $debug = false;
 
@@ -78,7 +78,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * Passed in upon instantiation and saved.
 	 *
 	 * @var    array
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $options;
 
@@ -86,7 +86,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The current SQL statement to execute.
 	 *
 	 * @var    mixed
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $query;
 
@@ -94,7 +94,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The common database table prefix.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $tablePrefix;
 
@@ -102,42 +102,42 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * A logger.
 	 *
 	 * @var    LoggerInterface
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $logger;
 
 	/**
 	 * Property reader.
 	 *
-	 * @var  DatabaseReader
+	 * @var  AbstractReader
 	 */
 	protected $reader = null;
 
 	/**
 	 * Property writer.
 	 *
-	 * @var DatabaseWriter
+	 * @var AbstractWriter
 	 */
 	protected $writer;
 
 	/**
 	 * Property table.
 	 *
-	 * @var DatabaseTable[]
+	 * @var AbstractTable[]
 	 */
 	protected $tables = array();
 
 	/**
 	 * Property databases.
 	 *
-	 * @var  DatabaseDatabase[]
+	 * @var  AbstractDatabase[]
 	 */
 	protected $databases = array();
 
 	/**
 	 * Property transaction.
 	 *
-	 * @var DatabaseTransaction
+	 * @var AbstractTransaction
 	 */
 	protected $transaction;
 
@@ -147,7 +147,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * @param   null  $connection The database connection instance.
 	 * @param   array $options    List of options used to configure the connection
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function __construct($connection = null, $options = array())
 	{
@@ -164,7 +164,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * getConnection
 	 *
-	 * @return  resource
+	 * @return  resource|object
 	 */
 	public function getConnection()
 	{
@@ -190,7 +190,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function execute()
@@ -242,7 +242,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function disconnect();
 
@@ -251,7 +251,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	abstract protected function doExecute();
@@ -263,7 +263,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  boolean  True if the database was successfully selected.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	abstract public function select($database);
@@ -273,7 +273,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  string  The database connector version.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function getVersion();
 
@@ -284,7 +284,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract public function freeResult($cursor = null);
 
@@ -312,7 +312,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  Query  The current query object or a new object extending the Query class.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \RuntimeException
 	 */
 	public function getQuery($new = false)
@@ -342,7 +342,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param string $name
 	 *
-	 * @return  DatabaseTable
+	 * @return  AbstractTable
 	 */
 	public function getTable($name)
 	{
@@ -361,10 +361,12 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param string $name
 	 *
-	 * @return  DatabaseDatabase
+	 * @return  AbstractDatabase
 	 */
-	public function getDatabase($name)
+	public function getDatabase($name = null)
 	{
+		$name = $name ? : $this->database;
+
 		if (empty($this->databases[$name]))
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->name), ucfirst($this->name));
@@ -380,13 +382,13 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param Query $query
 	 *
-	 * @return  DatabaseReader
+	 * @return  AbstractReader
 	 */
 	public function getReader($query = null)
 	{
 		if ($query)
 		{
-			$this->setQuery($query)->execute();
+			$this->setQuery($query);
 		}
 
 		if (!$this->reader)
@@ -402,7 +404,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * getWriter
 	 *
-	 * @return  DatabaseWriter
+	 * @return  AbstractWriter
 	 */
 	public function getWriter()
 	{
@@ -421,7 +423,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @param boolean $nested
 	 *
-	 * @return  DatabaseTransaction
+	 * @return  AbstractTransaction
 	 */
 	public function getTransaction($nested = true)
 	{
@@ -452,7 +454,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getCurrentDatabase()
 	{
@@ -464,7 +466,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  string  The common database table prefix.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function getPrefix()
 	{
@@ -480,7 +482,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  DatabaseDriver  Returns itself to allow chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function log($level, $message, array $context = array())
 	{
@@ -499,7 +501,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setLogger(LoggerInterface $logger)
 	{
@@ -517,7 +519,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  string  The processed SQL statement.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function replacePrefix($sql, $prefix = '#__')
 	{
@@ -617,7 +619,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  array  The queries from the input string separated into an array.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function splitSql($sql)
 	{
@@ -675,7 +677,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setDebug($level)
 	{
@@ -691,7 +693,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  DatabaseDriver  This object to support method chaining.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setQuery($query)
 	{
@@ -712,6 +714,11 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	{
 		if (strtolower($class) == 'array')
 		{
+			return $this->getReader()->loadArrayList($key);
+		}
+
+		if (strtolower($class) == 'assoc')
+		{
 			return $this->getReader()->loadAssocList($key);
 		}
 
@@ -728,6 +735,11 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	public function loadOne($class = '\\stdClass')
 	{
 		if (strtolower($class) == 'array')
+		{
+			return $this->getReader()->loadArray();
+		}
+
+		if (strtolower($class) == 'assoc')
 		{
 			return $this->getReader()->loadAssoc();
 		}
@@ -847,5 +859,14 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	{
 		return $this->escape($text, $extra);
 	}
-}
 
+	/**
+	 * Method to get property Name
+	 *
+	 * @return  string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+}

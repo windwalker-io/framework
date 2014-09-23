@@ -26,7 +26,7 @@ class SimpleCipher implements CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since    1.0
+	 * @since    {DEPLOY_VERSION}
 	 */
 	public function decrypt($data, $private = null, $public = null)
 	{
@@ -77,7 +77,7 @@ class SimpleCipher implements CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 */
 	public function encrypt($data, $private = null, $public = null)
@@ -123,7 +123,7 @@ class SimpleCipher implements CipherInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	private function getRandomKey($length = self::DEFAULT_RANDOM_BYTE_LENGTH)
 	{
@@ -148,7 +148,7 @@ class SimpleCipher implements CipherInterface
 	 *
 	 * @return  integer
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	private function hexToInt($s, $i)
 	{
@@ -228,7 +228,7 @@ class SimpleCipher implements CipherInterface
 	 *
 	 * @return  array  An array of integers.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	private function hexToIntArray($hex)
 	{
@@ -251,7 +251,7 @@ class SimpleCipher implements CipherInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	private function intToHex($i)
 	{

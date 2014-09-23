@@ -13,7 +13,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Class PostgresqlExpression
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class PostgresqlExpression extends QueryExpression
 {
@@ -28,7 +28,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  The concatenated values.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function concatenate($values, $separator = null)
 	{
@@ -47,7 +47,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  Return string used in query to obtain
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function current_timestamp()
 	{
@@ -65,7 +65,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  Returns string to extract year from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function year($date)
 	{
@@ -82,7 +82,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  Returns string to extract month from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function month($date)
 	{
@@ -99,7 +99,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  Returns string to extract day from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function day($date)
 	{
@@ -116,7 +116,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  Returns string to extract hour from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function hour($date)
 	{
@@ -133,7 +133,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  Returns string to extract minute from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function minute($date)
 	{
@@ -150,7 +150,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  Returns string to extract second from a date.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function second($date)
 	{
@@ -166,7 +166,7 @@ class PostgresqlExpression extends QueryExpression
 	 *
 	 * @return  string  Returns the cast value.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function cast_as_char($value)
 	{

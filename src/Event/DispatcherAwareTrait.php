@@ -13,7 +13,7 @@ use Windwalker\Event\Event\EventInterface;
 /**
  * Class DispatcherAwareTrait
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 trait DispatcherAwareTrait
 {
@@ -31,7 +31,7 @@ trait DispatcherAwareTrait
 	 *
 	 * @return  EventInterface  The event after being passed through all listeners.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function triggerEvent($event)
 	{

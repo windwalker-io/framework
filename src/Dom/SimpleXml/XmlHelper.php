@@ -11,7 +11,7 @@ namespace Windwalker\Dom\SimpleXml;
 /**
  * Simple Xml Helper to get attributes from \SimpleXMLElement
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class XmlHelper
 {
@@ -21,7 +21,7 @@ class XmlHelper
 	 * @var  array
 	 */
 	static protected $falseValue = array(
-		'disbaled',
+		'disabled',
 		'false',
 		'null',
 		'0',
@@ -145,4 +145,3 @@ class XmlHelper
 		$xml[$attr] = isset($xml[$attr]) ? $xml[$attr] : (string) $value;
 	}
 }
-

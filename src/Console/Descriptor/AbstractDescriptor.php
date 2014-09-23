@@ -11,7 +11,7 @@ namespace Windwalker\Console\Descriptor;
 /**
  * The abstract base descriptor.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractDescriptor implements DescriptorInterface
 {
@@ -20,7 +20,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @var  array
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public $items = array();
 
@@ -31,7 +31,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @return  DescriptorInterface  Return this object to support chaining.
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function addItem($item)
 	{
@@ -47,7 +47,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	abstract protected function renderItem($item);
 
@@ -56,7 +56,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function render()
 	{

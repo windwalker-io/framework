@@ -13,24 +13,39 @@ use Windwalker\Registry\Helper\RegistryHelper;
 /**
  * JSON format handler for Registry.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class JsonFormat implements FormatInterface
 {
 	/**
 	 * Converts an object into a JSON formatted string.
 	 *
-	 * @param   object  $object   Data source object.
-	 * @param   array   $options  Options used by the formatter.
+	 * @param   object $object  Data source object.
+	 * @param   array  $options Options used by the formatter.
 	 *
+	 * @throws  \InvalidArgumentException
 	 * @return  string  JSON formatted string.
 	 */
 	public static function objectToString($object, $options = array())
 	{
-		$depth  = RegistryHelper::getValue($options, 'depth', 512);
+		$depth  = RegistryHelper::getValue($options, 'depth');
 		$option = RegistryHelper::getValue($options, 'options', 0);
 
-		return json_encode($object, $option, $depth);
+		if (version_compare(PHP_VERSION, '5.5', '>'))
+		{
+			$depth = $depth ? : 512;
+
+			return json_encode($object, $option, $depth);
+		}
+
+		/*
+		if ($depth)
+		{
+			throw new \InvalidArgumentException('Depth in json_encode() only support higher than PHP 5.5');
+		}
+		*/
+
+		return json_encode($object, $option);
 	}
 
 	/**
@@ -47,6 +62,13 @@ class JsonFormat implements FormatInterface
 		$depth  = RegistryHelper::getValue($options, 'depth', 512);
 		$option = RegistryHelper::getValue($options, 'options', 0);
 
-		return json_decode(trim($data), $assoc, $depth, $option);
+		if (PHP_VERSION >= 5.4)
+		{
+			return json_decode(trim($data), $assoc, $depth, $option);
+		}
+		else
+		{
+			return json_decode(trim($data), $assoc, $depth);
+		}
 	}
 }

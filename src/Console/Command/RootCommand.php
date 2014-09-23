@@ -14,7 +14,7 @@ use Windwalker\Console\Option\Option;
 /**
  * The default command.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class RootCommand extends Command
 {
@@ -23,7 +23,7 @@ class RootCommand extends Command
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function configure()
 	{

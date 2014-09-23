@@ -8,12 +8,12 @@
 
 namespace Windwalker\Utilities\Reflection;
 
-use Windwalker\Utilities\String\StringNormalise;
+use Windwalker\String\StringNormalise;
 
 /**
  * Reflection Helper
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class ReflectionHelper
 {

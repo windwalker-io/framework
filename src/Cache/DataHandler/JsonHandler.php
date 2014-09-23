@@ -11,7 +11,7 @@ namespace Windwalker\Cache\DataHandler;
 /**
  * Class JsonHandler
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class JsonHandler implements DataHandlerInterface
 {

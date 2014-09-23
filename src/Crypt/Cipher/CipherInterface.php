@@ -26,7 +26,7 @@ interface CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since    1.0
+	 * @since    {DEPLOY_VERSION}
 	 */
 	public function decrypt($data, $private = null, $public = null);
 
@@ -39,7 +39,7 @@ interface CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  \InvalidArgumentException
 	 */
 	public function encrypt($data, $private = null, $public = null);

@@ -31,6 +31,7 @@ class SelectList extends HtmlElement
 	 * @var  Option[]
 	 */
 	protected $content;
+
 	/**
 	 * Property multiple.
 	 *
@@ -96,9 +97,9 @@ class SelectList extends HtmlElement
 					}
 				}
 
-				$option = new HtmlElement('optgroup', $option, array('label' => $name));
+				$this->content[$name] = new HtmlElement('optgroup', $option, array('label' => $name));
 			}
-			// not array means it is an option
+			// Not array means it is an option
 			else
 			{
 				if ($this->checkSelected($option->getValue()))

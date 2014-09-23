@@ -1,5 +1,6 @@
 # Development system files #
 .*
+!.gitignre
 !/.travis.yml
 
 # Composer #

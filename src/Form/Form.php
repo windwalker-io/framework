@@ -9,9 +9,13 @@
 namespace Windwalker\Form;
 
 use Windwalker\Form\Exception\FormValidFailException;
-use Windwalker\Form\Exception\ValidateFailException;
-use Windwalker\Form\Field\FieldHelper;
-use Windwalker\Form\Field\FieldInterface;
+use Windwalker\Form\Field\AbstractField;
+use Windwalker\Form\Validate\ValidateResult;
+
+if (!class_exists('CallbackFilterIterator'))
+{
+	include_once __DIR__ . '/Compat/CallbackFilterIterator.php';
+}
 
 /**
  * The Form class.
@@ -23,7 +27,7 @@ class Form implements \IteratorAggregate
 	/**
 	 * Property fields.
 	 *
-	 * @var  FieldInterface[]
+	 * @var  AbstractField[]
 	 */
 	protected $fields = array();
 
@@ -56,16 +60,19 @@ class Form implements \IteratorAggregate
 	protected $groups = array();
 
 	/**
-	 * Property fieldPaths.
+	 * Property errors.
 	 *
-	 * @var \SplPriorityQueue
+	 * @var  ValidateResult[]
 	 */
-	protected $fieldNamespaces;
+	protected $errors = array();
 
+	/**
+	 * Class init.
+	 *
+	 * @param string $control
+	 */
 	public function __construct($control = '')
 	{
-		$this->fieldNamespaces = new \SplPriorityQueue;
-
 		$this->control = $control;
 	}
 
@@ -74,9 +81,9 @@ class Form implements \IteratorAggregate
 	 *
 	 * @param string|\SimpleXMLElement $xml
 	 *
-	 * @return  void
+	 * @return  static
 	 */
-	public function load($xml)
+	public function loadXml($xml)
 	{
 		if (is_string($xml))
 		{
@@ -88,11 +95,22 @@ class Form implements \IteratorAggregate
 		}
 
 		$this->addFields($xml);
+
+		return $this;
 	}
 
+	/**
+	 * loadFile
+	 *
+	 * @param string $file
+	 *
+	 * @return  static
+	 */
 	public function loadFile($file)
 	{
-		$this->load(file_get_contents($file));
+		$this->loadXml(file_get_contents($file));
+
+		return $this;
 	}
 
 	/**
@@ -100,9 +118,9 @@ class Form implements \IteratorAggregate
 	 *
 	 * @param \Traversable|\SimpleXMLElement $fields
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
-	public function addFields(\Traversable $fields)
+	public function addFields($fields, $fieldset = null, $group = null)
 	{
 		if ($fields instanceof \SimpleXMLElement)
 		{
@@ -111,7 +129,7 @@ class Form implements \IteratorAggregate
 
 		foreach ($fields as $field)
 		{
-			$this->addField($field);
+			$this->addField($field, $fieldset, $group);
 		}
 
 		return $this;
@@ -120,15 +138,25 @@ class Form implements \IteratorAggregate
 	/**
 	 * addField
 	 *
-	 * @param string|FieldInterface|\SimpleXMLElement $field
+	 * @param string|AbstractField|\SimpleXMLElement  $field
+	 * @param string                                  $fieldset
+	 * @param string                                  $group
 	 *
-	 * @return  $this
-	 *
-	 * @throws \InvalidArgumentException
+	 * @return  static
 	 */
-	public function addField($field)
+	public function addField($field, $fieldset = null, $group = null)
 	{
-		$field = FieldHelper::createField($field, $this->fieldNamespaces);
+		$field = FieldHelper::create($field);
+
+		if ($fieldset)
+		{
+			$field->setFieldset($fieldset);
+		}
+
+		if ($group)
+		{
+			$field->setGroup($group);
+		}
 
 		$group    = $field->getGroup();
 		$fieldset = $field->getFieldset();
@@ -158,9 +186,39 @@ class Form implements \IteratorAggregate
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function addFieldNamespace($ns, $priority = 100)
+	public function addFieldNamespace($ns, $priority = 256)
 	{
-		$this->fieldNamespaces->insert($ns, $priority);
+		FieldHelper::addNamespace($ns, $priority);
+
+		return $this;
+	}
+
+	/**
+	 * Method to set property fieldNamespaces
+	 *
+	 * @param string $ns
+	 * @param int    $priority
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function addFilterNamespace($ns, $priority = 256)
+	{
+		FilterHelper::addNamespace($ns, $priority);
+
+		return $this;
+	}
+
+	/**
+	 * Method to set property fieldNamespaces
+	 *
+	 * @param string $ns
+	 * @param int    $priority
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function addValidatorNamespace($ns, $priority = 256)
+	{
+		ValidatorHelper::addNamespace($ns, $priority);
 
 		return $this;
 	}
@@ -168,7 +226,7 @@ class Form implements \IteratorAggregate
 	/**
 	 * Retrieve an external iterator
 	 *
-	 * @return \Iterator|FieldInterface[] An instance of an object implementing Iterator or Traversable
+	 * @return \Iterator|AbstractField[] An instance of an object implementing Iterator or Traversable
 	 */
 	public function getIterator()
 	{
@@ -180,7 +238,7 @@ class Form implements \IteratorAggregate
 	 *
 	 * @param \Closure $handler
 	 *
-	 * @return  \CallbackFilterIterator|FieldInterface[] An instance of an object implementing Iterator or Traversable
+	 * @return  \CallbackFilterIterator|AbstractField[] An instance of an object implementing Iterator or Traversable
 	 */
 	public function getCallbackIterator(\Closure $handler)
 	{
@@ -193,7 +251,7 @@ class Form implements \IteratorAggregate
 	 * @param string $name
 	 * @param string $group
 	 *
-	 * @return  FieldInterface
+	 * @return  AbstractField
 	 */
 	public function getField($name, $group = '')
 	{
@@ -260,14 +318,14 @@ class Form implements \IteratorAggregate
 	 * @param string $fieldset
 	 * @param string $group
 	 *
-	 * @return  FieldInterface[]
+	 * @return  AbstractField[]
 	 */
 	public function getFields($fieldset = null, $group = null)
 	{
 		/**
 		 * Filter field callback.
 		 *
-		 * @param FieldInterface          $current
+		 * @param AbstractField          $current
 		 * @param string                  $key
 		 * @param \CallbackFilterIterator $iterator
 		 *
@@ -382,37 +440,37 @@ class Form implements \IteratorAggregate
 	 */
 	public function validate()
 	{
-		$failFields = array();
+		$errors = array();
 
 		foreach ($this->fields as $field)
 		{
-			try
+			$result = $field->validate();
+
+			if ($result->isFailure())
 			{
-				$field->validate();
-			}
-			catch (ValidateFailException $e)
-			{
-				$failFields[] = $e;
+				$errors[] = $result;
 			}
 		}
 
-		if ($failFields)
+		if ($errors)
 		{
-			throw new FormValidFailException($failFields, 'Validate fail.');
+			$this->setErrors($errors);
+
+			return false;
 		}
 
 		return true;
 	}
 
 	/**
-	 * prepareView
+	 * getViews
 	 *
 	 * @param string $fieldset
 	 * @param string $group
 	 *
 	 * @return  array
 	 */
-	public function prepareView($fieldset = null, $group = null)
+	public function getViews($fieldset = null, $group = null)
 	{
 		$views = array();
 
@@ -499,7 +557,49 @@ class Form implements \IteratorAggregate
 	{
 		$this->control = $control;
 
+		foreach ($this->fields as $field)
+		{
+			$field->setControl($control);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * defineFormFields
+	 *
+	 * @param FieldDefinitionInterface $fields
+	 *
+	 * @return  $this
+	 */
+	public function defineFormFields(FieldDefinitionInterface $fields)
+	{
+		$fields->define($this);
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Errors
+	 *
+	 * @return  ValidateResult[]
+	 */
+	public function getErrors()
+	{
+		return $this->errors;
+	}
+
+	/**
+	 * Method to set property errors
+	 *
+	 * @param   ValidateResult[] $errors
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setErrors($errors)
+	{
+		$this->errors = $errors;
+
 		return $this;
 	}
 }
-

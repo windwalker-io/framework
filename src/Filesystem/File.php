@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Exception\FilesystemException;
 /**
  * A File handling class
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class File
 {
@@ -24,11 +24,48 @@ class File
 	 *
 	 * @return  string  The file name without the extension
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
-	public static function stripExt($file)
+	public static function stripExtension($file)
 	{
 		return preg_replace('#\.[^.]*$#', '', $file);
+	}
+
+	/**
+	 * getExtension
+	 *
+	 * @param   string  $file  The file path to get extension.
+	 *
+	 * @return  string  The ext of file path.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public static function getExtension($file)
+	{
+		return pathinfo($file, PATHINFO_EXTENSION);
+	}
+
+	/**
+	 * Get file name from a path.
+	 *
+	 * @param   string  $path  The file path to get basename.
+	 *
+	 * @return  string  The file name.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public static function getFilename($path)
+	{
+		$name = pathinfo($path, PATHINFO_FILENAME);
+
+		$ext = pathinfo($path, PATHINFO_EXTENSION);
+
+		if ($ext)
+		{
+			$name .= '.' . $ext;
+		}
+
+		return $name;
 	}
 
 	/**
@@ -39,7 +76,7 @@ class File
 	 *
 	 * @return  string  The sanitised string
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function makeSafe($file, array $stripChars = array('#^\.#'))
 	{
@@ -64,7 +101,7 @@ class File
 	 * @throws Exception\FilesystemException
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function copy($src, $dest, $force = false)
 	{
@@ -110,7 +147,7 @@ class File
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 */
 	public static function delete($file)
@@ -146,7 +183,7 @@ class File
 	 * @throws Exception\FilesystemException
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public static function move($src, $dest, $force = false)
 	{
@@ -169,6 +206,14 @@ class File
 			}
 		}
 
+		// Check folder exists
+		$dir = dirname($dest);
+
+		if (!is_dir($dir))
+		{
+			Folder::create($dir);
+		}
+
 		if (!@ rename($src, $dest))
 		{
 			throw new FilesystemException(__METHOD__ . ': Rename failed.');
@@ -180,12 +225,12 @@ class File
 	/**
 	 * Write contents to a file
 	 *
-	 * @param   string   $file         The full file path
-	 * @param   string   $buffer      The buffer to write
+	 * @param   string   $file    The full file path
+	 * @param   string   $buffer  The buffer to write
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 */
 	public static function write($file, $buffer)
@@ -193,7 +238,7 @@ class File
 		@set_time_limit(ini_get('max_execution_time'));
 
 		// If the destination directory doesn't exist we need to create it
-		if (!file_exists(dirname($file)))
+		if (!is_dir(dirname($file)))
 		{
 			Folder::create(dirname($file));
 		}
@@ -212,7 +257,7 @@ class File
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 * @throws  FilesystemException
 	 */
 	public static function upload($src, $dest)
@@ -240,11 +285,7 @@ class File
 				throw new FilesystemException(__METHOD__ . ': Failed to change file permissions.');
 			}
 		}
-		else
-		{
-			throw new FilesystemException(__METHOD__ . ': Failed to move file.');
-		}
 
-		return false;
+		throw new FilesystemException(__METHOD__ . ': Failed to move file.');
 	}
 }

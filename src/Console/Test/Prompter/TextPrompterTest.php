@@ -15,7 +15,7 @@ use Windwalker\Console\Prompter\TextPrompter;
 /**
  * Class TextPrompterTest
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class TextPrompterTest extends AbstractPrompterTest
 {
@@ -25,7 +25,7 @@ class TextPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function setUp()
 	{
@@ -39,7 +39,7 @@ class TextPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  1.0
+	 * @since  {DEPLOY_VERSION}
 	 */
 	public function testAsk()
 	{

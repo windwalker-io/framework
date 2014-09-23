@@ -11,7 +11,7 @@ namespace Windwalker\Cache\DataHandler;
 /**
  * Class RawHandler
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 class StringHandler implements DataHandlerInterface
 {

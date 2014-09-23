@@ -10,9 +10,9 @@ namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\SimpleXml\XmlHelper;
-use Windwalker\Form\Exception\FieldRequiredFailException;
-use Windwalker\Form\Exception\FieldValidateFailException;
 use Windwalker\Form\Filter\FilterInterface;
+use Windwalker\Form\FilterHelper;
+use Windwalker\Form\Validate\ValidateResult;
 use Windwalker\Validator\ValidatorInterface;
 
 /**
@@ -20,7 +20,7 @@ use Windwalker\Validator\ValidatorInterface;
  * 
  * @since  {DEPLOY_VERSION}
  */
-abstract class AbstractField implements FieldInterface
+abstract class AbstractField
 {
 	/**
 	 * Property type.
@@ -102,7 +102,7 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Property filter.
 	 *
-	 * @var  string|FilterInterface
+	 * @var  string|FilterInterface|callable
 	 */
 	protected $filter = null;
 
@@ -163,9 +163,9 @@ abstract class AbstractField implements FieldInterface
 
 		$this->filter = $filter ? : $this->getAttribute('filter');
 
-		$this->validator = $validator ? : $validator;
+		$this->validator = $validator ? : $this->getAttribute('validator');
 
-		$this->required = $this->getAttribute('required', false);
+		$this->required = $this->getBool('required', false);
 	}
 
 	/**
@@ -177,7 +177,7 @@ abstract class AbstractField implements FieldInterface
 	{
 		$attrs = array();
 
-		$this->prepareAttributes($attrs);
+		$this->prepare($attrs);
 
 		return $this->buildInput($attrs);
 	}
@@ -201,7 +201,7 @@ abstract class AbstractField implements FieldInterface
 	 *
 	 * @return  array
 	 */
-	abstract public function prepareAttributes(&$attrs);
+	abstract public function prepare(&$attrs);
 
 	/**
 	 * getLabel
@@ -241,7 +241,7 @@ abstract class AbstractField implements FieldInterface
 		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
 		$attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
 
-		return new HtmlElement('div', $label . ' ' . $input, $attrs);
+		return (string) new HtmlElement('div', $label . $input, $attrs);
 	}
 
 	/**
@@ -263,7 +263,7 @@ abstract class AbstractField implements FieldInterface
 	{
 		$control = $this->control ? $this->control . '.' : '';
 
-		return str_replace('.', '-', $control . $this->getName());
+		return str_replace('.', '-', $control . $this->getName(true));
 	}
 
 	/**
@@ -271,23 +271,29 @@ abstract class AbstractField implements FieldInterface
 	 *
 	 * @throws \Windwalker\Form\Exception\FieldRequiredFailException
 	 * @throws \Windwalker\Form\Exception\FieldValidateFailException
-	 * @return  boolean
+	 * @return  ValidateResult
 	 */
 	public function validate()
 	{
 		$this->filter();
 
+		$result = new ValidateResult;
+
 		if ($this->required && !$this->checkRequired())
 		{
-			throw new FieldRequiredFailException($this, sprintf('Field %s value empty', $this->getName(true)));
+			return $result->setMessage(sprintf('Field %s value not allow empty.', $this->getLabel(true)))
+				->setResult(ValidateResult::STATUS_REQUIRED)
+				->setField($this);
 		}
 
 		if ($this->validator && !$this->checkRule())
 		{
-			throw new FieldValidateFailException($this, sprintf('Field %s rule not valid', $this->getName(true)));
+			return $result->setMessage(sprintf('Field %s validate fail.', $this->getLabel(true)))
+				->setResult(ValidateResult::STATUS_FAILURE)
+				->setField($this);
 		}
 
-		return true;
+		return $result;
 	}
 
 	/**
@@ -299,7 +305,7 @@ abstract class AbstractField implements FieldInterface
 	{
 		$value = (string) $this->value;
 
-		if ($this->value && $value === '0')
+		if ($this->value || $value === '0')
 		{
 			return true;
 		}
@@ -324,7 +330,18 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function filter()
 	{
-		$this->value = $this->getFilter()->clean($this->value);
+		$filter = $this->getFilter();
+
+		if (is_callable($filter))
+		{
+			$this->value = call_user_func($filter, $this->value);
+		}
+		else
+		{
+			$this->value = $filter->clean($this->value);
+		}
+
+		return $this;
 	}
 
 	/**
@@ -361,6 +378,8 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function setName($name)
 	{
+		$this->fieldName = null;
+
 		$this->name = $name;
 
 		return $this;
@@ -369,13 +388,15 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Method to get property FieldName
 	 *
-	 * @return  null
+	 * @param bool $refresh
+	 *
+	 * @return  string
 	 */
-	public function getFieldName()
+	public function getFieldName($refresh = false)
 	{
-		if (!$this->fieldName)
+		if (!$this->fieldName || $refresh)
 		{
-			// prevent '..'
+			// Prevent '..'
 			$names = array_values(array_filter(explode('.', $this->getName(true)), 'strlen'));
 
 			$control = $this->control ? $this->control : array_shift($names);
@@ -384,8 +405,8 @@ abstract class AbstractField implements FieldInterface
 				function ($value)
 				{
 					return '[' . $value . ']';
-				}
-				, $names
+				},
+				$names
 			);
 
 			$this->fieldName = $control . implode('', $names);
@@ -427,6 +448,8 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function setGroup($group)
 	{
+		$this->fieldName = null;
+
 		$this->group = $group;
 
 		return $this;
@@ -512,7 +535,7 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Method to set property filter
 	 *
-	 * @param   string|\Windwalker\Form\Filter\FilterInterface $filter
+	 * @param   string|FilterInterface|callable $filter
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
@@ -526,13 +549,13 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Method to get property Filter
 	 *
-	 * @return  string|\Windwalker\Form\Filter\FilterInterface
+	 * @return  string|FilterInterface|callable
 	 */
 	public function getFilter()
 	{
-		if (!($this->filter instanceof FilterInterface))
+		if (!($this->filter instanceof FilterInterface) && !is_callable($this->filter))
 		{
-			$this->filter = FieldHelper::createFilter($this->filter);
+			$this->filter = FilterHelper::create($this->filter);
 		}
 
 		return $this->filter;
@@ -564,7 +587,7 @@ abstract class AbstractField implements FieldInterface
 
 			if ($name == 'fieldset')
 			{
-				$this->fieldset = (string) $parent['name'];
+				$this->fieldset = $this->fieldset ? : (string) $parent['name'];
 			}
 			elseif ($name == 'group')
 			{
@@ -596,6 +619,8 @@ abstract class AbstractField implements FieldInterface
 	 */
 	public function setControl($control)
 	{
+		$this->fieldName = null;
+
 		$this->control = $control;
 
 		return $this;
@@ -678,11 +703,9 @@ abstract class AbstractField implements FieldInterface
 	/**
 	 * Get all attributes.
 	 *
-	 * @param \SimpleXMLElement $xml A SimpleXMLElement object.
-	 *
 	 * @return  array The return values of all attributes.
 	 */
-	public function getAttributes(\SimpleXMLElement $xml)
+	public function getAttributes()
 	{
 		return $this->attributes;
 	}
