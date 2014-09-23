@@ -28,6 +28,7 @@ class Cache implements CacheInterface
 	 * @var  CacheStorageInterface
 	 */
 	protected $storage = null;
+
 	/**
 	 * Property handler.
 	 *
