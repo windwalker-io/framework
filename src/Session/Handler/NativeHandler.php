@@ -13,7 +13,7 @@ namespace Windwalker\Session\Handler;
  *
  * @since {DEPLOY_VERSION}
  */
-class PhpHandler extends \SessionHandler implements HandlerInterface
+class NativeHandler extends \SessionHandler implements HandlerInterface
 {
 	/**
 	 * isSupported

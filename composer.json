@@ -20,7 +20,9 @@
 		"jdorn/sql-formatter" : "1.*",
 		"twig/twig" : "*",
 		"illuminate/view" : "4.1.*",
-		"mustache/mustache": "2.*"
+		"mustache/mustache": "2.*",
+
+		"joomla/session" : "1.*"
 	},
 	"suggest": {
 		"symfony/yaml": "Install 2.* if you require YAML support."

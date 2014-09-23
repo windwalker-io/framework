@@ -137,7 +137,7 @@ class PhpRenderer extends AbstractRenderer
 	 *
 	 * @return  string
 	 */
-	protected function load($file, $data = null)
+	public function load($file, $data = null)
 	{
 		$data = $this->data->bind(new Data($data));
 
@@ -162,7 +162,7 @@ class PhpRenderer extends AbstractRenderer
 	 *
 	 * @return  mixed|null
 	 */
-	protected function parent()
+	public function parent()
 	{
 		if (!$this->extend)
 		{
@@ -188,7 +188,7 @@ class PhpRenderer extends AbstractRenderer
 	 *
 	 * @throws \LogicException
 	 */
-	protected function extend($name)
+	public function extend($name)
 	{
 		if ($this->extend)
 		{
@@ -232,7 +232,7 @@ class PhpRenderer extends AbstractRenderer
 	 *
 	 * @return void
 	 */
-	protected function block($name)
+	public function block($name)
 	{
 		$this->currentBlock = $name;
 
@@ -247,7 +247,7 @@ class PhpRenderer extends AbstractRenderer
 	 *
 	 * @return  void
 	 */
-	protected function endblock()
+	public function endblock()
 	{
 		$name = $this->getBlockQueue()->pop();
 
