@@ -18,6 +18,7 @@
 		"phpunit/dbunit": "1.*",
 		"phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl",
 		"jdorn/sql-formatter" : "1.*",
+
 		"twig/twig" : "*",
 		"illuminate/view" : "4.1.*",
 		"mustache/mustache": "2.*",

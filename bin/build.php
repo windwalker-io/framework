@@ -54,7 +54,7 @@ class Build extends AbstractCliApplication
 	 */
 	protected $subtrees = array(
 		'application' => 'Application',
-		// 'cache'      => 'Cache',
+		'cache'      => 'Cache',
 		'compare'    => 'Compare',
 		'console'    => 'Console',
 		'controller' => 'Controller',
@@ -82,7 +82,7 @@ class Build extends AbstractCliApplication
 		'registry'   => 'Registry',
 		'renderer'   => 'Renderer',
 		// 'router'     => 'Router',
-		// 'session'    => 'Session',
+		'session'    => 'Session',
 		'string'     => 'String',
 		'test'       => 'Test',
 		'uri'        => 'Uri',
