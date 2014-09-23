@@ -30,6 +30,8 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	{
 		parent::setUp();
 
+		return;
+
 		$this->instance = $prompter = new FakePasswordPrompter(null, null, $this->io);
 	}
 
@@ -45,7 +47,13 @@ class PasswordPrompterTest extends AbstractPrompterTest
 		if (TestEnvironment::isWindows())
 		{
 			$this->markTestSkipped('This test is not supported on Windows');
+			
+			return;
 		}
+		
+		$this->markTestSkipped('This test is not supported now');
+		
+		return;
 
 		$this->markTestSkipped('This test is not supported now');
 
