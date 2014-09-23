@@ -387,7 +387,7 @@ class Session implements \IteratorAggregate
 		if ($this->getOption('expire_time'))
 		{
 			$curTime = $this->get('session.timer.now', 0);
-			$maxTime = $this->get('session.timer.last', 0) + ($this->expireTime * 60);
+			$maxTime = $this->get('session.timer.last', 0) + ($this->getOption('expire_time') * 60);
 
 			// Empty session variables
 			if ($maxTime < $curTime)
@@ -639,10 +639,13 @@ class Session implements \IteratorAggregate
 	/**
 	 * Retrieve an external iterator
 	 *
+	 * @param  string  $namespace
+	 *
 	 * @return Traversable An instance of an object implementing Iterator Traversable
 	 */
-	public function getIterator()
+	public function getIterator($namespace = 'default')
 	{
+		return new \ArrayIterator($this->getAll($namespace));
 	}
 
 	/**
@@ -750,6 +753,11 @@ class Session implements \IteratorAggregate
 	 */
 	public function getCookie()
 	{
+		if ($this->cookie === null)
+		{
+			$this->cookie = &$_COOKIE;
+		}
+
 		return $this->cookie;
 	}
 
