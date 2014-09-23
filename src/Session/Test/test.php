@@ -19,4 +19,4 @@ show($_SESSION);
 $session->set('a', 'b');
 $session->addFlash('a', 'b');
 
-show($_SESSION, $session->takeFlashes());
+show($_SESSION);
