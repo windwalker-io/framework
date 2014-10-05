@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Middleware;
@@ -25,14 +25,14 @@ interface MiddlewareInterface
 	/**
 	 * Get next middleware.
 	 *
-	 * @return  mixed
+	 * @return  mixed|MiddlewareInterface
 	 */
 	public function getNext();
 
 	/**
 	 * Set next middleware.
 	 *
-	 * @param   object $object The middleware object.
+	 * @param   object|MiddlewareInterface $object The middleware object.
 	 *
 	 * @return  MiddlewareInterface  Return self to support chaining.
 	 */

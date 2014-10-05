@@ -1,0 +1,25 @@
+{
+	"name": "windwalker/test",
+	"type": "windwalker-package",
+	"description": "Windwalker Test package",
+	"keywords": ["windwalker", "framework", "test"],
+	"homepage": "https://github.com/ventoviro/windwalker-test",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/environment" : "~2.0"
+	},
+	"require-dev": {
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Test\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

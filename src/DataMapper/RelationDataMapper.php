@@ -1,16 +1,17 @@
 <?php
 /**
- * Part of datamapper project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\DataMapper;
 
-use Joomla\Database\DatabaseDriver;
-use Windwalker\Database\DatabaseFactory;
-use Windwalker\Database\QueryHelper;
+use Windwalker\Data\Data;
+use Windwalker\Data\DataSet;
+use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
 
 /**
  * Relation Database Mapper.
@@ -20,67 +21,60 @@ use Windwalker\Database\QueryHelper;
 class RelationDataMapper extends DataMapper
 {
 	/**
-	 * The mappers.
+	 * Property tables.
 	 *
-	 * @var  array
+	 * @var  DataSet
 	 */
-	protected $mappers = array();
-
-	/**
-	 * Select columns.
-	 *
-	 * @var  array
-	 */
-	protected $select = array();
-
-	/**
-	 * Select type.
-	 *
-	 * @var  int
-	 */
-	protected $selectType = null;
+	protected $tables = null;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string         $alias       Table alias.
-	 * @param string         $table       Table name.
-	 * @param string|array   $pk          Primary key.
-	 * @param DatabaseDriver $db          Database adapter.
-	 * @param QueryHelper    $queryHelper Query helper object.
+	 * @param string                   $alias       Table alias.
+	 * @param string                   $table       Table name.
+	 * @param string|array             $pk          Primary key.
+	 * @param DatabaseAdapterInterface $db          Database adapter.
 	 */
-	public function __construct($alias, $table, $pk = 'id', DatabaseDriver $db = null, QueryHelper $queryHelper = null)
+	public function __construct($alias, $table, $pk = 'id', DatabaseAdapterInterface $db = null)
 	{
-		$this->db = $db ? : DatabaseFactory::getDbo();
+		$this->db = $db ? : DatabaseAdapter::getInstance();
 
 		$this->pk = $pk ? : $alias . '.' . $pk;
 
-		$this->queryHelper = $queryHelper ? : new QueryHelper($this->db);
+		$this->tables = new DataSet;
 
 		$this->addTable($alias, $table);
 
-		$this->configure();
+		$this->prepare();
 	}
 
 	/**
 	 * Add a join table.
 	 *
-	 * @param string $alias      Table alias.
-	 * @param string $table      Table name.
-	 * @param mixed  $conditions Join conditions, can be string, array or Compare object.
-	 *                           Example:
-	 *                           - `a.id = b.catid` => 'ON a.id = b.catid'
-	 *                           - `array('a.lft <= b.lft', 'a.rgt >= b.rgt')` => 'ON a.lft <= b.lft AND a.rgt >= b.rgt'
-	 *                           - `new EqCompare('a.id', 'b.catid')` => 'ON a.id = b.catid'
-	 * @param string $joinType   Which join type we use for this table, default is LEFT.
+	 * @param string   $alias      Table alias.
+	 * @param string   $table      Table name.
+	 * @param mixed    $conditions Join conditions, can be string, array or Compare object.
+	 *                             Example:
+	 *                             - `a.id = b.catid` => 'ON a.id = b.catid'
+	 *                             - `array('a.lft <= b.lft', 'a.rgt >= b.rgt')` => 'ON a.lft <= b.lft AND a.rgt >= b.rgt'
+	 *                             - `new EqCompare('a.id', 'b.catid')` => 'ON a.id = b.catid'
+	 * @param string   $joinType   Which join type we use for this table, default is LEFT.
+	 * @param boolean  $prefix     Select field add prefix.
 	 *
 	 * @return  RelationDataMapper Return self to support chaining.
 	 */
-	public function addTable($alias, $table, $conditions = null, $joinType = 'LEFT')
+	public function addTable($alias, $table, $conditions = null, $joinType = 'LEFT', $prefix = null)
 	{
-		$this->mappers[$alias] = ($table instanceof DataMapper) ? $table : new DataMapper($table);
-
-		$this->queryHelper->addTable($alias, $table, $conditions, $joinType);
+		$this->tables[$alias] = new Data(
+			array(
+				'alias' => $alias,
+				'table' => $table,
+				'from'  => $alias . '.' . $table,
+				'conditions' => $conditions,
+				'joinType' => $joinType,
+				'prefix' => $prefix
+			)
+		);
 
 		return $this;
 	}
@@ -94,60 +88,7 @@ class RelationDataMapper extends DataMapper
 	 */
 	public function removeTable($alias)
 	{
-		$this->queryHelper->removeTable($alias);
-
-		return $this;
-	}
-
-	/**
-	 * Get select columns.
-	 *
-	 * @return array|string Select columns.
-	 */
-	public function getSelect()
-	{
-		return $this->select;
-	}
-
-	/**
-	 * Set select columns.
-	 *
-	 * @param array|string $select Select columns.
-	 *
-	 * @return  RelationDataMapper  Return self to support chaining.
-	 */
-	public function setSelect($select)
-	{
-		$this->select = $select;
-
-		return $this;
-	}
-
-	/**
-	 * Get select type.
-	 *
-	 * @return int Select type.
-	 */
-	public function getSelectType()
-	{
-		return $this->selectType;
-	}
-
-	/**
-	 * Set select type.
-	 *
-	 * @param int $selectType Select type: `QueryHelper::COLS_WITH_FIRST` or `QueryHelper::COLS_PREFIX_WITH_FIRST`.
-	 *
-	 *                        - COLS_WITH_FIRST        => Means first table use `alias`.`field` AS `field`
-	 *                        - COLS_PREFIX_WITH_FIRST => Means first use  `alias`.`field` AS `alias_field`
-	 *
-	 *                        You can use `QueryHelper::COLS_WITH_FIRST | QueryHelper::COLS_PREFIX_WITH_FIRST` to enable both.
-	 *
-	 * @return RelationDataMapper  Return self to support chaining.
-	 */
-	public function setSelectType($selectType)
-	{
-		$this->selectType = $selectType;
+		unset($this->tables[$alias]);
 
 		return $this;
 	}
@@ -164,24 +105,6 @@ class RelationDataMapper extends DataMapper
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
-		$query = $this->db->getQuery(true);
-
-		// Conditions.
-		$query = QueryHelper::buildWheres($query, $conditions);
-
-		// Loop ordering
-		foreach ($orders as $order)
-		{
-			$query->order($order);
-		}
-
-		// Build query
-		$selectType = $this->selectType ? : QueryHelper::COLS_WITH_FIRST;
-
-		$query->select($this->select ? : $this->queryHelper->getSelectFields($selectType));
-
-		$this->queryHelper->registerQueryTables($query);
-
-		return $this->db->setQuery($query, $start, $limit)->loadObjectList();
+		return $this->db->find($this->tables, $this->selectFields, $conditions, $orders, $start, $limit);
 	}
 }

@@ -1,0 +1,25 @@
+{
+	"name": "windwalker/cache",
+	"type": "windwalker-package",
+	"description": "Windwalker Cache package",
+	"keywords": ["windwalker", "framework", "cache"],
+	"homepage": "https://github.com/ventoviro/windwalker-cache",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Cache\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

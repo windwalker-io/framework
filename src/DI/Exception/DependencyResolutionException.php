@@ -1,9 +1,9 @@
 <?php
 /**
- * Part of the Joomla Framework DI Package
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2013 - 2014 Open Source Matters, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\DI\Exception;
@@ -11,7 +11,7 @@ namespace Windwalker\DI\Exception;
 /**
  * Exception class for handling errors in resolving a dependency
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class DependencyResolutionException extends \Exception
 {

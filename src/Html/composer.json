@@ -1,0 +1,28 @@
+{
+	"name": "windwalker/html",
+	"type": "windwalker-package",
+	"description": "Windwalker Html package",
+	"keywords": ["windwalker", "framework", "html"],
+	"homepage": "https://github.com/ventoviro/windwalker-html",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/dom" : "~2.0"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0"
+	},
+	"suggest": {
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Html\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

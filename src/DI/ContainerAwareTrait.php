@@ -1,17 +1,17 @@
 <?php
 /**
- * Part of formosa project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\DI;
 
 /**
- * Class ContainerAwareTrait
+ * Container Aware Trait
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 trait ContainerAwareTrait
 {
@@ -19,7 +19,7 @@ trait ContainerAwareTrait
 	 * DI Container
 	 *
 	 * @var    Container
-	 * @since  1.2
+	 * @since  {DEPLOY_VERSION}
 	 */
 	private $container;
 
@@ -28,7 +28,7 @@ trait ContainerAwareTrait
 	 *
 	 * @return  Container
 	 *
-	 * @since   1.2
+	 * @since   {DEPLOY_VERSION}
 	 *
 	 * @throws  \UnexpectedValueException May be thrown if the container has not been set.
 	 */
@@ -49,7 +49,7 @@ trait ContainerAwareTrait
 	 *
 	 * @return  mixed  Returns itself to support chaining.
 	 *
-	 * @since   1.2
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function setContainer(Container $container)
 	{
@@ -57,4 +57,4 @@ trait ContainerAwareTrait
 
 		return $this;
 	}
-} 
+}

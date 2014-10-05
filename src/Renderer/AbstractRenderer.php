@@ -1,9 +1,9 @@
 <?php
 /**
- * Part of formosa project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Renderer;
@@ -13,7 +13,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractRenderer
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractRenderer implements RendererInterface
 {
@@ -54,7 +54,7 @@ abstract class AbstractRenderer implements RendererInterface
 	 * @return  string  The escaped output.
 	 *
 	 * @see     ViewInterface::escape()
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function escape($output)
 	{
@@ -72,7 +72,7 @@ abstract class AbstractRenderer implements RendererInterface
 	 */
 	public function findFile($file, $ext = '')
 	{
-		$paths = clone $this->paths;
+		$paths = clone $this->getPaths();
 
 		$file = str_replace('.', '/', $file);
 
@@ -140,4 +140,4 @@ abstract class AbstractRenderer implements RendererInterface
 		$this->paths->insert($path, $priority);
 	}
 }
- 
+

@@ -1,0 +1,25 @@
+{
+	"name": "windwalker/uri",
+	"type": "windwalker-package",
+	"description": "Windwalker Uri package",
+	"keywords": ["windwalker", "framework", "uri"],
+	"homepage": "https://github.com/ventoviro/windwalker-uri",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Uri\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

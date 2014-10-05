@@ -2,7 +2,7 @@
 	"name": "windwalker/framework",
 	"description": "Rapido de la vento viro.",
 	"homepage": "https://github.com/ventoviro/windwalker",
-	"license": "GNU Lesser General Public License",
+	"license": "GPL-2.0+",
 	"minimum-stability": "beta",
 	"authors": [
 		{
@@ -11,16 +11,42 @@
 		}
 	],
 	"require": {
-		"joomla/utilities": "~1.0"
+		"psr/log" : "1.*@stable"
 	},
 	"require-dev": {
-		"joomla/test": "~1.0",
-		"joomla/application": "~1.0",
-		"joomla/database" : "~1.0"
+		"phpunit/phpunit": "3.*",
+		"phpunit/dbunit": "1.*",
+		"phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl",
+		"jdorn/sql-formatter" : "1.*",
+		"symfony/yaml" : "2.*@stable",
+
+		"twig/twig" : "*",
+		"illuminate/view" : "4.1.*",
+		"mustache/mustache": "2.*",
+
+		"joomla/session" : "1.*",
+		"joomla/event" : "1.*@stable"
 	},
+	"suggest": {
+		"symfony/yaml": "Install 2.* if you require YAML support."
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/ventoviro/phpunit-skeleton-generator"
+		}
+	],
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\": "src/"
+		},
+		"files": [
+			"src/Utilities/functions.php"
+		]
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
 		}
 	}
 }

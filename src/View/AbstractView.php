@@ -1,9 +1,9 @@
 <?php
 /**
- * Part of formosa project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\View;
@@ -11,14 +11,14 @@ namespace Windwalker\View;
 /**
  * Class AbstractView
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
-abstract class AbstractView implements ViewInterface
+abstract class AbstractView implements ViewInterface, \ArrayAccess
 {
 	/**
 	 * Property data.
 	 *
-	 * @var  array
+	 * @var  array|\ArrayAccess
 	 */
 	protected $data = array();
 
@@ -29,7 +29,7 @@ abstract class AbstractView implements ViewInterface
 	 */
 	public function __construct($data = array())
 	{
-		$this->data = (array) $data;
+		$this->data = $data;
 	}
 
 	/**
@@ -91,9 +91,80 @@ abstract class AbstractView implements ViewInterface
 	 */
 	public function setData($data)
 	{
-		$this->data = (array) $data;
+		$this->data = $data;
 
 		return $this;
 	}
+
+	/**
+	 * __toString
+	 *
+	 * @return  string
+	 */
+	public function __toString()
+	{
+		try
+		{
+			return (string) $this->render();
+		}
+		catch (\Exception $e)
+		{
+			return (string) $e;
+		}
+	}
+
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return isset($this->data[$offset]);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		if ($this->offsetExists($offset))
+		{
+			unset($this->data[$offset]);
+		}
+	}
 }
- 

@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Data;
@@ -54,7 +54,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 		// If is object, convert it to array
 		elseif (is_object($values))
 		{
-			$values = (array) $values;
+			$values = get_object_vars($values);
 		}
 
 		// Bind the properties.
@@ -67,7 +67,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 			}
 
 			// Set the property.
-			$this->$field = $value;
+			$this->set($field, $value);
 		}
 
 		return $this;
@@ -79,15 +79,17 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param string $field The field to set.
 	 * @param mixed  $value The value to set.
 	 *
-	 * @return  Data Return self to support chaining.
+	 * @throws  \InvalidArgumentException
+	 * @return  static Return self to support chaining.
 	 */
 	public function set($field, $value = null)
 	{
+		// Remove \0 from begin of field name.
 		if (strpos($field, "\0") === 0)
 		{
-			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
+			$field = substr($field, 3);
 		}
-		
+
 		$this->$field = $value;
 
 		return $this;
@@ -99,21 +101,41 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param string $field   The field to get.
 	 * @param mixed  $default The default value if not exists.
 	 *
+	 * @throws  \InvalidArgumentException
 	 * @return  mixed The value we want ot get.
 	 */
 	public function get($field, $default = null)
 	{
+		// Remove \0 from begin of field name.
 		if (strpos($field, "\0") === 0)
 		{
-			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
+			$field = substr($field, 3);
 		}
-		
+
 		if (isset($this->$field))
 		{
 			return $this->$field;
 		}
 
 		return $default;
+	}
+
+	/**
+	 * Method to check a field exists.
+	 *
+	 * @param string $field The field name to check.
+	 *
+	 * @return  boolean True if exists.
+	 */
+	public function exists($field)
+	{
+		// Remove \0 from begin of field name.
+		if (strpos($field, "\0") === 0)
+		{
+			$field = substr($field, 3);
+		}
+
+		return isset($this->$field);
 	}
 
 	/**
@@ -160,7 +182,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function offsetExists($offset)
 	{
-		return isset($this->$offset);
+		return $this->exists($offset);
 	}
 
 	/**
@@ -168,16 +190,12 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 *
 	 * @param mixed $offset Offset key.
 	 *
+	 * @throws  \InvalidArgumentException
 	 * @return  mixed The value to return.
 	 */
 	public function offsetGet($offset)
 	{
-		if (strpos($offset, "\0") === 0)
-		{
-			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
-		}
-		
-		return $this->$offset;
+		return $this->get($offset);
 	}
 
 	/**
@@ -186,16 +204,12 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param mixed $offset Offset key.
 	 * @param mixed $value  The value to set.
 	 *
+	 * @throws  \InvalidArgumentException
 	 * @return  void
 	 */
 	public function offsetSet($offset, $value)
 	{
-		if (strpos($offset, "\0") === 0)
-		{
-			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
-		}
-		
-		$this->$offset = $value;
+		$this->set($offset, $value);
 	}
 
 	/**
@@ -203,15 +217,17 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 *
 	 * @param mixed $offset Offset key to unset.
 	 *
+	 * @throws  \InvalidArgumentException
 	 * @return  void
 	 */
 	public function offsetUnset($offset)
 	{
+		// Remove \0 from begin of field name.
 		if (strpos($offset, "\0") === 0)
 		{
-			throw new \InvalidArgumentException("Cannot access property start with '\\0', got: " . $field);
+			$offset = substr($offset, 3);
 		}
-		
+
 		unset($this->$offset);
 	}
 

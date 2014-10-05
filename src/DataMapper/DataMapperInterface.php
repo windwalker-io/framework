@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\DataMapper;
@@ -70,6 +70,28 @@ interface DataMapperInterface
 	 * @return mixed Found row data.
 	 */
 	public function findOne($conditions = array(), $order = null);
+
+	/**
+	 * Find column as an array.
+	 *
+	 * @param string  $column     The column we want to select.
+	 * @param mixed   $conditions Where conditions, you can use array or Compare object.
+	 *                            Example:
+	 *                            - `array('id' => 5)` => id = 5
+	 *                            - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+	 * @param mixed   $order      Order sort, can ba string, array or object.
+	 *                            Example:
+	 *                            - `id ASC` => ORDER BY id ASC
+	 *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+	 * @param integer $start      Limit start number.
+	 * @param integer $limit      Limit rows.
+	 *
+	 * @return  mixed
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function findColumn($column, $conditions = array(), $order = null, $start = null, $limit = null);
 
 	/**
 	 * Create records by data set.

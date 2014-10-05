@@ -1,0 +1,37 @@
+#!/bin/sh
+
+##sh build/travis/subtree/dotest.sh Application
+#sh build/travis/subtree/dotest.sh Cache
+#sh build/travis/subtree/dotest.sh Compare
+#sh build/travis/subtree/dotest.sh Console
+#sh build/travis/subtree/dotest.sh Controller
+##sh build/travis/subtree/dotest.sh Crypt
+#sh build/travis/subtree/dotest.sh Data
+#sh build/travis/subtree/dotest.sh Database
+#sh build/travis/subtree/dotest.sh DataMapper
+#sh build/travis/subtree/dotest.sh DI
+#sh build/travis/subtree/dotest.sh Dom
+#sh build/travis/subtree/dotest.sh Environment
+##sh build/travis/subtree/dotest.sh Event
+#sh build/travis/subtree/dotest.sh Filesystem
+#sh build/travis/subtree/dotest.sh Filter
+#sh build/travis/subtree/dotest.sh Form
+#sh build/travis/subtree/dotest.sh Html
+#sh build/travis/subtree/dotest.sh IO
+##sh build/travis/subtree/dotest.sh Language
+##sh build/travis/subtree/dotest.sh Loader
+#sh build/travis/subtree/dotest.sh Middleware
+#sh build/travis/subtree/dotest.sh Model
+##sh build/travis/subtree/dotest.sh Profiler
+#sh build/travis/subtree/dotest.sh Query
+##sh build/travis/subtree/dotest.sh Record
+#sh build/travis/subtree/dotest.sh Registry
+#sh build/travis/subtree/dotest.sh Renderer
+##sh build/travis/subtree/dotest.sh Router
+#sh build/travis/subtree/dotest.sh Session
+#sh build/travis/subtree/dotest.sh String
+#sh build/travis/subtree/dotest.sh Test
+#sh build/travis/subtree/dotest.sh Uri
+#sh build/travis/subtree/dotest.sh Utilities
+#sh build/travis/subtree/dotest.sh Validator
+#sh build/travis/subtree/dotest.sh View

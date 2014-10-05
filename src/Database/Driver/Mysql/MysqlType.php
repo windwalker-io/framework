@@ -1,0 +1,43 @@
+<?php
+/**
+ * Part of Windwalker project. 
+ *
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
+
+namespace Windwalker\Database\Driver\Mysql;
+
+use Windwalker\Database\Command\Table\DataType;
+
+/**
+ * The MysqlType class.
+ * 
+ * @since  {DEPLOY_VERSION}
+ */
+abstract class MysqlType extends DataType
+{
+	const INTEGER = 'int';
+	const BOOLEAN = 'bool';
+	const ENUM = 'enum';
+
+	/**
+	 * Property types.
+	 *
+	 * @var  array
+	 */
+	public static $defaultLengths = array(
+		self::INTEGER => 11,
+	);
+
+	/**
+	 * Property typeMapping.
+	 *
+	 * @var  array
+	 */
+	protected static $typeMapping = array(
+		DataType::INTEGER => 'int',
+		DataType::BIT     => self::TINYINT,
+		DataType::BOOLEAN => self::BOOLEAN
+	);
+}

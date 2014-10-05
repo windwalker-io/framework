@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\DataMapper;
@@ -40,6 +40,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	protected $fields = null;
 
 	/**
+	 * Property selectFields.
+	 *
+	 * @var  array
+	 */
+	protected $selectFields = null;
+
+	/**
 	 * Data object class.
 	 *
 	 * @var  string
@@ -52,6 +59,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @var  string
 	 */
 	protected $datasetClass = 'Windwalker\\Data\\DataSet';
+
+	/**
+	 * Property useTransaction.
+	 *
+	 * @var  boolean
+	 */
+	protected $useTransaction = true;
 
 	/**
 	 * Init this class.
@@ -78,7 +92,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$this->pk = $pk;
 
 		// Set some custom configuration.
-		$this->configure();
+		$this->prepare();
 	}
 
 	/**
@@ -86,7 +100,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  void
 	 */
-	protected function configure()
+	protected function prepare()
 	{
 		// Override this method to to something.
 	}
@@ -194,6 +208,44 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	}
 
 	/**
+	 * Find column as an array.
+	 *
+	 * @param string  $column     The column we want to select.
+	 * @param mixed   $conditions Where conditions, you can use array or Compare object.
+	 *                            Example:
+	 *                            - `array('id' => 5)` => id = 5
+	 *                            - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+	 * @param mixed   $order      Order sort, can ba string, array or object.
+	 *                            Example:
+	 *                            - `id ASC` => ORDER BY id ASC
+	 *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+	 * @param integer $start      Limit start number.
+	 * @param integer $limit      Limit rows.
+	 *
+	 * @return  mixed
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function findColumn($column, $conditions = array(), $order = null, $start = null, $limit = null)
+	{
+		if (!is_string($column))
+		{
+			throw new \InvalidArgumentException('Column name should be string.');
+		}
+
+		$bakSelect = $this->selectFields;
+
+		$this->setSelectFields($column);
+
+		$dataset = $this->find($conditions, $order, $start, $limit);
+
+		$this->setSelectFields($bakSelect);
+
+		return $dataset->$column;
+	}
+
+	/**
 	 * Create records by data set.
 	 *
 	 * @param mixed $dataset The data set contains data we want to store.
@@ -204,17 +256,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function create($dataset)
 	{
-		if (!($dataset instanceof $this->datasetClass))
+		if (!($dataset instanceof \Traversable) && !is_array($dataset))
 		{
-			throw new \InvalidArgumentException('DataSet object should be: ' . $this->datasetClass);
+			throw new \InvalidArgumentException('DataSet object should be instance of a Traversable');
 		}
 
 		$dataset = $this->doCreate($dataset);
-
-		if (!($dataset instanceof $this->datasetClass))
-		{
-			throw new \UnexpectedValueException('Return value should be: ' . $this->datasetClass);
-		}
 
 		return $dataset;
 	}
@@ -229,11 +276,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function createOne($data)
 	{
-		if (!($data instanceof $this->dataClass))
-		{
-			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
-		}
-
 		$dataset = $this->create($this->bindDataset(array($data)));
 
 		return $dataset[0];
@@ -252,20 +294,15 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function update($dataset, $condFields = null)
 	{
-		if (!($dataset instanceof $this->datasetClass))
+		if (!($dataset instanceof \Traversable) && !is_array($dataset))
 		{
-			throw new \InvalidArgumentException('DataSet object should be: ' . $this->datasetClass);
+			throw new \InvalidArgumentException('DataSet object should be instance of a Traversable');
 		}
 
 		// Handling conditions
 		$condFields = $condFields ? : $this->getPrimaryKey();
 
 		$dataset = $this->doUpdate($dataset, (array) $condFields);
-
-		if (!($dataset instanceof $this->datasetClass))
-		{
-			throw new \UnexpectedValueException('Return value should be: ' . $this->datasetClass);
-		}
 
 		return $dataset;
 	}
@@ -282,11 +319,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function updateOne($data, $condFields = null)
 	{
-		if (!($data instanceof $this->dataClass))
-		{
-			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
-		}
-
 		$dataset = $this->update($this->bindDataset(array($data)), $condFields);
 
 		return $dataset[0];
@@ -310,11 +342,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function updateAll($data, $conditions = array())
 	{
-		if (!($data instanceof $this->dataClass))
-		{
-			throw new \InvalidArgumentException('Data object should be: ' . $this->dataClass);
-		}
-
 		return $this->doUpdateAll($data, $conditions);
 	}
 
@@ -663,6 +690,47 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function setDatasetClass($datasetClass)
 	{
 		$this->datasetClass = $datasetClass;
+
+		return $this;
+	}
+
+	/**
+	 * To use transaction or not.
+	 *
+	 * @param boolean $yn Yes or no, keep default that we get this value.
+	 *
+	 * @return  boolean
+	 */
+	public function useTransaction($yn = null)
+	{
+		if ($yn !== null)
+		{
+			$this->useTransaction = (boolean) $yn;
+		}
+
+		return $this->useTransaction;
+	}
+
+	/**
+	 * Method to get property SelectFields
+	 *
+	 * @return  array
+	 */
+	public function getSelectFields()
+	{
+		return $this->selectFields;
+	}
+
+	/**
+	 * Method to set property selectFields
+	 *
+	 * @param   array $selectFields
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setSelectFields($selectFields)
+	{
+		$this->selectFields = (array) $selectFields;
 
 		return $this;
 	}

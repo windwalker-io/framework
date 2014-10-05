@@ -2,13 +2,13 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Database;
 
-use Joomla\Database\DatabaseDriver;
+use Windwalker\Database\Driver\DatabaseDriver;
 
 /**
  * Class DatabaseFactory
@@ -16,35 +16,63 @@ use Joomla\Database\DatabaseDriver;
 abstract class DatabaseFactory
 {
 	/**
-	 * Property db.
+	 * The default DB object.
 	 *
 	 * @var DatabaseDriver
 	 */
 	protected static $db = null;
 
 	/**
-	 * Property command.
+	 * Property instances.
 	 *
-	 * @var  DatabaseCommand
+	 * @var  array
 	 */
-	protected static $command = null;
+	protected static $instances = array();
 
 	/**
 	 * getDbo
 	 *
-	 * @param array $option
-	 * @param bool  $forceNew
+	 * @param string $driver
+	 * @param array  $option
+	 * @param bool   $forceNew
 	 *
+	 * @throws \InvalidArgumentException
 	 * @return  DatabaseDriver
 	 */
-	public static function getDbo($option = array(), $forceNew = false)
+	public static function getDbo($driver = null, $option = array(), $forceNew = false)
 	{
-		if (!self::$db || $forceNew)
+		// No driver name given, we return default DB object.
+		if (!$driver)
 		{
-			self::$db = static::createDbo($option);
+			return self::$db;
 		}
 
-		return self::$db;
+		// Create new instance if this driver not exists.
+		if (empty(self::$instances[$driver]) || $forceNew)
+		{
+			self::$instances[$driver] = static::createDbo($driver, $option);
+
+			// Set default DB object.
+			if (!self::$db)
+			{
+				self::$db = self::$instances[$driver];
+			}
+		}
+
+		return self::$instances[$driver];
+	}
+
+	/**
+	 * setDbo
+	 *
+	 * @param string         $driver
+	 * @param DatabaseDriver $db
+	 *
+	 * @return  void
+	 */
+	public static function setDbo($driver, DatabaseDriver $db = null)
+	{
+		self::$instances[$driver] = $db;
 	}
 
 	/**
@@ -54,53 +82,56 @@ abstract class DatabaseFactory
 	 *
 	 * @return  void
 	 */
-	public static function setDbo(DatabaseDriver $db)
+	public static function setDefaultDbo(DatabaseDriver $db = null)
 	{
 		self::$db = $db;
-	}
 
-	/**
-	 * getCommand
-	 *
-	 * @param bool $forceNew
-	 *
-	 * @return  DatabaseCommand
-	 */
-	public static function getCommand($forceNew = false)
-	{
-		if (!self::$command || $forceNew)
+		if ($db)
 		{
-			self::$command = new DatabaseCommand(static::getDbo());
+			$driver = $db->getName();
+
+			self::$instances[$driver] = $db;
 		}
-
-		return self::$command;
-	}
-
-	/**
-	 * setCommand
-	 *
-	 * @param   DatabaseCommand $command
-	 *
-	 * @return  DatabaseFactory  Return self to support chaining.
-	 */
-	public static function setCommand(DatabaseCommand $command)
-	{
-		self::$command = $command;
 	}
 
 	/**
 	 * createDbo
 	 *
-	 * @param array $option
+	 * @param string $driver
+	 * @param array  $options
 	 *
+	 * @throws \RuntimeException
 	 * @return  DatabaseDriver
 	 */
-	public static function createDbo(array $option)
+	public static function createDbo($driver, array $options)
 	{
-		$dbFactory = \Joomla\Database\DatabaseFactory::getInstance();
+		// Sanitize the database connector options.
+		$options['driver']   = preg_replace('/[^A-Z0-9_\.-]/i', '', $driver);
+		$options['database'] = (isset($options['database'])) ? $options['database'] : null;
+		$options['select']   = (isset($options['select'])) ? $options['select'] : true;
 
-		$option['driver'] = !empty($option['driver']) ? $option['driver'] : 'mysql';
+		// Use custom Resource
+		$resource = isset($options['resource']) ? $options['resource'] : null;
 
-		return $dbFactory->getDriver($option['driver'], $option);
+		// Derive the class name from the driver.
+		$class = '\\Windwalker\\Database\\Driver\\' . ucfirst(strtolower($options['driver'])) . '\\' . ucfirst(strtolower($options['driver'])) . 'Driver';
+
+		// If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
+		if (!class_exists($class))
+		{
+			throw new \RuntimeException(sprintf('Unable to load Database Driver: %s', $options['driver']));
+		}
+
+		// Create our new Driver connector based on the options given.
+		try
+		{
+			$instance = new $class($resource, $options);
+		}
+		catch (\RuntimeException $e)
+		{
+			throw new \RuntimeException(sprintf('Unable to connect to the Database: %s', $e->getMessage()));
+		}
+
+		return $instance;
 	}
 }

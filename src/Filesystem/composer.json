@@ -1,0 +1,25 @@
+{
+	"name": "windwalker/filesystem",
+	"type": "windwalker-package",
+	"description": "Windwalker Filesystem package",
+	"keywords": ["windwalker", "framework", "filesystem"],
+	"homepage": "https://github.com/ventoviro/windwalker-filesystem",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"windwalker/test" : "~2.0"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Filesystem\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

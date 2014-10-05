@@ -1,0 +1,26 @@
+{
+	"name": "windwalker/router",
+	"type": "windwalker-package",
+	"description": "Windwalker Router package",
+	"keywords": ["windwalker", "framework", "router"],
+	"homepage": "https://github.com/ventoviro/windwalker-router",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0",
+		"windwalker/uri": "~2.0"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Router\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

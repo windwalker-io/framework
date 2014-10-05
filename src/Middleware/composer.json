@@ -3,18 +3,23 @@
 	"type": "windwalker-package",
 	"description": "Windwalker Middleware package",
 	"keywords": ["windwalker", "framework", "middleware"],
-	"homepage": "https://github.com/asika32764/windwalker-middleware",
+	"homepage": "https://github.com/ventoviro/windwalker-middleware",
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10"
 	},
 	"require-dev": {
-		"joomla/test": "1.0-beta2"
+		"windwalker/test": "~2.0"
 	},
-	"minimum-stability" : "beta",
+	"minimum-stability" : "dev",
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\Middleware\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
 		}
 	}
 }

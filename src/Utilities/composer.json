@@ -1,0 +1,29 @@
+{
+	"name": "windwalker/utilities",
+	"type": "windwalker-package",
+	"description": "Windwalker Utilities package",
+	"keywords": ["windwalker", "framework", "utilities"],
+	"homepage": "https://github.com/ventoviro/windwalker-utilities",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/string" : "~2.0"
+	},
+	"require-dev": {
+		"windwalker/test" : "~2.0"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Utilities\\": ""
+		},
+		"files": [
+			"functions.php"
+		]
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

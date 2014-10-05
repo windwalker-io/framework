@@ -1,0 +1,620 @@
+<?php
+/**
+ * Part of Windwalker project. 
+ *
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
+
+namespace Windwalker\Record;
+
+use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Query\Query;
+
+/**
+ * Class Table
+ *
+ * @since {DEPLOY_VERSION}
+ */
+class Record implements \IteratorAggregate
+{
+	/**
+	 * Name of the database table to model.
+	 *
+	 * @var    string
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $table = '';
+
+	/**
+	 * Name of the primary key fields in the table.
+	 *
+	 * @var    array
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $keys = array();
+
+	/**
+	 * Indicates that the primary keys autoincrement.
+	 *
+	 * @var    boolean
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $autoIncrement = true;
+
+	/**
+	 * The fields of the database table.
+	 *
+	 * @var    \stdClass
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $data = null;
+
+	/**
+	 * DatabaseDriver object.
+	 *
+	 * @var    DatabaseDriver
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $db;
+
+	/**
+	 * Object constructor to set table and key fields.  In most cases this will
+	 * be overridden by child classes to explicitly set the table and key fields
+	 * for a particular database table.
+	 *
+	 * @param   string          $table  Name of the table to model.
+	 * @param   mixed           $keys   Name of the primary key field in the table or array of field names that
+	 *                                  compose the primary key.
+	 * @param   DatabaseDriver  $db     DatabaseDriver object.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function __construct($table, $keys = 'id', DatabaseDriver $db = null)
+	{
+		$db = $db ? : DatabaseFactory::getDbo();
+
+		// Set internal variables.
+		$this->table = $table;
+		$this->db    = $db;
+		$this->data  = new \stdClass;
+
+		// Set the key to be an array.
+		if (is_string($keys))
+		{
+			$keys = array($keys);
+		}
+		elseif (is_object($keys))
+		{
+			$keys = (array) $keys;
+		}
+
+		$this->keys = $keys;
+
+		$this->autoIncrement = (count($keys) == 1) ? true : false;
+
+		// Initialise the table properties.
+		$fields = $this->getFields();
+
+		if ($fields)
+		{
+			foreach ($fields as $name => $v)
+			{
+				// Add the field if it is not already present.
+				$this->data->$name = null;
+			}
+		}
+	}
+
+	/**
+	 * Magic setter to set a table field.
+	 *
+	 * @param   string  $key    The key name.
+	 * @param   mixed   $value  The value to set.
+	 *
+	 * @return  void
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 * @throws  \InvalidArgumentException
+	 */
+	public function __set($key, $value)
+	{
+		if (property_exists($this->data, $key))
+		{
+			$this->data->$key = $value;
+		}
+		else
+		{
+			throw new \InvalidArgumentException(__METHOD__ . ' - Set unknown property: ' . $key);
+		}
+	}
+
+	/**
+	 * Magic getter to get a table field.
+	 *
+	 * @param   string  $key  The key name.
+	 *
+	 * @return  mixed
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 * @throws  \InvalidArgumentException
+	 */
+	public function __get($key)
+	{
+		if (property_exists($this->data, $key))
+		{
+			return $this->data->$key;
+		}
+
+		throw new \InvalidArgumentException(__METHOD__ . ' - Get unknown property: ' . $key);
+	}
+
+	/**
+	 * Method to provide a shortcut to binding, checking and storing a AbstractTable
+	 * instance to the database table.  The method will check a row in once the
+	 * data has been stored and if an ordering filter is present will attempt to
+	 * reorder the table rows based on the filter.  The ordering filter is an instance
+	 * property name.  The rows that will be reordered are those whose value matches
+	 * the AbstractTable instance for the property specified.
+	 *
+	 * @param   mixed  $src     An associative array or object to bind to the AbstractTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties
+	 *                          to ignore while binding.
+	 *
+	 * @return  $this  Method allows chaining
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function save($src, $ignore = '')
+	{
+		$this
+			// Attempt to bind the source to the instance.
+			->bind($src, $ignore)
+			// Run any sanity checks on the instance and verify that it is ready for storage.
+			->check()
+			// Attempt to store the properties to the database table.
+			->store();
+
+		return $this;
+	}
+
+	/**
+	 * Method to bind an associative array or object to the AbstractTable instance.  This
+	 * method only binds properties that are publicly accessible and optionally
+	 * takes an array of properties to ignore when binding.
+	 *
+	 * @param   mixed  $src     An associative array or object to bind to the AbstractTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+	 *
+	 * @return  static  Method allows chaining
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 * @throws  \InvalidArgumentException
+	 */
+	public function bind($src, $ignore = array())
+	{
+		// If the source value is not an array or object return false.
+		if (!is_object($src) && !is_array($src))
+		{
+			throw new \InvalidArgumentException(sprintf('%s::bind(*%s*)', get_class($this), gettype($src)));
+		}
+
+		// If the source value is an object, get its accessible properties.
+		if (is_object($src))
+		{
+			$src = get_object_vars($src);
+		}
+
+		// If the ignore value is a string, explode it over spaces.
+		if (!is_array($ignore))
+		{
+			$ignore = explode(' ', $ignore);
+		}
+
+		// Bind the source value, excluding the ignored fields.
+		foreach ($this->data as $k => $v)
+		{
+			// Only process fields not in the ignore array.
+			if (!in_array($k, $ignore))
+			{
+				if (isset($src[$k]))
+				{
+					$this->data->$k = $src[$k];
+				}
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Method to load a row from the database by primary key and bind the fields
+	 * to the AbstractTable instance properties.
+	 *
+	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+	 *                           set the instance property value is used.
+	 * @param   boolean  $reset  True to reset the default values before loading the new row.
+	 *
+	 * @return  static  Method allows chaining
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 * @throws  \RuntimeException
+	 * @throws  \UnexpectedValueException
+	 * @throws  \InvalidArgumentException
+	 */
+	public function load($keys = null, $reset = true)
+	{
+		if (empty($keys))
+		{
+			$empty = true;
+			$keys  = array();
+
+			// If empty, use the value of the current key
+			foreach ($this->keys as $key)
+			{
+				$empty      = $empty && empty($this->$key);
+				$keys[$key] = $this->$key;
+			}
+
+			// If empty primary key there's is no need to load anything
+			if ($empty)
+			{
+				return $this;
+			}
+		}
+		elseif (!is_array($keys))
+		{
+			// Load by primary key.
+			$keyCount = count($this->keys);
+
+			if ($keyCount)
+			{
+				if ($keyCount > 1)
+				{
+					throw new \InvalidArgumentException('Table has multiple primary keys specified, only one primary key value provided.');
+				}
+
+				$keys = array($this->getKeyName() => $keys);
+			}
+			else
+			{
+				throw new \RuntimeException('No table keys defined.');
+			}
+		}
+
+		if ($reset)
+		{
+			$this->reset();
+		}
+
+		// Initialise the query.
+		$query = $this->db->getQuery(true);
+		$query->select('*');
+		$query->from($this->db->quoteName($this->table));
+
+		foreach ($keys as $field => $value)
+		{
+			// Check that $field is in the table.
+
+			if (isset($this->data->$field) || is_null($this->data->$field))
+			{
+				// Add the search tuple to the query.
+				$query->where($this->db->quoteName($field) . ' = ' . $this->db->quote($value));
+			}
+			else
+			{
+				throw new \UnexpectedValueException(sprintf('Missing field in database: %s &#160; %s.', get_class($this), $field));
+			}
+		}
+
+		$this->db->setQuery($query);
+
+		$row = $this->db->loadOne();
+
+		// Check that we have a result.
+		if (empty($row))
+		{
+			throw new \RuntimeException(__METHOD__ . ' can not bind.');
+		}
+
+		// Bind the object with the row and return.
+		return $this->bind($row);
+	}
+
+	/**
+	 * Method to delete a row from the database table by primary key value.
+	 *
+	 * @param   mixed  $pKey  An optional primary key value to delete.  If not set the instance property value is used.
+	 *
+	 * @return  $this  Method allows chaining
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 * @throws  \UnexpectedValueException
+	 */
+	public function delete($pKey = null)
+	{
+		$key = $this->getKeyName();
+
+		$pKey = (is_null($pKey)) ? $this->$key : $pKey;
+
+		// If no primary key is given, return false.
+		if ($pKey === null)
+		{
+			throw new \UnexpectedValueException('Null primary key not allowed.');
+		}
+
+		// Delete the row by primary key.
+		$this->db->setQuery(
+			$this->db->getQuery(true)
+				->delete($this->db->quoteName($this->table))
+				->where($this->db->quoteName($key) . ' = ' . $this->db->quote($pKey))
+		)->execute();
+
+		return $this;
+	}
+
+	/**
+	 * Method to reset class properties to the defaults set in the class
+	 * definition. It will ignore the primary key as well as any private class
+	 * properties.
+	 *
+	 * @param bool $clear
+	 *
+	 * @return  static
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function reset($clear = false)
+	{
+		// Get the default values for the class from the table.
+		foreach ($this->getFields() as $k => $v)
+		{
+			$this->$k = $clear ? null : $v->Default;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Method to perform sanity checks on the AbstractTable instance properties to ensure
+	 * they are safe to store in the database.  Child classes should override this
+	 * method to make sure the data they are storing in the database is safe and
+	 * as expected before storage.
+	 *
+	 * @return  $this  Method allows chaining
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function check()
+	{
+		return $this;
+	}
+
+	/**
+	 * Method to store a row in the database from the AbstractTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * AbstractTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  $this  Method allows chaining
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function store($updateNulls = false)
+	{
+		// If a primary key exists update the object, otherwise insert it.
+		if ($this->hasPrimaryKey())
+		{
+			$this->db->getWriter()->updateOne($this->table, $this->data, $this->keys, $updateNulls);
+		}
+		else
+		{
+			$this->db->getWriter()->insertOne($this->table, $this->data, $this->keys[0]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Validate that the primary key has been set.
+	 *
+	 * @return  boolean  True if the primary key(s) have been set.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function hasPrimaryKey()
+	{
+		if ($this->autoIncrement)
+		{
+			$empty = true;
+
+			foreach ($this->keys as $key)
+			{
+				$empty = $empty && !$this->$key;
+			}
+		}
+		else
+		{
+			$query = $this->db->getQuery(true);
+
+			$query->select('COUNT(*)')
+				->from($this->table);
+
+			$this->appendPrimaryKeys($query);
+
+			$this->db->setQuery($query);
+
+			$count = $this->db->loadResult();
+
+			if ($count == 1)
+			{
+				$empty = false;
+			}
+			else
+			{
+				$empty = true;
+			}
+		}
+
+		return !$empty;
+	}
+
+	/**
+	 * Method to append the primary keys for this table to a query.
+	 *
+	 * @param   Query  $query  A query object to append.
+	 * @param   mixed  $pk     Optional primary key parameter.
+	 *
+	 * @return  $this  Method allows chaining
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function appendPrimaryKeys(Query $query, $pk = null)
+	{
+		if (is_null($pk))
+		{
+			foreach ($this->keys as $k)
+			{
+				$query->where($this->db->quoteName($k) . ' = ' . $this->db->quote($this->$k));
+			}
+		}
+		else
+		{
+			if (is_string($pk))
+			{
+				$pk = array($this->keys[0] => $pk);
+			}
+
+			$pk = (object) $pk;
+
+			foreach ($this->keys AS $k)
+			{
+				$query->where($this->db->quoteName($k) . ' = ' . $this->db->quote($pk->$k));
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Method to get the primary key field name for the table.
+	 *
+	 * @param   boolean  $multiple  True to return all primary keys (as an array) or false to return just the first one (as a string).
+	 *
+	 * @return  mixed  Array of primary key field names or string containing the first primary key field.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function getKeyName($multiple = false)
+	{
+		// Count the number of keys
+		if (count($this->keys))
+		{
+			if ($multiple)
+			{
+				// If we want multiple keys, return the raw array.
+				return $this->keys;
+			}
+			else
+			{
+				// If we want the standard method, just return the first key.
+				return $this->keys[0];
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Get the columns from database table.
+	 *
+	 * @return  mixed  An array of the field names, or false if an error occurs.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 * @throws  \UnexpectedValueException
+	 */
+	public function getFields()
+	{
+		static $cache = null;
+
+		if ($cache === null)
+		{
+			// Lookup the fields for this table only once.
+			$fields = $this->db->getTable($this->table)->getColumnDetails(true);
+
+			if (empty($fields))
+			{
+				throw new \UnexpectedValueException(sprintf('No columns found for %s table', $this->table));
+			}
+
+			$cache = $fields;
+		}
+
+		return $cache;
+	}
+
+	/**
+	 * Get the table name.
+	 *
+	 * @return  string
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function getTableName()
+	{
+		return $this->table;
+	}
+
+	/**
+	 * Get an iterator object.
+	 *
+	 * @return  \ArrayIterator
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->data);
+	}
+
+	/**
+	 * Clone the table.
+	 *
+	 * @return  \ArrayIterator
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function __clone()
+	{
+		return $this->getIterator();
+	}
+
+	/**
+	 * Quick quote.
+	 *
+	 * @param string $value
+	 *
+	 * @return  string
+	 */
+	public function q($value)
+	{
+		return $this->db->quote($value);
+	}
+
+	/**
+	 * Quick quote name.
+	 *
+	 * @param string $value
+	 *
+	 * @return  mixed
+	 */
+	public function qn($value)
+	{
+		return $this->db->quoteName($value);
+	}
+}
+

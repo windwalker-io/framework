@@ -1,0 +1,36 @@
+{
+	"name": "windwalker/renderer",
+	"type": "windwalker-package",
+	"description": "Windwalker Renderer package",
+	"keywords": ["windwalker", "framework", "renderer"],
+	"homepage": "https://github.com/ventoviro/windwalker-renderer",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/registry" : "~2.0",
+		"windwalker/data" : "~2.0"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0",
+		"windwalker/filesystem" : "~2.0",
+		"twig/twig" : "*",
+		"illuminate/view" : "4.1.*",
+		"mustache/mustache": "2.*"
+	},
+	"suggest" : {
+		"illuminate/view" : "Install 4.1.*(PHP 5.3) or 4.2.*(PHP 5.4) if you require Laravel Blade engine.",
+		"twig/twig" : "Install 1.* if you require Twig engine.",
+		"mustache/mustache": "Install 2.* if you require Mustache engine."
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Renderer\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

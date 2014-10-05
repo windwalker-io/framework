@@ -4,12 +4,12 @@ Windwalker Middleware is a simple & elegant PHP Middleware library help you inte
 
 ## Installation via Composer
 
-Add "asika/windwalker-middleware": "1.0.*" to the require block in your composer.json.
+Add "windwalker/middleware": "2.0.*" to the require block in your composer.json.
 
 ``` json
 {
     "require": {
-        "asika/windwalker-middleware": "~1.0"
+        "windwalker/middleware": "~2.0"
     }
 }
 ```
@@ -22,9 +22,9 @@ This is a simple way using middleware to wrap your logic.
 
 ``` php
 use Windwalker\Middleware\CallbackMiddleware;
-use Windwalker\Middleware\Middleware;
+use Windwalker\Middleware\AbstractMiddleware;
 
-class TestA extends Middleware
+class TestA extends AbstractMiddleware
 {
 	/**
 	 * call
@@ -41,7 +41,7 @@ class TestA extends Middleware
 	}
 }
 
-class TestB extends Middleware
+class TestB extends AbstractMiddleware
 {
 	/**
 	 * call

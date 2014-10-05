@@ -1,9 +1,9 @@
 <?php
 /**
- * Part of formosa project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Model;
@@ -13,33 +13,16 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractModel
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractModel implements ModelInterface, \ArrayAccess
 {
 	/**
-	 * Property cache.
-	 *
-	 * @var  array
-	 */
-	protected $cache = array();
-
-	/**
 	 * The model state.
 	 *
-	 * @var    Registry
+	 * @var  Registry
 	 */
 	protected $state;
-
-	/**
-	 * Property magicMethodPrefix.
-	 *
-	 * @var  array
-	 */
-	protected $magicMethodPrefix = array(
-		'get',
-		'load'
-	);
 
 	/**
 	 * Instantiate the model.
@@ -49,38 +32,6 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	public function __construct(Registry $state = null)
 	{
 		$this->state = ($state instanceof Registry) ? $state : new Registry;
-	}
-
-	/**
-	 * __call
-	 *
-	 * @param string $name
-	 * @param array  $args
-	 *
-	 * @return  mixed
-	 *
-	 * @throws \InvalidArgumentException
-	 */
-	public function __call($name, $args = array())
-	{
-		$allow = false;
-
-		foreach ($this->magicMethodPrefix as $prefix)
-		{
-			if (substr($name, 0, $prefix) == $prefix)
-			{
-				$allow = true;
-
-				break;
-			}
-		}
-
-		if (!$allow)
-		{
-			throw new \InvalidArgumentException(sprintf("Method %s::%s not found.", get_called_class(), $name));
-		}
-
-		return null;
 	}
 
 	/**
@@ -134,88 +85,36 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	}
 
 	/**
-	 * getStoredId
+	 * reset
 	 *
-	 * @param string $id
-	 *
-	 * @return  string
+	 * @return  static
 	 */
-	public function getStoredId($id = null)
+	public function reset()
 	{
-		$id = $id . json_encode($this->state->toArray());
+		$this->state->clear();
 
-		return md5($id);
+		return $this;
 	}
 
 	/**
-	 * getCache
+	 * Is a property exists or not.
 	 *
-	 * @param string $id
+	 * @param mixed $offset Offset key.
 	 *
-	 * @return  mixed
-	 */
-	protected function getCache($id = null)
-	{
-		$id = $this->getStoredId($id);
-
-		if (empty($this->cache[$id]))
-		{
-			return null;
-		}
-
-		return $this->cache[$id];
-	}
-
-	/**
-	 * setCache
-	 *
-	 * @param string $id
-	 * @param mixed  $item
-	 *
-	 * @return  mixed
-	 */
-	protected function setCache($id = null, $item = null)
-	{
-		$id = $this->getStoredId($id);
-
-		$this->cache[$id] = $item;
-
-		return $item;
-	}
-
-	/**
-	 * hasCache
-	 *
-	 * @param string $id
-	 *
-	 * @return  bool
-	 */
-	protected function hasCache($id = null)
-	{
-		$id = $this->getStoredId($id);
-
-		return !empty($this->cache[$id]);
-	}
-
-	/**
-	 * Whether a offset exists
-	 *
-	 * @param mixed $offset An offset to check for.
-	 *
-	 * @return boolean True on success or false on failure.
-	 *                 The return value will be casted to boolean if non-boolean was returned.
+	 * @return  boolean
 	 */
 	public function offsetExists($offset)
 	{
-		return (boolean) ($this->state->get($offset) !== null);
+		return $this->state->exists($offset);
 	}
 
 	/**
-	 * Offset to retrieve
+	 * Get a property.
 	 *
-	 * @param mixed $offset The offset to retrieve.
+	 * @param mixed $offset Offset key.
 	 *
-	 * @return mixed Can return all value types.
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
 	 */
 	public function offsetGet($offset)
 	{
@@ -223,12 +122,13 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	}
 
 	/**
-	 * Offset to set
+	 * Set a value to property.
 	 *
-	 * @param mixed $offset The offset to assign the value to.
+	 * @param mixed $offset Offset key.
 	 * @param mixed $value  The value to set.
 	 *
-	 * @return void
+	 * @throws  \InvalidArgumentException
+	 * @return  void
 	 */
 	public function offsetSet($offset, $value)
 	{
@@ -236,15 +136,15 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	}
 
 	/**
-	 * Offset to unset
+	 * Unset a property.
 	 *
-	 * @param mixed $offset The offset to unset.
+	 * @param mixed $offset Offset key to unset.
 	 *
-	 * @return void
+	 * @throws  \InvalidArgumentException
+	 * @return  void
 	 */
 	public function offsetUnset($offset)
 	{
 		$this->state->set($offset, null);
 	}
 }
- 

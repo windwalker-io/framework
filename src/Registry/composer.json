@@ -1,0 +1,29 @@
+{
+	"name": "windwalker/registry",
+	"type": "windwalker-package",
+	"description": "Windwalker Registry package",
+	"keywords": ["windwalker", "framework", "registry"],
+	"homepage": "https://github.com/ventoviro/windwalker-registry",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0",
+		"symfony/yaml": "2.*"
+	},
+	"minimum-stability" : "dev",
+	"suggest": {
+		"symfony/yaml": "Install 2.* if you require YAML support."
+	},
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Registry\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

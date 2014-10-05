@@ -1,0 +1,31 @@
+{
+	"name": "windwalker/form",
+	"type": "windwalker-package",
+	"description": "Windwalker Form package",
+	"keywords": ["windwalker", "framework", "form"],
+	"homepage": "https://github.com/ventoviro/windwalker-form",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/dom" : "~2.0",
+		"windwalker/html" : "~2.0",
+		"windwalker/validator" : "~2.0",
+		"windwalker/filter" : "~2.0"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0"
+	},
+	"suggest": {
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Form\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

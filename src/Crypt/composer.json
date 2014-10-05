@@ -1,0 +1,27 @@
+{
+	"name": "windwalker/crypt",
+	"type": "windwalker-package",
+	"description": "Windwalker Crypt package",
+	"keywords": ["windwalker", "framework", "crypt"],
+	"homepage": "https://github.com/ventoviro/windwalker-crypt",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Crypt\\": ""
+		}
+	},
+	"suggest" : {
+		"ext-mcrypt" : "Install php5-mcrypt if you want to use advanced cipher."
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

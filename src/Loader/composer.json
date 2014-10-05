@@ -1,0 +1,25 @@
+{
+	"name": "windwalker/loader",
+	"type": "windwalker-package",
+	"description": "Windwalker Loader package",
+	"keywords": ["windwalker", "framework", "loader"],
+	"homepage": "https://github.com/ventoviro/windwalker-loader",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Loader\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

@@ -2,15 +2,14 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\DataMapper;
 
-use Joomla\Database\DatabaseDriver;
-use Windwalker\Database\DatabaseFactory;
-use Windwalker\Database\QueryHelper;
+use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
 use Windwalker\DataMapper\Entity\Entity;
 
 /**
@@ -21,30 +20,20 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Joomla DB adapter.
 	 *
-	 * @var DatabaseDriver
+	 * @var DatabaseAdapter
 	 */
-	protected $db;
-
-	/**
-	 * Query helper.
-	 *
-	 * @var  QueryHelper
-	 */
-	protected $queryHelper = null;
+	protected $db = null;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string         $table       Table name.
-	 * @param string|array   $pk          Primary key.
-	 * @param DatabaseDriver $db          Database adapter.
-	 * @param QueryHelper    $queryHelper Query helper object.
+	 * @param string                   $table       Table name.
+	 * @param string|array             $pk          Primary key.
+	 * @param DatabaseAdapterInterface $db          Database adapter.
 	 */
-	public function __construct($table = null, $pk = 'id', DatabaseDriver $db = null, QueryHelper $queryHelper = null)
+	public function __construct($table = null, $pk = 'id', DatabaseAdapterInterface $db = null)
 	{
-		$this->db = $db ? : DatabaseFactory::getDbo();
-
-		$this->queryHelper = $queryHelper ? : new QueryHelper($this->db);
+		$this->db = $db ? : DatabaseAdapter::getInstance();
 
 		parent::__construct($table, $pk);
 	}
@@ -61,22 +50,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
-		$query = $this->db->getQuery(true);
-
-		// Conditions.
-		QueryHelper::buildWheres($query, $conditions);
-
-		// Loop ordering
-		foreach ($orders as $order)
-		{
-			$query->order($order);
-		}
-
-		// Build query
-		$query->select('*')
-			->from($this->table);
-
-		return $this->db->setQuery($query, $start, $limit)->loadObjectList();
+		return $this->db->find($this->table, $this->selectFields, $conditions, $orders, $start, $limit);
 	}
 
 	/**
@@ -89,29 +63,34 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doCreate($dataset)
 	{
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
 			foreach ($dataset as &$data)
 			{
+				if (!($data instanceof $this->dataClass))
+				{
+					$data = $this->bindData($data);
+				}
+
 				$entity = new Entity($this->getFields($this->table), $data);
 
 				$pk = $this->getPrimaryKey();
 
-				$this->db->insertObject($this->table, $entity, $pk);
+				$this->db->create($this->table, $entity, $pk);
 
 				$data->$pk = $entity->$pk;
 			}
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
 		return $dataset;
 	}
@@ -128,25 +107,30 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doUpdate($dataset, array $condFields)
 	{
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
 			foreach ($dataset as &$data)
 			{
+				if (!($data instanceof $this->dataClass))
+				{
+					$data = $this->bindData($data);
+				}
+
 				$entity = new Entity($this->getFields($this->table), $data);
 
-				$this->db->updateObject($this->table, $entity, $condFields);
+				$this->db->updateOne($this->table, $entity, $condFields);
 			}
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
 		return $dataset;
 	}
@@ -162,22 +146,20 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doUpdateAll($data, array $conditions)
 	{
-		$this->db->transactionStart(true);
-
-		$command = DatabaseFactory::getCommand();
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
-			$result = (boolean) $command->updateBatch($this->table, $data, $conditions);
+			$result = $this->db->updateAll($this->table, $data, $conditions);
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
 		return $result;
 	}
@@ -193,7 +175,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doFlush($dataset, array $conditions)
 	{
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
@@ -209,14 +191,14 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
-		return true;
+		return $dataset;
 	}
 
 	/**
@@ -229,27 +211,20 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doDelete(array $conditions)
 	{
-		$query = $this->db->getQuery(true);
-
-		// Conditions.
-		QueryHelper::buildWheres($query, $conditions);
-
-		$query->delete($this->table);
-
-		$this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
-			$result = (boolean) $this->db->setQuery($query)->execute();
+			$result = $this->db->delete($this->table, $conditions);
 		}
 		catch (\Exception $e)
 		{
-			$this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->transactionRollback(true);
 
 			throw $e;
 		}
 
-		$this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->transactionCommit(true);
 
 		return $result;
 	}
@@ -257,7 +232,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Get DB adapter.
 	 *
-	 * @return  \Joomla\Database\DatabaseDriver Db adapter.
+	 * @return  \Windwalker\Database\DatabaseDriver Db adapter.
 	 */
 	public function getDb()
 	{
@@ -267,7 +242,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Set db adapter.
 	 *
-	 * @param   \Joomla\Database\DatabaseDriver $db Db adapter.
+	 * @param   \Windwalker\Database\DatabaseDriver $db Db adapter.
 	 *
 	 * @return  DataMapper  Return self to support chaining.
 	 */
@@ -289,6 +264,6 @@ class DataMapper extends AbstractDataMapper
 	{
 		$table = $table ? : $this->table;
 
-		return array_keys(DatabaseFactory::getCommand()->getColumns($table));
+		return $this->db->getFields($table);
 	}
 }

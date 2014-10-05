@@ -1,0 +1,30 @@
+{
+	"name": "windwalker/application",
+	"type": "windwalker-package",
+	"description": "Windwalker Application package",
+	"keywords": ["windwalker", "framework", "application"],
+	"homepage": "https://github.com/ventoviro/windwalker-application",
+	"license": "GPL-2.0+",
+	"require": {
+		"php": ">=5.3.10",
+		"windwalker/io" : "~2.0",
+		"windwalker/registry" : "~2.0",
+		"windwalker/environment" : "~2.0",
+		"windwalker/uri" : "~2.0",
+		"psr/log" : "1.*@stable"
+	},
+	"require-dev": {
+		"windwalker/test": "~2.0"
+	},
+	"minimum-stability" : "dev",
+	"autoload": {
+		"psr-4": {
+			"Windwalker\\Application\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
+		}
+	}
+}

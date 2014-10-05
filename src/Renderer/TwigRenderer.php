@@ -1,26 +1,29 @@
 <?php
 /**
- * Part of formosa project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Renderer;
 
+use Windwalker\Registry\Registry;
+use Windwalker\Renderer\Twig\GlobalContainer;
+
 /**
  * Class PhpRenderer
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
-class TwigRenderer extends AbstractRenderer
+class TwigRenderer extends AbstractAdapterRenderer
 {
 	/**
 	 * Property twig.
 	 *
 	 * @var  \Twig_environment
 	 */
-	protected $twig = null;
+	protected $engine = null;
 
 	/**
 	 * Property loader.
@@ -39,11 +42,16 @@ class TwigRenderer extends AbstractRenderer
 	/**
 	 * Property config.
 	 *
-	 * @var  \Joomla\Registry\Registry|array
+	 * @var  Registry|array
 	 */
-	protected $config = array(
-		'debug' => FORMOSA_DEBUG
-	);
+	protected $config = array();
+
+	/**
+	 * Property debugExtension.
+	 *
+	 * @var  \Twig_Extension
+	 */
+	protected $debugExtension = null;
 
 	/**
 	 * render
@@ -56,9 +64,9 @@ class TwigRenderer extends AbstractRenderer
 	 */
 	public function render($file, $data = array())
 	{
-		$this->extensions = array_merge($this->extensions, (array) $this->config->get('extension', array()));
+		$this->extensions = array_merge($this->extensions, (array) $this->config->get('extensions', array()));
 
-		return $this->getTwig()->render($file, $data);
+		return $this->getEngine()->render($file, $data);
 	}
 
 	/**
@@ -70,7 +78,7 @@ class TwigRenderer extends AbstractRenderer
 	{
 		if (!$this->loader)
 		{
-			$this->loader = new \Twig_Loader_Filesystem(iterator_to_array($this->getPaths()));
+			$this->loader = new \Twig_Loader_Filesystem(iterator_to_array(clone $this->getPaths()));
 		}
 
 		return $this->loader;
@@ -105,26 +113,38 @@ class TwigRenderer extends AbstractRenderer
 	/**
 	 * getTwig
 	 *
+	 * @param bool $new
+	 *
 	 * @return  \Twig_environment
 	 */
-	protected function getTwig()
+	public function getEngine($new = false)
 	{
-		if (!($this->twig instanceof \Twig_Environment))
+		if (!($this->engine instanceof \Twig_Environment) || $new)
 		{
-			$this->twig = new \Twig_Environment($this->getLoader(), $this->config->toArray());
+			$this->engine = new \Twig_Environment($this->getLoader(), $this->config->toArray());
+
+			foreach (GlobalContainer::getExtensions() as $extension)
+			{
+				$this->engine->addExtension($extension);
+			}
 
 			foreach ($this->extensions as $extension)
 			{
-				$this->twig->addExtension($extension);
+				$this->engine->addExtension($extension);
 			}
 
-			if (FORMOSA_DEBUG)
+			foreach (GlobalContainer::getGlobals() as $name => $value)
 			{
-				$this->twig->addExtension(new \Twig_Extension_Debug);
+				$this->engine->addGlobal($name, $value);
+			}
+
+			if ($this->config->get('debug'))
+			{
+				$this->engine->addExtension($this->getDebugExtension());
 			}
 		}
 
-		return $this->twig;
+		return $this->engine;
 	}
 
 	/**
@@ -134,9 +154,43 @@ class TwigRenderer extends AbstractRenderer
 	 *
 	 * @return  TwigRenderer  Return self to support chaining.
 	 */
-	public function setTwig(\Twig_environment $twig)
+	public function setEngine($twig)
 	{
-		$this->twig = $twig;
+		if (!($twig instanceof \Twig_Environment))
+		{
+			throw new \InvalidArgumentException('Engine object should be Twig_environment');
+		}
+
+		$this->engine = $twig;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property DebugExtension
+	 *
+	 * @return  \Twig_Extension
+	 */
+	public function getDebugExtension()
+	{
+		if (!$this->debugExtension)
+		{
+			$this->debugExtension = new \Twig_Extension_Debug;
+		}
+
+		return $this->debugExtension;
+	}
+
+	/**
+	 * Method to set property debugExtension
+	 *
+	 * @param   \Twig_Extension $debugExtension
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDebugExtension(\Twig_Extension $debugExtension)
+	{
+		$this->debugExtension = $debugExtension;
 
 		return $this;
 	}

@@ -1,9 +1,9 @@
 <?php
 /**
- * Part of formosa project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Controller;
@@ -11,7 +11,7 @@ namespace Windwalker\Controller;
 /**
  * Class AbstractController
  *
- * @since 1.0
+ * @since {DEPLOY_VERSION}
  */
 abstract class AbstractController implements ControllerInterface
 {
@@ -94,7 +94,7 @@ abstract class AbstractController implements ControllerInterface
 	 *
 	 * @return  string  The serialized controller.
 	 *
-	 * @since   1.0
+	 * @since   {DEPLOY_VERSION}
 	 */
 	public function serialize()
 	{
@@ -117,4 +117,3 @@ abstract class AbstractController implements ControllerInterface
 		return $this;
 	}
 }
- 

@@ -3,20 +3,30 @@
 	"type": "windwalker-package",
 	"description": "Windwalker Database package",
 	"keywords": ["windwalker", "framework", "database"],
-	"homepage": "https://github.com/windwalker-framework/windwalker-database",
+	"homepage": "https://github.com/ventoviro/windwalker-database",
 	"license": "GPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
-		"windwalker/compare": "1.*",
-		"joomla/database": "~1.0"
+		"psr/log" : "1.*",
+		"windwalker/query" : "~2.0"
 	},
 	"require-dev": {
-		"joomla/test": "~1.0"
+		"windwalker/utilities" : "~2.0",
+		"windwalker/test" : "~2.0",
+		"windwalker/compare" : "~2.0"
+	},
+	"suggest": {
+		"windwalker/compare": "Install 2.* if you want to use Compare object."
 	},
 	"minimum-stability" : "dev",
 	"autoload": {
 		"psr-4": {
 			"Windwalker\\Database\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master" : "2.0-dev"
 		}
 	}
 }

@@ -1,280 +1,237 @@
 <?php
 /**
- * Part of the Joomla Framework Router Package
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
 namespace Windwalker\Router;
 
-use Joomla\Input\Input;
+use Windwalker\Router\Exception\RouteNotFoundException;
+use Windwalker\Router\Matcher\MatcherInterface;
+use Windwalker\Router\Matcher\SequentialMatcher;
 
 /**
  * A path router.
  *
- * @since  1.0
+ * @since  {DEPLOY_VERSION}
  */
 class Router
 {
 	/**
-	 * Controller class name prefix for creating controller objects by name.
+	 * Property routes.
 	 *
-	 * @var    string
-	 * @since  1.0
+	 * @var  Route[]
 	 */
-	protected $controllerPrefix;
+	protected $routes = array();
 
 	/**
-	 * The default page controller name for an empty route.
+	 * Property matcher.
 	 *
-	 * @var    string
-	 * @since  1.0
+	 * @var  MatcherInterface
 	 */
-	protected $default;
+	protected $matcher;
 
 	/**
-	 * An input object from which to derive the route.
+	 * Class init.
 	 *
-	 * @var    Input
-	 * @since  1.0
+	 * @param array            $routes
+	 * @param MatcherInterface $matcher
 	 */
-	protected $input;
-
-	/**
-	 * An array of rules, each rule being an associative array('regex'=> $regex, 'vars' => $vars, 'controller' => $controller)
-	 * for routing the request.
-	 *
-	 * @var    array
-	 * @since  1.0
-	 */
-	protected $maps = array();
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   Input  $input  An optional input object from which to derive the route.  If none
-	 *                         is given than the input from the application object will be used.
-	 *
-	 * @since   1.0
-	 */
-	public function __construct(Input $input = null)
+	public function __construct(array $routes = array(), MatcherInterface $matcher = null)
 	{
-		$this->input = ($input === null) ? new Input : $input;
+		$this->addRoutes($routes);
+
+		$this->matcher = $matcher ? : new SequentialMatcher;
 	}
 
 	/**
-	 * Add a route map to the router. If the pattern already exists it will be overwritten.
+	 * addMap
 	 *
-	 * @param   string  $pattern     The route pattern to use for matching.
-	 * @param   string  $controller  The controller name to map to the given pattern.
+	 * @param string $pattern
+	 * @param array  $variables
 	 *
-	 * @return  Router  Returns itself to support chaining.
-	 *
-	 * @since   1.0
+	 * @return  Route
 	 */
-	public function addMap($pattern, $controller)
+	public function addMap($pattern, $variables = array())
 	{
-		// Sanitize and explode the pattern.
-		$pattern = explode('/', trim(parse_url((string) $pattern, PHP_URL_PATH), ' /'));
+		$route = new Route(null, $pattern, $variables);
 
-		// Prepare the route variables
-		$vars = array();
+		$this->addRoute($route);
 
-		// Initialize regular expression
-		$regex = array();
-
-		// Loop on each segment
-		foreach ($pattern as $segment)
-		{
-			if ($segment == '*')
-			{
-				// Match a splat with no variable.
-				$regex[] = '.*';
-			}
-			elseif ($segment[0] == '*')
-			{
-				// Match a splat and capture the data to a named variable.
-				$vars[] = substr($segment, 1);
-				$regex[] = '(.*)';
-			}
-			elseif ($segment[0] == '\\' && $segment[1] == '*')
-			{
-				// Match an escaped splat segment.
-				$regex[] = '\*' . preg_quote(substr($segment, 2));
-			}
-			elseif ($segment == ':')
-			{
-				// Match an unnamed variable without capture.
-				$regex[] = '[^/]*';
-			}
-			elseif ($segment[0] == ':')
-			{
-				// Match a named variable and capture the data.
-				$vars[] = substr($segment, 1);
-				$regex[] = '([^/]*)';
-			}
-			elseif ($segment[0] == '\\' && $segment[1] == ':')
-			{
-				// Match a segment with an escaped variable character prefix.
-				$regex[] = preg_quote(substr($segment, 1));
-			}
-			else
-			{
-				// Match the standard segment.
-				$regex[] = preg_quote($segment);
-			}
-		}
-
-		$this->maps[] = array(
-			'regex' => chr(1) . '^' . implode('/', $regex) . '$' . chr(1),
-			'vars' => $vars,
-			'controller' => (string) $controller
-		);
-
-		return $this;
+		return $route;
 	}
 
 	/**
-	 * Add an array of route maps to the router.  If the pattern already exists it will be overwritten.
+	 * addMaps
 	 *
-	 * @param   array  $maps  A list of route maps to add to the router as $pattern => $controller.
+	 * @param array $maps
 	 *
-	 * @return  Router  Returns itself to support chaining.
-	 *
-	 * @since   1.0
+	 * @return  $this
 	 */
-	public function addMaps($maps)
+	public function addMaps(array $maps)
 	{
-		foreach ($maps as $pattern => $controller)
+		foreach ($maps as $pattern => $variables)
 		{
-			$this->addMap($pattern, $controller);
+			$this->addMap($pattern, $variables);
 		}
 
 		return $this;
 	}
 
 	/**
-	 * Find and execute the appropriate controller based on a given route.
+	 * Add Route
 	 *
-	 * @param   string  $route  The route string for which to find and execute a controller.
+	 * @param string|Route $name
+	 * @param string       $pattern
+	 * @param array        $variables
+	 * @param array        $method
+	 * @param array        $options
 	 *
-	 * @return  string
-	 *
-	 * @since   1.0
-	 * @throws  \InvalidArgumentException
-	 * @throws  \RuntimeException
+	 * @return  Router
 	 */
-	public function getController($route)
+	public function addRoute($name, $pattern = null, $variables = array(), $method = array(), $options = array())
 	{
-		// Get the controller name based on the route patterns and requested route.
-		$name = $this->parseRoute($route);
+		if ($name instanceof Route)
+		{
+			$route = $name;
+		}
+		else
+		{
+			if (!is_string($pattern))
+			{
+				throw new \InvalidArgumentException('Route pattern should be string');
+			}
 
-		// Get the controller object by name.
-		return $this->fetchController($name);
-	}
+			$route = new Route($name, $pattern, $variables, $method, $options);
+		}
 
-	/**
-	 * Set the controller name prefix.
-	 *
-	 * @param   string  $prefix  Controller class name prefix for creating controller objects by name.
-	 *
-	 * @return  Router  Returns itself to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function setControllerPrefix($prefix)
-	{
-		$this->controllerPrefix	= (string) $prefix;
+		if ($name = $route->getName())
+		{
+			$this->routes[$name] = $route;
+		}
+		elseif (!$name || is_numeric($name))
+		{
+			$this->routes[] = $route;
+		}
 
 		return $this;
 	}
 
 	/**
-	 * Set the default controller name.
+	 * addRoutes
 	 *
-	 * @param   string  $name  The default page controller name for an empty route.
+	 * @param array $routes
 	 *
-	 * @return  Router  Returns itself to support chaining.
-	 *
-	 * @since   1.0
+	 * @return  Router
 	 */
-	public function setDefaultController($name)
+	public function addRoutes(array $routes)
 	{
-		$this->default = (string) $name;
+		foreach ($routes as $route)
+		{
+			$this->addRoute($route);
+		}
 
 		return $this;
 	}
 
 	/**
-	 * Get a JController object for a given name.
+	 * parseRoute
 	 *
-	 * @param   string  $name  The controller name (excluding prefix) for which to fetch and instance.
+	 * @param string $route
+	 * @param string $method
+	 * @param array  $options
 	 *
-	 * @return  string
+	 * @return  array|boolean
 	 */
-	protected function fetchController($name)
+	public function match($route, $method = 'GET', $options = array())
 	{
-		// Derive the controller class name.
-		return $this->controllerPrefix . ucfirst($name);
-	}
-
-	/**
-	 * Parse the given route and return the name of a controller mapped to the given route.
-	 *
-	 * @param   string  $route  The route string for which to find and execute a controller.
-	 *
-	 * @return  string  The controller name for the given route excluding prefix.
-	 *
-	 * @since   1.0
-	 * @throws  \InvalidArgumentException
-	 */
-	protected function parseRoute($route)
-	{
-		$controller = false;
-
 		// Trim the query string off.
 		$route = preg_replace('/([^?]*).*/u', '\1', $route);
 
 		// Sanitize and explode the route.
 		$route = trim(parse_url($route, PHP_URL_PATH), ' /');
 
-		// If the route is empty then simply return the default route.  No parsing necessary.
-		if ($route == '')
+		$route = $route ? : '/';
+
+		$matched = $this->matcher
+			->setRoutes($this->routes)
+			->match($route, $method, $options);
+
+		if ($matched === false)
 		{
-			return $this->default;
+			throw new RouteNotFoundException(sprintf('Unable to handle request for route `%s`.', $route), 404);
 		}
 
-		// Iterate through all of the known route maps looking for a match.
-		foreach ($this->maps as $rule)
+		return $matched->getVariables();
+	}
+
+	/**
+	 * buildRoute
+	 *
+	 * @param string $name
+	 * @param array  $queries
+	 *
+	 * @return  string
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function build($name, $queries = array())
+	{
+		if (!array_key_exists($name, $this->routes))
 		{
-			if (preg_match($rule['regex'], $route, $matches))
-			{
-				// If we have gotten this far then we have a positive match.
-				$controller = $rule['controller'];
-
-				// Time to set the input variables.
-				// We are only going to set them if they don't already exist to avoid overwriting things.
-				foreach ($rule['vars'] as $i => $var)
-				{
-					$this->input->def($var, $matches[$i + 1]);
-
-					// Don't forget to do an explicit set on the GET superglobal.
-					$this->input->get->def($var, $matches[$i + 1]);
-				}
-
-				$this->input->def('_rawRoute', $route);
-
-				break;
-			}
+			throw new \InvalidArgumentException('Route: ' . $name . ' not found.');
 		}
 
-		// We were unable to find a route match for the request.  Panic.
-		if (!$controller)
-		{
-			throw new \InvalidArgumentException(sprintf('Unable to handle request for route `%s`.', $route), 404);
-		}
+		return $this->matcher->build($this->routes[$name], $queries);
+	}
 
-		return $controller;
+	/**
+	 * Method to get property Matcher
+	 *
+	 * @return  MatcherInterface
+	 */
+	public function getMatcher()
+	{
+		return $this->matcher;
+	}
+
+	/**
+	 * Method to set property matcher
+	 *
+	 * @param   MatcherInterface $matcher
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setMatcher($matcher)
+	{
+		$this->matcher = $matcher;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Routes
+	 *
+	 * @return  Route[]
+	 */
+	public function getRoutes()
+	{
+		return $this->routes;
+	}
+
+	/**
+	 * Method to set property routes
+	 *
+	 * @param   Route[] $routes
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setRoutes($routes)
+	{
+		$this->routes = $routes;
+
+		return $this;
 	}
 }
