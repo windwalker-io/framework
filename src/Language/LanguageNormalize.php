@@ -66,7 +66,7 @@ abstract class LanguageNormalize
 		// Only allow A-Z a-z 0-9 and "_", other characters will be replace with "_".
 		$key = preg_replace('/[^A-Z0-9]+/i', '.', $key);
 
-		return strtolower(trim($key, '_'));
+		return strtolower(trim($key, '.'));
 	}
 }
 

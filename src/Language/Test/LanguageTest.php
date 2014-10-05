@@ -293,7 +293,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
 		$orphans = $this->instance->getOrphans();
 
-		$this->assertEquals(array('WINDWALKER_LANGUAGE_TEST_NO_EXISTS_FLOWER', 'A_KEY_NOT_EXISTS'), $orphans);
+		$this->assertEquals(array('windwalker.language.test.no.exists.flower', 'a.key.not.exists'), $orphans);
 	}
 
 	/**
@@ -314,7 +314,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
 		$used = $this->instance->getUsed();
 
-		$this->assertEquals(array('WINDWALKER_LANGUAGE_TEST_SAKURA'), $used);
+		$this->assertEquals(array('windwalker.language.test.sakura'), $used);
 	}
 
 	/**
@@ -355,11 +355,10 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Language\Language::normalize
-	 * @TODO   Implement testNormalize().
 	 */
 	public function testNormalize()
 	{
-		$this->assertEquals('WINDWALKER_IS_GOOD', $this->instance->normalize('Windwalker is good ~~~!!!'));
+		$this->assertEquals('windwalker.is.good', $this->instance->normalize('Windwalker is good ~~~!!!'));
 
 		$this->instance->setNormalizeHandler(
 			function($value)

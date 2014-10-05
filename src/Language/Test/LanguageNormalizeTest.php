@@ -27,27 +27,27 @@ class LanguageNormalizeTest extends \PHPUnit_Framework_TestCase
 		return array(
 			array(
 				'foo_bar',
-				'FOO_BAR'
+				'foo.bar'
 			),
 			array(
 				'flower-sakura-flower',
-				'FLOWER_SAKURA_FLOWER'
+				'flower.sakura.flower'
 			),
 			array(
-				'flower.sakura.flower',
-				'FLOWER_SAKURA_FLOWER'
+				'FLOWER_SAKURA_FLOWER',
+				'flower.sakura.flower'
 			),
 			array(
 				'Lorem ipsum dolor sit amet, consectetur.',
-				'LOREM_IPSUM_DOLOR_SIT_AMET_CONSECTETUR'
+				'lorem.ipsum.dolor.sit.amet.consectetur'
 			),
 			array(
 				'--test-foo.bar/yoo\\go{play}test[fly]--',
-				'TEST_FOO_BAR_YOO_GO_PLAY_TEST_FLY'
+				'test.foo.bar.yoo.go.play.test.fly'
 			),
 			array(
 				'雲彩裡，許是懺悔 THe B612 只有用心靈，一個人才能看得很清楚',
-				'THE_B612'
+				'the.b612'
 			)
 		);
 	}

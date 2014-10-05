@@ -260,7 +260,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 				'/index.php',
 				'/index.php',
 				array(
-					'uri.request'    => 'http://foo.com/index.php',
+					'uri.current'    => 'http://foo.com/index.php',
 					'uri.base.full'  => 'http://foo.com/',
 					'uri.base.host'  => 'http://foo.com',
 					'uri.base.path'  => '/',
@@ -275,7 +275,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 				'/www/index.php',
 				'/www/index.php',
 				array(
-					'uri.request'    => 'http://foo.com/www/index.php',
+					'uri.current'    => 'http://foo.com/www/index.php',
 					'uri.base.full'  => 'http://foo.com/www/',
 					'uri.base.host'  => 'http://foo.com',
 					'uri.base.path'  => '/www/',
@@ -290,7 +290,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 				'/www/index.php/foo/bar',
 				'/www/index.php',
 				array(
-					'uri.request'    => 'http://foo.com/www/index.php/foo/bar',
+					'uri.current'    => 'http://foo.com/www/index.php/foo/bar',
 					'uri.base.full'  => 'http://foo.com/www/',
 					'uri.base.host'  => 'http://foo.com',
 					'uri.base.path'  => '/www/',
@@ -305,7 +305,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 				'/www/foo/bar',
 				'/www/index.php',
 				array(
-					'uri.request'    => 'http://foo.com/www/foo/bar',
+					'uri.current'    => 'http://foo.com/www/foo/bar',
 					'uri.base.full'  => 'http://foo.com/www/',
 					'uri.base.host'  => 'http://foo.com',
 					'uri.base.path'  => '/www/',
