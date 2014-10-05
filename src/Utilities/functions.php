@@ -53,7 +53,7 @@ if (!function_exists('show'))
 		}
 		else
 		{
-			$level = 4;
+			$level = 5;
 
 			$args[] = $last;
 		}

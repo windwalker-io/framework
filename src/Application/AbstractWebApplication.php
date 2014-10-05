@@ -164,7 +164,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		if (!preg_match('#^[a-z]+\://#i', $url))
 		{
 			// Get a URI instance for the requested URI.
-			$uri = new Uri($this->get('uri.request'));
+			$uri = new Uri($this->get('uri.current'));
 
 			// Get a base URL to prepend from the requested URI.
 			$prefix = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
@@ -309,7 +309,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$uri = $this->getSystemUri($requestUri);
 		}
 
-		$this->set('uri.request', $uri->getOriginal());
+		$this->set('uri.current', $uri->getOriginal());
 
 		// Get the host and path from the URI.
 		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
@@ -330,7 +330,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		$this->set('uri.base.path', $path . '/');
 
 		// Set the extended (non-base) part of the request URI as the route.
-		$route = substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full')));
+		$route = substr_replace($this->get('uri.current'), '', 0, strlen($this->get('uri.base.full')));
 
 		// Only variables should be passed by reference so we use two lines.
 		$file = explode('/', $script);
@@ -397,7 +397,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$uri->setPath(rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
 		}
 		else
-			// Pretty much everything else should be handled with SCRIPT_NAME.
+		// Pretty much everything else should be handled with SCRIPT_NAME.
 		{
 			$uri->setPath(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
 		}

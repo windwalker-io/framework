@@ -8,7 +8,7 @@
 
 namespace Windwalker\Utilities;
 
-use Windwalker\Utilities\String\String;
+use Windwalker\String\Utf8String;
 
 /**
  * The ArrayHelper class.
@@ -497,11 +497,11 @@ abstract class ArrayHelper
 					}
 					elseif ($caseSensitive)
 					{
-						$cmp = String::strcmp($va, $vb, $locale);
+						$cmp = Utf8String::strcmp($va, $vb, $locale);
 					}
 					else
 					{
-						$cmp = String::strcasecmp($va, $vb, $locale);
+						$cmp = Utf8String::strcasecmp($va, $vb, $locale);
 					}
 
 					if ($cmp > 0)
