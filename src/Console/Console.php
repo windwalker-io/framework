@@ -161,6 +161,11 @@ class Console extends AbstractConsole
 	 */
 	public function registerRootCommand()
 	{
+		if ($this->rootCommand)
+		{
+			return $this;
+		}
+
 		$this->rootCommand = new RootCommand(null, $this->io);
 
 		$this->rootCommand->setApplication($this)

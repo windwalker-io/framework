@@ -309,7 +309,17 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$uri = $this->getSystemUri($requestUri);
 		}
 
-		$this->set('uri.current', $uri->getOriginal());
+		$original = $uri->getOriginal();
+
+		$queryStart = strpos($original, '?');
+
+		if ($queryStart !== false)
+		{
+			$original = substr($original, 0, strpos($original, '?'));
+		}
+
+		$this->set('uri.current', $original);
+		$this->set('uri.full', $uri->getOriginal());
 
 		// Get the host and path from the URI.
 		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
