@@ -1,46 +1,58 @@
-# The Windwalker Console Package
+# Windwalker Console Package
 
-The Windwalker Console package provide an elegant and nested command structure for your cli application.
+The Windwalker Console package provides an elegant and nested command structure for your cli application.
 
-## The Command Calling Flow
+## Installation via Composer
+
+Add this to the require block in your `composer.json`.
+
+``` json
+{
+    "require": {
+        "windwalker/console": "~2.0"
+    }
+}
+```
+
+## The Nested Command Structure
+
+```
+          Console Application (RootCommand)
+                         |
+              ----------------------
+              |                    |
+          CommandA              CommandB
+              |                    |
+        ------------          ------------
+        |          |          |          |
+    CommandC   CommandD    CommandE   CommandF
+```
 
 If we type:
 
 ``` bash
-$ php cli/console.php command1 command2 command3 -a -b -cd --help
+$ php cli/console.php commandA commandC foo bar -a -bc -d=e --flower=sakura
 ```
 
-The command calling flow is:
+Then we will been direct to `CommandC` class, and the following `foo bar` will be arguments.
 
-```
-rootCommand (console application)
-    ->configure
-    ->execute
-
-    command1
-        ->configure
-        ->execute
-
-        commend2
-            ->configure
-            ->execute
-
-            commend3
-                ->configure
-                ->execute
-
-            return exitCode
-
-        return exitCode
-
-    return exitCode
-
-return exitCode
+``` php
+class CommandC extend AbstractCommand
+{
+    public function execute()
+    {
+        $arg1 = $this->getArgument(0); // foo
+        $arg2 = $this->getArgument(0); // bar
+        
+        $opt = $this->io->get('d') // e
+        $opt = $this->io->get('flower') // sakura
+    }
+}
 ```
 
 ## Initialising Console
 
-Console is extends from [AbstractCliApplication](https://github.com/ventoviro/windwalker/tree/staging/src/Application#command-line-applications), help us create a command line application.
+Console is the main application help us create a command line program.
 
 An example console application skeleton in `cli/console.php` file:
 
@@ -60,9 +72,9 @@ $console->execute();
 The `execute()` will find commands matched the cli input argument. If there are not any command registered,
 console will execute the `Default Command`.
 
-### Default Command
+### Default RootCommand
 
-`RootCommand` is a command object extends from base `Command` object. It provides some useful helper,
+`RootCommand` is a command object extends from base `Command`. It provides some useful helpers,
 we can list all commands by typing:
 
 ``` bash
@@ -72,7 +84,7 @@ $ php cli/app.php
 By default, the output is:
 
 ``` bash
-windwalker! Console - version: 1.0
+Windwalker Console - version: 1.0
 ------------------------------------------------------------
 
 [console.php Help]
@@ -85,28 +97,21 @@ Usage:
 
 Options:
 
-  -h / --help
-      Display this help message.
-
-  -q / --quiet
-      Do not output any message.
-
-  -v / --verbose
-      Increase the verbosity of messages.
-
-  --no-ansi
-      Suppress ANSI colors on unsupported terminals.
-
+  -h | --help       Display this help message.
+  -q | --quiet      Do not output any message.
+  -v | --verbose    Increase the verbosity of messages.
+  --no-ansi         Suppress ANSI colors on unsupported terminals.
+                    Use --no-ansi=false to force using color.
 
 Available commands:
 
   help    List all arguments and show usage & manual.
 
 
-Welcome to windwalker! Console.
+Welcome to Windwalker Console.
 ```
 
-### Set Executing Code for RootCommand
+### Set Handler for RootCommand
 
 We can add closure to every commands, that this command will execute this function first. Use `setHandler()` on
 `$console`, the Console will auto pass the code to RootCommand:
@@ -129,7 +134,7 @@ $console->setHandler(
 $console->execute();
 ```
 
-This will do same action:
+This code will do same action:
 
 ``` php
 <?php
@@ -137,8 +142,7 @@ This will do same action:
 
 // ...
 
-$console
-    ->getRootCommand() // Return the RootCommand
+$console->getRootCommand()
     ->setHandler(
         function($command)
         {
@@ -161,16 +165,14 @@ If we want to get help again, just type:
 
 ``` bash
 $ cli/console.php help
-```
 
-OR
+# OR
 
-``` bash
 $ cli/console.php --help
 ```
 
 > Note: Command only return integer between 0 and 255, `0` means success, while others means failure or other status.
-> The exit code of Unix/Linux meaning please see: [Exit Codes Meanings](http://www.tldp.org/LDP/abs/html/exitcodes.html)
+  The exit code of Unix/Linux meaning please see: [Exit Codes Meanings](http://www.tldp.org/LDP/abs/html/exitcodes.html)
 
 ## Add Help Message to Console
 
@@ -183,10 +185,11 @@ If we add this messages to Console:
 
 // ...
 
-$console = with(new Console)
-	->setName('Example Console')
+$console = new \Windwalker\Console\Console;
+
+$console->setName('Example Console')
 	->setVersion('1.2.3')
-	->setUsage('console.php <arguments> [-h|--help] [-q|--quiet]')
+	->setUsage('console.php <commands> <arguments> [-h|--help] [-q|--quiet]')
 	->setDescription('Hello World')
 	->setHelp(
 <<<HELP
@@ -205,13 +208,13 @@ HELP
 
 The help will show:
 
-![help](http://cl.ly/SPTF/cli-help.jpg)
+![console example](https://cloud.githubusercontent.com/assets/1639206/4477512/bae50278-497e-11e4-92a6-0f998461442b.png)
 
 ## Add First Level Command to Console
 
-Now, we just use the default command. But there are not first level arguments we can call except `HelpCommand`.
+Now, we just use the default root command. But there are no first level command are available to call except `HelpCommand`.
 
-We can add a command by this code:
+We can add a new command by this code:
 
 ``` php
 <?php
@@ -251,11 +254,11 @@ The foo command description has auto added to default command arguments list.
 
 ![foo-help](http://cl.ly/SOfp/p2013-11-10-3.jpg)
 
-## Using My Command Object
+## Declaring Command Class
 
 We can create our own command object instead setting it in runtime.
 
-This is an example FooCommand:
+This is an example FooCommand declaration:
 
 ``` php
 <?php
@@ -267,10 +270,14 @@ use Windwalker\Console\Command\Command;
 
 class FooCommand extends Command
 {
-    protected $name = 'foo';
+    protected $name  = 'foo';
+    protected $usage = 'foo command [--option]';
+    protected $help  = 'foo help';
+    protected $description = 'This is first level foo command.';
 
-    public function configure()
+    public function initialise()
     {
+        // We can also set help message in initialise method 
         $this->setDescription('This is first level foo command.')
             ->setUsage('foo command [--option]')
             ->setHelp('foo help');
@@ -278,13 +285,13 @@ class FooCommand extends Command
 
     public function doExecute()
     {
-        $this->out('This is Foo Command executing code.');
+        $this->out('This is Foo Command executing.');
     }
 }
 
 ```
 
-And we register it in Console:
+Then we register it in Console:
 
 ``` php
 <?php
@@ -293,40 +300,37 @@ And we register it in Console:
 $console->addCommand(new FooCommand);
 ```
 
-## Using Arguments and Options
+## Get Arguments and Options
 
-We can use this code to get arguments and options
+We can use this code to get arguments and options, setting them in `FooCommand`.
 
 ``` php
-public function configure()
+// src/Myapp/Command/FooCommand.php
+
+public function initialise()
 {
-    $this->setDescription('This is first level foo command.')
-        ->setUsage('foo command [--option]')
-        ->addOption(
+    // Define options first that we can set option aliases. 
+    $this->addOption(
             's', // option name
             0,   // default value
             'Add this option can make output lower case.', // option description
             Option::IS_GLOBAL // sub command will extends this global option
         )
         ->addOption(
-            array('y', 'yell', 'Y'), // First element will be option name, others will be alias
+            array('y', 'yell', 'Y'), // First element `y` will be option name, others will be alias
             0,
             'Yell will make output upper case.',
             Option::IS_PRIVATE // sub command will not extends private option, this is default value, we don't need set private manually.
-        )
-        ->setHelp('foo help');
+        );
 }
 
 public function doExecute()
 {
-    if (empty($this->input->args[0]))
+    $name = #this->getArgument(0);
+
+    if (!$name)
     {
-        $this->out('Please enter a name: ');
-        $name = fread(STDIN, 8792);
-    }
-    else
-    {
-        $name = $this->input->args[0];
+        $this->io->in('Please enter a name: ');
     }
 
     $reply = 'Hello ' . $name;
@@ -349,11 +353,9 @@ If we type:
 
 ``` bash
 $ php cli/console.php foo Asika --yell
-```
 
-OR
+# OR
 
-``` bash
 $ php cli/console.php foo Asika -y
 ```
 
@@ -363,23 +365,23 @@ The `getOption()` method will auto detect option aliases, then we can get:
 HELLO: ASIKA
 ```
 
-> Note: We have to `addOption()` first, then the `getOption('x')` is able to get the input option which we wanted.
->
-> If we don't do this first, we have to use `$this->input->get('x')` to get option value,
-> but this way do not support option aliases.
+> Note: We have to use `addOption()` to define options first, then the `$this->getOption('x')` will be able to 
+get the input option which we want. If we didn't do this, we have to use `$this->io->get('x')` 
+to get option value, but this way do not support option aliases.
 
 ## Add Second Level Commands and more...
 
-If we want to add several commands after FooCommand, we can use `addCommand()` method. Now we add two `bar` and `yoo`
-command to `FooCommand`.
+Now, FooCommand is the first level commands in our command tree, if we want to add several commands under FooCommand, 
+we can use `addCommand()` method. Now we add two `bar` and `yoo` command under `FooCommand`.
 
 ### Adding command in runtime.
 
-We use `addCommand()` to add commands.
+We can use `addCommand()` to add a command as other commands' child.
 
-If a command has one or more sub commands, the arguments means to call sub command which name equals to first argument.
+If a command has one or more children, the arguments means to call children which the name equals to this argument.
 
-If a command has on sub commands, Command object will run executing code if set, or run `doExecute()` if executing code not set. Then the remaining arguments will save in `$this->input->args`.
+If a command has no child, Command object will run handler closure if has set, or run `doExecute()` if handler not set. 
+Then the remaining arguments will be able to get by `$this->getArgument({offset})`.
 
 ``` php
 <?php
@@ -389,12 +391,9 @@ use Windwalker\Console\Option\Option;
 
 //...
 
-    public function configure()
+    public function initialise()
     {
-        $this->setDescription('This is first level foo command.')
-            ->setUsage('foo command [--option]')
-            ->setHelp('foo help')
-            ->addCommand(
+        $this->addCommand(
                 'bar',
                 'Bar description.'
             )
@@ -424,19 +423,26 @@ use Windwalker\Console\Command\Command;
 class BarCommand extends Command
 {
     protected $name = 'bar';
+    protected $usage = 'bar command [--option]';
+    protected $help  = 'bar help';
+    protected $description = 'This is second level bar command.';
 
-    public function configure()
+    public function initialise()
     {
-        $this->setDescription('This is second level bar command.')
-            ->setUsage('bar command [--option]')
-            ->setHelp('bar help')
-            ->addOption(new Option(array('y', 'yell'), 0))
+        $this->addOption(new Option(array('y', 'yell'), 0))
             ->addOption(new Option('s', 0, 'desc', Option::IS_GLOBAL));
     }
 
     public function doExecute()
     {
-        $this->out('This is Bar Command executing code.');
+        $this->out('This is Bar Command executing.');
+        
+        $arg1 = $this->getArgument(0);
+        
+        if ($arg1)
+        {
+            $this->out('Argument1: ' . $arg1);
+        }
     }
 }
 ```
@@ -452,17 +458,14 @@ use Myapp\Command\Foo\YooCommand;
 
 //...
 
-    public function configure()
+    public function initialise()
     {
-        $this->setDescription('This is first level foo command.')
-            ->setUsage('foo command [--option]')
-            ->setHelp('foo help')
-            ->addCommand(new BarCommand)
+        $this->addCommand(new BarCommand)
             ->addCommand(new YooCommand);
     }
 ```
 
-OK, typing:
+OK, let's typing:
 
 ``` bash
 $ cli/console.php foo bar
@@ -473,6 +476,181 @@ We get:
 ```
 This is Bar Command executing code.
 ```
+
+And typing
+
+``` bash
+$ cli/console.php foo bar sakura
+```
+
+get:
+
+```
+This is Bar Command executing code.
+Argument1: sakura
+```
+
+### Get Child by Path
+
+``` php
+$command = $console->getCommand('foo/bar'); // BarCommand
+
+// OR
+
+$command = $command->getChild('foo/bar/baz');
+```
+
+## The Prompter
+
+Prompter is a set of dialog tools help us asking questions for user.
+
+``` php
+$prompter = new \Windwalker\Console\Prompter\TextPrompter;
+
+$name = $prompter->ask('Tell me your name:', 'default');
+```
+
+OR set question in constructor.
+
+``` php
+$prompter = new TextPrompter('Tell me your name: ', $this->io);
+
+// If argument not exists, auto ask user.
+$name = $this->getArgument(0, $prompter);
+```
+
+### Validate Input Value
+
+``` php
+$prompter = new \Windwalker\Console\Prompter\ValidatePrompter;
+
+$prompter->setAttempt(3);
+
+$prompter->ask('Please enter username: ');
+```
+
+If we didn't type anything, ValidatePrompter will try ask us three times (We set this number by `setAttempt()`).
+
+```
+Please enter username:
+  Not a valid value.
+
+Please enter username:
+  Not a valid value.
+
+Please enter username:
+  Not a valid value.
+```
+
+We can set closure to validate our rule:
+
+``` php
+$prompter->setAttempt(3)
+    ->setNoValidMessage('No valid number.')
+    ->setHandler(
+    function($value)
+    {
+        return $value == 9;
+    }
+);
+
+$prompter->ask('Please enter right number: ');
+```
+
+Result
+
+```
+Please enter right number: 1
+No valid number.
+
+Please enter right number: 2
+No valid number.
+
+Please enter right number: 3
+No valid number.
+```
+
+If validate fail, we can choose shut down our process:
+ 
+``` php
+// ...
+
+$prompter->failToClose(true, 'Number validate fail and close');
+
+$prompter->ask('Please enter right number: ');
+```
+
+Result
+
+```
+Please enter right number:
+No valid number.
+
+Please enter right number:
+No valid number.
+
+Please enter right number:
+No valid number.
+
+Number validate fail and close
+```
+
+### Select List
+
+``` php
+$options = array(
+    's' => 'sakura',
+    'r' => 'Rose',
+    'o' => 'Olive'
+);
+
+$prompter = new \Windwalker\Console\Prompter\SelectPrompter('Which do you want: ', $options);
+
+$result = $prompter->ask();
+
+$command->out('You choose: ' . $result);
+```
+
+Output
+
+```
+  [s] - sakura
+  [r] - Rose
+  [o] - Olive
+
+Which do you want: r
+You choose: r
+```
+
+### Boolean Prompter
+
+BooleanPrompter convert input string to boolean type, the (y, yes, 1) weill be `true`, (n, no, 0, null) will be `false`.
+
+``` php
+$prompter = new \Windwalker\Console\Prompter\BooleanPrompter;
+
+$result = $prompter->ask('Do you wan to do this [Y/n]: ');
+
+var_dump($result);
+```
+
+Result
+
+```
+Do you wan to do this [Y/n]: y
+bool(true)
+```
+
+### Available Prompters
+
+- TextPrompter
+- SelectPrompter
+- CallbackPrompter
+- ValidatePrompter
+- NotNullPrompter
+- PasswordPrompter
+
+### Available Prompters
 
 ## HelpCommand
 
@@ -520,26 +698,16 @@ $console->getRootCommand()
 
 ## Use Command Without Console
 
-We can using `Command` without `Console` or `CliApplicaion`, please see [Command README](Command).
+We can using `Command` without, please see [Command README](Command).
+
+## Credits
+
+Windwalker Console incorporated many ideas from other CLI packages. 
+Below is a short list of projects which Windwalker drew inspiration.
+
+- [Symfony Console](https://github.com/symfony/Console)
+- [Commando](https://github.com/symfony/Console)
+- [CLIFramework](https://github.com/c9s/CLIFramework)
+- [Composer](https://github.com/composer/composer)
 
 
-## Installation via Composer
-
-Add `"windwalker/application": "~2.0"` to the require block in your composer.json,
-make sure you have `"minimum-stability": "dev"` and then run composer install.
-
-``` json
-{
-    "require": {
-        "asika/windwalker-console": "~2.0"
-    },
-    "minimum-stability": "dev"
-}
-```
-
-Alternatively, you can simply run the following from the command line:
-
-```
-composer init --stability="dev"
-composer require asika/windwalker-console "~2.0"
-```

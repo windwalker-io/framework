@@ -78,7 +78,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertInstanceOf(
-			'Windwalker\\Application\\Web\\WebEnvironment',
+			'Windwalker\\Environment\\Web\\WebEnvironment',
 			$this->instance->getEnvironment(),
 			'Environment property wrong type'
 		);

@@ -14,7 +14,13 @@ use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\FileViewFinder;
-use Illuminate\View\Environment as BladeEnvironment;
+use Illuminate\View\Factory as BladeEnvironment;
+
+// Fix for Illuminate 4.1 B/C
+if (!class_exists('Illuminate\View\Factory'))
+{
+	class_alias('Illuminate\View\Environment', 'Illuminate\View\Factory');
+}
 
 /**
  * The BladeRenderer class.
@@ -75,7 +81,7 @@ class BladeRenderer extends AbstractAdapterRenderer
 	 */
 	public function render($file, $data = array())
 	{
-		return $this->getEngine()->make($file);
+		return $this->getEngine()->make($file, $data)->render();
 	}
 
 	/**
@@ -254,6 +260,11 @@ class BladeRenderer extends AbstractAdapterRenderer
 			if (!$cachePath)
 			{
 				throw new \InvalidArgumentException('Please set cache_path into config.');
+			}
+
+			if (!is_dir($cachePath))
+			{
+				mkdir($cachePath, 0755, true);
 			}
 
 			$this->compiler = new CompilerEngine(new BladeCompiler($this->getFilesystem(), $cachePath));

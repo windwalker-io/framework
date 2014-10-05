@@ -64,9 +64,9 @@ abstract class LanguageNormalize
 	public static function toLanguageKey($key)
 	{
 		// Only allow A-Z a-z 0-9 and "_", other characters will be replace with "_".
-		$key = preg_replace('/[^A-Z0-9_]+/i', '_', $key);
+		$key = preg_replace('/[^A-Z0-9]+/i', '.', $key);
 
-		return strtoupper(trim($key, '_'));
+		return strtolower(trim($key, '_'));
 	}
 }
 

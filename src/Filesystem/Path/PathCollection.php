@@ -343,7 +343,7 @@ class PathCollection extends ArrayObject
 	 */
 	public function appendAll($appended)
 	{
-		foreach ($this->paths as &$path)
+		foreach ($this->storage as &$path)
 		{
 			$path->append($appended);
 		}
@@ -362,7 +362,7 @@ class PathCollection extends ArrayObject
 	 */
 	public function prependAll($prepended)
 	{
-		foreach ($this->paths as &$path)
+		foreach ($this->storage as &$path)
 		{
 			$path->prepend($prepended);
 		}
@@ -401,7 +401,7 @@ class PathCollection extends ArrayObject
 	/**
 	 * Is this path a subdir of another path in bag?
 	 *
-	 * When running recrusive scan dir, we have to avoid to re scan same dir.
+	 * When running recursive scan dir, we have to avoid to re scan same dir.
 	 *
 	 * @param  PathLocator $path The path to detect is subdir or not.
 	 *
@@ -411,7 +411,7 @@ class PathCollection extends ArrayObject
 	 */
 	public function isSubdir($path)
 	{
-		foreach ($this->paths as $member)
+		foreach ($this->storage as $member)
 		{
 			if ($member->isSubdirOf($path))
 			{
@@ -420,20 +420,5 @@ class PathCollection extends ArrayObject
 		}
 
 		return false;
-	}
-
-	/**
-	 * Automatic all parent methods
-	 *
-	 * @param   string $name Name of the method name we want to gall.
-	 * @param   array  $args Called args.
-	 *
-	 * @return  mixed   The filtered input value.
-	 *
-	 * @since  {DEPLOY_VERSION}
-	 */
-	public function __call($name, $args)
-	{
-		return call_user_func_array(array(parent, $name), $args);
 	}
 }

@@ -67,7 +67,7 @@ class PasswordPrompter extends CallbackPrompter
 	 *
 	 * @return  void
 	 */
-	protected function preprocess()
+	protected function initialise()
 	{
 		$this->win = defined('PHP_WINDOWS_VERSION_BUILD');
 

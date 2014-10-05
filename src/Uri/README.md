@@ -1,6 +1,6 @@
 # Windwalker Uri Package
 
-Windwalker Uri package is a Windwalker Framework fork now, to support our Application package.
+Windwalker Uri package is a Joomla Framework fork now, to support our Application package.
 
 ## Introduction
 

@@ -2,25 +2,26 @@
 
 ## Installation via Composer
 
-Add `"ventoviro/windwalker-middleware": "1.0.*"` to the require block in your composer.json.
+Add this to the require block in your `composer.json`.
 
 ``` json
 {
     "require": {
-        "ventoviro/windwalker-datamapper": "1.0.*"
+        "windwalker/datamapper": "~2.0"
     }
 }
 ```
 
 ## Getting Started
 
-### Prepare Database object
+### Prepare Windwalker Database object
 
 ``` php
 use Windwalker\Database\DatabaseFactory;
 
 // Make the database driver.
 $db = DatabaseFactory::getDbo(
+    'mysql',
 	array(
 		'driver'   => 'mysql',
 		'host'     => 'localhost',
@@ -32,13 +33,17 @@ $db = DatabaseFactory::getDbo(
 );
 ```
 
-You can get Database later by Factory:
+The DatabaseDriver will be cache in Factory, now DataMapper will auto load Windwalker DatabaseDriver 
+from `DatabaseFactory` and `DatabaseAdapter` to operate DB.
 
+### Manually Set An Exists DatabaseDriver To Adapter
+ 
 ``` php
-$db = DatabaseFactory::getDbo();
-```
+use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 
-See Joomla Database: https://github.com/joomla-framework/database
+DatabaseAdapter::setInstance(new WindwalkerAdapter($db));
+```
 
 ## Create a DataMapper
 
@@ -48,6 +53,45 @@ use Windwalker\DataMapper\DataMapper;
 $fooMapper = new DataMapper('#__foo');
 
 $fooSet = $fooMapper->find(array('id' => 1));
+```
+
+### Extend It
+
+You can also create a class to operate specific table:
+
+``` php
+class FooMapper extends DataMapper
+{
+    protected $table = '#__foo';
+}
+
+$data = (new FooMapper)->findAll();
+```
+
+Or using facade:
+
+``` php
+abstract class FooMapper
+{
+    protected static $instance;
+    
+    public static function getInstance()
+    {
+        if (!static::$instance)
+        {
+            static::$instance = new DataMapper('#__foo');
+        }
+        
+        return static::$instance;
+    }
+    
+    public static function __callStatic($name, $args)
+    {
+        return call_user_func_array(array(static::getInstance(), $name), $args);
+    }
+}
+
+$data = FooMapper::findOne(array('id' => 5, 'alias' => 'bar'));
 ```
 
 ## Find Records
@@ -220,18 +264,33 @@ $boolean = $fooMapper->delete(array('author' => 'Jean Grey'));
 Using `RelationDataMapper` to join tables.
 
 ``` php
-$fooMapper = new RelationDataMapper('foo', '#__foo');
+$fooMapper = new RelationDataMapper('flower', '#__flower');
 
-$fooMapper->addTable('author', '#__users', 'foo.user_id = author.id', 'LEFT')
-    ->addTable('category', '#__categories', array('category.lft >= foo.lft', 'category.rgt <= foo.rgt'), 'INNER');
+$fooMapper->addTable('author', '#__users', 'flower.user_id = author.id', 'LEFT')
+    ->addTable('category', '#__categories', array('category.lft >= flower.lft', 'category.rgt <= flower.rgt'), 'INNER');
 
 // Don't forget add alias on where conditions.
-$dataset = $fooMapper->find(array('foo.id' => 5));
+$dataset = $fooMapper->find(array('flower.id' => 5));
 ```
 
 The Join query will be:
 
 ``` sql
+SELECT `flower`.`id`,
+	`flower`.`catid`,
+	`flower`.`title`,
+	`flower`.`user_id`,
+	`flower`.`meaning`,
+	`flower`.`ordering`,
+	`flower`.`state`,
+	`flower`.`params`,
+	`author`.`id` AS `author_id`,
+	`author`.`name` AS `author_name`,
+	`author`.`pass` AS `author_pass`,
+	`category`.`id` AS `category_id`,
+	`category`.`title` AS `category_title`,
+	`category`.`ordering` AS `category_ordering`,
+	`category`.`params` AS `category_params`
 FROM #__foo AS foo
     LEFT JOIN #__users AS author ON foo.user_id = author.id
     INNER JOIN #__categories AS category ON category.lft >= foo.lft AND category.rgt <= foo.rgt
@@ -272,16 +331,18 @@ WHERE `id` >= '5'
     AND `catid` NOT IN (1,2,3,4,5)
 ```
 
-### Abailable compares:
+### Available compares:
 
-- EqCompare  : Equal `=`
-- NeqCompare : Not Equal `!=`
-- GtCompare  : Greater than `>`
-- GteCompare : Greate than or Equal `>=`
-- LtCompare  : Less than `<`
-- LteCompare : Less than or Equal `<=`
-- InCompare  : In `IN`
-- NinCompare : Not In `NOT IN`
+| Name       | Description      | Operator |
+| ---------- | -----------------| -------- |
+| EqCompare  | Equal                 | `=`  |
+| NeqCompare | Not Equal             | `!=` |
+| GtCompare  | Greater than          | `>`  |
+| GteCompare | Greater than or Equal | `>=` |
+| LtCompare  | Less than             | `<`  |
+| LteCompare | Less than or Equal    | `<=` |
+| InCompare  | In                    | `IN` |
+| NinCompare | Not In                | `IN` |
 
 ### Custom Compare
 
@@ -297,10 +358,36 @@ Will be
 
 See: https://github.com/ventoviro/windwalker-compare
 
-
 ## Using Data and DataSet
 
 See: https://github.com/ventoviro/windwalker-data
 
+## Integrate Other Framework's DB Object
+ 
+Create your own adapter.
+ 
+``` php
+class MyDatabaseAdapter extends DatabaseAdapter
+{
+    protected $db;
 
+    public function __construct(MyDBObject $db)
+    {
+        $this->db = $db;
+    }
 
+	public function find($table, $select = '*', array $conditions = array(), array $orders = array(), $start = 0, $limit = null) {}
+	public function create($table, $data, $pk = null) {}
+	public function updateOne($table, $data, array $condFields = array()) {}
+	public function updateAll($table, $data, array $conditions = array()) {}
+	public function delete($table, array $conditions = array()) {}
+	public function getFields($table) {}
+	public function transactionStart($asSavePoint = false) {}
+	public function transactionCommit($asSavePoint = false) {}
+	public function transactionRollback($asSavePoint = false) {}
+}
+
+DatabaseAdapter::setInstance(new MyDatabaseAdapter($db));
+```
+
+DataMapper will call this adapter to operate DB, it prevents that there may be 2 DB connections exists at the same time. 

@@ -26,13 +26,13 @@ class FooCommand extends Command
 	protected $name = 'foo';
 
 	/**
-	 * Configure command.
+	 * Initialise command.
 	 *
 	 * @return void
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	protected function configure()
+	protected function initialise()
 	{
 		$this->setDescription('Foo command desc')
 			->setUsage('foo <command> [option]')

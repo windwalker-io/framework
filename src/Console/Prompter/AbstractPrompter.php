@@ -8,7 +8,7 @@
 
 namespace Windwalker\Console\Prompter;
 
-use Windwalker\Console\IO\IO;
+use Windwalker\Console\IO\IOFactory;
 use Windwalker\Console\IO\IOInterface;
 
 /**
@@ -65,15 +65,28 @@ abstract class AbstractPrompter implements PrompterInterface
 	 */
 	function __construct($question = null, $default = null, IOInterface $io = null)
 	{
-		$this->io = $io ? : new IO;
+		$this->io = $io ? : IOFactory::getIO();
 		$this->question = $question;
 		$this->default  = $default;
 
+		$this->initialise();
 		$this->preprocess();
 	}
 
 	/**
 	 * Method to initialise something customize.
+	 *
+	 * @return  void
+	 */
+	protected function initialise()
+	{
+		// Override this method to initialise something.
+	}
+
+	/**
+	 * Method to initialise something customize.
+	 *
+	 * @deprecated Use initialise() instead.
 	 *
 	 * @return  void
 	 */

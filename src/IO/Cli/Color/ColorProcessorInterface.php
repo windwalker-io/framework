@@ -37,4 +37,13 @@ interface ColorProcessorInterface
 	 * @since   {DEPLOY_VERSION}
 	 */
 	public function addStyle($name, ColorStyle $style);
+
+	/**
+	 * Method to set property noColors
+	 *
+	 * @param   boolean $noColors
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setNoColors($noColors);
 }

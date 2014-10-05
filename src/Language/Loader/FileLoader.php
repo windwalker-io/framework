@@ -53,6 +53,8 @@ class FileLoader extends AbstractLoader
 			{
 				$queue->insert($path, $priority);
 			}
+
+			$paths = $queue;
 		}
 
 		$this->paths = $paths;
@@ -72,7 +74,11 @@ class FileLoader extends AbstractLoader
 		{
 			if (!$file = $this->findFile($file))
 			{
-				throw new \RuntimeException(sprintf('Language file: %s not found.', $file));
+				$paths = array_values(iterator_to_array(clone $this->paths));
+
+				$paths = implode(" / ", $paths);
+
+				throw new \RuntimeException(sprintf('Language file: %s not found. Paths in queue: %s', $file, $paths));
 			}
 		}
 

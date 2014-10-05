@@ -39,7 +39,7 @@ class RelationDataMapperTest extends DatabaseTest
 
 		$this->instance = new RelationDataMapper('flower', 'ww_flower');
 
-		$this->instance->addTable('cat', 'ww_categories', 'flower.catid = cat.id');
+		$this->instance->addTable('category', 'ww_categories', 'flower.catid = category.id');
 	}
 
 	/**
@@ -64,7 +64,7 @@ class RelationDataMapperTest extends DatabaseTest
 		$dataset = $this->instance->find(
 			array(
 				'flower.state' => 1,
-				new GteCompare('cat.id', 2)
+				new GteCompare('category.id', 2)
 			),
 			'flower.title DESC',
 			1,
@@ -79,14 +79,14 @@ SELECT `flower`.`id`,
 	`flower`.`ordering`,
 	`flower`.`state`,
 	`flower`.`params`,
-	`cat`.`id` AS `cat_id`,
-	`cat`.`title` AS `cat_title`,
-	`cat`.`ordering` AS `cat_ordering`,
-	`cat`.`params` AS `cat_params`
+	`category`.`id` AS `category_id`,
+	`category`.`title` AS `category_title`,
+	`category`.`ordering` AS `category_ordering`,
+	`category`.`params` AS `category_params`
 FROM `ww_flower` AS `flower`
-	LEFT JOIN `ww_categories` AS `cat` ON flower.catid = cat.id
+	LEFT JOIN `ww_categories` AS `category` ON flower.catid = category.id
 WHERE `flower`.`state` = 1
-	AND `cat`.`id` >= 2
+	AND `category`.`id` >= 2
 ORDER BY flower.title DESC
 LIMIT 1, 3
 SQL;
@@ -117,12 +117,12 @@ SELECT `flower`.`id`,
 	`flower`.`ordering`,
 	`flower`.`state`,
 	`flower`.`params`,
-	`cat`.`id` AS `cat_id`,
-	`cat`.`title` AS `cat_title`,
-	`cat`.`ordering` AS `cat_ordering`,
-	`cat`.`params` AS `cat_params`
+	`category`.`id` AS `category_id`,
+	`category`.`title` AS `category_title`,
+	`category`.`ordering` AS `category_ordering`,
+	`category`.`params` AS `category_params`
 FROM `ww_flower` AS `flower`
-	LEFT JOIN `ww_categories` AS `cat` ON flower.catid = cat.id
+	LEFT JOIN `ww_categories` AS `category` ON flower.catid = category.id
 ORDER BY flower.title DESC
 LIMIT 1, 3
 SQL;
@@ -142,7 +142,7 @@ SQL;
 		$data = $this->instance->findOne(
 			array(
 				'flower.state' => 1,
-				new GteCompare('cat.id', 2)
+				new GteCompare('category.id', 2)
 			),
 			'flower.title DESC'
 		);
@@ -155,14 +155,14 @@ SELECT `flower`.`id`,
 	`flower`.`ordering`,
 	`flower`.`state`,
 	`flower`.`params`,
-	`cat`.`id` AS `cat_id`,
-	`cat`.`title` AS `cat_title`,
-	`cat`.`ordering` AS `cat_ordering`,
-	`cat`.`params` AS `cat_params`
+	`category`.`id` AS `category_id`,
+	`category`.`title` AS `category_title`,
+	`category`.`ordering` AS `category_ordering`,
+	`category`.`params` AS `category_params`
 FROM `ww_flower` AS `flower`
-	LEFT JOIN `ww_categories` AS `cat` ON flower.catid = cat.id
+	LEFT JOIN `ww_categories` AS `category` ON flower.catid = category.id
 WHERE `flower`.`state` = 1
-	AND `cat`.`id` >= 2
+	AND `category`.`id` >= 2
 ORDER BY flower.title DESC
 SQL;
 

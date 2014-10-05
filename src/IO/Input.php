@@ -43,14 +43,6 @@ use Windwalker\IO\Filter\NullFilter;
 class Input implements \Serializable, \Countable
 {
 	/**
-	 * Filter object to use.
-	 *
-	 * @var    \Windwalker\Filter\InputFilter
-	 * @since  {DEPLOY_VERSION}
-	 */
-	protected $filter = null;
-
-	/**
 	 * Input data.
 	 *
 	 * @var    array
@@ -65,6 +57,14 @@ class Input implements \Serializable, \Countable
 	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $inputs = array();
+
+	/**
+	 * Filter object to use.
+	 *
+	 * @var    \Windwalker\Filter\InputFilter
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected $filter = null;
 
 	/**
 	 * Constructor.

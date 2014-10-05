@@ -1,36 +1,30 @@
-# Joomla Console Package Command Interface
+# Windwalker Console Package Command Interface
 
-A Joomla Framework Command package that support nested commend calling.
+## The Commands Structure
 
-## The Command Calling Flow
+```
+                    RootCommand
+                         |
+              ----------------------
+              |                    |
+          CommandA              CommandB
+              |                    |
+        ------------          ------------
+        |          |          |          |
+    CommandC   CommandD    CommandE   CommandF
+```
+
+If we type:
 
 ``` bash
-$ php cli/app.php command1 command2 command3 -a -b -cd --help
+$ php cli/console.php commandA commandC foo bar -a -bc -d=e --flower=sakura
 ```
 
-``` text
-command1
-    ->configure
-    ->execute
-    
-    commend2
-        ->configure
-        ->execute
-        
-        commend3
-            ->configure
-            ->execute
-        
-        return
-    
-    return
-
-return
-```
+Then we will been direct to `CommandC` class, and the following `foo bar` will be arguments.
 
 ## Usage
 
-We can using `Command` without `CliApplicaion`, just create this object.
+We can using `Command` without `Console` object, just create this object.
 
 ### Simple One Command
 
@@ -38,66 +32,62 @@ We can using `Command` without `CliApplicaion`, just create this object.
 <?php
 // cli/app.php
 
-use Joomla\Command\Command;
-use Joomla\Command\Option;
-use Joomla\Input\Cli as Input;
+use Windwalker\Console\Command\Command;
+use Windwalker\Console\Command\Option;
+use Windwalker\Console\IO\IO;
+
+$command = new Command('app', new IO);
+
+$command->setDescription('This is first level command description')
+    ->addOption(
+        'q', // option name
+        0,   // default value
+        'Add this option can make output lower case.', // option description
+        Option::IS_GLOBAL // sub command will extends this global option
+    )
+    ->addOption(
+        ['y', 'yell', 'Y'], // First element will be option name, others will be alias
+        0,
+        'Yell will make output upper case.',
+        Option::IS_PRIVATE // sub command will not extends normal option
+    )
+    ->setHandler(
+        function($command)
+        {
+            $name = $command->getArgument(0);
+        
+            if (!$name)
+            {
+                $name = $command->in('Please enter a name: ');
+            }
+
+            $reply = 'Hello ' . $name;
+
+            if ($command->getOption('y'))
+            {
+                $reply = strtoupper($reply);
+            }
+
+            if ($command->getOption('q'))
+            {
+                $reply = strtolower($reply);
+            }
+
+            $command->out($reply);
+        }
+    );
 
 try
 {
-    $command = new Command('app', new Input);
-
-    $command->setDescription('This is first level command description')
-        ->addOption(
-            'q', // option name
-            0,   // default value
-            'Add this option can make output lower case.', // option description
-            Option::IS_GLOBAL // sub command will extends this global option
-        )
-        ->addOption(
-            ['y', 'yell', 'Y'], // First element will be option name, others will be alias
-            0,
-            'Yell will make output upper case.',
-            Option::IS_PRIVATE // sub command will not extends normal option
-        )
-        ->setHandler(
-            function($command, $input, $output)
-            {
-                if (empty($input->args[0]))
-                {
-                    $output->out('Please enter a name: ');
-                    $name = fread(STDIN, 8792);
-                }
-                else
-                {
-                    $name = $input->args[0];
-                }
-
-                $reply = 'Hello ' . $name;
-
-                if ($command->getOption('y'))
-                {
-                    $reply = strtoupper($reply);
-                }
-
-                if ($command->getOption('q'))
-                {
-                    $reply = strtolower($reply);
-                }
-
-                $output->out($reply);
-            }
-        );
-
     $command->execute();
 }
 catch(Exception $e)
 {
     $command->renderException($e);
 }
-
 ```
 
-The `execute()` method will execute your command code. We set a `Closure` into `Command` and execute it.
+The `execute()` method will execute your command handler. We set a `Closure` into `Command` and execute it.
 
 When we type:
 
@@ -129,7 +119,7 @@ hello asika
 Type:
 
 ``` bash
-$ php cli/app.php Asika -yell
+$ php cli/app.php Asika --yell
 ```
 
 Output
@@ -144,46 +134,42 @@ HELLO ASIKA
 <?php
 // cli/app.php
 
-use Joomla\Command\Command;
-use Joomla\Command\Option;
-use Joomla\Input\Cli as Input;
+$command = new Command('app', new Input);
 
+// Default Command
+$command->setDescription('This is first level command description')
+    ->addOption(
+        'q',
+        0,
+        'Add this option can make output lower case.',
+        Option::IS_GLOBAL
+    )
+    // First level code
+    ->setHandler(
+        function($command, $input, $output)
+        {
+            $output->out('First level command.');
+        }
+    )
+    // Second level commend
+    ->addCommand(
+        'second',
+        'The second level argument',
+        array(
+            new Option(
+                array('a', 'A', 'ask'),
+                'a default',
+                'a desc'
+            )
+        ),
+        function($command, $input, $output)
+        {
+            echo 'Second level commend.';
+        }
+    );
+    
 try
 {
-    $command = new Command('app', new Input);
-
-    // Default Command
-    $command->setDescription('This is first level command description')
-        ->addOption(
-            'q',
-            0,
-            'Add this option can make output lower case.',
-            Option::IS_GLOBAL
-        )
-        // First level code
-        ->setHandler(
-            function($command, $input, $output)
-            {
-                $output->out('First level command.');
-            }
-        )
-        // Second level commend
-        ->addCommand(
-            'second',
-            'The second level argument',
-            array(
-                new Option(
-                    array('a', 'A', 'ask'),
-                    'a default',
-                    'a desc'
-                )
-            ),
-            function($command, $input, $output)
-            {
-                echo 'Second level commend.';
-            }
-        );
-
     $command->execute();
 }
 catch(Exception $e)
@@ -219,7 +205,7 @@ Output
 Second level commend.
 ```
 
-### Extends Classes
+### Declaring Command Classes
 
 If you want to execute Command by your class, you can extends it from `Command`:
 
@@ -229,11 +215,11 @@ If you want to execute Command by your class, you can extends it from `Command`:
 
 namespace Myapp;
 
-use Joomla\Command\Command;
+use Windwalker\Console\Command\Command;
 
 class FooCommand extends Command
 {
-	public function configure()
+	public function initialise()
 	{
 		$this->setName('foo')
 		    ->setDescription('foo desc')
@@ -261,11 +247,11 @@ And we add a sub command.
 
 namespace Myapp\Foo;
 
-use Joomla\Command\Command;
+use Windwalker\Console\Command\Command;
 
 class BarCommand extends Command
 {
-	public function configure()
+	public function initialise()
 	{
 		$this->setName('bar')
             ->setDescription('bar desc')
@@ -309,7 +295,7 @@ Bar
 
 You can use the `RootCommand` instead base `Command`, it provides some useful functions like `--help`, `--verbose`, `--quiet`.
 
-If we catched an exception, the `--verbose|-v` option can help us print backtrace information.
+If we catch an exception, the `--verbose|-v` option help us print backtrace information.
 
 ``` php
 <?php
@@ -339,5 +325,4 @@ We can get the help information.
 
 ## About Console Package
 
-This is part of Joomla Console package documentation, please see [Console Package](..).
-
+This is part of Windwalker Console package documentation, please see [Console Package](..).

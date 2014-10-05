@@ -37,11 +37,14 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetAndSetLogger()
 	{
-//		$this->assertInstanceOf('Psr\\Log\\NullLogger', $this->instance->getLogger());
-//
-//		$this->instance->setLogger(new MockLogger);
-//
-//		$this->assertInstanceOf('Windwalker\\Console\\Test\\Mock\\MockLogger', $this->instance->getLogger());
+		/* Re adding this test when we support PSR Logger
+
+		$this->assertInstanceOf('Psr\\Log\\NullLogger', $this->instance->getLogger());
+
+		$this->instance->setLogger(new MockLogger);
+
+		$this->assertInstanceOf('Windwalker\\Console\\Test\\Mock\\MockLogger', $this->instance->getLogger());
+		*/
 	}
 
 	/**
@@ -291,6 +294,4 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(221, $this->instance->getRootCommand()->setIO(new MockIO)->execute());
 	}
-
-
 }

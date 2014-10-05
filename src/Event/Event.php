@@ -116,6 +116,21 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	}
 
 	/**
+	 * Method to set property arguments
+	 *
+	 * @param   array  $arguments  An associative array of argument names as keys
+	 *                             and their values as values.
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setArguments(array $arguments)
+	{
+		$this->arguments = $arguments;
+
+		return $this;
+	}
+
+	/**
 	 * Add an event argument, only if it is not existing.
 	 *
 	 * @param   string  $name   The argument name.

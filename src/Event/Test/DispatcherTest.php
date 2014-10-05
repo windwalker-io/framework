@@ -10,7 +10,7 @@ use Windwalker\Event\Dispatcher;
 use Windwalker\Event\Event;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\EventImmutable;
-use Windwalker\Event\ListenersQueue;
+use Windwalker\Event\ListenerPriority;
 use Windwalker\Event\Test\Stub\EmptyListener;
 use Windwalker\Event\Test\Stub\FirstListener;
 use Windwalker\Event\Test\Stub\SecondListener;
@@ -277,17 +277,17 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->instance->hasListener($listener3, 'onSomething'));
 		$this->assertTrue($this->instance->hasListener($listener3, 'onAfterSomething'));
 
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener1, 'onBeforeSomething'));
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener1, 'onSomething'));
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener1, 'onAfterSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onBeforeSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onAfterSomething'));
 
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener1, 'onBeforeSomething'));
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener1, 'onSomething'));
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener1, 'onAfterSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onBeforeSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onAfterSomething'));
 
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener3, 'onBeforeSomething'));
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener3, 'onSomething'));
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener3, 'onAfterSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener3, 'onBeforeSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener3, 'onSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener3, 'onAfterSomething'));
 	}
 
 	/**
@@ -305,9 +305,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->instance->addListener(
 			$listener,
 			array(
-				'onBeforeSomething' => ListenersQueue::MIN,
-				'onSomething' => ListenersQueue::ABOVE_NORMAL,
-				'onAfterSomething' => ListenersQueue::HIGH
+				'onBeforeSomething' => ListenerPriority::MIN,
+				'onSomething' => ListenerPriority::ABOVE_NORMAL,
+				'onAfterSomething' => ListenerPriority::HIGH
 			)
 		);
 
@@ -315,9 +315,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->instance->hasListener($listener, 'onSomething'));
 		$this->assertTrue($this->instance->hasListener($listener, 'onAfterSomething'));
 
-		$this->assertEquals(ListenersQueue::MIN, $this->instance->getListenerPriority($listener, 'onBeforeSomething'));
-		$this->assertEquals(ListenersQueue::ABOVE_NORMAL, $this->instance->getListenerPriority($listener, 'onSomething'));
-		$this->assertEquals(ListenersQueue::HIGH, $this->instance->getListenerPriority($listener, 'onAfterSomething'));
+		$this->assertEquals(ListenerPriority::MIN, $this->instance->getListenerPriority($listener, 'onBeforeSomething'));
+		$this->assertEquals(ListenerPriority::ABOVE_NORMAL, $this->instance->getListenerPriority($listener, 'onSomething'));
+		$this->assertEquals(ListenerPriority::HIGH, $this->instance->getListenerPriority($listener, 'onAfterSomething'));
 	}
 
 	/**
@@ -335,8 +335,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->instance->addListener(
 			$listener,
 			array(
-				'onBeforeSomething' => ListenersQueue::NORMAL,
-				'onAfterSomething' => ListenersQueue::HIGH
+				'onBeforeSomething' => ListenerPriority::NORMAL,
+				'onAfterSomething' => ListenerPriority::HIGH
 			)
 		);
 
@@ -362,8 +362,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->instance->addListener(
 			$listener,
 			array(
-				'onSomething' => ListenersQueue::HIGH,
-				'onAfterSomething' => ListenersQueue::NORMAL
+				'onSomething' => ListenerPriority::HIGH,
+				'onAfterSomething' => ListenerPriority::NORMAL
 			)
 		);
 
@@ -371,8 +371,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->instance->hasListener($listener, 'onSomething'));
 		$this->assertTrue($this->instance->hasListener($listener, 'onAfterSomething'));
 
-		$this->assertEquals(ListenersQueue::HIGH, $this->instance->getListenerPriority($listener, 'onSomething'));
-		$this->assertEquals(ListenersQueue::NORMAL, $this->instance->getListenerPriority($listener, 'onAfterSomething'));
+		$this->assertEquals(ListenerPriority::HIGH, $this->instance->getListenerPriority($listener, 'onSomething'));
+		$this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener, 'onAfterSomething'));
 	}
 
 	/**
@@ -424,7 +424,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->instance->addListener($listener);
 
 		$this->assertEquals(
-			ListenersQueue::NORMAL,
+			ListenerPriority::NORMAL,
 			$this->instance->getListenerPriority(
 				$listener,
 				new Event('onSomething')
@@ -646,8 +646,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->instance->addListener($first)
 			->addListener($second)
 			->addListener($third)
-			->addListener($fourth, array('onSomething' => ListenersQueue::NORMAL))
-			->addListener($fifth, array('onSomething' => ListenersQueue::NORMAL));
+			->addListener($fourth, array('onSomething' => ListenerPriority::NORMAL))
+			->addListener($fifth, array('onSomething' => ListenerPriority::NORMAL));
 
 		// Inspect the event arguments to know the order of the listeners.
 		/** @var $event Event */
@@ -687,11 +687,11 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 			$event->setArgument('listeners', $listeners);
 		};
 
-		$this->instance->addListener($fourth, array('onSomething' => ListenersQueue::BELOW_NORMAL));
-		$this->instance->addListener($fifth, array('onSomething' => ListenersQueue::BELOW_NORMAL));
-		$this->instance->addListener($first, array('onSomething' => ListenersQueue::HIGH));
-		$this->instance->addListener($second, array('onSomething' => ListenersQueue::HIGH));
-		$this->instance->addListener($third, array('onSomething' => ListenersQueue::ABOVE_NORMAL));
+		$this->instance->addListener($fourth, array('onSomething' => ListenerPriority::BELOW_NORMAL));
+		$this->instance->addListener($fifth, array('onSomething' => ListenerPriority::BELOW_NORMAL));
+		$this->instance->addListener($first, array('onSomething' => ListenerPriority::HIGH));
+		$this->instance->addListener($second, array('onSomething' => ListenerPriority::HIGH));
+		$this->instance->addListener($third, array('onSomething' => ListenerPriority::ABOVE_NORMAL));
 
 		// Inspect the event arguments to know the order of the listeners.
 		/** @var $event Event */
@@ -725,7 +725,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
 		$this->instance->addListener($first)
 			->addListener($second)
-			->addListener($stopper, array('onSomething' => ListenersQueue::NORMAL))
+			->addListener($stopper, array('onSomething' => ListenerPriority::NORMAL))
 			->addListener($third);
 
 		/** @var $event Event */

@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwaklker\Form\Test\Mock;
+namespace Windwalker\Form\Test\Mock;
 
 /**
  * The FakeFilter class.

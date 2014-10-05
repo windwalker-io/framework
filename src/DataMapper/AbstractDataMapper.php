@@ -79,17 +79,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function __construct($table = null, $pk = 'id')
 	{
-		if (!$this->table)
-		{
-			$this->table = $table;
-		}
+		$this->table = $this->table ? : $table;
+		$this->pk = $this->pk ? : $pk;
 
 		if (!$this->table)
 		{
 			throw new \Exception('Hey, please give me a table name~!');
 		}
-
-		$this->pk = $pk;
 
 		// Set some custom configuration.
 		$this->prepare();

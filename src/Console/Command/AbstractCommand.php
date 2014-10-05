@@ -141,6 +141,7 @@ abstract class AbstractCommand implements \ArrayAccess
 		$this->options       = new OptionSet;
 		$this->globalOptions = new OptionSet;
 
+		$this->initialise();
 		$this->configure();
 
 		if (!$this->name)
@@ -212,9 +213,22 @@ abstract class AbstractCommand implements \ArrayAccess
 	}
 
 	/**
-	 * Configure command.
+	 * Initialise command.
 	 *
 	 * @return void
+	 *
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected function initialise()
+	{
+	}
+
+	/**
+	 * Initialise command.
+	 *
+	 * @return  void
+	 *
+	 * @deprecated Use initialise() instead. Will be remove in 2.1.
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */

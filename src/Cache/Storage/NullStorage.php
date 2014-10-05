@@ -40,7 +40,7 @@ class NullStorage extends AbstractCacheStorage
 	 */
 	public function getItem($key)
 	{
-		return $this;
+		return new CacheItem($item);
 	}
 
 	/**
@@ -53,7 +53,7 @@ class NullStorage extends AbstractCacheStorage
 	 */
 	public function setItem($item, $ttl = null)
 	{
-		return new CacheItem($item);
+		return $this;
 	}
 
 	/**
@@ -78,4 +78,3 @@ class NullStorage extends AbstractCacheStorage
 		return $this;
 	}
 }
-

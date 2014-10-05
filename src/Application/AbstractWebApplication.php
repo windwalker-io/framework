@@ -9,11 +9,11 @@
 namespace Windwalker\Application;
 
 use Windwalker\Environment\Web\WebClient;
+use Windwalker\Environment\Web\WebEnvironment;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
 use Windwalker\Application\Web\Response;
-use Windwalker\Application\Web\WebEnvironment;
 use Windwalker\Application\Web\ResponseInterface;
 use Windwalker\Registry\Registry;
 
@@ -459,7 +459,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Method to get property Environment
 	 *
-	 * @return  \Windwalker\Application\Web\WebEnvironment
+	 * @return  \Windwalker\Environment\Web\WebEnvironment
 	 */
 	public function getEnvironment()
 	{
@@ -469,7 +469,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Method to set property environment
 	 *
-	 * @param   \Windwalker\Application\Web\WebEnvironment $environment
+	 * @param   \Windwalker\Environment\Web\WebEnvironment $environment
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

@@ -146,7 +146,7 @@ class ColorProcessor implements ColorProcessorInterface
 	/**
 	 * Adds predefined color styles to the ColorProcessor object
 	 *
-	 * @return  Stdout  Instance of $this to allow chaining.
+	 * @return  static  Instance of $this to allow chaining.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
@@ -171,6 +171,30 @@ class ColorProcessor implements ColorProcessorInterface
 			'error',
 			new ColorStyle('white', 'red')
 		);
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property NoColors
+	 *
+	 * @return  boolean
+	 */
+	public function getNoColors()
+	{
+		return $this->noColors;
+	}
+
+	/**
+	 * Method to set property noColors
+	 *
+	 * @param   boolean $noColors
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setNoColors($noColors)
+	{
+		$this->noColors = $noColors;
 
 		return $this;
 	}

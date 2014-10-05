@@ -388,7 +388,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 
 		/**
 		 * Explode the registry path into an array and remove empty
-		 * nodes that occur as a result of a double dot. ex: joomla..test
+		 * nodes that occur as a result of a double dot. ex: windwalker..test
 		 * Finally, re-key the array so they are sequential.
 		 */
 		$nodes = array_values(array_filter(explode('.', $path), 'strlen'));

@@ -18,13 +18,13 @@ use Windwalker\Console\Command\Command;
 class BbbCommand extends Command
 {
 	/**
-	 * Configure command.
+	 * Initialise command.
 	 *
 	 * @return void
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	public function configure()
+	public function initialise()
 	{
 		$this->setName('bbb');
 	}

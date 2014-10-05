@@ -92,7 +92,14 @@ class TrieMatcher extends AbstractMatcher
 	 */
 	protected function matchSegment($segments, $node, $level = 1)
 	{
-		$segment = $segments[$level - 1];
+		$segment = isset($segments[$level - 1]) ? $segments[$level - 1] : false;
+
+		if ($segment === false)
+		{
+			return false;
+		}
+
+		$segment = $segment ? : '/';
 
 		foreach ($node as $regex => $child)
 		{
@@ -190,6 +197,8 @@ class TrieMatcher extends AbstractMatcher
 			{
 				// Fallback the placeholder to /
 				$segment = str_replace('{:PLACEHOLDER:}', '[^/]', $segment);
+
+				$segment = $segment ? : '/';
 
 				if (!isset($node[$segment]))
 				{

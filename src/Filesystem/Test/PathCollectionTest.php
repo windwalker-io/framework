@@ -62,12 +62,12 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 				array(
 					'/',
 					'/var/www/foo/bar',
-					'/var/www/joomla/bar/foo'
+					'/var/www/windwalker/bar/foo'
 				),
 				array(
 					new PathLocator('/'),
 					new PathLocator('/var/www/foo/bar'),
-					new PathLocator('/var/www/joomla/bar/foo')
+					new PathLocator('/var/www/windwalker/bar/foo')
 				)
 			),
 			
@@ -366,14 +366,14 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->setUp();
 		
-		$this->collection->addPath('joomla/dir/foo/bar', 'foo');
-		$this->collection->addPath('joomla/dir/yoo/hoo', 'yoo');
+		$this->collection->addPath('windwalker/dir/foo/bar', 'foo');
+		$this->collection->addPath('windwalker/dir/yoo/hoo', 'yoo');
 
 		$this->collection->setPrefix('/var/www');
 
 		$expects = array(
-			Path::clean('/var/www/joomla/dir/foo/bar'),
-			Path::clean('/var/www/joomla/dir/yoo/hoo'),
+			Path::clean('/var/www/windwalker/dir/foo/bar'),
+			Path::clean('/var/www/windwalker/dir/yoo/hoo'),
 		);
 
 		$paths = array(

@@ -1,22 +1,22 @@
 # Windwalker Compare Package
 
-## Installation via Composer
-
-Add `"ventoviro/windwalker-compare": "1.0.*"` to the require block in your composer.json.
-
-``` json
-{
-    "require": {
-        "ventoviro/windwalker-compare": "1.0.*"
-    }
-}
-```
-
 ## What is Compare
 
 Sometimes we will need a dynamic compare interface, but it hard to convert `=` or `<=` string to be php operator.
 
 Compare object can help us create an object with compare logic between two values, and convert it to string, then we can use this string to build SQL or other use.
+
+## Installation via Composer
+
+Add this to the require block in your `composer.json`.
+
+``` json
+{
+    "require": {
+        "windwalker/compare": "~2.0"
+    }
+}
+```
 
 ## Basic Usage
 
@@ -36,7 +36,7 @@ $conditions = array(
 $sql = 'WHERE ' . implode(' AND ' , $conditions);
 ```
 
-We will get `WHERE published >= 1 AND entry_id = 25 AND data <= '2014-03-02'`.
+We will get this string: `WHERE published >= 1 AND entry_id = 25 AND data <= '2014-03-02'`.
 
 ## Do Compare
 
@@ -50,13 +50,13 @@ var_dump($result); // bool(true)
 
 ## Available Compare Object
 
-| Name       | Description      | Operator |
-| ---------- | ---------------- | -------- |
-| EqCompare  | Equal                | `=`  |
-| NeqCompare | Not Equal            | `!=` |
-| GtCompare  | Greater than         | `>`  |
-| GteCompare | Greate than or Equal | `>=` |
-| LtCompare  | Less than            | `<`  |
-| LteCompare | Less than or Equal   | `<=` |
-
-
+| Name       | Description         | Operator |
+| ---------- | ------------------- | -------- |
+| EqCompare  | Equal                    | `=`  |
+| NeqCompare | Not Equal                | `!=` |
+| GtCompare  | Greater than             | `>`  |
+| GteCompare | Greater than or Equal    | `>=` |
+| LtCompare  | Less than                | `<`  |
+| LteCompare | Less than or Equal       | `<=` |
+| InCompare  | In an array or list      | `IN` |
+| NinCompare | Not In an array or list  | `IN` |

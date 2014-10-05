@@ -8,10 +8,6 @@
 
 namespace Windwalker\Event;
 
-use Windwalker\Event\Event;
-use Windwalker\Event\EventInterface;
-use Windwalker\Event\ListenersQueue;
-
 /**
  * The Dispatcher class.
  *
@@ -220,7 +216,7 @@ class Dispatcher
 
 			if (is_string($events))
 			{
-				$events = array($events => ListenersQueue::NORMAL);
+				$events = array($events => ListenerPriority::NORMAL);
 			}
 
 			foreach ($events as $name => $priority)
@@ -252,7 +248,7 @@ class Dispatcher
 				$this->listeners[$event] = new ListenersQueue;
 			}
 
-			$priority = isset($events[$event]) ? $events[$event] : ListenersQueue::NORMAL;
+			$priority = isset($events[$event]) ? $events[$event] : ListenerPriority::NORMAL;
 
 			$this->listeners[$event]->add($listener, $priority);
 		}
@@ -440,13 +436,14 @@ class Dispatcher
 	/**
 	 * Trigger an event.
 	 *
-	 * @param   EventInterface|string  $event  The event object or name.
+	 * @param   EventInterface|string $event The event object or name.
+	 * @param   array                 $args  The arguments to set in event.
 	 *
 	 * @return  EventInterface  The event after being passed through all listeners.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function triggerEvent($event)
+	public function triggerEvent($event, $args = array())
 	{
 		if (!($event instanceof EventInterface))
 		{
@@ -459,6 +456,10 @@ class Dispatcher
 				$event = new Event($event);
 			}
 		}
+
+		$arguments = array_merge($event->getArguments(), $args);
+
+		$event->setArguments($arguments);
 
 		if (isset($this->listeners[$event->getName()]))
 		{
@@ -484,4 +485,3 @@ class Dispatcher
 		return $event;
 	}
 }
-

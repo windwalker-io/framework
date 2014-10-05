@@ -106,6 +106,15 @@ class SequentialMatcherTest extends \PHPUnit_Framework_TestCase
 			),
 			// @ Match different routes
 
+			// Root
+			array(
+				'http://windwalker.com/',
+				'/',
+				'GET',
+				true,
+				__LINE__
+			),
+
 			// Optional id
 			array(
 				'http://windwalker.com/flower/5',

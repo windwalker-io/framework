@@ -85,7 +85,11 @@ class PhpRenderer extends AbstractRenderer
 
 		if (!$filePath)
 		{
-			throw new \UnexpectedValueException(sprintf('File: %s not found', $file));
+			$paths = array_values(iterator_to_array(clone $this->paths));
+
+			$paths = implode(" / ", $paths);
+
+			throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: ', $file, $paths));
 		}
 
 		// Start an output buffer.

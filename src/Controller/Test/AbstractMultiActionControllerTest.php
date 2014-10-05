@@ -56,11 +56,11 @@ class AbstractMultiActionControllerTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals('index', $this->instance->execute());
 
-		$this->instance->setAction('update')->setArguments(array(5, 'Flower'));
+		$this->instance->setActionName('update')->setArguments(array(5, 'Flower'));
 
 		$this->assertEquals('ID: 5 Title: Flower', $this->instance->execute());
 
-		$this->instance->setAction('create');
+		$this->instance->setActionName('create');
 
 		try
 		{
@@ -96,10 +96,10 @@ class AbstractMultiActionControllerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetAndSetAction()
 	{
-		$this->instance->setAction('update')->setArguments(array(5, 'Flower'));
+		$this->instance->setActionName('update')->setArguments(array(5, 'Flower'));
 
 		$this->assertEquals('ID: 5 Title: Flower', $this->instance->execute());
 
-		$this->assertEquals('update', $this->instance->getAction());
+		$this->assertEquals('update', $this->instance->getActionName());
 	}
 }

@@ -49,13 +49,13 @@ class HelpCommand extends Command
 	protected $describedCommand;
 
 	/**
-	 * Configure command.
+	 * Initialise command.
 	 *
 	 * @return void
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	protected function configure()
+	protected function initialise()
 	{
 		$this->setDescription('List all arguments and show usage & manual.');
 	}

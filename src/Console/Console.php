@@ -202,6 +202,22 @@ class Console extends AbstractConsole
 	}
 
 	/**
+	 * Get command by path.
+	 *
+	 * Example: getCommand('foo/bar/baz');
+	 *
+	 * @param   string  $path  The path or name of child.
+	 *
+	 * @return  AbstractCommand
+	 *
+	 * @since  {DEPLOY_VERSION}
+	 */
+	public function getCommand($path)
+	{
+		return $this->getRootCommand()->getChild($path);
+	}
+
+	/**
 	 * Sets whether to automatically exit after a command execution or not.
 	 *
 	 * @param   boolean  $boolean  Whether to automatically exit after a command execution or not.

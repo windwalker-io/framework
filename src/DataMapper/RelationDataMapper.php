@@ -30,10 +30,10 @@ class RelationDataMapper extends DataMapper
 	/**
 	 * Constructor.
 	 *
-	 * @param string                   $alias       Table alias.
-	 * @param string                   $table       Table name.
-	 * @param string|array             $pk          Primary key.
-	 * @param DatabaseAdapterInterface $db          Database adapter.
+	 * @param string                   $alias  Table alias.
+	 * @param string                   $table  Table name.
+	 * @param string|array             $pk     Primary key.
+	 * @param DatabaseAdapterInterface $db     Database adapter.
 	 */
 	public function __construct($alias, $table, $pk = 'id', DatabaseAdapterInterface $db = null)
 	{

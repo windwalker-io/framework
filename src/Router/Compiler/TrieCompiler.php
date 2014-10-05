@@ -46,7 +46,7 @@ abstract class TrieCompiler
 			if ($segment == '')
 			{
 				// Match root route.
-				$regex[] = '\\/';
+				$regex[] = '';
 			}
 			elseif ($segment == '*')
 			{

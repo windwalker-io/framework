@@ -25,13 +25,13 @@ class AaaCommand extends Command
 	protected $name = 'aaa';
 
 	/**
-	 * Configure command.
+	 * Initialise command.
 	 *
 	 * @return void
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	public function configure()
+	public function initialise()
 	{
 		$this->addCommand(new Aaa\BbbCommand)
 			->addOption(

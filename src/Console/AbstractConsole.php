@@ -180,7 +180,6 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @codeCoverageIgnore
 	 * @since   {DEPLOY_VERSION}
 	 */
 	protected function initialise()

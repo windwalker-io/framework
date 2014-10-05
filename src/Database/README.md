@@ -9,12 +9,10 @@ Add this dependency in your `composer.json` file.
 ``` json
 {
     "require": {
-        "windwalker/database" : "2.0.*"
+        "windwalker/database" : "~2.0"
     }
 }
 ```
-
-> Note: Before stable version released, you have to use `dev-master` as the version, and make sure the `minimum-stability` is `dev`.
 
 ## Getting Started
 

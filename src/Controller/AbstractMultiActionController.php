@@ -39,6 +39,7 @@ class AbstractMultiActionController extends AbstractController
 	/**
 	 * Execute the controller.
 	 *
+	 * @throws  \LogicException
 	 * @return  mixed Return executed result.
 	 */
 	public function execute()
@@ -80,6 +81,7 @@ class AbstractMultiActionController extends AbstractController
 	/**
 	 * doExecute
 	 *
+	 * @throws  \LogicException
 	 * @return  mixed
 	 */
 	protected function doExecute()
@@ -92,7 +94,7 @@ class AbstractMultiActionController extends AbstractController
 	 *
 	 * @return  string
 	 */
-	public function getAction()
+	public function getActionName()
 	{
 		return $this->action;
 	}
@@ -104,7 +106,7 @@ class AbstractMultiActionController extends AbstractController
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setAction($action)
+	public function setActionName($action)
 	{
 		$this->action = $action;
 

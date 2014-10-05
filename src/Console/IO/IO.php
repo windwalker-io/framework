@@ -119,14 +119,7 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
 	{
 		if ($this->output instanceof ColorfulOutputInterface)
 		{
-			if ($bool)
-			{
-				$this->output->setProcessor(new ColorProcessor);
-			}
-			else
-			{
-				$this->output->setProcessor(new NoColorProcessor);
-			}
+			$this->output->getProcessor()->setNoColors(!$bool);
 		}
 
 		return $this;

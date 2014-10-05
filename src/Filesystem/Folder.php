@@ -282,6 +282,15 @@ abstract class Folder
 		return true;
 	}
 
+	/**
+	 * files
+	 *
+	 * @param string   $path
+	 * @param boolean  $recursive
+	 * @param integer  $pathType
+	 *
+	 * @return  array
+	 */
 	public static function files($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
 		$files = array();
@@ -313,6 +322,15 @@ abstract class Folder
 		return $files;
 	}
 
+	/**
+	 * items
+	 *
+	 * @param string   $path
+	 * @param boolean  $recursive
+	 * @param integer  $pathType
+	 *
+	 * @return  array
+	 */
 	public static function items($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
 		$files = array();
@@ -345,6 +363,15 @@ abstract class Folder
 		return $files;
 	}
 
+	/**
+	 * folders
+	 *
+	 * @param string   $path
+	 * @param boolean  $recursive
+	 * @param integer  $pathType
+	 *
+	 * @return  array
+	 */
 	public static function folders($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
 		$files = array();

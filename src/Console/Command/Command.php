@@ -8,6 +8,8 @@
 
 namespace Windwalker\Console\Command;
 
+use Windwalker\Console\IO\IOFactory;
+
 /**
  * Base Command class.
  *
@@ -51,7 +53,7 @@ class Command extends AbstractCommand
 			$this->io->unshiftArgument('help');
 		}
 
-		if ($this->getOption('no-ansi'))
+		if ($this->getOption('no-ansi') && $this->getOption('no-ansi') != 'false')
 		{
 			$this->io->useColor(false);
 		}

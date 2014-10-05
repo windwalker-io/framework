@@ -12,7 +12,7 @@ use Windwalker\Cache\Item\CacheItem;
 use Windwalker\Cache\Item\CacheItemInterface;
 
 /**
- * Filesystem cache driver for the Joomla Framework.
+ * Filesystem cache driver for the Windwalker Framework.
  *
  * Supported options:
  * - ttl (integer)          : The default number of seconds for the cache life.
@@ -58,10 +58,13 @@ class FileStorage extends AbstractCacheStorage
 	/**
 	 * Constructor.
 	 *
-	 * @param   mixed  $options  An options array, or an object that implements \ArrayAccess
+	 * @param   int     $path
+	 * @param   string  $group
+	 * @param   bool    $denyAccess
+	 * @param   int     $ttl
+	 * @param   mixed   $options An options array, or an object that implements \ArrayAccess
 	 *
 	 * @since   {DEPLOY_VERSION}
-	 * @throws  \RuntimeException
 	 */
 	public function __construct($path, $group = '', $denyAccess = false, $ttl = null, $options = array())
 	{

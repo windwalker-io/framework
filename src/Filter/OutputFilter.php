@@ -11,7 +11,7 @@ namespace Windwalker\Filter;
 use Windwalker\Filter\Unicode\UnicodeHelper;
 
 /**
- * JFilterOutput
+ * Windwalker Output Filter
  *
  * @since  {DEPLOY_VERSION}
  */

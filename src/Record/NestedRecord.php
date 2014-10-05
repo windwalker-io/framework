@@ -178,7 +178,6 @@ class NestedRecord extends Record
 	 *
 	 * @return  static
 	 *
-	 * @note    Since 12.1 this method returns void and throws an InvalidArgumentException when an invalid position is passed.
 	 * @since   11.1
 	 * @throws  \InvalidArgumentException
 	 */
@@ -211,7 +210,6 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    http://docs.joomla.org/JTableNested/store
 	 * @since   11.1
 	 */
 	public function store($updateNulls = false)
@@ -273,7 +271,7 @@ class NestedRecord extends Record
 				->update($this->table)
 				->set('lft = lft + 2')
 				->where($repositionData->left_where);
-			
+
 			$this->db->setQuery($query)->execute();
 
 			// Create space in the tree at the new location for the new node in right ids.
@@ -322,7 +320,6 @@ class NestedRecord extends Record
 	 *
 	 * @return  mixed    Boolean true on success.
 	 *
-	 * @link    http://docs.joomla.org/JTable/move
 	 * @since   11.1
 	 */
 	public function move($delta, $where = '')
@@ -375,7 +372,6 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    http://docs.joomla.org/JTableNested/moveByReference
 	 * @since   11.1
 	 * @throws  \RuntimeException on database error.
 	 */
@@ -676,7 +672,6 @@ class NestedRecord extends Record
 	 *
 	 * @return  integer  1 + value of root rgt on success, false on failure
 	 *
-	 * @link    http://docs.joomla.org/JTableNested/rebuild
 	 * @since   11.1
 	 * @throws  \RuntimeException on database error.
 	 */
@@ -757,7 +752,6 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    http://docs.joomla.org/JTableNested/rebuildPath
 	 * @since   11.1
 	 */
 	public function rebuildPath($pk = null)

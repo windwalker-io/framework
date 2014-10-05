@@ -19,26 +19,33 @@ use Windwalker\Console\Option\Option;
 class TextOptionDescriptor extends AbstractDescriptor
 {
 	/**
+	 * The max length of command.
+	 *
+	 * @var int
+	 *
+	 * @since  1.0
+	 */
+	protected $maxLength = 0;
+
+	/**
+	 * Offset that between every commands and their descriptions.
+	 *
+	 * @var int
+	 *
+	 * @since  1.0
+	 */
+	protected $offsetAfterCommand = 4;
+
+	/**
 	 * Option description template.
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  1.0
 	 */
 	protected $template = <<<EOF
-  <info>%s</info>
-%s
-
+  <info>%-{WIDTH}s</info>%s
 EOF;
-
-	/**
-	 * The template of every description line.
-	 *
-	 * @var string
-	 *
-	 * @since  {DEPLOY_VERSION}
-	 */
-	protected $templateLineBody = '      %s';
 
 	/**
 	 * Render an item description.
@@ -48,19 +55,19 @@ EOF;
 	 * @throws  \InvalidArgumentException
 	 * @return  string  Rendered description.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   1.0
 	 */
 	protected function renderItem($option)
 	{
 		if (!($option instanceof Option))
 		{
-			throw new \InvalidArgumentException('Option descriptor need Command object to describe it.');
+			throw new \InvalidArgumentException('Command descriptor need Command object to describe it.');
 		}
 
-		/** @var Option $option */
+		/** @var Option $command */
 		$name        = $option->getName();
-		$aliases     = $option->getAlias();
 		$description = $option->getDescription() ?: 'No description';
+		$aliases     = $option->getAlias();
 
 		// Merge aliases
 		array_unshift($aliases, $name);
@@ -70,19 +77,26 @@ EOF;
 			$alias = strlen($alias) > 1 ? '--' . $alias : '-' . $alias;
 		}
 
+		$name = implode(' | ', $aliases);
+
+		$template = str_replace('{WIDTH}', $this->maxLength + $this->offsetAfterCommand, $this->template);
+
 		// Sets the body indent.
 		$body = array();
 
 		$description = explode("\n", $description);
 
+		$line1  = array_shift($description);
+		$body[] = sprintf($template, $name, $line1);
+
 		foreach ($description as $line)
 		{
 			$line = trim($line);
-			$line = sprintf($this->templateLineBody, $line);
+			$line = sprintf($template, '', $line);
 			$body[] = $line;
 		}
 
-		return sprintf($this->template, implode(' / ', $aliases), implode("\n", $body));
+		return implode("\n", $body);
 	}
 
 	/**
@@ -90,10 +104,35 @@ EOF;
 	 *
 	 * @return  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  1.0
 	 */
 	public function render()
 	{
+		// Count the max command length as column width.
+		foreach ($this->items as $item)
+		{
+			/** @var $item Option */
+			$name    = $item->getName();
+			$aliases = $item->getAlias();
+
+			// Merge aliases
+			array_unshift($aliases, $name);
+
+			foreach ($aliases as &$alias)
+			{
+				$alias = strlen($alias) > 1 ? '--' . $alias : '-' . $alias;
+			}
+
+			$name = implode(' | ', $aliases);
+
+			$length = strlen($name);
+
+			if ($length > $this->maxLength)
+			{
+				$this->maxLength = $length;
+			}
+		}
+
 		return parent::render();
 	}
 }

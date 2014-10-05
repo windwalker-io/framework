@@ -30,6 +30,26 @@ class Server implements ServerInterface
 	protected $uname = PHP_OS;
 
 	/**
+	 * isWeb
+	 *
+	 * @return  boolean
+	 */
+	public function isWeb()
+	{
+		return PhpHelper::isWeb();
+	}
+
+	/**
+	 * isCli
+	 *
+	 * @return  boolean
+	 */
+	public function isCli()
+	{
+		return PhpHelper::isCli();
+	}
+
+	/**
 	 * getOS
 	 *
 	 * @see  https://gist.github.com/asika32764/90e49a82c124858c9e1a
@@ -128,5 +148,101 @@ class Server implements ServerInterface
 		$this->uname = $uname;
 
 		return $this;
+	}
+
+	/**
+	 * getWorkingDirectory
+	 *
+	 * @return  string
+	 */
+	public function getWorkingDirectory()
+	{
+		return getcwd();
+	}
+
+	/**
+	 * getRoot
+	 *
+	 * @param bool $full
+	 *
+	 * @return  string
+	 */
+	public function getRoot($full = true)
+	{
+		return dirname($this->getEntry($full));
+	}
+
+	/**
+	 * getDocumentRoot
+	 *
+	 * @return  string
+	 */
+	public function getServerPublicRoot()
+	{
+		return $this->getGlobals('_SERVER', 'DOCUMENT_ROOT');
+	}
+
+	/**
+	 * getEntry
+	 *
+	 * @param   bool $full
+	 *
+	 * @return  string
+	 */
+	public function getEntry($full = true)
+	{
+		$key = $full ? 'SCRIPT_FILENAME' : 'SCRIPT_NAME';
+
+		$file = $this->getGlobals('_SERVER', $key);
+
+		if ($full && $this->isCli())
+		{
+			$file = trim($file, '.' . DIRECTORY_SEPARATOR);
+
+			$file = $this->getWorkingDirectory() . DIRECTORY_SEPARATOR . $file;
+		}
+
+		return $file;
+	}
+
+	/**
+	 * getRequestUri
+	 *
+	 * @param   bool $withParams
+	 *
+	 * @return  string
+	 */
+	public function getRequestUri($withParams = true)
+	{
+		if ($withParams)
+		{
+			return $this->getGlobals('_SERVER', 'REQUEST_URI');
+		}
+
+		return $this->getGlobals('_SERVER', 'PHP_SELF');
+	}
+
+	/**
+	 * getGlobals
+	 *
+	 * @param string $type
+	 * @param string $key
+	 * @param mixed  $default
+	 *
+	 * @return  mixed
+	 */
+	protected function getGlobals($type, $key, $default = null)
+	{
+		if (!isset($GLOBALS['_SERVER']))
+		{
+			$GLOBALS['_SERVER'] = $_SERVER;
+		}
+
+		if (isset($GLOBALS[$type][$key]))
+		{
+			return $GLOBALS[$type][$key];
+		}
+
+		return $default;
 	}
 }

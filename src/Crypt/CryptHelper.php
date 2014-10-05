@@ -72,7 +72,7 @@ class CryptHelper
 	 *
 	 * @param   integer  $length  Length of the random data to generate
 	 *
-	 * @note    This code is based on Joomla Crypt.
+	 * @note    This method is based on Joomla Crypt.
 	 * @return  string  Random binary data
 	 *
 	 * @since   {DEPLOY_VERSION}

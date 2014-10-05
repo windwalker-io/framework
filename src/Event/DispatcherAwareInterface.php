@@ -8,8 +8,6 @@
 
 namespace Windwalker\Event;
 
-use Windwalker\Event\EventInterface;
-
 /**
  * Interface DispatcherAwareInterface
  */

@@ -71,11 +71,18 @@ class Language implements LanguageInterface
 	protected $locale = null;
 
 	/**
+	 * Property defaultLocale.
+	 *
+	 * @var  string
+	 */
+	protected $defaultLocale = null;
+
+	/**
 	 * Property localise.
 	 *
-	 * @var  LocaliseInterface
+	 * @var  LocaliseInterface[]
 	 */
-	protected $localise = null;
+	protected $localises = array();
 
 	/**
 	 * Property normalizeHandler.
@@ -88,15 +95,17 @@ class Language implements LanguageInterface
 	 * Constructor.
 	 *
 	 * @param string                            $locale
-	 * @param FormatInterface|FormatInterface[] $formats
+	 * @param string                            $defaultLocale
 	 * @param LoaderInterface|LoaderInterface[] $loaders
+	 * @param FormatInterface|FormatInterface[] $formats
 	 */
-	public function __construct($locale = 'en-GB', $formats = null, $loaders = null)
+	public function __construct($locale = 'en-GB', $defaultLocale = 'en-GB', $loaders = null, $formats = null)
 	{
 		$formats = $formats ? : new IniFormat;
 		$loaders = $loaders ? : new FileLoader;
 
 		$this->setLocale($locale);
+		$this->setDefaultLocale($locale);
 		$this->setFormats($formats);
 		$this->setLoaders($loaders);
 	}
@@ -177,7 +186,7 @@ class Language implements LanguageInterface
 	 */
 	public function plural($string, $count = 1)
 	{
-		$localise = $this->getLocalise();
+		$localise = $this->getLocalise($this->locale);
 
 		// Get language plural handles
 		$suffix = $localise->getPluralSuffix((int) $count);
@@ -189,6 +198,27 @@ class Language implements LanguageInterface
 			if ($this->exists($key))
 			{
 				$string = $key;
+			}
+		}
+
+		// If current locale do not have singular & plural string
+		// We try to do same thing to default locale
+		if (!$this->exists($string))
+		{
+			// Find default localise
+			$localise = $this->getLocalise($this->defaultLocale);
+
+			// Get language plural handles
+			$suffix = $localise->getPluralSuffix((int) $count);
+
+			if ($suffix || $suffix == 0)
+			{
+				$key = $string . '_' . $suffix;
+
+				if ($this->exists($key))
+				{
+					$string = $key;
+				}
 			}
 		}
 
@@ -459,7 +489,31 @@ class Language implements LanguageInterface
 	{
 		$this->locale = LanguageNormalize::toLanguageTag($locale);
 
-		$this->localise = null;
+		$this->localises[$locale] = null;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property DefaultLocale
+	 *
+	 * @return  string
+	 */
+	public function getDefaultLocale()
+	{
+		return $this->defaultLocale;
+	}
+
+	/**
+	 * Method to set property defaultLocale
+	 *
+	 * @param   string $defaultLocale
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDefaultLocale($defaultLocale)
+	{
+		$this->defaultLocale = LanguageNormalize::toLanguageTag($defaultLocale);
 
 		return $this;
 	}
@@ -467,13 +521,16 @@ class Language implements LanguageInterface
 	/**
 	 * setLocalise
 	 *
+	 * @param   string            $locale
 	 * @param   LocaliseInterface $localise
 	 *
 	 * @return  Language  Return self to support chaining.
 	 */
-	public function setLocalise(LocaliseInterface $localise)
+	public function setLocalise($locale = 'en-GB', LocaliseInterface $localise)
 	{
-		$this->localise = $localise;
+		$locale = LanguageNormalize::toLanguageTag($locale);
+
+		$this->localises[$locale] = $localise;
 
 		return $this;
 	}
@@ -481,11 +538,15 @@ class Language implements LanguageInterface
 	/**
 	 * getLocalise
 	 *
+	 * @param string $locale
+	 *
 	 * @return  LocaliseInterface
 	 */
-	protected function getLocalise()
+	protected function getLocalise($locale = 'en-GB')
 	{
-		if (!($this->localise instanceof LocaliseInterface))
+		$locale = LanguageNormalize::toLanguageTag($locale);
+
+		if (empty($this->localises[$locale]) || !($this->localises[$locale] instanceof LocaliseInterface))
 		{
 			$tag = LanguageNormalize::getLocaliseClassPrefix($this->locale);
 
@@ -496,10 +557,10 @@ class Language implements LanguageInterface
 				$class = 'Windwalker\\Language\\Localise\\NullLocalise';
 			}
 
-			$this->localise = new $class;
+			$this->localises[$locale] = new $class;
 		}
 
-		return $this->localise;
+		return $this->localises[$locale];
 	}
 
 	/**

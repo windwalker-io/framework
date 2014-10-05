@@ -9,7 +9,7 @@
 namespace Windwalker\Query\Query;
 
 /**
- * Joomla Database Query Preparable Interface.
+ * Windwalker Query Preparable Interface.
  *
  * Adds bind/unbind methods as well as a getBounded() method
  * to retrieve the stored bounded variables on demand prior to

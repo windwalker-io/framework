@@ -68,9 +68,9 @@ Usage:
 
 Options:
 
-  <info>-q / --quiet</info>
-      q desc
-
+  <info>-q | --quiet     </info>q desc
+  <info>-s | --sakura    </info>sakura desc
+  <info>-r               </info>rose desc
 
 Available commands:
 
@@ -79,6 +79,7 @@ Available commands:
   <info>bar    </info>Bar command desc
 
   <info>yoo    </info>No description
+
 
 foo help';
 
@@ -99,7 +100,9 @@ foo help';
 				'Bar command desc'
 			)
 			->addCommand('yoo')
-			->addOption(array('q', 'quiet'), 'default', 'q desc');
+			->addOption(array('q', 'quiet'), 'default', 'q desc')
+			->addOption(array('s', 'sakura'), 'default', 'sakura desc')
+			->addOption(array('r'), 'default', 'rose desc');
 
 		$result = $this->instance->describe($command);
 

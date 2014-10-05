@@ -9,7 +9,7 @@
 namespace Windwalker\IO;
 
 /**
- * Joomla! Input Files Class
+ * Windwalker Input Files Class
  *
  * @since  {DEPLOY_VERSION}
  */

@@ -285,19 +285,19 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
 		// The application author name.  This string is used in generating startup scripts and has
 		// a maximum of 50 characters.
-		$tmp = (string) $this->config->get('author_name', 'Joomla Framework');
+		$tmp = (string) $this->config->get('author_name', 'Windwalker Framework');
 		$this->config->set('author_name', (strlen($tmp) > 50) ? substr($tmp, 0, 50) : $tmp);
 
 		// The application author email.  This string is used in generating startup scripts.
-		$tmp = (string) $this->config->get('author_email', 'admin@joomla.org');
+		$tmp = (string) $this->config->get('author_email', 'admin@windwalker.org');
 		$this->config->set('author_email', filter_var($tmp, FILTER_VALIDATE_EMAIL));
 
 		// The application name.  This string is used in generating startup scripts.
-		$tmp = (string) $this->config->get('application_name', 'JApplicationDaemon');
+		$tmp = (string) $this->config->get('application_name', 'WindwalkerDaemon');
 		$this->config->set('application_name', (string) preg_replace('/[^A-Z0-9_-]/i', '', $tmp));
 
 		// The application description.  This string is used in generating startup scripts.
-		$tmp = (string) $this->config->get('application_description', 'A generic Joomla Framework application.');
+		$tmp = (string) $this->config->get('application_description', 'A generic Windwalker Framework application.');
 		$this->config->set('application_description', filter_var($tmp, FILTER_SANITIZE_STRING));
 
 		/*

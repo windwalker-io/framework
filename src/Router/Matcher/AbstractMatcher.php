@@ -91,7 +91,12 @@ abstract class AbstractMatcher implements MatcherInterface
 			$routeItem->setRegex($regex);
 		}
 
-		if (preg_match($regex, trim($route, '/'), $matches))
+		$route = trim($route, '/');
+
+		// Check is root
+		$route = $route ? : '/';
+
+		if (preg_match($regex, $route, $matches))
 		{
 			$variables = RouteHelper::getVariables($matches);
 

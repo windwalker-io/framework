@@ -2,12 +2,12 @@
 
 ## Installation via Composer
 
-Add `"ventoviro/windwalker-data": "1.0.*"` to the require block in your composer.json.
+Add this to the require block in your `composer.json`.
 
 ``` json
 {
     "require": {
-        "ventoviro/windwalker-data": "1.0.*"
+        "windwalker/data": "~2.0"
     }
 }
 ```
@@ -29,7 +29,7 @@ $data = new Data($array);
 echo $data->flower; // sakura
 ```
 
-### Binding dat into it
+### Binding object into it
 
 ``` php
 $obj = new \stdClass;
@@ -47,10 +47,10 @@ Data object has magic method to be getter and setter of any property, we don't n
 ``` php
 echo $data->foo; // exists
 
-echo $data->yoo; // Not exists, but no error, it will return null.
+echo $data->yoo; // Not exists, but no warning, it will return null.
 ```
 
-We can also using normal getter and setter:
+We can also using getter and setter:
 
 ``` php
 $data->set('flower', 'rose');
@@ -67,7 +67,7 @@ echo $data->get('flower', 'Default value');
 
 // OR
 
-echo $data->flower ?: 'Default Value';
+echo $data->flower ? : 'Default Value';
 ```
 
 ### Array Access
@@ -95,20 +95,13 @@ foreach ($data as $key => $value)
 
 ### Null Data
 
-In PHP, an empty object means exists, so this code will return FALSE:
+In PHP, an empty object means not empty, so this code will return FALSE:
 
 ``` php
-$data = new Data; // Empty Data object
+$data = new Data; // Data object with no properties
 
 // IS NULL?
-if (empty($data))
-{
-    echo 'TRUE';
-}
-else
-{
-    echo 'FALSE';
-}
+var_dump(empty($data)); // bool(false)
 ```
 
 So we use `isNull()` method to detect whether object is empty or not, this is similar to [Null Object pattern](http://en.wikipedia.org/wiki/Null_Object_pattern):
@@ -117,28 +110,14 @@ So we use `isNull()` method to detect whether object is empty or not, this is si
 $data = new Data;
 
 // IS NULL?
-if ($data->isNull())
-{
-    echo 'TRUE';
-}
-else
-{
-    echo 'FALSE';
-}
+var_dump($data->isNull()); // bool(true)
 ```
 
 Another simple way is convert it to array, this also work:
 
 ``` php
 // IS NULL?
-if (!(array) $data)
-{
-    echo 'TRUE';
-}
-else
-{
-    echo 'FALSE';
-}
+var_dump(empty((array) $data)); // bool(true)
 ```
 
 ## Using DataSet Object
@@ -159,7 +138,7 @@ $dataSet = new DataSet(
 
 ### Array Access
 
-We can operate `DataSet` as an array, it use magic method to get and set data.
+Operate `DataSet` as an array, it use magic method to get and set data.
 
 ``` php
 echo $dataSet[0]->title; // Dog
@@ -184,14 +163,16 @@ foreach ($dataSet as $data)
 
 ### The Batch Getter & Setter
 
-Get values of `foo` field from all objects.
+Get values of `foo` field from all data objects.
 
 ``` php
+// will be an array of every Data's foo property
 $value = $dataset->foo;
 ```
 
 Set value to `bar` field of all object.
 
 ``` php
+// will set 'Fly' to every Data's bar property
 $dataset->bar = 'Fly';
 ```
