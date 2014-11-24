@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Driver;
@@ -142,6 +142,16 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	protected $transaction;
 
 	/**
+	 * Property profiler.
+	 *
+	 * @var  \Closure[]
+	 */
+	protected $profiler = array(
+		'before' => null,
+		'after' => null
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   null  $connection The database connection instance.
@@ -215,6 +225,8 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 			$this->log(LogLevel::DEBUG, 'Executed: {sql}', array('sql' => $sql));
 		}
 
+		!is_callable($this->profiler['before']) or call_user_func_array($this->profiler['before'], array($this, $sql));
+
 		try
 		{
 			$this->doExecute();
@@ -226,6 +238,8 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 
 			throw $e;
 		}
+
+		!is_callable($this->profiler['after']) or call_user_func_array($this->profiler['after'], array($this, $sql));
 
 		return $this;
 	}
@@ -341,16 +355,22 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * getTable
 	 *
 	 * @param string $name
+	 * @param bool   $reset
 	 *
 	 * @return  AbstractTable
 	 */
-	public function getTable($name)
+	public function getTable($name, $reset = false)
 	{
 		if (empty($this->tables[$name]))
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTable', ucfirst($this->name), ucfirst($this->name));
 
 			$this->tables[$name] = new $class($name, $this);
+		}
+
+		if ($reset)
+		{
+			$this->tables[$name]->reset();
 		}
 
 		return $this->tables[$name];
@@ -868,5 +888,21 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	public function getName()
 	{
 		return $this->name;
+	}
+
+	/**
+	 * Method to set property profiler
+	 *
+	 * @param \Closure $before
+	 * @param \Closure $after
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setProfilerHandler($before = null, $after = null)
+	{
+		$this->profiler['before'] = $before;
+		$this->profiler['after'] = $after;
+
+		return $this;
 	}
 }

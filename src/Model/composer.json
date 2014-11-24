@@ -4,7 +4,7 @@
 	"description": "Windwalker Model package",
 	"keywords": ["windwalker", "framework", "model"],
 	"homepage": "https://github.com/ventoviro/windwalker-model",
-	"license": "GPL-2.0+",
+	"license": "LGPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
 		"windwalker/registry" : "~2.0"

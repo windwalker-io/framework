@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router;
@@ -89,7 +89,7 @@ class Router
 	 * @param array        $method
 	 * @param array        $options
 	 *
-	 * @return  Router
+	 * @return  static
 	 */
 	public function addRoute($name, $pattern = null, $variables = array(), $method = array(), $options = array())
 	{
@@ -143,7 +143,7 @@ class Router
 	 * @param string $method
 	 * @param array  $options
 	 *
-	 * @return  array|boolean
+	 * @return  Route|boolean
 	 */
 	public function match($route, $method = 'GET', $options = array())
 	{
@@ -164,7 +164,7 @@ class Router
 			throw new RouteNotFoundException(sprintf('Unable to handle request for route `%s`.', $route), 404);
 		}
 
-		return $matched->getVariables();
+		return $matched;
 	}
 
 	/**

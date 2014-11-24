@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Test;
@@ -29,6 +29,30 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 * @since {DEPLOY_VERSION}
 	 */
 	public $instance;
+
+	/**
+	 * Set up test.
+	 *
+	 * @return void
+	 *
+	 * @since  {DEPLOY_VERSION}
+	 */
+	protected function setUp()
+	{
+		$io = new MockIO;
+
+		$io->setArguments(array('foo'));
+
+		/** @var $console Console */
+		$console = new Console($io);
+
+		$console->setName('Test Console')
+			->setVersion('1.2.3')
+			->setDescription('Test desc.')
+			->setAutoExit(false);
+
+		$this->instance = $console;
+	}
 
 	/**
 	 * testGetAndSetLogger
@@ -57,30 +81,6 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 		$this->instance->set('park.flower', 'sakura');
 
 		$this->assertEquals($this->instance->get('park.flower'), 'sakura', 'Config data not matched.');
-	}
-
-	/**
-	 * Set up test.
-	 *
-	 * @return void
-	 *
-	 * @since  {DEPLOY_VERSION}
-	 */
-	protected function setUp()
-	{
-		$io = new MockIO;
-
-		$io->setArguments(array('foo'));
-
-		/** @var $console Console */
-		$console = new Console($io);
-
-		$console->setName('Test Console')
-			->setVersion('1.2.3')
-			->setDescription('Test desc.')
-			->setAutoExit(false);
-
-		$this->instance = $console;
 	}
 
 	/**

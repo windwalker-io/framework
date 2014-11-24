@@ -4,7 +4,7 @@
 	"description": "Windwalker Validator package",
 	"keywords": ["windwalker", "framework", "validator"],
 	"homepage": "https://github.com/ventoviro/windwalker-validator",
-	"license": "GPL-2.0+",
+	"license": "LGPL-2.0+",
 	"require": {
 		"php": ">=5.3.10"
 	},

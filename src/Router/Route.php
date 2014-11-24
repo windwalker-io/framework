@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router;
@@ -97,7 +97,7 @@ class Route
 	 *
 	 * @var  array
 	 */
-	protected $options;
+	protected $options = array();
 
 	/**
 	 * Property ssl.
@@ -105,6 +105,13 @@ class Route
 	 * @var boolean
 	 */
 	protected $ssl = false;
+
+	/**
+	 * Property extra.
+	 *
+	 * @var  array
+	 */
+	protected $extra = array();
 
 	/**
 	 * Class init.
@@ -115,7 +122,7 @@ class Route
 	 * @param array|string $allowMethods
 	 * @param array        $options
 	 */
-	public function __construct($name, $pattern, $variables, $allowMethods = array(), $options = array())
+	public function __construct($name, $pattern, $variables = array(), $allowMethods = array(), $options = array())
 	{
 		$this->name = $name;
 		$this->pattern = $pattern;
@@ -228,7 +235,7 @@ class Route
 	/**
 	 * getVariables
 	 *
-	 * @return  string
+	 * @return  array
 	 */
 	public function getVariables()
 	{
@@ -238,7 +245,7 @@ class Route
 	/**
 	 * setVariables
 	 *
-	 * @param   string $variables
+	 * @param   array $variables
 	 *
 	 * @return  Route  Return self to support chaining.
 	 */
@@ -299,6 +306,7 @@ class Route
 		$this->setPort($options['port']);
 		$this->setSslPort($options['sslPort']);
 		$this->setRequirements($options['requirements']);
+		$this->setExtra($options['extra']);
 
 		return $this;
 	}
@@ -318,7 +326,8 @@ class Route
 			'host' => null,
 			'scheme' => null,
 			'port' => null,
-			'sslPort' => null
+			'sslPort' => null,
+			'extra' => array()
 		);
 
 		return array_merge($defaultOptions, (array) $options);
@@ -499,6 +508,30 @@ class Route
 	public function setSSL($ssl)
 	{
 		$this->ssl = $ssl;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Extra
+	 *
+	 * @return  array
+	 */
+	public function getExtra()
+	{
+		return $this->extra;
+	}
+
+	/**
+	 * Method to set property extra
+	 *
+	 * @param   array $extra
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setExtra($extra)
+	{
+		$this->extra = (array) $extra;
 
 		return $this;
 	}

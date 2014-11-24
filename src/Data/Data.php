@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Data;
@@ -16,7 +16,7 @@ namespace Windwalker\Data;
 class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countable
 {
 	/**
-	 * Constrictor.
+	 * Constructor.
 	 *
 	 * @param mixed $data
 	 */
@@ -248,6 +248,16 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function isNull()
 	{
-		return (boolean) !count($this);
+		return !$this->notNull();
+	}
+
+	/**
+	 * Is this object has properties?
+	 *
+	 * @return  boolean
+	 */
+	public function notNull()
+	{
+		return (boolean) count($this);
 	}
 }

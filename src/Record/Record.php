@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Record;
@@ -17,7 +17,7 @@ use Windwalker\Query\Query;
  *
  * @since {DEPLOY_VERSION}
  */
-class Record implements \IteratorAggregate
+class Record implements \ArrayAccess, \IteratorAggregate
 {
 	/**
 	 * Name of the database table to model.
@@ -120,14 +120,7 @@ class Record implements \IteratorAggregate
 	 */
 	public function __set($key, $value)
 	{
-		if (property_exists($this->data, $key))
-		{
-			$this->data->$key = $value;
-		}
-		else
-		{
-			throw new \InvalidArgumentException(__METHOD__ . ' - Set unknown property: ' . $key);
-		}
+		$this->set($key, $value);
 	}
 
 	/**
@@ -142,12 +135,66 @@ class Record implements \IteratorAggregate
 	 */
 	public function __get($key)
 	{
+		return $this->get($key);
+	}
+
+	/**
+	 * Magic setter to set a table field.
+	 *
+	 * @param   string  $key    The key name.
+	 * @param   mixed   $value  The value to set.
+	 *
+	 * @return  static
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 * @throws  \InvalidArgumentException
+	 */
+	public function set($key, $value)
+	{
+		if (property_exists($this->data, $key))
+		{
+			$this->data->$key = $value;
+
+			return $this;
+		}
+		else
+		{
+			throw new \InvalidArgumentException(__METHOD__ . ' - Set unknown property: ' . $key);
+		}
+	}
+
+	/**
+	 * Magic getter to get a table field.
+	 *
+	 * @param   string $key      The key name.
+	 * @param   null   $default  The default value.
+	 *
+	 * @return  mixed
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function get($key, $default = null)
+	{
 		if (property_exists($this->data, $key))
 		{
 			return $this->data->$key;
 		}
 
-		throw new \InvalidArgumentException(__METHOD__ . ' - Get unknown property: ' . $key);
+		return $default;
+	}
+
+	/**
+	 * exists
+	 *
+	 * @param   string $key Is this key exists.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function exists($key)
+	{
+		return property_exists($this->data, $key);
 	}
 
 	/**
@@ -382,7 +429,7 @@ class Record implements \IteratorAggregate
 	 * method to make sure the data they are storing in the database is safe and
 	 * as expected before storage.
 	 *
-	 * @return  $this  Method allows chaining
+	 * @return  static  Method allows chaining
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
@@ -616,5 +663,56 @@ class Record implements \IteratorAggregate
 	{
 		return $this->db->quoteName($value);
 	}
-}
 
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return $this->exists($offset);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		$this->data->$offset = null;
+	}
+}

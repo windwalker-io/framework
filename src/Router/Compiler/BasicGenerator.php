@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router\Compiler;
@@ -50,7 +50,15 @@ abstract class BasicGenerator
 
 		$segments = explode(',', $matches[1]);
 
-		$segments = '/(' . implode(')/(', $segments) . ')';
+		foreach ($segments as $k => $segment)
+		{
+			if (empty($data[$segment]))
+			{
+				unset($segments[$k]);
+			}
+		}
+
+		$segments = $segments ? '/(' . implode(')/(', $segments) . ')' : '';
 
 		$route = str_replace($matches[0], $segments, $route);
 
@@ -83,7 +91,7 @@ abstract class BasicGenerator
 
 		if ($queries)
 		{
-			$route = rtrim($route, '/') . '/?' . $queries;
+			$route = rtrim($route, '/') . '?' . $queries;
 		}
 
 		return $route;

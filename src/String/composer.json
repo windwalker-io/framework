@@ -4,7 +4,7 @@
 	"description": "Windwalker String package",
 	"keywords": ["windwalker", "framework", "string"],
 	"homepage": "https://github.com/ventoviro/windwalker-string",
-	"license": "GPL-2.0+",
+	"license": "LGPL-2.0+",
 	"require": {
 		"php": ">=5.3.10"
 	},

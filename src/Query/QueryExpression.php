@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Query;
@@ -98,6 +98,24 @@ class QueryExpression
 		{
 			return 'CONCATENATE(' . implode(' || ', $values) . ')';
 		}
+	}
+
+	/**
+	 * Concatenates an array of column names or values.
+	 *
+	 * Usage:
+	 * $query->select($query->concatenate(array('a', 'b')));
+	 *
+	 * @param   array   $values     An array of values to concatenate.
+	 * @param   string  $separator  As separator to place between each value.
+	 *
+	 * @return  string  The concatenated values.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function concat($values, $separator = null)
+	{
+		return $this->concatenate($values, $separator);
 	}
 
 	/**

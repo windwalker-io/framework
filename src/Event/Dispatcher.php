@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Event;
@@ -24,15 +24,6 @@ class Dispatcher
 	 * @since  {DEPLOY_VERSION}
 	 */
 	protected $events = array();
-
-	/**
-	 * A regular expression that will filter listener method names.
-	 *
-	 * @var    string
-	 * @since  {DEPLOY_VERSION}
-	 * @deprecated
-	 */
-	protected $listenerFilter;
 
 	/**
 	 * An array of ListenersPriorityQueue indexed
@@ -188,9 +179,9 @@ class Dispatcher
 	 * If no events are specified, it will be registered to all events matching it's methods name.
 	 * In the case of a closure, you must specify at least one event name.
 	 *
-	 * @param   object|\Closure  $listener  The listener
-	 * @param   array            $events    An associative array of event names as keys
-	 *                                     and the corresponding listener priority as values.
+	 * @param   object|\Closure  $listener    The listener
+	 * @param   array            $priorities  An associative array of event names as keys
+	 *                                        and the corresponding listener priority as values.
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
@@ -198,7 +189,7 @@ class Dispatcher
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function addListener($listener, array $events = array())
+	public function addListener($listener, $priorities = array())
 	{
 		if (!is_object($listener))
 		{
@@ -208,18 +199,17 @@ class Dispatcher
 		// We deal with a callable.
 		if (is_callable($listener))
 		{
-			if (empty($events))
+			if (empty($priorities))
 			{
-				throw new \InvalidArgumentException('No event name(s) and priority
-				specified for the Closure listener.');
+				throw new \InvalidArgumentException('No event name(s) and priority specified for the Closure listener.');
 			}
 
-			if (is_string($events))
+			if (is_string($priorities))
 			{
-				$events = array($events => ListenerPriority::NORMAL);
+				$priorities = array($priorities => ListenerPriority::NORMAL);
 			}
 
-			foreach ($events as $name => $priority)
+			foreach ($priorities as $name => $priority)
 			{
 				if (!isset($this->listeners[$name]))
 				{
@@ -235,9 +225,18 @@ class Dispatcher
 		// We deal with a "normal" object.
 		$methods = get_class_methods($listener);
 
-		if (!empty($events))
+		$defaultPriority = ListenerPriority::NORMAL;
+
+		if (is_numeric($priorities))
 		{
-			$methods = array_intersect($methods, array_keys($events));
+			$defaultPriority = $priorities;
+
+			$priorities = null;
+		}
+
+		if (!empty($priorities))
+		{
+			$methods = array_intersect($methods, array_keys($priorities));
 		}
 
 		foreach ($methods as $event)
@@ -248,7 +247,7 @@ class Dispatcher
 				$this->listeners[$event] = new ListenersQueue;
 			}
 
-			$priority = isset($events[$event]) ? $events[$event] : ListenerPriority::NORMAL;
+			$priority = isset($priorities[$event]) ? $priorities[$event] : $defaultPriority;
 
 			$this->listeners[$event]->add($listener, $priority);
 		}

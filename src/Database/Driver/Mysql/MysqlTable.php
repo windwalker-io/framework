@@ -3,14 +3,14 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Driver\Mysql;
 
 use Windwalker\Database\Command\AbstractTable;
-use Windwalker\Database\Command\Table\Column;
-use Windwalker\Database\Command\Table\Key;
+use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\Key;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 
 /**
@@ -114,8 +114,8 @@ class MysqlTable extends AbstractTable
 				$this->table,
 				$column->getName(),
 				$column->getType(),
-				!$column->getSigned(),
-				!$column->getAllowNull(),
+				$column->getSigned(),
+				$column->getAllowNull(),
 				$column->getDefault(),
 				$column->getPosition(),
 				$column->getComment()
@@ -158,6 +158,23 @@ class MysqlTable extends AbstractTable
 		{
 			$this->create($ifNotExists, $options);
 		}
+
+		return $this;
+	}
+
+	/**
+	 * drop
+	 *
+	 * @param bool   $ifNotExists
+	 * @param string $option
+	 *
+	 * @return  static
+	 */
+	public function drop($ifNotExists = true, $option = '')
+	{
+		$query = MysqlQueryBuilder::dropTable($this->table, $ifNotExists, $option);
+
+		$this->db->setQuery($query)->execute();
 
 		return $this;
 	}
@@ -236,46 +253,25 @@ class MysqlTable extends AbstractTable
 	 */
 	public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
-		$defaultOptions = array(
-			'primary' => false,
-			'auto_increment' => false,
-			'position' => null,
-			'length' => null
-		);
+		$column = $name;
 
-		$options = array_merge($defaultOptions, $options);
-
-		if ($options['primary'])
+		if (!($column instanceof Column))
 		{
-			$options['auto_increment'] = true;
-
-			$signed = false;
-			$allowNull = false;
-
-			$this->primary[] = $name;
+			$column = new Column($name, $type, $signed, $allowNull, $default, $comment, $options);
 		}
 
-		$type = MysqlType::getType($type);
+		$type   = MysqlType::getType($column->getType());
+		$length = $column->getLength() ? : MysqlType::getLength($type);
 
-		$length = $options['length'] ? : MysqlType::getLength($type);
+		$column->type($type)
+			->length($length);
 
-		$column = new Column;
-
-		$column->setName($name)
-			->setType($type)
-			->setLength($length)
-			->setSigned($signed)
-			->setAllowNull($allowNull)
-			->setDefault($default)
-			->setComment($comment)
-			->setAutoIncrement($options['auto_increment'])
-			->setPosition($options['position']);
-
-		// $query = MysqlQueryBuilder::addColumn($this->table, $name, $type, $unsigned, $notNull, $default, $position, $comment);
+		if ($column->isPrimary())
+		{
+			$this->primary[] = $column->getName();
+		}
 
 		$this->columns[] = $column;
-
-		// $this->db->setQuery($query)->execute();
 
 		return $this;
 	}
@@ -497,4 +493,3 @@ class MysqlTable extends AbstractTable
 		return $this;
 	}
 }
-

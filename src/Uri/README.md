@@ -1,4 +1,4 @@
-# Windwalker Uri Package
+# Windwalker Uri
 
 Windwalker Uri package is a Joomla Framework fork now, to support our Application package.
 
@@ -20,14 +20,11 @@ You can use the `Uri` class a number of different ways when dealing with Uris. I
 
 ## Installation via Composer
 
-Add `"windwalker/uri": "~2.0"` to the require block in your composer.json, make sure you have `"minimum-stability": "dev"` and then run `composer install`.
-
 ```json
 {
 	"require": {
 		"windwalker/uri": "~2.0"
-	},
-	"minimum-stability": "dev"
+	}
 }
 ```
 
@@ -35,7 +32,7 @@ Add `"windwalker/uri": "~2.0"` to the require block in your composer.json, make 
 
 The methods provided in the `Uri` class allow you to manipulate all aspects of a uri. For example, suppose you wanted to set a new uri, add in a port, and then also post a username and password to authenticate a .htaccess security file. You could use the following syntax:
 
-```
+``` php
 // new uri object
 $uri = new Windwalker\Uri\Uri;
 
@@ -46,25 +43,35 @@ $uri->setPass('myPass');
 
 echo $uri->__toString();
 ```
+
 This will output:
-   myUser:myPass@http://localhost:8888
+
+```
+myUser:myPass@http://localhost:8888
+```
 
 If you wanted to add a specific filepath after the host you could use the `setPath()` method:
 
-```
+``` php
 // set path
 $uri->setPath('path/to/file.php');
 ```
 
 Which will output
-   myUser:myPass@http://localhost:8888path/to/file.php
+
+```
+myUser:myPass@http://localhost:8888path/to/file.php
+```
 
 Adding a URL query:
-```
+
+``` php
 // url query
 $uri->setQuery('foo=bar');
 ```
 
 Output:
-   myUser:myPass@http://localhost:8888path/to/file.php?foo=bar
 
+```
+myUser:myPass@http://localhost:8888path/to/file.php?foo=bar
+```

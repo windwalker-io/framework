@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router;
@@ -75,7 +75,9 @@ class SingleActionRouter extends Router
 	 */
 	public function match($route, $method = 'GET', $options = array())
 	{
-		$vars = parent::match($route, $method, $options);
+		$matched = parent::match($route, $method, $options);
+
+		$vars = $matched->getVariables();
 
 		if (!array_key_exists('_controller', $vars))
 		{

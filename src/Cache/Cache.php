@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Cache;
@@ -20,7 +20,7 @@ use Windwalker\Cache\Storage\RuntimeStorage;
  *
  * @since {DEPLOY_VERSION}
  */
-class Cache implements CacheInterface
+class Cache implements CacheInterface, \ArrayAccess
 {
 	/**
 	 * Property storage.
@@ -44,8 +44,8 @@ class Cache implements CacheInterface
 	 */
 	public function __construct(CacheStorageInterface $storage = null, DataHandlerInterface $handler = null)
 	{
-		$this->storage = $storage ? : new RuntimeStorage;
-		$this->handler = $handler ? : new SerializeHandler;
+		$this->storage = $storage ?: new RuntimeStorage;
+		$this->handler = $handler ?: new SerializeHandler;
 	}
 
 	/**
@@ -239,5 +239,56 @@ class Cache implements CacheInterface
 
 		return $this;
 	}
-}
 
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return $this->exists($offset);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		$this->remove($offset);
+	}
+}

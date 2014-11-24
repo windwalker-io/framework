@@ -3,12 +3,10 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Event;
-
-use Windwalker\Event\EventInterface;
 
 /**
  * Class DispatcherAwareTrait
@@ -27,15 +25,16 @@ trait DispatcherAwareTrait
 	/**
 	 * Trigger an event.
 	 *
-	 * @param   EventInterface|string  $event  The event object or name.
+	 * @param   EventInterface|string $event The event object or name.
+	 * @param   array                 $args  The arguments.
 	 *
 	 * @return  EventInterface  The event after being passed through all listeners.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function triggerEvent($event)
+	public function triggerEvent($event, $args = array())
 	{
-		$this->dispatcher->triggerEvent($event);
+		$this->dispatcher->triggerEvent($event, $args);
 	}
 
 	/**
@@ -53,7 +52,7 @@ trait DispatcherAwareTrait
 	 *
 	 * @param   \Windwalker\Event\Dispatcher $dispatcher
 	 *
-	 * @return  DispatcherAwareTrait  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setDispatcher($dispatcher)
 	{

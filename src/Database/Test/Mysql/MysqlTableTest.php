@@ -3,14 +3,14 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Test\Mysql;
 
-use Windwalker\Database\Command\Table\Column;
-use Windwalker\Database\Command\Table\DataType;
-use Windwalker\Database\Command\Table\Key;
+use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\DataType;
+use Windwalker\Database\Schema\Key;
 use Windwalker\Database\Driver\Mysql\MysqlType;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 
@@ -104,6 +104,25 @@ class MysqlTableTest extends AbstractMysqlTest
 		$this->assertEquals('int(11) unsigned', $columns['id']->Type);
 		$this->assertEquals('varchar(255)', $columns['name']->Type);
 		$this->assertEquals('UNI', $columns['alias']->Key);
+
+		static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
+
+		// Test Column types
+		$table = $this->db->getTable('#__cloud', true);
+
+		$table->addColumn(new Column\Primary('id'))
+			->addColumn(new Column\Varchar('name'))
+			->addColumn(new Column\Char('type'))
+			->addColumn(new Column\Timestamp('created'))
+			->addColumn(new Column\Bit('state'))
+			->addColumn(new Column\Integer('uid'))
+			->addColumn(new Column\Tinyint('status'))
+			->create();
+
+		$columns = $table->getColumnDetails(true);
+
+		$this->assertEquals('int(11) unsigned', $columns['id']->Type);
+		$this->assertEquals('varchar(255)', $columns['name']->Type);
 
 		static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
 	}

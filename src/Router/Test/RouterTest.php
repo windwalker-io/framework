@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router\Test;
@@ -103,6 +103,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
 		$result = $this->instance->match('flower/5/foo');
 
+		$this->assertInstanceOf('Windwalker\Router\Route', $result);
+
+		$result = $result->getVariables();
+
 		$this->assertEquals('FlowerController', $result['_controller']);
 		$this->assertEquals('foo', $result['alias']);
 
@@ -159,10 +163,18 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
 		$result = $this->instance->match('flower/5/foo');
 
+		$this->assertInstanceOf('Windwalker\Router\Route', $result);
+
+		$result = $result->getVariables();
+
 		$this->assertEquals('FlowerController', $result['_controller']);
 		$this->assertEquals('foo', $result['alias']);
 
 		$result = $this->instance->match('foo/bar/5/baz');
+
+		$this->assertInstanceOf('Windwalker\Router\Route', $result);
+
+		$result = $result->getVariables();
 
 		$this->assertEquals('SakuraController', $result['_controller']);
 		$this->assertEquals('baz', $result['sakura']);

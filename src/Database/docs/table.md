@@ -13,9 +13,9 @@ Create a new table.
 > *NOTE:* Table has not support foreign key now.
 
 ``` php
-use Windwalker\Database\Command\Table\Column;
-use Windwalker\Database\Command\Table\Key;
-use Windwalker\Database\Command\Table\DataType;
+use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\Key;
+use Windwalker\Database\Schema\DataType;
 
 $table = $db->getTable('#__articles');
 
@@ -27,13 +27,30 @@ $table->addColumn('id', DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, '
     ->create(true); // True to add IF NOT EXISTS
 ```
 
+Using Column type objects:
+
+``` php
+use Windwalker\Database\Schema\Column;
+
+$table->addColumn(new Column\Primary('id'))
+    ->addColumn(new Column\Varchar('name'))
+    ->addColumn(new Column\Char('type'))
+    ->addColumn(new Column\Timestamp('created'))
+    ->addColumn(new Column\Bit('state'))
+    ->addColumn(new Column\Integer('uid'))
+    ->addColumn(new Column\Tinyint('status'))
+    ->create();
+```
+
+These objects will set default length and attributes for every column, and map the type to different database drivers.
+
 ## update()
 
 Update table schema. Only use on add columns and indexes.
 
 ``` php
-use Windwalker\Database\Command\Table\Column;
-use Windwalker\Database\Command\Table\Key;
+use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\Key;
 
 $table = $db->getTable('#__articles');
 
@@ -47,8 +64,8 @@ $table->addColumn('state', DataType::TINYINT, Column::SIGNED, Column::NOT_NULL, 
 If table exists, using update, otherwise use insert.
 
 ``` php
-use Windwalker\Database\Command\Table\Column;
-use Windwalker\Database\Command\Table\Key;
+use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\Key;
 
 $table = $db->getTable('#__articles');
 
@@ -68,7 +85,7 @@ $table->dropColumn('state');
 ## dropIndex()
 
 ``` php
-use Windwalker\Database\Command\Table\Key;
+use Windwalker\Database\Schema\Key;
 
 $table = $db->getTable('#__articles');
 

@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Test;
@@ -42,17 +42,19 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	{
 		$command = new RootCommand('default', new MockIO);
 
-		$command
-			->addCommand(
-				'yoo',
-				'yoo desc'
-			)
-			->setHandler(
-				function($command)
-				{
-					return 123;
-				}
-			);
+		$command->setApplication(new Console);
+
+		$command->addCommand(
+			'yoo',
+			'yoo desc'
+		);
+
+		$command->handler(
+			function($command)
+			{
+				return 123;
+			}
+		);
 
 		$this->instance = $command;
 	}
@@ -202,12 +204,17 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	{
 		$cmd = $this->instance;
 
-		$cmd->addOption(
+		$cmd->addGlobalOption(
 			array('y', 'yell', 'Y'),
 			false,
-			'Make return uppercase',
-			Option::IS_GLOBAL
+			'Make return uppercase'
 		);
+
+		$cmd->addGlobalOption('y')
+			->alias('yell')
+			->alias('Y')
+			->defaultValue(false)
+			->description('Make return uppercase');
 
 		$cmd->getIO()->setOption('y', 1);
 
@@ -324,7 +331,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetAndGetDescription()
 	{
-		$this->instance->setDescription('Wu la la~~~');
+		$this->instance->description('Wu la la~~~');
 
 		$this->assertEquals('Wu la la~~~', $this->instance->getDescription(), 'Description not matched');
 	}
@@ -360,7 +367,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf('\Closure', $code, 'Handler not exists');
 
-		$this->instance->setHandler(null);
+		$this->instance->handler(null);
 
 		$this->assertEquals(null, $this->instance->getHandler(), 'Handler should have been cleaned');
 	}
@@ -376,7 +383,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetAndgetCallableHandler()
 	{
-		$this->instance->setHandler(array($this, 'fakeHandler'));
+		$this->instance->handler(array($this, 'fakeHandler'));
 
 		$code = $this->instance->getHandler();
 
@@ -384,7 +391,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('Hello', $this->instance->execute(), 'Handler result failure.');
 
-		$this->instance->setHandler(null);
+		$this->instance->handler(null);
 
 		$this->assertEquals(null, $this->instance->getHandler(), 'Handler should have been cleaned');
 	}
@@ -413,7 +420,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::setOptionAlias
+	 * @covers Windwalker\Console\Command\AbstractCommand::setOptionAliases
 	 */
 	public function testSetOptionAlias()
 	{
@@ -450,7 +457,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetAndGetHelp()
 	{
-		$this->instance->setHelp('Ha Ha Ha');
+		$this->instance->help('Ha Ha Ha');
 
 		$this->assertEquals('Ha Ha Ha', $this->instance->getHelp(), 'Help text not matched.');
 	}
@@ -466,7 +473,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetAndGetUsage()
 	{
-		$this->instance->setUsage('yoo <command> [option]');
+		$this->instance->usage('yoo <command> [option]');
 
 		$this->assertEquals('yoo <command> [option]', $this->instance->getUsage(), 'Usage text not matched.');
 	}
@@ -490,7 +497,7 @@ Did you mean one of these?
 
 		$this->instance->getIO()->setArguments(array('yo'));
 
-		$this->instance->getIO()->setOption('no-ansi', 1);
+		$this->instance->getIO()->setOption('ansi', false);
 
 		$this->instance->execute();
 

@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router\Test\Compiler;
@@ -52,7 +52,13 @@ class BasicGeneratorTest extends \PHPUnit_Framework_TestCase
 			array(
 				'flower(/id)',
 				array('id' => 25, 'alias' => 'sakura'),
-				'flower/25/?alias=sakura',
+				'flower/25?alias=sakura',
+				__LINE__
+			),
+			array(
+				'flower(/id)',
+				array('alias' => 'sakura'),
+				'flower?alias=sakura',
 				__LINE__
 			),
 			array(
@@ -70,13 +76,13 @@ class BasicGeneratorTest extends \PHPUnit_Framework_TestCase
 			array(
 				'flower/(*tags)',
 				array('id' => 25, 'tags' => array('sakura', 'rose', 'olive')),
-				'flower/sakura/rose/olive/?id=25',
+				'flower/sakura/rose/olive?id=25',
 				__LINE__
 			),
 			array(
 				'flower/(*tags)/(alias)',
 				array('id' => 25, 'alias' => 'wind', 'tags' => array('sakura', 'rose', 'olive')),
-				'flower/sakura/rose/olive/wind/?id=25',
+				'flower/sakura/rose/olive/wind?id=25',
 				__LINE__
 			),
 		);

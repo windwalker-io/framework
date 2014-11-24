@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Test;
@@ -86,9 +86,9 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetAndGetAlias()
 	{
-		$this->instance->setAlias(array('yell', 'Y'));
+		$this->instance->setAliases(array('yell', 'Y'));
 
-		$alias = $this->instance->getAlias();
+		$alias = $this->instance->getAliases();
 
 		$this->assertEquals(array('yell', 'Y'), $alias);
 	}
@@ -100,11 +100,11 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	public function testSetAndGetDefault()
+	public function testSetAndGetDefaultValue()
 	{
-		$this->instance->setDefault(0);
+		$this->instance->defaultValue(0);
 
-		$this->assertEquals(0, $this->instance->getDefault(), 'Default value not matched.');
+		$this->assertEquals(0, $this->instance->getDefaultValue(), 'Default value not matched.');
 	}
 
 	/**
@@ -116,7 +116,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetAndGetDescription()
 	{
-		$this->instance->setDescription('Desc');
+		$this->instance->description('Desc');
 
 		$this->assertEquals('Desc', $this->instance->getDescription(), 'Description value not matched.');
 	}
@@ -185,13 +185,13 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGlobal()
 	{
-		$this->command->addOption(
+		$this->command->addGlobalOption(
 			'k',
 			'default',
-			'k desc',
-			Option::IS_GLOBAL
-		)
-		->addCommand('kkk');
+			'k desc'
+		);
+
+		$this->command->addCommand('kkk');
 
 		$kkk = $this->command->getChild('kkk');
 

@@ -3,11 +3,16 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console;
 
+use Windwalker\Console\Command\AbstractCommand;
+use Windwalker\Console\Descriptor\DescriptorHelperInterface;
+use Windwalker\Console\Descriptor\Text\TextCommandDescriptor;
+use Windwalker\Console\Descriptor\Text\TextDescriptorHelper;
+use Windwalker\Console\Descriptor\Text\TextOptionDescriptor;
 use Windwalker\Console\IO\IO;
 use Windwalker\Console\IO\IOInterface;
 use Windwalker\Registry\Registry;
@@ -32,6 +37,13 @@ abstract class AbstractConsole
 	 * @var  Registry
 	 */
 	protected $config = null;
+
+	/**
+	 * Property descriptor.
+	 *
+	 * @var DescriptorHelperInterface
+	 */
+	protected $descriptor;
 
 	/**
 	 * Class constructor.
@@ -149,12 +161,37 @@ abstract class AbstractConsole
 	 */
 	public function execute()
 	{
+		$this->prepareExecute();
+
 		// @event onBeforeExecute
 
 		// Perform application routines.
 		$this->doExecute();
 
 		// @event onAfterExecute
+
+		$this->postExecute();
+	}
+
+	/**
+	 * Prepare execute hook.
+	 *
+	 * @return  void
+	 */
+	protected function prepareExecute()
+	{
+	}
+
+	/**
+	 * Pose execute hook.
+	 *
+	 * @param   mixed  $result  Executed return value.
+	 *
+	 * @return  mixed
+	 */
+	protected function postExecute($result = null)
+	{
+		return $result;
 	}
 
 	/**
@@ -217,5 +254,77 @@ abstract class AbstractConsole
 		$this->config = $config;
 
 		return $this;
+	}
+
+	/**
+	 * Method to get property Config
+	 *
+	 * @return  Registry
+	 */
+	public function getConfig()
+	{
+		return $this->config;
+	}
+
+	/**
+	 * Method to set property config
+	 *
+	 * @param   Registry $config
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setConfig($config)
+	{
+		$this->config = $config;
+
+		return $this;
+	}
+
+	/**
+	 * Get or create descriptor.
+	 *
+	 * @return DescriptorHelperInterface|TextDescriptorHelper
+	 *
+	 * @since  {DEPLOY_VERSION}
+	 */
+	public function getDescriptor()
+	{
+		if (!$this->descriptor)
+		{
+			$this->descriptor = new TextDescriptorHelper(
+				new TextCommandDescriptor,
+				new TextOptionDescriptor
+			);
+		}
+
+		return $this->descriptor;
+	}
+
+	/**
+	 * Method to set property descriptor
+	 *
+	 * @param   DescriptorHelperInterface $descriptor
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDescriptor(DescriptorHelperInterface $descriptor)
+	{
+		$this->descriptor = $descriptor;
+
+		return $this;
+	}
+
+	/**
+	 * describeCommand
+	 *
+	 * @param AbstractCommand $command
+	 *
+	 * @return  string
+	 */
+	public function describeCommand(AbstractCommand $command)
+	{
+		$descriptor = $this->getDescriptor();
+
+		return $descriptor->describe($command);
 	}
 }

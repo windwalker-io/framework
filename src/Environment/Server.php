@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Environment;
@@ -220,6 +220,36 @@ class Server implements ServerInterface
 		}
 
 		return $this->getGlobals('_SERVER', 'PHP_SELF');
+	}
+
+	/**
+	 * getHost
+	 *
+	 * @return  string
+	 */
+	public function getHost()
+	{
+		return $this->getGlobals('_SERVER', 'HTTP_HOST');
+	}
+
+	/**
+	 * getPort
+	 *
+	 * @return  string
+	 */
+	public function getPort()
+	{
+		return $this->getGlobals('_SERVER', 'SERVER_PORT');
+	}
+
+	/**
+	 * getScheme
+	 *
+	 * @return  string
+	 */
+	public function getScheme()
+	{
+		return $this->getGlobals('_SERVER', 'REQUEST_SCHEME');
 	}
 
 	/**

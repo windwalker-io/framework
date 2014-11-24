@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Test\Stubs;
@@ -34,9 +34,9 @@ class FooCommand extends Command
 	 */
 	protected function initialise()
 	{
-		$this->setDescription('Foo command desc')
-			->setUsage('foo <command> [option]')
-			->setHelp('Foo Command Help')
+		$this->description('Foo command desc')
+			->usage('foo <command> [option]')
+			->help('Foo Command Help')
 			->addCommand(new AaaCommand);
 	}
 

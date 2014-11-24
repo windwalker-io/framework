@@ -1,4 +1,4 @@
-# Windwalker Database Package
+# Windwalker Database
 
 Windwalker database package is a DB operation wrapper, provide us an advanced way to access database and store data.
 

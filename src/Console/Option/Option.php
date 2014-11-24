@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Option;
@@ -32,13 +32,13 @@ class Option
 	protected $name;
 
 	/**
-	 * Option alias.
+	 * Option aliases.
 	 *
 	 * @var  array
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	protected $alias = array();
+	protected $aliases = array();
 
 	/**
 	 * Option description.
@@ -88,27 +88,27 @@ class Option
 	/**
 	 * Class Constructor.
 	 *
-	 * @param   mixed    $alias        The option name. Can be a string, an array or an object.
-	 *                                  If we use array, the first element will be option name, others will be alias.
+	 * @param   mixed    $aliases      The option name. Can be a string, an array or an object.
+	 *                                 If we use array, the first element will be option name, others will be alias.
 	 * @param   mixed    $default      The default value when we get a non-exists option.
 	 * @param   string   $description  The option description.
 	 * @param   boolean  $global       True is a global option.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function __construct($alias, $default = null, $description = null, $global = false)
+	public function __construct($aliases, $default = null, $description = null, $global = false)
 	{
-		$alias = (array) $alias;
-		$name  = array_shift($alias);
+		$aliases = (array) $aliases;
+		$name  = array_shift($aliases);
 
 		$this->name        = $name;
 		$this->default     = $default;
 		$this->description = $description;
 		$this->global      = $global;
 
-		if (count($alias))
+		if (count($aliases))
 		{
-			$this->setAlias($alias);
+			$this->setAliases($aliases);
 		}
 	}
 
@@ -121,9 +121,9 @@ class Option
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setAlias($alias)
+	public function setAliases($alias)
 	{
-		$this->alias = $alias;
+		$this->aliases = $alias;
 
 		return $this;
 	}
@@ -135,9 +135,39 @@ class Option
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	public function getAlias()
+	public function getAliases()
 	{
-		return $this->alias;
+		return $this->aliases;
+	}
+
+	/**
+	 * Add a new alias.
+	 *
+	 * @param   string $alias The alias name.
+	 *
+	 * @return  static
+	 */
+	public function alias($alias)
+	{
+		$this->aliases[] = $alias;
+
+		return $this;
+	}
+
+	/**
+	 * Default value getter, alias of defaultValue().
+	 *
+	 * @param   mixed  $default  The default value.
+	 *
+	 * @return  Option  Return this object to support chaining.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 *
+	 * @deprecated  2.2 Use defaultValue() instead
+	 */
+	public function setDefault($default)
+	{
+		return $this->defaultValue($default);
 	}
 
 	/**
@@ -149,7 +179,7 @@ class Option
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setDefault($default)
+	public function defaultValue($default)
 	{
 		$this->default = $default;
 
@@ -163,7 +193,7 @@ class Option
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	public function getDefault()
+	public function getDefaultValue()
 	{
 		return $this->default;
 	}
@@ -177,7 +207,7 @@ class Option
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setDescription($description)
+	public function description($description)
 	{
 		$this->description = $description;
 
@@ -270,14 +300,14 @@ class Option
 
 		$name = $this->name;
 
-		if ($io->getOption($name))
+		if ($io->getOption($name) !== null)
 		{
 			return $io->getOption($name);
 		}
 
-		foreach ($this->alias as $alias)
+		foreach ($this->aliases as $alias)
 		{
-			if ($io->getOption($alias))
+			if ($io->getOption($alias) !== null)
 			{
 				return $io->getOption($alias);
 			}

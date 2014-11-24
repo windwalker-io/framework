@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console;
@@ -92,6 +92,8 @@ class Console extends AbstractConsole
 	 */
 	public function execute()
 	{
+		$this->prepareExecute();
+
 		// @event onBeforeExecute
 
 		// Perform application routines.
@@ -99,7 +101,7 @@ class Console extends AbstractConsole
 
 		// @event onAfterExecute
 
-		return $exitCode;
+		return $this->postExecute($exitCode);
 	}
 
 	/**
@@ -115,11 +117,11 @@ class Console extends AbstractConsole
 	 */
 	public function doExecute()
 	{
-		$command  = $this->getRootCommand();
+		$command = $this->getRootCommand();
 
 		if ((!$command->getHandler() && !count($this->io->getArguments())))
 		{
-			$this->io->unshiftArgument('help');
+			$this->set('show_help', true);
 		}
 
 		try
@@ -136,7 +138,7 @@ class Console extends AbstractConsole
 		{
 			$command->renderException($e);
 
-			$exitCode = $e->getHandler();
+			$exitCode = $e->getCode();
 		}
 
 		if ($this->autoExit)
@@ -168,8 +170,7 @@ class Console extends AbstractConsole
 
 		$this->rootCommand = new RootCommand(null, $this->io);
 
-		$this->rootCommand->setApplication($this)
-			->addCommand(new HelpCommand);
+		$this->rootCommand->setApplication($this);
 
 		return $this;
 	}
@@ -327,7 +328,7 @@ class Console extends AbstractConsole
 	 */
 	public function setDescription($description)
 	{
-		$this->getRootCommand()->setDescription($description);
+		$this->getRootCommand()->description($description);
 
 		return $this;
 	}
@@ -343,7 +344,7 @@ class Console extends AbstractConsole
 	 */
 	public function setHandler($closure)
 	{
-		$this->getRootCommand()->setHandler($closure);
+		$this->getRootCommand()->handler($closure);
 
 		return $this;
 	}
@@ -357,7 +358,7 @@ class Console extends AbstractConsole
 	 */
 	public function setUsage($usage)
 	{
-		$this->getRootCommand()->setUsage($usage);
+		$this->getRootCommand()->usage($usage);
 
 		return $this;
 	}
@@ -371,7 +372,7 @@ class Console extends AbstractConsole
 	 */
 	public function setHelp($help)
 	{
-		$this->getRootCommand()->setHelp($help);
+		$this->getRootCommand()->help($help);
 
 		return $this;
 	}

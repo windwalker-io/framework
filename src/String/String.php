@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\String;
@@ -113,8 +113,16 @@ abstract class String
 	 */
 	public static function parseVariable($string, $data = array(), $tags = array('{{', '}}'))
 	{
+		$defaultTags = array('{{', '}}');
+
+		$tags = (array) $tags + $defaultTags;
+
+		list($begin, $end) = $tags;
+
+		$regex = preg_quote($begin) . '\s*(.+?)\s*' . preg_quote($end);
+
 		return preg_replace_callback(
-			'/\{\{\s*(.+?)\s*\}\}/',
+			chr(1) . $regex . chr(1),
 			function($match) use ($data)
 			{
 				$return = ArrayHelper::getByPath($data, $match[1]);

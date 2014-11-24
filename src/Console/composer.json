@@ -4,7 +4,7 @@
 	"description": "Windwalker Controller package",
 	"keywords": ["windwalker", "framework", "console"],
 	"homepage": "https://github.com/ventoviro/windwalker-console",
-	"license": "GPL-2.0+",
+	"license": "LGPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
 		"windwalker/io" : "~2.0",

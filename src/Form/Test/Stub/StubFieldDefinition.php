@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Form\Test\Stub;
@@ -31,54 +31,22 @@ class StubFieldDefinition implements FieldDefinitionInterface
 	 */
 	public function define(Form $form)
 	{
-		$form->addField(
-			new TextField(
-				'id',
-				'ID',
-				array(
-					'class' => 'control-input'
-				),
-				InputFilter::INTEGER
-			),
-			'a',
-			null
-		)->addField(
-			new TextField(
-				'username',
-				'Username',
-				array(
-					'class' => 'control-input',
-					'required' => true
-				)
-			),
-			'a',
-			'u'
-		)->addField(
-			new TextField(
-				'email',
-				'Email',
-				array(
-					'required' => true
-				),
-				null,
-				new EmailValidator
-			),
-			null,
-			'b'
-		)->addField(
-			new PasswordField(
-				'password',
-				'Password',
-				null,
-				InputFilter::ALNUM
-			),
-			'pf',
-			'b'
-		)->addField(
-			new TextField(
-				'address',
-				'Address'
-			)
-		);
+		$form->addField(new TextField('id', 'ID'), 'a', null)
+			->set('class', 'control-input')
+			->setFilter(InputFilter::INTEGER);
+
+		$form->addField(new TextField('username', 'Username'), 'a', 'u')
+			->required()
+			->set('class', 'control-input');
+
+		$form->addField(new TextField('email', 'Email'), null, 'b')
+			->required()
+			->setValidator(new EmailValidator)
+			->set('class', 'control-input');
+
+		$form->addField(new PasswordField('password', 'Password'), 'pf', 'b')
+			->setFilter(InputFilter::ALNUM);
+
+		$form->addField(new TextField('address', 'Address'));
 	}
 }

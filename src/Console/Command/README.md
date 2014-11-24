@@ -1,4 +1,4 @@
-# Windwalker Console Package Command Interface
+# Windwalker Console Command Interface
 
 ## The Commands Structure
 
@@ -38,19 +38,15 @@ use Windwalker\Console\IO\IO;
 
 $command = new Command('app', new IO);
 
-$command->setDescription('This is first level command description')
-    ->addOption(
-        'q', // option name
-        0,   // default value
-        'Add this option can make output lower case.', // option description
-        Option::IS_GLOBAL // sub command will extends this global option
-    )
-    ->addOption(
-        ['y', 'yell', 'Y'], // First element will be option name, others will be alias
-        0,
-        'Yell will make output upper case.',
-        Option::IS_PRIVATE // sub command will not extends normal option
-    )
+$command->addGlobalOption('q')
+    ->defaultValue(0)
+    ->description('Add this option can make output lower case.');
+    
+$command->addOption(['y', 'yell', 'Y']) // First element will be option name, others will be alias
+    ->defaultValue(0)
+    ->description('Yell will make output upper case.');
+     
+$command->description('This is first level command description')
     ->setHandler(
         function($command)
         {
@@ -137,37 +133,36 @@ HELLO ASIKA
 $command = new Command('app', new Input);
 
 // Default Command
-$command->setDescription('This is first level command description')
-    ->addOption(
-        'q',
-        0,
-        'Add this option can make output lower case.',
-        Option::IS_GLOBAL
-    )
+$command->description('This is first level command description')
     // First level code
     ->setHandler(
         function($command, $input, $output)
         {
             $output->out('First level command.');
         }
-    )
-    // Second level commend
-    ->addCommand(
-        'second',
-        'The second level argument',
-        array(
-            new Option(
-                array('a', 'A', 'ask'),
-                'a default',
-                'a desc'
-            )
-        ),
-        function($command, $input, $output)
-        {
-            echo 'Second level commend.';
-        }
     );
+
+$command->addGlobalOption('q')
+    ->defaultValue(0)
+    ->description('Add this option can make output lower case.');
     
+// Second level commend
+$command->addCommand(
+    'second'
+    'The second level argument',
+    array(
+        new Option(
+            array('a', 'A', 'ask'),
+            'a default',
+            'a desc'
+        )
+    ),
+    function($command, $input, $output)
+    {
+        echo 'Second level commend.';
+    }
+);
+
 try
 {
     $command->execute();
@@ -228,8 +223,7 @@ class FooCommand extends Command
 			    'q',
 			    0,
 			    'q desc'
-			)
-			;
+			);
 	}
 
 	public function doExecute()

@@ -1,4 +1,4 @@
-# Windwalker Event Package
+# Windwalker Event
 
 Windwalker Event Package provides an interface to create event systems.
 

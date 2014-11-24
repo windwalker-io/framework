@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Renderer;
@@ -105,11 +105,13 @@ class TwigRenderer extends AbstractAdapterRenderer
 	 *
 	 * @param \Twig_Extension $extension
 	 *
-	 * @return  void
+	 * @return  static
 	 */
 	public function addExtension(\Twig_Extension $extension)
 	{
 		$this->extensions[] = $extension;
+
+		return $this;
 	}
 
 	/**
@@ -193,6 +195,30 @@ class TwigRenderer extends AbstractAdapterRenderer
 	public function setDebugExtension(\Twig_Extension $debugExtension)
 	{
 		$this->debugExtension = $debugExtension;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Extensions
+	 *
+	 * @return  array
+	 */
+	public function getExtensions()
+	{
+		return $this->extensions;
+	}
+
+	/**
+	 * Method to set property extensions
+	 *
+	 * @param   array $extensions
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setExtensions($extensions)
+	{
+		$this->extensions = $extensions;
 
 		return $this;
 	}

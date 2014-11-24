@@ -4,7 +4,7 @@
 	"description": "Windwalker Record package",
 	"keywords": ["windwalker", "framework", "record"],
 	"homepage": "https://github.com/ventoviro/windwalker-record",
-	"license": "GPL-2.0+",
+	"license": "LGPL-2.0+",
 	"require": {
 		"php": ">=5.3.10",
 		"windwalker/database" : "~2.0"

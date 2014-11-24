@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Form\Field;
@@ -13,6 +13,7 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
 use Windwalker\Form\Filter\FilterInterface;
 use Windwalker\Form\FilterHelper;
 use Windwalker\Form\Validate\ValidateResult;
+use Windwalker\Form\ValidatorHelper;
 use Windwalker\Validator\ValidatorInterface;
 
 /**
@@ -215,7 +216,14 @@ abstract class AbstractField
 		$attrs['for']   = $this->getAttribute('for', $this->getId());
 		$attrs['title'] = $this->getAttribute('description');
 
-		return (string) new HtmlElement('label', $this->getLabel(), $attrs);
+		$label = $this->getLabel();
+
+		if ($this->required)
+		{
+			$label = '<span class="windwalker-input-required-hint">*</span> ' . $label;
+		}
+
+		return (string) new HtmlElement('label', $label, $attrs);
 	}
 
 	/**
@@ -275,8 +283,6 @@ abstract class AbstractField
 	 */
 	public function validate()
 	{
-		$this->filter();
-
 		$result = new ValidateResult;
 
 		if ($this->required && !$this->checkRequired())
@@ -526,7 +532,7 @@ abstract class AbstractField
 	{
 		if (!($this->validator instanceof ValidatorInterface))
 		{
-			$this->validator = FieldHelper::createValidator($this->validator);
+			$this->validator = ValidatorHelper::create($this->validator);
 		}
 
 		return $this->validator;
@@ -627,6 +633,50 @@ abstract class AbstractField
 	}
 
 	/**
+	 * label
+	 *
+	 * @param string $label
+	 *
+	 * @return  static
+	 */
+	public function label($label)
+	{
+		$this->label = $label;
+
+		return $this;
+	}
+
+	/**
+	 * required
+	 *
+	 * @param bool $value
+	 *
+	 * @return  static
+	 */
+	public function required($value = true)
+	{
+		$this->setAttribute('required', $value);
+
+		$this->required = $value;
+
+		return $this;
+	}
+
+	/**
+	 * disabled
+	 *
+	 * @param bool $value
+	 *
+	 * @return  static
+	 */
+	public function disabled($value = true)
+	{
+		$this->setAttribute('disabled', $value);
+
+		return $this;
+	}
+
+	/**
 	 * getAttribute
 	 *
 	 * @param string $name
@@ -645,11 +695,13 @@ abstract class AbstractField
 	 * @param string $name
 	 * @param mixed  $value
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
 	public function setAttribute($name, $value)
 	{
-		return $this->attributes[$name] = $value;
+		$this->attributes[$name] = $value;
+
+		return $this;
 	}
 
 
@@ -664,6 +716,21 @@ abstract class AbstractField
 	public function get($attr, $default = null)
 	{
 		return $this->getAttribute($attr, $default);
+	}
+
+	/**
+	 * set
+	 *
+	 * @param string $attr
+	 * @param mixed  $value
+	 *
+	 * @return  static
+	 */
+	public function set($attr, $value)
+	{
+		$this->setAttribute($attr, $value);
+
+		return $this;
 	}
 
 	/**

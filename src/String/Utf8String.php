@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\String;
@@ -11,8 +11,6 @@ namespace Windwalker\String;
 // PHP mbstring and iconv local configuration
 
 // Check if mbstring extension is loaded and attempt to load it if not present except for windows
-use Windwalker\Utilities\ArrayHelper;
-
 if (extension_loaded('mbstring'))
 {
 	// Make sure to suppress the output in case ini_set is disabled
@@ -71,7 +69,7 @@ abstract class Utf8String
 	 * needs handling as UTF-8 or not, potentially offering performance
 	 * benefits by using the native PHP equivalent if it's just ASCII e.g.;
 	 *
-	 * <code>
+	 * ``` php
 	 * if (String::is_ascii($someString))
 	 * {
 	 *     // It's just ASCII - use the native PHP version
@@ -81,7 +79,7 @@ abstract class Utf8String
 	 * {
 	 *     $someString = String::strtolower($someString);
 	 * }
-	 * </code>
+	 * ```
 	 *
 	 * @param   string  $str  The string to test.
 	 *
@@ -111,14 +109,7 @@ abstract class Utf8String
 	 */
 	public static function strpos($str, $search, $offset = false)
 	{
-		if ($offset === false)
-		{
-			return utf8_strpos($str, $search);
-		}
-		else
-		{
-			return utf8_strpos($str, $search, $offset);
-		}
+		return utf8_strpos($str, $search, $offset);
 	}
 
 	/**
@@ -152,16 +143,9 @@ abstract class Utf8String
 	 * @see     http://www.php.net/substr
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public static function substr($str, $offset, $length = false)
+	public static function substr($str, $offset, $length = null)
 	{
-		if ($length === false)
-		{
-			return utf8_substr($str, $offset);
-		}
-		else
-		{
-			return utf8_substr($str, $offset, $length);
-		}
+		return utf8_substr($str, $offset, $length);
 	}
 
 	/**
@@ -229,7 +213,7 @@ abstract class Utf8String
 	 * @param   string   $search   String to search
 	 * @param   string   $replace  Existing string to replace
 	 * @param   string   $str      New string to replace with
-	 * @param   integer  $count    Optional count value to be passed by referene
+	 * @param   integer  $count    Optional count value to be passed by reference
 	 *
 	 * @return  string  UTF-8 String
 	 *
@@ -243,14 +227,7 @@ abstract class Utf8String
 			require_once __DIR__ . '/phputf8/str_ireplace.php';
 		}
 
-		if ($count === false)
-		{
-			return utf8_ireplace($search, $replace, $str);
-		}
-		else
-		{
-			return utf8_ireplace($search, $replace, $str, $count);
-		}
+		return utf8_ireplace($search, $replace, $str, $count);
 	}
 
 	/**
@@ -383,7 +360,7 @@ abstract class Utf8String
 			}
 			else
 			{
-				return strcoll(self::transcode($str1, 'UTF-8', $encoding), self::transcode($str2, 'UTF-8', $encoding));
+				return strcoll(static::transcode($str1, 'UTF-8', $encoding), static::transcode($str2, 'UTF-8', $encoding));
 			}
 		}
 		else
@@ -413,18 +390,7 @@ abstract class Utf8String
 			require_once __DIR__ . '/phputf8/strcspn.php';
 		}
 
-		if ($start === false && $length === false)
-		{
-			return utf8_strcspn($str, $mask);
-		}
-		elseif ($length === false)
-		{
-			return utf8_strcspn($str, $mask, $start);
-		}
-		else
-		{
-			return utf8_strcspn($str, $mask, $start, $length);
-		}
+		return utf8_strcspn($str, $mask, $start, $length);
 	}
 
 	/**
@@ -493,18 +459,7 @@ abstract class Utf8String
 			require_once __DIR__ . '/phputf8/strspn.php';
 		}
 
-		if ($start === null && $length === null)
-		{
-			return utf8_strspn($str, $mask);
-		}
-		elseif ($length === null)
-		{
-			return utf8_strspn($str, $mask, $start);
-		}
-		else
-		{
-			return utf8_strspn($str, $mask, $start, $length);
-		}
+		return utf8_strspn($str, $mask, $start, $length);
 	}
 
 	/**
@@ -523,15 +478,7 @@ abstract class Utf8String
 	 */
 	public static function substr_replace($str, $repl, $start, $length = null)
 	{
-		// Loaded by library loader
-		if ($length === false)
-		{
-			return utf8_substr_replace($str, $repl, $start);
-		}
-		else
-		{
-			return utf8_substr_replace($str, $repl, $start, $length);
-		}
+		return utf8_substr_replace($str, $repl, $start, $length);
 	}
 
 	/**
@@ -562,14 +509,7 @@ abstract class Utf8String
 			require_once __DIR__ . '/phputf8/trim.php';
 		}
 
-		if ($charlist === false)
-		{
-			return utf8_ltrim($str);
-		}
-		else
-		{
-			return utf8_ltrim($str, $charlist);
-		}
+		return utf8_ltrim($str, $charlist);
 	}
 
 	/**
@@ -599,14 +539,7 @@ abstract class Utf8String
 			require_once __DIR__ . '/phputf8/trim.php';
 		}
 
-		if ($charlist === false)
-		{
-			return utf8_rtrim($str);
-		}
-		else
-		{
-			return utf8_rtrim($str, $charlist);
-		}
+		return utf8_rtrim($str, $charlist);
 	}
 
 	/**
@@ -636,14 +569,7 @@ abstract class Utf8String
 			require_once __DIR__ . '/phputf8/trim.php';
 		}
 
-		if ($charlist === false)
-		{
-			return utf8_trim($str);
-		}
-		else
-		{
-			return utf8_trim($str, $charlist);
-		}
+		return utf8_trim($str, $charlist);
 	}
 
 	/**

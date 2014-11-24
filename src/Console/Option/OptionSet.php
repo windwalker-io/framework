@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Option;
@@ -91,9 +91,9 @@ class OptionSet extends \ArrayObject
 	{
 		$name = $option->getName();
 
-		$aliases = $option->getAlias();
+		$aliases = $option->getAliases();
 
-		$this->setAlias($aliases, $name);
+		$this->setAliases($aliases, $name);
 
 		parent::offsetSet($name, $option);
 	}
@@ -129,7 +129,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setAlias($aliases, $option)
+	public function setAliases($aliases, $option)
 	{
 		$aliases = (array) $aliases;
 

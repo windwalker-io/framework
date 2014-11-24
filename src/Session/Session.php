@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Session;
@@ -28,7 +28,7 @@ use Windwalker\Session\Handler\NativeHandler;
  *
  * @since  {DEPLOY_VERSION}
  */
-class Session implements \IteratorAggregate
+class Session implements \ArrayAccess, \IteratorAggregate
 {
 	const STATE_ACTIVE = 'active';
 
@@ -234,6 +234,11 @@ class Session implements \IteratorAggregate
 
 		// Perform security checks
 		$this->validate();
+
+		if (!$restart && $this->state === static::STATE_EXPIRED)
+		{
+			$this->restart();
+		}
 
 		return true;
 	}
@@ -563,12 +568,29 @@ class Session implements \IteratorAggregate
 	 * @param   string $name      Name of variable
 	 * @param   string $namespace Namespace to use, default to 'default'
 	 *
-	 * @throws \RuntimeException
+	 * @return  boolean  True if the variable exists
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 *
+	 * @deprecated  Use exists() instead.
+	 */
+	public function has($name, $namespace = 'default')
+	{
+		return $this->exists($name, $namespace);
+	}
+
+	/**
+	 * Check whether data exists in the session store
+	 *
+	 * @param   string $name      Name of variable
+	 * @param   string $namespace Namespace to use, default to 'default'
+	 *
+	 * @throws  \RuntimeException
 	 * @return  boolean  True if the variable exists
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function has($name, $namespace = 'default')
+	public function exists($name, $namespace = 'default')
 	{
 		if ($this->state !== static::STATE_ACTIVE && $this->state !== static::STATE_EXPIRED)
 		{
@@ -593,8 +615,26 @@ class Session implements \IteratorAggregate
 	 * @return  mixed   The value from session or NULL if not set
 	 *
 	 * @since   {DEPLOY_VERSION}
+	 *
+	 * @deprecated  Use remove() instead.
 	 */
 	public function clear($name, $namespace = 'default')
+	{
+		return $this->remove($name, $namespace);
+	}
+
+	/**
+	 * Unset data from the session store
+	 *
+	 * @param   string $name      Name of variable
+	 * @param   string $namespace Namespace to use, default to 'default'
+	 *
+	 * @throws \RuntimeException
+	 * @return  mixed   The value from session or NULL if not set
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function remove($name, $namespace = 'default')
 	{
 		if ($this->state !== static::STATE_ACTIVE && $this->state !== static::STATE_EXPIRED)
 		{
@@ -631,7 +671,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  array
 	 */
-	public function takeFlashes()
+	public function getFlashes()
 	{
 		return $this->getFlashBag()->takeAll();
 	}
@@ -976,5 +1016,57 @@ class Session implements \IteratorAggregate
 		$this->debug = $debug;
 
 		return $this;
+	}
+
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return $this->exists($offset);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		$this->remove($offset);
 	}
 }

@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Utilities\Test;
@@ -332,9 +332,9 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	public function seedTestSubstr_replace()
 	{
 		return array(
-			array('321 Broadway Avenue', '321 Main Street', 'Broadway Avenue', 4, false),
+			array('321 Broadway Avenue', '321 Main Street', 'Broadway Avenue', 4, null),
 			array('321 Broadway Street', '321 Main Street', 'Broadway', 4, 4),
-			array('чадна 我能吞', 'чадна Би шил идэй чадна', '我能吞', 6, false),
+			array('чадна 我能吞', 'чадна Би шил идэй чадна', '我能吞', 6, null),
 			array('чадна 我能吞 шил идэй чадна', 'чадна Би шил идэй чадна', '我能吞', 6, 2)
 		);
 	}

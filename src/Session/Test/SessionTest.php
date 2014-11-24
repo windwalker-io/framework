@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Session\Test;
@@ -225,7 +225,7 @@ class SessionTest extends AbstractSessionTestCase
 	{
 		$this->instance->addFlash('Yoo', 'warning');
 
-		$flashes = $this->instance->takeFlashes();
+		$flashes = $this->instance->getFlashes();
 
 		$this->assertEquals(array('warning' => array('Yoo')), $flashes);
 	}

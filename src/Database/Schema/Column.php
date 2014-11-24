@@ -3,10 +3,10 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
-namespace Windwalker\Database\Command\Table;
+namespace Windwalker\Database\Schema;
 
 /**
  * The Column class.
@@ -64,7 +64,7 @@ class Column
 	protected $signed;
 
 	/**
-	 * Property nallowNull.
+	 * Property allowNull.
 	 *
 	 * @var  bool
 	 */
@@ -99,25 +99,33 @@ class Column
 	protected $autoIncrement = false;
 
 	/**
+	 * Property primary.
+	 *
+	 * @var boolean
+	 */
+	protected $primary;
+
+	/**
 	 * Class init.
 	 *
 	 * @param string $name
 	 * @param string $type
-	 * @param bool   $unsigned
-	 * @param bool   $notNull
+	 * @param bool   $signed
+	 * @param bool   $allowNull
 	 * @param string $default
-	 * @param null   $position
 	 * @param string $comment
+	 * @param array  $options
 	 */
-	public function __construct($name = null, $type = 'text', $unsigned = false, $notNull = false, $default = '', $position = null, $comment = '')
+	public function __construct($name = null, $type = 'text', $signed = false, $allowNull = false, $default = '', $comment = '', $options = array())
 	{
 		$this->name = $name;
 		$this->type = $type;
-		$this->unsigned = $unsigned;
-		$this->notNull = $notNull;
+		$this->signed = $signed;
+		$this->allowNull = $allowNull;
 		$this->default = $default;
-		$this->position = $position;
 		$this->comment = $comment;
+
+		$this->setOptions($options);
 	}
 
 	/**
@@ -137,7 +145,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setName($name)
+	public function name($name)
 	{
 		$this->name = $name;
 
@@ -161,7 +169,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setType($type)
+	public function type($type)
 	{
 		$this->type = $type;
 
@@ -185,7 +193,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setPosition($position)
+	public function position($position)
 	{
 		$this->position = $position;
 
@@ -209,7 +217,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setComment($comment)
+	public function comment($comment)
 	{
 		$this->comment = $comment;
 
@@ -233,7 +241,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setSigned($signed)
+	public function signed($signed = true)
 	{
 		$this->signed = $signed;
 
@@ -257,7 +265,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setAllowNull($allowNull)
+	public function allowNull($allowNull = true)
 	{
 		$this->allowNull = $allowNull;
 
@@ -281,7 +289,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setDefault($default)
+	public function defaultValue($default)
 	{
 		$this->default = $default;
 
@@ -305,7 +313,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setAutoIncrement($autoIncrement)
+	public function autoIncrement($autoIncrement = true)
 	{
 		$this->autoIncrement = $autoIncrement;
 
@@ -329,9 +337,76 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setLength($length)
+	public function length($length)
 	{
 		$this->length = $length;
+
+		return $this;
+	}
+
+	/**
+	 * setOptions
+	 *
+	 * @param array $options
+	 *
+	 * @return  static
+	 */
+	public function setOptions(array $options)
+	{
+		$defaultOptions = array(
+			'primary' => false,
+			'auto_increment' => false,
+			'position' => null,
+			'length' => null
+		);
+
+		$options = array_merge($defaultOptions, $options);
+
+		if ($options['primary'])
+		{
+			$options['auto_increment'] = true;
+
+			$this->signed = false;
+			$this->allowNull = false;
+		}
+
+		$this->autoIncrement = $options['auto_increment'];
+		$this->position = $options['position'];
+		$this->length = $options['length'];
+		$this->primary = $options['primary'];
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Primary
+	 *
+	 * @return  boolean
+	 */
+	public function isPrimary()
+	{
+		return $this->primary;
+	}
+
+	/**
+	 * Method to set property primary
+	 *
+	 * @param   boolean $primary
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function primary($primary)
+	{
+		$primary = (bool) $primary;
+
+		$this->primary = $primary;
+
+		if ($primary)
+		{
+			$this->signed = false;
+			$this->allowNull = false;
+			$this->autoIncrement = true;
+		}
 
 		return $this;
 	}

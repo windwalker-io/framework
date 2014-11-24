@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Record;
@@ -809,7 +809,7 @@ class NestedRecord extends Record
 	 */
 	public function createRoot()
 	{
-		$record = new Record('#__nestedsets');
+		$record = new Record($this->table);
 
 		$key = $this->getKeyName();
 

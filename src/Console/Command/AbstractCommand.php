@@ -3,11 +3,12 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Command;
 
+use Windwalker\Console\AbstractConsole;
 use Windwalker\Console\Console;
 use Windwalker\Console\Exception\CommandNotFoundException;
 use Windwalker\Console\Option\Option;
@@ -29,7 +30,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since  {DEPLOY_VERSION}
 	 */
-	public $application;
+	public $app;
 
 	/**
 	 * The Cli input object.
@@ -142,7 +143,6 @@ abstract class AbstractCommand implements \ArrayAccess
 		$this->globalOptions = new OptionSet;
 
 		$this->initialise();
-		$this->configure();
 
 		if (!$this->name)
 		{
@@ -159,6 +159,16 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function execute()
 	{
+		$this->prepareExecute();
+
+		// Show help or not
+		if (!count($this->children) && $this->app instanceof AbstractConsole && $this->app->get('show_help'))
+		{
+			$this->io->out($this->app->describeCommand($this));
+
+			return $this->postExecute(true);
+		}
+
 		if (count($this->children) && count($this->io->getArguments()))
 		{
 			$name = $this->io->getArgument(0);
@@ -195,7 +205,30 @@ abstract class AbstractCommand implements \ArrayAccess
 			}
 		}
 
-		return $this->doExecute();
+		$result = $this->doExecute();
+
+		return $this->postExecute($result);
+	}
+
+	/**
+	 * Prepare execute hook.
+	 *
+	 * @return  void
+	 */
+	protected function prepareExecute()
+	{
+	}
+
+	/**
+	 * Pose execute hook.
+	 *
+	 * @param   mixed  $result  Executed return value.
+	 *
+	 * @return  mixed
+	 */
+	protected function postExecute($result = null)
+	{
+		return $result;
 	}
 
 	/**
@@ -220,19 +253,6 @@ abstract class AbstractCommand implements \ArrayAccess
 	 * @since  {DEPLOY_VERSION}
 	 */
 	protected function initialise()
-	{
-	}
-
-	/**
-	 * Initialise command.
-	 *
-	 * @return  void
-	 *
-	 * @deprecated Use initialise() instead. Will be remove in 2.1.
-	 *
-	 * @since  {DEPLOY_VERSION}
-	 */
-	protected function configure()
 	{
 	}
 
@@ -266,7 +286,7 @@ abstract class AbstractCommand implements \ArrayAccess
 		}
 
 		$subCommand->setIO($io)
-			->setApplication($this->application);
+			->setApplication($this->app);
 
 		return $subCommand->execute();
 	}
@@ -274,7 +294,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * Method to get property Io
 	 *
-	 * @return  \Windwalker\IO\Cli\IOInterface
+	 * @return  \Windwalker\Console\IO\IOInterface
 	 */
 	public function getIO()
 	{
@@ -284,7 +304,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * Method to set property io
 	 *
-	 * @param   \Windwalker\IO\Cli\IOInterface $io
+	 * @param   \Windwalker\Console\IO\IOInterface $io
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
@@ -344,12 +364,12 @@ abstract class AbstractCommand implements \ArrayAccess
 		}
 
 		// Set argument detail
-		$command->setApplication($this->application)
+		$command->setApplication($this->app)
 			->setIO($this->io);
 
 		if ($description !== null)
 		{
-			$command->setDescription($description);
+			$command->description($description);
 		}
 
 		if (count($options))
@@ -359,7 +379,7 @@ abstract class AbstractCommand implements \ArrayAccess
 
 		if ($handler)
 		{
-			$command->setHandler($handler);
+			$command->handler($handler);
 		}
 
 		// Set parent
@@ -369,14 +389,14 @@ abstract class AbstractCommand implements \ArrayAccess
 		/** @var $option Option */
 		foreach ($this->globalOptions as $option)
 		{
-			$command->addOption($option);
+			$command->addGlobalOption($option);
 		}
 
 		$name  = $command->getName();
 
 		$this->children[$name] = $command;
 
-		return $this;
+		return $command;
 	}
 
 	/**
@@ -492,46 +512,69 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *                                 If we use array, the first element will be option name, others will be alias.
 	 * @param   mixed   $default      The default value when we get a non-exists option.
 	 * @param   string  $description  The option description.
-	 * @param   bool    $global       If true, this option will be a global option that sub commends will extends it.
 	 *
-	 * @return  AbstractCommand  Return this object to support chaining.
+	 * @return  Option  Return Option object.
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function addOption($option, $default = null, $description = null, $global = false)
+	public function addOption($option, $default = null, $description = null)
 	{
 		if (!($option instanceof Option))
 		{
-			$option = new Option($option, $default, $description, $global);
+			$option = new Option($option, $default, $description);
 		}
+
+		$option->setGlobal(Option::IS_PRIVATE);
 
 		$option->setIO($this->io);
 
-		$name   = $option->getName();
-		$global = $option->isGlobal();
+		$name = $option->getName();
 
-		if ($global)
+		$this->options[$name] = $option;
+
+		// Global option should not equal to private option
+		unset($this->globalOptions[$name]);
+
+		return $option;
+	}
+
+	/**
+	 * Add a option object to this command.
+	 *
+	 * @param   mixed   $option       The option name. Can be a string, an array or an object.
+	 *                                 If we use array, the first element will be option name, others will be alias.
+	 * @param   mixed   $default      The default value when we get a non-exists option.
+	 * @param   string  $description  The option description.
+	 *
+	 * @return  Option  Return Option object.
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public function addGlobalOption($option, $default = null, $description = null)
+	{
+		if (!($option instanceof Option))
 		{
-			$this->globalOptions[$name] = $option;
-
-			// Global option should not equal to private option
-			unset($this->options[$name]);
-
-			// We should pass global option to all children.
-			foreach ($this->children as $child)
-			{
-				$child->addOption($option);
-			}
+			$option = new Option($option, $default, $description);
 		}
-		else
+
+		$option->setGlobal(Option::IS_GLOBAL);
+
+		$option->setIO($this->io);
+
+		$name = $option->getName();
+
+		$this->globalOptions[$name] = $option;
+
+		// Global option should not equal to private option
+		unset($this->options[$name]);
+
+		// We should pass global option to all children.
+		foreach ($this->children as $child)
 		{
-			$this->options[$name] = $option;
-
-			// Global option should not equal to private option
-			unset($this->globalOptions[$name]);
+			$child->addGlobalOption($option);
 		}
 
-		return $this;
+		return $option;
 	}
 
 	/**
@@ -640,15 +683,15 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setOptionAlias($aliases, $name, $global = false)
+	public function setOptionAliases($aliases, $name, $global = false)
 	{
 		if ($global)
 		{
-			$this->globalOptions->setAlias($aliases, $name);
+			$this->globalOptions->setAliases($aliases, $name);
 		}
 		else
 		{
-			$this->options->setAlias($aliases, $name);
+			$this->options->setAliases($aliases, $name);
 		}
 
 		return $this;
@@ -675,7 +718,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setDescription($description)
+	public function description($description)
 	{
 		$this->description = $description;
 
@@ -731,7 +774,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setHandler($handler = null)
+	public function handler($handler = null)
 	{
 		$this->handler = $handler;
 
@@ -747,7 +790,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function getApplication()
 	{
-		return $this->application;
+		return $this->app;
 	}
 
 	/**
@@ -761,7 +804,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function setApplication($application)
 	{
-		$this->application = $application;
+		$this->app = $application;
 
 		return $this;
 	}
@@ -787,7 +830,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setHelp($help)
+	public function help($help)
 	{
 		$this->help = $help;
 
@@ -815,7 +858,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function setUsage($usage)
+	public function usage($usage)
 	{
 		$this->usage = $usage;
 
@@ -839,21 +882,22 @@ abstract class AbstractCommand implements \ArrayAccess
 		$autoComplete = '';
 		$alternatives = array();
 
-		// Autocomplete
+		// Auto complete
 		foreach ($this->children as $command)
 		{
 			/** @var $command Command */
 			$commandName = $command->getName();
+			$denominator = 3;
 
 			/*
-			 * Here we use "Levenshtein distance" to compare wrong name with every command names.
+			 * Here we use "Levenshtein distance" to compare wrong name with every commands' name.
 			 *
-			 * If the difference number less than 1/3 of wrong name which user typed, means this is a similar name,
+			 * If the difference number less than 1/3 of the wrong name which user typed, means this is a similar name,
 			 * we can notice user to choose these similar names.
 			 *
 			 * And if the string of wrong name can be found in a command name, we also notice user to choose it.
 			 */
-			if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / 3) || strpos($commandName, $wrongName) !== false)
+			if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / $denominator) || strpos($commandName, $wrongName) !== false)
 			{
 				$alternatives[] = "    " . $commandName;
 			}
@@ -880,8 +924,17 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since   {DEPLOY_VERSION}
 	 */
-	public function renderException($exception)
+	public function renderException(\Exception $exception)
 	{
+		$verbose = $this->app ? $this->app->get('verbose', 0) : 0;
+
+		if (!$verbose)
+		{
+			$this->out()->err($exception->getMessage());
+
+			return;
+		}
+
 		/** @var $exception \Exception */
 		$class = get_class($exception);
 
@@ -909,7 +962,12 @@ EOF;
 	 */
 	public function out($text = '', $nl = true)
 	{
-		$this->io->out($text, $nl);
+		$quiet = $this->app ? $this->app->get('quiet', false) : false;
+
+		if (!$quiet)
+		{
+			$this->io->out($text, $nl);
+		}
 
 		return $this;
 	}
@@ -926,7 +984,7 @@ EOF;
 	 */
 	public function err($text = '', $nl = true)
 	{
-		$this->io->out($text, $nl);
+		$this->io->err($text, $nl);
 
 		return $this;
 	}

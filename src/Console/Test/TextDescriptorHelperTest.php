@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Test;
@@ -72,14 +72,11 @@ Options:
   <info>-s | --sakura    </info>sakura desc
   <info>-r               </info>rose desc
 
-Available commands:
+Commands:
 
   <info>aaa    </info>No description
-
   <info>bar    </info>Bar command desc
-
   <info>yoo    </info>No description
-
 
 foo help';
 
@@ -92,23 +89,21 @@ foo help';
 		$command = new FooCommand;
 
 		$command->setApplication($console)
-			->setDescription('foo desc')
-			->setUsage('foo command option')
-			->setHelp('foo help')
-			->addCommand(
-				'bar',
-				'Bar command desc'
-			)
-			->addCommand('yoo')
-			->addOption(array('q', 'quiet'), 'default', 'q desc')
-			->addOption(array('s', 'sakura'), 'default', 'sakura desc')
-			->addOption(array('r'), 'default', 'rose desc');
+			->description('foo desc')
+			->usage('foo command option')
+			->help('foo help');
+
+		$command->addCommand('bar', 'Bar command desc');
+		$command->addCommand('yoo');
+		$command->addOption(array('q', 'quiet'), 'default', 'q desc');
+		$command->addOption(array('s', 'sakura'), 'default', 'sakura desc');
+		$command->addOption(array('r'), 'default', 'rose desc');
 
 		$result = $this->instance->describe($command);
 
 		$this->assertEquals(
-			str_replace(PHP_EOL, "\n", trim($compare)),
-			str_replace(PHP_EOL, "\n", trim($result))
+			str_replace("\r\n", "\n", trim($compare)),
+			str_replace("\r\n", "\n", trim($result))
 		);
 	}
 }

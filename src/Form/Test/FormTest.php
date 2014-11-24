@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Form\Test;
@@ -423,7 +423,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 
 		$form->bind($data);
 
-		$result = $form->validate();
+		$result = $form->filter()->validate();
 
 		$this->assertTrue($result);
 
@@ -440,7 +440,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 
 		$form->bind($data);
 
-		$result = $form->validate();
+		$result = $form->filter()->validate();
 		$errors = $form->getErrors();
 
 		$this->assertFalse($result);
@@ -541,5 +541,38 @@ class FormTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('wind[id]', $form->getField('id')->getFieldname());
 		$this->assertEquals('wind', $form->getControl());
+	}
+
+	/**
+	 * testFilterAndGetValues
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Form\Form::filter
+	 * @covers Windwalker\Form\Form::getValues
+	 */
+	public function testFilterAndGetValues()
+	{
+		$form = $this->getByDefine();
+
+		$data = array(
+			'id' => '123abc',
+			'u' => array(
+				'username' => 'foo'
+			),
+			'b' => array(
+				'email' => 'bar@gmail.com',
+				'password' => '123_ abc/\4,456qwe:$yui'
+			)
+		);
+
+		$form->bind($data);
+
+		$form->filter();
+
+		$values = $form->getValues();
+
+		$this->assertEquals('123', $values['id']);
+		$this->assertEquals('123abc4456qweyui', $values['b']['password']);
 	}
 }

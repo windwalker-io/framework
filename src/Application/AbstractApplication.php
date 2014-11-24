@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Application;
@@ -98,12 +98,34 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 */
 	public function execute()
 	{
+		$this->prepareExecute();
+
 		// @event onBeforeExecute
 
 		// Perform application routines.
 		$this->doExecute();
 
 		// @event onAfterExecute
+
+		$this->postExecute();
+	}
+
+	/**
+	 * Prepare execute hook.
+	 *
+	 * @return  void
+	 */
+	protected function prepareExecute()
+	{
+	}
+
+	/**
+	 * Pose execute hook.
+	 *
+	 * @return  mixed
+	 */
+	protected function postExecute()
+	{
 	}
 
 	/**

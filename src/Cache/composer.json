@@ -4,7 +4,7 @@
 	"description": "Windwalker Cache package",
 	"keywords": ["windwalker", "framework", "cache"],
 	"homepage": "https://github.com/ventoviro/windwalker-cache",
-	"license": "GPL-2.0+",
+	"license": "LGPL-2.0+",
 	"require": {
 		"php": ">=5.3.10"
 	},

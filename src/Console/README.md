@@ -1,4 +1,4 @@
-# Windwalker Console Package
+# Windwalker Console
 
 The Windwalker Console package provides an elegant and nested command structure for your cli application.
 
@@ -100,12 +100,7 @@ Options:
   -h | --help       Display this help message.
   -q | --quiet      Do not output any message.
   -v | --verbose    Increase the verbosity of messages.
-  --no-ansi         Suppress ANSI colors on unsupported terminals.
-                    Use --no-ansi=false to force using color.
-
-Available commands:
-
-  help    List all arguments and show usage & manual.
+  --ansi            Set 'off' to suppress ANSI colors on unsupported terminals.
 
 
 Welcome to Windwalker Console.
@@ -309,19 +304,16 @@ We can use this code to get arguments and options, setting them in `FooCommand`.
 
 public function initialise()
 {
-    // Define options first that we can set option aliases. 
-    $this->addOption(
-            's', // option name
-            0,   // default value
-            'Add this option can make output lower case.', // option description
-            Option::IS_GLOBAL // sub command will extends this global option
-        )
-        ->addOption(
-            array('y', 'yell', 'Y'), // First element `y` will be option name, others will be alias
-            0,
-            'Yell will make output upper case.',
-            Option::IS_PRIVATE // sub command will not extends private option, this is default value, we don't need set private manually.
-        );
+    // Define options first that we can set option aliases.
+    $this->addOption(array('y', 'yell')) // First element `y` will be option name, others will be alias
+        ->alias('Y') // Add a new alias
+        ->defaultValue(0)
+        ->description('Yell will make output upper case.');
+        
+    // Global options will pass to every child.
+    $this->addGlobalOption('s')
+        ->defaultValue(0)
+        ->description('Yell will make output upper case.');
 }
 
 public function doExecute()
@@ -393,18 +385,13 @@ use Windwalker\Console\Option\Option;
 
     public function initialise()
     {
-        $this->addCommand(
-                'bar',
-                'Bar description.'
-            )
-            ->addCommand(
-                'yoo',
-                'Yoo description.',
-                array(
-                    new Option(array('y', 'yell'), 0),
-                    new Option('s', 0, 'desc', Option::IS_GLOBAL)
-                )
-            );
+        $this->addCommand('bar')
+            ->description('Bar description.');
+            
+        $this->addCommand('yoo')
+            ->description('Yoo description.')
+            ->addOption(new Option(array('y', 'yell'), 0))
+            ->addGlobalOption(new Option('s', 0, 'desc'));
     }
 ```
 
@@ -430,7 +417,7 @@ class BarCommand extends Command
     public function initialise()
     {
         $this->addOption(new Option(array('y', 'yell'), 0))
-            ->addOption(new Option('s', 0, 'desc', Option::IS_GLOBAL));
+            ->addGlobalOption(new Option('s', 0, 'desc'));
     }
 
     public function doExecute()

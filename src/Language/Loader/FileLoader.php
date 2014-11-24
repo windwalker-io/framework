@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Language\Loader;
@@ -72,7 +72,7 @@ class FileLoader extends AbstractLoader
 	{
 		if (!is_file($file))
 		{
-			if (!$file = $this->findFile($file))
+			if (!$found = $this->findFile($file))
 			{
 				$paths = array_values(iterator_to_array(clone $this->paths));
 
@@ -81,8 +81,12 @@ class FileLoader extends AbstractLoader
 				throw new \RuntimeException(sprintf('Language file: %s not found. Paths in queue: %s', $file, $paths));
 			}
 		}
+		else
+		{
+			$found = $file;
+		}
 
-		return file_get_contents($file);
+		return file_get_contents($found);
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Registry;
@@ -313,6 +313,28 @@ class Registry implements \JsonSerializable, \ArrayAccess
 		$this->bindData($this->data, $source->toArray(), $recursive, false);
 
 		return $this;
+	}
+
+	/**
+	 * extract
+	 *
+	 * @param string $path
+	 *
+	 * @return  static
+	 */
+	public function extract($path)
+	{
+		return new static($this->get($path));
+	}
+
+	/**
+	 * getRaw
+	 *
+	 * @return  \stdClass
+	 */
+	public function getRaw()
+	{
+		return $this->data;
 	}
 
 	/**

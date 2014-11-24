@@ -3,13 +3,14 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Form;
 
 use Windwalker\Form\Exception\FormValidFailException;
 use Windwalker\Form\Field\AbstractField;
+use Windwalker\Form\Field\ListField;
 use Windwalker\Form\Validate\ValidateResult;
 
 if (!class_exists('CallbackFilterIterator'))
@@ -142,7 +143,7 @@ class Form implements \IteratorAggregate
 	 * @param string                                  $fieldset
 	 * @param string                                  $group
 	 *
-	 * @return  static
+	 * @return  AbstractField|ListField
 	 */
 	public function addField($field, $fieldset = null, $group = null)
 	{
@@ -174,6 +175,25 @@ class Form implements \IteratorAggregate
 		$field->setControl($this->control);
 
 		$this->fields[$field->getName(true)] = $field;
+
+		return $field;
+	}
+
+	/**
+	 * define
+	 *
+	 * @param AbstractField $field
+	 * @param callable      $closure
+	 * @param string        $fieldset
+	 * @param string        $group
+	 *
+	 * @return  $this
+	 */
+	public function define(AbstractField $field, \Closure $closure, $fieldset = null, $group = null)
+	{
+		$field = $closure($field, $fieldset, $group);
+
+		$this->addField($field, $fieldset, $group);
 
 		return $this;
 	}
@@ -433,6 +453,21 @@ class Form implements \IteratorAggregate
 	}
 
 	/**
+	 * filter
+	 *
+	 * @return  static
+	 */
+	public function filter()
+	{
+		foreach ($this->fields as $field)
+		{
+			$field->filter();
+		}
+
+		return $this;
+	}
+
+	/**
 	 * validate
 	 *
 	 * @throws  FormValidFailException
@@ -601,5 +636,25 @@ class Form implements \IteratorAggregate
 		$this->errors = $errors;
 
 		return $this;
+	}
+
+	/**
+	 * getValues
+	 *
+	 * @param string $fieldset
+	 * @param string $group
+	 *
+	 * @return  $this
+	 */
+	public function getValues($fieldset = null, $group = null)
+	{
+		$data = array();
+
+		foreach ($this->getFields($fieldset, $group) as $name => $field)
+		{
+			FormHelper::setByPath($data, $name, $field->getValue());
+		}
+
+		return $data;
 	}
 }

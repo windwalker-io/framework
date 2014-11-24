@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Form;
@@ -112,5 +112,84 @@ class FormHelper
 		}
 
 		return $dataTmp;
+	}
+
+	/**
+	 * setByPath
+	 *
+	 * @param mixed  &$data
+	 * @param string $paths
+	 * @param mixed  $value
+	 * @param string $separator
+	 * @param string $type
+	 *
+	 * @return  boolean
+	 *
+	 * @since   {DEPLOY_VERSION}
+	 */
+	public static function setByPath(&$data, $paths, $value, $separator = '.', $type = 'array')
+	{
+		if (empty($paths))
+		{
+			return false;
+		}
+
+		$args = is_array($paths) ? $paths : explode($separator, $paths);
+
+		/**
+		 * A closure as inner function to create data store.
+		 *
+		 * @param $type
+		 *
+		 * @return  array
+		 *
+		 * @throws \InvalidArgumentException
+		 */
+		$createStore = function($type)
+		{
+			if (strtolower($type) == 'array')
+			{
+				return array();
+			}
+
+			if (class_exists($type))
+			{
+				return new $type;
+			}
+
+			throw new \InvalidArgumentException(sprintf('Type %s not supported of class not exists', $type));
+		};
+
+		$dataTmp = &$data;
+
+		foreach ($args as $arg)
+		{
+			if (is_object($dataTmp))
+			{
+				if (empty($dataTmp->$arg))
+				{
+					$dataTmp->$arg = $createStore($type);
+				}
+
+				$dataTmp = &$dataTmp->$arg;
+			}
+			elseif (is_array($dataTmp))
+			{
+				if (empty($dataTmp[$arg]))
+				{
+					$dataTmp[$arg] = $createStore($type);
+				}
+
+				$dataTmp = &$dataTmp[$arg];
+			}
+			else
+			{
+				$dataTmp = &$createStore($type);
+			}
+		}
+
+		$dataTmp = $value;
+
+		return true;
 	}
 }

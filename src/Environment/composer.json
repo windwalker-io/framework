@@ -4,7 +4,7 @@
 	"description": "Windwalker Environment package",
 	"keywords": ["windwalker", "framework", "environment"],
 	"homepage": "https://github.com/ventoviro/windwalker-environment",
-	"license": "GPL-2.0+",
+	"license": "LGPL-2.0+",
 	"require": {
 		"php": ">=5.3.10"
 	},

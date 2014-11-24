@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\IO;
@@ -35,8 +35,9 @@ use Windwalker\IO\Filter\NullFilter;
  * @method      string   getPath()      getPath($name, $default = null)
  * @method      string   getUsername()  getUsername($name, $default = null)
  * @method      string   getEmail()     getEmail($name, $default = null)
- * @method      string   getUrl()       getUrl($name, $default = null)
- * @method      string   getRaw()       getRaw($name, $default = null)
+ * @method      string   getUrl()       getUrl($name, $default = null)  Get URL
+ * @method      string   getRaw()       getRaw($name, $default = null)  Get raw data
+ * @method      string   getVar()       getVar($name, $default = null)  Get string or array and filter them.
  *
  * @since {DEPLOY_VERSION}
  */
@@ -337,6 +338,56 @@ class Input implements \Serializable, \Countable
 		}
 
 		return $this->filter->clean($dataTmp, $filter);
+	}
+
+	/**
+	 * setByPath
+	 *
+	 * @param string $paths
+	 * @param mixed  $value
+	 *
+	 * @return  bool
+	 */
+	public function setByPath($paths, $value)
+	{
+		if (empty($paths))
+		{
+			return false;
+		}
+
+		$args = is_array($paths) ? $paths : explode('.', $paths);
+
+		$dataTmp = &$this->data;
+
+		foreach ($args as $arg)
+		{
+			if (is_object($dataTmp))
+			{
+				if (empty($dataTmp->$arg))
+				{
+					$dataTmp->$arg = array();
+				}
+
+				$dataTmp = &$dataTmp->$arg;
+			}
+			elseif (is_array($dataTmp))
+			{
+				if (empty($dataTmp[$arg]))
+				{
+					$dataTmp[$arg] = array();
+				}
+
+				$dataTmp = &$dataTmp[$arg];
+			}
+			else
+			{
+				$dataTmp = array();
+			}
+		}
+
+		$dataTmp = $value;
+
+		return true;
 	}
 
 	/**

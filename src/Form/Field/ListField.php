@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Form\Field;
@@ -86,9 +86,45 @@ class ListField extends AbstractField
 	 *
 	 * @return  array|Option[]
 	 */
-	protected function getOptions()
+	public function getOptions()
 	{
 		return array_merge($this->options, $this->prepareOptions());
+	}
+
+	/**
+	 * setOptions
+	 *
+	 * @param array|Option[] $options
+	 *
+	 * @return  static
+	 */
+	public function setOptions($options, $group = null)
+	{
+		if ($group)
+		{
+			$options = array($group => $options);
+		}
+
+		$this->handleOptions(null, $options);
+
+		return $this;
+	}
+
+	/**
+	 * addOption
+	 *
+	 * @param Option $option
+	 * @param string $group
+	 *
+	 * @return  $this
+	 */
+	public function addOption(Option $option, $group = null)
+	{
+		$options = array($option);
+
+		$this->setOptions($options, $group);
+
+		return $this;
 	}
 
 	/**
@@ -140,7 +176,7 @@ class ListField extends AbstractField
 
 		else
 		{
-			foreach ($options as $option)
+			foreach ($options as $name => $option)
 			{
 				// If is array, means it is group
 				if (is_array($option))
@@ -165,9 +201,9 @@ class ListField extends AbstractField
 						);
 					}
 				}
-			}
 
-			$this->options = $options;
+				$this->options[$name] = $option;
+			}
 		}
 	}
 

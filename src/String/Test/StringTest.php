@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\String\Test;
@@ -40,14 +40,15 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\String\String::isZero
-	 * @TODO   Implement testIsZero().
 	 */
 	public function testIsZero()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertTrue(String::isZero(0));
+		$this->assertTrue(String::isZero('0'));
+		$this->assertFalse(String::isZero(''));
+		$this->assertFalse(String::isZero(null));
+		$this->assertFalse(String::isZero(true));
+		$this->assertFalse(String::isZero(false));
 	}
 
 	/**
@@ -56,14 +57,12 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\String\String::quote
-	 * @TODO   Implement testQuote().
 	 */
 	public function testQuote()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('"foo"', String::quote('foo', '"'));
+		$this->assertEquals('"foo"', String::quote('foo', '""'));
+		$this->assertEquals('[foo]', String::quote('foo', '[]'));
 	}
 
 	/**
@@ -72,14 +71,10 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\String\String::backquote
-	 * @TODO   Implement testBackquote().
 	 */
 	public function testBackquote()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('`foo`', String::backquote('foo'));
 	}
 
 	/**
@@ -88,14 +83,14 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\String\String::parseVariable
-	 * @TODO   Implement testParseVariable().
 	 */
 	public function testParseVariable()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$data['foo']['bar']['baz'] = 'Flower';
+
+		$this->assertEquals('This is Flower', String::parseVariable('This is {{ foo.bar.baz }}', $data));
+		$this->assertEquals('This is ', String::parseVariable('This is {{ foo.yoo }}', $data));
+		$this->assertEquals('This is Flower', String::parseVariable('This is [ foo.bar.baz ]', $data, array('[', ']')));
 	}
 
 	/**

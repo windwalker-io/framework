@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Renderer;
@@ -116,7 +116,7 @@ abstract class AbstractRenderer implements RendererInterface
 
 			foreach ((array) $paths as $path)
 			{
-				$priority->insert($path, 1);
+				$priority->insert($path, 100);
 			}
 
 			$paths = $priority;
@@ -133,11 +133,13 @@ abstract class AbstractRenderer implements RendererInterface
 	 * @param string  $path
 	 * @param integer $priority
 	 *
-	 * @return  void
+	 * @return  static
 	 */
-	public function addPath($path, $priority = 0)
+	public function addPath($path, $priority = 100)
 	{
 		$this->paths->insert($path, $priority);
+
+		return $this;
 	}
 }
 
