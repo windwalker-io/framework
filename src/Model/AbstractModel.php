@@ -41,7 +41,7 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	 *
 	 * @return  void
 	 */
-	public function initialise()
+	protected function initialise()
 	{
 		// Override if you need.
 	}

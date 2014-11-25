@@ -9,7 +9,9 @@
 		"php": ">=5.3.10"
 	},
 	"require-dev": {
-		"windwalker/test": "~2.0"
+		"windwalker/test": "~2.0",
+		"windwalker/renderer" : "~2.0",
+		"windwalker/registry" : "~2.0"
 	},
 	"suggest" : {
 		"windwalker/renderer" : "Install 2.* if you want to use HtmlView to render page.",

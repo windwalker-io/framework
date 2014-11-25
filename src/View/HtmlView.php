@@ -9,6 +9,7 @@
 namespace Windwalker\View;
 
 use Windwalker\Data\Data;
+use Windwalker\Renderer\AbstractRenderer;
 use Windwalker\Renderer\PhpRenderer;
 use Windwalker\Renderer\RendererInterface;
 
@@ -114,7 +115,7 @@ class HtmlView extends SimpleHtmlView
 	/**
 	 * Method to get property Renderer
 	 *
-	 * @return  RendererInterface
+	 * @return  RendererInterface|AbstractRenderer
 	 */
 	public function getRenderer()
 	{
@@ -131,6 +132,44 @@ class HtmlView extends SimpleHtmlView
 	public function setRenderer($renderer)
 	{
 		$this->renderer = $renderer;
+
+		return $this;
+	}
+
+	/**
+	 * addPath
+	 *
+	 * @param string $path
+	 * @param int    $priority
+	 *
+	 * @return  static
+	 */
+	public function addPath($path, $priority = 100)
+	{
+		$renderer = $this->getRenderer();
+
+		if ($renderer instanceof AbstractRenderer)
+		{
+			$renderer->addPath($path, $priority);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * addPaths
+	 *
+	 * @param array|\Traversable $paths
+	 * @param int                $priority
+	 *
+	 * @return  static
+	 */
+	public function addPaths($paths, $priority = 100)
+	{
+		foreach ($paths as $path)
+		{
+			$this->addPath($path, $priority);
+		}
 
 		return $this;
 	}

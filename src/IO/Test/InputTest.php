@@ -400,6 +400,28 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * testGetByPath
+	 *
+	 * @covers  Windwalker\Input\Input::setByPath
+	 *
+	 * @return  void
+	 */
+	public function testSetByPath()
+	{
+		$array = array(
+			'var2' => 34,
+			'var3' => array('var2' => 'test123'),
+			'var4' => array('var1' => array('var2' => 'test'))
+		);
+
+		$input = $this->newInstance($array);
+
+		$input->setByPath('var3.var2', '2567-flower');
+
+		$this->assertEquals('2567', $input->getByPath('var3.var2', null, InputFilter::INTEGER));
+	}
+
+	/**
 	 * Test the Windwalker\Input\Input::getArray method without specified variables.
 	 *
 	 * @return  void

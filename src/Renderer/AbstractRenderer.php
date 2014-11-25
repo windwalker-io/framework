@@ -142,4 +142,3 @@ abstract class AbstractRenderer implements RendererInterface
 		return $this;
 	}
 }
-
