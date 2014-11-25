@@ -41,15 +41,16 @@ interface DatabaseAdapterInterface
 	/**
 	 * Do update action.
 	 *
-	 * @param string  $table      The table name.
-	 * @param mixed   $data       Data set contain data we want to update.
-	 * @param array   $condFields The where condition tell us record exists or not, if not set,
-	 *                            will use primary key instead.
+	 * @param string  $table        The table name.
+	 * @param mixed   $data         Data set contain data we want to update.
+	 * @param array   $condFields   The where condition tell us record exists or not, if not set,
+	 *                              will use primary key instead.
+	 * @param bool    $updateNulls  Update empty fields or not.
 	 *
 	 * @throws \Exception
 	 * @return  mixed Updated data set.
 	 */
-	public function updateOne($table, $data, array $condFields = array());
+	public function updateOne($table, $data, array $condFields = array(), $updateNulls = false);
 
 	/**
 	 * Do updateAll action.

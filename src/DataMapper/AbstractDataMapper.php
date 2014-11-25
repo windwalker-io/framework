@@ -91,6 +91,20 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		// Set some custom configuration.
 		$this->prepare();
+
+		$this->initialise();
+	}
+
+	/**
+	 * This method can be override by sub class to prepare come custom setting.
+	 *
+	 * @return  void
+	 *
+	 * @deprecated  Use initialise instead.
+	 */
+	protected function prepare()
+	{
+		// Override this method to to something.
 	}
 
 	/**
@@ -98,7 +112,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  void
 	 */
-	protected function prepare()
+	protected function initialise()
 	{
 		// Override this method to to something.
 	}
@@ -289,15 +303,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	/**
 	 * Update records by data set. Every data depend on this table's primary key to update itself.
 	 *
-	 * @param mixed $dataset    Data set contain data we want to update.
-	 * @param array $condFields The where condition tell us record exists or not, if not set,
-	 *                          will use primary key instead.
+	 * @param mixed $dataset      Data set contain data we want to update.
+	 * @param array $condFields   The where condition tell us record exists or not, if not set,
+	 *                            will use primary key instead.
+	 * @param bool  $updateNulls  Update empty fields or not.
 	 *
-	 * @throws \UnexpectedValueException
-	 * @throws \InvalidArgumentException
-	 * @return  mixed|DataSet Updated data set.
+	 * @return mixed|DataSet
 	 */
-	public function update($dataset, $condFields = null)
+	public function update($dataset, $condFields = null, $updateNulls = false)
 	{
 		if (!($dataset instanceof \Traversable) && !is_array($dataset))
 		{
@@ -307,7 +320,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		// Handling conditions
 		$condFields = $condFields ? : $this->getPrimaryKey();
 
-		$dataset = $this->doUpdate($dataset, (array) $condFields);
+		$dataset = $this->doUpdate($dataset, (array) $condFields, $updateNulls);
 
 		return $dataset;
 	}
@@ -315,16 +328,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	/**
 	 * Same as update(), just update one row.
 	 *
-	 * @param mixed $data       The data we want to update.
-	 * @param array $condFields The where condition tell us record exists or not, if not set,
-	 *                          will use primary key instead.
+	 * @param mixed $data         The data we want to update.
+	 * @param array $condFields   The where condition tell us record exists or not, if not set,
+	 *                            will use primary key instead.
+	 * @param bool  $updateNulls  Update empty fields or not.
 	 *
-	 * @throws \InvalidArgumentException
-	 * @return  mixed|Data Updated data.
+	 * @return mixed|Data
 	 */
-	public function updateOne($data, $condFields = null)
+	public function updateOne($data, $condFields = null, $updateNulls = false)
 	{
-		$dataset = $this->update($this->bindDataset(array($data)), $condFields);
+		$dataset = $this->update($this->bindDataset(array($data)), $condFields, $updateNulls);
 
 		return $dataset[0];
 	}
@@ -405,7 +418,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$createDataset = new $this->datasetClass;
 		$updateDataset = new $this->datasetClass;
 
-		foreach ($dataset as $k => $data)
+		foreach ($dataset as &$data)
 		{
 			if (!($data instanceof $this->dataClass))
 			{
@@ -434,8 +447,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			{
 				$createDataset[] = $data;
 			}
-
-			$dataset[$k] = $data;
 		}
 
 		$this->create($createDataset);
@@ -516,13 +527,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	/**
 	 * Do update action, this method should be override by sub class.
 	 *
-	 * @param mixed $dataset    Data set contain data we want to update.
-	 * @param array $condFields The where condition tell us record exists or not, if not set,
-	 *                          will use primary key instead.
+	 * @param mixed $dataset      Data set contain data we want to update.
+	 * @param array $condFields   The where condition tell us record exists or not, if not set,
+	 *                            will use primary key instead.
+	 * @param bool  $updateNulls  Update empty fields or not.
 	 *
 	 * @return  mixed Updated data set.
 	 */
-	abstract protected function doUpdate($dataset, array $condFields);
+	abstract protected function doUpdate($dataset, array $condFields, $updateNulls = false);
 
 	/**
 	 * Do updateAll action, this method should be override by sub class.

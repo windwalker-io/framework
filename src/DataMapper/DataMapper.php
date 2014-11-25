@@ -67,7 +67,7 @@ class DataMapper extends AbstractDataMapper
 
 		try
 		{
-			foreach ($dataset as $k => $data)
+			foreach ($dataset as &$data)
 			{
 				if (!($data instanceof $this->dataClass))
 				{
@@ -81,8 +81,6 @@ class DataMapper extends AbstractDataMapper
 				$this->db->create($this->table, $entity, $pk);
 
 				$data->$pk = $entity->$pk;
-
-				$dataset[$k] = $data;
 			}
 		}
 		catch (\Exception $e)
@@ -100,20 +98,21 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Do update action.
 	 *
-	 * @param mixed $dataset    Data set contain data we want to update.
-	 * @param array $condFields The where condition tell us record exists or not, if not set,
-	 *                          will use primary key instead.
+	 * @param mixed $dataset      Data set contain data we want to update.
+	 * @param array $condFields   The where condition tell us record exists or not, if not set,
+	 *                            will use primary key instead.
+	 * @param bool  $updateNulls  Update empty fields or not.
 	 *
 	 * @throws \Exception
 	 * @return  mixed Updated data set.
 	 */
-	protected function doUpdate($dataset, array $condFields)
+	protected function doUpdate($dataset, array $condFields, $updateNulls = false)
 	{
 		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
-			foreach ($dataset as $k => $data)
+			foreach ($dataset as &$data)
 			{
 				if (!($data instanceof $this->dataClass))
 				{
@@ -122,9 +121,7 @@ class DataMapper extends AbstractDataMapper
 
 				$entity = new Entity($this->getFields($this->table), $data);
 
-				$this->db->updateOne($this->table, $entity, $condFields);
-
-				$dataset[$k] = $data;
+				$this->db->updateOne($this->table, $entity, $condFields, $updateNulls);
 			}
 		}
 		catch (\Exception $e)
