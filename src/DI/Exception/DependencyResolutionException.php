@@ -11,7 +11,7 @@ namespace Windwalker\DI\Exception;
 /**
  * Exception class for handling errors in resolving a dependency
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class DependencyResolutionException extends \Exception
 {

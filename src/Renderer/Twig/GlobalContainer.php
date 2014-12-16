@@ -11,7 +11,7 @@ namespace Windwalker\Renderer\Twig;
 /**
  * The GlobalContainer class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class GlobalContainer
 {

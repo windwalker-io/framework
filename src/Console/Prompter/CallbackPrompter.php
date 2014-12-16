@@ -13,7 +13,7 @@ namespace Windwalker\Console\Prompter;
  *
  * It supports custom callback to validate use input and retry if fail.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class CallbackPrompter extends AbstractPrompter
 {
@@ -22,7 +22,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @var  callable
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $handler = null;
 
@@ -31,7 +31,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @var  int
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $attempt = 3;
 
@@ -40,7 +40,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @var  boolean
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $failToClose = false;
 
@@ -49,7 +49,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $noValidMessage = '  Not a valid value.';
 
@@ -58,7 +58,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $closeMessage = '  Valid fail and close.';
 
@@ -72,7 +72,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function ask($msg = '', $default = null)
 	{
@@ -117,7 +117,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @return  ValidatePrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setHandler($handler)
 	{
@@ -131,7 +131,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @return  callable  The validate callback.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getHandler()
 	{
@@ -145,7 +145,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @return  ValidatePrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setAttempt($attempt)
 	{
@@ -161,7 +161,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @return  ValidatePrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setNoValidMessage($noValidMessage)
 	{
@@ -178,7 +178,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @return  ValidatePrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function failToClose($failToClose = null, $message = '')
 	{

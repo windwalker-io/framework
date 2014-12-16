@@ -13,7 +13,7 @@ namespace Windwalker\String;
  *
  * The Inflector transforms words. This class is based on Joomla String package
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StringInflector
 {
@@ -21,7 +21,7 @@ class StringInflector
 	 * The singleton instance.
 	 *
 	 * @var    StringInflector
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private static $instance;
 
@@ -29,7 +29,7 @@ class StringInflector
 	 * The inflector rules for singularisation, pluralisation and countability.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $rules = array(
 		'singular' => array(
@@ -76,14 +76,14 @@ class StringInflector
 	 * The array is in the form [singular => plural]
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $cache = array();
 
 	/**
 	 * Protected constructor.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function __construct()
 	{
@@ -122,7 +122,7 @@ class StringInflector
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	private function addRule($data, $ruleType)
@@ -151,7 +151,7 @@ class StringInflector
 	 *
 	 * @return  mixed  The cached inflection or false if none found.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	private function getCachedPlural($singular)
 	{
@@ -173,7 +173,7 @@ class StringInflector
 	 *
 	 * @return  mixed  The cached inflection or false if none found.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	private function getCachedSingular($plural)
 	{
@@ -193,7 +193,7 @@ class StringInflector
 	 *
 	 * @return  mixed  An inflected string, or false if no rule could be applied.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	private function matchRegexRule($word, $ruleType)
 	{
@@ -220,7 +220,7 @@ class StringInflector
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	private function setCache($singular, $plural = null)
 	{
@@ -245,7 +245,7 @@ class StringInflector
 	 *
 	 * @return  static  Returns this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addCountableRule($data)
 	{
@@ -262,7 +262,7 @@ class StringInflector
 	 *
 	 * @return  static  Returns this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addWord($singular, $plural =null)
 	{
@@ -278,7 +278,7 @@ class StringInflector
 	 *
 	 * @return  static  Returns this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addPluraliseRule($data)
 	{
@@ -294,7 +294,7 @@ class StringInflector
 	 *
 	 * @return  static  Returns this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addSingulariseRule($data)
 	{
@@ -311,7 +311,7 @@ class StringInflector
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function getInstance($new = false)
 	{
@@ -334,7 +334,7 @@ class StringInflector
 	 *
 	 * @return  boolean  True if word is countable, false otherwise.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function isCountable($word)
 	{
@@ -348,7 +348,7 @@ class StringInflector
 	 *
 	 * @return  boolean  True if word is plural, false if not.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function isPlural($word)
 	{
@@ -371,7 +371,7 @@ class StringInflector
 	 *
 	 * @return  boolean  True if word is singular, false if not.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function isSingular($word)
 	{
@@ -394,7 +394,7 @@ class StringInflector
 	 *
 	 * @return  mixed  An inflected string, or false if no rule could be applied.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function toPlural($word)
 	{
@@ -432,7 +432,7 @@ class StringInflector
 	 *
 	 * @return  mixed  An inflected string, or false if no rule could be applied.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function toSingular($word)
 	{

@@ -14,7 +14,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of Query
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class QueryTest extends \PHPUnit_Framework_TestCase
 {

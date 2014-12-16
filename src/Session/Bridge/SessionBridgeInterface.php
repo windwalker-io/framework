@@ -11,7 +11,7 @@ namespace Windwalker\Session\Bridge;
 /**
  * Interface SessionBridgeInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface SessionBridgeInterface
 {
@@ -139,7 +139,7 @@ interface SessionBridgeInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setCookieParams($lifetime, $path = null, $domain = null, $secure = false, $httponly = true);
 }

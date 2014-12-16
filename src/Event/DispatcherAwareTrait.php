@@ -11,7 +11,7 @@ namespace Windwalker\Event;
 /**
  * Class DispatcherAwareTrait
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 trait DispatcherAwareTrait
 {
@@ -30,7 +30,7 @@ trait DispatcherAwareTrait
 	 *
 	 * @return  EventInterface  The event after being passed through all listeners.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function triggerEvent($event, $args = array())
 	{

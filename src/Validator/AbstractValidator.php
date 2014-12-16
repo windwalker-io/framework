@@ -11,7 +11,7 @@ namespace Windwalker\Validator;
 /**
  * The AbstractValidator class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractValidator implements ValidatorInterface
 {

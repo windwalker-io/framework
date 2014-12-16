@@ -11,7 +11,7 @@ namespace Windwalker\Crypt\Cipher;
 /**
  * The Simple class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class CipherSimple implements CipherInterface
 {
@@ -26,7 +26,7 @@ class CipherSimple implements CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since    {DEPLOY_VERSION}
+	 * @since    2.0
 	 */
 	public function decrypt($data, $key = null, $iv = null)
 	{
@@ -85,7 +85,7 @@ class CipherSimple implements CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function encrypt($data, $key = null, $iv = null)
@@ -131,7 +131,7 @@ class CipherSimple implements CipherInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	private function getRandomKey($length = self::DEFAULT_RANDOM_BYTE_LENGTH)
 	{
@@ -156,7 +156,7 @@ class CipherSimple implements CipherInterface
 	 *
 	 * @return  integer
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	private function hexToInt($s, $i)
 	{
@@ -236,7 +236,7 @@ class CipherSimple implements CipherInterface
 	 *
 	 * @return  array  An array of integers.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	private function hexToIntArray($hex)
 	{
@@ -259,7 +259,7 @@ class CipherSimple implements CipherInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	private function intToHex($i)
 	{

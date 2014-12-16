@@ -14,7 +14,7 @@ use Windwalker\Router\Route;
 /**
  * Test class of BinaryMatcher
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class BinaryMatcherTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,8 +62,6 @@ class BinaryMatcherTest extends \PHPUnit_Framework_TestCase
 		$routes = array_map(
 			function ($route)
 			{
-				$route = trim($route, '/');
-
 				return new Route($route, $route, array('_return' => $route));
 			},
 			$routes
@@ -72,7 +70,7 @@ class BinaryMatcherTest extends \PHPUnit_Framework_TestCase
 		$matched = $this->instance->setRoutes($routes)
 			->match('/corge/quux/qux');
 
-		$this->assertEquals('corge/quux/qux', $matched->getName());
+		$this->assertEquals('/corge/quux/qux', $matched->getName());
 
 		$this->instance->getCount();
 	}

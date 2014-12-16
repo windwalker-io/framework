@@ -13,7 +13,7 @@ use Windwalker\Crypt\Cipher\McryptCipher;
 /**
  * The AbstractCipherTestCase class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractMcryptTestCase extends \PHPUnit_Framework_TestCase
 {

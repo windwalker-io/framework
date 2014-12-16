@@ -16,7 +16,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 /**
  * Test class of CallbackMiddleware
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CallbackMiddlewareTest extends AbstractBaseTestCase
 {

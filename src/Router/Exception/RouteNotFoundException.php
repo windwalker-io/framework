@@ -11,7 +11,7 @@ namespace Windwalker\Router\Exception;
 /**
  * The RouteNotFoundException class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class RouteNotFoundException extends \RuntimeException
 {

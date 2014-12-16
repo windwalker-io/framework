@@ -15,7 +15,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of CubridQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CubridQueryTest extends \PHPUnit_Framework_TestCase
 {

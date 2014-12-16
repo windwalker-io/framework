@@ -13,7 +13,7 @@ use Windwalker\Test\Helper\DomHelper;
 /**
  * The DomTestCase class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class DomTestCase extends \PHPUnit_Framework_TestCase
 {

@@ -22,7 +22,7 @@ use Windwalker\Query\Query;
 /**
  * Class DatabaseDriver
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class DatabaseDriver implements LoggerAwareInterface
 {
@@ -30,7 +30,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $name;
 
@@ -38,7 +38,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The name of the database.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $database;
 
@@ -46,7 +46,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The database connection resource.
 	 *
 	 * @var    resource|object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $connection;
 
@@ -54,7 +54,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The number of SQL statements executed by the database driver.
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $count = 0;
 
@@ -62,7 +62,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The database connection cursor from the last query.
 	 *
 	 * @var    resource|object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $cursor;
 
@@ -70,7 +70,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The database driver debugging state.
 	 *
 	 * @var    boolean
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $debug = false;
 
@@ -78,7 +78,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * Passed in upon instantiation and saved.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $options;
 
@@ -86,7 +86,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The current SQL statement to execute.
 	 *
 	 * @var    mixed
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $query;
 
@@ -94,7 +94,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * The common database table prefix.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $tablePrefix;
 
@@ -102,7 +102,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * A logger.
 	 *
 	 * @var    LoggerInterface
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $logger;
 
@@ -157,7 +157,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 * @param   null  $connection The database connection instance.
 	 * @param   array $options    List of options used to configure the connection
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($connection = null, $options = array())
 	{
@@ -200,7 +200,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function execute()
@@ -256,7 +256,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract public function disconnect();
 
@@ -265,7 +265,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	abstract protected function doExecute();
@@ -277,7 +277,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  boolean  True if the database was successfully selected.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	abstract public function select($database);
@@ -287,7 +287,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  string  The database connector version.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract public function getVersion();
 
@@ -298,7 +298,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract public function freeResult($cursor = null);
 
@@ -326,7 +326,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  Query  The current query object or a new object extending the Query class.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function getQuery($new = false)
@@ -474,7 +474,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getCurrentDatabase()
 	{
@@ -486,7 +486,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  string  The common database table prefix.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getPrefix()
 	{
@@ -502,7 +502,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  DatabaseDriver  Returns itself to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function log($level, $message, array $context = array())
 	{
@@ -521,7 +521,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setLogger(LoggerInterface $logger)
 	{
@@ -539,7 +539,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  string  The processed SQL statement.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function replacePrefix($sql, $prefix = '#__')
 	{
@@ -639,7 +639,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  array  The queries from the input string separated into an array.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function splitSql($sql)
 	{
@@ -697,7 +697,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setDebug($level)
 	{
@@ -713,7 +713,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  DatabaseDriver  This object to support method chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setQuery($query)
 	{

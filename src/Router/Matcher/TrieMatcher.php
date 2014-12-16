@@ -15,7 +15,7 @@ use Windwalker\Router\RouteHelper;
 /**
  * The TrieMatcher class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TrieMatcher extends AbstractMatcher
 {

@@ -15,7 +15,7 @@ use Windwalker\Environment\Web\WebClient;
 /**
  * The WebEnvironment class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class WebEnvironment extends Environment
 {

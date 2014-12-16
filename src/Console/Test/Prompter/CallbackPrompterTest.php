@@ -13,7 +13,7 @@ use Windwalker\Console\Prompter\CallbackPrompter;
 /**
  * Class CallbackPrompterTest
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class CallbackPrompterTest extends AbstractPrompterTest
 {
@@ -23,7 +23,7 @@ class CallbackPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function setUp()
 	{
@@ -39,7 +39,7 @@ class CallbackPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testAsk()
 	{

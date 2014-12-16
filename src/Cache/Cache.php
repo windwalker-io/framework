@@ -18,7 +18,7 @@ use Windwalker\Cache\Storage\RuntimeStorage;
 /**
  * Class Cache
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Cache implements CacheInterface, \ArrayAccess
 {

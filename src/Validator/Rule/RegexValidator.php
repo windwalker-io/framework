@@ -13,7 +13,7 @@ use Windwalker\Validator\AbstractValidator;
 /**
  * The RegexValidator class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class RegexValidator extends AbstractValidator
 {

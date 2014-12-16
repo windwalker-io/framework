@@ -11,7 +11,7 @@ namespace Windwalker\Session\Handler;
 /**
  * Class XcacheHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class XcacheHandler extends AbstractHandler
 {
@@ -20,7 +20,7 @@ class XcacheHandler extends AbstractHandler
 	 *
 	 * @param   array  $options  Optional parameters.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function __construct($options = array())
@@ -38,7 +38,7 @@ class XcacheHandler extends AbstractHandler
 	 *
 	 * @return boolean  True on success, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	static public function isSupported()
 	{
@@ -52,7 +52,7 @@ class XcacheHandler extends AbstractHandler
 	 *
 	 * @return  string  The session data.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function read($id)
 	{
@@ -73,7 +73,7 @@ class XcacheHandler extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function write($id, $session_data)
 	{
@@ -87,7 +87,7 @@ class XcacheHandler extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function destroy($id)
 	{

@@ -14,7 +14,7 @@ use Windwalker\Router\Matcher\SequentialMatcher;
 /**
  * Class SingleActionRouter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SingleActionRouter extends Router
 {

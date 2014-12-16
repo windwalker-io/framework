@@ -11,7 +11,7 @@ namespace Windwalker\Event;
 /**
  * Class Event
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 {
@@ -20,7 +20,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @var    string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $name;
 
@@ -29,7 +29,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @var    array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $arguments;
 
@@ -38,7 +38,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @var    boolean
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $stopped = false;
 
@@ -48,7 +48,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 * @param   string  $name       The event name.
 	 * @param   array   $arguments  The event arguments.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($name, array $arguments = array())
 	{
@@ -61,7 +61,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  string  The event name.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getName()
 	{
@@ -76,7 +76,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  mixed  The argument value or the default value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getArgument($name, $default = null)
 	{
@@ -95,7 +95,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  boolean  True if it exists, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function hasArgument($name)
 	{
@@ -108,7 +108,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 * @return  array  An associative array of argument names as keys
 	 *                 and their values as values.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getArguments()
 	{
@@ -138,7 +138,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  Event  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addArgument($name, $value)
 	{
@@ -159,7 +159,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  Event  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setArgument($name, $value)
 	{
@@ -175,7 +175,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  mixed  The old argument value or null if it is not existing.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function removeArgument($name)
 	{
@@ -196,7 +196,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  array  The old arguments.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clearArguments()
 	{
@@ -212,7 +212,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function stop()
 	{
@@ -224,7 +224,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  boolean  True if stopped, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isStopped()
 	{
@@ -236,7 +236,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  integer  The number of arguments.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function count()
 	{
@@ -248,7 +248,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  string  The serialized event.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function serialize()
 	{
@@ -262,7 +262,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function unserialize($serialized)
 	{
@@ -276,7 +276,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  boolean  True if it exists, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetExists($name)
 	{
@@ -290,7 +290,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  mixed  The argument value or null if not existing.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetGet($name)
 	{
@@ -307,7 +307,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @throws  \InvalidArgumentException  If the argument name is null.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetSet($name, $value)
 	{
@@ -326,7 +326,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetUnset($name)
 	{

@@ -11,7 +11,7 @@ namespace Windwalker\Form\Test\Mock;
 /**
  * The FakeFilter class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FakeFilter
 {

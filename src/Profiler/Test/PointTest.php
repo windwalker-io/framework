@@ -13,7 +13,7 @@ use Windwalker\Profiler\Point\Point;
 /**
  * Test class of Point
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PointTest extends \PHPUnit_Framework_TestCase
 {

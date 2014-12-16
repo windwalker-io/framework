@@ -11,7 +11,7 @@ namespace Formosa\Utilities\Classes;
 /**
  * The MultiSingletonTrait class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 trait MultiSingletonTrait
 {

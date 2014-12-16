@@ -15,7 +15,7 @@ use Windwalker\IO\Input;
 /**
  * Test class of AbstractController
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractControllerTest extends \PHPUnit_Framework_TestCase
 {

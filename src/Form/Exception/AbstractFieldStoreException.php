@@ -13,7 +13,7 @@ use Windwalker\Form\Field\FieldInterface;
 /**
  * The AbstractFieldStoreException class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  *
  * @deprecated  Do not use exception to handle validate fail anymore.
  */

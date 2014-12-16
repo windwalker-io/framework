@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\ColorValidator;
 /**
  * Test class of ColorValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ColorValidatorTest extends \PHPUnit_Framework_TestCase
 {

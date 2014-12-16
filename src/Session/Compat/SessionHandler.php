@@ -11,7 +11,7 @@ include_once __DIR__ . '/SessionHandlerInterface.php';
 /**
  * The SessionHandler class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class SessionHandler implements SessionHandlerInterface
 {

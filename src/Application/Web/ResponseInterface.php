@@ -21,7 +21,7 @@ interface ResponseInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function respond($returnBody = false);
 
@@ -33,7 +33,7 @@ interface ResponseInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function compress($encodings);
 
@@ -57,7 +57,7 @@ interface ResponseInterface
 	 *
 	 * @return  static  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setHeader($name, $value, $replace = false);
 
@@ -66,7 +66,7 @@ interface ResponseInterface
 	 *
 	 * @return  static  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clearHeaders();
 
@@ -93,7 +93,7 @@ interface ResponseInterface
 	 *
 	 * @return  mixed  The response body either as an array or concatenated string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getBody($asArray = false);
 
@@ -104,7 +104,7 @@ interface ResponseInterface
 	 *
 	 * @return  static  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setBody($content);
 
@@ -115,7 +115,7 @@ interface ResponseInterface
 	 *
 	 * @return  static  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function prependBody($content);
 
@@ -126,7 +126,7 @@ interface ResponseInterface
 	 *
 	 * @return  static  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function appendBody($content);
 
@@ -143,7 +143,7 @@ interface ResponseInterface
 	 * @return  void
 	 *
 	 * @see     header()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function header($string, $replace = true, $code = null);
 
@@ -152,7 +152,7 @@ interface ResponseInterface
 	 *
 	 * @return  static  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function sendHeaders();
 
@@ -163,7 +163,7 @@ interface ResponseInterface
 	 * @return  boolean  True if the headers have already been sent.
 	 *
 	 * @see     headers_sent()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function checkHeadersSent();
 
@@ -174,7 +174,7 @@ interface ResponseInterface
 	 * @return  boolean  True if the connection is valid and normal.
 	 *
 	 * @see     connection_status()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function checkConnectionAlive();
 

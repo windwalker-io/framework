@@ -13,7 +13,7 @@ use Windwalker\View\SimpleHtmlView;
 /**
  * Test class of HtmlView
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SimpleHtmlViewTest extends \PHPUnit_Framework_TestCase
 {

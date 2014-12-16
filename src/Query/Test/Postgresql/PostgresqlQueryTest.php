@@ -15,7 +15,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of PostgresqlQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PostgresqlQueryTest extends \PHPUnit_Framework_TestCase
 {

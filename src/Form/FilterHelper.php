@@ -13,7 +13,7 @@ use Windwalker\Form\Filter\DefaultFilter;
 /**
  * The FilterHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FilterHelper extends AbstractFormElementHelper
 {

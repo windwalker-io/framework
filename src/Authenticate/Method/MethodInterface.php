@@ -13,7 +13,7 @@ use Windwalker\Authenticate\Credential;
 /**
  * Interface MethodInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface MethodInterface
 {

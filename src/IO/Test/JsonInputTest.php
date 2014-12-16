@@ -14,7 +14,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of JsonInput
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class JsonInputTest extends \PHPUnit_Framework_TestCase
 {

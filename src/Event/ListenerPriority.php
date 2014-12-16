@@ -11,7 +11,7 @@ namespace Windwalker\Event;
 /**
  * The ListenerPriority class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ListenerPriority
 {

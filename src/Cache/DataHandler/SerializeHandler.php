@@ -11,7 +11,7 @@ namespace Windwalker\Cache\DataHandler;
 /**
  * Class SerializeHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SerializeHandler implements DataHandlerInterface
 {

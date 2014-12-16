@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\Color\ColorProcessorInterface;
 /**
  * The ColorfulOutputInterface class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface ColorfulOutputInterface
 {
@@ -24,7 +24,7 @@ interface ColorfulOutputInterface
 	 *
 	 * @return  CliOutput  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setProcessor(ColorProcessorInterface $processor);
 
@@ -33,7 +33,7 @@ interface ColorfulOutputInterface
 	 *
 	 * @return  ColorProcessorInterface
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function getProcessor();

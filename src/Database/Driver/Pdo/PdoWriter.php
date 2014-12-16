@@ -13,7 +13,7 @@ use Windwalker\Database\Command\AbstractWriter;
 /**
  * Class PdoWriter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PdoWriter extends AbstractWriter
 {

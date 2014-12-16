@@ -13,7 +13,7 @@ use Windwalker\Test\Helper\StringHelper;
 /**
  * The AbstractBaseTestCase class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractBaseTestCase extends \PHPUnit_Framework_TestCase
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Renderer;
 /**
  * The AbstractAdapterRenderer class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractAdapterRenderer extends AbstractRenderer
 {

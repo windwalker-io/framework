@@ -13,7 +13,7 @@ use Windwalker\Loader\Loader\FileMappingLoader;
 /**
  * The MockPsr0Loader class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockFileMappingLoader extends FileMappingLoader
 {

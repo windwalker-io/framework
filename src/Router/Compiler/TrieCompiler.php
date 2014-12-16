@@ -13,7 +13,7 @@ use Windwalker\Router\RouteHelper;
 /**
  * The TrieCompiler class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class TrieCompiler
 {

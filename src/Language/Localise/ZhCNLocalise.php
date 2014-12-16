@@ -11,7 +11,7 @@ namespace Windwalker\Language\Localise;
 /**
  * Class ZhCNLocalise
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ZhCNLocalise extends ZhTWLocalise
 {

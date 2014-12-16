@@ -11,7 +11,7 @@ namespace Windwalker\Compare;
 /**
  * Class NotinCompare
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class NinCompare extends InCompare
 {

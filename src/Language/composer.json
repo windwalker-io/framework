@@ -1,28 +1,28 @@
 {
-	"name": "windwalker/language",
-	"type": "windwalker-package",
-	"description": "Windwalker Language package",
-	"keywords": ["windwalker", "framework", "language"],
-	"homepage": "https://github.com/ventoviro/windwalker-language",
-	"license": "LGPL-2.0+",
-	"require": {
-		"php": ">=5.3.10"
-	},
-	"require-dev": {
-		"symfony/yaml": "2.*@stable"
-	},
-	"suggest": {
-		"symfony/yaml": "Install 2.* if you require YAML language format."
-	},
-	"minimum-stability" : "dev",
-	"autoload": {
-		"psr-4": {
-			"Windwalker\\Language\\": ""
-		}
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master" : "2.0-dev"
-		}
-	}
+    "name": "windwalker/language",
+    "type": "windwalker-package",
+    "description": "Windwalker Language package",
+    "keywords": ["windwalker", "framework", "language"],
+    "homepage": "https://github.com/ventoviro/windwalker-language",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10"
+    },
+    "require-dev": {
+        "symfony/yaml": "2.*@stable"
+    },
+    "suggest": {
+        "symfony/yaml": "Install 2.* if you require YAML language format."
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Language\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
 }

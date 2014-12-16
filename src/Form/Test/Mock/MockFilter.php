@@ -13,7 +13,7 @@ use Windwalker\Form\Filter\FilterInterface;
 /**
  * The MockFilter class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockFilter implements FilterInterface
 {

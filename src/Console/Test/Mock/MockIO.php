@@ -15,7 +15,7 @@ use Windwalker\IO\Cli\Output\CliOutputInterface;
 /**
  * The MockIO class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockIO extends IO
 {

@@ -13,7 +13,7 @@ use Windwalker\Utilities\ArrayHelper;
 /**
  * Test class of ArrayHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 {

@@ -13,7 +13,7 @@ use Windwalker\Validator\AbstractValidator;
 /**
  * The EqualsValidator class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class EqualsValidator extends AbstractValidator
 {

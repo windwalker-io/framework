@@ -15,7 +15,7 @@ use Windwalker\Query\QueryElement;
 /**
  * Class MysqlQueryBuilder
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 {

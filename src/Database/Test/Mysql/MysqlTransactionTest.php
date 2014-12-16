@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\Mysql\MysqlTransaction;
 /**
  * Test class of MysqlTransaction
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlTransactionTest extends AbstractMysqlTest
 {

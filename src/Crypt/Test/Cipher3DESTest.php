@@ -13,7 +13,7 @@ use Windwalker\Crypt\Cipher\Cipher3DES;
 /**
  * Test class of Cipher3DES
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Mcrypt3DESTest extends AbstractMcryptTestCase
 {

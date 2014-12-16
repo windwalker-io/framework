@@ -13,7 +13,7 @@ use Windwalker\Compare\LteCompare;
 /**
  * Test class of LteCompare
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class LteCompareTest extends \PHPUnit_Framework_TestCase
 {

@@ -13,7 +13,7 @@ use Windwalker\Language\Format\PhpFormat;
 /**
  * Test class of PhpFormat
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PhpFormatTest extends \PHPUnit_Framework_TestCase
 {

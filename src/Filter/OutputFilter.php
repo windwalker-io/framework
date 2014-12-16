@@ -13,7 +13,7 @@ use Windwalker\Filter\Unicode\UnicodeHelper;
 /**
  * Windwalker Output Filter
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class OutputFilter
 {
@@ -88,7 +88,7 @@ class OutputFilter
 	 *
 	 * @return  string  Processed string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function stringURLSafe($string)
 	{
@@ -116,7 +116,7 @@ class OutputFilter
 	 *
 	 * @return  string  Processed string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function stringURLUnicodeSlug($string)
 	{

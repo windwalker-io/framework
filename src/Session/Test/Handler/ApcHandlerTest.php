@@ -13,7 +13,7 @@ use Windwalker\Session\Handler\ApcHandler;
 /**
  * Test class of ApcHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ApcHandlerTest extends \PHPUnit_Framework_TestCase
 {

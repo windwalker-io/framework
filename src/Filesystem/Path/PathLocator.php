@@ -19,7 +19,7 @@ if (!class_exists('CallbackFilterIterator'))
 /**
  * A Path locator class
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class PathLocator implements PathLocatorInterface, \IteratorAggregate
 {
@@ -28,7 +28,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $prefix = '';
 
@@ -37,7 +37,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @var array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $paths = array();
 
@@ -46,7 +46,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @param   string $path Path to parse.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($path)
 	{
@@ -60,7 +60,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  static  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function redirect($path)
 	{
@@ -121,7 +121,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  \SplFileInfo  Finded file info object.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function findOne($condition, $recursive = false)
 	{
@@ -143,7 +143,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  \CallbackFilterIterator  Finded files or paths iterator.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function find($condition, $recursive = false)
 	{
@@ -159,7 +159,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 * @return  \CallbackFilterIterator  Filtered file or path iteator.
 	 *
 	 * @see    http://www.php.net/manual/en/class.callbackfilteriterator.php
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function findByCallback(\Closure $callback, $recursive = false)
 	{
@@ -174,7 +174,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  string|array  Normalized path.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function normalize($path, $returnString = false)
 	{
@@ -203,7 +203,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  string  Cleaned path.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function clean($path)
 	{
@@ -221,7 +221,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  string|array  Cleaned path.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function removeDots($path)
 	{
@@ -266,7 +266,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  boolean  True if is a dir.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function isDir()
 	{
@@ -278,7 +278,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  boolean  True if is a file.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function isFile()
 	{
@@ -290,7 +290,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  boolean  True if exists.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function exists()
 	{
@@ -305,7 +305,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  static  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setPrefix($prefix = '')
 	{
@@ -321,7 +321,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  static  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function child($name)
 	{
@@ -339,7 +339,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  static  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function parent($condition = null)
 	{
@@ -392,7 +392,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  static  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function append($path)
 	{
@@ -415,7 +415,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  static  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function prepend($path)
 	{
@@ -438,7 +438,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  boolean  Is subdir or not.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function isSubdirOf($parent)
 	{
@@ -466,7 +466,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  string  Path name.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function __toString()
 	{
@@ -489,7 +489,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  array  Extracted path array.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function extract($path)
 	{
@@ -503,7 +503,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @return  array  Compacted path array.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function compact($path)
 	{

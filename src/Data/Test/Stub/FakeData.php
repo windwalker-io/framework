@@ -11,7 +11,7 @@ namespace Windwalker\Data\Test\Stub;
 /**
  * The FakeData class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FakeData
 {

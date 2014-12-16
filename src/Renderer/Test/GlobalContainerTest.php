@@ -16,7 +16,7 @@ use Windwalker\Test\TestCase\DomTestCase;
 /**
  * Test class of GlobalContainer
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class GlobalContainerTest extends DomTestCase
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Validator\Rule;
 /**
  * The IpValidator class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class IpValidator extends RegexValidator
 {

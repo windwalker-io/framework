@@ -11,7 +11,7 @@ namespace Windwalker\Renderer\Test\Stub;
 /**
  * The StubTwigExtension class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubTwigExtension extends \Twig_Extension
 {

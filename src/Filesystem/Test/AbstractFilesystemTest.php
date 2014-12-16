@@ -14,7 +14,7 @@ use Windwalker\Filesystem\Folder;
 /**
  * The AbstractFilesystemTest class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractFilesystemTest extends \PHPUnit_Framework_TestCase
 {

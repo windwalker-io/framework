@@ -13,7 +13,7 @@ use Windwalker\Language\Loader\PhpLoader;
 /**
  * Test class of PhpLoader
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PhpLoaderTest extends \PHPUnit_Framework_TestCase
 {

@@ -14,7 +14,7 @@ use Windwalker\DI\ServiceProviderInterface;
 /**
  * The StubServiceProvider class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubServiceProvider implements ServiceProviderInterface
 {

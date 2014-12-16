@@ -13,7 +13,7 @@ use Windwalker\Controller\Test\Stub\StubMultiActionController;
 /**
  * Test class of AbstractMultiActionController
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractMultiActionControllerTest extends \PHPUnit_Framework_TestCase
 {

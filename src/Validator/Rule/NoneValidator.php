@@ -13,7 +13,7 @@ use Windwalker\Validator\AbstractValidator;
 /**
  * The NoneValidator class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class NoneValidator extends AbstractValidator
 {

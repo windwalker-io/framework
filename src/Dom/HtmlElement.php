@@ -13,7 +13,7 @@ use Windwalker\Dom\Builder\HtmlBuilder;
 /**
  * The Html element object.
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class HtmlElement extends DomElement
 {

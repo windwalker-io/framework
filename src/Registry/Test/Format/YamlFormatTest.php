@@ -13,7 +13,7 @@ use Windwalker\Registry\Format\YamlFormat;
 /**
  * Test class of YamlFormat
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class YamlFormatTest extends \PHPUnit_Framework_TestCase
 {

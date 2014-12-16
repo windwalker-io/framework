@@ -13,7 +13,7 @@ use Windwalker\View\Test\Stub\StubView;
 /**
  * Test class of AbstractView
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractViewTest extends \PHPUnit_Framework_TestCase
 {

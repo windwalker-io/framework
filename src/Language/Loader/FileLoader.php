@@ -11,7 +11,7 @@ namespace Windwalker\Language\Loader;
 /**
  * Class FileLoader
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class FileLoader extends AbstractLoader
 {

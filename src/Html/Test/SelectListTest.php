@@ -15,7 +15,7 @@ use Windwalker\Test\TestCase\DomTestCase;
 /**
  * Test class of SelectList
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SelectListTest extends DomTestCase
 {

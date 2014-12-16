@@ -13,7 +13,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Class SqlservExpression
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SqlservExpression extends QueryExpression
 {
@@ -26,7 +26,7 @@ class SqlservExpression extends QueryExpression
 	 *
 	 * @return  string  The required char length call.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function char_length($field, $operator = null, $condition = null)
 	{
@@ -41,7 +41,7 @@ class SqlservExpression extends QueryExpression
 	 *
 	 * @return  string  The concatenated values.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function concatenate($values, $separator = null)
 	{
@@ -60,7 +60,7 @@ class SqlservExpression extends QueryExpression
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function current_timestamp()
 	{
@@ -74,7 +74,7 @@ class SqlservExpression extends QueryExpression
 	 *
 	 * @return  integer
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function length($value)
 	{
@@ -90,7 +90,7 @@ class SqlservExpression extends QueryExpression
 	 *
 	 * @return  string  Returns the cast value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function cast_as_char($value)
 	{

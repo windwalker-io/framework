@@ -22,7 +22,7 @@ if (!interface_exists('JsonSerializable'))
 /**
  * The IO class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {
@@ -83,7 +83,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	 * @param   string   $text  The text to display.
 	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @return $this
 	 */
 	public function err($text = '', $nl = true)
@@ -101,7 +101,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getOption($name, $default = null)
 	{
@@ -116,7 +116,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	 *
 	 * @return  IO
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setOption($name, $value)
 	{

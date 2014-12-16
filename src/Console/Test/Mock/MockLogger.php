@@ -13,7 +13,7 @@ use Psr\Log\AbstractLogger;
 /**
  * The MockLogger class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockLogger extends AbstractLogger
 {

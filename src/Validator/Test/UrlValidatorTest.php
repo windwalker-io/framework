@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\UrlValidator;
 /**
  * Test class of UrlValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class UrlValidatorTest extends AbstractValidateTestCase
 {

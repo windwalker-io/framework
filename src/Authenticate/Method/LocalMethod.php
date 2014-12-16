@@ -14,7 +14,7 @@ use Windwalker\Authenticate\Credential;
 /**
  * The LocalMethod class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class LocalMethod extends AbstractMethod
 {

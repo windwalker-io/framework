@@ -14,7 +14,7 @@ use Windwalker\Html\Option;
 /**
  * The SelectList class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class SelectList extends HtmlElement
 {

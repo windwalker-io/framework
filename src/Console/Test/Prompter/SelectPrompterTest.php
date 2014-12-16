@@ -17,7 +17,7 @@ use Windwalker\Console\Prompter\SelectPrompter;
 /**
  * Class SelectPrompterTest
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class SelectPrompterTest extends AbstractPrompterTest
 {
@@ -34,7 +34,7 @@ class SelectPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function setUp()
 	{
@@ -48,7 +48,7 @@ class SelectPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testAsk()
 	{

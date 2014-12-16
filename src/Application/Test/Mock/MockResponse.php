@@ -13,7 +13,7 @@ use Windwalker\Application\Web\Response;
 /**
  * The MockResponse class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockResponse extends Response
 {
@@ -43,7 +43,7 @@ class MockResponse extends Response
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function header($string, $replace = true, $code = null)
 	{
@@ -58,7 +58,7 @@ class MockResponse extends Response
 	 *
 	 * @return  boolean  True if the headers have already been sent.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function checkHeadersSent()
 	{
@@ -71,7 +71,7 @@ class MockResponse extends Response
 	 *
 	 * @return  boolean  True if the connection is valid and normal.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function checkConnectionAlive()
 	{

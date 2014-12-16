@@ -13,7 +13,7 @@ use Windwalker\Filter\Cleaner\CleanerInterface;
 /**
  * The StubThorCleaner class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubThorCleaner implements CleanerInterface
 {

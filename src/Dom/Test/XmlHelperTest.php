@@ -13,7 +13,7 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
 /**
  * Test class of XmlHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class XmlHelperTest extends \PHPUnit_Framework_TestCase
 {

@@ -16,7 +16,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
 /**
  * Class MysqlTable
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlTable extends AbstractTable
 {
@@ -371,7 +371,7 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @return  static  Returns this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function lock()
@@ -400,7 +400,7 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function truncate()

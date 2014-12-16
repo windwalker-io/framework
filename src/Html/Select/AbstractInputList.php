@@ -16,7 +16,7 @@ use Windwalker\Html\Option;
 /**
  * The InputList class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class AbstractInputList extends HtmlElement
 {

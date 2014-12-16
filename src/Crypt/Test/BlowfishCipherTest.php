@@ -13,7 +13,7 @@ use Windwalker\Crypt\Cipher\CipherBlowfish;
 /**
  * Test class of CipherBlowfish
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class McryptBlowfishTest extends AbstractMcryptTestCase
 {

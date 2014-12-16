@@ -11,7 +11,7 @@ namespace Windwalker\Database\Schema;
 /**
  * The Key class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Key
 {

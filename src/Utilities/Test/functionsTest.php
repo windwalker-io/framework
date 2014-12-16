@@ -9,7 +9,7 @@ namespace Windwalker\Utilities\Test;
 /**
  * Tests for the global PHP methods.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FunctionsTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +18,7 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function testWith()
 	{

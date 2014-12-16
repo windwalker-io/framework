@@ -14,7 +14,7 @@ use Windwalker\IO\Input;
 /**
  * Windwalker Input CLI Class
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class CliInput extends Input implements CliInputInterface
 {
@@ -22,7 +22,7 @@ class CliInput extends Input implements CliInputInterface
 	 * The executable that was called to run the CLI script.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $calledScript;
 
@@ -31,7 +31,7 @@ class CliInput extends Input implements CliInputInterface
 	 * with a specific argument name.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $args = array();
 
@@ -60,7 +60,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  string  The serialized input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function serialize()
 	{
@@ -85,7 +85,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($name, $default = null, $filter = 'string')
 	{
@@ -97,7 +97,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  mixed  The filtered input data.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function all()
 	{
@@ -111,7 +111,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  Input  The input object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function unserialize($input)
 	{
@@ -154,7 +154,7 @@ class CliInput extends Input implements CliInputInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function parseArguments()
 	{

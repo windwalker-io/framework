@@ -13,7 +13,7 @@ use Windwalker\Html\Option;
 /**
  * The TimezoneField class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TimezoneField extends ListField
 {

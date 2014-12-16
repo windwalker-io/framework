@@ -13,7 +13,7 @@ use Windwalker\Loader\Loader\Psr0Loader;
 /**
  * The MockPsr0Loader class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockPsr0Loader extends Psr0Loader
 {

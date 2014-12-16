@@ -15,7 +15,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of SqliteQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SqliteQueryTest extends \PHPUnit_Framework_TestCase
 {

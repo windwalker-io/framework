@@ -11,7 +11,7 @@ namespace Windwalker\Dom\Builder;
 /**
  * HTML Builder helper.
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class HtmlBuilder extends DomBuilder
 {

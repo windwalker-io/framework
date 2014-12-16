@@ -14,7 +14,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Test class of QueryExpression
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class QueryExpressionTest extends \PHPUnit_Framework_TestCase
 {

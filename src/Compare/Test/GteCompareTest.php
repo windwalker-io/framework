@@ -13,7 +13,7 @@ use Windwalker\Compare\GteCompare;
 /**
  * Test class of GteCompare
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class GteCompareTest extends \PHPUnit_Framework_TestCase
 {

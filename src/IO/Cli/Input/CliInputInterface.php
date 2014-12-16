@@ -28,7 +28,7 @@ interface CliInputInterface
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($name, $default = null);
 
@@ -40,7 +40,7 @@ interface CliInputInterface
 	 *
 	 * @return  CliInputInterface
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($name, $value);
 
@@ -49,7 +49,7 @@ interface CliInputInterface
 	 *
 	 * @return  mixed  The filtered input data.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function all();
 

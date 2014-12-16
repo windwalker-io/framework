@@ -15,7 +15,7 @@ use Windwalker\Console\Descriptor\AbstractDescriptor;
 /**
  * Class TextCommandDescriptor
  *
- * @since    {DEPLOY_VERSION}
+ * @since    2.0
  */
 class TextCommandDescriptor extends AbstractDescriptor
 {
@@ -24,7 +24,7 @@ class TextCommandDescriptor extends AbstractDescriptor
 	 *
 	 * @var int
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $offsetAfterCommand = 4;
 
@@ -33,7 +33,7 @@ class TextCommandDescriptor extends AbstractDescriptor
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $template = <<<EOF
   <info>%-{WIDTH}s</info>%s
@@ -44,7 +44,7 @@ EOF;
 	 *
 	 * @var int
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $maxLength = 0;
 
@@ -56,7 +56,7 @@ EOF;
 	 * @throws  \InvalidArgumentException
 	 * @return  string  Rendered description.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function renderItem($command)
 	{
@@ -94,7 +94,7 @@ EOF;
 	 *
 	 * @return  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function render()
 	{

@@ -11,7 +11,7 @@ namespace Windwalker\Filesystem\Exception;
 /**
  * Exception class for handling errors in the Filesystem package
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FilesystemException extends \RuntimeException
 {

@@ -15,7 +15,7 @@ use Windwalker\Authenticate\Method\AbstractMethod;
 /**
  * The MockMethod class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockMethod extends AbstractMethod
 {

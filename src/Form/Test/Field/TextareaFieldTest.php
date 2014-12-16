@@ -14,7 +14,7 @@ use Windwalker\Test\TestCase\DomTestCase;
 /**
  * Test class of TextField
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class TextareaFieldTest extends DomTestCase
 {

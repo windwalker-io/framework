@@ -11,7 +11,7 @@ namespace Windwalker\Test\Test;
 /**
  * Test class of TestHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class TestHelperTest extends \PHPUnit_Framework_TestCase
 {

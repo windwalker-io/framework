@@ -14,7 +14,7 @@ use Windwalker\Test\TestCase\DomTestCase;
 /**
  * Test class of MustacheRenderer
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MustacheRendererTest extends DomTestCase
 {
@@ -148,7 +148,7 @@ HTML;
 /**
  * The Chris class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Chris
 {

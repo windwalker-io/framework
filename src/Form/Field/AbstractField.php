@@ -19,7 +19,7 @@ use Windwalker\Validator\ValidatorInterface;
 /**
  * The AbstractField class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractField
 {

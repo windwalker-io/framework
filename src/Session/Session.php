@@ -26,7 +26,7 @@ use Windwalker\Session\Handler\NativeHandler;
  * Based on the standard PHP session handling mechanism it provides
  * more advanced features such as expire timeouts.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Session implements \ArrayAccess, \IteratorAggregate
 {
@@ -93,7 +93,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   SessionBridgeInterface $bridge
 	 * @param   array                  $options Optional parameters
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(HandlerInterface $handler = null, SessionBagInterface $bag = null,
 		FlashBagInterface $flashBag = null, SessionBridgeInterface $bridge = null, array $options = array())
@@ -157,7 +157,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function setCookieParams()
 	{
@@ -188,7 +188,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  boolean
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function start($restart = false)
 	{
@@ -254,7 +254,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @see     session_destroy()
 	 * @see     session_unset()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function destroy()
 	{
@@ -288,7 +288,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @return  boolean  True on success
 	 *
 	 * @see     destroy
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function restart()
 	{
@@ -311,7 +311,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @throws \RuntimeException
 	 * @return  boolean $result true on success
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function fork()
 	{
@@ -352,7 +352,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @return  void
 	 *
 	 * @see     session_write_close()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function close()
 	{
@@ -373,7 +373,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @return  boolean  True on success
 	 *
 	 * @see     http://shiflett.org/articles/the-truth-about-sessions
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function validate($restart = false)
 	{
@@ -449,7 +449,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  static Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function setCounter()
 	{
@@ -467,7 +467,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  static  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function setTimers()
 	{
@@ -496,7 +496,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @throws  \RuntimeException
 	 * @return  mixed  Value of a variable
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($name, $default = null, $namespace = 'default')
 	{
@@ -570,7 +570,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  boolean  True if the variable exists
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 *
 	 * @deprecated  Use exists() instead.
 	 */
@@ -588,7 +588,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @throws  \RuntimeException
 	 * @return  boolean  True if the variable exists
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function exists($name, $namespace = 'default')
 	{
@@ -614,7 +614,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @throws \RuntimeException
 	 * @return  mixed   The value from session or NULL if not set
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 *
 	 * @deprecated  Use remove() instead.
 	 */
@@ -632,7 +632,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @throws \RuntimeException
 	 * @return  mixed   The value from session or NULL if not set
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function remove($name, $namespace = 'default')
 	{
@@ -693,7 +693,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  string  The session name
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getName()
 	{
@@ -705,7 +705,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  string  The session name
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getId()
 	{
@@ -717,7 +717,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  boolean
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isActive()
 	{
@@ -729,7 +729,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isNew()
 	{
@@ -745,7 +745,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  string  Generated token
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function createToken($length = 32)
 	{

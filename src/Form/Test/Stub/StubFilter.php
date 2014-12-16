@@ -13,7 +13,7 @@ use Windwalker\Form\Filter\FilterInterface;
 /**
  * The StubFilter class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubFilter implements FilterInterface
 {

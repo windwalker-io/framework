@@ -17,7 +17,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of ChainBuilder
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ChainBuilderTest extends AbstractBaseTestCase
 {

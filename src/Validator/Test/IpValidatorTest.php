@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\IpValidator;
 /**
  * Test class of IpValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class IpValidatorTest extends AbstractValidateTestCase
 {

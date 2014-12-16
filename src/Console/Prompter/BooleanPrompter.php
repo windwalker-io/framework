@@ -11,7 +11,7 @@ namespace Windwalker\Console\Prompter;
 /**
  * Class BooleanPrompter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class BooleanPrompter extends TextPrompter
 {
@@ -20,7 +20,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @var  array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $trueAlias = array('y', 'yes', 1);
 
@@ -29,7 +29,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @var  array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $falseAlias = array('n', 'no', 0, 'null');
 
@@ -38,7 +38,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @var  int
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $attempt = 1;
 
@@ -50,7 +50,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function ask($msg = '', $default = null)
 	{
@@ -80,7 +80,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @return  array  Aliases.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getTrueAlias()
 	{
@@ -94,7 +94,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @return  BooleanPrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setTrueAlias($trueAlias)
 	{
@@ -108,7 +108,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @return  array  Aliases.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getFalseAlias()
 	{
@@ -122,7 +122,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @return  BooleanPrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setFalseAlias($falseAlias)
 	{

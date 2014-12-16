@@ -15,7 +15,7 @@ use Windwalker\DataMapper\DataMapper;
 /**
  * Test class of DataMapper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class DataMapperTest extends DatabaseTest
 {

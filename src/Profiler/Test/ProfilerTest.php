@@ -16,7 +16,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of Profiler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ProfilerTest extends \PHPUnit_Framework_TestCase
 {

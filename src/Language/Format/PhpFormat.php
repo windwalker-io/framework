@@ -11,7 +11,7 @@ namespace Windwalker\Language\Format;
 /**
  * Class IniFormat
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PhpFormat extends AbstractFormat
 {

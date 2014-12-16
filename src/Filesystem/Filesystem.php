@@ -19,7 +19,7 @@ if (!class_exists('CallbackFilterIterator'))
 /**
  * Class Filesystem
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class Filesystem
 {
@@ -220,7 +220,7 @@ abstract class Filesystem
 	 *
 	 * @return  \SplFileInfo  Finded file info object.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public static function findOne($condition, $recursive = false, $toArray = false)
 	{
@@ -248,7 +248,7 @@ abstract class Filesystem
 	 *
 	 * @return  \CallbackFilterIterator  Found files or paths iterator.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public static function find($path, $condition, $recursive = false, $toArray = false)
 	{
@@ -311,7 +311,7 @@ abstract class Filesystem
 	 *
 	 * @return  \CallbackFilterIterator  Filtered file or path iteator.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public static function findByCallback($path, \Closure $callback, $recursive = false, $toArray = false)
 	{

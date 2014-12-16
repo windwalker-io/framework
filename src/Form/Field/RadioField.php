@@ -13,7 +13,7 @@ use Windwalker\Html\Select\RadioList;
 /**
  * The RadioField class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class RadioField extends ListField
 {

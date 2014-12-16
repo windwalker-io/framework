@@ -13,7 +13,7 @@ use Windwalker\Validator\AbstractValidator;
 /**
  * The ValidateTestCase class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractValidateTestCase extends  \PHPUnit_Framework_TestCase
 {

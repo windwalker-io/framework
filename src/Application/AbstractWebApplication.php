@@ -20,7 +20,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractWebApplication
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractWebApplication extends AbstractApplication
 {
@@ -28,7 +28,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * The application client object.
 	 *
 	 * @var    WebEnvironment
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $environment;
 
@@ -36,7 +36,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * The application response object.
 	 *
 	 * @var    object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $response;
 
@@ -82,7 +82,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
@@ -146,7 +146,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function redirect($url, $moved = false)
 	{
@@ -229,7 +229,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setHeader($name, $value, $replace = false)
 	{
@@ -245,7 +245,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setBody($content)
 	{
@@ -261,7 +261,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  mixed  The response body either as an array or concatenated string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getBody($asArray = false)
 	{
@@ -300,7 +300,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function loadSystemUris($requestUri = null)
 	{
@@ -428,7 +428,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  string  The requested URI
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function detectRequestUri()
 	{

@@ -13,7 +13,7 @@ use Windwalker\Form\Field\AbstractField;
 /**
  * The HiddenField class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class HiddenField extends AbstractField
 {

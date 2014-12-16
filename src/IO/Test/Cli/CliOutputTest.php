@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\Output\CliOutput;
 /**
  * Test class of CliOutput
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CliOutputTest extends \PHPUnit_Framework_TestCase
 {

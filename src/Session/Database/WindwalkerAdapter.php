@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\DatabaseDriver;
 /**
  * The WindwalkerAdapter class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class WindwalkerAdapter extends AbstractDatabaseAdapter
 {

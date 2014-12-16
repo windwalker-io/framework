@@ -13,7 +13,7 @@ use Windwalker\Registry\Registry;
 /**
  * The JsonView class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class JsonView extends AbstractView
 {

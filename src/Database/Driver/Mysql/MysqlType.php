@@ -13,7 +13,7 @@ use Windwalker\Database\Schema\DataType;
 /**
  * The MysqlType class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class MysqlType extends DataType
 {

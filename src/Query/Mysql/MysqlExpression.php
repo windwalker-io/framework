@@ -13,7 +13,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Class MysqlExpression
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlExpression extends QueryExpression
 {
@@ -25,7 +25,7 @@ class MysqlExpression extends QueryExpression
 	 *
 	 * @return  string  The concatenated values.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function concatenate($values, $separator = null)
 	{

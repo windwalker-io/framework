@@ -14,7 +14,7 @@ use Windwalker\Dom\Helper\DomHelper;
 /**
  * Test class of DomBuilder
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class DomBuilderTest extends \PHPUnit_Framework_TestCase
 {

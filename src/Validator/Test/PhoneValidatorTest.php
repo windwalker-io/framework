@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\PhoneValidator;
 /**
  * Test class of PhoneValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PhoneValidatorTest extends AbstractValidateTestCase
 {

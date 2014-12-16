@@ -14,7 +14,7 @@ use Windwalker\Language\Language;
 /**
  * Test class of JsonFormat
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class JsonFormatTest extends \PHPUnit_Framework_TestCase
 {

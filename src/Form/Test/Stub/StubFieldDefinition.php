@@ -18,7 +18,7 @@ use Windwalker\Validator\Rule\EmailValidator;
 /**
  * The StubFieldDefinition class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubFieldDefinition implements FieldDefinitionInterface
 {

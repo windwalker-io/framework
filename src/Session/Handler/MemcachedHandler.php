@@ -11,7 +11,7 @@ namespace Windwalker\Session\Handler;
 /**
  * Class MemcachedHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MemcachedHandler extends AbstractHandler
 {
@@ -36,7 +36,7 @@ class MemcachedHandler extends AbstractHandler
 	 * @param   array      $options  Optional parameters.
 	 *
 	 * @throws \RuntimeException
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(\Memcached $memcached = null, $options = array())
 	{
@@ -57,7 +57,7 @@ class MemcachedHandler extends AbstractHandler
 	 *
 	 * @return boolean  True on success, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	static public function isSupported()
 	{

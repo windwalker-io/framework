@@ -13,7 +13,7 @@ use Windwalker\Console\Prompter\NotNullPrompter;
 /**
  * Class ValidatePrompterTest
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class NotNullPrompterTest extends AbstractPrompterTest
 {
@@ -23,7 +23,7 @@ class NotNullPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function setUp()
 	{
@@ -39,7 +39,7 @@ class NotNullPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testAsk()
 	{

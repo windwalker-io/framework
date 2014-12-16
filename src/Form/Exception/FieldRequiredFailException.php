@@ -11,7 +11,7 @@ namespace Windwalker\Form\Exception;
 /**
  * The EmptyValueException class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  *
  * @deprecated  Do not use exception to handle validate fail anymore.
  */

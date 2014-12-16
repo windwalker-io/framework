@@ -11,7 +11,7 @@ namespace Windwalker\IO\Cli\Output;
 /**
  * Class AbstractCliOutput
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractCliOutput implements CliOutputInterface
 {

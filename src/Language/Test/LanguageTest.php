@@ -13,7 +13,7 @@ use Windwalker\Language\Language;
 /**
  * Test class of Language
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class LanguageTest extends \PHPUnit_Framework_TestCase
 {

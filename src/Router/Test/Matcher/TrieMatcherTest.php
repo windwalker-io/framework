@@ -15,7 +15,7 @@ use Windwalker\Uri\Uri;
 /**
  * Test class of TrieMatcher
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class TrieMatcherTest extends \PHPUnit_Framework_TestCase
 {

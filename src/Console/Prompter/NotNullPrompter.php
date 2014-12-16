@@ -11,7 +11,7 @@ namespace Windwalker\Console\Prompter;
 /**
  * The NotNullPrompter class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class NotNullPrompter extends ValidatePrompter
 {
@@ -20,7 +20,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @var  int
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $attempt = 3;
 
@@ -29,7 +29,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @var  boolean
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $failToClose = false;
 
@@ -38,7 +38,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $noValidMessage = '  No value?';
 
@@ -47,7 +47,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $closeMessage = '  Please enter something.';
 
@@ -56,7 +56,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @return  callable  The validate callback.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getHandler()
 	{

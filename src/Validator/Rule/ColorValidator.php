@@ -13,7 +13,7 @@ use Windwalker\Validator\AbstractValidator;
 /**
  * The ColorValidator class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ColorValidator extends AbstractValidator
 {

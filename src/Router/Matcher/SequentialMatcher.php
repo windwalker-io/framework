@@ -13,7 +13,7 @@ use Windwalker\Router\Route;
 /**
  * The SequentialMatcher class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class SequentialMatcher extends AbstractMatcher
 {

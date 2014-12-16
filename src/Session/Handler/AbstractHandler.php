@@ -11,7 +11,7 @@ namespace Windwalker\Session\Handler;
 /**
  * Class AbstractHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractHandler implements HandlerInterface
 {

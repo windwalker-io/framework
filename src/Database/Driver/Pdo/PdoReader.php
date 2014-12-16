@@ -14,7 +14,7 @@ use Windwalker\Query\Query;
 /**
  * Class PdoReader
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PdoReader extends AbstractReader
 {
@@ -23,7 +23,7 @@ class PdoReader extends AbstractReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function fetchArray()
 	{
@@ -35,7 +35,7 @@ class PdoReader extends AbstractReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function fetchAssoc()
 	{
@@ -49,7 +49,7 @@ class PdoReader extends AbstractReader
 	 *
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function fetchObject($class = '\\stdClass')
 	{
@@ -104,7 +104,7 @@ class PdoReader extends AbstractReader
 	 *
 	 * @return  integer  The number of affected rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function countAffected()
 	{
@@ -116,7 +116,7 @@ class PdoReader extends AbstractReader
 	 *
 	 * @return  string  The value of the auto-increment field from the last inserted row.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function insertId()
 	{

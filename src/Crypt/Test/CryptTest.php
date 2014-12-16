@@ -14,7 +14,7 @@ use Windwalker\Crypt\Crypt;
 /**
  * Test class of Crypt
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CryptTest extends \PHPUnit_Framework_TestCase
 {

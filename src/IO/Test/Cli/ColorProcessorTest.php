@@ -15,7 +15,7 @@ use Windwalker\Test\TestEnvironment;
 /**
  * Test class of ColorProcessor
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ColorProcessorTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,6 +44,11 @@ class ColorProcessorTest extends \PHPUnit_Framework_TestCase
 		$this->instance = new ColorProcessor;
 
 		$this->winOs = TestEnvironment::isWindows();
+
+		if ($this->winOs)
+		{
+			$this->instance->setNoColors(true);
+		}
 	}
 
 	/**

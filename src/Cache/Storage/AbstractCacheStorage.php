@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Storage;
 /**
  * Class AbstractCacheStorage
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractCacheStorage implements CacheStorageInterface
 {
@@ -35,7 +35,7 @@ abstract class AbstractCacheStorage implements CacheStorageInterface
 	 * @param   int    $ttl      The Time To Live (TTL) of an item
 	 * @param   mixed  $options  An options array, or an object that implements \ArrayAccess
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($ttl = null, $options = array())
 	{

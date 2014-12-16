@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\CreditcardValidator;
 /**
  * Test class of CreditcardValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CreditcardValidatorTest extends AbstractValidateTestCase
 {

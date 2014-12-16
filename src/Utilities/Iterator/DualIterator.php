@@ -14,7 +14,7 @@ namespace Windwalker\Utilities\Iterator;
  * @note    This is a fork from Marcus Boerger's work:
  *          https://github.com/php/php-src/blob/master/ext/spl/examples/dualiterator.inc
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class DualIterator implements \Iterator
 {

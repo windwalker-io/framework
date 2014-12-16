@@ -15,7 +15,7 @@ use Windwalker\Utilities\ArrayHelper;
 /**
  * Test class of NestedRecord
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class NestedRecordTest extends AbstractMysqlTest
 {

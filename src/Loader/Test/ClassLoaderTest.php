@@ -17,7 +17,7 @@ use Windwalker\Loader\Test\Mock\MockPsr4Loader;
 /**
  * Test class of ClassLoader
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 {

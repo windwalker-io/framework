@@ -16,7 +16,7 @@ use Windwalker\Query\Query;
 /**
  * Class DatabaseReader
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractReader
 {
@@ -82,7 +82,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function loadResult()
@@ -111,7 +111,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function loadColumn($offset = 0)
@@ -138,7 +138,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function loadArray()
@@ -165,7 +165,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed   The return value or null if the query failed.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function loadArrayList($key = null)
@@ -199,7 +199,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function loadAssoc()
@@ -224,7 +224,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed   The return value or null if the query failed.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function loadAssocList($key = null)
@@ -259,7 +259,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function loadObject($class = 'stdClass')
@@ -287,7 +287,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function loadObjectList($key = null, $class = 'stdClass')
@@ -327,7 +327,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract public function fetchArray();
 
@@ -336,7 +336,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract public function fetchAssoc();
 
@@ -347,7 +347,7 @@ abstract class AbstractReader
 	 *
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract public function fetchObject($class = '\\stdClass');
 
@@ -357,7 +357,7 @@ abstract class AbstractReader
 	 *
 	 * @return  integer  The number of affected rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract public function countAffected();
 
@@ -366,7 +366,7 @@ abstract class AbstractReader
 	 *
 	 * @return  string  The value of the auto-increment field from the last inserted row.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract public function insertId();
 

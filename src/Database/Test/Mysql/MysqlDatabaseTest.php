@@ -14,7 +14,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
 /**
  * Test class of MysqlDatabase
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlDatabaseTest extends AbstractMysqlTest
 {

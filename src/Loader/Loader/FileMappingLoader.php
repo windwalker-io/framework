@@ -11,7 +11,7 @@ namespace Windwalker\Loader\Loader;
 /**
  * Class FileMappingLoader
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class FileMappingLoader extends AbstractLoader
 {

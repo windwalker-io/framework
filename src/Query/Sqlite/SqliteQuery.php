@@ -14,7 +14,7 @@ use Windwalker\Query\Query\PreparableTrait;
 /**
  * Class SqliteQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SqliteQuery extends Query
 {
@@ -22,7 +22,7 @@ class SqliteQuery extends Query
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $name = 'sqlite';
 
@@ -33,7 +33,7 @@ class SqliteQuery extends Query
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $nameQuote = '`';
 
@@ -41,7 +41,7 @@ class SqliteQuery extends Query
 	 * Holds key / value pair of bound objects.
 	 *
 	 * @var    mixed
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $bounded = array();
 
@@ -59,7 +59,7 @@ class SqliteQuery extends Query
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
 	{
@@ -103,7 +103,7 @@ class SqliteQuery extends Query
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function &getBounded($key = null)
 	{
@@ -132,7 +132,7 @@ class SqliteQuery extends Query
 	 *
 	 * @return  string  The escaped string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function escape($text, $extra = false)
 	{
@@ -156,7 +156,7 @@ class SqliteQuery extends Query
 	 *
 	 * @return  SqliteQuery  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clear($clause = null)
 	{

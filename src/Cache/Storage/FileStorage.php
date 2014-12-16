@@ -19,7 +19,7 @@ use Windwalker\Cache\Item\CacheItemInterface;
  * - file.locking (boolean) :
  * - file.path              : The path for cache files.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FileStorage extends AbstractCacheStorage
 {
@@ -64,7 +64,7 @@ class FileStorage extends AbstractCacheStorage
 	 * @param   int     $ttl
 	 * @param   mixed   $options An options array, or an object that implements \ArrayAccess
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($path, $group = '', $denyAccess = false, $ttl = null, $options = array())
 	{
@@ -84,7 +84,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @return  boolean  The result of the clear operation.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clear()
 	{
@@ -117,7 +117,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @return  CacheItemInterface
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function getItem($key)
@@ -184,7 +184,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function removeItem($key)
 	{
@@ -234,7 +234,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @return  boolean
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function exists($key)
 	{
@@ -248,7 +248,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @return  boolean  The method will always return true, if it returns.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException if the file path is invalid.
 	 */
 	protected function checkFilePath($filePath)
@@ -272,7 +272,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @return  string  The full stream URI for the cache entry.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException if the cache path is invalid.
 	 */
 	protected function fetchStreamUri($key)
@@ -301,7 +301,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @return  boolean  True if the data has expired.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isExpired($key)
 	{

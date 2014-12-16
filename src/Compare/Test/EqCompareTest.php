@@ -13,7 +13,7 @@ use Windwalker\Compare\EqCompare;
 /**
  * Test class of EqCompare
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class EqCompareTest extends \PHPUnit_Framework_TestCase
 {

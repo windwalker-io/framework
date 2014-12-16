@@ -11,7 +11,7 @@ namespace Windwalker\Session\Bridge;
 /**
  * The SessionBridge class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class NativeBridge implements SessionBridgeInterface
 {
@@ -258,7 +258,7 @@ class NativeBridge implements SessionBridgeInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setCookieParams($lifetime, $path = null, $domain = null, $secure = false, $httponly = true)
 	{

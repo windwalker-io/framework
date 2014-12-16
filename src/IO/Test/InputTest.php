@@ -15,7 +15,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of Input
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class InputTest extends \PHPUnit_Framework_TestCase
 {
@@ -397,6 +397,28 @@ class InputTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('test', $input->getByPath('var4.var1.var2'));
 		$this->assertEquals('default', $input->getByPath('var2.foo.bar', 'default'));
 		$this->assertEquals('123', $input->getByPath('var3.var2', null, InputFilter::INTEGER));
+	}
+
+	/**
+	 * testGetByPath
+	 *
+	 * @covers  Windwalker\Input\Input::setByPath
+	 *
+	 * @return  void
+	 */
+	public function testSetByPath()
+	{
+		$array = array(
+			'var2' => 34,
+			'var3' => array('var2' => 'test123'),
+			'var4' => array('var1' => array('var2' => 'test'))
+		);
+
+		$input = $this->newInstance($array);
+
+		$input->setByPath('var3.var2', '2567-flower');
+
+		$this->assertEquals('2567', $input->getByPath('var3.var2', null, InputFilter::INTEGER));
 	}
 
 	/**

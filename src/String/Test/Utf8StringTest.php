@@ -14,7 +14,7 @@ use Windwalker\String\Utf8String;
 /**
  * Test class of String
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Utf8StringTest extends \PHPUnit_Framework_TestCase
 {

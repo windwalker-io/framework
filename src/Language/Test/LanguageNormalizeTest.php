@@ -13,7 +13,7 @@ use Windwalker\Language\LanguageNormalize;
 /**
  * Test class of LanguageNormalize
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class LanguageNormalizeTest extends \PHPUnit_Framework_TestCase
 {

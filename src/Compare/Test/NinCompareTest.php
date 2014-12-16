@@ -13,7 +13,7 @@ use Windwalker\Compare\NinCompare;
 /**
  * Test class of NinCompare
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class NinCompareTest extends \PHPUnit_Framework_TestCase
 {

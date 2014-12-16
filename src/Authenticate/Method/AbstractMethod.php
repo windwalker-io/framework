@@ -11,7 +11,7 @@ namespace Windwalker\Authenticate\Method;
 /**
  * The AbstractMethod class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractMethod implements MethodInterface
 {

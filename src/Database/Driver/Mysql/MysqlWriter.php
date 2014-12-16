@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\Pdo\PdoWriter;
 /**
  * Class MysqlWriter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlWriter extends PdoWriter
 {

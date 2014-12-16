@@ -11,7 +11,7 @@ namespace Windwalker\Filesystem\Iterator;
 /**
  * The ArrayObject class. Based on ZF2.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {

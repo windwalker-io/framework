@@ -14,7 +14,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of AbstractCliApplication
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractCliApplicationTest extends \PHPUnit_Framework_TestCase
 {

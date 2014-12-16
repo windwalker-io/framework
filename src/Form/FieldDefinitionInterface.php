@@ -11,7 +11,7 @@ namespace Windwalker\Form;
 /**
  * Field Definition Interface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface FieldDefinitionInterface
 {

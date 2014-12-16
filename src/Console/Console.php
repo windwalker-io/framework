@@ -19,7 +19,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class Console
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Console extends AbstractConsole
 {
@@ -28,7 +28,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $name = 'Windwalker Console';
 
@@ -37,7 +37,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $version = '1.0';
 
@@ -46,7 +46,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $description = '';
 
@@ -55,7 +55,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var  AbstractCommand
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $rootCommand;
 
@@ -64,7 +64,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var boolean
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $autoExit;
 
@@ -88,7 +88,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  int  The Unix Console/Shell exit code.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
@@ -111,7 +111,7 @@ class Console extends AbstractConsole
 	 *
 	 * @see     http://tldp.org/LDP/abs/html/exitcodes.html
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \LogicException
 	 * @throws  \Exception
 	 */
@@ -159,7 +159,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function registerRootCommand()
 	{
@@ -182,7 +182,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  AbstractCommand The created commend.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function register($name)
 	{
@@ -198,7 +198,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  AbstractCommand  The registered command.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function addCommand(AbstractCommand $command)
 	{
@@ -216,7 +216,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  AbstractCommand
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getCommand($path)
 	{
@@ -230,7 +230,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setAutoExit($boolean)
 	{
@@ -244,7 +244,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return AbstractCommand  Default command.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getRootCommand()
 	{
@@ -256,7 +256,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return string  Application name.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getName()
 	{
@@ -270,7 +270,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setName($name)
 	{
@@ -296,7 +296,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setVersion($version)
 	{
@@ -310,7 +310,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return string  Application description.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getDescription()
 	{
@@ -324,7 +324,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setDescription($description)
 	{
@@ -340,7 +340,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setHandler($closure)
 	{

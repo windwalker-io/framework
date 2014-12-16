@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\Output\CliOutput;
 /**
  * The MockOutput class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockOutput extends CliOutput
 {
@@ -30,7 +30,7 @@ class MockOutput extends CliOutput
 	 * @param   string   $text  The text to display.
 	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 *
 	 * @return $this
 	 */
@@ -47,7 +47,7 @@ class MockOutput extends CliOutput
 	 * @param   string   $text  The text to display.
 	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 *
 	 * @return $this
 	 */
@@ -63,7 +63,7 @@ class MockOutput extends CliOutput
 	 *
 	 * @return string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getOutput()
 	{
@@ -77,7 +77,7 @@ class MockOutput extends CliOutput
 	 *
 	 * @return $this
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setOutput($output)
 	{

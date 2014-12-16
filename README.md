@@ -33,6 +33,7 @@ See: [Windwalker Starter](https://github.com/ventoviro/windwalker-starter)
 Every packages has ready to use, please try it:
 
 - [Application](https://github.com/ventoviro/windwalker-application)
+- [Authenticate](https://github.com/ventoviro/windwalker-authenticate)
 - [Cache](https://github.com/ventoviro/windwalker-cache)
 - [Compare](https://github.com/ventoviro/windwalker-compare)
 - [Console](https://github.com/ventoviro/windwalker-console)

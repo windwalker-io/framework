@@ -13,7 +13,7 @@ use Windwalker\Router\RouteHelper;
 /**
  * Test class of RouteHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class RouteHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,8 +26,20 @@ class RouteHelperTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSanitize()
 	{
-		$this->assertEquals('foo/bar/baz', RouteHelper::sanitize('/foo/bar/baz'));
-		$this->assertEquals('foo/bar/baz', RouteHelper::sanitize('http://flower.com/foo/bar/baz/?olive=peace'));
+		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('/foo/bar/baz'));
+		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('http://flower.com/foo/bar/baz/?olive=peace'));
+	}
+
+	/**
+	 * Method to test normalise()
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Router\RouteHelper::normalise
+	 */
+	public function testNormalise()
+	{
+		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('foo/bar/baz/'));
 	}
 
 	/**

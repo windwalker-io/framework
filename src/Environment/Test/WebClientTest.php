@@ -14,7 +14,7 @@ use Windwalker\Environment\Web\WebClient;
 /**
  * Test class of WebClient
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class WebClientTest extends \PHPUnit_Framework_TestCase
 {

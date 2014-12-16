@@ -11,7 +11,7 @@ namespace Windwalker\Application\Web;
 /**
  * Class Response
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Response implements ResponseInterface
 {
@@ -65,7 +65,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function respond($returnBody = false)
 	{
@@ -121,7 +121,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function compress($encodings)
 	{
@@ -213,7 +213,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setHeader($name, $value, $replace = false)
 	{
@@ -247,7 +247,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clearHeaders()
 	{
@@ -287,7 +287,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  mixed  The response body either as an array or concatenated string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getBody($asArray = false)
 	{
@@ -301,7 +301,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setBody($content)
 	{
@@ -318,7 +318,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function prependBody($content)
 	{
@@ -334,7 +334,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function appendBody($content)
 	{
@@ -357,7 +357,7 @@ class Response implements ResponseInterface
 	 *
 	 * @codeCoverageIgnore
 	 * @see     header()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function header($string, $replace = true, $code = null)
 	{
@@ -371,7 +371,7 @@ class Response implements ResponseInterface
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function sendHeaders()
 	{
@@ -400,7 +400,7 @@ class Response implements ResponseInterface
 	 *
 	 * @codeCoverageIgnore
 	 * @see     headers_sent()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function checkHeadersSent()
 	{
@@ -415,7 +415,7 @@ class Response implements ResponseInterface
 	 *
 	 * @codeCoverageIgnore
 	 * @see     connection_status()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function checkConnectionAlive()
 	{

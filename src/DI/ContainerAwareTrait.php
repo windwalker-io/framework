@@ -11,7 +11,7 @@ namespace Windwalker\DI;
 /**
  * Container Aware Trait
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 trait ContainerAwareTrait
 {
@@ -19,7 +19,7 @@ trait ContainerAwareTrait
 	 * DI Container
 	 *
 	 * @var    Container
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $container;
 
@@ -28,7 +28,7 @@ trait ContainerAwareTrait
 	 *
 	 * @return  Container
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 *
 	 * @throws  \UnexpectedValueException May be thrown if the container has not been set.
 	 */
@@ -49,7 +49,7 @@ trait ContainerAwareTrait
 	 *
 	 * @return  mixed  Returns itself to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setContainer(Container $container)
 	{

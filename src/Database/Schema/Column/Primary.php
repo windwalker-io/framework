@@ -14,7 +14,7 @@ use Windwalker\Database\Schema\DataType;
 /**
  * The Primary class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Primary extends Column
 {

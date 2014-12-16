@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 /**
  * Class CubridQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CubridQuery extends Query
 {
@@ -31,7 +31,7 @@ class CubridQuery extends Query
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $nameQuote = '`';
 
@@ -40,7 +40,7 @@ class CubridQuery extends Query
 	 * defined in child classes to hold the appropriate value for the engine.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $nullDate = '0000-00-00 00:00:00';
 }

@@ -11,7 +11,7 @@ namespace Sun\Flower;
 /**
  * The Sunflower class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Sunflower
 {

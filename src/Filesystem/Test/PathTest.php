@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Path;
 /**
  * Test class of Path
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PathTest extends AbstractFilesystemTest
 {
@@ -22,7 +22,7 @@ class PathTest extends AbstractFilesystemTest
 	 *
 	 * @return  array
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getCleanData()
 	{

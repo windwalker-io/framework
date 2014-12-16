@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\EqualsValidator;
 /**
  * Test class of EqualsValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class EqualsValidatorTest extends \PHPUnit_Framework_TestCase
 {

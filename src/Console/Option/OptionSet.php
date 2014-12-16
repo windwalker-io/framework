@@ -11,7 +11,7 @@ namespace Windwalker\Console\Option;
 /**
  * Option set to store options and resolve aliases.
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class OptionSet extends \ArrayObject
 {
@@ -20,7 +20,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @var    array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $aliases = array();
 
@@ -31,7 +31,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @return  OptionSet Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addOption(Option $option)
 	{
@@ -47,7 +47,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @return  boolean True if option exists.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetExists($name)
 	{
@@ -63,7 +63,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @return  Option|null  Return option object if exists.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetGet($name)
 	{
@@ -85,7 +85,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetSet($name, $option)
 	{
@@ -105,7 +105,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetUnset($name)
 	{
@@ -127,7 +127,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @return  OptionSet  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setAliases($aliases, $option)
 	{
@@ -148,7 +148,7 @@ class OptionSet extends \ArrayObject
 	 *
 	 * @return  string  Return name if found, or return alias as name.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function resolveAlias($alias)
 	{

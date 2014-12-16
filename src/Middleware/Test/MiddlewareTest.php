@@ -16,7 +16,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 /**
  * Test class of Middleware
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MiddlewareTest extends AbstractBaseTestCase
 {

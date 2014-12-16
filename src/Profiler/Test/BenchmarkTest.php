@@ -13,7 +13,7 @@ use Windwalker\Profiler\Benchmark;
 /**
  * Test class of Benchmark
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class BenchmarkTest extends \PHPUnit_Framework_TestCase
 {

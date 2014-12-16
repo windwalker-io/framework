@@ -13,7 +13,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Class OracleExpression
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class OracleExpression extends QueryExpression
 {

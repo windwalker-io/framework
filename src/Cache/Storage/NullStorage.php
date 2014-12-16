@@ -14,7 +14,7 @@ use Windwalker\Cache\Item\CacheItemInterface;
 /**
  * Class NullStorage
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class NullStorage extends AbstractCacheStorage
 {

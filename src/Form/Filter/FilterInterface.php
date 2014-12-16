@@ -11,7 +11,7 @@ namespace Windwalker\Form\Filter;
 /**
  * Interface FilterInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface FilterInterface
 {

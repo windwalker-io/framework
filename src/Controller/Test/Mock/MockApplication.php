@@ -13,7 +13,7 @@ use Windwalker\Application\AbstractApplication;
 /**
  * The MockApplication class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockApplication extends AbstractApplication
 {
@@ -23,7 +23,7 @@ class MockApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function doExecute()
 	{

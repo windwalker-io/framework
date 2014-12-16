@@ -13,7 +13,7 @@ use Windwalker\Query\Mysql\MysqlExpression;
 /**
  * Class MariadbExpression
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MariadbExpression extends MysqlExpression
 {

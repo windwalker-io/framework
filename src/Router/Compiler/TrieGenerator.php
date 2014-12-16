@@ -13,7 +13,7 @@ use Windwalker\Router\RouteHelper;
 /**
  * The TrieGenerator class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class TrieGenerator
 {
@@ -76,7 +76,7 @@ abstract class TrieGenerator
 
 		if ($queries)
 		{
-			$pattern = trim($pattern, '/') . '/?' . $queries;
+			$pattern = rtrim($pattern, '/') . '/?' . $queries;
 		}
 
 		return $pattern;

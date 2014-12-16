@@ -25,7 +25,7 @@ if (!class_exists('Illuminate\View\Factory'))
 /**
  * The BladeRenderer class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class BladeRenderer extends AbstractAdapterRenderer
 {

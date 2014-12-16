@@ -13,7 +13,7 @@ namespace Windwalker\Uri;
  *
  * Interface for read-only access to Uris. This class is a fork from Joomla Uri.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface UriInterface
 {
@@ -22,7 +22,7 @@ interface UriInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __toString();
 
@@ -33,7 +33,7 @@ interface UriInterface
 	 *
 	 * @return  string  The rendered URI string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function toString(array $parts = array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment'));
 
@@ -44,7 +44,7 @@ interface UriInterface
 	 *
 	 * @return  boolean  True if the variable exists.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function hasVar($name);
 
@@ -56,7 +56,7 @@ interface UriInterface
 	 *
 	 * @return  array   Query variables.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getVar($name, $default = null);
 
@@ -67,7 +67,7 @@ interface UriInterface
 	 *
 	 * @return  string   Query string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getQuery($toArray = false);
 
@@ -77,7 +77,7 @@ interface UriInterface
 	 *
 	 * @return  string  The URI scheme.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getScheme();
 
@@ -87,7 +87,7 @@ interface UriInterface
 	 *
 	 * @return  string  The URI username.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getUser();
 
@@ -97,7 +97,7 @@ interface UriInterface
 	 *
 	 * @return  string  The URI password.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getPass();
 
@@ -107,7 +107,7 @@ interface UriInterface
 	 *
 	 * @return  string  The URI host.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getHost();
 
@@ -117,7 +117,7 @@ interface UriInterface
 	 *
 	 * @return  integer  The URI port number.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getPort();
 
@@ -126,7 +126,7 @@ interface UriInterface
 	 *
 	 * @return  string  The URI path string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getPath();
 
@@ -136,7 +136,7 @@ interface UriInterface
 	 *
 	 * @return  string  The URI anchor string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getFragment();
 
@@ -145,7 +145,7 @@ interface UriInterface
 	 *
 	 * @return  boolean  True if using SSL via HTTPS.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isSSL();
 }

@@ -14,7 +14,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of FilesInput
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class FilesInputTest extends \PHPUnit_Framework_TestCase
 {

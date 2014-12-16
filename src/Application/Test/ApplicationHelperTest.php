@@ -13,7 +13,7 @@ use Windwalker\Application\Helper\ApplicationHelper;
 /**
  * Test class of ApplicationHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ApplicationHelperTest extends \PHPUnit_Framework_TestCase
 {

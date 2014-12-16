@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\Color\ColorStyle;
 /**
  * Test class of ColorStyle
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ColorStyleTest extends \PHPUnit_Framework_TestCase
 {

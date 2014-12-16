@@ -13,7 +13,7 @@ use Windwalker\String\StringNormalise;
 /**
  * Reflection Helper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ReflectionHelper
 {

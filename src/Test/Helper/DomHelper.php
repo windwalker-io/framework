@@ -11,7 +11,7 @@ namespace Windwalker\Test\Helper;
 /**
  * The DomHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class DomHelper
 {

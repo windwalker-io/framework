@@ -13,7 +13,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
 /**
  * Test class of MysqlQueryBuilder
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 {

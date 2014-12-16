@@ -14,7 +14,7 @@ use Windwalker\Console\Option\Option;
 /**
  * Class Option AbstractDescriptor
  *
- * @since    {DEPLOY_VERSION}
+ * @since    2.0
  */
 class TextOptionDescriptor extends AbstractDescriptor
 {

@@ -14,7 +14,7 @@ namespace Windwalker\Database\Schema;
  * The types data were referenced from:
  * https://docs.google.com/document/d/168GnMgXb8afOby1n9iLQXzu-PWujs-HxTv5YbEvmu-4/edit
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class DataType
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Profiler\Point;
 /**
  * Interface ProfilerPointInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface ProfilerPointInterface
 {

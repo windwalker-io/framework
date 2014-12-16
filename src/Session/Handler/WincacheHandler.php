@@ -11,7 +11,7 @@ namespace Windwalker\Session\Handler;
 /**
  * Class WincacheHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class WincacheHandler implements HandlerInterface
 {
@@ -20,7 +20,7 @@ class WincacheHandler implements HandlerInterface
 	 *
 	 * @param   array  $options  Optional parameters.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function __construct($options = array())
@@ -36,7 +36,7 @@ class WincacheHandler implements HandlerInterface
 	 *
 	 * @return boolean  True on success, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	static public function isSupported()
 	{

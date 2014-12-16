@@ -89,7 +89,7 @@ $time = $data['time'];
 
     I'm:
     <a href="<?php echo $data['link'] ?>">
-        <?php echo $data['name']; ?>
+        <?php echo $this->escape($data['name']); ?>
     </a>
 </p>
 ```

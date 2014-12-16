@@ -11,7 +11,7 @@ namespace Windwalker\Event;
 /**
  * Class ListenerPriorityQueue
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ListenersQueue implements \IteratorAggregate, \Countable
 {
@@ -20,7 +20,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @var    \SplPriorityQueue
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $queue;
 
@@ -32,7 +32,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @var    \SplObjectStorage
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $storage;
 
@@ -43,14 +43,14 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @var    integer
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $counter = PHP_INT_MAX;
 
 	/**
 	 * Constructor.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function __construct()
 	{
@@ -66,7 +66,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @return  ListenersQueue  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function add($listener, $priority)
 	{
@@ -89,7 +89,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @return  ListenersQueue  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function remove($listener)
 	{
@@ -117,7 +117,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @return  boolean  True if it exists, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function has($listener)
 	{
@@ -132,7 +132,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @return  mixed  The listener priority if it exists, null otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getPriority($listener, $default = null)
 	{
@@ -149,7 +149,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @return  object[]  An array of listeners.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getAll()
 	{
@@ -171,7 +171,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @return  \SplPriorityQueue  The inner queue.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getIterator()
 	{
@@ -191,7 +191,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
 	 *
 	 * @return  integer  The number of listeners in the queue.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function count()
 	{

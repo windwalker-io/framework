@@ -11,7 +11,7 @@ namespace Windwalker\Form\Exception;
 /**
  * The FieldValidateFailException class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  *
  * @deprecated  Do not use exception to handle validate fail anymore.
  */

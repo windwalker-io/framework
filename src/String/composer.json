@@ -1,28 +1,29 @@
 {
-	"name": "windwalker/string",
-	"type": "windwalker-package",
-	"description": "Windwalker String package",
-	"keywords": ["windwalker", "framework", "string"],
-	"homepage": "https://github.com/ventoviro/windwalker-string",
-	"license": "LGPL-2.0+",
-	"require": {
-		"php": ">=5.3.10"
-	},
-	"require-dev": {
-		"windwalker/test" : "~2.0"
-	},
-	"suggest" : {
-		"windwalker/utilities" : "Install 2.* if you want to use String::parseVariable() tmpl engine."
-	},
-	"minimum-stability" : "dev",
-	"autoload": {
-		"psr-4": {
-			"Windwalker\\String\\": ""
-		}
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master" : "2.0-dev"
-		}
-	}
+    "name": "windwalker/string",
+    "type": "windwalker-package",
+    "description": "Windwalker String package",
+    "keywords": ["windwalker", "framework", "string"],
+    "homepage": "https://github.com/ventoviro/windwalker-string",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10"
+    },
+    "require-dev": {
+        "windwalker/test": "~2.0",
+        "windwalker/utilities": "~2.0"
+    },
+    "suggest": {
+        "windwalker/utilities": "Install 2.* if you want to use String::parseVariable() tmpl engine."
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\String\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
 }

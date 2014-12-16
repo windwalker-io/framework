@@ -13,7 +13,7 @@ use Windwalker\Crypt\Cipher\CipherInterface;
 /**
  * The Crypt class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Crypt
 {

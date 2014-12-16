@@ -20,7 +20,7 @@ use Windwalker\Registry\Registry;
 /**
  * The AbstractConsole class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractConsole
 {
@@ -52,7 +52,7 @@ abstract class AbstractConsole
 	 *                                IO object.
 	 * @param   Registry     $config  An optional argument to provide dependency injection for the config object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
@@ -83,7 +83,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  static  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function out($text = '', $nl = true)
 	{
@@ -97,7 +97,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  string  The input string from standard input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function in()
 	{
@@ -135,7 +135,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function close($message = 0)
 	{
@@ -148,7 +148,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract protected function doExecute();
 
@@ -157,7 +157,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
@@ -202,7 +202,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  mixed   The value of the configuration.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($key, $default = null)
 	{
@@ -217,7 +217,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function initialise()
 	{
@@ -231,7 +231,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  mixed   Previous value of the property
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($key, $value = null)
 	{
@@ -247,7 +247,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  static  Returns itself to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setConfiguration(Registry $config)
 	{
@@ -285,7 +285,7 @@ abstract class AbstractConsole
 	 *
 	 * @return DescriptorHelperInterface|TextDescriptorHelper
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getDescriptor()
 	{

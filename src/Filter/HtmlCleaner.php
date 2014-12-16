@@ -14,7 +14,7 @@ namespace Windwalker\Filter;
  * Forked from the php input filter library by: Daniel Morris <dan@rootcube.com>
  * Original Contributors: Gianpaolo Racca, Ghislain Picard, Marco Wandschneider, Chris Tobin and Andrew Eddie.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class HtmlCleaner
 {
@@ -28,7 +28,7 @@ class HtmlCleaner
 	 * The array of permitted tags (white list).
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $tagsArray = array();
 
@@ -36,7 +36,7 @@ class HtmlCleaner
 	 * The array of permitted tag attributes (white list).
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $attrArray = array();
 
@@ -44,7 +44,7 @@ class HtmlCleaner
 	 * The method for sanitising tags: WhiteList method = 0 (default), BlackList method = 1
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $tagsMethod = self::USE_WHITE_LIST;
 
@@ -52,7 +52,7 @@ class HtmlCleaner
 	 * The method for sanitising attributes: WhiteList method = 0 (default), BlackList method = 1
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $attrMethod = self::USE_WHITE_LIST;
 
@@ -60,7 +60,7 @@ class HtmlCleaner
 	 * A flag for XSS checks. Only auto clean essentials = 0, Allow clean blacklisted tags/attr = 1
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $xssAuto;
 
@@ -68,7 +68,7 @@ class HtmlCleaner
 	 * The list of the default blacklisted tags.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $tagBlacklist = array(
 		'applet',
@@ -99,7 +99,7 @@ class HtmlCleaner
 	 * The list of the default blacklisted tag attributes. All event handlers implicit.
 	 *
 	 * @var    array
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public $attrBlacklist = array(
 		'action',
@@ -118,7 +118,7 @@ class HtmlCleaner
 	 * @param   integer  $attrMethod  WhiteList method = 0, BlackList method = 1
 	 * @param   integer  $xssAuto     Only auto clean essentials = 0, Allow clean blacklisted tags/attr = 1
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($tagsArray = array(), $attrArray = array(), $tagsMethod = self::USE_BLACK_LIST, $attrMethod = self::USE_BLACK_LIST, $xssAuto = 1)
 	{
@@ -141,7 +141,7 @@ class HtmlCleaner
 	 *
 	 * @return  boolean  True if bad code is detected
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function isBadAttribute($attrSubSet)
 	{
@@ -165,7 +165,7 @@ class HtmlCleaner
 	 *
 	 * @return  string  'Cleaned' version of input parameter
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function remove($source)
 	{
@@ -188,7 +188,7 @@ class HtmlCleaner
 	 *
 	 * @return  string  'Cleaned' version of input parameter
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function cleanTags($source)
 	{
@@ -419,7 +419,7 @@ class HtmlCleaner
 	 *
 	 * @return  array  Filtered array of attribute pairs
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function cleanAttributes($attrSet)
 	{
@@ -524,7 +524,7 @@ class HtmlCleaner
 	 *
 	 * @return  string  Plaintext string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function decode($source)
 	{
@@ -538,7 +538,7 @@ class HtmlCleaner
 	 *
 	 * @return  string  Filtered string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function escapeAttributeValues($source)
 	{
@@ -593,7 +593,7 @@ class HtmlCleaner
 	 *
 	 * @return  string  Filtered string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function stripCssExpressions($source)
 	{

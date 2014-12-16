@@ -11,7 +11,7 @@ namespace Windwalker\Environment;
 /**
  * The Environment class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Environment
 {

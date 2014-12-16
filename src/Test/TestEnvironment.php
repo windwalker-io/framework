@@ -14,7 +14,7 @@ use Windwalker\Environment\ServerHelper;
 /**
  * The TestEnvironment class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TestEnvironment extends ServerHelper
 {

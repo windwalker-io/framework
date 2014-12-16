@@ -15,7 +15,7 @@ use Windwalker\Dom\HtmlElements;
 /**
  * Test class of HtmlElements
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class HtmlElementsTest extends \PHPUnit_Framework_TestCase
 {

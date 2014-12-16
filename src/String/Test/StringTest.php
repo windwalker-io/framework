@@ -13,7 +13,7 @@ use Windwalker\String\String;
 /**
  * Test class of String
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class StringTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,8 +61,8 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	public function testQuote()
 	{
 		$this->assertEquals('"foo"', String::quote('foo', '"'));
-		$this->assertEquals('"foo"', String::quote('foo', '""'));
-		$this->assertEquals('[foo]', String::quote('foo', '[]'));
+		$this->assertEquals('"foo"', String::quote('foo', array('"', '"')));
+		$this->assertEquals('[foo]', String::quote('foo', array('[', ']')));
 	}
 
 	/**

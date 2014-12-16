@@ -11,7 +11,7 @@ namespace Windwalker\Controller;
 /**
  * The AbstractMultiActionController class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class AbstractMultiActionController extends AbstractController
 {

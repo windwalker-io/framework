@@ -11,7 +11,7 @@ namespace Windwalker\Authenticate;
 /**
  * The Credential class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Credential implements \ArrayAccess
 {

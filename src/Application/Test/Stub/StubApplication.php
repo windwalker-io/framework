@@ -13,7 +13,7 @@ use Windwalker\Application\AbstractApplication;
 /**
  * The AtubApplication class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubApplication extends AbstractApplication
 {
@@ -30,7 +30,7 @@ class StubApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function doExecute()
 	{
@@ -44,7 +44,7 @@ class StubApplication extends AbstractApplication
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function close($message = 0)
 	{

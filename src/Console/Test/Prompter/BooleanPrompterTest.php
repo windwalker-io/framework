@@ -13,7 +13,7 @@ use Windwalker\Console\Prompter\BooleanPrompter;
 /**
  * Class BooleanPrompterTest
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class BooleanPrompterTest extends AbstractPrompterTest
 {
@@ -23,7 +23,7 @@ class BooleanPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function setUp()
 	{
@@ -37,7 +37,7 @@ class BooleanPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testAsk()
 	{

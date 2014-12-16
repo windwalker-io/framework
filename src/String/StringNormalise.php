@@ -13,7 +13,7 @@ namespace Windwalker\String;
  *
  * This class is based on Joomla String package
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class StringNormalise
 {
@@ -37,7 +37,7 @@ abstract class StringNormalise
 	 *
 	 * @return  string  The space separated string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function fromCamelCase($input, $grouped = false)
 	{
@@ -53,7 +53,7 @@ abstract class StringNormalise
 	 *
 	 * @return  string  The camel case string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function toCamelCase($input)
 	{
@@ -72,7 +72,7 @@ abstract class StringNormalise
 	 *
 	 * @return  string  The dash separated string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function toDashSeparated($input)
 	{
@@ -89,7 +89,7 @@ abstract class StringNormalise
 	 *
 	 * @return  string  The space separated string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function toSpaceSeparated($input)
 	{
@@ -106,7 +106,7 @@ abstract class StringNormalise
 	 *
 	 * @return  string  The underscore separated string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function toUnderscoreSeparated($input)
 	{
@@ -123,7 +123,7 @@ abstract class StringNormalise
 	 *
 	 * @return  string  The variable string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function toVariable($input)
 	{
@@ -151,7 +151,7 @@ abstract class StringNormalise
 	 *
 	 * @return  string  The key string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function toKey($input)
 	{
@@ -169,7 +169,7 @@ abstract class StringNormalise
 	 *
 	 * @return  string Normalised class name.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function toClassNamespace($class)
 	{

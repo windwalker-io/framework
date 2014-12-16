@@ -14,7 +14,7 @@ use Windwalker\Cache\Item\CacheItemInterface;
 /**
  * Class XcacheStorage
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class XcacheStorage extends AbstractCacheStorage
 {
@@ -25,7 +25,7 @@ class XcacheStorage extends AbstractCacheStorage
 	 * @param   mixed $options An options array, or an object that implements \ArrayAccess
 	 *
 	 * @throws \RuntimeException
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($ttl = null, $options = array())
 	{

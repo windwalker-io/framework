@@ -13,7 +13,7 @@ use Windwalker\Form\Field\FieldInterface;
 /**
  * The ValidateResult class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ValidateResult
 {

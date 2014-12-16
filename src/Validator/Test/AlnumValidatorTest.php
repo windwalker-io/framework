@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\AlnumValidator;
 /**
  * Test class of AlnumValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AlnumValidatorTest extends \PHPUnit_Framework_TestCase
 {

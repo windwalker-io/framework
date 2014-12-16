@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\Pdo\PdoReader;
 /**
  * Test class of MysqlReader
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlReaderTest extends AbstractMysqlTest
 {

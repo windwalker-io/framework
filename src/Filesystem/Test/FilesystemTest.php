@@ -14,7 +14,7 @@ use Windwalker\Filesystem\Path;
 /**
  * Test class of Filesystem
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class FilesystemTest extends AbstractFilesystemTest
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Database\Command\Schema;
 /**
  * The Schema class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Schema
 {

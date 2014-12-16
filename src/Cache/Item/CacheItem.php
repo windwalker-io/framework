@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Item;
 /**
  * Class CacheItem
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CacheItem implements CacheItemInterface
 {
@@ -19,7 +19,7 @@ class CacheItem implements CacheItemInterface
 	 * The key for the cache item.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $key;
 
@@ -27,7 +27,7 @@ class CacheItem implements CacheItemInterface
 	 * The value of the cache item.
 	 *
 	 * @var    mixed
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $value;
 
@@ -35,7 +35,7 @@ class CacheItem implements CacheItemInterface
 	 * Whether the cache item is value or not.
 	 *
 	 * @var    boolean
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $hit;
 
@@ -45,7 +45,7 @@ class CacheItem implements CacheItemInterface
 	 * @param   string $key   The key for the cache item.
 	 * @param   mixed  $value The value for the cache item.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($key, $value = null)
 	{
@@ -59,7 +59,7 @@ class CacheItem implements CacheItemInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getKey()
 	{
@@ -71,7 +71,7 @@ class CacheItem implements CacheItemInterface
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getValue()
 	{
@@ -100,7 +100,7 @@ class CacheItem implements CacheItemInterface
 	 *
 	 * @return  boolean
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isHit()
 	{

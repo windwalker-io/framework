@@ -11,7 +11,7 @@ namespace Windwalker\DI\Test\Mock;
 /**
  * The StubStack class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubStack extends \SplStack
 {

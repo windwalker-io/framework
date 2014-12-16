@@ -14,7 +14,7 @@ use Windwalker\Html\Option;
 /**
  * Test class of Option
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class OptionTest extends \PHPUnit_Framework_TestCase
 {

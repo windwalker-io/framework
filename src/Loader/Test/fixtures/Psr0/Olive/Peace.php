@@ -9,7 +9,7 @@
 /**
  * The Peace class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Psr0_Olive_Peace
 {

@@ -13,7 +13,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Class CubridExpression
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CubridExpression extends QueryExpression
 {
@@ -25,7 +25,7 @@ class CubridExpression extends QueryExpression
 	 *
 	 * @return  string  The concatenated values.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function concatenate($values, $separator = null)
 	{
@@ -48,7 +48,7 @@ class CubridExpression extends QueryExpression
 	 *
 	 * @return  string  Returns the cast value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function cast_as_char($value)
 	{

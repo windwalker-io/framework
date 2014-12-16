@@ -15,7 +15,7 @@ use Windwalker\Registry\Registry;
 /**
  * Simple class for a Windwalker command line application.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractCliApplication extends AbstractApplication
 {
@@ -35,7 +35,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *                               config object.  If the argument is a Registry object that object will become
 	 *                               the application's config object, otherwise a default config object is created.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
@@ -66,7 +66,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *
 	 * @return  AbstractCliApplication  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function out($text = '', $nl = true)
 	{
@@ -80,7 +80,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 *
 	 * @return  string  The input string from standard input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function in()
 	{

@@ -11,7 +11,7 @@ namespace Windwalker\Router;
 /**
  * Class Route
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Route
 {
@@ -125,9 +125,9 @@ class Route
 	public function __construct($name, $pattern, $variables = array(), $allowMethods = array(), $options = array())
 	{
 		$this->name = $name;
-		$this->pattern = $pattern;
 		$this->variables = $variables;
 
+		$this->setPattern($pattern);
 		$this->setOptions($options);
 		$this->setAllowMethods($allowMethods);
 	}
@@ -151,7 +151,7 @@ class Route
 	 */
 	public function setPattern($pattern)
 	{
-		$this->pattern = $pattern;
+		$this->pattern = RouteHelper::normalise($pattern);
 
 		return $this;
 	}

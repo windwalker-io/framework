@@ -13,7 +13,7 @@ use Windwalker\View\AbstractView;
 /**
  * The StubView class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubView extends AbstractView
 {

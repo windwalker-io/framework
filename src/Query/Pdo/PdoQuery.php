@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 /**
  * Class PdoQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PdoQuery extends Query
 {

@@ -14,7 +14,7 @@ use Windwalker\DataMapper\RelationDataMapper;
 /**
  * Test class of RelationDataMapper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class RelationDataMapperTest extends DatabaseTest
 {

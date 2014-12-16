@@ -13,7 +13,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Class SqliteExpression
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SqliteExpression extends QueryExpression
 {
@@ -28,7 +28,7 @@ class SqliteExpression extends QueryExpression
 	 *
 	 * @return  string  The concatenated values.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function concatenate($values, $separator = null)
 	{
@@ -56,7 +56,7 @@ class SqliteExpression extends QueryExpression
 	 *
 	 * @return  string  The required char length call.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function char_length($field, $operator = null, $condition = null)
 	{

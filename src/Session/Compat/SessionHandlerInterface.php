@@ -13,7 +13,7 @@
  *
  * @link   http://php.net/manual/en/class.sessionhandlerinterface.php
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface SessionHandlerInterface
 {

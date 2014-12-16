@@ -13,7 +13,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Class IniFormat
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class YamlFormat extends AbstractFormat
 {

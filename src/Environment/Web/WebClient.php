@@ -13,7 +13,7 @@ namespace Windwalker\Environment\Web;
  *
  * This class is based on Joomla WebClient
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class WebClient
 {
@@ -44,7 +44,7 @@ class WebClient
 	 * The detected platform on which the web client runs.
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $platform;
 
@@ -52,7 +52,7 @@ class WebClient
 	 * True if the web client is a mobile device.
 	 *
 	 * @var    boolean
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $mobile = false;
 
@@ -60,7 +60,7 @@ class WebClient
 	 * The detected rendering engine used by the web client.
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $engine;
 
@@ -68,7 +68,7 @@ class WebClient
 	 * The detected browser used by the web client.
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $browser;
 
@@ -76,7 +76,7 @@ class WebClient
 	 * The detected browser version used by the web client.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $browserVersion;
 
@@ -84,7 +84,7 @@ class WebClient
 	 * The priority order detected accepted languages for the client.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $languages = array();
 
@@ -92,7 +92,7 @@ class WebClient
 	 * The priority order detected accepted encodings for the client.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $encodings = array();
 
@@ -100,7 +100,7 @@ class WebClient
 	 * The web client's user agent string.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $userAgent;
 
@@ -108,7 +108,7 @@ class WebClient
 	 * The web client's accepted encoding string.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $acceptEncoding;
 
@@ -116,7 +116,7 @@ class WebClient
 	 * The web client's accepted languages string.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $acceptLanguage;
 
@@ -124,7 +124,7 @@ class WebClient
 	 * True if the web client is a robot.
 	 *
 	 * @var    boolean
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $robot = false;
 
@@ -132,7 +132,7 @@ class WebClient
 	 * An array of flags determining whether or not a detection routine has been run.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $detection = array();
 
@@ -143,7 +143,7 @@ class WebClient
 	 * @param   string  $acceptEncoding  The optional client accept encoding string to parse.
 	 * @param   string  $acceptLanguage  The optional client accept language string to parse.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($userAgent = null, $acceptEncoding = null, $acceptLanguage = null)
 	{
@@ -185,7 +185,7 @@ class WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function detectBrowser($userAgent)
 	{
@@ -270,7 +270,7 @@ class WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function detectEncoding($acceptEncoding)
 	{
@@ -288,7 +288,7 @@ class WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function detectEngine($userAgent)
 	{
@@ -334,7 +334,7 @@ class WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function detectLanguage($acceptLanguage)
 	{
@@ -352,7 +352,7 @@ class WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function detectPlatform($userAgent)
 	{
@@ -445,7 +445,7 @@ class WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function detectRobot($userAgent)
 	{
@@ -626,7 +626,7 @@ class WebClient
 	 *
 	 * @return  boolean  True if using SSL, false if not.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isSSLConnection()
 	{

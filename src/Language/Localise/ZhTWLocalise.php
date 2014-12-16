@@ -11,7 +11,7 @@ namespace Windwalker\Language\Localise;
 /**
  * Class ZhTWLocalise
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ZhTWLocalise implements LocaliseInterface
 {

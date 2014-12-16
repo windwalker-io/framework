@@ -13,7 +13,7 @@ use Windwalker\Dom\HtmlElement;
 /**
  * The TextareaField class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TextareaField extends TextField
 {

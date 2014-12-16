@@ -15,7 +15,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 /**
  * Class AbstractPrompterTest
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractPrompterTest extends AbstractBaseTestCase
 {
@@ -46,7 +46,7 @@ abstract class AbstractPrompterTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function setUp()
 	{

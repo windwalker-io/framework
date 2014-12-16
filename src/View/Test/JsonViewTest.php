@@ -14,7 +14,7 @@ use Windwalker\View\JsonView;
 /**
  * Test class of JsonView
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class JsonViewTest extends \PHPUnit_Framework_TestCase
 {

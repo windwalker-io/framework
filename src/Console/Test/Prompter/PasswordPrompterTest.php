@@ -14,7 +14,7 @@ use Windwalker\Test\TestEnvironment;
 /**
  * Class PasswordPrompterTest
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class PasswordPrompterTest extends AbstractPrompterTest
 {
@@ -24,7 +24,7 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function setUp()
 	{
@@ -38,7 +38,7 @@ class PasswordPrompterTest extends AbstractPrompterTest
 	 *
 	 * @return  void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testAsk()
 	{

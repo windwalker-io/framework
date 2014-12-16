@@ -18,7 +18,7 @@ if (!interface_exists('JsonSerializable'))
 /**
  * Registry class
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Registry implements \JsonSerializable, \ArrayAccess
 {
@@ -26,7 +26,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 * Registry Object
 	 *
 	 * @var    object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $data;
 
@@ -36,7 +36,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 * @param   mixed   $data   The data to bind to the new Registry object.
 	 * @param   string  $format The format of input, only work when first argument is string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($data = null, $format = 'json')
 	{
@@ -59,7 +59,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __clone()
 	{
@@ -71,7 +71,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __toString()
 	{
@@ -91,7 +91,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  object
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @note    The interface is only present in PHP 5.4 and up.
 	 */
 	public function jsonSerialize()
@@ -107,7 +107,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  mixed  The value set, or the default if the value was not previously set (or null).
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function def($key, $default = '')
 	{
@@ -124,7 +124,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  boolean
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function exists($path)
 	{
@@ -166,7 +166,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  mixed  Value of entry or null
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($path, $default = null)
 	{
@@ -226,7 +226,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function loadArray($array)
 	{
@@ -242,7 +242,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function loadObject($object)
 	{
@@ -260,7 +260,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function loadFile($file, $format = 'JSON', $options = array())
 	{
@@ -285,7 +285,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function loadString($data, $format = 'JSON', $options = array())
 	{
@@ -306,7 +306,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function merge(Registry $source, $recursive = true)
 	{
@@ -344,7 +344,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  boolean  True if the offset exists, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetExists($offset)
 	{
@@ -358,7 +358,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  mixed  The array value if it exists, null otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetGet($offset)
 	{
@@ -373,7 +373,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetSet($offset, $value)
 	{
@@ -387,7 +387,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offsetUnset($offset)
 	{
@@ -402,7 +402,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  mixed  The value of the that has been set.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($path, $value)
 	{
@@ -443,7 +443,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  array  An associative array holding the namespace data
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function toArray()
 	{
@@ -457,7 +457,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  object   An an object holding the namespace data
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function toObject($class = '\stdClass')
 	{
@@ -472,7 +472,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  string   Namespace in string format
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function toString($format = 'JSON', $options = array())
 	{
@@ -554,7 +554,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @return  array  Array representation of the input object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function asArray($data)
 	{

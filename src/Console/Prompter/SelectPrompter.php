@@ -11,7 +11,7 @@ namespace Windwalker\Console\Prompter;
 /**
  * A prompter supports select list.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class SelectPrompter extends ValidatePrompter
 {
@@ -20,7 +20,7 @@ class SelectPrompter extends ValidatePrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $listTemplate = " %-{WIDTH}s[%s] - %s";
 
@@ -29,7 +29,7 @@ class SelectPrompter extends ValidatePrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $noValidMessage = '  Not a valid selection';
 
@@ -38,7 +38,7 @@ class SelectPrompter extends ValidatePrompter
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $closeMessage = 'No selected and close.';
 
@@ -50,7 +50,7 @@ class SelectPrompter extends ValidatePrompter
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function ask($msg = '', $default = null)
 	{
@@ -64,7 +64,7 @@ class SelectPrompter extends ValidatePrompter
 	 *
 	 * @return  string  list string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function renderList()
 	{
@@ -93,7 +93,7 @@ class SelectPrompter extends ValidatePrompter
 	 *
 	 * @return  callable  The validate callback.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getHandler()
 	{

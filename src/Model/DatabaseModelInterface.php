@@ -11,7 +11,7 @@ namespace Windwalker\Model;
 /**
  * The DatabaseModelInterface class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface DatabaseModelInterface extends ModelInterface
 {

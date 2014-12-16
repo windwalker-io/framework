@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\NoneValidator;
 /**
  * Test class of NoneValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class NoneValidatorTest extends \PHPUnit_Framework_TestCase
 {

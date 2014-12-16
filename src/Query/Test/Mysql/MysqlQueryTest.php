@@ -16,7 +16,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of MysqlQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 {

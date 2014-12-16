@@ -13,7 +13,7 @@ use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 /**
  * Test class of PostgresqlQueryBuilder
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PostgresqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 {

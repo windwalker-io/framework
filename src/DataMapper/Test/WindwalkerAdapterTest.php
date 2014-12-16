@@ -13,7 +13,7 @@ use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 /**
  * Test class of WindwalkerAdapter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class WindwalkerAdapterTest extends \PHPUnit_Framework_TestCase
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Form;
 /**
  * The FormHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FormHelper
 {
@@ -125,7 +125,7 @@ class FormHelper
 	 *
 	 * @return  boolean
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function setByPath(&$data, $paths, $value, $separator = '.', $type = 'array')
 	{

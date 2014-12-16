@@ -11,7 +11,7 @@ namespace Windwalker\Filter\Cleaner;
 /**
  * Interface FilterRuleInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface CleanerInterface
 {

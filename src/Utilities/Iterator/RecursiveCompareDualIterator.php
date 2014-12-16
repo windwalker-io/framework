@@ -11,7 +11,7 @@ namespace Windwalker\Utilities\Iterator;
 /**
  * The RecursiveCompareDualIterator class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class RecursiveCompareDualIterator extends \RecursiveIteratorIterator
 {

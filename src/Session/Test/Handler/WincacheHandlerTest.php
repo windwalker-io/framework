@@ -13,7 +13,7 @@ use Windwalker\Session\Handler\WincacheHandler;
 /**
  * Test class of WincacheHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class WincacheHandlerTest extends \PHPUnit_Framework_TestCase
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Console\Descriptor;
 /**
  * A descriptor helper to get different descriptor and render it.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 {
@@ -20,7 +20,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 	 *
 	 * @var DescriptorInterface
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $CommandDescriptor;
 
@@ -29,7 +29,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 	 *
 	 * @var DescriptorInterface
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $optionDescriptor;
 
@@ -39,7 +39,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 	 * @param   DescriptorInterface  $CommandDescriptor  Command descriptor.
 	 * @param   DescriptorInterface  $optionDescriptor   Option descriptor.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(DescriptorInterface $CommandDescriptor = null, DescriptorInterface $optionDescriptor = null)
 	{
@@ -52,7 +52,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 	 *
 	 * @return  DescriptorInterface
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getCommandDescriptor()
 	{
@@ -66,7 +66,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 	 *
 	 * @return  $this Support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setCommandDescriptor($CommandDescriptor)
 	{
@@ -80,7 +80,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 	 *
 	 * @return \Windwalker\Console\Descriptor\DescriptorInterface
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getOptionDescriptor()
 	{
@@ -94,7 +94,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 	 *
 	 * @return  $this  Support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setOptionDescriptor($optionDescriptor)
 	{

@@ -14,7 +14,7 @@ use Windwalker\Query\QueryElement;
 /**
  * Class PostgresqlQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PostgresqlQuery extends Query
 {
@@ -22,7 +22,7 @@ class PostgresqlQuery extends Query
 	 * The database driver name
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $name = 'postgresql';
 
@@ -33,7 +33,7 @@ class PostgresqlQuery extends Query
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $nameQuote = '"';
 
@@ -42,7 +42,7 @@ class PostgresqlQuery extends Query
 	 * defined in child classes to hold the appropriate value for the engine.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $nullDate = '1970-01-01 00:00:00';
 
@@ -50,7 +50,7 @@ class PostgresqlQuery extends Query
 	 * The FOR UPDATE element used in "FOR UPDATE" lock
 	 *
 	 * @var    object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $forUpdate = null;
 
@@ -58,7 +58,7 @@ class PostgresqlQuery extends Query
 	 * The FOR SHARE element used in "FOR SHARE" lock
 	 *
 	 * @var    object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $forShare = null;
 
@@ -66,7 +66,7 @@ class PostgresqlQuery extends Query
 	 * The NOWAIT element used in "FOR SHARE" and "FOR UPDATE" lock
 	 *
 	 * @var    object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $noWait = null;
 
@@ -74,7 +74,7 @@ class PostgresqlQuery extends Query
 	 * The LIMIT element
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $limit = null;
 
@@ -82,7 +82,7 @@ class PostgresqlQuery extends Query
 	 * The OFFSET element
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $offset = null;
 
@@ -90,7 +90,7 @@ class PostgresqlQuery extends Query
 	 * The RETURNING element of INSERT INTO
 	 *
 	 * @var    object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $returning = null;
 
@@ -99,7 +99,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  string	The completed query.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function toString()
 	{
@@ -232,7 +232,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  PostgresqlQuery  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clear($clause = null)
 	{
@@ -301,7 +301,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  PostgresqlQuery  FOR UPDATE query element
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function forUpdate($table_name, $glue = ',')
 	{
@@ -328,7 +328,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  PostgresqlQuery  FOR SHARE query element
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function forShare($table_name, $glue = ',')
 	{
@@ -352,7 +352,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  PostgresqlQuery  NOWAIT query element
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function noWait()
 	{
@@ -374,7 +374,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  PostgresqlQuery  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function limit($limit = 0, $offset = 0)
 	{
@@ -395,7 +395,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  PostgresqlQuery  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function offset($offset = 0)
 	{
@@ -414,7 +414,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  PostgresqlQuery  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function returning($pkCol)
 	{
@@ -437,7 +437,7 @@ class PostgresqlQuery extends Query
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function processLimit($query, $limit, $offset = 0)
 	{

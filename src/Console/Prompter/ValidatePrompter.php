@@ -13,7 +13,7 @@ use Windwalker\Console\IO\IOInterface;
 /**
  * A text prompter but we can set an array to validate input value.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ValidatePrompter extends CallbackPrompter
 {
@@ -22,7 +22,7 @@ class ValidatePrompter extends CallbackPrompter
 	 *
 	 * @var array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $options = array();
 
@@ -34,7 +34,7 @@ class ValidatePrompter extends CallbackPrompter
 	 * @param   $default     $default   The default value.
 	 * @param   IOInterface  $io        The input object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	function __construct($question = null, $options = array(),$default = null, IOInterface $io = null)
 	{
@@ -48,7 +48,7 @@ class ValidatePrompter extends CallbackPrompter
 	 *
 	 * @return  callable  The validate callback.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getHandler()
 	{
@@ -78,7 +78,7 @@ class ValidatePrompter extends CallbackPrompter
 	 *
 	 * @return  ValidatePrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addOption($description, $option = null)
 	{
@@ -101,7 +101,7 @@ class ValidatePrompter extends CallbackPrompter
 	 *
 	 * @return  ValidatePrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function removeOption($key)
 	{
@@ -120,7 +120,7 @@ class ValidatePrompter extends CallbackPrompter
 	 *
 	 * @return  ValidatePrompter  Return self to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setOptions($options)
 	{

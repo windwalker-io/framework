@@ -16,7 +16,7 @@ interface QueryInterface
 	 *
 	 * @return  string	The completed query.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __toString();
 
@@ -34,7 +34,7 @@ interface QueryInterface
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function call($columns);
 
@@ -45,7 +45,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function columns($columns);
 
@@ -57,7 +57,7 @@ interface QueryInterface
 	 *
 	 * @return  string  The format string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function dateFormat();
@@ -74,7 +74,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function delete($table = null);
 
@@ -91,7 +91,7 @@ interface QueryInterface
 	 *
 	 * @return  string  The escaped string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function escape($text, $extra = false);
@@ -110,7 +110,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function exec($columns);
 
@@ -129,7 +129,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 * @throws  \RuntimeException
 	 */
@@ -154,7 +154,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function group($columns);
 
@@ -169,7 +169,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function having($conditions, $glue = 'AND');
 
@@ -184,7 +184,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function innerJoin($table, $condition = array());
 
@@ -203,7 +203,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function insert($table, $incrementField=false);
 
@@ -219,7 +219,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function join($type, $table, $conditions);
 
@@ -234,7 +234,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function leftJoin($table, $condition = array());
 
@@ -251,7 +251,7 @@ interface QueryInterface
 	 *
 	 * @return  string  Null or zero representation of a timestamp.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function nullDate($quoted = true);
@@ -267,7 +267,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function order($columns);
 
@@ -283,7 +283,7 @@ interface QueryInterface
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function limit($limit = 0, $offset = 0);
 
@@ -298,7 +298,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function outerJoin($table, $condition = array());
 
@@ -320,7 +320,7 @@ interface QueryInterface
 	 *
 	 * @return  string  The quoted input string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function quote($text, $escape = true);
@@ -343,7 +343,7 @@ interface QueryInterface
 	 *
 	 * @return  mixed  The quote wrapped name, same type of $name.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException if the internal db property is not a valid object.
 	 */
 	public function quoteName($name);
@@ -359,7 +359,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function rightJoin($table, $condition = array());
 
@@ -377,7 +377,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function select($columns);
 
@@ -394,7 +394,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($conditions, $glue = ',');
 
@@ -409,7 +409,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setQuery($sql);
 
@@ -425,7 +425,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function update($table);
 
@@ -440,7 +440,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function values($values);
 
@@ -457,7 +457,7 @@ interface QueryInterface
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function where($conditions, $glue = 'AND');
 
@@ -475,7 +475,7 @@ interface QueryInterface
 	 *
 	 * @return  mixed    The Query object on success or boolean false on failure.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function union($query, $distinct = false);
 
@@ -489,7 +489,7 @@ interface QueryInterface
 	 *
 	 * @return  mixed   The Query object on success or boolean false on failure.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function unionDistinct($query);
 
@@ -507,7 +507,7 @@ interface QueryInterface
 	 *
 	 * @see     union
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function unionAll($query);
 
@@ -556,7 +556,7 @@ interface QueryInterface
 	 *
 	 * @return  string  Returns a string produced according to the formatting string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function format($format);
 }

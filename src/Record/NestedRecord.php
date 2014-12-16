@@ -11,7 +11,7 @@ namespace Windwalker\Record;
 /**
  * The NestedRecord class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class NestedRecord extends Record
 {

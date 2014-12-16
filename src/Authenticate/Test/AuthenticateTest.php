@@ -16,7 +16,7 @@ use Windwalker\Authenticate\Test\Mock\MockMethod;
 /**
  * Test class of Authenticate
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AuthenticateTest extends \PHPUnit_Framework_TestCase
 {

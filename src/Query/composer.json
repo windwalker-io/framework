@@ -1,27 +1,27 @@
 {
-	"name": "windwalker/query",
-	"type": "windwalker-package",
-	"description": "Windwalker Query package",
-	"keywords": ["windwalker", "framework", "query"],
-	"homepage": "https://github.com/ventoviro/windwalker-query",
-	"license": "LGPL-2.0+",
-	"require": {
-		"php": ">=5.3.10"
-	},
-	"require-dev": {
-		"windwalker/test": "~2.0",
-		"windwalker/database": "~2.0",
-		"jdorn/sql-formatter" : "1.*"
-	},
-	"minimum-stability" : "dev",
-	"autoload": {
-		"psr-4": {
-			"Windwalker\\Query\\": ""
-		}
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master" : "2.0-dev"
-		}
-	}
+    "name": "windwalker/query",
+    "type": "windwalker-package",
+    "description": "Windwalker Query package",
+    "keywords": ["windwalker", "framework", "query"],
+    "homepage": "https://github.com/ventoviro/windwalker-query",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10"
+    },
+    "require-dev": {
+        "windwalker/test": "~2.0",
+        "windwalker/database": "~2.0",
+        "jdorn/sql-formatter": "1.*"
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Query\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
 }

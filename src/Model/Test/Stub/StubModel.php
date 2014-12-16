@@ -13,7 +13,7 @@ use Windwalker\Model\AbstractModel;
 /**
  * The StubModel class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubModel extends AbstractModel
 {

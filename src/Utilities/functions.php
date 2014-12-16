@@ -18,7 +18,7 @@ if (!function_exists('with'))
 	 *
 	 * @param   mixed  $object  The object to return.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 *
 	 * @return mixed
 	 */
@@ -37,7 +37,7 @@ if (!function_exists('show'))
 	 *
 	 * @internal  int  $level  The level number to limit recursive loop.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 *
 	 * @return  void
 	 */

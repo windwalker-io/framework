@@ -17,7 +17,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractApplication
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractApplication implements LoggerAwareInterface
 {
@@ -25,7 +25,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 * The application configuration object.
 	 *
 	 * @var    Registry
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $config;
 
@@ -33,7 +33,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 * The application input object.
 	 *
 	 * @var    Input
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $input = null;
 
@@ -41,7 +41,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 * A logger.
 	 *
 	 * @var    LoggerInterface
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $logger;
 
@@ -55,7 +55,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *                             config object.  If the argument is a Registry object that object will become
 	 *                             the application's config object, otherwise a default config object is created.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(Input $input = null, Registry $config = null)
 	{
@@ -72,7 +72,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function close($message = 0)
 	{
@@ -85,7 +85,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract protected function doExecute();
 
@@ -94,7 +94,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
@@ -136,7 +136,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  mixed   The value of the configuration.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($key, $default = null)
 	{
@@ -148,7 +148,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  LoggerInterface
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getLogger()
 	{
@@ -169,7 +169,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function initialise()
 	{
@@ -183,7 +183,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  mixed   Previous value of the property
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($key, $value = null)
 	{
@@ -200,7 +200,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  AbstractApplication  Returns itself to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setConfiguration(Registry $config)
 	{
@@ -216,7 +216,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @return  AbstractApplication  Returns itself to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setLogger(LoggerInterface $logger)
 	{

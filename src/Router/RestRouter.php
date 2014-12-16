@@ -112,7 +112,7 @@ class RestRouter extends SingleActionRouter
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function fetchControllerSuffix($method = 'GET')
 	{
@@ -149,7 +149,7 @@ class RestRouter extends SingleActionRouter
 	 *
 	 * @return  string  The controller name for the given route excluding prefix.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function match($route, $method = 'GET', $options = array())
 	{

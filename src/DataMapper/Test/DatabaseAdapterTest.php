@@ -11,7 +11,7 @@ namespace Windwalker\DataMapper\Test;
 /**
  * Test class of DatabaseAdapter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class DatabaseAdapterTest extends \PHPUnit_Framework_TestCase
 {

@@ -13,7 +13,7 @@ use Windwalker\Compare\CompareHelper;
 /**
  * Test class of CompareHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CompareHelperTest extends \PHPUnit_Framework_TestCase
 {

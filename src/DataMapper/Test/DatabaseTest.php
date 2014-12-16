@@ -15,7 +15,7 @@ use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 /**
  * The DatabaseTest class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class DatabaseTest extends AbstractDatabaseCase
 {

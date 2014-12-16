@@ -13,7 +13,7 @@ use Windwalker\Query\Mysql\MysqlQuery;
 /**
  * Test class of MysqlDriver
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlDriverTest extends AbstractMysqlTest
 {

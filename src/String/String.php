@@ -13,22 +13,25 @@ use Windwalker\Utilities\ArrayHelper;
 /**
  * The String class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class String
 {
+	const INCREMENT_STYLE_DASH = 'dash';
+	const INCREMENT_STYLE_DEFAULT = 'default';
+
 	/**
 	 * Increment styles.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected static $incrementStyles = array(
-		'dash' => array(
+		self::INCREMENT_STYLE_DASH => array(
 			'#-(\d+)$#',
 			'-%d'
 		),
-		'default' => array(
+		self::INCREMENT_STYLE_DEFAULT => array(
 			array('#\((\d+)\)$#', '#\(\d+\)$#'),
 			array(' (%d)', '(%d)'),
 		),
@@ -69,16 +72,13 @@ abstract class String
 	 * Quote a string.
 	 *
 	 * @param   string $string The string to quote.
-	 * @param   string $quote  The quote symbol.
+	 * @param   array  $quote  The quote symbol.
 	 *
 	 * @return  string Quoted string.
 	 */
-	public static function quote($string, $quote = "''")
+	public static function quote($string, $quote = array('{@', '@}'))
 	{
-		if (!strlen($quote))
-		{
-			return $string;
-		}
+		$quote = (array) $quote;
 
 		if (empty($quote[1]))
 		{
@@ -97,7 +97,7 @@ abstract class String
 	 */
 	public static function backquote($string)
 	{
-		return static::quote($string, '``');
+		return static::quote($string, '`');
 	}
 
 	/**
@@ -154,9 +154,9 @@ abstract class String
 	 *
 	 * @return  string  The incremented string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
-	public static function increment($string, $style = 'default', $n = 0)
+	public static function increment($string, $style = self::INCREMENT_STYLE_DEFAULT, $n = 0)
 	{
 		$styleSpec = isset(self::$incrementStyles[$style]) ? self::$incrementStyles[$style] : self::$incrementStyles['default'];
 

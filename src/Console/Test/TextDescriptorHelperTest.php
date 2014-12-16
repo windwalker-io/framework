@@ -19,7 +19,7 @@ use Windwalker\Console\Test\Stubs\FooCommand;
 /**
  * Class TextDescriptorHelperTest
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TextDescriptorHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,7 +36,7 @@ class TextDescriptorHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function setUp()
 	{
@@ -51,7 +51,7 @@ class TextDescriptorHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testDescribe()
 	{

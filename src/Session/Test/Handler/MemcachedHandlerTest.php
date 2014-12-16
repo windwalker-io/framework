@@ -13,7 +13,7 @@ use Windwalker\Session\Handler\MemcachedHandler;
 /**
  * Test class of MemcachedHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MemcachedHandlerTest extends \PHPUnit_Framework_TestCase
 {

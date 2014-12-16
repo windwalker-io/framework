@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Exception\FilesystemException;
 /**
  * A Folder handling class
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class Folder
 {
@@ -32,7 +32,7 @@ abstract class Folder
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  FilesystemException
 	 */
 	public static function copy($src, $dest, $force = false)
@@ -88,7 +88,7 @@ abstract class Folder
 	 *
 	 * @return  boolean  True if successful.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  FilesystemException
 	 */
 	public static function create($path = '', $mode = 0755)
@@ -171,7 +171,7 @@ abstract class Folder
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  FilesystemException
 	 * @throws  \UnexpectedValueException
 	 */
@@ -241,7 +241,7 @@ abstract class Folder
 	 * @throws Exception\FilesystemException
 	 * @return  mixed  Error message on false or boolean true on success.
 	 *
-	 * @since    {DEPLOY_VERSION}
+	 * @since    2.0
 	 */
 	public static function move($src, $dest, $override = false)
 	{
@@ -413,7 +413,7 @@ abstract class Folder
 	 *
 	 * @return  array  Folders in the given folder.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function listFolderTree($path, $maxLevel = 3, $level = 0, $parent = 0)
 	{
@@ -464,7 +464,7 @@ abstract class Folder
 	 *
 	 * @return  string  The sanitised string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function makeSafe($path)
 	{

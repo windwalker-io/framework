@@ -13,7 +13,7 @@ use Windwalker\Crypt\CryptHelper;
 /**
  * The McryptCipher class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class McryptCipher implements CipherInterface
 {
@@ -41,7 +41,7 @@ abstract class McryptCipher implements CipherInterface
 	/**
 	 * Constructor.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function __construct()
@@ -63,7 +63,7 @@ abstract class McryptCipher implements CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since    {DEPLOY_VERSION}
+	 * @since    2.0
 	 */
 	public function decrypt($data, $key = null, $iv = null)
 	{
@@ -102,7 +102,7 @@ abstract class McryptCipher implements CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function encrypt($data, $key = null, $iv = null)

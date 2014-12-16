@@ -15,7 +15,7 @@ use Windwalker\Session\Handler\DatabaseHandler;
 /**
  * Test class of DatabaseHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class DatabaseHandlerTest extends AbstractDatabaseCase
 {

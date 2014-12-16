@@ -13,7 +13,7 @@ use Windwalker\Form\FieldHelper;
 /**
  * Test class of FieldHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class FieldHelperTest extends \PHPUnit_Framework_TestCase
 {

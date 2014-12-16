@@ -11,7 +11,7 @@ namespace Windwalker\Registry\Format;
 /**
  * INI format handler for Registry.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class IniFormat implements FormatInterface
 {

@@ -13,7 +13,7 @@ use Windwalker\Application\AbstractWebApplication;
 /**
  * The AtubApplication class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubWeb extends AbstractWebApplication
 {
@@ -30,7 +30,7 @@ class StubWeb extends AbstractWebApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function doExecute()
 	{
@@ -42,7 +42,7 @@ class StubWeb extends AbstractWebApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
@@ -62,7 +62,7 @@ class StubWeb extends AbstractWebApplication
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function close($message = 0)
 	{

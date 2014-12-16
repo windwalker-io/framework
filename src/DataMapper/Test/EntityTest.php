@@ -13,7 +13,7 @@ use Windwalker\DataMapper\Entity\Entity;
 /**
  * Test class of Entity
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class EntityTest extends \PHPUnit_Framework_TestCase
 {

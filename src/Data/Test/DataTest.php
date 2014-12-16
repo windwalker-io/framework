@@ -14,7 +14,7 @@ use Windwalker\Data\Test\Stub\FakeData;
 /**
  * Test class of Data
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class DataTest extends \PHPUnit_Framework_TestCase
 {

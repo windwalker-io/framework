@@ -13,7 +13,7 @@ use Joomla\Database\DatabaseDriver;
 /**
  * Class DatabaseAdapter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class JoomlaAdapter extends AbstractDatabaseAdapter
 {

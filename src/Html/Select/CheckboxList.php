@@ -15,7 +15,7 @@ use Windwalker\Html\Option;
 /**
  * The CheckboxList class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class CheckboxList extends AbstractInputList
 {

@@ -15,7 +15,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of OracleQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class OracleQueryTest extends \PHPUnit_Framework_TestCase
 {

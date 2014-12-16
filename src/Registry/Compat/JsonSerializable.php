@@ -9,7 +9,7 @@
 /**
  * Interface JsonSerializable
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface JsonSerializable
 {
@@ -18,7 +18,7 @@ interface JsonSerializable
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function jsonSerialize();
 }

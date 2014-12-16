@@ -11,7 +11,7 @@ namespace Windwalker\Database\Test;
 /**
  * The DsnResolver class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class DsnResolver
 {

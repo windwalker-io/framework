@@ -13,7 +13,7 @@ use Windwalker\Registry\Helper\RegistryHelper;
 /**
  * PHP class format handler for Registry
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class PhpFormat implements FormatInterface
 {

@@ -13,7 +13,7 @@ use Windwalker\Console\Command\Command;
 /**
  * Class BbbCommand
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class BbbCommand extends Command
 {
@@ -22,7 +22,7 @@ class BbbCommand extends Command
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function initialise()
 	{
@@ -34,7 +34,7 @@ class BbbCommand extends Command
 	 *
 	 * @return int
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function doExecute()
 	{

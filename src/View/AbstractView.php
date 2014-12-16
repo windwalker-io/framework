@@ -11,7 +11,7 @@ namespace Windwalker\View;
 /**
  * Class AbstractView
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractView implements ViewInterface, \ArrayAccess
 {
@@ -39,7 +39,7 @@ abstract class AbstractView implements ViewInterface, \ArrayAccess
 	 *
 	 * @return  void
 	 */
-	public function initialise()
+	protected function initialise()
 	{
 		// override if you need.
 	}

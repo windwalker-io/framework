@@ -120,7 +120,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 */
 	public function updateOne($table, $data, array $condFields = array())
 	{
-		return $this->db->getWriter()->updateOne($table, $data, $condFields);
+		return $this->db->getWriter()->updateOne($table, $data, $condFields, true);
 	}
 
 	/**

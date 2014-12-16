@@ -15,7 +15,7 @@ use Windwalker\Console\Descriptor\AbstractDescriptorHelper;
 /**
  * A descriptor helper to get different descriptor and render it.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TextDescriptorHelper extends AbstractDescriptorHelper
 {
@@ -24,7 +24,7 @@ class TextDescriptorHelper extends AbstractDescriptorHelper
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $template = <<<EOF
 
@@ -51,7 +51,7 @@ EOF;
 	 *
 	 * @throws  \RuntimeException
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function describe(AbstractCommand $command)
 	{

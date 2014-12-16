@@ -13,7 +13,7 @@ namespace Windwalker\Console\Prompter;
  *
  * Help us show dialog to ask use questions.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface PrompterInterface
 {
@@ -25,7 +25,7 @@ interface PrompterInterface
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function ask($msg = '', $default = '');
 
@@ -36,7 +36,7 @@ interface PrompterInterface
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __invoke($default = '');
 }

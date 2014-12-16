@@ -11,7 +11,7 @@ namespace Windwalker\IO\Cli;
 /**
  * Class IOInterface
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 interface IOInterface
 {
@@ -48,7 +48,7 @@ interface IOInterface
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getOption($name, $default = null);
 
@@ -60,7 +60,7 @@ interface IOInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setOption($name, $value);
 

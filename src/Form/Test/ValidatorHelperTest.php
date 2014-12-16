@@ -13,7 +13,7 @@ use Windwalker\Form\ValidatorHelper;
 /**
  * Test class of ValidatorHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ValidatorHelperTest extends \PHPUnit_Framework_TestCase
 {

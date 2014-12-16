@@ -13,7 +13,7 @@ use Windwalker\Form\FilterHelper;
 /**
  * Test class of FilterHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class FilterHelperTest extends \PHPUnit_Framework_TestCase
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Form\Filter;
 /**
  * The MockFilter class to use on test case.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockFilter implements FilterInterface
 {

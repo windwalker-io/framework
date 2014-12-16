@@ -16,7 +16,7 @@ namespace Windwalker\Uri;
  *
  * This class is a fork from Joomla Uri.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Uri extends AbstractUri
 {
@@ -29,7 +29,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  string  Previous value for the query variable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setVar($name, $value)
 	{
@@ -50,7 +50,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function delVar($name)
 	{
@@ -71,7 +71,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setQuery($query)
 	{
@@ -101,7 +101,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setScheme($scheme)
 	{
@@ -115,7 +115,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setUser($user)
 	{
@@ -129,7 +129,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setPass($pass)
 	{
@@ -143,7 +143,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setHost($host)
 	{
@@ -157,7 +157,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setPort($port)
 	{
@@ -171,7 +171,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setPath($path)
 	{
@@ -186,7 +186,7 @@ class Uri extends AbstractUri
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setFragment($anchor)
 	{

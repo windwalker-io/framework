@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * Class QueryBuilder
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractQueryBuilder implements QueryBuilderInterface
 {

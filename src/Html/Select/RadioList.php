@@ -11,7 +11,7 @@ namespace Windwalker\Html\Select;
 /**
  * The RadioList class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class RadioList extends AbstractInputList
 {

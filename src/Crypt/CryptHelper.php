@@ -11,7 +11,7 @@ namespace Windwalker\Crypt;
 /**
  * The CryptHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class CryptHelper
 {
@@ -75,7 +75,7 @@ class CryptHelper
 	 * @note    This method is based on Joomla Crypt.
 	 * @return  string  Random binary data
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function genRandomBytes($length = 16)
 	{

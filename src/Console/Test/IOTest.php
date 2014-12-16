@@ -13,7 +13,7 @@ use Windwalker\Console\IO\IO;
 /**
  * Test class of IO
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class IOTest extends \PHPUnit_Framework_TestCase
 {

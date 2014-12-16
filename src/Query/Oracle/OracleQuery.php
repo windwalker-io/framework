@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 /**
  * Class OracleQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class OracleQuery extends Query implements Query\PreparableInterface
 {
@@ -21,7 +21,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $name = 'oracle';
 
@@ -32,7 +32,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $nameQuote = '"';
 
@@ -40,7 +40,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 * Returns the current dateformat
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $dateFormat = 'RRRR-MM-DD HH24:MI:SS';
 
@@ -48,7 +48,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 * The limit for the result set.
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $limit;
 
@@ -56,7 +56,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 * The offset for the result set.
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $offset;
 
@@ -64,7 +64,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 * Holds key / value pair of bound objects.
 	 *
 	 * @var    mixed
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $bounded = array();
 
@@ -82,7 +82,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 *
 	 * @return  static  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
 	{
@@ -126,7 +126,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function &getBounded($key = null)
 	{
@@ -172,7 +172,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 *
 	 * @return  OracleQuery  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clear($clause = null)
 	{
@@ -199,7 +199,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function processLimit($query, $limit, $offset = 0)
 	{
@@ -244,7 +244,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 *
 	 * @return  OracleQuery  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function limit($limit = 0, $offset = 0)
 	{

@@ -15,7 +15,7 @@ use Windwalker\Profiler\Renderer\DefaultRenderer;
 /**
  * Test class of DefaultRenderer
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class DefaultRendererTest extends \PHPUnit_Framework_TestCase
 {

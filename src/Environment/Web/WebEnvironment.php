@@ -14,7 +14,7 @@ use Windwalker\Environment\ServerInterface;
 /**
  * The WebEnvironment class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class WebEnvironment extends Environment
 {

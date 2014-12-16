@@ -13,7 +13,7 @@ use Windwalker\Filesystem\Exception\FilesystemException;
 /**
  * A File handling class
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class File
 {
@@ -24,7 +24,7 @@ class File
 	 *
 	 * @return  string  The file name without the extension
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function stripExtension($file)
 	{
@@ -38,7 +38,7 @@ class File
 	 *
 	 * @return  string  The ext of file path.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function getExtension($file)
 	{
@@ -52,7 +52,7 @@ class File
 	 *
 	 * @return  string  The file name.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function getFilename($path)
 	{
@@ -76,7 +76,7 @@ class File
 	 *
 	 * @return  string  The sanitised string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function makeSafe($file, array $stripChars = array('#^\.#'))
 	{
@@ -101,7 +101,7 @@ class File
 	 * @throws Exception\FilesystemException
 	 * @return  boolean  True on success
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function copy($src, $dest, $force = false)
 	{
@@ -147,7 +147,7 @@ class File
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  FilesystemException
 	 */
 	public static function delete($file)
@@ -183,7 +183,7 @@ class File
 	 * @throws Exception\FilesystemException
 	 * @return  boolean  True on success
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function move($src, $dest, $force = false)
 	{
@@ -230,7 +230,7 @@ class File
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  FilesystemException
 	 */
 	public static function write($file, $buffer)
@@ -257,7 +257,7 @@ class File
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  FilesystemException
 	 */
 	public static function upload($src, $dest)

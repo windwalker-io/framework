@@ -15,7 +15,7 @@ use Windwalker\Html\Select\SelectList;
 /**
  * The ListField class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ListField extends AbstractField
 {

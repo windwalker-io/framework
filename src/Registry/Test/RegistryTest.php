@@ -14,7 +14,7 @@ use Windwalker\Registry\Registry;
 /**
  * Test class of Registry
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class RegistryTest extends \PHPUnit_Framework_TestCase
 {

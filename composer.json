@@ -1,49 +1,87 @@
 {
-	"name": "windwalker/framework",
-	"description": "Rapido de la vento viro.",
-	"homepage": "https://github.com/ventoviro/windwalker",
-	"license": "GPL-2.0+",
-	"minimum-stability": "beta",
-	"authors": [
-		{
-			"name": "Simon Asika",
-			"email": "asika32764@gmail.com"
-		}
-	],
-	"require": {
-		"psr/log" : "1.*@stable"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "3.*@stable",
-		"phpunit/dbunit": "1.*@stable",
-		"phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl",
-		"jdorn/sql-formatter" : "1.*@stable",
-		"symfony/yaml" : "2.*@stable",
+    "name": "windwalker/framework",
+    "description": "A Modern PHP framework.",
+    "homepage": "https://github.com/ventoviro/windwalker",
+    "license": "LGPL-2.0+",
+    "minimum-stability": "beta",
+    "authors": [
+        {
+            "name": "Simon Asika",
+            "email": "asika32764@gmail.com"
+        }
+    ],
+    "require": {
+        "psr/log": "1.*@stable"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.*@stable",
+        "phpunit/dbunit": "1.*@stable",
+        "phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl",
+        "jdorn/sql-formatter": "1.*@stable",
+        "symfony/yaml": "2.*@stable",
 
-		"twig/twig" : "1.*@stable",
-		"illuminate/view" : "4.1.*@stable",
-		"mustache/mustache": "2.*@stable"
-	},
-	"suggest": {
-		"symfony/yaml": "Install 2.* if you require YAML support."
-	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/ventoviro/phpunit-skeleton-generator"
-		}
-	],
-	"autoload": {
-		"psr-4": {
-			"Windwalker\\": "src/"
-		},
-		"files": [
-			"src/Utilities/functions.php"
-		]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master" : "2.0-dev"
-		}
-	}
+        "twig/twig": "1.*@stable",
+        "illuminate/view": "4.1.*@stable",
+        "mustache/mustache": "2.*@stable"
+    },
+    "suggest": {
+        "symfony/yaml": "Install 2.* if you require YAML support."
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ventoviro/phpunit-skeleton-generator"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\": "src/"
+        },
+        "files": [
+            "src/Utilities/functions.php"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    },
+    "replace": {
+        "windwalker/application": "self.version",
+        "windwalker/authenticate": "self.version",
+        "windwalker/cache": "self.version",
+        "windwalker/compare": "self.version",
+        "windwalker/console": "self.version",
+        "windwalker/controller": "self.version",
+        "windwalker/crypt": "self.version",
+        "windwalker/data": "self.version",
+        "windwalker/database": "self.version",
+        "windwalker/datamapper": "self.version",
+        "windwalker/di": "self.version",
+        "windwalker/dom": "self.version",
+        "windwalker/environment": "self.version",
+        "windwalker/event": "self.version",
+        "windwalker/filesystem": "self.version",
+        "windwalker/filter": "self.version",
+        "windwalker/form": "self.version",
+        "windwalker/html": "self.version",
+        "windwalker/io": "self.version",
+        "windwalker/language": "self.version",
+        "windwalker/loader": "self.version",
+        "windwalker/middleware": "self.version",
+        "windwalker/model": "self.version",
+        "windwalker/profiler": "self.version",
+        "windwalker/query": "self.version",
+        "windwalker/record": "self.version",
+        "windwalker/registry": "self.version",
+        "windwalker/renderer": "self.version",
+        "windwalker/router": "self.version",
+        "windwalker/session": "self.version",
+        "windwalker/string": "self.version",
+        "windwalker/test": "self.version",
+        "windwalker/uri": "self.version",
+        "windwalker/utilities": "self.version",
+        "windwalker/validator": "self.version",
+        "windwalker/view": "self.version"
+    }
 }

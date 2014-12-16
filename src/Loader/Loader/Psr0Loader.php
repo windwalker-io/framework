@@ -14,7 +14,7 @@ namespace Windwalker\Loader\Loader;
  * @note This class based on SplClassLoader class.
  *       See: https://gist.github.com/jwage/221634
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Psr0Loader extends AbstractLoader
 {

@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\IOInterface as WindwalkerIOInterface;
 /**
  * The IOInterface class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface IOInterface extends WindwalkerIOInterface
 {

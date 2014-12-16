@@ -14,7 +14,7 @@ use Windwalker\Console\Test\Stubs\Foo\AaaCommand;
 /**
  * Class FooCommand
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FooCommand extends Command
 {
@@ -30,7 +30,7 @@ class FooCommand extends Command
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function initialise()
 	{
@@ -45,7 +45,7 @@ class FooCommand extends Command
 	 *
 	 * @return int
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function doExecute()
 	{

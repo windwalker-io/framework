@@ -13,7 +13,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractRenderer
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractRenderer implements RendererInterface
 {
@@ -54,7 +54,7 @@ abstract class AbstractRenderer implements RendererInterface
 	 * @return  string  The escaped output.
 	 *
 	 * @see     ViewInterface::escape()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function escape($output)
 	{
@@ -142,4 +142,3 @@ abstract class AbstractRenderer implements RendererInterface
 		return $this;
 	}
 }
-

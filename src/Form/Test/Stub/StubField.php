@@ -13,7 +13,7 @@ use Windwalker\Form\Field\AbstractField;
 /**
  * The StubField class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubField extends AbstractField
 {

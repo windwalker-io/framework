@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * The Connection Container class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class ConnectionContainer
 {

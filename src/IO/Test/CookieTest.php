@@ -14,7 +14,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of Cookie
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CookieTest extends \PHPUnit_Framework_TestCase
 {

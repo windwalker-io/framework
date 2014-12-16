@@ -13,7 +13,7 @@ use Windwalker\Router\Compiler\BasicGenerator;
 /**
  * Test class of BasicGenerator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class BasicGeneratorTest extends \PHPUnit_Framework_TestCase
 {

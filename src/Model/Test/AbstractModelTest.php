@@ -14,7 +14,7 @@ use Windwalker\Registry\Registry;
 /**
  * Test class of AbstractModel
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractModelTest extends \PHPUnit_Framework_TestCase
 {

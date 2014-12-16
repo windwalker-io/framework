@@ -11,7 +11,7 @@ namespace Windwalker\Session\Database;
 /**
  * Class AbstractDatabaseAdapter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractDatabaseAdapter
 {

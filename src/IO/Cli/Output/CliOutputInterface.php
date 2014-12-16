@@ -11,7 +11,7 @@ namespace Windwalker\IO\Cli\Output;
 /**
  * Class CliOutputInterface
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 interface CliOutputInterface
 {
@@ -29,7 +29,7 @@ interface CliOutputInterface
 	 *
 	 * @param   string   $text  The text to display.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @return $this
 	 */
 	public function err($text = '');

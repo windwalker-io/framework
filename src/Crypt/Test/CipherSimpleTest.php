@@ -14,7 +14,7 @@ use Windwalker\Crypt\CryptHelper;
 /**
  * Test class of CipherSimple
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 {

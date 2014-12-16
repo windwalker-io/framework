@@ -15,7 +15,7 @@ use Windwalker\Query\QueryElement;
 /**
  * Class PostgresqlQueryBuilder
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 {

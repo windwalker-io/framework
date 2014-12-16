@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\BooleanValidator;
 /**
  * Test class of BooleanValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class BooleanValidatorTest extends \PHPUnit_Framework_TestCase
 {

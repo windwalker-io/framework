@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\RegexValidator;
 /**
  * Test class of RegexValidator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class RegexValidatorTest extends \PHPUnit_Framework_TestCase
 {

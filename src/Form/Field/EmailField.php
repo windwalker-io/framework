@@ -11,7 +11,7 @@ namespace Windwalker\Form\Field;
 /**
  * The EmailField class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class EmailField extends TextField
 {

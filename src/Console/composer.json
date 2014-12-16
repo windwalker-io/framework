@@ -1,27 +1,27 @@
 {
-	"name": "windwalker/console",
-	"type": "windwalker-package",
-	"description": "Windwalker Controller package",
-	"keywords": ["windwalker", "framework", "console"],
-	"homepage": "https://github.com/ventoviro/windwalker-console",
-	"license": "LGPL-2.0+",
-	"require": {
-		"php": ">=5.3.10",
-		"windwalker/io" : "~2.0",
-		"windwalker/registry" : "~2.0"
-	},
-	"require-dev": {
-		"windwalker/test" : "~2.0"
-	},
-	"minimum-stability" : "dev",
-	"autoload": {
-		"psr-4": {
-			"Windwalker\\Console\\" : ""
-		}
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master" : "2.0-dev"
-		}
-	}
+    "name": "windwalker/console",
+    "type": "windwalker-package",
+    "description": "Windwalker Controller package",
+    "keywords": ["windwalker", "framework", "console"],
+    "homepage": "https://github.com/ventoviro/windwalker-console",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10",
+        "windwalker/io": "~2.0",
+        "windwalker/registry": "~2.0"
+    },
+    "require-dev": {
+        "windwalker/test": "~2.0"
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Console\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
 }

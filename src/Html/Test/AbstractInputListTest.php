@@ -11,7 +11,7 @@ namespace Windwalker\Html\Test;
 /**
  * Test class of AbstractInputList
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractInputListTest extends \PHPUnit_Framework_TestCase
 {

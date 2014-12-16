@@ -13,7 +13,7 @@ use Windwalker\Filter\Cleaner\CleanerInterface;
 /**
  * Class Filter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class InputFilter implements \Serializable
 {
@@ -345,7 +345,7 @@ class InputFilter implements \Serializable
 	 *
 	 * @return  string  The serialized Filter.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function serialize()
 	{
@@ -363,7 +363,7 @@ class InputFilter implements \Serializable
 	 *
 	 * @return  static  The Filter object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function unserialize($input)
 	{

@@ -13,7 +13,7 @@ use Windwalker\Compare\EqCompare;
 /**
  * Test class of MysqlWriter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlWriterTest extends AbstractMysqlTest
 {

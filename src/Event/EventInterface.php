@@ -11,7 +11,7 @@ namespace Windwalker\Event;
 /**
  * Class EventInterface
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 interface EventInterface
 {
@@ -20,7 +20,7 @@ interface EventInterface
 	 *
 	 * @return  string  The event name.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getName();
 
@@ -29,7 +29,7 @@ interface EventInterface
 	 *
 	 * @return  boolean  True if stopped, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isStopped();
 }

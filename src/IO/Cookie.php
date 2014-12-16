@@ -11,7 +11,7 @@ namespace Windwalker\IO;
 /**
  * Windwalker Input Cookie Class
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Cookie extends Input
 {
@@ -63,7 +63,7 @@ class Cookie extends Input
 	 *
 	 * @link    http://www.ietf.org/rfc/rfc2109.txt
 	 * @see     setcookie()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($name, $value, $expire = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
 	{

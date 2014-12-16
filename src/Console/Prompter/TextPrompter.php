@@ -11,7 +11,7 @@ namespace Windwalker\Console\Prompter;
 /**
  * General text prompter.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TextPrompter extends AbstractPrompter
 {
@@ -23,7 +23,7 @@ class TextPrompter extends AbstractPrompter
 	 *
 	 * @return  string  The value that use input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function ask($msg = '', $default = null)
 	{

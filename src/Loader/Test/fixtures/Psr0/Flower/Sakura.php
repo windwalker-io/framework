@@ -11,7 +11,7 @@ namespace Psr0\Flower;
 /**
  * The Sakura class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Sakura
 {

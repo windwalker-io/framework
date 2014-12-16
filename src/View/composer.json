@@ -1,29 +1,31 @@
 {
-	"name": "windwalker/view",
-	"type": "windwalker-package",
-	"description": "Windwalker View package",
-	"keywords": ["windwalker", "framework", "view"],
-	"homepage": "https://github.com/ventoviro/windwalker-view",
-	"license": "LGPL-2.0+",
-	"require": {
-		"php": ">=5.3.10"
-	},
-	"require-dev": {
-		"windwalker/test": "~2.0"
-	},
-	"suggest" : {
-		"windwalker/renderer" : "Install 2.* if you want to use HtmlView to render page.",
-		"windwalker/registry" : "Install 2.* if you want to use JsonView."
-	},
-	"minimum-stability" : "dev",
-	"autoload": {
-		"psr-4": {
-			"Windwalker\\View\\": ""
-		}
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master" : "2.0-dev"
-		}
-	}
+    "name": "windwalker/view",
+    "type": "windwalker-package",
+    "description": "Windwalker View package",
+    "keywords": ["windwalker", "framework", "view"],
+    "homepage": "https://github.com/ventoviro/windwalker-view",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10"
+    },
+    "require-dev": {
+        "windwalker/test": "~2.0",
+        "windwalker/renderer": "~2.0",
+        "windwalker/registry": "~2.0"
+    },
+    "suggest": {
+        "windwalker/renderer": "Install 2.* if you want to use HtmlView to render page.",
+        "windwalker/registry": "Install 2.* if you want to use JsonView."
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\View\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
 }

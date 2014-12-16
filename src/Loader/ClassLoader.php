@@ -15,7 +15,7 @@ use Windwalker\Loader\Loader\Psr4Loader;
 /**
  * Class ClassLoader
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ClassLoader
 {

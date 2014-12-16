@@ -13,7 +13,7 @@ use Windwalker\Controller\AbstractController;
 /**
  * The StubController class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubController extends AbstractController
 {

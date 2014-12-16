@@ -13,7 +13,7 @@ use Windwalker\Registry\Format\XmlFormat;
 /**
  * Test class of XmlFormat
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class XmlFormatTest extends \PHPUnit_Framework_TestCase
 {

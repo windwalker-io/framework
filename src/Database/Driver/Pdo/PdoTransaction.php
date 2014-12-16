@@ -13,7 +13,7 @@ use Windwalker\Database\Command\AbstractTransaction;
 /**
  * Class PdoTransaction
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PdoTransaction extends AbstractTransaction
 {

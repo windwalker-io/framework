@@ -11,7 +11,7 @@ namespace Windwalker\Console\Command;
 /**
  * Base Command class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Command extends AbstractCommand
 {
@@ -20,7 +20,7 @@ class Command extends AbstractCommand
 	 *
 	 * @return int
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function doExecute()
 	{
@@ -45,7 +45,7 @@ class Command extends AbstractCommand
 	 *
 	 * @return  AbstractCommand  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addCommand($command, $description = null, $options = array(), \Closure $code = null)
 	{

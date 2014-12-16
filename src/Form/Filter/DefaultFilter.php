@@ -13,7 +13,7 @@ use Windwalker\Filter\InputFilter;
 /**
  * The InputFiler class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class DefaultFilter implements FilterInterface
 {

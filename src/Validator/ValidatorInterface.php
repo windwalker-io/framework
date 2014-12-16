@@ -11,7 +11,7 @@ namespace Windwalker\Validator;
 /**
  * The ValidatorInterface class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface ValidatorInterface
 {

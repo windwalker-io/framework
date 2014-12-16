@@ -15,7 +15,7 @@ namespace Windwalker\Uri;
  *
  * This class is a fork from Joomla Uri.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class UriHelper
 {
@@ -27,7 +27,7 @@ class UriHelper
 	 * @return  mixed  Associative array or false if badly formed URL.
 	 *
 	 * @see     http://us3.php.net/manual/en/function.parse-url.php
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function parseUrl($url)
 	{

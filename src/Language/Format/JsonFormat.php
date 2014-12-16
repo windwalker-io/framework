@@ -13,7 +13,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Class JsonFormat
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class JsonFormat extends AbstractFormat
 {

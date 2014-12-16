@@ -11,7 +11,7 @@ namespace Windwalker\Language\Localise;
 /**
  * Class NullLocalise
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class NullLocalise implements LocaliseInterface
 {

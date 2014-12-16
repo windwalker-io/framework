@@ -11,7 +11,7 @@ namespace Windwalker\Registry\Helper;
 /**
  * Class RegistryHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class RegistryHelper
 {
@@ -60,7 +60,7 @@ class RegistryHelper
 	 *
 	 * @return  object   The object mapped from the given array
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function toObject($array, $class = 'stdClass')
 	{

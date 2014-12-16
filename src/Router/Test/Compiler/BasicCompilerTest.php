@@ -16,7 +16,7 @@ use Windwalker\Router\RouteHelper;
 /**
  * Test class of BasicCompiler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class BasicCompilerTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,79 +29,79 @@ class BasicCompilerTest extends \PHPUnit_Framework_TestCase
 	{
 		return array(
 			array(
-				'flower/(id)',
-				'flower/(?P<id>\d+)',
-				'flower/25',
+				'/flower/(id)',
+				'/flower/(?P<id>\d+)',
+				'/flower/25',
 				array('id' => 25),
 				__LINE__
 			),
 			array(
-				'flower/caesar/(id)/(alias)',
-				'flower/caesar/(?P<id>\d+)/(?P<alias>[^/]+)',
-				'flower/caesar/25/othello',
+				'/flower/caesar/(id)/(alias)',
+				'/flower/caesar/(?P<id>\d+)/(?P<alias>[^/]+)',
+				'/flower/caesar/25/othello',
 				array('id' => 25, 'alias' => 'othello'),
 				__LINE__
 			),
 			array(
-				'flower/caesar/(id)-(alias)',
-				'flower/caesar/(?P<id>\d+)-(?P<alias>[^/]+)',
-				'flower/caesar/25-othello',
+				'/flower/caesar/(id)-(alias)',
+				'/flower/caesar/(?P<id>\d+)-(?P<alias>[^/]+)',
+				'/flower/caesar/25-othello',
 				array('id' => 25, 'alias' => 'othello'),
 				__LINE__
 			),
 			array(
-				'flower(/id)',
-				'flower(/(?P<id>\d+))?',
-				'flower/33',
+				'/flower(/id)',
+				'/flower(/(?P<id>\d+))?',
+				'/flower/33',
 				array('id' => 33),
 				__LINE__
 			),
 			array(
-				'flower(/id)',
-				'flower(/(?P<id>\d+))?',
-				'flower',
+				'/flower(/id)',
+				'/flower(/(?P<id>\d+))?',
+				'/flower',
 				array(),
 				__LINE__
 			),
 			array(
-				'flower/caesar(/id,alias)',
-				'flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
-				'flower/caesar/25/othello',
+				'/flower/caesar(/id,alias)',
+				'/flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
+				'/flower/caesar/25/othello',
 				array('id' => 25, 'alias' => 'othello'),
 				__LINE__
 			),
 			array(
-				'flower/caesar(/id,alias)',
-				'flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
-				'flower/caesar/25',
+				'/flower/caesar(/id,alias)',
+				'/flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
+				'/flower/caesar/25',
 				array('id' => 25),
 				__LINE__
 			),
 			array(
-				'flower/caesar(/id,alias)',
-				'flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
-				'flower/caesar',
+				'/flower/caesar(/id,alias)',
+				'/flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
+				'/flower/caesar',
 				array(),
 				__LINE__
 			),
 			array(
-				'king(/foo,bar,baz,yoo)',
-				'king(/(?P<foo>[^/]+)(/(?P<bar>[^/]+)(/(?P<baz>[^/]+)(/(?P<yoo>[^/]+))?)?)?)?',
-				'king/john/troilus/and/cressida',
+				'/king(/foo,bar,baz,yoo)',
+				'/king(/(?P<foo>[^/]+)(/(?P<bar>[^/]+)(/(?P<baz>[^/]+)(/(?P<yoo>[^/]+))?)?)?)?',
+				'/king/john/troilus/and/cressida',
 				array('foo' => 'john', 'bar' => 'troilus', 'baz' => 'and', 'yoo' => 'cressida'),
 				__LINE__
 			),
 			array(
-				'king/(*tags)',
-				'king/(?P<tags>.*)',
-				'king/john/troilus/and/cressida',
+				'/king/(*tags)',
+				'/king/(?P<tags>.*)',
+				'/king/john/troilus/and/cressida',
 				array('tags' => array('john', 'troilus', 'and', 'cressida')),
 				__LINE__
 			),
 			array(
-				'king/(*tags)/and/(alias)',
-				'king/(?P<tags>.*)/and/(?P<alias>[^/]+)',
-				'king/john/troilus/and/cressida',
+				'/king/(*tags)/and/(alias)',
+				'/king/(?P<tags>.*)/and/(?P<alias>[^/]+)',
+				'/king/john/troilus/and/cressida',
 				array('tags' => array('john', 'troilus'), 'alias' => 'cressida'),
 				__LINE__
 			),

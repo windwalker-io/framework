@@ -13,7 +13,7 @@ use Windwalker\Query\Mysql\MysqlQuery;
 /**
  * Class Mariadb
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MariadbQuery extends MysqlQuery
 {

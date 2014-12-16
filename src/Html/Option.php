@@ -13,7 +13,7 @@ use Windwalker\Dom\HtmlElement;
 /**
  * The HtmlOption class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Option extends HtmlElement
 {

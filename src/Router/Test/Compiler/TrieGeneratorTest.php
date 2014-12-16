@@ -13,7 +13,7 @@ use Windwalker\Router\Compiler\TrieGenerator;
 /**
  * Test class of TrieGenerator
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class TrieGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,33 +26,33 @@ class TrieGeneratorTest extends \PHPUnit_Framework_TestCase
 	{
 		return array(
 			array(
-				'flower/:id',
+				'/flower/:id',
 				array('id' => 25),
-				'flower/25',
+				'/flower/25',
 				__LINE__
 			),
 			array(
-				'flower/:id/:alias',
+				'/flower/:id/:alias',
 				array('id' => 25, 'alias' => 'sakura'),
-				'flower/25/sakura',
+				'/flower/25/sakura',
 				__LINE__
 			),
 			array(
-				'flower/:id/:alias',
+				'/flower/:id/:alias',
 				array('alias' => 'sakura'),
-				'flower/null/sakura',
+				'/flower/null/sakura',
 				__LINE__
 			),
 			array(
-				'flower/*tags',
+				'/flower/*tags',
 				array('id' => 25, 'tags' => array('sakura', 'rose', 'olive')),
-				'flower/sakura/rose/olive/?id=25',
+				'/flower/sakura/rose/olive/?id=25',
 				__LINE__
 			),
 			array(
-				'flower/*tags/:alias',
+				'/flower/*tags/:alias',
 				array('id' => 25, 'alias' => 'wind', 'tags' => array('sakura', 'rose', 'olive')),
-				'flower/sakura/rose/olive/wind/?id=25',
+				'/flower/sakura/rose/olive/wind/?id=25',
 				__LINE__
 			),
 		);

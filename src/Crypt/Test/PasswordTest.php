@@ -13,7 +13,7 @@ use Windwalker\Crypt\Password;
 /**
  * Test class of Password
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PasswordTest extends \PHPUnit_Framework_TestCase
 {

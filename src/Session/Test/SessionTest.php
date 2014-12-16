@@ -15,7 +15,7 @@ use Windwalker\Session\Test\Mock\MockArrayBridge;
 /**
  * Test class of Session
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SessionTest extends AbstractSessionTestCase
 {

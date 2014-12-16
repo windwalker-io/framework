@@ -13,7 +13,7 @@ use Windwalker\Crypt\Cipher\CipherRijndael256;
 /**
  * Test class of CipherRijndael256
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class McryptRijndael256Test extends AbstractMcryptTestCase
 {

@@ -13,7 +13,7 @@ use Windwalker\Environment\Server;
 /**
  * Test class of Server
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class ServerTest extends \PHPUnit_Framework_TestCase
 {

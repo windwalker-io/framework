@@ -15,7 +15,7 @@ use Windwalker\Router\Matcher\SequentialMatcher;
 /**
  * A path router.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Router
 {
@@ -151,9 +151,7 @@ class Router
 		$route = preg_replace('/([^?]*).*/u', '\1', $route);
 
 		// Sanitize and explode the route.
-		$route = trim(parse_url($route, PHP_URL_PATH), ' /');
-
-		$route = $route ? : '/';
+		$route = parse_url($route, PHP_URL_PATH);
 
 		$matched = $this->matcher
 			->setRoutes($this->routes)
@@ -172,19 +170,25 @@ class Router
 	 *
 	 * @param string $name
 	 * @param array  $queries
+	 * @param bool   $rootSlash
 	 *
-	 * @return  string
-	 *
-	 * @throws \InvalidArgumentException
+	 * @return string
 	 */
-	public function build($name, $queries = array())
+	public function build($name, $queries = array(), $rootSlash = false)
 	{
 		if (!array_key_exists($name, $this->routes))
 		{
-			throw new \InvalidArgumentException('Route: ' . $name . ' not found.');
+			throw new \OutOfRangeException('Route: ' . $name . ' not found.');
 		}
 
-		return $this->matcher->build($this->routes[$name], $queries);
+		$route = $this->matcher->build($this->routes[$name], (array) $queries);
+
+		if ($rootSlash)
+		{
+			return RouteHelper::normalise($route);
+		}
+
+		return ltrim($route, '/');
 	}
 
 	/**

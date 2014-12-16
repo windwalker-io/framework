@@ -13,7 +13,7 @@ use Windwalker\Router\Route;
 /**
  * Interface MatcherInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface MatcherInterface
 {

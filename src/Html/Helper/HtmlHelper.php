@@ -13,7 +13,7 @@ use Windwalker\Test\Helper\DomHelper;
 /**
  * The HtmlHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class HtmlHelper extends DomHelper
 {

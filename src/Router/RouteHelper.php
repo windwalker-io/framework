@@ -11,7 +11,7 @@ namespace Windwalker\Router;
 /**
  * The RouteHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class RouteHelper
 {
@@ -24,7 +24,19 @@ abstract class RouteHelper
 	 */
 	public static function sanitize($pattern)
 	{
-		return trim(parse_url((string) $pattern, PHP_URL_PATH), ' /');
+		return '/' . trim(parse_url((string) $pattern, PHP_URL_PATH), ' /');
+	}
+
+	/**
+	 * normalise
+	 *
+	 * @param string $route
+	 *
+	 * @return  string
+	 */
+	public static function normalise($route)
+	{
+		return '/' . ltrim($route, '/');
 	}
 
 	/**

@@ -13,7 +13,7 @@ use Windwalker\Environment\Web\WebClient;
 /**
  * The StubClient class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubClient extends WebClient
 {

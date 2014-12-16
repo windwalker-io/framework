@@ -11,7 +11,7 @@ namespace Windwalker\Console\Descriptor;
 /**
  * Interface of Descriptor.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface DescriptorInterface
 {
@@ -22,7 +22,7 @@ interface DescriptorInterface
 	 *
 	 * @return  DescriptorInterface  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function addItem($item);
 
@@ -31,7 +31,7 @@ interface DescriptorInterface
 	 *
 	 * @return  string  Rendered result.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function render();
 }

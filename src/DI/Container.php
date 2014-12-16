@@ -15,7 +15,7 @@ use Windwalker\DI\Exception\DependencyResolutionException;
  *
  * @note This class is based on Joomla Container.
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Container
 {
@@ -25,7 +25,7 @@ class Container
 	 * Holds the key aliases.
 	 *
 	 * @var    array  $aliases
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $aliases = array();
 
@@ -34,7 +34,7 @@ class Container
 	 * the item is meant to be a shared resource.
 	 *
 	 * @var    DataStore[]
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $dataStore = array();
 
@@ -42,7 +42,7 @@ class Container
 	 * Parent for hierarchical containers.
 	 *
 	 * @var    Container
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $parent;
 
@@ -51,7 +51,7 @@ class Container
 	 *
 	 * @param   Container  $parent  Parent for hierarchical containers.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(Container $parent = null)
 	{
@@ -66,7 +66,7 @@ class Container
 	 *
 	 * @return  Container  This object for chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function alias($alias, $key)
 	{
@@ -82,7 +82,7 @@ class Container
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function resolveAlias($key)
 	{
@@ -103,7 +103,7 @@ class Container
 	 * @return  mixed  Instance of class specified by $key with all dependencies injected.
 	 *                 Returns an object if the class exists and false otherwise
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function createObject($key, $shared = false)
 	{
@@ -147,7 +147,7 @@ class Container
 	 *
 	 * @return  object  Instance of class specified by $key with all dependencies injected.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function createSharedObject($key)
 	{
@@ -160,7 +160,7 @@ class Container
 	 *
 	 * @return  Container  This object for chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function createChild()
 	{
@@ -177,7 +177,7 @@ class Container
 	 *
 	 * @return  Container
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function extend($key, \Closure $callable)
@@ -206,7 +206,7 @@ class Container
 	 *
 	 * @return  array  Array of arguments to pass to the method.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  DependencyResolutionException
 	 */
 	protected function getMethodArgs(\ReflectionMethod $method)
@@ -268,7 +268,7 @@ class Container
 	 *
 	 * @throws  \OutOfBoundsException  Thrown if the provided key is already set and is protected.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($key, $value, $shared = false, $protected = false)
 	{
@@ -291,7 +291,7 @@ class Container
 	 *
 	 * @return  Container  This object for chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function protect($key, $callback, $shared = false)
 	{
@@ -307,7 +307,7 @@ class Container
 	 *
 	 * @return  Container  This object for chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function share($key, $callback, $protected = false)
 	{
@@ -322,7 +322,7 @@ class Container
 	 *
 	 * @return  mixed   Results of running the $callback for the specified $key.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function get($key, $forceNew = false)
@@ -344,7 +344,7 @@ class Container
 	 *
 	 * @return  boolean  True for success
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function exists($key)
 	{
@@ -358,7 +358,7 @@ class Container
 	 *
 	 * @return  DataStore
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function getRaw($key)
 	{
@@ -384,7 +384,7 @@ class Container
 	 *
 	 * @return  mixed   Results of running the $callback for the specified $key.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getNewInstance($key)
 	{
@@ -398,7 +398,7 @@ class Container
 	 *
 	 * @return  Container  This object for chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function registerServiceProvider(ServiceProviderInterface $provider)
 	{

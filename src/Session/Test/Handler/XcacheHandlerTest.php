@@ -13,7 +13,7 @@ use Windwalker\Session\Handler\XcacheHandler;
 /**
  * Test class of XcacheHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
 {

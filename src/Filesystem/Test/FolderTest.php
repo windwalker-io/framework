@@ -16,7 +16,7 @@ use Windwalker\Test\TestEnvironment;
 /**
  * Test class of Folder
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class FolderTest extends AbstractFilesystemTest
 {

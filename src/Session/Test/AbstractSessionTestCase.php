@@ -17,7 +17,7 @@ use Windwalker\Session\Session;
 /**
  * The AbstractSessionTestCase class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class AbstractSessionTestCase extends \PHPUnit_Framework_TestCase
 {

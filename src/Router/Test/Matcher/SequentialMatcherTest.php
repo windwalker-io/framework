@@ -14,7 +14,7 @@ use Windwalker\Uri\Uri;
 /**
  * Test class of SequentialMatcher
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SequentialMatcherTest extends \PHPUnit_Framework_TestCase
 {

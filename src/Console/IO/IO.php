@@ -22,7 +22,7 @@ if (!interface_exists('JsonSerializable'))
 /**
  * The IO class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {

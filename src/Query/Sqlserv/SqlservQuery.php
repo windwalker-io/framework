@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 /**
  * Class SqlservQuery
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SqlservQuery extends Query
 {
@@ -21,7 +21,7 @@ class SqlservQuery extends Query
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $name = 'sqlserv';
 
@@ -32,7 +32,7 @@ class SqlservQuery extends Query
 	 * used for the opening quote and the second for the closing quote.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $nameQuote = '[]';
 
@@ -41,7 +41,7 @@ class SqlservQuery extends Query
 	 * defined in child classes to hold the appropriate value for the engine.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $nullDate = '1900-01-01 00:00:00';
 
@@ -56,7 +56,7 @@ class SqlservQuery extends Query
 	 *
 	 * @return  string  The escaped string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function escape($text, $extra = false)
 	{
@@ -79,7 +79,7 @@ class SqlservQuery extends Query
 	 *
 	 * @return  string	The completed query.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __toString()
 	{

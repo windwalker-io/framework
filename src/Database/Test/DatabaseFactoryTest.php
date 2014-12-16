@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\Mysql\MysqlDriver;
 /**
  * Test class of DatabaseFactory
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class DatabaseFactoryTest extends \PHPUnit_Framework_TestCase
 {

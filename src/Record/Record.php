@@ -15,7 +15,7 @@ use Windwalker\Query\Query;
 /**
  * Class Table
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Record implements \ArrayAccess, \IteratorAggregate
 {
@@ -23,7 +23,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * Name of the database table to model.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $table = '';
 
@@ -31,7 +31,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * Name of the primary key fields in the table.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $keys = array();
 
@@ -39,7 +39,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * Indicates that the primary keys autoincrement.
 	 *
 	 * @var    boolean
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $autoIncrement = true;
 
@@ -47,7 +47,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * The fields of the database table.
 	 *
 	 * @var    \stdClass
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $data = null;
 
@@ -55,7 +55,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * DatabaseDriver object.
 	 *
 	 * @var    DatabaseDriver
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $db;
 
@@ -69,7 +69,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *                                  compose the primary key.
 	 * @param   DatabaseDriver  $db     DatabaseDriver object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($table, $keys = 'id', DatabaseDriver $db = null)
 	{
@@ -115,7 +115,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function __set($key, $value)
@@ -130,7 +130,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function __get($key)
@@ -146,7 +146,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function set($key, $value)
@@ -171,7 +171,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($key, $default = null)
 	{
@@ -190,7 +190,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  boolean
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function exists($key)
 	{
@@ -211,7 +211,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function save($src, $ignore = '')
 	{
@@ -236,7 +236,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  static  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function bind($src, $ignore = array())
@@ -285,7 +285,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  static  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 * @throws  \UnexpectedValueException
 	 * @throws  \InvalidArgumentException
@@ -376,7 +376,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \UnexpectedValueException
 	 */
 	public function delete($pKey = null)
@@ -410,7 +410,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function reset($clear = false)
 	{
@@ -431,7 +431,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  static  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function check()
 	{
@@ -449,7 +449,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function store($updateNulls = false)
 	{
@@ -471,7 +471,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  boolean  True if the primary key(s) have been set.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function hasPrimaryKey()
 	{
@@ -518,7 +518,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function appendPrimaryKeys(Query $query, $pk = null)
 	{
@@ -554,7 +554,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  mixed  Array of primary key field names or string containing the first primary key field.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getKeyName($multiple = false)
 	{
@@ -581,7 +581,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  mixed  An array of the field names, or false if an error occurs.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \UnexpectedValueException
 	 */
 	public function getFields()
@@ -609,7 +609,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getTableName()
 	{
@@ -621,7 +621,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  \ArrayIterator
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getIterator()
 	{
@@ -633,7 +633,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return  \ArrayIterator
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __clone()
 	{

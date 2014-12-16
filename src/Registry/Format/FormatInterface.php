@@ -11,7 +11,7 @@ namespace Windwalker\Registry\Format;
 /**
  * Class RegistryFormatInterface
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 interface FormatInterface
 {
@@ -23,7 +23,7 @@ interface FormatInterface
 	 *
 	 * @return  string  Formatted string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	static public function objectToString($object, $options = null);
 
@@ -35,7 +35,7 @@ interface FormatInterface
 	 *
 	 * @return  object  Data Object
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	static public function stringToObject($data, array $options = array());
 }

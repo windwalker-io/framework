@@ -13,7 +13,7 @@ use Windwalker\Record\Record;
 /**
  * Test class of Record
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class RecordTest extends \PHPUnit_Framework_TestCase
 {

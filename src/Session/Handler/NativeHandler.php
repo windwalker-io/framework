@@ -16,7 +16,7 @@ if (!class_exists('SessionHandler'))
 /**
  * Class PhpHandler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class NativeHandler extends \SessionHandler implements HandlerInterface
 {

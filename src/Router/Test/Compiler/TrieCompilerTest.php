@@ -14,7 +14,7 @@ use Windwalker\Router\RouteHelper;
 /**
  * Test class of TrieCompiler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class TrieCompilerTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,37 +27,37 @@ class TrieCompilerTest extends \PHPUnit_Framework_TestCase
 	{
 		return array(
 			array(
-				'flower/:id',
-				'flower/(?P<id>\d+)',
-				'flower/5',
+				'/flower/:id',
+				'/flower/(?P<id>\d+)',
+				'/flower/5',
 				array('id' => 5),
 				__LINE__
 			),
 			array(
-				'flower/caesar/:id/:alias',
-				'flower/caesar/(?P<id>\d+)/(?P<alias>[^/]+)',
-				'flower/caesar/25/othello',
+				'/flower/caesar/:id/:alias',
+				'/flower/caesar/(?P<id>\d+)/(?P<alias>[^/]+)',
+				'/flower/caesar/25/othello',
 				array('id' => 25, 'alias' => 'othello'),
 				__LINE__
 			),
 			array(
-				'king/john/*tags',
-				'king/john/(?P<tags>.*)',
-				'king/john/troilus/and/cressida',
+				'/king/john/*tags',
+				'/king/john/(?P<tags>.*)',
+				'/king/john/troilus/and/cressida',
 				array('tags' => array('troilus', 'and', 'cressida')),
 				__LINE__
 			),
 			array(
-				'king/*tags/:alias',
-				'king/(?P<tags>.*)/(?P<alias>[^/]+)',
-				'king/john/troilus/and/cressida',
+				'/king/*tags/:alias',
+				'/king/(?P<tags>.*)/(?P<alias>[^/]+)',
+				'/king/john/troilus/and/cressida',
 				array('tags' => array('john', 'troilus', 'and'), 'alias' => 'cressida'),
 				__LINE__
 			),
 			array(
-				'king/*tags/and/:alias',
-				'king/(?P<tags>.*)/and/(?P<alias>[^/]+)',
-				'king/john/troilus/and/cressida',
+				'/king/*tags/and/:alias',
+				'/king/(?P<tags>.*)/and/(?P<alias>[^/]+)',
+				'/king/john/troilus/and/cressida',
 				array('tags' => array('john', 'troilus'), 'alias' => 'cressida'),
 				__LINE__
 			),

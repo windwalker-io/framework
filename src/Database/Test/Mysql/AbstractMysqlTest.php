@@ -14,7 +14,7 @@ use Windwalker\Database\Test\AbstractDatabaseCase;
 /**
  * The AbstractMysqlTest class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractMysqlTest extends AbstractDatabaseCase
 {

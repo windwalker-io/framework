@@ -14,7 +14,7 @@ use Windwalker\Renderer\Twig\GlobalContainer;
 /**
  * Class PhpRenderer
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class TwigRenderer extends AbstractAdapterRenderer
 {

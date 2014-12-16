@@ -15,7 +15,7 @@ use Windwalker\Validator\ValidatorInterface;
 /**
  * The ValidatorHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ValidatorHelper extends AbstractFormElementHelper
 {

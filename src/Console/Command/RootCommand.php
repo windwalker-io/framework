@@ -13,7 +13,7 @@ use Windwalker\Console;
 /**
  * The default command.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class RootCommand extends Command
 {
@@ -22,7 +22,7 @@ class RootCommand extends Command
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function initialise()
 	{

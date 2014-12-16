@@ -13,7 +13,7 @@ use Windwalker\Application\AbstractDaemonApplication;
 /**
  * The StubDeamon class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubDeamon extends AbstractDaemonApplication
 {
@@ -23,7 +23,7 @@ class StubDeamon extends AbstractDaemonApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function doExecute()
 	{

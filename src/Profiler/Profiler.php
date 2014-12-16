@@ -16,7 +16,7 @@ use Windwalker\Profiler\Renderer\ProfilerRendererInterface;
 /**
  * Class Profiler
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Profiler implements ProfilerInterface, \Countable
 {

@@ -20,7 +20,7 @@ use Windwalker\Validator\Rule\IpValidator;
 /**
  * Test class of AbstractField
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractFieldTest extends DomTestCase
 {
