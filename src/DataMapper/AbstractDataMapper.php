@@ -3,12 +3,14 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\DataMapper;
 
+use Windwalker\Data\Data;
 use Windwalker\Data\DataInterface;
+use Windwalker\Data\DataSet;
 use Windwalker\Data\DatasetInterface;
 
 /**
@@ -120,7 +122,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @param integer $start      Limit start number.
 	 * @param integer $limit      Limit rows.
 	 *
-	 * @return mixed Found rows data set.
+	 * @return mixed|DataSet Found rows data set.
 	 */
 	public function find($conditions = array(), $order = null, $start = null, $limit = null)
 	{
@@ -167,7 +169,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @param integer $start Limit start number.
 	 * @param integer $limit Limit rows.
 	 *
-	 * @return mixed Found rows data set.
+	 * @return mixed|DataSet Found rows data set.
 	 */
 	public function findAll($order = null, $start = null, $limit = null)
 	{
@@ -189,7 +191,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *                          - `id ASC` => ORDER BY id ASC
 	 *                          - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
 	 *
-	 * @return mixed Found row data.
+	 * @return mixed|Data Found row data.
 	 */
 	public function findOne($conditions = array(), $order = null)
 	{
@@ -238,7 +240,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		$this->setSelectFields($bakSelect);
 
-		return $dataset->$column;
+		$values = array();
+
+		foreach ($dataset as $data)
+		{
+			$values[] = $data->$column;
+		}
+
+		return $values;
 	}
 
 	/**
@@ -248,7 +257,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @throws \UnexpectedValueException
 	 * @throws \InvalidArgumentException
-	 * @return  mixed  Data set data with inserted id.
+	 * @return  mixed|DataSet  Data set data with inserted id.
 	 */
 	public function create($dataset)
 	{
@@ -268,7 +277,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @param mixed $data Send a data in and store.
 	 *
 	 * @throws \InvalidArgumentException
-	 * @return  mixed Data with inserted id.
+	 * @return  mixed|Data Data with inserted id.
 	 */
 	public function createOne($data)
 	{
@@ -286,7 +295,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @throws \UnexpectedValueException
 	 * @throws \InvalidArgumentException
-	 * @return  mixed Updated data set.
+	 * @return  mixed|DataSet Updated data set.
 	 */
 	public function update($dataset, $condFields = null)
 	{
@@ -311,7 +320,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *                          will use primary key instead.
 	 *
 	 * @throws \InvalidArgumentException
-	 * @return  mixed Updated data.
+	 * @return  mixed|Data Updated data.
 	 */
 	public function updateOne($data, $condFields = null)
 	{
@@ -334,7 +343,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
 	 *
 	 * @throws \InvalidArgumentException
-	 * @return  mixed Updated data set.
+	 * @return  boolean
 	 */
 	public function updateAll($data, $conditions = array())
 	{
@@ -351,7 +360,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *                          - `new GteCompare('id', 20)` => 'id >= 20'
 	 *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
 	 *
-	 * @return  mixed Updated data set.
+	 * @return  mixed|DataSet Updated data set.
 	 */
 	public function flush($dataset, $conditions = array())
 	{
@@ -384,7 +393,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @param array $condFields The where condition tell us record exists or not, if not set,
 	 *                          will use primary key instead.
 	 *
-	 * @return  mixed Saved data set.
+	 * @return  mixed|DataSet Saved data set.
 	 */
 	public function save($dataset, $condFields = null)
 	{
@@ -441,7 +450,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @param array $condFields The where condition tell us record exists or not, if not set,
 	 *                          will use primary key instead.
 	 *
-	 * @return  mixed Saved data.
+	 * @return  mixed|Data Saved data.
 	 */
 	public function saveOne($data, $condFields = null)
 	{
@@ -519,7 +528,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @param mixed $data       The data we want to update to every rows.
 	 * @param mixed $conditions Where conditions, you can use array or Compare object.
 	 *
-	 * @return  mixed Updated data set.
+	 * @return  boolean
 	 */
 	abstract protected function doUpdateAll($data, array $conditions);
 

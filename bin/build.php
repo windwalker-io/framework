@@ -54,6 +54,7 @@ class Build extends AbstractCliApplication
 	 */
 	protected $subtrees = array(
 		'application' => 'Application',
+		'authenticate' => 'Authenticate',
 		'cache'      => 'Cache',
 		'compare'    => 'Compare',
 		'console'    => 'Console',
@@ -62,7 +63,6 @@ class Build extends AbstractCliApplication
 		'data'       => 'Data',
 		'database'   => 'Database',
 		'datamapper' => 'DataMapper',
-		// 'date'       => 'Date',
 		'di'         => 'DI',
 		'dom'        => 'Dom',
 		'environment' => 'Environment',

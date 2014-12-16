@@ -3,11 +3,16 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console;
 
+use Windwalker\Console\Command\AbstractCommand;
+use Windwalker\Console\Descriptor\DescriptorHelperInterface;
+use Windwalker\Console\Descriptor\Text\TextCommandDescriptor;
+use Windwalker\Console\Descriptor\Text\TextDescriptorHelper;
+use Windwalker\Console\Descriptor\Text\TextOptionDescriptor;
 use Windwalker\Console\IO\IO;
 use Windwalker\Console\IO\IOInterface;
 use Windwalker\Registry\Registry;
@@ -15,7 +20,7 @@ use Windwalker\Registry\Registry;
 /**
  * The AbstractConsole class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractConsole
 {
@@ -34,13 +39,20 @@ abstract class AbstractConsole
 	protected $config = null;
 
 	/**
+	 * Property descriptor.
+	 *
+	 * @var DescriptorHelperInterface
+	 */
+	protected $descriptor;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param   IOInterface  $io      An optional argument to provide dependency injection for the application's
 	 *                                IO object.
 	 * @param   Registry     $config  An optional argument to provide dependency injection for the config object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
@@ -71,7 +83,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  static  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function out($text = '', $nl = true)
 	{
@@ -85,7 +97,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  string  The input string from standard input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function in()
 	{
@@ -123,7 +135,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function close($message = 0)
 	{
@@ -136,7 +148,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract protected function doExecute();
 
@@ -145,16 +157,41 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
+		$this->prepareExecute();
+
 		// @event onBeforeExecute
 
 		// Perform application routines.
 		$this->doExecute();
 
 		// @event onAfterExecute
+
+		$this->postExecute();
+	}
+
+	/**
+	 * Prepare execute hook.
+	 *
+	 * @return  void
+	 */
+	protected function prepareExecute()
+	{
+	}
+
+	/**
+	 * Pose execute hook.
+	 *
+	 * @param   mixed  $result  Executed return value.
+	 *
+	 * @return  mixed
+	 */
+	protected function postExecute($result = null)
+	{
+		return $result;
 	}
 
 	/**
@@ -165,7 +202,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  mixed   The value of the configuration.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($key, $default = null)
 	{
@@ -180,7 +217,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function initialise()
 	{
@@ -194,7 +231,7 @@ abstract class AbstractConsole
 	 *
 	 * @return  mixed   Previous value of the property
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($key, $value = null)
 	{
@@ -210,12 +247,84 @@ abstract class AbstractConsole
 	 *
 	 * @return  static  Returns itself to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setConfiguration(Registry $config)
 	{
 		$this->config = $config;
 
 		return $this;
+	}
+
+	/**
+	 * Method to get property Config
+	 *
+	 * @return  Registry
+	 */
+	public function getConfig()
+	{
+		return $this->config;
+	}
+
+	/**
+	 * Method to set property config
+	 *
+	 * @param   Registry $config
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setConfig($config)
+	{
+		$this->config = $config;
+
+		return $this;
+	}
+
+	/**
+	 * Get or create descriptor.
+	 *
+	 * @return DescriptorHelperInterface|TextDescriptorHelper
+	 *
+	 * @since  2.0
+	 */
+	public function getDescriptor()
+	{
+		if (!$this->descriptor)
+		{
+			$this->descriptor = new TextDescriptorHelper(
+				new TextCommandDescriptor,
+				new TextOptionDescriptor
+			);
+		}
+
+		return $this->descriptor;
+	}
+
+	/**
+	 * Method to set property descriptor
+	 *
+	 * @param   DescriptorHelperInterface $descriptor
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDescriptor(DescriptorHelperInterface $descriptor)
+	{
+		$this->descriptor = $descriptor;
+
+		return $this;
+	}
+
+	/**
+	 * describeCommand
+	 *
+	 * @param AbstractCommand $command
+	 *
+	 * @return  string
+	 */
+	public function describeCommand(AbstractCommand $command)
+	{
+		$descriptor = $this->getDescriptor();
+
+		return $descriptor->describe($command);
 	}
 }

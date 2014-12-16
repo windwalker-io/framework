@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Cache\Storage;
@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Storage;
 /**
  * Class AbstractDriverCacheStorage
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractDriverCacheStorage extends AbstractCacheStorage
 {
@@ -29,7 +29,7 @@ abstract class AbstractDriverCacheStorage extends AbstractCacheStorage
 	 * @param   int    $ttl      The Time To Live (TTL) of an item
 	 * @param   mixed  $options  An options array, or an object that implements \ArrayAccess
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($driver = null, $ttl = null, $options = array())
 	{

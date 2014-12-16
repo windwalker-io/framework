@@ -1,26 +1,26 @@
 {
-	"name": "windwalker/model",
-	"type": "windwalker-package",
-	"description": "Windwalker Model package",
-	"keywords": ["windwalker", "framework", "model"],
-	"homepage": "https://github.com/ventoviro/windwalker-model",
-	"license": "GPL-2.0+",
-	"require": {
-		"php": ">=5.3.10",
-		"windwalker/registry" : "~2.0"
-	},
-	"require-dev": {
-		"windwalker/test": "~2.0"
-	},
-	"minimum-stability" : "dev",
-	"autoload": {
-		"psr-4": {
-			"Windwalker\\Model\\": ""
-		}
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master" : "2.0-dev"
-		}
-	}
+    "name": "windwalker/model",
+    "type": "windwalker-package",
+    "description": "Windwalker Model package",
+    "keywords": ["windwalker", "framework", "model"],
+    "homepage": "https://github.com/ventoviro/windwalker-model",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10",
+        "windwalker/registry": "~2.0"
+    },
+    "require-dev": {
+        "windwalker/test": "~2.0"
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Model\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
 }

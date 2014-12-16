@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Test;
@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\Mysql\MysqlDriver;
 /**
  * Test class of DatabaseFactory
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class DatabaseFactoryTest extends \PHPUnit_Framework_TestCase
 {

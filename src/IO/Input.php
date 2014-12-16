@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\IO;
@@ -35,10 +35,11 @@ use Windwalker\IO\Filter\NullFilter;
  * @method      string   getPath()      getPath($name, $default = null)
  * @method      string   getUsername()  getUsername($name, $default = null)
  * @method      string   getEmail()     getEmail($name, $default = null)
- * @method      string   getUrl()       getUrl($name, $default = null)
- * @method      string   getRaw()       getRaw($name, $default = null)
+ * @method      string   getUrl()       getUrl($name, $default = null)  Get URL
+ * @method      string   getRaw()       getRaw($name, $default = null)  Get raw data
+ * @method      string   getVar()       getVar($name, $default = null)  Get string or array and filter them.
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class Input implements \Serializable, \Countable
 {
@@ -46,7 +47,7 @@ class Input implements \Serializable, \Countable
 	 * Input data.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $data = array();
 
@@ -54,7 +55,7 @@ class Input implements \Serializable, \Countable
 	 * Input objects
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $inputs = array();
 
@@ -62,7 +63,7 @@ class Input implements \Serializable, \Countable
 	 * Filter object to use.
 	 *
 	 * @var    \Windwalker\Filter\InputFilter
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $filter = null;
 
@@ -72,7 +73,7 @@ class Input implements \Serializable, \Countable
 	 * @param   array       $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
 	 * @param   InputFilter $filter  The input filter object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($source = null, InputFilter $filter = null)
 	{
@@ -114,7 +115,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  Input  The request input object
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __get($name)
 	{
@@ -156,7 +157,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  integer  The number of variables in the input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @see     Countable::count()
 	 */
 	public function count()
@@ -173,7 +174,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($name, $default = null, $filter = 'cmd')
 	{
@@ -195,7 +196,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  mixed  The filtered input data.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getArray(array $vars = array(), $datasource = null)
 	{
@@ -247,7 +248,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($name, $value)
 	{
@@ -262,7 +263,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function def($name, $value)
 	{
@@ -281,7 +282,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  boolean
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function exists($name)
 	{
@@ -340,6 +341,56 @@ class Input implements \Serializable, \Countable
 	}
 
 	/**
+	 * setByPath
+	 *
+	 * @param string $paths
+	 * @param mixed  $value
+	 *
+	 * @return  bool
+	 */
+	public function setByPath($paths, $value)
+	{
+		if (empty($paths))
+		{
+			return false;
+		}
+
+		$args = is_array($paths) ? $paths : explode('.', $paths);
+
+		$dataTmp = &$this->data;
+
+		foreach ($args as $arg)
+		{
+			if (is_object($dataTmp))
+			{
+				if (empty($dataTmp->$arg))
+				{
+					$dataTmp->$arg = array();
+				}
+
+				$dataTmp = &$dataTmp->$arg;
+			}
+			elseif (is_array($dataTmp))
+			{
+				if (empty($dataTmp[$arg]))
+				{
+					$dataTmp[$arg] = array();
+				}
+
+				$dataTmp = &$dataTmp[$arg];
+			}
+			else
+			{
+				$dataTmp = array();
+			}
+		}
+
+		$dataTmp = $value;
+
+		return true;
+	}
+
+	/**
 	 * Magic method to get filtered input data.
 	 *
 	 * @param   string  $name       Name of the filter type prefixed with 'get'.
@@ -347,7 +398,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  mixed   The filtered input value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __call($name, $arguments)
 	{
@@ -371,7 +422,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  string   The request method.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getMethod()
 	{
@@ -385,7 +436,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  string  The serialized input.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function serialize()
 	{
@@ -408,7 +459,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  Input  The input object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function unserialize($input)
 	{
@@ -423,7 +474,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function loadAllInputs()
 	{

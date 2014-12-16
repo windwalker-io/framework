@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Session\Test\Mock;
@@ -13,7 +13,7 @@ use Windwalker\Session\Bridge\SessionBridgeInterface;
 /**
  * The MockArrayBridge class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class MockArrayBridge implements SessionBridgeInterface
 {
@@ -246,7 +246,7 @@ class MockArrayBridge implements SessionBridgeInterface
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setCookieParams($lifetime, $path = null, $domain = null, $secure = false, $httponly = true)
 	{

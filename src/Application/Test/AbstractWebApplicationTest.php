@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Application\Test;
@@ -15,7 +15,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of AbstractWebApplication
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 {
@@ -260,7 +260,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 				'/index.php',
 				'/index.php',
 				array(
-					'uri.request'    => 'http://foo.com/index.php',
+					'uri.current'    => 'http://foo.com/index.php',
 					'uri.base.full'  => 'http://foo.com/',
 					'uri.base.host'  => 'http://foo.com',
 					'uri.base.path'  => '/',
@@ -275,7 +275,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 				'/www/index.php',
 				'/www/index.php',
 				array(
-					'uri.request'    => 'http://foo.com/www/index.php',
+					'uri.current'    => 'http://foo.com/www/index.php',
 					'uri.base.full'  => 'http://foo.com/www/',
 					'uri.base.host'  => 'http://foo.com',
 					'uri.base.path'  => '/www/',
@@ -290,7 +290,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 				'/www/index.php/foo/bar',
 				'/www/index.php',
 				array(
-					'uri.request'    => 'http://foo.com/www/index.php/foo/bar',
+					'uri.current'    => 'http://foo.com/www/index.php/foo/bar',
 					'uri.base.full'  => 'http://foo.com/www/',
 					'uri.base.host'  => 'http://foo.com',
 					'uri.base.path'  => '/www/',
@@ -305,7 +305,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 				'/www/foo/bar',
 				'/www/index.php',
 				array(
-					'uri.request'    => 'http://foo.com/www/foo/bar',
+					'uri.current'    => 'http://foo.com/www/foo/bar',
 					'uri.base.full'  => 'http://foo.com/www/',
 					'uri.base.host'  => 'http://foo.com',
 					'uri.base.path'  => '/www/',

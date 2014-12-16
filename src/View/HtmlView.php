@@ -3,19 +3,20 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\View;
 
 use Windwalker\Data\Data;
+use Windwalker\Renderer\AbstractRenderer;
 use Windwalker\Renderer\PhpRenderer;
 use Windwalker\Renderer\RendererInterface;
 
 /**
  * The HtmlView class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class HtmlView extends SimpleHtmlView
 {
@@ -45,8 +46,6 @@ class HtmlView extends SimpleHtmlView
 	 *
 	 * @param   array             $data     The data array.
 	 * @param   RendererInterface $renderer The renderer engine.
-	 *
-	 * @internal param \Windwalker\Model\ModelInterface $model The model object.
 	 */
 	public function __construct($data = array(), RendererInterface $renderer = null)
 	{
@@ -111,5 +110,67 @@ class HtmlView extends SimpleHtmlView
 	 */
 	protected function prepare($data)
 	{
+	}
+
+	/**
+	 * Method to get property Renderer
+	 *
+	 * @return  RendererInterface|AbstractRenderer
+	 */
+	public function getRenderer()
+	{
+		return $this->renderer;
+	}
+
+	/**
+	 * Method to set property renderer
+	 *
+	 * @param   RendererInterface $renderer
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setRenderer($renderer)
+	{
+		$this->renderer = $renderer;
+
+		return $this;
+	}
+
+	/**
+	 * addPath
+	 *
+	 * @param string $path
+	 * @param int    $priority
+	 *
+	 * @return  static
+	 */
+	public function addPath($path, $priority = 100)
+	{
+		$renderer = $this->getRenderer();
+
+		if ($renderer instanceof AbstractRenderer)
+		{
+			$renderer->addPath($path, $priority);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * addPaths
+	 *
+	 * @param array|\Traversable $paths
+	 * @param int                $priority
+	 *
+	 * @return  static
+	 */
+	public function addPaths($paths, $priority = 100)
+	{
+		foreach ($paths as $path)
+		{
+			$this->addPath($path, $priority);
+		}
+
+		return $this;
 	}
 }

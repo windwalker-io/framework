@@ -3,10 +3,10 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
-namespace Windwalker\Database\Command\Table;
+namespace Windwalker\Database\Schema;
 
 /**
  * The ColumnType class.
@@ -14,7 +14,7 @@ namespace Windwalker\Database\Command\Table;
  * The types data were referenced from:
  * https://docs.google.com/document/d/168GnMgXb8afOby1n9iLQXzu-PWujs-HxTv5YbEvmu-4/edit
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class DataType
 {
@@ -56,6 +56,7 @@ abstract class DataType
 
 	// Not SQL92 types but general
 	const TEXT = 'text';
+	const LONGTEXT = 'longtext';
 	const TINYINT = 'tinyint';
 	const DATETIME = 'datetime';
 

@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Language\Test;
@@ -13,7 +13,7 @@ use Windwalker\Language\LanguageNormalize;
 /**
  * Test class of LanguageNormalize
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class LanguageNormalizeTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,27 +27,27 @@ class LanguageNormalizeTest extends \PHPUnit_Framework_TestCase
 		return array(
 			array(
 				'foo_bar',
-				'FOO_BAR'
+				'foo.bar'
 			),
 			array(
 				'flower-sakura-flower',
-				'FLOWER_SAKURA_FLOWER'
+				'flower.sakura.flower'
 			),
 			array(
-				'flower.sakura.flower',
-				'FLOWER_SAKURA_FLOWER'
+				'FLOWER_SAKURA_FLOWER',
+				'flower.sakura.flower'
 			),
 			array(
 				'Lorem ipsum dolor sit amet, consectetur.',
-				'LOREM_IPSUM_DOLOR_SIT_AMET_CONSECTETUR'
+				'lorem.ipsum.dolor.sit.amet.consectetur'
 			),
 			array(
 				'--test-foo.bar/yoo\\go{play}test[fly]--',
-				'TEST_FOO_BAR_YOO_GO_PLAY_TEST_FLY'
+				'test.foo.bar.yoo.go.play.test.fly'
 			),
 			array(
 				'雲彩裡，許是懺悔 THe B612 只有用心靈，一個人才能看得很清楚',
-				'THE_B612'
+				'the.b612'
 			)
 		);
 	}

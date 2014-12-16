@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Driver\Mysql;
@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\Pdo\PdoDriver;
 /**
  * Class MysqlDriver
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlDriver extends PdoDriver
 {
@@ -30,7 +30,7 @@ class MysqlDriver extends PdoDriver
 	 * @param   \PDO  $connection The pdo connection object.
 	 * @param   array $options    List of options used to configure the connection
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(\PDO $connection = null, $options = array())
 	{

@@ -1,4 +1,4 @@
-# Windwalker Crypt Package
+# Windwalker Crypt
 
 Windwalker Crypt package is use to encrypt & verify password, and provides an easy interface to do Symmetric-Key Algorithm encryption.
 

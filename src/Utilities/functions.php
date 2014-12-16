@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 if (!function_exists('with'))
@@ -18,7 +18,7 @@ if (!function_exists('with'))
 	 *
 	 * @param   mixed  $object  The object to return.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 *
 	 * @return mixed
 	 */
@@ -37,7 +37,7 @@ if (!function_exists('show'))
 	 *
 	 * @internal  int  $level  The level number to limit recursive loop.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 *
 	 * @return  void
 	 */
@@ -53,7 +53,7 @@ if (!function_exists('show'))
 		}
 		else
 		{
-			$level = 4;
+			$level = 5;
 
 			$args[] = $last;
 		}

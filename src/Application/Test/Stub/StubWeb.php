@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Application\Test\Stub;
@@ -13,7 +13,7 @@ use Windwalker\Application\AbstractWebApplication;
 /**
  * The AtubApplication class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class StubWeb extends AbstractWebApplication
 {
@@ -30,7 +30,7 @@ class StubWeb extends AbstractWebApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function doExecute()
 	{
@@ -42,7 +42,7 @@ class StubWeb extends AbstractWebApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
@@ -62,7 +62,7 @@ class StubWeb extends AbstractWebApplication
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function close($message = 0)
 	{

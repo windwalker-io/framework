@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Record;
@@ -15,15 +15,15 @@ use Windwalker\Query\Query;
 /**
  * Class Table
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
-class Record implements \IteratorAggregate
+class Record implements \ArrayAccess, \IteratorAggregate
 {
 	/**
 	 * Name of the database table to model.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $table = '';
 
@@ -31,7 +31,7 @@ class Record implements \IteratorAggregate
 	 * Name of the primary key fields in the table.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $keys = array();
 
@@ -39,7 +39,7 @@ class Record implements \IteratorAggregate
 	 * Indicates that the primary keys autoincrement.
 	 *
 	 * @var    boolean
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $autoIncrement = true;
 
@@ -47,7 +47,7 @@ class Record implements \IteratorAggregate
 	 * The fields of the database table.
 	 *
 	 * @var    \stdClass
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $data = null;
 
@@ -55,7 +55,7 @@ class Record implements \IteratorAggregate
 	 * DatabaseDriver object.
 	 *
 	 * @var    DatabaseDriver
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $db;
 
@@ -69,7 +69,7 @@ class Record implements \IteratorAggregate
 	 *                                  compose the primary key.
 	 * @param   DatabaseDriver  $db     DatabaseDriver object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($table, $keys = 'id', DatabaseDriver $db = null)
 	{
@@ -115,14 +115,47 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function __set($key, $value)
 	{
+		$this->set($key, $value);
+	}
+
+	/**
+	 * Magic getter to get a table field.
+	 *
+	 * @param   string  $key  The key name.
+	 *
+	 * @return  mixed
+	 *
+	 * @since   2.0
+	 * @throws  \InvalidArgumentException
+	 */
+	public function __get($key)
+	{
+		return $this->get($key);
+	}
+
+	/**
+	 * Magic setter to set a table field.
+	 *
+	 * @param   string  $key    The key name.
+	 * @param   mixed   $value  The value to set.
+	 *
+	 * @return  static
+	 *
+	 * @since   2.0
+	 * @throws  \InvalidArgumentException
+	 */
+	public function set($key, $value)
+	{
 		if (property_exists($this->data, $key))
 		{
 			$this->data->$key = $value;
+
+			return $this;
 		}
 		else
 		{
@@ -133,21 +166,35 @@ class Record implements \IteratorAggregate
 	/**
 	 * Magic getter to get a table field.
 	 *
-	 * @param   string  $key  The key name.
+	 * @param   string $key      The key name.
+	 * @param   null   $default  The default value.
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
-	 * @throws  \InvalidArgumentException
+	 * @since   2.0
 	 */
-	public function __get($key)
+	public function get($key, $default = null)
 	{
 		if (property_exists($this->data, $key))
 		{
 			return $this->data->$key;
 		}
 
-		throw new \InvalidArgumentException(__METHOD__ . ' - Get unknown property: ' . $key);
+		return $default;
+	}
+
+	/**
+	 * exists
+	 *
+	 * @param   string $key Is this key exists.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   2.0
+	 */
+	public function exists($key)
+	{
+		return property_exists($this->data, $key);
 	}
 
 	/**
@@ -164,7 +211,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function save($src, $ignore = '')
 	{
@@ -189,7 +236,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  static  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function bind($src, $ignore = array())
@@ -238,7 +285,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  static  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 * @throws  \UnexpectedValueException
 	 * @throws  \InvalidArgumentException
@@ -329,7 +376,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \UnexpectedValueException
 	 */
 	public function delete($pKey = null)
@@ -363,7 +410,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function reset($clear = false)
 	{
@@ -382,9 +429,9 @@ class Record implements \IteratorAggregate
 	 * method to make sure the data they are storing in the database is safe and
 	 * as expected before storage.
 	 *
-	 * @return  $this  Method allows chaining
+	 * @return  static  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function check()
 	{
@@ -402,7 +449,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function store($updateNulls = false)
 	{
@@ -424,7 +471,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  boolean  True if the primary key(s) have been set.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function hasPrimaryKey()
 	{
@@ -471,7 +518,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  $this  Method allows chaining
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function appendPrimaryKeys(Query $query, $pk = null)
 	{
@@ -507,7 +554,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  mixed  Array of primary key field names or string containing the first primary key field.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getKeyName($multiple = false)
 	{
@@ -534,7 +581,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  mixed  An array of the field names, or false if an error occurs.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \UnexpectedValueException
 	 */
 	public function getFields()
@@ -562,7 +609,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getTableName()
 	{
@@ -574,7 +621,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  \ArrayIterator
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getIterator()
 	{
@@ -586,7 +633,7 @@ class Record implements \IteratorAggregate
 	 *
 	 * @return  \ArrayIterator
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __clone()
 	{
@@ -616,5 +663,56 @@ class Record implements \IteratorAggregate
 	{
 		return $this->db->quoteName($value);
 	}
-}
 
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return $this->exists($offset);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		$this->data->$offset = null;
+	}
+}

@@ -1,4 +1,4 @@
-# Windwalker Compare Package
+# Windwalker Compare
 
 ## What is Compare
 

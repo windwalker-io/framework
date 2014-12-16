@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\IO;
@@ -11,7 +11,7 @@ namespace Windwalker\IO;
 /**
  * Windwalker Input Files Class
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class FilesInput extends Input
 {
@@ -19,7 +19,7 @@ class FilesInput extends Input
 	 * The pivoted data from a $_FILES or compatible array.
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $decodedData = array();
 
@@ -45,7 +45,7 @@ class FilesInput extends Input
 	 * @return  mixed  The filtered input value.
 	 *
 	 * @see     JFilterInput::clean
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function get($name, $default = null, $filter = 'cmd')
 	{
@@ -74,7 +74,7 @@ class FilesInput extends Input
 	 *
 	 * @return  array
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function decodeData(array $data)
 	{
@@ -101,7 +101,7 @@ class FilesInput extends Input
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function set($name, $value)
 	{

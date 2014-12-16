@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Query\Cubrid;
@@ -13,7 +13,7 @@ use Windwalker\Query\QueryExpression;
 /**
  * Class CubridExpression
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class CubridExpression extends QueryExpression
 {
@@ -25,7 +25,7 @@ class CubridExpression extends QueryExpression
 	 *
 	 * @return  string  The concatenated values.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function concatenate($values, $separator = null)
 	{
@@ -48,7 +48,7 @@ class CubridExpression extends QueryExpression
 	 *
 	 * @return  string  Returns the cast value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function cast_as_char($value)
 	{

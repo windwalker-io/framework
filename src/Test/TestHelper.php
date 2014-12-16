@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Test;
@@ -13,7 +13,7 @@ namespace Windwalker\Test;
  *
  * @note  This class is based on Joomla Test package.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TestHelper
 {
@@ -28,7 +28,7 @@ class TestHelper
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function assignMockCallbacks(\PHPUnit_Framework_MockObject_MockObject $mockObject, \PHPUnit_Framework_TestCase $test, $array)
 	{
@@ -61,7 +61,7 @@ class TestHelper
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function assignMockReturns(\PHPUnit_Framework_MockObject_MockObject $mockObject, \PHPUnit_Framework_TestCase $test, $array)
 	{
@@ -81,7 +81,7 @@ class TestHelper
 	 *
 	 * @return  mixed  The value of the property.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException if property not available.
 	 */
 	public static function getValue($object, $propertyName)
@@ -121,7 +121,7 @@ class TestHelper
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function invoke($object, $methodName)
 	{
@@ -149,7 +149,7 @@ class TestHelper
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function setValue($object, $propertyName, $value)
 	{

@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Session\Bag;
@@ -11,7 +11,7 @@ namespace Windwalker\Session\Bag;
 /**
  * The ArrayBag class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ArrayBag extends SessionBag implements SessionBagInterface
 {

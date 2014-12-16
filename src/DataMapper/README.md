@@ -1,4 +1,4 @@
-# Windwalker DataMapper Package
+# Windwalker DataMapper
 
 ## Installation via Composer
 

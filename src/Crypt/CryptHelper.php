@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Crypt;
@@ -11,7 +11,7 @@ namespace Windwalker\Crypt;
 /**
  * The CryptHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class CryptHelper
 {
@@ -75,7 +75,7 @@ class CryptHelper
 	 * @note    This method is based on Joomla Crypt.
 	 * @return  string  Random binary data
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function genRandomBytes($length = 16)
 	{

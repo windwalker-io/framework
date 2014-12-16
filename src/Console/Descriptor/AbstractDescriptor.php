@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Descriptor;
@@ -11,7 +11,7 @@ namespace Windwalker\Console\Descriptor;
 /**
  * The abstract base descriptor.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractDescriptor implements DescriptorInterface
 {
@@ -20,7 +20,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @var  array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $items = array();
 
@@ -31,7 +31,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @return  DescriptorInterface  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function addItem($item)
 	{
@@ -47,7 +47,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	abstract protected function renderItem($item);
 
@@ -56,7 +56,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function render()
 	{

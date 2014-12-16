@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router\Test;
@@ -13,7 +13,7 @@ use Windwalker\Router\SingleActionRouter;
 /**
  * Test class of SingleActionRouter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SingleActionRouterTest extends \PHPUnit_Framework_TestCase
 {
@@ -59,7 +59,7 @@ class SingleActionRouterTest extends \PHPUnit_Framework_TestCase
 		$routes = $this->instance->getRoutes();
 
 		$this->assertInstanceOf('Windwalker\Router\Route', $routes[0]);
-		$this->assertEquals('flower/(id)/(alias)', $routes[0]->getPattern());
+		$this->assertEquals('/flower/(id)/(alias)', $routes[0]->getPattern());
 	}
 
 	/**

@@ -3,15 +3,17 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router\Compiler;
 
+use Windwalker\Router\RouteHelper;
+
 /**
  * The Compiler class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class BasicCompiler
 {
@@ -25,7 +27,7 @@ abstract class BasicCompiler
 	 */
 	public static function compile($pattern, $requirements = array())
 	{
-		$pattern = trim(parse_url((string) $pattern, PHP_URL_PATH));
+		$pattern = RouteHelper::sanitize($pattern);
 
 		$regex = static::replaceOptionalSegments($pattern);
 		$regex = static::replaceWildcards($regex);
@@ -55,7 +57,7 @@ abstract class BasicCompiler
 		if (substr($regex, 0, 2) == '(/')
 		{
 			$name = array_shift($list);
-			$head = "/({{$name}})?";
+			$head = "/(\{{$name}\})?";
 		}
 
 		$tail = '';

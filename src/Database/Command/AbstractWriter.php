@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Command;
@@ -15,7 +15,7 @@ use Windwalker\Database\Query\QueryHelper;
 /**
  * Class DatabaseWriter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractWriter
 {
@@ -46,7 +46,7 @@ abstract class AbstractWriter
 	 * @throws \InvalidArgumentException
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function insertOne($table, &$data, $key = null)
 	{
@@ -127,7 +127,7 @@ abstract class AbstractWriter
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function updateOne($table, $data, $key, $updateNulls = false)
 	{
@@ -360,7 +360,7 @@ abstract class AbstractWriter
 	 *
 	 * @return  integer  The number of affected rows.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function countAffected()
 	{
@@ -372,7 +372,7 @@ abstract class AbstractWriter
 	 *
 	 * @return  string  The value of the auto-increment field from the last inserted row.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function insertId()
 	{

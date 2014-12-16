@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Model;
@@ -13,7 +13,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractModel
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractModel implements ModelInterface, \ArrayAccess
 {
@@ -32,6 +32,18 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	public function __construct(Registry $state = null)
 	{
 		$this->state = ($state instanceof Registry) ? $state : new Registry;
+
+		$this->initialise();
+	}
+
+	/**
+	 * initialise
+	 *
+	 * @return  void
+	 */
+	protected function initialise()
+	{
+		// Override if you need.
 	}
 
 	/**

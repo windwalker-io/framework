@@ -1,4 +1,4 @@
-# Windwalker Controller Package
+# Windwalker Controller
 
 The Windwalker Controller package is a simple interface to control some business logic, id didn't dependency to any other packages.
  You may integrate it to any systems.

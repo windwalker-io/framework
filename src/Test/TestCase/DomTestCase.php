@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Test\TestCase;
@@ -13,7 +13,7 @@ use Windwalker\Test\Helper\DomHelper;
 /**
  * The DomTestCase class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class DomTestCase extends \PHPUnit_Framework_TestCase
 {

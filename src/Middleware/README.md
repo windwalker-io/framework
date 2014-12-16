@@ -4,7 +4,7 @@ Windwalker Middleware is a simple & elegant PHP Middleware library help you inte
 
 ## Installation via Composer
 
-Add "windwalker/middleware": "2.0.*" to the require block in your composer.json.
+Add this to the require block in your `composer.json`.
 
 ``` json
 {
@@ -121,7 +121,7 @@ $ware = new CallbackMiddleware(
 )
 ```
 
-## The Blackhole
+## End The Chaining
 
 If a middleware call next, we have to make sure there are a next middleware exists, or we will return error.
 
@@ -167,7 +167,7 @@ The result still like below:
 <<< BBBB
 ```
 
-## Chaining Middleware
+## Chaining Builder
 
 We can using `ChainBuilder` to chaining multiple middlewares.
 
@@ -198,7 +198,3 @@ The result still:
 <<< BBBB
 <<< AAAA
 ```
-
-## Todo
-
-Writing UnitTest...

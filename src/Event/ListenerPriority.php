@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Event;
@@ -11,15 +11,15 @@ namespace Windwalker\Event;
 /**
  * The ListenerPriority class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ListenerPriority
 {
-	const MIN = -3;
-	const LOW = -2;
-	const BELOW_NORMAL = -1;
+	const MIN = -300;
+	const LOW = -200;
+	const BELOW_NORMAL = -100;
 	const NORMAL = 0;
-	const ABOVE_NORMAL = 1;
-	const HIGH = 2;
-	const MAX = 3;
+	const ABOVE_NORMAL = 100;
+	const HIGH = 200;
+	const MAX = 300;
 }

@@ -1,4 +1,4 @@
-# Windwalker Filter Package
+# Windwalker Filter
 
 Windwalker Filter package is a simple tool help us clean the input and output string. 
 
@@ -30,24 +30,24 @@ $username = $filter->clean($username, InputFilter::STRING);
 
 Available filter rules:
 
-| Name                  | Description |
-| --------------------- | ------------|
-| InputFilter::INTEGER  | Only first part of int in a string |
-| InputFilter::UINT     | Unsigned integer |
-| InputFilter::FLOAT    | Float number |
-| InputFilter::BOOLEAN  | Return true or false |
-| InputFilter::WORD     | Contains spaces and special characters |
-| InputFilter::ALNUM    | All numbers and letters (alphanumerics) |
-| InputFilter::CMD      | Only letters and `-`, `_` |
-| InputFilter::BASE64   | Base64 string |
-| InputFilter::STRING   | Letters and spaces |
-| InputFilter::HTML     | HTML format, but will clean tags in black list |
-| InputFilter::ARRAY    | An array |
-| InputFilter::PATH     | System path contains letters and `/`, `\` |
-| InputFilter::USERNAME | Letters allow to use as username |
-| InputFilter::EMAIL    | Letters allow to use as email |
-| InputFilter::URL      | Letters allow to use in URL |
-| InputFilter::RAW      | No filter |
+| Name                    | Description |
+| ----------------------- | ------------|
+| InputFilter::INTEGER    | Only use the first integer value |
+| InputFilter::UINT       | Unsigned integer, Only use the first integer value |
+| InputFilter::FLOAT      | Float number, Only use the first integer value |
+| InputFilter::BOOLEAN    | Return true or false |
+| InputFilter::WORD       | Only allow characters a-z, and underscores |
+| InputFilter::ALNUM      | All numbers and letters (alphanumerics) |
+| InputFilter::CMD        | Allow a-z, 0-9, underscore, dot, dash. Also remove leading dots from result. |
+| InputFilter::BASE64     | Allow a-z, 0-9, slash, plus, equals. |
+| InputFilter::STRING     | Converts the input to a plain text string; strips all tags / attributes. |
+| InputFilter::HTML       | HTML format, but will clean tags in black list |
+| InputFilter::ARRAY_TYPE | Attempts to convert the value to an array. |
+| InputFilter::PATH       | Converts the input into a string and validates it as a path. (e.g. path/to/file.png or path/to/dir)|
+| InputFilter::USERNAME   | Strips all invalid username characters. |
+| InputFilter::EMAIL      | Strips all invalid email characters. |
+| InputFilter::URL        | Strips all invalid url characters. |
+| InputFilter::RAW        | No filter |
 
 ### Custom Rules
 
@@ -126,4 +126,3 @@ OutputFilter::stripScript($html);
 // Strip style-tags from string
 OutputFilter::stripStyle($html);
 ```
-

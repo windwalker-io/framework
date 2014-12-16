@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Application\Test;
@@ -16,7 +16,7 @@ use Windwalker\Registry\Registry;
 /**
  * Test class of AbstractApplication
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
 {

@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Session\Handler;
@@ -12,7 +12,7 @@ namespace Windwalker\Session\Handler;
  * APC session storage handler for PHP
  *
  * @see    http://www.php.net/manual/en/function.session-set-save-handler.php
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ApcHandler extends AbstractHandler
 {
@@ -22,7 +22,7 @@ class ApcHandler extends AbstractHandler
 	 * @throws \RuntimeException
 	 * @internal param array $options Optional parameters
 	 *
-	 * @since    {DEPLOY_VERSION}
+	 * @since    2.0
 	 */
 	public function __construct($options)
 	{
@@ -39,7 +39,7 @@ class ApcHandler extends AbstractHandler
 	 *
 	 * @return boolean  True on success, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public static function isSupported()
 	{
@@ -54,7 +54,7 @@ class ApcHandler extends AbstractHandler
 	 *
 	 * @return  string  The session data.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function read($id)
 	{
@@ -69,7 +69,7 @@ class ApcHandler extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function write($id, $session_data)
 	{
@@ -83,7 +83,7 @@ class ApcHandler extends AbstractHandler
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function destroy($id)
 	{

@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Filter;
@@ -13,7 +13,7 @@ use Windwalker\Filter\Cleaner\CleanerInterface;
 /**
  * Class Filter
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class InputFilter implements \Serializable
 {
@@ -345,7 +345,7 @@ class InputFilter implements \Serializable
 	 *
 	 * @return  string  The serialized Filter.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function serialize()
 	{
@@ -363,7 +363,7 @@ class InputFilter implements \Serializable
 	 *
 	 * @return  static  The Filter object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function unserialize($input)
 	{

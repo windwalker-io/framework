@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router;
@@ -11,7 +11,7 @@ namespace Windwalker\Router;
 /**
  * The RouteHelper class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class RouteHelper
 {
@@ -24,14 +24,26 @@ abstract class RouteHelper
 	 */
 	public static function sanitize($pattern)
 	{
-		return trim(parse_url((string) $pattern, PHP_URL_PATH), ' /');
+		return '/' . trim(parse_url((string) $pattern, PHP_URL_PATH), ' /');
 	}
 
 	/**
-	 * convertVariables
+	 * normalise
 	 *
-	 * @param array $matches
-	 * @param array &$vars
+	 * @param string $route
+	 *
+	 * @return  string
+	 */
+	public static function normalise($route)
+	{
+		return '/' . ltrim($route, '/');
+	}
+
+	/**
+	 * Get variables from regex matched result.
+	 *
+	 * @param array $matches Regex matched result.
+	 * @param array &$vars   Variables to store data.
 	 *
 	 * @return  array
 	 */
@@ -63,5 +75,19 @@ abstract class RouteHelper
 		}
 
 		return $vars;
+	}
+
+	/**
+	 * getEnvironment
+	 *
+	 * @return  array
+	 */
+	public static function getEnvironment()
+	{
+		return array(
+			'host'   => $_SERVER['HTTP_HOST'],
+			'scheme' => $_SERVER['REQUEST_SCHEME'],
+			'port'   => $_SERVER['SERVER_PORT']
+		);
 	}
 }

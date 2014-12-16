@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Driver\Pdo;
@@ -20,7 +20,7 @@ use Windwalker\Query\Query;
 /**
  * Class PdoDriver
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class PdoDriver extends DatabaseDriver
 {
@@ -28,7 +28,7 @@ class PdoDriver extends DatabaseDriver
 	 * The name of the database driver.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $name = 'pdo';
 
@@ -36,7 +36,7 @@ class PdoDriver extends DatabaseDriver
 	 * The prepared statement.
 	 *
 	 * @var    \PDOStatement
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $cursor;
 
@@ -44,7 +44,7 @@ class PdoDriver extends DatabaseDriver
 	 * The database connection resource.
 	 *
 	 * @var    \PDO
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $connection;
 
@@ -68,7 +68,7 @@ class PdoDriver extends DatabaseDriver
 	 * @param   \PDO  $connection The pdo connection object.
 	 * @param   array $options    List of options used to configure the connection
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct(\PDO $connection = null, $options = array())
 	{
@@ -83,6 +83,8 @@ class PdoDriver extends DatabaseDriver
 		);
 
 		$options = array_merge($defaultOptions, $options);
+
+		$this->name = $options['driver'];
 
 		// Finalize initialisation
 		parent::__construct($connection, $options);
@@ -128,7 +130,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function disconnect()
 	{
@@ -147,7 +149,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  mixed
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getOption($key)
 	{
@@ -169,7 +171,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return boolean
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setOption($key, $value)
 	{
@@ -183,7 +185,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  string  The database connector version.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getVersion()
 	{
@@ -199,7 +201,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function select($database)
@@ -219,7 +221,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  PdoDriver  This object to support method chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setQuery($query, $driverOptions = array())
 	{
@@ -239,7 +241,7 @@ class PdoDriver extends DatabaseDriver
 	 * @throws \RuntimeException
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function doExecute()
 	{
@@ -284,7 +286,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function freeResult($cursor = null)
 	{
@@ -307,7 +309,7 @@ class PdoDriver extends DatabaseDriver
 	 *
 	 * @return  Query  The current query object or a new object extending the Query class.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function getQuery($new = false)
@@ -331,121 +333,6 @@ class PdoDriver extends DatabaseDriver
 		{
 			return $this->query;
 		}
-	}
-
-	/**
-	 * getTable
-	 *
-	 * @param string $name
-	 *
-	 * @return  AbstractTable
-	 */
-	public function getTable($name)
-	{
-		if (empty($this->tables[$name]))
-		{
-			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTable', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
-
-			if (class_exists($class))
-			{
-				$this->tables[$name] = new $class($name, $this);
-			}
-		}
-
-		return parent::getTable($name);
-	}
-
-	/**
-	 * getTable
-	 *
-	 * @param string $name
-	 *
-	 * @return  AbstractDatabase
-	 */
-	public function getDatabase($name = null)
-	{
-		$name = $name ? : $this->database;
-
-		if (empty($this->databases[$name]))
-		{
-			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
-
-			if (class_exists($class))
-			{
-				$this->databases[$name] = new $class($name, $this);
-			}
-		}
-
-		return parent::getDatabase($name);
-	}
-
-	/**
-	 * getReader
-	 *
-	 * @param Query $query
-	 *
-	 * @return  AbstractReader
-	 */
-	public function getReader($query = null)
-	{
-		if ($query)
-		{
-			$this->setQuery($query);
-		}
-
-		if (!$this->reader)
-		{
-			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sReader', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
-
-			if (class_exists($class))
-			{
-				$this->reader = new $class($this);
-			}
-		}
-
-		return parent::getReader();
-	}
-
-	/**
-	 * getWriter
-	 *
-	 * @return  AbstractWriter
-	 */
-	public function getWriter()
-	{
-		if (!$this->writer)
-		{
-			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sWriter', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
-
-			if (class_exists($class))
-			{
-				$this->writer = new $class($this);
-			}
-		}
-
-		return parent::getWriter();
-	}
-
-	/**
-	 * getWriter
-	 *
-	 * @param boolean $nested
-	 *
-	 * @return  AbstractTransaction
-	 */
-	public function getTransaction($nested = true)
-	{
-		if (!$this->transaction)
-		{
-			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTransaction', ucfirst($this->options['driver']), ucfirst($this->options['driver']));
-
-			if (class_exists($class))
-			{
-				$this->transaction = new $class($this, $nested);
-			}
-		}
-
-		return parent::getTransaction($nested);
 	}
 
 	/**

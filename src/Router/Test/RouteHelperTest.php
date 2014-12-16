@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router\Test;
@@ -13,7 +13,7 @@ use Windwalker\Router\RouteHelper;
 /**
  * Test class of RouteHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class RouteHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,8 +26,20 @@ class RouteHelperTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSanitize()
 	{
-		$this->assertEquals('foo/bar/baz', RouteHelper::sanitize('/foo/bar/baz'));
-		$this->assertEquals('foo/bar/baz', RouteHelper::sanitize('http://flower.com/foo/bar/baz/?olive=peace'));
+		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('/foo/bar/baz'));
+		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('http://flower.com/foo/bar/baz/?olive=peace'));
+	}
+
+	/**
+	 * Method to test normalise()
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Router\RouteHelper::normalise
+	 */
+	public function testNormalise()
+	{
+		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('foo/bar/baz/'));
 	}
 
 	/**

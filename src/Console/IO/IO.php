@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\IO;
@@ -22,7 +22,7 @@ if (!interface_exists('JsonSerializable'))
 /**
  * The IO class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {

@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Utilities\Iterator;
@@ -14,7 +14,7 @@ namespace Windwalker\Utilities\Iterator;
  * @note    This is a fork from Marcus Boerger's work:
  *          https://github.com/php/php-src/blob/master/ext/spl/examples/dualiterator.inc
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class DualIterator implements \Iterator
 {

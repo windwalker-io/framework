@@ -1,4 +1,4 @@
-# Windwalker Environment Package
+# Windwalker Environment
 
 Environment package provides a set of methods help us know information of our server and user's browser.
 
@@ -106,6 +106,14 @@ Set first argument to `false` will return request path without params, same as `
 
 ```
 /path/foo/
+```
+
+### Get Request Information
+
+``` php
+$server->getHost();
+$server->getScheme();
+$server->getPort();
 ```
 
 ## The PhpHelper

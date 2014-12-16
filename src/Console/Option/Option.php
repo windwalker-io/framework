@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Option;
@@ -14,7 +14,7 @@ use Windwalker\Console\IO\IOInterface;
 /**
  * The cli option class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Option
 {
@@ -27,25 +27,25 @@ class Option
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $name;
 
 	/**
-	 * Option alias.
+	 * Option aliases.
 	 *
 	 * @var  array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
-	protected $alias = array();
+	protected $aliases = array();
 
 	/**
 	 * Option description.
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $description;
 
@@ -54,7 +54,7 @@ class Option
 	 *
 	 * @var  boolean
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $global;
 
@@ -63,7 +63,7 @@ class Option
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $default;
 
@@ -72,7 +72,7 @@ class Option
 	 *
 	 * @var IOInterface
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $io;
 
@@ -81,34 +81,34 @@ class Option
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $value;
 
 	/**
 	 * Class Constructor.
 	 *
-	 * @param   mixed    $alias        The option name. Can be a string, an array or an object.
-	 *                                  If we use array, the first element will be option name, others will be alias.
+	 * @param   mixed    $aliases      The option name. Can be a string, an array or an object.
+	 *                                 If we use array, the first element will be option name, others will be alias.
 	 * @param   mixed    $default      The default value when we get a non-exists option.
 	 * @param   string   $description  The option description.
 	 * @param   boolean  $global       True is a global option.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
-	public function __construct($alias, $default = null, $description = null, $global = false)
+	public function __construct($aliases, $default = null, $description = null, $global = false)
 	{
-		$alias = (array) $alias;
-		$name  = array_shift($alias);
+		$aliases = (array) $aliases;
+		$name  = array_shift($aliases);
 
 		$this->name        = $name;
 		$this->default     = $default;
 		$this->description = $description;
 		$this->global      = $global;
 
-		if (count($alias))
+		if (count($aliases))
 		{
-			$this->setAlias($alias);
+			$this->setAliases($aliases);
 		}
 	}
 
@@ -119,11 +119,11 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
-	public function setAlias($alias)
+	public function setAliases($alias)
 	{
-		$this->alias = $alias;
+		$this->aliases = $alias;
 
 		return $this;
 	}
@@ -133,11 +133,41 @@ class Option
 	 *
 	 * @return array  The option alias.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
-	public function getAlias()
+	public function getAliases()
 	{
-		return $this->alias;
+		return $this->aliases;
+	}
+
+	/**
+	 * Add a new alias.
+	 *
+	 * @param   string $alias The alias name.
+	 *
+	 * @return  static
+	 */
+	public function alias($alias)
+	{
+		$this->aliases[] = $alias;
+
+		return $this;
+	}
+
+	/**
+	 * Default value getter, alias of defaultValue().
+	 *
+	 * @param   mixed  $default  The default value.
+	 *
+	 * @return  Option  Return this object to support chaining.
+	 *
+	 * @since   2.0
+	 *
+	 * @deprecated  2.2 Use defaultValue() instead
+	 */
+	public function setDefault($default)
+	{
+		return $this->defaultValue($default);
 	}
 
 	/**
@@ -147,9 +177,9 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
-	public function setDefault($default)
+	public function defaultValue($default)
 	{
 		$this->default = $default;
 
@@ -161,9 +191,9 @@ class Option
 	 *
 	 * @return string  The default value.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
-	public function getDefault()
+	public function getDefaultValue()
 	{
 		return $this->default;
 	}
@@ -175,9 +205,9 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
-	public function setDescription($description)
+	public function description($description)
 	{
 		$this->description = $description;
 
@@ -189,7 +219,7 @@ class Option
 	 *
 	 * @return  string  The description.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getDescription()
 	{
@@ -203,7 +233,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setName($name)
 	{
@@ -217,7 +247,7 @@ class Option
 	 *
 	 * @return  string  Name of this option.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getName()
 	{
@@ -229,7 +259,7 @@ class Option
 	 *
 	 * @return  IOInterface  The Cli IO object.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getIO()
 	{
@@ -248,7 +278,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setIO(IOInterface $io)
 	{
@@ -262,7 +292,7 @@ class Option
 	 *
 	 * @return  mixed  The value of this option.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getValue()
 	{
@@ -270,14 +300,14 @@ class Option
 
 		$name = $this->name;
 
-		if ($io->getOption($name))
+		if ($io->getOption($name) !== null)
 		{
 			return $io->getOption($name);
 		}
 
-		foreach ($this->alias as $alias)
+		foreach ($this->aliases as $alias)
 		{
-			if ($io->getOption($alias))
+			if ($io->getOption($alias) !== null)
 			{
 				return $io->getOption($alias);
 			}
@@ -291,7 +321,7 @@ class Option
 	 *
 	 * @return  bool  True is a global option.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function isGlobal()
 	{
@@ -305,7 +335,7 @@ class Option
 	 *
 	 * @return  Option  Return this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setGlobal($global)
 	{

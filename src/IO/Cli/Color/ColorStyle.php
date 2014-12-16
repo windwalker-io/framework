@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\IO\Cli\Color;
@@ -11,7 +11,7 @@ namespace Windwalker\IO\Cli\Color;
 /**
  * Class ColorStyle
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 final class ColorStyle
 {
@@ -19,7 +19,7 @@ final class ColorStyle
 	 * Known colors
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private static $knownColors = array(
 		'black'   => 0,
@@ -36,7 +36,7 @@ final class ColorStyle
 	 * Known styles
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private static $knownOptions = array(
 		'bold'       => 1,
@@ -49,7 +49,7 @@ final class ColorStyle
 	 * Foreground base value
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private static $fgBase = 30;
 
@@ -57,7 +57,7 @@ final class ColorStyle
 	 * Background base value
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private static $bgBase = 40;
 
@@ -65,7 +65,7 @@ final class ColorStyle
 	 * Foreground color
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $fgColor = 0;
 
@@ -73,7 +73,7 @@ final class ColorStyle
 	 * Background color
 	 *
 	 * @var    integer
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $bgColor = 0;
 
@@ -81,7 +81,7 @@ final class ColorStyle
 	 * Array of style options
 	 *
 	 * @var    array
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $options = array();
 
@@ -92,7 +92,7 @@ final class ColorStyle
 	 * @param   string  $bg       Background color.
 	 * @param   array   $options  Style options.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function __construct($fg = '', $bg = '', $options = array())
@@ -148,7 +148,7 @@ final class ColorStyle
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __toString()
 	{
@@ -164,7 +164,7 @@ final class ColorStyle
 	 *
 	 * @return  ColorStyle  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public static function fromString($string)
@@ -212,7 +212,7 @@ final class ColorStyle
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getStyle()
 	{
@@ -241,7 +241,7 @@ final class ColorStyle
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getKnownColors()
 	{
@@ -253,7 +253,7 @@ final class ColorStyle
 	 *
 	 * @return  array
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getKnownOptions()
 	{

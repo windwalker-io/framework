@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Cache\Storage;
@@ -14,7 +14,7 @@ use Windwalker\Cache\Item\CacheItemInterface;
 /**
  * Class XcacheStorage
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class XcacheStorage extends AbstractCacheStorage
 {
@@ -25,7 +25,7 @@ class XcacheStorage extends AbstractCacheStorage
 	 * @param   mixed $options An options array, or an object that implements \ArrayAccess
 	 *
 	 * @throws \RuntimeException
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function __construct($ttl = null, $options = array())
 	{

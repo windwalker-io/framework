@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Language\Test;
@@ -13,7 +13,7 @@ use Windwalker\Language\Language;
 /**
  * Test class of Language
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class LanguageTest extends \PHPUnit_Framework_TestCase
 {
@@ -293,7 +293,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
 		$orphans = $this->instance->getOrphans();
 
-		$this->assertEquals(array('WINDWALKER_LANGUAGE_TEST_NO_EXISTS_FLOWER', 'A_KEY_NOT_EXISTS'), $orphans);
+		$this->assertEquals(array('windwalker.language.test.no.exists.flower', 'a.key.not.exists'), $orphans);
 	}
 
 	/**
@@ -314,7 +314,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
 		$used = $this->instance->getUsed();
 
-		$this->assertEquals(array('WINDWALKER_LANGUAGE_TEST_SAKURA'), $used);
+		$this->assertEquals(array('windwalker.language.test.sakura'), $used);
 	}
 
 	/**
@@ -355,11 +355,10 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Language\Language::normalize
-	 * @TODO   Implement testNormalize().
 	 */
 	public function testNormalize()
 	{
-		$this->assertEquals('WINDWALKER_IS_GOOD', $this->instance->normalize('Windwalker is good ~~~!!!'));
+		$this->assertEquals('windwalker.is.good', $this->instance->normalize('Windwalker is good ~~~!!!'));
 
 		$this->instance->setNormalizeHandler(
 			function($value)

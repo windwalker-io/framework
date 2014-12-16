@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Renderer\Test;
@@ -15,7 +15,7 @@ use Windwalker\Test\TestCase\DomTestCase;
 /**
  * Test class of TwigRenderer
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class TwigRendererTest extends DomTestCase
 {
@@ -70,7 +70,7 @@ class TwigRendererTest extends DomTestCase
 	 */
 	public function testRender()
 	{
-		$html = $this->instance->render('default.twig');
+		$html = $this->instance->render('default');
 
 		$expect = <<<HTML
 <div id="global">

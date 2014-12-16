@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Registry\Format;
@@ -13,7 +13,7 @@ use Windwalker\Registry\Helper\RegistryHelper;
 /**
  * JSON format handler for Registry.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class JsonFormat implements FormatInterface
 {

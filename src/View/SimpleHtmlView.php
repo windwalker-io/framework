@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\View;
@@ -11,7 +11,7 @@ namespace Windwalker\View;
 /**
  * Class HtmlView
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class SimpleHtmlView extends AbstractView
 {
@@ -30,7 +30,7 @@ class SimpleHtmlView extends AbstractView
 	 * @return  string  The escaped output.
 	 *
 	 * @see     ViewInterface::escape()
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function escape($output)
 	{
@@ -43,7 +43,7 @@ class SimpleHtmlView extends AbstractView
 	 *
 	 * @return  string  The rendered view.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function render()
@@ -55,11 +55,6 @@ class SimpleHtmlView extends AbstractView
 		if (!is_file($layout))
 		{
 			throw new \RuntimeException(sprintf('Layout: %s Not Found', $layout));
-		}
-
-		if (!is_file($layout))
-		{
-			throw new \RuntimeException(sprintf('Layout: %s not found.', $layout));
 		}
 
 		$data = $this->data;

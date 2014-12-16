@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Test;
@@ -14,7 +14,7 @@ use Windwalker\Console\Option\Option;
 /**
  * Class OptionTest
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class OptionTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,7 +38,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected function setUp()
 	{
@@ -56,7 +56,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return array
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function optionProvider()
 	{
@@ -82,13 +82,13 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetAndGetAlias()
 	{
-		$this->instance->setAlias(array('yell', 'Y'));
+		$this->instance->setAliases(array('yell', 'Y'));
 
-		$alias = $this->instance->getAlias();
+		$alias = $this->instance->getAliases();
 
 		$this->assertEquals(array('yell', 'Y'), $alias);
 	}
@@ -98,13 +98,13 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
-	public function testSetAndGetDefault()
+	public function testSetAndGetDefaultValue()
 	{
-		$this->instance->setDefault(0);
+		$this->instance->defaultValue(0);
 
-		$this->assertEquals(0, $this->instance->getDefault(), 'Default value not matched.');
+		$this->assertEquals(0, $this->instance->getDefaultValue(), 'Default value not matched.');
 	}
 
 	/**
@@ -112,11 +112,11 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetAndGetDescription()
 	{
-		$this->instance->setDescription('Desc');
+		$this->instance->description('Desc');
 
 		$this->assertEquals('Desc', $this->instance->getDescription(), 'Description value not matched.');
 	}
@@ -126,7 +126,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetAndGetName()
 	{
@@ -140,7 +140,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetAndGetIO()
 	{
@@ -156,7 +156,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function testGetValue($inputs)
 	{
@@ -181,17 +181,17 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testGlobal()
 	{
-		$this->command->addOption(
+		$this->command->addGlobalOption(
 			'k',
 			'default',
-			'k desc',
-			Option::IS_GLOBAL
-		)
-		->addCommand('kkk');
+			'k desc'
+		);
+
+		$this->command->addCommand('kkk');
 
 		$kkk = $this->command->getChild('kkk');
 

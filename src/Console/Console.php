@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console;
@@ -19,7 +19,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class Console
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Console extends AbstractConsole
 {
@@ -28,7 +28,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var  string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $name = 'Windwalker Console';
 
@@ -37,7 +37,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $version = '1.0';
 
@@ -46,7 +46,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $description = '';
 
@@ -55,7 +55,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var  AbstractCommand
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $rootCommand;
 
@@ -64,7 +64,7 @@ class Console extends AbstractConsole
 	 *
 	 * @var boolean
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $autoExit;
 
@@ -88,10 +88,12 @@ class Console extends AbstractConsole
 	 *
 	 * @return  int  The Unix Console/Shell exit code.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
+		$this->prepareExecute();
+
 		// @event onBeforeExecute
 
 		// Perform application routines.
@@ -99,7 +101,7 @@ class Console extends AbstractConsole
 
 		// @event onAfterExecute
 
-		return $exitCode;
+		return $this->postExecute($exitCode);
 	}
 
 	/**
@@ -109,17 +111,17 @@ class Console extends AbstractConsole
 	 *
 	 * @see     http://tldp.org/LDP/abs/html/exitcodes.html
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \LogicException
 	 * @throws  \Exception
 	 */
 	public function doExecute()
 	{
-		$command  = $this->getRootCommand();
+		$command = $this->getRootCommand();
 
 		if ((!$command->getHandler() && !count($this->io->getArguments())))
 		{
-			$this->io->unshiftArgument('help');
+			$this->set('show_help', true);
 		}
 
 		try
@@ -136,7 +138,7 @@ class Console extends AbstractConsole
 		{
 			$command->renderException($e);
 
-			$exitCode = $e->getHandler();
+			$exitCode = $e->getCode();
 		}
 
 		if ($this->autoExit)
@@ -157,14 +159,18 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function registerRootCommand()
 	{
+		if ($this->rootCommand)
+		{
+			return $this;
+		}
+
 		$this->rootCommand = new RootCommand(null, $this->io);
 
-		$this->rootCommand->setApplication($this)
-			->addCommand(new HelpCommand);
+		$this->rootCommand->setApplication($this);
 
 		return $this;
 	}
@@ -176,7 +182,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  AbstractCommand The created commend.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function register($name)
 	{
@@ -192,7 +198,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  AbstractCommand  The registered command.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function addCommand(AbstractCommand $command)
 	{
@@ -210,7 +216,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  AbstractCommand
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getCommand($path)
 	{
@@ -224,7 +230,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setAutoExit($boolean)
 	{
@@ -238,7 +244,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return AbstractCommand  Default command.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getRootCommand()
 	{
@@ -250,7 +256,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return string  Application name.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getName()
 	{
@@ -264,7 +270,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setName($name)
 	{
@@ -290,7 +296,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setVersion($version)
 	{
@@ -304,7 +310,7 @@ class Console extends AbstractConsole
 	 *
 	 * @return string  Application description.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function getDescription()
 	{
@@ -318,11 +324,11 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setDescription($description)
 	{
-		$this->getRootCommand()->setDescription($description);
+		$this->getRootCommand()->description($description);
 
 		return $this;
 	}
@@ -334,11 +340,11 @@ class Console extends AbstractConsole
 	 *
 	 * @return  Console  Return this object to support chaining.
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function setHandler($closure)
 	{
-		$this->getRootCommand()->setHandler($closure);
+		$this->getRootCommand()->handler($closure);
 
 		return $this;
 	}
@@ -352,7 +358,7 @@ class Console extends AbstractConsole
 	 */
 	public function setUsage($usage)
 	{
-		$this->getRootCommand()->setUsage($usage);
+		$this->getRootCommand()->usage($usage);
 
 		return $this;
 	}
@@ -366,7 +372,7 @@ class Console extends AbstractConsole
 	 */
 	public function setHelp($help)
 	{
-		$this->getRootCommand()->setHelp($help);
+		$this->getRootCommand()->help($help);
 
 		return $this;
 	}

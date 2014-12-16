@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Event;
@@ -11,7 +11,7 @@ namespace Windwalker\Event;
 /**
  * The Dispatcher class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class Dispatcher
 {
@@ -21,18 +21,9 @@ class Dispatcher
 	 *
 	 * @var    EventInterface[]
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $events = array();
-
-	/**
-	 * A regular expression that will filter listener method names.
-	 *
-	 * @var    string
-	 * @since  {DEPLOY_VERSION}
-	 * @deprecated
-	 */
-	protected $listenerFilter;
 
 	/**
 	 * An array of ListenersPriorityQueue indexed
@@ -40,7 +31,7 @@ class Dispatcher
 	 *
 	 * @var    ListenersQueue[]
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $listeners = array();
 
@@ -52,7 +43,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setEvent(EventInterface $event)
 	{
@@ -68,7 +59,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addEvent(EventInterface $event)
 	{
@@ -87,7 +78,7 @@ class Dispatcher
 	 *
 	 * @return  boolean  True if the listener has the given event, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function hasEvent($event)
 	{
@@ -107,7 +98,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface|mixed  The event of the default value.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getEvent($name, $default = null)
 	{
@@ -127,7 +118,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function removeEvent($event)
 	{
@@ -149,7 +140,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface[]  The registered event.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getEvents()
 	{
@@ -161,7 +152,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface[]  The old events.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clearEvents()
 	{
@@ -176,7 +167,7 @@ class Dispatcher
 	 *
 	 * @return  integer  The number of registered events.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function countEvents()
 	{
@@ -188,17 +179,17 @@ class Dispatcher
 	 * If no events are specified, it will be registered to all events matching it's methods name.
 	 * In the case of a closure, you must specify at least one event name.
 	 *
-	 * @param   object|\Closure  $listener  The listener
-	 * @param   array            $events    An associative array of event names as keys
-	 *                                     and the corresponding listener priority as values.
+	 * @param   object|\Closure  $listener    The listener
+	 * @param   array            $priorities  An associative array of event names as keys
+	 *                                        and the corresponding listener priority as values.
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
 	 * @throws  \InvalidArgumentException
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
-	public function addListener($listener, array $events = array())
+	public function addListener($listener, $priorities = array())
 	{
 		if (!is_object($listener))
 		{
@@ -208,18 +199,17 @@ class Dispatcher
 		// We deal with a callable.
 		if (is_callable($listener))
 		{
-			if (empty($events))
+			if (empty($priorities))
 			{
-				throw new \InvalidArgumentException('No event name(s) and priority
-				specified for the Closure listener.');
+				throw new \InvalidArgumentException('No event name(s) and priority specified for the Closure listener.');
 			}
 
-			if (is_string($events))
+			if (is_string($priorities))
 			{
-				$events = array($events => ListenerPriority::NORMAL);
+				$priorities = array($priorities => ListenerPriority::NORMAL);
 			}
 
-			foreach ($events as $name => $priority)
+			foreach ($priorities as $name => $priority)
 			{
 				if (!isset($this->listeners[$name]))
 				{
@@ -235,9 +225,18 @@ class Dispatcher
 		// We deal with a "normal" object.
 		$methods = get_class_methods($listener);
 
-		if (!empty($events))
+		$defaultPriority = ListenerPriority::NORMAL;
+
+		if (is_numeric($priorities))
 		{
-			$methods = array_intersect($methods, array_keys($events));
+			$defaultPriority = $priorities;
+
+			$priorities = null;
+		}
+
+		if (!empty($priorities))
+		{
+			$methods = array_intersect($methods, array_keys($priorities));
 		}
 
 		foreach ($methods as $event)
@@ -248,7 +247,7 @@ class Dispatcher
 				$this->listeners[$event] = new ListenersQueue;
 			}
 
-			$priority = isset($events[$event]) ? $events[$event] : ListenerPriority::NORMAL;
+			$priority = isset($priorities[$event]) ? $priorities[$event] : $defaultPriority;
 
 			$this->listeners[$event]->add($listener, $priority);
 		}
@@ -264,7 +263,7 @@ class Dispatcher
 	 *
 	 * @return  mixed  The listener priority or null if the listener doesn't exist.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getListenerPriority($listener, $event)
 	{
@@ -288,7 +287,7 @@ class Dispatcher
 	 *
 	 * @return  object[]  An array of registered listeners sorted according to their priorities.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getListeners($event)
 	{
@@ -314,7 +313,7 @@ class Dispatcher
 	 *
 	 * @return  boolean  True if the listener is registered, false otherwise.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function hasListener($listener, $event = null)
 	{
@@ -353,7 +352,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function removeListener($listener, $event = null)
 	{
@@ -389,7 +388,7 @@ class Dispatcher
 	 *
 	 * @return  Dispatcher  This method is chainable.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function clearListeners($event = null)
 	{
@@ -421,7 +420,7 @@ class Dispatcher
 	 *
 	 * @return  integer  The number of registered listeners for the given event.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function countListeners($event)
 	{
@@ -441,7 +440,7 @@ class Dispatcher
 	 *
 	 * @return  EventInterface  The event after being passed through all listeners.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function triggerEvent($event, $args = array())
 	{

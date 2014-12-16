@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Data;
@@ -305,5 +305,15 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function isNull()
 	{
 		return empty($this->data);
+	}
+
+	/**
+	 * Is this data set has properties?
+	 *
+	 * @return  boolean True is exists.
+	 */
+	public function notNull()
+	{
+		return !$this->isNull();
 	}
 }

@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\IO;
@@ -14,7 +14,7 @@ namespace Windwalker\IO;
  * This class decodes a JSON string from the raw request data and makes it available via
  * the standard Input interface.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class JsonInput extends Input
 {
@@ -22,7 +22,7 @@ class JsonInput extends Input
 	 * The raw JSON string from the request.
 	 *
 	 * @var    string
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $raw;
 
@@ -64,7 +64,7 @@ class JsonInput extends Input
 	 *
 	 * @return  string  The raw JSON string from the request.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getRaw()
 	{

@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\IO\Cli\Color;
@@ -11,7 +11,7 @@ namespace Windwalker\IO\Cli\Color;
 /**
  * Class ProcessorInterface.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface ColorProcessorInterface
 {
@@ -22,7 +22,7 @@ interface ColorProcessorInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function process($output);
 
@@ -34,7 +34,7 @@ interface ColorProcessorInterface
 	 *
 	 * @return  ColorProcessor  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function addStyle($name, ColorStyle $style);
 

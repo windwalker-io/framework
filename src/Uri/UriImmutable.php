@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Uri;
@@ -15,13 +15,13 @@ namespace Windwalker\Uri;
  *
  * This class is a fork from Joomla Uri.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 final class UriImmutable extends AbstractUri
 {
 	/**
 	 * @var    boolean  Has this class been instantiated yet.
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	private $constructed = false;
 
@@ -33,7 +33,7 @@ final class UriImmutable extends AbstractUri
 	 *
 	 * @return  null  This method always throws an exception.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \BadMethodCallException
 	 */
 	public function __set($name, $value)
@@ -46,7 +46,7 @@ final class UriImmutable extends AbstractUri
 	 *
 	 * @param   string  $uri  The optional URI string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \BadMethodCallException
 	 */
 	public function __construct($uri = null)

@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Crypt\Cipher;
@@ -13,7 +13,7 @@ use Windwalker\Crypt\CryptHelper;
 /**
  * The McryptCipher class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class McryptCipher implements CipherInterface
 {
@@ -41,7 +41,7 @@ abstract class McryptCipher implements CipherInterface
 	/**
 	 * Constructor.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	public function __construct()
@@ -63,7 +63,7 @@ abstract class McryptCipher implements CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since    {DEPLOY_VERSION}
+	 * @since    2.0
 	 */
 	public function decrypt($data, $key = null, $iv = null)
 	{
@@ -102,7 +102,7 @@ abstract class McryptCipher implements CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function encrypt($data, $key = null, $iv = null)

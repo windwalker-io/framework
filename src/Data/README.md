@@ -1,4 +1,4 @@
-# Windwalker Data Package
+# Windwalker Data
 
 ## Installation via Composer
 

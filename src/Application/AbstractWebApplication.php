@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Application;
@@ -20,7 +20,7 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractWebApplication
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractWebApplication extends AbstractApplication
 {
@@ -28,7 +28,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * The application client object.
 	 *
 	 * @var    WebEnvironment
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $environment;
 
@@ -36,7 +36,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * The application response object.
 	 *
 	 * @var    object
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public $response;
 
@@ -82,16 +82,20 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function execute()
 	{
+		$this->prepareExecute();
+
 		// @event onBeforeExecute
 
 		// Perform application routines.
 		$this->doExecute();
 
 		// @event onAfterExecute
+
+		$this->postExecute();
 
 		// @event onBeforeRespond
 
@@ -142,7 +146,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function redirect($url, $moved = false)
 	{
@@ -164,7 +168,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		if (!preg_match('#^[a-z]+\://#i', $url))
 		{
 			// Get a URI instance for the requested URI.
-			$uri = new Uri($this->get('uri.request'));
+			$uri = new Uri($this->get('uri.current'));
 
 			// Get a base URL to prepend from the requested URI.
 			$prefix = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
@@ -225,7 +229,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setHeader($name, $value, $replace = false)
 	{
@@ -241,7 +245,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setBody($content)
 	{
@@ -257,7 +261,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  mixed  The response body either as an array or concatenated string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getBody($asArray = false)
 	{
@@ -296,7 +300,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  void
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	protected function loadSystemUris($requestUri = null)
 	{
@@ -309,7 +313,17 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$uri = $this->getSystemUri($requestUri);
 		}
 
-		$this->set('uri.request', $uri->getOriginal());
+		$original = $uri->getOriginal();
+
+		$queryStart = strpos($original, '?');
+
+		if ($queryStart !== false)
+		{
+			$original = substr($original, 0, strpos($original, '?'));
+		}
+
+		$this->set('uri.current', $original);
+		$this->set('uri.full', $uri->getOriginal());
 
 		// Get the host and path from the URI.
 		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
@@ -330,7 +344,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		$this->set('uri.base.path', $path . '/');
 
 		// Set the extended (non-base) part of the request URI as the route.
-		$route = substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full')));
+		$route = substr_replace($this->get('uri.current'), '', 0, strlen($this->get('uri.base.full')));
 
 		// Only variables should be passed by reference so we use two lines.
 		$file = explode('/', $script);
@@ -397,7 +411,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$uri->setPath(rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
 		}
 		else
-			// Pretty much everything else should be handled with SCRIPT_NAME.
+		// Pretty much everything else should be handled with SCRIPT_NAME.
 		{
 			$uri->setPath(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
 		}
@@ -414,7 +428,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @return  string  The requested URI
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function detectRequestUri()
 	{

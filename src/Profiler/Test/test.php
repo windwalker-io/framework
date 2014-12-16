@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 include_once __DIR__ . '/../../../vendor/autoload.php';
@@ -19,7 +19,7 @@ class Test
 
 	public static function f2()
 	{
-		md5(uniqid());
+		sha1(uniqid());
 	}
 }
 
@@ -35,8 +35,9 @@ $f2 = function()
 	Test::f2();
 };
 
-echo $benchmark->setTimeFormat(\Windwalker\Profiler\Benchmark::SECOND)
+echo $benchmark
+	->setTimeFormat(\Windwalker\Profiler\Benchmark::MICRO_SECOND)
 	->addTask('test1', $f1)
 	->addTask('test2', $f2)
-	->run(1000)
-	->renderResults(6, 'asc');
+	->execute(10000)
+	->render(6, 'asc');

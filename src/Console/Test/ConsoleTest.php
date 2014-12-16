@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Test;
@@ -17,7 +17,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Class ConsoleTest
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class ConsoleTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,9 +26,33 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @var Console
 	 *
-	 * @since {DEPLOY_VERSION}
+	 * @since 2.0
 	 */
 	public $instance;
+
+	/**
+	 * Set up test.
+	 *
+	 * @return void
+	 *
+	 * @since  2.0
+	 */
+	protected function setUp()
+	{
+		$io = new MockIO;
+
+		$io->setArguments(array('foo'));
+
+		/** @var $console Console */
+		$console = new Console($io);
+
+		$console->setName('Test Console')
+			->setVersion('1.2.3')
+			->setDescription('Test desc.')
+			->setAutoExit(false);
+
+		$this->instance = $console;
+	}
 
 	/**
 	 * testGetAndSetLogger
@@ -60,35 +84,11 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Set up test.
-	 *
-	 * @return void
-	 *
-	 * @since  {DEPLOY_VERSION}
-	 */
-	protected function setUp()
-	{
-		$io = new MockIO;
-
-		$io->setArguments(array('foo'));
-
-		/** @var $console Console */
-		$console = new Console($io);
-
-		$console->setName('Test Console')
-			->setVersion('1.2.3')
-			->setDescription('Test desc.')
-			->setAutoExit(false);
-
-		$this->instance = $console;
-	}
-
-	/**
 	 * Nested call the command.
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testNestedCall()
 	{
@@ -110,7 +110,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetAutoExit()
 	{
@@ -126,7 +126,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testAddCommand()
 	{
@@ -140,7 +140,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testConstruct()
 	{
@@ -158,7 +158,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testDoExecute()
 	{
@@ -175,7 +175,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testRegisterRootCommand()
 	{
@@ -187,7 +187,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testRegister()
 	{
@@ -201,7 +201,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testGetName()
 	{
@@ -213,7 +213,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetName()
 	{
@@ -227,7 +227,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testGetVersion()
 	{
@@ -239,7 +239,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetVersion()
 	{
@@ -253,7 +253,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testGetDescription()
 	{
@@ -265,7 +265,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetDescription()
 	{
@@ -279,7 +279,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function testSetHandler()
 	{

@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Router\Matcher;
@@ -16,7 +16,7 @@ use Windwalker\Router\RouteHelper;
 /**
  * The AbstractMatcher class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 abstract class AbstractMatcher implements MatcherInterface
 {
@@ -91,10 +91,7 @@ abstract class AbstractMatcher implements MatcherInterface
 			$routeItem->setRegex($regex);
 		}
 
-		$route = trim($route, '/');
-
-		// Check is root
-		$route = $route ? : '/';
+		$route = RouteHelper::normalise($route);
 
 		if (preg_match($regex, $route, $matches))
 		{

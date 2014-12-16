@@ -3,7 +3,7 @@
  * Part of Windwalker project Test files.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Test\Test;
@@ -11,7 +11,7 @@ namespace Windwalker\Test\Test;
 /**
  * Test class of TestHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class TestHelperTest extends \PHPUnit_Framework_TestCase
 {

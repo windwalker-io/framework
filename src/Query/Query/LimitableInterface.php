@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Query\Query;
@@ -15,7 +15,7 @@ namespace Windwalker\Query\Query;
  * to retrieve the stored bounded variables on demand prior to
  * query execution.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface LimitableInterface
 {
@@ -32,7 +32,7 @@ interface LimitableInterface
 	 *
 	 * @return  string
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function processLimit($query, $limit, $offset = 0);
 
@@ -48,7 +48,7 @@ interface LimitableInterface
 	 *
 	 * @return  LimitableInterface  Returns this object to allow chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function setLimit($limit = 0, $offset = 0);
 }

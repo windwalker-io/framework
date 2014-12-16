@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Command;
@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\DatabaseAwareTrait;
 /**
  * Class DatabaseTable
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 abstract class AbstractTable
 {
@@ -87,6 +87,16 @@ abstract class AbstractTable
 	abstract public function save($ifNotExists = true, $options = array());
 
 	/**
+	 * drop
+	 *
+	 * @param bool   $ifNotExists
+	 * @param string $option
+	 *
+	 * @return  static
+	 */
+	abstract public function drop($ifNotExists = true, $option = '');
+
+	/**
 	 * reset
 	 *
 	 * @return  static
@@ -131,7 +141,7 @@ abstract class AbstractTable
 	 *
 	 * @return  static  Returns this object to support chaining.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	abstract public function lock();
@@ -150,7 +160,7 @@ abstract class AbstractTable
 	 *
 	 * @return  static
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
 	abstract public function truncate();
@@ -285,4 +295,3 @@ abstract class AbstractTable
 		return $this;
 	}
 }
-

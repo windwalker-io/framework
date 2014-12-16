@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Filesystem\Iterator;
@@ -11,7 +11,7 @@ namespace Windwalker\Filesystem\Iterator;
 /**
  * A Directory iterator extends from SPL RecursiveDirectoryIterator.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
 {
@@ -23,7 +23,7 @@ class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
 	 * @return  \SplFileInfo  The filename, file information, or $this depending on the set flags.
 	 *          See the: http://www.php.net/manual/en/class.filesystemiterator.php#filesystemiterator.constants
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function current()
 	{

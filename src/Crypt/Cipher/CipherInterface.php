@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Crypt\Cipher;
@@ -11,7 +11,7 @@ namespace Windwalker\Crypt\Cipher;
 /**
  * Interface CipherInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 interface CipherInterface
 {
@@ -26,7 +26,7 @@ interface CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since    {DEPLOY_VERSION}
+	 * @since    2.0
 	 */
 	public function decrypt($data, $key = null, $iv = null);
 
@@ -39,7 +39,7 @@ interface CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function encrypt($data, $key = null, $iv = null);

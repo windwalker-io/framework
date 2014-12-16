@@ -3,7 +3,7 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Console\Descriptor\Text;
@@ -15,7 +15,7 @@ use Windwalker\Console\Descriptor\AbstractDescriptorHelper;
 /**
  * A descriptor helper to get different descriptor and render it.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.0
  */
 class TextDescriptorHelper extends AbstractDescriptorHelper
 {
@@ -24,7 +24,7 @@ class TextDescriptorHelper extends AbstractDescriptorHelper
 	 *
 	 * @var string
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	protected $template = <<<EOF
 
@@ -51,7 +51,7 @@ EOF;
 	 *
 	 * @throws  \RuntimeException
 	 *
-	 * @since  {DEPLOY_VERSION}
+	 * @since  2.0
 	 */
 	public function describe(AbstractCommand $command)
 	{
@@ -75,7 +75,7 @@ EOF;
 			$commandDescriptor->addItem($cmd);
 		}
 
-		$render['command'] = count($commands) ? "\nAvailable commands:\n\n" . $commandDescriptor->render() : '';
+		$render['command'] = count($commands) ? "\nCommands:\n\n" . $commandDescriptor->render() : '';
 
 		// Render Help template
 		/** @var Console $console */

@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 $autoload = __DIR__ . '/../../../../vendor/autoload.php';
@@ -16,6 +16,10 @@ if (!is_file($autoload))
 include_once $autoload;
 
 $console = new \Windwalker\Console\Console;
+
+$console->execute();
+
+die;
 
 $console->setName('Example Console')
 	->setVersion('1.2.3')

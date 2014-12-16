@@ -1,4 +1,4 @@
-# Windwalker Dom Package
+# Windwalker Dom
 
 ## Installation via Composer
 

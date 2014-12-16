@@ -3,7 +3,7 @@
  * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2008 - 2014 Asikart.com. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU Lesser General Public License version 2.1 or later.
  */
 
 namespace Windwalker\Database\Driver\Mysql;
@@ -14,7 +14,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
 /**
  * Class MysqlDatabase
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0
  */
 class MysqlDatabase extends AbstractDatabase
 {
@@ -46,7 +46,7 @@ class MysqlDatabase extends AbstractDatabase
 	 *
 	 * @return  static
 	 */
-	public function create($ifNotExists = false, $charset = null, $collate = null)
+	public function create($ifNotExists = false, $charset = 'utf8', $collate = 'utf8_general_ci')
 	{
 		$query = MysqlQueryBuilder::createDatabase($this->database, $ifNotExists, $charset, $collate);
 
@@ -119,7 +119,7 @@ class MysqlDatabase extends AbstractDatabase
 	 *
 	 * @return  array  An array of all the tables in the database.
 	 *
-	 * @since   {DEPLOY_VERSION}
+	 * @since   2.0
 	 */
 	public function getTables($refresh = false)
 	{
