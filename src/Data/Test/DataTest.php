@@ -167,6 +167,15 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('sakura', $this->instance['flower']);
 		$this->assertEquals('walker', $this->instance['wind']);
+
+		try
+		{
+			$this->instance[null] = 'sunflower';
+		}
+		catch (\Exception $e)
+		{
+			$this->assertTrue($e instanceof \InvalidArgumentException);
+		}
 	}
 
 	/**

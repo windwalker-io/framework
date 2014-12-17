@@ -65,7 +65,7 @@ class AbstractInputList extends HtmlElement
 	 */
 	protected function prepareOptions()
 	{
-		foreach ($this->content as $key => &$option)
+		foreach ($this->content as $key => $option)
 		{
 			if (!($option instanceof Option))
 			{

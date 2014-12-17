@@ -221,7 +221,7 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function offsetSet($offset, $value)
 	{
-		if ($offset)
+		if ($offset !== null)
 		{
 			$this->data[$offset] = $value;
 		}

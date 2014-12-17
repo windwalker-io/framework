@@ -2,7 +2,7 @@
 
 # Windwalker Framework   [![Analytics](https://ga-beacon.appspot.com/UA-48372917-1/windwalker/readme)](https://github.com/igrigorik/ga-beacon)
 
-[![Build Status](https://travis-ci.org/ventoviro/windwalker.svg?branch=staging)](https://travis-ci.org/ventoviro/windwalker) [![Latest Stable Version](https://poser.pugx.org/windwalker/framework/version.svg)](https://packagist.org/packages/windwalker/framework) [![Latest Unstable Version](https://poser.pugx.org/windwalker/framework/v/unstable.svg)](//packagist.org/packages/windwalker/framework) [![Total Downloads](https://poser.pugx.org/windwalker/framework/downloads.svg)](https://packagist.org/packages/windwalker/framework) [![License](https://poser.pugx.org/windwalker/framework/license.svg)](https://packagist.org/packages/windwalker/framework)
+[![Build Status](https://travis-ci.org/ventoviro/windwalker.svg?branch=staging)](https://travis-ci.org/ventoviro/windwalker) [![HHVM Status](http://hhvm.h4cc.de/badge/windwalker/framework.svg)](http://hhvm.h4cc.de/package/windwalker/framework) [![Latest Stable Version](https://poser.pugx.org/windwalker/framework/version.svg)](https://packagist.org/packages/windwalker/framework) [![Latest Unstable Version](https://poser.pugx.org/windwalker/framework/v/unstable.svg)](//packagist.org/packages/windwalker/framework) [![Total Downloads](https://poser.pugx.org/windwalker/framework/downloads.svg)](https://packagist.org/packages/windwalker/framework) [![License](https://poser.pugx.org/windwalker/framework/license.svg)](https://packagist.org/packages/windwalker/framework)
 
 **Windwalker** is a New PHP framework. It is based on Joomla and is core of [Windwalker RAD framework](https://github.com/ventoviro/windwalker-joomla-rad).
 
