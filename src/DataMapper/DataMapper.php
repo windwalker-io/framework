@@ -67,7 +67,7 @@ class DataMapper extends AbstractDataMapper
 
 		try
 		{
-			foreach ($dataset as &$data)
+			foreach ($dataset as $k => $data)
 			{
 				if (!($data instanceof $this->dataClass))
 				{
@@ -81,6 +81,8 @@ class DataMapper extends AbstractDataMapper
 				$this->db->create($this->table, $entity, $pk);
 
 				$data->$pk = $entity->$pk;
+
+				$dataset[$k] = $data;
 			}
 		}
 		catch (\Exception $e)
