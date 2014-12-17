@@ -8,6 +8,7 @@
 
 namespace Windwalker\Profiler;
 
+use Windwalker\Environment\PhpHelper;
 use Windwalker\Profiler\Point\Point;
 use Windwalker\Profiler\Point\ProfilerPointInterface;
 use Windwalker\Profiler\Renderer\DefaultRenderer;
@@ -87,7 +88,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 *
 	 * @throws  \InvalidArgumentException
 	 */
-	public function __construct($name, ProfilerRendererInterface $renderer = null, array $points = array(), $memoryRealUsage = true)
+	public function __construct($name, ProfilerRendererInterface $renderer = null, array $points = array(), $memoryRealUsage = null)
 	{
 		$this->name = $name;
 		$this->renderer = $renderer ? : new DefaultRenderer;
@@ -102,7 +103,8 @@ class Profiler implements ProfilerInterface, \Countable
 			$this->setPoints($points);
 		}
 
-		$this->memoryRealUsage = (bool) $memoryRealUsage;
+		// HHVM has different behavior on memory_get_usage()
+		$this->memoryRealUsage = ($memoryRealUsage === null) ? PhpHelper::isHHVM() : (bool) $memoryRealUsage;
 	}
 
 	/**

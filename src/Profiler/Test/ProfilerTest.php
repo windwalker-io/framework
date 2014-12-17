@@ -64,7 +64,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('test', $this->instance->getName());
 		$this->assertInstanceOf('Windwalker\Profiler\Renderer\DefaultRenderer', $this->instance->getRenderer());
 		$this->assertEmpty($this->instance->getPoints());
-		$this->assertTrue(TestHelper::getValue($this->instance, 'memoryRealUsage'));
+		$this->assertEquals(PhpHelper::isHHVM(), $this->instance->getMemoryRealUsage());
 
 		$renderer = new DefaultRenderer;
 		$pointOne = new Point('start');
@@ -103,16 +103,6 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMark()
 	{
-		// TODO: Different behavior of memory_get_usage() between HHVM & PHP
-		if (PhpHelper::isHHVM())
-		{
-			$this->instance->useMemoryRealUsage(true);
-		}
-		else
-		{
-			$this->instance->useMemoryRealUsage(false);
-		}
-
 		$this->instance->mark('one');
 		$this->instance->mark('two');
 		$this->instance->mark('three');
