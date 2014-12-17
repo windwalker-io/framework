@@ -8,6 +8,8 @@
 
 namespace Windwalker\Profiler\Test;
 
+use Windwalker\Environment\ServerHelper;
+use Windwalker\IO\Cli\IO;
 use Windwalker\Profiler\Point\Point;
 use Windwalker\Profiler\Profiler;
 use Windwalker\Profiler\Renderer\DefaultRenderer;
@@ -61,7 +63,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('test', $this->instance->getName());
 		$this->assertInstanceOf('Windwalker\Profiler\Renderer\DefaultRenderer', $this->instance->getRenderer());
 		$this->assertEmpty($this->instance->getPoints());
-		$this->assertFalse(TestHelper::getValue($this->instance, 'memoryRealUsage'));
+		$this->assertTrue(TestHelper::getValue($this->instance, 'memoryRealUsage'));
 
 		$renderer = new DefaultRenderer;
 		$pointOne = new Point('start');
@@ -71,12 +73,12 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 			'two' => $pointTwo
 		);
 
-		$profiler = new Profiler('bar', $renderer, $points, true);
+		$profiler = new Profiler('bar', $renderer, $points, false);
 
 		$this->assertEquals('bar', $profiler->getName());
 		$this->assertSame($renderer, $profiler->getRenderer());
 		$this->assertEquals($points, $profiler->getPoints());
-		$this->assertTrue(TestHelper::getValue($profiler, 'memoryRealUsage'));
+		$this->assertFalse($profiler->getMemoryRealUsage());
 	}
 
 	/**
@@ -100,6 +102,8 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMark()
 	{
+		$this->instance->useMemoryRealUsage(true);
+
 		$this->instance->mark('one');
 		$this->instance->mark('two');
 		$this->instance->mark('three');
@@ -124,8 +128,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertGreaterThan(0, $thirdPoint->getTime());
 		$this->assertGreaterThan(0, $thirdPoint->getMemory());
-var_dump('Profiler', $firstPoint, $secondPoint, $thirdPoint);
-		var_dump('memory_usage', memory_get_usage(), memory_get_peak_usage());
+
 		// Assert the third point has greater values than the second point.
 		$this->assertGreaterThan($secondPoint->getTime(), $thirdPoint->getTime());
 		$this->assertGreaterThan($secondPoint->getMemory(), $thirdPoint->getMemory());

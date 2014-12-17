@@ -87,7 +87,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 *
 	 * @throws  \InvalidArgumentException
 	 */
-	public function __construct($name, ProfilerRendererInterface $renderer = null, array $points = array(), $memoryRealUsage = false)
+	public function __construct($name, ProfilerRendererInterface $renderer = null, array $points = array(), $memoryRealUsage = true)
 	{
 		$this->name = $name;
 		$this->renderer = $renderer ? : new DefaultRenderer;
@@ -394,5 +394,19 @@ class Profiler implements ProfilerInterface, \Countable
 	public function count()
 	{
 		return count($this->points);
+	}
+
+	/**
+	 * Method to set property memoryRealUsage
+	 *
+	 * @param   boolean $memoryRealUsage
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function useMemoryRealUsage($memoryRealUsage)
+	{
+		$this->memoryRealUsage = $memoryRealUsage;
+
+		return $this;
 	}
 }
