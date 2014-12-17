@@ -36,7 +36,7 @@ class CheckboxList extends AbstractInputList
 		parent::prepareOptions();
 
 		// Prepare array name
-		foreach ($this->content as $key => &$option)
+		foreach ($this->content as $key => $option)
 		{
 			$option[0]->setAttribute('name', $option[0]->getAttribute('name') . '[]');
 		}
