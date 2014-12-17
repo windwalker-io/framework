@@ -8,6 +8,9 @@
 
 namespace Windwalker\Profiler\Test;
 
+use Windwalker\Environment\PhpHelper;
+use Windwalker\Environment\ServerHelper;
+use Windwalker\IO\Cli\IO;
 use Windwalker\Profiler\Point\Point;
 use Windwalker\Profiler\Profiler;
 use Windwalker\Profiler\Renderer\DefaultRenderer;
@@ -61,7 +64,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('test', $this->instance->getName());
 		$this->assertInstanceOf('Windwalker\Profiler\Renderer\DefaultRenderer', $this->instance->getRenderer());
 		$this->assertEmpty($this->instance->getPoints());
-		$this->assertFalse(TestHelper::getValue($this->instance, 'memoryRealUsage'));
+		$this->assertEquals(PhpHelper::isHHVM(), $this->instance->getMemoryRealUsage());
 
 		$renderer = new DefaultRenderer;
 		$pointOne = new Point('start');
@@ -71,12 +74,12 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 			'two' => $pointTwo
 		);
 
-		$profiler = new Profiler('bar', $renderer, $points, true);
+		$profiler = new Profiler('bar', $renderer, $points, false);
 
 		$this->assertEquals('bar', $profiler->getName());
 		$this->assertSame($renderer, $profiler->getRenderer());
 		$this->assertEquals($points, $profiler->getPoints());
-		$this->assertTrue(TestHelper::getValue($profiler, 'memoryRealUsage'));
+		$this->assertFalse($profiler->getMemoryRealUsage());
 	}
 
 	/**

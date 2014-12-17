@@ -1,6 +1,7 @@
 language: php
 
 php:
+  - hhvm
   - 5.3
   - 5.4
   - 5.5
@@ -22,7 +23,9 @@ before_script:
 #  - mysql joomla_ut < src/Joomla/Database/Tests/Stubs/mysql.sql
 #  - psql -c 'create database joomla_ut;' -U postgres
 #  - psql -d joomla_ut -a -f src/Joomla/Database/Tests/Stubs/postgresql.sql
-  - phpenv config-add build/travis/phpenv/memcached.ini
+#  - touch build/travis/phpenv/memcached.ini
+#  - phpenv config-add build/travis/phpenv/memcached.ini
+#  - cat build/travis/phpenv/memcached.ini
 
 script:
   - phpunit --configuration phpunit.travis.xml

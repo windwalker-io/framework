@@ -84,7 +84,7 @@ class SelectList extends HtmlElement
 	 */
 	protected function prepareOptions()
 	{
-		foreach ($this->content as $name => &$option)
+		foreach ($this->content as $name => $option)
 		{
 			// Array means it is a group
 			if (is_array($option))

@@ -90,6 +90,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 			$field = substr($field, 3);
 		}
 
+		if ($field === null || $field === false)
+		{
+			throw new \InvalidArgumentException('Cannot access empty property');
+		}
+
 		$this->$field = $value;
 
 		return $this;

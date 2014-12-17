@@ -170,6 +170,11 @@ class MysqlDatabaseTest extends AbstractMysqlTest
 	 */
 	public function __destruct()
 	{
+		if (!$this->db)
+		{
+			return;
+		}
+
 		$this->db->setQuery(MysqlQueryBuilder::dropDatabase('windwalker_foo_test', true))->execute();
 		$this->db->setQuery(MysqlQueryBuilder::dropDatabase('windwalker_bar_test', true))->execute();
 

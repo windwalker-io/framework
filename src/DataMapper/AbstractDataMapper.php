@@ -405,7 +405,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$createDataset = new $this->datasetClass;
 		$updateDataset = new $this->datasetClass;
 
-		foreach ($dataset as &$data)
+		foreach ($dataset as $k => $data)
 		{
 			if (!($data instanceof $this->dataClass))
 			{
@@ -434,6 +434,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			{
 				$createDataset[] = $data;
 			}
+
+			$dataset[$k] = $data;
 		}
 
 		$this->create($createDataset);
