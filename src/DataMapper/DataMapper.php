@@ -113,7 +113,7 @@ class DataMapper extends AbstractDataMapper
 
 		try
 		{
-			foreach ($dataset as &$data)
+			foreach ($dataset as $k => $data)
 			{
 				if (!($data instanceof $this->dataClass))
 				{
@@ -123,6 +123,8 @@ class DataMapper extends AbstractDataMapper
 				$entity = new Entity($this->getFields($this->table), $data);
 
 				$this->db->updateOne($this->table, $entity, $condFields);
+
+				$dataset[$k] = $data;
 			}
 		}
 		catch (\Exception $e)
