@@ -622,7 +622,7 @@ SQL;
 			}
 		);
 
-		$this->db->setQuery('SELECT * FROM ww_flowers')->execute();
+		$this->db->setQuery('SELECT * FROM #__flowers')->execute();
 
 		$this->assertSame($this->db, $profiler['db']);
 		$this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flowers', $profiler['sql']);
