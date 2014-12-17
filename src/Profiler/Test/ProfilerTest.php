@@ -124,7 +124,8 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertGreaterThan(0, $thirdPoint->getTime());
 		$this->assertGreaterThan(0, $thirdPoint->getMemory());
-
+show('Profiler', $firstPoint, $secondPoint, $thirdPoint);
+		show('memory_usage', memory_get_usage(), memory_get_peak_usage());
 		// Assert the third point has greater values than the second point.
 		$this->assertGreaterThan($secondPoint->getTime(), $thirdPoint->getTime());
 		$this->assertGreaterThan($secondPoint->getMemory(), $thirdPoint->getMemory());
