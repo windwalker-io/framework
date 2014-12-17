@@ -622,10 +622,10 @@ SQL;
 			}
 		);
 
-		$this->db->setQuery('SELECT * FROM #__flowers')->execute();
-		var_dump('DB list', $this->db->getDatabase()->getTables());
+		$this->db->setQuery('SELECT * FROM #__flower')->execute();
+
 		$this->assertSame($this->db, $profiler['db']);
-		$this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flowers', $profiler['sql']);
+		$this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flower', $profiler['sql']);
 
 		$this->assertTrue($profiler['before']);
 		$this->assertTrue($profiler['after']);
