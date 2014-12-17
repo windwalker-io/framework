@@ -8,6 +8,7 @@
 
 namespace Windwalker\Profiler\Test;
 
+use Windwalker\Environment\PhpHelper;
 use Windwalker\Environment\ServerHelper;
 use Windwalker\IO\Cli\IO;
 use Windwalker\Profiler\Point\Point;
@@ -102,7 +103,15 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMark()
 	{
-		$this->instance->useMemoryRealUsage(true);
+		// TODO: Different behavior of memory_get_usage() between HHVM & PHP
+		if (PhpHelper::isHHVM())
+		{
+			$this->instance->useMemoryRealUsage(true);
+		}
+		else
+		{
+			$this->instance->useMemoryRealUsage(false);
+		}
 
 		$this->instance->mark('one');
 		$this->instance->mark('two');
