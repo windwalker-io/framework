@@ -114,9 +114,9 @@ abstract class AbstractRenderer implements RendererInterface
 		{
 			$priority = new \SplPriorityQueue;
 
-			foreach ((array) $paths as $path)
+			foreach ((array) $paths as $i => $path)
 			{
-				$priority->insert($path, 100);
+				$priority->insert($path, 100 - ($i * 10));
 			}
 
 			$paths = $priority;
