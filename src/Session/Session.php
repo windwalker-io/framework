@@ -689,6 +689,30 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
+	 * Method to get property Bridge
+	 *
+	 * @return  SessionBridgeInterface
+	 */
+	public function getBridge()
+	{
+		return $this->bridge;
+	}
+
+	/**
+	 * Method to set property bridge
+	 *
+	 * @param   SessionBridgeInterface $bridge
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setBridge($bridge)
+	{
+		$this->bridge = $bridge;
+
+		return $this;
+	}
+
+	/**
 	 * Get session name
 	 *
 	 * @return  string  The session name
