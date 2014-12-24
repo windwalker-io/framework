@@ -69,6 +69,20 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	}
 
 	/**
+	 * Method to set property name
+	 *
+	 * @param   string $name
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
 	 * Get an event argument value.
 	 *
 	 * @param   string  $name     The argument name.
