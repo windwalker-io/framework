@@ -186,7 +186,7 @@ class Container
 
 		if (is_null($store))
 		{
-			throw new \InvalidArgumentException(sprintf('The requested key %s does not exist to extend.', $key));
+			throw new \UnexpectedValueException(sprintf('The requested key %s does not exist to extend.', $key));
 		}
 
 		$closure = function ($container) use($callable, $store)
@@ -323,7 +323,7 @@ class Container
 	 * @return  mixed   Results of running the $callback for the specified $key.
 	 *
 	 * @since   2.0
-	 * @throws  \InvalidArgumentException
+	 * @throws  \UnexpectedValueException
 	 */
 	public function get($key, $forceNew = false)
 	{
@@ -331,7 +331,7 @@ class Container
 
 		if (is_null($store))
 		{
-			throw new \InvalidArgumentException(sprintf('Key %s has not been registered with the container.', $key));
+			throw new \UnexpectedValueException(sprintf('Key %s has not been registered with the container.', $key));
 		}
 
 		return $store->get($this, $forceNew);
