@@ -74,7 +74,7 @@ class TwigRenderer extends AbstractAdapterRenderer
 	/**
 	 * getLoader
 	 *
-	 * @return  null
+	 * @return  \Twig_Loader_Filesystem
 	 */
 	public function getLoader()
 	{
