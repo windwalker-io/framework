@@ -616,7 +616,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @param   boolean  $global  is Global options.
 	 *
-	 * @return  mixed  The options array.
+	 * @return  Option[]  The options array.
 	 *
 	 * @since   2.0
 	 */
@@ -630,7 +630,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @param   boolean  $global  is Global options.
 	 *
-	 * @return  mixed  The options array.
+	 * @return  OptionSet  The options array.
 	 *
 	 * @since   2.0
 	 */
