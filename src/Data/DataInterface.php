@@ -31,4 +31,18 @@ interface DataInterface
 	 * @return  boolean
 	 */
 	public function isNull();
+
+	/**
+	 * Is this object has properties?
+	 *
+	 * @return  boolean
+	 */
+	public function notNull();
+
+	/**
+	 * Dump all data as array
+	 *
+	 * @return  array
+	 */
+	public function dump();
 }

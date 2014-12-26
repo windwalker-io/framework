@@ -11,7 +11,7 @@ namespace Windwalker\DataMapper;
 use Windwalker\Data\Data;
 use Windwalker\Data\DataInterface;
 use Windwalker\Data\DataSet;
-use Windwalker\Data\DatasetInterface;
+use Windwalker\Data\DataSetInterface;
 
 /**
  * Abstract DataMapper.
@@ -641,7 +641,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	{
 		$object = new $this->datasetClass;
 
-		if ($object instanceof DatasetInterface)
+		if ($object instanceof DataSetInterface)
 		{
 			return $object->bind($dataset);
 		}

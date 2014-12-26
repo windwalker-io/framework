@@ -219,4 +219,16 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertTrue($data->isNull());
 	}
+
+	/**
+	 * testDump
+	 *
+	 * @return  void
+	 */
+	public function testDump()
+	{
+		$compare = $this->getTestData();
+
+		$this->assertEquals($compare, $this->instance->dump());
+	}
 }

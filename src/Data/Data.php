@@ -265,4 +265,14 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	{
 		return (boolean) count($this);
 	}
+
+	/**
+	 * Dump all data as array
+	 *
+	 * @return  array
+	 */
+	public function dump()
+	{
+		return get_object_vars($this);
+	}
 }

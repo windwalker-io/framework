@@ -13,7 +13,7 @@ namespace Windwalker\Data;
  * 
  * @sine 1.0
  */
-interface DatasetInterface
+interface DataSetInterface
 {
 	/**
 	 * Bind an array contains multiple data into this object.
@@ -30,4 +30,18 @@ interface DatasetInterface
 	 * @return  boolean True if empty.
 	 */
 	public function isNull();
+
+	/**
+	 * Is this data set has properties?
+	 *
+	 * @return  boolean True is exists.
+	 */
+	public function notNull();
+
+	/**
+	 * Dump all data as array.
+	 *
+	 * @return  Data[]
+	 */
+	public function dump();
 }

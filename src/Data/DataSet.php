@@ -18,7 +18,7 @@ if (!interface_exists('JsonSerializable'))
  *
  * @since 1.0
  */
-class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
+class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {
 	/**
 	 * The data store.
@@ -315,5 +315,15 @@ class DataSet implements DatasetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function notNull()
 	{
 		return !$this->isNull();
+	}
+
+	/**
+	 * Dump all data as array.
+	 *
+	 * @return  Data[]
+	 */
+	public function dump()
+	{
+		return $this->data;
 	}
 }

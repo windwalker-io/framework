@@ -290,4 +290,14 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertTrue($dataset->isNull());
 	}
+
+	/**
+	 * testDump
+	 *
+	 * @return  void
+	 */
+	public function testDump()
+	{
+		$this->assertEquals($this->getTestData(), $this->instance->dump());
+	}
 }
