@@ -622,7 +622,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function getOptions($global = false)
 	{
-		return $global ? (array) $this->options : (array) $this->globalOptions;
+		return $global ? $this->options->toArray() : $this->globalOptions->toArray();
 	}
 
 	/**
@@ -648,7 +648,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function getAllOptions()
 	{
-		return array_merge((array) $this->globalOptions, (array) $this->options);
+		return array_merge($this->globalOptions->toArray(), $this->options->toArray());
 	}
 
 	/**

@@ -10,6 +10,7 @@ namespace Windwalker\Console\Test;
 
 use Windwalker\Console\Command\RootCommand;
 use Windwalker\Console\Option\Option;
+use Windwalker\Filesystem\Iterator\ArrayObject;
 
 /**
  * Class OptionTest
@@ -91,6 +92,19 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 		$alias = $this->instance->getAliases();
 
 		$this->assertEquals(array('yell', 'Y'), $alias);
+	}
+
+	/**
+	 * testHasAlias
+	 *
+	 * @return  void
+	 */
+	public function testHasAlias()
+	{
+		$this->assertTrue($this->instance->hasAlias('yell'));
+		$this->assertTrue($this->instance->hasAlias('y'));
+		$this->assertFalse($this->instance->hasAlias('k'));
+		$this->assertFalse($this->instance->hasAlias('foo'));
 	}
 
 	/**

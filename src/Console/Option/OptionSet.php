@@ -13,16 +13,14 @@ namespace Windwalker\Console\Option;
  *
  * @since 2.0
  */
-class OptionSet extends \ArrayObject
+class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serializable
 {
 	/**
-	 * Option aliases.
+	 * Property options.
 	 *
-	 * @var    array
-	 *
-	 * @since  2.0
+	 * @var  Option[]
 	 */
-	protected $aliases = array();
+	protected $options = array();
 
 	/**
 	 * Add a new option.
@@ -41,6 +39,40 @@ class OptionSet extends \ArrayObject
 	}
 
 	/**
+	 * Retrieve an external iterator
+	 *
+	 * @return \Traversable An instance of an object implementing Iterator or Traversable
+	 *
+	 * @since   2.0
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->options);
+	}
+
+	/**
+	 * Find option by name or alias.
+	 *
+	 * @param   string  $name  The name or alias.
+	 *
+	 * @return  Option  The found option object.
+	 *
+	 * @since   2.0
+	 */
+	protected function findOption($name)
+	{
+		foreach ($this->options as $option)
+		{
+			if ($option->hasAlias($name))
+			{
+				return $option;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Is a option exists?
 	 *
 	 * @param   mixed  $name  Option name.
@@ -51,9 +83,7 @@ class OptionSet extends \ArrayObject
 	 */
 	public function offsetExists($name)
 	{
-		$name = $this->resolveAlias($name);
-
-		return parent::offsetExists($name);
+		return (bool) $this->findOption($name);
 	}
 
 	/**
@@ -67,14 +97,7 @@ class OptionSet extends \ArrayObject
 	 */
 	public function offsetGet($name)
 	{
-		$name = $this->resolveAlias($name);
-
-		if (!$this->offsetExists($name))
-		{
-			return null;
-		}
-
-		return parent::offsetGet($name);
+		return $this->findOption($name);
 	}
 
 	/**
@@ -91,11 +114,7 @@ class OptionSet extends \ArrayObject
 	{
 		$name = $option->getName();
 
-		$aliases = $option->getAliases();
-
-		$this->setAliases($aliases, $name);
-
-		parent::offsetSet($name, $option);
+		$this->options[$name] = $option;
 	}
 
 	/**
@@ -109,54 +128,61 @@ class OptionSet extends \ArrayObject
 	 */
 	public function offsetUnset($name)
 	{
-		$name = $this->resolveAlias($name);
+		$option = $this->findOption($name);
 
-		if (!$this->offsetExists($name))
+		if ($option instanceof Option)
 		{
-			return;
+			unset($this->options[$option->getName()]);
 		}
-
-		parent::offsetUnset($name);
 	}
 
 	/**
-	 * Set Alias of an option.
+	 * Count options.
 	 *
-	 * @param   array|string  $aliases  An alias of a option, can be array.
-	 * @param   string        $option   The option which we want to add alias.
-	 *
-	 * @return  OptionSet  Return self to support chaining.
+	 * @return  integer  Number of options.
 	 *
 	 * @since   2.0
 	 */
-	public function setAliases($aliases, $option)
+	public function count()
 	{
-		$aliases = (array) $aliases;
-
-		foreach ($aliases as $alias)
-		{
-			$this->aliases[$alias] = $option;
-		}
-
-		return $this;
+		return count($this->options);
 	}
 
 	/**
-	 * Resolve alias for an option.
+	 * Serialize this object
 	 *
-	 * @param   string  $alias  An alias to help us get option name.
-	 *
-	 * @return  string  Return name if found, or return alias as name.
+	 * @return string
 	 *
 	 * @since   2.0
 	 */
-	protected function resolveAlias($alias)
+	public function serialize()
 	{
-		if (!empty($this->aliases[$alias]))
-		{
-			return $this->aliases[$alias];
-		}
+		return serialize($this->options);
+	}
 
-		return $alias;
+	/**
+	 * Un serialize this object.
+	 *
+	 * @param   string  $data  Serialized data.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.0
+	 */
+	public function unserialize($data)
+	{
+		$this->options = unserialize($data);
+	}
+
+	/**
+	 * Convert to array.
+	 *
+	 * @return  Option[]
+	 *
+	 * @since   2.0
+	 */
+	public function toArray()
+	{
+		return $this->options;
 	}
 }

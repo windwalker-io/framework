@@ -141,6 +141,25 @@ class Option
 	}
 
 	/**
+	 * Has alias.
+	 *
+	 * @param   string  $alias  The option alias to find.
+	 *
+	 * @return  boolean
+	 *
+	 * @since  2.0
+	 */
+	public function hasAlias($alias)
+	{
+		if ($this->name == $alias)
+		{
+			return true;
+		}
+
+		return in_array($alias, $this->aliases);
+	}
+
+	/**
 	 * Add a new alias.
 	 *
 	 * @param   string $alias The alias name.
