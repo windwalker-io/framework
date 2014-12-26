@@ -344,8 +344,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		$this->set('uri.base.full', $host . $path . '/');
 		$this->set('uri.base.host', $host);
 		$this->set('uri.base.path', $path . '/');
-		$this->set('uri.script.name', $scriptName);
-		$this->set('uri.script.path', $scriptName . '/');
+		$this->set('uri.script', $scriptName);
 
 		// Set the extended (non-base) part of the request URI as the route.
 		$route = substr_replace($this->get('uri.current'), '', 0, strlen($this->get('uri.base.full')));
