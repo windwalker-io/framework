@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of formosa project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 2.1 or later.
