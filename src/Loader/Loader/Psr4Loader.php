@@ -130,7 +130,10 @@ class Psr4Loader extends AbstractLoader
 				. '.php';
 
 			// If the mapped file exists, require it
-			$this->requireFile($file);
+			if (is_file($file))
+			{
+				$this->requireFile($file);
+			}
 		}
 
 		return $this;
