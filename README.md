@@ -33,6 +33,10 @@ composer create-project windwalker/starter windwalker ~2.0
 
 See: [Windwalker Starter](https://github.com/ventoviro/windwalker-starter)
 
+## How to Use
+
+See: [Documentation](http://windwalker.io/documentation/start/getting-started.html)
+
 ## Packages
 
 Every packages has ready to use, please try it:
