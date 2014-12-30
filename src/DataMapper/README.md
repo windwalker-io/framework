@@ -7,7 +7,8 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/datamapper": "~2.0"
+        "windwalker/datamapper": "~2.0",
+        "windwalker/database": "~2.0"
     }
 }
 ```
