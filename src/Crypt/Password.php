@@ -101,7 +101,7 @@ class Password
 	}
 
 	/**
-	 * verify
+	 * verify the password
 	 *
 	 * @param string $password
 	 * @param string $hash
@@ -110,7 +110,23 @@ class Password
 	 */
 	public function verify($password, $hash)
 	{
-		return ($hash === crypt($password, $hash));
+		if (!function_exists('crypt')) {
+			trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
+			return false;
+		}
+		// Calculate the user-provided hash, using the salt stored with the known hash
+		$ret = crypt($password, $hash);
+		if (!is_string($ret) || $this->_strlen($ret) != $this->_strlen($hash) || $this->_strlen($ret) <= 13) {
+			return false;
+		}
+
+		$status = 0;
+		$len = $this->_strlen($ret);
+		
+		for ($i = 0; $i < $len; ++$i) {
+			$status |= (ord($ret[$i]) ^ ord($hash[$i]));
+		}
+		return $status === 0;
 	}
 
 	/**
@@ -184,5 +200,20 @@ class Password
 		$this->type = $type;
 
 		return $this;
+	}
+	
+	/**
+	 * mb safe string length calculator
+	 * 
+	 * @param string $binary_string
+	 * 
+	 * @return int
+	 */
+	protected function _strlen($binary_string)
+	{
+		if (function_exists('mb_strlen')) {
+			return mb_strlen($binary_string, '8bit');
+		}
+		return strlen($binary_string);
 	}
 }
