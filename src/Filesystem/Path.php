@@ -155,10 +155,10 @@ class Path
 	/**
 	 * Checks for snooping outside of the file system root.
 	 *
-	 * @param   string $path A file system path to check.
-	 * @param   string $root System root path.
+	 * @param   string  $path  A file system path to check.
+	 * @param   string  $root  System root path.
 	 *
-	 * @throws \Exception
+	 * @throws  \Exception
 	 * @return  string  A cleaned version of the path or exit on error.
 	 *
 	 * @since   2.0
@@ -212,6 +212,57 @@ class Path
 		}
 
 		return $path;
+	}
+
+	/**
+	 * Normalize a path. This method will do clean() first to replace slashes and remove '..' to create a
+	 * Clean path. Unlike realpath(), if this path not exists, normalise() will still return this path.
+	 *
+	 * @param   string  $path  The path to normalize.
+	 * @param   string  $ds    Directory separator (optional).
+	 *
+	 * @return  string  The normalized path.
+	 *
+	 * @since   2.0.4
+	 * @throws  \UnexpectedValueException If $path is not a string.
+	 */
+	public static function normalize($path, $ds = DIRECTORY_SEPARATOR)
+	{
+		$parts    = array();
+		$path     = static::clean($path, $ds);
+		$segments = explode($ds, $path);
+
+		foreach ($segments as $segment)
+		{
+			if ($segment != '.')
+			{
+				$test = array_pop($parts);
+
+				if (is_null($test))
+				{
+					$parts[] = $segment;
+				}
+				elseif ($segment == '..')
+				{
+					if ($test == '..')
+					{
+						$parts[] = $test;
+					}
+
+					if ($test == '..' || $test == '')
+					{
+						$parts[] = $segment;
+					}
+				}
+				else
+				{
+					$parts[] = $test;
+					$parts[] = $segment;
+				}
+			}
+		}
+
+		return implode($ds, $parts);
 	}
 
 	/**
