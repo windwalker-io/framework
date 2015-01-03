@@ -51,6 +51,13 @@ class Console extends AbstractConsole
 	protected $description = '';
 
 	/**
+	 * Property help.
+	 *
+	 * @var  string
+	 */
+	protected $help = 'Welcome to Windwalker Console.';
+
+	/**
 	 * A default command to run as application.
 	 *
 	 * @var  AbstractCommand
@@ -171,6 +178,9 @@ class Console extends AbstractConsole
 		$this->rootCommand = new RootCommand(null, $this->io);
 
 		$this->rootCommand->setApplication($this);
+
+		$this->description ? $this->rootCommand->description($this->description) : null;
+		$this->help ? $this->rootCommand->help($this->help) : null;
 
 		return $this;
 	}
@@ -375,5 +385,15 @@ class Console extends AbstractConsole
 		$this->getRootCommand()->help($help);
 
 		return $this;
+	}
+
+	/**
+	 * Method to get property Help
+	 *
+	 * @return  string
+	 */
+	public function getHelp()
+	{
+		return $this->help;
 	}
 }
