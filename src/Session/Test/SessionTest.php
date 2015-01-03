@@ -9,6 +9,7 @@
 namespace Windwalker\Session\Test;
 
 use Windwalker\Session\Bag\ArrayBag;
+use Windwalker\Session\Bag\SessionBag;
 use Windwalker\Session\Session;
 use Windwalker\Session\Test\Mock\MockArrayBridge;
 
@@ -174,6 +175,48 @@ class SessionTest extends AbstractSessionTestCase
 	}
 
 	/**
+	 * testTakeAll
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Session\Session::takeAll
+	 */
+	public function testTakeAll()
+	{
+		$this->instance->setBag('foo', new SessionBag);
+
+		$this->instance->set('a', 'b', 'foo');
+		$this->instance->set('c', 'd', 'foo');
+
+		$this->assertEquals(array('a'=> 'b', 'c' => 'd'), $this->instance->getAll('foo'));
+
+		$this->assertEquals(array('a'=> 'b', 'c' => 'd'), $this->instance->takeAll('foo'));
+
+		$this->assertEquals(array(), $this->instance->getAll('foo'));
+	}
+
+	/**
+	 * testClean
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Session\Session::clean
+	 */
+	public function testClean()
+	{
+		$this->instance->setBag('foo', new SessionBag);
+
+		$this->instance->set('a', 'b', 'foo');
+		$this->instance->set('c', 'd', 'foo');
+
+		$this->assertEquals(array('a'=> 'b', 'c' => 'd'), $this->instance->getAll('foo'));
+
+		$this->instance->clean('foo');
+
+		$this->assertEquals(array(), $this->instance->getAll('foo'));
+	}
+
+	/**
 	 * Method to test set().
 	 *
 	 * @return void
@@ -192,12 +235,12 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::has
+	 * @covers Windwalker\Session\Session::exists
 	 */
-	public function testHas()
+	public function testExists()
 	{
-		$this->assertTrue($this->instance->has('sakura'));
-		$this->assertFalse($this->instance->has('sunflower'));
+		$this->assertTrue($this->instance->exists('sakura'));
+		$this->assertFalse($this->instance->exists('sunflower'));
 	}
 
 	/**
@@ -205,13 +248,13 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::clear
+	 * @covers Windwalker\Session\Session::remove
 	 */
-	public function testClear()
+	public function testRemove()
 	{
-		$this->instance->clear('sakura');
+		$this->instance->remove('sakura');
 
-		$this->assertFalse($this->instance->has('sakura'));
+		$this->assertFalse($this->instance->exists('sakura'));
 	}
 
 	/**

@@ -505,7 +505,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 */
 	protected function setTimers()
 	{
-		if (!$this->has('session.timer.start'))
+		if (!$this->exists('session.timer.start'))
 		{
 			$start = time();
 
@@ -550,7 +550,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param   string  $namespace  Session namespace, default is `default`.
 	 *
-	 * @return  mixed
+	 * @return  array
 	 * @throws \RuntimeException
 	 *
 	 * @since   2.0
@@ -571,6 +571,52 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
+	 * Get all session data and clean them.
+	 *
+	 * @param   string  $namespace  Session namespace, default is `default`.
+	 *
+	 * @return  array
+	 * @throws \RuntimeException
+	 *
+	 * @since   2.0.4
+	 */
+	public function takeAll($namespace = 'default')
+	{
+		if ($this->state !== static::STATE_ACTIVE && $this->state !== static::STATE_EXPIRED)
+		{
+			if ($this->debug)
+			{
+				throw new \RuntimeException('Session is not active.');
+			}
+
+			return false;
+		}
+
+		$bag = $this->getBag($namespace);
+		$all = $bag->all();
+
+		$this->clean($namespace);
+
+		return $all;
+	}
+
+	/**
+	 * Clean all data from a bag (namespace).
+	 *
+	 * @param   string  $namespace  $namespace  Session namespace, default is `default`.
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0.4
+	 */
+	public function clean($namespace = 'default')
+	{
+		$this->getBag($namespace)->clean();
+
+		return $this;
+	}
+
+	/**
 	 * Set data into the session store.
 	 *
 	 * @param   string $name      Name of a variable.
@@ -578,7 +624,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   string $namespace Namespace to use, default to 'default'.
 	 *
 	 * @throws \RuntimeException
-	 * @return  Session
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 */
