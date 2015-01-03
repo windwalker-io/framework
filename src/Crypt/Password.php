@@ -101,31 +101,40 @@ class Password
 	}
 
 	/**
-	 * verify the password
+	 * Verify the password.
 	 *
-	 * @param string $password
-	 * @param string $hash
+	 * @param   string   $password  The password plain text.
+	 * @param   string   $hash      The hashed password.
 	 *
-	 * @return  boolean
+	 * @return  boolean  Verify success or not.
+	 *
+	 * @see  https://github.com/ircmaxell/password_compat/blob/92951ae05e988803fdc1cd49f7e4cd29ca7b75e9/lib/password.php#L230-L247
 	 */
 	public function verify($password, $hash)
 	{
-		if (!function_exists('crypt')) {
+		if (!function_exists('crypt'))
+		{
 			trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
+
 			return false;
 		}
+
 		// Calculate the user-provided hash, using the salt stored with the known hash
 		$ret = crypt($password, $hash);
-		if (!is_string($ret) || $this->_strlen($ret) != $this->_strlen($hash) || $this->_strlen($ret) <= 13) {
+
+		if (!is_string($ret) || CryptHelper::getLength($ret) != CryptHelper::getLength($hash) || CryptHelper::getLength($ret) <= 13)
+		{
 			return false;
 		}
 
 		$status = 0;
-		$len = $this->_strlen($ret);
-		
-		for ($i = 0; $i < $len; ++$i) {
+		$len = CryptHelper::getLength($ret);
+
+		for ($i = 0; $i < $len; ++$i)
+		{
 			$status |= (ord($ret[$i]) ^ ord($hash[$i]));
 		}
+
 		return $status === 0;
 	}
 
@@ -200,20 +209,5 @@ class Password
 		$this->type = $type;
 
 		return $this;
-	}
-	
-	/**
-	 * mb safe string length calculator
-	 * 
-	 * @param string $binary_string
-	 * 
-	 * @return int
-	 */
-	protected function _strlen($binary_string)
-	{
-		if (function_exists('mb_strlen')) {
-			return mb_strlen($binary_string, '8bit');
-		}
-		return strlen($binary_string);
 	}
 }
