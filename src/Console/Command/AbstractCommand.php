@@ -603,7 +603,14 @@ abstract class AbstractCommand implements \ArrayAccess
 		{
 			$option->setIO($this->io);
 
-			return $option->getValue();
+			$value = $option->getValue();
+
+			if ($value === null)
+			{
+				return $default;
+			}
+
+			return $value;
 		}
 		else
 		{

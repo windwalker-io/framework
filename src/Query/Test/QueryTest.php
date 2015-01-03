@@ -654,9 +654,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->from('foo')
 			->where('a = b')
 			->order('id')
-			->limit(0, 3);
+			->limit(3, 1);
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
+		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 1, 3';
 
 		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
 	}
@@ -688,7 +688,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 0, 3)));
+		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 3, 0)));
 	}
 
 	/**

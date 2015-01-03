@@ -1049,17 +1049,17 @@ class Query implements QueryInterface
 	 * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
 	 * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
 	 *
-	 * @param   integer  $limit   The limit for the result set
-	 * @param   integer  $offset  The offset for the result set
+	 * @param   integer $limit  The limit for the result set
+	 * @param   integer $offset The offset for the result set
 	 *
-	 * @return  static  Returns this object to allow chaining.
+	 * @return static Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function limit($limit = 0, $offset = 0)
+	public function limit($limit = null, $offset = null)
 	{
-		$this->limit  = (int) $limit;
-		$this->offset = (int) $offset;
+		$this->limit  = $limit;
+		$this->offset = $offset;
 
 		return $this;
 	}
@@ -1069,24 +1069,23 @@ class Query implements QueryInterface
 	 * additions to make the query limited to a particular number of
 	 * results, or start at a particular offset.
 	 *
-	 * @param   string   $query   The query in string format
-	 * @param   integer  $limit   The limit for the result set
-	 * @param   integer  $offset  The offset for the result set
+	 * @param   string  $query  The query in string format
+	 * @param   integer $limit  The limit for the result set
+	 * @param   integer $offset The offset for the result set
 	 *
-	 * @return  string
-	 *
+	 * @return string
 	 * @since   2.0
 	 */
-	public function processLimit($query, $limit, $offset = 0)
+	public function processLimit($query, $limit, $offset = null)
 	{
-		if ($limit > 0 || $offset > 0)
+		if ($limit && $offset === null)
 		{
 			$query .= ' LIMIT ' . (int) $limit;
+		}
 
-			if ($offset > 0)
-			{
-				$query .= ', ' . (int) $offset;
-			}
+		elseif ($limit)
+		{
+			$query .= ' LIMIT ' . (int) $offset . ', ' . (int) $limit;
 		}
 
 		return $query;

@@ -237,6 +237,15 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 			$bbb->getOptionSet(true)->offsetGet('y'),
 			'Sub command "bbb" should have global option'
 		);
+
+		// Test default value
+		$cmd->addGlobalOption('n')
+			->defaultValue('default');
+
+		$cmd->addGlobalOption('h');
+
+		$this->assertEquals('default', $cmd->getOption('n'));
+		$this->assertEquals('default2', $cmd->getOption('h', 'default2'));
 	}
 
 	/**

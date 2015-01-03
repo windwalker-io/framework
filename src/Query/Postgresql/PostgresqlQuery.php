@@ -369,14 +369,14 @@ class PostgresqlQuery extends Query
 	/**
 	 * Set the LIMIT clause to the query
 	 *
-	 * @param   integer  $limit  Number of rows to return
-	 * @param   integer  $offset The offset for the result set
+	 * @param   integer $limit  Number of rows to return
+	 * @param   integer $offset The offset for the result set
 	 *
-	 * @return  PostgresqlQuery  Returns this object to allow chaining.
+	 * @return PostgresqlQuery Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function limit($limit = 0, $offset = 0)
+	public function limit($limit = null, $offset = null)
 	{
 		if (is_null($this->limit))
 		{
@@ -431,15 +431,14 @@ class PostgresqlQuery extends Query
 	 * additions to make the query limited to a particular number of
 	 * results, or start at a particular offset.
 	 *
-	 * @param   string   $query   The query in string format
-	 * @param   integer  $limit   The limit for the result set
-	 * @param   integer  $offset  The offset for the result set
+	 * @param   string  $query  The query in string format
+	 * @param   integer $limit  The limit for the result set
+	 * @param   integer $offset The offset for the result set
 	 *
-	 * @return  string
-	 *
+	 * @return string
 	 * @since   2.0
 	 */
-	public function processLimit($query, $limit, $offset = 0)
+	public function processLimit($query, $limit, $offset = null)
 	{
 		if ($limit > 0)
 		{

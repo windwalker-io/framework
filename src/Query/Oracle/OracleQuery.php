@@ -193,15 +193,14 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 * automatically by the __toString() method if it detects that the
 	 * query implements the LimitableInterface.
 	 *
-	 * @param   string   $query   The query in string format
-	 * @param   integer  $limit   The limit for the result set
-	 * @param   integer  $offset  The offset for the result set
+	 * @param   string  $query  The query in string format
+	 * @param   integer $limit  The limit for the result set
+	 * @param   integer $offset The offset for the result set
 	 *
-	 * @return  string
-	 *
+	 * @return string
 	 * @since   2.0
 	 */
-	public function processLimit($query, $limit, $offset = 0)
+	public function processLimit($query, $limit, $offset = null)
 	{
 		// Check if we need to mangle the query.
 		if ($limit || $offset)
@@ -239,14 +238,14 @@ class OracleQuery extends Query implements Query\PreparableInterface
 	 * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
 	 * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
 	 *
-	 * @param   integer  $limit   The limit for the result set
-	 * @param   integer  $offset  The offset for the result set
+	 * @param   integer $limit  The limit for the result set
+	 * @param   integer $offset The offset for the result set
 	 *
-	 * @return  OracleQuery  Returns this object to allow chaining.
+	 * @return OracleQuery Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function limit($limit = 0, $offset = 0)
+	public function limit($limit = null, $offset = null)
 	{
 		$this->limit = (int) $limit;
 		$this->offset = (int) $offset;

@@ -107,7 +107,7 @@ $query->select(array('title', 'meta', 'read'))
     ->where('year <= 1616')
     ->where('published > 0')
     ->order('popular DESC')
-    ->limit(0, 15);
+    ->limit(15);
     
 echo $query;
 ```
@@ -120,8 +120,21 @@ FROM shakespeare
 WHERE year <= 1616
     AND published > 0
 ORDER BY popular DESC
-LIMIT 0, 15
+LIMIT 15
 ```
+
+### Limit Process
+
+For common use, Mysql and some databases use this limit syntax:
+
+``` sql
+LIMIT {limit}
+# OR
+LIMIT {offset}, {limit}
+```
+
+Windwalker Query dose not follow this ordering, the Query::limit method look like: `limit($limit, $offset)`. 
+We must use `limit(3, 0)` to generate `LIMIT 0, 3` because it is more semantic on method interface.
 
 ### Where Conditions
 

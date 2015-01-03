@@ -278,14 +278,14 @@ interface QueryInterface
 	 * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
 	 * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
 	 *
-	 * @param   integer  $limit   The limit for the result set
-	 * @param   integer  $offset  The offset for the result set
+	 * @param   integer $limit  The limit for the result set
+	 * @param   integer $offset The offset for the result set
 	 *
-	 * @return  static  Returns this object to allow chaining.
+	 * @return static Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function limit($limit = 0, $offset = 0);
+	public function limit($limit = null, $offset = null);
 
 	/**
 	 * Add an OUTER JOIN clause to the query.
