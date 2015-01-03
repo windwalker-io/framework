@@ -95,7 +95,7 @@ class FileStorage extends AbstractCacheStorage
 			new \RecursiveIteratorIterator(
 				new \RecursiveDirectoryIterator($filePath)
 			),
-			'/\.data$/i'
+			'/' . preg_quote($this->options['format']) . '$/i'
 		);
 
 		/* @var  \RecursiveDirectoryIterator  $file */
@@ -329,6 +329,54 @@ class FileStorage extends AbstractCacheStorage
 		}
 
 		return $this->denyAccess = $bool;
+	}
+
+	/**
+	 * Method to get property Group
+	 *
+	 * @return  string
+	 */
+	public function getGroup()
+	{
+		return $this->group;
+	}
+
+	/**
+	 * Method to set property group
+	 *
+	 * @param   string $group
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setGroup($group)
+	{
+		$this->group = $group;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Path
+	 *
+	 * @return  string
+	 */
+	public function getPath()
+	{
+		return $this->path;
+	}
+
+	/**
+	 * Method to set property path
+	 *
+	 * @param   string $path
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setPath($path)
+	{
+		$this->path = $path;
+
+		return $this;
 	}
 }
 

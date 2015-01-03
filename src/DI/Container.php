@@ -406,5 +406,33 @@ class Container
 
 		return $this;
 	}
+
+	/**
+	 * Method to get property Parent
+	 *
+	 * @return  Container  Parent container.
+	 *
+	 * @since  2.0.4
+	 */
+	public function getParent()
+	{
+		return $this->parent;
+	}
+
+	/**
+	 * Method to set property parent
+	 *
+	 * @param   Container $parent  Parent container.
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since  2.0.4
+	 */
+	public function setParent($parent)
+	{
+		$this->parent = $parent;
+
+		return $this;
+	}
 }
 
