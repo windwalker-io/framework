@@ -88,7 +88,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 
 		// Build query
 		$query->select($select)
-			->limit($start, $limit);
+			->limit($limit, $start);
 
 		return $this->db->setQuery($query)->loadAll();
 	}

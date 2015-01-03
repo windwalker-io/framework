@@ -244,7 +244,7 @@ class NestedRecord extends Record
 					->from($this->table)
 					->where('parent_id = 0')
 					->order('lft DESC')
-					->limit(0, 1);
+					->limit(1);
 
 				$this->db->setQuery($query);
 
@@ -453,7 +453,7 @@ class NestedRecord extends Record
 				->from($this->table)
 				->where('parent_id = 0')
 				->order('lft DESC')
-				->limit(0, 1);
+				->limit(1);
 
 			$reference = $this->db->getReader($query)->loadObject();
 
@@ -886,7 +886,7 @@ class NestedRecord extends Record
 			->select($this->getKeyName() . ', parent_id, level, lft, rgt')
 			->from($this->table)
 			->where($k . ' = ' . $id)
-			->limit(0, 1);
+			->limit(1);
 
 		$row = $this->db->getReader($query)->loadObject();
 

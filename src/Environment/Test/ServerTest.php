@@ -236,11 +236,4 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals($value, $this->instance->isLinux());
 	}
-
-	public function testGetEntry()
-	{
-		echo $this->instance->getEntry();
-
-		die;
-	}
 }
