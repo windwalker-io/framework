@@ -207,4 +207,23 @@ class CryptHelper
 
 		return substr($randomStr, 0, $length);
 	}
+
+	/**
+	 * mb safe string length calculator
+	 *
+	 * @param   string  $binaryString  The binary string return from crypt().
+	 *
+	 * @return  integer  String length.
+	 *
+	 * @since   2.0.4
+	 */
+	public static function getLength($binaryString)
+	{
+		if (function_exists('mb_strlen'))
+		{
+			return mb_strlen($binaryString, '8bit');
+		}
+
+		return strlen($binaryString);
+	}
 }
