@@ -46,59 +46,68 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var  string
 	 * @see  getState()
+	 *
+	 * @since   2.0
 	 */
 	protected $state;
 
 	/**
-	 * Property cookie.
+	 * The Cookie source, default will be $_COOKIE.
+	 *
+	 * Set this property to your array to help you test.
 	 *
 	 * @var  array
+	 *
+	 * @since  2.0
 	 */
 	protected $cookie = null;
 
 	/**
-	 * Property bags.
+	 * The session data bags.
 	 *
 	 * @var  SessionBagInterface[]
 	 */
 	protected $bags = array();
 
 	/**
-	 * Property bridge.
+	 * The session bridge, default is PHP NativeBridge.
+	 *
+	 * Set this to your own bridge to help test.
 	 *
 	 * @var  SessionBridgeInterface
 	 */
 	protected $bridge = null;
 
 	/**
-	 * Property handler.
+	 * Session handler(storage).
 	 *
 	 * @var  HandlerInterface
 	 */
-	protected $handler;
+	protected $handler = null;
 
 	/**
-	 * Property options.
+	 * Session options.
 	 *
 	 * @var  array
 	 */
 	protected $options = array();
 
 	/**
-	 * Property debug.
+	 * Debug mode.
 	 *
 	 * @var boolean
 	 */
 	protected $debug;
 
 	/**
-	 * Constructor
+	 * Session constructor.
 	 *
-	 * @param   HandlerInterface       $handler The type of storage for the session.
-	 * @param   SessionBagInterface    $bag
-	 * @param   FlashBagInterface      $flashBag
-	 * @param   SessionBridgeInterface $bridge
-	 * @param   array                  $options Optional parameters
+	 * @param   HandlerInterface       $handler   The type of storage for the session.
+	 * @param   SessionBagInterface    $bag       The session data bags.
+	 * @param   FlashBagInterface      $flashBag  The session flash bags.
+	 * @param   SessionBridgeInterface $bridge    The session bridge, default is PHP NativeBridge.
+	 *                                            Set this to your own bridge to help test.
+	 * @param   array                  $options   Optional parameters.
 	 *
 	 * @since   2.0
 	 */
@@ -125,7 +134,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * init
+	 * Initialise Session params.
 	 *
 	 * @return  void
 	 */
@@ -150,7 +159,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * getCookieParams
+	 * Get php cookie parameters.
 	 *
 	 * @return  array
 	 */
@@ -191,7 +200,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Start a session.
 	 *
-	 * @param bool $restart
+	 * @param   boolean  $restart  Do you want to restart first.
 	 *
 	 * @return  boolean
 	 *
@@ -356,7 +365,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * frames by ending the session as soon as all changes to session variables are
 	 * done.
 	 *
-	 * @return  void
+	 * @return  static
 	 *
 	 * @see     session_write_close()
 	 * @since   2.0
@@ -364,6 +373,24 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	public function close()
 	{
 		$this->bridge->save();
+
+		return $this;
+	}
+
+	/**
+	 * Re generate the session id.
+	 *
+	 * @param   bool  $destroy Destroy session or not.
+	 *
+	 * @return  static
+	 *
+	 * @since   2.0.4
+	 */
+	public function regenerate($destroy = false)
+	{
+		$this->getBridge()->regenerate($destroy);
+
+		return $this;
 	}
 
 	/**
@@ -519,13 +546,14 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * getAll
+	 * Get all session data.
 	 *
-	 * @param string $namespace
+	 * @param   string  $namespace  Session namespace, default is `default`.
 	 *
 	 * @return  mixed
-	 *
 	 * @throws \RuntimeException
+	 *
+	 * @since   2.0
 	 */
 	public function getAll($namespace = 'default')
 	{
@@ -551,6 +579,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @throws \RuntimeException
 	 * @return  Session
+	 *
+	 * @since   2.0
 	 */
 	public function set($name, $value = null, $namespace = 'default')
 	{
@@ -659,12 +689,14 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * addFlash
+	 * Add a flash message.
 	 *
-	 * @param array|string $msg
-	 * @param string       $type
+	 * @param array|string  $msg   The message you want to set, can be an array to storage multiple messages.
+	 * @param string        $type  The message type, default is `info`.
 	 *
-	 * @return  Session
+	 * @return  static
+	 *
+	 * @since   2.0
 	 */
 	public function addFlash($msg, $type = 'info')
 	{
@@ -674,9 +706,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * takeFlashes
+	 * Take all flashes and clean them from bag.
 	 *
-	 * @return  array
+	 * @return  array  All flashes data.
+	 *
+	 * @since   2.0
 	 */
 	public function getFlashes()
 	{
@@ -686,9 +720,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Retrieve an external iterator
 	 *
-	 * @param  string  $namespace
+	 * @param   string  $namespace  The namespace to get data.
 	 *
-	 * @return Traversable An instance of an object implementing Iterator Traversable
+	 * @return  Traversable An instance of an object implementing Iterator Traversable
+	 *
+	 * @since   2.0
 	 */
 	public function getIterator($namespace = 'default')
 	{
@@ -699,6 +735,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * Method to get property Bridge
 	 *
 	 * @return  SessionBridgeInterface
+	 *
+	 * @since   2.0
 	 */
 	public function getBridge()
 	{
@@ -711,6 +749,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   SessionBridgeInterface $bridge
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setBridge($bridge)
 	{
@@ -723,6 +763,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * Method to get property Handler
 	 *
 	 * @return  HandlerInterface
+	 *
+	 * @since   2.0
 	 */
 	public function getHandler()
 	{
@@ -735,6 +777,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   HandlerInterface $handler
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setHandler($handler)
 	{
@@ -821,6 +865,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * Method to get property State
 	 *
 	 * @return  string
+	 *
+	 * @since   2.0
 	 */
 	public function getState()
 	{
@@ -833,6 +879,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   string $state
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setState($state)
 	{
@@ -842,9 +890,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * getCookie
+	 * Get cookie source, default is $_COOKIE.
 	 *
-	 * @return  array
+	 * @return  array  Cookie source
+	 *
+	 * @since   2.0
 	 */
 	public function getCookie()
 	{
@@ -857,11 +907,15 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * setCookie
+	 * Set cookie source. default will be $_COOKIE.
 	 *
-	 * @param   array  $cookie
+	 * Set this property to your array to help you test.
+	 *
+	 * @param   array  $cookie  Cookie source.
 	 *
 	 * @return  Session  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setCookie($cookie)
 	{
@@ -877,6 +931,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   mixed  $default
 	 *
 	 * @return  mixed
+	 *
+	 * @since   2.0
 	 */
 	public function getOption($name, $default = null)
 	{
@@ -895,6 +951,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   mixed   $value
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setOption($name, $value)
 	{
@@ -907,6 +965,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * Method to get property Options
 	 *
 	 * @return  array
+	 *
+	 * @since   2.0
 	 */
 	public function getOptions()
 	{
@@ -919,6 +979,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   array $options
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setOptions($options)
 	{
@@ -928,19 +990,25 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * registerHandler
+	 * Register handler as PHP session handler.
 	 *
-	 * @return  void
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	protected function registerHandler()
 	{
 		$this->handler->register();
+
+		return $this;
 	}
 
 	/**
-	 * getBags
+	 * Get all Session bags.
 	 *
 	 * @return  array
+	 *
+	 * @since   2.0
 	 */
 	public function getBags()
 	{
@@ -948,11 +1016,13 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * setBags
+	 * Set Session bags.
 	 *
 	 * @param   SessionBagInterface[] $bags
 	 *
 	 * @return  Session  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setBags(array $bags)
 	{
@@ -965,12 +1035,14 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * getBag
+	 * Get session bag.
 	 *
-	 * @param string $name
+	 * @param   string  $name  Bag name to get.
 	 *
 	 * @throws  \UnexpectedValueException
 	 * @return  SessionBagInterface
+	 *
+	 * @since   2.0
 	 */
 	public function getBag($name)
 	{
@@ -985,12 +1057,14 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * setBag
+	 * Set session bag by name.
 	 *
-	 * @param string              $name
-	 * @param SessionBagInterface $bag
+	 * @param   string               $name  Session bag name to set.
+	 * @param   SessionBagInterface  $bag   Session bag object.
 	 *
-	 * @return  Session
+	 * @return  static
+	 *
+	 * @since   2.0
 	 */
 	public function setBag($name, SessionBagInterface $bag)
 	{
@@ -1005,9 +1079,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * getFlashBag
+	 * Get Flash bag.
 	 *
 	 * @return  FlashBagInterface
+	 *
+	 * @since   2.0
 	 */
 	public function getFlashBag()
 	{
@@ -1020,11 +1096,13 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * setFlashBag
+	 * Set Flash Bag
 	 *
-	 * @param   FlashBagInterface $bag
+	 * @param   FlashBagInterface  $bag  The flash bag object.
 	 *
-	 * @return  Session
+	 * @return  static
+	 *
+	 * @since   2.0
 	 */
 	public function setFlashBag(FlashBagInterface $bag)
 	{
@@ -1036,9 +1114,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * preapreBagsData
 	 *
-	 * @param SessionBagInterface[] $bags
+	 * @param   SessionBagInterface[]  $bags
 	 *
-	 * @return  Session
+	 * @return  static
+	 *
+	 * @since   2.0
 	 */
 	protected function prepareBagsData(array $bags)
 	{
@@ -1062,9 +1142,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Method to set property debug
 	 *
-	 * @param   boolean $debug
+	 * @param   boolean  $debug
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setDebug($debug)
 	{
@@ -1076,9 +1158,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Is a property exists or not.
 	 *
-	 * @param mixed $offset Offset key.
+	 * @param   mixed  $offset  Offset key.
 	 *
 	 * @return  boolean
+	 *
+	 * @since   2.0
 	 */
 	public function offsetExists($offset)
 	{
@@ -1088,10 +1172,12 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Get a property.
 	 *
-	 * @param mixed $offset Offset key.
+	 * @param   mixed  $offset  Offset key.
 	 *
 	 * @throws  \InvalidArgumentException
 	 * @return  mixed The value to return.
+	 *
+	 * @since   2.0
 	 */
 	public function offsetGet($offset)
 	{
@@ -1101,11 +1187,13 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Set a value to property.
 	 *
-	 * @param mixed $offset Offset key.
-	 * @param mixed $value  The value to set.
+	 * @param   mixed  $offset  Offset key.
+	 * @param   mixed  $value   The value to set.
 	 *
 	 * @throws  \InvalidArgumentException
 	 * @return  void
+	 *
+	 * @since   2.0
 	 */
 	public function offsetSet($offset, $value)
 	{
@@ -1115,10 +1203,12 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Unset a property.
 	 *
-	 * @param mixed $offset Offset key to unset.
+	 * @param   mixed  $offset  Offset key to unset.
 	 *
 	 * @throws  \InvalidArgumentException
 	 * @return  void
+	 *
+	 * @since   2.0
 	 */
 	public function offsetUnset($offset)
 	{
