@@ -19,4 +19,8 @@ include_once $autoload;
 
 $server = new Server;
 
-echo $server->getRoot(false);
+echo $server->getEntry();
+echo "\n";
+echo $server->getWorkingDirectory();
+
+echo "\n\n";

@@ -193,13 +193,20 @@ class Server implements ServerInterface
 	{
 		$key = $full ? 'SCRIPT_FILENAME' : 'SCRIPT_NAME';
 
+		$wdir = $this->getWorkingDirectory();
+
 		$file = $this->getGlobals('_SERVER', $key);
+
+		if (strpos($file, $wdir) === 0)
+		{
+			$file = substr($file, strlen($wdir));
+		}
+
+		$file = trim($file, '.' . DIRECTORY_SEPARATOR);
 
 		if ($full && $this->isCli())
 		{
-			$file = trim($file, '.' . DIRECTORY_SEPARATOR);
-
-			$file = $this->getWorkingDirectory() . DIRECTORY_SEPARATOR . $file;
+			$file = $wdir . DIRECTORY_SEPARATOR . $file;
 		}
 
 		return $file;
