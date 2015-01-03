@@ -71,6 +71,13 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	protected $bridge = null;
 
 	/**
+	 * Property handler.
+	 *
+	 * @var  HandlerInterface
+	 */
+	protected $handler;
+
+	/**
 	 * Property options.
 	 *
 	 * @var  array
@@ -708,6 +715,30 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	public function setBridge($bridge)
 	{
 		$this->bridge = $bridge;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Handler
+	 *
+	 * @return  HandlerInterface
+	 */
+	public function getHandler()
+	{
+		return $this->handler;
+	}
+
+	/**
+	 * Method to set property handler
+	 *
+	 * @param   HandlerInterface $handler
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setHandler($handler)
+	{
+		$this->handler = $handler;
 
 		return $this;
 	}
