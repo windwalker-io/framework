@@ -213,7 +213,7 @@ class FilesystemTest extends AbstractFilesystemTest
 	public function testFindOne()
 	{
 		// String condition
-		$file = Filesystem::findOne(static::$dest, 'file', true, true);
+		$file = Filesystem::findOne(static::$dest, 'file', true);
 		$files = Filesystem::find(static::$dest, 'file', true, true);
 
 		$this->assertEquals(

@@ -207,6 +207,7 @@ abstract class Filesystem
 	/**
 	 * Find one file and return.
 	 *
+	 * @param  string   $path         The directory path.
 	 * @param  mixed    $condition    Finding condition, that can be a string, a regex or a callback function.
 	 *                                Callback example:
 	 *                                <code>
@@ -216,15 +217,14 @@ abstract class Filesystem
 	 *                                }
 	 *                                </code>
 	 * @param  boolean  $recursive    True to resursive.
-	 * @param  boolean  $toArray      True to convert iterator to array.
 	 *
 	 * @return  \SplFileInfo  Finded file info object.
 	 *
 	 * @since  2.0
 	 */
-	public static function findOne($condition, $recursive = false, $toArray = false)
+	public static function findOne($path, $condition, $recursive = false)
 	{
-		$iterator = new \LimitIterator(static::find($condition, $recursive, $toArray), 0, 1);
+		$iterator = new \LimitIterator(static::find($path, $condition, $recursive), 0, 1);
 
 		$iterator->rewind();
 
