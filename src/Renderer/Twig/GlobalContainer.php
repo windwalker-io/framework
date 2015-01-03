@@ -18,7 +18,7 @@ abstract class GlobalContainer
 	/**
 	 * Property extensions.
 	 *
-	 * @var  \Twig_Extension[]
+	 * @var  \Twig_ExtensionInterface[]
 	 */
 	protected static $extensions = array();
 
@@ -32,12 +32,12 @@ abstract class GlobalContainer
 	/**
 	 * addExtension
 	 *
-	 * @param string          $name
-	 * @param \Twig_Extension $extension
+	 * @param string                   $name
+	 * @param \Twig_ExtensionInterface $extension
 	 *
 	 * @return  void
 	 */
-	public static function addExtension($name, \Twig_Extension $extension)
+	public static function addExtension($name, \Twig_ExtensionInterface $extension)
 	{
 		static::$extensions[$name] = $extension;
 	}
@@ -47,7 +47,7 @@ abstract class GlobalContainer
 	 *
 	 * @param   string $name
 	 *
-	 * @return  \Twig_Extension
+	 * @return  \Twig_ExtensionInterface
 	 */
 	public static function getExtension($name)
 	{
@@ -77,7 +77,7 @@ abstract class GlobalContainer
 	/**
 	 * Method to get property Extensions
 	 *
-	 * @return  \Twig_Extension[]
+	 * @return  \Twig_ExtensionInterface[]
 	 */
 	public static function getExtensions()
 	{
@@ -87,7 +87,7 @@ abstract class GlobalContainer
 	/**
 	 * Method to set property extensions
 	 *
-	 * @param   \Twig_Extension[] $extensions
+	 * @param   \Twig_ExtensionInterface[] $extensions
 	 *
 	 * @return  void
 	 */
