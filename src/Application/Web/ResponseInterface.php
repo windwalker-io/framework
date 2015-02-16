@@ -17,7 +17,7 @@ interface ResponseInterface
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
 	 * application output data.
 	 *
-	 * @param   boolean $returnBody
+	 * @param   boolean $returnBody  Return output body or not.
 	 *
 	 * @return  string
 	 *
@@ -29,20 +29,22 @@ interface ResponseInterface
 	 * Checks the accept encoding of the browser and compresses the data before
 	 * sending it to the client if possible.
 	 *
-	 * @param string $encodings
+	 * @param   string  $encodings  The compress encodings(x-gzip, gzip, deflate).
 	 *
-	 * @return  static
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 */
 	public function compress($encodings);
 
 	/**
-	 * getCachable
+	 * Is cachable.
 	 *
-	 * @param boolean $cachable
+	 * @param   boolean  $cachable  True of false to set cachable, or just return value if this argument empty.
 	 *
-	 * @return  boolean
+	 * @return  boolean  Is cachable.
+	 *
+	 * @since   2.0
 	 */
 	public function isCachable($cachable = null);
 
@@ -55,7 +57,7 @@ interface ResponseInterface
 	 * @param   string   $value    The value of the header to set.
 	 * @param   boolean  $replace  True to replace any headers with the same name.
 	 *
-	 * @return  static  Return self to support chaining.
+	 * @return  Response  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -64,16 +66,18 @@ interface ResponseInterface
 	/**
 	 * Method to clear any set response headers.
 	 *
-	 * @return  static  Return self to support chaining.
+	 * @return  static  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
 	public function clearHeaders();
 
 	/**
-	 * getHeaders
+	 * Get all headers array.
 	 *
-	 * @return  array
+	 * @return  array  A set of current headers.
+	 *
+	 * @since   2.0
 	 */
 	public function getHeaders();
 
@@ -179,50 +183,62 @@ interface ResponseInterface
 	public function checkConnectionAlive();
 
 	/**
-	 * getMimeType
+	 * Get content MIME type.
 	 *
-	 * @return  string
+	 * @return  string  The content MIME type.
+	 *
+	 * @since   2.0
 	 */
 	public function getMimeType();
 
 	/**
-	 * setMimeType
+	 * Set content MIME type.
 	 *
-	 * @param   string $mimeType
+	 * @param   string  $mimeType  The content MIME type.
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setMimeType($mimeType);
 
 	/**
-	 * getCharSet
+	 * Get Encoding.
 	 *
-	 * @return  string
+	 * @return  string  The charset.
+	 *
+	 * @since   2.0
 	 */
 	public function getCharSet();
 
 	/**
-	 * setCharSet
+	 * Set Encoding.
 	 *
-	 * @param   string $charSet
+	 * @param   string  $charSet  The charset.
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setCharSet($charSet);
 
 	/**
-	 * getModifiedDate
+	 * Get modified date.
 	 *
-	 * @return  \DateTime
+	 * @return  \DateTime  The modified date.
+	 *
+	 * @since   2.0
 	 */
 	public function getModifiedDate();
 
 	/**
-	 * setModifiedDate
+	 * Set modified date.
 	 *
-	 * @param   \DateTime $modifiedDate
+	 * @param   \DateTime $modifiedDate  modified date
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setModifiedDate($modifiedDate);
 }

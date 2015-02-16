@@ -108,6 +108,8 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *                               the application's config object, otherwise a default config object is created.
 	 *
 	 * @throws \RuntimeException
+	 *
+	 * @since  2.0
 	 */
 	public function __construct(IOInterface $io = null, Registry $config = null)
 	{
@@ -930,9 +932,11 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	}
 
 	/**
-	 * getName
+	 * Get application name.
 	 *
-	 * @return  string
+	 * @return  string  Application name.
+	 *
+	 * @since   2.0
 	 */
 	public function getName()
 	{
@@ -940,11 +944,13 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	}
 
 	/**
-	 * setName
+	 * Set application name.
 	 *
-	 * @param   string $name
+	 * @param   string  $name  Name of this application.
 	 *
 	 * @return  AbstractDaemonApplication  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setName($name)
 	{

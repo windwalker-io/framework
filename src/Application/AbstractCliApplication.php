@@ -20,20 +20,21 @@ use Windwalker\Registry\Registry;
 abstract class AbstractCliApplication extends AbstractApplication
 {
 	/**
-	 * Property io.
+	 * The CLI In/Out object.
 	 *
-	 * @var  IOInterface
+	 * @var    IOInterface
+	 * @since  2.0
 	 */
 	public $io = null;
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param   IOInterface $io      An optional argument to provide dependency injection for the application's
-	 *                               IO object.
-	 * @param   Registry    $config  An optional argument to provide dependency injection for the application's
-	 *                               config object.  If the argument is a Registry object that object will become
-	 *                               the application's config object, otherwise a default config object is created.
+	 * @param   IOInterface  $io      An optional argument to provide dependency injection for the application's
+	 *                                IO object.
+	 * @param   Registry     $config  An optional argument to provide dependency injection for the application's
+	 *                                config object.  If the argument is a Registry object that object will become
+	 *                                the application's config object, otherwise a default config object is created.
 	 *
 	 * @since   2.0
 	 */
@@ -88,7 +89,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	}
 
 	/**
-	 * getIo
+	 * Get the IO object.
 	 *
 	 * @return  IOInterface
 	 */
@@ -98,9 +99,9 @@ abstract class AbstractCliApplication extends AbstractApplication
 	}
 
 	/**
-	 * setIo
+	 * Set the IO object.
 	 *
-	 * @param   IOInterface $io
+	 * @param   IOInterface  $io  The IO object.
 	 *
 	 * @return  AbstractCliApplication  Return self to support chaining.
 	 */

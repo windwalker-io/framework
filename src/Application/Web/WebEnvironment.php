@@ -14,23 +14,28 @@ use Windwalker\Environment\Web\WebClient;
 
 /**
  * The WebEnvironment class.
+ *
+ * This class based on Windwalker Environment class and improved for web application.
  * 
  * @since  2.0
  */
 class WebEnvironment extends Environment
 {
 	/**
-	 * Property client.
+	 * The web client object.
 	 *
-	 * @var  WebClient
+	 * @var    WebClient
+	 * @since  2.0
 	 */
 	public $client;
 
 	/**
-	 * Class init.
+	 * Constructor of this class.
 	 *
-	 * @param WebClient       $client
-	 * @param ServerInterface $server
+	 * @param   WebClient        $client  The WebClient object to determine browser version.
+	 * @param   ServerInterface  $server  The server information object.
+	 *
+	 * @since   2.0
 	 */
 	public function __construct(WebClient $client = null, ServerInterface $server = null)
 	{
@@ -40,9 +45,11 @@ class WebEnvironment extends Environment
 	}
 
 	/**
-	 * Method to get property Client
+	 * Method to get Client object.
 	 *
-	 * @return  WebClient
+	 * @return  WebClient  The web client object.
+	 *
+	 * @since   2.0
 	 */
 	public function getClient()
 	{
@@ -52,9 +59,11 @@ class WebEnvironment extends Environment
 	/**
 	 * Method to set property client
 	 *
-	 * @param   WebClient $client
+	 * @param   WebClient $client  The web client object.
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setClient($client)
 	{

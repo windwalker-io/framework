@@ -9,51 +9,57 @@
 namespace Windwalker\Application\Web;
 
 /**
- * Class Response
+ * The object to handle web response.
  *
  * @since 2.0
  */
 class Response implements ResponseInterface
 {
 	/**
-	 * Property cachable.
+	 * Is cachable.
 	 *
-	 * @var boolean
+	 * @var    boolean
+	 * @since  2.0
 	 */
 	protected $cachable = false;
 
 	/**
-	 * Property headers.
+	 * Set of headers.
 	 *
-	 * @var  array
+	 * @var    array
+	 * @since  2.0
 	 */
 	protected $headers = array();
 
 	/**
-	 * Property body.
+	 * Response body.
 	 *
-	 * @var  string
+	 * @var    string
+	 * @since  2.0
 	 */
 	protected $body = null;
 
 	/**
-	 * Property mimeType.
+	 * Content MIME type.
 	 *
-	 * @var string
+	 * @var    string
+	 * @since  2.0
 	 */
 	protected $mimeType = 'text/html';
 
 	/**
-	 * Property charSet.
+	 * Encoding.
 	 *
-	 * @var string
+	 * @var    string
+	 * @since  2.0
 	 */
 	protected $charSet = 'utf-8';
 
 	/**
 	 * The body modified date for response headers.
 	 *
-	 * @var \DateTime
+	 * @var    \DateTime
+	 * @since  2.0
 	 */
 	protected $modifiedDate = null;
 
@@ -61,7 +67,7 @@ class Response implements ResponseInterface
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
 	 * application output data.
 	 *
-	 * @param   boolean $returnBody
+	 * @param   boolean $returnBody  Return output body or not.
 	 *
 	 * @return  string
 	 *
@@ -117,9 +123,9 @@ class Response implements ResponseInterface
 	 * Checks the accept encoding of the browser and compresses the data before
 	 * sending it to the client if possible.
 	 *
-	 * @param string $encodings
+	 * @param   string  $encodings  The compress encodings(x-gzip, gzip, deflate).
 	 *
-	 * @return  static
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -184,11 +190,13 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * getCachable
+	 * Is cachable.
 	 *
-	 * @param boolean $cachable
+	 * @param   boolean  $cachable  True of false to set cachable, or just return value if this argument empty.
 	 *
-	 * @return  boolean
+	 * @return  boolean  Is cachable.
+	 *
+	 * @since   2.0
 	 */
 	public function isCachable($cachable = null)
 	{
@@ -211,7 +219,7 @@ class Response implements ResponseInterface
 	 * @param   string   $value    The value of the header to set.
 	 * @param   boolean  $replace  True to replace any headers with the same name.
 	 *
-	 * @return  Response  Instance of $this to allow chaining.
+	 * @return  static  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -245,7 +253,7 @@ class Response implements ResponseInterface
 	/**
 	 * Method to clear any set response headers.
 	 *
-	 * @return  Response  Instance of $this to allow chaining.
+	 * @return  static  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -257,9 +265,11 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * getHeaders
+	 * Get all headers array.
 	 *
-	 * @return  array
+	 * @return  array  A set of current headers.
+	 *
+	 * @since   2.0
 	 */
 	public function getHeaders()
 	{
@@ -267,11 +277,13 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * setHeaders
+	 * Set header array.
 	 *
-	 * @param   array $headers
+	 * @param   array  $headers  An array of headers.
 	 *
-	 * @return  Response  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setHeaders($headers)
 	{
@@ -281,7 +293,7 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * Return the body content
+	 * Return the body content.
 	 *
 	 * @param   boolean  $asArray  True to return the body as an array of strings.
 	 *
@@ -299,7 +311,7 @@ class Response implements ResponseInterface
 	 *
 	 * @param   string  $content  The content to set as the response body.
 	 *
-	 * @return  Response  Instance of $this to allow chaining.
+	 * @return  static  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -316,7 +328,7 @@ class Response implements ResponseInterface
 	 *
 	 * @param   string  $content  The content to prepend to the response body.
 	 *
-	 * @return  Response  Instance of $this to allow chaining.
+	 * @return  static  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -332,7 +344,7 @@ class Response implements ResponseInterface
 	 *
 	 * @param   string  $content  The content to append to the response body.
 	 *
-	 * @return  Response  Instance of $this to allow chaining.
+	 * @return  static  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -344,8 +356,7 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * Method to send a header to the client.  We are wrapping this to isolate the header() function
-	 * from our code base for testing reasons.
+	 * Method to send a header to the client.  We wrap header() function with this method for testing reason.
 	 *
 	 * @param   string   $string   The header string.
 	 * @param   boolean  $replace  The optional replace parameter indicates whether the header should
@@ -355,7 +366,6 @@ class Response implements ResponseInterface
 	 *
 	 * @return  static
 	 *
-	 * @codeCoverageIgnore
 	 * @see     header()
 	 * @since   2.0
 	 */
@@ -367,7 +377,7 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * Send the response headers.
+	 * Send all response headers.
 	 *
 	 * @return  Response  Instance of $this to allow chaining.
 	 *
@@ -390,15 +400,16 @@ class Response implements ResponseInterface
 				}
 			}
 		}
+
+		return $this;
 	}
 
 	/**
-	 * Method to check to see if headers have already been sent.  We are wrapping this to isolate the
-	 * headers_sent() function from our code base for testing reasons.
+	 * Method to check to see if headers have already been sent.
+	 * We wrap headers_sent() function with this method for testing reason.
 	 *
 	 * @return  boolean  True if the headers have already been sent.
 	 *
-	 * @codeCoverageIgnore
 	 * @see     headers_sent()
 	 * @since   2.0
 	 */
@@ -408,12 +419,11 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * Method to check the current client connection status to ensure that it is alive.  We are
-	 * wrapping this to isolate the connection_status() function from our code base for testing reasons.
+	 * Method to check the current client connection status to ensure that it is alive.
+	 * We wrap connection_status() function with this method for testing reason.
 	 *
 	 * @return  boolean  True if the connection is valid and normal.
 	 *
-	 * @codeCoverageIgnore
 	 * @see     connection_status()
 	 * @since   2.0
 	 */
@@ -423,9 +433,11 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * getMimeType
+	 * Get content MIME type.
 	 *
-	 * @return  string
+	 * @return  string  The content MIME type.
+	 *
+	 * @since   2.0
 	 */
 	public function getMimeType()
 	{
@@ -433,11 +445,13 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * setMimeType
+	 * Set content MIME type.
 	 *
-	 * @param   string $mimeType
+	 * @param   string  $mimeType  The content MIME type.
 	 *
-	 * @return  Response  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setMimeType($mimeType)
 	{
@@ -447,9 +461,11 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * getCharSet
+	 * Get Encoding.
 	 *
-	 * @return  string
+	 * @return  string  The charset.
+	 *
+	 * @since   2.0
 	 */
 	public function getCharSet()
 	{
@@ -457,11 +473,13 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * setCharSet
+	 * Set Encoding.
 	 *
-	 * @param   string $charSet
+	 * @param   string  $charSet  The charset.
 	 *
-	 * @return  Response  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setCharSet($charSet)
 	{
@@ -471,9 +489,11 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * getModifiedDate
+	 * Get modified date.
 	 *
-	 * @return  \DateTime
+	 * @return  \DateTime  The modified date.
+	 *
+	 * @since   2.0
 	 */
 	public function getModifiedDate()
 	{
@@ -481,11 +501,13 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * setModifiedDate
+	 * Set modified date.
 	 *
-	 * @param   \DateTime $modifiedDate
+	 * @param   \DateTime $modifiedDate  modified date
 	 *
-	 * @return  Response  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setModifiedDate($modifiedDate)
 	{

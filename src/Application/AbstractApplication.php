@@ -15,7 +15,7 @@ use Windwalker\IO\Input;
 use Windwalker\Registry\Registry;
 
 /**
- * Class AbstractApplication
+ * The Abstract Application Class.
  *
  * @since 2.0
  */
@@ -38,7 +38,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	public $input = null;
 
 	/**
-	 * A logger.
+	 * A logger object.
 	 *
 	 * @var    LoggerInterface
 	 * @since  2.0
@@ -46,14 +46,10 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	protected $logger;
 
 	/**
-	 * Class constructor.
+	 * Class constructor of Application.
 	 *
-	 * @param   Input     $input   An optional argument to provide dependency injection for the application's
-	 *                             input object.  If the argument is a InputCli object that object will become
-	 *                             the application's input object, otherwise a default input object is created.
-	 * @param   Registry  $config  An optional argument to provide dependency injection for the application's
-	 *                             config object.  If the argument is a Registry object that object will become
-	 *                             the application's config object, otherwise a default config object is created.
+	 * @param   Input     $input   An optional argument to provide an Input object.
+	 * @param   Registry  $config  An optional argument to provide a Registry object to be config.
 	 *
 	 * @since   2.0
 	 */
@@ -80,7 +76,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	}
 
 	/**
-	 * Method to run the application routines.  Most likely you will want to instantiate a controller
+	 * Method to run the application routines. Most likely you will want to instantiate a controller
 	 * and execute it, or perform some sort of task directly.
 	 *
 	 * @return  void
@@ -120,7 +116,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	}
 
 	/**
-	 * Pose execute hook.
+	 * Post execute hook.
 	 *
 	 * @return  mixed
 	 */
@@ -164,7 +160,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Custom initialisation method.
 	 *
-	 * Called at the end of the AbstractApplication::__construct method.
+	 * Called at the end of the AbstractApplication::__construct() method.
 	 * This is for developers to inject initialisation code for their application classes.
 	 *
 	 * @return  void
@@ -188,6 +184,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	public function set($key, $value = null)
 	{
 		$previous = $this->config->get($key);
+
 		$this->config->set($key, $value);
 
 		return $previous;
@@ -225,4 +222,3 @@ abstract class AbstractApplication implements LoggerAwareInterface
 		return $this;
 	}
 }
-

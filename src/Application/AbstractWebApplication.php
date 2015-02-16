@@ -18,14 +18,14 @@ use Windwalker\Application\Web\ResponseInterface;
 use Windwalker\Registry\Registry;
 
 /**
- * Class AbstractWebApplication
+ * Application for Web HTTP foundation.
  *
  * @since 2.0
  */
 abstract class AbstractWebApplication extends AbstractApplication
 {
 	/**
-	 * The application client object.
+	 * The application environment object.
 	 *
 	 * @var    WebEnvironment
 	 * @since  2.0
@@ -35,15 +35,16 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * The application response object.
 	 *
-	 * @var    object
+	 * @var    ResponseInterface
 	 * @since  2.0
 	 */
 	public $response;
 
 	/**
-	 * Property uri.
+	 * The system Uri object.
 	 *
-	 * @var Uri
+	 * @var    Uri
+	 * @since  2.0
 	 */
 	protected $uri = null;
 
@@ -60,6 +61,8 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *                                           client object.  If the argument is a Web\WebEnvironment object that object will become
 	 *                                           the application's client object, otherwise a default client object is created.
 	 * @param   ResponseInterface  $response     The response object.
+	 *
+	 * @since   2.0
 	 */
 	public function __construct(Input $input = null, Registry $config = null, WebEnvironment $environment = null, ResponseInterface $response = null)
 	{
@@ -109,9 +112,11 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
 	 * application output data.
 	 *
-	 * @param   boolean $returnBody
+	 * @param   boolean  $returnBody  Return body or just output it.
 	 *
-	 * @return  string
+	 * @return  string  The rendered body string.
+	 *
+	 * @since   2.0
 	 */
 	public function respond($returnBody = false)
 	{
@@ -125,9 +130,11 @@ abstract class AbstractWebApplication extends AbstractApplication
 	}
 
 	/**
-	 * __toString
+	 * Magic method to render output.
 	 *
-	 * @return  string
+	 * @return  string  Rendered string.
+	 *
+	 * @since   2.0
 	 */
 	public function __toString()
 	{
@@ -255,7 +262,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	}
 
 	/**
-	 * Return the body content
+	 * Return the body content.
 	 *
 	 * @param   boolean  $asArray  True to return the body as an array of strings.
 	 *
@@ -269,9 +276,9 @@ abstract class AbstractWebApplication extends AbstractApplication
 	}
 
 	/**
-	 * getResponse
+	 * Get Response object.
 	 *
-	 * @return  object
+	 * @return  ResponseInterface
 	 */
 	public function getResponse()
 	{
@@ -279,13 +286,13 @@ abstract class AbstractWebApplication extends AbstractApplication
 	}
 
 	/**
-	 * setResponse
+	 * Set Response object into application.
 	 *
-	 * @param   object $response
+	 * @param   ResponseInterface  $response  The response object.
 	 *
 	 * @return  AbstractWebApplication  Return self to support chaining.
 	 */
-	public function setResponse($response)
+	public function setResponse(ResponseInterface $response)
 	{
 		$this->response = $response;
 
@@ -388,12 +395,14 @@ abstract class AbstractWebApplication extends AbstractApplication
 	}
 
 	/**
-	 * getSystemUri
+	 * Get system Uri object.
 	 *
-	 * @param string $requestUri
-	 * @param bool   $refresh
+	 * @param   string  $requestUri  The request uri string.
+	 * @param   bool    $refresh     Refresh the uri.
 	 *
-	 * @return  Uri
+	 * @return  Uri  The system Uri object.
+	 *
+	 * @since   2.0
 	 */
 	protected function getSystemUri($requestUri = null, $refresh = false)
 	{
@@ -477,6 +486,8 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * Method to get property Environment
 	 *
 	 * @return  \Windwalker\Environment\Web\WebEnvironment
+	 *
+	 * @since   2.0
 	 */
 	public function getEnvironment()
 	{
@@ -489,6 +500,8 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @param   \Windwalker\Environment\Web\WebEnvironment $environment
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.0
 	 */
 	public function setEnvironment($environment)
 	{
