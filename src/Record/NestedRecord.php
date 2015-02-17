@@ -15,10 +15,45 @@ namespace Windwalker\Record;
  */
 class NestedRecord extends Record
 {
+	/**
+	 * @deprecated  use LOCATION_* instead. Will be remove in 2.1.
+	 */
 	const POSITION_BEFORE = 1;
+
+	/**
+	 * @deprecated  use LOCATION_* instead. Will be remove in 2.1.
+	 */
 	const POSITION_AFTER = 2;
+
+	/**
+	 * @deprecated  use LOCATION_* instead. Will be remove in 2.1.
+	 */
 	const POSITION_FIRST_CHILD = 3;
+
+	/**
+	 * @deprecated  use LOCATION_* instead. Will be remove in 2.1.
+	 */
 	const POSITION_LAST_CHILD = 4;
+
+	/**
+	 * @const integer
+	 */
+	const LOCATION_BEFORE = 1;
+
+	/**
+	 * @const integer
+	 */
+	const LOCATION_AFTER = 2;
+
+	/**
+	 * @const integer
+	 */
+	const LOCATION_FIRST_CHILD = 3;
+
+	/**
+	 * @const integer
+	 */
+	const LOCATION_LAST_CHILD = 4;
 
 	/**
 	 * Object property to hold the location type to use when storing the row.
@@ -181,13 +216,13 @@ class NestedRecord extends Record
 	 * @since   11.1
 	 * @throws  \InvalidArgumentException
 	 */
-	public function setLocation($referenceId, $position = self::POSITION_AFTER)
+	public function setLocation($referenceId, $position = self::LOCATION_AFTER)
 	{
 		$allow = array(
-			static::POSITION_AFTER,
-			static::POSITION_BEFORE,
-			static::POSITION_FIRST_CHILD,
-			static::POSITION_LAST_CHILD
+			static::LOCATION_AFTER,
+			static::LOCATION_BEFORE,
+			static::LOCATION_FIRST_CHILD,
+			static::LOCATION_LAST_CHILD
 		);
 
 		// Make sure the location is valid.
@@ -342,14 +377,14 @@ class NestedRecord extends Record
 			$query->where('rgt > ' . (int) $this->rgt)
 				->order('rgt ASC');
 
-			$position = static::POSITION_AFTER;
+			$position = static::LOCATION_AFTER;
 		}
 		else
 		{
 			$query->where('lft < ' . (int) $this->lft)
 				->order('lft DESC');
 
-			$position = static::POSITION_BEFORE;
+			$position = static::LOCATION_BEFORE;
 		}
 
 		$this->db->setQuery($query);
@@ -375,7 +410,7 @@ class NestedRecord extends Record
 	 * @since   11.1
 	 * @throws  \RuntimeException on database error.
 	 */
-	public function moveByReference($referenceId, $position = self::POSITION_AFTER, $pk = null)
+	public function moveByReference($referenceId, $position = self::LOCATION_AFTER, $pk = null)
 	{
 		$k = $this->getKeyName();
 		$pk = (is_null($pk)) ? $this->$k : $pk;
@@ -919,7 +954,7 @@ class NestedRecord extends Record
 	 *
 	 * @since   11.1
 	 */
-	protected function getTreeRepositionData($referenceNode, $nodeWidth, $position = self::POSITION_BEFORE)
+	protected function getTreeRepositionData($referenceNode, $nodeWidth, $position = self::LOCATION_BEFORE)
 	{
 		// Make sure the reference an object with a left and right id.
 		if (!is_object($referenceNode) || !(isset($referenceNode->lft) && isset($referenceNode->rgt)))
@@ -939,7 +974,7 @@ class NestedRecord extends Record
 		// Run the calculations and build the data object by reference position.
 		switch ($position)
 		{
-			case static::POSITION_FIRST_CHILD:
+			case static::LOCATION_FIRST_CHILD:
 				$data->left_where = 'lft > ' . $referenceNode->lft;
 				$data->right_where = 'rgt >= ' . $referenceNode->lft;
 
@@ -949,7 +984,7 @@ class NestedRecord extends Record
 				$data->new_level = $referenceNode->level + 1;
 				break;
 
-			case static::POSITION_LAST_CHILD:
+			case static::LOCATION_LAST_CHILD:
 				$data->left_where = 'lft > ' . ($referenceNode->rgt);
 				$data->right_where = 'rgt >= ' . ($referenceNode->rgt);
 
@@ -959,7 +994,7 @@ class NestedRecord extends Record
 				$data->new_level = $referenceNode->level + 1;
 				break;
 
-			case static::POSITION_BEFORE;
+			case static::LOCATION_BEFORE;
 				$data->left_where = 'lft >= ' . $referenceNode->lft;
 				$data->right_where = 'rgt >= ' . $referenceNode->lft;
 
@@ -970,7 +1005,7 @@ class NestedRecord extends Record
 				break;
 
 			default:
-			case static::POSITION_AFTER:
+			case static::LOCATION_AFTER:
 				$data->left_where = 'lft > ' . $referenceNode->rgt;
 				$data->right_where = 'rgt > ' . $referenceNode->rgt;
 
