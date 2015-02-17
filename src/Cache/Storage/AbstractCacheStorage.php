@@ -97,5 +97,29 @@ abstract class AbstractCacheStorage implements CacheStorageInterface
 
 		return $this;
 	}
+
+	/**
+	 * Method to get property Options
+	 *
+	 * @return  array
+	 */
+	public function getOptions()
+	{
+		return $this->options;
+	}
+
+	/**
+	 * Method to set property options
+	 *
+	 * @param   array $options
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setOptions($options)
+	{
+		$this->options = $options;
+
+		return $this;
+	}
 }
 
