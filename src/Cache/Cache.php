@@ -52,13 +52,20 @@ class Cache implements CacheInterface, \ArrayAccess
 	 * Here we pass in a cache key to be fetched from the cache.
 	 * A CacheItem object will be constructed and returned to us
 	 *
-	 * @param string $key The unique key of this item in the cache
+	 * @param   string  $key  The unique key of this item in the cache
 	 *
-	 * @return CacheItemInterface  The newly populated CacheItem class representing the stored data in the cache
+	 * @return  mixed  The cached value or null if not exists.
+	 *
+	 * @since   2.0
 	 */
 	public function get($key)
 	{
 		$value = $this->storage->getItem($key)->getValue();
+
+		if ($value === null)
+		{
+			return $value;
+		}
 
 		return $this->handler->decode($value);
 	}

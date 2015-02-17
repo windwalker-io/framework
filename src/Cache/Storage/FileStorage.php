@@ -122,21 +122,6 @@ class FileStorage extends AbstractCacheStorage
 	 */
 	public function getItem($key)
 	{
-		// If the cached data has expired remove it and return.
-		if ($this->exists($key) && $this->isExpired($key))
-		{
-			try
-			{
-				$this->removeItem($key);
-			}
-			catch (\RuntimeException $e)
-			{
-				throw new \RuntimeException(sprintf('Unable to clean expired cache entry for %s.', $key), null, $e);
-			}
-
-			return new CacheItem($key);
-		}
-
 		if (!$this->exists($key))
 		{
 			return new CacheItem($key);
@@ -228,17 +213,36 @@ class FileStorage extends AbstractCacheStorage
 	}
 
 	/**
-	 * Method to determine whether a storage entry has been set for a key.
+	 * Method to determine whether a storage entry has been set for a key and not expired.
 	 *
 	 * @param   string  $key  The storage entry identifier.
 	 *
-	 * @return  boolean
+	 * @return  boolean  Tue of exists and not expired.
 	 *
 	 * @since   2.0
 	 */
 	public function exists($key)
 	{
-		return is_file($this->fetchStreamUri($key));
+		if (is_file($this->fetchStreamUri($key)))
+		{
+			if ($this->isExpired($key))
+			{
+				try
+				{
+					$this->removeItem($key);
+				}
+				catch (\RuntimeException $e)
+				{
+					throw new \RuntimeException(sprintf('Unable to clean expired cache entry for %s.', $key), null, $e);
+				}
+
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
