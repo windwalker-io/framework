@@ -22,6 +22,8 @@ use Windwalker\Data\DataSetInterface;
  */
 abstract class AbstractDataMapper implements DataMapperInterface
 {
+	const UPDATE_NULLS = true;
+
 	/**
 	 * Table name.
 	 *

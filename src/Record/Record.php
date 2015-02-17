@@ -19,6 +19,8 @@ use Windwalker\Query\Query;
  */
 class Record implements \ArrayAccess, \IteratorAggregate
 {
+	const UPDATE_NULLS = true;
+
 	/**
 	 * Name of the database table to model.
 	 *
