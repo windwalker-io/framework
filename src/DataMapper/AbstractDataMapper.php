@@ -17,55 +17,64 @@ use Windwalker\Data\DataSetInterface;
  * Abstract DataMapper.
  *
  * The class can implement by any database system.
+ *
+ * @since  2.0
  */
 abstract class AbstractDataMapper implements DataMapperInterface
 {
 	/**
 	 * Table name.
 	 *
-	 * @var  string
+	 * @var    string
+	 * @since  2.0
 	 */
 	protected $table = null;
 
 	/**
 	 * Primary key.
 	 *
-	 * @var  array
+	 * @var    array
+	 * @since  2.0
 	 */
 	protected $pk = null;
 
 	/**
 	 * Table fields.
 	 *
-	 * @var  array
+	 * @var    array
+	 * @since  2.0
 	 */
 	protected $fields = null;
 
 	/**
 	 * Property selectFields.
 	 *
-	 * @var  array
+	 * @var    array
+	 * @since  2.0
 	 */
 	protected $selectFields = null;
 
 	/**
 	 * Data object class.
 	 *
-	 * @var  string
+	 * @var    string
+	 * @since  2.0
 	 */
 	protected $dataClass = 'Windwalker\\Data\\Data';
 
 	/**
 	 * Data set object class.
 	 *
-	 * @var  string
+	 * @var    string
+	 * @since  2.0
 	 */
 	protected $datasetClass = 'Windwalker\\Data\\DataSet';
 
 	/**
 	 * Property useTransaction.
 	 *
-	 * @var  boolean
+	 * @var    boolean
+	 * @since  2.0
 	 */
 	protected $useTransaction = true;
 
@@ -74,10 +83,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * We don't dependency on database in abstract class, that means you can use other data provider.
 	 *
-	 * @param string $table Table name.
-	 * @param string $pk    The primary key.
+	 * @param   string  $table  Table name.
+	 * @param   string  $pk     The primary key.
 	 *
-	 * @throws \Exception
+	 * @throws  \Exception
+	 * @since   2.0
 	 */
 	public function __construct($table = null, $pk = 'id')
 	{
@@ -99,6 +109,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * This method can be override by sub class to prepare come custom setting.
 	 *
 	 * @return  void
+	 * @since   2.0
 	 *
 	 * @deprecated  Use initialise instead.
 	 */
@@ -111,6 +122,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * This method can be override by sub class to prepare come custom setting.
 	 *
 	 * @return  void
+	 * @since   2.0
 	 */
 	protected function initialise()
 	{
@@ -124,19 +136,20 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * - `$mapper->find(array('id' => 5), 'date', 20, 10);`
 	 * - `$mapper->find(null, 'id', 0, 1);`
 	 *
-	 * @param mixed   $conditions Where conditions, you can use array or Compare object.
-	 *                            Example:
-	 *                            - `array('id' => 5)` => id = 5
-	 *                            - `new GteCompare('id', 20)` => 'id >= 20'
-	 *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-	 * @param mixed   $order      Order sort, can ba string, array or object.
-	 *                            Example:
-	 *                            - `id ASC` => ORDER BY id ASC
-	 *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
-	 * @param integer $start      Limit start number.
-	 * @param integer $limit      Limit rows.
+	 * @param   mixed    $conditions Where conditions, you can use array or Compare object.
+	 *                               Example:
+	 *                               - `array('id' => 5)` => id = 5
+	 *                               - `new GteCompare('id', 20)` => 'id >= 20'
+	 *                               - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+	 * @param   mixed    $order      Order sort, can ba string, array or object.
+	 *                               Example:
+	 *                               - `id ASC` => ORDER BY id ASC
+	 *                               - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+	 * @param   integer  $start      Limit start number.
+	 * @param   integer  $limit      Limit rows.
 	 *
-	 * @return mixed|DataSet Found rows data set.
+	 * @return  mixed|DataSet Found rows data set.
+	 * @since   2.0
 	 */
 	public function find($conditions = array(), $order = null, $start = null, $limit = null)
 	{
@@ -402,13 +415,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * Save will auto detect is conditions matched in data or not.
 	 * If matched, using update, otherwise we will create it as new record.
 	 *
-	 * @param mixed $dataset    The data set contains data we want to save.
-	 * @param array $condFields The where condition tell us record exists or not, if not set,
-	 *                          will use primary key instead.
+	 * @param mixed $dataset      The data set contains data we want to save.
+	 * @param array $condFields   The where condition tell us record exists or not, if not set,
+	 *                            will use primary key instead.
+	 * @param bool  $updateNulls  Update empty fields or not.
 	 *
 	 * @return  mixed|DataSet Saved data set.
 	 */
-	public function save($dataset, $condFields = null)
+	public function save($dataset, $condFields = null, $updateNulls = false)
 	{
 		// Handling conditions
 		$condFields = $condFields ? : $this->getPrimaryKey();
@@ -453,7 +467,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		$this->create($createDataset);
 
-		$this->update($updateDataset, $condFields);
+		$this->update($updateDataset, $condFields, $updateNulls);
 
 		return $dataset;
 	}
@@ -461,15 +475,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	/**
 	 * Save only one row.
 	 *
-	 * @param mixed $data       The data we want to save.
-	 * @param array $condFields The where condition tell us record exists or not, if not set,
-	 *                          will use primary key instead.
+	 * @param mixed $data         The data we want to save.
+	 * @param array $condFields   The where condition tell us record exists or not, if not set,
+	 *                            will use primary key instead.
+	 * @param bool  $updateNulls  Update empty fields or not.
 	 *
 	 * @return  mixed|Data Saved data.
 	 */
-	public function saveOne($data, $condFields = null)
+	public function saveOne($data, $condFields = null, $updateNulls = false)
 	{
-		$dataset = $this->save($this->bindDataset(array($data)), $condFields);
+		$dataset = $this->save($this->bindDataset(array($data)), $condFields, $updateNulls);
 
 		return $dataset[0];
 	}

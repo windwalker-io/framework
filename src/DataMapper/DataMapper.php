@@ -27,9 +27,9 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Constructor.
 	 *
-	 * @param string                   $table       Table name.
-	 * @param string|array             $pk          Primary key.
-	 * @param DatabaseAdapterInterface $db          Database adapter.
+	 * @param   string                    $table  Table name.
+	 * @param   string|array              $pk     Primary key.
+	 * @param   DatabaseAdapterInterface  $db     Database adapter.
 	 */
 	public function __construct($table = null, $pk = 'id', DatabaseAdapterInterface $db = null)
 	{
@@ -41,12 +41,12 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Do find action.
 	 *
-	 * @param array   $conditions Where conditions, you can use array or Compare object.
-	 * @param array   $orders     Order sort, can ba string, array or object.
-	 * @param integer $start      Limit start number.
-	 * @param integer $limit      Limit rows.
+	 * @param   array    $conditions  Where conditions, you can use array or Compare object.
+	 * @param   array    $orders      Order sort, can ba string, array or object.
+	 * @param   integer  $start       Limit start number.
+	 * @param   integer  $limit       Limit rows.
 	 *
-	 * @return  mixed Found rows data set.
+	 * @return  mixed  Found rows data set.
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
@@ -100,12 +100,12 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Do update action.
 	 *
-	 * @param mixed $dataset      Data set contain data we want to update.
-	 * @param array $condFields   The where condition tell us record exists or not, if not set,
-	 *                            will use primary key instead.
-	 * @param bool  $updateNulls  Update empty fields or not.
+	 * @param   mixed  $dataset     Data set contain data we want to update.
+	 * @param   array  $condFields  The where condition tell us record exists or not, if not set,
+	 *                              will use primary key instead.
+	 * @param   bool  $updateNulls  Update empty fields or not.
 	 *
-	 * @throws \Exception
+	 * @throws  \Exception
 	 * @return  mixed Updated data set.
 	 */
 	protected function doUpdate($dataset, array $condFields, $updateNulls = false)
@@ -143,10 +143,10 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Do updateAll action.
 	 *
-	 * @param mixed $data       The data we want to update to every rows.
-	 * @param mixed $conditions Where conditions, you can use array or Compare object.
+	 * @param   mixed  $data        The data we want to update to every rows.
+	 * @param   mixed  $conditions  Where conditions, you can use array or Compare object.
 	 *
-	 * @throws \Exception
+	 * @throws  \Exception
 	 * @return  boolean
 	 */
 	protected function doUpdateAll($data, array $conditions)
