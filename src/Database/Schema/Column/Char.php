@@ -32,7 +32,7 @@ class Char extends Column
 	{
 		$options['length'] = $length;
 
-		parent::__construct($name, DataType::VARCHAR, Column::SIGNED, $allowNull, $default, $comment, $options);
+		parent::__construct($name, DataType::CHAR, Column::SIGNED, $allowNull, $default, $comment, $options);
 	}
 }
  
