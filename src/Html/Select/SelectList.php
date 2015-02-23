@@ -72,6 +72,7 @@ class SelectList extends HtmlElement
 		if ($this->multiple)
 		{
 			$this->setAttribute('multiple', 'true');
+			$this->setAttribute('name', $this->getAttribute('name') . '[]');
 		}
 
 		return parent::toString($forcePair);
