@@ -81,7 +81,17 @@ class BladeRenderer extends AbstractAdapterRenderer
 	 */
 	public function render($file, $data = array())
 	{
-		return $this->getEngine()->make($file, $data)->render();
+		if ($data instanceof \Traversable)
+		{
+			$data = iterator_to_array($data);
+		}
+
+		if (is_object($data))
+		{
+			$data = get_object_vars($data);
+		}
+		
+		return $this->getEngine()->make($file, (array) $data)->render();
 	}
 
 	/**
