@@ -120,13 +120,15 @@ class SelectList extends HtmlElement
 	 */
 	protected function checkSelected($value)
 	{
+		$value = (string) $value;
+
 		if ($this->multiple)
 		{
 			return in_array($value, (array) $this->getSelected());
 		}
 		else
 		{
-			return $value == $this->getSelected();
+			return $value == (string) $this->getSelected();
 		}
 	}
 
