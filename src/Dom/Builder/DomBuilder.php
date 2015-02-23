@@ -33,7 +33,7 @@ class DomBuilder
 
 		foreach ((array) $attribs as $key => $value)
 		{
-			if ($value !== null && $value !== false && $value !== '')
+			if ($value !== null && $value !== false)
 			{
 				$tag .= ' ' . $key . '=' . static::quote($value);
 			}
@@ -63,4 +63,3 @@ class DomBuilder
 		return '"' . $value . '"';
 	}
 }
-
