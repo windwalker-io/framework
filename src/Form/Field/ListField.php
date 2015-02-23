@@ -202,7 +202,14 @@ class ListField extends AbstractField
 					}
 				}
 
-				$this->options[$name] = $option;
+				if (is_numeric($name))
+				{
+					$this->options[] = $option;
+				}
+				else
+				{
+					$this->options[$name] = $option;
+				}
 			}
 		}
 	}
