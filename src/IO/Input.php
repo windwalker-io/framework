@@ -37,7 +37,7 @@ use Windwalker\IO\Filter\NullFilter;
  * @method      string   getEmail()     getEmail($name, $default = null)
  * @method      string   getUrl()       getUrl($name, $default = null)  Get URL
  * @method      string   getRaw()       getRaw($name, $default = null)  Get raw data
- * @method      string   getVar()       getVar($name, $default = null)  Get string or array and filter them.
+ * @method      mixed    getVar()       getVar($name, $default = null)  Get string or array and filter them.
  *
  * @since 2.0
  */
