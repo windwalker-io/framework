@@ -74,27 +74,20 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
-	 * Set value.
+	 * Set value to Data object.
 	 *
 	 * @param string $field The field to set.
 	 * @param mixed  $value The value to set.
+	 *
+	 * @note  If you get "Cannot access empty property" error message, means you should not use (array) to convert object to array.
+	 *        This action will make protected property contains in array too and start with \0 of property name.
+	 *        Use `get_object_vars()` instead.
 	 *
 	 * @throws  \InvalidArgumentException
 	 * @return  static Return self to support chaining.
 	 */
 	public function set($field, $value = null)
 	{
-		// Remove \0 from begin of field name.
-		if (strpos($field, "\0") === 0)
-		{
-			$field = substr($field, 3);
-		}
-
-		if ($field === null || $field === false)
-		{
-			throw new \InvalidArgumentException('Cannot access empty property');
-		}
-
 		$this->$field = $value;
 
 		return $this;
@@ -111,12 +104,6 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function get($field, $default = null)
 	{
-		// Remove \0 from begin of field name.
-		if (strpos($field, "\0") === 0)
-		{
-			$field = substr($field, 3);
-		}
-
 		if (isset($this->$field))
 		{
 			return $this->$field;
