@@ -75,7 +75,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('sakura', $data->flower);
 
-		$data->bind((array) new FakeData);
+		// $data->bind((array) new FakeData);
 	}
 
 	/**

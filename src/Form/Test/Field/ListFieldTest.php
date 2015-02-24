@@ -75,7 +75,7 @@ class ListFieldTest extends DomTestCase
 	{
 		$html = <<<HTML
 <select name="flower" id="flower" class="stub-flower" size="10" disabled="true" onchange="return false;">
-	<option selected="selected"></option>
+	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>
 </select>
@@ -87,7 +87,7 @@ HTML;
 
 		$html = <<<HTML
 <select name="flower" id="flower" class="stub-flower" size="10" disabled="true" onchange="return false;">
-	<option selected="selected"></option>
+	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>
 </select>
@@ -98,8 +98,8 @@ HTML;
 		$this->instance->setAttribute('multiple', true);
 
 		$html = <<<HTML
-<select name="flower" id="flower" class="stub-flower" size="10" disabled="true" onchange="return false;" multiple="true">
-	<option selected="selected"></option>
+<select name="flower[]" id="flower" class="stub-flower" size="10" disabled="true" onchange="return false;" multiple="true">
+	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>
 </select>
