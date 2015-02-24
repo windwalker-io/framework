@@ -35,4 +35,3 @@ class Varchar extends Column
 		parent::__construct($name, DataType::VARCHAR, Column::SIGNED, $allowNull, $default, $comment, $options);
 	}
 }
- 

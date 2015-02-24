@@ -36,4 +36,3 @@ class Bit extends Column
 		parent::__construct($name, DataType::BIT, $signed, $allowNull, $default, $comment, $options);
 	}
 }
- 

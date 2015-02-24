@@ -12,7 +12,7 @@ use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\DataType;
 
 /**
- * The Bit class.
+ * The TIMESTAMP class.
  * 
  * @since  2.0
  */
@@ -29,7 +29,6 @@ class Timestamp extends Column
 	 */
 	public function __construct($name = null, $allowNull = false, $default = '', $comment = '', $options = array())
 	{
-		parent::__construct($name, DataType::DATETIME, true, $allowNull, $default, $comment, $options);
+		parent::__construct($name, DataType::TIMESTAMP, true, $allowNull, $default, $comment, $options);
 	}
 }
- 

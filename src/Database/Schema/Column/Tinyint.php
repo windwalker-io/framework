@@ -36,4 +36,3 @@ class Tinyint extends Column
 		parent::__construct($name, DataType::TINYINT, $signed, $allowNull, $default, $comment, $options);
 	}
 }
- 

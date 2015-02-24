@@ -16,22 +16,23 @@ use Windwalker\Database\Schema\DataType;
  * 
  * @since  2.0
  */
-class Char extends Column
+class Double extends Column
 {
 	/**
 	 * Class init.
 	 *
 	 * @param string $name
-	 * @param int    $length
+	 * @param string $length
+	 * @param bool   $signed
 	 * @param bool   $allowNull
 	 * @param string $default
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $length = 255, $allowNull = false, $default = '', $comment = '', $options = array())
+	public function __construct($name = null, $length = '10,2', $signed = false, $allowNull = false, $default = '', $comment = '', $options = array())
 	{
 		$options['length'] = $length;
 
-		parent::__construct($name, DataType::CHAR, Column::SIGNED, $allowNull, $default, $comment, $options);
+		parent::__construct($name, DataType::DECIMAL, $signed, $allowNull, $default, $comment, $options);
 	}
 }

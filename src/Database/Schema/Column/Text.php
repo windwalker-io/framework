@@ -32,4 +32,3 @@ class Text extends Column
 		parent::__construct($name, DataType::TEXT, Column::SIGNED, $allowNull, $default, $comment, $options);
 	}
 }
- 
