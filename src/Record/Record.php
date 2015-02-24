@@ -73,7 +73,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($table, $keys = 'id', DatabaseDriver $db = null)
+	public function __construct($table = null, $keys = 'id', DatabaseDriver $db = null)
 	{
 		$db = $db ? : DatabaseFactory::getDbo();
 
@@ -106,6 +106,11 @@ class Record implements \ArrayAccess, \IteratorAggregate
 				// Add the field if it is not already present.
 				$this->data->$name = null;
 			}
+		}
+
+		if (!$this->table)
+		{
+			throw new \InvalidArgumentException('Table name should not empty.');
 		}
 	}
 
@@ -619,6 +624,20 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
+	 * Method to set property table
+	 *
+	 * @param   string $table
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setTableName($table)
+	{
+		$this->table = $table;
+
+		return $this;
+	}
+
+	/**
 	 * Get an iterator object.
 	 *
 	 * @return  \ArrayIterator
@@ -628,6 +647,26 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->data);
+	}
+
+	/**
+	 * toObject
+	 *
+	 * @return  \stdClass
+	 */
+	public function toObject()
+	{
+		return $this->data;
+	}
+
+	/**
+	 * toArray
+	 *
+	 * @return  array
+	 */
+	public function toArray()
+	{
+		return get_object_vars($this->data);
 	}
 
 	/**
