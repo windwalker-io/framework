@@ -364,7 +364,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		// Check that we have a result.
 		if (empty($row))
 		{
-			throw new \RuntimeException(__METHOD__ . ' can not bind.');
+			throw new \RuntimeException('No result.');
 		}
 
 		// Bind the object with the row and return.
@@ -664,6 +664,41 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	public function qn($value)
 	{
 		return $this->db->quoteName($value);
+	}
+
+	/**
+	 * Check a field value exists in database or not, to keep a field unique.
+	 *
+	 * @param   string  $field  The field name to check.
+	 *
+	 * @return  boolean
+	 */
+	public function valueExists($field)
+	{
+		$record = new static($this->table, $this->keys, $this->db);
+
+		$record->load(array($field => $this->$field));
+
+		if ($record->$field != $this->$field)
+		{
+			return false;
+		}
+
+		// check record keys same as self
+		$same = array();
+
+		foreach ($this->keys as $key)
+		{
+			$same[] = ($record->$key == $this->$key);
+		}
+
+		// Key not same, means same value exists in other record.
+		if (array_key_exists(false, $same, true))
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

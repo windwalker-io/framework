@@ -11,7 +11,6 @@ namespace Windwalker\Cache;
 use Windwalker\Cache\DataHandler\DataHandlerInterface;
 use Windwalker\Cache\DataHandler\SerializeHandler;
 use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Item\CacheItemInterface;
 use Windwalker\Cache\Storage\CacheStorageInterface;
 use Windwalker\Cache\Storage\RuntimeStorage;
 
