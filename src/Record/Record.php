@@ -732,7 +732,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		}
 
 		// Key not same, means same value exists in other record.
-		if (array_key_exists(false, $same, true))
+		if (in_array(false, $same, true))
 		{
 			return true;
 		}
