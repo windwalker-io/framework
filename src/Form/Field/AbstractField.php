@@ -734,6 +734,36 @@ abstract class AbstractField
 	}
 
 	/**
+	 * append
+	 *
+	 * @param string $attr
+	 * @param string $value
+	 *
+	 * @return  static
+	 */
+	public function appendAttribute($attr, $value)
+	{
+		$this->setAttribute($attr, trim($this->getAttribute($attr) . $value));
+
+		return $this;
+	}
+
+	/**
+	 * prependAttribute
+	 *
+	 * @param string $attr
+	 * @param string $value
+	 *
+	 * @return  static
+	 */
+	public function prependAttribute($attr, $value)
+	{
+		$this->setAttribute($attr, trim($value . $this->getAttribute($attr)));
+
+		return $this;
+	}
+
+	/**
 	 * Method to convert some string like `true`, `1`, `yes` to boolean TRUE,
 	 * and `no`, `false`, `disabled`, `null`, `none`, `0` string to boolean FALSE.
 	 *

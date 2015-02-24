@@ -434,6 +434,46 @@ class Form implements \IteratorAggregate
 	}
 
 	/**
+	 * setAttributes
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 * @param string $fieldset
+	 * @param string $group
+	 *
+	 * @return  $this
+	 */
+	public function setAttributes($name, $value, $fieldset = null, $group = null)
+	{
+		foreach ($this->getFields($fieldset, $group) as $field)
+		{
+			$field->setAttribute($name, $value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * appendAttributes
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 * @param string $fieldset
+	 * @param string $group
+	 *
+	 * @return  static
+	 */
+	public function appendAttributes($name, $value, $fieldset = null, $group = null)
+	{
+		foreach ($this->getFields($fieldset, $group) as $field)
+		{
+			$field->appendAttribute($name, $value);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * bind
 	 *
 	 * @param array $data
