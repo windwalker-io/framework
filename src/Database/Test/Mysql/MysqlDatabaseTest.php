@@ -87,6 +87,25 @@ class MysqlDatabaseTest extends AbstractMysqlTest
 	}
 
 	/**
+	 * Methos to test DB exists.
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::exsts
+	 */
+	public function testExists()
+	{
+		$database = $this->db->getDatabase('windwalker_foo_test');
+
+		$database->create(true);
+
+		$this->assertTrue($this->db->getDatabase('windwalker_foo_test')->exists());
+		$this->assertFalse($this->db->getDatabase('windwalker_bar_test')->exists());
+
+		$database->drop();
+	}
+
+	/**
 	 * Method to test rename().
 	 *
 	 * @return void

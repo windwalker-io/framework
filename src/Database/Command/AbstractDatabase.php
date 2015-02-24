@@ -73,6 +73,13 @@ abstract class AbstractDatabase
 	abstract public function drop($ifExists = false);
 
 	/**
+	 * exists
+	 *
+	 * @return  boolean
+	 */
+	abstract public function exists();
+
+	/**
 	 * renameDatabase
 	 *
 	 * @param string  $newName

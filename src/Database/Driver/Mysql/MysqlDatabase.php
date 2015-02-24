@@ -72,6 +72,18 @@ class MysqlDatabase extends AbstractDatabase
 	}
 
 	/**
+	 * exists
+	 *
+	 * @return  boolean
+	 */
+	public function exists()
+	{
+		$databases = $this->db->listDatabases();
+
+		return in_array($this->database, $databases);
+	}
+
+	/**
 	 * renameDatabase
 	 *
 	 * @param string  $newName
