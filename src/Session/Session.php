@@ -540,6 +540,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 			{
 				throw new \RuntimeException('Session is not active.');
 			}
+			
+			return false;
 		}
 
 		return $this->getBag($namespace)->get($name, $default);
