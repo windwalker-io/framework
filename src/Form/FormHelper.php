@@ -97,11 +97,11 @@ class FormHelper
 
 		foreach ($args as $arg)
 		{
-			if (is_object($dataTmp) && !empty($dataTmp->$arg))
+			if (is_object($dataTmp) && isset($dataTmp->$arg))
 			{
 				$dataTmp = $dataTmp->$arg;
 			}
-			elseif (is_array($dataTmp) && !empty($dataTmp[$arg]))
+			elseif (is_array($dataTmp) && isset($dataTmp[$arg]))
 			{
 				$dataTmp = $dataTmp[$arg];
 			}
