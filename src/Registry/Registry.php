@@ -139,9 +139,12 @@ class Registry implements \JsonSerializable, \ArrayAccess
 			// Traverse the registry to find the correct node for the result.
 			for ($i = 0, $n = count($nodes); $i < $n; $i++)
 			{
-				if (isset($node->$nodes[$i]))
+				// Fix for PHP7
+				$key = $nodes[$i];
+
+				if (isset($node->$key))
 				{
-					$node = $node->$nodes[$i];
+					$node = $node->$key;
 				}
 				else
 				{
@@ -423,16 +426,22 @@ class Registry implements \JsonSerializable, \ArrayAccess
 			// Traverse the registry to find the correct node for the result.
 			for ($i = 0, $n = count($nodes) - 1; $i < $n; $i++)
 			{
-				if (!isset($node->$nodes[$i]) && ($i != $n))
+				// Fix for PHP7
+				$key = $nodes[$i];
+
+				if (!isset($node->$key) && ($i != $n))
 				{
-					$node->$nodes[$i] = new \stdClass;
+					$node->$key = new \stdClass;
 				}
 
-				$node = $node->$nodes[$i];
+				$node = $node->$key;
 			}
 
+			// Fix for PHP7
+			$key = $nodes[$i];
+
 			// Get the old value if exists so we can return it
-			$result = $node->$nodes[$i] = $value;
+			$result = $node->$key = $value;
 		}
 
 		return $result;
