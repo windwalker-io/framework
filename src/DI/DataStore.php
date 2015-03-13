@@ -184,6 +184,6 @@ class DataStore
 	 */
 	public function __clone()
 	{
-		$this->callback = clone $this->callback;
+		// $this->callback = clone $this->callback;
 	}
 }
