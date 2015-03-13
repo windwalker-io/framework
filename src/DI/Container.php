@@ -392,6 +392,26 @@ class Container
 	}
 
 	/**
+	 * Fork an instance to a new key.
+	 *
+	 * @param   string  $key       Origin key.
+	 * @param   string  $newKey    New key.
+	 * @param   bool    $forceNew  Force new.
+	 *
+	 * @return  mixed  Forked instance.
+	 *
+	 * @since   2.0.7
+	 */
+	public function fork($key, $newKey, $forceNew = false)
+	{
+		$raw = clone $this->getRaw($key);
+
+		$this->dataStore[$newKey] = $raw;
+
+		return $this->get($newKey, $forceNew);
+	}
+
+	/**
 	 * Register a service provider to the container.
 	 *
 	 * @param   ServiceProviderInterface  $provider  The service provider to register.w

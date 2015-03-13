@@ -152,4 +152,38 @@ class DataStore
 
 		return $this->protected;
 	}
+
+	/**
+	 * Method to get property Instance
+	 *
+	 * @return  mixed
+	 */
+	public function getInstance()
+	{
+		return $this->instance;
+	}
+
+	/**
+	 * Method to set property instance
+	 *
+	 * @param   mixed $instance
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setInstance($instance)
+	{
+		$this->instance = $instance;
+
+		return $this;
+	}
+
+	/**
+	 * __clone
+	 *
+	 * @return  void
+	 */
+	public function __clone()
+	{
+		$this->callback = clone $this->callback;
+	}
 }

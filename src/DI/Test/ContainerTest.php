@@ -165,6 +165,11 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('SplStack', $container->get('olive'));
 	}
 
+	/**
+	 * testGetFromParent
+	 *
+	 * @return  void
+	 */
 	public function testGetFromParent()
 	{
 		$container = new Container($this->instance);
@@ -419,6 +424,36 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertEquals('World~~~!!!', $this->instance->get('Hello'));
+	}
+
+	/**
+	 * testFork
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\DI\Container::fork
+	 */
+	public function testFork()
+	{
+		$hello = $this->instance->fork('Hello', 'Hello2');
+
+		$this->assertEquals('World', $hello);
+		$this->assertEquals('World', $this->instance->get('Hello2'));
+
+		$closure = function()
+		{
+			return uniqid();
+		};
+
+		$this->instance->share('uniqid', $closure);
+
+		$uid = $this->instance->get('uniqid');
+
+		$this->assertEquals($uid, $this->instance->fork('uniqid', 'uniqid2'));
+		$this->assertEquals($uid, $this->instance->get('uniqid2'));
+
+		$this->assertNotEquals($uid, $uid2 = $this->instance->fork('uniqid', 'uniqid3', Container::FORCE_NEW));
+		$this->assertEquals($uid2, $this->instance->get('uniqid3'));
 	}
 
 	/**
