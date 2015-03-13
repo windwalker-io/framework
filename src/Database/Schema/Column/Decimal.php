@@ -12,11 +12,11 @@ use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\DataType;
 
 /**
- * The Varchar class.
+ * The Decimal class.
  * 
  * @since  2.0
  */
-class Double extends Column
+class Decimal extends Column
 {
 	/**
 	 * Class init.

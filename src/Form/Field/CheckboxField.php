@@ -42,7 +42,7 @@ class CheckboxField extends AbstractField
 		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
-		$attrs['value']    = $this->getAttribute('onchange');
+		$attrs['value']    = $this->getAttribute('value');
 		$attrs['checked']  = $value ? 'true' : null;
 	}
 }
