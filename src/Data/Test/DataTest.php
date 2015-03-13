@@ -231,4 +231,48 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals($compare, $this->instance->dump());
 	}
+
+	/**
+	 * Method to test map()
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Data\Data::map
+	 */
+	public function testMap()
+	{
+		$data = new Data;
+
+		$data->foo = 'bar';
+		$data->baz = 'yoo';
+
+		$data->map(function($value)
+		{
+			return strtoupper($value);
+		});
+
+		$this->assertEquals('YOO', $data->baz);
+	}
+
+	/**
+	 * Method to test walk()
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Data\Data::walk
+	 */
+	public function testWalk()
+	{
+		$data = new Data;
+
+		$data->foo = 'bar';
+		$data->baz = 'yoo';
+
+		$data->walk(function(&$value, $key, $userdata)
+		{
+			$value = $userdata . ':' . $key . ':' . strtoupper($value);
+		}, 'prefix');
+
+		$this->assertEquals('prefix:baz:YOO', $data->baz);
+	}
 }

@@ -267,4 +267,41 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	{
 		return get_object_vars($this);
 	}
+
+	/**
+	 * Mapping all elements.
+	 *
+	 * @param   callable  $callback  Callback to handle every element.
+	 *
+	 * @return  static  Support chaining.
+	 */
+	public function map($callback)
+	{
+		foreach ($this->getIterator() as $key => $value)
+		{
+			$this[$key] = call_user_func($callback, $value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Apply a user supplied function to every member of this object.
+	 *
+	 * @param   callable  $callback  Callback to handle every element.
+	 * @param   mixed     $userdata  This will be passed as the third parameter to the callback.
+	 *
+	 * @return  static  Support chaining.
+	 */
+	public function walk($callback, $userdata = null)
+	{
+		foreach ($this->getIterator() as $key => $value)
+		{
+			call_user_func_array($callback, array(&$value, $key, $userdata));
+
+			$this->$key = $value;
+		}
+
+		return $this;
+	}
 }

@@ -300,4 +300,40 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals($this->getTestData(), $this->instance->dump());
 	}
+
+	/**
+	 * Method to test map()
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::map
+	 */
+	public function testMap()
+	{
+		$this->instance->map(function($data)
+		{
+			$data->foo = 'bar';
+
+			return $data;
+		});
+
+		$this->assertEquals(array('bar', 'bar'), $this->instance->foo);
+	}
+
+	/**
+	 * Method to test walk()
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::walk
+	 */
+	public function testWalk()
+	{
+		$this->instance->walk(function(&$data, $key, $userdata)
+		{
+			$data->foo = $userdata . ':' . $key;
+		}, 'prefix');
+
+		$this->assertEquals(array('prefix:0', 'prefix:1'), $this->instance->foo);
+	}
 }

@@ -326,4 +326,33 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	{
 		return $this->data;
 	}
+
+	/**
+	 * Mapping all elements.
+	 *
+	 * @param   callable  $callback
+	 *
+	 * @return  static  Support chaining.
+	 */
+	public function map($callback)
+	{
+		$this->data = array_map($callback, $this->data);
+
+		return $this;
+	}
+
+	/**
+	 * Apply a user supplied function to every member of this object.
+	 *
+	 * @param   callable  $callback  Callback to handle every element.
+	 * @param   mixed     $userdata  This will be passed as the third parameter to the callback.
+	 *
+	 * @return  static  Support chaining.
+	 */
+	public function walk($callback, $userdata = null)
+	{
+		array_walk($this->data, $callback, $userdata);
+
+		return $this;
+	}
 }
