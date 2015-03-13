@@ -8,6 +8,7 @@
 
 namespace Windwalker\Record\Test;
 
+use Windwalker\Database\Test\Mysql\AbstractMysqlTest;
 use Windwalker\Record\Record;
 
 /**
@@ -15,7 +16,7 @@ use Windwalker\Record\Record;
  *
  * @since 2.0
  */
-class RecordTest extends \PHPUnit_Framework_TestCase
+class RecordTest extends AbstractMysqlTest
 {
 	/**
 	 * Test instance.
@@ -103,10 +104,17 @@ class RecordTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testBind()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$record = new Record('ww_flower');
+
+		$record->bind(
+			array(
+				'title' => 'sakura',
+				'fake' => 'cat'
+			)
 		);
+
+		$this->assertEquals('sakura', $record->title);
+		$this->assertEquals(null, $record->fake);
 	}
 
 	/**

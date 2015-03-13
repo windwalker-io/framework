@@ -266,13 +266,15 @@ class Record implements \ArrayAccess, \IteratorAggregate
 			$ignore = explode(' ', $ignore);
 		}
 
+		$fields = $this->getFields();
+
 		// Bind the source value, excluding the ignored fields.
 		foreach ($this->data as $k => $v)
 		{
 			// Only process fields not in the ignore array.
 			if (!in_array($k, $ignore))
 			{
-				if (isset($src[$k]))
+				if (isset($src[$k]) && array_key_exists($k, $fields))
 				{
 					$this->data->$k = $src[$k];
 				}
