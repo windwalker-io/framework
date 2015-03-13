@@ -112,6 +112,13 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
 	 */
 	public function offsetSet($offset, $value)
 	{
+		if ($offset === '' || $offset === null)
+		{
+			array_push($this->elements, $value);
+
+			return;
+		}
+
 		$this->elements[$offset] = $value;
 	}
 

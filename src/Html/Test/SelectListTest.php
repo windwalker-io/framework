@@ -79,6 +79,20 @@ class SelectListTest extends DomTestCase
 HTML;
 
 		$this->assertDomStringEqualsDomString($expect, $select);
+
+		$expect = <<<HTML
+<select class="input-select" name="form[timezone]">
+	<option class="opt" value="Asia/Tokyo">Asia - Tokyo</option>
+	<option value="Asia/Taipei">Asia - Taipei</option>
+	<option value="Asia/Paris">Europe - Paris</option>
+	<option value="UTC" selected="selected">UTC</option>
+	<option value="Europe/London">Europe - London</option>
+</select>
+HTML;
+
+		$select->addOption(new Option('Europe - London', 'Europe/London'));
+
+		$this->assertDomStringEqualsDomString($expect, $select);
 	}
 
 	/**
@@ -122,6 +136,25 @@ HTML;
 	<option value="UTC" selected="selected">UTC</option>
 </select>
 HTML;
+
+		$this->assertDomStringEqualsDomString($expect, $select);
+
+		$expect = <<<HTML
+<select class="input-select" name="form[timezone]">
+	<optgroup label="Asia">
+		<option class="opt" value="Asia/Tokyo">Tokyo</option>
+		<option value="Asia/Taipei">Taipei</option>
+	</optgroup>
+
+	<optgroup label="Europe">
+		<option value="Asia/Paris">Europe - Paris</option>
+		<option value="Europe/London">Europe - London</option>
+	</optgroup>
+
+	<option value="UTC" selected="selected">UTC</option>
+</select>
+HTML;
+		$select->addOption(new Option('Europe - London', 'Europe/London'), 'Europe');
 
 		$this->assertDomStringEqualsDomString($expect, $select);
 	}

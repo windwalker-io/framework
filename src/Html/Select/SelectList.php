@@ -52,8 +52,8 @@ class SelectList extends HtmlElement
 	{
 		$attribs['name'] = $name;
 
-		$this->selected = $selected;
-		$this->multiple = $multiple;
+		$this->setSelected($selected);
+		$this->setMultiple($multiple);
 
 		parent::__construct('select', $options, $attribs);
 	}
@@ -67,15 +67,22 @@ class SelectList extends HtmlElement
 	 */
 	public function toString($forcePair = false)
 	{
+		$tmpContent = clone $this->getContent();
+		$tmpName    = $this->getAttribute('name');
+
 		$this->prepareOptions();
 
 		if ($this->multiple)
 		{
-			$this->setAttribute('multiple', 'true');
 			$this->setAttribute('name', $this->getAttribute('name') . '[]');
 		}
 
-		return parent::toString($forcePair);
+		$html = parent::toString($forcePair);
+
+		$this->setAttribute('name', $tmpName);
+		$this->setContent($tmpContent);
+
+		return $html;
 	}
 
 	/**
@@ -152,6 +159,68 @@ class SelectList extends HtmlElement
 	public function setSelected($selected)
 	{
 		$this->selected = $selected;
+
+		return $this;
+	}
+
+	/**
+	 * __clone
+	 *
+	 * @return  void
+	 */
+	public function __clone()
+	{
+		$this->content = clone $this->content;
+	}
+
+	/**
+	 * Method to get property Multiple
+	 *
+	 * @return  boolean
+	 */
+	public function getMultiple()
+	{
+		return $this->multiple;
+	}
+
+	/**
+	 * Method to set property multiple
+	 *
+	 * @param   boolean $multiple
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setMultiple($multiple)
+	{
+		$this->multiple = $multiple;
+
+		$this->setAttribute('multiple', $multiple ? 'true' : 'false');
+
+		return $this;
+	}
+
+	/**
+	 * addOption
+	 *
+	 * @param Option $option
+	 * @param string $group
+	 *
+	 * @return  static
+	 */
+	public function addOption(Option $option, $group = null)
+	{
+		if ($group)
+		{
+			$content = $this->content[$group];
+
+			array_push($content, $option);
+
+			$this->content[$group] = $content;
+		}
+		else
+		{
+			$this->content[] = $option;
+		}
 
 		return $this;
 	}
