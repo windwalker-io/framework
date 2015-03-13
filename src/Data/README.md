@@ -120,6 +120,21 @@ Another simple way is convert it to array, this also work:
 var_dump(empty((array) $data)); // bool(true)
 ```
 
+### Map and Walk
+
+``` php
+$data->map(function($value)
+{
+    return strtoupper($value);
+});
+
+$data->walk(function(&$value, $key, $userdata)
+{
+    $value = $userdata . ':' . $key . ':' . $value;
+}, 'prefix');
+```
+
+
 ## Using DataSet Object
 
 `DataSet` is a data collection bag for `Data` object. We can insert array with data in constructor.
@@ -175,4 +190,20 @@ Set value to `bar` field of all object.
 ``` php
 // will set 'Fly' to every Data's bar property
 $dataset->bar = 'Fly';
+```
+
+### Map and Walk
+
+``` php
+$dataset->map(function($data)
+{
+    $data->foo = 'bar';
+
+    return $data;
+});
+
+$dataset->walk(function(&$data, $key, $userdata)
+{
+    $data->foo = $userdata . ':' . $key;
+}, 'prefix');
 ```
