@@ -672,13 +672,13 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Clone the table.
 	 *
-	 * @return  \ArrayIterator
+	 * @return  void
 	 *
 	 * @since   2.0
 	 */
 	public function __clone()
 	{
-		return $this->getIterator();
+		$this->data = clone $this->data;
 	}
 
 	/**

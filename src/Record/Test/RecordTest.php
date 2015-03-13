@@ -291,13 +291,17 @@ class RecordTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::__clone
-	 * @TODO   Implement test__clone().
 	 */
 	public function test__clone()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$record = new Record('#__flower');
+
+		$record->title = 'sakura';
+
+		$new = clone $record;
+
+		$new->title = 'sunflower';
+
+		$this->assertEquals('sakura', $record->title);
 	}
 }
