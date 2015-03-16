@@ -41,6 +41,19 @@ class ValidatePrompterTest extends AbstractPrompterTest
 	 */
 	public function testAsk()
 	{
+		if (version_compare(PHP_VERSION, '7.0.0-dev', '='))
+		{
+			$this->markTestSkipped('Segmentation fault in PHP 7.0');
+		}
+
+		$this->setStream("4\n5\n6");
+
+		$this->assertEquals($this->instance->ask(null, 'sakura'), 'sakura', 'Should validate fail and return default.');
+
+		$this->setStream("4\n5\n6");
+
+		$this->assertNull($this->instance->ask(null), 'Should validate fail and get NULL.');
+
 		$this->setStream('sakura');
 
 		$this->assertEquals($this->instance->ask('Tell me something: '), 'sakura', 'Should validate success and pass.');
