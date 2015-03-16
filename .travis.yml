@@ -6,28 +6,17 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - 7.0
 
 services:
   - memcached # will start memcached
 
 before_install:
-#  - composer self-update
-  - sh -e build/travis/scripts/apt-get.sh
-#  - sh -e build/travis/scripts/apache2-vhost.sh
-#  - sh -e build/travis/scripts/apache2-configure.sh
+  - composer self-update
 
 before_script:
   - composer update --dev
   - phpenv rehash
-#  - mysql -e 'create database joomla_ut;'
-#  - mysql joomla_ut < src/Joomla/Database/Tests/Stubs/mysql.sql
-#  - psql -c 'create database joomla_ut;' -U postgres
-#  - psql -d joomla_ut -a -f src/Joomla/Database/Tests/Stubs/postgresql.sql
-#  - touch build/travis/phpenv/memcached.ini
-#  - phpenv config-add build/travis/phpenv/memcached.ini
-#  - cat build/travis/phpenv/memcached.ini
 
 script:
   - phpunit --configuration phpunit.travis.xml
-#  - chmod +x build/travis/subtree/*
-#  - sh -e build/travis/subtree/test-subtree.sh
