@@ -110,10 +110,14 @@ class MysqlTable extends AbstractTable
 	{
 		foreach ($this->columns as $column)
 		{
+			$length = $column->getLength();
+
+			$length = $length ? '(' . $length . ')' : null;
+
 			$query = MysqlQueryBuilder::addColumn(
 				$this->table,
 				$column->getName(),
-				$column->getType(),
+				$column->getType() . $length,
 				$column->getSigned(),
 				$column->getAllowNull(),
 				$column->getDefault(),
@@ -286,6 +290,108 @@ class MysqlTable extends AbstractTable
 	public function dropColumn($name)
 	{
 		$query = MysqlQueryBuilder::dropColumn($this->table, $name);
+
+		$this->db->setQuery($query)->execute();
+
+		return $this;
+	}
+
+	/**
+	 * modifyColumn
+	 *
+	 * @param string|Column $name
+	 * @param string $type
+	 * @param bool   $signed
+	 * @param bool   $allowNull
+	 * @param string $default
+	 * @param string $comment
+	 * @param array  $options
+	 *
+	 * @return  static
+	 */
+	public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
+	{
+		if ($name instanceof Column)
+		{
+			$column = $name;
+			$length = $column->getLength();
+			$length = $length ? '(' . $length . ')' : null;
+
+			$name      = $column->getName();
+			$type      = $column->getType() . $length;
+			$signed    = $column->getSigned();
+			$allowNull = $column->getAllowNull();
+			$default   = $column->getDefault();
+			$position  = $column->getPosition();
+			$comment   = $column->getComment();
+		}
+		else
+		{
+			$position = isset($options['position']) ? $options['position'] : null;
+		}
+
+		$query = MysqlQueryBuilder::modifyColumn(
+			$this->table,
+			$name,
+			$type,
+			$signed,
+			$allowNull,
+			$default,
+			$position,
+			$comment
+		);
+
+		$this->db->setQuery($query)->execute();
+
+		return $this;
+	}
+
+	/**
+	 * changeColumn
+	 *
+	 * @param string $oldName
+	 * @param string|Column  $newName
+	 * @param string $type
+	 * @param bool   $signed
+	 * @param bool   $allowNull
+	 * @param string $default
+	 * @param string $comment
+	 * @param array  $options
+	 *
+	 * @return  static
+	 */
+	public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
+	{
+		if ($newName instanceof Column)
+		{
+			$column = $newName;
+			$length = $column->getLength();
+			$length = $length ? '(' . $length . ')' : null;
+
+			$newName   = $column->getName();
+			$type      = $column->getType() . $length;
+			$signed    = $column->getSigned();
+			$allowNull = $column->getAllowNull();
+			$default   = $column->getDefault();
+			$position  = $column->getPosition();
+			$comment   = $column->getComment();
+		}
+		else
+		{
+			$position = isset($options['position']) ? $options['position'] : null;
+		}
+
+		$query = MysqlQueryBuilder::changeColumn(
+			$this->table,
+			$oldName,
+			$newName,
+			$type,
+			$signed,
+			$allowNull,
+			$default,
+			$position,
+			$comment
+		);
 
 		$this->db->setQuery($query)->execute();
 

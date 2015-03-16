@@ -10,6 +10,7 @@ namespace Windwalker\Database\Command;
 
 use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Database\Driver\DatabaseAwareTrait;
+use Windwalker\Database\Schema\Column;
 
 /**
  * Class DatabaseTable
@@ -213,9 +214,40 @@ abstract class AbstractTable
 	 *
 	 * @param string $name
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
 	abstract public function dropColumn($name);
+
+	/**
+	 * modifyColumn
+	 *
+	 * @param string|Column  $name
+	 * @param string $type
+	 * @param bool   $signed
+	 * @param bool   $allowNull
+	 * @param string $default
+	 * @param string $comment
+	 * @param array  $options
+	 *
+	 * @return  static
+	 */
+	abstract public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array());
+
+	/**
+	 * changeColumn
+	 *
+	 * @param string $oldName
+	 * @param string|Column  $newName
+	 * @param string $type
+	 * @param bool   $signed
+	 * @param bool   $allowNull
+	 * @param string $default
+	 * @param string $comment
+	 * @param array  $options
+	 *
+	 * @return  static
+	 */
+	abstract public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array());
 
 	/**
 	 * addIndex

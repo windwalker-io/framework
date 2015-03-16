@@ -28,7 +28,7 @@ class Varchar extends Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $length = 255, $allowNull = false, $default = '', $comment = '', $options = array())
+	public function __construct($name = null, $length = 255, $allowNull = false, $default = null, $comment = '', $options = array())
 	{
 		$options['length'] = $length;
 

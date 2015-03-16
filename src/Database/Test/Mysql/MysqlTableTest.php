@@ -296,13 +296,52 @@ class MysqlTableTest extends AbstractMysqlTest
 	 */
 	public function testDropColumn()
 	{
-		$table = $this->db->getTable('#__categories');
+		$table = $this->db->getTable('#__categories', true);
 
 		$table->dropColumn('state');
 
 		$columns = $table->getColumns(true);
 
 		$this->assertEquals(array('id', 'title', 'ordering', 'params'), $columns);
+	}
+
+	/**
+	 * Method to test modifyColumn()
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Database\Driver\Mysql\MysqlTable::modifyColumn
+	 */
+	public function testModifyColumn()
+	{
+		$table = $this->db->getTable('#__categories', true);
+
+		$table->addColumn(new Column\Varchar('foo'))
+			->save();
+
+		$table->modifyColumn(new Column\Integer('foo'));
+
+		$tables = $table->getColumnDetails();
+
+		$this->assertEquals('int(11) unsigned', $tables['foo']->Type);
+
+		$table->modifyColumn(new Column\Tinyint('foo', 3, Column::SIGNED));
+
+		$tables = $table->getColumnDetails();
+
+		$this->assertEquals('tinyint(3)', $tables['foo']->Type);
+	}
+
+	public function testChangeColumn()
+	{
+		$table = $this->db->getTable('#__categories', true);
+
+		$table->changeColumn('foo', new Column\Integer('bar'));
+
+		$tables = $table->getColumnDetails();
+
+		$this->assertEquals('int(11) unsigned', $tables['bar']->Type);
+		$this->assertArrayNotHasKey('foo', $tables);
 	}
 
 	/**
@@ -314,7 +353,7 @@ class MysqlTableTest extends AbstractMysqlTest
 	 */
 	public function testGetIndexes()
 	{
-		$table = $this->db->getTable('#__categories');
+		$table = $this->db->getTable('#__categories', true);
 
 		$indexes = $table->getIndexes();
 
@@ -330,7 +369,7 @@ class MysqlTableTest extends AbstractMysqlTest
 	 */
 	public function testAddIndex()
 	{
-		$table = $this->db->getTable('#__categories');
+		$table = $this->db->getTable('#__categories', true);
 
 		$table->addIndex('key', 'idx_ordering', array('ordering', 'id'))
 			->save();
@@ -351,7 +390,7 @@ class MysqlTableTest extends AbstractMysqlTest
 	 */
 	public function testDropIndex()
 	{
-		$table = $this->db->getTable('#__categories');
+		$table = $this->db->getTable('#__categories', true);
 
 		$table->dropIndex(Key::TYPE_INDEX, 'idx_ordering');
 

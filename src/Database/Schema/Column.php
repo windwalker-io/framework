@@ -116,7 +116,7 @@ class Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $type = 'text', $signed = false, $allowNull = false, $default = '', $comment = '', $options = array())
+	public function __construct($name = null, $type = 'text', $signed = false, $allowNull = false, $default = null, $comment = '', $options = array())
 	{
 		$this->name = $name;
 		$this->type = $type;

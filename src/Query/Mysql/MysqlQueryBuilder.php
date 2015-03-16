@@ -535,4 +535,3 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 		return static::$query;
 	}
 }
-
