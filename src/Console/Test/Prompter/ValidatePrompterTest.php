@@ -43,11 +43,11 @@ class ValidatePrompterTest extends AbstractPrompterTest
 	{
 		$this->setStream("4\n5\n6");
 
-		$this->assertEquals($this->instance->ask(null, 'sakura'), 'sakura', 'Should validate fail and return default.');
-
-		$this->setStream("4\n5\n6");
-
-		$this->assertNull($this->instance->ask(null), 'Should validate fail and get NULL.');
+//		$this->assertEquals($this->instance->ask(null, 'sakura'), 'sakura', 'Should validate fail and return default.');
+//
+//		$this->setStream("4\n5\n6");
+//
+//		$this->assertNull($this->instance->ask(null), 'Should validate fail and get NULL.');
 //
 //		$this->setStream('sakura');
 //
