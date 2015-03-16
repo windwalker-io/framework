@@ -11,6 +11,8 @@ namespace Windwalker\Console\Test;
 use Windwalker\Console\Console;
 use Windwalker\Console\Test\Mock\MockIO;
 use Windwalker\Console\Test\Mock\MockLogger;
+use Windwalker\Console\Test\Stubs\Foo\Aaa\BbbCommand;
+use Windwalker\Console\Test\Stubs\Foo\AaaCommand;
 use Windwalker\Console\Test\Stubs\FooCommand;
 use Windwalker\Test\TestHelper;
 
@@ -103,6 +105,42 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(99, $code, 'return code not matched.');
 
 		$this->assertEquals('Bbb Command', $output, 'Output not matched.');
+	}
+
+	/**
+	 * testExecuteByPath
+	 *
+	 * @return  void
+	 */
+	public function testExecuteByPath()
+	{
+		$this->instance->addCommand(new FooCommand);
+
+		$code = $this->instance->executeByPath('foo/aaa/bbb', $this->instance->io);
+
+		$output = $this->instance->io->getTestOutput();
+
+		$this->assertEquals(99, $code, 'return code not matched.');
+
+		$this->assertEquals('Bbb Command', $output, 'Output not matched.');
+	}
+
+	/**
+	 * testGetCommand
+	 *
+	 * @return  void
+	 */
+	public function testGetCommand()
+	{
+		$this->instance->addCommand(new FooCommand);
+
+		$command = $this->instance->getCommand('foo/aaa');
+
+		$this->assertTrue($command instanceof AaaCommand);
+
+		$command = $this->instance->getCommand('foo/aaa/bbb');
+
+		$this->assertTrue($command instanceof BbbCommand);
 	}
 
 	/**

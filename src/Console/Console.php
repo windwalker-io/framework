@@ -114,6 +114,8 @@ class Console extends AbstractConsole
 	/**
 	 * Method to run the application routines.
 	 *
+	 * @param   AbstractCommand  $command  The Command object to execute, default will be rootCommand.
+	 *
 	 * @return  int  The Unix Console/Shell exit code.
 	 *
 	 * @see     http://tldp.org/LDP/abs/html/exitcodes.html
@@ -122,9 +124,9 @@ class Console extends AbstractConsole
 	 * @throws  \LogicException
 	 * @throws  \Exception
 	 */
-	public function doExecute()
+	public function doExecute(AbstractCommand $command = null)
 	{
-		$command = $this->getRootCommand();
+		$command = $command ? : $this->getRootCommand();
 
 		if ((!$command->getHandler() && !count($this->io->getArguments())))
 		{
@@ -159,6 +161,31 @@ class Console extends AbstractConsole
 		}
 
 		return $exitCode;
+	}
+
+	/**
+	 * executeByPath
+	 *
+	 * @param string $path
+	 * @param IO     $io
+	 *
+	 * @return  int
+	 */
+	public function executeByPath($path, $io = null)
+	{
+		$io = $io ? : $this->io;
+
+		$command = $this->getCommand($path);
+
+		if (!$command)
+		{
+			throw new \UnexpectedValueException('Command: ' . $path . ' not found.');
+		}
+
+		$command->setIO($io);
+		$command->setApplication($this);
+
+		return $this->doExecute($command);
 	}
 
 	/**

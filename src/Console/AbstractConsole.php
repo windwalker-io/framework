@@ -146,11 +146,13 @@ abstract class AbstractConsole
 	 * Method to run the application routines.  Most likely you will want to instantiate a controller
 	 * and execute it, or perform some sort of task directly.
 	 *
+	 * @param   AbstractCommand  $command  The Command object to execute, default will be rootCommand.
+	 *
 	 * @return  void
 	 *
 	 * @since   2.0
 	 */
-	abstract protected function doExecute();
+	abstract protected function doExecute(AbstractCommand $command = null);
 
 	/**
 	 * Execute the application.
