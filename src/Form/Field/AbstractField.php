@@ -492,7 +492,7 @@ abstract class AbstractField
 	 */
 	public function getValue()
 	{
-		return $this->value ? : $this->getAttribute('default');
+		return ($this->value !== null) ? $this->value : $this->getAttribute('default');
 	}
 
 	/**
