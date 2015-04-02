@@ -1134,7 +1134,7 @@ class Query implements QueryInterface
 	 */
 	public function quote($text, $escape = true)
 	{
-		if (is_numeric($text) || is_null($text))
+		if (is_null($text))
 		{
 			return $text;
 		}
