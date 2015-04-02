@@ -28,7 +28,7 @@ class Key
 	/**
 	 * @var string
 	 */
-	const TYPE_PRIMARY = 'primary';
+	const TYPE_PRIMARY = 'primary key';
 
 	/**
 	 * Property name.
