@@ -132,7 +132,7 @@ class DataIterator implements \Countable, \Iterator
 	 */
 	public function count()
 	{
-		$this->reader->count();
+		return $this->reader->count();
 	}
 }
 

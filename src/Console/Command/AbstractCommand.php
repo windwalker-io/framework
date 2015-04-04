@@ -185,9 +185,7 @@ abstract class AbstractCommand implements \ArrayAccess
 			}
 			catch (\Exception $e)
 			{
-				$this->renderException($e);
-
-				return $e->getCode();
+				throw $e;
 			}
 		}
 
