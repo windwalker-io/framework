@@ -121,7 +121,7 @@ abstract class ArrayHelper
 	/**
 	 * Utility function to map an object to an array
 	 *
-	 * @param   object   $p_obj    The source object
+	 * @param   object   $source   The source object
 	 * @param   boolean  $recurse  True to recurse through multi-level objects
 	 * @param   string   $regex    An optional regular expression to match on field names
 	 *
@@ -129,11 +129,11 @@ abstract class ArrayHelper
 	 *
 	 * @since   2.0
 	 */
-	public static function fromObject($p_obj, $recurse = true, $regex = null)
+	public static function fromObject($source, $recurse = true, $regex = null)
 	{
-		if (is_object($p_obj))
+		if (is_object($source))
 		{
-			return self::arrayFromObject($p_obj, $recurse, $regex);
+			return self::arrayFromObject($source, $recurse, $regex);
 		}
 		else
 		{
@@ -222,7 +222,7 @@ abstract class ArrayHelper
 	/**
 	 * Utility function to return a value from a named array or a specified default
 	 *
-	 * @param   array   $array    A named array
+	 * @param   array   $source   A named array or object.
 	 * @param   string  $name     The key to search for
 	 * @param   mixed   $default  The default value to give if no key found
 	 * @param   string  $type     Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
@@ -231,13 +231,22 @@ abstract class ArrayHelper
 	 *
 	 * @since   2.0
 	 */
-	public static function getValue(array $array, $name, $default = null, $type = '')
+	public static function getValue($source, $name, $default = null, $type = '')
 	{
+		if (!is_array($source) && !is_object($source))
+		{
+			throw new \InvalidArgumentException('The object must be an array or a object that implements ArrayAccess');
+		}
+
 		$result = null;
 
-		if (isset($array[$name]))
+		if (is_array($source) && isset($source[$name]))
 		{
-			$result = $array[$name];
+			$result = $source[$name];
+		}
+		elseif (is_object($source) && isset($source->$name))
+		{
+			$result = $source->$name;
 		}
 
 		// Handle the default case
@@ -290,6 +299,29 @@ abstract class ArrayHelper
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Set a value into array or object.
+	 *
+	 * @param   mixed  &$array An array to set value.
+	 * @param   string $key    Array key to store this value.
+	 * @param   mixed  $value  Value which to set into array or object.
+	 *
+	 * @return  mixed Result array or object.
+	 */
+	public static function setValue(&$array, $key, $value)
+	{
+		if (is_array($array))
+		{
+			$array[$key] = $value;
+		}
+		elseif (is_object($array))
+		{
+			$array->$key = $value;
+		}
+
+		return $array;
 	}
 
 	/**
@@ -441,6 +473,52 @@ abstract class ArrayHelper
 		unset($counter);
 
 		return $result;
+	}
+
+	/**
+	 * Pivot Array, separate by key. Same as AKHelperArray::pivot().
+	 * From:
+	 *         [value] => Array
+	 *             (
+	 *                 [0] => aaa
+	 *                 [1] => bbb
+	 *             )
+	 *         [text] => Array
+	 *             (
+	 *                 [0] => aaa
+	 *                 [1] => bbb
+	 *             )
+	 *  To:
+	 *         [0] => Array
+	 *             (
+	 *                 [value] => aaa
+	 *                 [text] => aaa
+	 *             )
+	 *         [1] => Array
+	 *             (
+	 *                 [value] => bbb
+	 *                 [text] => bbb
+	 *             )
+	 *
+	 * @param   array $array An array with two level.
+	 *
+	 * @return  array An pivoted array.
+	 */
+	public static function pivotByKey($array)
+	{
+		$array = (array) $array;
+		$new   = array();
+		$keys  = array_keys($array);
+
+		foreach ($keys as $k => $val)
+		{
+			foreach ((array) $array[$val] as $k2 => $v2)
+			{
+				$new[$k2][$val] = $v2;
+			}
+		}
+
+		return $new;
 	}
 
 	/**
@@ -860,9 +938,11 @@ abstract class ArrayHelper
 		{
 			$array = get_object_vars($array);
 		}
+
 		foreach ($array as $k => $v)
 		{
 			$key = $prefix ? $prefix . $separator . $k : $k;
+
 			if (is_object($v) || is_array($v))
 			{
 				$array = array_merge($array, static::flatten($v, $separator, $key));
@@ -872,6 +952,141 @@ abstract class ArrayHelper
 				$array[$key] = $v;
 			}
 		}
+
 		return $array;
+	}
+
+	/**
+	 * Query a two-dimensional array values to get second level array.
+	 *
+	 * @param   array    $array    An array to query.
+	 * @param   mixed    $queries  Query strings, may contain Comparison Operators: '>', '>=', '<', '<='.
+	 *                             Example:
+	 *                             array(
+	 *                                 'id'         => 6,   // Get all elements where id=6
+	 *                                 '>published' => 0    // Get all elements where published>0
+	 *                             );
+	 * @param   boolean  $strict   Use strict to compare equals.
+	 * @param   boolean  $keepKey  Keep origin array keys.
+	 *
+	 * @return  array  An new two-dimensional array queried.
+	 *
+	 * @since   2.0
+	 */
+	public static function query($array, $queries = array(), $strict = false, $keepKey = false)
+	{
+		$results = array();
+		$queries = (array) $queries;
+
+		// Visit Array
+		foreach ((array) $array as $k => $v)
+		{
+			$data = (array) $v;
+
+			// Visit Query Rules
+			foreach ($queries as $key => $val)
+			{
+				/*
+				 * Key: is query key
+				 * Val: is query value
+				 * Data: is array element
+				 */
+				$value = null;
+
+				if (substr($key, -2) == '>=')
+				{
+					if (static::getByPath($data, trim(substr($key, 0, -2))) >= $val)
+					{
+						$value = $v;
+					}
+				}
+				elseif (substr($key, -2) == '<=')
+				{
+					if (static::getByPath($data, trim(substr($key, 0, -2))) <= $val)
+					{
+						$value = $v;
+					}
+				}
+				elseif (substr($key, -1) == '>')
+				{
+					if (static::getByPath($data, trim(substr($key, 0, -1))) > $val)
+					{
+						$value = $v;
+					}
+				}
+				elseif (substr($key, -1) == '<')
+				{
+					if (static::getByPath($data, trim(substr($key, 0, -1))) < $val)
+					{
+						$value = $v;
+					}
+				}
+				else
+				{
+					if ($strict)
+					{
+						if (static::getByPath($data, $key) === $val)
+						{
+							$value = $v;
+						}
+					}
+					else
+					{
+						// Workaround for PHP 5.4 object compare bug, see: https://bugs.php.net/bug.php?id=62976
+						$compare1 = is_object(static::getByPath($data, $key)) ? get_object_vars(static::getByPath($data, $key)) : static::getByPath($data, $key);
+						$compare2 = is_object($val) ? get_object_vars($val) : $val;
+
+						if ($compare1 == $compare2)
+						{
+							$value = $v;
+						}
+					}
+				}
+
+				// Set Query results
+				if ($value)
+				{
+					if ($keepKey)
+					{
+						$results[$k] = $value;
+					}
+					else
+					{
+						$results[] = $value;
+					}
+				}
+			}
+		}
+
+		return $results;
+	}
+
+	/**
+	 * Convert an Array or Object keys to new name by an array index.
+	 *
+	 * @param   mixed $origin Array or Object to convert.
+	 * @param   mixed $map    Array or Object index for convert.
+	 *
+	 * @return  mixed Mapped array or object.
+	 */
+	public static function mapKey($origin, $map = array())
+	{
+		$result = is_array($origin) ? array() : new \stdClass;
+
+		foreach ((array) $origin as $key => $val)
+		{
+			$newKey = self::getValue($map, $key);
+
+			if ($newKey)
+			{
+				self::setValue($result, $newKey, $val);
+			}
+			else
+			{
+				self::setValue($result, $key, $val);
+			}
+		}
+
+		return $result;
 	}
 }

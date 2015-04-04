@@ -511,6 +511,29 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * seedTestPivotByKey
+	 *
+	 * @return array
+	 */
+	public function seedTestPivotByKey()
+	{
+		return array(
+			array(
+				// data
+				array(
+					'Jones'  => array(123, 223),
+					'Arthur' => array('Lancelot', 'Jessica')
+				),
+				// expected
+				array(
+					array('Jones' => 123, 'Arthur' => 'Lancelot'),
+					array('Jones' => 223, 'Arthur' => 'Jessica'),
+				),
+			),
+		);
+	}
+
+	/**
 	 * Data provider for sorting objects
 	 *
 	 * @return  array
@@ -1461,6 +1484,54 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Method to test setValue
+	 *
+	 * @covers \Windwalker\Utilities\ArrayHelper::setValue
+	 *
+	 * @return void
+	 */
+	public function testSetValue()
+	{
+		$data = array(
+			'Archer' => 'Unlimited Blade World',
+			'Saber'  => 'Excalibur',
+			'Lancer' => 'Gáe Bulg',
+			'Rider'  => 'Breaker Gorgon',
+		);
+		$data2 = (object) $data;
+
+		$newData = ArrayHelper::setValue($data, 'Saber', 'Avalon');
+
+		$this->assertEquals('Avalon', $data['Saber']);
+		$this->assertEquals('Avalon', $newData['Saber']);
+
+		$newData = ArrayHelper::setValue($data, 'Archer', 'Unlimited Blade Works');
+
+		$this->assertEquals('Unlimited Blade Works', $data['Archer']);
+		$this->assertEquals('Unlimited Blade Works', $newData['Archer']);
+
+		$newData = ArrayHelper::setValue($data, 'Berserker', 'Gold Hand');
+
+		$this->assertEquals('Gold Hand', $data['Berserker']);
+		$this->assertEquals('Gold Hand', $newData['Berserker']);
+
+		$newData2 = ArrayHelper::setValue($data2, 'Saber', 'Avalon');
+
+		$this->assertEquals('Avalon', $data2->Saber);
+		$this->assertEquals('Avalon', $newData2->Saber);
+
+		$newData2 = ArrayHelper::setValue($data2, 'Archer', 'Unlimited Blade Works');
+
+		$this->assertEquals('Unlimited Blade Works', $data2->Archer);
+		$this->assertEquals('Unlimited Blade Works', $newData2->Archer);
+
+		$newData2 = ArrayHelper::setValue($data2, 'Berserker', 'Gold Hand');
+
+		$this->assertEquals('Gold Hand', $data2->Berserker);
+		$this->assertEquals('Gold Hand', $newData2->Berserker);
+	}
+
+	/**
 	 * Tests the ArrayHelper::invert method.
 	 *
 	 * @param   array   $input     The array being input.
@@ -1539,6 +1610,22 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 			ArrayHelper::pivot($source, $key),
 			$this->equalTo($expected)
 		);
+	}
+
+	/**
+	 * Method to test pivotByKey().
+	 *
+	 * @param array $data
+	 * @param array $expected
+	 *
+	 * @return void
+	 *
+	 * @dataProvider seedTestPivotByKey
+	 * @covers       \Windwalker\Helper\ArrayHelper::pivotByKey
+	 */
+	public function testPivotByKey($data, $expected)
+	{
+		$this->assertEquals($expected, ArrayHelper::pivotByKey($data));
 	}
 
 	/**
@@ -1734,5 +1821,182 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 		$flatted = ArrayHelper::flatten($array, '/');
 
 		$this->assertEquals($flatted['pos1/sunflower'], 'love');
+	}
+
+	/**
+	 * Method to test query()
+	 *
+	 * @covers  \Windwalker\Utilities\ArrayHelper::query
+	 *
+	 * @return  void
+	 */
+	public function testQuery()
+	{
+		$data = array(
+			array(
+				'id' => 1,
+				'title' => 'Julius Caesar',
+				'data' => (object) array('foo' => 'bar'),
+			),
+			array(
+				'id' => 2,
+				'title' => 'Macbeth',
+				'data' => array(),
+			),
+			array(
+				'id' => 3,
+				'title' => 'Othello',
+				'data' => 123,
+			),
+			array(
+				'id' => 4,
+				'title' => 'Hamlet',
+				'data' => true,
+			),
+		);
+
+		// Test id equals
+		$this->assertEquals(array($data[1]), ArrayHelper::query($data, array('id' => 2)));
+
+		// Test strict equals
+		$this->assertEquals(array($data[0], $data[2], $data[3]), ArrayHelper::query($data, array('data' => true), false));
+		$this->assertEquals(array($data[3]), ArrayHelper::query($data, array('data' => true), true));
+
+		// Test id GT
+		$this->assertEquals(array($data[1], $data[2], $data[3]), ArrayHelper::query($data, array('id >' => 1)));
+
+		// Test id GTE
+		$this->assertEquals(array($data[1], $data[2], $data[3]), ArrayHelper::query($data, array('id >=' => 2)));
+
+		// Test id LT
+		$this->assertEquals(array($data[0], $data[1]), ArrayHelper::query($data, array('id <' => 3)));
+
+		// Test id LTE
+		$this->assertEquals(array($data[0], $data[1]), ArrayHelper::query($data, array('id <=' => 2)));
+
+		// Test array equals
+		$this->assertEquals(array($data[1]), ArrayHelper::query($data, array('data' => array())));
+
+		// Test object equals
+		$object = new \stdClass;
+		$object->foo = 'bar';
+		$this->assertEquals(array($data[0], $data[3]), ArrayHelper::query($data, array('data' => $object)));
+
+		// Test object strict equals
+		$this->assertEquals(array($data[0]), ArrayHelper::query($data, array('data' => $data[0]['data']), true));
+
+		// Test Keep Key
+		$this->assertEquals(array(1 => $data[1], 2 => $data[2], 3 => $data[3]), ArrayHelper::query($data, array('id >=' => 2), false, true));
+	}
+
+	/**
+	 * Method to test mapKey
+	 *
+	 * @covers \Windwalker\Utilities\ArrayHelper::mapKey
+	 *
+	 * @return void
+	 */
+	public function testMapKey()
+	{
+		$data = array(
+			'top' => 'Captain America',
+			'middle' => 'Iron Man',
+			'bottom' => 'Thor',
+		);
+		$data2 = (object) $data;
+
+		$map = array(
+			'middle' => 'bottom',
+			'bottom' => 'middle',
+		);
+
+		$expected = array(
+			'top' => 'Captain America',
+			'middle' => 'Thor',
+			'bottom' => 'Iron Man',
+		);
+		$expected2 = (object) $expected;
+
+		$result = ArrayHelper::mapKey($data, $map);
+		$this->assertEquals($expected, $result);
+
+		$result2 = ArrayHelper::mapKey($data2, $map);
+		$this->assertEquals($expected2, $result2);
+	}
+
+	/**
+	 * Method to test merge
+	 *
+	 * @covers \Windwalker\Utilities\ArrayHelper::merge
+	 *
+	 * @return void
+	 */
+	public function testMerge()
+	{
+		$data1 = array(
+			'green'     => 'Hulk',
+			'red'       => 'empty',
+			'human'     => array(
+				'dark'  => 'empty',
+				'black' => array(
+					'male'      => 'empty',
+					'female'    => 'empty',
+					'no-gender' => 'empty',
+				),
+			)
+		);
+		$data2 = array(
+			'ai'        => 'Jarvis',
+			'agent'     => 'Phil Coulson',
+			'red'       => array(
+				'left'  => 'Pepper',
+				'right' => 'Iron Man',
+			),
+			'human'     => array(
+				'dark'  => 'Nick Fury',
+				'black' => array(
+					'female' => 'Black Widow',
+					'male'   => 'Loki',
+				),
+			)
+		);
+
+		$expected = array(
+			'ai'        => 'Jarvis',
+			'agent'     => 'Phil Coulson',
+			'green' => 'Hulk',
+			'red'       => array(
+				'left'  => 'Pepper',
+				'right' => 'Iron Man',
+			),
+			'human'     => array(
+				'dark'  => 'Nick Fury',
+				'black' => array(
+					'male'      => 'Loki',
+					'female'    => 'Black Widow',
+					'no-gender' => 'empty',
+				),
+			),
+		);
+
+		$expected2 = array(
+			'ai'        => 'Jarvis',
+			'agent'     => 'Phil Coulson',
+			'green' => 'Hulk',
+			'red'       => array(
+				'left'  => 'Pepper',
+				'right' => 'Iron Man',
+			),
+			'human'     => array(
+				'dark'  => 'Nick Fury',
+				'black' => array(
+					'male'   => 'Loki',
+					'female' => 'Black Widow',
+				),
+			),
+		);
+
+		$this->assertEquals($expected, ArrayHelper::merge($data1, $data2));
+		$this->assertEquals($expected2, ArrayHelper::merge($data1, $data2, false));
 	}
 }
