@@ -355,4 +355,48 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 
 		return $this;
 	}
+
+	/**
+	 * ksort
+	 *
+	 * @param  integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
+	 *                          for details see sort().
+	 *
+	 * @return  static  Support chaining.
+	 */
+	public function ksort($flags = null)
+	{
+		ksort($this->data, $flags);
+
+		return $this;
+	}
+
+	/**
+	 * krsort
+	 *
+	 * @param  integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
+	 *                          for details see sort().
+	 *
+	 * @return  static  Support chaining.
+	 */
+	public function krsort($flags = null)
+	{
+		krsort($this->data, $flags);
+
+		return $this;
+	}
+
+	/**
+	 * uksort
+	 *
+	 * @param   callable  $callable  The compare function used for the sort.
+	 *
+	 * @return  static  Support chaining.
+	 */
+	public function uksort($callable)
+	{
+		uksort($this->data, $callable);
+
+		return $this;
+	}
 }
