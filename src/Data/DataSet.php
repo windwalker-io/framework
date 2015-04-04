@@ -359,8 +359,10 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	/**
 	 * ksort
 	 *
-	 * @param  integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
-	 *                          for details see sort().
+	 * @param   integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
+	 *                           for details see sort().
+	 *
+	 * @TODO    Add test.
 	 *
 	 * @return  static  Support chaining.
 	 */
@@ -374,8 +376,10 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	/**
 	 * krsort
 	 *
-	 * @param  integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
-	 *                          for details see sort().
+	 * @param   integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
+	 *                           for details see sort().
+	 *
+	 * @TODO    Add test.
 	 *
 	 * @return  static  Support chaining.
 	 */
@@ -390,6 +394,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * uksort
 	 *
 	 * @param   callable  $callable  The compare function used for the sort.
+	 *
+	 * @TODO    Add test.
 	 *
 	 * @return  static  Support chaining.
 	 */
