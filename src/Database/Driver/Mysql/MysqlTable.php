@@ -443,6 +443,12 @@ class MysqlTable extends AbstractTable
 	 */
 	public function dropIndex($type, $name)
 	{
+		if ($type == Key::TYPE_PRIMARY)
+		{
+			$type = 'KEY';
+			$name = 'PRIMARY';
+		}
+
 		$query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);
 
 		$this->db->setQuery($query)->execute();

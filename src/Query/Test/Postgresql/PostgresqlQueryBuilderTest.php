@@ -262,7 +262,7 @@ SQL;
 	 */
 	public function testAlterColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} MODIFY {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} MODIFY {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
 		$actual = PostgresqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
@@ -290,7 +290,7 @@ SQL;
 	 */
 	public function testAddColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} ADD {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} ADD {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
 		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
@@ -309,7 +309,7 @@ SQL;
 	 */
 	public function testChangeColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} CHANGE {$this->qn}bar{$this->qn} {$this->qn}yoo{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} CHANGE {$this->qn}bar{$this->qn} {$this->qn}yoo{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
 		$actual = PostgresqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
@@ -328,7 +328,7 @@ SQL;
 	 */
 	public function testModifyColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} MODIFY {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} MODIFY {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
 		$actual = PostgresqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
