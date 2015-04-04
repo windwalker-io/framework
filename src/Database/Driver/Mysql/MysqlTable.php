@@ -445,8 +445,7 @@ class MysqlTable extends AbstractTable
 	{
 		if ($type == Key::TYPE_PRIMARY)
 		{
-			$type = 'KEY';
-			$name = 'PRIMARY';
+			$name = null;
 		}
 
 		$query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);

@@ -397,6 +397,13 @@ class MysqlTableTest extends AbstractMysqlTest
 		$indexes = $table->getIndexes();
 
 		$this->assertEquals(1, count($indexes));
+
+		$table->modifyColumn('id', DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, null);
+		$table->dropIndex(Key::TYPE_PRIMARY, 'primary');
+
+		$indexes = $table->getIndexes();
+
+		$this->assertEquals(0, count($indexes));
 	}
 
 	/**
