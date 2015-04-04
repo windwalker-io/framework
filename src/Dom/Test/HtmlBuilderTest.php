@@ -85,6 +85,14 @@ class HtmlBuilderTest extends \PHPUnit_Framework_TestCase
 				'',
 				array(),
 				false
+			),
+			array(
+				'case8_attr_only_tag',
+				'<video controls muted></video>',
+				'video',
+				'',
+				array('controls' => true, 'muted' => true),
+				false
 			)
 		);
 	}

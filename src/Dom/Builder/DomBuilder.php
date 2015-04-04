@@ -33,10 +33,19 @@ class DomBuilder
 
 		foreach ((array) $attribs as $key => $value)
 		{
-			if ($value !== null && $value !== false)
+			if ($value === true)
 			{
-				$tag .= ' ' . $key . '=' . static::quote($value);
+				$tag .= ' ' . $key;
+
+				continue;
 			}
+
+			if ($value === null || $value === false)
+			{
+				continue;
+			}
+
+			$tag .= ' ' . $key . '=' . static::quote($value);
 		}
 
 		if ($content !== null)
