@@ -8,7 +8,6 @@
 
 namespace Windwalker\Utilities\Test;
 
-use Windwalker\String\String;
 use Windwalker\String\Utf8String;
 
 /**
