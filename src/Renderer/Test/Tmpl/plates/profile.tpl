@@ -1,4 +1,4 @@
-<?php $this->layout('template', ['title' => 'User Profile']) ?>
+<?php $this->layout('template', array('title' => 'User Profile')) ?>
 
 <?php $this->start('page') ?>
 <h1>Welcome!</h1>
