@@ -46,6 +46,13 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	protected $autoIncrement = true;
 
 	/**
+	 * Property fields.
+	 *
+	 * @var  array
+	 */
+	protected $fields = null;
+
+	/**
 	 * The fields of the database table.
 	 *
 	 * @var    \stdClass
@@ -588,16 +595,14 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Get the columns from database table.
 	 *
-	 * @return  mixed  An array of the field names, or false if an error occurs.
+	 * @return  array  An array of the field names, or false if an error occurs.
 	 *
 	 * @since   2.0
 	 * @throws  \UnexpectedValueException
 	 */
 	public function getFields()
 	{
-		static $cache = null;
-
-		if ($cache === null)
+		if ($this->fields === null)
 		{
 			// Lookup the fields for this table only once.
 			$fields = $this->db->getTable($this->table)->getColumnDetails(true);
@@ -607,10 +612,22 @@ class Record implements \ArrayAccess, \IteratorAggregate
 				throw new \UnexpectedValueException(sprintf('No columns found for %s table', $this->table));
 			}
 
-			$cache = $fields;
+			$this->fields = $fields;
 		}
 
-		return $cache;
+		return $this->fields;
+	}
+
+	/**
+	 * Method to check a field exists or not.
+	 *
+	 * @param string $name
+	 *
+	 * @return  boolean
+	 */
+	public function hasField($name)
+	{
+		return array_key_exists($name, (array) $this->fields);
 	}
 
 	/**

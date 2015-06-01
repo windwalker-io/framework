@@ -261,6 +261,14 @@ class RecordTest extends AbstractMysqlTest
 		);
 	}
 
+	public function testHasField()
+	{
+		$record = new Record('ww_flower');
+
+		$this->assertTrue($record->hasField('title'));
+		$this->assertFalse($record->hasField('chicken'));
+	}
+
 	/**
 	 * Method to test getTableName().
 	 *
