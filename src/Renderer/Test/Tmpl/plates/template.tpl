@@ -1,20 +1,20 @@
 <html>
 <head>
-    <title><?=$this->e($title)?></title>
+    <title><?php echo $this->e($title)?></title>
 </head>
 <body>
 
 <img src="logo.png">
 
 <div id="page">
-    <?=$this->section('page')?>
+    <?php echo $this->section('page')?>
 </div>
 
 <div id="sidebar">
     <?php if ($this->section('sidebar')): ?>
-    <?=$this->section('sidebar')?>
+    <?php echo $this->section('sidebar')?>
     <?php else: ?>
-    <?=$this->fetch('default-sidebar')?>
+    <?php echo $this->fetch('default-sidebar')?>
     <?php endif ?>
 </div>
 

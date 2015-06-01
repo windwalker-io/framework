@@ -2,7 +2,7 @@
 
 <?php $this->start('page') ?>
 <h1>Welcome!</h1>
-<p>Hello <?=$this->e($name)?></p>
+<p>Hello <?php echo $this->e($name)?></p>
 <?php $this->stop() ?>
 
 <?php $this->start('sidebar') ?>
