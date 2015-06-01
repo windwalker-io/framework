@@ -10,33 +10,11 @@ namespace Windwalker\Renderer;
 
 /**
  * The AbstractAdapterRenderer class.
+ *
+ * @deprecated  Use AbstractEngineRenderer instead.
  * 
  * @since  2.0
  */
-abstract class AbstractAdapterRenderer extends AbstractRenderer
+abstract class AbstractAdapterRenderer extends AbstractEngineRenderer
 {
-	/**
-	 * Property engine.
-	 *
-	 * @var  object
-	 */
-	protected $engine = null;
-
-	/**
-	 * Method to get property Engine
-	 *
-	 * @param   boolean $new
-	 *
-	 * @return  object
-	 */
-	abstract public function getEngine($new = false);
-
-	/**
-	 * Method to set property engine
-	 *
-	 * @param   object $engine
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	abstract public function setEngine($engine);
 }

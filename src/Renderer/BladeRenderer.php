@@ -27,7 +27,7 @@ if (!class_exists('Illuminate\View\Factory'))
  *
  * @since  2.0
  */
-class BladeRenderer extends AbstractAdapterRenderer
+class BladeRenderer extends AbstractEngineRenderer
 {
 	/**
 	 * Property blade.

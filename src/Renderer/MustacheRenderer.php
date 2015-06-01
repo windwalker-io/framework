@@ -13,7 +13,7 @@ namespace Windwalker\Renderer;
  * 
  * @since  2.0
  */
-class MustacheRenderer extends AbstractAdapterRenderer
+class MustacheRenderer extends AbstractEngineRenderer
 {
 	/**
 	 * Property engine.

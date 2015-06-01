@@ -16,7 +16,7 @@ use Windwalker\Renderer\Twig\GlobalContainer;
  *
  * @since 2.0
  */
-class TwigRenderer extends AbstractAdapterRenderer
+class TwigRenderer extends AbstractEngineRenderer
 {
 	/**
 	 * Property twig.
