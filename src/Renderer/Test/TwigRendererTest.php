@@ -71,6 +71,14 @@ class TwigRendererTest extends DomTestCase
 	 */
 	public function testRender()
 	{
+		// @TODO: [HHVM] Fix this for HHVM
+		if (PhpHelper::isHHVM())
+		{
+			$this->markTestSkipped('Unknown error of Timeout');
+
+			return;
+		}
+
 		$html = $this->instance->render('default');
 
 		$expect = <<<HTML
@@ -122,6 +130,7 @@ HTML;
 	 */
 	public function testAddExtension()
 	{
+		// @TODO: [HHVM] Fix this for HHVM
 		if (PhpHelper::isHHVM())
 		{
 			$this->markTestSkipped('Unknown error of Timeout');

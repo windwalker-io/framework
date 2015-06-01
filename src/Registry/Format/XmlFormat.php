@@ -60,7 +60,7 @@ class XmlFormat implements FormatInterface
 
 		foreach ($xml->children() as $node)
 		{
-			$obj->$node['name'] = static::getValueFromNode($node);
+			$obj->{$node['name']} = static::getValueFromNode($node);
 		}
 
 		return $obj;
@@ -69,7 +69,7 @@ class XmlFormat implements FormatInterface
 	/**
 	 * Method to get a PHP native value for a SimpleXMLElement object. -- called recursively
 	 *
-	 * @param   object  $node  SimpleXMLElement object for which to get the native value.
+	 * @param   \SimpleXMLElement  $node  SimpleXMLElement object for which to get the native value.
 	 *
 	 * @return  mixed  Native value of the SimpleXMLElement object.
 	 */
@@ -114,7 +114,9 @@ class XmlFormat implements FormatInterface
 
 				foreach ($node->children() as $child)
 				{
-					$value->$child['name'] = static::getValueFromNode($child);
+					$name = (string) $child['name'];
+
+					$value->$name = static::getValueFromNode($child);
 				}
 
 				break;

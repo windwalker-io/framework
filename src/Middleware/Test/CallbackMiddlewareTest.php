@@ -11,6 +11,7 @@ namespace Windwalker\Middleware\Test;
 use Windwalker\Middleware\CallbackMiddleware;
 use Windwalker\Middleware\EndMiddleware;
 use Windwalker\Middleware\Test\Stub\StubOthelloMiddleware;
+use Windwalker\Test\Helper\StringHelper;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
