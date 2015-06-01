@@ -39,4 +39,3 @@ interface FormatInterface
 	 */
 	static public function stringToObject($data, array $options = array());
 }
-
