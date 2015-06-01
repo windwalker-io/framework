@@ -20,7 +20,8 @@
 
         "twig/twig": "1.*@stable",
         "illuminate/view": "4.1.*@stable",
-        "mustache/mustache": "2.*@stable"
+        "mustache/mustache": "2.*@stable",
+        "league/plates": "3.*"
     },
     "suggest": {
         "symfony/yaml": "Install 2.* if you require YAML support."

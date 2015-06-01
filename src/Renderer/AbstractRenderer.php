@@ -141,4 +141,21 @@ abstract class AbstractRenderer implements RendererInterface
 
 		return $this;
 	}
+
+	/**
+	 * __get
+	 *
+	 * @param string $name
+	 *
+	 * @return  mixed
+	 */
+	public function __get($name)
+	{
+		if ($name == 'config')
+		{
+			return $this->$name;
+		}
+
+		throw new \UnexpectedValueException('Property ' . $name . ' not extists.');
+	}
 }

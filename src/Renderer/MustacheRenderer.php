@@ -72,7 +72,7 @@ class MustacheRenderer extends AbstractEngineRenderer
 	 */
 	public function getEngine($new = false)
 	{
-		if (!$this->engine)
+		if (!$this->engine || $new)
 		{
 			$this->engine = new \Mustache_Engine($this->config->get('options', array()));
 		}
@@ -89,6 +89,11 @@ class MustacheRenderer extends AbstractEngineRenderer
 	 */
 	public function setEngine($engine)
 	{
+		if (!($engine instanceof \Mustache_Engine))
+		{
+			throw new \InvalidArgumentException('Engine object should be Mustache_Engine');
+		}
+
 		$this->engine = $engine;
 
 		return $this;
