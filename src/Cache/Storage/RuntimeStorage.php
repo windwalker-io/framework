@@ -12,7 +12,7 @@ use Windwalker\Cache\Item\CacheItem;
 use Windwalker\Cache\Item\CacheItemInterface;
 
 /**
- * Class RuntimeStorage
+ * Runtime Storage.
  *
  * @since 2.0
  */
@@ -23,7 +23,7 @@ class RuntimeStorage extends AbstractCacheStorage
 	 *
 	 * @var  array
 	 */
-	protected static $store = array();
+	protected $store = array();
 
 	/**
 	 * Method to determine whether a storage entry has been set for a key.
@@ -34,7 +34,7 @@ class RuntimeStorage extends AbstractCacheStorage
 	 */
 	public function exists($key)
 	{
-		return isset(static::$store[$key]);
+		return isset($this->store[$key]);
 	}
 
 	/**
@@ -49,9 +49,9 @@ class RuntimeStorage extends AbstractCacheStorage
 	{
 		$item = new CacheItem($key);
 
-		if (isset(static::$store[$key]))
+		if (isset($this->store[$key]))
 		{
-			$item->setValue(static::$store[$key]);
+			$item->setValue($this->store[$key]);
 		}
 
 		return $item;
@@ -70,7 +70,7 @@ class RuntimeStorage extends AbstractCacheStorage
 		$key = $item->getKey();
 		$value = $item->getValue();
 
-		static::$store[$key] = $value;
+		$this->store[$key] = $value;
 
 		return $this;
 	}
@@ -84,9 +84,9 @@ class RuntimeStorage extends AbstractCacheStorage
 	 */
 	public function removeItem($key)
 	{
-		if (array_key_exists($key, static::$store))
+		if (array_key_exists($key, $this->store))
 		{
-			unset(static::$store[$key]);
+			unset($this->store[$key]);
 		}
 
 		return $this;
@@ -99,9 +99,8 @@ class RuntimeStorage extends AbstractCacheStorage
 	 */
 	public function clear()
 	{
-		static::$store = array();
+		$this->store = array();
 
 		return $this;
 	}
 }
-
