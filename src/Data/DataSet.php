@@ -333,6 +333,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * @param   callable  $callback
 	 *
 	 * @return  static  Support chaining.
+	 *
+	 * @since   2.0.9
 	 */
 	public function map($callback)
 	{
@@ -348,6 +350,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * @param   mixed     $userdata  This will be passed as the third parameter to the callback.
 	 *
 	 * @return  static  Support chaining.
+	 *
+	 * @since   2.0.9
 	 */
 	public function walk($callback, $userdata = null)
 	{
@@ -363,6 +367,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 *                           for details see sort().
 	 *
 	 * @return  static  Support chaining.
+	 *
+	 * @since   2.0.9
 	 */
 	public function ksort($flags = null)
 	{
@@ -378,6 +384,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 *                           for details see sort().
 	 *
 	 * @return  static  Support chaining.
+	 *
+	 * @since   2.0.9
 	 */
 	public function krsort($flags = null)
 	{
@@ -392,6 +400,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * @param   callable  $callable  The compare function used for the sort.
 	 *
 	 * @return  static  Support chaining.
+	 *
+	 * @since   2.0.9
 	 */
 	public function uksort($callable)
 	{
@@ -404,6 +414,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * Shuffle this DataSet to random orders.
 	 *
 	 * @return  static  Support chaining.
+	 *
+	 * @since   2.0.9
 	 */
 	public function shuffle()
 	{
@@ -416,6 +428,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * Clone this class.
 	 *
 	 * @return  void
+	 *
+	 * @since   2.0.9
 	 */
 	public function __clone()
 	{
@@ -440,6 +454,8 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * Return all the keys of this DataSet.
 	 *
 	 * @return  array
+	 *
+	 * @since   2.0.9
 	 */
 	public function getKeys()
 	{

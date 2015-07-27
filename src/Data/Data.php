@@ -274,6 +274,8 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param   callable  $callback  Callback to handle every element.
 	 *
 	 * @return  static  Support chaining.
+	 *
+	 * @since   2.0.9
 	 */
 	public function map($callback)
 	{
@@ -292,6 +294,8 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param   mixed     $userdata  This will be passed as the third parameter to the callback.
 	 *
 	 * @return  static  Support chaining.
+	 *
+	 * @since   2.0.9
 	 */
 	public function walk($callback, $userdata = null)
 	{
@@ -309,6 +313,8 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * Clone this object.
 	 *
 	 * @return  void
+	 *
+	 * @since   2.0.9
 	 */
 	public function __clone()
 	{
