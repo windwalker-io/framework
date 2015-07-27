@@ -10,7 +10,7 @@ use Windwalker\Application\AbstractCliApplication;
 
 include_once __DIR__ . '/../vendor/autoload.php';
 
-define('JPATH_ROOT', realpath(__DIR__ . '/..'));
+define('WINDWALKER_ROOT', realpath(__DIR__ . '/..'));
 
 /**
  * Class Build to build subtrees.
@@ -101,6 +101,11 @@ class Build extends AbstractCliApplication
 		$this->tag = $tag = $this->io->getOption('t') ? : $this->io->getOption('tag');
 
 		$branch = $this->io->getOption('b') ?: $this->io->getOption('branch', 'test');
+
+		if ($this->tag && !$this->io->getOption('no-replace'))
+		{
+			$this->replaceDocblockTags();
+		}
 
 		$this->branch = $branch;
 
@@ -236,6 +241,41 @@ class Build extends AbstractCliApplication
 		}
 
 		$this->close();
+	}
+
+	/**
+	 * replaceDocblockTags
+	 *
+	 * @return  void
+	 */
+	protected function replaceDocblockTags()
+	{
+		$this->out('Replacing Docblock');
+
+		$files = new RecursiveIteratorIterator(new \RecursiveDirectoryIterator(WINDWALKER_ROOT . '/src', \FilesystemIterator::SKIP_DOTS));
+
+		/** @var \SplFileInfo $file */
+		foreach ($files as $file)
+		{
+			if ($file->isDir() || $file->getExtension() != 'php')
+			{
+				continue;
+			}
+
+			$content = file_get_contents($file->getPathname());
+
+			$content = str_replace(
+				array('{DEPLOY_VERSION}', '{ORGANIZATION}'),
+				array($this->tag, 'LYRASOFT'),
+				$content
+			);
+
+			file_put_contents($file->getPathname(), $content);
+		}
+
+		$this->exec('git checkout staging');
+		$this->exec(sprintf('git commit -am "Prepare for %s release."', $this->tag));
+		$this->exec('git push origin staging');
 	}
 }
 
