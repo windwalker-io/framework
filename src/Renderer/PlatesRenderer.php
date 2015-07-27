@@ -2,7 +2,7 @@
 /**
  * Part of windwalker project. 
  *
- * @copyright  Copyright (C) 2015 {ORGANIZATION}. All rights reserved.
+ * @copyright  Copyright (C) 2015 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later;
  */
 
@@ -14,7 +14,7 @@ use League\Plates\Extension\ExtensionInterface;
 /**
  * The PlatesRenderer class.
  * 
- * @since  {DEPLOY_VERSION}
+ * @since  2.0.9
  */
 class PlatesRenderer extends AbstractEngineRenderer
 {

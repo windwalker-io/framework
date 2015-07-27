@@ -15,7 +15,7 @@ use Windwalker\Test\TestCase\DomTestCase;
 /**
  * Test class of PlatesRenderer
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.0.9
  */
 class PlatesRendererTest extends DomTestCase
 {
