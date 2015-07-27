@@ -65,7 +65,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 
 		foreach ($dataset as $data)
 		{
-			$this->data[] = $data;
+			$this[] = $data;
 		}
 
 		return $this;

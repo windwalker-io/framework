@@ -446,7 +446,7 @@ class DataMapperTest extends DatabaseTest
 		$this->assertEquals('stdClass', $this->instance->getDataClass());
 
 		// If we use DataSet, all stdClass will be auto convert to Data
-		$this->assertInstanceOf('Windwalker\\Data\\Data', $this->instance->findOne());
+		$this->assertInstanceOf('Windwalker\Data\Data', $this->instance->findOne());
 
 		$this->instance->setDatasetClass('ArrayObject');
 

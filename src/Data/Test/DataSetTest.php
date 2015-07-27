@@ -168,6 +168,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Data\DataSet::offsetGet
+	 * @covers Windwalker\Data\DataSet::offsetSet
 	 */
 	public function testOffsetGetAndSet()
 	{
@@ -178,6 +179,10 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 		$this->instance[3] = new Data(array('foo' => 'bar'));
 
 		$this->assertEquals('bar', $this->instance[3]->foo);
+
+		$this->instance[4] = new \stdClass;
+
+		$this->assertInstanceOf('Windwalker\Data\Data', $this->instance[4]);
 	}
 
 	/**
