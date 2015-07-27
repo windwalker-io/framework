@@ -304,4 +304,20 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 
 		return $this;
 	}
+
+	/**
+	 * Clone this object.
+	 *
+	 * @return  void
+	 */
+	public function __clone()
+	{
+		foreach ($this as $key => $item)
+		{
+			if (is_object($item))
+			{
+				$this->$key = clone $item;
+			}
+		}
+	}
 }

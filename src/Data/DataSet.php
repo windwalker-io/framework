@@ -65,12 +65,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 
 		foreach ($dataset as $data)
 		{
-			if (!($data instanceof Data))
-			{
-				$data = new Data($data);
-			}
-
-			$this[] = $data;
+			$this->data[] = $data;
 		}
 
 		return $this;
@@ -221,6 +216,11 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function offsetSet($offset, $value)
 	{
+		if (!($value instanceof Data))
+		{
+			$value = new Data($value);
+		}
+
 		if ($offset !== null)
 		{
 			$this->data[$offset] = $value;
@@ -357,12 +357,10 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	}
 
 	/**
-	 * ksort
+	 * Sort Dataset by key.
 	 *
 	 * @param   integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
 	 *                           for details see sort().
-	 *
-	 * @TODO    Add test.
 	 *
 	 * @return  static  Support chaining.
 	 */
@@ -374,12 +372,10 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	}
 
 	/**
-	 * krsort
+	 * Sort DataSet by key in reverse order
 	 *
 	 * @param   integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
 	 *                           for details see sort().
-	 *
-	 * @TODO    Add test.
 	 *
 	 * @return  static  Support chaining.
 	 */
@@ -391,11 +387,9 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	}
 
 	/**
-	 * uksort
+	 * Sort DataSet by keys using a user-defined comparison function
 	 *
 	 * @param   callable  $callable  The compare function used for the sort.
-	 *
-	 * @TODO    Add test.
 	 *
 	 * @return  static  Support chaining.
 	 */
@@ -404,5 +398,51 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 		uksort($this->data, $callable);
 
 		return $this;
+	}
+
+	/**
+	 * Shuffle this DataSet to random orders.
+	 *
+	 * @return  static  Support chaining.
+	 */
+	public function shuffle()
+	{
+		shuffle($this->data);
+
+		return $this;
+	}
+
+	/**
+	 * Clone this class.
+	 *
+	 * @return  void
+	 */
+	public function __clone()
+	{
+		$data = array();
+
+		foreach ($this->data as $item)
+		{
+			if (is_object($item))
+			{
+				$data[] = clone $item;
+			}
+			else
+			{
+				$data[] = $item;
+			}
+		}
+
+		$this->data = $data;
+	}
+
+	/**
+	 * Return all the keys of this DataSet.
+	 *
+	 * @return  array
+	 */
+	public function getKeys()
+	{
+		return array_keys($this->data);
 	}
 }

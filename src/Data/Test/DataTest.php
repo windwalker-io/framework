@@ -275,4 +275,23 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('prefix:baz:YOO', $data->baz);
 	}
+
+	/**
+	 * testClone
+	 *
+	 * @return  void
+	 */
+	public function testClone()
+	{
+		$data = new Data;
+		$data->foo = new \stdClass;
+		$data->bar = new \stdClass;
+		$data->baz = 'yoo';
+
+		$data2 = clone $data;
+
+		$this->assertNotSame($data->foo, $data2->foo);
+		$this->assertNotSame($data->foo, $data2->foo);
+		$this->assertEquals('yoo', $data2->baz);
+	}
 }

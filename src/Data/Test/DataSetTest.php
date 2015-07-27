@@ -336,4 +336,120 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(array('prefix:0', 'prefix:1'), $this->instance->foo);
 	}
+
+	/**
+	 * testClone
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::__clone
+	 */
+	public function testClone()
+	{
+		$expected = new DataSet($this->getTestData());
+
+		$dataset = clone $expected;
+
+		$this->assertNotSame($expected, $dataset);
+		$this->assertNotSame($expected[0], $dataset[0]);
+		$this->assertNotSame($expected[1], $dataset[1]);
+	}
+
+	/**
+	 * testGetKeys
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::getKeys
+	 */
+	public function testGetKeys()
+	{
+		$dataset = new DataSet($this->getTestData());
+
+		$this->assertEquals(array(0, 1), $dataset->getKeys());
+
+		$dataset['flower'] = new Data;
+
+		$this->assertEquals(array(0, 1, 'flower'), $dataset->getKeys());
+	}
+
+	/**
+	 * testKsort
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::ksort
+	 */
+	public function testKsort()
+	{
+		$dataset = new DataSet;
+		$dataset[1] = array('flower' => 'sakura');
+		$dataset[2] = array('flower' => 'rose');
+		$dataset[0] = array('flower' => 'sunflower');
+
+		$dataset->ksort();
+
+		$this->assertEquals(array('sunflower', 'sakura', 'rose'), array_values($dataset->flower));
+
+		$dataset = new DataSet;
+		$dataset['001'] = array('flower' => 'sakura');
+		$dataset['2'] = array('flower' => 'rose');
+		$dataset['00030'] = array('flower' => 'sunflower');
+
+		$dataset->ksort(SORT_STRING);
+
+		$this->assertEquals(array('sunflower', 'sakura', 'rose'), array_values($dataset->flower));
+	}
+
+	/**
+	 * testKrsort
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::krsort
+	 */
+	public function testKrsort()
+	{
+		$dataset = new DataSet;
+		$dataset[1] = array('flower' => 'sakura');
+		$dataset[2] = array('flower' => 'rose');
+		$dataset[0] = array('flower' => 'sunflower');
+
+		$dataset->krsort();
+
+		$this->assertEquals(array('rose', 'sakura', 'sunflower'), array_values($dataset->flower));
+
+		$dataset = new DataSet;
+		$dataset['001'] = array('flower' => 'sakura');
+		$dataset['2'] = array('flower' => 'rose');
+		$dataset['00030'] = array('flower' => 'sunflower');
+
+		$dataset->krsort(SORT_STRING);
+
+		$this->assertEquals(array('rose', 'sakura', 'sunflower'), array_values($dataset->flower));
+	}
+
+	/**
+	 * testUksort
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::uksort
+	 */
+	public function testUksort()
+	{
+		$this->markTestSkipped();
+	}
+
+	/**
+	 * testShuffle
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::shuffle
+	 */
+	public function testShuffle()
+	{
+		$this->markTestSkipped();
+	}
 }
