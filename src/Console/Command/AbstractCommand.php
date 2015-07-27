@@ -956,6 +956,25 @@ EOF;
 	}
 
 	/**
+	 * Raise error message.
+	 *
+	 * @param   \Exception|string  $exception  Exception object or message string.
+	 *
+	 * @return  void
+	 *
+	 * @throws  \Exception
+	 */
+	public function error($exception)
+	{
+		if (!($exception instanceof $exception))
+		{
+			$exception = new \Exception($exception);
+		}
+
+		throw $exception;
+	}
+
+	/**
 	 * Write a string to standard output.
 	 *
 	 * @param   string   $text  The text to display.

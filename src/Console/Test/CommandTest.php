@@ -580,4 +580,16 @@ Did you mean one of these?
 	{
 		return 'Hello';
 	}
+
+	/**
+	 * testError
+	 *
+	 * @return  void
+	 *
+	 * @expectedException  \Exception
+	 */
+	public function testError()
+	{
+		$this->instance->error('test');
+	}
 }
