@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project Test files.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
+ * @license    GNU Lesser General Public License version 3 or later. see LICENSE
  */
 
 namespace Windwalker\Renderer\Test;

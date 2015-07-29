@@ -1,7 +1,7 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters. All rights reserved.
- * @license    GNU Lesser General Public License version 2.1 or later..txt
+ * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Source Matters. All rights reserved.
+ * @license    GNU Lesser General Public License version 3 or later..txt
  */
 
 namespace Windwalker\Event\Test\Stub;
