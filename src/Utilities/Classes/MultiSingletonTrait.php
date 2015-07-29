@@ -6,7 +6,7 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Formosa\Utilities\Classes;
+namespace Windwalker\Utilities\Classes;
 
 /**
  * The MultiSingletonTrait class.
