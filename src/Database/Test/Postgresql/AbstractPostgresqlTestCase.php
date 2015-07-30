@@ -1,41 +1,41 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Database\Test\Mysql;
+namespace Windwalker\Database\Test\Postgresql;
 
-use Windwalker\Database\Driver\Mysql\MysqlDriver;
-use Windwalker\Database\Test\AbstractDatabaseCase;
+use Windwalker\Database\Driver\Postgresql\PostgresqlDriver;
+use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
 /**
- * The AbstractMysqlTest class.
- * 
- * @since  2.0
+ * The AbstractPostgresqlTest class.
+ *
+ * @since  {DEPLOY_VERSION}
  */
-abstract class AbstractMysqlTest extends AbstractDatabaseCase
+abstract class AbstractPostgresqlTestCase extends AbstractDatabaseTestCase
 {
 	/**
 	 * Property driver.
 	 *
 	 * @var  string
 	 */
-	protected static $driver = 'mysql';
+	protected static $driver = 'postgresql';
 
 	/**
 	 * Property quote.
 	 *
 	 * @var  array
 	 */
-	protected static $quote = array('`', '`');
+	protected static $quote = array('"', '"');
 
 	/**
 	 * Property db.
 	 *
-	 * @var MysqlDriver
+	 * @var PostgresqlDriver
 	 */
 	protected $db;
 

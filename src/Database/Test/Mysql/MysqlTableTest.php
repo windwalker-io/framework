@@ -19,7 +19,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
  *
  * @since 2.0
  */
-class MysqlTableTest extends AbstractMysqlTest
+class MysqlTableTest extends AbstractMysqlTestCase
 {
 	/**
 	 * Method to test getName().

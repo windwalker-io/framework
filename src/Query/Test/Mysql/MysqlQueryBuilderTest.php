@@ -9,13 +9,14 @@
 namespace Windwalker\Query\Test\Mysql;
 
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Test\AbstractQueryBuilderTestCase;
 
 /**
  * Test class of MysqlQueryBuilder
  *
  * @since 2.0
  */
-class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
+class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 {
 	/**
 	 * Property qn.
@@ -29,13 +30,13 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showDatabases
+	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::listDatabases
 	 */
 	public function testShowDatabases()
 	{
 		$expected = "SHOW DATABASES WHERE a = b";
 
-		$actual = MysqlQueryBuilder::showDatabases('a = b');
+		$actual = MysqlQueryBuilder::listDatabases('a = b');
 
 		$this->assertEquals(\SqlFormatter::compress($expected), \SqlFormatter::compress($actual));
 	}
@@ -49,7 +50,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCreateDatabase()
 	{
-		$expected = "CREATE DATABASE {$this->qn}foo{$this->qn}";
+		$expected = "CREATE DATABASE {$this->qn('foo')}";
 
 		$actual = MysqlQueryBuilder::createDatabase('foo');
 
@@ -58,7 +59,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn}foo{$this->qn}";
+		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn('foo')}";
 
 		$actual = MysqlQueryBuilder::createDatabase('foo', true);
 
@@ -67,7 +68,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn}foo{$this->qn} CHARACTER SET='utf8' COLLATE='bar'";
+		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn('foo')} CHARACTER SET='utf8' COLLATE='bar'";
 
 		$actual = MysqlQueryBuilder::createDatabase('foo', true, 'utf8', 'bar');
 
@@ -86,7 +87,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDropDatabase()
 	{
-		$expected = "DROP DATABASE {$this->qn}foo{$this->qn}";
+		$expected = "DROP DATABASE {$this->qn('foo')}";
 
 		$actual = MysqlQueryBuilder::dropDatabase('foo');
 
@@ -95,7 +96,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "DROP DATABASE IF EXISTS {$this->qn}foo{$this->qn}";
+		$expected = "DROP DATABASE IF EXISTS {$this->qn('foo')}";
 
 		$actual = MysqlQueryBuilder::dropDatabase('foo', true);
 
@@ -114,7 +115,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testShowTableColumns()
 	{
-		$expected = "SHOW COLUMNS FROM {$this->qn}foo{$this->qn}";
+		$expected = "SHOW COLUMNS FROM {$this->qn('foo')}";
 
 		$actual = MysqlQueryBuilder::showTableColumns('foo');
 
@@ -123,7 +124,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "SHOW FULL COLUMNS FROM {$this->qn}foo{$this->qn} WHERE a = b";
+		$expected = "SHOW FULL COLUMNS FROM {$this->qn('foo')} WHERE a = b";
 
 		$actual = MysqlQueryBuilder::showTableColumns('foo', true, 'a = b');
 
@@ -142,7 +143,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testShowDbTables()
 	{
-		$expected = "SHOW TABLE STATUS FROM {$this->qn}foo{$this->qn}";
+		$expected = "SHOW TABLE STATUS FROM {$this->qn('foo')}";
 
 		$actual = MysqlQueryBuilder::showDbTables('foo');
 
@@ -151,7 +152,7 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "SHOW TABLE STATUS FROM {$this->qn}foo{$this->qn} WHERE a = b";
+		$expected = "SHOW TABLE STATUS FROM {$this->qn('foo')} WHERE a = b";
 
 		$actual = MysqlQueryBuilder::showDbTables('foo', 'a = b');
 
@@ -171,12 +172,12 @@ class MysqlQueryBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testCreateTable()
 	{
 		$expected = <<<SQL
-CREATE TABLE IF NOT EXISTS {$this->qn}foo{$this->qn} (
-  {$this->qn}id{$this->qn} int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
-  {$this->qn}name{$this->qn} varchar(255) NOT NULL COMMENT 'Member Name',
-  {$this->qn}email{$this->qn} varchar(255) NOT NULL COMMENT 'Member email',
-  PRIMARY KEY ({$this->qn}id{$this->qn}),
-  KEY {$this->qn}idx_alias{$this->qn} ({$this->qn}email{$this->qn})
+CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
+  {$this->qn('id')} int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
+  {$this->qn('name')} varchar(255) NOT NULL COMMENT 'Member Name',
+  {$this->qn('email')} varchar(255) NOT NULL COMMENT 'Member email',
+  PRIMARY KEY ({$this->qn('id')}),
+  KEY {$this->qn('idx_alias')} ({$this->qn('email')})
 ) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
 SQL;
 
@@ -198,12 +199,12 @@ SQL;
 		);
 
 		$expected = <<<SQL
-CREATE TABLE {$this->qn}foo{$this->qn} (
-  {$this->qn}id{$this->qn} int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
-  {$this->qn}name{$this->qn} varchar(255) NOT NULL COMMENT 'Member Name',
-  {$this->qn}email{$this->qn} varchar(255) NOT NULL COMMENT 'Member email',
-  PRIMARY KEY ({$this->qn}id{$this->qn}, {$this->qn}email{$this->qn}),
-  UNIQUE KEY {$this->qn}idx_alias{$this->qn} ({$this->qn}email{$this->qn}, {$this->qn}id{$this->qn})
+CREATE TABLE {$this->qn('foo')} (
+  {$this->qn('id')} int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
+  {$this->qn('name')} varchar(255) NOT NULL COMMENT 'Member Name',
+  {$this->qn('email')} varchar(255) NOT NULL COMMENT 'Member email',
+  PRIMARY KEY ({$this->qn('id')}, {$this->qn('email')}),
+  UNIQUE KEY {$this->qn('idx_alias')} ({$this->qn('email')}, {$this->qn('id')})
 ) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
 SQL;
 
@@ -234,7 +235,7 @@ SQL;
 	 */
 	public function testDropTable()
 	{
-		$expected = "DROP TABLE {$this->qn}foo{$this->qn}";
+		$expected = "DROP TABLE {$this->qn('foo')}";
 
 		$actual = MysqlQueryBuilder::dropTable('foo');
 
@@ -243,7 +244,7 @@ SQL;
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "DROP TABLE IF EXISTS {$this->qn}foo{$this->qn}";
+		$expected = "DROP TABLE IF EXISTS {$this->qn('foo')}";
 
 		$actual = MysqlQueryBuilder::dropTable('foo', true);
 
@@ -262,7 +263,7 @@ SQL;
 	 */
 	public function testAlterColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} MODIFY {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
 		$actual = MysqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
@@ -271,7 +272,7 @@ SQL;
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} CHANGE {$this->qn}bar{$this->qn} {$this->qn}yoo{$this->qn} text AFTER {$this->qn}id{$this->qn}";
+		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} text AFTER {$this->qn('id')}";
 
 		$actual = MysqlQueryBuilder::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', true, true, null, 'AFTER id', null);
 
@@ -290,7 +291,7 @@ SQL;
 	 */
 	public function testAddColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} ADD {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
 		$actual = MysqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
@@ -309,7 +310,7 @@ SQL;
 	 */
 	public function testChangeColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} CHANGE {$this->qn}bar{$this->qn} {$this->qn}yoo{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
 		$actual = MysqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
@@ -328,7 +329,7 @@ SQL;
 	 */
 	public function testModifyColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} MODIFY {$this->qn}bar{$this->qn} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
 		$actual = MysqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
@@ -347,7 +348,7 @@ SQL;
 	 */
 	public function testDropColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} DROP {$this->qn}bar{$this->qn}";
+		$expected = "ALTER TABLE {$this->qn('foo')} DROP {$this->qn('bar')}";
 
 		$actual = MysqlQueryBuilder::dropColumn('foo', 'bar');
 
@@ -366,7 +367,7 @@ SQL;
 	 */
 	public function testAddIndex()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} ADD KEY {$this->qn}idx_alias{$this->qn} ({$this->qn}alias{$this->qn}, {$this->qn}name{$this->qn}) COMMENT 'Test Index'";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')}) COMMENT 'Test Index'";
 
 		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', array('alias', 'name'), 'Test Index');
 
@@ -375,7 +376,7 @@ SQL;
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} ADD KEY {$this->qn}idx_alias{$this->qn} ({$this->qn}alias{$this->qn}) COMMENT 'Test Index'";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}) COMMENT 'Test Index'";
 
 		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', 'alias', 'Test Index');
 
@@ -394,7 +395,7 @@ SQL;
 	 */
 	public function testBuildIndexDeclare()
 	{
-		$expected = "{$this->qn}idx_alias{$this->qn} ({$this->qn}alias{$this->qn})";
+		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')})";
 
 		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias');
 
@@ -403,7 +404,7 @@ SQL;
 			\SqlFormatter::compress($actual)
 		);
 
-		$expected = "{$this->qn}idx_alias{$this->qn} ({$this->qn}alias{$this->qn}, {$this->qn}name{$this->qn})";
+		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')})";
 
 		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'));
 
@@ -422,7 +423,7 @@ SQL;
 	 */
 	public function testDropIndex()
 	{
-		$expected = "ALTER TABLE {$this->qn}foo{$this->qn} DROP INDEX {$this->qn}bar{$this->qn}";
+		$expected = "ALTER TABLE {$this->qn('foo')} DROP INDEX {$this->qn('bar')}";
 
 		$actual = MysqlQueryBuilder::dropIndex('foo', 'INDEX', 'bar');
 
@@ -460,7 +461,7 @@ SQL;
 	 */
 	public function testReplace()
 	{
-		$expected = "REPLACE INTO {$this->qn}foo{$this->qn} (a,b) VALUES (c, d, e), (f, g, h)";
+		$expected = "REPLACE INTO {$this->qn('foo')} (a,b) VALUES (c, d, e), (f, g, h)";
 
 		$actual = MysqlQueryBuilder::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
 

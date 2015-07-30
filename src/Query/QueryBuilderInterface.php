@@ -20,7 +20,7 @@ interface QueryBuilderInterface
 	 *
 	 * @return  string
 	 */
-	public static function showDatabases();
+	public static function listDatabases();
 
 	/**
 	 * createDatabase

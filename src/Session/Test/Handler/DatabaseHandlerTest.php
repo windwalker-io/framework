@@ -8,7 +8,7 @@
 
 namespace Windwalker\Session\Test\Handler;
 
-use Windwalker\Database\Test\AbstractDatabaseCase;
+use Windwalker\Database\Test\AbstractDatabaseTestCase;
 use Windwalker\Session\Database\WindwalkerAdapter;
 use Windwalker\Session\Handler\DatabaseHandler;
 
@@ -17,7 +17,7 @@ use Windwalker\Session\Handler\DatabaseHandler;
  *
  * @since 2.0
  */
-class DatabaseHandlerTest extends AbstractDatabaseCase
+class DatabaseHandlerTest extends AbstractDatabaseTestCase
 {
 	/**
 	 * Property driver.

@@ -2,27 +2,27 @@
 /**
  * Part of Windwalker project Test files.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Database\Test\Mysql;
+namespace Windwalker\Database\Test\Postgresql;
 
-use Windwalker\Query\Mysql\MysqlQuery;
+use Windwalker\Query\Postgresql\PostgresqlQuery;
 
 /**
- * Test class of MysqlDriver
+ * Test class of PostgresqlDriver
  *
- * @since 2.0
+ * @since {DEPLOY_VERSION}
  */
-class MysqlDriverTest extends AbstractMysqlTestCase
+class PostgresqlDriverTest extends AbstractPostgresqlTestCase
 {
 	/**
 	 * Method to test getOption().
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::getOption
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getOption
 	 */
 	public function testGetOption()
 	{
@@ -34,7 +34,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::setOption
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::setOption
 	 */
 	public function testSetOption()
 	{
@@ -48,7 +48,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::getVersion
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getVersion
 	 */
 	public function testGetVersion()
 	{
@@ -63,7 +63,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::select
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::select
 	 */
 	public function testSelect()
 	{
@@ -78,11 +78,11 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::setQuery
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::setQuery
 	 */
 	public function testGetAndSetQuery()
 	{
-		$q = new MysqlQuery($this->connection);
+		$q = new PostgresqlQuery($this->connection);
 
 		$q->select('*')
 			->from('wind');
@@ -99,7 +99,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::doExecute
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::doExecute
 	 */
 	public function testExecute()
 	{
@@ -115,7 +115,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::freeResult
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::freeResult
 	 */
 	public function testFreeResult()
 	{
@@ -130,7 +130,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::getTable
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getTable
 	 */
 	public function testGetTable()
 	{
@@ -150,7 +150,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::getDatabase
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getDatabase
 	 */
 	public function testGetDatabase()
 	{
@@ -170,7 +170,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::getReader
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getReader
 	 */
 	public function testGetReader()
 	{
@@ -188,7 +188,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::getWriter
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getWriter
 	 */
 	public function testGetWriter()
 	{
@@ -206,7 +206,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::getTransaction
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::getTransaction
 	 */
 	public function testGetTransaction()
 	{
@@ -230,7 +230,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::listDatabases
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::listDatabases
 	 */
 	public function testListDatabases()
 	{
@@ -452,24 +452,6 @@ SQL;
 		$item = $this->db->setQuery($query)->loadOne('assoc');
 
 		$this->assertEquals('Apple Blossom', $item['title']);
-
-		// Test bind params
-		$query = $this->db->getQuery(true);
-
-		$id = 4;
-
-		echo $query->select('*')
-			->from('#__flower')
-			->where('id = :id')
-			->bind('id', $id);
-
-		$item = $this->db->setQuery($query)->loadOne();
-
-		$this->assertEquals('Apple Blossom', $item->title);
-
-		$item = $this->db->setQuery($query)->loadOne('assoc');
-
-		$this->assertEquals('Apple Blossom', $item['title']);
 	}
 
 	/**
@@ -615,46 +597,11 @@ SQL;
 	}
 
 	/**
-	 * Method to test disconnect().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::setProfilerHandler
-	 */
-	public function testSetProfilerHandler()
-	{
-		$profiler = array();
-
-		$this->db->setProfilerHandler(
-			function($db, $sql) use (&$profiler)
-			{
-				$profiler['db'] = $db;
-				$profiler['sql'] = $sql;
-				$profiler['before'] = true;
-			},
-			function($db, $sql) use (&$profiler)
-			{
-				$profiler['db'] = $db;
-				$profiler['sql'] = $sql;
-				$profiler['after'] = true;
-			}
-		);
-
-		$this->db->setQuery('SELECT * FROM #__flower')->execute();
-
-		$this->assertSame($this->db, $profiler['db']);
-		$this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flower', $profiler['sql']);
-
-		$this->assertTrue($profiler['before']);
-		$this->assertTrue($profiler['after']);
-	}
-
-	/**
 	 * Method to test connect().
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::connect
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::connect
 	 */
 	public function testConnect()
 	{
@@ -670,7 +617,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::disconnect
+	 * @covers Windwalker\Database\Driver\Pdo\PdoDriver::disconnect
 	 */
 	public function testDisconnect()
 	{

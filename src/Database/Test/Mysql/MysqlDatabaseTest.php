@@ -16,7 +16,7 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
  *
  * @since 2.0
  */
-class MysqlDatabaseTest extends AbstractMysqlTest
+class MysqlDatabaseTest extends AbstractMysqlTestCase
 {
 	/**
 	 * testAutoSelect

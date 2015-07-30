@@ -15,7 +15,7 @@ use Windwalker\Compare\EqCompare;
  *
  * @since 2.0
  */
-class MysqlWriterTest extends AbstractMysqlTest
+class MysqlWriterTest extends AbstractMysqlTestCase
 {
 	/**
 	 * Method to test insertOne().

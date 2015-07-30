@@ -8,7 +8,7 @@
 
 namespace Windwalker\DataMapper\Test;
 
-use Windwalker\Database\Test\AbstractDatabaseCase;
+use Windwalker\Database\Test\AbstractDatabaseTestCase;
 use Windwalker\DataMapper\Adapter\DatabaseAdapter;
 use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 
@@ -17,7 +17,7 @@ use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
  * 
  * @since  2.0
  */
-abstract class DatabaseTest extends AbstractDatabaseCase
+abstract class DatabaseTest extends AbstractDatabaseTestCase
 {
 	/**
 	 * Property driver.

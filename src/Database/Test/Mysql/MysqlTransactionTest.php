@@ -15,7 +15,7 @@ use Windwalker\Database\Driver\Mysql\MysqlTransaction;
  *
  * @since 2.0
  */
-class MysqlTransactionTest extends AbstractMysqlTest
+class MysqlTransactionTest extends AbstractMysqlTestCase
 {
 	/**
 	 * Tears down the fixture, for example, closes a network connection.

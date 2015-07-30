@@ -13,7 +13,7 @@ namespace Windwalker\Test\Helper;
  * 
  * @since  2.0
  */
-class StringHelper
+class TestStringHelper
 {
 	/**
 	 * remove spaces
@@ -42,5 +42,25 @@ class StringHelper
 	public static function removeCRLF($string)
 	{
 		return str_replace(PHP_EOL, "\n", $string);
+	}
+
+	/**
+	 * quote
+	 *
+	 * @param string       $string
+	 * @param array|string $quote
+	 *
+	 * @return  string
+	 */
+	public static function quote($string, $quote = array('"', '"'))
+	{
+		$quote = (array) $quote;
+
+		if (empty($quote[1]))
+		{
+			$quote[1] = $quote[0];
+		}
+
+		return $quote[0] . $string . $quote[1];
 	}
 }

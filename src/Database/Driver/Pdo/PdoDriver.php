@@ -84,7 +84,11 @@ class PdoDriver extends DatabaseDriver
 
 		$options = array_merge($defaultOptions, $options);
 
-		$this->name = $options['driver'];
+		// We shouldn't use pdo directly.
+		if ($this->name == 'pdo')
+		{
+			$this->name = $options['driver'];
+		}
 
 		// Finalize initialisation
 		parent::__construct($connection, $options);
@@ -354,6 +358,6 @@ class PdoDriver extends DatabaseDriver
 
 		/** @var $builder \Windwalker\Query\QueryBuilderInterface */
 
-		return $this->setQuery($builder::showDatabases())->loadColumn();
+		return $this->setQuery($builder::listDatabases())->loadColumn();
 	}
 }

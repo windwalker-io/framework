@@ -8,7 +8,7 @@
 
 namespace Windwalker\Record\Test;
 
-use Windwalker\Database\Test\Mysql\AbstractMysqlTest;
+use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
 use Windwalker\Record\Record;
 
 /**
@@ -16,7 +16,7 @@ use Windwalker\Record\Record;
  *
  * @since 2.0
  */
-class RecordTest extends AbstractMysqlTest
+class RecordTest extends AbstractMysqlTestCase
 {
 	/**
 	 * Test instance.

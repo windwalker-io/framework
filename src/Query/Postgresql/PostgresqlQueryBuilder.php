@@ -36,37 +36,37 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	/**
 	 * showDatabases
 	 *
-	 * @param string $where
+	 * @param array|string $where
 	 *
 	 * @return  string
 	 */
-	public static function showDatabases($where = null)
+	public static function listDatabases($where = null)
 	{
-		$where = $where ? new QueryElement('WHERE', $where, 'AND') : null;
+		$where = (array) $where;
+		$where[] = 'datistemplate = false';
+		$where = new QueryElement('WHERE', $where, ' AND ');
 
-		return 'SHOW DATABASES ' . $where;
+		return 'SELECT datname FROM pg_database ' . $where . ';';
 	}
 
 	/**
 	 * createDatabase
 	 *
 	 * @param string $name
-	 * @param bool   $isNotExists
-	 * @param string $charset
-	 * @param string $collate
+	 * @param string $encoding
+	 * @param string $owner
 	 *
 	 * @return  string
 	 */
-	public static function createDatabase($name, $isNotExists = false, $charset = null, $collate = null)
+	public static function createDatabase($name, $encoding = null, $owner = null)
 	{
 		$query = static::getQuery();
 
 		return static::build(
 			'CREATE DATABASE',
-			$isNotExists ? 'IF NOT EXISTS' : null,
 			$query->quoteName($name),
-			$charset ? 'CHARACTER SET=' . $query->quote($charset) : null,
-			$collate ? 'COLLATE=' . $query->quote($collate) : null
+			$encoding ? 'ENCODING ' . $query->quote($encoding) : null,
+			$owner ? 'OWNER ' . $query->quoteName($owner) : null
 		);
 	}
 
@@ -101,6 +101,10 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	public static function showTableColumns($table, $full = false, $where = null)
 	{
 		$query = static::getQuery();
+
+		$query->select('*')
+			->from('information_schema.columns')
+			->where('table_schema = ')
 
 		return static::build(
 			'SHOW',

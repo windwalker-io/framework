@@ -8,7 +8,7 @@
 
 namespace Windwalker\Test\TestCase;
 
-use Windwalker\Test\Helper\StringHelper;
+use Windwalker\Test\Helper\TestStringHelper;
 
 /**
  * The AbstractBaseTestCase class.
@@ -33,8 +33,8 @@ abstract class AbstractBaseTestCase extends \PHPUnit_Framework_TestCase
 	public function assertStringDataEquals($expected, $actual, $message = '', $delta = 0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
 	{
 		$this->assertEquals(
-			StringHelper::clean($expected),
-			StringHelper::clean($actual),
+			TestStringHelper::clean($expected),
+			TestStringHelper::clean($actual),
 			$message,
 			$delta,
 			$maxDepth,
@@ -59,8 +59,8 @@ abstract class AbstractBaseTestCase extends \PHPUnit_Framework_TestCase
 	public function assertStringSafeEquals($expected, $actual, $message = '', $delta = 0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
 	{
 		$this->assertEquals(
-			trim(StringHelper::removeCRLF($expected)),
-			trim(StringHelper::removeCRLF($actual)),
+			trim(TestStringHelper::removeCRLF($expected)),
+			trim(TestStringHelper::removeCRLF($actual)),
 			$message,
 			$delta,
 			$maxDepth,

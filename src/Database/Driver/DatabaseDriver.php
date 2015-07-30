@@ -398,6 +398,11 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->name), ucfirst($this->name));
 
+			if (!class_exists($class))
+			{
+				throw new \InvalidArgumentException(sprintf('Class %s not exists.', $class));
+			}
+
 			$this->databases[$name] = new $class($name, $this);
 		}
 

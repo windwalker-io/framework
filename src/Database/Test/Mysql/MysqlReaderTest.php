@@ -16,7 +16,7 @@ use Windwalker\Database\Driver\Pdo\PdoReader;
  *
  * @since 2.0
  */
-class MysqlReaderTest extends AbstractMysqlTest
+class MysqlReaderTest extends AbstractMysqlTestCase
 {
 	/**
 	 * Method to test fetchArray().

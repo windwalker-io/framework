@@ -36,11 +36,11 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	/**
 	 * showDatabases
 	 *
-	 * @param string $where
+	 * @param array $where
 	 *
 	 * @return  string
 	 */
-	public static function showDatabases($where = null)
+	public static function listDatabases($where = null)
 	{
 		$where = $where ? new QueryElement('WHERE', $where, 'AND') : null;
 

@@ -8,7 +8,7 @@
 
 namespace Windwalker\Record\Test;
 
-use Windwalker\Database\Test\Mysql\AbstractMysqlTest;
+use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
 use Windwalker\Record\NestedRecord;
 use Windwalker\Utilities\ArrayHelper;
 
@@ -17,7 +17,7 @@ use Windwalker\Utilities\ArrayHelper;
  *
  * @since 2.0
  */
-class NestedRecordTest extends AbstractMysqlTest
+class NestedRecordTest extends AbstractMysqlTestCase
 {
 	/**
 	 * Test instance.
