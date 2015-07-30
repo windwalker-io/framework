@@ -46,9 +46,9 @@ class DataStore
 	/**
 	 * Class init.
 	 *
-	 * @param callable $callback
-	 * @param boolean  $shared
-	 * @param boolean  $protected
+	 * @param  callable  $callback   The callback handler of this data.
+	 * @param  boolean   $shared     Is this a shared data?
+	 * @param  boolean   $protected  Is this aprotected data?
 	 */
 	public function __construct($callback, $shared = false, $protected = false)
 	{
@@ -59,7 +59,7 @@ class DataStore
 	}
 
 	/**
-	 * get
+	 * Get instance of this DataStore.
 	 *
 	 * @param Container $container
 	 * @param boolean   $forceNew
@@ -175,15 +175,5 @@ class DataStore
 		$this->instance = $instance;
 
 		return $this;
-	}
-
-	/**
-	 * __clone
-	 *
-	 * @return  void
-	 */
-	public function __clone()
-	{
-		// $this->callback = clone $this->callback;
 	}
 }

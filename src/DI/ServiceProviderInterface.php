@@ -22,4 +22,3 @@ interface ServiceProviderInterface
 	 */
 	public function register(Container $container);
 }
-
