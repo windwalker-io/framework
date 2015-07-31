@@ -8,7 +8,7 @@
 
 namespace Windwalker\Registry;
 
-use Windwalker\Registry\Helper\RegistryHelper;
+use Windwalker\Registry\RegistryHelper;
 
 if (!interface_exists('JsonSerializable'))
 {
@@ -23,12 +23,19 @@ if (!interface_exists('JsonSerializable'))
 class Registry implements \JsonSerializable, \ArrayAccess
 {
 	/**
-	 * Registry Object
+	 * Property separator.
 	 *
-	 * @var    object
+	 * @var  string
+	 */
+	protected $separator = '.';
+
+	/**
+	 * Registry data store.
+	 *
+	 * @var    array
 	 * @since  2.0
 	 */
-	protected $data;
+	protected $data = array();
 
 	/**
 	 * Constructor
@@ -40,9 +47,6 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 */
 	public function __construct($data = null, $format = 'json')
 	{
-		// Instantiate the internal data object.
-		$this->data = new \stdClass;
-
 		// Optionally load supplied data.
 		if (is_array($data) || is_object($data))
 		{
@@ -81,7 +85,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 		}
 		catch (\Exception $e)
 		{
-			return (string) $e;
+			return trigger_error((string) $e, E_USER_ERROR);
 		}
 	}
 
@@ -89,7 +93,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 * Implementation for the JsonSerializable interface.
 	 * Allows us to pass Registry objects to json_encode.
 	 *
-	 * @return  object
+	 * @return  array
 	 *
 	 * @since   2.0
 	 * @note    The interface is only present in PHP 5.4 and up.
@@ -102,19 +106,19 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Sets a default value if not already assigned.
 	 *
-	 * @param   string  $key      The name of the parameter.
-	 * @param   mixed   $default  An optional value for the parameter.
+	 * @param   string  $path   The name of the parameter.
+	 * @param   mixed   $value  An optional value for the parameter.
 	 *
-	 * @return  mixed  The value set, or the default if the value was not previously set (or null).
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function def($key, $default = '')
+	public function def($path, $value = '')
 	{
-		$value = $this->get($key, $default);
-		$this->set($key, $value);
+		$value = $this->get($path, $value);
+		$this->set($path, $value);
 
-		return $value;
+		return $this;
 	}
 
 	/**
@@ -128,44 +132,14 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 */
 	public function exists($path)
 	{
-		// Explode the registry path into an array
-		$nodes = explode('.', $path);
-
-		if ($nodes)
-		{
-			// Initialize the current node to be the registry root.
-			$node = $this->data;
-
-			// Traverse the registry to find the correct node for the result.
-			for ($i = 0, $n = count($nodes); $i < $n; $i++)
-			{
-				// Fix for PHP7
-				$key = $nodes[$i];
-
-				if (isset($node->$key))
-				{
-					$node = $node->$key;
-				}
-				else
-				{
-					break;
-				}
-
-				if ($i + 1 == $n)
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
+		return !is_null($this->get($path));
 	}
 
 	/**
 	 * Get a registry value.
 	 *
-	 * @param   string  $path     Registry path (e.g. foo.content.showauthor)
-	 * @param   mixed   $default  Optional default value, returned if the internal value is null.
+	 * @param   string  $path       Registry path (e.g. foo.content.showauthor)
+	 * @param   mixed   $default    Optional default value, returned if the internal value is null.
 	 *
 	 * @return  mixed  Value of entry or null
 	 *
@@ -173,41 +147,9 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 */
 	public function get($path, $default = null)
 	{
-		$result = $default;
+		$result = RegistryHelper::getByPath($this->data, $path, $this->separator);
 
-		if (!strpos($path, '.'))
-		{
-			return (isset($this->data->$path) && $this->data->$path !== null && $this->data->$path !== '') ? $this->data->$path : $default;
-		}
-
-		// Explode the registry path into an array
-		$nodes = explode('.', $path);
-
-		// Initialize the current node to be the registry root.
-		$node = $this->data;
-		$found = false;
-
-		// Traverse the registry to find the correct node for the result.
-		foreach ($nodes as $n)
-		{
-			if (isset($node->$n))
-			{
-				$node = $node->$n;
-				$found = true;
-			}
-			else
-			{
-				$found = false;
-				break;
-			}
-		}
-
-		if ($found && $node !== null && $node !== '')
-		{
-			$result = $node;
-		}
-
-		return $result;
+		return !is_null($result) ? $result : $default;
 	}
 
 	/**
@@ -217,7 +159,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 */
 	public function clear()
 	{
-		$this->data = new \stdClass;
+		$this->data = array();
 
 		return $this;
 	}
@@ -295,7 +237,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 		// Load a string into the given namespace [or default namespace if not given]
 		$class = $this->getFormatClass($format);
 
-		$obj = $class::stringToObject($data, $options);
+		$obj = $class::stringToStruct($data, $options);
 		$this->loadObject($obj);
 
 		return $this;
@@ -400,51 +342,18 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Set a registry value.
 	 *
-	 * @param   string  $path   Registry Path (e.g. foo.content.showauthor)
-	 * @param   mixed   $value  Value of entry
+	 * @param   string  $path       Registry Path (e.g. foo.content.showauthor)
+	 * @param   mixed   $value      Value of entry.
 	 *
-	 * @return  mixed  The value of the that has been set.
+	 * @return   static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 */
 	public function set($path, $value)
 	{
-		$result = null;
+		RegistryHelper::setByPath($this->data, $path, $value, $this->separator);
 
-		/**
-		 * Explode the registry path into an array and remove empty
-		 * nodes that occur as a result of a double dot. ex: windwalker..test
-		 * Finally, re-key the array so they are sequential.
-		 */
-		$nodes = array_values(array_filter(explode('.', $path), 'strlen'));
-
-		if ($nodes)
-		{
-			// Initialize the current node to be the registry root.
-			$node = $this->data;
-
-			// Traverse the registry to find the correct node for the result.
-			for ($i = 0, $n = count($nodes) - 1; $i < $n; $i++)
-			{
-				// Fix for PHP7
-				$key = $nodes[$i];
-
-				if (!isset($node->$key) && ($i != $n))
-				{
-					$node->$key = new \stdClass;
-				}
-
-				$node = $node->$key;
-			}
-
-			// Fix for PHP7
-			$key = $nodes[$i];
-
-			// Get the old value if exists so we can return it
-			$result = $node->$key = $value;
-		}
-
-		return $result;
+		return $this;
 	}
 
 	/**
@@ -468,7 +377,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 *
 	 * @since   2.0
 	 */
-	public function toObject($class = '\stdClass')
+	public function toObject($class = 'stdClass')
 	{
 		return RegistryHelper::toObject($this->data, $class);
 	}
@@ -487,7 +396,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	{
 		$class = $this->getFormatClass($format);
 
-		return $class::objectToString($this->data, $options);
+		return $class::structToString($this->data, $options);
 	}
 
 	/**
@@ -514,14 +423,14 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Method to recursively bind data to a parent object.
 	 *
-	 * @param   object  $parent    The parent object on which to attach the data values.
+	 * @param   array   $parent    The parent object on which to attach the data values.
 	 * @param   mixed   $data      An array or object of data to bind to the parent object.
 	 * @param   boolean $recursive True to support recursive bindData.
 	 * @param   boolean $allowNull Allow null
 	 *
 	 * @return  void
 	 */
-	protected function bindData($parent, $data, $recursive = true, $allowNull = true)
+	protected function bindData(&$parent, $data, $recursive = true, $allowNull = true)
 	{
 		// Ensure the input data is an array.
 		if (is_object($data))
@@ -533,25 +442,25 @@ class Registry implements \JsonSerializable, \ArrayAccess
 			$data = (array) $data;
 		}
 
-		foreach ($data as $k => $v)
+		foreach ($data as $key => $value)
 		{
-			if (!$allowNull && !(($v !== null) && ($v !== '')))
+			if (!$allowNull && !(($value !== null) && ($value !== '')))
 			{
 				continue;
 			}
 
-			if ($recursive && ((is_array($v) && RegistryHelper::isAssociativeArray($v)) || is_object($v)))
+			if ($recursive && (is_array($value) || is_object($value)))
 			{
-				if (!isset($parent->$k))
+				if (!isset($parent[$key]))
 				{
-					$parent->$k = new \stdClass;
+					$parent[$key] = array();
 				}
 
-				$this->bindData($parent->$k, $v);
+				$this->bindData($parent[$key], $value);
 			}
 			else
 			{
-				$parent->$k = $v;
+				$parent[$key] = $value;
 			}
 		}
 	}
@@ -559,7 +468,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	/**
 	 * Method to recursively convert an object of data to an array.
 	 *
-	 * @param   object  $data  An object of data to return as an array.
+	 * @param   mixed  $data  An object of data to return as an array.
 	 *
 	 * @return  array  Array representation of the input object.
 	 *

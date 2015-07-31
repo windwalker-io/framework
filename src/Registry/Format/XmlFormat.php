@@ -20,14 +20,14 @@ class XmlFormat implements FormatInterface
 	 * -	If more than two levels of nested groups are necessary, since INI is not
 	 * useful, XML or another format should be used.
 	 *
-	 * @param   object  $object   Data source object.
+	 * @param   object  $struct   Data source object.
 	 * @param   array   $options  Options used by the formatter.
 	 *
 	 * @return  string  XML formatted string.
 	 *
 	 * @since   2.0
 	 */
-	public static function objectToString($object, $options = array())
+	public static function structToString($struct, $options = array())
 	{
 		$rootName = (isset($options['name'])) ? $options['name'] : 'registry';
 		$nodeName = (isset($options['nodeName'])) ? $options['nodeName'] : 'node';
@@ -36,7 +36,7 @@ class XmlFormat implements FormatInterface
 		$root = simplexml_load_string('<' . $rootName . ' />');
 
 		// Iterate over the object members.
-		static::getXmlChildren($root, $object, $nodeName);
+		static::getXmlChildren($root, $struct, $nodeName);
 
 		return $root->asXML();
 	}
@@ -51,7 +51,7 @@ class XmlFormat implements FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	public static function stringToObject($data, array $options = array())
+	public static function stringToStruct($data, array $options = array())
 	{
 		$obj = new \stdClass;
 

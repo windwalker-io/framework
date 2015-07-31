@@ -50,7 +50,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\YamlFormat::objectToString
+	 * @covers Windwalker\Registry\Format\YamlFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\YamlFormat::stringToObject
+	 * @covers Windwalker\Registry\Format\YamlFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()

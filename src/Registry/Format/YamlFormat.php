@@ -10,7 +10,7 @@ namespace Windwalker\Registry\Format;
 
 use Symfony\Component\Yaml\Parser as SymfonyYamlParser;
 use Symfony\Component\Yaml\Dumper as SymfonyYamlDumper;
-use Windwalker\Registry\Helper\RegistryHelper;
+use Windwalker\Registry\RegistryHelper;
 
 /**
  * YAML format handler for Registry.
@@ -37,16 +37,16 @@ class YamlFormat implements FormatInterface
 	 * Converts an object into a YAML formatted string.
 	 * We use json_* to convert the passed object to an array.
 	 *
-	 * @param   object  $object   Data source object.
+	 * @param   object  $struct   Data source object.
 	 * @param   array   $options  Options used by the formatter.
 	 *
 	 * @return  string  YAML formatted string.
 	 *
 	 * @since   2.0
 	 */
-	static public function objectToString($object, $options = array())
+	static public function structToString($struct, $options = array())
 	{
-		$array = json_decode(json_encode($object), true);
+		$array = json_decode(json_encode($struct), true);
 
 		$inline = RegistryHelper::getValue($options, 'inline', 2);
 		$indent = RegistryHelper::getValue($options, 'indent', 0);
@@ -65,7 +65,7 @@ class YamlFormat implements FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	static public function stringToObject($data, array $options = array())
+	static public function stringToStruct($data, array $options = array())
 	{
 		$array = static::getParser()->parse(trim($data));
 

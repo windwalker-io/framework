@@ -8,7 +8,7 @@
 
 namespace Windwalker\Registry\Format;
 
-use Windwalker\Registry\Helper\RegistryHelper;
+use Windwalker\Registry\RegistryHelper;
 
 /**
  * JSON format handler for Registry.
@@ -20,13 +20,13 @@ class JsonFormat implements FormatInterface
 	/**
 	 * Converts an object into a JSON formatted string.
 	 *
-	 * @param   object $object  Data source object.
+	 * @param   object $struct  Data source object.
 	 * @param   array  $options Options used by the formatter.
 	 *
 	 * @throws  \InvalidArgumentException
 	 * @return  string  JSON formatted string.
 	 */
-	public static function objectToString($object, $options = array())
+	public static function structToString($struct, $options = array())
 	{
 		$depth  = RegistryHelper::getValue($options, 'depth');
 		$option = RegistryHelper::getValue($options, 'options', 0);
@@ -35,7 +35,7 @@ class JsonFormat implements FormatInterface
 		{
 			$depth = $depth ? : 512;
 
-			return json_encode($object, $option, $depth);
+			return json_encode($struct, $option, $depth);
 		}
 
 		/*
@@ -45,7 +45,7 @@ class JsonFormat implements FormatInterface
 		}
 		*/
 
-		return json_encode($object, $option);
+		return json_encode($struct, $option);
 	}
 
 	/**
@@ -56,7 +56,7 @@ class JsonFormat implements FormatInterface
 	 *
 	 * @return  object   Data object.
 	 */
-	public static function stringToObject($data, array $options = array())
+	public static function stringToStruct($data, array $options = array())
 	{
 		$assoc  = RegistryHelper::getValue($options, 'assoc', false);
 		$depth  = RegistryHelper::getValue($options, 'depth', 512);

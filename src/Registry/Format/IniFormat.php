@@ -8,6 +8,8 @@
 
 namespace Windwalker\Registry\Format;
 
+use Windwalker\Registry\RegistryHelper;
+
 /**
  * INI format handler for Registry.
  *
@@ -28,29 +30,39 @@ class IniFormat implements FormatInterface
 	 * levels deep.  Therefore we will only go through the first two levels of
 	 * the object.
 	 *
-	 * @param   object  $object   Data source object.
+	 * @param   object  $struct   Data source object.
 	 * @param   array   $options  Options used by the formatter.
 	 *
 	 * @return  string  INI formatted string.
 	 */
-	public static function objectToString($object, $options = array())
+	public static function structToString($struct, $options = array())
 	{
 		$local = array();
 		$global = array();
 
 		// Iterate over the object to set the properties.
-		foreach (get_object_vars($object) as $key => $value)
+		foreach ($struct as $key => $value)
 		{
 			// If the value is an object then we need to put it in a local section.
-			if (is_object($value))
+			if (is_array($value))
 			{
+				if (!RegistryHelper::isAssociativeArray($value))
+				{
+					continue;
+				}
+
 				// Add the section line.
 				$local[] = '';
 				$local[] = '[' . $key . ']';
 
 				// Add the properties for this section.
-				foreach (get_object_vars($value) as $k => $v)
+				foreach ($value as $k => $v)
 				{
+					if (is_numeric($k))
+					{
+						continue;
+					}
+
 					$local[] = $k . '=' . static::getValueAsINI($v);
 				}
 			}
@@ -72,7 +84,7 @@ class IniFormat implements FormatInterface
 	 *
 	 * @return  object   Data object.
 	 */
-	public static function stringToObject($data, array $options = array())
+	public static function stringToStruct($data, array $options = array())
 	{
 		$sections = (isset($options['processSections'])) ? $options['processSections'] : false;
 

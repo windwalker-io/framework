@@ -45,7 +45,7 @@ class RegistryHelper
 	 * @param string $name
 	 * @param mixed  $default
 	 *
-	 * @return  null
+	 * @return  mixed
 	 */
 	public static function getValue(array $array, $name, $default = null)
 	{
@@ -64,21 +64,21 @@ class RegistryHelper
 	 */
 	public static function toObject($array, $class = 'stdClass')
 	{
-		$obj = new $class;
+		$object = new $class;
 
 		foreach ($array as $k => $v)
 		{
 			if (is_array($v))
 			{
-				$obj->$k = self::toObject($v, $class);
+				$object->$k = static::toObject($v, $class);
 			}
 			else
 			{
-				$obj->$k = $v;
+				$object->$k = $v;
 			}
 		}
 
-		return $obj;
+		return $object;
 	}
 
 	/**
@@ -92,7 +92,7 @@ class RegistryHelper
 	 *
 	 * @return  mixed Found value, null if not exists.
 	 *
-	 * @since   2.0
+	 * @since   2.1
 	 */
 	public static function getByPath(array $data, $path, $separator = '.')
 	{

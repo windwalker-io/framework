@@ -8,7 +8,7 @@
 
 namespace Windwalker\Registry\Format;
 
-use Windwalker\Registry\Helper\RegistryHelper;
+use Windwalker\Registry\RegistryHelper;
 
 /**
  * PHP class format handler for Registry
@@ -21,20 +21,20 @@ class PhpFormat implements FormatInterface
 	 * Converts an object into a php class string.
 	 * - NOTE: Only one depth level is supported.
 	 *
-	 * @param   object $object Data Source Object
+	 * @param   object $struct Data Source Object
 	 * @param   array  $params Parameters used by the formatter
 	 *
 	 * @throws  \InvalidArgumentException
 	 * @return  string  Config class formatted string
 	 */
-	public static function objectToString($object, $params = array())
+	public static function structToString($struct, $params = array())
 	{
 		$header = RegistryHelper::getValue($params, 'header');
 
 		// Build the object variables string
 		$vars = "";
 
-		foreach (get_object_vars($object) as $k => $v)
+		foreach ($struct as $k => $v)
 		{
 			if (is_scalar($v))
 			{
@@ -74,7 +74,7 @@ class PhpFormat implements FormatInterface
 	 *
 	 * @return  object   Data object.
 	 */
-	public static function stringToObject($data, array $options = array())
+	public static function stringToStruct($data, array $options = array())
 	{
 		return $data;
 	}

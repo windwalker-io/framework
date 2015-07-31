@@ -8,15 +8,16 @@
 
 namespace Windwalker\Registry\Test;
 
-use Windwalker\Registry\Helper\RegistryHelper;
+use Windwalker\Registry\RegistryHelper;
 use Windwalker\Registry\Registry;
+use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
  * Test class of Registry
  *
  * @since 2.0
  */
-class RegistryTest extends \PHPUnit_Framework_TestCase
+class RegistryTest extends AbstractBaseTestCase
 {
 	/**
 	 * Test instance.
@@ -294,7 +295,6 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Registry\Registry::offsetUnset
-	 * @TODO   Implement testOffsetUnset().
 	 */
 	public function testOffsetUnset()
 	{
@@ -309,7 +309,6 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Registry\Registry::set
-	 * @TODO   Implement testSet().
 	 */
 	public function testSet()
 	{
@@ -357,11 +356,11 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	{
 		$registry = new Registry($this->getTestData());
 
-		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.json'), $this->clean($registry->toString('json')));
-		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.yml'), $this->clean($registry->toString('yaml')));
-		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.ini'), $this->clean($registry->toString('ini')));
-		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.xml'), $this->clean($registry->toString('xml')));
-		$this->assertEquals($this->loadFile(__DIR__ . '/Stubs/flower.php'), $this->clean($registry->toString('php')));
+		$this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.ini'), $registry->toString('ini'));
+		$this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.json'), $registry->toString('json'));
+		$this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.yml'), $registry->toString('yml'));
+		$this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.xml'), $registry->toString('xml'));
+		$this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.php'), $registry->toString('php'));
 	}
 
 	/**
@@ -393,7 +392,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	{
 		$text = file_get_contents($file);
 
-		return $this->clean($text);
+		return $text;
 	}
 
 	/**

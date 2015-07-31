@@ -18,14 +18,14 @@ interface FormatInterface
 	/**
 	 * Converts an object into a formatted string.
 	 *
-	 * @param   object  $object   Data Source Object.
+	 * @param   object  $struct   Data Source Object.
 	 * @param   array   $options  An array of options for the formatter.
 	 *
 	 * @return  string  Formatted string.
 	 *
 	 * @since   2.0
 	 */
-	static public function objectToString($object, $options = null);
+	static public function structToString($struct, $options = null);
 
 	/**
 	 * Converts a formatted string into an object.
@@ -37,5 +37,5 @@ interface FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	static public function stringToObject($data, array $options = array());
+	static public function stringToStruct($data, array $options = array());
 }
