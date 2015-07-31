@@ -549,16 +549,16 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Append value to a path in registry
+	 * Push value to a path in registry
 	 *
-	 * @param   string  $path   Parent registry Path (e.g. joomla.content.showauthor)
-	 * @param   mixed   $value  Value of entry
+	 * @param   string  $path   Parent registry Path (e.g. windwalker.content.showauthor)
+	 * @param   mixed   $value  Value of entry, one or more elements.
 	 *
-	 * @return  static  Return self to support chaining.
+	 * @return  integer  the new number of elements in the array.
 	 *
 	 * @since   2.1
 	 */
-	public function append($path, $value)
+	public function push($path, $value)
 	{
 		$node = $this->get($path);
 
@@ -571,11 +571,129 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 			$node = get_object_vars($node);
 		}
 
-		array_push($node, $value);
+		if (!is_array($node))
+		{
+			throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.', $path, gettype($node)));
+		}
+
+		$args = func_get_args();
+
+		if (count($args) <= 2)
+		{
+			$num = array_push($node, $value);
+		}
+		else
+		{
+			$args[0] = &$node;
+
+			$num = call_user_func_array('array_push', $args);
+		}
 
 		$this->set($path, $node);
 
-		return $this;
+		return $num;
+	}
+
+	/**
+	 * Prepend value to a path in registry.
+	 *
+	 * @param   string  $path   Parent registry Path (e.g. windwalker.content.showauthor)
+	 * @param   mixed   $value  Value of entry, one or more elements.
+	 *
+	 * @return  integer  the new number of elements in the array.
+	 *
+	 * @since   2.1
+	 */
+	public function unshift($path, $value)
+	{
+		$node = $this->get($path);
+
+		if (!$node)
+		{
+			$node = array();
+		}
+		elseif (is_object($node))
+		{
+			$node = get_object_vars($node);
+		}
+
+		if (!is_array($node))
+		{
+			throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.', $path, gettype($node)));
+		}
+
+		$args = func_get_args();
+
+		if (count($args) <= 2)
+		{
+			$key = array_unshift($node, $value);
+		}
+		else
+		{
+			$args[0] = &$node;
+
+			$key = call_user_func_array('array_unshift', $args);
+		}
+
+		$this->set($path, $node);
+
+		return $key;
+	}
+
+	/**
+	 * To remove first element from the path of this registry.
+	 *
+	 * @param   string  $path  The registry path.
+	 *
+	 * @return  mixed  The shifted value, or null if array is empty.
+	 */
+	public function shift($path)
+	{
+		$node = $this->get($path);
+
+		if (is_object($node))
+		{
+			$node = get_object_vars($node);
+		}
+
+		if (!is_array($node))
+		{
+			throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.', $path, gettype($node)));
+		}
+
+		$value = array_shift($node);
+
+		$this->set($path, $node);
+
+		return $value;
+	}
+
+	/**
+	 * To remove last element from the path of this registry.
+	 *
+	 * @param   string  $path  The registry path.
+	 *
+	 * @return  mixed  The shifted value, or &null; if array is empty.
+	 */
+	public function pop($path)
+	{
+		$node = $this->get($path);
+
+		if (is_object($node))
+		{
+			$node = get_object_vars($node);
+		}
+
+		if (!is_array($node))
+		{
+			throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.', $path, gettype($node)));
+		}
+
+		$value = array_pop($node);
+
+		$this->set($path, $node);
+
+		return $value;
 	}
 
 	/**

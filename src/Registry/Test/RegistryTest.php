@@ -386,17 +386,22 @@ class RegistryTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Registry\Registry::append
+	 * @covers Windwalker\Registry\Registry::push
 	 */
-	public function testAppend()
+	public function testPush()
 	{
 		$registry = new Registry;
 
 		$registry->set('foo', array('var1', 'var2', 'var3'));
 
-		$registry->append('foo', 'var4');
+		$registry->push('foo', 'var4');
 
 		$this->assertEquals('var4', $registry->get('foo.3'));
+
+		$registry->push('foo', 'var5', 'var6');
+
+		$this->assertEquals('var5', $registry->get('foo.4'));
+		$this->assertEquals('var6', $registry->get('foo.5'));
 
 		$registry->set('foo2', (object) array('var1', 'var2', 'var3'));
 
@@ -404,7 +409,94 @@ class RegistryTest extends AbstractBaseTestCase
 
 		$this->assertTrue(is_object($b));
 
-		$registry->append('foo2', 'var4');
+		$registry->push('foo2', 'var4');
+
+		$b = $registry->get('foo2');
+
+		$this->assertTrue(is_array($b));
+	}
+
+	/**
+	 * testShift
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Registry\Registry::shift
+	 */
+	public function testShift()
+	{
+		$registry = new Registry;
+
+		$registry->set('foo.bar', array('var1', 'var2', 'var3'));
+
+		$this->assertEquals('var1', $registry->shift('foo.bar'));
+
+		$this->assertEquals('var2', $registry->get('foo.bar.0'));
+
+		$registry->set('foo.bar2', (object) array('v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3'));
+
+		$this->assertEquals('var1', $registry->shift('foo.bar2'));
+
+		$this->assertEquals('var2', $registry->get('foo.bar2.v2'));
+
+		$this->assertTrue(is_array($registry->get('foo.bar2')));
+	}
+
+	/**
+	 * testPop
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Registry\Registry::pop
+	 */
+	public function testPop()
+	{
+		$registry = new Registry;
+
+		$registry->set('foo.bar', array('var1', 'var2', 'var3'));
+
+		$this->assertEquals('var3', $registry->pop('foo.bar'));
+
+		$this->assertNull($registry->get('foo.bar.2'));
+
+		$registry->set('foo.bar2', (object) array('v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3'));
+
+		$this->assertEquals('var3', $registry->pop('foo.bar2'));
+
+		$this->assertNull($registry->get('foo.bar2.v3'));
+
+		$this->assertTrue(is_array($registry->get('foo.bar2')));
+	}
+
+	/**
+	 * testUnshift
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Registry\Registry::unshift
+	 */
+	public function testUnshift()
+	{
+		$registry = new Registry;
+
+		$registry->set('foo', array('var1', 'var2', 'var3'));
+
+		$registry->unshift('foo', 'var4');
+
+		$this->assertEquals('var4', $registry->get('foo.0'));
+
+		$registry->unshift('foo', 'var5', 'var6');
+
+		$this->assertEquals('var5', $registry->get('foo.0'));
+		$this->assertEquals('var6', $registry->get('foo.1'));
+
+		$registry->set('foo2', (object) array('var1', 'var2', 'var3'));
+
+		$b = $registry->get('foo2');
+
+		$this->assertTrue(is_object($b));
+
+		$registry->unshift('foo2', 'var4');
 
 		$b = $registry->get('foo2');
 
