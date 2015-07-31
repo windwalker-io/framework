@@ -16,6 +16,92 @@ namespace Windwalker\Registry;
 class RegistryHelper
 {
 	/**
+	 * Load the contents of a file into the registry
+	 *
+	 * @param   string  $file     Path to file to load
+	 * @param   string  $format   Format of the file [optional: defaults to JSON]
+	 * @param   array   $options  Options used by the formatter
+	 *
+	 * @return  static  Return this object to support chaining.
+	 *
+	 * @since   2.1
+	 */
+	public static function loadFile($file, $format = Format::JSON, $options = array())
+	{
+		if (strtolower($format) == Format::PHP)
+		{
+			$data = include $file;
+		}
+		else
+		{
+			$data = file_get_contents($file);
+		}
+
+		return static::loadString($data, $format, $options);
+	}
+
+	/**
+	 * Load a string into the registry
+	 *
+	 * @param   string  $data     String to load into the registry
+	 * @param   string  $format   Format of the string
+	 * @param   array   $options  Options used by the formatter
+	 *
+	 * @return  static  Return this object to support chaining.
+	 *
+	 * @since   2.1
+	 */
+	public static function loadString($data, $format = Format::JSON, $options = array())
+	{
+		// Load a string into the given namespace [or default namespace if not given]
+		$class = static::getFormatClass($format);
+
+		return $class::stringToStruct($data, $options);
+	}
+
+	/**
+	 * Get a namespace in a given string format
+	 *
+	 * @param   array|object  $data     The structure data to convert to markup string.
+	 * @param   string        $format   Format to return the string in
+	 * @param   mixed         $options  Parameters used by the formatter, see formatters for more info
+	 *
+	 * @return  string  Namespace in string format
+	 *
+	 * @since   2.1
+	 */
+	public static function toString($data, $format = Format::JSON, $options = array())
+	{
+		$class = static::getFormatClass($format);
+
+		return $class::structToString($data, $options);
+	}
+
+	/**
+	 * getFormatClass
+	 *
+	 * @param string $format
+	 *
+	 * @return  string|\Windwalker\Registry\Format\FormatInterface
+	 *
+	 * @throws  \DomainException
+	 *
+	 * @since   2.1
+	 */
+	protected static function getFormatClass($format)
+	{
+		// Return a namespace in a given format
+		$class = sprintf('%s\Format\%sFormat', __NAMESPACE__, ucfirst(strtolower($format)));
+
+		if (!class_exists($class))
+		{
+			throw new \DomainException(sprintf('Registry format: %s not supported. Class: %s not found.', $format, $class));
+		}
+
+		return $class;
+	}
+
+	/**
 	 * Method to determine if an array is an associative array.
 	 *
 	 * @param   array  $array  An array to test.

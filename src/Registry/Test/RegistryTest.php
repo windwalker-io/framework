@@ -239,12 +239,57 @@ class RegistryTest extends AbstractBaseTestCase
 	 */
 	public function testMerge()
 	{
+		// Test recursive merge
+		$object1 = '{
+			"foo" : "foo value",
+			"bar" : {
+				"bar1" : "bar value 1",
+				"bar2" : "bar value 2"
+			}
+		}';
+		$object2 = '{
+			"foo" : "foo value",
+			"bar" : {
+				"bar2" : "new bar value 2"
+			}
+		}';
+
+		$registry1 = new Registry(json_decode($object1));
+		$registry2 = new Registry(json_decode($object2));
+
+		$registry1->merge($registry2, true);
+
+		$this->assertEquals($registry1->get('bar.bar2'), 'new bar value 2', 'Line: ' . __LINE__ . '. bar.bar2 shuould be override.');
+		$this->assertEquals($registry1->get('bar.bar1'), 'bar value 1', 'Line: ' . __LINE__ . '. bar.bar1 should not be overrided.');
+
 		$registry = new Registry(array('flower' => 'rose', 'honor' => 'Osmanthus month'));
 
 		$registry->merge($this->instance, true);
 
 		$this->assertEquals($registry->get('flower'), 'sakura');
 		$this->assertEquals($registry->get('honor'), 'Osmanthus month');
+	}
+
+	/**
+	 * testMergeTo
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Registry\Registry::mergeTo
+	 */
+	public function testMergeTo()
+	{
+		$registry = new Registry(array('sunflower' => 'shine', 'honor' => 'Osmanthus month'));
+
+		$this->instance->mergeTo('pos1', $registry, true);
+
+		$this->assertEquals($this->instance->get('pos1.sunflower'), 'shine');
+		$this->assertEquals($this->instance->get('pos1.honor'), 'Osmanthus month');
+
+		$this->instance->mergeTo('foo.bar', $registry, true);
+
+		$this->assertEquals($this->instance->get('foo.bar.sunflower'), 'shine');
+		$this->assertEquals($this->instance->get('foo.bar.honor'), 'Osmanthus month');
 	}
 
 	/**

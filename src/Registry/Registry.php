@@ -43,7 +43,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($data = null, $format = 'json')
+	public function __construct($data = null, $format = Format::JSON)
 	{
 		// Optionally load supplied data.
 		if (is_array($data) || is_object($data))
@@ -179,9 +179,10 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @param   array  $array  Associative array of value to load
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  static  Return this object to support chaining.
 	 *
 	 * @since   2.0
+	 * @deprecated  3.0
 	 */
 	public function loadArray($array)
 	{
@@ -195,13 +196,28 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @param   object  $object  The object holding the publics to load
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  static  Return this object to support chaining.
 	 *
 	 * @since   2.0
+	 * @deprecated  3.0
 	 */
 	public function loadObject($object)
 	{
 		$this->bindData($this->data, $object);
+
+		return $this;
+	}
+
+	/**
+	 * Load an array or object of values into the default namespace
+	 *
+	 * @param  array|object  $data  The value to load into registry.
+	 *
+	 * @return  static  Return this object to support chaining.
+	 */
+	public function load($data)
+	{
+		$this->bindData($this->data, $data);
 
 		return $this;
 	}
@@ -213,22 +229,15 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   string  $format   Format of the file [optional: defaults to JSON]
 	 * @param   array   $options  Options used by the formatter
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  static  Return this object to support chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function loadFile($file, $format = 'JSON', $options = array())
+	public function loadFile($file, $format = Format::JSON, $options = array())
 	{
-		if (strtolower($format) == 'php')
-		{
-			$data = include $file;
+		$this->load(RegistryHelper::loadFile($file, $format, $options));
 
-			return $this->loadArray($data, $format, $options);
-		}
-
-		$data = file_get_contents($file);
-
-		return $this->loadString($data, $format, $options);
+		return $this;
 	}
 
 	/**
@@ -238,17 +247,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   string  $format   Format of the string
 	 * @param   array   $options  Options used by the formatter
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  static  Return this object to support chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function loadString($data, $format = 'JSON', $options = array())
+	public function loadString($data, $format = Format::JSON, $options = array())
 	{
-		// Load a string into the given namespace [or default namespace if not given]
-		$class = $this->getFormatClass($format);
-
-		$obj = $class::stringToStruct($data, $options);
-		$this->loadObject($obj);
+		$this->load(RegistryHelper::loadString($data, $format, $options));
 
 		return $this;
 	}
@@ -256,16 +261,57 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Merge a Registry object into this one
 	 *
-	 * @param   Registry  $source     Source Registry object to merge.
-	 * @param   boolean   $recursive  True to support recursive merge the children values.
+	 * @param   Registry|mixed  $source     Source Registry object to merge.
+	 * @param   boolean         $recursive  True to support recursive merge the children values.
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  static  Return this object to support chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function merge(Registry $source, $recursive = true)
+	public function merge($source, $recursive = true)
 	{
-		$this->bindData($this->data, $source->toArray(), $recursive, false);
+		if ($source instanceof Registry)
+		{
+			$source = $source->getRaw();
+		}
+
+		$this->bindData($this->data, $source, $recursive);
+
+		return $this;
+	}
+
+	/**
+	 * mergeTo
+	 *
+	 * @param string   $path
+	 * @param Registry $source
+	 * @param bool     $recursive
+	 *
+	 * @return  static
+	 */
+	public function mergeTo($path, $source, $recursive = true)
+	{
+		$nodes = RegistryHelper::getPathNodes($path);
+
+		$data = array();
+
+		$tmp =& $data;
+
+		foreach ($nodes as $node)
+		{
+			$tmp[$node] = array();
+
+			$tmp =& $tmp[$node];
+		}
+
+		if ($source instanceof Registry)
+		{
+			$source = $source->getRaw();
+		}
+
+		$tmp = $source;
+
+		$this->bindData($this->data, $data, $recursive);
 
 		return $this;
 	}
@@ -402,32 +448,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   2.0
 	 */
-	public function toString($format = 'JSON', $options = array())
+	public function toString($format = Format::JSON, $options = array())
 	{
-		$class = $this->getFormatClass($format);
-
-		return $class::structToString($this->data, $options);
-	}
-
-	/**
-	 * getFormatClass
-	 *
-	 * @param string $format
-	 *
-	 * @throws  \DomainException
-	 * @return  string|\Windwalker\Registry\Format\FormatInterface
-	 */
-	protected function getFormatClass($format)
-	{
-		// Return a namespace in a given format
-		$class = __NAMESPACE__ . '\\Format\\' . ucfirst(strtolower($format)) . 'Format';
-
-		if (!class_exists($class))
-		{
-			throw new \DomainException(sprintf('Registry format: %s not supported. Class: %s not found.', $format, $class));
-		}
-
-		return $class;
+		return RegistryHelper::toString($this->data, $format, $options);
 	}
 
 	/**
@@ -436,11 +459,10 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   array   $parent    The parent object on which to attach the data values.
 	 * @param   mixed   $data      An array or object of data to bind to the parent object.
 	 * @param   boolean $recursive True to support recursive bindData.
-	 * @param   boolean $allowNull Allow null
 	 *
 	 * @return  void
 	 */
-	protected function bindData(&$parent, $data, $recursive = true, $allowNull = true)
+	protected function bindData(&$parent, $data, $recursive = true)
 	{
 		// Ensure the input data is an array.
 		if (is_object($data))
@@ -454,7 +476,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
 		foreach ($data as $key => $value)
 		{
-			if (!$allowNull && !(($value !== null) && ($value !== '')))
+			if ($value === null)
 			{
 				continue;
 			}
