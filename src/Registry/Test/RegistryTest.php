@@ -412,6 +412,62 @@ class RegistryTest extends AbstractBaseTestCase
 	}
 
 	/**
+	 * testReset
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Registry\Registry::reset
+	 */
+	public function testReset()
+	{
+		$this->instance->reset();
+
+		$this->assertEquals(array(), $this->instance->getRaw());
+	}
+
+	/**
+	 * testGetRaw
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Registry\Registry::getRaw
+	 */
+	public function testGetRaw()
+	{
+		$this->assertEquals($this->getTestData(), $this->instance->getRaw());
+	}
+
+	/**
+	 * testGetIterator
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Registry\Registry::getIterator
+	 */
+	public function testGetIterator()
+	{
+		$this->assertInstanceOf('RecursiveArrayIterator', $this->instance->getIterator());
+
+		$this->assertEquals($this->getTestData(), iterator_to_array($this->instance));
+		$this->assertEquals(
+			iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($this->getTestData()))),
+			iterator_to_array(new \RecursiveIteratorIterator($this->instance))
+		);
+	}
+
+	/**
+	 * testCount
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Registry\Registry::count
+	 */
+	public function testCount()
+	{
+		$this->assertEquals(5, count($this->instance));
+	}
+
+	/**
 	 * loadFile
 	 *
 	 * @param string $file
@@ -423,17 +479,5 @@ class RegistryTest extends AbstractBaseTestCase
 		$text = file_get_contents($file);
 
 		return $text;
-	}
-
-	/**
-	 * clean
-	 *
-	 * @param string $text
-	 *
-	 * @return  string
-	 */
-	protected function clean($text)
-	{
-		return trim(preg_replace('/\s+/', ' ', $text));
 	}
 }

@@ -44,7 +44,7 @@ class YamlFormat implements FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	static public function structToString($struct, $options = array())
+	static public function structToString($struct, array $options = array())
 	{
 		$array = json_decode(json_encode($struct), true);
 

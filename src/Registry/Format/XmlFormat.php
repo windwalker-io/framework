@@ -17,7 +17,7 @@ class XmlFormat implements FormatInterface
 {
 	/**
 	 * Converts an object into an XML formatted string.
-	 * -	If more than two levels of nested groups are necessary, since INI is not
+	 * -    If more than two levels of nested groups are necessary, since INI is not
 	 * useful, XML or another format should be used.
 	 *
 	 * @param   object  $struct   Data source object.
@@ -27,7 +27,7 @@ class XmlFormat implements FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	public static function structToString($struct, $options = array())
+	public static function structToString($struct, array $options = array())
 	{
 		$rootName = (isset($options['name'])) ? $options['name'] : 'registry';
 		$nodeName = (isset($options['nodeName'])) ? $options['nodeName'] : 'node';

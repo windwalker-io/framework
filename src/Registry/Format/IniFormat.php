@@ -35,7 +35,7 @@ class IniFormat implements FormatInterface
 	 *
 	 * @return  string  INI formatted string.
 	 */
-	public static function structToString($struct, $options = array())
+	public static function structToString($struct, array $options = array())
 	{
 		$local = array();
 		$global = array();

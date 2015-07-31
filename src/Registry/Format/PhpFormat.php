@@ -21,15 +21,14 @@ class PhpFormat implements FormatInterface
 	 * Converts an object into a php class string.
 	 * - NOTE: Only one depth level is supported.
 	 *
-	 * @param   object $struct Data Source Object
-	 * @param   array  $params Parameters used by the formatter
+	 * @param   object  $struct   Data Source Object
+	 * @param   array   $options  Parameters used by the formatter
 	 *
-	 * @throws  \InvalidArgumentException
-	 * @return  string  Config class formatted string
+	 * @return  string
 	 */
-	public static function structToString($struct, $params = array())
+	public static function structToString($struct, array $options = array())
 	{
-		$header = RegistryHelper::getValue($params, 'header');
+		$header = RegistryHelper::getValue($options, 'header');
 
 		// Build the object variables string
 		$vars = "";
@@ -57,8 +56,8 @@ class PhpFormat implements FormatInterface
 		$str .= $vars;
 		$str .= ");\n";
 
-		// Use the closing tag if it not set to false in parameters.
-		if (RegistryHelper::getValue($params, 'closingtag', false))
+		// Use the closing tag if set to true in parameters.
+		if (RegistryHelper::getValue($options, 'closingtag', false))
 		{
 			$str .= "\n?>";
 		}

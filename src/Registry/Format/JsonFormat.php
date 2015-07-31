@@ -20,13 +20,12 @@ class JsonFormat implements FormatInterface
 	/**
 	 * Converts an object into a JSON formatted string.
 	 *
-	 * @param   object $struct  Data source object.
-	 * @param   array  $options Options used by the formatter.
+	 * @param   object  $struct   Data source object.
+	 * @param   array   $options  Options used by the formatter.
 	 *
-	 * @throws  \InvalidArgumentException
-	 * @return  string  JSON formatted string.
+	 * @return  string
 	 */
-	public static function structToString($struct, $options = array())
+	public static function structToString($struct, array $options = array())
 	{
 		$depth  = RegistryHelper::getValue($options, 'depth');
 		$option = RegistryHelper::getValue($options, 'options', 0);

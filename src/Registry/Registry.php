@@ -151,15 +151,27 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Clear all data.
+	 * Reset all data.
 	 *
 	 * @return  static
 	 */
-	public function clear()
+	public function reset()
 	{
 		$this->data = array();
 
 		return $this;
+	}
+
+	/**
+	 * Clear all data.
+	 *
+	 * @return  static
+	 *
+	 * @deprecated  3.0
+	 */
+	public function clear()
+	{
+		return $this->reset();
 	}
 
 	/**
@@ -567,18 +579,21 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Gets this object represented as an ArrayIterator.
+	 * Gets this object represented as an RecursiveArrayIterator.
 	 *
 	 * This allows the data properties to be accessed via a foreach statement.
 	 *
-	 * @return  \ArrayIterator  This object represented as an ArrayIterator.
+	 * You can wrap this iterator by RecursiveIteratorIterator that will support recursive foreach.
+	 * Example: `foreach (new \RecursiveIteratorIterator($registry) as $value)`
+	 *
+	 * @return  \RecursiveArrayIterator  This object represented as an RecursiveArrayIterator.
 	 *
 	 * @see     IteratorAggregate::getIterator()
 	 * @since   2.1
 	 */
 	public function getIterator()
 	{
-		return new \ArrayIterator($this->data);
+		return new \RecursiveArrayIterator($this->data);
 	}
 
 	/**
