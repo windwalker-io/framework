@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php" colors="false"
+<phpunit
+	bootstrap="vendor/autoload.php"
+	colors="false"
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
-	strict="true"
 	syntaxCheck="true"
 	>
 	<php>
