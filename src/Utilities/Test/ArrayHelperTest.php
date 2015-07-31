@@ -8,6 +8,7 @@
 
 namespace Windwalker\Utilities\Test;
 
+use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Utilities\ArrayHelper;
 
 /**
@@ -15,7 +16,7 @@ use Windwalker\Utilities\ArrayHelper;
  *
  * @since 2.0
  */
-class ArrayHelperTest extends \PHPUnit_Framework_TestCase
+class ArrayHelperTest extends AbstractBaseTestCase
 {
 	/**
 	 * Data provider for testArrayUnique.
@@ -1998,5 +1999,85 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, ArrayHelper::merge($data1, $data2));
 		$this->assertEquals($expected2, ArrayHelper::merge($data1, $data2, false));
+	}
+
+	/**
+	 * testGetByPath
+	 *
+	 * @return  void
+	 *
+	 * @covers \Windwalker\Utilities\ArrayHelper::getByPath
+	 */
+	public function testGetByPath()
+	{
+		$data = array(
+			'flower' => 'sakura',
+			'olive' => 'peace',
+			'pos1' => array(
+				'sunflower' => 'love'
+			),
+			'pos2' => array(
+				'cornflower' => 'elegant'
+			),
+			'array' => array(
+				'A',
+				'B',
+				'C'
+			)
+		);
+
+		$this->assertEquals('sakura', ArrayHelper::getByPath($data, 'flower'));
+		$this->assertEquals('love', ArrayHelper::getByPath($data, 'pos1.sunflower'));
+		$this->assertEquals('love', ArrayHelper::getByPath($data, 'pos1/sunflower', '/'));
+		$this->assertEquals($data['array'], ArrayHelper::getByPath($data, 'array'));
+		$this->assertNull(ArrayHelper::getByPath($data, 'not.exists'));
+	}
+
+	/**
+	 * testSetByPath
+	 *
+	 * @return  void
+	 *
+	 * @covers \Windwalker\Utilities\ArrayHelper::setByPath
+	 */
+	public function testSetByPath()
+	{
+		$data = array();
+
+		// One level
+		$return = ArrayHelper::setByPath($data, 'flower', 'sakura');
+
+		$this->assertEquals('sakura', $data['flower']);
+		$this->assertTrue($return);
+
+		// Multi-level
+		ArrayHelper::setByPath($data, 'foo.bar', 'test');
+
+		$this->assertEquals('test', $data['foo']['bar']);
+
+		// Separator
+		ArrayHelper::setByPath($data, 'foo/bar', 'play', '/');
+
+		$this->assertEquals('play', $data['foo']['bar']);
+
+		// Type
+		ArrayHelper::setByPath($data, 'cloud/fly', 'bird', '/', 'stdClass');
+
+		$this->assertEquals('bird', $data['cloud']->fly);
+
+		// False
+		$return = ArrayHelper::setByPath($data, '', 'goo');
+
+		$this->assertFalse($return);
+
+		// Fix path
+		ArrayHelper::setByPath($data, 'double..separators', 'value');
+
+		$this->assertEquals('value', $data['double']['separators']);
+
+		$this->assertExpectedException(function()
+		{
+			ArrayHelper::setByPath($data, 'a.b', 'c', '.', 'Non\Exists\Class');
+		}, new \InvalidArgumentException, 'Type or class: Non\Exists\Class not exists');
 	}
 }
