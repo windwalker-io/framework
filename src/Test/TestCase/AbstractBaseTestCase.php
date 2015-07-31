@@ -68,4 +68,46 @@ abstract class AbstractBaseTestCase extends \PHPUnit_Framework_TestCase
 			$ignoreCase
 		);
 	}
+
+	/**
+	 * assertExpectedException
+	 *
+	 * @param callable $closure
+	 * @param string   $class
+	 * @param string   $msg
+	 * @param int      $code
+	 * @param string   $message
+	 *
+	 * @return  void
+	 */
+	public function assertExpectedException($closure, $class = 'Exception', $msg = null, $code = null, $message = '')
+	{
+		if (is_object($class))
+		{
+			$class = get_class($class);
+		}
+
+		try
+		{
+			$closure();
+		}
+		catch (\Exception $e)
+		{
+			$this->assertInstanceOf($class, $e, $message);
+
+			if ($msg)
+			{
+				$this->assertEquals($msg, $e->getMessage(), $message);
+			}
+
+			if ($code)
+			{
+				$this->assertEquals($code, $e->getCode(), $message);
+			}
+
+			return;
+		}
+
+		$this->fail('No exception caught.');
+	}
 }
