@@ -348,7 +348,7 @@ class PathCollectionTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetDiresctoryIterator()
 	{
-		
+		$this->markTestIncomplete();
 	}
 	
 	/**

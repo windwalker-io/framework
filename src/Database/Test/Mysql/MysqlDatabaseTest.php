@@ -32,7 +32,18 @@ class MysqlDatabaseTest extends AbstractMysqlTest
 
 		$db = new MysqlDriver(null, $option);
 
-		$db->setQuery('SELECT * FROM #__flower')->loadAll();
+		$e = null;
+
+		try
+		{
+			$db->setQuery('SELECT * FROM #__flower')->loadAll();
+		}
+		catch (\Exception $e)
+		{
+			// No action
+		}
+
+		$this->assertNull($e, '$e should not be an exception.');
 	}
 
 	/**

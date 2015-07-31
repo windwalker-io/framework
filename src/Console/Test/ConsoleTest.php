@@ -63,6 +63,8 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetAndSetLogger()
 	{
+		$this->markTestSkipped('Re adding this test when we support PSR Logger');
+
 		/* Re adding this test when we support PSR Logger
 
 		$this->assertInstanceOf('Psr\\Log\\NullLogger', $this->instance->getLogger());
