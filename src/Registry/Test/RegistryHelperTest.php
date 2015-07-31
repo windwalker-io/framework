@@ -157,4 +157,34 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array('a', 'b', 'c'), RegistryHelper::getPathNodes('a..b.c'));
 		$this->assertEquals(array('a', 'b', 'c'), RegistryHelper::getPathNodes('a//b/c', '/'));
 	}
+
+	/**
+	 * testFlatten
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Registry\RegistryHelper::flatten
+	 * @since   1.0
+	 */
+	public function testFlatten()
+	{
+		$array = array(
+			'flower' => 'sakura',
+			'olive' => 'peace',
+			'pos1' => array(
+				'sunflower' => 'love'
+			),
+			'pos2' => array(
+				'cornflower' => 'elegant'
+			)
+		);
+
+		$flatted = RegistryHelper::flatten($array);
+
+		$this->assertEquals($flatted['pos1.sunflower'], 'love');
+
+		$flatted = RegistryHelper::flatten($array, '/');
+
+		$this->assertEquals($flatted['pos1/sunflower'], 'love');
+	}
 }

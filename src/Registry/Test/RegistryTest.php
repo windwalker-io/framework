@@ -368,17 +368,47 @@ class RegistryTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Registry::toOneDimension
+	 * @covers Windwalker\Registry\Registry::flatten
 	 */
-	public function flatten()
+	public function testFlatten()
 	{
 		$flatted = $this->instance->flatten();
 
-		$this->assertEquals($flatted['pos1.sunflower'], 'sakura');
+		$this->assertEquals($flatted['pos1.sunflower'], 'love');
 
 		$flatted = $this->instance->flatten('/');
 
-		$this->assertEquals($flatted['pos1/sunflower'], 'sakura');
+		$this->assertEquals($flatted['pos1/sunflower'], 'love');
+	}
+
+	/**
+	 * testAppend
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Registry\Registry::append
+	 */
+	public function testAppend()
+	{
+		$registry = new Registry;
+
+		$registry->set('foo', array('var1', 'var2', 'var3'));
+
+		$registry->append('foo', 'var4');
+
+		$this->assertEquals('var4', $registry->get('foo.3'));
+
+		$registry->set('foo2', (object) array('var1', 'var2', 'var3'));
+
+		$b = $registry->get('foo2');
+
+		$this->assertTrue(is_object($b));
+
+		$registry->append('foo2', 'var4');
+
+		$b = $registry->get('foo2');
+
+		$this->assertTrue(is_array($b));
 	}
 
 	/**

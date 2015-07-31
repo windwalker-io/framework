@@ -182,5 +182,42 @@ class RegistryHelper
 	{
 		return array_values(array_filter(explode($separator, $path), 'strlen'));
 	}
+
+	/**
+	 * Method to recursively convert data to one dimension array.
+	 *
+	 * @param   array|object  $array      The array or object to convert.
+	 * @param   string        $separator  The key separator.
+	 * @param   string        $prefix     Last level key prefix.
+	 *
+	 * @return  array
+	 */
+	public static function flatten($array, $separator = '.', $prefix = '')
+	{
+		if ($array instanceof \Traversable)
+		{
+			$array = iterator_to_array($array);
+		}
+		elseif (is_object($array))
+		{
+			$array = get_object_vars($array);
+		}
+
+		foreach ($array as $k => $v)
+		{
+			$key = $prefix ? $prefix . $separator . $k : $k;
+
+			if (is_object($v) || is_array($v))
+			{
+				$array = array_merge($array, static::flatten($v, $separator, $key));
+			}
+			else
+			{
+				$array[$key] = $v;
+			}
+		}
+
+		return $array;
+	}
 }
 

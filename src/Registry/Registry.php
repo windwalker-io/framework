@@ -8,8 +8,6 @@
 
 namespace Windwalker\Registry;
 
-use Windwalker\Registry\RegistryHelper;
-
 if (!interface_exists('JsonSerializable'))
 {
 	include_once __DIR__ . '/Compat/JsonSerializable.php';
@@ -20,7 +18,7 @@ if (!interface_exists('JsonSerializable'))
  *
  * @since  2.0
  */
-class Registry implements \JsonSerializable, \ArrayAccess
+class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \Countable
 {
 	/**
 	 * Property separator.
@@ -507,39 +505,92 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	 */
 	public function flatten($separator = '.')
 	{
-		$array = array();
-
-		$this->toFlatten($separator, $this->data, $array);
-
-		return $array;
+		return RegistryHelper::flatten($this->data, $separator);
 	}
 
 	/**
-	 * Method to recursively convert data to one dimension array.
+	 * Method to get property Separator
 	 *
-	 * @param string        $separator The key separator.
-	 * @param array|object  $data      Data source of this scope.
-	 * @param array         &$array    The result array, it is pass by reference.
-	 * @param string        $prefix    Last level key prefix.
+	 * @return  string
 	 *
-	 * @return  void
+	 * @since   2.1
 	 */
-	protected function toFlatten($separator = '.', $data = null, &$array = array(), $prefix = '')
+	public function getSeparator()
 	{
-		$data = (array) $data;
+		return $this->separator;
+	}
 
-		foreach ($data as $k => $v)
+	/**
+	 * Method to set property separator
+	 *
+	 * @param   string $separator
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.1
+	 */
+	public function setSeparator($separator)
+	{
+		$this->separator = $separator;
+
+		return $this;
+	}
+
+	/**
+	 * Append value to a path in registry
+	 *
+	 * @param   string  $path   Parent registry Path (e.g. joomla.content.showauthor)
+	 * @param   mixed   $value  Value of entry
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.1
+	 */
+	public function append($path, $value)
+	{
+		$node = $this->get($path);
+
+		if (!$node)
 		{
-			$key = $prefix ? $prefix . $separator . $k : $k;
-
-			if (is_object($v) || is_array($v))
-			{
-				$this->toFlatten($separator, $v, $array, $key);
-			}
-			else
-			{
-				$array[$key] = $v;
-			}
+			$node = array();
 		}
+		elseif (is_object($node))
+		{
+			$node = get_object_vars($node);
+		}
+
+		array_push($node, $value);
+
+		$this->set($path, $node);
+
+		return $this;
+	}
+
+	/**
+	 * Gets this object represented as an ArrayIterator.
+	 *
+	 * This allows the data properties to be accessed via a foreach statement.
+	 *
+	 * @return  \ArrayIterator  This object represented as an ArrayIterator.
+	 *
+	 * @see     IteratorAggregate::getIterator()
+	 * @since   2.1
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->data);
+	}
+
+	/**
+	 * Count elements of the data object
+	 *
+	 * @return  integer  The custom count as an integer.
+	 *
+	 * @link    http://php.net/manual/en/countable.count.php
+	 * @since   2.1
+	 */
+	public function count()
+	{
+		return count($this->data);
 	}
 }
