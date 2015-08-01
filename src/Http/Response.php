@@ -35,7 +35,13 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
 	 */
 	protected $reasonPhrase;
 
-
+	/**
+	 * Class init.
+	 *
+	 * @param string $body
+	 * @param int    $status
+	 * @param array  $headers
+	 */
 	public function __construct($body = 'php://memory', $status = 200, array $headers = [])
 	{
 		if (!$body instanceof StreamInterface)

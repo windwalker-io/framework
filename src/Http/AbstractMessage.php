@@ -11,7 +11,6 @@ namespace Windwalker\Http;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
-use Windwalker\Http\Helper\HttpValidationHelper;
 
 /**
  * The AbstractMessage class.
@@ -205,7 +204,9 @@ abstract class AbstractMessage implements MessageInterface
 	{
 		$new = $this->createHeader($name);
 
-		return $new->withAddedHeader($name, $value);
+		$new = $new->withAddedHeader($name, $value);
+
+		return $new;
 	}
 
 	/**
