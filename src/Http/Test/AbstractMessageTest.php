@@ -9,7 +9,6 @@
 namespace Windwalker\Http\Test;
 
 use Windwalker\Http\AbstractMessage;
-use Windwalker\Http\Helper\HeaderSecurityHelper;
 use Windwalker\Http\Stream;
 use Windwalker\Http\Test\Stub\StubMessage;
 

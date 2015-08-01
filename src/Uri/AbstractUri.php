@@ -19,6 +19,9 @@ namespace Windwalker\Uri;
  */
 abstract class AbstractUri implements UriInterface
 {
+	const SCHEME_HTTP = 'http';
+	const SCHEME_HTTPS = 'https';
+
 	/**
 	 * @var    string  Original URI
 	 * @since  2.0
@@ -127,7 +130,7 @@ abstract class AbstractUri implements UriInterface
 		$uri .= in_array('pass', $parts) ? (!empty($this->pass) ? ':' : '') . $this->pass . (!empty($this->user) ? '@' : '') : '';
 		$uri .= in_array('host', $parts) ? $this->host : '';
 		$uri .= in_array('port', $parts) ? (!empty($this->port) ? ':' : '') . $this->port : '';
-		$uri .= in_array('path', $parts) ? $this->path : '';
+		$uri .= in_array('path', $parts) ? $this->path ? '/' . ltrim($this->path, '/') : '' : '';
 		$uri .= in_array('query', $parts) ? (!empty($query) ? '?' . $query : '') : '';
 		$uri .= in_array('fragment', $parts) ? (!empty($this->fragment) ? '#' . $this->fragment : '') : '';
 
@@ -187,7 +190,7 @@ abstract class AbstractUri implements UriInterface
 		// If the query is empty build it first
 		if (is_null($this->query))
 		{
-			$this->query = self::buildQuery($this->vars);
+			$this->query = UriHelper::buildQuery($this->vars);
 		}
 
 		return $this->query;
@@ -230,6 +233,35 @@ abstract class AbstractUri implements UriInterface
 	public function getPass()
 	{
 		return $this->pass;
+	}
+
+	/**
+	 * Retrieve the user information component of the URI.
+	 *
+	 * If no user information is present, this method MUST return an empty
+	 * string.
+	 *
+	 * If a user is present in the URI, this will return that value;
+	 * additionally, if the password is also present, it will be appended to the
+	 * user value, with a colon (":") separating the values.
+	 *
+	 * The trailing "@" character is not part of the user information and MUST
+	 * NOT be added.
+	 *
+	 * @return  string  The URI user information, in "username[:password]" format.
+	 *
+	 * @since   2.1
+	 */
+	public function getUserInfo()
+	{
+		$info = $this->user;
+
+		if ($info && $this->pass)
+		{
+			$info .= ':' . $this->pass;
+		}
+
+		return $info;
 	}
 
 	/**
@@ -295,20 +327,7 @@ abstract class AbstractUri implements UriInterface
 		return $this->getScheme() == 'https' ? true : false;
 	}
 
-	/**
-	 * Build a query from a array (reverse of the PHP parse_str()).
-	 *
-	 * @param   array  $params  The array of key => value pairs to return as a query string.
-	 *
-	 * @return  string  The resulting query string.
-	 *
-	 * @see     parse_str()
-	 * @since   2.0
-	 */
-	protected static function buildQuery(array $params)
-	{
-		return urldecode(http_build_query($params, '', '&'));
-	}
+
 
 	/**
 	 * Parse a given URI and populate the class fields.
@@ -351,7 +370,7 @@ abstract class AbstractUri implements UriInterface
 		// Parse the query
 		if (isset($parts['query']))
 		{
-			parse_str($parts['query'], $this->vars);
+			$this->vars = UriHelper::parseQuery($parts['query']);
 		}
 
 		return $retval;
@@ -365,48 +384,5 @@ abstract class AbstractUri implements UriInterface
 	public function getOriginal()
 	{
 		return $this->uri;
-	}
-
-	/**
-	 * Resolves //, ../ and ./ from a path and returns
-	 * the result. Eg:
-	 *
-	 * /foo/bar/../boo.php	=> /foo/boo.php
-	 * /foo/bar/../../boo.php => /boo.php
-	 * /foo/bar/.././/boo.php => /foo/boo.php
-	 *
-	 * @param   string  $path  The URI path to clean.
-	 *
-	 * @return  string  Cleaned and resolved URI path.
-	 *
-	 * @since   2.0
-	 */
-	protected function cleanPath($path)
-	{
-		$path = explode('/', preg_replace('#(/+)#', '/', $path));
-
-		for ($i = 0, $n = count($path); $i < $n; $i++)
-		{
-			if ($path[$i] == '.' || $path[$i] == '..')
-			{
-				if (($path[$i] == '.') || ($path[$i] == '..' && $i == 1 && $path[0] == ''))
-				{
-					unset($path[$i]);
-					$path = array_values($path);
-					$i--;
-					$n--;
-				}
-				elseif ($path[$i] == '..' && ($i > 1 || ($i == 1 && $path[0] != '')))
-				{
-					unset($path[$i]);
-					unset($path[$i - 1]);
-					$path = array_values($path);
-					$i -= 2;
-					$n -= 2;
-				}
-			}
-		}
-
-		return implode('/', $path);
 	}
 }
