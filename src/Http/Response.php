@@ -17,7 +17,7 @@ use Psr\Http\Message\StreamInterface;
  * 
  * @since  {DEPLOY_VERSION}
  */
-class AbstractResponse extends AbstractMessage implements ResponseInterface, MessageInterface
+class Response extends AbstractMessage implements ResponseInterface, MessageInterface
 {
 	/**
 	 * Retrieves the HTTP protocol version as a string.

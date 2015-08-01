@@ -10,7 +10,11 @@ namespace Windwalker\Http;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
+use Windwalker\Http\Helper\HeaderSecurityHelper;
+use Windwalker\Http\Helper\HttpValidationHelper;
+use Windwalker\Uri\PsrUri;
 
 /**
  * The AbstractRequest class.
@@ -19,11 +23,90 @@ use Psr\Http\Message\UriInterface;
  */
 class AbstractRequest extends AbstractMessage implements RequestInterface, MessageInterface
 {
+	/**
+	 * Property method.
+	 *
+	 * @var  string
+	 */
 	protected $method;
 
+	/**
+	 * Property uri.
+	 *
+	 * @var  UriInterface
+	 */
 	protected $uri;
 
+	/**
+	 * Property requestTarget.
+	 *
+	 * @var  string
+	 */
 	protected $requestTarget;
+
+	/**
+	 * Property allowMethods.
+	 *
+	 * @var  array
+	 */
+	protected $allowMethods = array(
+		'CONNECT',
+		'DELETE',
+		'GET',
+		'HEAD',
+		'OPTIONS',
+		'PATCH',
+		'POST',
+		'PUT',
+		'TRACE',
+	);
+
+	/**
+	 * Class init.
+	 *
+	 * @param string|UriInterface    $uri
+	 * @param string                 $method
+	 * @param string|StreamInterface $body
+	 * @param array                  $headers
+	 */
+	public function __construct($uri = null, $method = null, $body = 'php://memory', $headers = array())
+	{
+		$method = $this->validateMethod($method);
+
+		if (!$body instanceof StreamInterface)
+		{
+			$body = new Stream($body, Stream::MODE_READ_ONLY_FROM_BEGIN);
+		}
+
+		if (!$uri instanceof UriInterface)
+		{
+			$uri = new PsrUri($uri);
+		}
+
+		$this->stream = $body;
+		$this->method = $method;
+		$this->uri    = $uri;
+
+		foreach ($headers as $name => $value)
+		{
+			$value = HttpValidationHelper::allToArray($value);
+
+			if (!HttpValidationHelper::arrayOnlyContainsString($value))
+			{
+				throw new \InvalidArgumentException('Header values should ony have string.');
+			}
+
+			if (!HeaderSecurityHelper::isValidName($name))
+			{
+				throw new \InvalidArgumentException('Invalid header name');
+			}
+
+			$normalized = strtolower($name);
+			$this->headerNames[$normalized] = $name;
+			$this->headers[$name] = $value;
+		}
+
+	}
 
 	/**
 	 * Retrieves the message's request target.
@@ -53,7 +136,19 @@ class AbstractRequest extends AbstractMessage implements RequestInterface, Messa
 			return '/';
 		}
 
+		$target = $this->uri->getPath();
 
+		if ($this->uri->getQuery())
+		{
+			$target .= '?' . $this->uri->getQuery();
+		}
+
+		if (empty($target))
+		{
+			$target = '/';
+		}
+
+		return $target;
 	}
 
 	/**
@@ -73,7 +168,7 @@ class AbstractRequest extends AbstractMessage implements RequestInterface, Messa
 	 *
 	 * @param mixed $requestTarget
 	 *
-	 * @return self
+	 * @return static
 	 * @throws \InvalidArgumentException if the request target is invalid.
 	 */
 	public function withRequestTarget($requestTarget)
@@ -96,7 +191,7 @@ class AbstractRequest extends AbstractMessage implements RequestInterface, Messa
 	 */
 	public function getMethod()
 	{
-
+		return $this->method;
 	}
 
 	/**
@@ -112,12 +207,18 @@ class AbstractRequest extends AbstractMessage implements RequestInterface, Messa
 	 *
 	 * @param string $method Case-sensitive method.
 	 *
-	 * @return self
+	 * @return static
 	 * @throws \InvalidArgumentException for invalid HTTP methods.
 	 */
 	public function withMethod($method)
 	{
+		$method = $this->validateMethod($method);
 
+		$new = clone $this;
+
+		$new->method = $method;
+
+		return $new;
 	}
 
 	/**
@@ -131,7 +232,7 @@ class AbstractRequest extends AbstractMessage implements RequestInterface, Messa
 	 */
 	public function getUri()
 	{
-
+		return $this->uri;
 	}
 
 	/**
@@ -164,9 +265,62 @@ class AbstractRequest extends AbstractMessage implements RequestInterface, Messa
 	 * @param UriInterface $uri          New request URI to use.
 	 * @param bool         $preserveHost Preserve the original state of the Host header.
 	 *
-	 * @return self
+	 * @return static
 	 */
-	public function withUri(UriInterface $uri, $preserveHost = false) {
+	public function withUri(UriInterface $uri, $preserveHost = false)
+	{
+		$new = clone $this;
+		$new->uri = $uri;
 
+		if ($preserveHost)
+		{
+			return $new;
+		}
+
+		if (!$uri->getHost())
+		{
+			return $new;
+		}
+
+		$host = $uri->getHost();
+
+		if ($uri->getPort())
+		{
+			$host .= ':' . $uri->getPort();
+		}
+
+		$new->headerNames['host'] = 'Host';
+		$new->headers['Host'] = array($host);
+
+		return $new;
+	}
+
+	/**
+	 * validateMethod
+	 *
+	 * @param string $method
+	 *
+	 * @return  string
+	 */
+	protected function validateMethod($method)
+	{
+		if ($method === null)
+		{
+			return $method;
+		}
+
+		if (!is_string($method))
+		{
+			throw new \InvalidArgumentException('Method should be a string.');
+		}
+
+		$method = strtoupper($method);
+
+		if (!in_array($method, $this->allowMethods))
+		{
+			throw new \InvalidArgumentException('Invalid HTTP method: ' . $method);
+		}
+
+		return $method;
 	}
 }

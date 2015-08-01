@@ -17,6 +17,38 @@ use Psr\Http\Message\StreamInterface;
  */
 class Stream implements StreamInterface
 {
+	const MODE_READ_ONLY_FROM_BEGIN  = 'rb';
+	const MODE_READ_WRITE_FROM_BEGIN = 'rb+';
+	const MODE_WRITE_ONLY_RESET      = 'wb';
+	const MODE_READ_WRITE_RESET      = 'wb+';
+	const MODE_WRITE_ONLY_FROM_END   = 'ab';
+	const MODE_READ_WRITE_FROM_END   = 'ab+';
+
+	/**
+	 * Stream resource.
+	 *
+	 * @var resource
+	 */
+	protected $resource;
+
+	/**
+	 * Stream resource.
+	 *
+	 * @var string|resource
+	 */
+	protected $stream;
+
+	/**
+	 * Class init.
+	 *
+	 * @param string|resource $stream  The stream resource cursor.
+	 * @param string          $mode    Mode with which to open stream
+	 */
+	public function __construct($stream = 'php://memory', $mode = 'r')
+	{
+		$this->attach($stream, $mode);
+	}
+
 	/**
 	 * Reads all data from the stream into a string, from the beginning to end.
 	 *
@@ -33,7 +65,21 @@ class Stream implements StreamInterface
 	 */
 	public function __toString()
 	{
+		if (!$this->isReadable())
+		{
+			return '';
+		}
 
+		try
+		{
+			$this->rewind();
+
+			return $this->getContents();
+		}
+		catch (\Exception $e)
+		{
+			return (string) $e;
+		}
 	}
 
 	/**
@@ -43,7 +89,42 @@ class Stream implements StreamInterface
 	 */
 	public function close()
 	{
+		if (! $this->resource)
+		{
+			return;
+		}
 
+		$resource = $this->detach();
+
+		fclose($resource);
+	}
+
+	/**
+	 * Method to attach resource into object.
+	 *
+	 * @param   string|resource  $stream  The stream resource cursor.
+	 * @param   string           $mode    Mode with which to open stream
+	 *
+	 * @return  static Return self to support chaining.
+	 */
+	public function attach($stream, $mode = 'r')
+	{
+		$this->stream = $stream;
+
+		if (is_resource($stream))
+		{
+			$this->resource = $stream;
+		}
+		elseif (is_string($stream))
+		{
+			$this->resource = fopen($stream, $mode);
+		}
+		else
+		{
+			throw new \InvalidArgumentException('Invalid resource.');
+		}
+
+		return $this;
 	}
 
 	/**
@@ -55,7 +136,12 @@ class Stream implements StreamInterface
 	 */
 	public function detach()
 	{
+		$resource = $this->resource;
 
+		$this->resource = null;
+		$this->stream = null;
+
+		return $resource;
 	}
 
 	/**
@@ -65,7 +151,14 @@ class Stream implements StreamInterface
 	 */
 	public function getSize()
 	{
+		if (!is_resource($this->resource))
+		{
+			return null;
+		}
 
+		$stats = fstat($this->resource);
+
+		return $stats['size'];
 	}
 
 	/**
@@ -76,7 +169,19 @@ class Stream implements StreamInterface
 	 */
 	public function tell()
 	{
+		if (!is_resource($this->resource))
+		{
+			throw new \RuntimeException('No resource available.');
+		}
 
+		$result = ftell($this->resource);
+
+		if (!is_int($result))
+		{
+			throw new \RuntimeException('Error occurred during tell operation');
+		}
+
+		return $result;
 	}
 
 	/**
@@ -86,7 +191,12 @@ class Stream implements StreamInterface
 	 */
 	public function eof()
 	{
+		if (!is_resource($this->resource))
+		{
+			return true;
+		}
 
+		return feof($this->resource);
 	}
 
 	/**
@@ -96,7 +206,14 @@ class Stream implements StreamInterface
 	 */
 	public function isSeekable()
 	{
+		if (!is_resource($this->resource))
+		{
+			return false;
+		}
 
+		$meta = stream_get_meta_data($this->resource);
+
+		return $meta['seekable'];
 	}
 
 	/**
@@ -111,11 +228,30 @@ class Stream implements StreamInterface
 	 *                    offset bytes SEEK_CUR: Set position to current location plus offset
 	 *                    SEEK_END: Set position to end-of-stream plus offset.
 	 *
+	 * @return boolean
+	 *
 	 * @throws \RuntimeException on failure.
 	 */
 	public function seek($offset, $whence = SEEK_SET)
 	{
+		if (!is_resource($this->resource))
+		{
+			throw new \RuntimeException('No resource available.');
+		}
 
+		if (!$this->isSeekable())
+		{
+			throw new \RuntimeException('Stream is not seekable');
+		}
+
+		$result = fseek($this->resource, $offset, $whence);
+
+		if ($result !== 0)
+		{
+			throw new \RuntimeException('Error seeking within stream');
+		}
+
+		return true;
 	}
 
 	/**
@@ -130,7 +266,7 @@ class Stream implements StreamInterface
 	 */
 	public function rewind()
 	{
-
+		return $this->seek(0);
 	}
 
 	/**
@@ -140,7 +276,14 @@ class Stream implements StreamInterface
 	 */
 	public function isWritable()
 	{
+		if (!is_resource($this->resource))
+		{
+			return false;
+		}
 
+		$meta = stream_get_meta_data($this->resource);
+
+		return is_writable($meta['uri']);
 	}
 
 	/**
@@ -153,7 +296,19 @@ class Stream implements StreamInterface
 	 */
 	public function write($string)
 	{
+		if (!is_resource($this->resource))
+		{
+			throw new \RuntimeException('No resource available.');
+		}
 
+		$result = fwrite($this->resource, $string);
+
+		if ($result === false)
+		{
+			throw new \RuntimeException('Error writing to stream');
+		}
+
+		return $result;
 	}
 
 	/**
@@ -163,7 +318,15 @@ class Stream implements StreamInterface
 	 */
 	public function isReadable()
 	{
+		if (!is_resource($this->resource))
+		{
+			return false;
+		}
 
+		$meta = stream_get_meta_data($this->resource);
+		$mode = $meta['mode'];
+
+		return (strstr($mode, 'r') || strstr($mode, '+'));
 	}
 
 	/**
@@ -179,7 +342,24 @@ class Stream implements StreamInterface
 	 */
 	public function read($length)
 	{
+		if (!is_resource($this->resource))
+		{
+			throw new \RuntimeException('No resource available.');
+		}
 
+		if (! $this->isReadable())
+		{
+			throw new \RuntimeException('Stream is not readable');
+		}
+
+		$result = fread($this->resource, $length);
+
+		if ($result === false)
+		{
+			throw new \RuntimeException('Error reading stream');
+		}
+
+		return $result;
 	}
 
 	/**
@@ -191,7 +371,19 @@ class Stream implements StreamInterface
 	 */
 	public function getContents()
 	{
+		if (!$this->isReadable())
+		{
+			return '';
+		}
 
+		$result = stream_get_contents($this->resource);
+
+		if ($result === false)
+		{
+			throw new \RuntimeException('Error reading from stream');
+		}
+
+		return $result;
 	}
 
 	/**
@@ -208,7 +400,30 @@ class Stream implements StreamInterface
 	 *     provided. Returns a specific key value if a key is provided and the
 	 *     value is found, or null if the key is not found.
 	 */
-	public function getMetadata($key = null) {
+	public function getMetadata($key = null)
+	{
+		$metadata = stream_get_meta_data($this->resource);
 
+		if ($key === null)
+		{
+			return $metadata;
+		}
+
+		if (!array_key_exists($key, $metadata))
+		{
+			return null;
+		}
+
+		return $metadata[$key];
+	}
+
+	/**
+	 * Method to get property Resource
+	 *
+	 * @return  resource
+	 */
+	public function getResource()
+	{
+		return $this->resource;
 	}
 }
