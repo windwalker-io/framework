@@ -10,7 +10,6 @@ namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 
 /**
  * The AbstractTransport class.
@@ -31,7 +30,7 @@ abstract class AbstractTransport implements TransportInterface
 	 *
 	 * @param   array|\ArrayAccess $options Client options object.
 	 *
-	 * @since   1.0
+	 * @since   2.1
 	 */
 	public function __construct($options = array())
 	{
@@ -53,15 +52,14 @@ abstract class AbstractTransport implements TransportInterface
 	/**
 	 * Send a request to the server and return a Response object with the response.
 	 *
-	 * @param  RequestInterface $request The request object to send.
+	 * @param   RequestInterface $request The request object to send.
 	 *
-	 * @return ResponseInterface
-	 * @since   1.0
+	 * @return  ResponseInterface
+	 *
+	 * @since   2.1
 	 */
 	public function request(RequestInterface $request)
 	{
-		$method = $request->getMethod();
-
 		$uri = $request->getUri()
 			->withPath(null)
 			->withQuery(null)
@@ -69,27 +67,21 @@ abstract class AbstractTransport implements TransportInterface
 
 		$uri = $uri . $request->getRequestTarget();
 
-		$data = $request->getBody()->getContents();
+		$request = $request->withRequestTarget($uri);
 
-		return $this->doRequest($method, $uri, json_decode($data));
+		return $this->doRequest($request);
 	}
 
 	/**
 	 * Send a request to the server and return a Response object with the response.
 	 *
-	 * @param   string        $method     The HTTP method for sending the request.
-	 * @param   string        $uri        The URI to the resource to request.
-	 * @param   mixed         $data       Either an associative array or a string to be sent with the request.
-	 * @param   array         $headers    An array of request headers to send with the request.
-	 * @param   integer       $timeout    Read timeout in seconds.
-	 * @param   string        $userAgent  The optional user agent string to send with the request.
+	 * @param   RequestInterface  $request  The request object to store request params.
 	 *
 	 * @return  ResponseInterface
 	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @since   2.1
 	 */
-	abstract protected function doRequest($method, $uri, $data = null, array $headers = null, $timeout = null, $userAgent = null);
+	abstract protected function doRequest(RequestInterface $request);
 
 	/**
 	 * getOption

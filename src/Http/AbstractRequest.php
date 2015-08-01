@@ -75,7 +75,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 
 		if (!$body instanceof StreamInterface)
 		{
-			$body = new Stream($body, Stream::MODE_READ_ONLY_FROM_BEGIN);
+			$body = new Stream($body, Stream::MODE_READ_WRITE_RESET);
 		}
 
 		if (!$uri instanceof UriInterface)

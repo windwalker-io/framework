@@ -181,7 +181,7 @@ abstract class HeaderHelper
 	{
 		foreach ($array as $value)
 		{
-			if (!is_string($value))
+			if (!is_string((string) $value))
 			{
 				return false;
 			}

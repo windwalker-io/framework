@@ -8,7 +8,7 @@
 
 namespace Windwalker\Http\Transport;
 
-use Psr\Http\Message\UriInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Windwalker\Http\Response;
 
@@ -22,66 +22,80 @@ class CurlTransport extends AbstractTransport
 	/**
 	 * Send a request to the server and return a Response object with the response.
 	 *
-	 * @param   string       $method    The HTTP method for sending the request.
-	 * @param   string       $uri       The URI to the resource to request.
-	 * @param   mixed        $data      Either an associative array or a string to be sent with the request.
-	 * @param   array        $headers   An array of request headers to send with the request.
-	 * @param   integer      $timeout   Read timeout in seconds.
-	 * @param   string       $userAgent The optional user agent string to send with the request.
+	 * @param   RequestInterface  $request  The request object to store request params.
 	 *
 	 * @return  ResponseInterface
 	 *
-	 * @since   2.1
-	 * @throws  \RuntimeException
+	 * @since    2.1
 	 */
-	protected function doRequest($method, $uri, $data = null, array $headers = null, $timeout = null, $userAgent = null)
+	protected function doRequest(RequestInterface $request)
 	{
 		// Setup the cURL handle.
 		$ch = curl_init();
 
 		// Set the request method.
-		$options[CURLOPT_CUSTOMREQUEST] = strtoupper($method);
+		$options[CURLOPT_CUSTOMREQUEST] = $request->getMethod();
 
 		// Don't wait for body when $method is HEAD
-		$options[CURLOPT_NOBODY] = ($method === 'HEAD');
+		$options[CURLOPT_NOBODY] = ($request->getMethod() === 'HEAD');
 
 		// Initialize the certificate store
-		$options[CURLOPT_CAINFO] = isset($this->options['curl.certpath']) ? $this->options['curl.certpath'] : __DIR__ . '/cacert.pem';
+		$options[CURLOPT_CAINFO] = $this->getOption('certpath',  __DIR__ . '/cacert.pem');
+
+		// Set HTTP Version
+		switch ($request->getProtocolVersion())
+		{
+			case '1.0':
+				$options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_0;
+				break;
+
+			case '1.1':
+				$options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
+				break;
+
+			case '2.0':
+				if (defined('CURL_HTTP_VERSION_2_0'))
+				{
+					$options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_2_0;
+				}
+		}
 
 		// If data exists let's encode it and make sure our Content-type header is set.
+		$data = json_decode($request->getBody(), true);
+
 		if (isset($data))
 		{
 			// If the data is a scalar value simply add it to the cURL post fields.
-			if (is_scalar($data) || (isset($headers['Content-Type']) && strpos($headers['Content-Type'], 'multipart/form-data') === 0))
+			if (is_scalar($data) || strpos($request->getHeaderLine('Content-Type'), 'multipart/form-data') === 0)
 			{
 				$options[CURLOPT_POSTFIELDS] = $data;
 			}
 			else
-				// Otherwise we need to encode the value first.
+			// Otherwise we need to encode the value first.
 			{
 				$options[CURLOPT_POSTFIELDS] = http_build_query($data);
 			}
 
-			if (!isset($headers['Content-Type']))
+			if (!$request->getHeaderLine('Content-Type'))
 			{
-				$headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8';
+				$request = $request->withHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
 			}
 
 			// Add the relevant headers.
 			if (is_scalar($options[CURLOPT_POSTFIELDS]))
 			{
-				$headers['Content-Length'] = strlen($options[CURLOPT_POSTFIELDS]);
+				$request = $request->withHeader('Content-Length', strlen($options[CURLOPT_POSTFIELDS]));
 			}
 		}
 
 		// Build the headers string for the request.
 		$headerArray = array();
 
-		if (isset($headers))
+		if ($headers = $request->getHeaders())
 		{
 			foreach ($headers as $key => $value)
 			{
-				$headerArray[] = $key . ': ' . $value;
+				$headerArray[] = $key . ': ' . implode(',', $value);
 			}
 
 			// Add the headers string into the stream context options array.
@@ -89,20 +103,20 @@ class CurlTransport extends AbstractTransport
 		}
 
 		// If an explicit timeout is given user it.
-		if (isset($timeout))
+		if ($timeout = $this->getOption('timeout'))
 		{
 			$options[CURLOPT_TIMEOUT] = (int) $timeout;
 			$options[CURLOPT_CONNECTTIMEOUT] = (int) $timeout;
 		}
 
 		// If an explicit user agent is given use it.
-		if (isset($userAgent))
+		if ($userAgent = $this->getOption('userAgent'))
 		{
 			$options[CURLOPT_USERAGENT] = $userAgent;
 		}
 
 		// Set the request URL.
-		$options[CURLOPT_URL] = (string) $uri;
+		$options[CURLOPT_URL] = (string) $request->getRequestTarget();
 
 		// We want our headers. :-)
 		$options[CURLOPT_HEADER] = true;
@@ -124,9 +138,9 @@ class CurlTransport extends AbstractTransport
 		}
 
 		// Set any custom transport options
-		if (isset($this->options['transport.curl']))
+		if ($this->getOption('options'))
 		{
-			foreach ($this->options['transport.curl'] as $key => $value)
+			foreach ((array) $this->getOption('options') as $key => $value)
 			{
 				$options[$key] = $value;
 			}
@@ -138,16 +152,12 @@ class CurlTransport extends AbstractTransport
 		// Execute the request and close the connection.
 		$content = curl_exec($ch);
 
-		// Check if the content is a string. If it is not, it must be an error.
-		if (!is_string($content))
+		if (!$this->getOption('allow_empty_result', false) && !trim($content))
 		{
 			$message = curl_error($ch);
 
-			if (empty($message))
-			{
-				// Error but nothing from cURL? Create our own
-				$message = 'No HTTP response received';
-			}
+			// Error but nothing from cURL? Create our own
+			$message = $message ? : 'No HTTP response received';
 
 			throw new \RuntimeException($message);
 		}
@@ -190,6 +200,8 @@ class CurlTransport extends AbstractTransport
 
 		// Set the body for the response.
 		$return->getBody()->write(array_pop($response));
+
+		$return->getBody()->rewind();
 
 		// Get the last set of response headers as an array.
 		$headers = explode("\r\n", array_pop($response));

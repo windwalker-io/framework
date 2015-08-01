@@ -15,7 +15,7 @@ use Windwalker\Http\Transport\CurlTransport;
  *
  * @since {DEPLOY_VERSION}
  */
-class CurlTransportTest extends AbstractTransportTest
+class StreamTransportTest extends AbstractTransportTest
 {
 	/**
 	 * Property options.
@@ -41,7 +41,7 @@ class CurlTransportTest extends AbstractTransportTest
 	 */
 	protected function setUp()
 	{
-		$this->instance = new CurlTransport;
+		$this->instance = new StreamTransport;
 	}
 
 	/**

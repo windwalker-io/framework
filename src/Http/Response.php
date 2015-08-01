@@ -46,7 +46,7 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
 	{
 		if (!$body instanceof StreamInterface)
 		{
-			$body = new Stream($body, Stream::MODE_READ_ONLY_FROM_BEGIN);
+			$body = new Stream($body, Stream::MODE_READ_WRITE_RESET);
 		}
 
 		$this->stream = $body;
