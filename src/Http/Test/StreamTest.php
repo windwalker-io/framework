@@ -145,10 +145,14 @@ class StreamTest extends AbstractBaseTestCase
 	 */
 	public function testGetSize()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->createTempFile();
+
+		file_put_contents($this->tmpnam, 'FOO BAR');
+		$resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
+
+		$stream = new Stream($resource);
+
+		$this->assertEquals(7, $stream->getSize());
 	}
 
 	/**
