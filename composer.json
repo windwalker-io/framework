@@ -11,7 +11,8 @@
         }
     ],
     "require": {
-        "psr/log": "1.*@stable"
+        "psr/log": "1.*@stable",
+        "psr/http-message": "1.*@stable"
     },
     "require-dev": {
         "phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl",
@@ -21,7 +22,9 @@
         "twig/twig": "1.*@stable",
         "illuminate/view": "4.1.*@stable",
         "mustache/mustache": "2.*@stable",
-        "league/plates": "3.*@stable"
+        "league/plates": "3.*@stable",
+
+        "phly/http": "*"
     },
     "suggest": {
         "symfony/yaml": "Install 2.* if you require YAML support."

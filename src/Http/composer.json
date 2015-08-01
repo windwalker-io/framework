@@ -1,0 +1,27 @@
+{
+    "name": "windwalker/http",
+    "type": "windwalker-package",
+    "description": "Windwalker Http package",
+    "keywords": ["windwalker", "framework", "http"],
+    "homepage": "https://github.com/ventoviro/windwalker-http",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10",
+        "psr/http-message": "1.*"
+    },
+    "require-dev": {
+        "windwalker/environment": "~2.0",
+        "windwalker/test": "~2.0"
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Http\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
+}
