@@ -11,7 +11,8 @@
         }
     ],
     "require": {
-        "psr/log": "1.*@stable"
+        "psr/log": "1.*@stable",
+        "psr/http-message": "1.*@stable"
     },
     "require-dev": {
         "phpunit/phpunit-skeleton-generator": "dev-windwalker-tmpl",
