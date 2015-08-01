@@ -8,14 +8,14 @@
 
 namespace Windwalker\Uri;
 
-use Psr\Http\Message\UriInterface;
+use Psr\Http\Message\UriInterface as PsrUriInterface;
 
 /**
  * The PsrUri class.
  * 
  * @since  {DEPLOY_VERSION}
  */
-class PsrUri extends AbstractUri implements UriInterface
+class PsrUri extends AbstractUri implements PsrUriInterface
 {
 	/**
 	 * Sub-delimiters used in query strings and fragments.
