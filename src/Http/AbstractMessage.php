@@ -10,7 +10,7 @@ namespace Windwalker\Http;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
-use Windwalker\Http\Helper\HeaderSecurityHelper;
+use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\HttpValidationHelper;
 
 /**
@@ -227,14 +227,14 @@ abstract class AbstractMessage implements MessageInterface
 	 */
 	public function withAddedHeader($name, $value)
 	{
-		$value = HttpValidationHelper::allToArray($value);
+		$value = HeaderHelper::allToArray($value);
 
-		if (!HttpValidationHelper::arrayOnlyContainsString($value))
+		if (!HeaderHelper::arrayOnlyContainsString($value))
 		{
 			throw new \InvalidArgumentException('Header values should ony have string.');
 		}
 
-		if (!HeaderSecurityHelper::isValidName($name))
+		if (!HeaderHelper::isValidName($name))
 		{
 			throw new \InvalidArgumentException('Invalid header name');
 		}

@@ -12,7 +12,7 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
-use Windwalker\Http\Helper\HeaderSecurityHelper;
+use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\HttpValidationHelper;
 use Windwalker\Uri\PsrUri;
 
@@ -89,14 +89,14 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 
 		foreach ($headers as $name => $value)
 		{
-			$value = HttpValidationHelper::allToArray($value);
+			$value = HeaderHelper::allToArray($value);
 
-			if (!HttpValidationHelper::arrayOnlyContainsString($value))
+			if (!HeaderHelper::arrayOnlyContainsString($value))
 			{
 				throw new \InvalidArgumentException('Header values should ony have string.');
 			}
 
-			if (!HeaderSecurityHelper::isValidName($name))
+			if (!HeaderHelper::isValidName($name))
 			{
 				throw new \InvalidArgumentException('Invalid header name');
 			}
@@ -105,7 +105,6 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 			$this->headerNames[$normalized] = $name;
 			$this->headers[$name] = $value;
 		}
-
 	}
 
 	/**

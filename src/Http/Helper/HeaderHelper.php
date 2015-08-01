@@ -15,7 +15,7 @@ namespace Windwalker\Http\Helper;
  * 
  * @since  {DEPLOY_VERSION}
  */
-abstract class HeaderSecurityHelper
+abstract class HeaderHelper
 {
 	/**
 	 * Check whether or not a header name is valid.
@@ -130,6 +130,58 @@ abstract class HeaderSecurityHelper
 			// 127 === DEL
 			// 255 === null byte
 			if (($ascii < 32 && ! in_array($ascii, array(9, 10, 13), true)) || $ascii === 127 || $ascii > 254)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * allToArray
+	 *
+	 * @param mixed $value
+	 *
+	 * @return  array
+	 */
+	public static function allToArray($value)
+	{
+		if ($value instanceof \Traversable)
+		{
+			$value = iterator_to_array($value);
+		}
+
+		if (is_object($value))
+		{
+			$value = get_object_vars($value);
+		}
+
+		$value = (array) $value;
+
+		foreach ($value as $k => $v)
+		{
+			if (!static::isValidValue($v))
+			{
+				throw new \InvalidArgumentException('Value :' . $value . ' is invalid.');
+			}
+		}
+
+		return $value;
+	}
+
+	/**
+	 * arrayOnlyContainsString
+	 *
+	 * @param array $array
+	 *
+	 * @return  bool
+	 */
+	public static function arrayOnlyContainsString(array $array)
+	{
+		foreach ($array as $value)
+		{
+			if (!is_string($value))
 			{
 				return false;
 			}
