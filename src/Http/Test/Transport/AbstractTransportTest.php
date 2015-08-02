@@ -150,8 +150,10 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 
 		$response = $this->instance->request($request);
 
-		$data = json_decode($response->getBody()->getContents(), true);
-show($data);
+		show($r = $response->getBody()->getContents());
+
+		$data = json_decode($r, true);
+
 		$this->assertEquals(array('foo' => 'bar'), $data['data']);
 		$this->assertEquals('PUT', $data['_SERVER']['REQUEST_METHOD']);
 	}

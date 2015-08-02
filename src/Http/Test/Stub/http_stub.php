@@ -21,4 +21,4 @@ foreach ($GLOBALS as $key => $value)
 parse_str(file_get_contents('php://input'), $globals['data']);
 
 header('Content-Type: text/json');
-echo json_encode($globals);
+echo print_r($GLOBALS, 1);
