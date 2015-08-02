@@ -34,11 +34,6 @@ abstract class AbstractTransport implements TransportInterface
 	 */
 	public function __construct($options = array())
 	{
-		if (!static::isSupported())
-		{
-			throw new \RangeException(__CLASS__ . ' not support.');
-		}
-
 		$this->setOptions($options);
 	}
 

@@ -10,6 +10,7 @@ namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Response;
 
@@ -225,6 +226,29 @@ class CurlTransport extends AbstractTransport
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Use stream to download file.
+	 *
+	 * @param   RequestInterface       $request The request object to store request params.
+	 * @param   string|StreamInterface $dest    The dest path to store file.
+	 *
+	 * @return  ResponseInterface
+	 * @since   2.1
+	 */
+	public function download(RequestInterface $request, $dest)
+	{
+		if (!$dest)
+		{
+			throw new \InvalidArgumentException('Target file path is empty.');
+		}
+
+		$response = $this->request($request);
+
+		file_put_contents($dest, $response->getBody()->__toString());
+
+		return $response;
 	}
 
 	/**

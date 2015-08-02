@@ -43,6 +43,8 @@ class StreamTransportTest extends AbstractTransportTest
 	protected function setUp()
 	{
 		$this->instance = new StreamTransport;
+
+		parent::setUp();
 	}
 
 	/**

@@ -63,49 +63,33 @@ class HttpClient implements HttpClientInterface
 	 */
 	public function request($method, $url, $data = null, $headers = array())
 	{
-		$url = (string) $url;
-
-		// If is GET, we merge data into URL.
-		if (strtoupper($method) == 'GET' && is_array($data))
-		{
-			$url = new Uri($url);
-
-			foreach ($data as $k => $v)
-			{
-				$url->setVar($k, $v);
-			}
-
-			$url = (string) $url;
-			$data = null;
-		}
-
-		// If not GET, convert data to query string.
-		if (is_array($data))
-		{
-			$data = UriHelper::buildQuery($data);
-		}
-
-		$request = new Request;
-
-		/** @var RequestInterface $request */
-		$request->getBody()->write((string) $data);
-
-		$request = $request->withRequestTarget((string) new PsrUri($url))
-			->withMethod($method);
-
-		// Set global headers
-		foreach ((array) $this->getOption('header') as $key => $value)
-		{
-			$request = $request->withHeader($key, $value);
-		}
-
-		// Override with this method
-		foreach ($headers as $key => $value)
-		{
-			$request = $request->withHeader($key, $value);
-		}
+		$request = $this->prepareRequest(new Request, $method, $url, $data, $headers);
 
 		return $this->send($request);
+	}
+
+	/**
+	 * Download file to target path.
+	 *
+	 * @param string|object $url     The URL to request, may be string or Uri object.
+	 * @param string|       $dest    The dest file path can be a StreamInterface.
+	 * @param mixed         $data    The request body data, can be an array of POST data.
+	 * @param array         $headers The headers array.
+	 *
+	 * @return  mixed
+	 */
+	public function download($url, $dest, $data = null, $headers = array())
+	{
+		$request = $this->prepareRequest(new Request, 'GET', $url, $data, $headers);
+
+		$transport = $this->getTransport();
+
+		if (!$transport::isSupported())
+		{
+			throw new \RangeException(get_class($transport) . ' driver not supported.');
+		}
+
+		return $transport->download($request, $dest);
 	}
 
 	/**
@@ -119,6 +103,11 @@ class HttpClient implements HttpClientInterface
 	{
 		$transport = $this->getTransport();
 
+		if (!$transport::isSupported())
+		{
+			throw new \RangeException(get_class($transport) . ' driver not supported.');
+		}
+
 		return $transport->request($request);
 	}
 
@@ -128,28 +117,30 @@ class HttpClient implements HttpClientInterface
 	 * @param   string   $url      Path to the resource.
 	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
 	 *
-	 * @return  Response
+	 * @return  ResponseInterface
 	 *
 	 * @since   2.1
 	 */
-	public function options($url, $headers = null)
+	public function options($url, $headers = array())
 	{
 		return $this->request('OPTIONS', $url, null, $headers);
 	}
+
 	/**
 	 * Method to send the HEAD command to the server.
 	 *
 	 * @param   string   $url      Path to the resource.
 	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
 	 *
-	 * @return  Response
+	 * @return  ResponseInterface
 	 *
 	 * @since   2.1
 	 */
-	public function head($url, $headers = null)
+	public function head($url, $headers = array())
 	{
 		return $this->request('HEAD', $url, null, $headers);
 	}
+
 	/**
 	 * Method to send the GET command to the server.
 	 *
@@ -157,14 +148,15 @@ class HttpClient implements HttpClientInterface
 	 * @param   mixed    $data     Either an associative array or a string to be sent with the request.
 	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
 	 *
-	 * @return  Response
+	 * @return  ResponseInterface
 	 *
 	 * @since   2.1
 	 */
-	public function get($url, $data = null, $headers = null)
+	public function get($url, $data = null, $headers = array())
 	{
 		return $this->request('GET', $url, $data, $headers);
 	}
+
 	/**
 	 * Method to send the POST command to the server.
 	 *
@@ -172,14 +164,15 @@ class HttpClient implements HttpClientInterface
 	 * @param   mixed    $data     Either an associative array or a string to be sent with the request.
 	 * @param   array    $headers  An array of name-value pairs to include in the header of the request
 	 *
-	 * @return  Response
+	 * @return  ResponseInterface
 	 *
 	 * @since   2.1
 	 */
-	public function post($url, $data, $headers = null)
+	public function post($url, $data, $headers = array())
 	{
 		return $this->request('POST', $url, $data, $headers);
 	}
+
 	/**
 	 * Method to send the PUT command to the server.
 	 *
@@ -187,14 +180,15 @@ class HttpClient implements HttpClientInterface
 	 * @param   mixed    $data     Either an associative array or a string to be sent with the request.
 	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
 	 *
-	 * @return  Response
+	 * @return  ResponseInterface
 	 *
 	 * @since   2.1
 	 */
-	public function put($url, $data, $headers = null)
+	public function put($url, $data, $headers = array())
 	{
 		return $this->request('PUT', $url, $data, $headers);
 	}
+
 	/**
 	 * Method to send the DELETE command to the server.
 	 *
@@ -202,28 +196,30 @@ class HttpClient implements HttpClientInterface
 	 * @param   mixed    $data     Either an associative array or a string to be sent with the request.
 	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
 	 *
-	 * @return  Response
+	 * @return  ResponseInterface
 	 *
 	 * @since   2.1
 	 */
-	public function delete($url, $data = null, $headers = null)
+	public function delete($url, $data = null, $headers = array())
 	{
 		return $this->request('DELETE', $url, $data, $headers);
 	}
+
 	/**
 	 * Method to send the TRACE command to the server.
 	 *
 	 * @param   string   $url      Path to the resource.
 	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
 	 *
-	 * @return  Response
+	 * @return  ResponseInterface
 	 *
 	 * @since   2.1
 	 */
-	public function trace($url, $headers = null)
+	public function trace($url, $headers = array())
 	{
 		return $this->request('TRACE', $url, null, $headers);
 	}
+
 	/**
 	 * Method to send the PATCH command to the server.
 	 *
@@ -231,11 +227,11 @@ class HttpClient implements HttpClientInterface
 	 * @param   mixed    $data     Either an associative array or a string to be sent with the request.
 	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
 	 *
-	 * @return  Response
+	 * @return  ResponseInterface
 	 *
 	 * @since   2.1
 	 */
-	public function patch($url, $data, $headers = null)
+	public function patch($url, $data, $headers = array())
 	{
 		return $this->request('PATCH', $url, $data, $headers);
 	}
@@ -329,5 +325,61 @@ class HttpClient implements HttpClientInterface
 		$this->transport = $transport;
 
 		return $this;
+	}
+
+	/**
+	 * Prepare Request object to send request.
+	 *
+	 * @param   RequestInterface  $request  The Psr Request object.
+	 * @param   string            $method   The method type.
+	 * @param   string|object     $url      The URL to request, may be string or Uri object.
+	 * @param   mixed             $data     The request body data, can be an array of POST data.
+	 * @param   array             $headers  The headers array.
+	 *
+	 * @return  RequestInterface
+	 */
+	protected function prepareRequest(RequestInterface $request, $method, $url, $data, $headers)
+	{
+		$url = (string) $url;
+
+		// If is GET, we merge data into URL.
+		if (strtoupper($method) == 'GET' && is_array($data))
+		{
+			$url = new Uri($url);
+
+			foreach ($data as $k => $v)
+			{
+				$url->setVar($k, $v);
+			}
+
+			$url = (string) $url;
+			$data = null;
+		}
+
+		// If not GET, convert data to query string.
+		if (is_array($data))
+		{
+			$data = UriHelper::buildQuery($data);
+		}
+
+		/** @var RequestInterface $request */
+		$request->getBody()->write((string) $data);
+
+		$request = $request->withRequestTarget((string) new PsrUri($url))
+			->withMethod($method);
+
+		// Set global headers
+		foreach ((array) $this->getOption('header') as $key => $value)
+		{
+			$request = $request->withHeader($key, $value);
+		}
+
+		// Override with this method
+		foreach ($headers as $key => $value)
+		{
+			$request = $request->withHeader($key, $value);
+		}
+
+		return $request;
 	}
 }

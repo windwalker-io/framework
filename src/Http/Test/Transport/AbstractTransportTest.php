@@ -8,7 +8,9 @@
 
 namespace Windwalker\Http\Test\Transport;
 
+use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Request;
+use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\Stream\StringStream;
 use Windwalker\Http\Transport\AbstractTransport;
 use Windwalker\Uri\PsrUri;
@@ -38,6 +40,13 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	protected $instance;
 
 	/**
+	 * Property downloadFile.
+	 *
+	 * @var  string
+	 */
+	protected $destFile;
+
+	/**
 	 * setUpBeforeClass
 	 *
 	 * @return  void
@@ -51,13 +60,31 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		if (!$this->instance->isSupported())
+		{
+			$this->markTestSkipped(get_class($this->instance) . ' driver not supported.');
+		}
+
+		$this->destFile = __DIR__ . '/downloaded.tmp';
+	}
+
+	/**
 	 * createRequest
 	 *
-	 * @return  Request
+	 * @param StreamInterface $stream
+	 *
+	 * @return Request
 	 */
-	protected function createRequest()
+	protected function createRequest($stream = null)
 	{
-		return new Request(new StringStream);
+		return new Request($stream ? : new StringStream);
 	}
 
 	/**
@@ -211,5 +238,36 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(array('foo' => 'bar'), $data['_GET']);
 		$this->assertEquals(array('flower' => 'sakura'), $data['_POST']);
+	}
+
+	public function testDownload()
+	{
+		$this->unlinkDownloaded();
+
+		$this->assertFileNotExists((string) $this->destFile);
+
+		$request = $this->createRequest(new Stream);
+
+		$src = dirname(WINDWALKER_TEST_HTTP_URL) . '/download_stub.txt';
+
+		$request = $request->withUri(new PsrUri($src))
+			->withMethod('GET');
+
+		$response = $this->instance->download($request, $this->destFile);
+
+		$this->assertEquals('This is test download file.', trim(file_get_contents($this->destFile)));
+	}
+
+	/**
+	 * unlinkDownloaded
+	 *
+	 * @return  void
+	 */
+	protected function unlinkDownloaded()
+	{
+		if (is_file($this->destFile))
+		{
+			unlink($this->destFile);
+		}
 	}
 }

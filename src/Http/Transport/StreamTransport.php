@@ -10,7 +10,9 @@ namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\Helper\StreamHelper;
 use Windwalker\Http\Response;
 use Windwalker\Http\Stream\Stream;
 
@@ -124,7 +126,16 @@ class StreamTransport extends AbstractTransport
 
 		$stream = new Stream($connection);
 
-		$content = $stream->getContents();
+		if ($dest = $this->getOption('target_file'))
+		{
+			$content = '';
+			StreamHelper::copyTo($stream, $dest);
+		}
+		else
+		{
+			$content = $stream->getContents();
+		}
+
 		$metadata = $stream->getMetadata();
 
 		$stream->close();
@@ -153,7 +164,7 @@ class StreamTransport extends AbstractTransport
 	 *
 	 * @return  Response
 	 *
-	 * @since   1.0
+	 * @since   2.1
 	 * @throws  \UnexpectedValueException
 	 */
 	protected function getResponse(array $headers, $body)
@@ -188,6 +199,35 @@ class StreamTransport extends AbstractTransport
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Use stream to download file.
+	 *
+	 * @param   RequestInterface       $request The request object to store request params.
+	 * @param   string|StreamInterface $dest    The dest path to store file.
+	 *
+	 * @return  ResponseInterface
+	 * @since   2.1
+	 */
+	public function download(RequestInterface $request, $dest)
+	{
+		if (!$dest)
+		{
+			throw new \InvalidArgumentException('Target file path is emptty.');
+		}
+
+		$dest = $dest instanceof StreamInterface ? $dest : new Stream($dest, Stream::MODE_READ_WRITE_RESET);
+
+		$this->setOption('target_file', $dest);
+
+		$response = $this->request($request);
+
+		$this->setOption('target_file', null);
+
+		$dest->close();
+
+		return $response;
 	}
 
 	/**

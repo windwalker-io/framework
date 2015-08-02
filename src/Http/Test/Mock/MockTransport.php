@@ -10,6 +10,7 @@ namespace Windwalker\Http\Test\Mock;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Response;
 use Windwalker\Http\Transport\AbstractTransport;
 
@@ -67,5 +68,21 @@ class MockTransport extends AbstractTransport
 	public static function isSupported()
 	{
 		return true;
+	}
+
+	/**
+	 * Use stream to download file.
+	 *
+	 * @param   RequestInterface       $request The request object to store request params.
+	 * @param   string|StreamInterface $dest    The dest path to store file.
+	 *
+	 * @return  ResponseInterface
+	 * @since   2.1
+	 */
+	public function download(RequestInterface $request, $dest)
+	{
+		$this->setOption('target_file', $dest);
+
+		return $this->request($request);
 	}
 }

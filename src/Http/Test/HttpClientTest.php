@@ -72,6 +72,23 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * testDownload
+	 *
+	 * @return  void
+	 */
+	public function testDownload()
+	{
+		$url = 'http://example.com';
+		$dest = '/path/to/file';
+
+		$this->instance->download($url, $dest);
+
+		$this->assertEquals('GET', $this->transport->request->getMethod());
+		$this->assertEquals('http://example.com', $this->transport->request->getRequestTarget());
+		$this->assertEquals('/path/to/file', $this->transport->getOption('target_file'));
+	}
+
+	/**
 	 * Method to test request().
 	 *
 	 * @return void
