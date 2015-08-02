@@ -175,7 +175,7 @@ class Uri extends AbstractUri
 	 */
 	public function setPath($path)
 	{
-		$this->path = $this->cleanPath($path);
+		$this->path = UriHelper::cleanPath($path);
 	}
 
 	/**
