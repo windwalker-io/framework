@@ -7,6 +7,7 @@
  */
 
 $globals = array();
+$_SERVER['HTTP_HOST'];
 
 foreach ($GLOBALS as $key => $value)
 {
@@ -21,4 +22,4 @@ foreach ($GLOBALS as $key => $value)
 parse_str(file_get_contents('php://input'), $globals['data']);
 
 header('Content-Type: text/json');
-echo print_r($GLOBALS, 1);
+echo json_encode($globals);
