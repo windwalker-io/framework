@@ -97,7 +97,7 @@ abstract class AbstractBaseTestCase extends \PHPUnit_Framework_TestCase
 
 			if ($msg)
 			{
-				$this->assertEquals($msg, $e->getMessage(), $message);
+				$this->assertStringStartsWith($msg, $e->getMessage(), $message);
 			}
 
 			if ($code)
