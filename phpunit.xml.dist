@@ -10,7 +10,7 @@
 	<php>
 		<ini name="error_reporting" value="32767" />
 
-		<const name="WINDWALKER_TEST_HTTP_URL" value="http://example.com/foo?foo=bar" />
+		<!--<const name="WINDWALKER_TEST_HTTP_URL" value="http://localhost/{windwalker_path}/src/Http/Test/Stub/http_stub.php" />-->
 
 		<!--<const name="WINDWALKER_TEST_DB_DSN_MYSQL"      value="host=localhost;dbname=windwalker_test;user=root;pass=ut1234;prefix=ww_" />-->
 		<!--<const name="WINDWALKER_TEST_DB_DSN_POSTGRESQL" value="host=localhost;dbname=windwalker_test;user=root;pass=ut1234;prefix=ww_" />-->
