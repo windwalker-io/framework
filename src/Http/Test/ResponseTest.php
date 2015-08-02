@@ -9,7 +9,7 @@
 namespace Windwalker\Http\Test;
 
 use Windwalker\Http\Response;
-use Windwalker\Http\Stream;
+use Windwalker\Http\Stream\Stream;
 
 /**
  * Test class of Response
@@ -51,7 +51,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 		// Test no params
 		$res = new Response;
 
-		$this->assertInstanceOf('Windwalker\Http\Stream', $res->getBody());
+		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $res->getBody());
 		$this->assertEquals('php://memory', $res->getBody()->getMetadata('uri'));
 		$this->assertEquals(200, $res->getStatusCode());
 		$this->assertEquals(array(), $res->getHeaders());
@@ -65,7 +65,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
 		$res = new Response($body, 404, $headers);
 
-		$this->assertInstanceOf('Windwalker\Http\Stream', $res->getBody());
+		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $res->getBody());
 		$this->assertEquals($tmpfile, $res->getBody()->getMetadata('uri'));
 		$this->assertEquals(array('Flower', 'Sakura'), $res->getHeader('x-foo'));
 		$this->assertEquals(array('application/json'), $res->getHeader('content-type'));

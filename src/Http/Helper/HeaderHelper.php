@@ -189,4 +189,31 @@ abstract class HeaderHelper
 
 		return true;
 	}
+
+	/**
+	 * toHeaderLine
+	 *
+	 * @param array  $headers
+	 * @param bool   $toString
+	 *
+	 * @return  array|string
+	 */
+	public static function toHeaderLine($headers, $toString = false)
+	{
+		$headerArray = array();
+
+		foreach ($headers as $key => $value)
+		{
+			$value = is_array($value) ? implode(',', $value) : implode(',', $value);
+
+			$headerArray[] = $key . ': ' . $value;
+		}
+
+		if ($toString)
+		{
+			$headerArray = implode($headerArray, "\r\n");
+		}
+
+		return $headerArray;
+	}
 }

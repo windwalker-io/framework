@@ -6,9 +6,9 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Http\Test;
+namespace Windwalker\Http\Test\Stream;
 
-use Windwalker\Http\Stream;
+use Windwalker\Http\Stream\Stream;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Test\TestHelper;
 
@@ -22,7 +22,7 @@ class StreamTest extends AbstractBaseTestCase
 	/**
 	 * Test instance.
 	 *
-	 * @var Stream
+	 * @var \Windwalker\Http\Stream\Stream
 	 */
 	protected $instance;
 
@@ -63,7 +63,7 @@ class StreamTest extends AbstractBaseTestCase
 		$resource = fopen('php://memory', Stream::MODE_READ_WRITE_RESET);
 		$stream   = new Stream($resource);
 
-		$this->assertInstanceOf('Windwalker\Http\Stream', $stream);
+		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $stream);
 
 		$stream = new Stream;
 
@@ -194,11 +194,18 @@ class StreamTest extends AbstractBaseTestCase
 	{
 		$this->createTempFile();
 		file_put_contents($this->tmpnam, 'FOO BAR');
-		$resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_RESET);
+		$resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
 		$stream = new Stream($resource);
 
 		fseek($resource, 2);
 		$this->assertFalse($stream->eof());
+
+		while (! feof($resource))
+		{
+			fread($resource, 4096);
+		}
+
+		$this->assertTrue($stream->eof());
 	}
 
 	/**
@@ -225,18 +232,23 @@ class StreamTest extends AbstractBaseTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Http\Stream::seek
-	 * @TODO   Implement testSeek().
 	 */
 	public function testSeek()
 	{
 		$this->createTempFile();
 		file_put_contents($this->tmpnam, 'FOO BAR');
 
-		$resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_RESET);
+		$resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
 		$stream = new Stream($resource);
 
 		$this->assertTrue($stream->seek(2));
 		$this->assertEquals(2, $stream->tell());
+
+		$this->assertTrue($stream->seek(2, SEEK_CUR));
+		$this->assertEquals(4, $stream->tell());
+
+		$this->assertTrue($stream->seek(-1, SEEK_END));
+		$this->assertEquals(6, $stream->tell());
 	}
 
 	/**
@@ -291,6 +303,16 @@ class StreamTest extends AbstractBaseTestCase
 		$stream->write('flower');
 
 		$this->assertEquals('flower', file_get_contents($this->tmpnam));
+
+		$stream->write(' bloom');
+
+		$this->assertEquals('flower bloom', file_get_contents($this->tmpnam));
+
+		$stream->seek(4);
+
+		$stream->write('test');
+
+		$this->assertEquals('flowtestloom', file_get_contents($this->tmpnam));
 	}
 
 	/**

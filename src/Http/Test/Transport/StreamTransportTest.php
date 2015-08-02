@@ -9,6 +9,7 @@
 namespace Windwalker\Http\Test\Transport;
 
 use Windwalker\Http\Transport\CurlTransport;
+use Windwalker\Http\Transport\StreamTransport;
 
 /**
  * Test class of CurlTransport

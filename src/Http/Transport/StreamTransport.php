@@ -6,13 +6,13 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Http\Test\Transport;
+namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Response;
-use Windwalker\Http\Stream;
-use Windwalker\Http\Transport\AbstractTransport;
+use Windwalker\Http\Stream\Stream;
 
 /**
  * The StreamTransport class.
@@ -63,18 +63,16 @@ class StreamTransport extends AbstractTransport
 			$request = $request->withHeader('Content-Length', strlen($options['content']));
 		}
 
-		// Build the headers string for the request.
-		$headerString = null;
+		// Speed up stream get URL
+		// @see http://stackoverflow.com/questions/3629504/php-file-get-contents-very-slow-when-using-full-url
+		// @see http://stackoverflow.com/questions/13679976/how-to-speed-up-file-get-contents
+		$request = $request->withHeader('Connection', 'Close');
 
+		// Build the headers string for the request.
 		if ($headers = $request->getHeaders())
 		{
-			foreach ($headers as $key => $value)
-			{
-				$headerString .= $key . ': ' . implode(',', $value) . "\r\n";
-			}
-
 			// Add the headers string into the stream context options array.
-			$options['header'] = trim($headerString, "\r\n");
+			$options['header'] = HeaderHelper::toHeaderLine($headers, true);
 		}
 
 		// If an explicit timeout is given user it.

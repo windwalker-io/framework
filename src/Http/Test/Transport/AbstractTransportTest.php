@@ -9,6 +9,7 @@
 namespace Windwalker\Http\Test\Transport;
 
 use Windwalker\Http\Request;
+use Windwalker\Http\Stream\StringStream;
 use Windwalker\Http\Transport\AbstractTransport;
 use Windwalker\Uri\PsrUri;
 
@@ -49,13 +50,23 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * createRequest
+	 *
+	 * @return  Request
+	 */
+	protected function createRequest()
+	{
+		return new Request(new StringStream);
+	}
+
+	/**
 	 * testRequestGet
 	 *
 	 * @return  void
 	 */
 	public function testRequestGet()
 	{
-		$request = new Request;
+		$request = $this->createRequest();
 
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
 			->withMethod('GET');
@@ -65,7 +76,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(200, $response->getStatusCode());
 		$this->assertJson($response->getBody()->getContents());
 
-		$request = new Request;
+		$request = $this->createRequest();
 
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar&baz[3]=yoo'))
 			->withMethod('GET');
@@ -85,7 +96,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testBadDomainGet()
 	{
-		$request = new Request;
+		$request = $this->createRequest();
 
 		$request = $request->withUri(new PsrUri('http://not.exists.url/flower.sakura'))
 			->withMethod('GET');
@@ -100,7 +111,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testBadPathGet()
 	{
-		$request = new Request;
+		$request = $this->createRequest();
 
 		$request = $request->withUri(new PsrUri(dirname(WINDWALKER_TEST_HTTP_URL) . '/wrong.php'))
 			->withMethod('POST');
@@ -120,7 +131,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRequestPost()
 	{
-		$request = new Request;
+		$request = $this->createRequest();
 
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
 			->withMethod('POST');
@@ -141,7 +152,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRequestPut()
 	{
-		$request = new Request;
+		$request = $this->createRequest();
 
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
 			->withMethod('PUT');
@@ -163,7 +174,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRequestCredentials()
 	{
-		$request = new Request;
+		$request = $this->createRequest();
 
 		$uri = new PsrUri(WINDWALKER_TEST_HTTP_URL);
 		$uri = $uri->withUserInfo('username', 'pass1234');
@@ -186,7 +197,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRequestPostScalar()
 	{
-		$request = new Request;
+		$request = $this->createRequest();
 
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar'))
 			->withMethod('POST');

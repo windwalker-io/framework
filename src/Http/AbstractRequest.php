@@ -14,6 +14,7 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\HttpValidationHelper;
+use Windwalker\Http\Stream\Stream;
 use Windwalker\Uri\PsrUri;
 
 /**

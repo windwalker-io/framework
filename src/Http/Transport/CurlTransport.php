@@ -10,6 +10,7 @@ namespace Windwalker\Http\Transport;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Response;
 
 /**
@@ -89,17 +90,10 @@ class CurlTransport extends AbstractTransport
 		}
 
 		// Build the headers string for the request.
-		$headerArray = array();
-
 		if ($headers = $request->getHeaders())
 		{
-			foreach ($headers as $key => $value)
-			{
-				$headerArray[] = $key . ': ' . implode(',', $value);
-			}
-
 			// Add the headers string into the stream context options array.
-			$options[CURLOPT_HTTPHEADER] = $headerArray;
+			$options[CURLOPT_HTTPHEADER] = HeaderHelper::toHeaderLine($headers);
 		}
 
 		// If an explicit timeout is given user it.

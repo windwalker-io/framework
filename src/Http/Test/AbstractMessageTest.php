@@ -9,7 +9,7 @@
 namespace Windwalker\Http\Test;
 
 use Windwalker\Http\AbstractMessage;
-use Windwalker\Http\Stream;
+use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\Test\Stub\StubMessage;
 
 /**

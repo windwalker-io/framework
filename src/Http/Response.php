@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\ResponseHelper;
+use Windwalker\Http\Stream\Stream;
 
 /**
  * The AbstractResponse class.

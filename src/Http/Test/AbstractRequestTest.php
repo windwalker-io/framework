@@ -9,7 +9,7 @@
 namespace Windwalker\Http\Test;
 
 use Windwalker\Http\AbstractRequest;
-use Windwalker\Http\Stream;
+use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\Test\Stub\StubRequest;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Uri\PsrUri;
@@ -62,7 +62,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
 		$this->assertInstanceOf('Windwalker\Uri\PsrUri', $request->getUri());
 		$this->assertEquals('', (string) $request->getUri());
 		$this->assertNull($request->getMethod());
-		$this->assertInstanceOf('Windwalker\Http\Stream', $request->getBody());
+		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $request->getBody());
 		$this->assertEquals('php://memory', $request->getBody()->getMetadata('uri'));
 		$this->assertEquals(array(), $request->getHeaders());
 
@@ -80,7 +80,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
 		$this->assertInstanceOf('Windwalker\Uri\PsrUri', $request->getUri());
 		$this->assertEquals('http://example.com/?foo=bar#baz', (string) $request->getUri());
 		$this->assertEquals('POST', $request->getMethod());
-		$this->assertInstanceOf('Windwalker\Http\Stream', $request->getBody());
+		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $request->getBody());
 		$this->assertEquals($tmpfile, $request->getBody()->getMetadata('uri'));
 		$this->assertEquals(array('Flower', 'Sakura'), $request->getHeader('x-foo'));
 		$this->assertEquals(array('application/json'), $request->getHeader('content-type'));
