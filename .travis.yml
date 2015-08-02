@@ -16,7 +16,9 @@ before_install:
   - sh -e build/travis/scripts/apt-get.sh
   - sh -e build/travis/scripts/apache2-vhost.sh
   - sh -e build/travis/scripts/apache2-configure.sh
+  - ls -l
   - wget http://localhost -O index.html
+  - wget http://localhost/src/Http/Test/Stub/http_stub.php -O index.html
   - cat index.html
 
 before_script:
