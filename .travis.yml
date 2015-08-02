@@ -20,6 +20,7 @@ before_install:
   - wget http://localhost -O index.html
   - ls /etc/apache2/sites-available
   - sudo cat /etc/apache2/sites-available/windwalker.host
+  - sudo cat /etc/hosts
 
 before_script:
   - composer update --dev
