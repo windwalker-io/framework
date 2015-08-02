@@ -369,7 +369,7 @@ class HttpClient implements HttpClientInterface
 			->withMethod($method);
 
 		// Set global headers
-		foreach ((array) $this->getOption('header') as $key => $value)
+		foreach ((array) $this->getOption('headers') as $key => $value)
 		{
 			$request = $request->withHeader($key, $value);
 		}
