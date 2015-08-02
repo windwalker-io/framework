@@ -7,6 +7,7 @@
  */
 
 $globals = array();
+$_SERVER['HTTP_HOST'];
 
 foreach ($GLOBALS as $key => $value)
 {
