@@ -16,11 +16,7 @@ before_install:
   - sh -e build/travis/scripts/apt-get.sh
   - sh -e build/travis/scripts/apache2-vhost.sh
   - sh -e build/travis/scripts/apache2-configure.sh
-  - ls -l
-  - wget http://localhost -O index.html
-  - ls /etc/apache2/sites-available
-  - sudo cat /etc/apache2/sites-available/windwalker.host
-  - sudo cat /etc/hosts
+  - wget http://windwalker.host/src/Http/Test/Stub/http_stub.php -O index.html
 
 before_script:
   - composer update --dev
