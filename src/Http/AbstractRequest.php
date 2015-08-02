@@ -72,8 +72,6 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 	 */
 	public function __construct($uri = null, $method = null, $body = 'php://memory', $headers = array())
 	{
-		$method = $this->validateMethod($method);
-
 		if (!$body instanceof StreamInterface)
 		{
 			$body = new Stream($body, Stream::MODE_READ_WRITE_RESET);
@@ -83,10 +81,6 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 		{
 			$uri = new PsrUri($uri);
 		}
-
-		$this->stream = $body;
-		$this->method = $method;
-		$this->uri    = $uri;
 
 		foreach ($headers as $name => $value)
 		{
@@ -106,6 +100,10 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 			$this->headerNames[$normalized] = $name;
 			$this->headers[$name] = $value;
 		}
+
+		$this->stream = $body;
+		$this->method = $this->validateMethod($method);
+		$this->uri    = $uri;
 	}
 
 	/**

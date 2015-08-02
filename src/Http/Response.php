@@ -50,8 +50,6 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
 			$body = new Stream($body, Stream::MODE_READ_WRITE_RESET);
 		}
 
-		$this->stream = $body;
-
 		foreach ($headers as $name => $value)
 		{
 			$value = HeaderHelper::allToArray($value);
@@ -70,6 +68,9 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
 			$this->headerNames[$normalized] = $name;
 			$this->headers[$name] = $value;
 		}
+
+		$this->stream     = $body;
+		$this->statusCode = $status;
 	}
 
 	/**

@@ -84,7 +84,7 @@ class UploadedFile implements UploadedFileInterface
 	 * @param string                           $clientFilename   The client filename.
 	 * @param string                           $clientMediaType  The file media type.
 	 */
-	public function __construct($file, $size, $error = UPLOAD_ERR_OK, $clientFilename = null, $clientMediaType = null)
+	public function __construct($file, $size = 0, $error = UPLOAD_ERR_OK, $clientFilename = null, $clientMediaType = null)
 	{
 		if (is_string($file))
 		{
