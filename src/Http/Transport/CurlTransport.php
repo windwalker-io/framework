@@ -62,7 +62,7 @@ class CurlTransport extends AbstractTransport
 		}
 
 		// If data exists let's encode it and make sure our Content-type header is set.
-		$data = json_decode($request->getBody(), true);
+		$data = (string) $request->getBody();
 
 		if (isset($data))
 		{

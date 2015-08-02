@@ -39,14 +39,7 @@ abstract class AbstractTransport implements TransportInterface
 			throw new \RangeException(__CLASS__ . ' not support.');
 		}
 
-		if (!is_array($options) && !($options instanceof \ArrayAccess))
-		{
-			throw new \InvalidArgumentException(
-				'The options param must be an array or implement the ArrayAccess interface.'
-			);
-		}
-
-		$this->options = $options;
+		$this->setOptions($options);
 	}
 
 	/**
@@ -84,12 +77,12 @@ abstract class AbstractTransport implements TransportInterface
 	abstract protected function doRequest(RequestInterface $request);
 
 	/**
-	 * getOption
+	 * Get option value.
 	 *
-	 * @param string $name
-	 * @param mixed  $default
+	 * @param   string  $name     Option name.
+	 * @param   mixed   $default  The default value if not exists.
 	 *
-	 * @return  mixed
+	 * @return  mixed  The found value or default value.
 	 */
 	public function getOption($name, $default = null)
 	{
@@ -99,5 +92,54 @@ abstract class AbstractTransport implements TransportInterface
 		}
 
 		return $this->options[$name];
+	}
+
+	/**
+	 * Set option value.
+	 *
+	 * @param   string  $name   Option name.
+	 * @param   mixed   $value  The value you want to set in.
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setOption($name, $value)
+	{
+		$this->options[$name] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Options
+	 *
+	 * @return  array
+	 */
+	public function getOptions()
+	{
+		return $this->options;
+	}
+
+	/**
+	 * Method to set property options
+	 *
+	 * @param   array $options
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setOptions($options)
+	{
+		if ($options instanceof \Traversable)
+		{
+			$options = iterator_to_array($options);
+		}
+
+		if (is_object($options))
+		{
+			$options = get_object_vars($options);
+		}
+
+		$this->options = (array) $options;
+
+		return $this;
 	}
 }

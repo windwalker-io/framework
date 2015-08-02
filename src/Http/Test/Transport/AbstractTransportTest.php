@@ -12,6 +12,7 @@ use Windwalker\Http\Request;
 use Windwalker\Http\Stream\StringStream;
 use Windwalker\Http\Transport\AbstractTransport;
 use Windwalker\Uri\PsrUri;
+use Windwalker\Uri\UriHelper;
 
 /**
  * Test class of CurlTransport
@@ -116,7 +117,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 		$request = $request->withUri(new PsrUri(dirname(WINDWALKER_TEST_HTTP_URL) . '/wrong.php'))
 			->withMethod('POST');
 
-		$request->getBody()->write(json_encode(array('foo' => 'bar')));
+		$request->getBody()->write(UriHelper::buildQuery(array('foo' => 'bar')));
 
 		$response = $this->instance->request($request);
 
@@ -136,7 +137,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
 			->withMethod('POST');
 
-		$request->getBody()->write(json_encode(array('foo' => 'bar')));
+		$request->getBody()->write(UriHelper::buildQuery(array('foo' => 'bar')));
 
 		$response = $this->instance->request($request);
 
@@ -157,7 +158,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
 			->withMethod('PUT');
 
-		$request->getBody()->write(json_encode(array('foo' => 'bar')));
+		$request->getBody()->write(UriHelper::buildQuery(array('foo' => 'bar')));
 
 		$response = $this->instance->request($request);
 
@@ -202,7 +203,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar'))
 			->withMethod('POST');
 
-		$request->getBody()->write(json_encode('flower=sakura'));
+		$request->getBody()->write('flower=sakura');
 
 		$response = $this->instance->request($request);
 

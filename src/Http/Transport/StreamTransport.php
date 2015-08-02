@@ -39,7 +39,7 @@ class StreamTransport extends AbstractTransport
 		$options['protocol_version'] = $request->getProtocolVersion();
 
 		// If data exists let's encode it and make sure our Content-Type header is set.
-		$data = json_decode($request->getBody(), true);
+		$data = (string) $request->getBody();
 
 		if (isset($data))
 		{

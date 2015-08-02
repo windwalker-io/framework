@@ -9,7 +9,7 @@
 	<php>
 		<ini name="error_reporting" value="32767" />
 
-		<const name="WINDWALKER_TEST_HTTP_URL" value="http://windwalker.host/src/Http/Test/Stub/http_stub.php" />
+		<const name="WINDWALKER_TEST_HTTP_URL" value="http://windwalker.host/Test/Stub/http_stub.php" />
 	</php>
 	<testsuites>
 		<testsuite name="Unit">
