@@ -13,7 +13,7 @@ namespace Windwalker\Event;
  *
  * @since  2.0
  */
-class Dispatcher
+class Dispatcher implements DispatcherInterface
 {
 	/**
 	 * An array of registered events indexed by
@@ -180,7 +180,7 @@ class Dispatcher
 	 * In the case of a closure, you must specify at least one event name.
 	 *
 	 * @param   object|\Closure  $listener    The listener
-	 * @param   array            $priorities  An associative array of event names as keys
+	 * @param   array|integer    $priorities  An associative array of event names as keys
 	 *                                        and the corresponding listener priority as values.
 	 *
 	 * @return  Dispatcher  This method is chainable.
@@ -456,9 +456,10 @@ class Dispatcher
 			}
 		}
 
-		$arguments = array_merge($event->getArguments(), $args);
-
-		$event->setArguments($arguments);
+		foreach ($args as $name => &$value)
+		{
+			$event->setArgument($name, $value);
+		}
 
 		if (isset($this->listeners[$event->getName()]))
 		{

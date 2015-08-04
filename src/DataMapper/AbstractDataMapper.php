@@ -12,6 +12,11 @@ use Windwalker\Data\Data;
 use Windwalker\Data\DataInterface;
 use Windwalker\Data\DataSet;
 use Windwalker\Data\DataSetInterface;
+use Windwalker\Event\Dispatcher;
+use Windwalker\Event\DispatcherInterface;
+use Windwalker\Event\Event;
+use Windwalker\Event\EventInterface;
+use Windwalker\Event\ListenerMapper;
 
 /**
  * Abstract DataMapper.
@@ -79,6 +84,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @since  2.0
 	 */
 	protected $useTransaction = true;
+
+	/**
+	 * Property dispatcher.
+	 *
+	 * @var  DispatcherInterface
+	 */
+	protected $dispatcher;
 
 	/**
 	 * Init this class.
@@ -172,6 +184,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		$order = (array) $order;
 
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'conditions' => &$conditions,
+			'order'      => &$order,
+			'start'      => &$start,
+			'limit'      => &$limit
+		));
+
 		// Find data
 		$result = $this->doFind($conditions, $order, $start, $limit) ? : array();
 
@@ -183,7 +202,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			}
 		}
 
-		return $this->bindDataset($result);
+		$result = $this->bindDataset($result);
+
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+			'result' => &$result,
+		));
+
+		return $result;
 	}
 
 	/**
@@ -769,6 +794,73 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function setSelectFields($selectFields)
 	{
 		$this->selectFields = (array) $selectFields;
+
+		return $this;
+	}
+
+	/**
+	 * triggerEvent
+	 *
+	 * @param   string|Event  $event
+	 * @param   array         $args
+	 *
+	 * @return  Event
+	 */
+	public function triggerEvent($event, $args = array())
+	{
+		$dispatcher = $this->getDispatcher();
+
+		if (!$dispatcher instanceof DispatcherInterface)
+		{
+			return null;
+		}
+
+		$args['mapper'] = $this;
+
+		$event = $this->dispatcher->triggerEvent($event, $args);
+
+		$innerListener = array($this, $event->getName());
+
+		if (!$event->isStopped() && is_callable($innerListener))
+		{
+			call_user_func($innerListener, $event);
+		}
+
+		foreach ($event->getArguments() as $name => $value)
+		{
+			$args[$name] = &$value;
+		}
+
+		return $event;
+	}
+
+	/**
+	 * Method to get property Dispatcher
+	 *
+	 * @return  DispatcherInterface
+	 */
+	public function getDispatcher()
+	{
+		if (!$this->dispatcher && class_exists('Windwalker\Event\Dispatcher'))
+		{
+			$this->dispatcher = new Dispatcher;
+
+			ListenerMapper::add($this);
+		}
+
+		return $this->dispatcher;
+	}
+
+	/**
+	 * Method to set property dispatcher
+	 *
+	 * @param   DispatcherInterface $dispatcher
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDispatcher(DispatcherInterface $dispatcher)
+	{
+		$this->dispatcher = $dispatcher;
 
 		return $this;
 	}

@@ -137,7 +137,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setArguments(array $arguments)
+	public function setArguments(array &$arguments)
 	{
 		$this->arguments = $arguments;
 
@@ -154,7 +154,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @since   2.0
 	 */
-	public function addArgument($name, $value)
+	public function addArgument($name, &$value)
 	{
 		if (!isset($this->arguments[$name]))
 		{
@@ -175,9 +175,9 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @since   2.0
 	 */
-	public function setArgument($name, $value)
+	public function setArgument($name, &$value)
 	{
-		$this->arguments[$name] = $value;
+		$this->arguments[$name] = &$value;
 
 		return $this;
 	}
