@@ -456,10 +456,7 @@ class Dispatcher implements DispatcherInterface
 			}
 		}
 
-		foreach ($args as $name => &$value)
-		{
-			$event->setArgument($name, $value);
-		}
+		$event->mergeArguments($args);
 
 		if (isset($this->listeners[$event->getName()]))
 		{
