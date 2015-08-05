@@ -8,7 +8,7 @@
 
 namespace Windwalker\Query\Test\Mysql;
 
-use Windwalker\Database\Test\DsnResolver;
+use Windwalker\Database\Test\TestDsnResolver;
 use Windwalker\Query\Mysql\MysqlQuery;
 use Windwalker\Query\Query;
 use Windwalker\Test\TestHelper;
@@ -56,7 +56,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$dsn = DsnResolver::getDsn('mysql');
+		$dsn = TestDsnResolver::getDsn('mysql');
 
 		if ($dsn)
 		{

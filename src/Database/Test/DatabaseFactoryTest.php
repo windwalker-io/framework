@@ -85,7 +85,7 @@ class DatabaseFactoryTest extends \PHPUnit_Framework_TestCase
 	public static function getOptions()
 	{
 		// Only use mysql to test
-		$dsn = DsnResolver::getDsn('mysql');
+		$dsn = TestDsnResolver::getDsn('mysql');
 
 		$options = array(
 			'host' => $dsn['host'],
