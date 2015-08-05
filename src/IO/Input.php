@@ -92,11 +92,12 @@ class Input implements \Serializable, \Countable
 	/**
 	 * Prepare source.
 	 *
-	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   array    $source     Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   boolean  $reference  If set to true, he source in first argument will be reference.
 	 *
 	 * @return  void
 	 */
-	protected function prepareSource($source = null)
+	public function prepareSource(&$source = null, $reference = false)
 	{
 		if (is_null($source))
 		{
@@ -104,7 +105,14 @@ class Input implements \Serializable, \Countable
 		}
 		else
 		{
-			$this->data = $source;
+			if ($reference)
+			{
+				$this->data = &$source;
+			}
+			else
+			{
+				$this->data = $source;
+			}
 		}
 	}
 
@@ -310,7 +318,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @return  array|null
 	 */
-	public function getByPath($paths, $default = null, $filter = 'cmd')
+	public function getByPath($paths, $default = null, $filter = InputFilter::CMD)
 	{
 		if (empty($paths))
 		{

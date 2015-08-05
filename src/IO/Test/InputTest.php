@@ -84,6 +84,26 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * testPrepareSource
+	 *
+	 * @return  void
+	 */
+	public function testPrepareSource()
+	{
+		$_REQUEST['foo'] = 'bar';
+
+		$instance = new Input;
+
+		$instance->prepareSource($_REQUEST, true);
+
+		$this->assertSame($_REQUEST, TestHelper::getValue($instance, 'data'));
+
+		$instance->set('foo', 'baz');
+
+		$this->assertEquals('baz', $instance->get('foo'));
+	}
+
+	/**
 	 * Method to test __get().
 	 *
 	 * @return void

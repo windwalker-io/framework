@@ -18,11 +18,12 @@ class Cookie extends Input
 	/**
 	 * Prepare source.
 	 *
-	 * @param   array  $source  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   array    $source     Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   boolean  $reference  If set to true, he source in first argument will be reference.
 	 *
 	 * @return  void
 	 */
-	protected function prepareSource($source = null)
+	public function prepareSource(&$source = null, $reference = false)
 	{
 		$this->data = &$_COOKIE;
 	}
