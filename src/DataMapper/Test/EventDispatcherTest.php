@@ -48,6 +48,11 @@ class EventDispatcherTest extends AbstractBaseTestCase
 		$this->instance->getDispatcher()->addListener($this->listener);
 	}
 
+	/**
+	 * testFind
+	 *
+	 * @return  void
+	 */
 	public function testFind()
 	{
 		$this->instance->find(array('id' => 5), 'created', 5, 10);
@@ -56,10 +61,12 @@ class EventDispatcherTest extends AbstractBaseTestCase
 		$this->assertEquals(array('id' => 5), $this->listener->beforeEvent['conditions']);
 		$this->assertEquals(array('created'), $this->listener->beforeEvent['order']);
 		$this->assertEquals(5, $this->listener->beforeEvent['start']);
-		$this->assertEquals(10, $this->listener->beforeEvent['limit']);
+
+		// Listener will change limit to 20
+		$this->assertEquals(20, $this->listener->beforeEvent['limit']);
 		$this->assertEquals(20, $this->instance->args[3]);
 
 		$this->assertEquals('onAfterFind', $this->listener->afterEvent->getName());
-		$this->assertEquals(array('doFind'), $this->listener->afterEvent['result']->method);
+		$this->assertEquals(array('doFind', 'After'), $this->listener->afterEvent['result']->method);
 	}
 }

@@ -8,6 +8,7 @@
 
 namespace Windwalker\DataMapper\Test\Stub;
 
+use Windwalker\Data\Data;
 use Windwalker\Event\Event;
 
 /**
@@ -42,7 +43,7 @@ class StubDataMapperListener
 	{
 		$this->beforeEvent = clone $event;
 
-		$event['limit'] = 20;
+		$event->setArgument('limit', 20);
 	}
 
 	/**
@@ -55,6 +56,10 @@ class StubDataMapperListener
 	public function onAfterFind(Event $event)
 	{
 		$this->afterEvent = clone $event;
+
+
+
+		$event['result'][] = array('method' => 'After');
 	}
 
 	/**

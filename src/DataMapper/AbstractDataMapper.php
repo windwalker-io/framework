@@ -826,11 +826,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			call_user_func($innerListener, $event);
 		}
 
-		foreach ($event->getArguments() as $name => $value)
-		{
-			$args[$name] = &$value;
-		}
-
 		return $event;
 	}
 
