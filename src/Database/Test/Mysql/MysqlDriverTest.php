@@ -452,6 +452,24 @@ SQL;
 		$item = $this->db->setQuery($query)->loadOne('assoc');
 
 		$this->assertEquals('Apple Blossom', $item['title']);
+
+		// Test bind params
+		$query = $this->db->getQuery(true);
+
+		$id = 4;
+
+		echo $query->select('*')
+			->from('#__flower')
+			->where('id = :id')
+			->bind('id', $id);
+
+		$item = $this->db->setQuery($query)->loadOne();
+
+		$this->assertEquals('Apple Blossom', $item->title);
+
+		$item = $this->db->setQuery($query)->loadOne('assoc');
+
+		$this->assertEquals('Apple Blossom', $item['title']);
 	}
 
 	/**

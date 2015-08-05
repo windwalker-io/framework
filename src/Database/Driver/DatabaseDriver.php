@@ -142,6 +142,13 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	protected $transaction;
 
 	/**
+	 * Property lastQuery.
+	 *
+	 * @var  string
+	 */
+	protected $lastQuery;
+
+	/**
 	 * Property profiler.
 	 *
 	 * @var  \Closure[]
@@ -239,7 +246,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 			throw $e;
 		}
 
-		!is_callable($this->profiler['after']) or call_user_func_array($this->profiler['after'], array($this, $sql));
+		!is_callable($this->profiler['after']) or call_user_func_array($this->profiler['after'], array($this, $this->lastQuery));
 
 		return $this;
 	}
