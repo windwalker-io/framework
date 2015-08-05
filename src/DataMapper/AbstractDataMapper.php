@@ -15,7 +15,6 @@ use Windwalker\Data\DataSetInterface;
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherInterface;
 use Windwalker\Event\Event;
-use Windwalker\Event\EventInterface;
 use Windwalker\Event\ListenerMapper;
 
 /**

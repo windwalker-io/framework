@@ -56,6 +56,18 @@ class DataMapperTest extends DatabaseTest
 		$this->assertEquals(array(1, 2, 3), $dataset->id);
 		$this->assertEquals(array('Alstroemeria', 'Amaryllis', 'Anemone'), $dataset->title);
 
+		$dataset = $this->instance->find(null, null, 0, 3);
+
+		$this->assertEquals(array(), $dataset->id);
+
+		$dataset = $this->instance->find(0, null, 0, 3);
+
+		$this->assertEquals(array(), $dataset->id);
+
+		$dataset = $this->instance->find(false, null, 0, 3);
+
+		$this->assertEquals(array(), $dataset->id);
+
 		$dataset = $this->instance->find(array('state' => 1), 'ordering DESC', 2, 3);
 
 		$this->assertEquals(array(1, 1, 1), $dataset->state);
