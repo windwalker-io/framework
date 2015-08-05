@@ -21,16 +21,9 @@ class StubDataMapperListener
 	/**
 	 * Property lastEvent.
 	 *
-	 * @var  Event
+	 * @var  Event[]
 	 */
-	public $beforeEvent;
-
-	/**
-	 * Property afterEvent.
-	 *
-	 * @var  Event
-	 */
-	public $afterEvent;
+	public $events;
 
 	/**
 	 * onFind
@@ -41,7 +34,7 @@ class StubDataMapperListener
 	 */
 	public function onBeforeFind(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
 
 		$event->setArgument('limit', 20);
 	}
@@ -55,9 +48,7 @@ class StubDataMapperListener
 	 */
 	public function onAfterFind(Event $event)
 	{
-		$this->afterEvent = clone $event;
-
-
+		$this->events[__FUNCTION__] = clone $event;
 
 		$event['result'][] = array('method' => 'After');
 	}
@@ -71,7 +62,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeFindAll(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['limit'] = 20;
 	}
 
 	/**
@@ -83,7 +76,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterFindAll(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'][] = array('method' => 'After');
 	}
 
 	/**
@@ -95,7 +90,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeFindOne(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['order'] = 'id';
 	}
 
 	/**
@@ -107,7 +104,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterFindOne(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result']->foo = 'after';
 	}
 
 	/**
@@ -119,7 +118,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeFindColumn(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['column'] = 'bar';
 	}
 
 	/**
@@ -131,7 +132,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterFindColumn(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'After';
 	}
 
 	/**
@@ -143,7 +146,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeCreate(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['dataset'] = array();
 	}
 
 	/**
@@ -155,7 +160,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterCreate(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'after';
 	}
 
 	/**
@@ -167,7 +174,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeCreateOne(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['data'] = array();
 	}
 
 	/**
@@ -179,7 +188,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterCreateOne(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'after';
 	}
 
 	/**
@@ -191,7 +202,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeUpdate(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['confFields'] = 'state';
 	}
 
 	/**
@@ -203,7 +216,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterUpdate(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'after';
 	}
 
 	/**
@@ -215,7 +230,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeUpdateOne(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['confFields'] = 'state';
 	}
 
 	/**
@@ -227,7 +244,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterUpdateOne(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'after';
 	}
 
 	/**
@@ -239,7 +258,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeSave(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['confFields'] = 'state';
 	}
 
 	/**
@@ -251,7 +272,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterSave(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'after';
 	}
 
 	/**
@@ -263,7 +286,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeSaveOne(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['confFields'] = 'state';
 	}
 
 	/**
@@ -275,7 +300,9 @@ class StubDataMapperListener
 	 */
 	public function onAfterSaveOne(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'after';
 	}
 
 	/**
@@ -287,7 +314,9 @@ class StubDataMapperListener
 	 */
 	public function onBeforeFlush(Event $event)
 	{
-		$this->beforeEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['conditions'] = array('state' => 1);
 	}
 
 	/**
@@ -299,6 +328,36 @@ class StubDataMapperListener
 	 */
 	public function onAfterFlush(Event $event)
 	{
-		$this->afterEvent = clone $event;
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'after';
+	}
+
+	/**
+	 * onBeforeDelete
+	 *
+	 * @param Event $event
+	 *
+	 * @return  void
+	 */
+	public function onBeforeDelete(Event $event)
+	{
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['conditions'] = array('state' => 1);
+	}
+
+	/**
+	 * onAfterDelete
+	 *
+	 * @param Event $event
+	 *
+	 * @return  void
+	 */
+	public function onAfterDelete(Event $event)
+	{
+		$this->events[__FUNCTION__] = clone $event;
+
+		$event['result'] = 'after';
 	}
 }

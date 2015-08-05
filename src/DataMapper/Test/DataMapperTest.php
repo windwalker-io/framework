@@ -325,7 +325,7 @@ class DataMapperTest extends DatabaseTest
 		$newDataset = $this->loadToDataset('SELECT * FROM ww_flower WHERE catid = 3');
 
 		$this->assertEquals(array('Baby\'s Breath2', 'Bachelor Button2', 'Begonia2'), $newDataset->title);
-		$this->assertEquals(array(94, 95, 96), $returns->id);
+		$this->assertEquals(array(94, 95, 96), $newDataset->id);
 	}
 
 	/**
