@@ -33,4 +33,3 @@ interface EventInterface
 	 */
 	public function isStopped();
 }
-

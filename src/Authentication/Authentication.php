@@ -6,18 +6,16 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Authenticate;
+namespace Windwalker\Authentication;
 
-use Windwalker\Authenticate\Method\MethodInterface;
+use Windwalker\Authentication\Method\MethodInterface;
 
 /**
- * The Authenticate class.
+ * The Authentication class.
  * 
  * @since  2.0
- *
- * @deprecated  Use Authentication package instead.
  */
-class Authenticate
+class Authentication
 {
 	const SUCCESS = 1;
 

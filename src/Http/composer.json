@@ -2,7 +2,7 @@
     "name": "windwalker/http",
     "type": "windwalker-package",
     "description": "Windwalker Http package",
-    "keywords": ["windwalker", "framework", "http"],
+    "keywords": ["windwalker", "framework", "http", "psr7", "request"],
     "homepage": "https://github.com/ventoviro/windwalker-http",
     "license": "LGPL-2.0+",
     "require": {

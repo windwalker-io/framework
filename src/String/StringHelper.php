@@ -76,7 +76,7 @@ abstract class StringHelper
 	 *
 	 * @return  string Quoted string.
 	 */
-	public static function quote($string, $quote = array('{@', '@}'))
+	public static function quote($string, $quote = array('"', '"'))
 	{
 		$quote = (array) $quote;
 
@@ -195,5 +195,92 @@ abstract class StringHelper
 		}
 
 		return $string;
+	}
+
+	/**
+	 * at
+	 *
+	 * @param string $string
+	 * @param int    $num
+	 *
+	 * @return  string
+	 */
+	public static function at($string, $num)
+	{
+		$num = (int) $num;
+
+		if (Utf8String::strlen($string) < $num)
+		{
+			return null;
+		}
+
+		return Utf8String::substr($string, $num, 1);
+	}
+
+	/**
+	 * remove spaces
+	 *
+	 * See: http://stackoverflow.com/questions/3760816/remove-new-lines-from-string
+	 * And: http://stackoverflow.com/questions/9558110/php-remove-line-break-or-cr-lf-with-no-success
+	 *
+	 * @param string $string
+	 *
+	 * @return  string
+	 */
+	public static function collapseWhitespace($string)
+	{
+		$string = preg_replace('/\s\s+/', ' ', $string);
+
+		return trim(preg_replace('/\s+/', ' ', $string));
+	}
+
+	/**
+	 * endsWith
+	 *
+	 * @param string  $string
+	 * @param string  $target
+	 * @param boolean $caseSensitive
+	 *
+	 * @return  boolean
+	 */
+	public static function endsWith($string, $target, $caseSensitive = true)
+	{
+		$stringLength = Utf8String::strlen($string);
+		$targetLength = Utf8String::strlen($target);
+
+		if ($stringLength < $targetLength)
+		{
+			return false;
+		}
+
+		if (!$caseSensitive)
+		{
+			$string = strtolower($string);
+			$target = strtolower($target);
+		}
+
+		$end = Utf8String::substr($string, -$targetLength);
+
+		return $end === $target;
+	}
+
+	/**
+	 * startsWith
+	 *
+	 * @param string  $string
+	 * @param string  $target
+	 * @param boolean $caseSensitive
+	 *
+	 * @return  boolean
+	 */
+	public static function startsWith($string, $target, $caseSensitive = true)
+	{
+		if (!$caseSensitive)
+		{
+			$string = strtolower($string);
+			$target = strtolower($target);
+		}
+
+		return strpos($string, $target) === 0;
 	}
 }

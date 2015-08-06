@@ -186,13 +186,14 @@ class QueryHelper
 	{
 		foreach ($conditions as $key => $value)
 		{
-			if (empty($value))
+			// NULL
+			if ($value === null)
 			{
-				continue;
+				$query->where($query->format('%n = NULL', $key));
 			}
 
 			// If using Compare class, we convert it to string.
-			if ($value instanceof Compare)
+			elseif ($value instanceof Compare)
 			{
 				$query->where((string) static::buildCompare($key, $value, $query));
 			}
@@ -200,7 +201,7 @@ class QueryHelper
 			// If key is numeric, just send value to query where.
 			elseif (is_numeric($key))
 			{
-				$query->where((string) $value);
+				$query->where($query->format('%n = %a', $key, $value));
 			}
 
 			// If is array or object, we use "IN" condition.

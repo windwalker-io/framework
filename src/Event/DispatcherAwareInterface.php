@@ -14,15 +14,19 @@ namespace Windwalker\Event;
 interface DispatcherAwareInterface
 {
 	/**
-	 * Trigger an event.
+	 * getDispatcher
 	 *
-	 * @param   EventInterface|string $event The event object or name.
-	 * @param   array                 $args  The arguments.
-	 *
-	 * @return  EventInterface  The event after being passed through all listeners.
-	 *
-	 * @since   2.0
+	 * @return  DispatcherInterface
 	 */
-	public function triggerEvent($event, $args = array());
+	public function getDispatcher();
+
+	/**
+	 * setDispatcher
+	 *
+	 * @param   DispatcherInterface  $dispatcher
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDispatcher(DispatcherInterface $dispatcher);
 }
 

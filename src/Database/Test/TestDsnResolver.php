@@ -8,12 +8,14 @@
 
 namespace Windwalker\Database\Test;
 
+use Windwalker\Database\Driver\Pdo\PdoHelper;
+
 /**
  * The DsnResolver class.
  * 
  * @since  2.0
  */
-abstract class DsnResolver
+abstract class TestDsnResolver
 {
 	/**
 	 * getDsn
@@ -36,10 +38,6 @@ abstract class DsnResolver
 			return false;
 		}
 
-		// Parse DSN to array
-		$dsn = str_replace(';', "\n", $dsn);
-		$dsn = parse_ini_string($dsn);
-
-		return $dsn;
+		return PdoHelper::extractDsn($dsn);
 	}
 }

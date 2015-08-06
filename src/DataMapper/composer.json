@@ -12,10 +12,12 @@
     "require-dev": {
 		"windwalker/database": "~2.0",
         "windwalker/test": "~2.0",
-        "windwalker/compare": "~2.0"
+        "windwalker/compare": "~2.0",
+        "windwalker/event": "~2.0"
     },
     "suggest": {
         "windwalker/database": "Install 2.* if you want Windwalker Database.",
+        "windwalker/event": "Install 2.* if you want to use hooks.",
         "windwalker/compare": "Install 2.* if you want to use Compare object."
     },
     "minimum-stability": "beta",

@@ -20,6 +20,13 @@ define('WINDWALKER_ROOT', realpath(__DIR__ . '/..'));
 class Build extends AbstractCliApplication
 {
 	/**
+	 * Property organization.
+	 *
+	 * @var  string
+	 */
+	protected $organization = 'ventoviro';
+
+	/**
 	 * Property lastOutput.
 	 *
 	 * @var  mixed
@@ -55,6 +62,7 @@ class Build extends AbstractCliApplication
 	protected $subtrees = array(
 		'application' => 'Application',
 		'authenticate' => 'Authenticate',
+		'authentication' => 'Authentication',
 		'cache'      => 'Cache',
 		'compare'    => 'Compare',
 		'console'    => 'Console',
@@ -71,6 +79,7 @@ class Build extends AbstractCliApplication
 		'filter'     => 'Filter',
 		'form'       => 'Form',
 		'html'       => 'Html',
+		'http'       => 'Http',
 		'io'         => 'IO',
 		'language'   => 'Language',
 		'loader'     => 'Loader',
@@ -94,10 +103,15 @@ class Build extends AbstractCliApplication
 	/**
 	 * Method to run this application.
 	 *
-	 * @return  void
+	 * @return  boolean
 	 */
 	protected function doExecute()
 	{
+		if ($this->io->getOption('h'))
+		{
+			return $this->help();
+		}
+
 		$this->tag = $tag = $this->io->getOption('t') ? : $this->io->getOption('tag');
 
 		$branch = $this->io->getOption('b') ?: $this->io->getOption('branch', 'test');
@@ -143,6 +157,8 @@ class Build extends AbstractCliApplication
 		$this->exec('git checkout staging');
 
 		$this->out()->out('Split finish.');
+
+		return true;
 	}
 
 	/**
@@ -165,7 +181,7 @@ class Build extends AbstractCliApplication
 		$this->exec(sprintf('git branch -D %s-%s', $this->branch, $subtree));
 
 		// Add remote repo
-		$this->exec(sprintf('git remote add %s git@github.com:ventoviro/windwalker-%s.git', $subtree, $subtree));
+		$this->exec(sprintf('git remote add %s git@github.com:%s/windwalker-%s.git', $subtree, $this->organization, $subtree));
 
 		$force = $this->io->getOption('f') ? : $this->io->getOption('force', false);
 
@@ -224,6 +240,33 @@ class Build extends AbstractCliApplication
 		$return = exec(trim($command), $this->lastOutput, $this->lastReturn);
 
 		$this->out($return);
+	}
+
+	/**
+	 * help
+	 *
+	 * @return  boolean
+	 */
+	protected function help()
+	{
+		$help = <<<HELP
+Windwalker Build Command.
+
+Will run subtree split and push every packages to it's repos.
+
+Usage: php build.php [-t] [-b=test] [-f] [--dry-run] [--no-replace]
+
+-t              Git tag of this build, will push to main repo and every subtree.
+-b              Get branch to push, will  push to main repo and every subtree.
+-f              Override commits or not.
+--dry-run       Do not real push, just run the subtree split process.
+--no-replace    Do not replace the docblock variables.
+
+HELP;
+
+		$this->out($help);
+
+		return true;
 	}
 
 	/**

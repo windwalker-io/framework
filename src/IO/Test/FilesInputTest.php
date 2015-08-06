@@ -102,6 +102,38 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertEquals($expected, $this->instance->get('myfile'));
+
+		$data2 = array(
+			'foo' => array(
+				'name' => array(
+					'myfile' => 'n',
+					'myfile2' => 'nn'
+				),
+				'type' => array(
+					'myfile' => 'ty',
+					'myfile2' => 'ttyy'
+				),
+				'tmp_name' => array(
+					'myfile' => 'tm',
+					'myfile2' => 'ttmm'
+				),
+				'error' => array(
+					'myfile' => 'e',
+					'myfile2' => 'ee'
+				),
+				'size' => array(
+					'myfile' => 's',
+					'myfile2' => 'ss'
+				)
+			)
+		);
+
+		TestHelper::setValue($this->instance, 'data', $data2);
+
+		$this->assertEquals($data, $this->instance->get('foo'));
+
+		// We don't convert data structure for getByPath() now.
+		$this->assertEquals('n', $this->instance->getByPath('foo.name.myfile'));
 	}
 
 	/**

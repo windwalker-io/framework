@@ -48,10 +48,10 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->instance->hasEvent('onTest'));
 		$this->assertSame($event, $this->instance->getEvent('onTest'));
 
-		$immutableEvent = new EventImmutable('onAfterSomething');
-		$this->instance->setEvent($immutableEvent);
-		$this->assertTrue($this->instance->hasEvent('onAfterSomething'));
-		$this->assertSame($immutableEvent, $this->instance->getEvent('onAfterSomething'));
+//		$immutableEvent = new EventImmutable('onAfterSomething');
+//		$this->instance->setEvent($immutableEvent);
+//		$this->assertTrue($this->instance->hasEvent('onAfterSomething'));
+//		$this->assertSame($immutableEvent, $this->instance->getEvent('onAfterSomething'));
 
 		// Setting an existing event will replace the old one.
 		$eventCopy = new Event('onTest');
@@ -75,10 +75,10 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->instance->hasEvent('onTest'));
 		$this->assertSame($event, $this->instance->getEvent('onTest'));
 
-		$immutableEvent = new EventImmutable('onAfterSomething');
-		$this->instance->addEvent($immutableEvent);
-		$this->assertTrue($this->instance->hasEvent('onAfterSomething'));
-		$this->assertSame($immutableEvent, $this->instance->getEvent('onAfterSomething'));
+//		$immutableEvent = new EventImmutable('onAfterSomething');
+//		$this->instance->addEvent($immutableEvent);
+//		$this->assertTrue($this->instance->hasEvent('onAfterSomething'));
+//		$this->assertSame($immutableEvent, $this->instance->getEvent('onAfterSomething'));
 
 		// Adding an existing event will have no effect.
 		$eventCopy = new Event('onTest');
@@ -761,6 +761,25 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->instance->addListener($mockedListener);
 
 		$this->instance->triggerEvent('onSomething');
+	}
+
+	/**
+	 * testTriggerEventReference
+	 *
+	 * @return  void
+	 */
+	public function testTriggerEventReference()
+	{
+		$event = new Event('onSomething');
+
+		$foo = 'foo';
+		$args = array('foo' => &$foo);
+
+		$this->instance->triggerEvent($event, $args);
+
+		$event->setArgument('foo', 'bar');
+
+		$this->assertEquals('bar', $foo);
 	}
 
 	/**

@@ -25,6 +25,22 @@ class PdoHelper
 	private static $options = array();
 
 	/**
+	 * extractDsn
+	 *
+	 * @param   string  $dsn
+	 *
+	 * @return  array
+	 */
+	public static function extractDsn($dsn)
+	{
+		// Parse DSN to array
+		$dsn = str_replace(';', "\n", $dsn);
+		$dsn = parse_ini_string($dsn);
+
+		return $dsn;
+	}
+
+	/**
 	 * getDsn
 	 *
 	 * @param string $driver

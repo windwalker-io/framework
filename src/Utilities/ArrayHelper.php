@@ -70,7 +70,7 @@ abstract class ArrayHelper
 		{
 			if (is_array($v))
 			{
-				$obj->$k = self::toObject($v, $class);
+				$obj->$k = static::toObject($v, $class);
 			}
 			else
 			{
@@ -79,6 +79,44 @@ abstract class ArrayHelper
 		}
 
 		return $obj;
+	}
+
+	/**
+	 * Utility function to convert all types to an array.
+	 *
+	 * @param   mixed  $data       The data to convert.
+	 * @param   bool   $recursive  Recursive if data is nested.
+	 *
+	 * @return  array  The converted array.
+	 */
+	public static function toArray($data, $recursive = false)
+	{
+		// Ensure the input data is an array.
+		if ($data instanceof \Traversable)
+		{
+			$data = iterator_to_array($data);
+		}
+		elseif (is_object($data))
+		{
+			$data = get_object_vars($data);
+		}
+		else
+		{
+			$data = (array) $data;
+		}
+
+		if ($recursive)
+		{
+			foreach ($data as &$value)
+			{
+				if (is_array($value) || is_object($value))
+				{
+					$value = static::toArray($value, $recursive);
+				}
+			}
+		}
+
+		return $data;
 	}
 
 	/**
@@ -133,7 +171,7 @@ abstract class ArrayHelper
 	{
 		if (is_object($source))
 		{
-			return self::arrayFromObject($source, $recurse, $regex);
+			return static::arrayFromObject($source, $recurse, $regex);
 		}
 		else
 		{

@@ -1,0 +1,25 @@
+{
+    "name": "windwalker/authentication",
+    "type": "windwalker-package",
+    "description": "Windwalker Authentication package",
+    "keywords": ["windwalker", "framework", "authentication"],
+    "homepage": "https://github.com/ventoviro/windwalker-authentication",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10"
+    },
+    "require-dev": {
+        "windwalker/test": "~2.0"
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Authentication\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
+}

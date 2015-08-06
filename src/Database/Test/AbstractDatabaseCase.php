@@ -73,7 +73,7 @@ abstract class AbstractDatabaseCase extends \PHPUnit_Framework_TestCase
 			throw new \LogicException('static::$driver variable is empty.');
 		}
 
-		static::$dsn = $dsn = DsnResolver::getDsn(static::$driver);
+		static::$dsn = $dsn = TestDsnResolver::getDsn(static::$driver);
 
 		if (!$dsn)
 		{

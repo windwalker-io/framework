@@ -53,7 +53,8 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	public function __construct($name, array $arguments = array())
 	{
 		$this->name = $name;
-		$this->arguments = $arguments;
+
+		$this->mergeArguments($arguments);
 	}
 
 	/**
@@ -139,7 +140,9 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 */
 	public function setArguments(array $arguments)
 	{
-		$this->arguments = $arguments;
+		$this->clearArguments();
+
+		$this->mergeArguments($arguments);
 
 		return $this;
 	}
@@ -183,6 +186,23 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	}
 
 	/**
+	 * mergeArguments
+	 *
+	 * @param   array  $arguments
+	 *
+	 * @return  static
+	 */
+	public function mergeArguments(array $arguments)
+	{
+		foreach ($arguments as $key => &$value)
+		{
+			$this->arguments[$key] = &$value;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Remove an event argument.
 	 *
 	 * @param   string  $name  The argument name.
@@ -208,17 +228,18 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	/**
 	 * Clear all event arguments.
 	 *
-	 * @return  array  The old arguments.
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 */
 	public function clearArguments()
 	{
-		$arguments = $this->arguments;
+		// Break the reference
+		unset($this->arguments);
 
 		$this->arguments = array();
 
-		return $arguments;
+		return $this;
 	}
 
 	/**

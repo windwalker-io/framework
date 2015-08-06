@@ -25,6 +25,23 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	private $instance;
 
 	/**
+	 * testConstruct
+	 *
+	 * @return  void
+	 */
+	public function testConstruct()
+	{
+		$foo = 'foo';
+		$args = array('foo' => &$foo);
+
+		$event = new Event('onTest', $args);
+
+		$event->setArgument('foo', 'bar');
+
+		$this->assertEquals('bar', $foo);
+	}
+
+	/**
 	 * Test the getName method.
 	 *
 	 * @return  void
@@ -62,8 +79,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 			'array' => $array
 		);
 
-		/** @var $event \Windwalker\Event\Event */
-		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', array('test', $arguments));
+		$event = new Event('onTest', $arguments);
 
 		$this->assertEquals('bar', $event->getArgument('string'));
 		$this->assertSame($object, $event->getArgument('object'));
@@ -113,8 +129,10 @@ class EventTest extends \PHPUnit_Framework_TestCase
 			'array' => $array
 		);
 
+		$args = array('test', $arguments);
+
 		/** @var $event \Windwalker\Event\Event */
-		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', array('test', $arguments));
+		$event = new Event('onTest', $arguments);
 
 		$this->assertSame($arguments, $event->getArguments());
 	}
@@ -178,7 +196,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 			'array' => $array
 		);
 
-		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', array('test', $arguments));
+		$event = new Event('onTest', $arguments);
 
 		$serialized = serialize($event);
 
@@ -229,7 +247,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 			'array' => $array
 		);
 
-		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', array('test', $arguments));
+		$event = new Event('onTest', $arguments);
 
 		$this->assertEquals('bar', $event['string']);
 		$this->assertSame($object, $event['object']);
@@ -362,9 +380,9 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
 		$event = new Event('test', $arguments);
 
-		$oldArguments = $event->clearArguments();
+		$self = $event->clearArguments();
 
-		$this->assertSame($oldArguments, $arguments);
+		$this->assertSame($self, $event);
 		$this->assertFalse($event->hasArgument('test'));
 		$this->assertFalse($event->hasArgument('foo'));
 	}

@@ -6,14 +6,12 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Authenticate\Method;
+namespace Windwalker\Authentication\Method;
 
 /**
  * The AbstractMethod class.
  * 
  * @since  2.0
- *
- * @deprecated  Use Authentication package instead.
  */
 abstract class AbstractMethod implements MethodInterface
 {
