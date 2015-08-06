@@ -465,7 +465,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	protected function bindData(&$parent, $data, $recursive = true)
 	{
 		// Ensure the input data is an array.
-		if (is_object($data))
+		if ($data instanceof \Traversable)
+		{
+			$data = iterator_to_array($data);
+		}
+		elseif (is_object($data))
 		{
 			$data = get_object_vars($data);
 		}

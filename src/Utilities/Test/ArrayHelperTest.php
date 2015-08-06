@@ -23,7 +23,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestArrayUnique()
 	{
@@ -52,7 +52,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestFromObject()
 	{
@@ -236,7 +236,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestGetColumn()
 	{
@@ -309,7 +309,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestGetValue()
 	{
@@ -371,7 +371,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestInvert()
 	{
@@ -438,7 +438,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestPivot()
 	{
@@ -539,7 +539,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestSortObject()
 	{
@@ -1134,7 +1134,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToInteger()
 	{
@@ -1178,7 +1178,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToObject()
 	{
@@ -1263,7 +1263,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToString()
 	{
@@ -1381,6 +1381,45 @@ class ArrayHelperTest extends AbstractBaseTestCase
 				'Should turn multiple dimension array into single string with " = " and no spaces with outer key',
 				false
 			),
+		);
+	}
+
+	/**
+	 * Data provider for object inputs
+	 *
+	 * @return  array
+	 *
+	 * @since   2.0
+	 */
+	public function seedTestToArray()
+	{
+		return array(
+			'string' => array(
+				'foo',
+				false,
+				array('foo')
+			),
+			'array' => array(
+				array('foo'),
+				false,
+				array('foo')
+			),
+			'array_recursive' => array(
+				array('foo' => array(
+					(object) array('bar' => 'bar'),
+					(object) array('baz' => 'baz')
+				)),
+				true,
+				array('foo' => array(
+					array('bar' => 'bar'),
+					array('baz' => 'baz')
+				))
+			),
+			'iterator' => array(
+				array('foo' => new \ArrayIterator(array('bar' => 'baz'))),
+				true,
+				array('foo' => array('bar' => 'baz'))
+			)
 		);
 	}
 
@@ -1556,7 +1595,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @sovers  ArrayHelper::isAssociative
 	 */
 	public function testIsAssociative()
@@ -1739,6 +1778,23 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	}
 
 	/**
+	 * testToArray
+	 *
+	 * @param $input
+	 * @param $recursive
+	 * @param $expect
+	 *
+	 * @return  void
+	 *
+	 * @dataProvider  seedTestToArray
+	 * @covers        Windwalker\Utilities\ArrayHelper::toArray
+	 */
+	public function testToArray($input, $recursive, $expect)
+	{
+		$this->assertEquals($expect, ArrayHelper::toArray($input, $recursive));
+	}
+
+	/**
 	 * Tests converting array to string.
 	 *
 	 * @param   array    $input     The array being input
@@ -1775,7 +1831,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\Utilities\ArrayHelper::arraySearch
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testArraySearch()
 	{
@@ -1800,7 +1856,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\Utilities\ArrayHelper::flatten
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testFlatten()
 	{
