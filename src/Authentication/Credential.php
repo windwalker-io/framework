@@ -6,14 +6,12 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Authenticate;
+namespace Windwalker\Authentication;
 
 /**
  * The Credential class.
  * 
  * @since  2.0
- *
- * @deprecated  Use Authentication package instead.
  */
 class Credential implements \ArrayAccess
 {

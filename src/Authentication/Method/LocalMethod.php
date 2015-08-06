@@ -6,17 +6,15 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Authenticate\Method;
+namespace Windwalker\Authentication\Method;
 
-use Windwalker\Authenticate\Authenticate;
-use Windwalker\Authenticate\Credential;
+use Windwalker\Authentication\Authentication;
+use Windwalker\Authentication\Credential;
 
 /**
  * The LocalMethod class.
  * 
  * @since  2.0
- *
- * @deprecated  Use Authentication package instead.
  */
 class LocalMethod extends AbstractMethod
 {
@@ -58,7 +56,7 @@ class LocalMethod extends AbstractMethod
 
 		if (!$username || !$password)
 		{
-			$this->status = Authenticate::EMPTY_CREDENTIAL;
+			$this->status = Authentication::EMPTY_CREDENTIAL;
 
 			return false;
 		}
@@ -77,7 +75,7 @@ class LocalMethod extends AbstractMethod
 
 			if (!isset($user['password']))
 			{
-				$this->status = Authenticate::INVALID_CREDENTIAL;
+				$this->status = Authentication::INVALID_CREDENTIAL;
 
 				return false;
 			}
@@ -86,17 +84,17 @@ class LocalMethod extends AbstractMethod
 
 			if (call_user_func_array($handler, array($password, $user['password'])))
 			{
-				$this->status = Authenticate::SUCCESS;
+				$this->status = Authentication::SUCCESS;
 
 				return true;
 			}
 
-			$this->status = Authenticate::INVALID_CREDENTIAL;
+			$this->status = Authentication::INVALID_CREDENTIAL;
 
 			return false;
 		}
 
-		$this->status = Authenticate::USER_NOT_FOUND;
+		$this->status = Authentication::USER_NOT_FOUND;
 
 		return false;
 	}
@@ -162,4 +160,3 @@ class LocalMethod extends AbstractMethod
 		return $this;
 	}
 }
- 

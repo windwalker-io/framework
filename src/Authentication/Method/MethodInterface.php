@@ -6,9 +6,9 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Authenticate\Method;
+namespace Windwalker\Authentication\Method;
 
-use Windwalker\Authenticate\Credential;
+use Windwalker\Authentication\Credential;
 
 /**
  * Interface MethodInterface
