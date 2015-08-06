@@ -60,6 +60,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testQuote()
 	{
+		$this->assertEquals('"foo"', StringHelper::quote('foo'));
 		$this->assertEquals('"foo"', StringHelper::quote('foo', '"'));
 		$this->assertEquals('"foo"', StringHelper::quote('foo', array('"', '"')));
 		$this->assertEquals('[foo]', StringHelper::quote('foo', array('[', ']')));
@@ -133,5 +134,62 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 			$expected,
 			StringHelper::increment($string, $style, $number)
 		);
+	}
+
+	/**
+	 * testAt
+	 *
+	 * @return  void
+	 */
+	public function testAt()
+	{
+		$string = 'Foo Bar';
+
+		$this->assertEquals('F', StringHelper::at($string, 0));
+		$this->assertEquals('o', StringHelper::at($string, 1));
+		$this->assertNull(StringHelper::at($string, 10));
+	}
+
+	/**
+	 * testEndsWith
+	 *
+	 * @return  void
+	 */
+	public function testEndsWith()
+	{
+		$string = 'Foo';
+
+		$this->assertTrue(StringHelper::endsWith($string, 'oo'));
+		$this->assertFalse(StringHelper::endsWith($string, 'Oo'));
+		$this->assertTrue(StringHelper::endsWith($string, 'Oo', false));
+		$this->assertFalse(StringHelper::endsWith($string, 'ooooo'));
+		$this->assertFalse(StringHelper::endsWith($string, 'uv'));
+	}
+
+	/**
+	 * testStartsWith
+	 *
+	 * @return  void
+	 */
+	public function testStartsWith()
+	{
+		$string = 'Foo';
+
+		$this->assertTrue(StringHelper::startsWith($string, 'Fo'));
+		$this->assertFalse(StringHelper::startsWith($string, 'fo'));
+		$this->assertTrue(StringHelper::startsWith($string, 'fo', false));
+		$this->assertFalse(StringHelper::startsWith($string, 'ooooo'));
+		$this->assertFalse(StringHelper::startsWith($string, 'uv'));
+	}
+
+	/**
+	 * testCollapseWhitespace
+	 *
+	 * @return  void
+	 */
+	public function testCollapseWhitespace()
+	{
+		$this->assertEquals('foo bar', StringHelper::collapseWhitespace(' foo   bar  '));
+		$this->assertEquals('foo bar', StringHelper::collapseWhitespace(" foo \n \r  bar \n "));
 	}
 }
