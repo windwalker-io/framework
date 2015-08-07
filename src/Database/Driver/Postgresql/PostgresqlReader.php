@@ -9,6 +9,7 @@
 namespace Windwalker\Database\Driver\Postgresql;
 
 use Windwalker\Database\Driver\Pdo\PdoReader;
+use Windwalker\Query\Query;
 
 /**
  * Class PostgresqlReader
@@ -26,11 +27,33 @@ class PostgresqlReader extends PdoReader
 	 *
 	 * @since   2.1
 	 */
-	public function insertId()
+	public function insertId($name = null)
 	{
+		if ($name)
+		{
+			$name = $this->db->replacePrefix($name);
+
+			// Error suppress this to prevent PDO warning us that the driver doesn't support this operation.
+			return @$this->db->getConnection()->lastInsertId($name);
+		}
+
 		$insertQuery = $this->db->getQuery();
 
-		$table = $insertQuery->insert->getElements();
+		if ($insertQuery instanceof Query)
+		{
+			$table = $insertQuery->insert->getElements();
+		}
+		else
+		{
+			preg_match('/insert\s*into\s*[\"]*(\W\w+)[\"]*/i', $insertQuery, $matches);
+
+			if (!isset($matches[1]))
+			{
+				return false;
+			}
+
+			$table = array($matches[1]);
+		}
 
 		/* find sequence column name */
 		$colNameQuery = $this->db->getQuery(true);

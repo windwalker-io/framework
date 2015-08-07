@@ -105,7 +105,7 @@ class PostgresqlDriverTest extends AbstractPostgresqlTestCase
 	{
 		// "INSERT INTO {$this->qn('#__flower')} ({$this->qn('catid')}) VALUES ('3')"
 		$this->db->setQuery(
-			$this->db->getQuery(true)
+			(string) $this->db->getQuery(true)
 				->insert('#__flower')
 				->columns('title, catid')
 				->values("'qwer', 3")
