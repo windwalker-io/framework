@@ -384,12 +384,11 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	 *
 	 * @param string $name
 	 * @param array  $columns
+	 * @param string $table
 	 *
-	 * @return  string
-	 *
-	 * @throws \InvalidArgumentException
+	 * @return string
 	 */
-	public static function buildIndexDeclare($name, $columns)
+	public static function buildIndexDeclare($name, $columns, $table = null)
 	{
 		$query = static::getQuery();
 		$cols  = array();
@@ -417,7 +416,11 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 
 		$name = $name ? $query->quoteName($name) . ' ' : '';
 
-		return $name . $cols;
+		return static::build(
+			$name ? $query->quoteName($name) : null,
+			$table ? 'ON ' . $query->quoteName($table) : null,
+			$cols
+		);
 	}
 
 	/**

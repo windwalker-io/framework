@@ -124,17 +124,6 @@ interface QueryBuilderInterface
 	public static function addIndex($table, $type, $name, $columns);
 
 	/**
-	 * dropIndex
-	 *
-	 * @param string $table
-	 * @param string $type
-	 * @param string $name
-	 *
-	 * @return  string
-	 */
-	public static function dropIndex($table, $type, $name);
-
-	/**
 	 * build
 	 *
 	 * @return  string

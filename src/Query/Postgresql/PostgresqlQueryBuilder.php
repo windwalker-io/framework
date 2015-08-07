@@ -159,20 +159,17 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 * @param array        $columns
 	 * @param array|string $pks
 	 * @param array        $keys
-	 * @param null         $autoIncrement
+	 * @param string       $inherits
 	 * @param bool         $ifNotExists
-	 * @param string       $engine
-	 * @param string       $defaultCharset
+	 * @param string       $tablespace
 	 *
-	 * @throws \InvalidArgumentException
-	 * @return  string
+	 * @return string
 	 */
-	public static function createTable($name, $columns, $pks = array(), $keys = array(), $autoIncrement = null,
-		$ifNotExists = true, $engine = 'InnoDB', $defaultCharset = 'utf8')
+	public static function createTable($name, $columns, $pks = array(), $keys = array(), $inherits = null,
+		$ifNotExists = true, $tablespace = null)
 	{
 		$query = static::getQuery();
 		$cols = array();
-		$engine = $engine ? : 'InnoDB';
 
 		foreach ($columns as $cName => $details)
 		{
@@ -190,18 +187,15 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 
 		if ($pks)
 		{
-			$pks = array(
-				'type' => 'PRIMARY KEY',
-				'columns' => (array) $pks
-			);
-
-			array_unshift($keys, $pks);
+			$cols[] = 'PRIMARY KEY ' . static::buildIndexDeclare(null, (array) $pks, null);
 		}
+
+		$indexes = array();
 
 		foreach ($keys as $key)
 		{
 			$define = array(
-				'type' => 'KEY',
+				'type' => 'INDEX',
 				'name' => null,
 				'columns' => array(),
 				'comment' => ''
@@ -214,8 +208,10 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 
 			$define = array_merge($define, $key);
 
-			$cols[] = $define['type'] . ' ' . static::buildIndexDeclare($define['name'], $define['columns']);
+			$indexes[] = 'CREATE ' . $define['type'] . ' ' . static::buildIndexDeclare($define['name'], $define['columns'], $name);
 		}
+
+		$indexes = implode(";\n", $indexes);
 
 		$cols = "(\n" . implode(",\n", $cols) . "\n)";
 
@@ -224,9 +220,9 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 			$ifNotExists ? 'IF NOT EXISTS' : null,
 			$query->quoteName($name),
 			$cols,
-			'ENGINE=' . $engine,
-			$autoIncrement ? 'AUTO_INCREMENT=' . $autoIncrement : null,
-			$defaultCharset ? 'DEFAULT CHARSET=' . $defaultCharset : null
+			$inherits ? 'INHERITS (' . implode(',', $query->quoteName((array) $inherits)) . ')' : null,
+			$tablespace ? 'TABLESPACE ' . $query->quoteName($tablespace) : null,
+			$indexes ? "\n;" . $indexes . ";" : null
 		);
 	}
 
@@ -252,22 +248,40 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	}
 
 	/**
+	 * comment
+	 *
+	 * @param string $object
+	 * @param string $table
+	 * @param string $column
+	 * @param string $comment
+	 *
+	 * @return string
+	 */
+	public static function comment($object = 'COLUMN', $table, $column, $comment)
+	{
+		$query = static::getQuery();
+
+		return static::build(
+			'COMMENT ON ' . $object,
+			$query->quoteName($table) . '.' . $query->quoteName($column),
+			'IS',
+			$query->quote($comment)
+		);
+	}
+
+	/**
 	 * alterColumn
 	 *
 	 * @param string $operation
 	 * @param string $table
 	 * @param string $column
 	 * @param string $type
-	 * @param bool   $unsigned
 	 * @param bool   $notNull
 	 * @param null   $default
-	 * @param null   $position
-	 * @param string $comment
 	 *
 	 * @return  string
 	 */
-	public static function alterColumn($operation, $table, $column, $type = 'text', $unsigned = false, $notNull = false, $default = null,
-		$position = null, $comment = '')
+	public static function alterColumn($operation, $table, $column, $type = 'text', $notNull = false, $default = null)
 	{
 		$query = static::getQuery();
 
@@ -277,13 +291,10 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 			'ALTER TABLE',
 			$query->quoteName($table),
 			$operation,
-			implode(' ', $column),
-			$type ? : 'text',
-			$unsigned ? 'UNSIGNED' : null,
+			implode(' TO ', $column),
+			$type,
 			$notNull ? 'NOT NULL' : null,
-			!is_null($default) ? 'DEFAULT ' . $query->quote($default) : null,
-			$comment ? 'COMMENT ' . $query->quote($comment) : null,
-			static::handleColumnPosition($position)
+			!is_null($default) ? 'DEFAULT ' . $query->quote($default) : null
 		);
 	}
 
@@ -293,18 +304,14 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 * @param string $table
 	 * @param string $column
 	 * @param string $type
-	 * @param bool   $signed
 	 * @param bool   $allowNull
 	 * @param string $default
-	 * @param string $position
-	 * @param string $comment
 	 *
 	 * @return  string
 	 */
-	public static function addColumn($table, $column, $type = 'text', $signed = false, $allowNull = false, $default = null,
-		$position = null, $comment = '')
+	public static function addColumn($table, $column, $type = 'text', $allowNull = false, $default = null)
 	{
-		return static::alterColumn('ADD', $table, $column, $type, $signed, $allowNull, $default, $position, $comment);
+		return static::alterColumn('ADD', $table, $column, $type, $allowNull, $default);
 	}
 
 	/**
@@ -314,40 +321,16 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 * @param string $oldColumn
 	 * @param string $newColumn
 	 * @param string $type
-	 * @param bool   $signed
 	 * @param bool   $allowNull
 	 * @param null   $default
-	 * @param string $position
-	 * @param string $comment
 	 *
 	 * @return  string
 	 */
-	public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text', $signed = false, $allowNull = false, $default = null,
-		$position = null, $comment = '')
+	public static function renameColumn($table, $oldColumn, $newColumn, $type = 'text', $allowNull = false, $default = null)
 	{
 		$column = array($oldColumn, $newColumn);
 
-		return static::alterColumn('CHANGE', $table, $column, $type, $signed, $allowNull, $default, $position, $comment);
-	}
-
-	/**
-	 * modifyColumn
-	 *
-	 * @param string $table
-	 * @param string $column
-	 * @param string $type
-	 * @param bool   $unsigned
-	 * @param bool   $notNull
-	 * @param null   $default
-	 * @param string $position
-	 * @param string $comment
-	 *
-	 * @return  string
-	 */
-	public static function modifyColumn($table, $column, $type = 'text', $unsigned = false, $notNull = false, $default = null,
-		$position = null, $comment = '')
-	{
-		return static::alterColumn('MODIFY', $table, $column, $type, $unsigned, $notNull, $default, $position, $comment);
+		return static::alterColumn('RENAME', $table, $column, $type, $allowNull, $default);
 	}
 
 	/**
@@ -377,26 +360,19 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 * @param string       $type
 	 * @param string       $name
 	 * @param string|array $columns
-	 * @param string       $comment
 	 *
 	 * @return  string
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public static function addIndex($table, $type, $name, $columns, $comment = null)
+	public static function addIndex($table, $type, $name, $columns)
 	{
-		$query = static::getQuery();
-		$cols  = static::buildIndexDeclare($name, $columns);
-
-		$comment = $comment ? 'COMMENT ' . $query->quote($comment) : '';
+		$cols = static::buildIndexDeclare($name, $columns, $table);
 
 		return static::build(
-			'ALTER TABLE',
-			$query->quoteName($table),
-			'ADD',
+			'CREATE',
 			strtoupper($type),
-			$cols,
-			$comment
+			$cols
 		);
 	}
 
@@ -406,11 +382,11 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 * @param string $name
 	 * @param array  $columns
 	 *
-	 * @return  string
+	 * @param        $table
 	 *
-	 * @throws \InvalidArgumentException
+	 * @return string
 	 */
-	public static function buildIndexDeclare($name, $columns)
+	public static function buildIndexDeclare($name, $columns, $table = null)
 	{
 		$query = static::getQuery();
 		$cols  = array();
@@ -436,29 +412,30 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 
 		$cols = '(' . implode(', ', $cols) . ')';
 
-		$name = $name ? $query->quoteName($name) . ' ' : '';
-
-		return $name . $cols;
+		return static::build(
+			$name ? $query->quoteName($name) : null,
+			$table ? 'ON ' . $query->quoteName($table) : null,
+			$cols
+		);
 	}
 
 	/**
 	 * dropIndex
 	 *
-	 * @param string $table
-	 * @param string $type
 	 * @param string $name
+	 * @param bool   $ifExists
+	 * @param bool   $concurrently
 	 *
-	 * @return  string
+	 * @return string
 	 */
-	public static function dropIndex($table, $type, $name)
+	public static function dropIndex($name, $ifExists = false, $concurrently = false)
 	{
 		$query = static::getQuery();
 
 		return static::build(
-			'ALTER TABLE',
-			$query->quoteName($table),
-			'DROP',
-			strtoupper($type),
+			'DROP INDEX',
+			$concurrently ? 'CONCURRENTLY' : null,
+			$ifExists ? 'IF EXISTS' : null,
 			$query->quoteName($name)
 		);
 	}
@@ -485,58 +462,6 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 		}
 
 		return implode(' ', $args);
-	}
-
-	/**
-	 * handleColumnPosition
-	 *
-	 * @param string $position
-	 *
-	 * @return  string
-	 */
-	protected static function handleColumnPosition($position)
-	{
-		$query = static::getQuery();
-
-		if (!$position)
-		{
-			return null;
-		}
-
-		$posColumn = '';
-
-		$position = trim($position);
-
-		if (strpos(strtoupper($position), 'AFTER') !== false)
-		{
-			list($position, $posColumn) = explode(' ', $position, 2);
-
-			$posColumn = $query->quoteName($posColumn);
-		}
-
-		return $position . ' ' . $posColumn;
-	}
-
-	/**
-	 * replace
-	 *
-	 * @param string $name
-	 * @param array  $columns
-	 * @param array  $values
-	 *
-	 * @return  string
-	 */
-	public static function replace($name, $columns = array(), $values = array())
-	{
-		$query = new PostgresqlQuery;
-
-		$query = (string) $query->insert($query->quoteName($name))
-			->columns($columns)
-			->values($values);
-
-		$query = substr(trim($query), 6);
-
-		return 'REPLACE' . $query;
 	}
 
 	/**

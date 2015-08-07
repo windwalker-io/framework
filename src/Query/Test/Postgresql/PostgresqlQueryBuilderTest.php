@@ -169,25 +169,26 @@ SQL;
 	{
 		$expected = <<<SQL
 CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
-  {$this->qn('id')} int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
-  {$this->qn('name')} varchar(255) NOT NULL COMMENT 'Member Name',
-  {$this->qn('email')} varchar(255) NOT NULL COMMENT 'Member email',
-  PRIMARY KEY ({$this->qn('id')}),
-  KEY {$this->qn('idx_alias')} ({$this->qn('email')})
-) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
+  {$this->qn('id')}    serial NOT NULL,
+  {$this->qn('name')}  varchar(255) NOT NULL,
+  {$this->qn('email')} varchar(255) NOT NULL,
+  PRIMARY KEY ({$this->qn('id')})
+) INHERITS ({$this->qn('bar')}) TABLESPACE {$this->qn('tablespace')};
+
+CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')});
 SQL;
 
 		$columns = array(
-			'id' => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
-			'name' => array('varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''),
-			'email' => "varchar(255) NOT NULL COMMENT 'Member email'"
+			'id' => 'serial NOT NULL',
+			'name' => array('varchar(255)', 'NOT NULL'),
+			'email' => "varchar(255) NOT NULL"
 		);
 
 		$keys = array(
-			array('type' => 'KEY', 'name' => 'idx_alias', 'columns' => 'email')
+			array('type' => 'INDEX', 'name' => 'idx_alias', 'columns' => 'email')
 		);
 
-		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
+		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 'bar', true, 'tablespace');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -196,25 +197,25 @@ SQL;
 
 		$expected = <<<SQL
 CREATE TABLE {$this->qn('foo')} (
-  {$this->qn('id')} int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
-  {$this->qn('name')} varchar(255) NOT NULL COMMENT 'Member Name',
-  {$this->qn('email')} varchar(255) NOT NULL COMMENT 'Member email',
-  PRIMARY KEY ({$this->qn('id')}, {$this->qn('email')}),
-  UNIQUE KEY {$this->qn('idx_alias')} ({$this->qn('email')}, {$this->qn('id')})
-) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
+  {$this->qn('id')} int(11) NOT NULL,
+  {$this->qn('name')} varchar(255) NOT NULL,
+  {$this->qn('email')} varchar(255) NOT NULL,
+  PRIMARY KEY ({$this->qn('id')}, {$this->qn('email')})
+);
+CREATE UNIQUE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')}, {$this->qn('id')});
 SQL;
 
 		$columns = array(
-			'id' => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
-			'name' => array('varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''),
-			'email' => "varchar(255) NOT NULL COMMENT 'Member email'"
+			'id' => 'int(11) NOT NULL',
+			'name' => array('varchar(255)', 'NOT NULL'),
+			'email' => "varchar(255) NOT NULL"
 		);
 
 		$keys = array(
-			array('type' => 'UNIQUE KEY', 'name' => 'idx_alias', 'columns' => array('email', 'id'))
+			array('type' => 'UNIQUE INDEX', 'name' => 'idx_alias', 'columns' => array('email', 'id'))
 		);
 
-		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
+		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, null, false, null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -259,18 +260,18 @@ SQL;
 	 */
 	public function testAlterColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL DEFAULT '1'";
 
-		$actual = PostgresqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
+		$actual = PostgresqlQueryBuilder::alterColumn('ADD', 'foo', 'bar', 'int(11)', true, '1');
 
 		$this->assertEquals(
 			$this->format($expected),
 			$this->format($actual)
 		);
 
-		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} text AFTER {$this->qn('id')}";
+		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
 
-		$actual = PostgresqlQueryBuilder::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', false, false, null, 'AFTER id', null);
+		$actual = PostgresqlQueryBuilder::alterColumn('RENAME', 'foo', array('bar', 'yoo'), null, false, null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -287,28 +288,9 @@ SQL;
 	 */
 	public function testAddColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL DEFAULT '1'";
 
-		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
-
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
-
-	/**
-	 * Method to test changeColumn().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::changeColumn
-	 */
-	public function testChangeColumn()
-	{
-		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
-
-		$actual = PostgresqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', true, true, '1', 'FIRST', 'Test');
+		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, '1');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -317,17 +299,17 @@ SQL;
 	}
 
 	/**
-	 * Method to test modifyColumn().
+	 * Method to test renameColumn().
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::modifyColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::renameColumn
 	 */
-	public function testModifyColumn()
+	public function testRenameColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')} int(11) NOT NULL DEFAULT '1'";
 
-		$actual = PostgresqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
+		$actual = PostgresqlQueryBuilder::renameColumn('foo', 'bar', 'yoo', 'int(11)', true, '1');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -363,18 +345,18 @@ SQL;
 	 */
 	public function testAddIndex()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')}) COMMENT 'Test Index'";
+		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', array('alias', 'name'), 'Test Index');
+		$actual = PostgresqlQueryBuilder::addIndex('foo', 'INDEX', 'idx_alias', array('alias', 'name'));
 
 		$this->assertEquals(
 			$this->format($expected),
 			$this->format($actual)
 		);
 
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}) COMMENT 'Test Index'";
+		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')})";
 
-		$actual = PostgresqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', 'alias', 'Test Index');
+		$actual = PostgresqlQueryBuilder::addIndex('foo', 'INDEX', 'idx_alias', 'alias');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -393,16 +375,16 @@ SQL;
 	{
 		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')})";
 
-		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias');
+		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias', null);
 
 		$this->assertEquals(
 			$this->format($expected),
 			$this->format($actual)
 		);
 
-		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')})";
+		$expected = "{$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'));
+		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'), 'foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -419,9 +401,18 @@ SQL;
 	 */
 	public function testDropIndex()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} DROP INDEX {$this->qn('bar')}";
+		$expected = "DROP INDEX {$this->qn('bar')}";
 
-		$actual = PostgresqlQueryBuilder::dropIndex('foo', 'INDEX', 'bar');
+		$actual = PostgresqlQueryBuilder::dropIndex('bar');
+
+		$this->assertEquals(
+			$this->format($expected),
+			$this->format($actual)
+		);
+
+		$expected = "DROP INDEX CONCURRENTLY IF EXISTS {$this->qn('bar')}";
+
+		$actual = PostgresqlQueryBuilder::dropIndex('bar', true, true);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -441,25 +432,6 @@ SQL;
 		$expected = "FLOWER SAKURA SUNFLOWER OLIVE";
 
 		$actual = PostgresqlQueryBuilder::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
-
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
-
-	/**
-	 * Method to test replace().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::replace
-	 */
-	public function testReplace()
-	{
-		$expected = "REPLACE INTO {$this->qn('foo')} (a,b) VALUES (c, d, e), (f, g, h)";
-
-		$actual = PostgresqlQueryBuilder::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
 
 		$this->assertEquals(
 			$this->format($expected),
