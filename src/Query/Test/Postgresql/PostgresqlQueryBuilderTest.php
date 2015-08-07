@@ -98,7 +98,7 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 
 		$expected = "DROP DATABASE IF EXISTS {$this->qn('foo')}";
 
-		echo $actual = PostgresqlQueryBuilder::dropDatabase('foo', true);
+		$actual = PostgresqlQueryBuilder::dropDatabase('foo', true);
 
 		$this->assertEquals(
 			\SqlFormatter::compress($expected),
@@ -115,22 +115,24 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 	 */
 	public function testShowTableColumns()
 	{
-		$expected = "SHOW COLUMNS FROM {$this->qn('foo')}";
+		$expected = <<<SQL
+SELECT attr.attname AS "Field",pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "Type",CASE WHEN attr.attnotnull IS TRUE THEN 'NO' ELSE 'YES' END AS "Null",attrdef.adsrc AS "Default",dsc.description AS "Comments"
+FROM pg_catalog.pg_attribute AS attr
+LEFT JOIN pg_catalog.pg_class AS class ON class.oid = attr.attrelid
+LEFT JOIN pg_catalog.pg_type AS typ ON typ.oid = attr.atttypid
+LEFT JOIN pg_catalog.pg_attrdef AS attrdef ON attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum
+LEFT JOIN pg_catalog.pg_description AS dsc ON dsc.classoid = class.oid
+WHERE attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='foo'
+	AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+	nspname = 'public')) AND attr.attnum > 0 AND NOT attr.attisdropped
+ORDER BY attr.attnum
+SQL;
 
 		$actual = PostgresqlQueryBuilder::showTableColumns('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
-		);
-
-		$expected = "SHOW FULL COLUMNS FROM {$this->qn('foo')} WHERE a = b";
-
-		$actual = PostgresqlQueryBuilder::showTableColumns('foo', true, 'a = b');
-
-		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			\SqlFormatter::format($expected, false),
+			\SqlFormatter::format($actual, false)
 		);
 	}
 

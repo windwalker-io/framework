@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "#__flower" (
 	state int NOT NULL,
 	params text NOT NULL,
 	PRIMARY KEY (id)
-)  ;
+);
 
 INSERT INTO "#__flower" (id, catid, title, meaning, ordering, state, params) VALUES
 	(1, 2, 'Alstroemeria', 'aspiring', 1, 0, ''),

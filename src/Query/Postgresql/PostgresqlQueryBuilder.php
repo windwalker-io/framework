@@ -100,19 +100,35 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 */
 	public static function showTableColumns($table, $full = false, $where = null)
 	{
-		$query = static::getQuery();
+		$query = static::getQuery(true);
 
-		$query->select('*')
-			->from('information_schema.columns')
-			->where('table_schema = ')
+		// Field
+		$query->select('attr.attname AS "Field"')
+			->from('pg_catalog.pg_attribute AS attr')
+			->leftJoin('pg_catalog.pg_class AS class', 'class.oid = attr.attrelid');
 
-		return static::build(
-			'SHOW',
-			$full ? 'FULL' : false,
-			'COLUMNS FROM',
-			$query->quoteName($table),
-			$where ? new QueryElement('WHERE', $where, 'AND') : null
-		);
+		// Type
+		$query->select('pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "Type"')
+			->leftJoin('pg_catalog.pg_type AS typ', 'typ.oid = attr.atttypid');
+		// Is Null
+		$query->select('CASE WHEN attr.attnotnull IS TRUE THEN \'NO\' ELSE \'YES\' END AS "Null"');
+
+		// Default
+		$query->select('attrdef.adsrc AS "Default"')
+			->leftJoin('pg_catalog.pg_attrdef AS attrdef', 'attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum');
+
+		// Extra / Comments
+		$query->select('dsc.description AS "Comments"')
+			->leftJoin('pg_catalog.pg_description AS dsc', 'dsc.classoid = class.oid');
+
+		// General
+		$query->where('attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=' . $query->quote($table) . '
+	AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+	nspname = \'public\'))')
+			->where('attr.attnum > 0 AND NOT attr.attisdropped')
+			->order('attr.attnum');
+
+		return (string) $query;
 	}
 
 	/**

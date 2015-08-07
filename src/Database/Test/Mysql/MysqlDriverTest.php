@@ -458,7 +458,7 @@ SQL;
 
 		$id = 4;
 
-		echo $query->select('*')
+		$query->select('*')
 			->from('#__flower')
 			->where('id = :id')
 			->bind('id', $id);

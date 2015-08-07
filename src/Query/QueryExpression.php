@@ -284,5 +284,31 @@ class QueryExpression
 	{
 		return $value;
 	}
-}
 
+	/**
+	 * caseCondition
+	 *
+	 * @param   array   $cases
+	 * @param   string  $else
+	 *
+	 * @return  string
+	 */
+	public function caseCondition(array $cases, $else = null)
+	{
+		$expression = "CASE";
+
+		foreach ($cases as $condition => $case)
+		{
+			$expression .= $condition . ' THEN' . $case . "\n";
+		}
+
+		if ($else)
+		{
+			$expression .= 'ELSE ' . $else . "\n";
+		}
+
+		$expression .= 'END';
+
+		return $expression;
+	}
+}
