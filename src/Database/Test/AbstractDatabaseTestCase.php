@@ -16,7 +16,7 @@ use Windwalker\Database\Driver\DatabaseDriver;
  *
  * @since 1.0
  */
-abstract class AbstractDatabaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 {
 	/**
 	 * Property db.

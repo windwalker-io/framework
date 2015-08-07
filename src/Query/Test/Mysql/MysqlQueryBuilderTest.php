@@ -9,21 +9,21 @@
 namespace Windwalker\Query\Test\Mysql;
 
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
-use Windwalker\Query\Test\AbstractQueryBuilderTestCase;
+use Windwalker\Database\Test\AbstractQueryTestCase;
 
 /**
  * Test class of MysqlQueryBuilder
  *
  * @since 2.0
  */
-class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
+class MysqlQueryBuilderTest extends AbstractQueryTestCase
 {
 	/**
-	 * Property qn.
+	 * Property quote.
 	 *
-	 * @var  string
+	 * @var  array
 	 */
-	protected $qn = '`';
+	protected static $quote = '`';
 
 	/**
 	 * Method to test showDatabases().
@@ -38,7 +38,7 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 
 		$actual = MysqlQueryBuilder::listDatabases('a = b');
 
-		$this->assertEquals(\SqlFormatter::compress($expected), \SqlFormatter::compress($actual));
+		$this->assertEquals($this->format($expected), $this->format($actual));
 	}
 
 	/**
@@ -55,8 +55,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::createDatabase('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn('foo')}";
@@ -64,8 +64,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::createDatabase('foo', true);
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn('foo')} CHARACTER SET='utf8' COLLATE='bar'";
@@ -73,8 +73,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::createDatabase('foo', true, 'utf8', 'bar');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -92,8 +92,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::dropDatabase('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "DROP DATABASE IF EXISTS {$this->qn('foo')}";
@@ -101,8 +101,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::dropDatabase('foo', true);
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -120,8 +120,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::showTableColumns('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "SHOW FULL COLUMNS FROM {$this->qn('foo')} WHERE a = b";
@@ -129,8 +129,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::showTableColumns('foo', true, 'a = b');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -148,8 +148,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::showDbTables('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "SHOW TABLE STATUS FROM {$this->qn('foo')} WHERE a = b";
@@ -157,8 +157,8 @@ class MysqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = MysqlQueryBuilder::showDbTables('foo', 'a = b');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -194,8 +194,8 @@ SQL;
 		$actual = MysqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = <<<SQL
@@ -221,8 +221,8 @@ SQL;
 		$actual = MysqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -240,8 +240,8 @@ SQL;
 		$actual = MysqlQueryBuilder::dropTable('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "DROP TABLE IF EXISTS {$this->qn('foo')}";
@@ -249,8 +249,8 @@ SQL;
 		$actual = MysqlQueryBuilder::dropTable('foo', true);
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -268,8 +268,8 @@ SQL;
 		$actual = MysqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} text AFTER {$this->qn('id')}";
@@ -277,8 +277,8 @@ SQL;
 		$actual = MysqlQueryBuilder::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', true, true, null, 'AFTER id', null);
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -296,8 +296,8 @@ SQL;
 		$actual = MysqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -315,8 +315,8 @@ SQL;
 		$actual = MysqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -334,8 +334,8 @@ SQL;
 		$actual = MysqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -353,8 +353,8 @@ SQL;
 		$actual = MysqlQueryBuilder::dropColumn('foo', 'bar');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -372,8 +372,8 @@ SQL;
 		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', array('alias', 'name'), 'Test Index');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}) COMMENT 'Test Index'";
@@ -381,8 +381,8 @@ SQL;
 		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', 'alias', 'Test Index');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -400,8 +400,8 @@ SQL;
 		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')})";
@@ -409,8 +409,8 @@ SQL;
 		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'));
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -428,8 +428,8 @@ SQL;
 		$actual = MysqlQueryBuilder::dropIndex('foo', 'INDEX', 'bar');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -447,8 +447,8 @@ SQL;
 		$actual = MysqlQueryBuilder::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -466,8 +466,8 @@ SQL;
 		$actual = MysqlQueryBuilder::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 

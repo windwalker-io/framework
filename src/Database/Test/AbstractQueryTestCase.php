@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Query\Test;
+namespace Windwalker\Database\Test;
 
 use Windwalker\Test\Helper\TestStringHelper;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
@@ -16,14 +16,14 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
  *
  * @since  {DEPLOY_VERSION}
  */
-class AbstractQueryBuilderTestCase extends AbstractBaseTestCase
+class AbstractQueryTestCase extends AbstractBaseTestCase
 {
 	/**
-	 * Property qn.
+	 * Property quote.
 	 *
-	 * @var  string
+	 * @var  array
 	 */
-	protected $qn = array('`', '`');
+	protected static $quote = array('"', '"');
 
 	/**
 	 * quote
@@ -34,6 +34,18 @@ class AbstractQueryBuilderTestCase extends AbstractBaseTestCase
 	 */
 	protected function qn($text)
 	{
-		return TestStringHelper::quote($text, $this->qn);
+		return TestStringHelper::quote($text, static::$quote);
+	}
+
+	/**
+	 * format
+	 *
+	 * @param   string  $sql
+	 *
+	 * @return  String
+	 */
+	protected function format($sql)
+	{
+		return \SqlFormatter::format((string) $sql, false);
 	}
 }

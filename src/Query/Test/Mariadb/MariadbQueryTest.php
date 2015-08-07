@@ -8,6 +8,7 @@
 
 namespace Windwalker\Query\Test\Mariadb;
 
+use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Mariadb\MariadbQuery;
 use Windwalker\Query\Query;
 use Windwalker\Test\TestHelper;
@@ -17,8 +18,15 @@ use Windwalker\Test\TestHelper;
  *
  * @since 2.0
  */
-class MariadbQueryTest extends \PHPUnit_Framework_TestCase
+class MariadbQueryTest extends AbstractQueryTestCase
 {
+	/**
+	 * Property quote.
+	 *
+	 * @var  array
+	 */
+	protected static $quote = '`';
+
 	/**
 	 * Test instance.
 	 *
@@ -89,7 +97,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'CALL foo,bar';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -441,7 +449,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add multiple conditions
 		$query = $this->getQuery()
@@ -451,7 +459,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Use array
 		$query = $this->getQuery()
@@ -466,7 +474,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add two join
 		$query = $this->getQuery()
@@ -477,7 +485,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid INNER JOIN yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -496,7 +504,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'INSERT INTO foo (a, b, c) VALUES  (1, 2, 3)';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -516,7 +524,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add multiple conditions
 		$query = $this->getQuery()
@@ -526,7 +534,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Use array
 		$query = $this->getQuery()
@@ -541,7 +549,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -561,7 +569,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add multiple conditions
 		$query = $this->getQuery()
@@ -571,7 +579,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Use array
 		$query = $this->getQuery()
@@ -586,7 +594,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add two join
 		$query = $this->getQuery()
@@ -597,7 +605,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid LEFT JOIN yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -631,7 +639,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		$query = $this->getQuery()
 			->select('*')
@@ -641,7 +649,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id DESC,catid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -662,7 +670,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		$query = $this->getQuery()
 			->select('*')
@@ -673,7 +681,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -693,7 +701,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 3';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 3)));
+		$this->assertEquals($this->format($sql), $this->format($query->processLimit($query, 3)));
 
 		$query = $this->getQuery()
 			->select('*')
@@ -703,7 +711,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id LIMIT 0, 3';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query->processLimit($query, 3, 0)));
+		$this->assertEquals($this->format($sql), $this->format($query->processLimit($query, 3, 0)));
 	}
 
 	/**
@@ -723,7 +731,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add multiple conditions
 		$query = $this->getQuery()
@@ -733,7 +741,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Use array
 		$query = $this->getQuery()
@@ -748,7 +756,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add two join
 		$query = $this->getQuery()
@@ -759,7 +767,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid OUTER JOIN yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -816,7 +824,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add multiple conditions
 		$query = $this->getQuery()
@@ -826,7 +834,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Use array
 		$query = $this->getQuery()
@@ -841,7 +849,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		// Add two join
 		$query = $this->getQuery()
@@ -852,7 +860,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid RIGHT JOIN yoo AS y ON a.id = y.aid';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -872,7 +880,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		$query = $this->getQuery()
 			->select(array('a.*', 'a.id'))
@@ -882,7 +890,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT a.*,a.id FROM foo AS a WHERE a = b ORDER BY id';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -901,7 +909,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'UPDATE foo SET a = b , c = d';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		$query = $this->getQuery()
 			->update('foo')
@@ -909,7 +917,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'UPDATE foo SET a = b , c = d';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -945,7 +953,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'UPDATE foo SET a = b , c = d WHERE id = 1';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		$query = $this->getQuery()
 			->update('foo AS a')
@@ -956,7 +964,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'UPDATE foo AS a LEFT JOIN bar AS b ON a.id = b.aid SET a = b , c = d WHERE id = 1';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -1019,7 +1027,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		$query = $this->getQuery()
 			->update('foo')
@@ -1029,7 +1037,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = 'UPDATE foo SET a = b , c = d WHERE id = 1';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 
 		$query = $this->getQuery()
 			->delete('foo')
@@ -1080,7 +1088,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ( SELECT * FROM foo WHERE a = b ORDER BY id)';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -1110,7 +1118,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION DISTINCT ( SELECT * FROM foo WHERE a = b ORDER BY id)';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**
@@ -1140,7 +1148,7 @@ class MariadbQueryTest extends \PHPUnit_Framework_TestCase
 
 		$sql = '( SELECT * FROM foo WHERE a = b ORDER BY id) UNION ALL ( SELECT * FROM foo WHERE a = b ORDER BY id)';
 
-		$this->assertEquals(\SqlFormatter::compress($sql), \SqlFormatter::compress($query));
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**

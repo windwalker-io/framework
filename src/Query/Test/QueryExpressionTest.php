@@ -16,7 +16,7 @@ use Windwalker\Query\QueryExpression;
  *
  * @since 2.0
  */
-class QueryExpressionTest extends \PHPUnit_Framework_TestCase
+class QueryExpressionTest extends AbstractQueryTestCase
 {
 	/**
 	 * Test instance.

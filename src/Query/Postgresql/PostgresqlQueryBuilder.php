@@ -103,12 +103,12 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 		$query = static::getQuery(true);
 
 		// Field
-		$query->select('attr.attname AS "Field"')
+		$query->select('attr.attname AS "column_name"')
 			->from('pg_catalog.pg_attribute AS attr')
 			->leftJoin('pg_catalog.pg_class AS class', 'class.oid = attr.attrelid');
 
 		// Type
-		$query->select('pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "Type"')
+		$query->select('pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "column_type"')
 			->leftJoin('pg_catalog.pg_type AS typ', 'typ.oid = attr.atttypid');
 		// Is Null
 		$query->select('CASE WHEN attr.attnotnull IS TRUE THEN \'NO\' ELSE \'YES\' END AS "Null"');
@@ -118,7 +118,7 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 			->leftJoin('pg_catalog.pg_attrdef AS attrdef', 'attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum');
 
 		// Extra / Comments
-		$query->select('dsc.description AS "Comments"')
+		$query->select('dsc.description AS "comments"')
 			->leftJoin('pg_catalog.pg_description AS dsc', 'dsc.classoid = class.oid');
 
 		// General
@@ -141,14 +141,15 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 */
 	public static function showDbTables($dbname, $where = null)
 	{
-		$query = static::getQuery();
+		$query = static::getQuery(true);
 
-		return static::build(
-			'SHOW',
-			'TABLE STATUS FROM',
-			$query->quoteName($dbname),
-			$where ? new QueryElement('WHERE', $where, 'AND') : null
-		);
+		$query->select('table_name')
+			->from('information_schema.tables')
+			->where('table_type=' . $query->quote('BASE TABLE'))
+			->where('table_schema NOT IN (' . $query->quote('pg_catalog') . ', ' . $query->quote('information_schema') . ')')
+			->order('table_name ASC');
+
+		return (string) $query;
 	}
 
 	/**

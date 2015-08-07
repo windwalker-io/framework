@@ -173,4 +173,3 @@ class PostgresqlExpression extends QueryExpression
 		return $value . '::text';
 	}
 }
-

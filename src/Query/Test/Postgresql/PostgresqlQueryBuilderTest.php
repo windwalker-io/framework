@@ -9,22 +9,15 @@
 namespace Windwalker\Query\Test\Postgresql;
 
 use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
-use Windwalker\Query\Test\AbstractQueryBuilderTestCase;
+use Windwalker\Database\Test\AbstractQueryTestCase;
 
 /**
  * Test class of PostgresqlQueryBuilder
  *
  * @since 2.0
  */
-class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
+class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
 {
-	/**
-	 * Property qn.
-	 *
-	 * @var  string
-	 */
-	protected $qn = '"';
-
 	/**
 	 * Method to test showDatabases().
 	 *
@@ -38,7 +31,7 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 
 		$actual = PostgresqlQueryBuilder::listDatabases('a = b');
 
-		$this->assertEquals(\SqlFormatter::compress($expected), \SqlFormatter::compress($actual));
+		$this->assertEquals($this->format($expected), $this->format($actual));
 	}
 
 	/**
@@ -55,8 +48,8 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = PostgresqlQueryBuilder::createDatabase('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "CREATE DATABASE {$this->qn('foo')} ENCODING 'utf8'";
@@ -64,8 +57,8 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = PostgresqlQueryBuilder::createDatabase('foo', 'utf8');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "CREATE DATABASE {$this->qn('foo')} ENCODING 'utf8' OWNER {$this->qn('bar')}";
@@ -73,8 +66,8 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = PostgresqlQueryBuilder::createDatabase('foo', 'utf8', 'bar');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -92,8 +85,8 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = PostgresqlQueryBuilder::dropDatabase('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "DROP DATABASE IF EXISTS {$this->qn('foo')}";
@@ -101,8 +94,8 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 		$actual = PostgresqlQueryBuilder::dropDatabase('foo', true);
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -116,12 +109,15 @@ class PostgresqlQueryBuilderTest extends AbstractQueryBuilderTestCase
 	public function testShowTableColumns()
 	{
 		$expected = <<<SQL
-SELECT attr.attname AS "Field",pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "Type",CASE WHEN attr.attnotnull IS TRUE THEN 'NO' ELSE 'YES' END AS "Null",attrdef.adsrc AS "Default",dsc.description AS "Comments"
+SELECT attr.attname AS "column_name",
+	pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "column_type",
+	CASE WHEN attr.attnotnull IS TRUE THEN 'NO' ELSE 'YES' END AS "Null",
+	attrdef.adsrc AS "Default",dsc.description AS "comments"
 FROM pg_catalog.pg_attribute AS attr
-LEFT JOIN pg_catalog.pg_class AS class ON class.oid = attr.attrelid
-LEFT JOIN pg_catalog.pg_type AS typ ON typ.oid = attr.atttypid
-LEFT JOIN pg_catalog.pg_attrdef AS attrdef ON attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum
-LEFT JOIN pg_catalog.pg_description AS dsc ON dsc.classoid = class.oid
+	LEFT JOIN pg_catalog.pg_class       AS class   ON class.oid = attr.attrelid
+	LEFT JOIN pg_catalog.pg_type        AS typ     ON typ.oid = attr.atttypid
+	LEFT JOIN pg_catalog.pg_attrdef     AS attrdef ON attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum
+	LEFT JOIN pg_catalog.pg_description AS dsc     ON dsc.classoid = class.oid
 WHERE attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='foo'
 	AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
 	nspname = 'public')) AND attr.attnum > 0 AND NOT attr.attisdropped
@@ -145,22 +141,20 @@ SQL;
 	 */
 	public function testShowDbTables()
 	{
-		$expected = "SHOW TABLE STATUS FROM {$this->qn('foo')}";
+		$expected = <<<SQL
+SELECT table_name
+FROM information_schema.tables
+WHERE table_type = 'BASE TABLE'
+  AND table_schema NOT IN ('pg_catalog', 'information_schema')
+ORDER BY
+  table_name ASC
+SQL;
 
 		$actual = PostgresqlQueryBuilder::showDbTables('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
-		);
-
-		$expected = "SHOW TABLE STATUS FROM {$this->qn('foo')} WHERE a = b";
-
-		$actual = PostgresqlQueryBuilder::showDbTables('foo', 'a = b');
-
-		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -196,8 +190,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = <<<SQL
@@ -223,8 +217,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -242,8 +236,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::dropTable('foo');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "DROP TABLE IF EXISTS {$this->qn('foo')}";
@@ -251,8 +245,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::dropTable('foo', true);
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -270,8 +264,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} text AFTER {$this->qn('id')}";
@@ -279,8 +273,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', false, false, null, 'AFTER id', null);
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -298,8 +292,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -317,8 +311,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -336,8 +330,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', true, true, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -355,8 +349,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::dropColumn('foo', 'bar');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -374,8 +368,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', array('alias', 'name'), 'Test Index');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}) COMMENT 'Test Index'";
@@ -383,8 +377,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', 'alias', 'Test Index');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -402,8 +396,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 
 		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')})";
@@ -411,8 +405,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'));
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -430,8 +424,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::dropIndex('foo', 'INDEX', 'bar');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -449,8 +443,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 
@@ -468,8 +462,8 @@ SQL;
 		$actual = PostgresqlQueryBuilder::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
 
 		$this->assertEquals(
-			\SqlFormatter::compress($expected),
-			\SqlFormatter::compress($actual)
+			$this->format($expected),
+			$this->format($actual)
 		);
 	}
 

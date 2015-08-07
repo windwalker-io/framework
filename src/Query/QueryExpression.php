@@ -292,6 +292,8 @@ class QueryExpression
 	 * @param   string  $else
 	 *
 	 * @return  string
+	 *
+	 * @since   2.1
 	 */
 	public function caseCondition(array $cases, $else = null)
 	{
