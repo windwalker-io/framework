@@ -32,7 +32,9 @@ class PostgresqlDatabase extends AbstractDatabase
 	 */
 	public function select()
 	{
-		$this->db->setQuery('USE ' . $this->db->quoteName($this->database))->execute();
+		$this->db->disconnect();
+
+		$this->db->setDatabaseName($this->getName());
 
 		return $this;
 	}
@@ -42,13 +44,12 @@ class PostgresqlDatabase extends AbstractDatabase
 	 *
 	 * @param bool   $ifNotExists
 	 * @param string $charset
-	 * @param string $collate
 	 *
 	 * @return  static
 	 */
-	public function create($ifNotExists = false, $charset = 'utf8', $collate = 'utf8_general_ci')
+	public function create($ifNotExists = false, $charset = 'utf8')
 	{
-		$query = PostgresqlQueryBuilder::createDatabase($this->database, $charset, $collate);
+		$query = PostgresqlQueryBuilder::createDatabase($this->database, $charset);
 
 		$this->db->setQuery($query)->execute();
 

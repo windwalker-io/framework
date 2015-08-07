@@ -11,14 +11,16 @@ INSERT INTO "#__categories" (id, title, ordering, params) VALUES
 	(1, 'Foo', 1, ''),
 	(2, 'Bar', 2, '');
 
+ALTER SEQUENCE "#__categories_id_seq" RESTART WITH 3;
+
 CREATE TABLE IF NOT EXISTS "#__flower" (
 	id serial NOT NULL,
 	catid int NOT NULL,
 	title varchar(255) NOT NULL,
-	meaning text NOT NULL,
-	ordering int NOT NULL,
-	state int NOT NULL,
-	params text NOT NULL,
+	meaning text,
+	ordering int,
+	state int,
+	params text,
 	PRIMARY KEY (id)
 );
 
@@ -108,3 +110,5 @@ INSERT INTO "#__flower" (id, catid, title, meaning, ordering, state, params) VAL
 	(83, 2, 'Wisteria', 'steadfast', 83, 0, ''),
 	(84, 1, 'Yarrow', 'good health', 84, 1, ''),
 	(85, 2, 'Zinnia', 'thoughts of friends', 85, 1, '');
+
+ALTER SEQUENCE "#__flower_id_seq" RESTART WITH 86;

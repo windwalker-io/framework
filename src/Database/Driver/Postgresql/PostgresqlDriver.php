@@ -39,4 +39,80 @@ class PostgresqlDriver extends PdoDriver
 
 		parent::__construct($connection, $options);
 	}
+
+	/**
+	 * This function replaces a string identifier <var>$prefix</var> with the string held is the
+	 * <var>tablePrefix</var> class variable.
+	 *
+	 * @param   string  $sql     The SQL statement to prepare.
+	 * @param   string  $prefix  The common table prefix.
+	 *
+	 * @return  string  The processed SQL statement.
+	 *
+	 * @since   1.0
+	 */
+	public function replacePrefix($sql, $prefix = '#__')
+	{
+		$sql = trim($sql);
+
+		if (strpos($sql, '\''))
+		{
+			// Sequence name quoted with ' ' but need to be replaced
+			if (strpos($sql, 'currval'))
+			{
+				$sql = explode('currval', $sql);
+
+				for ($nIndex = 1; $nIndex < count($sql); $nIndex = $nIndex + 2)
+				{
+					$sql[$nIndex] = str_replace($prefix, $this->tablePrefix, $sql[$nIndex]);
+				}
+
+				$sql = implode('currval', $sql);
+			}
+
+			// Sequence name quoted with ' ' but need to be replaced
+			if (strpos($sql, 'nextval'))
+			{
+				$sql = explode('nextval', $sql);
+
+				for ($nIndex = 1; $nIndex < count($sql); $nIndex = $nIndex + 2)
+				{
+					$sql[$nIndex] = str_replace($prefix, $this->tablePrefix, $sql[$nIndex]);
+				}
+
+				$sql = implode('nextval', $sql);
+			}
+
+			// Sequence name quoted with ' ' but need to be replaced
+			if (strpos($sql, 'setval'))
+			{
+				$sql = explode('setval', $sql);
+
+				for ($nIndex = 1; $nIndex < count($sql); $nIndex = $nIndex + 2)
+				{
+					$sql[$nIndex] = str_replace($prefix, $this->tablePrefix, $sql[$nIndex]);
+				}
+
+				$sql = implode('setval', $sql);
+			}
+
+			$explodedQuery = explode('\'', $sql);
+
+			for ($nIndex = 0; $nIndex < count($explodedQuery); $nIndex = $nIndex + 2)
+			{
+				if (strpos($explodedQuery[$nIndex], $prefix))
+				{
+					$explodedQuery[$nIndex] = str_replace($prefix, $this->tablePrefix, $explodedQuery[$nIndex]);
+				}
+			}
+
+			$replacedQuery = implode('\'', $explodedQuery);
+		}
+		else
+		{
+			$replacedQuery = str_replace($prefix, $this->tablePrefix, $sql);
+		}
+
+		return $replacedQuery;
+	}
 }

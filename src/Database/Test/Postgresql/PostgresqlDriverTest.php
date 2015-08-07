@@ -103,11 +103,17 @@ class PostgresqlDriverTest extends AbstractPostgresqlTestCase
 	 */
 	public function testExecute()
 	{
-		$this->db->setQuery('INSERT INTO `#__flower` (`catid`) VALUES ("3")');
+		// "INSERT INTO {$this->qn('#__flower')} ({$this->qn('catid')}) VALUES ('3')"
+		$this->db->setQuery(
+			$this->db->getQuery(true)
+				->insert('#__flower')
+				->columns('title, catid')
+				->values("'qwer', 3")
+		);
 
 		$this->db->execute();
 
-		$this->assertEquals(86, $this->db->getWriter()->insertId());
+		$this->assertEquals(86, $this->db->getReader()->insertId());
 	}
 
 	/**

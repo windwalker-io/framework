@@ -9,6 +9,7 @@
 namespace Windwalker\Database\Test;
 
 use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Driver\DatabaseDriver;
 
 /**
@@ -61,6 +62,13 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 	protected static $dsn = array();
 
 	/**
+	 * Property debug.
+	 *
+	 * @var  boolean
+	 */
+	protected static $debug = true;
+
+	/**
 	 * setUpBeforeClass
 	 *
 	 * @throws \LogicException
@@ -107,23 +115,20 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 			)
 		);
 
-		$db->getDatabase($dbname)->create(true);
+		$database = $db->getDatabase($dbname);
+
+		if (static::$debug)
+		{
+			$database->drop(true);
+		}
+
+		$database->create(true);
 
 		$db->select($dbname);
 
 		$queries = file_get_contents(__DIR__ . '/Stub/' . static::$driver . '.sql');
 
-		$queries = $db->splitSql($queries);
-
-		foreach ($queries as $query)
-		{
-			$query = trim($query);
-
-			if ($query)
-			{
-				$db->setQuery($query)->execute();
-			}
-		}
+		DatabaseHelper::batchQuery($db, $queries);
 	}
 
 	/**
@@ -138,7 +143,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 			return;
 		}
 
-		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname))->execute();
+		static::$debug or self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname))->execute();
 
 		self::$dbo = null;
 	}
@@ -153,7 +158,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 			return;
 		}
 
-		self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname))->execute();
+		static::$debug or self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname))->execute();
 
 		self::$dbo = null;
 	}

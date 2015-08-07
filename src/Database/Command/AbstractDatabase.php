@@ -57,11 +57,10 @@ abstract class AbstractDatabase
 	 *
 	 * @param bool   $ifNotExists
 	 * @param string $charset
-	 * @param string $collate
 	 *
 	 * @return  static
 	 */
-	abstract public function create($ifNotExists = false, $charset = null, $collate = null);
+	abstract public function create($ifNotExists = false, $charset = null);
 
 	/**
 	 * dropDatabase

@@ -205,7 +205,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * Execute the SQL statement.
 	 *
-	 * @return  mixed  A database cursor resource on success, boolean false on failure.
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 * @throws  \RuntimeException
@@ -914,6 +914,46 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	{
 		$this->profiler['before'] = $before;
 		$this->profiler['after'] = $after;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Options
+	 *
+	 * @return  array
+	 */
+	public function getOptions()
+	{
+		return $this->options;
+	}
+
+	/**
+	 * Method to set property options
+	 *
+	 * @param   array $options
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setOptions($options)
+	{
+		$this->options = $options;
+
+		return $this;
+	}
+
+	/**
+	 * Method to set property database
+	 *
+	 * @param   string $database
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDatabaseName($database)
+	{
+		$this->database = $database;
+
+		$this->options['database'] = $database;
 
 		return $this;
 	}
