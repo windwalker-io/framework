@@ -49,13 +49,11 @@ class PostgresqlTransaction extends PdoTransaction
 	 */
 	public function commit()
 	{
-		if (!$this->nested || $this->depth <= 1)
+		$this->depth--;
+
+		if (!$this->nested)
 		{
 			parent::commit();
-		}
-		else
-		{
-			$this->depth--;
 		}
 
 		return $this;
