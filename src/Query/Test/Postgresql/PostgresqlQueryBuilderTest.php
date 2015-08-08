@@ -288,9 +288,9 @@ SQL;
 	 */
 	public function testAddColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL SET DEFAULT '1'";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL DEFAULT '1'";
 
-		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, '1');
+		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', false, '1');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -307,9 +307,9 @@ SQL;
 	 */
 	public function testRenameColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')} int(11) NOT NULL SET DEFAULT '1'";
+		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
 
-		$actual = PostgresqlQueryBuilder::renameColumn('foo', 'bar', 'yoo', 'int(11)', true, '1');
+		$actual = PostgresqlQueryBuilder::renameColumn('foo', 'bar', 'yoo');
 
 		$this->assertEquals(
 			$this->format($expected),

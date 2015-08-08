@@ -132,31 +132,48 @@ class PostgresqlTable extends AbstractTable
 
 			$length = $length ? '(' . $length . ')' : null;
 
-			$query = MysqlQueryBuilder::addColumn(
+			$sequence = null;
+
+			if ($column->getAutoIncrement())
+			{
+				$column->type(PostgresqlType::SERIAL);
+			}
+
+			$query = PostgresqlQueryBuilder::addColumn(
 				$this->table,
 				$column->getName(),
 				$column->getType() . $length,
-				$column->getSigned(),
 				$column->getAllowNull(),
-				$column->getDefault(),
-				$column->getPosition(),
-				$column->getComment()
+				$column->getDefault()
 			);
 
 			$this->db->setQuery($query)->execute();
+
+			if ($column->getComment())
+			{
+				$query = PostgresqlQueryBuilder::comment('COLUMN', $this->table, $column->getName(), $column->getComment());
+
+				$this->db->setQuery($query)->execute();
+			}
 		}
 
 		foreach ($this->indexes as $index)
 		{
-			$query = MysqlQueryBuilder::addIndex(
+			$query = PostgresqlQueryBuilder::addIndex(
 				$this->table,
 				$index->getType(),
 				$index->getName(),
-				$index->getColumns(),
-				$index->getComment()
+				$index->getColumns()
 			);
 
 			$this->db->setQuery($query)->execute();
+
+			if ($index->getComment())
+			{
+				$query = PostgresqlQueryBuilder::comment('INDEX', 'public', $index->getName(), $index->getComment());
+
+				$this->db->setQuery($query)->execute();
+			}
 		}
 
 		return $this;
@@ -271,8 +288,6 @@ class PostgresqlTable extends AbstractTable
 			$query .= ";\n" . PostgresqlQueryBuilder::comment('INDEX', 'public', $name, $comment);
 		}
 
-		//echo $this->db->replacePrefix($query);
-
 		DatabaseHelper::batchQuery($this->db, $query);
 
 		return $this;
@@ -303,6 +318,8 @@ class PostgresqlTable extends AbstractTable
 		$type   = PostgresqlType::getType($column->getType());
 		$length = $column->getLength() ? : PostgresqlType::getLength($type);
 
+		$length = PostgresqlType::noLength($type) ? null : $length;
+
 		$column->type($type)
 			->length($length);
 
@@ -325,7 +342,7 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function dropColumn($name)
 	{
-		$query = MysqlQueryBuilder::dropColumn($this->table, $name);
+		$query = PostgresqlQueryBuilder ::dropColumn($this->table, $name);
 
 		$this->db->setQuery($query)->execute();
 
@@ -347,37 +364,61 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
-		if ($name instanceof Column)
-		{
-			$column = $name;
-			$length = $column->getLength();
-			$length = $length ? '(' . $length . ')' : null;
+		$column = $name;
 
+		if ($column instanceof Column)
+		{
 			$name      = $column->getName();
-			$type      = $column->getType() . $length;
-			$signed    = $column->getSigned();
+			$type      = $column->getType();
+			$length    = $column->getLength();
 			$allowNull = $column->getAllowNull();
 			$default   = $column->getDefault();
-			$position  = $column->getPosition();
 			$comment   = $column->getComment();
 		}
-		else
+
+		$type   = PostgresqlType::getType($type);
+		$length = isset($length) ? $length : PostgresqlType::getLength($type);
+		$length = PostgresqlType::noLength($type) ? null : $length;
+		$length = $length ? '(' . $length . ')' : null;
+
+		$query = $this->db->getQuery(true);
+
+		// Type
+		$sql = PostgresqlQueryBuilder::build(
+			'ALTER TABLE ' . $query->quoteName($this->table),
+			'ALTER COLUMN',
+			$query->quoteName($name),
+			'TYPE',
+			$type . $length,
+			isset($options['using']) ? 'USING ' . $options['using'] : null
+		);
+
+		$sql .= ";\n" . PostgresqlQueryBuilder::build(
+			'ALTER TABLE ' . $query->quoteName($this->table),
+			'ALTER COLUMN',
+			$query->quoteName($name),
+			$allowNull ? 'DROP' : 'SET',
+			'NOT NULL'
+		);
+
+		if (!is_null($default))
 		{
-			$position = isset($options['position']) ? $options['position'] : null;
+			$sql .= ";\n" . PostgresqlQueryBuilder::build(
+				'ALTER TABLE ' . $query->quoteName($this->table),
+				'ALTER COLUMN',
+				$query->quoteName($name),
+				'SET DEFAULT' . $query->quote($default)
+			);
 		}
 
-		$query = MysqlQueryBuilder::modifyColumn(
+		$sql .= ";\n" . PostgresqlQueryBuilder::comment(
+			'COLUMN',
 			$this->table,
 			$name,
-			$type,
-			$signed,
-			$allowNull,
-			$default,
-			$position,
 			$comment
 		);
 
-		$this->db->setQuery($query)->execute();
+		DatabaseHelper::batchQuery($this->db, $sql);
 
 		return $this;
 	}
@@ -398,38 +439,70 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
-		if ($newName instanceof Column)
-		{
-			$column = $newName;
-			$length = $column->getLength();
-			$length = $length ? '(' . $length . ')' : null;
+		$column = $name = $newName;
 
-			$newName   = $column->getName();
-			$type      = $column->getType() . $length;
-			$signed    = $column->getSigned();
+		if ($column instanceof Column)
+		{
+			$name      = $column->getName();
+			$type      = $column->getType();
+			$length    = $column->getLength();
 			$allowNull = $column->getAllowNull();
 			$default   = $column->getDefault();
-			$position  = $column->getPosition();
 			$comment   = $column->getComment();
 		}
-		else
+
+		$type   = PostgresqlType::getType($type);
+		$length = isset($length) ? $length : PostgresqlType::getLength($type);
+		$length = PostgresqlType::noLength($type) ? null : $length;
+		$length = $length ? '(' . $length . ')' : null;
+
+		$query = $this->db->getQuery(true);
+
+		// Type
+		$sql = PostgresqlQueryBuilder::build(
+			'ALTER TABLE ' . $query->quoteName($this->table),
+			'ALTER COLUMN',
+			$query->quoteName($oldName),
+			'TYPE',
+			$type . $length
+		);
+
+		// Not NULL
+		$sql .= ";\n" . PostgresqlQueryBuilder::build(
+			'ALTER TABLE ' . $query->quoteName($this->table),
+			'ALTER COLUMN',
+			$query->quoteName($oldName),
+			$allowNull ? 'DROP' : 'SET',
+			'NOT NULL'
+		);
+
+		// Default
+		if (!is_null($default))
 		{
-			$position = isset($options['position']) ? $options['position'] : null;
+			$sql .= ";\n" . PostgresqlQueryBuilder::build(
+				'ALTER TABLE ' . $query->quoteName($this->table),
+				'ALTER COLUMN',
+				$query->quoteName($oldName),
+				'SET DEFAULT' . $query->quote($default)
+			);
 		}
 
-		$query = MysqlQueryBuilder::changeColumn(
+		// Comment
+		$sql .= ";\n" . PostgresqlQueryBuilder::comment(
+			'COLUMN',
 			$this->table,
 			$oldName,
-			$newName,
-			$type,
-			$signed,
-			$allowNull,
-			$default,
-			$position,
 			$comment
 		);
 
-		$this->db->setQuery($query)->execute();
+		// Rename
+		$sql .= ";\n" . PostgresqlQueryBuilder::renameColumn(
+			$this->table,
+			$oldName,
+			$name
+		);
+
+		DatabaseHelper::batchQuery($this->db, $sql);
 
 		return $this;
 	}
@@ -472,19 +545,21 @@ class PostgresqlTable extends AbstractTable
 	/**
 	 * dropIndex
 	 *
-	 * @param string  $type
-	 * @param string  $name
+	 * @param string $name
+	 * @param bool   $constraint
 	 *
-	 * @return  mixed
+	 * @return mixed
 	 */
-	public function dropIndex($type, $name)
+	public function dropIndex($name, $constraint = false)
 	{
-		if ($type == Key::TYPE_PRIMARY)
+		if ($constraint)
 		{
-			$name = null;
+			$query = PostgresqlQueryBuilder::dropConstraint($this->table, $name, true, 'RESTRICT');
 		}
-
-		$query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);
+		else
+		{
+			$query = PostgresqlQueryBuilder::dropIndex($name, true);
+		}
 
 		$this->db->setQuery($query)->execute();
 
@@ -630,13 +705,25 @@ class PostgresqlTable extends AbstractTable
 				$field->Extra = 'auto_increment';
 			}
 
-			if (isset($keys[$field->column_name]))
+			// Find key
+			$index = null;
+
+			foreach ($keys as $key)
 			{
-				if ($keys[$field->column_name]->is_primary)
+				if ($key->column_name == $field->column_name)
+				{
+					$index = $key;
+					break;
+				}
+			}
+
+			if ($index)
+			{
+				if ($index->is_primary)
 				{
 					$field->Key = 'PRI';
 				}
-				elseif ($keys[$field->column_name]->is_unique)
+				elseif ($index->is_unique)
 				{
 					$field->Key = 'UNI';
 				}
@@ -691,7 +778,24 @@ WHERE t.oid = ix.indrelid
 	AND t.relname = ' . $this->db->quote($this->db->replacePrefix($this->table)) . '
 ORDER BY t.relname, i.relname;');
 
-		$keys = $this->db->loadAll('column_name');
+		$keys = $this->db->loadAll();
+
+		foreach ($keys as $key)
+		{
+			$key->Table = $this->table;
+			$key->Non_unique = !$key->is_unique;
+			$key->Key_name = $key->index_name;
+			$key->Column_name = $key->column_name;
+			$key->Collation = 'A';
+			$key->Cardinality = 0;
+			$key->Sub_part = null;
+			$key->Packed = null;
+			$key->Null = null;
+			$key->Index_type = 'BTREE';
+			// TODO: Finish comments query
+			$key->Comment = null;
+			$key->Index_comment = null;
+		}
 
 		return $keys;
 	}

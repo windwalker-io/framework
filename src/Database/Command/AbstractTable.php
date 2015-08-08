@@ -264,12 +264,11 @@ abstract class AbstractTable
 	/**
 	 * dropIndex
 	 *
-	 * @param string  $type
 	 * @param string  $name
 	 *
 	 * @return  static
 	 */
-	abstract public function dropIndex($type, $name);
+	abstract public function dropIndex($name);
 
 	/**
 	 * getIndexes

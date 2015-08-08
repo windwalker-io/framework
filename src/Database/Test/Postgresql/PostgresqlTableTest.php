@@ -282,12 +282,12 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories');
 
-		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State', array('position' => 'AFTER ordering', 'length' => 1))
+		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State')
 			->save();
 
 		$columns = $table->getColumns(true);
 
-		$this->assertEquals(array('id', 'title', 'ordering', 'state', 'params'), $columns);
+		$this->assertEquals(array('id', 'title', 'ordering', 'params', 'state'), $columns);
 	}
 
 	/**
@@ -319,31 +319,36 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addColumn(new Column\Varchar('foo'))
+		$table->addColumn(new Column\Integer('foo'))
 			->save();
 
-		$table->modifyColumn(new Column\Integer('foo'));
+		$table->modifyColumn(new Column\Tinyint('foo', 3));
 
 		$tables = $table->getColumnDetails();
 
-		$this->assertEquals('int(11) unsigned', $tables['foo']->Type);
+		$this->assertEquals('smallint', $tables['foo']->Type);
 
-		$table->modifyColumn(new Column\Tinyint('foo', 3, Column::SIGNED));
+		$table->modifyColumn(new Column\Varchar('foo', 3));
 
 		$tables = $table->getColumnDetails();
 
-		$this->assertEquals('tinyint(3)', $tables['foo']->Type);
+		$this->assertEquals('varchar(3)', $tables['foo']->Type);
 	}
 
+	/**
+	 * testChangeColumn
+	 *
+	 * @return  void
+	 */
 	public function testChangeColumn()
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->changeColumn('foo', new Column\Integer('bar'));
+		$table->changeColumn('foo', new Column\Char('bar', 5));
 
 		$tables = $table->getColumnDetails();
 
-		$this->assertEquals('int(11) unsigned', $tables['bar']->Type);
+		$this->assertEquals('character(5)', $tables['bar']->Type);
 		$this->assertArrayNotHasKey('foo', $tables);
 	}
 
@@ -360,7 +365,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 
 		$indexes = $table->getIndexes();
 
-		$this->assertEquals('PRIMARY', $indexes[0]->Key_name);
+		$this->assertEquals('ww_categories_pkey', $indexes[0]->Key_name);
 	}
 
 	/**
@@ -374,14 +379,14 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addIndex('key', 'idx_ordering', array('ordering', 'id'))
+		$table->addIndex('INDEX', 'idx_ordering', array('ordering', 'id'))
 			->save();
 
 		$indexes = $table->getIndexes();
 
-		$this->assertEquals('PRIMARY', $indexes[0]->Key_name);
+		$this->assertEquals('ww_categories_pkey', $indexes[2]->Key_name);
 		$this->assertEquals('idx_ordering', $indexes[1]->Key_name);
-		$this->assertEquals('id', $indexes[2]->Column_name);
+		$this->assertEquals('id', $indexes[0]->Column_name);
 	}
 
 	/**
@@ -395,14 +400,14 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->dropIndex(Key::TYPE_INDEX, 'idx_ordering');
+		$table->dropIndex('idx_ordering');
 
 		$indexes = $table->getIndexes();
 
 		$this->assertEquals(1, count($indexes));
 
 		$table->modifyColumn('id', DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, null);
-		$table->dropIndex(Key::TYPE_PRIMARY, 'primary');
+		$table->dropIndex('ww_categories_pkey', true);
 
 		$indexes = $table->getIndexes();
 

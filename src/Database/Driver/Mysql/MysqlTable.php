@@ -439,19 +439,13 @@ class MysqlTable extends AbstractTable
 	/**
 	 * dropIndex
 	 *
-	 * @param string  $type
 	 * @param string  $name
 	 *
 	 * @return  mixed
 	 */
-	public function dropIndex($type, $name)
+	public function dropIndex($name)
 	{
-		if ($type == Key::TYPE_PRIMARY)
-		{
-			$name = null;
-		}
-
-		$query = MysqlQueryBuilder::dropIndex($this->table, $type, $name);
+		$query = MysqlQueryBuilder::dropIndex($this->table, $name);
 
 		$this->db->setQuery($query)->execute();
 

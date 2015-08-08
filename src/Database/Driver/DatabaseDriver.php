@@ -159,6 +159,13 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	);
 
 	/**
+	 * Property independentQuery.
+	 *
+	 * @var  Query
+	 */
+	protected static $independentQuery;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   null  $connection The database connection instance.
@@ -806,14 +813,12 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 */
 	private function getIndependentQuery()
 	{
-		static $query;
-
-		if (!$query)
+		if (!isset(static::$independentQuery[$this->name]))
 		{
-			$query = $this->getQuery(true);
+			static::$independentQuery[$this->name] = $this->getQuery(true);
 		}
 
-		return $query;
+		return static::$independentQuery[$this->name];
 	}
 
 	/**

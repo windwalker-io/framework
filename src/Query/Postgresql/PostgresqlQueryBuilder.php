@@ -280,7 +280,7 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 *
 	 * @return  string
 	 */
-	public static function alterColumn($operation, $table, $column, $type = 'text', $notNull = false, $default = null)
+	public static function alterColumn($operation, $table, $column, $type = null, $notNull = false, $default = null)
 	{
 		$query = static::getQuery();
 
@@ -310,7 +310,17 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 */
 	public static function addColumn($table, $column, $type = 'text', $allowNull = false, $default = null)
 	{
-		return static::alterColumn('ADD', $table, $column, $type, $allowNull, $default);
+		$query = static::getQuery();
+
+		return static::build(
+			'ALTER TABLE',
+			$query->quoteName($table),
+			'ADD',
+			$query->quoteName($column),
+			$type,
+			$allowNull ? null : 'NOT NULL',
+			$default ? 'DEFAULT' . $query->quote($default) : null
+		);
 	}
 
 	/**
@@ -319,17 +329,14 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 * @param string $table
 	 * @param string $oldColumn
 	 * @param string $newColumn
-	 * @param string $type
-	 * @param bool   $allowNull
-	 * @param null   $default
 	 *
 	 * @return  string
 	 */
-	public static function renameColumn($table, $oldColumn, $newColumn, $type = 'text', $allowNull = false, $default = null)
+	public static function renameColumn($table, $oldColumn, $newColumn)
 	{
 		$column = array($oldColumn, $newColumn);
 
-		return static::alterColumn('RENAME', $table, $column, $type, $allowNull, $default);
+		return static::alterColumn('RENAME', $table, $column);
 	}
 
 	/**
@@ -436,6 +443,30 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 			$concurrently ? 'CONCURRENTLY' : null,
 			$ifExists ? 'IF EXISTS' : null,
 			$query->quoteName($name)
+		);
+	}
+
+	/**
+	 * dropConstraint
+	 *
+	 * @param string $table
+	 * @param string $name
+	 * @param bool   $ifExists
+	 * @param string $action
+	 *
+	 * @return  string
+	 */
+	public static function dropConstraint($table, $name, $ifExists = false, $action = null)
+	{
+		$query = static::getQuery();
+
+		return static::build(
+			'ALTER TABLE',
+			$query->quoteName($table),
+			'DROP CONSTRAINT',
+			$ifExists ? 'IF EXISTS' : null,
+			$query->quoteName($name),
+			$action
 		);
 	}
 

@@ -8,7 +8,7 @@
 
 namespace Windwalker\Database\Test\Mysql;
 
-use Windwalker\Database\Driver\Mysql\PostgresqlTransaction;
+use Windwalker\Database\Driver\Mysql\MysqlTransaction;
 
 /**
  * Test class of MysqlTransaction
@@ -36,7 +36,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	 */
 	public function testGetNested()
 	{
-		$tran = new PostgresqlTransaction($this->db, false);
+		$tran = new MysqlTransaction($this->db, false);
 
 		$this->assertFalse($tran->getNested());
 	}
@@ -50,7 +50,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	 */
 	public function testSetNested()
 	{
-		$tran = new PostgresqlTransaction($this->db);
+		$tran = new MysqlTransaction($this->db);
 
 		$tran->setNested(false);
 

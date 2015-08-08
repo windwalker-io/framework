@@ -43,10 +43,35 @@ abstract class PostgresqlType extends DataType
 	protected static $typeMapping = array(
 		DataType::TINYINT  => self::SMALLINT,
 		DataType::DATETIME => self::TIMESTAMP,
-		'TINYTEXT' => self::TEXT,
-		'MEDIUMTEXT' => self::TEXT,
+		'tinytext' => self::TEXT,
+		'mediumtext' => self::TEXT,
 		DataType::LONGTEXT => self::TEXT,
 		// MysqlType::ENUM => self::VARCHAR, // Postgres support ENUM after 8.3
 		MysqlType::SET => self::TEXT
 	);
+
+	/**
+	 * Property noLength.
+	 *
+	 * @var  array
+	 */
+	protected static $noLength = array(
+		self::INTEGER,
+		self::SMALLINT,
+		self::SERIAL
+	);
+
+	/**
+	 * noLength
+	 *
+	 * @param   string $type
+	 *
+	 * @return  boolean
+	 */
+	public static function noLength($type)
+	{
+		$type = strtolower($type);
+
+		return in_array($type, static::$noLength);
+	}
 }

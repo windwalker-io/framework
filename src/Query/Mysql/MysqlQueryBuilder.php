@@ -193,7 +193,7 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 
 			$define = array_merge($define, $key);
 
-			$cols[] = $define['type'] . ' ' . static::buildIndexDeclare($define['name'], $define['columns']);
+			$cols[] = strtoupper($define['type']) . ' ' . static::buildIndexDeclare($define['name'], $define['columns']);
 		}
 
 		$cols = "(\n" . implode(",\n", $cols) . "\n)";
@@ -414,8 +414,6 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 
 		$cols = '(' . implode(', ', $cols) . ')';
 
-		$name = $name ? $query->quoteName($name) . ' ' : '';
-
 		return static::build(
 			$name ? $query->quoteName($name) : null,
 			$table ? 'ON ' . $query->quoteName($table) : null,
@@ -427,21 +425,19 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	 * dropIndex
 	 *
 	 * @param string $table
-	 * @param string $type
 	 * @param string $name
 	 *
 	 * @return  string
 	 */
-	public static function dropIndex($table, $type, $name)
+	public static function dropIndex($table, $name)
 	{
 		$query = static::getQuery();
 
 		return static::build(
-			'ALTER TABLE',
-			$query->quoteName($table),
-			'DROP',
-			strtoupper($type),
-			$query->quoteName($name)
+			'DROP INDEX',
+			$query->quoteName($name),
+			'ON',
+			$query->quoteName($table)
 		);
 	}
 

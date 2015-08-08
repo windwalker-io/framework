@@ -323,7 +323,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$tables = $table->getColumnDetails();
 
-		$this->assertEquals('int(11) unsigned', $tables['foo']->Type);
+		$this->assertEquals('int(10) unsigned', $tables['foo']->Type);
 
 		$table->modifyColumn(new Column\Tinyint('foo', 3, Column::SIGNED));
 
@@ -340,7 +340,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$tables = $table->getColumnDetails();
 
-		$this->assertEquals('int(11) unsigned', $tables['bar']->Type);
+		$this->assertEquals('int(10) unsigned', $tables['bar']->Type);
 		$this->assertArrayNotHasKey('foo', $tables);
 	}
 
@@ -392,14 +392,14 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->dropIndex(Key::TYPE_INDEX, 'idx_ordering');
+		$table->dropIndex('idx_ordering');
 
 		$indexes = $table->getIndexes();
 
 		$this->assertEquals(1, count($indexes));
 
 		$table->modifyColumn('id', DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, null);
-		$table->dropIndex(Key::TYPE_PRIMARY, 'primary');
+		$table->dropIndex('primary');
 
 		$indexes = $table->getIndexes();
 
