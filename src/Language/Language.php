@@ -85,6 +85,13 @@ class Language implements LanguageInterface
 	protected $localises = array();
 
 	/**
+	 * Property traces.
+	 *
+	 * @var  array
+	 */
+	protected $trace = array();
+
+	/**
 	 * Property normalizeHandler.
 	 *
 	 * @var  callable
@@ -168,7 +175,7 @@ class Language implements LanguageInterface
 		// In debug mode, we notice user this is a translating string but not found.
 		if ($this->debug)
 		{
-			$this->orphans[] = $normalizeKey;
+			$this->orphans[$normalizeKey] = $this->backtrace($normalizeKey);
 
 			$key = '??' . $key . '??';
 		}
@@ -605,6 +612,76 @@ class Language implements LanguageInterface
 		$this->normalizeHandler = $normalizeHandler;
 
 		return $this;
+	}
+
+	/**
+	 * backTrace
+	 *
+	 * @param string  $string
+	 * @param int     $level
+	 *
+	 * @return  array
+	 */
+	protected function backtrace($string, $level = 1)
+	{
+		if (isset($this->trace[$string]))
+		{
+			return $this;
+		}
+
+		$info = array(
+			'position' => null,
+			'called' => null
+		);
+
+		if (function_exists('debug_backtrace'))
+		{
+			$trace = debug_backtrace();
+
+			// Find where called this object
+			$traceData = $trace[$level];
+
+			while($traceData['class'] == __CLASS__)
+			{
+				$level++;
+
+				$traceData = $trace[$level];
+			}
+
+			$ref = new \ReflectionMethod($traceData['class'], $traceData['function']);
+
+			$info['position'] = array(
+				'file'   => $ref->getFileName(),
+				'class'  => $traceData['class'],
+				'function' => $traceData['function'],
+				'line'   => $ref->getStartLine()
+			);
+
+			if (isset($trace[$level - 1]))
+			{
+				$traceData = $trace[$level - 1];
+
+				$info['called'] = array(
+					'file'   => $traceData['file'],
+					'class'  => $traceData['class'],
+					'function' => $traceData['function'],
+					'line'   => $traceData['line'],
+					'args'   => $traceData['args']
+				);
+			}
+		}
+
+		return $info;
+	}
+
+	/**
+	 * Method to get property Trace
+	 *
+	 * @return  array
+	 */
+	public function getTrace()
+	{
+		return $this->trace;
 	}
 }
 

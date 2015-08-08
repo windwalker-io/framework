@@ -293,7 +293,16 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
 		$orphans = $this->instance->getOrphans();
 
-		$this->assertEquals(array('windwalker.language.test.no.exists.flower', 'a.key.not.exists'), $orphans);
+		$this->assertEquals(array('windwalker.language.test.no.exists.flower', 'a.key.not.exists'), array_keys($orphans));
+
+		$position = $orphans['a.key.not.exists']['position'];
+		$ref = new \ReflectionMethod($this, __FUNCTION__);
+		$this->assertEquals(__METHOD__, $position['class'] . '::' . $position['function']);
+		$this->assertEquals(__FILE__, $position['file']);
+		$this->assertEquals($ref->getStartLine(), $position['line']);
+
+		$called = $orphans['a.key.not.exists']['called'];
+		$this->assertEquals('Windwalker\Language\Language::translate', $called['class'] . '::' . $called['function']);
 	}
 
 	/**
