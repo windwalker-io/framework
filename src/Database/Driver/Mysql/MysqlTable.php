@@ -62,7 +62,7 @@ class MysqlTable extends AbstractTable
 		$defaultOptions = array(
 			'auto_increment' => 1,
 			'engine' => 'InnoDB',
-			'default_charset' => 'utf8'
+			'charset' => 'utf8'
 		);
 
 		$options = array_merge($defaultOptions, $options);
@@ -97,7 +97,7 @@ class MysqlTable extends AbstractTable
 			);
 		}
 
-		$this->doCreate($columns, $this->primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['default_charset']);
+		$this->doCreate($columns, $this->primary, $keys, $options['auto_increment'], $ifNotExists, $options);
 
 		return $this;
 	}
