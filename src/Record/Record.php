@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\DatabaseDriver;
 use Windwalker\Query\Query;
 
 /**
- * Class Table
+ * Class Record
  *
  * @since 2.0
  */
@@ -28,6 +28,14 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * @since  2.0
 	 */
 	protected $table = '';
+
+	/**
+	 * The fields of the database table.
+	 *
+	 * @var    \stdClass
+	 * @since  2.0
+	 */
+	protected $data = null;
 
 	/**
 	 * Name of the primary key fields in the table.
@@ -46,19 +54,18 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	protected $autoIncrement = true;
 
 	/**
+	 * Property aliases.
+	 *
+	 * @var  array
+	 */
+	protected $aliases = array();
+
+	/**
 	 * Property fields.
 	 *
 	 * @var  array
 	 */
 	protected $fields = null;
-
-	/**
-	 * The fields of the database table.
-	 *
-	 * @var    \stdClass
-	 * @since  2.0
-	 */
-	protected $data = null;
 
 	/**
 	 * DatabaseDriver object.
@@ -165,6 +172,8 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function set($key, $value)
 	{
+		$key = $this->resolveAlias($key);
+
 		if (property_exists($this->data, $key))
 		{
 			$this->data->$key = $value;
@@ -189,6 +198,8 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function get($key, $default = null)
 	{
+		$key = $this->resolveAlias($key);
+
 		if (property_exists($this->data, $key))
 		{
 			return $this->data->$key;
@@ -208,6 +219,8 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function exists($key)
 	{
+		$key = $this->resolveAlias($key);
+
 		return property_exists($this->data, $key);
 	}
 
@@ -276,14 +289,16 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		$fields = $this->getFields();
 
 		// Bind the source value, excluding the ignored fields.
-		foreach ($this->data as $k => $v)
+		foreach ($src as $k => $v)
 		{
 			// Only process fields not in the ignore array.
 			if (!in_array($k, $ignore))
 			{
-				if (isset($src[$k]) && array_key_exists($k, $fields))
+				$k = $this->resolveAlias($k);
+
+				if (array_key_exists($k, $fields))
 				{
-					$this->data->$k = $src[$k];
+					$this->data->$k = $v;
 				}
 			}
 		}
@@ -757,6 +772,45 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		}
 
 		return false;
+	}
+
+	/**
+	 * Set column alias.
+	 *
+	 * @param   string  $name
+	 * @param   string  $alias
+	 *
+	 * @return  static
+	 */
+	public function setAlias($name, $alias)
+	{
+		if ($alias === null && isset($this->aliases[$name]))
+		{
+			unset($this->aliases[$name]);
+		}
+		else
+		{
+			$this->aliases[$name] = $alias;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Resolve alias.
+	 *
+	 * @param   string $name
+	 *
+	 * @return  string
+	 */
+	public function resolveAlias($name)
+	{
+		if (isset($this->aliases[$name]))
+		{
+			return $this->aliases[$name];
+		}
+
+		return $name;
 	}
 
 	/**

@@ -10,6 +10,7 @@ namespace Windwalker\Record\Test;
 
 use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
 use Windwalker\Record\Record;
+use Windwalker\Test\TestHelper;
 
 /**
  * Test class of Record
@@ -52,14 +53,39 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::__set
-	 * @TODO   Implement test__set().
 	 */
 	public function test__set()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$record = new Record('#__flower');
+
+		$record->set('catid', 1);
+
+		$data = TestHelper::getValue($record, 'data');
+
+		$this->assertEquals(1, $data->catid);
+
+		$record->catid = 3;
+
+		$data = TestHelper::getValue($record, 'data');
+
+		$this->assertEquals(3, $data->catid);
+
+		$this->assertExpectedException(
+			function() use ($record)
+			{
+				$record->foo = 'bar';
+			},
+			new \InvalidArgumentException
 		);
+
+		// Alias
+		$record->setAlias('foo', 'catid');
+
+		$record->foo = 6;
+
+		$data = TestHelper::getValue($record, 'data');
+
+		$this->assertEquals(6, $data->catid);
 	}
 
 	/**
@@ -68,14 +94,23 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::__get
-	 * @TODO   Implement test__get().
 	 */
 	public function test__get()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$record = new Record('#__flower');
+
+		$record->setAlias('foo', 'catid');
+
+		$record->bind(array(
+			'id' => 1,
+			'foo' => 6,
+			'title' => 'Sakura'
+		));
+
+		$this->assertEquals(1, $record->id);
+		$this->assertEquals(6, $record->foo);
+		$this->assertEquals(6, $record->catid);
+		$this->assertEquals('Sakura', $record->title);
 	}
 
 	/**
