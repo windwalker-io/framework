@@ -85,7 +85,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 
 		if (!$dsn)
 		{
-			return;
+			static::markTestSkipped('DSN of driver ' . static::$driver . ' not available');
 		}
 
 		static::$dbname = $dbname = isset($dsn['dbname']) ? $dsn['dbname'] : null;
