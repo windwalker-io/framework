@@ -132,7 +132,7 @@ class PdoDriver extends DatabaseDriver
 	/**
 	 * Disconnects the database.
 	 *
-	 * @return  void
+	 * @return  static
 	 *
 	 * @since   2.0
 	 */
@@ -140,7 +140,11 @@ class PdoDriver extends DatabaseDriver
 	{
 		$this->freeResult();
 
+		unset($this->connection);
+
 		$this->connection = null;
+
+		return $this;
 	}
 
 	/**
@@ -323,7 +327,7 @@ class PdoDriver extends DatabaseDriver
 		if ($new)
 		{
 			// Derive the class name from the driver.
-			$class = '\\Windwalker\\Query\\' . ucfirst($this->options['driver']) . '\\' . ucfirst($this->options['driver']) . 'Query';
+			$class = 'Windwalker\\Query\\' . ucfirst($this->name) . '\\' . ucfirst($this->name) . 'Query';
 
 			// Make sure we have a query class for this driver.
 			if (class_exists($class))
@@ -349,7 +353,7 @@ class PdoDriver extends DatabaseDriver
 	 */
 	public function listDatabases()
 	{
-		$builder = sprintf('Windwalker\\Query\\%s\\%sQueryBuilder', $this->options['driver'], $this->options['driver']);
+		$builder = sprintf('Windwalker\\Query\\%s\\%sQueryBuilder', $this->name, $this->name);
 
 		if (!class_exists($builder))
 		{

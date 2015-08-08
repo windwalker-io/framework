@@ -9,9 +9,11 @@
 namespace Windwalker\Database\Driver\Postgresql;
 
 use Windwalker\Database\Command\AbstractTable;
+use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 
 /**
  * Class PostgresqlTable
@@ -60,13 +62,13 @@ class PostgresqlTable extends AbstractTable
 	{
 		$defaultOptions = array(
 			'auto_increment' => 1,
-			'engine' => 'InnoDB',
-			'default_charset' => 'utf8'
+			'sequences' => array()
 		);
 
 		$options = array_merge($defaultOptions, $options);
 
 		$columns = array();
+		$comments = array();
 
 		foreach ($this->columns as $column)
 		{
@@ -74,29 +76,45 @@ class PostgresqlTable extends AbstractTable
 
 			$length = $length ? '(' . $length . ')' : null;
 
+			if ($column->getAutoIncrement())
+			{
+				$column->type(PostgresqlType::SERIAL);
+				$options['sequences'][$column->getName()] = $this->table . '_' . $column->getName() . '_seq';
+			}
+
 			$columns[$column->getName()] = MysqlQueryBuilder::build(
 				$column->getType() . $length,
-				$column->getSigned() ? '' : 'UNSIGNED',
-				$column->getAllowNull() ? '' : 'NOT NULL',
-				$column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : '',
-				$column->getAutoIncrement() ? 'AUTO_INCREMENT' : '',
-				$column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : ''
+				$column->getAllowNull() ? null : 'NOT NULL',
+				$column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
 			);
+
+			if ($column->getComment())
+			{
+				$comments[$column->getName()] = $column->getComment();
+			}
 		}
 
 		$keys = array();
+		$keyComments = array();
 
 		foreach ($this->indexes as $index)
 		{
 			$keys[$index->getName()] = array(
-				'type' => $index->getType(),
+				'type' => strtoupper($index->getType()),
 				'name' => $index->getName(),
-				'columns' => $index->getColumns(),
-				'comment' => $index->getComment() ? 'COMMENT ' . $this->db->quote($index->getComment()) : ''
+				'columns' => $index->getColumns()
 			);
+
+			if ($index->getComment())
+			{
+				$keyComments[$index->getName()] = $index->getComment();
+			}
 		}
 
-		$this->doCreate($columns, $this->primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['default_charset']);
+		$options['comments'] = $comments;
+		$options['key_comments'] = $keyComments;
+
+		$this->doCreate($columns, $this->primary, $keys, $options['auto_increment'], $ifNotExists, $options);
 
 		return $this;
 	}
@@ -227,17 +245,35 @@ class PostgresqlTable extends AbstractTable
 	 * @param array  $keys
 	 * @param int    $autoIncrement
 	 * @param bool   $ifNotExists
-	 * @param string $engine
-	 * @param string $defaultCharset
+	 * @param array  $options
 	 *
-	 * @return  $this
+	 * @return $this
 	 */
 	public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null, $ifNotExists = true,
-		$engine = 'InnoDB', $defaultCharset = 'utf8')
+		$options = array())
 	{
-		$query = MysqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $autoIncrement, $ifNotExists, $engine, $defaultCharset);
+		$inherits = isset($options['inherits']) ? $options['inherits'] : null;
+		$tablespace = isset($options['tablespace']) ? $options['tablespace'] : null;
 
-		$this->db->setQuery($query)->execute();
+		$query = PostgresqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $inherits, $ifNotExists, $tablespace);
+
+		$comments = isset($options['comments']) ? $options['comments'] : array();
+		$keyComments = isset($options['key_comments']) ? $options['key_comments'] : array();
+
+		// Comments
+		foreach ($comments as $name => $comment)
+		{
+			$query .= ";\n" . PostgresqlQueryBuilder::comment('COLUMN', $this->table, $name, $comment);
+		}
+
+		foreach ($keyComments as $name => $comment)
+		{
+			$query .= ";\n" . PostgresqlQueryBuilder::comment('INDEX', 'public', $name, $comment);
+		}
+
+		//echo $this->db->replacePrefix($query);
+
+		DatabaseHelper::batchQuery($this->db, $query);
 
 		return $this;
 	}
@@ -264,8 +300,8 @@ class PostgresqlTable extends AbstractTable
 			$column = new Column($name, $type, $signed, $allowNull, $default, $comment, $options);
 		}
 
-		$type   = MysqlType::getType($column->getType());
-		$length = $column->getLength() ? : MysqlType::getLength($type);
+		$type   = PostgresqlType::getType($column->getType());
+		$length = $column->getLength() ? : PostgresqlType::getLength($type);
 
 		$column->type($type)
 			->length($length);
@@ -465,7 +501,12 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function rename($newName, $returnNew = true)
 	{
-		$this->db->setQuery('RENAME TABLE ' . $this->db->quoteName($this->table) . ' TO ' . $this->db->quoteName($newName));
+		$this->db->setQuery(PostgresqlQueryBuilder::build(
+			'ALTER TABLE',
+			$this->db->quoteName($this->table),
+			'RENAME TO',
+			$this->db->quoteName($newName)
+		));
 
 		$this->db->execute();
 
@@ -547,9 +588,66 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function getColumnDetails($full = true)
 	{
-		$query = MysqlQueryBuilder::showTableColumns($this->table, $full);
+		$query = PostgresqlQueryBuilder::showTableColumns($this->db->replacePrefix($this->table), $full);
 
-		return $this->db->setQuery($query)->loadAll('Field');
+		$fields = $this->db->setQuery($query)->loadAll();
+
+		$result = array();
+
+		foreach ($fields as $field)
+		{
+			// Do some dirty translation to MySQL output.
+			$result[$field->column_name] = (object) array(
+				'column_name' => $field->column_name,
+				'type'        => $field->column_type,
+				'null'        => $field->Null,
+				'Default'     => $field->Default,
+				'Field'       => $field->column_name,
+				'Type'        => $field->column_type,
+				'Null'        => $field->Null,
+				'Extra'       => null,
+				'Privileges'  => null,
+				'Comment'     => $field->Comment
+			);
+		}
+
+		$keys = $this->getIndexes();
+
+		foreach ($result as $field)
+		{
+			if (preg_match("/^NULL::*/", $field->Default))
+			{
+				$field->Default = null;
+			}
+
+			if (strpos($field->Type, 'character varying') !== false)
+			{
+				$field->Type = str_replace('character varying', 'varchar', $field->Type);
+			}
+
+			if (strpos($field->Default, 'nextval') !== false)
+			{
+				$field->Extra = 'auto_increment';
+			}
+
+			if (isset($keys[$field->column_name]))
+			{
+				if ($keys[$field->column_name]->is_primary)
+				{
+					$field->Key = 'PRI';
+				}
+				elseif ($keys[$field->column_name]->is_unique)
+				{
+					$field->Key = 'UNI';
+				}
+				else
+				{
+					$field->Key = 'MUL';
+				}
+			}
+		}
+
+		return $result;
 	}
 
 	/**
@@ -562,9 +660,9 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function getColumnDetail($column, $full = true)
 	{
-		$query = MysqlQueryBuilder::showTableColumns($this->table, $full, 'Field = ' . $this->db->quote($column));
+		$columns = $this->getColumnDetails($full);
 
-		return $this->db->setQuery($query)->loadOne();
+		return isset($columns[$column]) ? $columns[$column] : null;
 	}
 
 	/**
@@ -574,10 +672,28 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function getIndexes()
 	{
-		// Get the details columns information.
-		$this->db->setQuery('SHOW KEYS FROM ' . $this->db->quoteName($this->table));
+		$this->db->setQuery('
+SELECT
+	t.relname AS table_name,
+	i.relname AS index_name,
+	a.attname AS column_name,
+	ix.indisunique AS is_unique,
+	ix.indisprimary AS is_primary
+FROM pg_class AS t,
+	pg_class AS i,
+	pg_index AS ix,
+	pg_attribute AS a
+WHERE t.oid = ix.indrelid
+	AND i.oid = ix.indexrelid
+	AND a.attrelid = t.oid
+	AND a.attnum = ANY(ix.indkey)
+	AND t.relkind = \'r\'
+	AND t.relname = ' . $this->db->quote($this->db->replacePrefix($this->table)) . '
+ORDER BY t.relname, i.relname;');
 
-		return $this->db->loadAll();
+		$keys = $this->db->loadAll('column_name');
+
+		return $keys;
 	}
 
 	/**

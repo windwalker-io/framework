@@ -261,9 +261,9 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(\PDO $connection = null)
+	public function __construct(\PDO &$connection = null)
 	{
-		$this->connection = $connection ? : ConnectionContainer::getConnection($this->name);
+		$this->connection = &$connection ? : ConnectionContainer::getConnection($this->name);
 	}
 
 	/**
@@ -1847,7 +1847,7 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @return  \PDO
 	 */
-	public function getConnection()
+	public function &getConnection()
 	{
 		return $this->connection;
 	}
@@ -1859,9 +1859,9 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setConnection($connection)
+	public function setConnection(&$connection)
 	{
-		$this->connection = $connection;
+		$this->connection = &$connection;
 
 		return $this;
 	}

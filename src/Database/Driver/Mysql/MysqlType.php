@@ -20,6 +20,7 @@ abstract class MysqlType extends DataType
 	const INTEGER = 'int';
 	const BOOLEAN = 'bool';
 	const ENUM = 'enum';
+	const SET = 'set';
 
 	/**
 	 * Property types.
@@ -38,6 +39,6 @@ abstract class MysqlType extends DataType
 	protected static $typeMapping = array(
 		DataType::INTEGER => 'int',
 		DataType::BIT     => self::TINYINT,
-		DataType::BOOLEAN => self::BOOLEAN
+		DataType::BOOLEAN => self::BOOLEAN,
 	);
 }

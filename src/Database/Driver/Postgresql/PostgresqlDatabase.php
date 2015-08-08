@@ -65,6 +65,23 @@ class PostgresqlDatabase extends AbstractDatabase
 	 */
 	public function drop($ifExists = false)
 	{
+		if ($this->getName() == $this->db->getDatabase()->getName())
+		{
+			$this->db->disconnect();
+			$this->db->setDatabaseName(null);
+			$this->db->connect();
+		}
+
+		$pid = version_compare($this->db->getVersion(), '9.2', '>=') ? 'pid' : 'procpid';
+
+		$query = $this->db->getQuery(true);
+
+		$query->select('pg_terminate_backend(' . $pid . ')')
+			->from('pg_stat_activity')
+			->where('datname = ' . $query->quote($this->getName()));
+
+		$this->db->setQuery($query)->execute();
+
 		$query = PostgresqlQueryBuilder::dropDatabase($this->database, $ifExists);
 
 		$this->db->setQuery($query)->execute();

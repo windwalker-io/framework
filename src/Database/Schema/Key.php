@@ -18,7 +18,7 @@ class Key
 	/**
 	 * @var string
 	 */
-	const TYPE_UNIQUE = 'unique';
+	const TYPE_UNIQUE = 'unique index';
 
 	/**
 	 * @var string

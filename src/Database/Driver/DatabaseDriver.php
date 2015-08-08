@@ -183,7 +183,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	 *
 	 * @return  resource|object
 	 */
-	public function getConnection()
+	public function &getConnection()
 	{
 		return $this->connection;
 	}
@@ -261,7 +261,7 @@ abstract class DatabaseDriver implements LoggerAwareInterface
 	/**
 	 * Disconnects the database.
 	 *
-	 * @return  void
+	 * @return  static
 	 *
 	 * @since   2.0
 	 */

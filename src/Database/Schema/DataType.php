@@ -54,7 +54,7 @@ abstract class DataType
 	const OBJECT_BINARY = 'objectbinary';
 	const LARGE_OBJECT = 'large object';
 
-	// Not SQL92 types but general
+	// Not SQL92 types but common
 	const TEXT = 'text';
 	const LONGTEXT = 'longtext';
 	const TINYINT = 'tinyint';
@@ -81,7 +81,10 @@ abstract class DataType
 		self::INTEGER => 11,
 		self::TINYINT => 4,
 		self::SMALLINT => 6,
+		self::BIT => 1,
 		self::DECIMAL => '10,2',
+		self::DOUBLE => '10,2',
+		self::FLOAT => '10,2',
 	);
 
 	/**
@@ -95,12 +98,12 @@ abstract class DataType
 	{
 		$type = strtolower($type);
 
-		if (isset(static::$defaultLengths[$type]))
+		if (array_key_exists($type, static::$defaultLengths))
 		{
 			return static::$defaultLengths[$type];
 		}
 
-		if (isset(self::$defaultLengths[$type]))
+		if (array_key_exists($type, self::$defaultLengths))
 		{
 			return self::$defaultLengths[$type];
 		}

@@ -93,12 +93,10 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 * showTableColumn
 	 *
 	 * @param string       $table
-	 * @param bool         $full
-	 * @param string|array $where
 	 *
 	 * @return  string
 	 */
-	public static function showTableColumns($table, $full = false, $where = null)
+	public static function showTableColumns($table)
 	{
 		$query = static::getQuery(true);
 
@@ -110,6 +108,7 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 		// Type
 		$query->select('pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "column_type"')
 			->leftJoin('pg_catalog.pg_type AS typ', 'typ.oid = attr.atttypid');
+
 		// Is Null
 		$query->select('CASE WHEN attr.attnotnull IS TRUE THEN \'NO\' ELSE \'YES\' END AS "Null"');
 
@@ -117,9 +116,8 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 		$query->select('attrdef.adsrc AS "Default"')
 			->leftJoin('pg_catalog.pg_attrdef AS attrdef', 'attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum');
 
-		// Extra / Comments
-		$query->select('dsc.description AS "comments"')
-			->leftJoin('pg_catalog.pg_description AS dsc', 'dsc.classoid = class.oid');
+		// Comment
+		$query->select('pg_catalog.col_description(attr.attrelid, attr.attnum) AS "Comment"');
 
 		// General
 		$query->where('attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=' . $query->quote($table) . '
@@ -222,7 +220,8 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 			$cols,
 			$inherits ? 'INHERITS (' . implode(',', $query->quoteName((array) $inherits)) . ')' : null,
 			$tablespace ? 'TABLESPACE ' . $query->quoteName($tablespace) : null,
-			$indexes ? "\n;" . $indexes . ";" : null
+			";\n",
+			$indexes ? $indexes : null
 		);
 	}
 
@@ -294,7 +293,7 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 			implode(' TO ', $column),
 			$type,
 			$notNull ? 'NOT NULL' : null,
-			!is_null($default) ? 'DEFAULT ' . $query->quote($default) : null
+			!is_null($default) ? 'SET DEFAULT ' . $query->quote($default) : null
 		);
 	}
 
@@ -461,7 +460,7 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 			$sql[] = $arg;
 		}
 
-		return implode(' ', $args);
+		return implode(' ', $sql);
 	}
 
 	/**

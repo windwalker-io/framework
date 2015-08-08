@@ -119,13 +119,12 @@ abstract class AbstractTable
 	 * @param array  $keys
 	 * @param int    $autoIncrement
 	 * @param bool   $ifNotExists
-	 * @param string $engine
-	 * @param string $defaultCharset
+	 * @param array  $options
 	 *
 	 * @return  $this
 	 */
 	abstract public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null,
-		$ifNotExists = true, $engine = 'InnoDB', $defaultCharset = 'utf8');
+		$ifNotExists = true, $options = array());
 
 	/**
 	 * rename

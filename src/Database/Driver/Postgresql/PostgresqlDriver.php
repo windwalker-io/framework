@@ -49,7 +49,7 @@ class PostgresqlDriver extends PdoDriver
 	 *
 	 * @return  string  The processed SQL statement.
 	 *
-	 * @since   1.0
+	 * @since   2.1
 	 */
 	public function replacePrefix($sql, $prefix = '#__')
 	{

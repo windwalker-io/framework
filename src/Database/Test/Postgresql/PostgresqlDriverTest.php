@@ -240,7 +240,7 @@ class PostgresqlDriverTest extends AbstractPostgresqlTestCase
 	 */
 	public function testListDatabases()
 	{
-		$dbs = $this->db->setQuery('SHOW DATABASES')->loadColumn();
+		$dbs = $this->db->setQuery('SELECT datname FROM pg_database WHERE datistemplate = false')->loadColumn();
 
 		$dbList = $this->db->listDatabases();
 

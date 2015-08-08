@@ -12,6 +12,7 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 
 /**
  * Class MysqlTable
@@ -227,15 +228,17 @@ class MysqlTable extends AbstractTable
 	 * @param array  $keys
 	 * @param int    $autoIncrement
 	 * @param bool   $ifNotExists
-	 * @param string $engine
-	 * @param string $defaultCharset
+	 * @param array  $options
 	 *
-	 * @return  $this
+	 * @return $this
 	 */
-	public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null, $ifNotExists = true,
-		$engine = 'InnoDB', $defaultCharset = 'utf8')
+	public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null, $ifNotExists = true, $options = array())
 	{
-		$query = MysqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $autoIncrement, $ifNotExists, $engine, $defaultCharset);
+		$autoIncrement = isset($options['auto_increment']) ? $options['auto_increment'] : null;
+		$engine  = isset($options['engine']) ? $options['engine'] : 'InnoDB';
+		$charset = isset($options['charset']) ? $options['charset'] : 'utf8';
+
+		$query = MysqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $autoIncrement, $ifNotExists, $engine, $charset);
 
 		$this->db->setQuery($query)->execute();
 

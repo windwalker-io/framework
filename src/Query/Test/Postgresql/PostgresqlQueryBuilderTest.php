@@ -112,12 +112,12 @@ class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
 SELECT attr.attname AS "column_name",
 	pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "column_type",
 	CASE WHEN attr.attnotnull IS TRUE THEN 'NO' ELSE 'YES' END AS "Null",
-	attrdef.adsrc AS "Default",dsc.description AS "comments"
+	attrdef.adsrc AS "Default",
+	pg_catalog.col_description(attr.attrelid, attr.attnum) AS "Comment"
 FROM pg_catalog.pg_attribute AS attr
 	LEFT JOIN pg_catalog.pg_class       AS class   ON class.oid = attr.attrelid
 	LEFT JOIN pg_catalog.pg_type        AS typ     ON typ.oid = attr.atttypid
 	LEFT JOIN pg_catalog.pg_attrdef     AS attrdef ON attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum
-	LEFT JOIN pg_catalog.pg_description AS dsc     ON dsc.classoid = class.oid
 WHERE attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='foo'
 	AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
 	nspname = 'public')) AND attr.attnum > 0 AND NOT attr.attisdropped
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
   PRIMARY KEY ({$this->qn('id')})
 ) INHERITS ({$this->qn('bar')}) TABLESPACE {$this->qn('tablespace')};
 
-CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')});
+CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')})
 SQL;
 
 		$columns = array(
@@ -202,7 +202,7 @@ CREATE TABLE {$this->qn('foo')} (
   {$this->qn('email')} varchar(255) NOT NULL,
   PRIMARY KEY ({$this->qn('id')}, {$this->qn('email')})
 );
-CREATE UNIQUE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')}, {$this->qn('id')});
+CREATE UNIQUE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')}, {$this->qn('id')})
 SQL;
 
 		$columns = array(
@@ -260,7 +260,7 @@ SQL;
 	 */
 	public function testAlterColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL DEFAULT '1'";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL SET DEFAULT '1'";
 
 		$actual = PostgresqlQueryBuilder::alterColumn('ADD', 'foo', 'bar', 'int(11)', true, '1');
 
@@ -288,7 +288,7 @@ SQL;
 	 */
 	public function testAddColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL DEFAULT '1'";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL SET DEFAULT '1'";
 
 		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', true, '1');
 
@@ -307,7 +307,7 @@ SQL;
 	 */
 	public function testRenameColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')} int(11) NOT NULL DEFAULT '1'";
+		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')} int(11) NOT NULL SET DEFAULT '1'";
 
 		$actual = PostgresqlQueryBuilder::renameColumn('foo', 'bar', 'yoo', 'int(11)', true, '1');
 

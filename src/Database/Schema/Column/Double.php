@@ -29,7 +29,7 @@ class Double extends Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $length = '10,2', $signed = false, $allowNull = false, $default = null, $comment = '', $options = array())
+	public function __construct($name = null, $length = null, $signed = false, $allowNull = false, $default = null, $comment = '', $options = array())
 	{
 		$options['length'] = $length;
 
