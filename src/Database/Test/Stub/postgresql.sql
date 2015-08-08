@@ -112,3 +112,19 @@ INSERT INTO "#__flower" (id, catid, title, meaning, ordering, state, params) VAL
 	(85, 2, 'Zinnia', 'thoughts of friends', 85, 1, '');
 
 ALTER SEQUENCE "#__flower_id_seq" RESTART WITH 86;
+
+-- Nested set
+CREATE TABLE IF NOT EXISTS "#__nestedsets" (
+"id" serial NOT NULL,
+"parent_id" integer NOT NULL DEFAULT '0',
+"lft" integer NOT NULL DEFAULT '0',
+"rgt" integer NOT NULL DEFAULT '0',
+"level" integer NOT NULL DEFAULT '0',
+"title" varchar(255) NOT NULL,
+"alias" varchar(255) NOT NULL DEFAULT '',
+"access" smallint NOT NULL DEFAULT '0',
+"path" varchar(255) NOT NULL DEFAULT '',
+PRIMARY KEY ("id")
+);
+
+CREATE INDEX "idx_left_right" ON "#__nestedsets" ("lft", "rgt")

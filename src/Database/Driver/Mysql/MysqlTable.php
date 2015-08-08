@@ -316,12 +316,10 @@ class MysqlTable extends AbstractTable
 	{
 		if ($name instanceof Column)
 		{
-			$column = $name;
-			$length = $column->getLength();
-			$length = $length ? '(' . $length . ')' : null;
-
+			$column    = $name;
+			$length    = $column->getLength();
 			$name      = $column->getName();
-			$type      = $column->getType() . $length;
+			$type      = $column->getType();
 			$signed    = $column->getSigned();
 			$allowNull = $column->getAllowNull();
 			$default   = $column->getDefault();
@@ -333,10 +331,14 @@ class MysqlTable extends AbstractTable
 			$position = isset($options['position']) ? $options['position'] : null;
 		}
 
+		$type   = MysqlType::getType($type);
+		$length = isset($length) ? $length : MysqlType::getLength($type);
+		$length = $length ? '(' . $length . ')' : null;
+
 		$query = MysqlQueryBuilder::modifyColumn(
 			$this->table,
 			$name,
-			$type,
+			$type . $length,
 			$signed,
 			$allowNull,
 			$default,
@@ -367,10 +369,8 @@ class MysqlTable extends AbstractTable
 	{
 		if ($newName instanceof Column)
 		{
-			$column = $newName;
-			$length = $column->getLength();
-			$length = $length ? '(' . $length . ')' : null;
-
+			$column    = $newName;
+			$length    = $column->getLength();
 			$newName   = $column->getName();
 			$type      = $column->getType() . $length;
 			$signed    = $column->getSigned();
@@ -384,11 +384,15 @@ class MysqlTable extends AbstractTable
 			$position = isset($options['position']) ? $options['position'] : null;
 		}
 
+		$type   = MysqlType::getType($type);
+		$length = isset($length) ? $length : MysqlType::getLength($type);
+		$length = $length ? '(' . $length . ')' : null;
+
 		$query = MysqlQueryBuilder::changeColumn(
 			$this->table,
 			$oldName,
 			$newName,
-			$type,
+			$type . $length,
 			$signed,
 			$allowNull,
 			$default,

@@ -141,11 +141,16 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	{
 		$query = static::getQuery(true);
 
-		$query->select('table_name')
+		$query->select('table_name AS "Name"')
 			->from('information_schema.tables')
 			->where('table_type=' . $query->quote('BASE TABLE'))
 			->where('table_schema NOT IN (' . $query->quote('pg_catalog') . ', ' . $query->quote('information_schema') . ')')
 			->order('table_name ASC');
+
+		if ($where)
+		{
+			$query->where($where);
+		}
 
 		return (string) $query;
 	}

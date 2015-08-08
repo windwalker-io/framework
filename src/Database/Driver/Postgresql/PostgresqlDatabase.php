@@ -111,32 +111,33 @@ class PostgresqlDatabase extends AbstractDatabase
 	 */
 	public function rename($newName, $returnNew = true)
 	{
-		// Postgresql 5.1.7 do not have RENAME DATABASE syntax anymore, so we use rename tables to do that.
-		// @see: http://stackoverflow.com/questions/67093/how-do-i-quickly-rename-a-postgresql-database-change-schema-name?page=1&tab=votes#tab-top
-		$newDatabase = $this->db->getDatabase($newName)->create();
-
-		$tables = $this->db->getReader(PostgresqlQueryBuilder::showDbTables($this->database))->loadObjectList();
-
-		foreach ($tables as $table)
+		if ($this->db->getDatabase()->getName() == $this->getName())
 		{
-			$name = $table->Name;
-
-			$this->db->setQuery(
-				sprintf(
-					'RENAME TABLE %s.%s TO %s.%s',
-					$this->db->quoteName($this->database),
-					$this->db->quoteName($name),
-					$this->db->quoteName($newName),
-					$this->db->quoteName($name)
-				)
-			)->execute();
+			$this->db->disconnect();
+			$this->db->setDatabaseName(null);
 		}
 
-		$this->drop(true);
+		$pid = version_compare($this->db->getVersion(), '9.2', '>=') ? 'pid' : 'procpid';
+
+		$query = $this->db->getQuery(true);
+
+		$query->select('pg_terminate_backend(' . $pid . ')')
+			->from('pg_stat_activity')
+			->where('datname = ' . $query->quote($this->getName()));
+
+		$this->db->setQuery($query)->execute();
+
+		$query = sprintf(
+			'ALTER DATABASE %s RENAME TO %s',
+			$this->db->quoteName($this->getName()),
+			$this->db->quoteName($newName)
+		);
+
+		$this->db->setQuery($query)->execute();
 
 		if ($returnNew)
 		{
-			return $newDatabase;
+			return $this->db->getDatabase($newName)->select();
 		}
 
 		return $this;
@@ -184,7 +185,7 @@ class PostgresqlDatabase extends AbstractDatabase
 	{
 		$table = $this->db->replacePrefix($table);
 
-		$query = PostgresqlQueryBuilder::showDbTables($this->database, 'Name = ' . $this->db->quote($table));
+		$query = PostgresqlQueryBuilder::showDbTables($this->database, 'table_name = ' . $this->db->quote($table));
 
 		$table = $this->db->setQuery($query)->loadOne();
 

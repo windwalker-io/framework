@@ -323,7 +323,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$tables = $table->getColumnDetails();
 
-		$this->assertEquals('int(10) unsigned', $tables['foo']->Type);
+		$this->assertEquals('int(11) unsigned', $tables['foo']->Type);
 
 		$table->modifyColumn(new Column\Tinyint('foo', 3, Column::SIGNED));
 
@@ -332,6 +332,11 @@ class MysqlTableTest extends AbstractMysqlTestCase
 		$this->assertEquals('tinyint(3)', $tables['foo']->Type);
 	}
 
+	/**
+	 * testChangeColumn
+	 *
+	 * @return  void
+	 */
 	public function testChangeColumn()
 	{
 		$table = $this->db->getTable('#__categories', true);
@@ -340,7 +345,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$tables = $table->getColumnDetails();
 
-		$this->assertEquals('int(10) unsigned', $tables['bar']->Type);
+		$this->assertEquals('int(11) unsigned', $tables['bar']->Type);
 		$this->assertArrayNotHasKey('foo', $tables);
 	}
 
