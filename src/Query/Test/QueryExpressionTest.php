@@ -8,6 +8,7 @@
 
 namespace Windwalker\Query\Test;
 
+use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryExpression;
 

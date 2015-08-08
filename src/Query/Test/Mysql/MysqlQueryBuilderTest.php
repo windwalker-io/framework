@@ -423,9 +423,9 @@ SQL;
 	 */
 	public function testDropIndex()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} DROP INDEX {$this->qn('bar')}";
+		$expected = "DROP INDEX {$this->qn('bar')} ON {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::dropIndex('foo', 'INDEX', 'bar');
+		$actual = MysqlQueryBuilder::dropIndex('foo', 'bar');
 
 		$this->assertEquals(
 			$this->format($expected),

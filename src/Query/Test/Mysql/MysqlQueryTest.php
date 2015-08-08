@@ -822,7 +822,7 @@ class MysqlQueryTest extends AbstractQueryTestCase
 	 */
 	public function testQuoteName()
 	{
-		$this->assertEquals("{$this->qn}foo{$this->qn}", $this->instance->quoteName('foo'));
+		$this->assertEquals("{$this->qn('foo')}", $this->instance->quoteName('foo'));
 	}
 
 	/**
