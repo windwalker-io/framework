@@ -12,7 +12,6 @@ use Windwalker\Database\Driver\Postgresql\PostgresqlType;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Key;
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
 use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 
 /**
@@ -89,7 +88,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::create
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::create
 	 */
 	public function testCreate()
 	{
@@ -135,7 +134,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::create
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::create
 	 */
 	public function testDoCreate()
 	{
@@ -163,7 +162,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::rename
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::rename
 	 */
 	public function testRename()
 	{
@@ -182,7 +181,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::lock
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::lock
 	 * @TODO   Implement testLock().
 	 */
 	public function testLock()
@@ -198,7 +197,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::unlock
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::unlock
 	 * @TODO   Implement testUnlock().
 	 */
 	public function testUnlock()
@@ -214,7 +213,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::truncate
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::truncate
 	 */
 	public function testTruncate()
 	{
@@ -232,7 +231,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::getColumns
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::getColumns
 	 */
 	public function testGetColumns()
 	{
@@ -246,7 +245,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::getColumnDetails
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::getColumnDetails
 	 */
 	public function testGetColumnDetails()
 	{
@@ -261,7 +260,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::getColumnDetail
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::getColumnDetail
 	 */
 	public function testGetColumnDetail()
 	{
@@ -276,7 +275,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::addColumn
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::addColumn
 	 */
 	public function testAddColumn()
 	{
@@ -295,7 +294,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::dropColumn
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::dropColumn
 	 */
 	public function testDropColumn()
 	{
@@ -313,7 +312,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Database\Driver\Mysql\MysqlTable::modifyColumn
+	 * @covers  Windwalker\Database\Driver\Postgresql\PostgresqlTable::modifyColumn
 	 */
 	public function testModifyColumn()
 	{
@@ -357,7 +356,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::getIndexes
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::getIndexes
 	 */
 	public function testGetIndexes()
 	{
@@ -373,7 +372,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::addIndex
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::addIndex
 	 */
 	public function testAddIndex()
 	{
@@ -394,7 +393,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::dropIndex
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::dropIndex
 	 */
 	public function testDropIndex()
 	{

@@ -116,14 +116,14 @@ ALTER SEQUENCE "#__flower_id_seq" RESTART WITH 86;
 -- Nested set
 CREATE TABLE IF NOT EXISTS "#__nestedsets" (
 "id" serial NOT NULL,
-"parent_id" integer NOT NULL DEFAULT '0',
-"lft" integer NOT NULL DEFAULT '0',
-"rgt" integer NOT NULL DEFAULT '0',
-"level" integer NOT NULL DEFAULT '0',
-"title" varchar(255) NOT NULL,
-"alias" varchar(255) NOT NULL DEFAULT '',
-"access" smallint NOT NULL DEFAULT '0',
-"path" varchar(255) NOT NULL DEFAULT '',
+"parent_id" integer DEFAULT '0',
+"lft" integer DEFAULT '0',
+"rgt" integer  DEFAULT '0',
+"level" integer  DEFAULT '0',
+"title" varchar(255) ,
+"alias" varchar(255)  DEFAULT '',
+"access" smallint  DEFAULT '0',
+"path" varchar(255)  DEFAULT '',
 PRIMARY KEY ("id")
 );
 

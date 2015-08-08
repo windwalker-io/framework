@@ -8,9 +8,7 @@
 
 namespace Windwalker\Database\Test\Postgresql;
 
-use Windwalker\Database\Driver\Mysql\MysqlDriver;
 use Windwalker\Database\Driver\Postgresql\PostgresqlDriver;
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
 use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 
 /**
@@ -53,7 +51,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::select
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::select
 	 */
 	public function testSelect()
 	{
@@ -68,7 +66,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::create
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::create
 	 */
 	public function testCreate()
 	{
@@ -86,7 +84,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::drop
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::drop
 	 */
 	public function testDrop()
 	{
@@ -104,7 +102,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::exsts
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::exsts
 	 */
 	public function testExists()
 	{
@@ -123,7 +121,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::rename
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::rename
 	 */
 	public function testRename()
 	{
@@ -153,7 +151,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::getTables
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTables
 	 */
 	public function testGetTables()
 	{
@@ -174,7 +172,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::getTableDetails
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetails
 	 */
 	public function testGetTableDetails()
 	{
@@ -188,7 +186,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::getTableDetail
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetail
 	 */
 	public function testGetTableDetail()
 	{

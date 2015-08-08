@@ -6,17 +6,17 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Database\Test\Mysql;
+namespace Windwalker\Database\Test\Postgresql;
 
 use Windwalker\Database\Driver\Pdo\PdoDriver;
 use Windwalker\Database\Driver\Pdo\PdoReader;
 
 /**
- * Test class of MysqlReader
+ * Test class of PostgresqlReader
  *
  * @since 2.0
  */
-class MysqlReaderTest extends AbstractMysqlTestCase
+class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 {
 	/**
 	 * Method to test fetchArray().
@@ -105,7 +105,6 @@ class MysqlReaderTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Database\Driver\Pdo\PdoReader::fetchAll
-	 * @TODO   Implement testFetchAll().
 	 */
 	public function testFetchAll()
 	{
@@ -145,7 +144,7 @@ class MysqlReaderTest extends AbstractMysqlTestCase
 	 */
 	public function testCountAffected()
 	{
-		$this->db->setQuery('INSERT INTO ' . $this->qn('#__flower') . ' (' . $this->qn('catid') . ') VALUES (\'3\')');
+		$this->db->setQuery('INSERT INTO ' . $this->qn('#__flower') . ' ("catid", "title") VALUES (\'3\', \'test\')');
 
 		$this->db->execute();
 
