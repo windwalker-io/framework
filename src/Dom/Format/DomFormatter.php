@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project.
+ * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2015 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later;
@@ -9,10 +9,10 @@
 namespace Windwalker\Dom\Format;
 
 /**
- * The HtmlFormatter class.
+ * The AbstractFormatter class.
  *
- * This is a fork from: https://github.com/gajus/dindent to help use test Dom code.
- *
+ *  This class based on https://github.com/gajus/dindent to help use test Dom code.
+ * 
  * @since  {DEPLOY_VERSION}
  */
 class DomFormatter
@@ -33,30 +33,6 @@ class DomFormatter
 		'indentation_character' => '    '
 	);
 
-	/**
-	 * Property inlineElements.
-	 *
-	 * @var  array
-	 */
-	protected $inlineElements = array(
-		'b', 'big', 'i', 'small', 'tt', 'abbr', 'acronym', 'cite', 'code', 'dfn', 'em', 'kbd', 'strong', 'samp',
-		'var', 'a', 'bdo', 'br', 'img', 'span', 'sub', 'sup', 'source'
-	);
-
-	/**
-	 * Property temporaryReplacementsScript.
-	 *
-	 * @var  array
-	 */
-	protected $temporaryReplacementsScript = array();
-
-	/**
-	 * Property temporaryReplacementsInline.
-	 *
-	 * @var  array
-	 */
-	protected $temporaryReplacementsInline = array();
-
 	const ELEMENT_TYPE_BLOCK = 0;
 	const ELEMENT_TYPE_INLINE = 1;
 
@@ -70,40 +46,33 @@ class DomFormatter
 	 *
 	 * @var  static[]
 	 */
-	protected static $instance = array();
+	protected static $instance;
 
 	/**
 	 * getInstance
 	 *
-	 * @param   string  $type
-	 *
 	 * @return  static
 	 */
-	public static function getInstance($type = 'html')
+	public static function getInstance()
 	{
-		$type = strtolower($type);
-
-		if (empty(static::$instance[$type]))
+		if (empty(static::$instance))
 		{
-			static::$instance[$type] = new static;
+			static::$instance = new static;
 		}
 
-		return static::$instance[$type];
+		return static::$instance;
 	}
 
 	/**
 	 * Method to set property instance
 	 *
-	 * @param   string $type
 	 * @param   static $instance
 	 *
 	 * @return  void
 	 */
-	public static function setInstance($type, $instance)
+	public static function setInstance($instance)
 	{
-		$type = strtolower($type);
-
-		static::$instance[$type] = $instance;
+		static::$instance = $instance;
 	}
 
 	/**
@@ -115,27 +84,7 @@ class DomFormatter
 	 */
 	public static function format($buffer)
 	{
-		return static::getInstance('html')->indent($buffer);
-	}
-
-	/**
-	 * formatXml
-	 *
-	 * @param   string  $buffer
-	 *
-	 * @return  string
-	 */
-	public static function formatXml($buffer)
-	{
-		if (empty(static::$instance['xml']))
-		{
-			$instance = new static;
-			$instance->setInlineElements(array());
-
-			static::$instance['xml'] = $instance;
-		}
-
-		return static::getInstance('html')->indent($buffer);
+		return static::getInstance()->indent($buffer);
 	}
 
 	/**
@@ -157,103 +106,43 @@ class DomFormatter
 	}
 
 	/**
-	 * @param   string   $elementName Element name, e.g. "b".
-	 * @param   integer  $type
+	 * indent
 	 *
-	 * @return  void
-	 */
-	public function setElementType($elementName, $type)
-	{
-		if ($type === static::ELEMENT_TYPE_BLOCK)
-		{
-			$this->inlineElements = array_diff($this->inlineElements, array($elementName));
-		}
-		else
-		{
-			if ($type === static::ELEMENT_TYPE_INLINE)
-			{
-				$this->inlineElements[] = $elementName;
-			}
-			else
-			{
-				throw new \InvalidArgumentException('Unrecognized element type.');
-			}
-		}
-
-		$this->inlineElements = array_unique($this->inlineElements);
-	}
-
-	/**
-	 * Format Html.
+	 * @param   string  $input
 	 *
-	 * @param string $input HTML input.
-	 *
-	 * @return string Indented HTML.
+	 * @return  string
 	 */
 	public function indent($input)
 	{
 		$this->log = array();
 
-		// Dindent does not indent <script> body. Instead, it temporary removes it from the code,
-		// indents the input, and restores the script body.
-		if (preg_match_all('/<script\b[^>]*>([\s\S]*?)<\/script>/mi', $input, $matches))
-		{
-			$this->temporaryReplacementsScript = $matches[0];
-			foreach ($matches[0] as $i => $match)
-			{
-				$input = str_replace($match, '<script>' . ($i + 1) . '</script>', $input);
-			}
-		}
+		$input = $this->removeDoubleWhiteSpace($input);
 
-		/*
-		 * Removing double whitespaces to make the source code easier to read.
-		 * With exception of <pre>/ CSS white-space changing the default behaviour,
-		 * double whitespace is meaningless in HTML output.
-		 *
-		 * This reason alone is sufficient not to use Dindent in production.
-		 */
-		$input = str_replace("\t", '', $input);
-		$input = preg_replace('/\s{2,}/', ' ', $input);
+		$output = $this->doIndent($input);
 
-		// Remove inline elements and replace them with text entities.
-		if (preg_match_all('/<(' . implode('|', $this->inlineElements) . ')[^>]*>(?:[^<]*)<\/\1>/', $input, $matches))
-		{
-			$this->temporaryReplacementsInline = $matches[0];
+		return trim($output);
+	}
 
-			foreach ($matches[0] as $i => $match)
-			{
-				$input = str_replace($match, 'ᐃ' . ($i + 1) . 'ᐃ', $input);
-			}
-		}
-
+	/**
+	 * Format Dom.
+	 *
+	 * @param string $input Dom input.
+	 *
+	 * @return string Indented Dom.
+	 */
+	public function doIndent($input)
+	{
 		$subject = $input;
 
 		$output = '';
 
-		$next_line_indentation_level = 0;
+		$nextLineIndentationLevel = 0;
 
 		do
 		{
-			$indentation_level = $next_line_indentation_level;
+			$indentationLevel = $nextLineIndentationLevel;
 
-			$patterns = array(
-				// block tag
-				'/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\/(?:\2)>)/'  => static::MATCH_INDENT_NO,
-				// DOCTYPE
-				'/^<!([^>]*)>/'                                => static::MATCH_INDENT_NO,
-				// tag with implied closing
-				'/^<(input|link|meta|base|br|img|hr)([^>]*)>/' => static::MATCH_INDENT_NO,
-				// opening tag
-				'/^<[^\/]([^>]*)>/'                            => static::MATCH_INDENT_INCREASE,
-				// closing tag
-				'/^<\/([^>]*)>/'                               => static::MATCH_INDENT_DECREASE,
-				// self-closing tag
-				'/^<(.+)\/>/'                                  => static::MATCH_INDENT_DECREASE,
-				// whitespace
-				'/^(\s+)/'                                     => static::MATCH_DISCARD,
-				// text node
-				'/([^<]+)/'                                    => static::MATCH_INDENT_NO
-			);
+			$patterns = $this->getTagPatterns();
 
 			$rules = array('NO', 'DECREASE', 'INCREASE', 'DISCARD');
 
@@ -283,21 +172,21 @@ class DomFormatter
 					{
 						if ($rule === static::MATCH_INDENT_DECREASE)
 						{
-							$next_line_indentation_level--;
-							$indentation_level--;
+							$nextLineIndentationLevel--;
+							$indentationLevel--;
 						}
 						else
 						{
-							$next_line_indentation_level++;
+							$nextLineIndentationLevel++;
 						}
 					}
 
-					if ($indentation_level < 0)
+					if ($indentationLevel < 0)
 					{
-						$indentation_level = 0;
+						$indentationLevel = 0;
 					}
 
-					$output .= str_repeat($this->options['indentation_character'], $indentation_level) . $matches[0] . "\n";
+					$output .= str_repeat($this->options['indentation_character'], $indentationLevel) . $matches[0] . "\n";
 
 					break;
 				}
@@ -319,17 +208,54 @@ class DomFormatter
 
 		$output = preg_replace('/(<(\w+)[^>]*>)\s*(<\/\2>)/', '\\1\\3', $output);
 
-		foreach ($this->temporaryReplacementsScript as $i => $original)
-		{
-			$output = str_replace('<script>' . ($i + 1) . '</script>', $original, $output);
-		}
+		return $output;
+	}
 
-		foreach ($this->temporaryReplacementsInline as $i => $original)
-		{
-			$output = str_replace('ᐃ' . ($i + 1) . 'ᐃ', $original, $output);
-		}
+	/**
+	 * removeDoubleWhiteSpace
+	 *
+	 * @param  string $input
+	 *
+	 * @return  string
+	 */
+	protected function removeDoubleWhiteSpace($input)
+	{
+		/*
+		 * Removing double whitespaces to make the source code easier to read.
+		 * With exception of <pre>/ CSS white-space changing the default behaviour,
+		 * double whitespace is meaningless in HTML output.
+		 *
+		 * This reason alone is sufficient not to use Dindent in production.
+		 */
+		$input = str_replace("\t", '', $input);
+		$input = preg_replace('/\s{2,}/', ' ', $input);
 
-		return trim($output);
+		return $input;
+	}
+
+	/**
+	 * getTagPatterns
+	 *
+	 * @return  array
+	 */
+	protected function getTagPatterns()
+	{
+		return array(
+			// block tag
+			'/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\/(?:\2)>)/'  => static::MATCH_INDENT_NO,
+			// DOCTYPE
+			'/^<!([^>]*)>/'                                => static::MATCH_INDENT_NO,
+			// opening tag
+			'/^<[^\/]([^>]*)>/'                            => static::MATCH_INDENT_INCREASE,
+			// closing tag
+			'/^<\/([^>]*)>/'                               => static::MATCH_INDENT_DECREASE,
+			// self-closing tag
+			'/^<(.+)\/>/'                                  => static::MATCH_INDENT_DECREASE,
+			// whitespace
+			'/^(\s+)/'                                     => static::MATCH_DISCARD,
+			// text node
+			'/([^<]+)/'                                    => static::MATCH_INDENT_NO
+		);
 	}
 
 	/**
@@ -340,19 +266,5 @@ class DomFormatter
 	public function getLog()
 	{
 		return $this->log;
-	}
-
-	/**
-	 * Method to set property inlineElements
-	 *
-	 * @param   array $inlineElements
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setInlineElements($inlineElements)
-	{
-		$this->inlineElements = (array) $inlineElements;
-
-		return $this;
 	}
 }

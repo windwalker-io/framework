@@ -9,6 +9,7 @@
 namespace Windwalker\Test\TestCase;
 
 use Windwalker\Dom\Format\DomFormatter;
+use Windwalker\Dom\Format\HtmlFormatter;
 use Windwalker\Test\Helper\DomHelper;
 
 /**
@@ -58,8 +59,8 @@ class AbstractDomTestCase extends AbstractBaseTestCase
 		$canonicalize = FALSE, $ignoreCase = FALSE)
 	{
 		$this->assertEquals(
-			DomFormatter::formatXml((string) $expected),
-			DomFormatter::formatXml((string) $actual),
+			DomFormatter::format((string) $expected),
+			DomFormatter::format((string) $actual),
 			$message,
 			$delta,
 			$maxDepth,
@@ -83,8 +84,8 @@ class AbstractDomTestCase extends AbstractBaseTestCase
 		$canonicalize = FALSE, $ignoreCase = FALSE)
 	{
 		$this->assertEquals(
-			DomFormatter::format((string) $expected),
-			DomFormatter::format((string) $actual),
+			HtmlFormatter::format((string) $expected),
+			HtmlFormatter::format((string) $actual),
 			$message,
 			$delta,
 			$maxDepth,
