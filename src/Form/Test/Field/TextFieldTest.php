@@ -9,14 +9,14 @@
 namespace Windwalker\Form\Test\Field;
 
 use Windwalker\Form\Field\TextField;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of TextField
  *
  * @since 2.0
  */
-class TextFieldTest extends DomTestCase
+class TextFieldTest extends AbstractDomTestCase
 {
 	/**
 	 * Test instance.

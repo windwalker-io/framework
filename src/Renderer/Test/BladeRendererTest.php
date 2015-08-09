@@ -11,14 +11,14 @@ namespace Windwalker\Renderer\Test;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Folder;
 use Windwalker\Renderer\BladeRenderer;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of BladeRenderer
  *
  * @since 2.0
  */
-class BladeRendererTest extends DomTestCase
+class BladeRendererTest extends AbstractDomTestCase
 {
 	/**
 	 * Test instance.

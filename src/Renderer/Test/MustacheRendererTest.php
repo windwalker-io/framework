@@ -9,14 +9,14 @@
 namespace Windwalker\Renderer\Test;
 
 use Windwalker\Renderer\MustacheRenderer;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of MustacheRenderer
  *
  * @since 2.0
  */
-class MustacheRendererTest extends DomTestCase
+class MustacheRendererTest extends AbstractDomTestCase
 {
 	/**
 	 * Test instance.

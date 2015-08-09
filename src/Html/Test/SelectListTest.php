@@ -10,14 +10,14 @@ namespace Windwalker\Html\Test;
 
 use Windwalker\Html\Option;
 use Windwalker\Html\Select\SelectList;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of SelectList
  *
  * @since 2.0
  */
-class SelectListTest extends DomTestCase
+class SelectListTest extends AbstractDomTestCase
 {
 	/**
 	 * Test instance.
@@ -78,7 +78,7 @@ class SelectListTest extends DomTestCase
 </select>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $select);
+		$this->assertHtmlFormatEquals($expect, $select);
 
 		$expect = <<<HTML
 <select class="input-select" name="form[timezone]">
@@ -92,7 +92,7 @@ HTML;
 
 		$select->addOption(new Option('Europe - London', 'Europe/London'));
 
-		$this->assertDomStringEqualsDomString($expect, $select);
+		$this->assertHtmlFormatEquals($expect, $select);
 	}
 
 	/**
@@ -137,7 +137,7 @@ HTML;
 </select>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $select);
+		$this->assertHtmlFormatEquals($expect, $select);
 
 		$expect = <<<HTML
 <select class="input-select" name="form[timezone]">
@@ -156,7 +156,7 @@ HTML;
 HTML;
 		$select->addOption(new Option('Europe - London', 'Europe/London'), 'Europe');
 
-		$this->assertDomStringEqualsDomString($expect, $select);
+		$this->assertHtmlFormatEquals($expect, $select);
 	}
 
 	/**

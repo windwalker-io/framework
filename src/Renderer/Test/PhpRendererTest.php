@@ -9,14 +9,14 @@
 namespace Windwalker\Renderer\Test;
 
 use Windwalker\Renderer\PhpRenderer;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of PhpRenderer
  *
  * @since 2.0
  */
-class PhpRendererTest extends DomTestCase
+class PhpRendererTest extends AbstractDomTestCase
 {
 	/**
 	 * Test instance.

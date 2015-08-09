@@ -11,14 +11,14 @@ namespace Windwalker\Renderer\Test;
 use Windwalker\Renderer\Test\Stub\StubTwigExtension;
 use Windwalker\Renderer\Twig\GlobalContainer;
 use Windwalker\Renderer\TwigRenderer;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of GlobalContainer
  *
  * @since 2.0
  */
-class GlobalContainerTest extends DomTestCase
+class GlobalContainerTest extends AbstractDomTestCase
 {
 	/**
 	 * Method to test addExtension().

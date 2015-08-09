@@ -10,14 +10,14 @@ namespace Windwalker\Html\Test;
 
 use Windwalker\Html\Option;
 use Windwalker\Html\Select\CheckboxList;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of CheckboxList
  *
  * @since 2.0
  */
-class CheckboxListTest extends DomTestCase
+class CheckboxListTest extends AbstractDomTestCase
 {
 	/**
 	 * testCreateList
@@ -57,6 +57,6 @@ class CheckboxListTest extends DomTestCase
 </span>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $select);
+		$this->assertHtmlFormatEquals($expect, $select);
 	}
 }

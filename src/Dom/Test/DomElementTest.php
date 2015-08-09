@@ -10,13 +10,14 @@ namespace Windwalker\Dom\Test;
 
 use Windwalker\Dom\DomElement;
 use Windwalker\Dom\Helper\DomHelper;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of DomElement
  *
  * @since 2.0
  */
-class DomElementTest extends \PHPUnit_Framework_TestCase
+class DomElementTest extends AbstractDomTestCase
 {
 	/**
 	 * domTestCase
@@ -95,9 +96,9 @@ class DomElementTest extends \PHPUnit_Framework_TestCase
 	{
 		$element = new DomElement($tag, $content, $attribs);
 
-		$this->assertEquals(
-			DomHelper::minify($expect),
-			DomHelper::minify($element->toString($forcePaired)),
+		$this->assertDomFormatEquals(
+			$expect,
+			$element->toString($forcePaired),
 			'Dom build case fail: ' . $name
 		);
 	}
@@ -111,9 +112,9 @@ class DomElementTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__toString()
 	{
-		$this->assertEquals(
-			DomHelper::minify('<field id="foo">data</field>'),
-			DomHelper::minify(new DomElement('field', 'data', array('id' => 'foo')))
+		$this->assertDomFormatEquals(
+			'<field id="foo">data</field>',
+			new DomElement('field', 'data', array('id' => 'foo'))
 		);
 	}
 

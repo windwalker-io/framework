@@ -1,0 +1,50 @@
+<?php
+/**
+ * Part of Windwalker project. 
+ *
+ * @copyright  Copyright (C) 2015 {ORGANIZATION}. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
+
+namespace Windwalker\Html\Media;
+
+/**
+ * The Audio class.
+ * 
+ * @since  {DEPLOY_VERSION}
+ */
+class Audio extends AbstractMediaElement
+{
+	/**
+	 * Property name.
+	 *
+	 * @var  string
+	 */
+	protected $name = 'audio';
+
+	/**
+	 * addMp3Source
+	 *
+	 * @param string $src
+	 * @param string $media
+	 *
+	 * @return  static
+	 */
+	public function addMp3Source($src, $media = null)
+	{
+		return $this->addSource('mpeg', $src, $media);
+	}
+
+	/**
+	 * addWavSource
+	 *
+	 * @param string $src
+	 * @param string $media
+	 *
+	 * @return  static
+	 */
+	public function addWavSource($src, $media = null)
+	{
+		return $this->addSource('wav', $src, $media);
+	}
+}

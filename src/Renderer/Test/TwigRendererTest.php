@@ -11,14 +11,14 @@ namespace Windwalker\Renderer\Test;
 use Windwalker\Environment\PhpHelper;
 use Windwalker\Renderer\Test\Stub\StubTwigExtension;
 use Windwalker\Renderer\TwigRenderer;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of TwigRenderer
  *
  * @since 2.0
  */
-class TwigRendererTest extends DomTestCase
+class TwigRendererTest extends AbstractDomTestCase
 {
 	/**
 	 * Property path.

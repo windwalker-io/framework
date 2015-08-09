@@ -70,6 +70,18 @@ class DomElement implements \ArrayAccess
 	}
 
 	/**
+	 * Alias of toString()
+	 *
+	 * @param boolean $forcePair
+	 *
+	 * @return  string
+	 */
+	public function render($forcePair = false)
+	{
+		return $this->toString($forcePair);
+	}
+
+	/**
 	 * Convert this object to string.
 	 *
 	 * @return  string
@@ -101,7 +113,7 @@ class DomElement implements \ArrayAccess
 	 *
 	 * @param   mixed $content Element content.
 	 *
-	 * @return  HtmlElement  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setContent($content)
 	{
@@ -134,11 +146,11 @@ class DomElement implements \ArrayAccess
 	 * @param string $name  Attribute name.
 	 * @param string $value The value to set into attribute.
 	 *
-	 * @return  HtmlElement  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setAttribute($name, $value)
 	{
-		$this->attribs[$name] = (string) $value;
+		$this->attribs[$name] = $value;
 
 		return $this;
 	}
@@ -158,7 +170,7 @@ class DomElement implements \ArrayAccess
 	 *
 	 * @param   array $attribs All attributes.
 	 *
-	 * @return  HtmlElement  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setAttributes($attribs)
 	{
@@ -182,7 +194,7 @@ class DomElement implements \ArrayAccess
 	 *
 	 * @param   string $name Set element tag name.
 	 *
-	 * @return  HtmlElement  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 */
 	public function setName($name)
 	{

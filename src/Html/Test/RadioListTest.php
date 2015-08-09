@@ -10,14 +10,14 @@ namespace Windwalker\Html\Test;
 
 use Windwalker\Html\Option;
 use Windwalker\Html\Select\RadioList;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of RadioList
  *
  * @since 2.0
  */
-class RadioListTest extends DomTestCase
+class RadioListTest extends AbstractDomTestCase
 {
 	/**
 	 * Tears down the fixture, for example, closes a network connection.
@@ -67,6 +67,6 @@ class RadioListTest extends DomTestCase
 </span>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $select);
+		$this->assertHtmlFormatEquals($expect, $select);
 	}
 }

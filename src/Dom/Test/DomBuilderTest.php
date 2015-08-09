@@ -10,13 +10,14 @@ namespace Windwalker\Dom\Test;
 
 use Windwalker\Dom\Builder\DomBuilder;
 use Windwalker\Dom\Helper\DomHelper;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of DomBuilder
  *
  * @since 2.0
  */
-class DomBuilderTest extends \PHPUnit_Framework_TestCase
+class DomBuilderTest extends AbstractDomTestCase
 {
 	/**
 	 * domTestCase
@@ -91,9 +92,9 @@ class DomBuilderTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCreate($name, $expect, $tag, $content, $attribs, $forcePaired)
 	{
-		$this->assertEquals(
-			DomHelper::minify($expect),
-			DomHelper::minify(DomBuilder::create($tag, $content, $attribs, $forcePaired)),
+		$this->assertDomFormatEquals(
+			$expect,
+			DomBuilder::create($tag, $content, $attribs, $forcePaired),
 			'Dom build case fail: ' . $name
 		);
 	}

@@ -10,14 +10,14 @@ namespace Windwalker\Form\Test\Field;
 
 use Windwalker\Form\Field\ListField;
 use Windwalker\Html\Option;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 
 /**
  * Test class of TextField
  *
  * @since 2.0
  */
-class ListFieldTest extends DomTestCase
+class ListFieldTest extends AbstractDomTestCase
 {
 	/**
 	 * Test instance.

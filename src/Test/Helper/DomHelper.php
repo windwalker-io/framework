@@ -49,4 +49,44 @@ class DomHelper
 
 		return trim($buffer);
 	}
+
+	/**
+	 * format
+	 *
+	 * @param   string  $buffer
+	 *
+	 * @return  string
+	 */
+	public static function format($buffer)
+	{
+		$dom = new \DOMDocument;
+
+		$dom->preserveWhiteSpace = false;
+
+		$dom->loadXML($buffer);
+
+		$dom->formatOutput = true;
+
+		return $dom->saveXML();
+	}
+
+	/**
+	 * format
+	 *
+	 * @param   string  $buffer
+	 *
+	 * @return  string
+	 */
+	public static function formatHtml($buffer)
+	{
+		$dom = new \DOMDocument;
+
+		$dom->preserveWhiteSpace = true;
+
+		$dom->loadXML($buffer);
+
+		$dom->formatOutput = true;
+
+		return $dom->saveXML();
+	}
 }

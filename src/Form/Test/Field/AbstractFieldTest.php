@@ -13,7 +13,7 @@ use Windwalker\Filter\InputFilter;
 use Windwalker\Form\Test\Stub\StubField;
 use Windwalker\Form\Test\Stub\StubFilter;
 use Windwalker\Form\Validate\ValidateResult;
-use Windwalker\Test\TestCase\DomTestCase;
+use Windwalker\Test\TestCase\AbstractDomTestCase;
 use Windwalker\Validator\Rule\EmailValidator;
 use Windwalker\Validator\Rule\IpValidator;
 
@@ -22,7 +22,7 @@ use Windwalker\Validator\Rule\IpValidator;
  *
  * @since 2.0
  */
-class AbstractFieldTest extends DomTestCase
+class AbstractFieldTest extends AbstractDomTestCase
 {
 	/**
 	 * Test instance.

@@ -49,13 +49,13 @@ class AbstractInputList extends HtmlElement
 	 * @param array      $attribs
 	 * @param mixed      $checked
 	 */
-	public function __construct($name, $options, $attribs = array(), $checked = null)
+	public function __construct($name, $options = array(), $attribs = array(), $checked = null)
 	{
 		$attribs['name'] = $name;
 
 		$this->checked = $checked;
 
-		parent::__construct('span', $options, $attribs);
+		parent::__construct('span', (array) $options, $attribs);
 	}
 
 	/**

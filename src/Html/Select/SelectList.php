@@ -48,14 +48,26 @@ class SelectList extends HtmlElement
 	 * @param mixed      $selected
 	 * @param bool       $multiple
 	 */
-	public function __construct($name, $options, $attribs = array(), $selected = null, $multiple = false)
+	public function __construct($name, $options = array(), $attribs = array(), $selected = null, $multiple = false)
 	{
 		$attribs['name'] = $name;
 
 		$this->setSelected($selected);
 		$this->setMultiple($multiple);
 
-		parent::__construct('select', $options, $attribs);
+		parent::__construct('select', (array) $options, $attribs);
+	}
+
+	/**
+	 * Quick create for PHP 5.3
+	 *
+	 * @param   array  $attribs
+	 *
+	 * @return  static
+	 */
+	public static function create($name, $attribs = array())
+	{
+		return new static($name, array(), $attribs);
 	}
 
 	/**
