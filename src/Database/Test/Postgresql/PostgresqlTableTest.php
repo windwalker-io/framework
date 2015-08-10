@@ -318,20 +318,20 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addColumn(new Column\Integer('foo'))
+		$table->addColumn(new Column\Varchar('foo'))
 			->save();
+
+		$table->modifyColumn(new Column\Integer('foo', 3));
+
+		$tables = $table->getColumnDetails();
+
+		$this->assertEquals('integer', $tables['foo']->Type);
 
 		$table->modifyColumn(new Column\Tinyint('foo', 3));
 
 		$tables = $table->getColumnDetails();
 
 		$this->assertEquals('smallint', $tables['foo']->Type);
-
-		$table->modifyColumn(new Column\Varchar('foo', 3));
-
-		$tables = $table->getColumnDetails();
-
-		$this->assertEquals('varchar(3)', $tables['foo']->Type);
 	}
 
 	/**

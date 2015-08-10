@@ -390,7 +390,7 @@ class PostgresqlTable extends AbstractTable
 			$query->quoteName($name),
 			'TYPE',
 			$type . $length,
-			isset($options['using']) ? 'USING ' . $options['using'] : null
+			$this->usingTextToNumeric($name, $type)
 		);
 
 		$sql .= ";\n" . PostgresqlQueryBuilder::build(
@@ -464,7 +464,8 @@ class PostgresqlTable extends AbstractTable
 			'ALTER COLUMN',
 			$query->quoteName($oldName),
 			'TYPE',
-			$type . $length
+			$type . $length,
+			$this->usingTextToNumeric($oldName, $type)
 		);
 
 		// Not NULL
@@ -505,6 +506,45 @@ class PostgresqlTable extends AbstractTable
 		DatabaseHelper::batchQuery($this->db, $sql);
 
 		return $this;
+	}
+
+	/**
+	 * usingTextToNumeric
+	 *
+	 * @param   string  $column
+	 * @param   string  $type
+	 *
+	 * @return  string
+	 */
+	protected function usingTextToNumeric($column, $type)
+	{
+		$type = strtolower($type);
+
+		$details = $this->getColumnDetail($column);
+
+		list($originType) = explode('(', $details->Type);
+
+		$textTypes = array(
+			PostgresqlType::TEXT,
+			PostgresqlType::CHAR,
+			PostgresqlType::CHARACTER,
+			PostgresqlType::VARCHAR
+		);
+
+		$numericTypes = array(
+			PostgresqlType::INTEGER,
+			PostgresqlType::SMALLINT,
+			PostgresqlType::FLOAT,
+			PostgresqlType::DOUBLE,
+			PostgresqlType::DECIMAL
+		);
+
+		if (in_array($originType, $textTypes) && in_array($type, $numericTypes))
+		{
+			return sprintf('USING trim(%s)::%s', $this->db->quoteName($column), $type);
+		}
+
+		return null;
 	}
 
 	/**
