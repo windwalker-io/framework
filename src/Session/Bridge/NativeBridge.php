@@ -20,25 +20,29 @@ class NativeBridge implements SessionBridgeInterface
 	 *
 	 * @var boolean
 	 */
-	protected $started;
+	protected static $started = false;
 
 	/**
 	 * Property closed.
 	 *
 	 * @var boolean
 	 */
-	protected $closed;
+	protected static $closed = false;
 
 	/**
 	 * Class init.
 	 */
 	public function __construct()
 	{
-		// Disable transparent sid support
-		ini_set('session.use_trans_sid', '0');
+		// Do not re set ini if session has started.
+		if (!$this->isStarted())
+		{
+			// Disable transparent sid support
+			ini_set('session.use_trans_sid', '0');
 
-		// Only allow the session ID to come from cookies and nothing else.
-		ini_set('session.use_only_cookies', '1');
+			// Only allow the session ID to come from cookies and nothing else.
+			ini_set('session.use_only_cookies', '1');
+		}
 	}
 
 	/**
@@ -50,6 +54,11 @@ class NativeBridge implements SessionBridgeInterface
 	 */
 	public function start()
 	{
+		if ($this->isStarted())
+		{
+			return true;
+		}
+
 		/*
 		 * Write and Close handlers are called after destructing objects since PHP 5.0.5.
 		 * Thus destructors can use sessions but session handler can't use objects.
@@ -71,7 +80,7 @@ class NativeBridge implements SessionBridgeInterface
 			throw new \RuntimeException('Failed to start the session');
 		}
 
-		$this->started = true;
+		static::$started = true;
 
 		return true;
 	}
@@ -83,7 +92,7 @@ class NativeBridge implements SessionBridgeInterface
 	 */
 	public function isStarted()
 	{
-		return $this->started;
+		return static::$started && $this->getId();
 	}
 
 	/**
@@ -211,8 +220,8 @@ class NativeBridge implements SessionBridgeInterface
 	{
 		session_write_close();
 
-		$this->closed = true;
-		$this->started = false;
+		static::$closed = true;
+		static::$started = false;
 	}
 
 	/**
@@ -223,14 +232,14 @@ class NativeBridge implements SessionBridgeInterface
 	public function destroy()
 	{
 		// Need to destroy any existing sessions started with session.auto_start
-		if (session_id())
+		if ($this->getId())
 		{
 			session_unset();
 			session_destroy();
 		}
 
-		$this->closed = true;
-		$this->started = false;
+		static::$closed = true;
+		static::$started = false;
 	}
 
 	/**

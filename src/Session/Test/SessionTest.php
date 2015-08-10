@@ -56,6 +56,18 @@ class SessionTest extends AbstractSessionTestCase
 	{
 	}
 
+	public function testDoubleStart()
+	{
+		$levelBak = error_reporting(0);
+		$session = new Session;
+
+		$session->start();
+
+		$session2 = new Session;
+
+		$session2->start();
+	}
+
 	/**
 	 * Method to test start().
 	 *
