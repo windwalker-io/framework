@@ -10,6 +10,11 @@ namespace Windwalker\Record;
 
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Event\Dispatcher;
+use Windwalker\Event\DispatcherInterface;
+use Windwalker\Event\Event;
+use Windwalker\Event\EventInterface;
+use Windwalker\Event\ListenerMapper;
 use Windwalker\Query\Query;
 
 /**
@@ -74,6 +79,13 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * @since  2.0
 	 */
 	protected $db;
+
+	/**
+	 * Property dispatcher.
+	 *
+	 * @var  Dispatcher
+	 */
+	protected $dispatcher;
 
 	/**
 	 * Object constructor to set table and key fields.  In most cases this will
@@ -323,6 +335,12 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function load($keys = null, $reset = true)
 	{
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'conditions'  => &$keys,
+			'reset' => &$reset
+		));
+
 		if (empty($keys))
 		{
 			$empty = true;
@@ -397,7 +415,14 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		}
 
 		// Bind the object with the row and return.
-		return $this->bind($row);
+		$row = $this->bind($row);
+
+		// Event
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+			'result' => &$row,
+		));
+
+		return $row;
 	}
 
 	/**
@@ -412,6 +437,11 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function delete($pKey = null)
 	{
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'conditions'  => &$pKey
+		));
+
 		$key = $this->getKeyName();
 
 		$pKey = (is_null($pKey)) ? $this->$key : $pKey;
@@ -428,6 +458,9 @@ class Record implements \ArrayAccess, \IteratorAggregate
 				->delete($this->db->quoteName($this->table))
 				->where($this->db->quoteName($key) . ' = ' . $this->db->quote($pKey))
 		)->execute();
+
+		// Event
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
 		return $this;
 	}
@@ -484,6 +517,11 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function store($updateNulls = false)
 	{
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'updateNulls'  => &$updateNulls
+		));
+
 		// If a primary key exists update the object, otherwise insert it.
 		if ($this->hasPrimaryKey())
 		{
@@ -493,6 +531,9 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		{
 			$this->db->getWriter()->insertOne($this->table, $this->data, $this->keys[0]);
 		}
+
+		// Event
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
 		return $this;
 	}
@@ -863,5 +904,76 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	public function offsetUnset($offset)
 	{
 		$this->data->$offset = null;
+	}
+
+	/**
+	 * triggerEvent
+	 *
+	 * @param   string|Event  $event
+	 * @param   array         $args
+	 *
+	 * @return  Event
+	 *
+	 * @since   2.1
+	 */
+	public function triggerEvent($event, $args = array())
+	{
+		$dispatcher = $this->getDispatcher();
+
+		if (!$dispatcher instanceof DispatcherInterface)
+		{
+			return null;
+		}
+
+		$args['record'] = $this;
+
+		$event = $this->dispatcher->triggerEvent($event, $args);
+
+		$innerListener = array($this, $event->getName());
+
+		if (!$event->isStopped() && is_callable($innerListener))
+		{
+			call_user_func($innerListener, $event);
+		}
+
+		return $event;
+	}
+
+	/**
+	 * Method to get property Dispatcher
+	 *
+	 * @return  DispatcherInterface
+	 *
+	 * @since   2.1
+	 */
+	public function getDispatcher()
+	{
+		if (!$this->dispatcher && class_exists('Windwalker\Event\Dispatcher'))
+		{
+			$this->dispatcher = new Dispatcher;
+
+			if (is_subclass_of($this, 'Windwalker\Evebt\DispatcherAwareInterface'))
+			{
+				ListenerMapper::add($this);
+			}
+		}
+
+		return $this->dispatcher;
+	}
+
+	/**
+	 * Method to set property dispatcher
+	 *
+	 * @param   DispatcherInterface $dispatcher
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.1
+	 */
+	public function setDispatcher(DispatcherInterface $dispatcher)
+	{
+		$this->dispatcher = $dispatcher;
+
+		return $this;
 	}
 }

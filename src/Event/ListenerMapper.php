@@ -66,7 +66,7 @@ class ListenerMapper
 	 *
 	 * @return  boolean
 	 */
-	public static function add($target)
+	public static function add(DispatcherAwareInterface $target)
 	{
 		if (!$target instanceof DispatcherAwareInterface)
 		{

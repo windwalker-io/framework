@@ -989,7 +989,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		{
 			$this->dispatcher = new Dispatcher;
 
-			ListenerMapper::add($this);
+			if (is_subclass_of($this, 'Windwalker\Evebt\DispatcherAwareInterface'))
+			{
+				ListenerMapper::add($this);
+			}
 		}
 
 		return $this->dispatcher;
