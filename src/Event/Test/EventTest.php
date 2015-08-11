@@ -11,7 +11,7 @@ use Windwalker\Event\Event;
 /**
  * Tests for the Event class.
  *
- * @since  1.0
+ * @since  2.0
  */
 class EventTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @var    Event
 	 *
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	private $instance;
 
@@ -46,7 +46,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetName()
 	{
@@ -58,7 +58,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetArgument()
 	{
@@ -91,7 +91,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testHasArgument()
 	{
@@ -108,7 +108,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetArguments()
 	{
@@ -143,7 +143,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testIsStopped()
 	{
@@ -155,7 +155,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testCount()
 	{
@@ -177,7 +177,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testSerializeUnserialize()
 	{
@@ -210,7 +210,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testOffsetExists()
 	{
@@ -226,7 +226,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testOffsetGet()
 	{
@@ -259,7 +259,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAddArgument()
 	{
@@ -286,7 +286,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAddArgumentExisting()
 	{
@@ -302,7 +302,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testSetArgument()
 	{
@@ -329,7 +329,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testSetArgumentExisting()
 	{
@@ -345,7 +345,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testRemoveArgument()
 	{
@@ -364,7 +364,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testClearArguments()
 	{
@@ -392,7 +392,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testStop()
 	{
@@ -408,7 +408,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testOffsetSet()
 	{
@@ -437,7 +437,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testOffsetSetException()
 	{
@@ -449,7 +449,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testOffsetUnset()
 	{
@@ -469,7 +469,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	protected function setUp()
 	{

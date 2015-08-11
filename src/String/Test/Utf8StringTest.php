@@ -19,7 +19,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var    String
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	protected $object;
 
@@ -48,7 +48,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.2.0
+	 * @since   2.0
 	 */
 	public function seedTestIs_ascii()
 	{
@@ -68,7 +68,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrpos()
 	{
@@ -89,7 +89,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestGetStrrpos()
 	{
@@ -109,7 +109,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestSubstr()
 	{
@@ -127,7 +127,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrtolower()
 	{
@@ -141,7 +141,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrtoupper()
 	{
@@ -155,7 +155,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrlen()
 	{
@@ -169,7 +169,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStr_ireplace()
 	{
@@ -188,7 +188,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStr_split()
 	{
@@ -205,7 +205,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrcasecmp()
 	{
@@ -228,7 +228,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrcmp()
 	{
@@ -254,7 +254,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrcspn()
 	{
@@ -270,7 +270,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStristr()
 	{
@@ -286,7 +286,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrrev()
 	{
@@ -301,7 +301,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestStrspn()
 	{
@@ -326,7 +326,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestSubstr_replace()
 	{
@@ -343,7 +343,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestLtrim()
 	{
@@ -363,7 +363,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestRtrim()
 	{
@@ -383,7 +383,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestTrim()
 	{
@@ -403,7 +403,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestUcfirst()
 	{
@@ -422,7 +422,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestUcwords()
 	{
@@ -440,13 +440,13 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestTranscode()
 	{
 		return array(
-			array('Åbc Öde €100', 'UTF-8', 'ISO-8859-1', "\xc5bc \xd6de EUR100"),
-			array(array('Åbc Öde €100'), 'UTF-8', 'ISO-8859-1', null),
+			array('Åbc Öde €2.0', 'UTF-8', 'ISO-8859-1', "\xc5bc \xd6de EUR2.0"),
+			array(array('Åbc Öde €2.0'), 'UTF-8', 'ISO-8859-1', null),
 		);
 	}
 
@@ -455,7 +455,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestValid()
 	{
@@ -476,7 +476,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.2.0
+	 * @since   2.0
 	 */
 	public function seedTestUnicodeToUtf8()
 	{
@@ -491,7 +491,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.2.0
+	 * @since   2.0
 	 */
 	public function seedTestUnicodeToUtf16()
 	{
@@ -511,7 +511,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::is_ascii
 	 * @dataProvider  seedTestIs_ascii
-	 * @since         1.2.0
+	 * @since         2.0
 	 */
 	public function testIs_ascii($string, $expected)
 	{
@@ -533,7 +533,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strpos
 	 * @dataProvider  seedTestStrpos
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrpos($expect, $haystack, $needle, $offset = 0)
 	{
@@ -553,7 +553,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strrpos
 	 * @dataProvider  seedTestGetStrrpos
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrrpos($expect, $haystack, $needle, $offset = 0)
 	{
@@ -573,7 +573,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::substr
 	 * @dataProvider  seedTestSubstr
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testSubstr($expect, $string, $start, $length = false)
 	{
@@ -591,7 +591,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strtolower
 	 * @dataProvider  seedTestStrtolower
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrtolower($string, $expect)
 	{
@@ -609,7 +609,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strtoupper
 	 * @dataProvider  seedTestStrtoupper
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrtoupper($string, $expect)
 	{
@@ -627,7 +627,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strlen
 	 * @dataProvider  seedTestStrlen
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrlen($string, $expect)
 	{
@@ -648,7 +648,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::str_ireplace
 	 * @dataProvider  seedTestStr_ireplace
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStr_ireplace($search, $replace, $subject, $count, $expect)
 	{
@@ -667,7 +667,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::str_split
 	 * @dataProvider  seedTestStr_split
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStr_split($string, $split_length, $expect)
 	{
@@ -687,7 +687,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strcasecmp
 	 * @dataProvider  seedTestStrcasecmp
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrcasecmp($string1, $string2, $locale, $expect)
 	{
@@ -730,7 +730,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strcmp
 	 * @dataProvider  seedTestStrcmp
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrcmp($string1, $string2, $locale, $expect)
 	{
@@ -775,7 +775,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strcspn
 	 * @dataProvider  seedTestStrcspn
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrcspn($haystack, $needles, $start, $len, $expect)
 	{
@@ -794,7 +794,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::stristr
 	 * @dataProvider  seedTestStristr
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStristr($haystack, $needle, $expect)
 	{
@@ -812,7 +812,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strrev
 	 * @dataProvider  seedTestStrrev
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrrev($string, $expect)
 	{
@@ -833,7 +833,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::strspn
 	 * @dataProvider  seedTestStrspn
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testStrspn($subject, $mask, $start, $length, $expect)
 	{
@@ -854,7 +854,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::substr_replace
 	 * @dataProvider  seedTestSubstr_replace
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testSubstr_replace($expect, $string, $replacement, $start, $length)
 	{
@@ -873,7 +873,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::ltrim
 	 * @dataProvider  seedTestLtrim
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testLtrim($string, $charlist, $expect)
 	{
@@ -900,7 +900,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::rtrim
 	 * @dataProvider  seedTestRtrim
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testRtrim($string, $charlist, $expect)
 	{
@@ -927,7 +927,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::trim
 	 * @dataProvider  seedTestTrim
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testTrim($string, $charlist, $expect)
 	{
@@ -955,7 +955,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::ucfirst
 	 * @dataProvider  seedTestUcfirst
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testUcfirst($string, $delimiter, $newDelimiter, $expect)
 	{
@@ -973,7 +973,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::ucwords
 	 * @dataProvider  seedTestUcwords
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testUcwords($string, $expect)
 	{
@@ -993,7 +993,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::transcode
 	 * @dataProvider  seedTestTranscode
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testTranscode($source, $from_encoding, $to_encoding, $expect)
 	{
@@ -1011,7 +1011,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::valid
 	 * @dataProvider  seedTestValid
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testValid($string, $expect)
 	{
@@ -1029,7 +1029,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::unicode_to_utf8
 	 * @dataProvider  seedTestUnicodeToUtf8
-	 * @since         1.2.0
+	 * @since         2.0
 	 */
 	public function testUnicodeToUtf8($string, $expect)
 	{
@@ -1047,7 +1047,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::unicode_to_utf16
 	 * @dataProvider  seedTestUnicodeToUtf16
-	 * @since         1.2.0
+	 * @since         2.0
 	 */
 	public function testUnicodeToUtf16($string, $expect)
 	{
@@ -1065,7 +1065,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\Utf8String::compliant
 	 * @dataProvider  seedTestValid
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testCompliant($string, $expect)
 	{

@@ -57,7 +57,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Windwalker\Profiler\Profiler::__construct
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function test__construct()
 	{

@@ -24,7 +24,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function detectBrowser($userAgent)
 	{
@@ -38,7 +38,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function detectEngine($userAgent)
 	{
@@ -52,7 +52,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function detectPlatform($userAgent)
 	{
@@ -66,7 +66,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function detectEncoding($acceptEncoding)
 	{
@@ -80,7 +80,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function detectLanguage($acceptLanguage)
 	{
@@ -94,7 +94,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function detectRobot($userAgent)
 	{
@@ -108,7 +108,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  mixed  The value of the class variable.
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function getProperty($name)
 	{
@@ -129,7 +129,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function loadClientInformation($userAgent = null)
 	{
@@ -141,7 +141,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function fetchConfigurationData()
 	{
@@ -155,7 +155,7 @@ class StubClient extends WebClient
 	 *
 	 * @return  string
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testHelperClient($ua)
 	{

@@ -22,7 +22,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 * An instance of a JWebClient inspector.
 	 *
 	 * @var    StubClient
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	protected $inspector;
 
@@ -31,7 +31,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public static function getUserAgentData()
 	{
@@ -124,7 +124,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public static function getEncodingData()
 	{
@@ -145,7 +145,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public static function getLanguageData()
 	{
@@ -166,7 +166,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public static function detectRobotData()
 	{
@@ -188,7 +188,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function setUp()
 	{
@@ -208,7 +208,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since 11.3
+	 * @since 2.0
 	 */
 	public function test__construct()
 	{
@@ -220,7 +220,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @since 11.3
+	 * @since 2.0
 	 */
 	public function test__get()
 	{
@@ -240,7 +240,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider getUserAgentData
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testDetectBrowser($platform, $mobile, $engine, $browser, $version, $ua)
 	{
@@ -260,7 +260,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider getEncodingData
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testDetectEncoding($ae, $e)
 	{
@@ -283,7 +283,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider getUserAgentData
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testDetectEngine($p, $m, $e, $b, $v, $ua)
 	{
@@ -302,7 +302,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider getLanguageData
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testDetectLanguage($al, $l)
 	{
@@ -325,7 +325,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider getUserAgentData
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testDetectPlatform($p, $m, $e, $b, $v, $ua)
 	{
@@ -345,7 +345,7 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider detectRobotData
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testDetectRobot($userAgent, $expected)
 	{

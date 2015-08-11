@@ -13,7 +13,7 @@ use Windwalker\Uri\UriImmutable;
 /**
  * Tests for the Windwalker\Uri\UriImmutable class.
  *
- * @since  1.0
+ * @since  2.0
  */
 class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 * Object under test
 	 *
 	 * @var    UriImmutable
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	protected $object;
 
@@ -31,7 +31,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	protected function setUp()
 	{
@@ -43,7 +43,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::__toString
 	 */
 	public function test__toString()
@@ -59,7 +59,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::toString
 	 */
 	public function testToString()
@@ -75,7 +75,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::hasVar
 	 */
 	public function testHasVar()
@@ -96,7 +96,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getVar
 	 */
 	public function testGetVar()
@@ -122,7 +122,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getQuery
 	 */
 	public function testGetQuery()
@@ -143,7 +143,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getScheme
 	 */
 	public function testGetScheme()
@@ -159,7 +159,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getUser
 	 */
 	public function testGetUser()
@@ -175,7 +175,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getPass
 	 */
 	public function testGetPass()
@@ -191,7 +191,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getHost
 	 */
 	public function testGetHost()
@@ -207,7 +207,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getPort
 	 */
 	public function testGetPort()
@@ -223,7 +223,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getPath
 	 */
 	public function testGetPath()
@@ -239,7 +239,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::getFragment
 	 */
 	public function testGetFragment()
@@ -255,7 +255,7 @@ class UriImmuteableTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @covers  Windwalker\Uri\UriImmutable::isSSL
 	 */
 	public function testIsSSL()

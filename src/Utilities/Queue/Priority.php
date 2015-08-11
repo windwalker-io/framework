@@ -11,7 +11,7 @@ namespace Windwalker\Utilities\Queue;
 /**
  * Class Priority
  *
- * @since 1.0
+ * @since 2.0
  */
 class Priority
 {

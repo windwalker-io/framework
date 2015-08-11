@@ -116,7 +116,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Windwalker\IO\Cli::get
 	 * @covers  Windwalker\IO\Cli::parseArguments
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testParseLongArguments()
 	{
@@ -155,7 +155,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Windwalker\IO\Cli::get
 	 * @covers  Windwalker\IO\Cli::parseArguments
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testParseShortArguments()
 	{
@@ -323,7 +323,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\IO\Cli::get
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetFromServer()
 	{

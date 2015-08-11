@@ -13,7 +13,7 @@ use Windwalker\Uri\UriHelper;
 /**
  * Tests for the Windwalker\Uri\UriHelper class.
  *
- * @since  1.0
+ * @since  2.0
  */
 class UriHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +23,7 @@ class UriHelperTest extends \PHPUnit_Framework_TestCase
 	 * @return  array
 	 *
 	 * @covers  Windwalker\Uri\UriHelper::parseUrl
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testParseUrl()
 	{

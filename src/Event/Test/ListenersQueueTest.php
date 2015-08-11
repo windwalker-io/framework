@@ -12,7 +12,7 @@ use Windwalker\Event\Test\Stub\EmptyListener;
 /**
  * Tests for the ListenersPriorityQueue class.
  *
- * @since  1.0
+ * @since  2.0
  */
 class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @var    ListenersQueue
 	 *
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	private $instance;
 
@@ -30,7 +30,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAdd()
 	{
@@ -64,7 +64,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAddExisting()
 	{
@@ -82,7 +82,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetPriorityNonExisting()
 	{
@@ -103,7 +103,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testRemove()
 	{
@@ -146,7 +146,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetAll()
 	{
@@ -205,7 +205,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetIterator()
 	{
@@ -267,7 +267,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetIteratorMultipleIterations()
 	{
@@ -301,7 +301,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testCount()
 	{
@@ -323,7 +323,7 @@ class ListenersQueueTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	protected function setUp()
 	{

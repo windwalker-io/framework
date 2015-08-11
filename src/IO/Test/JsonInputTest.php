@@ -52,7 +52,7 @@ class JsonInputTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\IO\Json::__construct
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function test__construct()
 	{
@@ -90,7 +90,7 @@ class JsonInputTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\IO\JsonInput::getRaw
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testgetRaw()
 	{

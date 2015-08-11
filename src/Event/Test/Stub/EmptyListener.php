@@ -9,7 +9,7 @@ namespace Windwalker\Event\Test\Stub;
 /**
  * A listener with no methods.
  *
- * @since  1.0
+ * @since  2.0
  */
 class EmptyListener
 {

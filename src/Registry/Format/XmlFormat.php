@@ -60,7 +60,7 @@ class XmlFormat implements FormatInterface
 
 		foreach ($xml->children() as $node)
 		{
-			$obj->$node['name'] = static::getValueFromNode($node);
+			$obj->{$node['name']} = static::getValueFromNode($node);
 		}
 
 		return $obj;

@@ -12,7 +12,7 @@ use Windwalker\Event\Event;
  * A listener used to test the triggerEvent method in the dispatcher.
  * It will be added in second position.
  *
- * @since  1.0
+ * @since  2.0
  */
 class SecondListener
 {
@@ -23,7 +23,7 @@ class SecondListener
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function onSomething(Event $event)
 	{

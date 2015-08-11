@@ -16,7 +16,7 @@ use Windwalker\Database\Query\QueryHelper;
 /**
  * Class WindwalkerAdapter
  *
- * @since 1.0
+ * @since 2.0
  */
 class WindwalkerAdapter extends DatabaseAdapter
 {

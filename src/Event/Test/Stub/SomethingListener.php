@@ -11,7 +11,7 @@ use Windwalker\Event\Event;
 /**
  * A listener listening to some events.
  *
- * @since  1.0
+ * @since  2.0
  */
 class SomethingListener
 {
@@ -22,7 +22,7 @@ class SomethingListener
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function onBeforeSomething(Event $event)
 	{
@@ -35,7 +35,7 @@ class SomethingListener
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function onSomething(Event $event)
 	{
@@ -48,7 +48,7 @@ class SomethingListener
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function onAfterSomething(Event $event)
 	{

@@ -15,7 +15,7 @@ use Windwalker\Database\Driver\DatabaseDriver;
 /**
  * Class DatabaseTestCase
  *
- * @since 1.0
+ * @since 2.0
  */
 abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 {
@@ -170,7 +170,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	protected function setUp()
 	{

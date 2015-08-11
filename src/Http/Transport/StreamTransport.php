@@ -235,7 +235,7 @@ class StreamTransport extends AbstractTransport
 	 *
 	 * @return  boolean  True if available else false
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public static function isSupported()
 	{

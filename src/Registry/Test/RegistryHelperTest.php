@@ -164,7 +164,7 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\Registry\RegistryHelper::flatten
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testFlatten()
 	{

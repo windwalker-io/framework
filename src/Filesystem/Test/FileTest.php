@@ -69,7 +69,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function dataTestMakeSafe()
 	{

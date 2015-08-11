@@ -13,7 +13,7 @@ use Windwalker\Database\DatabaseFactory;
 /**
  * Class DatabaseAdapter
  *
- * @since 1.0
+ * @since 2.0
  */
 abstract class DatabaseAdapter implements DatabaseAdapterInterface
 {

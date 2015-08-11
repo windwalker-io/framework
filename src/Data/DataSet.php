@@ -16,7 +16,7 @@ if (!interface_exists('JsonSerializable'))
 /**
  * The Data set to store multiple data.
  *
- * @since 1.0
+ * @since 2.0
  */
 class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {

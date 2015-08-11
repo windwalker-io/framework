@@ -13,13 +13,13 @@ use Windwalker\Test\TestHelper;
  * Test for the StringInflector class.
  *
  * @link   http://en.wikipedia.org/wiki/English_plural
- * @since  1.0
+ * @since  2.0
  */
 class InflectorTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var    StringInflector
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	protected $StringInflector;
 
@@ -28,7 +28,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedIsCountable()
 	{
@@ -43,7 +43,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedSinglePlural()
 	{
@@ -87,7 +87,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	protected function setUp()
 	{
@@ -102,7 +102,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::addRule
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAddRule()
 	{
@@ -153,7 +153,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Windwalker\String\StringInflector::addRule
 	 * @expectedException  InvalidArgumentException
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAddRuleException()
 	{
@@ -166,7 +166,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::getCachedPlural
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetCachedPlural()
 	{
@@ -191,7 +191,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::getCachedSingular
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetCachedSingular()
 	{
@@ -216,7 +216,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::matchRegexRule
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testMatchRegexRule()
 	{
@@ -244,7 +244,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::setCache
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testSetCache()
 	{
@@ -275,7 +275,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::addCountableRule
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAddCountableRule()
 	{
@@ -308,7 +308,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::addWord
-	 * @since   1.2.0
+	 * @since   2.0
 	 */
 	public function testAddWord()
 	{
@@ -347,7 +347,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::addPluraliseRule
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAddPluraliseRule()
 	{
@@ -374,7 +374,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::addSingulariseRule
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testAddSingulariseRule()
 	{
@@ -401,7 +401,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::getInstance
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testGetInstance()
 	{
@@ -437,7 +437,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Windwalker\String\StringInflector::isCountable
 	 * @dataProvider  seedIsCountable
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testIsCountable($input, $expected)
 	{
@@ -457,7 +457,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Windwalker\String\StringInflector::isPlural
 	 * @dataProvider  seedSinglePlural
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testIsPlural($singular, $plural)
 	{
@@ -485,7 +485,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Windwalker\String\StringInflector::isSingular
 	 * @dataProvider  seedSinglePlural
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testIsSingular($singular, $plural)
 	{
@@ -513,7 +513,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Windwalker\String\StringInflector::toPlural
 	 * @dataProvider  seedSinglePlural
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testToPlural($singular, $plural)
 	{
@@ -529,7 +529,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::toPlural
-	 * @since   1.2.0
+	 * @since   2.0
 	 */
 	public function testToPluralAlreadyPlural()
 	{
@@ -546,7 +546,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Windwalker\String\StringInflector::toSingular
 	 * @dataProvider  seedSinglePlural
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testToSingular($singular, $plural)
 	{
@@ -562,7 +562,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\String\StringInflector::toSingular
-	 * @since   1.2.0
+	 * @since   2.0
 	 */
 	public function testToSingularRetFalse()
 	{

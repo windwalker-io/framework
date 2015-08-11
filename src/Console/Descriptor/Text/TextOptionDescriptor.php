@@ -23,7 +23,7 @@ class TextOptionDescriptor extends AbstractDescriptor
 	 *
 	 * @var int
 	 *
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	protected $maxLength = 0;
 
@@ -32,7 +32,7 @@ class TextOptionDescriptor extends AbstractDescriptor
 	 *
 	 * @var int
 	 *
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	protected $offsetAfterCommand = 4;
 
@@ -41,7 +41,7 @@ class TextOptionDescriptor extends AbstractDescriptor
 	 *
 	 * @var string
 	 *
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	protected $template = <<<EOF
   <info>%-{WIDTH}s</info>%s
@@ -55,7 +55,7 @@ EOF;
 	 * @throws  \InvalidArgumentException
 	 * @return  string  Rendered description.
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	protected function renderItem($option)
 	{
@@ -104,7 +104,7 @@ EOF;
 	 *
 	 * @return  string
 	 *
-	 * @since  1.0
+	 * @since  2.0
 	 */
 	public function render()
 	{

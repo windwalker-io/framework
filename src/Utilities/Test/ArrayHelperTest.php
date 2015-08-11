@@ -1433,7 +1433,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @dataProvider  seedTestArrayUnique
 	 * @covers        Windwalker\Utilities\ArrayHelper::arrayUnique
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testArrayUnique($input, $expected)
 	{
@@ -1457,7 +1457,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 * @dataProvider  seedTestFromObject
 	 * @covers        Windwalker\Utilities\ArrayHelper::fromObject
 	 * @covers        Windwalker\Utilities\ArrayHelper::arrayFromObject
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testFromObject($input, $recurse, $regex, $expect, $defaults)
 	{
@@ -1485,7 +1485,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @dataProvider  seedTestGetColumn
 	 * @covers        Windwalker\Utilities\ArrayHelper::getColumn
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testGetColumn($input, $index, $expect, $message)
 	{
@@ -1507,7 +1507,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @dataProvider  seedTestGetValue
 	 * @covers        Windwalker\Utilities\ArrayHelper::getValue
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testGetValue($input, $index, $default, $type, $expect, $message, $defaults)
 	{
@@ -1580,7 +1580,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 * @return  void
 	 *
 	 * @dataProvider  seedTestInvert
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testInvert($input, $expected)
 	{
@@ -1642,7 +1642,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @dataProvider  seedTestPivot
 	 * @covers        Windwalker\Utilities\ArrayHelper::pivot
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testPivot($source, $key, $expected)
 	{
@@ -1684,7 +1684,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @dataProvider  seedTestSortObject
 	 * @covers        Windwalker\Utilities\ArrayHelper::sortObjects
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testSortObjects($input, $key, $direction, $casesensitive, $locale, $expect, $message, $defaults, $swappable_keys = array())
 	{
@@ -1742,7 +1742,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @dataProvider  seedTestToInteger
 	 * @covers        Windwalker\Utilities\ArrayHelper::toInteger
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToInteger($input, $default, $expect, $message)
 	{
@@ -1766,7 +1766,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @dataProvider  seedTestToObject
 	 * @covers        Windwalker\Utilities\ArrayHelper::toObject
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToObject($input, $className, $expect, $message)
 	{
@@ -1809,7 +1809,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @dataProvider  seedTestToString
 	 * @covers        Windwalker\Utilities\ArrayHelper::toString
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToString($input, $inner, $outer, $keepKey, $expect, $message, $defaults)
 	{

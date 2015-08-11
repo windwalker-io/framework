@@ -99,7 +99,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestIncrement()
 	{
@@ -126,7 +126,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringHelper::increment
 	 * @dataProvider  seedTestIncrement
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testIncrement($string, $style, $number, $expected)
 	{

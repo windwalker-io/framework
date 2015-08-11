@@ -119,7 +119,7 @@ class ColorProcessorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\IO\Cli\Color\ColorProcessor::process
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testProcessNamed()
 	{
@@ -140,7 +140,7 @@ class ColorProcessorTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Windwalker\IO\Cli\Color\ColorProcessor::replaceColors
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function testProcessReplace()
 	{

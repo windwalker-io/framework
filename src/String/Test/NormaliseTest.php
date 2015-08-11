@@ -11,7 +11,7 @@ use Windwalker\String\StringNormalise;
 /**
  * StringNormaliseTest
  *
- * @since  1.0
+ * @since  2.0
  */
 class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestFromCamelCase()
 	{
@@ -41,7 +41,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestFromCamelCase_nongrouped()
 	{
@@ -58,7 +58,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToCamelCase()
 	{
@@ -77,7 +77,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToDashSeparated()
 	{
@@ -99,7 +99,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToSpaceSeparated()
 	{
@@ -121,7 +121,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToUnderscoreSeparated()
 	{
@@ -143,7 +143,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToVariable()
 	{
@@ -162,7 +162,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 */
 	public function seedTestToKey()
 	{
@@ -186,7 +186,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringNormalise::fromCamelcase
 	 * @dataProvider  seedTestFromCamelCase_nongrouped
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testFromCamelCase_nongrouped($expected, $input)
 	{
@@ -203,7 +203,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringNormalise::fromCamelcase
 	 * @dataProvider  seedTestFromCamelCase
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testFromCamelCase_grouped($input, $expected)
 	{
@@ -220,7 +220,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringNormalise::toCamelcase
 	 * @dataProvider  seedTestToCamelCase
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToCamelCase($expected, $input)
 	{
@@ -237,7 +237,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringNormalise::toDashSeparated
 	 * @dataProvider  seedTestToDashSeparated
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToDashSeparated($expected, $input)
 	{
@@ -254,7 +254,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringNormalise::toSpaceSeparated
 	 * @dataProvider  seedTestToSpaceSeparated
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToSpaceSeparated($expected, $input)
 	{
@@ -271,7 +271,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringNormalise::toUnderscoreSeparated
 	 * @dataProvider  seedTestToUnderscoreSeparated
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToUnderscoreSeparated($expected, $input)
 	{
@@ -288,7 +288,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringNormalise::toVariable
 	 * @dataProvider  seedTestToVariable
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToVariable($expected, $input)
 	{
@@ -305,7 +305,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Windwalker\String\StringNormalise::toKey
 	 * @dataProvider  seedTestToKey
-	 * @since         1.0
+	 * @since         2.0
 	 */
 	public function testToKey($expected, $input)
 	{

@@ -175,7 +175,7 @@ class CurlTransport extends AbstractTransport
 	 *
 	 * @return  Response
 	 *
-	 * @since   1.0
+	 * @since   2.0
 	 * @throws  \UnexpectedValueException
 	 */
 	protected function getResponse($content, $info)

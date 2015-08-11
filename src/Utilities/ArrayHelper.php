@@ -604,8 +604,8 @@ abstract class ArrayHelper
 						$locale = $sortLocale[$i];
 					}
 
-					$va = $a->$key[$i];
-					$vb = $b->$key[$i];
+					$va = $a->{$key[$i]};
+					$vb = $b->{$key[$i]};
 
 					if ((is_bool($va) || is_numeric($va)) && (is_bool($vb) || is_numeric($vb)))
 					{
