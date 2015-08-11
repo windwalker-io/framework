@@ -60,7 +60,7 @@ class NestedRecord extends Record
 	 * Possible values are: ['before', 'after', 'first-child', 'last-child'].
 	 *
 	 * @var    string
-	 * @since  11.1
+	 * @since  2.0
 	 */
 	protected $location;
 
@@ -70,7 +70,7 @@ class NestedRecord extends Record
 	 * node describes where to store the current node in the tree.
 	 *
 	 * @var    integer
-	 * @since  11.1
+	 * @since  2.0
 	 */
 	protected $locationId;
 
@@ -78,7 +78,7 @@ class NestedRecord extends Record
 	 * An array to cache values in recursive processes.
 	 *
 	 * @var    array
-	 * @since  11.1
+	 * @since  2.0
 	 */
 	protected $cache = array();
 
@@ -97,7 +97,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  mixed    An array of node objects including the start node.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 * @throws  \RuntimeException on database error
 	 */
 	public function getPath($pk = null)
@@ -123,7 +123,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  mixed    Boolean false on failure or array of node objects on success.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 * @throws  \RuntimeException on database error.
 	 */
 	public function getTree($pk = null)
@@ -149,7 +149,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True if a leaf node, false if not or null if the node does not exist.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 * @throws  \RuntimeException on database error.
 	 */
 	public function isLeaf($pk = null)
@@ -177,7 +177,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True if all checks pass.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 * @throws  \Exception
 	 * @throws  \RuntimeException on database error.
 	 * @throws  \UnexpectedValueException
@@ -213,7 +213,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  static
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public function setLocation($referenceId, $position = self::LOCATION_AFTER)
@@ -245,13 +245,11 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 */
 	public function store($updateNulls = false)
 	{
 		$k = $this->getKeyName();
-
-		// @onBeforeStore
 
 		/*
 		 * If the primary key is empty, then we assume we are inserting a new node into the
@@ -340,8 +338,6 @@ class NestedRecord extends Record
 
 		$result = parent::store($updateNulls);
 
-		// @onAfterStore
-
 		return $result;
 	}
 
@@ -355,7 +351,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  mixed    Boolean true on success.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 */
 	public function move($delta, $where = '')
 	{
@@ -407,7 +403,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 * @throws  \RuntimeException on database error.
 	 */
 	public function moveByReference($referenceId, $position = self::LOCATION_AFTER, $pk = null)
@@ -561,14 +557,18 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 */
 	public function delete($pk = null, $children = true)
 	{
 		$k = $this->getKeyName();
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
-		// @onBeforeDelete
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'conditions'  => &$pk,
+			'children' => &$children
+		));
 
 		// Get the node by id.
 		$node = $this->getNode($pk);
@@ -646,7 +646,8 @@ class NestedRecord extends Record
 			$this->db->setQuery($query)->execute();
 		}
 
-		// @onAfterDelete
+		// Event
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
 		return true;
 	}
@@ -656,7 +657,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  mixed  The primary id of the root row, or false if not found and the internal error is set.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 */
 	public function getRootId()
 	{
@@ -707,7 +708,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  integer  1 + value of root rgt on success, false on failure
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 * @throws  \RuntimeException on database error.
 	 */
 	public function rebuild($parentId = null, $leftId = 0, $level = 0, $path = '')
@@ -787,7 +788,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 */
 	public function rebuildPath($pk = null)
 	{
@@ -891,7 +892,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  mixed    Boolean false on failure or node object on success.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 * @throws  \RuntimeException on database error.
 	 */
 	protected function getNode($id, $key = null)
@@ -952,7 +953,7 @@ class NestedRecord extends Record
 	 *
 	 * @return  mixed    Boolean false on failure or data object on success.
 	 *
-	 * @since   11.1
+	 * @since   2.0
 	 */
 	protected function getTreeRepositionData($referenceNode, $nodeWidth, $position = self::LOCATION_BEFORE)
 	{

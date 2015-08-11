@@ -166,14 +166,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function find($conditions = array(), $order = null, $start = null, $limit = null)
 	{
-		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
-			'conditions' => &$conditions,
-			'order'      => &$order,
-			'start'      => &$start,
-			'limit'      => &$limit
-		));
-
 		// Handling conditions
 		if (!is_array($conditions) && !is_object($conditions))
 		{
@@ -190,6 +182,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$conditions = (array) $conditions;
 
 		$order = (array) $order;
+
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'conditions' => &$conditions,
+			'order'      => &$order,
+			'start'      => &$start,
+			'limit'      => &$limit
+		));
 
 		// Find data
 		$result = $this->doFind($conditions, $order, $start, $limit) ? : array();
@@ -520,12 +520,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function flush($dataset, $conditions = array())
 	{
-		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
-			'dataset'     => &$dataset,
-			'conditions'  => &$conditions
-		));
-
 		// Handling conditions
 		if (!is_array($conditions) && !is_object($conditions))
 		{
@@ -538,6 +532,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 			$conditions = $cond;
 		}
+
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'dataset'     => &$dataset,
+			'conditions'  => &$conditions
+		));
 
 		$result = $this->doFlush($dataset, (array) $conditions);
 
@@ -562,17 +562,17 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function save($dataset, $condFields = null, $updateNulls = false)
 	{
+		// Handling conditions
+		$condFields = $condFields ? : $this->getPrimaryKey();
+
+		$condFields = (array) $condFields;
+
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
 			'dataset'     => &$dataset,
 			'condFields'  => &$condFields,
 			'updateNulls' => &$updateNulls
 		));
-
-		// Handling conditions
-		$condFields = $condFields ? : $this->getPrimaryKey();
-
-		$condFields = (array) $condFields;
 
 		$createDataset = new $this->datasetClass;
 		$updateDataset = new $this->datasetClass;
@@ -666,11 +666,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function delete($conditions)
 	{
-		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
-			'conditions'  => &$conditions
-		));
-
 		// Handling conditions
 		if (!is_array($conditions) && !is_object($conditions))
 		{
@@ -685,6 +680,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		$conditions = (array) $conditions;
+
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'conditions'  => &$conditions
+		));
 
 		$result = $this->doDelete($conditions);
 

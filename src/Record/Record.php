@@ -300,6 +300,13 @@ class Record implements \ArrayAccess, \IteratorAggregate
 
 		$fields = $this->getFields();
 
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'src'    => &$src,
+			'fields' => $fields,
+			'ignore' => &$ignore
+		));
+
 		// Bind the source value, excluding the ignored fields.
 		foreach ($src as $k => $v)
 		{
@@ -314,6 +321,9 @@ class Record implements \ArrayAccess, \IteratorAggregate
 				}
 			}
 		}
+
+		// Event
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
 		return $this;
 	}
@@ -335,12 +345,6 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function load($keys = null, $reset = true)
 	{
-		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
-			'conditions'  => &$keys,
-			'reset' => &$reset
-		));
-
 		if (empty($keys))
 		{
 			$empty = true;
@@ -378,6 +382,12 @@ class Record implements \ArrayAccess, \IteratorAggregate
 				throw new \RuntimeException('No table keys defined.');
 			}
 		}
+
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'conditions'  => &$keys,
+			'reset' => &$reset
+		));
 
 		if ($reset)
 		{
@@ -437,14 +447,14 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function delete($pKey = null)
 	{
+		$key = $this->getKeyName();
+
+		$pKey = (is_null($pKey)) ? $this->$key : $pKey;
+
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
 			'conditions'  => &$pKey
 		));
-
-		$key = $this->getKeyName();
-
-		$pKey = (is_null($pKey)) ? $this->$key : $pKey;
 
 		// If no primary key is given, return false.
 		if ($pKey === null)
