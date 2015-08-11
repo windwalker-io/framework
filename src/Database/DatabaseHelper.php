@@ -8,7 +8,7 @@
 
 namespace Windwalker\Database;
 
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**
  * The DatabaseHelper class.
@@ -20,12 +20,12 @@ abstract class DatabaseHelper
 	/**
 	 * batchQuery
 	 *
-	 * @param   DatabaseDriver $db
+	 * @param   AbstractDatabaseDriver $db
 	 * @param   array|string   $queries
 	 *
 	 * @return  boolean
 	 */
-	public static function batchQuery(DatabaseDriver $db, $queries)
+	public static function batchQuery(AbstractDatabaseDriver $db, $queries)
 	{
 		if (is_string($queries))
 		{

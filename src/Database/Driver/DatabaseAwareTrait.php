@@ -16,16 +16,16 @@ trait DatabaseAwareTrait
 	/**
 	 * Property db.
 	 *
-	 * @var  DatabaseDriver
+	 * @var  AbstractDatabaseDriver
 	 */
 	protected $db = null;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param DatabaseDriver $db
+	 * @param AbstractDatabaseDriver $db
 	 */
-	public function __construct(DatabaseDriver $db)
+	public function __construct(AbstractDatabaseDriver $db)
 	{
 		$this->setDb($db);
 	}
@@ -33,7 +33,7 @@ trait DatabaseAwareTrait
 	/**
 	 * getDb
 	 *
-	 * @return  DatabaseDriver
+	 * @return  AbstractDatabaseDriver
 	 */
 	public function getDb()
 	{
@@ -43,7 +43,7 @@ trait DatabaseAwareTrait
 	/**
 	 * setDb
 	 *
-	 * @param   DatabaseDriver $db
+	 * @param   AbstractDatabaseDriver $db
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

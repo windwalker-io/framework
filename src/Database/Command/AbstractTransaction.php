@@ -9,7 +9,7 @@
 namespace Windwalker\Database\Command;
 
 use Windwalker\Database\Driver\DatabaseAwareTrait;
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**
  * Class DatabaseTransaction
@@ -21,7 +21,7 @@ abstract class AbstractTransaction
 	/**
 	 * Property driver.
 	 *
-	 * @var  \Windwalker\Database\Driver\DatabaseDriver
+	 * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
 	 */
 	protected $db;
 
@@ -43,10 +43,10 @@ abstract class AbstractTransaction
 	/**
 	 * Constructor.
 	 *
-	 * @param DatabaseDriver $db
+	 * @param AbstractDatabaseDriver $db
 	 * @param bool           $nested
 	 */
-	public function __construct(DatabaseDriver $db, $nested = true)
+	public function __construct(AbstractDatabaseDriver $db, $nested = true)
 	{
 		$this->nested = $nested;
 
@@ -101,7 +101,7 @@ abstract class AbstractTransaction
 	/**
 	 * Method to get property Db
 	 *
-	 * @return  \Windwalker\Database\Driver\DatabaseDriver
+	 * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver
 	 */
 	public function getDriver()
 	{
@@ -111,7 +111,7 @@ abstract class AbstractTransaction
 	/**
 	 * Method to set property db
 	 *
-	 * @param   \Windwalker\Database\Driver\DatabaseDriver $db
+	 * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

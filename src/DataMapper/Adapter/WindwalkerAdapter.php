@@ -10,7 +10,7 @@ namespace Windwalker\DataMapper\Adapter;
 
 use Windwalker\Data\DataSet;
 use Windwalker\Database\DatabaseFactory;
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
 
 /**
@@ -30,10 +30,10 @@ class WindwalkerAdapter extends DatabaseAdapter
 	/**
 	 * Constructor.
 	 *
-	 * @param DatabaseDriver $db          Database adapter.
+	 * @param AbstractDatabaseDriver $db          Database adapter.
 	 * @param QueryHelper    $queryHelper Query helper object.
 	 */
-	public function __construct(DatabaseDriver $db = null, QueryHelper $queryHelper = null)
+	public function __construct(AbstractDatabaseDriver $db = null, QueryHelper $queryHelper = null)
 	{
 		$this->db = $db ? : DatabaseFactory::getDbo();
 

@@ -10,7 +10,7 @@ namespace Windwalker\Database\Query;
 
 use Windwalker\Compare\Compare;
 use Windwalker\Database\DatabaseFactory;
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
 
@@ -22,7 +22,7 @@ class QueryHelper
 	/**
 	 * Property db.
 	 *
-	 * @var  DatabaseDriver
+	 * @var  AbstractDatabaseDriver
 	 */
 	protected $db = null;
 
@@ -36,9 +36,9 @@ class QueryHelper
 	/**
 	 * Constructor.
 	 *
-	 * @param DatabaseDriver $db
+	 * @param AbstractDatabaseDriver $db
 	 */
-	public function __construct(DatabaseDriver $db = null)
+	public function __construct(AbstractDatabaseDriver $db = null)
 	{
 		$this->db = $db ? : $this->getDb();
 	}
@@ -253,7 +253,7 @@ class QueryHelper
 	/**
 	 * getDb
 	 *
-	 * @return  DatabaseDriver
+	 * @return  AbstractDatabaseDriver
 	 */
 	public function getDb()
 	{
@@ -268,7 +268,7 @@ class QueryHelper
 	/**
 	 * setDb
 	 *
-	 * @param   DatabaseDriver $db
+	 * @param   AbstractDatabaseDriver $db
 	 *
 	 * @return  QueryHelper  Return self to support chaining.
 	 */

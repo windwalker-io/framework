@@ -9,12 +9,16 @@
 namespace Windwalker\Database\Driver;
 
 /**
- * The DatabaseDriver class.
+ * The DatabaseDriverInterface class.
  *
- * @since  2.0
- *
- * @deprecated  3.0 Use AbstractDatabaseDriver instead.
+ * @since  2.1
  */
-abstract class DatabaseDriver extends AbstractDatabaseDriver
+interface DatabaseDriverInterface
 {
+	/**
+	 * Is this driver supported.
+	 *
+	 * @return  boolean
+	 */
+	public static function isSupported();
 }

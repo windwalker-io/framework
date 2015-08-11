@@ -25,6 +25,16 @@ class PostgresqlDriver extends PdoDriver
 	protected $name = 'postgresql';
 
 	/**
+	 * Is this driver supported.
+	 *
+	 * @return  boolean
+	 */
+	public static function isSupported()
+	{
+		return in_array('pgsql', \PDO::getAvailableDrivers());
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   \PDO  $connection The pdo connection object.

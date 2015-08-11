@@ -9,7 +9,7 @@
 namespace Windwalker\Database\Command;
 
 use Windwalker\Database\Driver\DatabaseAwareTrait;
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**
  * Class DatabaseDatabase
@@ -28,7 +28,7 @@ abstract class AbstractDatabase
 	/**
 	 * Property driver.
 	 *
-	 * @var  \Windwalker\Database\Driver\DatabaseDriver
+	 * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
 	 */
 	protected $db;
 
@@ -36,9 +36,9 @@ abstract class AbstractDatabase
 	 * Constructor.
 	 *
 	 * @param string         $database
-	 * @param DatabaseDriver $db
+	 * @param AbstractDatabaseDriver $db
 	 */
-	public function __construct($database, DatabaseDriver $db)
+	public function __construct($database, AbstractDatabaseDriver $db)
 	{
 		$this->database = $database;
 
@@ -151,7 +151,7 @@ abstract class AbstractDatabase
 	/**
 	 * Method to get property Db
 	 *
-	 * @return  \Windwalker\Database\Driver\DatabaseDriver
+	 * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver
 	 */
 	public function getDriver()
 	{
@@ -161,7 +161,7 @@ abstract class AbstractDatabase
 	/**
 	 * Method to set property db
 	 *
-	 * @param   \Windwalker\Database\Driver\DatabaseDriver $db
+	 * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

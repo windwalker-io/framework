@@ -8,7 +8,7 @@
 
 namespace Windwalker\Session\Database;
 
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**
  * The WindwalkerAdapter class.
@@ -20,17 +20,17 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	/**
 	 * Property db.
 	 *
-	 * @var  \Windwalker\Database\Driver\DatabaseDriver
+	 * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
 	 */
 	protected $db = null;
 
 	/**
 	 * Class init.
 	 *
-	 * @param DatabaseDriver $db
+	 * @param AbstractDatabaseDriver $db
 	 * @param array          $options
 	 */
-	public function __construct(DatabaseDriver $db, $options = array())
+	public function __construct(AbstractDatabaseDriver $db, $options = array())
 	{
 		parent::__construct($db, $options);
 	}

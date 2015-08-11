@@ -13,7 +13,7 @@ use Windwalker\Database\Command\AbstractReader;
 use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Command\AbstractTransaction;
 use Windwalker\Database\Command\AbstractWriter;
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Query\Query\PreparableInterface;
 use Windwalker\Query\Query;
 
@@ -22,7 +22,7 @@ use Windwalker\Query\Query;
  *
  * @since 2.0
  */
-class PdoDriver extends DatabaseDriver
+class PdoDriver extends AbstractDatabaseDriver
 {
 	/**
 	 * The name of the database driver.
@@ -61,6 +61,16 @@ class PdoDriver extends DatabaseDriver
 	 * @var  PdoReader
 	 */
 	protected $reader = null;
+
+	/**
+	 * Is this driver supported.
+	 *
+	 * @return  boolean
+	 */
+	public static function isSupported()
+	{
+		return class_exists('PDO');
+	}
 
 	/**
 	 * Constructor.

@@ -9,7 +9,7 @@
 namespace Windwalker\Record;
 
 use Windwalker\Database\DatabaseFactory;
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherInterface;
 use Windwalker\Event\Event;
@@ -75,7 +75,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * DatabaseDriver object.
 	 *
-	 * @var    DatabaseDriver
+	 * @var    AbstractDatabaseDriver
 	 * @since  2.0
 	 */
 	protected $db;
@@ -95,11 +95,11 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * @param   string          $table  Name of the table to model.
 	 * @param   mixed           $keys   Name of the primary key field in the table or array of field names that
 	 *                                  compose the primary key.
-	 * @param   DatabaseDriver  $db     DatabaseDriver object.
+	 * @param   AbstractDatabaseDriver  $db     DatabaseDriver object.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($table = null, $keys = 'id', DatabaseDriver $db = null)
+	public function __construct($table = null, $keys = 'id', AbstractDatabaseDriver $db = null)
 	{
 		$db = $db ? : DatabaseFactory::getDbo();
 

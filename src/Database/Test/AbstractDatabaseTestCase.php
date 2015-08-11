@@ -10,7 +10,7 @@ namespace Windwalker\Database\Test;
 
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\DatabaseHelper;
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**
  * Class DatabaseTestCase
@@ -22,14 +22,14 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 	/**
 	 * Property db.
 	 *
-	 * @var  DatabaseDriver
+	 * @var  AbstractDatabaseDriver
 	 */
 	protected static $dbo = null;
 
 	/**
 	 * Property db.
 	 *
-	 * @var  DatabaseDriver
+	 * @var  AbstractDatabaseDriver
 	 */
 	protected $db = null;
 
@@ -103,17 +103,26 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 			return;
 		}
 
-		// Use factory create dbo, only create once and will be singleton.
-		$db = self::$dbo = DatabaseFactory::getDbo(
-			static::$driver,
-			array(
-				'host'     => isset($dsn['host']) ? $dsn['host'] : null,
-				'user'     => isset($dsn['user']) ? $dsn['user'] : null,
-				'password' => isset($dsn['pass']) ? $dsn['pass'] : null,
-				'port'     => isset($dsn['port']) ? $dsn['port'] : null,
-				'prefix'   => isset($dsn['prefix']) ? $dsn['prefix'] : null,
-			)
-		);
+		try
+		{
+			// Use factory create dbo, only create once and will be singleton.
+			$db = self::$dbo = DatabaseFactory::getDbo(
+				static::$driver,
+				array(
+					'host'     => isset($dsn['host']) ? $dsn['host'] : null,
+					'user'     => isset($dsn['user']) ? $dsn['user'] : null,
+					'password' => isset($dsn['pass']) ? $dsn['pass'] : null,
+					'port'     => isset($dsn['port']) ? $dsn['port'] : null,
+					'prefix'   => isset($dsn['prefix']) ? $dsn['prefix'] : null,
+				)
+			);
+		}
+		catch (\RangeException $e)
+		{
+			static::markTestSkipped($e->getMessage());
+
+			return;
+		}
 
 		$database = $db->getDatabase($dbname);
 

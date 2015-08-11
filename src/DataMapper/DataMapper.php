@@ -237,7 +237,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Get DB adapter.
 	 *
-	 * @return  \Windwalker\Database\Driver\DatabaseDriver Db adapter.
+	 * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver Db adapter.
 	 */
 	public function getDb()
 	{
@@ -247,7 +247,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Set db adapter.
 	 *
-	 * @param   \Windwalker\Database\Driver\DatabaseDriver $db Db adapter.
+	 * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db Db adapter.
 	 *
 	 * @return  DataMapper  Return self to support chaining.
 	 */

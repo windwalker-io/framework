@@ -25,6 +25,16 @@ class MysqlDriver extends PdoDriver
 	protected $name = 'mysql';
 
 	/**
+	 * Is this driver supported.
+	 *
+	 * @return  boolean
+	 */
+	public static function isSupported()
+	{
+		return in_array('mysql', \PDO::getAvailableDrivers());
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   \PDO  $connection The pdo connection object.

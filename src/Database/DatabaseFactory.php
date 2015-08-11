@@ -8,7 +8,8 @@
 
 namespace Windwalker\Database;
 
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Database\Driver\DatabaseDriverInterface;
 
 /**
  * Class DatabaseFactory
@@ -18,7 +19,7 @@ abstract class DatabaseFactory
 	/**
 	 * The default DB object.
 	 *
-	 * @var DatabaseDriver
+	 * @var AbstractDatabaseDriver
 	 */
 	protected static $db = null;
 
@@ -37,7 +38,7 @@ abstract class DatabaseFactory
 	 * @param bool   $forceNew
 	 *
 	 * @throws \InvalidArgumentException
-	 * @return  DatabaseDriver
+	 * @return  AbstractDatabaseDriver
 	 */
 	public static function getDbo($driver = null, $option = array(), $forceNew = false)
 	{
@@ -66,11 +67,11 @@ abstract class DatabaseFactory
 	 * setDbo
 	 *
 	 * @param string         $driver
-	 * @param DatabaseDriver $db
+	 * @param AbstractDatabaseDriver $db
 	 *
 	 * @return  void
 	 */
-	public static function setDbo($driver, DatabaseDriver $db = null)
+	public static function setDbo($driver, AbstractDatabaseDriver $db = null)
 	{
 		self::$instances[$driver] = $db;
 	}
@@ -78,11 +79,11 @@ abstract class DatabaseFactory
 	/**
 	 * setDb
 	 *
-	 * @param   DatabaseDriver $db
+	 * @param   AbstractDatabaseDriver $db
 	 *
 	 * @return  void
 	 */
-	public static function setDefaultDbo(DatabaseDriver $db = null)
+	public static function setDefaultDbo(AbstractDatabaseDriver $db = null)
 	{
 		self::$db = $db;
 
@@ -101,7 +102,7 @@ abstract class DatabaseFactory
 	 * @param array  $options
 	 *
 	 * @throws \RuntimeException
-	 * @return  DatabaseDriver
+	 * @return  AbstractDatabaseDriver
 	 */
 	public static function createDbo($driver, array $options)
 	{
@@ -120,6 +121,12 @@ abstract class DatabaseFactory
 		if (!class_exists($class))
 		{
 			throw new \RuntimeException(sprintf('Unable to load Database Driver: %s', $options['driver']));
+		}
+
+		/** @var DatabaseDriverInterface $class */
+		if (!$class::isSupported())
+		{
+			throw new \RangeException('Database driver ' . $driver . ' not supported.');
 		}
 
 		// Create our new Driver connector based on the options given.
