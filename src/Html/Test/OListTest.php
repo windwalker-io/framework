@@ -15,7 +15,7 @@ use Windwalker\Test\TestCase\AbstractDomTestCase;
 /**
  * Test class of OList
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class OListTest extends AbstractDomTestCase
 {

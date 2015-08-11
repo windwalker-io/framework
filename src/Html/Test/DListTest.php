@@ -16,7 +16,7 @@ use Windwalker\Test\TestCase\AbstractDomTestCase;
 /**
  * Test class of DList
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class DListTest extends AbstractDomTestCase
 {

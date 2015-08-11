@@ -13,7 +13,7 @@ use Windwalker\Uri\PsrUri;
 /**
  * Test class of PsrUri
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class PsrUriTest extends \PHPUnit_Framework_TestCase
 {

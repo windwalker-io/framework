@@ -15,7 +15,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of Stream
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class StreamTest extends AbstractBaseTestCase
 {

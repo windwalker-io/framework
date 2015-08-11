@@ -15,7 +15,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 /**
  * Test class of UploadedFile
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class UploadedFileTest extends AbstractBaseTestCase
 {

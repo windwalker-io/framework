@@ -14,7 +14,7 @@ use Windwalker\Http\Transport\StreamTransport;
 /**
  * Test class of CurlTransport
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class StreamTransportTest extends AbstractTransportTest
 {

@@ -13,7 +13,7 @@ use Windwalker\Http\Transport\CurlTransport;
 /**
  * Test class of CurlTransport
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class CurlTransportTest extends AbstractTransportTest
 {

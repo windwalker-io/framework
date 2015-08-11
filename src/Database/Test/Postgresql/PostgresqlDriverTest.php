@@ -13,7 +13,7 @@ use Windwalker\Query\Postgresql\PostgresqlQuery;
 /**
  * Test class of PostgresqlDriver
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class PostgresqlDriverTest extends AbstractPostgresqlTestCase
 {

@@ -15,7 +15,7 @@ use Windwalker\Http\Test\Stub\StubMessage;
 /**
  * Test class of AbstractMessage
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class AbstractMessageTest extends \PHPUnit_Framework_TestCase
 {

@@ -16,7 +16,7 @@ use Windwalker\Test\TestCase\AbstractDomTestCase;
 /**
  * Test class of FormWrapper
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class FormWrapperTest extends AbstractDomTestCase
 {

@@ -19,7 +19,7 @@ use Windwalker\Uri\UriHelper;
 /**
  * Test class of CurlTransport
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 {

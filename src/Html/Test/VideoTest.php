@@ -14,7 +14,7 @@ use Windwalker\Test\TestCase\AbstractDomTestCase;
 /**
  * Test class of Video
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class VideoTest extends AbstractDomTestCase
 {

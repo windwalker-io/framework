@@ -14,7 +14,7 @@ use Windwalker\Http\Stream\Stream;
 /**
  * Test class of Response
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {

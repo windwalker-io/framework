@@ -17,7 +17,7 @@ use Windwalker\Uri\PsrUri;
 /**
  * Test class of AbstractRequest
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class AbstractRequestTest extends AbstractBaseTestCase
 {

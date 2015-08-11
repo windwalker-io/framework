@@ -16,7 +16,7 @@ use Windwalker\Uri\PsrUri;
 /**
  * Test class of ServerRequest
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class ServerRequestTest extends \PHPUnit_Framework_TestCase
 {

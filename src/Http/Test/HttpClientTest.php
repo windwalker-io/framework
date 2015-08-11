@@ -17,7 +17,7 @@ use Windwalker\Uri\UriHelper;
 /**
  * Test class of HttpClient
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1
  */
 class HttpClientTest extends \PHPUnit_Framework_TestCase
 {
