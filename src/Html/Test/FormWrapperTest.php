@@ -11,7 +11,7 @@ namespace Windwalker\Html\Test;
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Html\Form\FormWrapper;
 use Windwalker\Html\Form\InputElement;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of FormWrapper

@@ -13,7 +13,7 @@ use Windwalker\Filter\InputFilter;
 use Windwalker\Form\Test\Stub\StubField;
 use Windwalker\Form\Test\Stub\StubFilter;
 use Windwalker\Form\Validate\ValidateResult;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Validator\Rule\EmailValidator;
 use Windwalker\Validator\Rule\IpValidator;
 

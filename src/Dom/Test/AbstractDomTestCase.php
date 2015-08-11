@@ -6,11 +6,12 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Test\TestCase;
+namespace Windwalker\Dom\Test;
 
 use Windwalker\Dom\Format\DomFormatter;
 use Windwalker\Dom\Format\HtmlFormatter;
-use Windwalker\Test\Helper\DomHelper;
+use Windwalker\Test\Helper\TestDomHelper;
+use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
  * The DomTestCase class.
@@ -34,8 +35,8 @@ class AbstractDomTestCase extends AbstractBaseTestCase
 		$canonicalize = FALSE, $ignoreCase = FALSE)
 	{
 		$this->assertEquals(
-			DomHelper::minify((string) $expected),
-			DomHelper::minify((string) $actual),
+			TestDomHelper::minify((string) $expected),
+			TestDomHelper::minify((string) $actual),
 			$message,
 			$delta,
 			$maxDepth,

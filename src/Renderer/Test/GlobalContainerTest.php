@@ -11,7 +11,7 @@ namespace Windwalker\Renderer\Test;
 use Windwalker\Renderer\Test\Stub\StubTwigExtension;
 use Windwalker\Renderer\Twig\GlobalContainer;
 use Windwalker\Renderer\TwigRenderer;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of GlobalContainer

@@ -11,7 +11,7 @@ namespace Windwalker\Renderer\Test;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Folder;
 use Windwalker\Renderer\BladeRenderer;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of BladeRenderer

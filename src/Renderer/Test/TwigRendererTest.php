@@ -11,7 +11,7 @@ namespace Windwalker\Renderer\Test;
 use Windwalker\Environment\PhpHelper;
 use Windwalker\Renderer\Test\Stub\StubTwigExtension;
 use Windwalker\Renderer\TwigRenderer;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of TwigRenderer
@@ -122,13 +122,6 @@ HTML;
 	 */
 	public function testAddExtension()
 	{
-		if (PhpHelper::isHHVM())
-		{
-			$this->markTestSkipped('Unknown error of Timeout');
-
-			return;
-		}
-
 		$this->instance->addExtension(new StubTwigExtension);
 
 		$html = $this->instance->render('ext-test.twig');

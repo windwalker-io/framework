@@ -12,6 +12,7 @@
     },
     "require-dev": {
         "windwalker/test": "~2.0",
+        "windwalker/dom": "~2.0",
         "windwalker/filesystem": "~2.0",
         "twig/twig": "1.*",
         "illuminate/view": "4.1.*",

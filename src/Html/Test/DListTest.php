@@ -11,7 +11,7 @@ namespace Windwalker\Html\Test;
 use Windwalker\Html\Enum\DList;
 use Windwalker\Html\Enum\DListDescription;
 use Windwalker\Html\Enum\DListTitle;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of DList

@@ -9,7 +9,7 @@
 namespace Windwalker\Form\Test\Field;
 
 use Windwalker\Form\Field\TextField;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of TextField
