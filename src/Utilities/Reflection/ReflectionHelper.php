@@ -8,8 +8,6 @@
 
 namespace Windwalker\Utilities\Reflection;
 
-use Windwalker\String\StringNormalise;
-
 /**
  * Reflection Helper
  *
@@ -17,13 +15,6 @@ use Windwalker\String\StringNormalise;
  */
 class ReflectionHelper
 {
-	/**
-	 * The reflections cache.
-	 *
-	 * @var  array
-	 */
-	protected static $refs = array();
-
 	/**
 	 * Get a new ReflectionClass.
 	 *
@@ -47,24 +38,7 @@ class ReflectionHelper
 	 */
 	protected static function getReflection($class)
 	{
-		if (is_object($class))
-		{
-			$class = get_class($class);
-		}
-
-		if (!is_string($class))
-		{
-			throw new \InvalidArgumentException('ReflectionClass need string name or object.');
-		}
-
-		$class = StringNormalise::toClassNamespace($class);
-
-		if (empty(static::$refs[$class]))
-		{
-			static::$refs[$class] = new \ReflectionClass($class);
-		}
-
-		return static::$refs[$class];
+		return new \ReflectionClass($class);
 	}
 
 	/**
