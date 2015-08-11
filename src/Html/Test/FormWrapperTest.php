@@ -121,9 +121,7 @@ class FormWrapperTest extends AbstractDomTestCase
 			->target('_blank');
 
 		$html = <<<HTML
-<form accept="UTF-8" accept-charset="UTF-8" action="foo.php" autocomplete="off"
-	enctype="application/x-www-form-urlencoded" method="post" name="test"
-	novalidate="novalidate" target="_blank">
+<form accept="UTF-8" accept-charset="UTF-8" action="foo.php" autocomplete="off" enctype="application/x-www-form-urlencoded" method="post" name="test" novalidate="novalidate" target="_blank">
 HTML;
 
 		$this->assertDomFormatEquals($html, $form->renderStart());

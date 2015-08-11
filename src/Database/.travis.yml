@@ -1,10 +1,15 @@
 language: php
 
+sudo: true
+
 php:
   - 5.3
   - 5.4
   - 5.5
   - 5.6
+
+addons:
+  postgresql: "9.3"
 
 before_script:
   - sudo apt-get update

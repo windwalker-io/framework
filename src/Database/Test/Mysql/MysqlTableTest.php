@@ -416,25 +416,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 */
 	public function __destruct()
 	{
-		try
-		{
-			$this->db->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
-		}
-		catch (\Exception $e)
-		{
-			// Do nothing
-		}
-
-		try
-		{
-			$this->db->setQuery(MysqlQueryBuilder::dropTable('#__wind', true))->execute();
-		}
-		catch (\Exception $e)
-		{
-			// Do nothing
-		}
-
-		parent::__destruct();
+		parent::tearDownAfterClass();
 	}
 
 	/**
@@ -444,22 +426,25 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 */
 	public static function tearDownAfterClass()
 	{
-		try
+		if (static::$dbo)
 		{
-			static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
-		}
-		catch (\Exception $e)
-		{
-			// Do nothing
-		}
+			try
+			{
+				static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
+			}
+			catch (\Exception $e)
+			{
+				// Do nothing
+			}
 
-		try
-		{
-			static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__wind', true))->execute();
-		}
-		catch (\Exception $e)
-		{
-			// Do nothing
+			try
+			{
+				static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__wind', true))->execute();
+			}
+			catch (\Exception $e)
+			{
+				// Do nothing
+			}
 		}
 
 		parent::tearDownAfterClass();

@@ -146,6 +146,8 @@ class DomFormatter
 
 			$rules = array('NO', 'DECREASE', 'INCREASE', 'DISCARD');
 
+			$match = array();
+
 			foreach ($patterns as $pattern => $rule)
 			{
 				if ($match = preg_match($pattern, $subject, $matches))

@@ -254,7 +254,7 @@ Windwalker Build Command.
 
 Will run subtree split and push every packages to it's repos.
 
-Usage: php build.php [-t] [-b=test] [-f] [--dry-run] [--no-replace]
+Usage: php build.php [packages] [-t] [-b=test] [-f] [--dry-run] [--no-replace]
 
 -t              Git tag of this build, will push to main repo and every subtree.
 -b              Get branch to push, will  push to main repo and every subtree.

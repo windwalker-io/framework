@@ -13,14 +13,14 @@
     "require-dev": {
         "windwalker/test": "~2.0",
         "windwalker/filesystem": "~2.0",
-        "twig/twig": "*",
+        "twig/twig": "1.*",
         "illuminate/view": "4.1.*",
         "mustache/mustache": "2.*",
         "league/plates": "3.*"
     },
     "suggest": {
         "league/plates": "Install 3.* if you require Plates template engine.",
-        "illuminate/view": "Install 4.1.*(PHP 5.3) or 4.2.*(PHP 5.4) if you require Laravel Blade engine.",
+        "illuminate/view": "Install 4.1.*(PHP 5.3) or 5.*(PHP 5.4) if you require Laravel Blade engine.",
         "twig/twig": "Install 1.* if you require Twig engine.",
         "mustache/mustache": "Install 2.* if you require Mustache engine."
     },
@@ -32,7 +32,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1-dev"
+            "dev-master": "2.2-dev"
         }
     }
 }

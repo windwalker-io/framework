@@ -298,7 +298,7 @@ class PsrUriTest extends \PHPUnit_Framework_TestCase
 			{
 				$key = sprintf('%s-%s', $method, $type);
 
-				$combinations[$key] = [$method, $value];
+				$combinations[$key] = array($method, $value);
 			}
 		}
 
