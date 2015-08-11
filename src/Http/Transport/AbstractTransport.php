@@ -49,9 +49,9 @@ abstract class AbstractTransport implements TransportInterface
 	public function request(RequestInterface $request)
 	{
 		$uri = $request->getUri()
-			->withPath(null)
-			->withQuery(null)
-			->withFragment(null);
+			->withPath('')
+			->withQuery('')
+			->withFragment('');
 
 		$uri = $uri . $request->getRequestTarget();
 

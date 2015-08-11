@@ -75,3 +75,20 @@ Output:
 ```
 myUser:myPass@http://localhost:8888path/to/file.php?foo=bar
 ```
+
+### PsrUri
+
+`PsrUri` is a Uri object implemented the Psr UriInterface.
+
+This object is also immutable, so we must get return value as new object every change.
+
+``` php
+$uri = (new PsrUri('http://example.com'))
+    ->withScheme('https')
+    ->withUserInfo('user', 'pass')
+    ->withPath('/path/to/target')
+    ->withQuery('flower=sakura')
+    ->withFragment('#hash');
+
+(string) $uri; // https://user:pass@example.com/path/to/target?flower=sakura#fragment
+```

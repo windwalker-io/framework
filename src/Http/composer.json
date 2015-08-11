@@ -20,6 +20,9 @@
             "Windwalker\\Http\\": ""
         }
     },
+    "provide": {
+        "psr/http-message-implementation": "~1.0"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "2.1-dev"

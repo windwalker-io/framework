@@ -79,7 +79,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 
 		if (!$uri instanceof UriInterface)
 		{
-			$uri = new PsrUri($uri);
+			$uri = new PsrUri((string) $uri);
 		}
 
 		foreach ($headers as $name => $value)

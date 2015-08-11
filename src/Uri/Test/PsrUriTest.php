@@ -261,4 +261,64 @@ class PsrUriTest extends \PHPUnit_Framework_TestCase
 		$uri = $uri->withFragment($expected);
 		$this->assertEquals($expected, $uri->getFragment());
 	}
+
+	/**
+	 * seedInvalidArguments
+	 *
+	 * @return  array
+	 */
+	public function seedInvalidArguments()
+	{
+		$methods = array(
+			'withScheme',
+			'withUserInfo',
+			'withHost',
+			'withPath',
+			'withQuery',
+			'withFragment',
+		);
+
+		$values = array(
+			'null'       => null,
+			'true'       => true,
+			'false'      => false,
+			'zero'       => 0,
+			'int'        => 1,
+			'zero-float' => 0.0,
+			'float'      => 1.1,
+			'array'      => array('value'),
+			'object'     => (object) array('value' => 'value'),
+		);
+
+		$combinations = array();
+
+		foreach ($methods as $method)
+		{
+			foreach ($values as $type => $value)
+			{
+				$key = sprintf('%s-%s', $method, $type);
+
+				$combinations[$key] = [$method, $value];
+			}
+		}
+
+		return $combinations;
+	}
+
+	/**
+	 * testPassingInvalidValueToWithMethodRaisesException
+	 *
+	 * @param $method
+	 * @param $value
+	 *
+	 * @return  void
+	 *
+	 * @dataProvider seedInvalidArguments
+	 */
+	public function testInvalidArguments($method, $value)
+	{
+		$uri = new PsrUri('https://example.com/');
+		$this->setExpectedException('InvalidArgumentException');
+		$uri->$method($value);
+	}
 }

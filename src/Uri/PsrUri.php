@@ -44,6 +44,24 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	);
 
 	/**
+	 * Constructor.
+	 * You can pass a URI string to the constructor to initialise a specific URI.
+	 *
+	 * @param   string  $uri  The optional URI string
+	 *
+	 * @since   2.0
+	 */
+	public function __construct($uri = '')
+	{
+		if (!is_string($uri))
+		{
+			throw new \InvalidArgumentException('URI should be a string');
+		}
+
+		parent::__construct($uri);
+	}
+
+	/**
 	 * Retrieve the authority component of the URI.
 	 *
 	 * If no authority information is present, this method MUST return an empty
@@ -105,6 +123,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	 */
 	public function withScheme($scheme)
 	{
+		if (!is_string($scheme))
+		{
+			throw new \InvalidArgumentException('URI Scheme should be a string.');
+		}
+
 		$scheme = UriHelper::filterScheme($scheme);
 
 		$new = clone $this;
@@ -130,6 +153,16 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	 */
 	public function withUserInfo($user, $password = null)
 	{
+		if (!is_string($user))
+		{
+			throw new \InvalidArgumentException('URI User should be a string.');
+		}
+
+		if ($password !== null && !is_string($password))
+		{
+			throw new \InvalidArgumentException('URI Password should be a string or NULL.');
+		}
+
 		$new = clone $this;
 		$new->user = $user;
 		$new->pass = $password;
@@ -153,6 +186,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	 */
 	public function withHost($host)
 	{
+		if (!is_string($host))
+		{
+			throw new \InvalidArgumentException('URI Host should be a string.');
+		}
+
 		$new = clone $this;
 		$new->host = $host;
 
@@ -222,9 +260,9 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	 */
 	public function withPath($path)
 	{
-		if (is_array($path) || (is_object($path) && !is_callable($path, '__toString')))
+		if (!is_string($path))
 		{
-			throw new \InvalidArgumentException('Invalid path type.');
+			throw new \InvalidArgumentException('URI Path should be a string.');
 		}
 
 		$path = (string) $path;
@@ -261,9 +299,9 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	 */
 	public function withQuery($query)
 	{
-		if (is_array($query))
+		if (!is_string($query))
 		{
-			$query = UriHelper::buildQuery($query);
+			throw new \InvalidArgumentException('URI Query should be a string.');
 		}
 
 		$query = UriHelper::filterQuery($query);
@@ -292,6 +330,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	 */
 	public function withFragment($fragment)
 	{
+		if (!is_string($fragment))
+		{
+			throw new \InvalidArgumentException('URI Fragment should be a string.');
+		}
+
 		$fragment = UriHelper::filterFragment($fragment);
 
 		$new = clone $this;

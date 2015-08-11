@@ -6,11 +6,14 @@
     "homepage": "https://github.com/ventoviro/windwalker-uri",
     "license": "LGPL-2.0+",
     "require": {
-        "php": ">=5.3.10",
-        "psr/http-message": "1.*"
+        "php": ">=5.3.10"
     },
     "require-dev": {
-        "windwalker/test": "~2.0"
+        "windwalker/test": "~2.0",
+        "psr/http-message": "1.*"
+    },
+    "suggest": {
+        "psr/http-message": "Install 1.* if you need PsrUri support."
     },
     "minimum-stability": "beta",
     "autoload": {
