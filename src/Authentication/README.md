@@ -1,4 +1,4 @@
-# Windwalker Authenticate
+# Windwalker Authentication
 
 ## Installation via Composer
 
@@ -7,7 +7,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/authenticate": "~2.0"
+        "windwalker/authentication": "~2.0"
     }
 }
 ```
@@ -19,7 +19,7 @@ This is a simple login auth process.
 ``` php
 public function login($username, $password)
 {
-    $auth = new Authenticate;
+    $auth = new Authentication;
 
     // Attach methods
     $auth->addMethod(new LocalMethod);
@@ -51,7 +51,7 @@ public function login($username, $password)
 ## Create Custom Methods
 
 ``` php
-use Windwalker\Authenticate\Method\AbstractMethod;
+use Windwalker\Authentication\Method\AbstractMethod;
 
 class MyMethod extends AbstractMethod
 {
@@ -62,7 +62,7 @@ class MyMethod extends AbstractMethod
 
         if (!$username || !$password)
         {
-            $this->status = Authenticate::EMPTY_CREDENTIAL;
+            $this->status = Authentication::EMPTY_CREDENTIAL;
 
             return false;
         }
@@ -71,20 +71,20 @@ class MyMethod extends AbstractMethod
 
         if (!$user)
         {
-            $this->status = Authenticate::USER_NOT_FOUND;
+            $this->status = Authentication::USER_NOT_FOUND;
 
             return false;
         }
 
         if (!password_verify($password, $user->password))
         {
-            $this->status = Authenticate::INVALID_CREDENTIAL;
+            $this->status = Authentication::INVALID_CREDENTIAL;
 
             return false;
         }
 
         // Success
-        $this->status = Authenticate::SUCCESS;
+        $this->status = Authentication::SUCCESS;
 
         // Set some data to Credential
         $credential->bind($user);
