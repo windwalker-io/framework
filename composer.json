@@ -43,12 +43,13 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1-dev"
+            "dev-master": "2.2-dev"
         }
     },
     "replace": {
         "windwalker/application": "self.version",
         "windwalker/authenticate": "self.version",
+        "windwalker/authentication": "self.version",
         "windwalker/cache": "self.version",
         "windwalker/compare": "self.version",
         "windwalker/console": "self.version",
@@ -65,6 +66,7 @@
         "windwalker/filter": "self.version",
         "windwalker/form": "self.version",
         "windwalker/html": "self.version",
+        "windwalker/http": "self.version",
         "windwalker/io": "self.version",
         "windwalker/language": "self.version",
         "windwalker/loader": "self.version",
