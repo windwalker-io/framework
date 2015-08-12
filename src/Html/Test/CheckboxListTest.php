@@ -10,7 +10,7 @@ namespace Windwalker\Html\Test;
 
 use Windwalker\Html\Option;
 use Windwalker\Html\Select\CheckboxList;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of CheckboxList

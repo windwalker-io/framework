@@ -10,7 +10,7 @@ namespace Windwalker\Dom\Test;
 
 use Windwalker\Dom\DomElement;
 use Windwalker\Dom\Helper\DomHelper;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of DomElement

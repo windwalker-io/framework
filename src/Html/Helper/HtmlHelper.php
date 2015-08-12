@@ -8,14 +8,14 @@
 
 namespace Windwalker\Html\Helper;
 
-use Windwalker\Test\Helper\DomHelper;
+use Windwalker\Test\Helper\TestDomHelper;
 
 /**
  * The HtmlHelper class.
  * 
  * @since  2.0
  */
-abstract class HtmlHelper extends DomHelper
+abstract class HtmlHelper extends TestDomHelper
 {
 	/**
 	 * Repair HTML. If Tidy not exists, use repair function.

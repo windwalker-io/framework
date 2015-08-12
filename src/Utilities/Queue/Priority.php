@@ -30,6 +30,8 @@ class Priority
 	 * @param integer      $priority
 	 *
 	 * @return  \SplPriorityQueue
+	 *
+	 * @deprecated  3.0  Use \Windwalker\Utilities\Queue\PriorityQueue instead.
 	 */
 	public static function createQueue($queue, $priority = self::NORMAL)
 	{
@@ -47,6 +49,8 @@ class Priority
 	 * createPriorityQueueObject
 	 *
 	 * @return  \SplPriorityQueue
+	 *
+	 * @deprecated  3.0  Use \Windwalker\Utilities\Queue\PriorityQueue instead.
 	 */
 	public static function createPriorityQueueObject()
 	{

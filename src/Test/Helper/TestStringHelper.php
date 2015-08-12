@@ -41,7 +41,7 @@ class TestStringHelper
 	 */
 	public static function removeCRLF($string)
 	{
-		return str_replace(PHP_EOL, "\n", $string);
+		return str_replace("\r\n", "\n", $string);
 	}
 
 	/**

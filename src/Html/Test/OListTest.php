@@ -10,7 +10,7 @@ namespace Windwalker\Html\Test;
 
 use Windwalker\Html\Enum\ListItem;
 use Windwalker\Html\Enum\OList;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of OList

@@ -9,7 +9,7 @@
 namespace Windwalker\Html\Test;
 
 use Windwalker\Html\Media\Audio;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of Audio

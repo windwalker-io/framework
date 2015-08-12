@@ -10,7 +10,7 @@ namespace Windwalker\Renderer\Test;
 
 use League\Plates\Engine;
 use Windwalker\Renderer\PlatesRenderer;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of PlatesRenderer

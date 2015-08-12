@@ -1942,4 +1942,52 @@ class Query implements QueryInterface, PreparableInterface
 
 		return null;
 	}
+
+	/**
+	 * Method to get property DateFormat
+	 *
+	 * @return  string
+	 */
+	public function getDateFormat()
+	{
+		return $this->dateFormat;
+	}
+
+	/**
+	 * Method to set property dateFormat
+	 *
+	 * @param   string $dateFormat
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDateFormat($dateFormat)
+	{
+		$this->dateFormat = $dateFormat;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property NullDate
+	 *
+	 * @return  string
+	 */
+	public function getNullDate()
+	{
+		return $this->nullDate;
+	}
+
+	/**
+	 * Method to set property nullDate
+	 *
+	 * @param   string $nullDate
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setNullDate($nullDate)
+	{
+		$this->nullDate = $nullDate;
+
+		return $this;
+	}
 }

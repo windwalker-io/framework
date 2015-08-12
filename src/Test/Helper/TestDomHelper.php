@@ -13,7 +13,7 @@ namespace Windwalker\Test\Helper;
  * 
  * @since  2.0
  */
-class DomHelper
+class TestDomHelper
 {
 	/**
 	 * A simple method to minify Dom and Html.
@@ -48,45 +48,5 @@ class DomHelper
 		$buffer = str_replace(array(' <', '> '), array('<', '>'), $buffer);
 
 		return trim($buffer);
-	}
-
-	/**
-	 * format
-	 *
-	 * @param   string  $buffer
-	 *
-	 * @return  string
-	 */
-	public static function format($buffer)
-	{
-		$dom = new \DOMDocument;
-
-		$dom->preserveWhiteSpace = false;
-
-		$dom->loadXML($buffer);
-
-		$dom->formatOutput = true;
-
-		return $dom->saveXML();
-	}
-
-	/**
-	 * format
-	 *
-	 * @param   string  $buffer
-	 *
-	 * @return  string
-	 */
-	public static function formatHtml($buffer)
-	{
-		$dom = new \DOMDocument;
-
-		$dom->preserveWhiteSpace = true;
-
-		$dom->loadXML($buffer);
-
-		$dom->formatOutput = true;
-
-		return $dom->saveXML();
 	}
 }

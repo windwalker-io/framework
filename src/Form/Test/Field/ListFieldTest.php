@@ -10,7 +10,7 @@ namespace Windwalker\Form\Test\Field;
 
 use Windwalker\Form\Field\ListField;
 use Windwalker\Html\Option;
-use Windwalker\Test\TestCase\AbstractDomTestCase;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of TextField
