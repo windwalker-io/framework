@@ -70,33 +70,47 @@ class PhpRenderer extends AbstractRenderer
 	 * render
 	 *
 	 * @param string  $file
-	 * @param Data    $data
+	 * @param Data    $__data
 	 *
 	 * @throws  \UnexpectedValueException
 	 * @return  string
 	 */
-	public function render($file, $data = null)
+	public function render($file, $__data = null)
 	{
-		$this->data = $data = ($data instanceof Data) ? $data : new Data($data);
+		$this->data = $__data = ($__data instanceof Data) ? $__data : new Data($__data);
 
-		$this->prepareData($data);
+		$this->prepareData($__data);
 
-		$filePath = $this->findFile($file);
+		$__filePath = $this->findFile($file);
 
-		if (!$filePath)
+		if (!$__filePath)
 		{
-			$paths = array_values(iterator_to_array(clone $this->paths));
+			$__paths = array_values(iterator_to_array(clone $this->paths));
 
-			$paths = "\n " . implode(" |\n ", $paths);
+			$__paths = "\n " . implode(" |\n ", $__paths);
 
-			throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $paths));
+			throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $__paths));
+		}
+
+		if ($this->config->get('local_variables', false))
+		{
+			foreach ($__data as $key => $value)
+			{
+				${$key} = $value;
+			}
+		}
+		else
+		{
+			$data = $__data;
+
+			unset($__data);
 		}
 
 		// Start an output buffer.
 		ob_start();
 
 		// Load the layout.
-		include $filePath;
+		include $__filePath;
 
 		// Get the layout contents.
 		$output = ob_get_clean();
@@ -115,7 +129,7 @@ class PhpRenderer extends AbstractRenderer
 			$parent->setBlock($name, $block);
 		}
 
-		$output = $parent->render($this->extend, $data);
+		$output = $parent->render($this->extend, $this->data);
 
 		return $output;
 	}
