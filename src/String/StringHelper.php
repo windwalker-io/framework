@@ -283,4 +283,35 @@ abstract class StringHelper
 
 		return strpos($string, $target) === 0;
 	}
+
+	/**
+	 * Explode a string and force elements number.
+	 *
+	 * @param string $separator
+	 * @param string $data
+	 * @param int    $number
+	 *
+	 * @return  array
+	 */
+	public static function explode($separator, $data, $number = null)
+	{
+		if ($number)
+		{
+			$array = explode($separator, $data, $number);
+		}
+		else
+		{
+			$array = explode($separator, $data);
+		}
+
+		if (count($array) < $number)
+		{
+			foreach (range(1, $number - count($array)) as $i)
+			{
+				array_push($array, null);
+			}
+		}
+
+		return $array;
+	}
 }
