@@ -13,6 +13,8 @@ use Windwalker\Registry\Registry;
 /**
  * Class AbstractRenderer
  *
+ * @property-read  Registry  $config  Config data.
+ *
  * @since 2.0
  */
 abstract class AbstractRenderer implements RendererInterface
