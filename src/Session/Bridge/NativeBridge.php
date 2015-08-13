@@ -275,4 +275,14 @@ class NativeBridge implements SessionBridgeInterface
 
 		return $this;
 	}
+
+	/**
+	 * getStorage
+	 *
+	 * @return  array
+	 */
+	public function &getStorage()
+	{
+		return $_SESSION;
+	}
 }

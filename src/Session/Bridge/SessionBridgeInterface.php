@@ -142,4 +142,11 @@ interface SessionBridgeInterface
 	 * @since   2.0
 	 */
 	public function setCookieParams($lifetime, $path = null, $domain = null, $secure = false, $httponly = true);
+
+	/**
+	 * getStorage
+	 *
+	 * @return  array
+	 */
+	public function &getStorage();
 }

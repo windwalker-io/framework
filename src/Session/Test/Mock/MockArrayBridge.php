@@ -269,4 +269,14 @@ class MockArrayBridge implements SessionBridgeInterface
 	{
 		return md5($name);
 	}
+
+	/**
+	 * getStorage
+	 *
+	 * @return  array
+	 */
+	public function &getStorage()
+	{
+		return $this->data;
+	}
 }

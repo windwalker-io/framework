@@ -1174,7 +1174,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 		{
 			$ns = '_' . strtolower($name);
 
-			$session = &$_SESSION;
+			$session = &$this->getBridge()->getStorage();
 
 			if (!isset($session[$ns]) || !is_array($session[$ns]))
 			{
