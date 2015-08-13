@@ -13,11 +13,9 @@ use Windwalker\DI\Exception\DependencyResolutionException;
 /**
  * The DI Container.
  *
- * @note This class is based on Joomla Container.
- *
  * @since 2.0
  */
-class Container
+class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 {
 	const FORCE_NEW = true;
 
@@ -351,6 +349,27 @@ class Container
 	}
 
 	/**
+	 * Remove an item from container.
+	 *
+	 * @param   string  $key  Name of the dataStore key to get.
+	 *
+	 * @return  static  This object for chaining.
+	 *
+	 * @since   2.1
+	 */
+	public function remove($key)
+	{
+		$key = $this->resolveAlias($key);
+
+		if (isset($this->dataStore[$key]))
+		{
+			unset($this->dataStore[$key]);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Method to check if specified dataStore key exists.
 	 *
 	 * @param   string  $key  Name of the dataStore key to check.
@@ -490,20 +509,33 @@ class Container
 	/**
 	 * getChild
 	 *
-	 * @param   string  $name
+	 * @param   string   $name
+	 * @param   boolean  $forceNew
 	 *
 	 * @return  Container
 	 *
 	 * @since   2.1
 	 */
-	public function getChild($name)
+	public function getChild($name, $forceNew = false)
 	{
-		if (isset($this->children[$name]))
+		if (!isset($this->children[$name]) || $forceNew)
 		{
-			return $this->children[$name];
+			return $this->createChild($name);
 		}
 
 		return $this->children[$name];
+	}
+
+	/**
+	 * hasChild
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  boolean
+	 */
+	public function hasChild($name)
+	{
+		return isset($this->children[$name]);
 	}
 
 	/**
@@ -552,5 +584,85 @@ class Container
 
 		return $this;
 	}
-}
 
+	/**
+	 * Retrieve an external iterator
+	 *
+	 * @return \Traversable An instance of an object implementing Iterator or Traversable
+	 *
+	 * @since   2.1
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->dataStore);
+	}
+
+	/**
+	 * Is a property exists or not.
+	 *
+	 * @param   mixed   $offset   Offset key.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   2.1
+	 */
+	public function offsetExists($offset)
+	{
+		return $this->exists($offset);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param   mixed   $offset   Offset key.
+	 *
+	 * @return  mixed  The value to return.
+	 *
+	 * @since   2.1
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param   mixed  $offset  Offset key.
+	 * @param   mixed  $value  The value to set.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.1
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->share($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param   mixed  $offset  Offset key to unset.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.1
+	 */
+	public function offsetUnset($offset)
+	{
+		$this->remove($offset);
+	}
+
+	/**
+	 * Count this object.
+	 *
+	 * @return  integer
+	 *
+	 * @since   2.1
+	 */
+	public function count()
+	{
+		return count($this->dataStore);
+	}
+}
