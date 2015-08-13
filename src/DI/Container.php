@@ -171,8 +171,10 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @since   2.0
 	 */
-	public function createChild($name)
+	public function createChild($name = null)
 	{
+		$name = $name ? : md5(uniqid());
+
 		$this->children[$name] = new static($this);
 
 		return $this;
