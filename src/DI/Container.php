@@ -22,6 +22,13 @@ class Container
 	const FORCE_NEW = true;
 
 	/**
+	 * Property children.
+	 *
+	 * @var  Container[]
+	 */
+	protected $children = array();
+
+	/**
 	 * Holds the key aliases.
 	 *
 	 * @var    array  $aliases
@@ -49,13 +56,15 @@ class Container
 	/**
 	 * Constructor for the DI Container
 	 *
-	 * @param   Container  $parent  Parent for hierarchical containers.
+	 * @param   Container    $parent    Parent for hierarchical containers.
+	 * @param   Container[]  $children  Children Containers.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(Container $parent = null)
+	public function __construct(Container $parent = null, array $children = array())
 	{
 		$this->parent = $parent;
+		$this->children = $children;
 	}
 
 	/**
@@ -158,13 +167,17 @@ class Container
 	 * Create a child Container with a new property scope that
 	 * that has the ability to access the parent scope when resolving.
 	 *
+	 * @param   string  $name  The child name.
+	 *
 	 * @return  Container  This object for chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function createChild()
+	public function createChild($name)
 	{
-		return new static($this);
+		$this->children[$name] = new static($this);
+
+		return $this;
 	}
 
 	/**
@@ -451,6 +464,91 @@ class Container
 	public function setParent($parent)
 	{
 		$this->parent = $parent;
+
+		return $this;
+	}
+
+	/**
+	 * addChild
+	 *
+	 * @param string    $name
+	 * @param Container $container
+	 *
+	 * @return  static
+	 *
+	 * @since   2.1
+	 */
+	public function addChild($name, Container $container)
+	{
+		$container->setParent($this);
+
+		$this->children[$name] = $container;
+
+		return $this;
+	}
+
+	/**
+	 * getChild
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  Container
+	 *
+	 * @since   2.1
+	 */
+	public function getChild($name)
+	{
+		if (isset($this->children[$name]))
+		{
+			return $this->children[$name];
+		}
+
+		return $this->children[$name];
+	}
+
+	/**
+	 * removeChild
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  static
+	 *
+	 * @since   2.1
+	 */
+	public function removeChild($name)
+	{
+		if (isset($this->children[$name]))
+		{
+			unset($this->children[$name]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Children
+	 *
+	 * @return  Container[]
+	 *
+	 * @since   2.1
+	 */
+	public function getChildren()
+	{
+		return $this->children;
+	}
+
+	/**
+	 * Method to set property children
+	 *
+	 * @param   Container[] $children
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.1
+	 */
+	public function setChildren(array $children)
+	{
+		$this->children = $children;
 
 		return $this;
 	}
