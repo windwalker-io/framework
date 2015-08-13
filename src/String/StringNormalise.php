@@ -77,9 +77,7 @@ abstract class StringNormalise
 	public static function toDashSeparated($input)
 	{
 		// Convert spaces and underscores to dashes.
-		$input = preg_replace('#[ \-_]+#', '-', $input);
-
-		return $input;
+		return static::separate($input, '-');
 	}
 
 	/**
@@ -94,9 +92,37 @@ abstract class StringNormalise
 	public static function toSpaceSeparated($input)
 	{
 		// Convert underscores and dashes to spaces.
-		$input = preg_replace('#[ \-_]+#', ' ', $input);
+		return static::separate($input, ' ');
+	}
 
-		return $input;
+	/**
+	 * Method to convert a string into dot separated form.
+	 *
+	 * @param   string  $input  The string input (ASCII only).
+	 *
+	 * @return  string  The dot separated string.
+	 *
+	 * @since   2.1
+	 */
+	public static function toDotSeparated($input)
+	{
+		// Convert underscores and dashes to dots.
+		return static::separate($input, '.');
+	}
+
+	/**
+	 * Separate a string by custom separator.
+	 *
+	 * @param   string  $input      The string input (ASCII only).
+	 * @param   string  $separator  The separator to want to separate it.
+	 *
+	 * @return  string  The string be converted.
+	 *
+	 * @since   2.1
+	 */
+	public static function separate($input, $separator = '_')
+	{
+		return $input = preg_replace('#[ \-_]+#', $separator, $input);
 	}
 
 	/**
@@ -111,9 +137,7 @@ abstract class StringNormalise
 	public static function toUnderscoreSeparated($input)
 	{
 		// Convert spaces and dashes to underscores.
-		$input = preg_replace('#[ \-_]+#', '_', $input);
-
-		return $input;
+		return static::separate($input, '_');
 	}
 
 	/**
@@ -163,7 +187,7 @@ abstract class StringNormalise
 	}
 
 	/**
-	 * Convert to standard PSR-0 class name.
+	 * Convert to standard PSR-0/PSR-4 class name.
 	 *
 	 * @param   string $class The class name string.
 	 *
