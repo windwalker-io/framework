@@ -45,7 +45,7 @@ abstract class AbstractRenderer implements RendererInterface
 
 		$this->config = new Registry($this->config);
 
-		$this->config->loadArray($config);
+		$this->config->load($config);
 	}
 
 	/**

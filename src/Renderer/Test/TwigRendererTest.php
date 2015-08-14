@@ -10,6 +10,7 @@ namespace Windwalker\Renderer\Test;
 
 use Windwalker\Environment\PhpHelper;
 use Windwalker\Renderer\Test\Stub\StubTwigExtension;
+use Windwalker\Renderer\Twig\TwigFilesystemLoader;
 use Windwalker\Renderer\TwigRenderer;
 use Windwalker\Dom\Test\AbstractDomTestCase;
 
@@ -72,6 +73,31 @@ class TwigRendererTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = $this->instance->render('default');
+
+		$expect = <<<HTML
+<div id="global">
+	<p> (_global/global) Lorem ipsum dolor sit amet</p>
+	<p> (default) Nulla sed libero sem. Praesent ac dignissim risus.</p>
+	<p> (foo/bar) Phasellus vitae bibendum neque, quis suscipit urna. Fusce eu odio ante.</p>
+	<p> (_global/global) Suspendisse finibus fermentum massa ut tempus. </p>
+</div>
+HTML;
+
+		$this->assertDomStringEqualsDomString($expect, $html);
+	}
+
+	/**
+	 * Method to test render().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Renderer\TwigRenderer::render
+	 */
+	public function testRenderWithDotPath()
+	{
+		$this->instance->config->set('path_separator', '.');
+
+		$html = $this->instance->render('default_dot');
 
 		$expect = <<<HTML
 <div id="global">
