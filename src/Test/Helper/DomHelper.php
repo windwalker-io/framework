@@ -6,12 +6,14 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Dom\Helper;
+namespace Windwalker\Test\Helper;
 
 /**
  * The DomHelper class.
  * 
  * @since  2.0
+ *
+ * @deprecated  3.0
  */
 class DomHelper
 {
@@ -45,6 +47,8 @@ class DomHelper
 
 		$buffer = preg_replace($search, $replace, $buffer);
 
-		return $buffer;
+		$buffer = str_replace(array(' <', '> '), array('<', '>'), $buffer);
+
+		return trim($buffer);
 	}
 }
