@@ -10,6 +10,7 @@ namespace Windwalker\Renderer;
 
 use Windwalker\Registry\Registry;
 use Windwalker\Renderer\Twig\GlobalContainer;
+use Windwalker\Renderer\Twig\TwigFilesystemLoader;
 
 /**
  * Class PhpRenderer
@@ -80,7 +81,14 @@ class TwigRenderer extends AbstractEngineRenderer
 	{
 		if (!$this->loader)
 		{
-			$this->loader = new \Twig_Loader_Filesystem(iterator_to_array(clone $this->getPaths()));
+			if ($this->config->get('path_separator'))
+			{
+				$this->loader = new TwigFilesystemLoader(iterator_to_array(clone $this->getPaths()), $this->config->get('path_separator'));
+			}
+			else
+			{
+				$this->loader = new \Twig_Loader_Filesystem(iterator_to_array(clone $this->getPaths()));
+			}
 		}
 
 		return $this->loader;
