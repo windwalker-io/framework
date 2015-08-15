@@ -13,7 +13,7 @@ namespace Windwalker\Profiler\Point;
  *
  * @since 2.0
  */
-class Point implements ProfilerPointInterface
+class Point implements PointInterface
 {
 	/**
 	 * The profile point name.
@@ -39,17 +39,27 @@ class Point implements ProfilerPointInterface
 	protected $memory = null;
 
 	/**
+	 * Property data.
+	 *
+	 * @var  CollectorInterface
+	 */
+	protected $data = array();
+
+	/**
 	 * Constructor.
 	 *
-	 * @param   string   $name    The point name.
-	 * @param   float    $timing  The time in seconds.
-	 * @param   integer  $memory  The allocated amount of memory in bytes
+	 * @param   string  $name   The point name.
+	 * @param   float   $timing The time in seconds.
+	 * @param   integer $memory The allocated amount of memory in bytes
+	 * @param   mixed   $data   The collector data.
 	 */
-	public function __construct($name, $timing = 0.0, $memory = 0)
+	public function __construct($name, $timing = 0.0, $memory = 0, $data = array())
 	{
 		$this->name = $name;
 		$this->time = (float) $timing;
 		$this->memory = (int) $memory;
+
+		$this->setData($data);
 	}
 
 	/**
@@ -84,5 +94,34 @@ class Point implements ProfilerPointInterface
 	public function getMemory($megaBytes = false)
 	{
 		return $megaBytes ? $this->memory / 1048576 : $this->memory;
+	}
+
+	/**
+	 * Method to get property Data
+	 *
+	 * @return  CollectorInterface
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+
+	/**
+	 * Method to set property data
+	 *
+	 * @param   array|CollectorInterface $data
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setData($data)
+	{
+		if (!$data instanceof CollectorInterface)
+		{
+			$data = new Collector($data);
+		}
+
+		$this->data = $data;
+
+		return $this;
 	}
 }

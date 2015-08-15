@@ -239,7 +239,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 			$this->log(LogLevel::DEBUG, 'Executed: {sql}', array('sql' => $sql));
 		}
 
-		!is_callable($this->profiler['before']) or call_user_func_array($this->profiler['before'], array($this, $sql));
+		!is_callable($this->profiler['before']) or call_user_func($this->profiler['before'], $this, $sql);
 
 		try
 		{
@@ -253,7 +253,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 			throw $e;
 		}
 
-		!is_callable($this->profiler['after']) or call_user_func_array($this->profiler['after'], array($this, $this->lastQuery));
+		!is_callable($this->profiler['after']) or call_user_func($this->profiler['after'], $this, $this->lastQuery);
 
 		return $this;
 	}

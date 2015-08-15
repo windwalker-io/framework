@@ -259,9 +259,10 @@ class FileStorage extends AbstractCacheStorage
 	{
 		if (!is_dir($filePath))
 		{
-			throw new \RuntimeException(sprintf('The base cache path `%s` does not exist.', $filePath));
+			mkdir($filePath, 0755, true);
 		}
-		elseif (!is_writable($filePath))
+
+		if (!is_writable($filePath))
 		{
 			throw new \RuntimeException(sprintf('The base cache path `%s` is not writable.', $filePath));
 		}

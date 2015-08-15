@@ -9,13 +9,11 @@
 namespace Windwalker\Profiler\Point;
 
 /**
- * Interface ProfilerPointInterface
+ * Interface PointInterface
  *
  * @since  2.0
- *
- * @deprecated  3.0  Use CollectorInterface instead.
  */
-interface ProfilerPointInterface extends PointInterface
+interface PointInterface
 {
 	/**
 	 * Get the name of this profile point.
