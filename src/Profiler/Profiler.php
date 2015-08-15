@@ -117,7 +117,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	protected function setPoint(PointInterface $point)
+	public function setPoint(PointInterface $point)
 	{
 		if (isset($this->points[$point->getName()]))
 		{
