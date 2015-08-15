@@ -39,4 +39,11 @@ interface PointInterface
 	 * @return  integer  The amount of allocated memory in B.
 	 */
 	public function getMemory($megaBytes = false);
+
+	/**
+	 * getData
+	 *
+	 * @return  CollectorInterface
+	 */
+	public function getData();
 }

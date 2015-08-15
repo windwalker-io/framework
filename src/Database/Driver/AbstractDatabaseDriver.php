@@ -253,7 +253,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 			throw $e;
 		}
 
-		!is_callable($this->profiler['after']) or call_user_func($this->profiler['after'], $this, $this->lastQuery);
+		!is_callable($this->profiler['after']) or call_user_func($this->profiler['after'], $this, $this->lastQuery, $this->getReader()->countAffected());
 
 		return $this;
 	}
