@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Html;
+namespace Windwalker\Html\Grid;
 
 /**
  * The Grid class to dynamically generate HTML tables.
@@ -63,6 +63,19 @@ class Grid
 	public function __construct($options = array())
 	{
 		$this->setTableOptions($options, true);
+	}
+
+	/**
+	 * create
+	 *
+	 * @param array $options
+	 *
+	 * @return static
+	 * @internal param string $name
+	 */
+	public static function create($options = array())
+	{
+		return new static($options);
 	}
 
 	/**
