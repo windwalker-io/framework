@@ -971,6 +971,8 @@ abstract class ArrayHelper
 	 */
 	public static function flatten($array, $separator = '.', $prefix = '')
 	{
+		$return = array();
+
 		if ($array instanceof \Traversable)
 		{
 			$array = iterator_to_array($array);
@@ -986,15 +988,15 @@ abstract class ArrayHelper
 
 			if (is_object($v) || is_array($v))
 			{
-				$array = array_merge($array, static::flatten($v, $separator, $key));
+				$return = array_merge($return, static::flatten($v, $separator, $key));
 			}
 			else
 			{
-				$array[$key] = $v;
+				$return[$key] = $v;
 			}
 		}
 
-		return $array;
+		return $return;
 	}
 
 	/**
