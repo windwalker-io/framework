@@ -32,7 +32,7 @@ interface DispatcherInterface
 	 * @param   array|integer    $priorities  An associative array of event names as keys
 	 *                                        and the corresponding listener priority as values.
 	 *
-	 * @return  Dispatcher  This method is chainable.
+	 * @return  DispatcherInterface  This method is chainable.
 	 *
 	 * @throws  \InvalidArgumentException
 	 *
