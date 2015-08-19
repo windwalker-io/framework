@@ -91,7 +91,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Execute the application.
 	 *
-	 * @return  void
+	 * @return  mixed
 	 *
 	 * @since   2.0
 	 */
@@ -106,7 +106,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 
 		// @event onAfterExecute
 
-		$this->postExecute();
+		return $this->postExecute();
 	}
 
 	/**
