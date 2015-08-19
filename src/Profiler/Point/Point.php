@@ -13,7 +13,7 @@ namespace Windwalker\Profiler\Point;
  *
  * @since 2.0
  */
-class Point implements PointInterface
+class Point implements ProfilerPointInterface
 {
 	/**
 	 * The profile point name.
@@ -60,6 +60,19 @@ class Point implements PointInterface
 		$this->memory = (int) $memory;
 
 		$this->setData($data);
+	}
+
+	/**
+	 * Create a point of current information.
+	 *
+	 * @param   string  $name   The point name.
+	 * @param   mixed   $data   The collector data.
+	 *
+	 * @return  static
+	 */
+	public static function current($name, $data = array())
+	{
+		return new static($name, microtime(true), memory_get_usage(false), $data);
 	}
 
 	/**
