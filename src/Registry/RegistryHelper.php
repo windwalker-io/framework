@@ -193,7 +193,15 @@ class RegistryHelper
 
 		foreach ($nodes as $arg)
 		{
-			if (is_array($dataTmp) && isset($dataTmp[$arg]))
+			if (is_object($dataTmp) && isset($dataTmp->$arg))
+			{
+				$dataTmp = $dataTmp->$arg;
+			}
+			elseif ($dataTmp instanceof \ArrayAccess && isset($dataTmp[$arg]))
+			{
+				$dataTmp = $dataTmp[$arg];
+			}
+			elseif (is_array($dataTmp) && isset($dataTmp[$arg]))
 			{
 				$dataTmp = $dataTmp[$arg];
 			}
@@ -304,6 +312,44 @@ class RegistryHelper
 		}
 
 		return $array;
+	}
+
+	/**
+	 * Utility function to convert all types to an array.
+	 *
+	 * @param   mixed  $data       The data to convert.
+	 * @param   bool   $recursive  Recursive if data is nested.
+	 *
+	 * @return  array  The converted array.
+	 */
+	public static function toArray($data, $recursive = false)
+	{
+		// Ensure the input data is an array.
+		if ($data instanceof \Traversable)
+		{
+			$data = iterator_to_array($data);
+		}
+		elseif (is_object($data))
+		{
+			$data = get_object_vars($data);
+		}
+		else
+		{
+			$data = (array) $data;
+		}
+
+		if ($recursive)
+		{
+			foreach ($data as &$value)
+			{
+				if (is_array($value) || is_object($value))
+				{
+					$value = static::toArray($value, $recursive);
+				}
+			}
+		}
+
+		return $data;
 	}
 }
 

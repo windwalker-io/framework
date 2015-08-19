@@ -8,6 +8,7 @@
 
 namespace Windwalker\Registry\Test;
 
+use Windwalker\Registry\Registry;
 use Windwalker\Registry\RegistryHelper;
 
 /**
@@ -108,6 +109,37 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Method to test getByPath().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Registry\RegistryHelper::getByPath
+	 */
+	public function testGetByPathWithObject()
+	{
+		$data = array(
+			'flower' => 'sakura',
+			'olive' => 'peace',
+			'pos1' => (object) array(
+				'sunflower' => 'love'
+			),
+			'pos2' => new Registry(array(
+				'cornflower' => 'elegant'
+			)),
+			'array' => array(
+				'A',
+				'B',
+				'C'
+			)
+		);
+
+		$this->assertEquals('sakura', RegistryHelper::getByPath($data, 'flower'));
+		$this->assertEquals('love', RegistryHelper::getByPath($data, 'pos1.sunflower'));
+		$this->assertEquals('elegant', RegistryHelper::getByPath($data, 'pos2.cornflower'));
+		$this->assertEquals(null, RegistryHelper::getByPath($data, 'pos2.data'));
+	}
+
+	/**
 	 * Method to test setByPath().
 	 *
 	 * @return void
@@ -186,5 +218,61 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 		$flatted = RegistryHelper::flatten($array, '/');
 
 		$this->assertEquals($flatted['pos1/sunflower'], 'love');
+	}
+
+	/**
+	 * Data provider for object inputs
+	 *
+	 * @return  array
+	 *
+	 * @since   2.0
+	 */
+	public function seedTestToArray()
+	{
+		return array(
+			'string' => array(
+				'foo',
+				false,
+				array('foo')
+			),
+			'array' => array(
+				array('foo'),
+				false,
+				array('foo')
+			),
+			'array_recursive' => array(
+				array('foo' => array(
+					(object) array('bar' => 'bar'),
+					(object) array('baz' => 'baz')
+				)),
+				true,
+				array('foo' => array(
+					array('bar' => 'bar'),
+					array('baz' => 'baz')
+				))
+			),
+			'iterator' => array(
+				array('foo' => new \ArrayIterator(array('bar' => 'baz'))),
+				true,
+				array('foo' => array('bar' => 'baz'))
+			)
+		);
+	}
+
+	/**
+	 * testToArray
+	 *
+	 * @param $input
+	 * @param $recursive
+	 * @param $expect
+	 *
+	 * @return  void
+	 *
+	 * @dataProvider  seedTestToArray
+	 * @covers        Windwalker\Utilities\ArrayHelper::toArray
+	 */
+	public function testToArray($input, $recursive, $expect)
+	{
+		$this->assertEquals($expect, RegistryHelper::toArray($input, $recursive));
 	}
 }

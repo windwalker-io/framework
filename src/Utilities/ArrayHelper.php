@@ -763,6 +763,10 @@ abstract class ArrayHelper
 			{
 				$dataTmp = $dataTmp->$arg;
 			}
+			elseif ($dataTmp instanceof \ArrayAccess && isset($dataTmp[$arg]))
+			{
+				$dataTmp = $dataTmp[$arg];
+			}
 			elseif (is_array($dataTmp) && isset($dataTmp[$arg]))
 			{
 				$dataTmp = $dataTmp[$arg];
