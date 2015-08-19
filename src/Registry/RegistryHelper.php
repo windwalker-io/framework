@@ -22,7 +22,7 @@ class RegistryHelper
 	 * @param   string  $format   Format of the file [optional: defaults to JSON]
 	 * @param   array   $options  Options used by the formatter
 	 *
-	 * @return  static  Return this object to support chaining.
+	 * @return  array  Return parsed array.
 	 *
 	 * @since   2.1
 	 */
@@ -47,7 +47,7 @@ class RegistryHelper
 	 * @param   string  $format   Format of the string
 	 * @param   array   $options  Options used by the formatter
 	 *
-	 * @return  static  Return this object to support chaining.
+	 * @return  array  Return parsed array.
 	 *
 	 * @since   2.1
 	 */

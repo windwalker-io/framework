@@ -41,7 +41,7 @@ class Dispatcher implements DispatcherInterface
 	 *
 	 * @param   EventInterface  $event  The event.
 	 *
-	 * @return  Dispatcher  This method is chainable.
+	 * @return  static  This method is chainable.
 	 *
 	 * @since   2.0
 	 */
@@ -57,7 +57,7 @@ class Dispatcher implements DispatcherInterface
 	 *
 	 * @param   EventInterface  $event  The event.
 	 *
-	 * @return  Dispatcher  This method is chainable.
+	 * @return  static  This method is chainable.
 	 *
 	 * @since   2.0
 	 */
@@ -116,7 +116,7 @@ class Dispatcher implements DispatcherInterface
 	 *
 	 * @param   EventInterface|string  $event  The event object or name.
 	 *
-	 * @return  Dispatcher  This method is chainable.
+	 * @return  static  This method is chainable.
 	 *
 	 * @since   2.0
 	 */
@@ -183,7 +183,7 @@ class Dispatcher implements DispatcherInterface
 	 * @param   array|integer    $priorities  An associative array of event names as keys
 	 *                                        and the corresponding listener priority as values.
 	 *
-	 * @return  Dispatcher  This method is chainable.
+	 * @return  static  This method is chainable.
 	 *
 	 * @throws  \InvalidArgumentException
 	 *
@@ -289,8 +289,13 @@ class Dispatcher implements DispatcherInterface
 	 *
 	 * @since   2.0
 	 */
-	public function getListeners($event)
+	public function getListeners($event = null)
 	{
+		if ($event === null)
+		{
+			return $this->listeners;
+		}
+
 		if ($event instanceof EventInterface)
 		{
 			$event = $event->getName();

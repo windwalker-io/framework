@@ -9,13 +9,11 @@
 namespace Windwalker\Profiler\Point;
 
 /**
- * Interface ProfilerPointInterface
+ * Interface PointInterface
  *
  * @since  2.0
- *
- * @deprecated  3.0  Use CollectorInterface instead.
  */
-interface ProfilerPointInterface extends PointInterface
+interface PointInterface
 {
 	/**
 	 * Get the name of this profile point.
@@ -41,4 +39,11 @@ interface ProfilerPointInterface extends PointInterface
 	 * @return  integer  The amount of allocated memory in B.
 	 */
 	public function getMemory($megaBytes = false);
+
+	/**
+	 * getData
+	 *
+	 * @return  CollectorInterface
+	 */
+	public function getData();
 }

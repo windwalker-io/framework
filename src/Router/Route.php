@@ -13,7 +13,7 @@ namespace Windwalker\Router;
  *
  * @since 2.0
  */
-class Route
+class Route implements \IteratorAggregate
 {
 	/**
 	 * Property name.
@@ -534,5 +534,15 @@ class Route
 		$this->extra = (array) $extra;
 
 		return $this;
+	}
+
+	/**
+	 * Retrieve an external iterator
+	 *
+	 * @return \Traversable An instance of an object implementing Iterator or Traversable
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator(get_object_vars($this));
 	}
 }

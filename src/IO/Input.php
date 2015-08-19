@@ -508,4 +508,35 @@ class Input implements \Serializable, \Countable
 			$loaded = true;
 		}
 	}
+
+	/**
+	 * getAllInputs
+	 *
+	 * @return  Input[]
+	 */
+	public function getAllInputs()
+	{
+		$this->loadAllInputs();
+
+		return $this->inputs;
+	}
+
+	/**
+	 * dumpAllInputs
+	 *
+	 * @return  array
+	 */
+	public function dumpAllInputs()
+	{
+		$inputs = $this->getAllInputs();
+
+		$return = array();
+
+		foreach ($inputs as $key => $input)
+		{
+			$return[$key] = $input->getArray();
+		}
+
+		return $return;
+	}
 }

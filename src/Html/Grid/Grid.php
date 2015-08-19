@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Html;
+namespace Windwalker\Html\Grid;
 
 /**
  * The Grid class to dynamically generate HTML tables.
@@ -19,6 +19,10 @@ namespace Windwalker\Html;
  */
 class Grid
 {
+	const ROW_HEAD   = 1;
+	const ROW_FOOT   = 2;
+	const ROW_NORMAL = 3;
+
 	/**
 	 * Array of columns
 	 * @var array
@@ -59,6 +63,19 @@ class Grid
 	public function __construct($options = array())
 	{
 		$this->setTableOptions($options, true);
+	}
+
+	/**
+	 * create
+	 *
+	 * @param array $options
+	 *
+	 * @return static
+	 * @internal param string $name
+	 */
+	public static function create($options = array())
+	{
+		return new static($options);
 	}
 
 	/**
@@ -194,18 +211,18 @@ class Grid
 	 *
 	 * @since   2.1
 	 */
-	public function addRow($options = array(), $special = false)
+	public function addRow($options = array(), $special = self::ROW_NORMAL)
 	{
 		$this->rows[]['_row'] = $options;
 		$this->activeRow = count($this->rows) - 1;
 
 		if ($special)
 		{
-			if ($special === 1)
+			if ($special === static::ROW_HEAD)
 			{
 				$this->specialRows['header'][] = $this->activeRow;
 			}
-			else
+			elseif ($special === static::ROW_FOOT)
 			{
 				$this->specialRows['footer'][] = $this->activeRow;
 			}
