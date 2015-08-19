@@ -17,6 +17,9 @@ use Windwalker\Registry\Registry;
 /**
  * The Abstract Application Class.
  *
+ * @property-read  Registry  $config
+ * @property-read  Input     $input
+ *
  * @since 2.0
  */
 abstract class AbstractApplication implements LoggerAwareInterface
@@ -35,7 +38,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 * @var    Input
 	 * @since  2.0
 	 */
-	public $input = null;
+	protected $input = null;
 
 	/**
 	 * A logger object.
@@ -220,5 +223,27 @@ abstract class AbstractApplication implements LoggerAwareInterface
 		$this->logger = $logger;
 
 		return $this;
+	}
+
+	/**
+	 * is utilized for reading data from inaccessible members.
+	 *
+	 * @param   $name  string
+	 *
+	 * @return  mixed
+	 */
+	public function __get($name)
+	{
+		$allowNames = array(
+			'config',
+			'input'
+		);
+
+		if (in_array($name, $allowNames))
+		{
+			return $this->$name;
+		}
+
+		throw new \UnexpectedValueException('Property: ' . $name . ' not found in ' . get_called_class());
 	}
 }
