@@ -8,8 +8,10 @@
 
 namespace Windwalker\Registry\Test;
 
+use Windwalker\Profiler\Profiler;
 use Windwalker\Registry\Registry;
 use Windwalker\Registry\RegistryHelper;
+use Windwalker\Registry\Test\Stubs\StubDumpable;
 
 /**
  * Test class of RegistryHelper
@@ -274,5 +276,19 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	public function testToArray($input, $recursive, $expect)
 	{
 		$this->assertEquals($expect, RegistryHelper::toArray($input, $recursive));
+	}
+
+	public function testDumpObjectValue()
+	{
+		$data = new StubDumpable(new StubDumpable);
+
+		$dumped = RegistryHelper::dumpObjectValues($data);
+
+		$this->assertEquals('foo', $dumped['foo']);
+		$this->assertEquals('bar', $dumped['bar']);
+		$this->assertNull($dumped['data']['self']);
+		$this->assertEquals(RegistryHelper::dumpObjectValues(new StubDumpable), $dumped['data']['new']);
+		$this->assertEquals(array('sakura', 'rose'), $dumped['data']['flower']);
+		$this->assertEquals(array('wind' => 'walker'), $dumped['iterator']);
 	}
 }

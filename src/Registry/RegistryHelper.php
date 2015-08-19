@@ -16,6 +16,13 @@ namespace Windwalker\Registry;
 class RegistryHelper
 {
 	/**
+	 * Property objectStorage.
+	 *
+	 * @var  \SplObjectStorage
+	 */
+	private static $objectStorage;
+
+	/**
 	 * Load the contents of a file into the registry
 	 *
 	 * @param   string  $file     Path to file to load
@@ -350,6 +357,74 @@ class RegistryHelper
 		}
 
 		return $data;
+	}
+
+	/**
+	 * dumpObjectValues
+	 *
+	 * @param   mixed  $object
+	 *
+	 * @return  array
+	 */
+	public static function dumpObjectValues($object)
+	{
+		$data = array();
+
+		static::$objectStorage = new \SplObjectStorage;
+
+		static::doDump($data, $object);
+
+		return $data;
+	}
+
+	/**
+	 * doDump
+	 *
+	 * @param   array  $data
+	 * @param   mixed  $object
+	 *
+	 * @return  void
+	 */
+	private static function doDump(&$data, $object)
+	{
+		if (is_object($object) && static::$objectStorage->contains($object))
+		{
+			$data = null;
+
+			return;
+		}
+
+		if (is_object($object))
+		{
+			static::$objectStorage->attach($object);
+		}
+
+		if (is_array($object) || $object instanceof \Traversable)
+		{
+			foreach ($object as $key => $value)
+			{
+				static::doDump($data[$key], $value);
+			}
+		}
+		elseif (is_object($object))
+		{
+			$ref = new \ReflectionObject($object);
+
+			$properties = $ref->getProperties();
+
+			foreach ($properties as $property)
+			{
+				$property->setAccessible(true);
+
+				$value = $property->getValue($object);
+
+				static::doDump($data[$property->getName()], $value);
+			}
+		}
+		else
+		{
+			$data = $object;
+		}
 	}
 }
 
