@@ -41,7 +41,7 @@ class ListField extends AbstractField
 	 * @param null   $filter
 	 * @param null   $rule
 	 */
-	public function __construct($name, $label = null, $options = array(), $attributes = array(), $filter = null, $rule = null)
+	public function __construct($name = null, $label = null, $options = array(), $attributes = array(), $filter = null, $rule = null)
 	{
 		parent::__construct($name, $label, $attributes, $filter, $rule);
 

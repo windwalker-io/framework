@@ -148,7 +148,7 @@ abstract class AbstractField
 	 * @param string $filter
 	 * @param string $validator
 	 */
-	public function __construct($name, $label = null, $attributes = array(), $filter = null, $validator = null)
+	public function __construct($name = null, $label = null, $attributes = array(), $filter = null, $validator = null)
 	{
 		if ($name instanceof \SimpleXMLElement)
 		{
@@ -271,7 +271,7 @@ abstract class AbstractField
 	{
 		$control = $this->control ? $this->control . '.' : '';
 
-		return str_replace('.', '-', $control . $this->getName(true));
+		return 'input-' . str_replace('.', '-', $control . $this->getName(true));
 	}
 
 	/**
