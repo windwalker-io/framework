@@ -234,7 +234,7 @@ class Language implements LanguageInterface
 
 		unset($args[1]);
 
-		if (count($args))
+		if (count($args) > 1)
 		{
 			$args[0] = $string;
 
