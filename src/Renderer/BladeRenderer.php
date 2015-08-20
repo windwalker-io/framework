@@ -15,6 +15,7 @@ use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\FileViewFinder;
 use Illuminate\View\Factory as BladeEnvironment;
+use Windwalker\Renderer\Blade\GlobalContainer;
 
 // Fix for Illuminate 4.1 B/C
 if (!class_exists('Illuminate\View\Factory'))
@@ -72,6 +73,13 @@ class BladeRenderer extends AbstractEngineRenderer
 	protected $compiler;
 
 	/**
+	 * Property customCompiler.
+	 *
+	 * @var  callable[]
+	 */
+	protected $customCompilers = array();
+
+	/**
 	 * render
 	 *
 	 * @param string $file
@@ -106,6 +114,19 @@ class BladeRenderer extends AbstractEngineRenderer
 		if (!$this->engine || $new)
 		{
 			$this->engine = new BladeEnvironment($this->getResolver(), $this->getFinder(), $this->getDispatcher());
+
+			/** @var BladeCompiler $bladeCompiler */
+			$bladeCompiler = $this->getCompiler()->getCompiler();
+
+			foreach (GlobalContainer::getCompilers() as $name => $callback)
+			{
+				$bladeCompiler->directive($name, $callback);
+			}
+
+			foreach ($this->getCustomCompilers() as $name => $callback)
+			{
+				$bladeCompiler->directive($name, $callback);
+			}
 		}
 
 		return $this->engine;
@@ -293,6 +314,50 @@ class BladeRenderer extends AbstractEngineRenderer
 	public function setCompiler($compiler)
 	{
 		$this->compiler = $compiler;
+
+		return $this;
+	}
+
+	/**
+	 * addCustomCompiler
+	 *
+	 * @param   string   $name
+	 * @param   callable $compiler
+	 *
+	 * @return  static
+	 */
+	public function addCustomCompiler($name, $compiler)
+	{
+		if (!is_callable($compiler))
+		{
+			throw new \InvalidArgumentException('Compiler should be callable.');
+		}
+
+		$this->customCompilers[$name] = $compiler;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property CustomCompiler
+	 *
+	 * @return  \callable[]
+	 */
+	public function getCustomCompilers()
+	{
+		return $this->customCompilers;
+	}
+
+	/**
+	 * Method to set property customCompiler
+	 *
+	 * @param   \callable[] $customCompilers
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setCustomCompilers(array $customCompilers)
+	{
+		$this->customCompilers = $customCompilers;
 
 		return $this;
 	}
