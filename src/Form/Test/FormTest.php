@@ -505,7 +505,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$form = $this->getByDefine('windwalker');
 
-		$html = '<div id="windwalker-id-control" class="text-field "><label id="windwalker-id-label" for="windwalker-id">ID</label><input type="text" name="windwalker[id]" id="windwalker-id" class="control-input" /></div>';
+		$html = '<div id="input-windwalker-id-control" class="text-field "><label id="input-windwalker-id-label" for="input-windwalker-id">ID</label><input type="text" name="windwalker[id]" id="input-windwalker-id" class="control-input" /></div>';
 
 		$this->assertEquals($html, $form->renderField('id'));
 	}

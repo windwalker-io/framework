@@ -85,6 +85,7 @@ class AbstractInputList extends HtmlElement
 			$attrs['id'] = $option->getAttribute('id');
 			$attrs['id'] = $attrs['id'] ? : strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $attrs['name'] ? : 'empty'), '-'));
 			$attrs['id'] .= '-' . strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $option->getValue() ? : 'empty'), '-'));
+			$attrs['id'] = 'input-' . $attrs['id'];
 
 			// Do not affect source options
 			$option = clone $option;

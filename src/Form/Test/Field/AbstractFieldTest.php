@@ -69,46 +69,46 @@ class AbstractFieldTest extends AbstractDomTestCase
 	public function testRenderInput()
 	{
 		$expect = <<<HTML
-<input type="text" name="flower" id="flower" class="stub-flower" />
+<input type="text" name="flower" id="input-flower" class="stub-flower" />
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 
 		// Control
 		$this->instance->setControl('windwalker');
 
 		$expect = <<<HTML
-<input type="text" name="windwalker[flower]" id="windwalker-flower" class="stub-flower" />
+<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" />
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 
 		// Default value
 		$this->instance->setAttribute('default', 'default-value');
 
 		$expect = <<<HTML
-<input type="text" name="windwalker[flower]" id="windwalker-flower" class="stub-flower" value="default-value" />
+<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="default-value" />
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 
 		// Value
 		$this->instance->setValue('sakura');
 
 		$expect = <<<HTML
-<input type="text" name="windwalker[flower]" id="windwalker-flower" class="stub-flower" value="sakura" />
+<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" />
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 
 		// Group
 		$this->instance->setGroup('foo.bar');
 
 		$expect = <<<HTML
-<input type="text" name="windwalker[foo][bar][flower]" id="windwalker-foo-bar-flower" class="stub-flower" value="sakura" />
+<input type="text" name="windwalker[foo][bar][flower]" id="input-windwalker-foo-bar-flower" class="stub-flower" value="sakura" />
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 	}
 
 	/**
@@ -132,10 +132,10 @@ XML;
 		$field = new StubField(simplexml_load_string($xml));
 
 		$expect = <<<HTML
-<input type="text" name="flower" id="flower" class="stub-flower" value="default-value" />
+<input type="text" name="flower" id="input-flower" class="stub-flower" value="default-value" />
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $field->renderInput());
+		$this->assertHtmlFormatEquals($expect, $field->renderInput());
 	}
 
 	/**
@@ -164,10 +164,10 @@ HTML;
 	public function testRenderLabel()
 	{
 		$expect = <<<HTML
-<label id="flower-label" for="flower">Flower</label>
+<label id="input-flower-label" for="input-flower">Flower</label>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->renderLabel());
+		$this->assertHtmlFormatEquals($expect, $this->instance->renderLabel());
 	}
 
 	/**
@@ -200,13 +200,13 @@ HTML;
 		$this->instance->setAttribute('controlClass', 'control-group');
 
 		$expect = <<<HTML
-<div id="windwalker-flower-control" class="stub-field control-group">
-	<label id="windwalker-flower-label" for="windwalker-flower">Flower</label>
-	<input type="text" name="windwalker[flower]" id="windwalker-flower" class="stub-flower" value="sakura" />
+<div id="input-windwalker-flower-control" class="stub-field control-group">
+	<label id="input-windwalker-flower-label" for="input-windwalker-flower">Flower</label>
+	<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" />
 </div>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->render());
+		$this->assertHtmlFormatEquals($expect, $this->instance->render());
 	}
 
 	/**
@@ -230,11 +230,11 @@ HTML;
 	 */
 	public function testGetId()
 	{
-		$this->assertEquals('flower', $this->instance->getId());
+		$this->assertEquals('input-flower', $this->instance->getId());
 
 		$this->instance->setControl('windwalker');
 
-		$this->assertEquals('windwalker-flower', $this->instance->getId());
+		$this->assertEquals('input-windwalker-flower', $this->instance->getId());
 	}
 
 	/**
@@ -362,7 +362,7 @@ HTML;
 		$this->instance->setGroup('goo');
 		$this->instance->setName('yoo');
 
-		$this->assertEquals('windwalker-goo-yoo', $this->instance->getId());
+		$this->assertEquals('input-windwalker-goo-yoo', $this->instance->getId());
 	}
 
 	/**
@@ -410,18 +410,18 @@ HTML;
 		$this->instance->setGroup('wind');
 
 		$expect = <<<HTML
-<input type="text" name="wind[flower]" id="wind-flower" class="stub-flower" />
+<input type="text" name="wind[flower]" id="input-wind-flower" class="stub-flower" />
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 
 		$this->instance->setGroup('wind.walker');
 
 		$expect = <<<HTML
-<input type="text" name="wind[walker][flower]" id="wind-walker-flower" class="stub-flower" />
+<input type="text" name="wind[walker][flower]" id="input-wind-walker-flower" class="stub-flower" />
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 	}
 
 	/**

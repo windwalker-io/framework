@@ -75,41 +75,41 @@ class RadioFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<span id="flower" class="radio-inputs stub-flower">
-	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="flower-asia-tokyo" />
-	<label class="opt" id="flower-asia-tokyo-label" for="flower-asia-tokyo">Asia - Tokyo</label>
+<span id="input-flower" class="radio-inputs stub-flower">
+	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="input-flower-asia-tokyo" />
+	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
 
-	<input value="Asia/Taipei" name="flower" type="radio" id="flower-asia-taipei" />
-	<label id="flower-asia-taipei-label" for="flower-asia-taipei">Asia - Taipei</label>
+	<input value="Asia/Taipei" name="flower" type="radio" id="input-flower-asia-taipei" />
+	<label id="input-flower-asia-taipei-label" for="input-flower-asia-taipei">Asia - Taipei</label>
 
-	<input value="Asia/Paris" name="flower" type="radio" id="flower-asia-paris" />
-	<label id="flower-asia-paris-label" for="flower-asia-paris">Europe - Paris</label>
+	<input value="Asia/Paris" name="flower" type="radio" id="input-flower-asia-paris" />
+	<label id="input-flower-asia-paris-label" for="input-flower-asia-paris">Europe - Paris</label>
 
-	<input value="UTC" name="flower" type="radio" id="flower-utc" />
-	<label id="flower-utc-label" for="flower-utc">UTC</label>
+	<input value="UTC" name="flower" type="radio" id="input-flower-utc" />
+	<label id="input-flower-utc-label" for="input-flower-utc">UTC</label>
 </span>
 HTML;
 
-		$this->assertDomStringEqualsDomString($html, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($html, $this->instance->renderInput());
 
 		$this->instance->setValue('UTC');
 
 		$html = <<<HTML
-<span id="flower" class="radio-inputs stub-flower">
-	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="flower-asia-tokyo" />
-	<label class="opt" id="flower-asia-tokyo-label" for="flower-asia-tokyo">Asia - Tokyo</label>
+<span id="input-flower" class="radio-inputs stub-flower">
+	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="input-flower-asia-tokyo" />
+	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
 
-	<input value="Asia/Taipei" name="flower" type="radio" id="flower-asia-taipei" />
-	<label id="flower-asia-taipei-label" for="flower-asia-taipei">Asia - Taipei</label>
+	<input value="Asia/Taipei" name="flower" type="radio" id="input-flower-asia-taipei" />
+	<label id="input-flower-asia-taipei-label" for="input-flower-asia-taipei">Asia - Taipei</label>
 
-	<input value="Asia/Paris" name="flower" type="radio" id="flower-asia-paris" />
-	<label id="flower-asia-paris-label" for="flower-asia-paris">Europe - Paris</label>
+	<input value="Asia/Paris" name="flower" type="radio" id="input-flower-asia-paris" />
+	<label id="input-flower-asia-paris-label" for="input-flower-asia-paris">Europe - Paris</label>
 
-	<input value="UTC" name="flower" checked="checked" type="radio" id="flower-utc" />
-	<label id="flower-utc-label" for="flower-utc">UTC</label>
+	<input value="UTC" name="flower" checked="checked" type="radio" id="input-flower-utc" />
+	<label id="input-flower-utc-label" for="input-flower-utc">UTC</label>
 </span>
 HTML;
 
-		$this->assertDomStringEqualsDomString($html, $this->instance->renderInput());
+		$this->assertHtmlFormatEquals($html, $this->instance->renderInput());
 	}
 }
