@@ -23,6 +23,13 @@ abstract class GlobalContainer
 	protected static $compilers = array();
 
 	/**
+	 * Property cachePath.
+	 *
+	 * @var  string
+	 */
+	protected static $cachePath;
+
+	/**
 	 * addCompiler
 	 *
 	 * @param string    $name
@@ -92,5 +99,27 @@ abstract class GlobalContainer
 	public static function setCompilers(array $compilers)
 	{
 		static::$compilers = $compilers;
+	}
+
+	/**
+	 * Method to get property CachePath
+	 *
+	 * @return  string
+	 */
+	public static function getCachePath()
+	{
+		return static::$cachePath;
+	}
+
+	/**
+	 * Method to set property cachePath
+	 *
+	 * @param   string $cachePath
+	 *
+	 * @return  void
+	 */
+	public static function setCachePath($cachePath)
+	{
+		static::$cachePath = $cachePath;
 	}
 }

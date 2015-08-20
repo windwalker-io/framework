@@ -286,7 +286,7 @@ class BladeRenderer extends AbstractEngineRenderer
 	{
 		if (!$this->compiler)
 		{
-			$cachePath = $this->config->get('cache_path');
+			$cachePath = $this->config->get('cache_path') ? : GlobalContainer::getCachePath();
 
 			if (!$cachePath)
 			{
