@@ -43,17 +43,17 @@ class CheckboxListTest extends AbstractDomTestCase
 
 		$expect = <<<HTML
 <span class="checkbox-inputs input-select">
-	<input class="opt" value="Asia/Tokyo" type="checkbox" name="form[timezone][]" id="form-timezone-asia-tokyo" />
-	<label class="opt" id="form-timezone-asia-tokyo-label" for="form-timezone-asia-tokyo">Asia - Tokyo</label>
+	<input class="opt" value="Asia/Tokyo" type="checkbox" name="form[timezone][]" id="input-form-timezone-asia-tokyo" />
+	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
 
-	<input value="Asia/Taipei" type="checkbox" name="form[timezone][]" id="form-timezone-asia-taipei" />
-	<label id="form-timezone-asia-taipei-label" for="form-timezone-asia-taipei">Asia - Taipei</label>
+	<input value="Asia/Taipei" type="checkbox" name="form[timezone][]" id="input-form-timezone-asia-taipei" />
+	<label id="input-form-timezone-asia-taipei-label" for="input-form-timezone-asia-taipei">Asia - Taipei</label>
 
-	<input value="Asia/Paris" type="checkbox" name="form[timezone][]" id="form-timezone-asia-paris" />
-	<label id="form-timezone-asia-paris-label" for="form-timezone-asia-paris">Europe - Paris</label>
+	<input value="Asia/Paris" type="checkbox" name="form[timezone][]" id="input-form-timezone-asia-paris" />
+	<label id="input-form-timezone-asia-paris-label" for="input-form-timezone-asia-paris">Europe - Paris</label>
 
-	<input value="UTC" checked="checked" type="checkbox" name="form[timezone][]" id="form-timezone-utc" />
-	<label id="form-timezone-utc-label" for="form-timezone-utc">UTC</label>
+	<input value="UTC" checked="checked" type="checkbox" name="form[timezone][]" id="input-form-timezone-utc" />
+	<label id="input-form-timezone-utc-label" for="input-form-timezone-utc">UTC</label>
 </span>
 HTML;
 
