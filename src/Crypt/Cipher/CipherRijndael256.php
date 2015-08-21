@@ -13,7 +13,7 @@ namespace Windwalker\Crypt\Cipher;
  * 
  * @since  2.0
  */
-class CipherRijndael256 extends McryptCipher
+class CipherRijndael256 extends AbstractMcryptCipher
 {
 	/**
 	 * @var    integer  The mcrypt cipher constant.

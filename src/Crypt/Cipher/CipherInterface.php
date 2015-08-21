@@ -22,8 +22,6 @@ interface CipherInterface
 	 * @param   string  $key   The private key.
 	 * @param   string  $iv    The public key.
 	 *
-	 * @internal param \Windwalker\Crypt\KeyInterface $key The key object to use for decryption.
-	 *
 	 * @return  string  The decrypted data string.
 	 *
 	 * @since    2.0

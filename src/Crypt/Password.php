@@ -89,12 +89,28 @@ class Password
 
 			default:
 			case static::BLOWFISH:
+				$salt = CryptHelper::repeatToLength($salt, 22, true);
+				$cost = CryptHelper::limitInteger($this->cost, 4, 31);
+
+				if (function_exists('password_hash'))
+				{
+					$options = array(
+						'cost' => $cost,
+						'salt' => $salt
+					);
+
+					return password_hash($password, PASSWORD_BCRYPT, $options);
+				}
+
 				$prefix = (version_compare(PHP_VERSION, '5.3.7') >= 0) ? '$2y$' : '$2a$';
 
-				$salt = CryptHelper::repeatToLength($salt, 21);
-
-				$salt = $prefix . CryptHelper::limitInteger($this->cost, 4, 31) . '$' . $salt . '$';
+				$salt = $prefix . $cost . '$' . $salt . '$';
 				break;
+		}
+
+		if (!function_exists('crypt'))
+		{
+			throw new \RangeException("crypt() must be loaded for Password::create method");
 		}
 
 		return crypt($password, $salt);
@@ -112,16 +128,27 @@ class Password
 	 */
 	public function verify($password, $hash)
 	{
+		if (function_exists('password_verify'))
+		{
+			return password_verify($password, $hash);
+		}
+
 		if (!function_exists('crypt'))
 		{
-			trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
-
-			return false;
+			throw new \RangeException("crypt() must be loaded for Password::verify method");
 		}
 
 		// Calculate the user-provided hash, using the salt stored with the known hash
 		$ret = crypt($password, $hash);
 
+		/*
+		 * Prevent timing attack.
+		 *
+		 * @see  http://rdist.root.org/2010/07/19/exploiting-remote-timing-attacks/
+		 * @see  http://rdist.root.org/2010/01/07/timing-independent-array-comparison/
+		 * @see  http://crypto.stanford.edu/~dabo/papers/ssl-timing.pdf
+		 * @see  https://www.evernote.com/shard/s12/sh/ca50fc6a-7121-4b8f-a4a7-2d6577a59195/a0b0306f8c6becd1
+		 */
 		if (!is_string($ret) || CryptHelper::getLength($ret) != CryptHelper::getLength($hash) || CryptHelper::getLength($ret) <= 13)
 		{
 			return false;

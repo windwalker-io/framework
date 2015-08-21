@@ -8,7 +8,7 @@
 
 namespace Windwalker\Crypt\Test;
 
-use Windwalker\Crypt\Cipher\McryptCipher;
+use Windwalker\Crypt\Cipher\AbstractMcryptCipher;
 
 /**
  * The AbstractCipherTestCase class.
@@ -27,7 +27,7 @@ abstract class AbstractMcryptTestCase extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test instance.
 	 *
-	 * @var McryptCipher
+	 * @var AbstractMcryptCipher
 	 */
 	protected $instance;
 

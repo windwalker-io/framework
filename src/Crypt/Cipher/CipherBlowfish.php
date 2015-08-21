@@ -13,7 +13,7 @@ namespace Windwalker\Crypt\Cipher;
  * 
  * @since  2.0
  */
-class CipherBlowfish extends McryptCipher
+class CipherBlowfish extends AbstractMcryptCipher
 {
 	/**
 	 * @var    integer  The mcrypt cipher constant.

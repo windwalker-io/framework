@@ -22,7 +22,7 @@ class CryptHelper
 	 * @param integer $min
 	 * @param integer $max
 	 *
-	 * @return  null
+	 * @return  integer
 	 */
 	public static function limitInteger($int, $min = null, $max = null)
 	{

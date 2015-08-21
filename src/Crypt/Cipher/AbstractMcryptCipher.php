@@ -15,7 +15,7 @@ use Windwalker\Crypt\CryptHelper;
  * 
  * @since  2.0
  */
-abstract class McryptCipher implements CipherInterface
+abstract class AbstractMcryptCipher implements CipherInterface
 {
 	/**
 	 * Property type.
