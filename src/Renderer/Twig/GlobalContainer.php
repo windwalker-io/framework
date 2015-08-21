@@ -158,8 +158,8 @@ abstract class GlobalContainer
 	 *
 	 * @return  void
 	 */
-	public static function setGlobals($globals)
+	public static function setGlobals(array $globals)
 	{
-		self::$globals = $globals;
+		static::$globals = $globals;
 	}
 }

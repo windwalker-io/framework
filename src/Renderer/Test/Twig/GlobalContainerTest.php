@@ -6,7 +6,7 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Renderer\Test;
+namespace Windwalker\Renderer\Test\Twig;
 
 use Windwalker\Renderer\Test\Stub\StubTwigExtension;
 use Windwalker\Renderer\Twig\GlobalContainer;
@@ -31,7 +31,7 @@ class GlobalContainerTest extends AbstractDomTestCase
 	{
 		GlobalContainer::addExtension('stub', new StubTwigExtension);
 
-		$renderer = new TwigRenderer(__DIR__ . '/Tmpl/twig');
+		$renderer = new TwigRenderer(__DIR__ . '/../Tmpl/twig');
 
 		$html = $renderer->render('ext-test.twig');
 
@@ -45,7 +45,7 @@ class GlobalContainerTest extends AbstractDomTestCase
 </ul>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $html);
+		$this->assertHtmlFormatEquals($expect, $html);
 
 		GlobalContainer::removeExtension('stub');
 	}

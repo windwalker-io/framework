@@ -15,6 +15,7 @@ use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\FileViewFinder;
 use Illuminate\View\Factory as BladeEnvironment;
+use Windwalker\Renderer\Blade\BladeExtending;
 use Windwalker\Renderer\Blade\GlobalContainer;
 
 // Fix for Illuminate 4.1 B/C
@@ -120,12 +121,12 @@ class BladeRenderer extends AbstractEngineRenderer
 
 			foreach (GlobalContainer::getCompilers() as $name => $callback)
 			{
-				$bladeCompiler->directive($name, $callback);
+				BladeExtending::extend($bladeCompiler, $name, $callback);
 			}
 
 			foreach ($this->getCustomCompilers() as $name => $callback)
 			{
-				$bladeCompiler->directive($name, $callback);
+				BladeExtending::extend($bladeCompiler, $name, $callback);
 			}
 		}
 
