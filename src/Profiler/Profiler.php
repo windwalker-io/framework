@@ -9,8 +9,9 @@
 namespace Windwalker\Profiler;
 
 use Windwalker\Environment\PhpHelper;
+use Windwalker\Profiler\Point\CollectorInterface;
 use Windwalker\Profiler\Point\Point;
-use Windwalker\Profiler\Point\ProfilerPointInterface;
+use Windwalker\Profiler\Point\PointInterface;
 use Windwalker\Profiler\Renderer\DefaultRenderer;
 use Windwalker\Profiler\Renderer\ProfilerRendererInterface;
 
@@ -35,7 +36,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 * It is used to quickly find a point
 	 * without having to traverse $points.
 	 *
-	 * @var  ProfilerPointInterface[]
+	 * @var  PointInterface[]
 	 */
 	protected $points = array();
 
@@ -83,7 +84,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 *
 	 * @param   string                     $name             The profiler name.
 	 * @param   ProfilerRendererInterface  $renderer         The renderer.
-	 * @param   ProfilerPointInterface[]   $points           An array of profile points.
+	 * @param   PointInterface[]   $points           An array of profile points.
 	 * @param   boolean                    $memoryRealUsage  True to get the real memory usage.
 	 *
 	 * @throws  \InvalidArgumentException
@@ -110,19 +111,14 @@ class Profiler implements ProfilerInterface, \Countable
 	/**
 	 * set Point
 	 *
-	 * @param ProfilerPointInterface $point
+	 * @param PointInterface $point
 	 *
 	 * @return  static
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	protected function setPoint(ProfilerPointInterface $point)
+	public function setPoint(PointInterface $point)
 	{
-		if (!($point instanceof ProfilerPointInterface))
-		{
-			throw new \InvalidArgumentException('One of the passed point does not implement ProfilerPointInterface.');
-		}
-
 		if (isset($this->points[$point->getName()]))
 		{
 			throw new \InvalidArgumentException(
@@ -145,7 +141,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 * This function is called by the constructor when injecting an array of points
 	 * (mostly for testing purposes).
 	 *
-	 * @param   ProfilerPointInterface[]  $points  An array of profile points.
+	 * @param   PointInterface[]  $points  An array of profile points.
 	 *
 	 * @return  void
 	 *
@@ -172,13 +168,14 @@ class Profiler implements ProfilerInterface, \Countable
 	/**
 	 * Mark a profile point.
 	 *
-	 * @param   string  $name  The profile point name.
+	 * @param   string                     $name  The profile point name.
+	 * @param   array|CollectorInterface   $data  The data collection of this point.
 	 *
-	 * @return  ProfilerInterface  This method is chainable.
+	 * @return  ProfilerInterface This method is chainable.
 	 *
 	 * @throws  \InvalidArgumentException  If the point already exists.
 	 */
-	public function mark($name)
+	public function mark($name, $data = array())
 	{
 		// If a point already exists with this name.
 		if (isset($this->points[$name]))
@@ -210,7 +207,8 @@ class Profiler implements ProfilerInterface, \Countable
 		$point = new Point(
 			$name,
 			$timeStamp - $this->startTimeStamp,
-			$memoryBytes - $this->startMemoryBytes
+			$memoryBytes - $this->startMemoryBytes,
+			$data
 		);
 
 		// Store it.
@@ -236,7 +234,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 *
 	 * @param   string  $name     The name of the point.
 	 *
-	 * @return  ProfilerPointInterface|mixed  The profile point or the default value.
+	 * @return  PointInterface|mixed  The profile point or the default value.
 	 */
 	public function getPoint($name)
 	{
@@ -327,7 +325,7 @@ class Profiler implements ProfilerInterface, \Countable
 	/**
 	 * Get the points in this profiler (from the first to the last).
 	 *
-	 * @return  ProfilerPointInterface[]  An array of points in this profiler.
+	 * @return  PointInterface[]  An array of points in this profiler.
 	 */
 	public function getPoints()
 	{

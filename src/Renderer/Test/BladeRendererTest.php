@@ -86,7 +86,9 @@ class BladeRendererTest extends AbstractDomTestCase
 
 		$expect = <<<HTML
 <html>
-<body>This is the master sidebar.
+<body>
+	This is the master sidebar.
+
 	<p>This is appended to the master sidebar.</p>
 	<div class="container">
 		<p>This is my body content.</p>
@@ -95,7 +97,37 @@ class BladeRendererTest extends AbstractDomTestCase
 </html>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $html);
+		$this->assertHtmlFormatEquals($expect, $html);
+	}
+
+	/**
+	 * testAddCompilers
+	 *
+	 * @return  void
+	 */
+	public function testAddCompilers()
+	{
+		$this->instance->addCustomCompiler('upper', function($expression)
+		{
+			return "<?php echo strtoupper{$expression} ?>";
+		});
+
+		$expect = <<<HTML
+<html>
+<body>
+	This is the master sidebar.
+
+	<p>This is appended to the master sidebar.</p>
+	<div class="container">
+		<p>THIS IS MY BODY CONTENT.</p>
+	</div>
+</body>
+</html>
+HTML;
+
+		$html = $this->instance->render('compiler');
+
+		$this->assertHtmlFormatEquals($expect, $html);
 	}
 
 	/**
@@ -125,7 +157,6 @@ HTML;
 			'This test has not been implemented yet.'
 		);
 	}
-
 
 	/**
 	 * Method to test getFilesystem().

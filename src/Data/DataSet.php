@@ -461,4 +461,28 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	{
 		return array_keys($this->data);
 	}
+
+	/**
+	 * Push element to last.
+	 *
+	 * @param   Data|mixed  $data  Data to push.
+	 *
+	 * @return  static
+	 */
+	public function push($data)
+	{
+		$this[] = $data;
+
+		return $this;
+	}
+
+	/**
+	 * Pop the last element.
+	 *
+	 * @return  Data
+	 */
+	public function pop()
+	{
+		return array_pop($this->data);
+	}
 }

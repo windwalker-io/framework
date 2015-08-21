@@ -137,7 +137,7 @@ class TwigRenderer extends AbstractEngineRenderer
 
 			foreach (GlobalContainer::getExtensions() as $extension)
 			{
-				$this->engine->addExtension($extension);
+				$this->engine->addExtension(clone $extension);
 			}
 
 			foreach ($this->extensions as $extension)

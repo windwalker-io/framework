@@ -182,11 +182,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @return  static  Return this object to support chaining.
 	 *
 	 * @since   2.0
-	 * @deprecated  3.0
+	 * @deprecated  3.0  Use load() instead.
 	 */
 	public function loadArray($array)
 	{
-		$this->bindData($this->data, $array);
+		$this->bindData($this->data, $array, false);
 
 		return $this;
 	}
@@ -199,11 +199,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @return  static  Return this object to support chaining.
 	 *
 	 * @since   2.0
-	 * @deprecated  3.0
+	 * @deprecated  3.0  Use load() instead.
 	 */
 	public function loadObject($object)
 	{
-		$this->bindData($this->data, $object);
+		$this->bindData($this->data, $object, false);
 
 		return $this;
 	}
@@ -212,12 +212,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * Load an array or object of values into the default namespace
 	 *
 	 * @param  array|object  $data  The value to load into registry.
+	 * @param  boolean       $raw   Set to false that we will convert all object to array.
 	 *
-	 * @return  static  Return this object to support chaining.
+	 * @return static Return this object to support chaining.
 	 */
-	public function load($data)
+	public function load($data, $raw = false)
 	{
-		$this->bindData($this->data, $data);
+		$this->bindData($this->data, $data, $raw);
 
 		return $this;
 	}
@@ -235,7 +236,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function loadFile($file, $format = Format::JSON, $options = array())
 	{
-		$this->load(RegistryHelper::loadFile($file, $format, $options));
+		$this->load(RegistryHelper::loadFile($file, $format, $options), false);
 
 		return $this;
 	}
@@ -253,43 +254,43 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function loadString($data, $format = Format::JSON, $options = array())
 	{
-		$this->load(RegistryHelper::loadString($data, $format, $options));
+		$this->load(RegistryHelper::loadString($data, $format, $options), false);
 
 		return $this;
 	}
 
 	/**
-	 * Merge a Registry object into this one
+	 * Merge a structure data into this object.
 	 *
-	 * @param   Registry|mixed  $source     Source Registry object to merge.
-	 * @param   boolean         $recursive  True to support recursive merge the children values.
+	 * @param   Registry|mixed  $source  Source structure data to merge.
+	 * @param   boolean         $raw     Set to false to convert all object to array.
 	 *
 	 * @return  static  Return this object to support chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function merge($source, $recursive = true)
+	public function merge($source, $raw = false)
 	{
 		if ($source instanceof Registry)
 		{
 			$source = $source->getRaw();
 		}
 
-		$this->bindData($this->data, $source, $recursive);
+		$this->bindData($this->data, $source, $raw);
 
 		return $this;
 	}
 
 	/**
-	 * mergeTo
+	 * Merge a structure data to a node.
 	 *
-	 * @param string   $path
-	 * @param Registry $source
-	 * @param bool     $recursive
+	 * @param   string    $path    The path to merge as root.
+	 * @param   Registry  $source  Source structure data to merge.
+	 * @param   boolean   $raw     Set to false to convert all object to array.
 	 *
 	 * @return  static
 	 */
-	public function mergeTo($path, $source, $recursive = true)
+	public function mergeTo($path, $source, $raw = false)
 	{
 		$nodes = RegistryHelper::getPathNodes($path);
 
@@ -311,7 +312,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
 		$tmp = $source;
 
-		$this->bindData($this->data, $data, $recursive);
+		$this->bindData($this->data, $data, $raw);
 
 		return $this;
 	}
@@ -396,16 +397,38 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Set a registry value.
+	 * Set a registry value and convert object to array.
 	 *
-	 * @param   string  $path       Registry Path (e.g. foo.content.showauthor)
-	 * @param   mixed   $value      Value of entry.
+	 * @param   string  $path   Registry Path (e.g. foo.content.showauthor)
+	 * @param   mixed   $value  Value of entry.
 	 *
-	 * @return   static  Return self to support chaining.
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 */
 	public function set($path, $value)
+	{
+		if (is_array($value) || is_object($value))
+		{
+			$value = RegistryHelper::toArray($value, true);
+		}
+
+		RegistryHelper::setByPath($this->data, $path, $value, $this->separator);
+
+		return $this;
+	}
+
+	/**
+	 * Set a registry value.
+	 *
+	 * @param   string  $path   Registry Path (e.g. foo.content.showauthor)
+	 * @param   mixed   $value  Value of entry.
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   2.1
+	 */
+	public function setRaw($path, $value)
 	{
 		RegistryHelper::setByPath($this->data, $path, $value, $this->separator);
 
@@ -456,26 +479,18 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Method to recursively bind data to a parent object.
 	 *
-	 * @param   array   $parent    The parent object on which to attach the data values.
-	 * @param   mixed   $data      An array or object of data to bind to the parent object.
-	 * @param   boolean $recursive True to support recursive bindData.
+	 * @param   array    $parent  The parent object on which to attach the data values.
+	 * @param   mixed    $data    An array or object of data to bind to the parent object.
+	 * @param   boolean  $raw     Set to false to convert all object to array.
 	 *
 	 * @return  void
 	 */
-	protected function bindData(&$parent, $data, $recursive = true)
+	protected function bindData(&$parent, $data, $raw = false)
 	{
 		// Ensure the input data is an array.
-		if ($data instanceof \Traversable)
+		if (!$raw)
 		{
-			$data = iterator_to_array($data);
-		}
-		elseif (is_object($data))
-		{
-			$data = get_object_vars($data);
-		}
-		else
-		{
-			$data = (array) $data;
+			$data = RegistryHelper::toArray($data, true);
 		}
 
 		foreach ($data as $key => $value)
@@ -485,7 +500,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 				continue;
 			}
 
-			if ($recursive && (is_array($value) || is_object($value)))
+			if (is_array($value))
 			{
 				if (!isset($parent[$key]))
 				{

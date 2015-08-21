@@ -8,6 +8,8 @@
 
 namespace Windwalker\Renderer\Twig;
 
+use Twig_Loader_Filesystem;
+
 /**
  * The TwigFilesystemLoader class.
  *
@@ -78,5 +80,19 @@ class TwigFilesystemLoader extends \Twig_Loader_Filesystem
 		$path = preg_replace('#/{2,}#', '/', str_replace('.', '/', $name));
 
 		return $path . '.twig';
+	}
+
+	/**
+	 * Adds a path where templates are stored.
+	 *
+	 * @param string $path      A path where to look for templates
+	 * @param string $namespace A path name
+	 */
+	public function addPath($path, $namespace = self::MAIN_NAMESPACE)
+	{
+		// invalidate the cache
+		$this->cache = array();
+
+		$this->paths[$namespace][] = rtrim($path, '/\\');
 	}
 }

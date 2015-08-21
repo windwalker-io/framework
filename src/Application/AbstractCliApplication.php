@@ -15,6 +15,8 @@ use Windwalker\Registry\Registry;
 /**
  * Simple class for a Windwalker command line application.
  *
+ * @property-read  IOInterface  $io
+ *
  * @since  2.0
  */
 abstract class AbstractCliApplication extends AbstractApplication
@@ -25,7 +27,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 * @var    IOInterface
 	 * @since  2.0
 	 */
-	public $io = null;
+	protected $io = null;
 
 	/**
 	 * Class constructor.
@@ -110,5 +112,24 @@ abstract class AbstractCliApplication extends AbstractApplication
 		$this->io = $io;
 
 		return $this;
+	}
+
+	/**
+	 * is utilized for reading data from inaccessible members.
+	 *
+	 * @param   $name  string
+	 *
+	 * @return  mixed
+	 */
+	public function __get($name)
+	{
+		$allowNames = array('io');
+
+		if (in_array($name, $allowNames))
+		{
+			return $this->$name;
+		}
+
+		return parent::__get($name);
 	}
 }

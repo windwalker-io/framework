@@ -16,13 +16,20 @@ namespace Windwalker\Registry;
 class RegistryHelper
 {
 	/**
+	 * Property objectStorage.
+	 *
+	 * @var  \SplObjectStorage
+	 */
+	private static $objectStorage;
+
+	/**
 	 * Load the contents of a file into the registry
 	 *
 	 * @param   string  $file     Path to file to load
 	 * @param   string  $format   Format of the file [optional: defaults to JSON]
 	 * @param   array   $options  Options used by the formatter
 	 *
-	 * @return  static  Return this object to support chaining.
+	 * @return  array  Return parsed array.
 	 *
 	 * @since   2.1
 	 */
@@ -47,7 +54,7 @@ class RegistryHelper
 	 * @param   string  $format   Format of the string
 	 * @param   array   $options  Options used by the formatter
 	 *
-	 * @return  static  Return this object to support chaining.
+	 * @return  array  Return parsed array.
 	 *
 	 * @since   2.1
 	 */
@@ -193,7 +200,15 @@ class RegistryHelper
 
 		foreach ($nodes as $arg)
 		{
-			if (is_array($dataTmp) && isset($dataTmp[$arg]))
+			if (is_object($dataTmp) && isset($dataTmp->$arg))
+			{
+				$dataTmp = $dataTmp->$arg;
+			}
+			elseif ($dataTmp instanceof \ArrayAccess && isset($dataTmp[$arg]))
+			{
+				$dataTmp = $dataTmp[$arg];
+			}
+			elseif (is_array($dataTmp) && isset($dataTmp[$arg]))
 			{
 				$dataTmp = $dataTmp[$arg];
 			}
@@ -280,6 +295,8 @@ class RegistryHelper
 	 */
 	public static function flatten($array, $separator = '.', $prefix = '')
 	{
+		$return = array();
+
 		if ($array instanceof \Traversable)
 		{
 			$array = iterator_to_array($array);
@@ -295,15 +312,121 @@ class RegistryHelper
 
 			if (is_object($v) || is_array($v))
 			{
-				$array = array_merge($array, static::flatten($v, $separator, $key));
+				$return = array_merge($return, static::flatten($v, $separator, $key));
 			}
 			else
 			{
-				$array[$key] = $v;
+				$return[$key] = $v;
 			}
 		}
 
-		return $array;
+		return $return;
+	}
+
+	/**
+	 * Utility function to convert all types to an array.
+	 *
+	 * @param   mixed  $data       The data to convert.
+	 * @param   bool   $recursive  Recursive if data is nested.
+	 *
+	 * @return  array  The converted array.
+	 */
+	public static function toArray($data, $recursive = false)
+	{
+		// Ensure the input data is an array.
+		if ($data instanceof \Traversable)
+		{
+			$data = iterator_to_array($data);
+		}
+		elseif (is_object($data))
+		{
+			$data = get_object_vars($data);
+		}
+		else
+		{
+			$data = (array) $data;
+		}
+
+		if ($recursive)
+		{
+			foreach ($data as &$value)
+			{
+				if (is_array($value) || is_object($value))
+				{
+					$value = static::toArray($value, $recursive);
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * dumpObjectValues
+	 *
+	 * @param   mixed  $object
+	 *
+	 * @return  array
+	 */
+	public static function dumpObjectValues($object)
+	{
+		$data = array();
+
+		static::$objectStorage = new \SplObjectStorage;
+
+		static::doDump($data, $object);
+
+		return $data;
+	}
+
+	/**
+	 * doDump
+	 *
+	 * @param   array  $data
+	 * @param   mixed  $object
+	 *
+	 * @return  void
+	 */
+	private static function doDump(&$data, $object)
+	{
+		if (is_object($object) && static::$objectStorage->contains($object))
+		{
+			$data = null;
+
+			return;
+		}
+
+		if (is_object($object))
+		{
+			static::$objectStorage->attach($object);
+		}
+
+		if (is_array($object) || $object instanceof \Traversable)
+		{
+			foreach ($object as $key => $value)
+			{
+				static::doDump($data[$key], $value);
+			}
+		}
+		elseif (is_object($object))
+		{
+			$ref = new \ReflectionObject($object);
+
+			$properties = $ref->getProperties();
+
+			foreach ($properties as $property)
+			{
+				$property->setAccessible(true);
+
+				$value = $property->getValue($object);
+
+				static::doDump($data[$property->getName()], $value);
+			}
+		}
+		else
+		{
+			$data = $object;
+		}
 	}
 }
 

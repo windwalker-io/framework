@@ -124,7 +124,7 @@ class RegistryTest extends AbstractBaseTestCase
 
 		$this->instance->def('lily', 'love');
 
-		$this->assertEquals($this->instance->get('lily'), 'love');
+		$this->assertEquals('love', $this->instance->get('lily'));
 	}
 
 	/**
@@ -163,13 +163,13 @@ class RegistryTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Registry::loadArray
+	 * @covers Windwalker\Registry\Registry::load
 	 */
 	public function testLoadArray()
 	{
 		$registry = new Registry;
 
-		$registry->loadArray($this->getTestData());
+		$registry->load($this->getTestData());
 
 		$this->assertEquals($registry->get('olive'), 'peace');
 
@@ -181,13 +181,13 @@ class RegistryTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Registry::loadObject
+	 * @covers Windwalker\Registry\Registry::load
 	 */
 	public function testLoadObject()
 	{
 		$registry = new Registry;
 
-		$registry->loadObject((object) $this->getTestData());
+		$registry->load((object) $this->getTestData());
 
 		$this->assertEquals($registry->get('olive'), 'peace');
 
@@ -218,7 +218,6 @@ class RegistryTest extends AbstractBaseTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Registry\Registry::loadString
-	 * @TODO   Implement testLoadString().
 	 */
 	public function testLoadString()
 	{
@@ -257,14 +256,14 @@ class RegistryTest extends AbstractBaseTestCase
 		$registry1 = new Registry(json_decode($object1));
 		$registry2 = new Registry(json_decode($object2));
 
-		$registry1->merge($registry2, true);
+		$registry1->merge($registry2);
 
 		$this->assertEquals($registry1->get('bar.bar2'), 'new bar value 2', 'Line: ' . __LINE__ . '. bar.bar2 shuould be override.');
 		$this->assertEquals($registry1->get('bar.bar1'), 'bar value 1', 'Line: ' . __LINE__ . '. bar.bar1 should not be overrided.');
 
 		$registry = new Registry(array('flower' => 'rose', 'honor' => 'Osmanthus month'));
 
-		$registry->merge($this->instance, true);
+		$registry->merge($this->instance);
 
 		$this->assertEquals($registry->get('flower'), 'sakura');
 		$this->assertEquals($registry->get('honor'), 'Osmanthus month');
@@ -281,12 +280,12 @@ class RegistryTest extends AbstractBaseTestCase
 	{
 		$registry = new Registry(array('sunflower' => 'shine', 'honor' => 'Osmanthus month'));
 
-		$this->instance->mergeTo('pos1', $registry, true);
+		$this->instance->mergeTo('pos1', $registry);
 
 		$this->assertEquals($this->instance->get('pos1.sunflower'), 'shine');
 		$this->assertEquals($this->instance->get('pos1.honor'), 'Osmanthus month');
 
-		$this->instance->mergeTo('foo.bar', $registry, true);
+		$this->instance->mergeTo('foo.bar', $registry);
 
 		$this->assertEquals($this->instance->get('foo.bar.sunflower'), 'shine');
 		$this->assertEquals($this->instance->get('foo.bar.honor'), 'Osmanthus month');
@@ -298,7 +297,6 @@ class RegistryTest extends AbstractBaseTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Registry\Registry::offsetExists
-	 * @TODO   Implement testOffsetExists().
 	 */
 	public function testOffsetExists()
 	{
@@ -312,7 +310,6 @@ class RegistryTest extends AbstractBaseTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Registry\Registry::offsetGet
-	 * @TODO   Implement testOffsetGet().
 	 */
 	public function testOffsetGet()
 	{
@@ -325,7 +322,6 @@ class RegistryTest extends AbstractBaseTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Registry\Registry::offsetSet
-	 * @TODO   Implement testOffsetSet().
 	 */
 	public function testOffsetSet()
 	{
@@ -360,6 +356,23 @@ class RegistryTest extends AbstractBaseTestCase
 		$this->instance->set('tree.bird', 'sleeping');
 
 		$this->assertEquals($this->instance->get('tree.bird'), 'sleeping');
+	}
+
+	/**
+	 * Method to test setRaw()
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Registry\Registry::setRaw
+	 */
+	public function testSetRaw()
+	{
+		$object = (object) array('foo' => 'bar');
+
+		$this->instance->setRaw('tree.bird', $object);
+
+		$this->assertEquals('bar', $this->instance->get('tree.bird.foo'));
+		$this->assertSame($object, $this->instance->get('tree.bird'));
 	}
 
 	/**
@@ -448,7 +461,7 @@ class RegistryTest extends AbstractBaseTestCase
 		$this->assertEquals('var5', $registry->get('foo.4'));
 		$this->assertEquals('var6', $registry->get('foo.5'));
 
-		$registry->set('foo2', (object) array('var1', 'var2', 'var3'));
+		$registry->setRaw('foo2', (object) array('var1', 'var2', 'var3'));
 
 		$b = $registry->get('foo2');
 
@@ -478,7 +491,7 @@ class RegistryTest extends AbstractBaseTestCase
 
 		$this->assertEquals('var2', $registry->get('foo.bar.0'));
 
-		$registry->set('foo.bar2', (object) array('v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3'));
+		$registry->setRaw('foo.bar2', (object) array('v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3'));
 
 		$this->assertEquals('var1', $registry->shift('foo.bar2'));
 
@@ -504,7 +517,7 @@ class RegistryTest extends AbstractBaseTestCase
 
 		$this->assertNull($registry->get('foo.bar.2'));
 
-		$registry->set('foo.bar2', (object) array('v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3'));
+		$registry->setRaw('foo.bar2', (object) array('v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3'));
 
 		$this->assertEquals('var3', $registry->pop('foo.bar2'));
 
@@ -535,7 +548,7 @@ class RegistryTest extends AbstractBaseTestCase
 		$this->assertEquals('var5', $registry->get('foo.0'));
 		$this->assertEquals('var6', $registry->get('foo.1'));
 
-		$registry->set('foo2', (object) array('var1', 'var2', 'var3'));
+		$registry->setRaw('foo2', (object) array('var1', 'var2', 'var3'));
 
 		$b = $registry->get('foo2');
 

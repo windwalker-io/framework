@@ -74,7 +74,7 @@ class ListFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<select name="flower" id="flower" class="stub-flower" size="10" disabled="true" onchange="return false;">
+<select name="flower" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;">
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>
@@ -86,7 +86,7 @@ HTML;
 		$this->instance->setValue(1);
 
 		$html = <<<HTML
-<select name="flower" id="flower" class="stub-flower" size="10" disabled="true" onchange="return false;">
+<select name="flower" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;">
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>
@@ -98,7 +98,7 @@ HTML;
 		$this->instance->setAttribute('multiple', true);
 
 		$html = <<<HTML
-<select name="flower[]" id="flower" class="stub-flower" size="10" disabled="true" onchange="return false;" multiple="true">
+<select name="flower[]" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;" multiple="true">
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>
@@ -134,7 +134,7 @@ HTML;
 		);
 
 		$html = <<<HTML
-<select name="timezone" id="timezone">
+<select name="timezone" id="input-timezone">
 	<optgroup label="Asia">
 		<option class="opt" value="Asia/Tokyo">Tokyo</option>
 		<option value="Asia/Taipei">Taipei</option>

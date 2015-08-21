@@ -290,10 +290,11 @@ abstract class StringHelper
 	 * @param string $separator
 	 * @param string $data
 	 * @param int    $number
+	 * @param string $callback
 	 *
-	 * @return  array
+	 * @return array
 	 */
-	public static function explode($separator, $data, $number = null)
+	public static function explode($separator, $data, $number = null, $callback = 'array_push')
 	{
 		if ($number)
 		{
@@ -308,7 +309,7 @@ abstract class StringHelper
 		{
 			foreach (range(1, $number - count($array)) as $i)
 			{
-				array_push($array, null);
+				$callback($array, null);
 			}
 		}
 

@@ -93,7 +93,7 @@ abstract class GlobalContainer
 	 */
 	public static function setExtensions(array $extensions)
 	{
-		self::$extensions = $extensions;
+		static::$extensions = $extensions;
 	}
 
 	/**

@@ -68,6 +68,16 @@ class Form implements \IteratorAggregate
 	protected $errors = array();
 
 	/**
+	 * Property wraps.
+	 *
+	 * @var  array
+	 */
+	protected $wrap = array(
+		'fieldset' => null,
+		'group' => null
+	);
+
+	/**
 	 * Class init.
 	 *
 	 * @param string $control
@@ -137,6 +147,28 @@ class Form implements \IteratorAggregate
 	}
 
 	/**
+	 * Add a field.
+	 *
+	 * @param string        $name
+	 * @param AbstractField $field
+	 *
+	 * @return  AbstractField|ListField
+	 */
+	public function add($name, AbstractField $field = null)
+	{
+		if ($field)
+		{
+			$field->setName($name);
+		}
+		else
+		{
+			$field = $name;
+		}
+
+		return $this->addField($field);
+	}
+
+	/**
 	 * addField
 	 *
 	 * @param string|AbstractField|\SimpleXMLElement  $field
@@ -148,6 +180,9 @@ class Form implements \IteratorAggregate
 	public function addField($field, $fieldset = null, $group = null)
 	{
 		$field = FieldHelper::create($field);
+
+		$fieldset = $fieldset ? : $this->wrap['fieldset'];
+		$group    = $group    ? : $this->wrap['group'];
 
 		if ($fieldset)
 		{
@@ -177,6 +212,28 @@ class Form implements \IteratorAggregate
 		$this->fields[$field->getName(true)] = $field;
 
 		return $field;
+	}
+
+	/**
+	 * wrap
+	 *
+	 * @param string   $fieldset
+	 * @param string   $group
+	 * @param callable $handler
+	 *
+	 * @return  static
+	 */
+	public function wrap($fieldset, $group, \Closure $handler)
+	{
+		$this->wrap['fieldset'] = $fieldset;
+		$this->wrap['group'] = $group;
+
+		$handler($this);
+
+		$this->wrap['fieldset'] = null;
+		$this->wrap['group'] = null;
+
+		return $this;
 	}
 
 	/**

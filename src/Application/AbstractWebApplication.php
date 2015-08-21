@@ -20,6 +20,9 @@ use Windwalker\Registry\Registry;
 /**
  * Application for Web HTTP foundation.
  *
+ * @property-read  WebEnvironment     $environment
+ * @property-read  ResponseInterface  $response
+ *
  * @since 2.0
  */
 abstract class AbstractWebApplication extends AbstractApplication
@@ -30,7 +33,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @var    WebEnvironment
 	 * @since  2.0
 	 */
-	public $environment;
+	protected $environment;
 
 	/**
 	 * The application response object.
@@ -38,7 +41,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @var    ResponseInterface
 	 * @since  2.0
 	 */
-	public $response;
+	protected $response;
 
 	/**
 	 * The system Uri object.
@@ -83,7 +86,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Execute the application.
 	 *
-	 * @return  void
+	 * @return  string
 	 *
 	 * @since   2.0
 	 */
@@ -103,9 +106,10 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// @event onBeforeRespond
 
 		// Send the application response.
-		$this->respond();
+		$output = $this->respond($this->get('return_body', false));
 
 		// @event onAfterRespond
+		return $output;
 	}
 
 	/**
@@ -508,5 +512,27 @@ abstract class AbstractWebApplication extends AbstractApplication
 		$this->environment = $environment;
 
 		return $this;
+	}
+
+	/**
+	 * is utilized for reading data from inaccessible members.
+	 *
+	 * @param   $name  string
+	 *
+	 * @return  mixed
+	 */
+	public function __get($name)
+	{
+		$allowNames = array(
+			'environment',
+			'response'
+		);
+
+		if (in_array($name, $allowNames))
+		{
+			return $this->$name;
+		}
+
+		return parent::__get($name);
 	}
 }
