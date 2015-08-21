@@ -162,4 +162,3 @@ class LocalMethod extends AbstractMethod
 		return $this;
 	}
 }
- 

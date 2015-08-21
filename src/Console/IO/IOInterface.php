@@ -113,4 +113,3 @@ interface IOInterface extends WindwalkerIOInterface
 	 */
 	public function setInputStream($inputStream);
 }
- 

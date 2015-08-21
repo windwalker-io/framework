@@ -61,8 +61,7 @@ class Newline extends AbstractCliApplication
 			switch ($lastChar)
 			{
 				case ' ' :
-				case "\r" :
-					$content[$length - 1] = "\n";
+					$content = substr($content, 0, -1);
 					break;
 
 				case '}' :

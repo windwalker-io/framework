@@ -44,4 +44,3 @@ interface CipherInterface
 	 */
 	public function encrypt($data, $key = null, $iv = null);
 }
- 

@@ -31,4 +31,3 @@ class MockLogger extends AbstractLogger
 		return null;
 	}
 }
- 

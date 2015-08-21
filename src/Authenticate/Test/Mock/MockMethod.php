@@ -47,4 +47,3 @@ class MockMethod extends AbstractMethod
 		return false;
 	}
 }
- 

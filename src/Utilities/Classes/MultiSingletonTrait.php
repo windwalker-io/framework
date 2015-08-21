@@ -63,4 +63,4 @@ trait MultiSingletonTrait
 	{
 		return isset(static::$instances[$name]);
 	}
-} 
+}
