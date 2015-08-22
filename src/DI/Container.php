@@ -167,7 +167,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @param   string  $name  The child name.
 	 *
-	 * @return  Container  This object for chaining.
+	 * @return  static  The new container object.
 	 *
 	 * @since   2.0
 	 */
@@ -177,7 +177,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
 		$this->children[$name] = new static($this);
 
-		return $this;
+		return $this->children[$name];
 	}
 
 	/**
