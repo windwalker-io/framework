@@ -16,12 +16,12 @@ namespace Windwalker\Cache\DataHandler;
 class StringHandler implements DataHandlerInterface
 {
 	/**
-	 * unserialize
+	 * Encode data.
 	 *
-	 * @param string $data
+	 * @param   mixed  $data
 	 *
 	 * @throws \InvalidArgumentException
-	 * @return  mixed
+	 * @return  string
 	 */
 	public function encode($data)
 	{
@@ -34,11 +34,11 @@ class StringHandler implements DataHandlerInterface
 	}
 
 	/**
-	 * serialize
+	 * Decode data.
 	 *
-	 * @param mixed $data
+	 * @param   string  $data
 	 *
-	 * @return  string
+	 * @return  mixed
 	 */
 	public function decode($data)
 	{

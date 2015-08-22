@@ -14,20 +14,20 @@ namespace Windwalker\Cache\DataHandler;
 interface DataHandlerInterface
 {
 	/**
-	 * unserialize
+	 * Encode data.
 	 *
-	 * @param string $data
+	 * @param   mixed  $data
 	 *
-	 * @return  mixed
+	 * @return  string
 	 */
 	public function encode($data);
 
 	/**
-	 * serialize
+	 * Decode data.
 	 *
-	 * @param mixed $data
+	 * @param   string  $data
 	 *
-	 * @return  string
+	 * @return  mixed
 	 */
 	public function decode($data);
 }

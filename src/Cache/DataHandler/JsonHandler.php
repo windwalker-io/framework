@@ -16,11 +16,11 @@ namespace Windwalker\Cache\DataHandler;
 class JsonHandler implements DataHandlerInterface
 {
 	/**
-	 * unserialize
+	 * Encode data.
 	 *
-	 * @param string $data
+	 * @param   mixed  $data
 	 *
-	 * @return  mixed
+	 * @return  string
 	 */
 	public function encode($data)
 	{
@@ -28,11 +28,11 @@ class JsonHandler implements DataHandlerInterface
 	}
 
 	/**
-	 * serialize
+	 * Decode data.
 	 *
-	 * @param mixed $data
+	 * @param   string  $data
 	 *
-	 * @return  string
+	 * @return  mixed
 	 */
 	public function decode($data)
 	{
