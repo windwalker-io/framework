@@ -271,7 +271,7 @@ abstract class AbstractField
 	{
 		$control = $this->control ? $this->control . '/' : '';
 
-		return 'input-' . str_replace('/', '-', $control . $this->getName(true));
+		return 'input-' . preg_replace('/[^A-Z0-9_]+/i', '-', $control . $this->getName(true));
 	}
 
 	/**

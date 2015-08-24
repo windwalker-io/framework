@@ -235,6 +235,10 @@ HTML;
 		$this->instance->setControl('windwalker');
 
 		$this->assertEquals('input-windwalker-flower', $this->instance->getId());
+
+		$this->instance->setName('a.b-c_d:e');
+
+		$this->assertEquals('input-windwalker-a-b-c_d-e', $this->instance->getId());
 	}
 
 	/**
