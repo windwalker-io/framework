@@ -334,7 +334,7 @@ class Form implements \IteratorAggregate
 	{
 		if ($group)
 		{
-			$name = $group . '.' . $name;
+			$name = $group . ':' . $name;
 		}
 
 		return isset($this->fields[$name]) ? $this->fields[$name] : null;
@@ -352,7 +352,7 @@ class Form implements \IteratorAggregate
 	{
 		if ($group)
 		{
-			$name = $group . '.' . $name;
+			$name = $group . ':' . $name;
 		}
 
 		if (isset($this->fields[$name]))
@@ -541,6 +541,8 @@ class Form implements \IteratorAggregate
 	{
 		foreach ($this->fields as $name => $field)
 		{
+			$name = str_replace(':', '.', $name);
+
 			$value = FormHelper::getByPath($data, $name);
 
 			$field->setValue($value);
@@ -749,6 +751,8 @@ class Form implements \IteratorAggregate
 
 		foreach ($this->getFields($fieldset, $group) as $name => $field)
 		{
+			$name = str_replace(':', '.', $name);
+
 			FormHelper::setByPath($data, $name, $field->getValue());
 		}
 

@@ -271,7 +271,7 @@ abstract class AbstractField
 	{
 		$control = $this->control ? $this->control . '.' : '';
 
-		return 'input-' . str_replace('.', '-', $control . $this->getName(true));
+		return 'input-' . str_replace(array('.', ':'), '-', $control . $this->getName(true));
 	}
 
 	/**
@@ -370,7 +370,7 @@ abstract class AbstractField
 	{
 		$group = $withGroup ? $this->getGroup() : '';
 
-		$group = $group ? $group . '.' : '';
+		$group = $group ? $group . ':' : '';
 
 		return $group . $this->name;
 	}
@@ -402,8 +402,10 @@ abstract class AbstractField
 	{
 		if (!$this->fieldName || $refresh)
 		{
+			$name = str_replace(':', '.', $this->getName(true));
+
 			// Prevent '..'
-			$names = array_values(array_filter(explode('.', $this->getName(true)), 'strlen'));
+			$names = array_values(array_filter(explode('.', $name), 'strlen'));
 
 			$control = $this->control ? $this->control : array_shift($names);
 
