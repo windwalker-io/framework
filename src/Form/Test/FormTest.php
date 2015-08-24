@@ -103,7 +103,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		// Group structure
 		$this->assertEquals(array_keys($fields), array_keys($defineForm->getFields()));
 
-		$this->assertEquals('u[username]', $fields['u:username']->getFieldName());
+		$this->assertEquals('u[username]', $fields['u/username']->getFieldName());
 	}
 
 	/**
@@ -155,8 +155,8 @@ class FormTest extends \PHPUnit_Framework_TestCase
 
 		$fields = $form->getFields(null, 'sakura');
 
-		$this->assertInstanceOf('Windwalker\\Form\\Field\\TextField', $fields['sakura:egg']);
-		$this->assertEquals('sakura[hotdog]', $fields['sakura:hotdog']->getFieldName());
+		$this->assertInstanceOf('Windwalker\\Form\\Field\\TextField', $fields['sakura/egg']);
+		$this->assertEquals('sakura[hotdog]', $fields['sakura/hotdog']->getFieldName());
 	}
 
 	/**
@@ -396,7 +396,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		$fields = $form->bind($data)->getFields();
 
 		$this->assertEquals(5, $fields['id']->getValue());
-		$this->assertEquals('foo', $fields['u:username']->getValue());
+		$this->assertEquals('foo', $fields['u/username']->getValue());
 	}
 
 	/**
@@ -476,7 +476,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 
 		$array = $form->getViews();
 
-		$this->assertEquals('123_ abc4456qwe:$yui', $array['b:password']['value']);
+		$this->assertEquals('123_ abc4456qwe:$yui', $array['b/password']['value']);
 	}
 
 	/**

@@ -84,7 +84,7 @@ class FormHelper
 	 *
 	 * @return  mixed Found value, null if not exists.
 	 */
-	public static function getByPath($data, $paths, $separator = '.')
+	public static function getByPath($data, $paths, $separator = '/')
 	{
 		if (empty($paths))
 		{
@@ -127,7 +127,7 @@ class FormHelper
 	 *
 	 * @since   2.0
 	 */
-	public static function setByPath(&$data, $paths, $value, $separator = '.', $type = 'array')
+	public static function setByPath(&$data, $paths, $value, $separator = '/', $type = 'array')
 	{
 		if (empty($paths))
 		{

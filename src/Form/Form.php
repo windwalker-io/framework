@@ -133,6 +133,9 @@ class Form implements \IteratorAggregate
 	 */
 	public function addFields($fields, $fieldset = null, $group = null)
 	{
+		// B/C
+		$group = str_replace('.', '/', $group);
+
 		if ($fields instanceof \SimpleXMLElement)
 		{
 			$fields = $fields->xpath('//field');
@@ -180,6 +183,9 @@ class Form implements \IteratorAggregate
 	public function addField($field, $fieldset = null, $group = null)
 	{
 		$field = FieldHelper::create($field);
+
+		// B/C
+		$group = str_replace('.', '/', $group);
 
 		$fieldset = $fieldset ? : $this->wrap['fieldset'];
 		$group    = $group    ? : $this->wrap['group'];
@@ -334,7 +340,10 @@ class Form implements \IteratorAggregate
 	{
 		if ($group)
 		{
-			$name = $group . ':' . $name;
+			// B/C
+			$group = str_replace('.', '/', $group);
+
+			$name = $group . '/' . $name;
 		}
 
 		return isset($this->fields[$name]) ? $this->fields[$name] : null;
@@ -352,7 +361,10 @@ class Form implements \IteratorAggregate
 	{
 		if ($group)
 		{
-			$name = $group . ':' . $name;
+			// B/C
+			$group = str_replace('.', '/', $group);
+
+			$name = $group . '/' . $name;
 		}
 
 		if (isset($this->fields[$name]))
@@ -373,6 +385,9 @@ class Form implements \IteratorAggregate
 	 */
 	public function removeFields($fieldset = null, $group = null)
 	{
+		// B/C
+		$group = str_replace('.', '/', $group);
+
 		foreach ($this->fields as $current)
 		{
 			if ($fieldset && $current->getFieldset() != $fieldset)
@@ -399,6 +414,9 @@ class Form implements \IteratorAggregate
 	 */
 	public function getFields($fieldset = null, $group = null)
 	{
+		// B/C
+		$group = str_replace('.', '/', $group);
+
 		/**
 		 * Filter field callback.
 		 *
@@ -541,8 +559,6 @@ class Form implements \IteratorAggregate
 	{
 		foreach ($this->fields as $name => $field)
 		{
-			$name = str_replace(':', '.', $name);
-
 			$value = FormHelper::getByPath($data, $name);
 
 			$field->setValue($value);
@@ -608,6 +624,9 @@ class Form implements \IteratorAggregate
 	{
 		$views = array();
 
+		// B/C
+		$group = str_replace('.', '/', $group);
+
 		foreach ($this->getFields($fieldset, $group) as $field)
 		{
 			$views[$field->getName(true)] = array(
@@ -629,6 +648,9 @@ class Form implements \IteratorAggregate
 	 */
 	public function prepareStore($fieldset = null, $group = null)
 	{
+		// B/C
+		$group = str_replace('.', '/', $group);
+
 		foreach ($this->getFields($fieldset, $group) as $field)
 		{
 			$field->prepareStore();
@@ -751,8 +773,6 @@ class Form implements \IteratorAggregate
 
 		foreach ($this->getFields($fieldset, $group) as $name => $field)
 		{
-			$name = str_replace(':', '.', $name);
-
 			FormHelper::setByPath($data, $name, $field->getValue());
 		}
 
