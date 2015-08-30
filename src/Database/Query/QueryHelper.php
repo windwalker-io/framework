@@ -278,4 +278,28 @@ class QueryHelper
 
 		return $this;
 	}
+
+	/**
+	 * Method to get property Tables
+	 *
+	 * @return  array
+	 */
+	public function getTables()
+	{
+		return $this->tables;
+	}
+
+	/**
+	 * Method to set property tables
+	 *
+	 * @param   array $tables
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setTables($tables)
+	{
+		$this->tables = $tables;
+
+		return $this;
+	}
 }
