@@ -104,7 +104,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		$db = $db ? : DatabaseFactory::getDbo();
 
 		// Set internal variables.
-		$this->table = $table;
+		$this->table = $this->table ? : $table;
 		$this->db    = $db;
 		$this->data  = new \stdClass;
 
