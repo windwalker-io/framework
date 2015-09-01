@@ -1990,4 +1990,23 @@ class Query implements QueryInterface, PreparableInterface
 
 		return $this;
 	}
+
+	/**
+	 * Unsetting PDO connection before going to sleep (this is needed if the query gets serialized)
+	 */
+	public function __sleep()
+	{
+		$this->connection = NULL;
+	}
+
+	/**
+	 * Trying to re-retrieve the pdo connection after waking up
+	 */
+	public function __wakeup()
+	{
+		if ($this->name)
+		{
+			$this->connection = ConnectionContainer::getConnection($this->name);
+		}
+	}
 }
