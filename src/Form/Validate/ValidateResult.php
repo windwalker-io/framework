@@ -8,7 +8,7 @@
 
 namespace Windwalker\Form\Validate;
 
-use Windwalker\Form\Field\FieldInterface;
+use Windwalker\Form\Field\AbstractField;
 
 /**
  * The ValidateResult class.
@@ -40,7 +40,7 @@ class ValidateResult
 	/**
 	 * Property field.
 	 *
-	 * @var FieldInterface
+	 * @var AbstractField
 	 */
 	protected $field;
 
@@ -49,9 +49,9 @@ class ValidateResult
 	 *
 	 * @param integer|boolean $result
 	 * @param string          $message
-	 * @param FieldInterface  $field
+	 * @param AbstractField  $field
 	 */
-	public function __construct($result = self::STATUS_SUCCESS, $message = null, FieldInterface $field = null)
+	public function __construct($result = self::STATUS_SUCCESS, $message = null, AbstractField $field = null)
 	{
 		$this->field   = $field;
 		$this->message = $message;
@@ -110,7 +110,7 @@ class ValidateResult
 	/**
 	 * Method to get property Field
 	 *
-	 * @return  FieldInterface
+	 * @return  AbstractField
 	 */
 	public function getField()
 	{
@@ -120,11 +120,11 @@ class ValidateResult
 	/**
 	 * Method to set property field
 	 *
-	 * @param   FieldInterface $field
+	 * @param   AbstractField $field
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setField($field)
+	public function setField(AbstractField $field)
 	{
 		$this->field = $field;
 

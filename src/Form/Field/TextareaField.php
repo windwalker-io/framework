@@ -39,6 +39,7 @@ class TextareaField extends TextField
 		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
+		$attrs['required'] = $this->required;
 
 		$attrs['cols'] = $this->getAttribute('cols');
 		$attrs['rows'] = $this->getAttribute('rows');

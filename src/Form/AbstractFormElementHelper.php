@@ -13,7 +13,7 @@ namespace Windwalker\Form;
  * 
  * @since  2.0
  */
-class AbstractFormElementHelper
+abstract class AbstractFormElementHelper
 {
 	/**
 	 * Property fieldNamespaces.

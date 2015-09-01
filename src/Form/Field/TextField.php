@@ -44,5 +44,6 @@ class TextField extends AbstractField
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
 		$attrs['value']    = $this->getValue();
+		$attrs['required'] = $this->required;
 	}
 }

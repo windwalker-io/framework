@@ -65,6 +65,7 @@ class ListField extends AbstractField
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
 		$attrs['multiple'] = $this->getAttribute('multiple');
+		$attrs['required'] = $this->required;
 	}
 
 	/**
