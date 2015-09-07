@@ -170,14 +170,14 @@ class MysqlTable extends AbstractTable
 	/**
 	 * drop
 	 *
-	 * @param bool   $ifNotExists
+	 * @param bool   $ifExists
 	 * @param string $option
 	 *
 	 * @return  static
 	 */
-	public function drop($ifNotExists = true, $option = '')
+	public function drop($ifExists = true, $option = '')
 	{
-		$query = MysqlQueryBuilder::dropTable($this->table, $ifNotExists, $option);
+		$query = MysqlQueryBuilder::dropTable($this->table, $ifExists, $option);
 
 		$this->db->setQuery($query)->execute();
 

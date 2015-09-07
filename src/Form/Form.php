@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -20,7 +20,7 @@ if (!class_exists('CallbackFilterIterator'))
 
 /**
  * The Form class.
- * 
+ *
  * @since  2.0
  */
 class Form implements \IteratorAggregate
@@ -59,6 +59,13 @@ class Form implements \IteratorAggregate
 	 * @var  string[]
 	 */
 	protected $groups = array();
+
+	/**
+	 * Property fieldRenderHandler.
+	 *
+	 * @var  callable
+	 */
+	protected $fieldRenderHandler;
 
 	/**
 	 * Property errors.
@@ -669,6 +676,11 @@ class Form implements \IteratorAggregate
 	{
 		$field = $this->getField($name, $group);
 
+		if ($this->fieldRenderHandler)
+		{
+			return call_user_func($this->fieldRenderHandler, $field, $this);
+		}
+
 		return $field->render();
 	}
 
@@ -686,7 +698,14 @@ class Form implements \IteratorAggregate
 
 		foreach ($this->getFields($fieldset, $group) as $field)
 		{
-			$output .= "\n" . $field->render();
+			if ($this->fieldRenderHandler)
+			{
+				$output .= "\n" .  call_user_func($this->fieldRenderHandler, $field, $this);
+			}
+			else
+			{
+				$output .= "\n" . $field->render();
+			}
 		}
 
 		return $output;
@@ -777,5 +796,34 @@ class Form implements \IteratorAggregate
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Method to get property FieldRenderHandler
+	 *
+	 * @return  callable
+	 */
+	public function getFieldRenderHandler()
+	{
+		return $this->fieldRenderHandler;
+	}
+
+	/**
+	 * Method to set property fieldRenderHandler
+	 *
+	 * @param   callable $fieldRenderHandler
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setFieldRenderHandler($fieldRenderHandler)
+	{
+		if (!is_callable($fieldRenderHandler))
+		{
+			throw new \InvalidArgumentException('Field render handler should be callable.');
+		}
+
+		$this->fieldRenderHandler = $fieldRenderHandler;
+
+		return $this;
 	}
 }

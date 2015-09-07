@@ -23,11 +23,39 @@ abstract class GlobalContainer
 	protected static $compilers = array();
 
 	/**
+	 * Property extensions.
+	 *
+	 * @var  array
+	 */
+	protected static $extensions = array();
+
+	/**
 	 * Property cachePath.
 	 *
 	 * @var  string
 	 */
 	protected static $cachePath;
+
+	/**
+	 * Array of opening and closing tags for raw echos.
+	 *
+	 * @var array
+	 */
+	protected static $rawTags = array();
+
+	/**
+	 * Array of opening and closing tags for regular echos.
+	 *
+	 * @var array
+	 */
+	protected static $contentTags = array();
+
+	/**
+	 * Array of opening and closing tags for escaped echos.
+	 *
+	 * @var array
+	 */
+	protected static $escapedTags = array();
 
 	/**
 	 * addCompiler
@@ -102,6 +130,78 @@ abstract class GlobalContainer
 	}
 
 	/**
+	 * addExtension
+	 *
+	 * @param string    $name
+	 * @param callable  $extension
+	 *
+	 * @return  void
+	 */
+	public static function addExtension($name, $extension)
+	{
+		if (!is_callable($extension))
+		{
+			throw new \InvalidArgumentException('Extension should be callable.');
+		}
+
+		static::$extensions[$name] = $extension;
+	}
+
+	/**
+	 * getExtension
+	 *
+	 * @param   string $name
+	 *
+	 * @return  callable
+	 */
+	public static function getExtension($name)
+	{
+		if (!empty(static::$extensions[$name]))
+		{
+			return static::$extensions[$name];
+		}
+
+		return null;
+	}
+
+	/**
+	 * removeExtension
+	 *
+	 * @param string $name
+	 *
+	 * @return  void
+	 */
+	public static function removeExtension($name)
+	{
+		if (isset(static::$extensions[$name]))
+		{
+			unset(static::$extensions[$name]);
+		}
+	}
+
+	/**
+	 * Method to get property Extensions
+	 *
+	 * @return  array
+	 */
+	public static function getExtensions()
+	{
+		return static::$extensions;
+	}
+
+	/**
+	 * Method to set property extensions
+	 *
+	 * @param   array $extensions
+	 *
+	 * @return  void
+	 */
+	public static function setExtensions($extensions)
+	{
+		static::$extensions = $extensions;
+	}
+
+	/**
 	 * Method to get property CachePath
 	 *
 	 * @return  string
@@ -121,5 +221,68 @@ abstract class GlobalContainer
 	public static function setCachePath($cachePath)
 	{
 		static::$cachePath = $cachePath;
+	}
+
+	/**
+	 * Method to get property RawTags
+	 *
+	 * @return  array
+	 */
+	public static function getRawTags()
+	{
+		return static::$rawTags;
+	}
+
+	/**
+	 * Method to set property rawTags
+	 *
+	 * @param string $start
+	 * @param string $end
+	 */
+	public static function setRawTags($start, $end)
+	{
+		static::$rawTags = array($start, $end);
+	}
+
+	/**
+	 * Method to get property ContentTags
+	 *
+	 * @return  array
+	 */
+	public static function getContentTags()
+	{
+		return static::$contentTags;
+	}
+
+	/**
+	 * Method to set property contentTags
+	 *
+	 * @param string $start
+	 * @param string $end
+	 */
+	public static function setContentTags($start, $end)
+	{
+		static::$contentTags = array($start, $end);
+	}
+
+	/**
+	 * Method to get property EscapedTags
+	 *
+	 * @return  array
+	 */
+	public static function getEscapedTags()
+	{
+		return static::$escapedTags;
+	}
+
+	/**
+	 * Method to set property escapedTags
+	 *
+	 * @param string $start
+	 * @param string $end
+	 */
+	public static function setEscapedTags($start, $end)
+	{
+		static::$escapedTags = array($start, $end);
 	}
 }

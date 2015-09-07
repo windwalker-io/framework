@@ -45,5 +45,7 @@ class TextField extends AbstractField
 		$attrs['onchange'] = $this->getAttribute('onchange');
 		$attrs['value']    = $this->getValue();
 		$attrs['required'] = $this->required;
+
+		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 	}
 }

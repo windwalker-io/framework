@@ -176,9 +176,7 @@ abstract class AbstractField
 	 */
 	public function renderInput()
 	{
-		$attrs = array();
-
-		$this->prepare($attrs);
+		$attrs = $this->prepareAttributes();
 
 		return $this->buildInput($attrs);
 	}
@@ -203,6 +201,20 @@ abstract class AbstractField
 	 * @return  array
 	 */
 	abstract public function prepare(&$attrs);
+
+	/**
+	 * prepareAttributes
+	 *
+	 * @return  array
+	 */
+	public function prepareAttributes()
+	{
+		$attrs = array();
+
+		$this->prepare($attrs);
+
+		return $attrs;
+	}
 
 	/**
 	 * getLabel
@@ -287,14 +299,14 @@ abstract class AbstractField
 
 		if ($this->required && !$this->checkRequired())
 		{
-			return $result->setMessage(sprintf('Field %s value not allow empty.', $this->getLabel(true)))
+			return $result->setMessage(sprintf('Field %s value not allow empty.', $this->getLabel()))
 				->setResult(ValidateResult::STATUS_REQUIRED)
 				->setField($this);
 		}
 
-		if ($this->validator && !$this->checkRule())
+		if ($this->value !== null && $this->value !== '' && $this->validator && !$this->checkRule())
 		{
-			return $result->setMessage(sprintf('Field %s validate fail.', $this->getLabel(true)))
+			return $result->setMessage(sprintf('Field %s validate fail.', $this->getLabel()))
 				->setResult(ValidateResult::STATUS_FAILURE)
 				->setField($this);
 		}
@@ -495,7 +507,7 @@ abstract class AbstractField
 	 */
 	public function getValue()
 	{
-		return ($this->value !== null) ? $this->value : $this->getAttribute('default');
+		return ($this->value !== null && $this->value !== '') ? $this->value : $this->getAttribute('default');
 	}
 
 	/**
@@ -510,6 +522,44 @@ abstract class AbstractField
 		$this->value = $value;
 
 		return $this;
+	}
+
+	/**
+	 * description
+	 *
+	 * @param   string  $desc
+	 *
+	 * @return  static
+	 */
+	public function description($desc)
+	{
+		$this->setAttribute('description', $desc);
+
+		return $this;
+	}
+
+	/**
+	 * defaultValue
+	 *
+	 * @param   string  $value
+	 *
+	 * @return  static
+	 */
+	public function defaultValue($value)
+	{
+		$this->setAttribute('default', $value);
+
+		return $this;
+	}
+
+	/**
+	 * getDefaultValue
+	 *
+	 * @return  mixed
+	 */
+	public function getDefaultValue()
+	{
+		return $this->getAttribute('default');
 	}
 
 	/**
@@ -821,5 +871,15 @@ abstract class AbstractField
 	public function def($attr, $value)
 	{
 		$this->attributes[$attr] = isset($this->attributes[$attr]) ? $this->attributes[$attr] : (string) $value;
+	}
+
+	/**
+	 * Method to get property Type
+	 *
+	 * @return  string
+	 */
+	public function getType()
+	{
+		return $this->type;
 	}
 }

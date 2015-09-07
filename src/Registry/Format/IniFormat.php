@@ -145,13 +145,6 @@ class IniFormat implements FormatInterface
 			// Get the key and value for the line.
 			list ($key, $value) = explode('=', $line, 2);
 
-			// Validate the key.
-			if (preg_match('/[^A-Z0-9_]/i', $key))
-			{
-				// Maybe throw exception?
-				continue;
-			}
-
 			// If the value is quoted then we assume it is a string.
 			$length = strlen($value);
 

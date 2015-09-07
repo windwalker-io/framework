@@ -31,22 +31,7 @@ class DomBuilder
 
 		$tag = '<' . $name;
 
-		foreach ((array) $attribs as $key => $value)
-		{
-			if ($value === true)
-			{
-				$tag .= ' ' . $key;
-
-				continue;
-			}
-
-			if ($value === null || $value === false)
-			{
-				continue;
-			}
-
-			$tag .= ' ' . $key . '=' . static::quote($value);
-		}
+		$tag .= static::buildAttributes($attribs);
 
 		if ($content !== null)
 		{
@@ -58,6 +43,37 @@ class DomBuilder
 		}
 
 		return $tag;
+	}
+
+	/**
+	 * buildAttributes
+	 *
+	 * @param array $attribs
+	 *
+	 * @return  string
+	 */
+	public static function buildAttributes($attribs)
+	{
+		$string = '';
+
+		foreach ((array) $attribs as $key => $value)
+		{
+			if ($value === true)
+			{
+				$string .= ' ' . $key;
+
+				continue;
+			}
+
+			if ($value === null || $value === false)
+			{
+				continue;
+			}
+
+			$string .= ' ' . $key . '=' . static::quote($value);
+		}
+
+		return $string;
 	}
 
 	/**

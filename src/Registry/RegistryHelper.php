@@ -95,7 +95,7 @@ class RegistryHelper
 	 *
 	 * @since   2.1
 	 */
-	protected static function getFormatClass($format)
+	public static function getFormatClass($format)
 	{
 		// Return a namespace in a given format
 		$class = sprintf('%s\Format\%sFormat', __NAMESPACE__, ucfirst(strtolower($format)));

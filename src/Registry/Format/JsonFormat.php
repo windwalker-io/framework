@@ -70,4 +70,14 @@ class JsonFormat implements FormatInterface
 			return json_decode(trim($data), $assoc, $depth);
 		}
 	}
+
+	/**
+	 * prettyPrint
+	 *
+	 * @return  bool|int
+	 */
+	public static function prettyPrint()
+	{
+		return defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : false;
+	}
 }

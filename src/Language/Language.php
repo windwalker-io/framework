@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -92,6 +92,13 @@ class Language implements LanguageInterface
 	protected $trace = array();
 
 	/**
+	 * Property defaultBacktraceLevel.
+	 *
+	 * @var  integer
+	 */
+	protected $traceLevelOffset = 0;
+
+	/**
 	 * Property normalizeHandler.
 	 *
 	 * @var  callable
@@ -175,7 +182,7 @@ class Language implements LanguageInterface
 		// In debug mode, we notice user this is a translating string but not found.
 		if ($this->debug)
 		{
-			$this->orphans[$normalizeKey] = $this->backtrace($normalizeKey);
+			$this->orphans[$normalizeKey] = $this->backtrace($normalizeKey, $this->traceLevelOffset + 2);
 
 			$key = '??' . $key . '??';
 		}
@@ -238,11 +245,23 @@ class Language implements LanguageInterface
 		{
 			$args[0] = $string;
 
-			return call_user_func_array(array($this, 'sprintf'), $args);
+			$offset = $this->traceLevelOffset = $this->traceLevelOffset + 2;
+
+			$result =  call_user_func_array(array($this, 'sprintf'), $args);
+
+			$this->traceLevelOffset = $offset;
+
+			return $result;
 		}
 
 		// Fallback to default translate
-		return $this->translate($string);
+		$offset = $this->traceLevelOffset++;
+
+		$result =  $this->translate($string);
+
+		$this->traceLevelOffset = $offset;
+
+		return $result;
 	}
 
 	/**
@@ -256,7 +275,11 @@ class Language implements LanguageInterface
 	{
 		$args = func_get_args();
 
+		$offset = $this->traceLevelOffset++;
+
 		$args[0] = $this->translate($key);
+
+		$this->traceLevelOffset = $offset;
 
 		return call_user_func_array('sprintf', $args);
 	}
@@ -631,35 +654,51 @@ class Language implements LanguageInterface
 
 		$info = array(
 			'position' => null,
-			'called' => null
+			'called' => null,
+			'args' => array()
 		);
 
 		if (function_exists('debug_backtrace'))
 		{
+			$defaultTrace = array(
+				'file'     => null,
+				'line'     => null,
+				'function' => null,
+				'class'    => null,
+				'object'   => null,
+				'type'     => null,
+				'args'     => array()
+			);
+
 			$trace = debug_backtrace();
 
 			// Find where called this object
-			$traceData = $trace[$level];
-
-			while($traceData['class'] == __CLASS__)
+			if (isset($trace[$level]))
 			{
-				$level++;
+				$traceData = array_merge($defaultTrace, $trace[$level]);
 
-				$traceData = $trace[$level];
+				$ref = null;
+
+				if (method_exists($traceData['class'], $traceData['function']))
+				{
+					$ref = new \ReflectionMethod($traceData['class'], $traceData['function']);
+				}
+				elseif (function_exists($traceData['function']))
+				{
+					$ref = new \ReflectionFunction($traceData['function']);
+				}
+
+				$info['position'] = array(
+					'file'   => $ref ? $ref->getFileName() : $traceData['file'],
+					'class'  => $traceData['class'],
+					'function' => $traceData['function'],
+					'line'   => $ref ? $ref->getStartLine() : $traceData['line']
+				);
 			}
-
-			$ref = new \ReflectionMethod($traceData['class'], $traceData['function']);
-
-			$info['position'] = array(
-				'file'   => $ref->getFileName(),
-				'class'  => $traceData['class'],
-				'function' => $traceData['function'],
-				'line'   => $ref->getStartLine()
-			);
 
 			if (isset($trace[$level - 1]))
 			{
-				$traceData = $trace[$level - 1];
+				$traceData = array_merge($defaultTrace, $trace[$level - 1]);
 
 				$info['called'] = array(
 					'file'   => $traceData['file'],
@@ -668,6 +707,8 @@ class Language implements LanguageInterface
 					'line'   => $traceData['line'],
 					'args'   => $traceData['args']
 				);
+
+				$info['args'] = $traceData['args'];
 			}
 		}
 
@@ -683,5 +724,28 @@ class Language implements LanguageInterface
 	{
 		return $this->trace;
 	}
-}
 
+	/**
+	 * Method to get property TraceLevelOffset
+	 *
+	 * @return  int
+	 */
+	public function getTraceLevelOffset()
+	{
+		return $this->traceLevelOffset;
+	}
+
+	/**
+	 * Method to set property traceLevelOffset
+	 *
+	 * @param   int $traceLevelOffset
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setTraceLevelOffset($traceLevelOffset)
+	{
+		$this->traceLevelOffset = $traceLevelOffset;
+
+		return $this;
+	}
+}

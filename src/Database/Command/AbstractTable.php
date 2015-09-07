@@ -90,12 +90,12 @@ abstract class AbstractTable
 	/**
 	 * drop
 	 *
-	 * @param bool   $ifNotExists
+	 * @param bool   $ifExists
 	 * @param string $option
 	 *
 	 * @return  static
 	 */
-	abstract public function drop($ifNotExists = true, $option = '');
+	abstract public function drop($ifExists = true, $option = '');
 
 	/**
 	 * reset

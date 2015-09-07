@@ -190,7 +190,6 @@ HTML;
 	 * @return void
 	 *
 	 * @covers Windwalker\Form\Field\AbstractField::render
-	 * @TODO   Implement testRender().
 	 */
 	public function testRender()
 	{
@@ -198,11 +197,12 @@ HTML;
 		$this->instance->setValue('sakura');
 
 		$this->instance->setAttribute('controlClass', 'control-group');
+		$this->instance->setAttribute('attribs', array('data-test-element' => true));
 
 		$expect = <<<HTML
 <div id="input-windwalker-flower-control" class="stub-field control-group">
 	<label id="input-windwalker-flower-label" for="input-windwalker-flower">Flower</label>
-	<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" />
+	<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" data-test-element />
 </div>
 HTML;
 
@@ -261,6 +261,10 @@ HTML;
 			new IpValidator
 		);
 
+		// No value will not validate
+		$this->assertTrue($field->validate()->isSuccess());
+
+		// Do validate
 		$this->assertTrue($field->setValue('123.21.23.156')->validate()->isSuccess());
 
 		$this->assertFalse($field->setValue('/var/foo/bar')->validate()->isSuccess());
@@ -300,7 +304,6 @@ HTML;
 	 * @return void
 	 *
 	 * @covers Windwalker\Form\Field\AbstractField::checkRule
-	 * @TODO   Implement testCheckRule().
 	 */
 	public function testCheckRule()
 	{

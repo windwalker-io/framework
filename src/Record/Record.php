@@ -16,6 +16,7 @@ use Windwalker\Event\Event;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\ListenerMapper;
 use Windwalker\Query\Query;
+use Windwalker\Record\Exception\NoResultException;
 
 /**
  * Class Record
@@ -286,6 +287,11 @@ class Record implements \ArrayAccess, \IteratorAggregate
 			throw new \InvalidArgumentException(sprintf('%s::bind(*%s*)', get_class($this), gettype($src)));
 		}
 
+		if ($src instanceof \Traversable)
+		{
+			$src = iterator_to_array($src);
+		}
+
 		// If the source value is an object, get its accessible properties.
 		if (is_object($src))
 		{
@@ -421,7 +427,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		// Check that we have a result.
 		if (empty($row))
 		{
-			throw new \RuntimeException('No result.');
+			throw new NoResultException('No result.');
 		}
 
 		// Bind the object with the row and return.
@@ -693,6 +699,8 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function hasField($name)
 	{
+		$name = $this->resolveAlias($name);
+
 		return array_key_exists($name, (array) $this->fields);
 	}
 
@@ -752,6 +760,18 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	public function toArray()
 	{
 		return get_object_vars($this->data);
+	}
+
+	/**
+	 * __isset
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  boolean
+	 */
+	public function __isset($name)
+	{
+		return $this->hasField($name);
 	}
 
 	/**
