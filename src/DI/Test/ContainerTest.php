@@ -403,7 +403,8 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCreateChild()
 	{
-		$this->assertInstanceOf('Windwalker\\DI\\Container', $this->instance->createChild());
+		$this->assertInstanceOf('Windwalker\\DI\\Container', $this->instance->createChild('foo'));
+		$this->assertNotSame($this->instance, $this->instance->createChild('bar'));
 	}
 
 	/**
@@ -468,5 +469,19 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 		$this->instance->registerServiceProvider(new StubServiceProvider);
 
 		$this->assertEquals('Bingo', $this->instance->get('bingo'));
+	}
+
+	/**
+	 * testArrayAccess
+	 *
+	 * @return  void
+	 */
+	public function testArrayAccess()
+	{
+		$this->assertEquals('World', $this->instance['Hello']);
+
+		$this->instance['your'] = 'welcome';
+
+		$this->assertEquals('welcome', $this->instance['your']);
 	}
 }

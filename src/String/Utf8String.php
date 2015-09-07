@@ -748,7 +748,6 @@ abstract class Utf8String
 		return utf8_compliant($str);
 	}
 
-
 	/**
 	 * Converts Unicode sequences to UTF-8 string
 	 *

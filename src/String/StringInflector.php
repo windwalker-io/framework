@@ -23,7 +23,7 @@ class StringInflector
 	 * @var    StringInflector
 	 * @since  2.0
 	 */
-	private static $instance;
+	protected static $instance;
 
 	/**
 	 * The inflector rules for singularisation, pluralisation and countability.
@@ -31,7 +31,7 @@ class StringInflector
 	 * @var    array
 	 * @since  2.0
 	 */
-	private $rules = array(
+	protected $rules = array(
 		'singular' => array(
 			'/(matr)ices$/i' => '\1ix',
 			'/(vert|ind)ices$/i' => '\1ex',
@@ -78,18 +78,17 @@ class StringInflector
 	 * @var    array
 	 * @since  2.0
 	 */
-	private $cache = array();
+	protected $cache = array();
 
 	/**
 	 * Protected constructor.
 	 *
 	 * @since  2.0
 	 */
-	protected function __construct()
+	public function __construct()
 	{
 		// Pre=populate the irregual singular/plural.
-		$this
-			->addWord('deer')
+		$this->addWord('deer')
 			->addWord('moose')
 			->addWord('sheep')
 			->addWord('bison')
@@ -319,12 +318,12 @@ class StringInflector
 		{
 			return new static;
 		}
-		elseif (!is_object(self::$instance))
+		elseif (!is_object(static::$instance))
 		{
-			self::$instance = new static;
+			static::$instance = new static;
 		}
 
-		return self::$instance;
+		return static::$instance;
 	}
 
 	/**
