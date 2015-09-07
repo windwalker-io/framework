@@ -430,11 +430,23 @@ The argument index used for unspecified tokens is incremented only when used.
 
 ## Bind Params
 
-OracleQuery support `PreparableInterface` now, we can bind params to our query string:
+We can bind params to our query string:
  
 ``` php
+// Bind data
 $query->where('title = :title')
     ->bind(':title', 'Hamlet');
+
+// Now do execute of this query
+$bounded =& $query->getBounded();
+
+foreach ($bounded as $key => $data)
+{
+    $pdo->bindParam($key, $data->value, $data->dataType, $data->length, $data->driverOptions);
+}
+
+// Or use Windwalker Database
+$db->setQuery($query)->loadAll();
 ```
 
 ## Query Expression

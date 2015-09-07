@@ -44,8 +44,7 @@ $registry->loadString('{"foo" : "bar"}');
 $registry->loadString('<root></root>', 'xml');
 
 // Load by object or array
-$registry->loadObject($object);
-$registry->loadArray($array);
+$registry->load($object);
 
 // Load by file
 $registry->loadFile($root . '/config/config.json', 'json');
@@ -90,6 +89,27 @@ $registry = new Registry($json);
 $registry->get('parent.child'); // return 'Foo'
 
 $registry->set('parent.child', $value);
+```
+
+### Append & Prepend
+
+Support `push / pop / shift / unshift` methods.
+
+``` php
+$registry->set('foo.bar', array('fisrt', 'second'));
+
+$registry->push('foo.bar', 'third');
+
+$registry->get('foo.bar');
+// Result: Array(first, second, third)
+```
+
+### Use other separator
+
+``` php
+$registry->setSeparator('/');
+
+$data = $registry->get('foo/bar');
 ```
 
 ## Accessing a Registry as an Array
@@ -173,6 +193,12 @@ If you just want to merge first level, do not hope recursive:
 $registry1->merge($registry2, false); // Set param 2 to false that Registry will only merge first level
 ```
 
+Merge to a child node:
+
+``` php
+$registry->mergeTo('foo.bar', $anotherRegistry);
+```
+
 ## Dump to file.
 
 ``` php
@@ -233,4 +259,18 @@ $registry->loadString('foo: bar', 'yaml');
 
 // Convert to string
 $registry->toString('yaml');
+```
+
+## RegistryHelper
+
+``` php
+use Windwalker\Registry\RegistryHelper;
+
+RehistryHelper::loadFaile($file, $format); // File to array
+RehistryHelper::loadString($string, $format); // String to array
+RehistryHelper::toString($array, $format); // Array to string
+
+// Use format class
+$json = RehistryHelper::getFormatClass('json'); // Get JsonFormat
+$string = $json::structToString($array);
 ```

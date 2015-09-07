@@ -110,6 +110,27 @@ foreach ($html as $element)
 }
 ```
 
+## Formatter
+
+`DomFormatter` and `HtmlFormatter` will help us format `XML` / `HTML` string.
+
+``` php
+$xml = '<field id="foo" class="bar"><option value="1">Yes</option><option value="0">No</option></field>';
+
+DomFormatter::format($xml);
+```
+
+Result
+
+``` xml
+<field id="foo" class="bar">
+    <option value="1">Yes</option>
+    <option value="0">No</option>
+</field>
+```
+
+`HtmlFormatter` will convert some tags to unpaired element, e.g. `<img>`.
+
 ## XmlHelper
 
 `XmlHelper` using on get attributes of `SimpleXmlElement`.

@@ -148,6 +148,24 @@ Result:
 </article>
 ```
 
+### Use Local Variables
+
+We can ignore `$data` variable and directly use every variables.
+
+``` php
+$renderer = new PhpRenderer(__DIR__ . '/file/path', array('local_variables' => true));
+
+echo $renderer->render('template', array('foo' => 'bar'));
+```
+
+In template
+
+``` html
+<p>
+    <?php echo $foo ?>
+</p>
+```
+
 ## Add More Paths to Search
 
 We create 3 paths by `SplPriorityQueue`, that make theme path is priority to others, so we can override view templates
@@ -221,6 +239,17 @@ $renderer->render('foo', $data);
 
 The file name must suffix with `.blade.php`.
 
+### Add Custom Compilers
+
+``` php
+$renderer = new BladeRenderer($paths, array('cache_path' => __DIR__ . '/cache'));
+
+$renderer->addCustomCompiler('datetime', function($expression)
+{
+    return "<?php echo with{$expression}->format('m/d/Y H:i'); ?>";
+});
+```
+
 More about Blade engine please see [Laravel Document](http://laravel.com/docs/4.2/templates#blade-templating).
 
 ## Mustache Renderer
@@ -283,6 +312,18 @@ $renderer->setLoader(new \Mustache_Loader_FilesystemLoader($path, $options));
 ### Config
 
 We can change the file extension name and many other configs, please see [Mustache PHP Document](https://github.com/bobthecow/mustache.php/wiki).
+
+### Use Plastes Renderer
+
+``` php
+use Windwalker\Renderer\PlastesRenderer;
+
+$renderer = new PlastesRenderer;
+
+echo $renderer->render('flower.sakura', array('foo' => 'bar'));
+```
+
+See: [Plastes](http://platesphp.com/)
 
 ## Use Cases
 

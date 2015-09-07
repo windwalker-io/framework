@@ -37,6 +37,17 @@ $db = DatabaseFactory::getDbo(
 The DatabaseDriver will be cache in Factory, now DataMapper will auto load Windwalker DatabaseDriver 
 from `DatabaseFactory` and `DatabaseAdapter` to operate DB.
 
+#### Current Supported Drivers
+
+- mysql
+- postgresql
+
+Todo:
+
+- oracle
+- mssql
+- sqlite
+
 ### Manually Set An Exists DatabaseDriver To Adapter
  
 ``` php
@@ -362,6 +373,50 @@ See: https://github.com/ventoviro/windwalker-compare
 ## Using Data and DataSet
 
 See: https://github.com/ventoviro/windwalker-data
+
+## Hooks
+
+Add `"windwalker/event": "~2.0"` to `composer.json`.
+
+Then we are able to use hooks after every operations.
+
+``` php
+class FooListener
+{
+    public function onAfterCreate(Event $event)
+    {
+        $result = $event['result'];
+
+        // Do something
+    }
+}
+
+$mapper = new DataMapper('table');
+$mapper->getDispatcher()->addListener(new FooListener);
+
+$mapper->create($dataset);
+```
+
+Extends DataMapper:
+
+``` php
+class SakuraMapper extends DataMapper
+{
+    protected $table = 'saluras';
+
+    public function onAfterFind(Event $event)
+    {
+        $result = $event['result'];
+
+        // Find some relations
+    }
+}
+
+$mapper = new DataMapper('table');
+$mapper->find(array('id' => 5));
+```
+
+More about Event: [Windwalker Event](https://github.com/ventoviro/windwalker-event)
 
 ## Integrate Other Framework's DB Object
  

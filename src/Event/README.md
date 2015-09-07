@@ -182,6 +182,15 @@ class ContentListener
 }
 ```
 
+## Make Arguments Referenced
+
+``` php
+$dispatcher->triggerEvent('onSomeEvent', array(
+    'foo' => &$foo,
+    'bar' => &$bar
+));
+```
+
 ## Observable Pattern
 
 Most of time we use event system to inject some logic before & after our main logic:
