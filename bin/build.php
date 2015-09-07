@@ -129,7 +129,7 @@ class Build extends AbstractCliApplication
 
 		$this->exec('git checkout -b ' . $branch);
 
-		$this->exec('git merge staging');
+		$this->exec('git merge master');
 
 		if ($this->tag)
 		{
@@ -140,7 +140,7 @@ class Build extends AbstractCliApplication
 			$this->exec('git tag ' . $tag);
 		}
 
-		$this->exec(sprintf('git push origin %s %s:%s staging:staging', $tag, $branch, $branch));
+		$this->exec(sprintf('git push origin %s %s:%s master:master', $tag, $branch, $branch));
 
 		$allows = $this->io->getArguments();
 
@@ -154,7 +154,7 @@ class Build extends AbstractCliApplication
 			$this->splitTree($subtree, $namespace);
 		}
 
-		$this->exec('git checkout staging');
+		$this->exec('git checkout master');
 
 		$this->out()->out('Split finish.');
 
@@ -256,9 +256,9 @@ Will run subtree split and push every packages to it's repos.
 
 Usage: php build.php [packages] [-t] [-b=test] [-f] [--dry-run] [--no-replace]
 
--t              Git tag of this build, will push to main repo and every subtree.
--b              Get branch to push, will  push to main repo and every subtree.
--f              Override commits or not.
+-t | --tags     Git tag of this build, will push to main repo and every subtree.
+-b | --branch   Get branch to push, will  push to main repo and every subtree.
+-f | --force    Override commits or not.
 --dry-run       Do not real push, just run the subtree split process.
 --no-replace    Do not replace the docblock variables.
 
@@ -316,9 +316,9 @@ HELP;
 			file_put_contents($file->getPathname(), $content);
 		}
 
-		$this->exec('git checkout staging');
+		$this->exec('git checkout master');
 		$this->exec(sprintf('git commit -am "Prepare for %s release."', $this->tag));
-		$this->exec('git push origin staging');
+		$this->exec('git push origin master');
 	}
 }
 
