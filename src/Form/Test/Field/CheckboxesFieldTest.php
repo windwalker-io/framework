@@ -53,6 +53,7 @@ class CheckboxesFieldTest extends AbstractDomTestCase
 		$this->instance->setAttribute('disabled', true);
 		$this->instance->setAttribute('onchange', 'return false;');
 		$this->instance->setAttribute('multiple', false);
+		$this->instance->setAttribute('attribs',  array('data-test-element' => true));
 	}
 
 	/**
@@ -75,7 +76,7 @@ class CheckboxesFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<span id="input-flower" class="checkbox-inputs stub-flower">
+<span id="input-flower" class="checkbox-inputs stub-flower" disabled="true" data-test-element>
 	<input class="opt" value="Asia/Tokyo" name="flower[]" type="checkbox" id="input-flower-asia-tokyo" />
 	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
 
@@ -95,7 +96,7 @@ HTML;
 		$this->instance->setValue('UTC');
 
 		$html = <<<HTML
-<span id="input-flower" class="checkbox-inputs stub-flower">
+<span id="input-flower" class="checkbox-inputs stub-flower" disabled="true" data-test-element>
 	<input class="opt" value="Asia/Tokyo" name="flower[]" type="checkbox" id="input-flower-asia-tokyo" />
 	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
 

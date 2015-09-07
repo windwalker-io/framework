@@ -35,8 +35,6 @@ if (!function_exists('show'))
 	 *
 	 * @param   mixed  $data   Array or Object to dump.
 	 *
-	 * @internal  int  $level  The level number to limit recursive loop.
-	 *
 	 * @since   2.0
 	 *
 	 * @return  void

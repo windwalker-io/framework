@@ -32,17 +32,17 @@ class Option extends HtmlElement
 	protected $attributes = array();
 
 	/**
-	 * @param $text
-	 * @param $value
-	 * @param $attributes
+	 * @param string $text
+	 * @param string $value
+	 * @param array  $attribs
 	 */
-	public function __construct($text = null, $value = null, $attributes = array())
+	public function __construct($text = null, $value = null, $attribs = array())
 	{
 		$this->value = $value;
 
-		$attributes['value'] = $value;
+		$attribs['value'] = $value;
 
-		parent::__construct('option', $text, $attributes);
+		parent::__construct('option', $text, $attribs);
 	}
 
 	/**

@@ -303,6 +303,21 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
 		$called = $orphans['a.key.not.exists']['called'];
 		$this->assertEquals('Windwalker\Language\Language::translate', $called['class'] . '::' . $called['function']);
+
+		// Wrap in a function
+		$this->instance->setTraceLevelOffset(1);
+
+		$this->translate('another.key.not.exists');
+		$orphans = $this->instance->getOrphans();
+
+		$position = $orphans['another.key.not.exists']['position'];
+		$ref = new \ReflectionMethod($this, __FUNCTION__);
+		$this->assertEquals(__METHOD__, $position['class'] . '::' . $position['function']);
+		$this->assertEquals(__FILE__, $position['file']);
+		$this->assertEquals($ref->getStartLine(), $position['line']);
+
+		$called = $orphans['another.key.not.exists']['called'];
+		$this->assertEquals(__CLASS__ . '::translate', $called['class'] . '::' . $called['function']);
 	}
 
 	/**
@@ -409,5 +424,17 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 		$this->markTestIncomplete(
 			'This test has not been implemented yet.'
 		);
+	}
+
+	/**
+	 * translate
+	 *
+	 * @param   string  $text
+	 *
+	 * @return  string
+	 */
+	public function translate($text)
+	{
+		return $this->instance->translate($text);
 	}
 }

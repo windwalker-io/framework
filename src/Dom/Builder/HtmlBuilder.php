@@ -51,9 +51,21 @@ class HtmlBuilder extends DomBuilder
 	{
 		$paired = $forcePair ? : !in_array(strtolower($name), static::$unpairedElements);
 
+		return parent::create($name, $content, $attribs, $paired);
+	}
+
+	/**
+	 * buildAttributes
+	 *
+	 * @param array $attribs
+	 *
+	 * @return  string
+	 */
+	public static function buildAttributes($attribs)
+	{
 		$attribs = static::mapAttrValues($attribs);
 
-		return parent::create($name, $content, $attribs, $paired);
+		return parent::buildAttributes($attribs);
 	}
 
 	/**

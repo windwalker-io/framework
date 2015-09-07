@@ -49,6 +49,7 @@ class TextFieldTest extends AbstractDomTestCase
 		$this->instance->setAttribute('disabled',    true);
 		$this->instance->setAttribute('onchange',    'javascript:void(0);');
 		$this->instance->setAttribute('value',       'sakura');
+		$this->instance->setAttribute('attribs',     array('data-test-element' => true));
 	}
 
 	/**
@@ -71,7 +72,7 @@ class TextFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<input type="text" name="flower" id="test-field" class="stub-flower" placeholder="th" size="60" maxlength="10" readonly="true" disabled="true" onchange="javascript:void(0);" />
+<input type="text" name="flower" id="test-field" class="stub-flower" placeholder="th" size="60" maxlength="10" readonly="true" disabled="true" onchange="javascript:void(0);" data-test-element />
 HTML;
 
 		$this->assertDomStringEqualsDomString($html, $this->instance->renderInput());

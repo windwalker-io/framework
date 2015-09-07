@@ -110,4 +110,25 @@ class DomBuilderTest extends AbstractDomTestCase
 	{
 		$this->assertEquals('"foo"', DomBuilder::quote('foo'));
 	}
+
+	/**
+	 * testPrepareAttributes
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Dom\Builder\DomBuilder::buildAttributes
+	 */
+	public function testBuildAttributes()
+	{
+		$attrs = array(
+			'foo' => 'bar',
+			'data' => true,
+			'bar' => false,
+			'empty' => '',
+			'selected' => true,
+			'checked' => false
+		);
+
+		$this->assertEquals(' foo="bar" data empty="" selected', DomBuilder::buildAttributes($attrs));
+	}
 }

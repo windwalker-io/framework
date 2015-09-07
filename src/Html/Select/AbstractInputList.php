@@ -123,8 +123,13 @@ class AbstractInputList extends HtmlElement
 	{
 		$this->prepareOptions();
 
+		$attrs = $this->getAttributes();
 		$attrs['id'] = $this->getAttribute('id');
 		$attrs['class'] = $this->type . '-inputs ' . $this->getAttribute('class');
+
+		$attrs['name']     = null;
+		$attrs['onchange'] = null;
+		$attrs['size']     = null;
 
 		return HtmlBuilder::create($this->name, $this->content, $attrs, $forcePair);
 	}

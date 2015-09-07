@@ -121,4 +121,25 @@ class HtmlBuilderTest extends \PHPUnit_Framework_TestCase
 			'Dom build case fail: ' . $name
 		);
 	}
+
+	/**
+	 * testPrepareAttributes
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Dom\Builder\HtmlBuilder::buildAttributes
+	 */
+	public function testBuildAttributes()
+	{
+		$attrs = array(
+			'foo' => 'bar',
+			'data' => true,
+			'bar' => false,
+			'empty' => '',
+			'selected' => true,
+			'checked' => false
+		);
+
+		$this->assertEquals(' foo="bar" data empty="" selected="selected"', HtmlBuilder::buildAttributes($attrs));
+	}
 }

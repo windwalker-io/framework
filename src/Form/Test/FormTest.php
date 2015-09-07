@@ -8,6 +8,7 @@
 
 namespace Windwalker\Form\Test;
 
+use Windwalker\Form\Field\AbstractField;
 use Windwalker\Form\Field\TextField;
 use Windwalker\Form\FieldHelper;
 use Windwalker\Form\FilterHelper;
@@ -500,6 +501,8 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Form\Form::renderField
+	 *
+	 * @since  2.1.2
 	 */
 	public function testRenderField()
 	{
@@ -508,6 +511,15 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		$html = '<div id="input-windwalker-id-control" class="text-field "><label id="input-windwalker-id-label" for="input-windwalker-id">ID</label><input type="text" name="windwalker[id]" id="input-windwalker-id" class="control-input" /></div>';
 
 		$this->assertEquals($html, $form->renderField('id'));
+
+		// Use renderer
+
+		$form->setFieldRenderHandler(function(AbstractField $field, $form)
+		{
+			return 'Happy Field: ' . $field->getName();
+		});
+
+		$this->assertEquals('Happy Field: id', $form->renderField('id'));
 	}
 
 	/**

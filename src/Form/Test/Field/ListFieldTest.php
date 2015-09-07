@@ -52,6 +52,7 @@ class ListFieldTest extends AbstractDomTestCase
 		$this->instance->setAttribute('disabled', true);
 		$this->instance->setAttribute('onchange', 'return false;');
 		$this->instance->setAttribute('multiple', false);
+		$this->instance->setAttribute('attribs',  array('data-test-element' => true));
 	}
 
 	/**
@@ -74,7 +75,7 @@ class ListFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<select name="flower" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;">
+<select name="flower" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;" data-test-element>
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>
@@ -86,7 +87,7 @@ HTML;
 		$this->instance->setValue(1);
 
 		$html = <<<HTML
-<select name="flower" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;">
+<select name="flower" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;" data-test-element>
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>
@@ -98,7 +99,7 @@ HTML;
 		$this->instance->setAttribute('multiple', true);
 
 		$html = <<<HTML
-<select name="flower[]" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;" multiple="true">
+<select name="flower[]" id="input-flower" class="stub-flower" size="10" disabled="true" onchange="return false;" multiple="true" data-test-element>
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
 	<option value="No">0</option>

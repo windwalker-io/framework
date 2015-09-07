@@ -41,12 +41,13 @@ class TextareaFieldTest extends AbstractDomTestCase
 			)
 		);
 
-		$this->instance->setAttribute('id',          'test-field');
-		$this->instance->setAttribute('readonly',    true);
-		$this->instance->setAttribute('disabled',    true);
-		$this->instance->setAttribute('onchange',    'javascript:void(0);');
-		$this->instance->setAttribute('cols',        10);
-		$this->instance->setAttribute('rows',        15);
+		$this->instance->setAttribute('id',        'test-field');
+		$this->instance->setAttribute('readonly',  true);
+		$this->instance->setAttribute('disabled',  true);
+		$this->instance->setAttribute('onchange',  'javascript:void(0);');
+		$this->instance->setAttribute('cols',      10);
+		$this->instance->setAttribute('rows',      15);
+		$this->instance->setAttribute('attribs',   array('data-test-element' => true));
 
 		$this->instance->setValue('sakura');
 	}
@@ -71,7 +72,7 @@ class TextareaFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<textarea name="flower" id="test-field" class="stub-flower" readonly="true" disabled="true" onchange="javascript:void(0);" cols="10" rows="15">sakura</textarea>
+<textarea name="flower" id="test-field" class="stub-flower" readonly="true" disabled="true" onchange="javascript:void(0);" cols="10" rows="15" data-test-element>sakura</textarea>
 HTML;
 
 		$this->assertDomStringEqualsDomString($html, $this->instance->renderInput());
