@@ -201,7 +201,7 @@ class QueryHelper
 			// If key is numeric, just send value to query where.
 			elseif (is_numeric($key))
 			{
-				$query->where($query->format('%n = %a', $key, $value));
+				$query->where($value);
 			}
 
 			// If is array or object, we use "IN" condition.
