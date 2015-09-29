@@ -278,4 +278,52 @@ class UriHelper
 
 		return implode('/', $path);
 	}
+
+	/**
+	 * decode
+	 *
+	 * @param   string  $string
+	 *
+	 * @return  array|string
+	 */
+	public static function decode($string)
+	{
+		if (is_array($string))
+		{
+			foreach ($string as $k => $substring)
+			{
+				$string[$k] = static::decode($substring);
+			}
+		}
+		else
+		{
+			$string = urldecode($string);
+		}
+
+		return $string;
+	}
+
+	/**
+	 * encode
+	 *
+	 * @param   string  $string
+	 *
+	 * @return  array|string
+	 */
+	public static function encode($string)
+	{
+		if (is_array($string))
+		{
+			foreach ($string as $k => $substring)
+			{
+				$string[$k] = static::encode($substring);
+			}
+		}
+		else
+		{
+			$string = urlencode($string);
+		}
+
+		return $string;
+	}
 }
