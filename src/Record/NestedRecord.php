@@ -200,7 +200,7 @@ class NestedRecord extends Record
 			throw new \UnexpectedValueException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id, get_class($this)));
 		}
 
-		return true;
+		return $this;
 	}
 
 	/**

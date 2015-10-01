@@ -171,6 +171,42 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	}
 
 	/**
+	 * compare
+	 *
+	 * @param mixed $priority1
+	 * @param mixed $priority2
+	 *
+	 * @return  int
+	 */
+	public function compare($priority1, $priority2)
+	{
+		$p1Count = count($priority1);
+		$p2Count = count($priority2);
+
+		$count = min($p1Count, $p2Count);
+
+		foreach (range(1, $count) as $i)
+		{
+			$k = $i - 1;
+
+			if ($priority1[$k] == $priority2[$k])
+			{
+				continue;
+			}
+			elseif ($priority1[$k] > $priority2[$k])
+			{
+				return 1;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+
+		return 0;
+	}
+
+	/**
 	 * Method to get property Serial
 	 *
 	 * @return  int
