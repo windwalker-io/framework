@@ -136,8 +136,8 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Get a registry value.
 	 *
-	 * @param   string  $path       Registry path (e.g. foo.content.showauthor)
-	 * @param   mixed   $default    Optional default value, returned if the internal value is null.
+	 * @param   string  $path     Registry path (e.g. foo.content.showauthor)
+	 * @param   mixed   $default  Optional default value, returned if the internal value is null.
 	 *
 	 * @return  mixed  Value of entry or null
 	 *
@@ -284,9 +284,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Merge a structure data to a node.
 	 *
-	 * @param   string    $path    The path to merge as root.
-	 * @param   Registry  $source  Source structure data to merge.
-	 * @param   boolean   $raw     Set to false to convert all object to array.
+	 * @param   string          $path    The path to merge as root.
+	 * @param   Registry|mixed  $source  Source structure data to merge.
+	 * @param   boolean         $raw     Set to false to convert all object to array.
 	 *
 	 * @return  static
 	 */

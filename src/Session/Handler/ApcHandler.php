@@ -19,8 +19,9 @@ class ApcHandler extends AbstractHandler
 	/**
 	 * Constructor
 	 *
+	 * @param array $options Optional parameters
+	 *
 	 * @throws \RuntimeException
-	 * @internal param array $options Optional parameters
 	 *
 	 * @since    2.0
 	 */

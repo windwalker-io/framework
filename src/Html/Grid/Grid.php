@@ -71,7 +71,6 @@ class Grid
 	 * @param array $options
 	 *
 	 * @return static
-	 * @internal param string $name
 	 */
 	public static function create($options = array())
 	{
