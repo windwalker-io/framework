@@ -273,7 +273,7 @@ $boolean = $fooMapper->delete(array('author' => 'Jean Grey'));
 
 ## Join Tables
 
-Using `RelationDataMapper` to join tables.
+Use `RelationDataMapper` to join tables.
 
 ``` php
 $fooMapper = new RelationDataMapper('flower', '#__flower');
@@ -317,6 +317,12 @@ $fooMapper->addTable(
     'category.lft >= foo.lft OR category.rgt <= foo.rgt',
     'LEFT'
 );
+```
+
+### Group
+
+``` php
+$fooMapper->group('category.id');
 ```
 
 ## Compare objects

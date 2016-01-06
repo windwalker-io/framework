@@ -28,6 +28,28 @@ class RelationDataMapper extends DataMapper
 	protected $tables = null;
 
 	/**
+	 * Property options.
+	 *
+	 * @var  array
+	 */
+	protected $options = array();
+
+	/**
+	 * getInstance
+	 *
+	 * @param string                   $alias  Table alias.
+	 * @param string                   $table  Table name.
+	 * @param string|array             $pk     Primary key.
+	 * @param DatabaseAdapterInterface $db     Database adapter.
+	 *
+	 * @return  static
+	 */
+	public static function getInstance($alias, $table, $pk = 'id', DatabaseAdapterInterface $db = null)
+	{
+		return new static($alias, $table, $pk, $db);
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string                   $alias  Table alias.
@@ -105,6 +127,53 @@ class RelationDataMapper extends DataMapper
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
-		return $this->db->find($this->tables, $this->selectFields, $conditions, $orders, $start, $limit);
+		return $this->db->find($this->tables, $this->selectFields, $conditions, $orders, $start, $limit, $this->options);
+	}
+
+	/**
+	 * group
+	 *
+	 * @param  string $condition
+	 *
+	 * @return  static
+	 */
+	public function group($condition)
+	{
+		$this->options['group'] = $condition;
+
+		return $this;
+	}
+
+	/**
+	 * set
+	 *
+	 * @param   string  $name
+	 * @param   mixed   $value
+	 *
+	 * @return  static
+	 */
+	public function set($name, $value)
+	{
+		$this->options[$name] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * get
+	 *
+	 * @param string $name
+	 * @param mixed  $default
+	 *
+	 * @return  mixed
+	 */
+	public function get($name, $default = null)
+	{
+		if (!isset($this->options[$name]))
+		{
+			return $default;
+		}
+
+		return $this->options[$name];
 	}
 }
