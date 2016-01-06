@@ -28,6 +28,20 @@ class AbstractInputList extends HtmlElement
 	protected $checked = null;
 
 	/**
+	 * Property disabled.
+	 *
+	 * @var  boolean
+	 */
+	protected $disabled = false;
+
+	/**
+	 * Property readonly.
+	 *
+	 * @var  boolean
+	 */
+	protected $readonly = false;
+
+	/**
 	 * Element content.
 	 *
 	 * @var  Option[]
@@ -86,6 +100,8 @@ class AbstractInputList extends HtmlElement
 			$attrs['id'] = $attrs['id'] ? : strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $attrs['name'] ? : 'empty'), '-'));
 			$attrs['id'] .= '-' . strtolower(trim(preg_replace('/[^A-Z0-9_\.-]/i', '-', $option->getValue() ? : 'empty'), '-'));
 			$attrs['id'] = 'input-' . $attrs['id'];
+			$attrs['disabled'] = $this->disabled;
+			$attrs['readonly'] = $this->readonly;
 
 			// Do not affect source options
 			$option = clone $option;
@@ -93,6 +109,9 @@ class AbstractInputList extends HtmlElement
 			$option->setAttributes($attrs);
 
 			$input = new HtmlElement('input', null, $attrs);
+
+			$option->setAttribute('disabled', null);
+			$option->setAttribute('readonly', null);
 
 			$label = $this->createLabel($option);
 
@@ -121,6 +140,18 @@ class AbstractInputList extends HtmlElement
 	 */
 	public function toString($forcePair = false)
 	{
+		if ($this->getAttribute('disabled'))
+		{
+			$this->disabled = true;
+			$this->setAttribute('disabled', null);
+		}
+
+		if ($this->getAttribute('readonly'))
+		{
+			$this->readonly = true;
+			$this->setAttribute('readonly', null);
+		}
+
 		$this->prepareOptions();
 
 		$attrs = $this->getAttributes();
@@ -175,6 +206,54 @@ class AbstractInputList extends HtmlElement
 	public function setChecked($checked)
 	{
 		$this->checked = $checked;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Disabled
+	 *
+	 * @return  boolean
+	 */
+	public function getDisabled()
+	{
+		return $this->disabled;
+	}
+
+	/**
+	 * Method to set property disabled
+	 *
+	 * @param   boolean $disabled
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDisabled($disabled)
+	{
+		$this->disabled = $disabled;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Readonly
+	 *
+	 * @return  boolean
+	 */
+	public function getReadonly()
+	{
+		return $this->readonly;
+	}
+
+	/**
+	 * Method to set property readonly
+	 *
+	 * @param   boolean $readonly
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setReadonly($readonly)
+	{
+		$this->readonly = $readonly;
 
 		return $this;
 	}

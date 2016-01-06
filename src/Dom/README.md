@@ -44,12 +44,12 @@ $attrs = array('id' => 'foo', 'class' => 'bar');
 $content = array(
     new DomElement('option', 'Yes', array('value' => 1)),
     new DomElement('option', 'No', array('value' => 0))
-)
+);
 
 echo $dom = (string) new DomElement('field', $content, $attrs);
 ```
 
-The output wil be:
+The output will be:
 
 ``` xml
 <field id="foo" class="bar">
@@ -108,6 +108,31 @@ foreach ($html as $element)
 {
     echo $element;
 }
+```
+
+### Attributes
+
+``` php
+$html = new HtmlElement('input', array(
+    'data-string' => 'string',
+    'data-empty' => '',
+    'data-true'  => true,
+    'data-false' => false,
+    'data-null'  => null,
+
+    // Special attributes
+    'checked'    => 'checked',
+    'disabled'   => true,
+    'readonly'   => false
+));
+
+echo $html;
+```
+
+Result
+
+``` html
+<input data-string="string" data-empty="" data-true checked="checked" disabled="disabled">
 ```
 
 ## Formatter
