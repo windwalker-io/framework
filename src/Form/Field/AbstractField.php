@@ -12,6 +12,7 @@ use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\SimpleXml\XmlHelper;
 use Windwalker\Form\Filter\FilterInterface;
 use Windwalker\Form\FilterHelper;
+use Windwalker\Form\Form;
 use Windwalker\Form\Validate\ValidateResult;
 use Windwalker\Form\ValidatorHelper;
 use Windwalker\Validator\ValidatorInterface;
@@ -138,6 +139,13 @@ abstract class AbstractField
 		'yes',
 		'1'
 	);
+
+	/**
+	 * Property form.
+	 *
+	 * @var  Form
+	 */
+	protected $form;
 
 	/**
 	 * Constructor.
@@ -881,5 +889,29 @@ abstract class AbstractField
 	public function getType()
 	{
 		return $this->type;
+	}
+
+	/**
+	 * Method to get property Form
+	 *
+	 * @return  Form
+	 */
+	public function getForm()
+	{
+		return $this->form;
+	}
+
+	/**
+	 * Method to set property form
+	 *
+	 * @param   Form $form
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setForm($form)
+	{
+		$this->form = $form;
+
+		return $this;
 	}
 }

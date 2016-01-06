@@ -221,7 +221,14 @@ class Input implements \Serializable, \Countable
 			{
 				if (is_null($datasource))
 				{
-					$results[$k] = $this->getArray($v, $this->get($k, null, 'array'));
+					if ($this instanceof FilesInput)
+					{
+						$results[$k] = $this->getArray($this->get($k, null, 'array'), $this->get($k, null, 'array'));
+					}
+					else
+					{
+						$results[$k] = $this->getArray($v, $this->get($k, null, 'array'));
+					}
 				}
 				else
 				{

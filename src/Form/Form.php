@@ -220,7 +220,8 @@ class Form implements \IteratorAggregate
 			$this->fieldsets[] = $fieldset;
 		}
 
-		$field->setControl($this->control);
+		$field->setControl($this->control)
+			->setForm($this);
 
 		$this->fields[$field->getName(true)] = $field;
 
@@ -232,7 +233,7 @@ class Form implements \IteratorAggregate
 	 *
 	 * @param string   $fieldset
 	 * @param string   $group
-	 * @param callable $handler
+	 * @param \Closure $handler
 	 *
 	 * @return  static
 	 */
@@ -253,7 +254,7 @@ class Form implements \IteratorAggregate
 	 * define
 	 *
 	 * @param AbstractField $field
-	 * @param callable      $closure
+	 * @param \Closure      $closure
 	 * @param string        $fieldset
 	 * @param string        $group
 	 *
