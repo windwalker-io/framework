@@ -10,7 +10,7 @@ namespace Windwalker\DataMapper;
 
 use Windwalker\Data\Data;
 use Windwalker\Data\DataSet;
-use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\AbstractDatabaseAdapter;
 use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
 
 /**
@@ -59,7 +59,7 @@ class RelationDataMapper extends DataMapper
 	 */
 	public function __construct($alias, $table, $pk = 'id', DatabaseAdapterInterface $db = null)
 	{
-		$this->db = $db ? : DatabaseAdapter::getInstance();
+		$this->db = $db ? : AbstractDatabaseAdapter::getInstance();
 
 		$this->pk = $pk ? : $alias . '.' . $pk;
 

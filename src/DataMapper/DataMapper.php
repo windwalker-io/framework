@@ -8,7 +8,7 @@
 
 namespace Windwalker\DataMapper;
 
-use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\AbstractDatabaseAdapter;
 use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
 use Windwalker\DataMapper\Entity\Entity;
 
@@ -20,7 +20,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * The DB adapter.
 	 *
-	 * @var DatabaseAdapter
+	 * @var AbstractDatabaseAdapter
 	 */
 	protected $db = null;
 
@@ -33,7 +33,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	public function __construct($table = null, $pk = 'id', DatabaseAdapterInterface $db = null)
 	{
-		$this->db = $db ? : DatabaseAdapter::getInstance();
+		$this->db = $db ? : AbstractDatabaseAdapter::getInstance();
 
 		parent::__construct($table, $pk);
 	}

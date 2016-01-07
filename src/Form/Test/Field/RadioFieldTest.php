@@ -76,17 +76,17 @@ class RadioFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<span id="input-flower" class="radio-inputs stub-flower" disabled="true" data-test-element>
-	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="input-flower-asia-tokyo" />
+<span id="input-flower" class="radio-inputs stub-flower" data-test-element>
+	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="input-flower-asia-tokyo" disabled="disabled" />
 	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
 
-	<input value="Asia/Taipei" name="flower" type="radio" id="input-flower-asia-taipei" />
+	<input value="Asia/Taipei" name="flower" type="radio" id="input-flower-asia-taipei" disabled="disabled" />
 	<label id="input-flower-asia-taipei-label" for="input-flower-asia-taipei">Asia - Taipei</label>
 
-	<input value="Asia/Paris" name="flower" type="radio" id="input-flower-asia-paris" />
+	<input value="Asia/Paris" name="flower" type="radio" id="input-flower-asia-paris" disabled="disabled" />
 	<label id="input-flower-asia-paris-label" for="input-flower-asia-paris">Europe - Paris</label>
 
-	<input value="UTC" name="flower" type="radio" id="input-flower-utc" />
+	<input value="UTC" name="flower" type="radio" id="input-flower-utc" disabled="disabled" />
 	<label id="input-flower-utc-label" for="input-flower-utc">UTC</label>
 </span>
 HTML;
@@ -96,17 +96,17 @@ HTML;
 		$this->instance->setValue('UTC');
 
 		$html = <<<HTML
-<span id="input-flower" class="radio-inputs stub-flower" disabled="true" data-test-element>
-	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="input-flower-asia-tokyo" />
+<span id="input-flower" class="radio-inputs stub-flower" data-test-element>
+	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="input-flower-asia-tokyo" disabled="disabled" />
 	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
 
-	<input value="Asia/Taipei" name="flower" type="radio" id="input-flower-asia-taipei" />
+	<input value="Asia/Taipei" name="flower" type="radio" id="input-flower-asia-taipei" disabled="disabled" />
 	<label id="input-flower-asia-taipei-label" for="input-flower-asia-taipei">Asia - Taipei</label>
 
-	<input value="Asia/Paris" name="flower" type="radio" id="input-flower-asia-paris" />
+	<input value="Asia/Paris" name="flower" type="radio" id="input-flower-asia-paris" disabled="disabled" />
 	<label id="input-flower-asia-paris-label" for="input-flower-asia-paris">Europe - Paris</label>
 
-	<input value="UTC" name="flower" checked="checked" type="radio" id="input-flower-utc" />
+	<input value="UTC" name="flower" checked="checked" type="radio" id="input-flower-utc" disabled="disabled" />
 	<label id="input-flower-utc-label" for="input-flower-utc">UTC</label>
 </span>
 HTML;

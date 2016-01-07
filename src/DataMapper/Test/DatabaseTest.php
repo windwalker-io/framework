@@ -9,7 +9,7 @@
 namespace Windwalker\DataMapper\Test;
 
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
-use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\AbstractDatabaseAdapter;
 use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 
 /**
@@ -37,7 +37,7 @@ abstract class DatabaseTest extends AbstractDatabaseTestCase
 
 		if (static::$dbo)
 		{
-			DatabaseAdapter::setInstance(new WindwalkerAdapter(static::$dbo));
+			AbstractDatabaseAdapter::setInstance(new WindwalkerAdapter(static::$dbo));
 		}
 	}
 

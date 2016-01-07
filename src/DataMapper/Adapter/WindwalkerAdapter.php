@@ -18,7 +18,7 @@ use Windwalker\Database\Query\QueryHelper;
  *
  * @since 2.0
  */
-class WindwalkerAdapter extends DatabaseAdapter
+class WindwalkerAdapter extends AbstractDatabaseAdapter
 {
 	/**
 	 * Query helper.
@@ -26,6 +26,13 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 * @var  QueryHelper
 	 */
 	protected $queryHelper = null;
+
+	/**
+	 * Property db.
+	 *
+	 * @var  AbstractDatabaseDriver
+	 */
+	protected $db;
 
 	/**
 	 * Constructor.
@@ -93,7 +100,7 @@ class WindwalkerAdapter extends DatabaseAdapter
 
 		if (isset($options['group']))
 		{
-			echo $query->group($options['group']);
+			$query->group($options['group']);
 		}
 
 		if (isset($options['having']))
