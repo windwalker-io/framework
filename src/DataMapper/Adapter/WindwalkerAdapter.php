@@ -18,7 +18,7 @@ use Windwalker\Database\Query\QueryHelper;
  *
  * @since 2.0
  */
-class WindwalkerAdapter extends DatabaseAdapter
+class WindwalkerAdapter extends AbstractDatabaseAdapter
 {
 	/**
 	 * Query helper.
@@ -26,6 +26,13 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 * @var  QueryHelper
 	 */
 	protected $queryHelper = null;
+
+	/**
+	 * Property db.
+	 *
+	 * @var  AbstractDatabaseDriver
+	 */
+	protected $db;
 
 	/**
 	 * Constructor.
@@ -49,10 +56,11 @@ class WindwalkerAdapter extends DatabaseAdapter
 	 * @param array           $orders     Order sort, can ba string, array or object.
 	 * @param integer         $start      Limit start number.
 	 * @param integer         $limit      Limit rows.
+	 * @param array           $options    Other options.
 	 *
 	 * @return  mixed Found rows data set.
 	 */
-	public function find($table, $select = null, array $conditions = array(), array $orders = array(), $start = 0, $limit = null)
+	public function find($table, $select = null, array $conditions = array(), array $orders = array(), $start = 0, $limit = null, $options = array())
 	{
 		$query = $this->db->getQuery(true);
 
@@ -89,6 +97,16 @@ class WindwalkerAdapter extends DatabaseAdapter
 		// Build query
 		$query->select($select)
 			->limit($limit, $start);
+
+		if (isset($options['group']))
+		{
+			$query->group($options['group']);
+		}
+
+		if (isset($options['having']))
+		{
+			$query->group($options['having']);
+		}
 
 		return $this->db->setQuery($query)->loadAll();
 	}

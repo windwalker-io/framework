@@ -95,6 +95,48 @@ SQL;
 	}
 
 	/**
+	 * Test find()
+	 *
+	 * @covers Windwalker\DataMapper\RelationDataMapper::find
+	 *
+	 * @return void
+	 */
+	public function testFindGroup()
+	{
+		$mapper = RelationDataMapper::getInstance('category', 'ww_categories')
+			->addTable('flower', 'ww_flower', 'flower.catid = category.id')
+			->group('category.id');
+
+		$dataset = $mapper->find(
+			array(
+				'flower.state' => 1
+			),
+			'flower.title DESC'
+		);
+
+		$sql = <<<SQL
+SELECT `flower`.`id` AS `flower_id`,
+	`flower`.`catid` AS `flower_catid`,
+	`flower`.`title` AS `flower_title`,
+	`flower`.`meaning` AS `flower_meaning`,
+	`flower`.`ordering` AS `flower_ordering`,
+	`flower`.`state` AS `flower_state`,
+	`flower`.`params` AS `flower_params`,
+	`category`.`id` AS `id`,
+	`category`.`title` AS `title`,
+	`category`.`ordering` AS `ordering`,
+	`category`.`params` AS `params`
+FROM `ww_categories` AS `category`
+	LEFT JOIN `ww_flower` AS `flower` ON flower.catid = category.id
+WHERE `flower`.`state` = 1
+GROUP BY category.id
+ORDER BY flower.title DESC
+SQL;
+
+		$this->assertEquals($dataset, $this->loadToDataset($sql));
+	}
+
+	/**
 	 * Test findAll()
 	 *
 	 * @covers Windwalker\DataMapper\RelationDataMapper::findAll

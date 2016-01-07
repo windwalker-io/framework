@@ -30,7 +30,7 @@ class EnGBLocalise implements LocaliseInterface
 		}
 		elseif ($count == 1)
 		{
-			return '';
+			return '1';
 		}
 
 		return 'more';

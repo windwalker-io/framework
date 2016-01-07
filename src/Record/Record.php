@@ -89,6 +89,13 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	protected $dispatcher;
 
 	/**
+	 * Property fieldsCache.
+	 *
+	 * @var  array
+	 */
+	protected static $fieldsCache = array();
+
+	/**
 	 * Object constructor to set table and key fields.  In most cases this will
 	 * be overridden by child classes to explicitly set the table and key fields
 	 * for a particular database table.
@@ -187,16 +194,9 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	{
 		$key = $this->resolveAlias($key);
 
-		if (property_exists($this->data, $key))
-		{
-			$this->data->$key = $value;
+		$this->data->$key = $value;
 
-			return $this;
-		}
-		else
-		{
-			throw new \InvalidArgumentException(__METHOD__ . ' - Set unknown property: ' . $key);
-		}
+		return $this;
 	}
 
 	/**
@@ -494,6 +494,8 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function reset($clear = false)
 	{
+		$this->data = new \stdClass;
+
 		// Get the default values for the class from the table.
 		foreach ($this->getFields() as $k => $v)
 		{
@@ -535,18 +537,28 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	{
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
-			'updateNulls'  => &$updateNulls
+			'updateNulls' => &$updateNulls
 		));
+
+		// Filter non-necessary field
+		$data = array();
+
+		foreach ($this->getFields() as $field => $value)
+		{
+			$data[$field] = $this->data->$field;
+		}
 
 		// If a primary key exists update the object, otherwise insert it.
 		if ($this->hasPrimaryKey())
 		{
-			$this->db->getWriter()->updateOne($this->table, $this->data, $this->keys, $updateNulls);
+			$this->db->getWriter()->updateOne($this->table, $data, $this->keys, $updateNulls);
 		}
 		else
 		{
-			$this->db->getWriter()->insertOne($this->table, $this->data, $this->keys[0]);
+			$this->db->getWriter()->insertOne($this->table, $data, $this->keys[0]);
 		}
+
+		$this->data->{$this->keys[0]} = $data[$this->keys[0]];
 
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
@@ -676,15 +688,22 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	{
 		if ($this->fields === null)
 		{
+			$table = $this->getTableName();
+
+			if (isset(static::$fieldsCache[$table]))
+			{
+				return $this->fields = static::$fieldsCache[$table];
+			}
+
 			// Lookup the fields for this table only once.
-			$fields = $this->db->getTable($this->table)->getColumnDetails(true);
+			$fields = $this->db->getTable($table)->getColumnDetails(true);
 
 			if (empty($fields))
 			{
 				throw new \UnexpectedValueException(sprintf('No columns found for %s table', $this->table));
 			}
 
-			$this->fields = $fields;
+			$this->fields = static::$fieldsCache[$table] = $fields;
 		}
 
 		return $this->fields;

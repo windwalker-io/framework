@@ -70,14 +70,6 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$this->assertEquals(3, $data->catid);
 
-		$this->assertExpectedException(
-			function() use ($record)
-			{
-				$record->foo = 'bar';
-			},
-			new \InvalidArgumentException
-		);
-
 		// Alias
 		$record->setAlias('foo', 'catid');
 
@@ -222,14 +214,27 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::store
-	 * @TODO   Implement testStore().
 	 */
 	public function testStore()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$data = array(
+			'title'   => 'Lancelot',
+			'meaning' => 'First Knight'
 		);
+
+		$record = new Record('ww_flower');
+
+		$record->bind($data);
+
+		$record->foo = 'Forbidden';
+
+		$record->store();
+
+		$record = new Record('ww_flower');
+
+		$record->load(array('title' => 'Lancelot'));
+
+		$this->assertEquals('First Knight', $record->meaning);
 	}
 
 	/**

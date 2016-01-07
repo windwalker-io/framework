@@ -72,7 +72,7 @@ class TextareaFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<textarea name="flower" id="test-field" class="stub-flower" readonly="true" disabled="true" onchange="javascript:void(0);" cols="10" rows="15" data-test-element>sakura</textarea>
+<textarea name="flower" id="test-field" class="stub-flower" readonly="readonly" disabled="disabled" onchange="javascript:void(0);" cols="10" rows="15" data-test-element>sakura</textarea>
 HTML;
 
 		$this->assertDomStringEqualsDomString($html, $this->instance->renderInput());
