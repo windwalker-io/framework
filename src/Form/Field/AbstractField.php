@@ -738,6 +738,20 @@ abstract class AbstractField
 	}
 
 	/**
+	 * readonly
+	 *
+	 * @param bool $value
+	 *
+	 * @return  static
+	 */
+	public function readonly($value = true)
+	{
+		$this->setAttribute('readonly', $value);
+
+		return $this;
+	}
+
+	/**
 	 * getAttribute
 	 *
 	 * @param string $name
