@@ -12,6 +12,8 @@ namespace Windwalker\Database\Command\Schema;
  * The Schema class.
  * 
  * @since  2.0
+ *
+ * @deprecated No longer used.
  */
 class Schema
 {
