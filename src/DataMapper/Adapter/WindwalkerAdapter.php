@@ -105,7 +105,7 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 
 		if (isset($options['having']))
 		{
-			$query->group($options['having']);
+			$query->having($options['having']);
 		}
 
 		return $this->db->setQuery($query)->loadAll();
