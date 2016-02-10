@@ -128,7 +128,7 @@ class PhpRenderer extends AbstractRenderer
 		}
 
 		/** @var $parent phpRenderer */
-		$parent = new static($this->paths, $this->config);
+		$parent = $this->createSelf();
 
 		foreach ($this->block as $name => $block)
 		{
@@ -165,7 +165,7 @@ class PhpRenderer extends AbstractRenderer
 	{
 		$data = $this->data->bind(new Data($data));
 
-		$renderer = new static($this->paths, $this->config);
+		$renderer = $this->createSelf();
 
 		return $renderer->render($file, $data);
 	}
@@ -195,12 +195,22 @@ class PhpRenderer extends AbstractRenderer
 
 		if (!$this->parent)
 		{
-			$this->parent = new static($this->paths);
+			$this->parent = $this->createSelf();
 
 			$this->parent->render($this->extend, $this->data);
 		}
 
 		return $this->parent->getBlock($this->currentBlock);
+	}
+
+	/**
+	 * createSelf
+	 *
+	 * @return  static
+	 */
+	protected function createSelf()
+	{
+		return new static($this->paths, $this->config);
 	}
 
 	/**

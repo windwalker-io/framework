@@ -14,7 +14,7 @@ use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\FileViewFinder;
-use Illuminate\View\Environment as BladeEnvironment;
+use Illuminate\View\Factory as BladeEnvironment;
 use Windwalker\Renderer\Blade\BladeExtending;
 use Windwalker\Renderer\Blade\GlobalContainer;
 

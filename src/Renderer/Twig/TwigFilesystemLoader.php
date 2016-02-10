@@ -77,7 +77,7 @@ class TwigFilesystemLoader extends \Twig_Loader_Filesystem
 			$name = substr($name, 0, -5);
 		}
 
-		$path = preg_replace('#/{2,}#', '/', str_replace('.', '/', $name));
+		$path = preg_replace('#/{2,}#', '/', str_replace($this->separator, '/', $name));
 
 		return $path . '.twig';
 	}
