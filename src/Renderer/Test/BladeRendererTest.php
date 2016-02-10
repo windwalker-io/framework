@@ -139,7 +139,7 @@ HTML;
 	 */
 	public function testGetBlade()
 	{
-		$this->assertInstanceOf('Illuminate\View\Factory', $this->instance->getEngine());
+		$this->assertInstanceOf('Illuminate\View\Environment', $this->instance->getEngine());
 	}
 
 	/**

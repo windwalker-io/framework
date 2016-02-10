@@ -14,7 +14,7 @@ use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\FileViewFinder;
-use Illuminate\View\Factory as BladeEnvironment;
+use Illuminate\View\Environment as BladeEnvironment;
 use Windwalker\Renderer\Blade\BladeExtending;
 use Windwalker\Renderer\Blade\GlobalContainer;
 
@@ -211,7 +211,7 @@ class BladeRenderer extends AbstractEngineRenderer
 	{
 		if (!$this->finder)
 		{
-			$this->finder = new FileViewFinder($this->getFilesystem(), iterator_to_array(clone $this->getPaths()));
+			$this->finder = new FileViewFinder($this->getFilesystem(), $this->dumpPaths());
 		}
 
 		return $this->finder;

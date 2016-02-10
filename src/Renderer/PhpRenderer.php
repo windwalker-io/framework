@@ -85,7 +85,7 @@ class PhpRenderer extends AbstractRenderer
 
 		if (!$__filePath)
 		{
-			$__paths = array_values(iterator_to_array(clone $this->paths));
+			$__paths = $this->dumpPaths();
 
 			$__paths = "\n " . implode(" |\n ", $__paths);
 

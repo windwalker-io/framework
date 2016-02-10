@@ -145,6 +145,25 @@ abstract class AbstractRenderer implements RendererInterface
 	}
 
 	/**
+	 * dumpPaths
+	 *
+	 * @return  array
+	 */
+	public function dumpPaths()
+	{
+		$paths = clone $this->paths;
+
+		$return = array();
+
+		foreach ($paths as $path)
+		{
+			$return[] = $path;
+		}
+
+		return $return;
+	}
+
+	/**
 	 * __get
 	 *
 	 * @param string $name
