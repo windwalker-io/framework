@@ -9,7 +9,6 @@
 namespace Windwalker\Query\Sqlite;
 
 use Windwalker\Query\Query;
-use Windwalker\Query\Query\PreparableTrait;
 
 /**
  * Class SqliteQuery
@@ -141,7 +140,7 @@ class SqliteQuery extends Query
 			return $text;
 		}
 
-		if (!is_callable('SQLite3', 'escapeString'))
+		if (!class_exists('SQLite3') || !is_callable('SQLite3', 'escapeString'))
 		{
 			return $this->escapeWithNoConnection($text);
 		}

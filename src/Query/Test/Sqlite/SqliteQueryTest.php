@@ -304,6 +304,11 @@ class SqliteQueryTest extends AbstractQueryTestCase
 	 */
 	public function testEscape()
 	{
+		if (!class_exists('SQLite3'))
+		{
+			$this->markTestSkipped('SQLite4 not exists.');
+		}
+
 		$this->assertEquals('foo "\'\'_-!@#$%^&*() ' . "\n \t \r" . ' ', $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
 	}
 

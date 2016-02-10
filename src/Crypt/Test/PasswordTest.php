@@ -155,7 +155,11 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 
 		$prefix = (version_compare(PHP_VERSION, '5.3.7') >= 0) ? '$2y$' : '$2a$';
 
-		$this->assertEquals(crypt('windwalker', $prefix . '10$sakurasakurasakurasaku$'), $pass);
+		// PHP7 will auto generate salt
+		if (version_compare(PHP_VERSION, 7, '<'))
+		{
+			$this->assertEquals(crypt('windwalker', $prefix . '10$sakurasakurasakurasaku$'), $pass);
+		}
 
 		$this->assertTrue($this->instance->verify('windwalker', $pass));
 

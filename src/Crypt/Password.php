@@ -94,10 +94,12 @@ class Password
 
 				if (function_exists('password_hash'))
 				{
-					$options = array(
-						'cost' => $cost,
-						'salt' => $salt
-					);
+					$options['cost'] = $cost;
+
+					if (version_compare(PHP_VERSION, 7, '<'))
+					{
+						$options['salt'] = $salt;
+					}
 
 					return password_hash($password, PASSWORD_BCRYPT, $options);
 				}
