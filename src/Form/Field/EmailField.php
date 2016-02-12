@@ -33,7 +33,7 @@ class EmailField extends TextField
 	{
 		parent::prepare($attrs);
 
-		$attrs['class'] = 'validate-email ' . $attrs['class'];
+		$attrs['type'] = 'email';
 	}
 }
 
