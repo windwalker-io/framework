@@ -21,19 +21,19 @@ if (!interface_exists('JsonSerializable'))
 class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \Countable
 {
 	/**
-	 * Property separator.
-	 *
-	 * @var  string
-	 */
-	protected $separator = '.';
-
-	/**
 	 * Registry data store.
 	 *
 	 * @var    array
 	 * @since  2.0
 	 */
 	protected $data = array();
+
+	/**
+	 * Property separator.
+	 *
+	 * @var  string
+	 */
+	protected $separator = '.';
 
 	/**
 	 * Constructor
@@ -495,7 +495,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
 		foreach ($data as $key => $value)
 		{
-			if ($value === null)
+			if ($value === null || $value === '')
 			{
 				continue;
 			}

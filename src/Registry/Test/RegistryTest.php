@@ -205,11 +205,11 @@ class RegistryTest extends AbstractBaseTestCase
 	{
 		$registry = new Registry;
 
-		$this->assertEquals($registry->clear()->loadFile(__DIR__ . '/Stubs/flower.json', 'json')->get('flower'), 'sakura');
-		$this->assertEquals($registry->clear()->loadFile(__DIR__ . '/Stubs/flower.yml', 'yaml')->get('flower'), 'sakura');
-		$this->assertEquals($registry->clear()->loadFile(__DIR__ . '/Stubs/flower.ini', 'ini')->get('flower'), 'sakura');
-		$this->assertEquals($registry->clear()->loadFile(__DIR__ . '/Stubs/flower.xml', 'xml')->get('flower'), 'sakura');
-		$this->assertEquals($registry->clear()->loadFile(__DIR__ . '/Stubs/flower.php', 'php')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadFile(__DIR__ . '/Stubs/flower.json', 'json')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadFile(__DIR__ . '/Stubs/flower.yml', 'yaml')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadFile(__DIR__ . '/Stubs/flower.ini', 'ini')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadFile(__DIR__ . '/Stubs/flower.xml', 'xml')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadFile(__DIR__ . '/Stubs/flower.php', 'php')->get('flower'), 'sakura');
 	}
 
 	/**
@@ -223,10 +223,10 @@ class RegistryTest extends AbstractBaseTestCase
 	{
 		$registry = new Registry;
 
-		$this->assertEquals($registry->clear()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.json'), 'json')->get('flower'), 'sakura');
-		$this->assertEquals($registry->clear()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.yml'), 'yaml')->get('flower'), 'sakura');
-		$this->assertEquals($registry->clear()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.ini'), 'ini')->get('flower'), 'sakura');
-		$this->assertEquals($registry->clear()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.xml'), 'xml')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.json'), 'json')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.yml'), 'yaml')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.ini'), 'ini')->get('flower'), 'sakura');
+		$this->assertEquals($registry->reset()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.xml'), 'xml')->get('flower'), 'sakura');
 	}
 
 	/**
@@ -243,13 +243,15 @@ class RegistryTest extends AbstractBaseTestCase
 			"foo" : "foo value",
 			"bar" : {
 				"bar1" : "bar value 1",
-				"bar2" : "bar value 2"
+				"bar2" : "bar value 2",
+				"bar3" : "bar value 3"
 			}
 		}';
 		$object2 = '{
 			"foo" : "foo value",
 			"bar" : {
-				"bar2" : "new bar value 2"
+				"bar2" : "new bar value 2",
+				"bar3" : ""
 			}
 		}';
 
@@ -258,8 +260,9 @@ class RegistryTest extends AbstractBaseTestCase
 
 		$registry1->merge($registry2);
 
-		$this->assertEquals($registry1->get('bar.bar2'), 'new bar value 2', 'Line: ' . __LINE__ . '. bar.bar2 shuould be override.');
-		$this->assertEquals($registry1->get('bar.bar1'), 'bar value 1', 'Line: ' . __LINE__ . '. bar.bar1 should not be overrided.');
+		$this->assertEquals('new bar value 2', $registry1->get('bar.bar2'), 'Line: ' . __LINE__ . '. bar.bar2 should be override.');
+		$this->assertEquals('bar value 1', $registry1->get('bar.bar1'), 'Line: ' . __LINE__ . '. bar.bar1 should not be override.');
+		$this->assertSame('bar value 3', $registry1->get('bar.bar3'), 'Line: ' . __LINE__ . '. bar.bar3 should not be override.');
 
 		$registry = new Registry(array('flower' => 'rose', 'honor' => 'Osmanthus month'));
 
