@@ -120,6 +120,35 @@ class Router
 	}
 
 	/**
+	 * hasRoute
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  boolean
+	 */
+	public function hasRoute($name)
+	{
+		return isset($this->routes[$name]);
+	}
+
+	/**
+	 * getRoute
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  Route
+	 */
+	public function getRoute($name)
+	{
+		if ($this->hasRoute($name))
+		{
+			return $this->routes[$name];
+		}
+
+		return null;
+	}
+
+	/**
 	 * addRoutes
 	 *
 	 * @param array $routes

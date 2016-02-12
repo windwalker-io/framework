@@ -146,6 +146,25 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * testHasAndGetRoute
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Router\Router::hasRoutes
+	 * @covers Windwalker\Router\Router::getRoutes
+	 */
+	public function testHasAndGetRoute()
+	{
+		$this->instance->addRoute($route = new Route('foo', '/foo'));
+
+		$this->assertFalse($this->instance->hasRoute('bar'));
+		$this->assertTrue($this->instance->hasRoute('foo'));
+
+		$this->assertNull($this->instance->getRoute('bar'));
+		$this->assertSame($route, $this->instance->getRoute('foo'));
+	}
+
+	/**
 	 * Method to test match().
 	 *
 	 * @return void
