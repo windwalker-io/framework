@@ -9,6 +9,9 @@
 namespace Windwalker\Query\Test;
 
 use Windwalker\Database\Test\AbstractQueryTestCase;
+use Windwalker\Database\Test\TestDsnResolver;
+use Windwalker\Query\ConnectionContainer;
+use Windwalker\Query\Mysql\MysqlQuery;
 use Windwalker\Query\Query;
 use Windwalker\Test\TestHelper;
 
@@ -1191,5 +1194,45 @@ class QueryTest extends AbstractQueryTestCase
 		$this->markTestIncomplete(
 			'This test has not been implemented yet.'
 		);
+	}
+
+	/**
+	 * testSerialize
+	 *
+	 * @return  void
+	 */
+	public function testSerialize()
+	{
+		$dsn = TestDsnResolver::getDsn('mysql');
+
+		if (!$dsn)
+		{
+			$this->markTestSkipped('No DSN to test');
+		}
+
+		$pdo = new \PDO('mysql:host=localhost;', $dsn['user'], $dsn['pass']);
+
+		ConnectionContainer::setConnection('mysql', $pdo);
+
+		$query = new MysqlQuery($pdo);
+
+		$string = serialize($query);
+
+		/** @var Query $query */
+		$query = unserialize($string);
+
+		$this->assertSame($query->getConnection(), $pdo);
+
+		// Test expression
+		$query->expression('CONCAT', array('a', 'b'));
+
+		$string = serialize($query);
+
+		/** @var Query $query */
+		$query = unserialize($string);
+
+		$this->assertSame($query->getConnection(), $pdo);
+
+		ConnectionContainer::setConnection('mysql', null);
 	}
 }

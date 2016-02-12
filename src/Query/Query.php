@@ -1996,7 +1996,7 @@ class Query implements QueryInterface, PreparableInterface
 	 */
 	public function __sleep()
 	{
-		$this->connection = NULL;
+		return array_diff(array_keys(get_object_vars($this)), array('connection'));
 	}
 
 	/**
