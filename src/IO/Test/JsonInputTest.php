@@ -75,6 +75,8 @@ class JsonInputTest extends \PHPUnit_Framework_TestCase
 		);
 
 		// Src from GLOBAL
+		JsonInput::setRawData(null);
+
 		$GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
 		$json = new JsonInput;
 
@@ -89,10 +91,10 @@ class JsonInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\IO\JsonInput::getRaw
+	 * @covers  Windwalker\IO\JsonInput::getRawData()
 	 * @since   2.0
 	 */
-	public function testgetRaw()
+	public function testGetRawData()
 	{
 		$GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
 
@@ -100,7 +102,7 @@ class JsonInputTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(
 			$GLOBALS['HTTP_RAW_POST_DATA'],
-			$json->getRaw()
+			$json->getRawData()
 		);
 	}
 }

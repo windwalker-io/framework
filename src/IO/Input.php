@@ -157,6 +157,13 @@ class Input implements \Serializable, \Countable
 			return $this->inputs[$name];
 		}
 
+		if (in_array(strtolower($name), array('put', 'patch', 'delete', 'link', 'unlink')))
+		{
+			$this->inputs[$name] = new FormDataInput(null, $filter);
+
+			return $this->inputs[$name];
+		}
+
 		return null;
 	}
 
@@ -511,6 +518,10 @@ class Input implements \Serializable, \Countable
 					$this->$global;
 				}
 			}
+
+			$method = $this->getMethod();
+
+			$this->$method;
 
 			$loaded = true;
 		}

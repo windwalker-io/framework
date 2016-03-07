@@ -516,6 +516,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSerialize()
 	{
+		$_SERVER['REQUEST_METHOD'] = 'custom';
+
 		$instance = $this->newInstance(array('foo' => 'bar123'));
 
 		$input = unserialize(serialize($instance));
