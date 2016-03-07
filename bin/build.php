@@ -116,6 +116,10 @@ class Build extends AbstractCliApplication
 
 		$branch = $this->io->getOption('b') ?: $this->io->getOption('branch', 'test');
 
+		$force = $this->io->getOption('f') ? : $this->io->getOption('force', false);
+
+		$force = $force ? ' -f' : false;
+
 		if ($this->tag && !$this->io->getOption('no-replace'))
 		{
 			$this->replaceDocblockTags();
@@ -139,10 +143,10 @@ class Build extends AbstractCliApplication
 
 			$this->exec('git tag ' . $tag);
 
-			$this->exec(sprintf('git push %s %s', $branch, $this->tag));
+			$this->exec(sprintf('git push %s %s' . $force, $branch, $this->tag));
 		}
 
-		$this->exec(sprintf('git push origin %s %s:%s master:master', $tag, $branch, $branch));
+		$this->exec(sprintf('git push origin %s %s:%s master:master' . $force, $tag, $branch, $branch));
 
 		$allows = $this->io->getArguments();
 
