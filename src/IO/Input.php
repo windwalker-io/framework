@@ -159,7 +159,9 @@ class Input implements \Serializable, \Countable
 
 		if (in_array(strtolower($name), array('put', 'patch', 'delete', 'link', 'unlink')))
 		{
-			$this->inputs[$name] = new FormDataInput(null, $filter);
+			$data = (strtolower($this->getMethod()) == strtolower($name)) ? null : array();
+
+			$this->inputs[$name] = new FormDataInput($data, $filter);
 
 			return $this->inputs[$name];
 		}
@@ -448,9 +450,12 @@ class Input implements \Serializable, \Countable
 	 */
 	public function getMethod()
 	{
-		$method = strtoupper($_SERVER['REQUEST_METHOD']);
+		if (isset($_SERVER['REQUEST_METHOD']))
+		{
+			return strtoupper($_SERVER['REQUEST_METHOD']);
+		}
 
-		return $method;
+		return null;
 	}
 
 	/**
@@ -556,5 +561,19 @@ class Input implements \Serializable, \Countable
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Method to set property data
+	 *
+	 * @param   array $data
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setData($data)
+	{
+		$this->data = $data;
+
+		return $this;
 	}
 }

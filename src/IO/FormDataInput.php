@@ -130,12 +130,12 @@ class FormDataInput extends Input
 		$boundary = $matches[1];
 
 		// split content by boundary and get rid of last -- element
-		$a_blocks = preg_split("/-+$boundary/", $input);
+		$aBlocks = preg_split("/-+$boundary/", $input);
 
-		array_pop($a_blocks);
+		array_pop($aBlocks);
 
 		// loop data blocks
-		foreach ($a_blocks as $id => $block)
+		foreach ($aBlocks as $id => $block)
 		{
 			if (empty($block))
 			{
@@ -154,10 +154,13 @@ class FormDataInput extends Input
 			else
 			{
 				// match "name" and optional value in between newline sequences
-				preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+				preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?[\n|\r]$/s', $block, $matches);
 			}
 
-			$data[$matches[1]] = $matches[2];
+			if (isset($matches[1]) && isset($matches[2]))
+			{
+				$data[$matches[1]] = rtrim($matches[2], "\n\r");
+			}
 		}
 
 		return $data;
