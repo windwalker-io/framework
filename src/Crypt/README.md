@@ -85,17 +85,17 @@ But there has a `CipherSimple` are can use if your server is not able to install
 use Windwalker\Crypt\Cipher\CipherBlowfish;
 use Windwalker\Crypt\Crypt;
 
-$crypt = new Crypt(new BlowfishCipher, 'My private key');
+$crypt = new Crypt(new CipherBlowfish, 'My private key');
 
 $encrypted = $crypt->encrypt('My Text');
 
-$bool = $crypt->verify('My Text', $hash, 'My private key'); // True
+$bool = $crypt->verify('My Text', $encrypted, 'My private key'); // True
 ```
 
 Get the plain text back:
 
 ``` php
-$crypt = new Crypt(new BlowfishCipher, 'My private key');
+$crypt = new Crypt(new CipherBlowfish, 'My private key');
 
 $encrypted = $crypt->encrypt('My Text');
 
