@@ -15,13 +15,14 @@ use Windwalker\Form\FilterHelper;
 use Windwalker\Form\Form;
 use Windwalker\Form\Test\Stub\StubFieldDefinition;
 use Windwalker\Form\ValidatorHelper;
+use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
  * Test class of Form
  *
  * @since 2.0
  */
-class FormTest extends \PHPUnit_Framework_TestCase
+class FormTest extends AbstractBaseTestCase
 {
 	/**
 	 * Test instance.
@@ -586,5 +587,45 @@ class FormTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('123', $values['id']);
 		$this->assertEquals('123abc4456qweyui', $values['b']['password']);
+	}
+
+	/**
+	 * testSetAndGetFieldRendererHandler
+	 *
+	 * @return  void
+	 */
+	public function testSetAndGetFieldRendererHandler()
+	{
+		$renderer = function () {
+			return 'Test';
+		};
+
+		$form = new Form;
+		$form->add('test', new TextField);
+
+		$form->setFieldRenderHandler($renderer);
+
+		$this->assertEquals('Test', trim($form->renderFields()));
+
+		$form->setFieldRenderHandler(new FormTestRendererHandlerer);
+
+		$this->assertEquals('Flower', trim($form->renderFields()));
+
+		$this->assertExpectedException(function () use ($form)
+		{
+			$form->setFieldRenderHandler(new \stdClass);
+		}, new \InvalidArgumentException);
+	}
+}
+
+class FormTestRendererHandlerer {
+	public function __invoke()
+	{
+		return $this->render();
+	}
+
+	public function render()
+	{
+		return 'Flower';
 	}
 }

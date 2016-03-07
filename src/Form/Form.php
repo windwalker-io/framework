@@ -63,7 +63,7 @@ class Form implements \IteratorAggregate
 	/**
 	 * Property fieldRenderHandler.
 	 *
-	 * @var  callable
+	 * @var  callable|object
 	 */
 	protected $fieldRenderHandler;
 
@@ -802,7 +802,7 @@ class Form implements \IteratorAggregate
 	/**
 	 * Method to get property FieldRenderHandler
 	 *
-	 * @return  callable
+	 * @return  callable|object
 	 */
 	public function getFieldRenderHandler()
 	{
@@ -812,7 +812,7 @@ class Form implements \IteratorAggregate
 	/**
 	 * Method to set property fieldRenderHandler
 	 *
-	 * @param   callable $fieldRenderHandler
+	 * @param   callable|object $fieldRenderHandler
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
@@ -820,7 +820,7 @@ class Form implements \IteratorAggregate
 	{
 		if (!is_callable($fieldRenderHandler))
 		{
-			throw new \InvalidArgumentException('Field render handler should be callable.');
+			throw new \InvalidArgumentException('Field render handler should be callable or an object with __invoke() method.');
 		}
 
 		$this->fieldRenderHandler = $fieldRenderHandler;
