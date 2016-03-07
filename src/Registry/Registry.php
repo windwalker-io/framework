@@ -21,6 +21,13 @@ if (!interface_exists('JsonSerializable'))
 class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \Countable
 {
 	/**
+	 * Property separator.
+	 *
+	 * @var  string
+	 */
+	protected $separator = '.';
+
+	/**
 	 * Registry data store.
 	 *
 	 * @var    array
@@ -29,11 +36,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	protected $data = array();
 
 	/**
-	 * Property separator.
+	 * Property ignoreValues.
 	 *
-	 * @var  string
+	 * @var  array
 	 */
-	protected $separator = '.';
+	protected $ignoreValues = array(null);
 
 	/**
 	 * Constructor
@@ -136,8 +143,8 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Get a registry value.
 	 *
-	 * @param   string  $path     Registry path (e.g. foo.content.showauthor)
-	 * @param   mixed   $default  Optional default value, returned if the internal value is null.
+	 * @param   string  $path       Registry path (e.g. foo.content.showauthor)
+	 * @param   mixed   $default    Optional default value, returned if the internal value is null.
 	 *
 	 * @return  mixed  Value of entry or null
 	 *
@@ -284,9 +291,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Merge a structure data to a node.
 	 *
-	 * @param   string          $path    The path to merge as root.
-	 * @param   Registry|mixed  $source  Source structure data to merge.
-	 * @param   boolean         $raw     Set to false to convert all object to array.
+	 * @param   string    $path    The path to merge as root.
+	 * @param   Registry  $source  Source structure data to merge.
+	 * @param   boolean   $raw     Set to false to convert all object to array.
 	 *
 	 * @return  static
 	 */
@@ -495,7 +502,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
 		foreach ($data as $key => $value)
 		{
-			if ($value === null || $value === '')
+			if (in_array($value, $this->ignoreValues, true))
 			{
 				continue;
 			}
@@ -766,5 +773,29 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	public function count()
 	{
 		return count($this->data);
+	}
+
+	/**
+	 * Method to get property IgnoreValues
+	 *
+	 * @return  array
+	 */
+	public function getIgnoreValues()
+	{
+		return $this->ignoreValues;
+	}
+
+	/**
+	 * Method to set property ignoreValues
+	 *
+	 * @param   array $ignoreValues
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setIgnoreValues($ignoreValues)
+	{
+		$this->ignoreValues = (array) $ignoreValues;
+
+		return $this;
 	}
 }

@@ -251,6 +251,49 @@ class RegistryTest extends AbstractBaseTestCase
 			"foo" : "foo value",
 			"bar" : {
 				"bar2" : "new bar value 2",
+				"bar3" : null
+			}
+		}';
+
+		$registry1 = new Registry(json_decode($object1));
+		$registry2 = new Registry(json_decode($object2));
+
+		$registry1->merge($registry2);
+
+		$this->assertEquals('new bar value 2', $registry1->get('bar.bar2'), 'Line: ' . __LINE__ . '. bar.bar2 should be override.');
+		$this->assertEquals('bar value 1', $registry1->get('bar.bar1'), 'Line: ' . __LINE__ . '. bar.bar1 should not be override.');
+		$this->assertSame('bar value 3', $registry1->get('bar.bar3'), 'Line: ' . __LINE__ . '. bar.bar3 should not be override.');
+
+		$registry = new Registry(array('flower' => 'rose', 'honor' => 'Osmanthus month'));
+
+		$registry->merge($this->instance);
+
+		$this->assertEquals($registry->get('flower'), 'sakura');
+		$this->assertEquals($registry->get('honor'), 'Osmanthus month');
+	}
+
+	/**
+	 * Method to test merge().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Registry\Registry::merge
+	 */
+	public function testMergeWithIgnoreValues()
+	{
+		// Test recursive merge
+		$object1 = '{
+			"foo" : "foo value",
+			"bar" : {
+				"bar1" : "bar value 1",
+				"bar2" : "bar value 2",
+				"bar3" : "bar value 3"
+			}
+		}';
+		$object2 = '{
+			"foo" : "foo value",
+			"bar" : {
+				"bar2" : "new bar value 2",
 				"bar3" : ""
 			}
 		}';
@@ -258,6 +301,7 @@ class RegistryTest extends AbstractBaseTestCase
 		$registry1 = new Registry(json_decode($object1));
 		$registry2 = new Registry(json_decode($object2));
 
+		$registry1->setIgnoreValues(array(null, ''));
 		$registry1->merge($registry2);
 
 		$this->assertEquals('new bar value 2', $registry1->get('bar.bar2'), 'Line: ' . __LINE__ . '. bar.bar2 should be override.');
