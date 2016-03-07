@@ -12,6 +12,11 @@ namespace Windwalker\Crypt\Cipher;
  * The Simple class.
  * 
  * @since  2.0
+ *
+ * @deprecated  This cipher is not safe.
+ *
+ * @link  https://github.com/ventoviro/windwalker/issues/260
+ * @link  http://www.openwall.com/lists/oss-security/2015/11/08/1
  */
 class CipherSimple implements CipherInterface
 {
