@@ -14,7 +14,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of FormDataInput
  *
- * @since {DEPLOY_VERSION}
+ * @since 2.1.7
  */
 class FormDataInputTest extends \PHPUnit_Framework_TestCase
 {
