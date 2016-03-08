@@ -143,7 +143,7 @@ class Build extends AbstractCliApplication
 
 			$this->exec('git tag ' . $tag);
 
-			$this->exec(sprintf('git push %s %s' . $force, $branch, $this->tag));
+			$this->exec(sprintf('git push origin %s' . $force, $this->tag));
 		}
 
 		$this->exec(sprintf('git push origin %s %s:%s master:master' . $force, $tag, $branch, $branch));
