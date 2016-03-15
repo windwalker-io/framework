@@ -409,7 +409,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		{
 			// Check that $field is in the table.
 
-			if (isset($this->data->$field) && !is_null($this->data->$field))
+			if (isset($this->data->$field) || is_null($this->data->$field))
 			{
 				// Add the search tuple to the query.
 				$query->where($this->db->quoteName($field) . ' = ' . $this->db->quote($value));
