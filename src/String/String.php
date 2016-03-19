@@ -12,6 +12,8 @@ namespace Windwalker\String;
  * The String class.
  * 
  * @since  2.0
+ *
+ * @deprecated  Use StringHelper since PHP7 no longer support scalar type ass class name.
  */
 abstract class String extends StringHelper
 {

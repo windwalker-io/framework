@@ -553,7 +553,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	{
 		// Remove the following lines when you implement this test.
 		$this->markTestSkipped(
-			'A bug that the static $loaded variable has benn set to true.....'
+			'A bug that the static $loaded variable has been set to true.....'
 		);
 
 		$instance = $this->newInstance(array());

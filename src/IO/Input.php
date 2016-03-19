@@ -450,9 +450,12 @@ class Input implements \Serializable, \Countable
 	 */
 	public function getMethod()
 	{
-		$method = strtoupper($_SERVER['REQUEST_METHOD']);
+		if (isset($_SERVER['REQUEST_METHOD']))
+		{
+			return strtoupper($_SERVER['REQUEST_METHOD']);
+		}
 
-		return $method;
+		return null;
 	}
 
 	/**
