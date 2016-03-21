@@ -575,10 +575,10 @@ class PostgresqlTable extends AbstractTable
 
 		$index = new Key;
 
-		$index->setName($name)
-			->setType($type)
-			->setColumns($columns)
-			->setComment($comment);
+		$index->name($name)
+			->type($type)
+			->columns($columns)
+			->comment($comment);
 
 		$this->indexes[] = $index;
 
