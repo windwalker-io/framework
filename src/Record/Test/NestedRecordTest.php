@@ -198,11 +198,13 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 */
 	public function testGetPath()
 	{
-		$path = $this->instance->getPath(5);
+		$path = $this->instance->getPath(5, true);
 
 		$ids = ArrayHelper::getColumn($path, 'id');
+		$paths = ArrayHelper::getColumn($path, 'path');
 
 		$this->assertEquals(array(1, 2, 5), $ids);
+		$this->assertEquals(array('', 'flower', 'flower/sunflower'), $paths);
 	}
 
 	/**
@@ -214,11 +216,21 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 */
 	public function testGetTree()
 	{
-		$tree = $this->instance->getTree(1);
+		$tree = $this->instance->getTree(1, true);
 
 		$ids = array(1, 6, 2, 4, 3, 5, 7);
+		$paths = array(
+			'',
+			'rose',
+			'flower',
+			'flower/olive',
+			'flower/sakura',
+			'flower/sunflower',
+			'rose'
+		);
 
 		$this->assertEquals($ids, ArrayHelper::getColumn($tree, 'id'));
+		$this->assertEquals($paths, ArrayHelper::getColumn($tree, 'path'));
 	}
 
 	/**
