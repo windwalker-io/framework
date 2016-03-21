@@ -44,7 +44,7 @@ class RelationDataMapper extends DataMapper
 	 *
 	 * @return  static
 	 */
-	public static function getInstance($alias, $table, $pk = 'id', DatabaseAdapterInterface $db = null)
+	public static function getInstance($alias = null, $table = null, $pk = 'id', DatabaseAdapterInterface $db = null)
 	{
 		return new static($alias, $table, $pk, $db);
 	}
@@ -65,9 +65,14 @@ class RelationDataMapper extends DataMapper
 
 		$this->tables = new DataSet;
 
-		$this->addTable($alias, $table);
+		if ($alias && $table)
+		{
+			$this->addTable($alias, $table);
+		}
 
 		$this->prepare();
+
+		$this->initialise();
 	}
 
 	/**
