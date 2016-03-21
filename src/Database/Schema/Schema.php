@@ -8,153 +8,158 @@
 
 namespace Windwalker\Database\Command\Schema;
 
+use Windwalker\Database\Command\AbstractTable;
+use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\Key;
+
 /**
  * The Schema class.
- * 
- * @since  2.0
  *
- * @deprecated No longer used.
+ * @method  Column  bit($name)
+ * @method  Column  char($name)
+ * @method  Column  datetime($name)
+ * @method  Column  decimal($name)
+ * @method  Column  double($name)
+ * @method  Column  float($name)
+ * @method  Column  integer($name)
+ * @method  Column  logintext($name)
+ * @method  Column  primary($name)
+ * @method  Column  text($name)
+ * @method  Column  timestamp($name)
+ * @method  Column  tinyint($name)
+ * @method  Column  varchar($name)
+ *
+ * @since  {DEPLOY_VERSION}
  */
 class Schema
 {
 	/**
-	 * Property columns.
+	 * Property table.
 	 *
-	 * @var  Column[]
+	 * @var  AbstractTable
 	 */
-	protected $columns = array();
+	protected $table;
 
 	/**
-	 * Property keys.
+	 * Schema constructor.
 	 *
-	 * @var  array
+	 * @param AbstractTable $table
 	 */
-	protected $keys = array();
-
-	/**
-	 * Property autoIncrement.
-	 *
-	 * @var  int
-	 */
-	protected $autoIncrement = null;
-
-	/**
-	 * Property ifNotExists.
-	 *
-	 * @var  boolean
-	 */
-	protected $ifNotExists = null;
-
-	/**
-	 * Property engine.
-	 *
-	 * @var  string
-	 */
-	protected $engine = null;
-
-	/**
-	 * Property defaultCharset.
-	 *
-	 * @var  string
-	 */
-	protected $defaultCharset = 'utf8';
-
-	/**
-	 * Class init.
-	 *
-	 * @param array   $columns
-	 * @param array   $keys
-	 * @param integer $autoIncrement
-	 * @param string  $engine
-	 * @param string  $defaultCharset
-	 */
-	public function __construct($columns = array(), $keys = array(), $autoIncrement = null, $engine = 'InnoDB', $defaultCharset = 'utf8')
+	public function __construct(AbstractTable $table)
 	{
-		$this->keys           = $keys;
-		$this->engine         = $engine;
-		$this->defaultCharset = $defaultCharset;
-		$this->columns        = $columns;
-		$this->autoIncrement  = $autoIncrement;
+		$this->table = $table;
 	}
 
 	/**
-	 * setColumn
-	 *
-	 * @param Column $column
-	 *
-	 * @return  static
-	 */
-	public function setColumn(Column $column)
-	{
-		$this->columns[$column->getName()] = $column;
-
-		return $this;
-	}
-
-	/**
-	 * getColumn
+	 * addColumn
 	 *
 	 * @param string $name
+	 * @param Column $column
 	 *
 	 * @return  Column
 	 */
-	public function getColumn($name)
+	public function addColumn($name, Column $column)
 	{
-		if (empty($this->columns[$name]))
+		$column->name($name);
+
+		$this->table->addColumn($column);
+
+		return $column;
+	}
+
+	/**
+	 * addIndex
+	 *
+	 * @param string $name
+	 * @param array  $columns
+	 *
+	 * @return  Key
+	 */
+	public function addIndex($name = null, $columns = null)
+	{
+		// Old style B/C
+		if (in_array($name, array(Key::TYPE_INDEX, Key::TYPE_PRIMARY, Key::TYPE_UNIQUE)))
 		{
-			return null;
+			$ref = new \ReflectionClass('Windwalker\Database\Schema\Key');
+
+			$this->getTable()->addIndex($key = $ref->newInstanceArgs(func_get_args()));
+
+			return $key;
 		}
 
-		return $this->columns[$name];
+		$this->addIndex($key = new Key(Key::TYPE_INDEX, $name, $columns));
+
+		return $key;
 	}
 
 	/**
-	 * Method to get property Columns
+	 * addUniqueKey
 	 *
-	 * @return  array
+	 * @param string $name
+	 * @param array  $columns
+	 *
+	 * @return  Key
 	 */
-	public function getColumns()
+	public function addUniqueKey($name, $columns = array())
 	{
-		return $this->columns;
+		return $this->getTable()->addIndex(Key::TYPE_UNIQUE, $name, $columns);
 	}
 
 	/**
-	 * Method to set property columns
+	 * addPrimaryKey
 	 *
-	 * @param   array $columns
+	 * @param string $name
+	 * @param array  $columns
+	 *
+	 * @return  Key
+	 */
+	public function addPrimaryKey($name, $columns)
+	{
+		return $this->getTable()->addIndex(Key::TYPE_PRIMARY, $name, $columns);
+	}
+
+	/**
+	 * is triggered when invoking inaccessible methods in an object context.
+	 *
+	 * @param $name      string
+	 * @param $arguments array
+	 *
+	 * @return mixed
+	 */
+	public function __call($name, $arguments)
+	{
+		$class = 'Windwalker\Database\Schema\Column\\' . ucfirst($name);
+
+		if (class_exists($class))
+		{
+			$column = array_shift($arguments);
+
+			return $this->addColumn($column, new $class);
+		}
+
+		throw new \BadMethodCallException(sprintf('DataType or index: %s not exists.', $name));
+	}
+
+	/**
+	 * Method to get property Table
+	 *
+	 * @return  AbstractTable
+	 */
+	public function getTable()
+	{
+		return $this->table;
+	}
+
+	/**
+	 * Method to set property table
+	 *
+	 * @param   AbstractTable $table
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setColumns($columns)
+	public function setTable($table)
 	{
-		foreach ($columns as $column)
-		{
-			$this->setColumn($column);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Method to get property Keys
-	 *
-	 * @return  array
-	 */
-	public function getKeys()
-	{
-		return $this->keys;
-	}
-
-	/**
-	 * Method to set property keys
-	 *
-	 * @param   array $keys
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setKeys($keys)
-	{
-		$this->keys = $keys;
+		$this->table = $table;
 
 		return $this;
 	}
