@@ -33,7 +33,7 @@ class TextField extends AbstractField
 	 */
 	public function prepare(&$attrs)
 	{
-		$attrs['type']     = 'text';
+		$attrs['type']     = $this->type ? : 'text';
 		$attrs['name']     = $this->getFieldName();
 		$attrs['id']       = $this->getAttribute('id', $this->getId());
 		$attrs['class']    = $this->getAttribute('class');
