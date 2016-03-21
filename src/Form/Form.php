@@ -135,8 +135,10 @@ class Form implements \IteratorAggregate
 	 * addFields
 	 *
 	 * @param \Traversable|\SimpleXMLElement $fields
+	 * @param string                         $fieldset
+	 * @param string                         $group
 	 *
-	 * @return  static
+	 * @return static
 	 */
 	public function addFields($fields, $fieldset = null, $group = null)
 	{
@@ -161,10 +163,12 @@ class Form implements \IteratorAggregate
 	 *
 	 * @param string        $name
 	 * @param AbstractField $field
+	 * @param string        $fieldset
+	 * @param string        $group
 	 *
-	 * @return  AbstractField|ListField
+	 * @return AbstractField|ListField
 	 */
-	public function add($name, AbstractField $field = null)
+	public function add($name, AbstractField $field = null, $fieldset = null, $group = null)
 	{
 		if ($field)
 		{
@@ -175,7 +179,7 @@ class Form implements \IteratorAggregate
 			$field = $name;
 		}
 
-		return $this->addField($field);
+		return $this->addField($field, $fieldset, $group);
 	}
 
 	/**
