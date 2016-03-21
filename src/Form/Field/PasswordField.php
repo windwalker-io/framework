@@ -34,7 +34,6 @@ class PasswordField extends TextField
 		parent::prepare($attrs);
 
 		$attrs['autocomplete'] = $this->getAttribute('autocomplete');
-		$attrs['type'] = 'password';
 	}
 }
 

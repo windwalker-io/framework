@@ -32,8 +32,6 @@ class EmailField extends TextField
 	public function prepare(&$attrs)
 	{
 		parent::prepare($attrs);
-
-		$attrs['type'] = 'email';
 	}
 }
 
