@@ -93,14 +93,14 @@ class NestedRecord extends Record
 	/**
 	 * Method to get an array of nodes from a given node to its root.
 	 *
-	 * @param   integer  $pk  Primary key of the node for which to get the path.
+	 * @param   integer  $pk         Primary key of the node for which to get the path.
+	 * @param   boolean  $allFields  Get all fields.
 	 *
-	 * @return  mixed    An array of node objects including the start node.
+	 * @return mixed An array of node objects including the start node.
 	 *
 	 * @since   2.0
-	 * @throws  \RuntimeException on database error
 	 */
-	public function getPath($pk = null)
+	public function getPath($pk = null, $allFields = false)
 	{
 		$k = $this->getKeyName();
 		$pk = (is_null($pk)) ? $this->$k : $pk;
@@ -113,20 +113,25 @@ class NestedRecord extends Record
 			->where('n.' . $k . ' = ' . (int) $pk)
 			->order('p.lft');
 
+		if ($allFields)
+		{
+			$query->select('p.*');
+		}
+
 		return $this->db->getReader($query)->loadObjectList();
 	}
 
 	/**
 	 * Method to get a node and all its child nodes.
 	 *
-	 * @param   integer  $pk  Primary key of the node for which to get the tree.
+	 * @param   integer  $pk         Primary key of the node for which to get the tree.
+	 * @param   boolean  $allFields  Get all fields.
 	 *
-	 * @return  mixed    Boolean false on failure or array of node objects on success.
+	 * @return mixed Boolean false on failure or array of node objects on success.
 	 *
 	 * @since   2.0
-	 * @throws  \RuntimeException on database error.
 	 */
-	public function getTree($pk = null)
+	public function getTree($pk = null, $allFields = false)
 	{
 		$k = $this->getKeyName();
 		$pk = (is_null($pk)) ? $this->$k : $pk;
@@ -138,6 +143,11 @@ class NestedRecord extends Record
 			->where('n.lft BETWEEN p.lft AND p.rgt')
 			->where('p.' . $k . ' = ' . $pk)
 			->order('n.lft');
+
+		if ($allFields)
+		{
+			$query->select('n.*');
+		}
 
 		return $this->db->getReader($query)->loadObjectList();
 	}
@@ -337,6 +347,8 @@ class NestedRecord extends Record
 		}
 
 		$result = parent::store($updateNulls);
+
+		$this->rebuildPath();
 
 		return $result;
 	}

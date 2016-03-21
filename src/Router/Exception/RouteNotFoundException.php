@@ -8,6 +8,8 @@
 
 namespace Windwalker\Router\Exception;
 
+use Exception;
+
 /**
  * The RouteNotFoundException class.
  * 
@@ -15,4 +17,15 @@ namespace Windwalker\Router\Exception;
  */
 class RouteNotFoundException extends \RuntimeException
 {
+	/**
+	 * RouteNotFoundException constructor.
+	 *
+	 * @param string    $message
+	 * @param int       $code
+	 * @param Exception $previous
+	 */
+	public function __construct($message = '', $code = 404, Exception $previous = null)
+	{
+		parent::__construct($message, $code, $previous);
+	}
 }

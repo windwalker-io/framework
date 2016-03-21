@@ -25,6 +25,13 @@ class TextareaField extends TextField
 	protected $type = 'textarea';
 
 	/**
+	 * Property element.
+	 *
+	 * @var  string
+	 */
+	protected $element = 'textarea';
+
+	/**
 	 * prepareRenderInput
 	 *
 	 * @param array $attrs
@@ -56,7 +63,7 @@ class TextareaField extends TextField
 	 */
 	public function buildInput($attrs)
 	{
-		return new HtmlElement('textarea', $this->getValue(), $attrs);
+		return new HtmlElement($this->element, $this->getValue(), $attrs);
 	}
 }
 

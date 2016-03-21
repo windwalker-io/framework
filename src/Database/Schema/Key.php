@@ -59,6 +59,22 @@ class Key
 	protected $comment = '';
 
 	/**
+	 * Key constructor.
+	 *
+	 * @param string $name
+	 * @param int    $type
+	 * @param array  $columns
+	 * @param string $comment
+	 */
+	public function __construct($type = null, $name = null, $columns = array(), $comment = null)
+	{
+		$this->name    = $name;
+		$this->type    = $type;
+		$this->columns = $columns;
+		$this->comment = $comment;
+	}
+
+	/**
 	 * Method to get property Name
 	 *
 	 * @return  string
@@ -75,7 +91,7 @@ class Key
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setName($name)
+	public function name($name)
 	{
 		$this->name = $name;
 
@@ -99,7 +115,7 @@ class Key
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setType($type)
+	public function type($type)
 	{
 		$this->type = $type;
 
@@ -123,7 +139,7 @@ class Key
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setColumns($columns)
+	public function columns($columns)
 	{
 		$this->columns = $columns;
 
@@ -147,7 +163,7 @@ class Key
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setComment($comment)
+	public function comment($comment)
 	{
 		$this->comment = $comment;
 

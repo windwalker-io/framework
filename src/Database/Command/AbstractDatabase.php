@@ -33,6 +33,20 @@ abstract class AbstractDatabase
 	protected $db;
 
 	/**
+	 * Property tablesCache.
+	 *
+	 * @var  array
+	 */
+	protected static $tablesCache = array();
+
+	/**
+	 * Property tableDetailsCache.
+	 *
+	 * @var  array
+	 */
+	protected static $tableDetailsCache = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string         $database
@@ -170,6 +184,17 @@ abstract class AbstractDatabase
 		$this->db = $db;
 
 		return $this;
+	}
+
+	/**
+	 * resetCache
+	 *
+	 * @return  void
+	 */
+	public static function resetCache()
+	{
+		static::$tablesCache = array();
+		static::$tableDetailsCache = array();
 	}
 }
 

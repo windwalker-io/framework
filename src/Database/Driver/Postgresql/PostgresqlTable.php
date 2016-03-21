@@ -198,6 +198,9 @@ class PostgresqlTable extends AbstractTable
 			$this->create($ifNotExists, $options);
 		}
 
+		$database = $this->db->getDatabase();
+		$database::resetCache();
+
 		return $this;
 	}
 
@@ -561,21 +564,28 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function addIndex($type, $name = null, $columns = array(), $comment = null, $options = array())
 	{
-		if (!$columns)
+		if (!$type instanceof Key)
 		{
-			throw new \InvalidArgumentException('No columns given.');
+			if (!$columns)
+			{
+				throw new \InvalidArgumentException('No columns given.');
+			}
+
+			$columns = (array) $columns;
+
+			$name = $name ? : $columns[0];
+
+			$index = new Key;
+
+			$index->name($name)
+				->type($type)
+				->columns($columns)
+				->comment($comment);
 		}
-
-		$columns = (array) $columns;
-
-		$name = $name ? : $columns[0];
-
-		$index = new Key;
-
-		$index->setName($name)
-			->setType($type)
-			->setColumns($columns)
-			->setComment($comment);
+		else
+		{
+			$index = $type;
+		}
 
 		$this->indexes[] = $index;
 

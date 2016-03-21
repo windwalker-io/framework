@@ -32,6 +32,13 @@ abstract class AbstractField
 	protected $type = '';
 
 	/**
+	 * Property element.
+	 *
+	 * @var  string
+	 */
+	protected $element = 'input';
+
+	/**
 	 * Property name.
 	 *
 	 * @var  string
@@ -198,7 +205,7 @@ abstract class AbstractField
 	 */
 	public function buildInput($attrs)
 	{
-		return new HtmlElement('input', null, $attrs);
+		return new HtmlElement($this->element, null, $attrs);
 	}
 
 	/**
