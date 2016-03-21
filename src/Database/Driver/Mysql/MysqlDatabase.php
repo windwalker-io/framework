@@ -19,13 +19,6 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
 class MysqlDatabase extends AbstractDatabase
 {
 	/**
-	 * Property tablesCache.
-	 *
-	 * @var  array
-	 */
-	protected static $tablesCache = array();
-
-	/**
 	 * select
 	 *
 	 * @return  static
@@ -150,9 +143,18 @@ class MysqlDatabase extends AbstractDatabase
 	 */
 	public function getTableDetails()
 	{
+		if (isset(static::$tableDetailsCache[$this->database]))
+		{
+			return static::$tableDetailsCache[$this->database];
+		}
+
 		$query = MysqlQueryBuilder::showDbTables($this->database);
 
-		return $this->db->setQuery($query)->loadAll('Name');
+		$details = $this->db->setQuery($query)->loadAll('Name');
+
+		static::$tableDetailsCache[$this->database] = $details;
+
+		return $details;
 	}
 
 	/**
@@ -164,13 +166,11 @@ class MysqlDatabase extends AbstractDatabase
 	 */
 	public function getTableDetail($table)
 	{
+		$tables = $this->getTableDetails();
+		
 		$table = $this->db->replacePrefix($table);
 
-		$query = MysqlQueryBuilder::showDbTables($this->database, 'Name = ' . $this->db->quote($table));
-
-		$table = $this->db->setQuery($query)->loadOne();
-
-		if (!$table)
+		if (!isset($tables[$table]))
 		{
 			return false;
 		}
