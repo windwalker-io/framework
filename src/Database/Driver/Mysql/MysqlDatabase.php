@@ -152,9 +152,7 @@ class MysqlDatabase extends AbstractDatabase
 
 		$details = $this->db->setQuery($query)->loadAll('Name');
 
-		static::$tableDetailsCache[$this->database] = $details;
-
-		return $details;
+		return static::$tableDetailsCache[$this->database] = $details;
 	}
 
 	/**

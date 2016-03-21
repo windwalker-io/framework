@@ -198,6 +198,9 @@ class PostgresqlTable extends AbstractTable
 			$this->create($ifNotExists, $options);
 		}
 
+		$database = $this->db->getDatabase();
+		$database::resetCache();
+
 		return $this;
 	}
 

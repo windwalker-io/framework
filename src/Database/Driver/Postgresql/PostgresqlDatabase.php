@@ -19,13 +19,6 @@ use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 class PostgresqlDatabase extends AbstractDatabase
 {
 	/**
-	 * Property tablesCache.
-	 *
-	 * @var  array
-	 */
-	protected static $tablesCache = array();
-
-	/**
 	 * select
 	 *
 	 * @return  static
@@ -169,9 +162,16 @@ class PostgresqlDatabase extends AbstractDatabase
 	 */
 	public function getTableDetails()
 	{
+		if (isset(static::$tableDetailsCache[$this->database]))
+		{
+			return static::$tableDetailsCache[$this->database];
+		}
+
 		$query = PostgresqlQueryBuilder::showDbTables($this->database);
 
-		return $this->db->setQuery($query)->loadAll('Name');
+		$details = $this->db->setQuery($query)->loadAll('Name');
+
+		return static::$tableDetailsCache[$this->database] = $details;
 	}
 
 	/**
@@ -183,13 +183,11 @@ class PostgresqlDatabase extends AbstractDatabase
 	 */
 	public function getTableDetail($table)
 	{
+		$tables = $this->getTableDetails();
+
 		$table = $this->db->replacePrefix($table);
 
-		$query = PostgresqlQueryBuilder::showDbTables($this->database, 'table_name = ' . $this->db->quote($table));
-
-		$table = $this->db->setQuery($query)->loadOne();
-
-		if (!$table)
+		if (!isset($tables[$table]))
 		{
 			return false;
 		}
