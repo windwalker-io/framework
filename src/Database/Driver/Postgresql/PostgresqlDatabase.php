@@ -192,7 +192,7 @@ class PostgresqlDatabase extends AbstractDatabase
 			return false;
 		}
 
-		return $table;
+		return $tables[$table];
 	}
 
 	/**

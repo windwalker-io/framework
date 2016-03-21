@@ -173,7 +173,7 @@ class MysqlDatabase extends AbstractDatabase
 			return false;
 		}
 
-		return $table;
+		return $tables[$table];
 	}
 
 	/**
