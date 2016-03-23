@@ -29,7 +29,7 @@ use Windwalker\Database\Schema\Key;
  * @method  Column  tinyint($name)
  * @method  Column  varchar($name)
  *
- * @since  {DEPLOY_VERSION}
+ * @since  2.1.8
  */
 class Schema
 {
