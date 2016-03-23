@@ -14,6 +14,42 @@ Add this to the require block in your `composer.json`.
 }
 ```
 
+## Simple Template Engine
+
+Simple variable replace.
+
+``` php
+use Windwalker\String\SimpleTemplate;
+
+$string = 'Hello my name is: {{ name }}~~~!!!';
+
+SimpleTemplate::render($string, array('name' => 'Simon')); // Hello my name is Simon~~~!!!
+```
+
+Multi-level variable.
+
+``` php
+$string = 'Hello my name is: {{ user.name }} and ID is: {{ user.id }}~~~!!!';
+
+$array = array(
+    'user' => array(
+        'name' => 'Simon',
+        'id' => 123
+    )
+);
+
+SimpleTemplate::render($string, $array); // Hello my name is Simon and ID is: 123~~~!!!
+```
+
+Custom Tags:
+
+
+``` php
+$string = 'Hello my name is: {$ name $}~~~!!!';
+
+SimpleTemplate::render($string, array('name' => 'Simon'), array('{$', '$}'); // Hello my name is Simon~~~!!!
+```
+
 ## Utf8String
 
 Utf8String is a wrap of `phputf8` library:
@@ -113,40 +149,6 @@ StringHelper::quote('foo', array('{{', '}}')); // {{foo}}
 
 // Backquote
 StringHelper::backquote('foo'); // `foo`
-```
-
-### Simple Template Engine
-
-Simple variable replace.
-
-``` php
-$string = 'Hello my name is: {{ name }}~~~!!!';
-
-StringHelper::parseVariabe($string, array('name' => 'Simon')); // Hello my name is Simon~~~!!!
-```
-
-Multi-level variable.
-
-``` php
-$string = 'Hello my name is: {{ user.name }} and ID is: {{ user.id }}~~~!!!';
-
-$array = array(
-    'user' => array(
-        'name' => 'Simon',
-        'id' => 123
-    )
-);
-
-StringHelper::parseVariabe($string, $array); // Hello my name is Simon and ID is: 123~~~!!!
-```
-
-Custom Tags:
-
-
-``` php
-$string = 'Hello my name is: {$ name $}~~~!!!';
-
-StringHelper::parseVariabe($string, array('name' => 'Simon'), array('{$', '$}'); // Hello my name is Simon~~~!!!
 ```
 
 ### More Methods
