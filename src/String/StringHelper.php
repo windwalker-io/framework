@@ -110,34 +110,12 @@ abstract class StringHelper
 	 * @param   array  $tags   The variable tags.
 	 *
 	 * @return  string Replaced template.
+	 *
+	 * @deprecated  3.0  Use SimpleTemplate::render() instead.
 	 */
 	public static function parseVariable($string, $data = array(), $tags = array('{{', '}}'))
 	{
-		$defaultTags = array('{{', '}}');
-
-		$tags = (array) $tags + $defaultTags;
-
-		list($begin, $end) = $tags;
-
-		$regex = preg_quote($begin) . '\s*(.+?)\s*' . preg_quote($end);
-
-		return preg_replace_callback(
-			chr(1) . $regex . chr(1),
-			function($match) use ($data)
-			{
-				$return = ArrayHelper::getByPath($data, $match[1]);
-
-				if (is_array($return) || is_object($return))
-				{
-					return print_r($return, 1);
-				}
-				else
-				{
-					return $return;
-				}
-			},
-			$string
-		);
+		return SimpleTemplate::render($string, $data, $tags);
 	}
 
 	/**
