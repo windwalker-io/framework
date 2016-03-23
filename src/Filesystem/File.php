@@ -128,7 +128,7 @@ class File
 			}
 			else
 			{
-				throw new FilesystemException($dest . ' has exists, copy faieed.');
+				throw new FilesystemException($dest . ' has exists, copy failed.');
 			}
 		}
 
