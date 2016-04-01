@@ -234,6 +234,8 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * @return  boolean
 	 *
 	 * @since   2.0
+	 *
+	 * @deprecated  Use hasField() instead.
 	 */
 	public function exists($key)
 	{
@@ -917,7 +919,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetExists($offset)
 	{
-		return $this->exists($offset);
+		return $this->hasField($offset);
 	}
 
 	/**
