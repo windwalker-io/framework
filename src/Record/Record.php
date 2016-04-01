@@ -13,7 +13,6 @@ use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherInterface;
 use Windwalker\Event\Event;
-use Windwalker\Event\EventInterface;
 use Windwalker\Event\ListenerMapper;
 use Windwalker\Query\Query;
 use Windwalker\Record\Exception\NoResultException;
@@ -57,7 +56,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * @var    boolean
 	 * @since  2.0
 	 */
-	protected $autoIncrement = true;
+	protected $autoIncrement = null;
 
 	/**
 	 * Property aliases.
@@ -116,19 +115,25 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		$this->db    = $db;
 		$this->data  = new \stdClass;
 
-		// Set the key to be an array.
-		if (is_string($keys))
+		if (!$this->keys)
 		{
-			$keys = array($keys);
-		}
-		elseif (is_object($keys))
-		{
-			$keys = (array) $keys;
+			// Set the key to be an array.
+			if (is_string($keys))
+			{
+				$keys = array($keys);
+			}
+			elseif (is_object($keys))
+			{
+				$keys = (array) $keys;
+			}
+
+			$this->keys = $keys;
 		}
 
-		$this->keys = $keys;
-
-		$this->autoIncrement = (count($keys) == 1) ? true : false;
+		if ($this->autoIncrement === null)
+		{
+			$this->autoIncrement = (count($keys) == 1) ? true : false;
+		}
 
 		// Initialise the table properties.
 		$fields = $this->getFields();
@@ -1022,6 +1027,30 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	public function setDispatcher(DispatcherInterface $dispatcher)
 	{
 		$this->dispatcher = $dispatcher;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Db
+	 *
+	 * @return  AbstractDatabaseDriver
+	 */
+	public function getDb()
+	{
+		return $this->db;
+	}
+
+	/**
+	 * Method to set property db
+	 *
+	 * @param   AbstractDatabaseDriver $db
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDb($db)
+	{
+		$this->db = $db;
 
 		return $this;
 	}
