@@ -43,7 +43,7 @@ class TextField extends AbstractField
 		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
-		$attrs['value']    = $this->getValue();
+		$attrs['value']    = $this->escape($this->getValue());
 		$attrs['required'] = $this->required;
 
 		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));

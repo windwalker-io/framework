@@ -935,4 +935,18 @@ abstract class AbstractField
 
 		return $this;
 	}
+
+	/**
+	 * Escape html string.
+	 *
+	 * @param   string  $text
+	 *
+	 * @return  string
+	 *
+	 * @since  2.1.9
+	 */
+	public function escape($text)
+	{
+		return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+	}
 }

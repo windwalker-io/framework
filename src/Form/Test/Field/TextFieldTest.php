@@ -72,7 +72,7 @@ class TextFieldTest extends AbstractDomTestCase
 	public function testRender()
 	{
 		$html = <<<HTML
-<input type="text" name="flower" id="test-field" class="stub-flower" placeholder="th" size="60" maxlength="10" readonly="readonly" disabled="disabled" onchange="javascript:void(0);" data-test-element />
+<input type="text" name="flower" id="test-field" class="stub-flower" placeholder="th" size="60" maxlength="10" readonly="readonly" disabled="disabled" onchange="javascript:void(0);" value="" data-test-element />
 HTML;
 
 		$this->assertDomStringEqualsDomString($html, $this->instance->renderInput());
