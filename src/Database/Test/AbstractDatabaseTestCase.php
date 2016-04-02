@@ -135,9 +135,51 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 
 		$db->select($dbname);
 
-		$queries = file_get_contents(__DIR__ . '/Stub/' . static::$driver . '.sql');
+		static::setupFixtures();
+	}
 
-		DatabaseHelper::batchQuery($db, $queries);
+	/**
+	 * getInstallSql
+	 *
+	 * @return  string
+	 */
+	protected static function getSetupSql()
+	{
+		return file_get_contents(__DIR__ . '/Stub/' . static::$driver . '.sql');
+	}
+
+	/**
+	 * setupFixtures
+	 *
+	 * @return  void
+	 */
+	protected static function setupFixtures()
+	{
+		$queries = static::getSetupSql();
+
+		DatabaseHelper::batchQuery(static::$dbo, $queries);
+	}
+
+	/**
+	 * getTearDownSql
+	 *
+	 * @return  string
+	 */
+	protected static function getTearDownSql()
+	{
+		return 'DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname);
+	}
+
+	/**
+	 * tearDownFixtures
+	 *
+	 * @return  void
+	 */
+	protected function tearDownFixtures()
+	{
+		$queries = static::getTearDownSql();
+
+		DatabaseHelper::batchQuery(static::$dbo, $queries);
 	}
 
 	/**
@@ -152,7 +194,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 			return;
 		}
 
-		static::$debug or self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname))->execute();
+		static::$debug or static::tearDownFixtures();
 
 		self::$dbo = null;
 	}
@@ -167,7 +209,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 			return;
 		}
 
-		static::$debug or self::$dbo->setQuery('DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname))->execute();
+		static::$debug or static::tearDownFixtures();
 
 		self::$dbo = null;
 	}
