@@ -566,7 +566,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 				throw new \RuntimeException('Session is not active.');
 			}
 
-			return false;
+			return array();
 		}
 
 		return $this->getBag($namespace)->all();
@@ -776,7 +776,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function getIterator($namespace = 'default')
 	{
-		return new \ArrayIterator($this->getAll($namespace));
+		$array = (array) $this->getAll($namespace);
+
+		return new \ArrayIterator($array);
 	}
 
 	/**
