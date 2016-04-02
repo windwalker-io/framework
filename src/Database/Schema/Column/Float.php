@@ -12,27 +12,12 @@ use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\DataType;
 
 /**
- * The Varchar class.
+ * The Float class.
  * 
  * @since  2.0
+ *
+ * @deprecated  3.0  Use FloatType instead.
  */
-class Float extends Column
+class Float extends FloatType
 {
-	/**
-	 * Class init.
-	 *
-	 * @param string $name
-	 * @param string $length
-	 * @param bool   $signed
-	 * @param bool   $allowNull
-	 * @param string $default
-	 * @param string $comment
-	 * @param array  $options
-	 */
-	public function __construct($name = null, $length = null, $signed = false, $allowNull = false, $default = null, $comment = '', $options = array())
-	{
-		$options['length'] = $length;
-
-		parent::__construct($name, DataType::FLOAT, $signed, $allowNull, $default, $comment, $options);
-	}
 }
