@@ -165,12 +165,48 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 		$headers = $this->instance->getResponse()->sentHeaders;
 
 		$array = array(
-			'HTTP/1.1 303 See other',
+			'HTTP/2.0 303 See Other',
 			'Location: http://foo.com/foo',
 			'Content-Type: text/html; charset=utf-8'
 		);
 
 		$this->assertEquals($array, $headers);
+
+		// Boolean
+		$this->instance->getResponse()->sentHeaders = array();
+
+		$this->instance->redirect('/foo', true);
+
+		$headers = $this->instance->getResponse()->sentHeaders;
+
+		$this->assertEquals('HTTP/2.0 301 Moved Permanently', $headers[0]);
+
+		// Code
+		$this->instance->getResponse()->sentHeaders = array();
+
+		$this->instance->redirect('/foo', 307);
+
+		$headers = $this->instance->getResponse()->sentHeaders;
+
+		$this->assertEquals('HTTP/2.0 307 Temporary Redirect', $headers[0]);
+
+		// String
+		$this->instance->getResponse()->sentHeaders = array();
+
+		$this->instance->redirect('/foo', 305);
+
+		$headers = $this->instance->getResponse()->sentHeaders;
+
+		$this->assertEquals('HTTP/2.0 305 Use Proxy', $headers[0]);
+
+		// Other
+		$this->instance->getResponse()->sentHeaders = array();
+
+		$this->instance->redirect('/foo', 'foo');
+
+		$headers = $this->instance->getResponse()->sentHeaders;
+
+		$this->assertEquals('HTTP/2.0 301 Moved Permanently', $headers[0]);
 	}
 
 	/**

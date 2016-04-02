@@ -52,6 +52,24 @@ abstract class AbstractWebApplication extends AbstractApplication
 	protected $uri = null;
 
 	/**
+	 * Redirect HTTP codes.
+	 *
+	 * @var    array
+	 * @since  2.1.9
+	 */
+	protected $redirectCodes = array(
+		300 => 'HTTP/2.0 300 Multiple Choices',
+		301 => 'HTTP/2.0 301 Moved Permanently',
+		302 => 'HTTP/2.0 302 Found',
+		303 => 'HTTP/2.0 303 See Other',
+		304 => 'Not Modified',
+		305 => 'HTTP/2.0 305 Use Proxy',
+		306 => 'HTTP/2.0 306 (Unused)',
+		307 => 'HTTP/2.0 307 Temporary Redirect',
+		308 => 'Permanent Redirect'
+	);
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param   Input              $input        An optional argument to provide dependency injection for the application's
@@ -152,14 +170,14 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * or "303 See Other" code in the header pointing to the new location. If the headers have already been
 	 * sent this will be accomplished using a JavaScript statement.
 	 *
-	 * @param   string   $url    The URL to redirect to. Can only be http/https URL
-	 * @param   boolean  $moved  True if the page is 301 Permanently Moved, otherwise 303 See Other is assumed.
+	 * @param   string       $url   The URL to redirect to. Can only be http/https URL
+	 * @param   boolean|int  $code  True if the page is 301 Permanently Moved, otherwise 303 See Other is assumed.
 	 *
 	 * @return  void
 	 *
 	 * @since   2.0
 	 */
-	public function redirect($url, $moved = false)
+	public function redirect($url, $code = 303)
 	{
 		// Check for relative internal links.
 		if (preg_match('#^index\.php#', $url))
@@ -219,7 +237,12 @@ abstract class AbstractWebApplication extends AbstractApplication
 			else
 			{
 				// All other cases use the more efficient HTTP header for redirection.
-				$this->response->header($moved ? 'HTTP/1.1 301 Moved Permanently' : 'HTTP/1.1 303 See other');
+				if (!array_key_exists((int) $code, $this->redirectCodes))
+				{
+					$code = $code ? 301 : 303;
+				}
+
+				$this->response->header($this->redirectCodes[$code]);
 				$this->response->header('Location: ' . $url);
 				$this->response->header('Content-Type: text/html; charset=' . $this->response->getCharSet());
 			}
