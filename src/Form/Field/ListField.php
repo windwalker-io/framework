@@ -119,13 +119,30 @@ class ListField extends AbstractField
 	 * @param Option $option
 	 * @param string $group
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
 	public function addOption(Option $option, $group = null)
 	{
 		$options = array($option);
 
 		$this->setOptions($options, $group);
+
+		return $this;
+	}
+
+	/**
+	 * option
+	 *
+	 * @param string $text
+	 * @param string $value
+	 * @param array  $attribs
+	 * @param string $group
+	 *
+	 * @return static
+	 */
+	public function option($text = null, $value = null, $attribs = array(), $group = null)
+	{
+		$this->addOption(new Option($text, $value, $attribs), $group);
 
 		return $this;
 	}
