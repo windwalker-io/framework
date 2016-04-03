@@ -33,6 +33,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$data = new \stdClass;
 		$data->catid = 3;
 		$data->title = 'Sakura';
+		$data->meaning = '';
 		$data->params = $compare;
 
 		$writer->insertOne('#__flower', $data, 'id');
@@ -50,6 +51,8 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$data = array();
 		$data['catid'] = 4;
 		$data['title'] = 'Sunflower';
+		$data['meaning'] = '';
+		$data['params'] = '';
 
 		$writer->insertOne('#__flower', $data, 'id');
 
@@ -78,6 +81,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$data = new \stdClass;
 		$data->id = 86;
 		$data->title = 'Sakura2';
+		$data->meaning = '';
 		$data->params = $compare;
 
 		$writer->updateOne('#__flower', $data, 'id');
@@ -92,6 +96,8 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$data['id'] = 87;
 		$data['catid'] = 5;
 		$data['title'] = 'Sunflower2';
+		$data['meaning'] = '';
+		$data['params'] = '';
 
 		$writer->updateOne('#__flower', $data, 'id');
 
@@ -128,6 +134,8 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$data = new \stdClass;
 		$data->catid = 3;
 		$data->title = 'Sakura';
+		$data->meaning = '';
+		$data->params = '';
 
 		$writer->saveOne('#__flower', $data, 'id');
 
@@ -144,6 +152,8 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$data['id'] = 88;
 		$data['catid'] = 3;
 		$data['title'] = 'Sakura2';
+		$data['meaning'] = '';
+		$data['params'] = '';
 
 		$writer->saveOne('#__flower', $data, 'id');
 
@@ -165,8 +175,8 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$writer = $this->db->getWriter();
 
 		$dataSet = array(
-			array('title' => 'Foo', 'catid' => 6),
-			array('title' => 'Bar', 'catid' => 6),
+			array('title' => 'Foo', 'catid' => 6, 'meaning' => '', 'params' => ''),
+			array('title' => 'Bar', 'catid' => 6, 'meaning' => '', 'params' => ''),
 		);
 
 		$writer->insertMultiple('#__flower', $dataSet, 'id');
@@ -190,8 +200,8 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$writer = $this->db->getWriter();
 
 		$dataSet = array(
-			array('id' => 89, 'title' => 'Foo2', 'catid' => 6),
-			array('id' => 90, 'title' => 'Bar2', 'catid' => 6),
+			array('id' => 89, 'title' => 'Foo2', 'catid' => 6, 'meaning' => '', 'params' => ''),
+			array('id' => 90, 'title' => 'Bar2', 'catid' => 6, 'meaning' => '', 'params' => ''),
 		);
 
 		$writer->updateMultiple('#__flower', $dataSet, 'id');
@@ -294,7 +304,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 	 */
 	public function testInsertId()
 	{
-		$this->db->setQuery('INSERT INTO #__flower (catid, title) VALUES ("3", "Foo3")')->execute();
+		$this->db->setQuery('INSERT INTO #__flower (catid, title, meaning, params) VALUES ("3", "Foo3", "", "")')->execute();
 
 		$this->assertEquals(91, $this->db->getWriter()->insertId());
 	}

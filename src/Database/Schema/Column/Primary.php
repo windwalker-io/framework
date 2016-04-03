@@ -29,6 +29,6 @@ class Primary extends Column
 	{
 		$options['primary'] = true;
 
-		parent::__construct($name, DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, null, $comment, $options);
+		parent::__construct($name, DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, false, $comment, $options);
 	}
 }

@@ -92,7 +92,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$table = $this->db->getTable('#__cloud');
 
-		$table->addColumn('id', MysqlType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, '', 'PK', array('primary' => true))
+		$table->addColumn('id', MysqlType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, null, 'PK', array('primary' => true))
 			->addColumn('name', DataType::VARCHAR, Column::SIGNED, Column::NOT_NULL, '', 'Name')
 			->addColumn('alias', 'varchar(255)', Column::SIGNED, Column::NOT_NULL, '', 'Alias')
 			->addIndex(Key::TYPE_INDEX, 'idx_name', 'name', 'Test')

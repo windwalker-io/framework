@@ -31,6 +31,18 @@ class QueryExpression
 	}
 
 	/**
+	 * isExpression
+	 *
+	 * @param   string  $value
+	 *
+	 * @return  boolean
+	 */
+	public static function isExpression($value)
+	{
+		return substr($value, -1) == ')';
+	}
+
+	/**
 	 * buildExpression
 	 *
 	 * @param string $name

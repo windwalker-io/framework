@@ -79,7 +79,7 @@ class MysqlTable extends AbstractTable
 				$column->getType() . $length,
 				$column->getSigned() ? '' : 'UNSIGNED',
 				$column->getAllowNull() ? '' : 'NOT NULL',
-				$column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : '',
+				$column->getDefault() !== false ? 'DEFAULT ' . $this->db->getQuery(true)->validValue($column->getDefault()) : '',
 				$column->getAutoIncrement() ? 'AUTO_INCREMENT' : '',
 				$column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : ''
 			);
@@ -272,6 +272,11 @@ class MysqlTable extends AbstractTable
 
 		$type   = MysqlType::getType($column->getType());
 		$length = $column->getLength() ? : MysqlType::getLength($type);
+
+		if ($type == MysqlType::DATETIME && $column->getDefault() === '')
+		{
+			$type = $this->db->getQuery(true)->getNullDate();
+		}
 
 		$column->type($type)
 			->length($length);

@@ -219,7 +219,8 @@ class RecordTest extends AbstractMysqlTestCase
 	{
 		$data = array(
 			'title'   => 'Lancelot',
-			'meaning' => 'First Knight'
+			'meaning' => 'First Knight',
+			'params' => ''
 		);
 
 		$record = new Record('ww_flower');

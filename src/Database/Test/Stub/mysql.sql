@@ -1,8 +1,8 @@
 
 CREATE TABLE IF NOT EXISTS `ww_categories` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-	`ordering` int(11) NOT NULL,
+	`title` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+	`ordering` int(11) NOT NULL DEFAULT 0,
 	`params` text COLLATE utf8_unicode_ci NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
@@ -13,11 +13,11 @@ INSERT INTO `ww_categories` (`id`, `title`, `ordering`, `params`) VALUES
 
 CREATE TABLE IF NOT EXISTS `ww_flower` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`catid` int(11) NOT NULL,
-	`title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+	`catid` int(11) NOT NULL DEFAULT 0,
+	`title` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
 	`meaning` text COLLATE utf8_unicode_ci NOT NULL,
-	`ordering` int(11) NOT NULL,
-	`state` tinyint(1) NOT NULL,
+	`ordering` int(11) NOT NULL DEFAULT 0,
+	`state` tinyint(1) NOT NULL DEFAULT 0,
 	`params` text COLLATE utf8_unicode_ci NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=86 ;

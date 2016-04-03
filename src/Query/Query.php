@@ -1992,6 +1992,51 @@ class Query implements QueryInterface, PreparableInterface
 	}
 
 	/**
+	 * getValidValue
+	 *
+	 * @param string $value
+	 * @param bool   $allowExpression
+	 *
+	 * @return  float|int|string
+	 */
+	public function validValue($value, $allowExpression = false)
+	{
+		if ($value === null)
+		{
+			return 'NULL';
+		}
+		elseif (is_float($value) || is_double($value))
+		{
+			return (double) $value;
+		}
+		elseif (is_numeric($value))
+		{
+			return (int) $value;
+		}
+
+		if ($allowExpression && $this->getExpression()->isExpression($value))
+		{
+			return $value;
+		}
+
+		return $this->quote($value);
+	}
+
+	/**
+	 * getValidDatetime
+	 *
+	 * @param   string  $string
+	 *
+	 * @return  string
+	 */
+	public function validDatetime($string)
+	{
+		$date = new \DateTime($string);
+
+		return $date->format($this->getDateFormat());
+	}
+
+	/**
 	 * Unsetting PDO connection before going to sleep (this is needed if the query gets serialized)
 	 */
 	public function __sleep()

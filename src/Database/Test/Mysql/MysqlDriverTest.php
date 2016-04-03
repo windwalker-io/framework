@@ -103,7 +103,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 */
 	public function testExecute()
 	{
-		$this->db->setQuery('INSERT INTO `#__flower` (`catid`) VALUES ("3")');
+		$this->db->setQuery('INSERT INTO `#__flower` (`catid`, `meaning`, `params`) VALUES ("3", "", "")');
 
 		$this->db->execute();
 

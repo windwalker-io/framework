@@ -146,11 +146,11 @@ class DataMapperTest extends DatabaseTest
 	{
 		// Create from array
 		$dataset = array(
-			array('title' => 'Sakura'),
-			array('title' => 'Peony'),
+			array('title' => 'Sakura', 'meaning' => '', 'params' => ''),
+			array('title' => 'Peony', 'meaning' => '', 'params' => ''),
 
 			// DataMapper should remove non-necessary field
-			array('title' => 'Sunflower', 'anim' => 'bird')
+			array('title' => 'Sunflower', 'anim' => 'bird', 'meaning' => '', 'params' => '')
 		);
 
 		$returns = $this->instance->create($dataset);
@@ -166,9 +166,9 @@ class DataMapperTest extends DatabaseTest
 		// Create from DataSet
 		$dataset = new DataSet(
 			array(
-				new Data(array('title' => 'Sakura2')),
-				new Data(array('title' => 'Peony2')),
-				new Data(array('title' => 'Sunflower2'))
+				new Data(array('title' => 'Sakura2', 'meaning' => '', 'params' => '')),
+				new Data(array('title' => 'Peony2', 'meaning' => '', 'params' => '')),
+				new Data(array('title' => 'Sunflower2', 'meaning' => '', 'params' => ''))
 			)
 		);
 
@@ -195,7 +195,9 @@ class DataMapperTest extends DatabaseTest
 		// Create from array
 		$data = array(
 			'title' => 'Foo flower',
-			'state' => 1
+			'state' => 1,
+			'meaning' => '',
+			'params' => ''
 		);
 
 		$newData = $this->instance->createOne($data);
@@ -209,7 +211,9 @@ class DataMapperTest extends DatabaseTest
 		$data = new Data(
 			array(
 				'title' => 'Foo flower',
-				'state' => 1
+				'state' => 1,
+				'meaning' => '',
+				'params' => ''
 			)
 		);
 
@@ -326,9 +330,9 @@ class DataMapperTest extends DatabaseTest
 		$this->db->setQuery('UPDATE ww_flower SET catid = 3 WHERE id IN (6, 7, 8)')->execute();
 
 		$dataset = array(
-			array('title' => 'Baby\'s Breath2', 'catid' => 3),
-			array('title' => 'Bachelor Button2', 'catid' => 3),
-			array('title' => 'Begonia2', 'catid' => 3),
+			array('title' => 'Baby\'s Breath2', 'catid' => 3, 'meaning' => '', 'params' => ''),
+			array('title' => 'Bachelor Button2', 'catid' => 3, 'meaning' => '', 'params' => ''),
+			array('title' => 'Begonia2', 'catid' => 3, 'meaning' => '', 'params' => ''),
 		);
 
 		// Delete all catid = 3 and re insert them.
@@ -350,8 +354,8 @@ class DataMapperTest extends DatabaseTest
 	public function testSave()
 	{
 		$dataset = array(
-			array('title' => 'Sunflower', 'catid' => 5),
-			array('id' => 15, 'title' => 'striped2', 'catid' => 5),
+			array('title' => 'Sunflower', 'catid' => 5, 'meaning' => '', 'params' => ''),
+			array('id' => 15, 'title' => 'striped2', 'catid' => 5, 'meaning' => '', 'params' => ''),
 		);
 
 		$returns = $this->instance->save($dataset, 'id');
@@ -373,14 +377,14 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testSaveOne()
 	{
-		$data = array('title' => 'Sakura', 'catid' => 6);
+		$data = array('title' => 'Sakura', 'catid' => 6, 'meaning' => '', 'params' => '');
 
 		$return = $this->instance->saveOne($data, 'id');
 
 		$this->assertEquals('Sakura', $this->db->setQuery('SELECT title FROM ww_flower WHERE catid = 6')->loadResult());
 		$this->assertEquals(98, $return->id);
 
-		$data = array('id' => 15, 'title' => 'striped3', 'catid' => 6);
+		$data = array('id' => 15, 'title' => 'striped3', 'catid' => 6, 'meaning' => '', 'params' => '');
 
 		$return = $this->instance->saveOne($data, 'id');
 

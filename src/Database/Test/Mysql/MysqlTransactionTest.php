@@ -100,7 +100,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	{
 		$table = '#__flower';
 
-		$sql = "INSERT INTO {$table} (title) VALUES ('A'), ('B'), ('C')";
+		$sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('A', '', ''), ('B', '', ''), ('C', '', '')";
 
 		$tran = $this->db->getTransaction()->start();
 
@@ -125,7 +125,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	{
 		$table = '#__flower';
 
-		$sql = "INSERT INTO {$table} (title) VALUES ('A'), ('B'), ('C')";
+		$sql = "INSERT INTO {$table} (title, meaning, params) VALUES ('A', '', ''), ('B', '', ''), ('C', '', '')";
 
 		$tran = $this->db->getTransaction()->start();
 

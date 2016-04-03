@@ -8,6 +8,8 @@
 
 namespace Windwalker\Session\Test\Handler;
 
+use Windwalker\Database\Schema\Column\Text;
+use Windwalker\Database\Schema\Column\Varchar;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 use Windwalker\Session\Database\WindwalkerAdapter;
 use Windwalker\Session\Handler\DatabaseHandler;
@@ -43,9 +45,9 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
 		parent::setUpBeforeClass();
 
 		static::$dbo->getTable('windwalker_sessions')
-			->addColumn('id', 'varchar(255)', true, false, null, '')
-			->addColumn('data', 'text')
-			->addColumn('time', 'varchar(255)')
+			->addColumn(new Varchar('id'))
+			->addColumn(new Text('data'))
+			->addColumn(new Varchar('time'))
 			->save();
 	}
 
