@@ -167,12 +167,12 @@ abstract class AbstractWriter
 			}
 
 			// Prepare and sanitize the fields and values for the database query.
-			if ($v === null || $v === '')
+			if ($v === null)
 			{
 				// If the value is null and we want to update nulls then set it.
 				if ($updateNulls)
 				{
-					$val = 'NULL';
+					$val = $query->quote('');
 				}
 				else
 					// If the value is null and we do not want to update nulls then ignore this field.

@@ -550,9 +550,16 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		// Filter non-necessary field
 		$data = array();
 
-		foreach ($this->getFields() as $field => $value)
+		foreach ($this->getFields() as $field => $detail)
 		{
-			$data[$field] = $this->data->$field;
+			if ($this->data->$field === null && $updateNulls)
+			{
+				$this->data->$field = $detail->Default;
+			}
+			else
+			{
+				$data[$field] = $this->data->$field;
+			}
 		}
 
 		// If a primary key exists update the object, otherwise insert it.
