@@ -275,7 +275,9 @@ class MysqlTable extends AbstractTable
 
 		if ($type == MysqlType::DATETIME && $column->getDefault() === '')
 		{
-			$type = $this->db->getQuery(true)->getNullDate();
+			$default = $this->db->getQuery(true)->getNullDate();
+
+			$column->defaultValue($default);
 		}
 
 		$column->type($type)
