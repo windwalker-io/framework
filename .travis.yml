@@ -23,7 +23,7 @@ before_install:
   - sh -e build/travis/scripts/apache2-configure.sh
 
 before_script:
-  - composer update --dev
+  - composer update
   - phpenv rehash
 
 script:

@@ -25,7 +25,7 @@
         "league/plates": "~3.0"
     },
     "suggest": {
-        "symfony/yaml": "Install 3.* if you require YAML support."
+        "symfony/yaml": "Install ~2.0 if you require YAML support."
     },
     "autoload": {
         "psr-4": {
