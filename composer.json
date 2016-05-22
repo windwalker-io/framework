@@ -17,7 +17,7 @@
     "require-dev": {
         "windwalker/phpunit-skeleton-generator": "2.*@stable",
         "jdorn/sql-formatter": "~1.0",
-        "symfony/yaml": "~3.0",
+        "symfony/yaml": "~2.0",
 
         "twig/twig": "~1.0",
         "illuminate/view": "4.1.*",
