@@ -16,16 +16,16 @@
     },
     "require-dev": {
         "windwalker/phpunit-skeleton-generator": "2.*@stable",
-        "jdorn/sql-formatter": "1.*@stable",
-        "symfony/yaml": "2.*@stable",
+        "jdorn/sql-formatter": "~1.0",
+        "symfony/yaml": "~3.0",
 
-        "twig/twig": "1.*@stable",
-        "illuminate/view": "4.1.*@stable",
-        "mustache/mustache": "2.*@stable",
-        "league/plates": "3.*@stable"
+        "twig/twig": "~1.0",
+        "illuminate/view": "4.1.*",
+        "mustache/mustache": "~2.0",
+        "league/plates": "~3.0"
     },
     "suggest": {
-        "symfony/yaml": "Install 2.* if you require YAML support."
+        "symfony/yaml": "Install 3.* if you require YAML support."
     },
     "autoload": {
         "psr-4": {
@@ -37,12 +37,11 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
+            "dev-master": "3.x-dev"
         }
     },
     "replace": {
         "windwalker/application": "self.version",
-        "windwalker/authenticate": "self.version",
         "windwalker/authentication": "self.version",
         "windwalker/cache": "self.version",
         "windwalker/compare": "self.version",
