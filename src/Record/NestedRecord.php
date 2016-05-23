@@ -16,26 +16,6 @@ namespace Windwalker\Record;
 class NestedRecord extends Record
 {
 	/**
-	 * @deprecated  use LOCATION_* instead. Will be remove in 2.1.
-	 */
-	const POSITION_BEFORE = 1;
-
-	/**
-	 * @deprecated  use LOCATION_* instead. Will be remove in 2.1.
-	 */
-	const POSITION_AFTER = 2;
-
-	/**
-	 * @deprecated  use LOCATION_* instead. Will be remove in 2.1.
-	 */
-	const POSITION_FIRST_CHILD = 3;
-
-	/**
-	 * @deprecated  use LOCATION_* instead. Will be remove in 2.1.
-	 */
-	const POSITION_LAST_CHILD = 4;
-
-	/**
 	 * @const integer
 	 */
 	const LOCATION_BEFORE = 1;

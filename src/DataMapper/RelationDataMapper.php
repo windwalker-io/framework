@@ -70,9 +70,7 @@ class RelationDataMapper extends DataMapper
 			$this->addTable($alias, $table);
 		}
 
-		$this->prepare();
-
-		$this->initialise();
+		$this->init();
 	}
 
 	/**

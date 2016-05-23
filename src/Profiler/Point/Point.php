@@ -13,7 +13,7 @@ namespace Windwalker\Profiler\Point;
  *
  * @since 2.0
  */
-class Point implements ProfilerPointInterface
+class Point implements PointInterface
 {
 	/**
 	 * The profile point name.

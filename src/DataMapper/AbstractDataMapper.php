@@ -113,22 +113,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		// Set some custom configuration.
-		$this->prepare();
-
-		$this->initialise();
-	}
-
-	/**
-	 * This method can be override by sub class to prepare come custom setting.
-	 *
-	 * @return  void
-	 * @since   2.0
-	 *
-	 * @deprecated  Use initialise instead.
-	 */
-	protected function prepare()
-	{
-		// Override this method to to something.
+		$this->init();
 	}
 
 	/**
@@ -137,7 +122,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @return  void
 	 * @since   2.0
 	 */
-	protected function initialise()
+	protected function init()
 	{
 		// Override this method to to something.
 	}

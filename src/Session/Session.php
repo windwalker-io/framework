@@ -653,23 +653,6 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @param   string $name      Name of variable
 	 * @param   string $namespace Namespace to use, default to 'default'
 	 *
-	 * @return  boolean  True if the variable exists
-	 *
-	 * @since   2.0
-	 *
-	 * @deprecated  Use exists() instead.
-	 */
-	public function has($name, $namespace = 'default')
-	{
-		return $this->exists($name, $namespace);
-	}
-
-	/**
-	 * Check whether data exists in the session store
-	 *
-	 * @param   string $name      Name of variable
-	 * @param   string $namespace Namespace to use, default to 'default'
-	 *
 	 * @throws  \RuntimeException
 	 * @return  boolean  True if the variable exists
 	 *
@@ -688,24 +671,6 @@ class Session implements \ArrayAccess, \IteratorAggregate
 		}
 
 		return $this->getBag($namespace)->has($name);
-	}
-
-	/**
-	 * Unset data from the session store
-	 *
-	 * @param   string $name      Name of variable
-	 * @param   string $namespace Namespace to use, default to 'default'
-	 *
-	 * @throws \RuntimeException
-	 * @return  mixed   The value from session or NULL if not set
-	 *
-	 * @since   2.0
-	 *
-	 * @deprecated  Use remove() instead.
-	 */
-	public function clear($name, $namespace = 'default')
-	{
-		return $this->remove($name, $namespace);
 	}
 
 	/**

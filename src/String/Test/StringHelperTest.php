@@ -79,22 +79,6 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Method to test parseVariable().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\String\StringHelper::parseVariable
-	 */
-	public function testParseVariable()
-	{
-		$data['foo']['bar']['baz'] = 'Flower';
-
-		$this->assertEquals('This is Flower', StringHelper::parseVariable('This is {{ foo.bar.baz }}', $data));
-		$this->assertEquals('This is ', StringHelper::parseVariable('This is {{ foo.yoo }}', $data));
-		$this->assertEquals('This is Flower', StringHelper::parseVariable('This is [ foo.bar.baz ]', $data, array('[', ']')));
-	}
-
-	/**
 	 * Test...
 	 *
 	 * @return  array

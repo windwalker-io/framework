@@ -170,52 +170,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Clear all data.
-	 *
-	 * @return  static
-	 *
-	 * @deprecated  3.0
-	 */
-	public function clear()
-	{
-		return $this->reset();
-	}
-
-	/**
-	 * Load a associative array of values into the default namespace
-	 *
-	 * @param   array  $array  Associative array of value to load
-	 *
-	 * @return  static  Return this object to support chaining.
-	 *
-	 * @since   2.0
-	 * @deprecated  3.0  Use load() instead.
-	 */
-	public function loadArray($array)
-	{
-		$this->bindData($this->data, $array, false);
-
-		return $this;
-	}
-
-	/**
-	 * Load the public variables of the object into the default namespace.
-	 *
-	 * @param   object  $object  The object holding the publics to load
-	 *
-	 * @return  static  Return this object to support chaining.
-	 *
-	 * @since   2.0
-	 * @deprecated  3.0  Use load() instead.
-	 */
-	public function loadObject($object)
-	{
-		$this->bindData($this->data, $object, false);
-
-		return $this;
-	}
-
-	/**
 	 * Load an array or object of values into the default namespace
 	 *
 	 * @param  array|object  $data  The value to load into registry.

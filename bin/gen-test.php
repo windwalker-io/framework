@@ -73,7 +73,7 @@ class GenTest extends AbstractCliApplication
 		$autoload = WINDWALKER_ROOT . '/vendor/autoload.php';
 
 		$command = sprintf(
-			'vendor/phpunit/phpunit-skeleton-generator/phpunit-skelgen generate-test --bootstrap="%s" %s %s %s %s',
+			'vendor/windwalker/phpunit-skeleton-generator/phpunit-skelgen generate-test --bootstrap="%s" %s %s %s %s',
 			$autoload,
 			$class,
 			$classPath,

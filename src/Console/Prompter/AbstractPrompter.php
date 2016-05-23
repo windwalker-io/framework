@@ -70,7 +70,6 @@ abstract class AbstractPrompter implements PrompterInterface
 		$this->default  = $default;
 
 		$this->initialise();
-		$this->preprocess();
 	}
 
 	/**
@@ -79,18 +78,6 @@ abstract class AbstractPrompter implements PrompterInterface
 	 * @return  void
 	 */
 	protected function initialise()
-	{
-		// Override this method to initialise something.
-	}
-
-	/**
-	 * Method to initialise something customize.
-	 *
-	 * @deprecated Use initialise() instead.
-	 *
-	 * @return  void
-	 */
-	protected function preprocess()
 	{
 		// Override this method to initialise something.
 	}

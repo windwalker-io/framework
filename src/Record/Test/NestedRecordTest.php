@@ -123,7 +123,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 		);
 
 		$this->instance->bind($data)
-			->setLocation(1, NestedRecord::POSITION_FIRST_CHILD)
+			->setLocation(1, NestedRecord::LOCATION_FIRST_CHILD)
 			->store();
 
 		$data = array(
@@ -133,7 +133,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset(true)
 			->bind($data)
-			->setLocation(2, NestedRecord::POSITION_FIRST_CHILD)
+			->setLocation(2, NestedRecord::LOCATION_FIRST_CHILD)
 			->store();
 
 		// First child
@@ -144,7 +144,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset(true)
 			->bind($data)
-			->setLocation(2, NestedRecord::POSITION_FIRST_CHILD)
+			->setLocation(2, NestedRecord::LOCATION_FIRST_CHILD)
 			->store();
 
 		$this->assertEquals(array(2, 3), array($this->instance->lft, $this->instance->rgt));
@@ -157,7 +157,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset(true)
 			->bind($data)
-			->setLocation(2, NestedRecord::POSITION_LAST_CHILD)
+			->setLocation(2, NestedRecord::LOCATION_LAST_CHILD)
 			->store();
 
 		$this->assertEquals(array(6, 7), array($this->instance->lft, $this->instance->rgt));
@@ -170,7 +170,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset(true)
 			->bind($data)
-			->setLocation(2, NestedRecord::POSITION_BEFORE)
+			->setLocation(2, NestedRecord::LOCATION_BEFORE)
 			->store();
 
 		$this->assertEquals(array(1, 2), array($this->instance->lft, $this->instance->rgt));
@@ -183,7 +183,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset(true)
 			->bind($data)
-			->setLocation(2, NestedRecord::POSITION_AFTER)
+			->setLocation(2, NestedRecord::LOCATION_AFTER)
 			->store();
 
 		$this->assertEquals(array(11, 12), array($this->instance->lft, $this->instance->rgt));
@@ -273,7 +273,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	{
 		$this->instance->load(5);
 
-		$this->instance->moveByReference(1, NestedRecord::POSITION_LAST_CHILD);
+		$this->instance->moveByReference(1, NestedRecord::LOCATION_LAST_CHILD);
 
 		$this->assertEquals(array(11, 12), array($this->instance->lft, $this->instance->rgt));
 	}
@@ -297,7 +297,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset(true)
 			->bind($data)
-			->setLocation(2, NestedRecord::POSITION_BEFORE)
+			->setLocation(2, NestedRecord::LOCATION_BEFORE)
 			->store();
 
 		$this->instance->delete(8);

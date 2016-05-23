@@ -227,24 +227,6 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * exists
-	 *
-	 * @param   string $key Is this key exists.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   2.0
-	 *
-	 * @deprecated  Use hasField() instead.
-	 */
-	public function exists($key)
-	{
-		$key = $this->resolveAlias($key);
-
-		return property_exists($this->data, $key);
-	}
-
-	/**
 	 * Method to provide a shortcut to binding, checking and storing a AbstractTable
 	 * instance to the database table.  The method will check a row in once the
 	 * data has been stored and if an ordering filter is present will attempt to

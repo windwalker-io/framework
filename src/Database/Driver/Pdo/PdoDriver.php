@@ -8,7 +8,7 @@
 
 namespace Windwalker\Database\Driver\Pdo;
 
-use Windwalker\Database\Driver\DatabaseDriver;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Query\Query\PreparableInterface;
 use Windwalker\Query\Query;
 
@@ -17,7 +17,7 @@ use Windwalker\Query\Query;
  *
  * @since 2.0
  */
-class PdoDriver extends DatabaseDriver
+class PdoDriver extends AbstractDatabaseDriver
 {
 	/**
 	 * The name of the database driver.

@@ -101,24 +101,6 @@ abstract class StringHelper
 	}
 
 	/**
-	 * Parse variable and replace it. This method is a simple template engine.
-	 *
-	 * Example: The {{ foo.bar.yoo }} will be replace to value of `$data['foo']['bar']['yoo']`
-	 *
-	 * @param   string $string The template to replace.
-	 * @param   array  $data   The data to find.
-	 * @param   array  $tags   The variable tags.
-	 *
-	 * @return  string Replaced template.
-	 *
-	 * @deprecated  3.0  Use SimpleTemplate::render() instead.
-	 */
-	public static function parseVariable($string, $data = array(), $tags = array('{{', '}}'))
-	{
-		return SimpleTemplate::render($string, $data, $tags);
-	}
-
-	/**
 	 * Increments a trailing number in a string.
 	 *
 	 * Used to easily create distinct labels when copying objects. The method has the following styles:

@@ -174,22 +174,6 @@ class Option
 	}
 
 	/**
-	 * Default value getter, alias of defaultValue().
-	 *
-	 * @param   mixed  $default  The default value.
-	 *
-	 * @return  Option  Return this object to support chaining.
-	 *
-	 * @since   2.0
-	 *
-	 * @deprecated  2.2 Use defaultValue() instead
-	 */
-	public function setDefault($default)
-	{
-		return $this->defaultValue($default);
-	}
-
-	/**
 	 * Default value getter.
 	 *
 	 * @param   mixed  $default  The default value.
