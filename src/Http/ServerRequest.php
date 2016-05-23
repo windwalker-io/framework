@@ -12,6 +12,7 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Windwalker\Http\Helper\ServerHelper;
 use Windwalker\Http\Stream\PhpInputStream;
 
@@ -78,24 +79,27 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
 	/**
 	 * Property uploadedFiles.
 	 *
-	 * @var  array
+	 * @var  UploadedFileInterface[]
 	 */
 	protected $uploadedFiles;
 
 	/**
 	 * Class init
 	 *
-	 * @param   array                            $serverParams   Server parameters, typically from $_SERVER
-	 * @param   array                            $uploadedFiles  Upload file information, a tree of UploadedFiles
-	 * @param   string                           $uri            URI for the request, if any.
-	 * @param   string                           $method         HTTP method for the request, if any.
-	 * @param   string|resource|StreamInterface  $body           Message body, if any.
-	 * @param   array                            $headers        Headers for the message, if any.
-	 *
-	 * @throws \InvalidArgumentException
+	 * @param   array                           $serverParams  Server parameters, typically from $_SERVER
+	 * @param   UploadedFileInterface[]         $uploadedFiles Upload file information, a tree of UploadedFiles
+	 * @param   string                          $uri           URI for the request, if any.
+	 * @param   string                          $method        HTTP method for the request, if any.
+	 * @param   string|resource|StreamInterface $body          Message body, if any.
+	 * @param   array                           $headers       Headers for the message, if any.
+	 * @param   array                           $cookies
+	 * @param   array                           $queryParams
+	 * @param   string                          $parsedBody
+	 * @param   string                          $protocol
 	 */
 	public function __construct(array $serverParams = array(), array $uploadedFiles = array(), $uri = null,
-		$method = null, $body = 'php://input', array $headers = array())
+		$method = null, $body = 'php://input', array $headers = array(), array $cookies = array(),
+		array $queryParams = array(), $parsedBody = null, $protocol = '1.1')
 	{
 		if (!ServerHelper::validateUploadedFiles($uploadedFiles))
 		{
@@ -109,6 +113,10 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
 
 		$this->serverParams  = $serverParams;
 		$this->uploadedFiles = $uploadedFiles;
+		$this->cookieParams  = $cookies;
+		$this->queryParams   = $queryParams;
+		$this->parsedBody    = $parsedBody;
+		$this->protocol      = $protocol;
 
 		parent::__construct($uri, $method, $body, $headers);
 	}

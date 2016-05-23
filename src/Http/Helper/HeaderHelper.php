@@ -18,6 +18,36 @@ namespace Windwalker\Http\Helper;
 abstract class HeaderHelper
 {
 	/**
+	 * Search for a header value.
+	 *
+	 * Does a case-insensitive search for a matching header.
+	 *
+	 * If found, it is returned as a string, using comma concatenation.
+	 *
+	 * If not, the $default is returned.
+	 *
+	 * @param array  $headers
+	 * @param string $name
+	 * @param mixed  $default
+	 *
+	 * @return string
+	 */
+	public static function getValue(array $headers, $name, $default = null)
+	{
+		$name    = strtolower($name);
+		$headers = array_change_key_case($headers, CASE_LOWER);
+
+		if (array_key_exists($name, $headers))
+		{
+			$value = is_array($headers[$name]) ? implode(', ', $headers[$name]) : $headers[$name];
+
+			return $value;
+		}
+
+		return $default;
+	}
+
+	/**
 	 * Check whether or not a header name is valid.
 	 *
 	 * @param   mixed  $name

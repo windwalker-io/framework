@@ -38,9 +38,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	 */
 	protected $standardSchemes = array(
 		'http'  => 80,
-		'https' => 443,
-		'ftp'   => 21,
-		'sftp'  => 22
+		'https' => 443
 	);
 
 	/**
@@ -222,11 +220,14 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 			throw new \InvalidArgumentException('Invalid port type.');
 		}
 
-		$port = (int) $port;
-
-		if ($port < 1 || $port > 65535)
+		if ($port !== null)
 		{
-			throw new \InvalidArgumentException(sprintf('Number of "%d" is not a valid TCP/UDP port', $port));
+			$port = (int) $port;
+
+			if ($port < 1 || $port > 65535)
+			{
+				throw new \InvalidArgumentException(sprintf('Number of "%d" is not a valid TCP/UDP port', $port));
+			}
 		}
 
 		$new = clone $this;

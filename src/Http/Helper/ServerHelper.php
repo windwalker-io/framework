@@ -18,6 +18,27 @@ use Psr\Http\Message\UploadedFileInterface;
 abstract class ServerHelper
 {
 	/**
+	 * Access a value in an array, returning a default value if not found
+	 *
+	 * Will also do a case-insensitive search if a case sensitive search fails.
+	 *
+	 * @param array  $servers
+	 * @param string $name
+	 * @param mixed  $default
+	 *
+	 * @return mixed
+	 */
+	public static function getValue(array $servers, $name, $default = null)
+	{
+		if (array_key_exists($name, $servers))
+		{
+			return $servers[$name];
+		}
+
+		return $default;
+	}
+
+	/**
 	 * Recursively validate the structure in an uploaded files array.
 	 *
 	 * Every file should be an UploadedFileInterface object.
@@ -44,5 +65,63 @@ abstract class ServerHelper
 		}
 
 		return true;
+	}
+
+	/**
+	 * getAllHeaders
+	 *
+	 * @return  array|false
+	 */
+	public static function getAllHeaders()
+	{
+		if (function_exists('getallheaders'))
+		{
+			return getallheaders();
+		}
+
+		$headers = array();
+
+		foreach ($_SERVER as $name => $value)
+		{
+			if (substr($name, 0, 5) == 'HTTP_')
+			{
+				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+			}
+		}
+		
+		return $headers;
+	}
+
+	/**
+	 * apacheRequestHeaders
+	 *
+	 * @return  array
+	 *
+	 * @link  http://php.net/manual/en/function.getallheaders.php#99814
+	 */
+	public static function apacheRequestHeaders()
+	{
+		if (function_exists('apache_request_headers'))
+		{
+			// return apache_request_headers();
+		}
+		
+		$out = array();
+
+		foreach ($_SERVER as $key => $value)
+		{
+			if (substr($key, 0, 5) == "HTTP_")
+			{
+				$key = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($key, 5)))));
+
+				$out[$key] = $value;
+			}
+			else
+			{
+				$out[$key] = $value;
+			}
+		}
+
+		return $out;
 	}
 }

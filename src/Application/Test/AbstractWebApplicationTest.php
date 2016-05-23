@@ -8,7 +8,7 @@
 
 namespace Windwalker\Application\Test;
 
-use Windwalker\Application\Test\Mock\MockOutput;
+use Windwalker\Application\Test\Mock\MockResponse;
 use Windwalker\Application\Test\Stub\StubWeb;
 use Windwalker\Test\TestHelper;
 
@@ -93,7 +93,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExecute()
 	{
-		$this->instance->setOutput(new MockOutput);
+		$this->instance->setOutput(new MockResponse);
 
 		ob_start();
 		$this->instance->execute();
@@ -116,7 +116,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRespond()
 	{
-		$this->instance->setOutput(new MockOutput);
+		$this->instance->setOutput(new MockResponse);
 
 		$this->instance->setBody('Hello World');
 
@@ -142,7 +142,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__toString()
 	{
-		$this->instance->setOutput(new MockOutput);
+		$this->instance->setOutput(new MockResponse);
 
 		$this->instance->setBody('Hello World');
 
@@ -158,7 +158,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRedirect()
 	{
-		$this->instance->setOutput(new MockOutput);
+		$this->instance->setOutput(new MockResponse);
 
 		$this->instance->redirect('/foo');
 
@@ -218,7 +218,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetHeader()
 	{
-		$this->instance->setOutput(new MockOutput);
+		$this->instance->setOutput(new MockResponse);
 
 		$this->instance->setHeader('Ethnic', 'We are borg.');
 
@@ -248,7 +248,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetAndSetOutput()
 	{
-		$this->instance->setOutput(new MockOutput);
+		$this->instance->setOutput(new MockResponse);
 
 		$this->assertInstanceOf('Windwalker\\Application\\Test\\Mock\\MockOutput', $this->instance->getOutput());
 	}
@@ -274,7 +274,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 		$_SERVER['REQUEST_URI'] = $uri;
 		$_SERVER['SCRIPT_NAME'] = $script;
 
-		$app = new StubWeb(null, null, null, new MockOutput);
+		$app = new StubWeb(null, null, null, new MockResponse);
 
 		foreach ($tests as $name => $value)
 		{

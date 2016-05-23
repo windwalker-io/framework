@@ -13,15 +13,15 @@ use Windwalker\Environment\Web\WebEnvironment;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
-use Windwalker\Application\Web\Output;
-use Windwalker\Application\Web\OutputInterface;
+use Windwalker\Http\Response\OutputResponse;
+use Windwalker\Http\Response\OutputResponseInterface;
 use Windwalker\Registry\Registry;
 
 /**
  * Application for Web HTTP foundation.
  *
- * @property-read  WebEnvironment  $environment
- * @property-read  OutputInterface $output
+ * @property-read  WebEnvironment          $environment
+ * @property-read  OutputResponseInterface $output
  *
  * @since 2.0
  */
@@ -38,7 +38,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * The application output object.
 	 *
-	 * @var    OutputInterface
+	 * @var    OutputResponseInterface
 	 * @since  2.0
 	 */
 	protected $output;
@@ -78,17 +78,17 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @param   Registry        $config       An optional argument to provide dependency injection for the application's
 	 *                                        config object.  If the argument is a Registry object that object will become
 	 *                                        the application's config object, otherwise a default config object is created.
-	 * @param   WebEnvironment  $environment  An optional argument to provide dependency injection for the application's
+	 * @param   WebEnvironment          $environment An optional argument to provide dependency injection for the application's
 	 *                                        client object.  If the argument is a Web\WebEnvironment object that object will become
 	 *                                        the application's client object, otherwise a default client object is created.
-	 * @param   OutputInterface $output       The output object.
+	 * @param   OutputResponseInterface $output The output object.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(Input $input = null, Registry $config = null, WebEnvironment $environment = null, OutputInterface $output = null)
+	public function __construct(Input $input = null, Registry $config = null, WebEnvironment $environment = null, OutputResponseInterface $output = null)
 	{
 		$this->environment = $environment instanceof WebEnvironment  ? $environment : new WebEnvironment;
-		$this->output      = $output      instanceof OutputInterface ? $output      : new Output;
+		$this->output      = $output      instanceof OutputResponseInterface ? $output      : new OutputResponse;
 
 		// Call the constructor as late as possible (it runs `init()`).
 		parent::__construct($input, $config);
@@ -261,7 +261,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @param   string   $value    The value of the header to set.
 	 * @param   boolean  $replace  True to replace any headers with the same name.
 	 *
-	 * @return  Output  Instance of $this to allow chaining.
+	 * @return  OutputResponse  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -305,7 +305,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Get Output object.
 	 *
-	 * @return  OutputInterface
+	 * @return  OutputResponseInterface
 	 */
 	public function getOutput()
 	{
@@ -315,11 +315,11 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Set Output object into application.
 	 *
-	 * @param   OutputInterface $output The output object.
+	 * @param   OutputResponseInterface $output The output object.
 	 *
 	 * @return  AbstractWebApplication  Return self to support chaining.
 	 */
-	public function setOutput(OutputInterface $output)
+	public function setOutput(OutputResponseInterface $output)
 	{
 		$this->output = $output;
 
