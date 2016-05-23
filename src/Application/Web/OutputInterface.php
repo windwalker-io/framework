@@ -9,9 +9,9 @@
 namespace Windwalker\Application\Web;
 
 /**
- * Interface ResponseInterface
+ * Interface OutputInterface
  */
-interface ResponseInterface
+interface OutputInterface
 {
 	/**
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
@@ -57,7 +57,7 @@ interface ResponseInterface
 	 * @param   string   $value    The value of the header to set.
 	 * @param   boolean  $replace  True to replace any headers with the same name.
 	 *
-	 * @return  Response  Instance of $this to allow chaining.
+	 * @return  Output  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */

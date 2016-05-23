@@ -13,15 +13,15 @@ use Windwalker\Environment\Web\WebEnvironment;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
-use Windwalker\Application\Web\Response;
-use Windwalker\Application\Web\ResponseInterface;
+use Windwalker\Application\Web\Output;
+use Windwalker\Application\Web\OutputInterface;
 use Windwalker\Registry\Registry;
 
 /**
  * Application for Web HTTP foundation.
  *
- * @property-read  WebEnvironment     $environment
- * @property-read  ResponseInterface  $response
+ * @property-read  WebEnvironment  $environment
+ * @property-read  OutputInterface $output
  *
  * @since 2.0
  */
@@ -36,12 +36,12 @@ abstract class AbstractWebApplication extends AbstractApplication
 	protected $environment;
 
 	/**
-	 * The application response object.
+	 * The application output object.
 	 *
-	 * @var    ResponseInterface
+	 * @var    OutputInterface
 	 * @since  2.0
 	 */
-	protected $response;
+	protected $output;
 
 	/**
 	 * The system Uri object.
@@ -72,23 +72,23 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Class constructor.
 	 *
-	 * @param   Input              $input        An optional argument to provide dependency injection for the application's
-	 *                                           input object.  If the argument is a Input object that object will become
-	 *                                           the application's input object, otherwise a default input object is created.
-	 * @param   Registry           $config       An optional argument to provide dependency injection for the application's
-	 *                                           config object.  If the argument is a Registry object that object will become
-	 *                                           the application's config object, otherwise a default config object is created.
-	 * @param   WebEnvironment     $environment  An optional argument to provide dependency injection for the application's
-	 *                                           client object.  If the argument is a Web\WebEnvironment object that object will become
-	 *                                           the application's client object, otherwise a default client object is created.
-	 * @param   ResponseInterface  $response     The response object.
+	 * @param   Input           $input        An optional argument to provide dependency injection for the application's
+	 *                                        input object.  If the argument is a Input object that object will become
+	 *                                        the application's input object, otherwise a default input object is created.
+	 * @param   Registry        $config       An optional argument to provide dependency injection for the application's
+	 *                                        config object.  If the argument is a Registry object that object will become
+	 *                                        the application's config object, otherwise a default config object is created.
+	 * @param   WebEnvironment  $environment  An optional argument to provide dependency injection for the application's
+	 *                                        client object.  If the argument is a Web\WebEnvironment object that object will become
+	 *                                        the application's client object, otherwise a default client object is created.
+	 * @param   OutputInterface $output       The output object.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(Input $input = null, Registry $config = null, WebEnvironment $environment = null, ResponseInterface $response = null)
+	public function __construct(Input $input = null, Registry $config = null, WebEnvironment $environment = null, OutputInterface $output = null)
 	{
-		$this->environment = $environment instanceof WebEnvironment    ? $environment : new WebEnvironment;
-		$this->response    = $response    instanceof ResponseInterface ? $response    : new Response;
+		$this->environment = $environment instanceof WebEnvironment  ? $environment : new WebEnvironment;
+		$this->output      = $output      instanceof OutputInterface ? $output      : new Output;
 
 		// Call the constructor as late as possible (it runs `initialise`).
 		parent::__construct($input, $config);
@@ -145,10 +145,10 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// If gzip compression is enabled in configuration and the server is compliant, compress the output.
 		if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler'))
 		{
-			$this->response->compress($this->environment->client->getEncodings());
+			$this->output->compress($this->environment->client->getEncodings());
 		}
 
-		return $this->response->respond($returnBody);
+		return $this->output->respond($returnBody);
 	}
 
 	/**
@@ -218,7 +218,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		}
 
 		// If the headers have already been sent we need to send the redirect statement via JavaScript.
-		if ($this->response->checkHeadersSent())
+		if ($this->output->checkHeadersSent())
 		{
 			echo "<script>document.location.href='$url';</script>\n";
 		}
@@ -228,7 +228,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			if (($this->environment->client->getEngine() == WebClient::TRIDENT) && !ApplicationHelper::isAscii($url))
 			{
 				$html = '<html><head>';
-				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->response->getCharSet() . '" />';
+				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->output->getCharSet() . '" />';
 				$html .= '<script>document.location.href=\'' . $url . '\';</script>';
 				$html .= '</head><body></body></html>';
 
@@ -242,9 +242,9 @@ abstract class AbstractWebApplication extends AbstractApplication
 					$code = $code ? 301 : 303;
 				}
 
-				$this->response->header($this->redirectCodes[$code]);
-				$this->response->header('Location: ' . $url);
-				$this->response->header('Content-Type: text/html; charset=' . $this->response->getCharSet());
+				$this->output->header($this->redirectCodes[$code]);
+				$this->output->header('Location: ' . $url);
+				$this->output->header('Content-Type: text/html; charset=' . $this->output->getCharSet());
 			}
 		}
 
@@ -261,13 +261,13 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @param   string   $value    The value of the header to set.
 	 * @param   boolean  $replace  True to replace any headers with the same name.
 	 *
-	 * @return  Response  Instance of $this to allow chaining.
+	 * @return  Output  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */
 	public function setHeader($name, $value, $replace = false)
 	{
-		$this->response->setHeader($name, $value, $replace);
+		$this->output->setHeader($name, $value, $replace);
 
 		return $this;
 	}
@@ -283,7 +283,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function setBody($content)
 	{
-		$this->response->setBody($content);
+		$this->output->setBody($content);
 
 		return $this;
 	}
@@ -299,29 +299,29 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function getBody($asArray = false)
 	{
-		return $this->response->getBody($asArray);
+		return $this->output->getBody($asArray);
 	}
 
 	/**
-	 * Get Response object.
+	 * Get Output object.
 	 *
-	 * @return  ResponseInterface
+	 * @return  OutputInterface
 	 */
-	public function getResponse()
+	public function getOutput()
 	{
-		return $this->response;
+		return $this->output;
 	}
 
 	/**
-	 * Set Response object into application.
+	 * Set Output object into application.
 	 *
-	 * @param   ResponseInterface  $response  The response object.
+	 * @param   OutputInterface $output The output object.
 	 *
 	 * @return  AbstractWebApplication  Return self to support chaining.
 	 */
-	public function setResponse(ResponseInterface $response)
+	public function setOutput(OutputInterface $output)
 	{
-		$this->response = $response;
+		$this->output = $output;
 
 		return $this;
 	}
@@ -548,7 +548,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	{
 		$allowNames = array(
 			'environment',
-			'response'
+			'output'
 		);
 
 		if (in_array($name, $allowNames))

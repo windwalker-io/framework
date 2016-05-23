@@ -52,7 +52,7 @@ $app->execute();
 
 ## WebApplication
 
-`AbstractWebApplication` add `WebEnvironment` and `Response` object to itself that help us handle HTTP request and response.
+`AbstractWebApplication` add `WebEnvironment` and `Output` object to itself that help us handle HTTP request and output.
 
 ### Environment
 
@@ -70,16 +70,16 @@ $this->environment->server->isUnix();
 
 See: [Environment Package](https://github.com/ventoviro/windwalker-environment)
 
-### Response
+### Output
 
-All HTTP response can use `Response` object to operate.
+All HTTP output can use `Output` object to operate.
 
 ``` php
-$this->response->setHeader('status', 200); // HTTP Status
+$this->output->setHeader('status', 200); // HTTP Status
 
-$this->response->setBody($data);
+$this->output->setBody($data);
 
-$this->response->respond(); // Send all data to client
+$this->output->respond(); // Send all data to client
 ```
 
 ## Cli Application

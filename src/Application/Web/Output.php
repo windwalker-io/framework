@@ -13,7 +13,7 @@ namespace Windwalker\Application\Web;
  *
  * @since 2.0
  */
-class Response implements ResponseInterface
+class Output implements OutputInterface
 {
 	/**
 	 * Is cachable.
@@ -379,7 +379,7 @@ class Response implements ResponseInterface
 	/**
 	 * Send all response headers.
 	 *
-	 * @return  Response  Instance of $this to allow chaining.
+	 * @return  Output  Instance of $this to allow chaining.
 	 *
 	 * @since   2.0
 	 */

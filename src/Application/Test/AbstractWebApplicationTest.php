@@ -8,7 +8,7 @@
 
 namespace Windwalker\Application\Test;
 
-use Windwalker\Application\Test\Mock\MockResponse;
+use Windwalker\Application\Test\Mock\MockOutput;
 use Windwalker\Application\Test\Stub\StubWeb;
 use Windwalker\Test\TestHelper;
 
@@ -72,9 +72,9 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertInstanceOf(
-			'Windwalker\\Application\\Web\\Response',
-			$this->instance->getResponse(),
-			'Response property wrong type'
+			'Windwalker\\Application\\Web\\Output',
+			$this->instance->getOutput(),
+			'Output property wrong type'
 		);
 
 		$this->assertInstanceOf(
@@ -93,7 +93,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExecute()
 	{
-		$this->instance->setResponse(new MockResponse);
+		$this->instance->setOutput(new MockOutput);
 
 		ob_start();
 		$this->instance->execute();
@@ -103,7 +103,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertContains(
 			'Content-Type: text/html; charset=utf-8',
-			$this->instance->getResponse()->sentHeaders[0]
+			$this->instance->getOutput()->sentHeaders[0]
 		);
 	}
 
@@ -116,7 +116,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRespond()
 	{
-		$this->instance->setResponse(new MockResponse);
+		$this->instance->setOutput(new MockOutput);
 
 		$this->instance->setBody('Hello World');
 
@@ -142,7 +142,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__toString()
 	{
-		$this->instance->setResponse(new MockResponse);
+		$this->instance->setOutput(new MockOutput);
 
 		$this->instance->setBody('Hello World');
 
@@ -158,11 +158,11 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRedirect()
 	{
-		$this->instance->setResponse(new MockResponse);
+		$this->instance->setOutput(new MockOutput);
 
 		$this->instance->redirect('/foo');
 
-		$headers = $this->instance->getResponse()->sentHeaders;
+		$headers = $this->instance->getOutput()->sentHeaders;
 
 		$array = array(
 			'HTTP/2.0 303 See Other',
@@ -173,38 +173,38 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($array, $headers);
 
 		// Boolean
-		$this->instance->getResponse()->sentHeaders = array();
+		$this->instance->getOutput()->sentHeaders = array();
 
 		$this->instance->redirect('/foo', true);
 
-		$headers = $this->instance->getResponse()->sentHeaders;
+		$headers = $this->instance->getOutput()->sentHeaders;
 
 		$this->assertEquals('HTTP/2.0 301 Moved Permanently', $headers[0]);
 
 		// Code
-		$this->instance->getResponse()->sentHeaders = array();
+		$this->instance->getOutput()->sentHeaders = array();
 
 		$this->instance->redirect('/foo', 307);
 
-		$headers = $this->instance->getResponse()->sentHeaders;
+		$headers = $this->instance->getOutput()->sentHeaders;
 
 		$this->assertEquals('HTTP/2.0 307 Temporary Redirect', $headers[0]);
 
 		// String
-		$this->instance->getResponse()->sentHeaders = array();
+		$this->instance->getOutput()->sentHeaders = array();
 
 		$this->instance->redirect('/foo', 305);
 
-		$headers = $this->instance->getResponse()->sentHeaders;
+		$headers = $this->instance->getOutput()->sentHeaders;
 
 		$this->assertEquals('HTTP/2.0 305 Use Proxy', $headers[0]);
 
 		// Other
-		$this->instance->getResponse()->sentHeaders = array();
+		$this->instance->getOutput()->sentHeaders = array();
 
 		$this->instance->redirect('/foo', 'foo');
 
-		$headers = $this->instance->getResponse()->sentHeaders;
+		$headers = $this->instance->getOutput()->sentHeaders;
 
 		$this->assertEquals('HTTP/2.0 301 Moved Permanently', $headers[0]);
 	}
@@ -218,11 +218,11 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetHeader()
 	{
-		$this->instance->setResponse(new MockResponse);
+		$this->instance->setOutput(new MockOutput);
 
 		$this->instance->setHeader('Ethnic', 'We are borg.');
 
-		$this->assertEquals('We are borg.', $this->instance->getResponse()->headers[0]['value']);
+		$this->assertEquals('We are borg.', $this->instance->getOutput()->headers[0]['value']);
 	}
 
 	/**
@@ -240,17 +240,17 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Method to test getResponse().
+	 * Method to test getOutput().
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractWebApplication::getResponse
+	 * @covers Windwalker\Application\AbstractWebApplication::getOutput
 	 */
-	public function testGetAndSetResponse()
+	public function testGetAndSetOutput()
 	{
-		$this->instance->setResponse(new MockResponse);
+		$this->instance->setOutput(new MockOutput);
 
-		$this->assertInstanceOf('Windwalker\\Application\\Test\\Mock\\MockResponse', $this->instance->getResponse());
+		$this->assertInstanceOf('Windwalker\\Application\\Test\\Mock\\MockOutput', $this->instance->getOutput());
 	}
 
 	/**
@@ -274,7 +274,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 		$_SERVER['REQUEST_URI'] = $uri;
 		$_SERVER['SCRIPT_NAME'] = $script;
 
-		$app = new StubWeb(null, null, null, new MockResponse);
+		$app = new StubWeb(null, null, null, new MockOutput);
 
 		foreach ($tests as $name => $value)
 		{

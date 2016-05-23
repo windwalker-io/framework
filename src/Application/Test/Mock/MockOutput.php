@@ -8,14 +8,14 @@
 
 namespace Windwalker\Application\Test\Mock;
 
-use Windwalker\Application\Web\Response;
+use Windwalker\Application\Web\Output;
 
 /**
- * The MockResponse class.
+ * The MockOutput class.
  * 
  * @since  2.0
  */
-class MockResponse extends Response
+class MockOutput extends Output
 {
 	/**
 	 * Property sentHeaders.

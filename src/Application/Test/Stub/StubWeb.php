@@ -46,7 +46,7 @@ class StubWeb extends AbstractWebApplication
 	 */
 	public function execute()
 	{
-		$this->response->sentHeaders = array();
+		$this->output->sentHeaders = array();
 
 		// Perform application routines.
 		$this->doExecute();
