@@ -21,7 +21,7 @@ use Windwalker\Registry\Registry;
 
 class MyApplication extends AbstractApplication
 {
-    protected function initialise()
+    protected function init()
     {
         // Do stuff.
     }

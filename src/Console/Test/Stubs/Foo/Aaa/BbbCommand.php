@@ -24,7 +24,7 @@ class BbbCommand extends Command
 	 *
 	 * @since  2.0
 	 */
-	public function initialise()
+	public function init()
 	{
 		$this->setName('bbb');
 	}

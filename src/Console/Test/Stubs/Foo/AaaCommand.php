@@ -31,7 +31,7 @@ class AaaCommand extends Command
 	 *
 	 * @since  2.0
 	 */
-	public function initialise()
+	public function init()
 	{
 		$this->addCommand(new Aaa\BbbCommand)
 			->addOption(

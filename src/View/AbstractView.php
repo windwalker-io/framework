@@ -31,7 +31,7 @@ abstract class AbstractView implements ViewInterface, \ArrayAccess
 	{
 		$this->data = $data;
 
-		$this->initialise();
+		$this->init();
 	}
 
 	/**
@@ -39,7 +39,7 @@ abstract class AbstractView implements ViewInterface, \ArrayAccess
 	 *
 	 * @return  void
 	 */
-	protected function initialise()
+	protected function init()
 	{
 		// override if you need.
 	}

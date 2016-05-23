@@ -24,7 +24,7 @@ class RootCommand extends Command
 	 *
 	 * @since  2.0
 	 */
-	protected function initialise()
+	protected function init()
 	{
 		// Get application file name
 		if (!$this->name)

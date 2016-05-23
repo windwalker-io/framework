@@ -214,7 +214,7 @@ use Windwalker\Console\Command\Command;
 
 class FooCommand extends Command
 {
-	public function initialise()
+	public function init()
 	{
 		$this->setName('foo')
 		    ->setDescription('foo desc')
@@ -245,7 +245,7 @@ use Windwalker\Console\Command\Command;
 
 class BarCommand extends Command
 {
-	public function initialise()
+	public function init()
 	{
 		$this->setName('bar')
             ->setDescription('bar desc')

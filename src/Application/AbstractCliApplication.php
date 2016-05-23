@@ -51,7 +51,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 		$this->io     = $io instanceof IOInterface  ? $io     : new IO;
 		$this->config = $config instanceof Registry ? $config : new Registry;
 
-		$this->initialise();
+		$this->init();
 
 		// Set the execution datetime and timestamp;
 		$this->set('execution.datetime', gmdate('Y-m-d H:i:s'));

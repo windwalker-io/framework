@@ -69,7 +69,7 @@ abstract class AbstractPrompter implements PrompterInterface
 		$this->question = $question;
 		$this->default  = $default;
 
-		$this->initialise();
+		$this->init();
 	}
 
 	/**
@@ -77,7 +77,7 @@ abstract class AbstractPrompter implements PrompterInterface
 	 *
 	 * @return  void
 	 */
-	protected function initialise()
+	protected function init()
 	{
 		// Override this method to initialise something.
 	}

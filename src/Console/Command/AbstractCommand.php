@@ -142,7 +142,7 @@ abstract class AbstractCommand implements \ArrayAccess
 		$this->options       = new OptionSet;
 		$this->globalOptions = new OptionSet;
 
-		$this->initialise();
+		$this->init();
 
 		if (!$this->name)
 		{
@@ -153,8 +153,9 @@ abstract class AbstractCommand implements \ArrayAccess
 	/**
 	 * Execute this command.
 	 *
-	 * @return  mixed  Executed result or exit code.
+	 * @return mixed Executed result or exit code.
 	 *
+	 * @throws \Exception
 	 * @since  2.0
 	 */
 	public function execute()
@@ -250,7 +251,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since  2.0
 	 */
-	protected function initialise()
+	protected function init()
 	{
 	}
 

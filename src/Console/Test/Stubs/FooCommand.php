@@ -32,7 +32,7 @@ class FooCommand extends Command
 	 *
 	 * @since  2.0
 	 */
-	protected function initialise()
+	protected function init()
 	{
 		$this->description('Foo command desc')
 			->usage('foo <command> [option]')

@@ -61,7 +61,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 		$this->input = $input instanceof Input ? $input : new Input;
 		$this->config = $config instanceof Registry ? $config : new Registry;
 
-		$this->initialise();
+		$this->init();
 	}
 
 	/**
@@ -170,7 +170,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 *
 	 * @since   2.0
 	 */
-	protected function initialise()
+	protected function init()
 	{
 	}
 

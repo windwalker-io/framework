@@ -90,7 +90,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		$this->environment = $environment instanceof WebEnvironment  ? $environment : new WebEnvironment;
 		$this->output      = $output      instanceof OutputInterface ? $output      : new Output;
 
-		// Call the constructor as late as possible (it runs `initialise`).
+		// Call the constructor as late as possible (it runs `init()`).
 		parent::__construct($input, $config);
 
 		// Set the system URIs.

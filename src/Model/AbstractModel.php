@@ -33,7 +33,7 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	{
 		$this->state = ($state instanceof Registry) ? $state : new Registry;
 
-		$this->initialise();
+		$this->init();
 	}
 
 	/**
@@ -41,7 +41,7 @@ abstract class AbstractModel implements ModelInterface, \ArrayAccess
 	 *
 	 * @return  void
 	 */
-	protected function initialise()
+	protected function init()
 	{
 		// Override if you need.
 	}
