@@ -8,7 +8,7 @@
 
 namespace Windwalker\Http\Test;
 
-use Windwalker\Http\Request;
+use Windwalker\Http\Request\Request;
 use Windwalker\Uri\PsrUri;
 
 /**
@@ -51,7 +51,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Request::getHeaders
+	 * @covers Windwalker\Http\Request\Request::getHeaders
 	 */
 	public function testGetHeaders()
 	{
@@ -67,7 +67,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Request::getHeader
+	 * @covers Windwalker\Http\Request\Request::getHeader
 	 */
 	public function testGetHeader()
 	{
@@ -76,5 +76,21 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 		$request = $this->instance->withUri(new PsrUri('http://windwalker.io/flower/sakura'));
 
 		$this->assertEquals(array('windwalker.io'), $request->getHeader('host'));
+	}
+
+	/**
+	 * Method to test hasHeader().
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Http\Request\Request::hasHeader
+	 */
+	public function testHasHeader()
+	{
+		$request = new Request('http://example.com/foo', 'GET');
+
+		$this->assertTrue($request->hasHeader('host'));
+		$this->assertTrue($request->hasHeader('Host'));
+		$this->assertFalse($request->hasHeader('X-Foo'));
 	}
 }

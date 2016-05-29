@@ -12,7 +12,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
-use Windwalker\Http\Response;
+use Windwalker\Http\Response\Response;
 
 /**
  * The CurlTransport class.

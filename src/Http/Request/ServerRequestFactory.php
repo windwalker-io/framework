@@ -6,11 +6,12 @@
  * @license    GNU General Public License version 2 or later.
  */
 
-namespace Windwalker\Http;
+namespace Windwalker\Http\Request;
 
 use Psr\Http\Message\UploadedFileInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\ServerHelper;
+use Windwalker\Http\UploadedFile;
 use Windwalker\Uri\PsrUri;
 
 /**
@@ -66,7 +67,6 @@ class ServerRequestFactory
 			$body    ? : $_POST,
 			static::getProtocolVersion($server)
 		);
-
 	}
 
 	/**
@@ -207,7 +207,10 @@ class ServerRequestFactory
 		}
 
 		// URI host
-		static::getHostAndPortFromHeaders($host = '', $port = null, $server, $headers);
+		$host = '';
+		$port = null;
+
+		static::getHostAndPortFromHeaders($host, $port, $server, $headers);
 
 		// URI path
 		$path = static::getRequestUri($server);
@@ -373,8 +376,10 @@ class ServerRequestFactory
 	{
 		if (is_array($headerHost))
 		{
-			$host = implode(', ', $headerHost);
+			$headerHost = implode(', ', $headerHost);
 		}
+
+		$host = $headerHost;
 
 		if (preg_match('|\:(\d+)$|', $host, $matches))
 		{

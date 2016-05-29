@@ -9,18 +9,19 @@
 namespace Windwalker\Http\Response;
 
 use Windwalker\Http\Response\Response;
+use Windwalker\Http\Stream\Stream;
 
 /**
- * The HtmlResponse class.
+ * The EmptyResponse class.
  *
  * @since  {DEPLOY_VERSION}
  */
-class HtmlResponse extends TextResponse
+class EmptyResponse extends Response
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'text/html';
+	public function __construct($status = 204, array $headers = array())
+	{
+		$body = new Stream('php://temp', 'r');
+
+		parent::__construct($body, $status, $headers);
+	}
 }

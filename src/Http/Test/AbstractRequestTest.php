@@ -8,7 +8,7 @@
 
 namespace Windwalker\Http\Test;
 
-use Windwalker\Http\AbstractRequest;
+use Windwalker\Http\Request\AbstractRequest;
 use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\Test\Stub\StubRequest;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
@@ -101,8 +101,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\AbstractRequest::getRequestTarget
-	 * @covers Windwalker\Http\AbstractRequest::withRequestTarget
+	 * @covers Windwalker\Http\Request\AbstractRequest::getRequestTarget
+	 * @covers Windwalker\Http\Request\AbstractRequest::withRequestTarget
 	 */
 	public function testWithAndGetRequestTarget()
 	{
@@ -127,8 +127,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\AbstractRequest::getMethod
-	 * @covers Windwalker\Http\AbstractRequest::withMethod
+	 * @covers Windwalker\Http\Request\AbstractRequest::getMethod
+	 * @covers Windwalker\Http\Request\AbstractRequest::withMethod
 	 */
 	public function testWithAndGetMethod()
 	{
@@ -150,8 +150,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\AbstractRequest::getUri
-	 * @covers Windwalker\Http\AbstractRequest::withUri
+	 * @covers Windwalker\Http\Request\AbstractRequest::getUri
+	 * @covers Windwalker\Http\Request\AbstractRequest::withUri
 	 */
 	public function testWithAndGetUri()
 	{

@@ -6,11 +6,12 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Http;
+namespace Windwalker\Http\Response;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\AbstractMessage;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\Stream\Stream;
@@ -110,7 +111,10 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
 	 */
 	public function withStatus($code, $reasonPhrase = '')
 	{
-		$code = ResponseHelper::validateStatus($code);
+		if (!ResponseHelper::validateStatus($code))
+		{
+			throw new \InvalidArgumentException('Invalid status code: ' . $code);
+		}
 
 		$new = clone $this;
 		$new->statusCode   = (int) $code;

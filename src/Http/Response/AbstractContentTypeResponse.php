@@ -8,21 +8,43 @@
 
 namespace Windwalker\Http\Response;
 
-use Windwalker\Http\Response;
+use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\Response\Response;
 
 /**
  * The AbstractContentTypeResponse class.
  *
  * @since  {DEPLOY_VERSION}
  */
-class AbstractContentTypeResponse extends Response
+abstract class AbstractContentTypeResponse extends Response
 {
 	/**
 	 * Property type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'application/text';
+	protected $type = 'text/plain';
+
+	/**
+	 * HtmlResponse constructor.
+	 */
+	public function __construct($data = '', $status = 200, array $headers = array())
+	{
+		parent::__construct(
+			$this->handleBody($data),
+			$status,
+			$this->addContentType($headers, $this->type . '; charset=utf-8')
+		);
+	}
+
+	/**
+	 * handleBody
+	 *
+	 * @param   string  $body
+	 *
+	 * @return  StreamInterface
+	 */
+	abstract protected function handleBody($body);
 
 	/**
 	 * Inject the provided Content-Type, if none is already present.
@@ -43,20 +65,21 @@ class AbstractContentTypeResponse extends Response
 	/**
 	 * injectContentType
 	 *
-	 * @param   string  $contentType
+	 * @param   array  $headers
+	 * @param   string $contentType
 	 *
-	 * @return  void
+	 * @return array
 	 */
-	protected function injectContentType($contentType)
+	protected function addContentType($headers, $contentType)
 	{
-		$name = $this->getHeaderName('Content-Type');
+		$keys = array_change_key_case(array_keys($headers), CASE_LOWER);
 
-		if (isset($this->headers[$name]))
+		if (!isset($keys['content-type']))
 		{
-			return;
+			$headers['content-type'] = array($contentType);
 		}
 
-		$this->headers[$name] = array($contentType);
+		return $headers;
 	}
 
 	/**

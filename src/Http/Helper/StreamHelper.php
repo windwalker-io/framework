@@ -8,7 +8,11 @@
 
 namespace Windwalker\Http\Helper;
 
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\Output\StreamOutput;
+use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\Stream;
 
 /**
@@ -18,6 +22,13 @@ use Windwalker\Http\Stream\Stream;
  */
 abstract class StreamHelper
 {
+	/**
+	 * Property outputClass for test use.
+	 *
+	 * @var  StreamOutput
+	 */
+	public static $outputObject;
+
 	/**
 	 * Copy stream to another stream.
 	 *
@@ -66,10 +77,62 @@ abstract class StreamHelper
 	 */
 	public static function copyFrom($src, StreamInterface $dest)
 	{
-		$srcStream = $src instanceof StreamInterface ? $src : new Stream($src, Stream::MODE_READ_WRITE_RESET);
+		$srcStream = $src instanceof StreamInterface ? $src : new Stream($src, Stream::MODE_READ_ONLY_FROM_BEGIN);
 
 		static::copy($srcStream, $dest);
 
 		$srcStream->close();
+	}
+
+	/**
+	 * sendAttachment
+	 *
+	 * @param string|resource   $source
+	 * @param ResponseInterface $response
+	 * @param array             $options
+	 */
+	public static function sendAttachment($source, ResponseInterface $response = null, $options = array())
+	{
+		$stream = new Stream($source, 'r');
+
+		/** @var MessageInterface|ResponseInterface $response */
+		$response = $response ? : new Response;
+
+		$filename = null;
+
+		if (is_string($source))
+		{
+			$filename = pathinfo($source, PATHINFO_BASENAME);
+		}
+
+		if (isset($options['filename']))
+		{
+			$filename = $options['filename'];
+		}
+
+		if ($filename !== null)
+		{
+			$response = $response->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+		}
+
+		$response = $response->withBody($stream)
+			->withHeader('content-type', 'application/octet-stream')
+			->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+			->withHeader('Content-Transfer-Encoding', 'binary')
+			->withHeader('Content-Encoding', 'none');
+
+		$output = static::$outputObject;
+
+		if (!$output instanceof StreamOutput)
+		{
+			$output = new StreamOutput;
+		}
+
+		if (isset($options['delay']))
+		{
+			$output->setDelay($options['delay']);
+		}
+
+		$output->respond($response);
 	}
 }

@@ -10,6 +10,7 @@ namespace Windwalker\Http;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Windwalker\Http\Request\Request;
 use Windwalker\Http\Transport\CurlTransport;
 use Windwalker\Http\Transport\TransportInterface;
 use Windwalker\Uri\PsrUri;

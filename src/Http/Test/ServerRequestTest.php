@@ -8,7 +8,7 @@
 
 namespace Windwalker\Http\Test;
 
-use Windwalker\Http\ServerRequest;
+use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Test\TestHelper;
 use Windwalker\Uri\PsrUri;
@@ -99,7 +99,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::getServerParams
+	 * @covers Windwalker\Http\Request\ServerRequest::getServerParams
 	 * @TODO   Implement testGetServerParams().
 	 */
 	public function testGetServerParams()
@@ -115,7 +115,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::getCookieParams
+	 * @covers Windwalker\Http\Request\ServerRequest::getCookieParams
 	 * @TODO   Implement testGetCookieParams().
 	 */
 	public function testGetCookieParams()
@@ -131,7 +131,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::withCookieParams
+	 * @covers Windwalker\Http\Request\ServerRequest::withCookieParams
 	 * @TODO   Implement testWithCookieParams().
 	 */
 	public function testWithCookieParams()
@@ -147,7 +147,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::getQueryParams
+	 * @covers Windwalker\Http\Request\ServerRequest::getQueryParams
 	 * @TODO   Implement testGetQueryParams().
 	 */
 	public function testGetQueryParams()
@@ -163,7 +163,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::withQueryParams
+	 * @covers Windwalker\Http\Request\ServerRequest::withQueryParams
 	 * @TODO   Implement testWithQueryParams().
 	 */
 	public function testWithQueryParams()
@@ -179,7 +179,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::getUploadedFiles
+	 * @covers Windwalker\Http\Request\ServerRequest::getUploadedFiles
 	 * @TODO   Implement testGetUploadedFiles().
 	 */
 	public function testGetUploadedFiles()
@@ -195,7 +195,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::withUploadedFiles
+	 * @covers Windwalker\Http\Request\ServerRequest::withUploadedFiles
 	 * @TODO   Implement testWithUploadedFiles().
 	 */
 	public function testWithUploadedFiles()
@@ -211,7 +211,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::getParsedBody
+	 * @covers Windwalker\Http\Request\ServerRequest::getParsedBody
 	 * @TODO   Implement testGetParsedBody().
 	 */
 	public function testGetParsedBody()
@@ -227,7 +227,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::withParsedBody
+	 * @covers Windwalker\Http\Request\ServerRequest::withParsedBody
 	 * @TODO   Implement testWithParsedBody().
 	 */
 	public function testWithParsedBody()
@@ -243,7 +243,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::getAttributes
+	 * @covers Windwalker\Http\Request\ServerRequest::getAttributes
 	 * @TODO   Implement testGetAttributes().
 	 */
 	public function testGetAttributes()
@@ -259,7 +259,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::getAttribute
+	 * @covers Windwalker\Http\Request\ServerRequest::getAttribute
 	 * @TODO   Implement testGetAttribute().
 	 */
 	public function testGetAttribute()
@@ -275,7 +275,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::withAttribute
+	 * @covers Windwalker\Http\Request\ServerRequest::withAttribute
 	 * @TODO   Implement testWithAttribute().
 	 */
 	public function testWithAttribute()
@@ -291,7 +291,7 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\ServerRequest::withoutAttribute
+	 * @covers Windwalker\Http\Request\ServerRequest::withoutAttribute
 	 * @TODO   Implement testWithoutAttribute().
 	 */
 	public function testWithoutAttribute()

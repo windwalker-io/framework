@@ -11,7 +11,7 @@ namespace Windwalker\Http\Helper;
 /**
  * The HttpSecurityHelper class.
  *
- * A simple helper class based on Phly HeaderSecurity.
+ * A simple helper class based on Phly HeaderSecurity class.
  * 
  * @since  2.1
  */
@@ -62,18 +62,14 @@ abstract class HeaderHelper
 	}
 
 	/**
-	 * Filter a header value
-	 *
-	 * Ensures CRLF header injection vectors are filtered.
-	 *
-	 * Per RFC 7230, only VISIBLE ASCII characters, spaces, and horizontal
-	 * tabs are allowed in values; header continuations MUST consist of
-	 * a single CRLF sequence followed by a space or horizontal tab.
-	 *
-	 * This method filters any values not allowed from the string, and is
-	 * lossy.
+	 * Method to remove invalid CRLF injection from header value.
+	 * 
+	 * Follows RFC-7230, only allows visible ASCII characters, spaces
+	 * and tabs in header value. every new line must only contains
+	 * a single CRLF and a space or tab after it.
 	 *
 	 * @see http://en.wikipedia.org/wiki/HTTP_response_splitting
+	 * @see https://tools.ietf.org/html/rfc7230
 	 *
 	 * @param   string  $value
 	 *
@@ -121,17 +117,16 @@ abstract class HeaderHelper
 	}
 
 	/**
-	 * Validate a header value.
+	 * Method to validate a header value.
 	 *
-	 * Per RFC 7230, only VISIBLE ASCII characters, spaces, and horizontal
-	 * tabs are allowed in values; header continuations MUST consist of
-	 * a single CRLF sequence followed by a space or horizontal tab.
-	 *
-	 * @param   string  $value
+	 * Follows RFC-7230, only allows visible ASCII characters, spaces
+	 * and tabs in header value. every new line must only contains
+	 * a single CRLF and a space or tab after it.
 	 *
 	 * @return  boolean
 	 *
 	 * @see http://en.wikipedia.org/wiki/HTTP_response_splitting
+	 * @see https://tools.ietf.org/html/rfc7230
 	 */
 	public static function isValidValue($value)
 	{
@@ -166,6 +161,23 @@ abstract class HeaderHelper
 		}
 
 		return true;
+	}
+
+	/**
+	 * isValidProtocolVersion
+	 *
+	 * @param   string  $version
+	 *
+	 * @return  boolean
+	 */
+	public static function isValidProtocolVersion($version)
+	{
+		if (!is_string($version) || empty($version))
+		{
+			return false;
+		}
+
+		return (bool) preg_match('#^(1\.[01]|2)$#', $version);
 	}
 
 	/**
@@ -211,7 +223,12 @@ abstract class HeaderHelper
 	{
 		foreach ($array as $value)
 		{
-			if (!is_string((string) $value))
+			if (is_numeric($value))
+			{
+				$value = (string) $value;
+			}
+
+			if (!is_string($value))
 			{
 				return false;
 			}
@@ -234,9 +251,9 @@ abstract class HeaderHelper
 
 		foreach ($headers as $key => $value)
 		{
-			$value = is_array($value) ? implode(',', $value) : implode(',', $value);
+			$value = is_array($value) ? implode(',', $value) : $value;
 
-			$headerArray[] = $key . ': ' . $value;
+			$headerArray[] = static::normalizeHeaderName($key) . ': ' . $value;
 		}
 
 		if ($toString)
@@ -245,5 +262,20 @@ abstract class HeaderHelper
 		}
 
 		return $headerArray;
+	}
+
+	/**
+	 * Filter a header name to wordcase
+	 *
+	 * @param string $header
+	 *
+	 * @return string
+	 */
+	public static function normalizeHeaderName($header)
+	{
+		$filtered = str_replace('-', ' ', $header);
+		$filtered = ucwords($filtered);
+
+		return str_replace(' ', '-', $filtered);
 	}
 }

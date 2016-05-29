@@ -8,7 +8,7 @@
 
 namespace Windwalker\Http\Test;
 
-use Windwalker\Http\Response;
+use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\Stream;
 
 /**

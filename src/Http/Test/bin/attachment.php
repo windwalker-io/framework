@@ -17,22 +17,11 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 $server = \Windwalker\Http\WebServer::createServerFromRequest(function ($request, ResponseInterface $response, $finalHandler)
 {
-	// $response = $response->withHeader('Content-Type', 'application/json');
-
-//	$response->getBody()->write('Hello World!');
-
-	$response = new \Windwalker\Http\Response\HtmlResponse('<root><f>中文 World!</f></root>');
-
-	$response = $response->withHeader('asd', 123);
-
-	$response = $finalHandler($request, $response);
-
-	return $response;
+	\Windwalker\Http\Helper\StreamHelper::sendAttachment(__DIR__ . '/packet.zip', $response, ['delay' => 10000]);
+	die;
 }, \Windwalker\Http\Request\ServerRequestFactory::fromGlobals(), new \Windwalker\Http\Response\HtmlResponse);
 
 $server->listen(function ($request, $response) use ($server)
 {
-	$server->cachable($server::CACHE_CUSTOM_HEADER);
 
-	return $server->getCompressor()->compress($response);
 });

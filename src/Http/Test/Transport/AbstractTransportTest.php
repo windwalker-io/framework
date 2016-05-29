@@ -9,7 +9,7 @@
 namespace Windwalker\Http\Test\Transport;
 
 use Psr\Http\Message\StreamInterface;
-use Windwalker\Http\Request;
+use Windwalker\Http\Request\Request;
 use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\Stream\StringStream;
 use Windwalker\Http\Transport\AbstractTransport;

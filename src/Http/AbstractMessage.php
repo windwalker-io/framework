@@ -75,6 +75,22 @@ abstract class AbstractMessage implements MessageInterface
 	 */
 	public function withProtocolVersion($version)
 	{
+		if (!is_string($version))
+		{
+			throw new \InvalidArgumentException(sprintf(
+				'Invalid version number, require string type, %s provided',
+				gettype($version)
+			));
+		}
+
+		if (!HeaderHelper::isValidProtocolVersion($version))
+		{
+			throw new \InvalidArgumentException(sprintf(
+				'Invalid version number, require "<major>.<minor>" format, %s provided',
+				$version
+			));
+		}
+
 		$new = clone $this;
 		$new->protocol = $version;
 
@@ -88,12 +104,14 @@ abstract class AbstractMessage implements MessageInterface
 	 * each value is an array of strings associated with the header.
 	 *
 	 *     // Represent the headers as a string
-	 *     foreach ($message->getHeaders() as $name => $values) {
+	 *     foreach ($message->getHeaders() as $name => $values)
+	 *     {
 	 *         echo $name . ": " . implode(", ", $values);
 	 *     }
 	 *
 	 *     // Emit headers iteratively:
-	 *     foreach ($message->getHeaders() as $name => $values) {
+	 *     foreach ($message->getHeaders() as $name => $values)
+	 *     {
 	 *         foreach ($values as $value) {
 	 *             header(sprintf('%s: %s', $name, $value), false);
 	 *         }
@@ -178,7 +196,7 @@ abstract class AbstractMessage implements MessageInterface
 
 		if (!$value)
 		{
-			return null;
+			return '';
 		}
 
 		return implode(',', $value);
@@ -232,12 +250,12 @@ abstract class AbstractMessage implements MessageInterface
 
 		if (!HeaderHelper::arrayOnlyContainsString($value))
 		{
-			throw new \InvalidArgumentException('Header values should ony have string.');
+			throw new \InvalidArgumentException('Header values should ony contain string.');
 		}
 
 		if (!HeaderHelper::isValidName($name))
 		{
-			throw new \InvalidArgumentException('Invalid header name');
+			throw new \InvalidArgumentException('Invalid header name: ' . $name);
 		}
 
 		$new = clone $this;
@@ -329,6 +347,9 @@ abstract class AbstractMessage implements MessageInterface
 		$new = clone $this;
 
 		$normalized = strtolower($name);
+
+		$name = HeaderHelper::normalizeHeaderName($name);
+
 		$new->headerNames[$normalized] = $name;
 		$new->headers[$name] = array();
 

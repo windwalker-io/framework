@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Http;
+namespace Windwalker\Http\Request;
 
 use Psr\Http\Message\RequestInterface;
 
@@ -84,6 +84,26 @@ class Request extends AbstractRequest implements RequestInterface
 		$name = $this->getHeaderName($name);
 
 		return (array) $this->headers[$name];
+	}
+
+	/**
+	 * Checks if a header exists by the given case-insensitive name.
+	 *
+	 * @param string $name Case-insensitive header field name.
+	 *
+	 * @return bool Returns true if any header names match the given header
+	 *     name using a case-insensitive string comparison. Returns false if
+	 *     no matching header name is found in the message.
+	 */
+	public function hasHeader($name)
+	{
+		if (strtolower($name) === 'host' && ($this->uri && $this->uri->getHost()))
+		{
+			$this->headerNames['host'] = $name;
+			$this->headers[$name] = array($this->getHostFromUri());
+		}
+
+		return parent::hasHeader($name);
 	}
 
 	/**

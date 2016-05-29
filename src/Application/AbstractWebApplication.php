@@ -8,12 +8,12 @@
 
 namespace Windwalker\Application;
 
+use Windwalker\Http\Output\Output;
 use Windwalker\Environment\Web\WebClient;
 use Windwalker\Environment\Web\WebEnvironment;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
-use Windwalker\Http\Response\OutputResponse;
 use Windwalker\Http\Response\OutputResponseInterface;
 use Windwalker\Registry\Registry;
 
@@ -88,7 +88,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	public function __construct(Input $input = null, Registry $config = null, WebEnvironment $environment = null, OutputResponseInterface $output = null)
 	{
 		$this->environment = $environment instanceof WebEnvironment  ? $environment : new WebEnvironment;
-		$this->output      = $output      instanceof OutputResponseInterface ? $output      : new OutputResponse;
+		$this->output      = $output      instanceof OutputResponseInterface ? $output      : new Output;
 
 		// Call the constructor as late as possible (it runs `init()`).
 		parent::__construct($input, $config);

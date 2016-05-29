@@ -9,7 +9,7 @@
 namespace Windwalker\Http\Test;
 
 use Windwalker\Http\HttpClient;
-use Windwalker\Http\Request;
+use Windwalker\Http\Request\Request;
 use Windwalker\Http\Test\Mock\MockTransport;
 use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;

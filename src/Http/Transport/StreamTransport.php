@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\StreamHelper;
-use Windwalker\Http\Response;
+use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\Stream;
 
 /**

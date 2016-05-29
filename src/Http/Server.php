@@ -9,7 +9,12 @@
 namespace Windwalker\Http;
 
 use Psr\Http\Message\RequestInterface;
-use Windwalker\Application\Web\Output;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Windwalker\Http\Output\Output;
+use Windwalker\Http\Output\OutputInterface;
+use Windwalker\Http\Request\ServerRequestFactory;
+use Windwalker\Http\Response\Response;
 
 /**
  * The Server class.
@@ -28,45 +33,106 @@ class Server
 	/**
 	 * Property request.
 	 *
-	 * @var  RequestInterface
+	 * @var  ServerRequestInterface
 	 */
 	protected $request;
 
 	/**
+	 * Property response.
+	 *
+	 * @var  ResponseInterface
+	 */
+	protected $response;
+
+	/**
 	 * Property emitter.
 	 *
-	 * @var  Output
+	 * @var  OutputInterface
 	 */
 	protected $output;
 
 	/**
+	 * Create a Server instance
+	 *
+	 * Creates a server instance from the callback and the following
+	 * PHP environmental values:
+	 *
+	 * - server; typically this will be the $_SERVER superglobal
+	 * - query; typically this will be the $_GET superglobal
+	 * - body; typically this will be the $_POST superglobal
+	 * - cookies; typically this will be the $_COOKIE superglobal
+	 * - files; typically this will be the $_FILES superglobal
+	 *
+	 * @param callable $callback
+	 * @param array $server
+	 * @param array $query
+	 * @param array $body
+	 * @param array $cookies
+	 * @param array $files
+	 * @return static
+	 */
+	public static function createServer(callable $callback, array $server, array $query, array $body, array $cookies, array $files)
+	{
+		$request  = ServerRequestFactory::fromGlobals($server, $query, $body, $cookies, $files);
+		$response = new Response;
+
+		return new static($callback, $request, $response);
+	}
+
+	/**
+	 * Create a Server instance from an existing request object
+	 *
+	 * Provided a callback, an existing request object, and optionally an
+	 * existing response object, create and return the Server instance.
+	 *
+	 * If no Response object is provided, one will be created.
+	 *
+	 * @param callable $callback
+	 * @param ServerRequestInterface $request
+	 * @param null|ResponseInterface $response
+	 * @return static
+	 */
+	public static function createServerFromRequest(callable $callback, ServerRequestInterface $request, ResponseInterface $response = null)
+	{
+		if (! $response)
+		{
+			$response = new Response;
+		}
+
+		return new static($callback, $request, $response);
+	}
+
+	/**
 	 * Server constructor.
 	 *
-	 * @param callable         $handler
-	 * @param RequestInterface $request
-	 * @param Output           $output
+	 * @param callable          $handler
+	 * @param RequestInterface  $request
+	 * @param ResponseInterface $response
+	 * @param OutputInterface   $output
 	 */
-	public function __construct(callable $handler, RequestInterface $request, Output $output)
+	public function __construct(callable $handler, RequestInterface $request, ResponseInterface $response, OutputInterface $output = null)
 	{
-		$this->handler = $handler;
-		$this->request = $request;
-		$this->output  = $output;
+		$this->handler  = $handler;
+		$this->request  = $request;
+		$this->response = $response;
+		$this->output   = $output ? : $this->getOutput();
 	}
 
 	/**
 	 * listen
 	 *
 	 * @param callable $finalHandler
-	 *
-	 * @return  void
 	 */
 	public function listen(callable $finalHandler = null)
 	{
-		$response = call_user_func($this->handler, $this->request, $this->output, $finalHandler);
+		$response = call_user_func($this->handler, $this->request, $this->response, $finalHandler);
 
-		$this->output->setBody($response);
+		if (!$response instanceof ResponseInterface)
+		{
+			$response = $this->response;
+		}
 
-		$this->output->respond();
+		$this->output->respond($response);
 	}
 
 	/**
@@ -96,7 +162,7 @@ class Server
 	/**
 	 * Method to get property Request
 	 *
-	 * @return  RequestInterface
+	 * @return  ServerRequestInterface
 	 */
 	public function getRequest()
 	{
@@ -106,7 +172,7 @@ class Server
 	/**
 	 * Method to set property request
 	 *
-	 * @param   RequestInterface $request
+	 * @param   ServerRequestInterface $request
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
@@ -120,7 +186,7 @@ class Server
 	/**
 	 * Method to get property Output
 	 *
-	 * @return  Output
+	 * @return  OutputInterface
 	 */
 	public function getOutput()
 	{

@@ -6,14 +6,14 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Http;
+namespace Windwalker\Http\Request;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
+use Windwalker\Http\AbstractMessage;
 use Windwalker\Http\Helper\HeaderHelper;
-use Windwalker\Http\Helper\HttpValidationHelper;
 use Windwalker\Http\Stream\Stream;
 use Windwalker\Uri\PsrUri;
 

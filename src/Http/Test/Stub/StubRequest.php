@@ -8,7 +8,7 @@
 
 namespace Windwalker\Http\Test\Stub;
 
-use Windwalker\Http\AbstractRequest;
+use Windwalker\Http\Request\AbstractRequest;
 
 /**
  * The StubRequest class.

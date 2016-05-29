@@ -107,19 +107,12 @@ abstract class ResponseHelper
 	 *
 	 * @param int|string $code
 	 *
-	 * @return  integer
-	 *
-	 * @throws \InvalidArgumentException on an invalid status code.
+	 * @return  boolean  Valid or not.
 	 */
 	public static function validateStatus($code)
 	{
 		$code = (int) $code;
 
-		if ($code < 100 || $code >= 600)
-		{
-			throw new \InvalidArgumentException('Invalid status code: ' . $code);
-		}
-
-		return $code;
+		return ($code >= 100 && $code < 600);
 	}
 }

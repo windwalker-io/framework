@@ -11,13 +11,14 @@ namespace Windwalker\Http\Test;
 use Windwalker\Http\AbstractMessage;
 use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\Test\Stub\StubMessage;
+use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
  * Test class of AbstractMessage
  *
  * @since 2.1
  */
-class AbstractMessageTest extends \PHPUnit_Framework_TestCase
+class AbstractMessageTest extends AbstractBaseTestCase
 {
 	/**
 	 * Test instance.
@@ -63,6 +64,19 @@ class AbstractMessageTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertNotSame($this->message, $message);
 		$this->assertEquals('1.0', $message->getProtocolVersion());
+		
+		// Wrong type
+		$this->assertExpectedException(function () use ($message)
+		{
+			$this->message->withProtocolVersion(1.0);
+		}, 'InvalidArgumentException');
+
+		$message = new StubMessage;
+		$message = $message->withHeader('x-foo', 'foo1');
+		$message = $message->withHeader('X-Foo', 'foo2');
+		$message = $message->withHeader('x-Boo', 'boo');
+
+		show($message);
 	}
 
 	/**
@@ -141,6 +155,7 @@ class AbstractMessageTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('Foo,Bar', $message->getHeaderLine('X-Foo'));
 		$this->assertEquals('Foo,Bar', $message->getHeaderLine('x-foo'));
+		$this->assertSame('', $message->getHeaderLine('x-bar'));
 	}
 
 	/**

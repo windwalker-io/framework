@@ -11,7 +11,7 @@ namespace Windwalker\Http\Test\Mock;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Windwalker\Http\Response;
+use Windwalker\Http\Response\Response;
 use Windwalker\Http\Transport\AbstractTransport;
 
 /**

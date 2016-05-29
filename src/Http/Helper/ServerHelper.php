@@ -103,7 +103,7 @@ abstract class ServerHelper
 	{
 		if (function_exists('apache_request_headers'))
 		{
-			// return apache_request_headers();
+			return apache_request_headers();
 		}
 		
 		$out = array();

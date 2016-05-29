@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Http;
+namespace Windwalker\Http\Request;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;

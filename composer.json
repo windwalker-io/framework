@@ -22,7 +22,9 @@
         "twig/twig": "~1.0",
         "illuminate/view": "4.1.*",
         "mustache/mustache": "~2.0",
-        "league/plates": "~3.0"
+        "league/plates": "~3.0",
+
+        "zendframework/zend-diactoros": "*"
     },
     "suggest": {
         "symfony/yaml": "Install ~2.0 if you require YAML support."

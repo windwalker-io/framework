@@ -21,7 +21,7 @@ $server = \Windwalker\Http\WebServer::createServerFromRequest(function ($request
 
 //	$response->getBody()->write('Hello World!');
 
-	$response = new \Windwalker\Http\Response\HtmlResponse('<root><f>中文 World!</f></root>');
+	$response = new \Windwalker\Http\Response\XmlResponse('<root><f>中文 World!</f></root>');
 
 	$response = $response->withHeader('asd', 123);
 
@@ -30,9 +30,9 @@ $server = \Windwalker\Http\WebServer::createServerFromRequest(function ($request
 	return $response;
 }, \Windwalker\Http\Request\ServerRequestFactory::fromGlobals(), new \Windwalker\Http\Response\HtmlResponse);
 
+//$server->getOutput()
+
 $server->listen(function ($request, $response) use ($server)
 {
-	$server->cachable($server::CACHE_CUSTOM_HEADER);
-
-	return $server->getCompressor()->compress($response);
+	return $server->compress($response);
 });

@@ -6,22 +6,25 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Http\Response;
+namespace Windwalker\Http\Output;
+
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Interface OutputInterface
  */
-interface OutputResponseInterface
+interface OutputInterface
 {
 	/**
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
 	 * application output data.
 	 *
-	 * @param   boolean $returnBody  Return output body or not.
+	 * @param   ResponseInterface $response    Respond body output.
+	 * @param   boolean           $returnBody  Return body as string.
 	 *
-	 * @return  string
-	 *
-	 * @since   2.0
+	 * @return string
+	 * 
+	 * @since   3.0
 	 */
-	public function respond($returnBody = false);
+	public function respond(ResponseInterface $response, $returnBody = false);
 }
