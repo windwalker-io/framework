@@ -267,7 +267,7 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 	{
 		if (is_file($this->destFile))
 		{
-			unlink($this->destFile);
+			@unlink($this->destFile);
 		}
 	}
 }

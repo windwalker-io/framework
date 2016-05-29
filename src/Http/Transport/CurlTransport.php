@@ -55,7 +55,7 @@ class CurlTransport extends AbstractTransport
 				$options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
 				break;
 
-			case '2.0':
+			case '2':
 				if (defined('CURL_HTTP_VERSION_2_0'))
 				{
 					$options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_2_0;

@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Http\Test;
+namespace Windwalker\Http\Test\Request;
 
 use Windwalker\Http\Request\Request;
 use Windwalker\Uri\PsrUri;

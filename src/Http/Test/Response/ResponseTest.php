@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Http\Test;
+namespace Windwalker\Http\Test\Response;
 
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\Stream;
