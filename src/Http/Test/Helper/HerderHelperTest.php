@@ -135,6 +135,8 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, HeaderHelper::isValidValue($string), str_replace(array("\t", "\n", "\r"), array("\\t", "\\n", "\\r"), $string) . ' assert fail - #' . $num);
 	}
 
+
+
 	/**
 	 * isValidValue_Provider
 	 *
@@ -256,5 +258,46 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('X-Foo', HeaderHelper::normalizeHeaderName('x-foo'));
 		$this->assertEquals('X-Foo', HeaderHelper::normalizeHeaderName('X Foo'));
 		$this->assertEquals('X-Foo', HeaderHelper::normalizeHeaderName('X foo'));
+	}
+
+	/**
+	 * testIsValidProtocolVersion
+	 *
+	 * @param $version
+	 * @param $expected
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Http\Helper\HeaderHelper::isValidProtocolVersion
+	 *
+	 * @dataProvider isValidProtocolVersion_Provider
+	 */
+	public function testIsValidProtocolVersion($version, $expected)
+	{
+		$this->assertEquals($expected, HeaderHelper::isValidProtocolVersion($version));
+	}
+
+	/**
+	 * isValidProtocol_Provider
+	 *
+	 * @return  array
+	 */
+	public function isValidProtocolVersion_Provider()
+	{
+		return array(
+			array('1.0', true),
+			array('1.1', true),
+			array('2',   true),
+			array('2.0', false),
+			array('0.5', false),
+			array('1.5', false),
+			array('2.1', false),
+			array('123', false),
+			array(123,   false),
+			array(1.0,   false),
+			array(new \stdClass, false),
+			array(array(), false),
+			array(null,  false),
+		);
 	}
 }

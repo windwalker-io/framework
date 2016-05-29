@@ -48,7 +48,7 @@ class ServerRequestFactory
 	 * @return ServerRequest
 	 * @throws \InvalidArgumentException for invalid file values
 	 */
-	public static function fromGlobals(array $server = array(), array $query = array(), array $body = null,
+	public static function create(array $server = array(), array $query = array(), array $body = null,
 		array $cookies = array(), array $files = array())
 	{
 		$server  = static::prepareServers($server ? : $_SERVER);

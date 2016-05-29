@@ -70,13 +70,6 @@ class AbstractMessageTest extends AbstractBaseTestCase
 		{
 			$this->message->withProtocolVersion(1.0);
 		}, 'InvalidArgumentException');
-
-		$message = new StubMessage;
-		$message = $message->withHeader('x-foo', 'foo1');
-		$message = $message->withHeader('X-Foo', 'foo2');
-		$message = $message->withHeader('x-Boo', 'boo');
-
-		show($message);
 	}
 
 	/**

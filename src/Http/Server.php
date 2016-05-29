@@ -71,12 +71,11 @@ class Server
 	 * @param array $files
 	 * @return static
 	 */
-	public static function createServer(callable $callback, array $server, array $query, array $body, array $cookies, array $files)
+	public static function createFromGlobals(callable $callback, array $server, array $query, array $body, array $cookies, array $files)
 	{
-		$request  = ServerRequestFactory::fromGlobals($server, $query, $body, $cookies, $files);
-		$response = new Response;
+		$request  = ServerRequestFactory::create($server, $query, $body, $cookies, $files);
 
-		return new static($callback, $request, $response);
+		return new static($callback, $request);
 	}
 
 	/**
@@ -87,34 +86,16 @@ class Server
 	 *
 	 * If no Response object is provided, one will be created.
 	 *
-	 * @param callable $callback
-	 * @param ServerRequestInterface $request
-	 * @param null|ResponseInterface $response
-	 * @return static
-	 */
-	public static function createServerFromRequest(callable $callback, ServerRequestInterface $request, ResponseInterface $response = null)
-	{
-		if (! $response)
-		{
-			$response = new Response;
-		}
-
-		return new static($callback, $request, $response);
-	}
-
-	/**
-	 * Server constructor.
-	 *
 	 * @param callable          $handler
 	 * @param RequestInterface  $request
 	 * @param ResponseInterface $response
 	 * @param OutputInterface   $output
 	 */
-	public function __construct(callable $handler, RequestInterface $request, ResponseInterface $response, OutputInterface $output = null)
+	public function __construct(callable $handler, RequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		$this->handler  = $handler;
 		$this->request  = $request;
-		$this->response = $response;
+		$this->response = $response ? : new Response;
 		$this->output   = $output ? : $this->getOutput();
 	}
 

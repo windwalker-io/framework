@@ -15,11 +15,11 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 //
 //show($request->getUri());
 
-$server = \Windwalker\Http\WebServer::createServerFromRequest(function ($request, ResponseInterface $response, $finalHandler)
+$server = \Windwalker\Http\WebServer::createFromRequest(function ($request, ResponseInterface $response, $finalHandler)
 {
 	\Windwalker\Http\Helper\StreamHelper::sendAttachment(__DIR__ . '/packet.zip', $response, ['delay' => 10000]);
 	die;
-}, \Windwalker\Http\Request\ServerRequestFactory::fromGlobals(), new \Windwalker\Http\Response\HtmlResponse);
+}, \Windwalker\Http\Request\ServerRequestFactory::create(), new \Windwalker\Http\Response\HtmlResponse);
 
 $server->listen(function ($request, $response) use ($server)
 {
