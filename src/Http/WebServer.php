@@ -11,7 +11,7 @@ namespace Windwalker\Http;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Windwalker\Http\Output\Compressor;
+use Windwalker\Http\Output\HttpCompressor;
 use Windwalker\Http\Output\OutputInterface;
 use Windwalker\Uri\PsrUri;
 use Windwalker\Uri\UriData;
@@ -19,8 +19,8 @@ use Windwalker\Uri\UriData;
 /**
  * The WebServer class.
  *
- * @property-read  UriData     uri
- * @property-read  Compressor  compressor
+ * @property-read  UriData        uri
+ * @property-read  HttpCompressor compressor
  *
  * @since  {DEPLOY_VERSION}
  */
@@ -75,7 +75,7 @@ class WebServer extends Server
 	/**
 	 * Property compressor.
 	 *
-	 * @var  Compressor
+	 * @var  HttpCompressor
 	 */
 	protected $compressor;
 
@@ -95,7 +95,7 @@ class WebServer extends Server
 
 		$this->loadSystemUris();
 
-		$this->compressor = new Compressor($this);
+		$this->compressor = new HttpCompressor($this);
 	}
 
 	/**
@@ -383,7 +383,7 @@ class WebServer extends Server
 	/**
 	 * Method to get property Compressor
 	 *
-	 * @return  Compressor
+	 * @return  HttpCompressor
 	 */
 	public function getCompressor()
 	{
@@ -393,11 +393,11 @@ class WebServer extends Server
 	/**
 	 * Method to set property compressor
 	 *
-	 * @param   Compressor $compressor
+	 * @param   HttpCompressor $compressor
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setCompressor(Compressor $compressor)
+	public function setCompressor(HttpCompressor $compressor)
 	{
 		$this->compressor = $compressor;
 

@@ -86,12 +86,32 @@ class Server
 	 *
 	 * If no Response object is provided, one will be created.
 	 *
-	 * @param callable          $handler
-	 * @param RequestInterface  $request
-	 * @param ResponseInterface $response
-	 * @param OutputInterface   $output
+	 * @param callable               $handler
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface      $response
+	 * @param OutputInterface        $output
+	 *
+	 * @return static
 	 */
-	public function __construct(callable $handler, RequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
+	public static function create(callable $handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
+	{
+		return new static($handler, $request, $response, $output);
+	}
+
+	/**
+	 * Create a Server instance from an existing request object
+	 *
+	 * Provided a callback, an existing request object, and optionally an
+	 * existing response object, create and return the Server instance.
+	 *
+	 * If no Response object is provided, one will be created.
+	 *
+	 * @param callable                $handler
+	 * @param ServerRequestInterface  $request
+	 * @param ResponseInterface       $response
+	 * @param OutputInterface         $output
+	 */
+	public function __construct(callable $handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		$this->handler  = $handler;
 		$this->request  = $request;

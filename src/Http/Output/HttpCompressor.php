@@ -17,8 +17,12 @@ use Windwalker\Http\WebServer;
  *
  * @since  {DEPLOY_VERSION}
  */
-class Compressor
+class HttpCompressor
 {
+	const ENCODING_GZIP    = 'gz';
+	const ENCODING_XGZIP   = 'gz';
+	const ENCODING_DEFLATE = 'deflate';
+
 	/**
 	 * Property request.
 	 *
@@ -41,6 +45,13 @@ class Compressor
 	protected $encodings;
 
 	/**
+	 * Property encodedBy.
+	 *
+	 * @var  string
+	 */
+	protected $encodedBy = 'Windwalker';
+
+	/**
 	 * Compressor constructor.
 	 *
 	 * @param WebServer $server
@@ -50,6 +61,16 @@ class Compressor
 	{
 		$this->server         = $server;
 		$this->acceptEncoding = $acceptEncoding ? : $this->getAcceptEncoding();
+	}
+
+	/**
+	 * isSupported
+	 *
+	 * @return  boolean
+	 */
+	public static function isSupported()
+	{
+		return extension_loaded('zlib') || ini_get('zlib.output_compression');
 	}
 
 	/**
@@ -68,7 +89,9 @@ class Compressor
 	 *
 	 * @param ResponseInterface $response
 	 *
-	 * @return static Return self to support chaining.
+	 * @return ResponseInterface Return Response object.
+	 *
+	 * @throws CompressException
 	 *
 	 * @since    3.0
 	 */
@@ -78,9 +101,9 @@ class Compressor
 
 		// Supported compression encodings.
 		$supported = array(
-			'x-gzip'  => 'gz',
-			'gzip'    => 'gz',
-			'deflate' => 'deflate'
+			'x-gzip'  => FORCE_GZIP,
+			'gzip'    => FORCE_GZIP,
+			'deflate' => FORCE_DEFLATE
 		);
 
 		// Get the supported encoding.
@@ -92,46 +115,46 @@ class Compressor
 			return $response;
 		}
 
+		// Verify that the server supports gzip compression before we attempt to gzip encode the data.
+		if (!static::isSupported())
+		{
+			throw new CompressException(
+				'Your system do not support HTTP compression, please check zlib has benn enabled' .
+				' or zlib.output_compression in php.ini has set to "On".'
+			);
+		}
+
 		// Verify that headers have not yet been sent, and that our connection is still alive.
 		if ($this->checkHeadersSent() || !$this->checkConnectionAlive())
 		{
-			return $response;
+			throw new CompressException('Header has been sent, compression can not work.');
 		}
 
 		// Iterate through the encodings and attempt to compress the data using any found supported encodings.
 		foreach ($encodings as $encoding)
 		{
-			if (($supported[$encoding] == 'gz') || ($supported[$encoding] == 'deflate'))
+			// Attempt to gzip encode the data with an optimal level 4.
+			$data = $response->getBody();
+			$gzdata = gzencode($data, 4, $supported[$encoding]);
+
+			// If there was a problem encoding the data just try the next encoding scheme.
+			if ($gzdata === false)
 			{
-				// Verify that the server supports gzip compression before we attempt to gzip encode the data.
-				if (!extension_loaded('zlib') || ini_get('zlib.output_compression'))
-				{
-					continue;
-				}
-
-				// Attempt to gzip encode the data with an optimal level 4.
-				$data = $response->getBody();
-				$gzdata = gzencode($data, 4, ($supported[$encoding] == 'gz') ? FORCE_GZIP : FORCE_DEFLATE);
-
-				// If there was a problem encoding the data just try the next encoding scheme.
-				if ($gzdata === false)
-				{
-					continue;
-				}
-
-				// Set the encoding headers.
-				/** @var ResponseInterface|MessageInterface $response */
-				$response = $response->withHeader('content-encoding', $encoding);
-				$response = $response->withHeader('x-content-encoded-by', 'Windwalker');
-
-				// Replace the output with the encoded data.
-				$body = $response->getBody();
-				$body->rewind();
-				$body->write($gzdata);
-
-				// Compression complete, let's break out of the loop.
-				break;
+				continue;
 			}
+
+			// Set the encoding headers.
+			/** @var ResponseInterface|MessageInterface $response */
+			$response = $response->withHeader('Content-Encoding', $encoding);
+			$response = $response->withHeader('X-Content-Encoded-By', $this->getEncodedBy());
+
+			// Replace the output with the encoded data.
+			$body = $response->getBody();
+			$body->rewind();
+			$body->write($gzdata);
+
+			// Compression complete, let's break out of the loop.
+			break;
 		}
 
 		return $response;
@@ -218,5 +241,29 @@ class Compressor
 	public function checkConnectionAlive()
 	{
 		return (connection_status() === CONNECTION_NORMAL);
+	}
+
+	/**
+	 * Method to get property EncodedBy
+	 *
+	 * @return  string
+	 */
+	public function getEncodedBy()
+	{
+		return $this->encodedBy;
+	}
+
+	/**
+	 * Method to set property encodedBy
+	 *
+	 * @param   string $encodedBy
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setEncodedBy($encodedBy)
+	{
+		$this->encodedBy = (string) $encodedBy;
+
+		return $this;
 	}
 }

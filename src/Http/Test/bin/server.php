@@ -15,7 +15,7 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 //
 //show($request->getUri());
 
-$server = \Windwalker\Http\WebServer::createFromRequest(function ($request, ResponseInterface $response, $finalHandler)
+$server = \Windwalker\Http\WebServer::create(function ($request, ResponseInterface $response, $finalHandler)
 {
 	// $response = $response->withHeader('Content-Type', 'application/json');
 
@@ -30,9 +30,9 @@ $server = \Windwalker\Http\WebServer::createFromRequest(function ($request, Resp
 	return $response;
 }, \Windwalker\Http\Request\ServerRequestFactory::create(), new \Windwalker\Http\Response\HtmlResponse);
 
-$server->listen(function ($request, $response) use ($server)
+$server->listen(function ($request, ResponseInterface $response) use ($server)
 {
 	$server->cachable($server::CACHE_CUSTOM_HEADER);
 
-	return $server->getCompressor()->compress($response);
+	return $response = $server->getCompressor()->compress($response);
 });
