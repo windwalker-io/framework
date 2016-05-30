@@ -152,15 +152,20 @@ class HttpCompressor
 		if (!static::isSupported())
 		{
 			throw new CompressException(
-				'Your system do not support HTTP compression, please check zlib has benn enabled' .
+				'Your system does not support HTTP compression, please check zlib has benn enabled' .
 				' or zlib.output_compression in php.ini has set to "On".'
 			);
 		}
 
 		// Verify that headers have not yet been sent, and that our connection is still alive.
-		if ($this->checkHeadersSent() || !$this->checkConnectionAlive())
+		if ($this->checkHeadersSent())
 		{
 			throw new CompressException('Header has been sent or connection is not alive, compression can not work.');
+		}
+
+		if (!$this->checkConnectionAlive())
+		{
+			throw new CompressException('Connection is not alive, compression can not work.');
 		}
 
 		return gzencode($data, $level, $encoding);
