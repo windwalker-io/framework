@@ -240,6 +240,11 @@ abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array('flower' => 'sakura'), $data['_POST']);
 	}
 
+	/**
+	 * testDownload
+	 *
+	 * @return  void
+	 */
 	public function testDownload()
 	{
 		$this->unlinkDownloaded();

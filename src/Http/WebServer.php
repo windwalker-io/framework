@@ -9,8 +9,8 @@
 namespace Windwalker\Http;
 
 use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Http\Output\HttpCompressor;
 use Windwalker\Http\Output\OutputInterface;
 use Windwalker\Uri\PsrUri;
@@ -82,12 +82,12 @@ class WebServer extends Server
 	/**
 	 * Server constructor.
 	 *
-	 * @param callable          $handler
-	 * @param RequestInterface  $request
-	 * @param ResponseInterface $response
-	 * @param OutputInterface   $output
+	 * @param callable                $handler
+	 * @param ServerRequestInterface  $request
+	 * @param ResponseInterface       $response
+	 * @param OutputInterface         $output
 	 */
-	public function __construct(callable $handler, RequestInterface $request, ResponseInterface $response, OutputInterface $output = null)
+	public function __construct(callable $handler, ServerRequestInterface $request, ResponseInterface $response, OutputInterface $output = null)
 	{
 		parent::__construct($handler, $request, $response, $output);
 
@@ -95,7 +95,7 @@ class WebServer extends Server
 
 		$this->loadSystemUris();
 
-		$this->compressor = new HttpCompressor($this);
+		$this->compressor = $this->createHttpCompressor();
 	}
 
 	/**
@@ -426,5 +426,24 @@ class WebServer extends Server
 		$this->cachable = $cachable;
 
 		return $this;
+	}
+
+	/**
+	 * Create Compressor object.
+	 *
+	 * @param  string $acceptEncoding  The HTTP_ACCEPT_ENCODING param, the common is "gzip, deflate".
+	 *
+	 * @return HttpCompressor
+	 */
+	public function createHttpCompressor($acceptEncoding = null)
+	{
+		if (!$acceptEncoding)
+		{
+			$servers = $this->getRequest()->getServerParams();
+
+			$acceptEncoding = isset($servers['HTTP_ACCEPT_ENCODING']) ? $servers['HTTP_ACCEPT_ENCODING'] : '';
+		}
+
+		return new HttpCompressor($acceptEncoding);
 	}
 }

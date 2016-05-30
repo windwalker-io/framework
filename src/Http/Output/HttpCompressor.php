@@ -10,7 +10,6 @@ namespace Windwalker\Http\Output;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
-use Windwalker\Http\WebServer;
 
 /**
  * The Compressor class.
@@ -22,13 +21,6 @@ class HttpCompressor
 	const ENCODING_GZIP    = 'gz';
 	const ENCODING_XGZIP   = 'gz';
 	const ENCODING_DEFLATE = 'deflate';
-
-	/**
-	 * Property request.
-	 *
-	 * @var  WebServer
-	 */
-	protected $server;
 
 	/**
 	 * Property acceptEncoding.
@@ -54,12 +46,10 @@ class HttpCompressor
 	/**
 	 * Compressor constructor.
 	 *
-	 * @param WebServer $server
 	 * @param string    $acceptEncoding
 	 */
-	public function __construct(WebServer $server, $acceptEncoding = null)
+	public function __construct($acceptEncoding = null)
 	{
-		$this->server         = $server;
 		$this->acceptEncoding = $acceptEncoding ? : $this->getAcceptEncoding();
 	}
 
@@ -115,27 +105,12 @@ class HttpCompressor
 			return $response;
 		}
 
-		// Verify that the server supports gzip compression before we attempt to gzip encode the data.
-		if (!static::isSupported())
-		{
-			throw new CompressException(
-				'Your system do not support HTTP compression, please check zlib has benn enabled' .
-				' or zlib.output_compression in php.ini has set to "On".'
-			);
-		}
-
-		// Verify that headers have not yet been sent, and that our connection is still alive.
-		if ($this->checkHeadersSent() || !$this->checkConnectionAlive())
-		{
-			throw new CompressException('Header has been sent, compression can not work.');
-		}
-
 		// Iterate through the encodings and attempt to compress the data using any found supported encodings.
 		foreach ($encodings as $encoding)
 		{
 			// Attempt to gzip encode the data with an optimal level 4.
 			$data = $response->getBody();
-			$gzdata = gzencode($data, 4, $supported[$encoding]);
+			$gzdata = $this->encode($data, $supported[$encoding]);
 
 			// If there was a problem encoding the data just try the next encoding scheme.
 			if ($gzdata === false)
@@ -161,27 +136,34 @@ class HttpCompressor
 	}
 
 	/**
-	 * Method to get property Request
+	 * Compress raw data.
 	 *
-	 * @return  WebServer
+	 * @param string  $data      The data to encode.
+	 * @param int     $encoding  The encoding mode. Can be FORCE_GZIP (the default) or FORCE_DEFLATE.
+	 * @param int     $level     The level of compression. Can be given as 0 for no compression up to 9
+	 *                           for maximum compression. If not given, the default compression level will
+	 *                           be the default compression level of the zlib library.
+	 *
+	 * @return  string
 	 */
-	public function getServer()
+	public function encode($data, $encoding = FORCE_GZIP, $level = 4)
 	{
-		return $this->server;
-	}
+		// Verify that the server supports gzip compression before we attempt to gzip encode the data.
+		if (!static::isSupported())
+		{
+			throw new CompressException(
+				'Your system do not support HTTP compression, please check zlib has benn enabled' .
+				' or zlib.output_compression in php.ini has set to "On".'
+			);
+		}
 
-	/**
-	 * Method to set property request
-	 *
-	 * @param   WebServer $server
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setServer(WebServer $server)
-	{
-		$this->server = $server;
+		// Verify that headers have not yet been sent, and that our connection is still alive.
+		if ($this->checkHeadersSent() || !$this->checkConnectionAlive())
+		{
+			throw new CompressException('Header has been sent or connection is not alive, compression can not work.');
+		}
 
-		return $this;
+		return gzencode($data, $level, $encoding);
 	}
 
 	/**
@@ -193,9 +175,7 @@ class HttpCompressor
 	{
 		if ($this->acceptEncoding === null)
 		{
-			$server = $this->getServer()->getRequest()->getServerParams();
-
-			$this->acceptEncoding = isset($server['HTTP_ACCEPT_ENCODING']) ? $server['HTTP_ACCEPT_ENCODING'] : $server['HTTP_ACCEPT_ENCODING'];
+			$this->acceptEncoding = isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : '';
 		}
 
 		return $this->acceptEncoding;
