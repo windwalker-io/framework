@@ -48,6 +48,13 @@ class StubStreamOutput extends StreamOutput
 	public $output;
 
 	/**
+	 * Property waiting.
+	 *
+	 * @var  int
+	 */
+	public $waiting;
+
+	/**
 	 * MockOutput constructor.
 	 */
 	public function __construct()
@@ -115,5 +122,20 @@ class StubStreamOutput extends StreamOutput
 	public function checkHeaderSent()
 	{
 		return false;
+	}
+
+	/**
+	 * delay
+	 *
+	 * @return  void
+	 */
+	public function delay()
+	{
+		if ($this->delay === null)
+		{
+			return;
+		}
+
+		$this->waiting += $this->delay;
 	}
 }

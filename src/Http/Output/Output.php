@@ -9,6 +9,7 @@
 namespace Windwalker\Http\Output;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 
 /**
@@ -25,7 +26,7 @@ class Output implements OutputInterface
 	 * @param   ResponseInterface $response    Respond body output.
 	 * @param   boolean           $returnBody  Return body as string.
 	 *
-	 * @return  ResponseInterface|void
+	 * @return  StreamInterface|void
 	 *
 	 * @since   3.0
 	 */

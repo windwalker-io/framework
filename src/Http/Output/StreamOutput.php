@@ -41,11 +41,6 @@ class StreamOutput extends Output
 	 */
 	public function respond(ResponseInterface $response, $returnBody = false)
 	{
-		if ($this->checkHeaderSent())
-		{
-			throw new \RuntimeException('Headers has already sent, unable to respond data.');
-		}
-
 		$response = $this->prepareContentLength($response);
 
 		parent::respond($response, false);
@@ -79,7 +74,7 @@ class StreamOutput extends Output
 			return;
 		}
 
-		list($unit, $first, $last, $lenght) = $range;
+		list($unit, $first, $last, $length) = array_values($range);
 
 		++$last;
 
@@ -140,30 +135,17 @@ class StreamOutput extends Output
 	{
 		if (preg_match('/(?P<unit>[\w]+)\s+(?P<first>\d+)-(?P<last>\d+)\/(?P<length>\d+|\*)/', $header, $matches))
 		{
-			$matches['first']  = (int) $matches['first'];
-			$matches['last']   = (int) $matches['last'];
+			$return = array();
 
-			if (is_numeric($matches['length']))
-			{
-				$matches['length'] = (int) $matches['length'];
-			}
+			$return['unit']   = $matches['unit'];
+			$return['first']  = (int) $matches['first'];
+			$return['last']   = (int) $matches['last'];
+			$return['length'] = is_numeric($matches['length']) ? (int) $matches['length'] : '*';
 
-			return $matches;
+			return $return;
 		}
 
 		return false;
-	}
-
-	/**
-	 * Check header sent or not. The method is for for test use.
-	 *
-	 * @return  boolean
-	 *
-	 * @see  headers_sent
-	 */
-	public function checkHeaderSent()
-	{
-		return headers_sent();
 	}
 
 	/**

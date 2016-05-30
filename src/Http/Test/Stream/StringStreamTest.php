@@ -184,6 +184,9 @@ class StringStreamTest extends AbstractBaseTestCase
 
 		$stream->seek(7);
 		$this->assertTrue($stream->eof());
+
+		$stream->seek(4096);
+		$this->assertTrue($stream->eof());
 	}
 
 	/**

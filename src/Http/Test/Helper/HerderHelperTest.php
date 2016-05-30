@@ -167,13 +167,14 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @param mixed $source
 	 * @param array $expected
+	 * @param int   $num
 	 *
 	 * @covers        Windwalker\Http\Helper\HeaderHelper::allToArray
 	 * @dataProvider  allToArray_Provider
 	 */
-	public function testAllToArray($source, $expected)
+	public function testAllToArray($source, $expected, $num)
 	{
-		$this->assertEquals($expected, HeaderHelper::allToArray($source));
+		$this->assertEquals($expected, HeaderHelper::allToArray($source), $num . ' error.');
 	}
 
 	/**
@@ -186,19 +187,23 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 		return array(
 			array(
 				array('A', 'B', 'C'),
-				array('A', 'B', 'C')
+				array('A', 'B', 'C'),
+				'#1'
 			),
 			array(
-				(object) array('A', 'B', 'C'),
-				array('A', 'B', 'C')
+				(object) array('a' => 'A', 'b' => 'B'),
+				array('a' => 'A', 'b' => 'B'),
+				'#2'
 			),
 			array(
 				new \ArrayIterator(array('A', 'B', 'C')),
-				array('A', 'B', 'C')
+				array('A', 'B', 'C'),
+				'#3'
 			),
 			array(
 				'A',
-				array('A')
+				array('A'),
+				'#4'
 			)
 		);
 	}

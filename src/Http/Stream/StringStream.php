@@ -173,7 +173,7 @@ class StringStream extends Stream implements StreamInterface
 	 */
 	public function eof()
 	{
-		return $this->position == $this->getSize();
+		return $this->position >= $this->getSize();
 	}
 
 	/**

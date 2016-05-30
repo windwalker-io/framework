@@ -15,6 +15,8 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 //
 //show($request->getUri());
 
+show($_FILES);exit(' @Checkpoint');
+
 $server = \Windwalker\Http\WebServer::create(function ($request, ResponseInterface $response, $finalHandler)
 {
 	// $response = $response->withHeader('Content-Type', 'application/json');
