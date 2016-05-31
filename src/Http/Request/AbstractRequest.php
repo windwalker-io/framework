@@ -65,10 +65,10 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 	/**
 	 * Class init.
 	 *
-	 * @param string|UriInterface    $uri
-	 * @param string                 $method
-	 * @param string|StreamInterface $body
-	 * @param array                  $headers
+	 * @param  string|UriInterface     $uri      The uri target of this request.
+	 * @param  string                  $method   The request method.
+	 * @param  string|StreamInterface  $body     The request body.
+	 * @param  array                   $headers  The request headers.
 	 */
 	public function __construct($uri = null, $method = null, $body = 'php://memory', $headers = array())
 	{
@@ -294,11 +294,11 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 	}
 
 	/**
-	 * validateMethod
+	 * Validate method name.
 	 *
-	 * @param string $method
+	 * @param   string  $method  Method to validate.
 	 *
-	 * @return  string
+	 * @return  string  Valid or not.
 	 */
 	protected function validateMethod($method)
 	{

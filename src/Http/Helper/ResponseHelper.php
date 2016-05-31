@@ -16,7 +16,7 @@ namespace Windwalker\Http\Helper;
 abstract class ResponseHelper
 {
 	/**
-	 * Property phrases.
+	 * Status phrases.
 	 *
 	 * @var  array
 	 */
@@ -86,9 +86,9 @@ abstract class ResponseHelper
 	);
 
 	/**
-	 * getPhrase
+	 * Get status phrase by code.
 	 *
-	 * @param integer $code
+	 * @param   integer  $code  Status code to get phrase.
 	 *
 	 * @return  string
 	 */
@@ -105,7 +105,7 @@ abstract class ResponseHelper
 	/**
 	 * Validate a status code.
 	 *
-	 * @param int|string $code
+	 * @param   int|string $code
 	 *
 	 * @return  boolean  Valid or not.
 	 */

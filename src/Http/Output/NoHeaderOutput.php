@@ -16,7 +16,7 @@ namespace Windwalker\Http\Output;
 class NoHeaderOutput extends Output
 {
 	/**
-	 * Method to override parent header().
+	 * Method to override parent header() and do nothing.
 	 *
 	 * @param   string   $string   The header string.
 	 * @param   boolean  $replace  The optional replace parameter indicates whether the header should

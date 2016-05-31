@@ -9,28 +9,24 @@
 namespace Windwalker\Http\Helper;
 
 /**
- * The HttpSecurityHelper class.
- *
- * A simple helper class based on Phly HeaderSecurity class.
+ * The HeaderHelper class.
  * 
  * @since  2.1
  */
 abstract class HeaderHelper
 {
 	/**
-	 * Search for a header value.
+	 * Get header value.
 	 *
-	 * Does a case-insensitive search for a matching header.
+	 * The key will be lower case to search header value and implode array to string by comma.
 	 *
-	 * If found, it is returned as a string, using comma concatenation.
+	 * @param  array  $headers  The headers wqe want to search.
+	 * @param  string $name     The name to search.
+	 * @param  mixed  $default  The default value if not found.
 	 *
-	 * If not, the $default is returned.
+	 * @return string  Found header value.
 	 *
-	 * @param array  $headers
-	 * @param string $name
-	 * @param mixed  $default
-	 *
-	 * @return string
+	 * @since  3.0
 	 */
 	public static function getValue(array $headers, $name, $default = null)
 	{
@@ -50,9 +46,11 @@ abstract class HeaderHelper
 	/**
 	 * Check whether or not a header name is valid.
 	 *
-	 * @param   mixed  $name
+	 * This method based on phly/http
 	 *
-	 * @return  boolean
+	 * @param   mixed  $name  The header to validate.
+	 *
+	 * @return  boolean  Valid or not.
 	 *
 	 * @see http://tools.ietf.org/html/rfc7230#section-3.2
 	 */
@@ -71,9 +69,9 @@ abstract class HeaderHelper
 	 * @see http://en.wikipedia.org/wiki/HTTP_response_splitting
 	 * @see https://tools.ietf.org/html/rfc7230
 	 *
-	 * @param   string  $value
+	 * @param   string  $value  The value to filter.
 	 *
-	 * @return  string
+	 * @return  string  Filtered value.
 	 */
 	public static function filter($value)
 	{
@@ -123,7 +121,7 @@ abstract class HeaderHelper
 	 * and tabs in header value. every new line must only contains
 	 * a single CRLF and a space or tab after it.
 	 *
-	 * @return  boolean
+	 * @return  boolean  Valid or not.
 	 *
 	 * @see http://en.wikipedia.org/wiki/HTTP_response_splitting
 	 * @see https://tools.ietf.org/html/rfc7230
@@ -164,11 +162,13 @@ abstract class HeaderHelper
 	}
 
 	/**
-	 * isValidProtocolVersion
+	 * Method to validate protocol version format.
 	 *
-	 * @param   string  $version
+	 * Only allow 1.0, 1.1 and 2.
 	 *
-	 * @return  boolean
+	 * @param   string  $version  Version string to validate.
+	 *
+	 * @return  boolean  Valid or not.
 	 */
 	public static function isValidProtocolVersion($version)
 	{
@@ -181,11 +181,11 @@ abstract class HeaderHelper
 	}
 
 	/**
-	 * allToArray
+	 * Convert values to array.
 	 *
-	 * @param mixed $value
+	 * @param   mixed  $value  Value to convert to array.
 	 *
-	 * @return  array
+	 * @return  array  Converted array.
 	 */
 	public static function allToArray($value)
 	{
@@ -213,11 +213,11 @@ abstract class HeaderHelper
 	}
 
 	/**
-	 * arrayOnlyContainsString
+	 * Validate is an array only contains string.
 	 *
-	 * @param array $array
+	 * @param   array  $array  An array to validate.
 	 *
-	 * @return  bool
+	 * @return  boolean  valid or not.
 	 */
 	public static function arrayOnlyContainsString(array $array)
 	{
@@ -238,12 +238,14 @@ abstract class HeaderHelper
 	}
 
 	/**
-	 * toHeaderLine
+	 * Convert every header values to one line and merge multiple values with comma.
 	 *
-	 * @param array  $headers
-	 * @param bool   $toString
+	 * @param array  $headers   Headers to convert,
+	 * @param bool   $toString  If true, will implode all header lines with line break.
 	 *
-	 * @return  array|string
+	 * @return  array|string  Converted headers.
+	 *
+	 *
 	 */
 	public static function toHeaderLine($headers, $toString = false)
 	{
@@ -265,11 +267,13 @@ abstract class HeaderHelper
 	}
 
 	/**
-	 * Filter a header name to wordcase
+	 * Filter a header name to lowercase.
 	 *
-	 * @param string $header
+	 * @param   string  $header  Header name to normalize.
 	 *
-	 * @return string
+	 * @return  string  Normalized name.
+	 *
+	 * @since   3.0
 	 */
 	public static function normalizeHeaderName($header)
 	{

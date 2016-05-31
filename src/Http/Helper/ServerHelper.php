@@ -22,11 +22,11 @@ abstract class ServerHelper
 	 *
 	 * Will also do a case-insensitive search if a case sensitive search fails.
 	 *
-	 * @param array  $servers
-	 * @param string $name
-	 * @param mixed  $default
+	 * @param   array   $servers  Server values to search.
+	 * @param   string  $name     The name we want to search.
+	 * @param   mixed   $default  Default value if not found.
 	 *
-	 * @return mixed
+	 * @return  mixed
 	 */
 	public static function getValue(array $servers, $name, $default = null)
 	{
@@ -68,7 +68,9 @@ abstract class ServerHelper
 	}
 
 	/**
-	 * getAllHeaders
+	 * A proxy to getallheaders().
+	 * 
+	 * If this function not available, we will use native code to implement this function.
 	 *
 	 * @return  array|false
 	 */
@@ -93,7 +95,9 @@ abstract class ServerHelper
 	}
 
 	/**
-	 * apacheRequestHeaders
+	 * A proxy to apache_request_headers().
+	 *
+	 * If this function not available, we will use native code to implement this function.
 	 *
 	 * @return  array
 	 *

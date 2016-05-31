@@ -12,7 +12,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * Interface OutputInterface
+ * OutputInterface
+ *
+ * @since  3.0
  */
 interface OutputInterface
 {
@@ -20,8 +22,8 @@ interface OutputInterface
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
 	 * application output data.
 	 *
-	 * @param   ResponseInterface $response    Respond body output.
-	 * @param   boolean           $returnBody  Return body as string.
+	 * @param   ResponseInterface  $response    Respond body output.
+	 * @param   boolean            $returnBody  Return body as string.
 	 *
 	 * @return  string|StreamInterface
 	 * 

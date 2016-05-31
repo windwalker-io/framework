@@ -23,10 +23,10 @@ class Output implements OutputInterface
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
 	 * application output data.
 	 *
-	 * @param   ResponseInterface $response    Respond body output.
-	 * @param   boolean           $returnBody  Return body as string.
+	 * @param   ResponseInterface  $response    Respond body output.
+	 * @param   boolean            $returnBody  Return body as string.
 	 *
-	 * @return  StreamInterface|void
+	 * @return  string|StreamInterface
 	 *
 	 * @since   3.0
 	 */
@@ -67,7 +67,7 @@ class Output implements OutputInterface
 	 * @param   integer  $code     Forces the HTTP response code to the specified value. Note that
 	 *                             this parameter only has an effect if the string is not empty.
 	 *
-	 * @return  static
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @see     header()
 	 */
@@ -81,9 +81,9 @@ class Output implements OutputInterface
 	/**
 	 * Send all response headers.
 	 *
-	 * @param ResponseInterface $response
+	 * @param   ResponseInterface  $response  Response object to contain headers.
 	 *
-	 * @return Output Instance of $this to allow chaining.
+	 * @return  Output  Instance of $this to allow chaining.
 	 */
 	public function sendHeaders(ResponseInterface $response)
 	{
@@ -104,9 +104,9 @@ class Output implements OutputInterface
 	}
 
 	/**
-	 * sendStatusLine
+	 * Send HTTP status line.
 	 *
-	 * @param ResponseInterface $response
+	 * @param   ResponseInterface  $response  Response object to contain status code and protocol version.
 	 *
 	 * @return  void
 	 */

@@ -92,10 +92,10 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
 	 * @param   string                          $method        HTTP method for the request, if any.
 	 * @param   string|resource|StreamInterface $body          Message body, if any.
 	 * @param   array                           $headers       Headers for the message, if any.
-	 * @param   array                           $cookies
-	 * @param   array                           $queryParams
-	 * @param   string                          $parsedBody
-	 * @param   string                          $protocol
+	 * @param   array                           $cookies       Cookie values, typically is $_COOKIE.
+	 * @param   array                           $queryParams   Http query, typically is $_GET.
+	 * @param   string                          $parsedBody    Parsed body, typically is $_POST.
+	 * @param   string                          $protocol      The protocol version, default is 1.1.
 	 */
 	public function __construct(array $serverParams = array(), array $uploadedFiles = array(), $uri = null,
 		$method = null, $body = 'php://input', array $headers = array(), array $cookies = array(),

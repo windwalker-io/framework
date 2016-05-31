@@ -85,11 +85,13 @@ abstract class StreamHelper
 	}
 
 	/**
-	 * sendAttachment
+	 * A simple method to quickly send attachment stream download.
 	 *
-	 * @param string|resource   $source
-	 * @param ResponseInterface $response
-	 * @param array             $options
+	 * @param   string|resource    $source    The file source, can be file path or resource.
+	 * @param   ResponseInterface  $response  A custom Response object to contain your headers.
+	 * @param   array              $options   Options to provide some settings.
+	 *
+	 * @return  void
 	 */
 	public static function sendAttachment($source, ResponseInterface $response = null, $options = array())
 	{
@@ -116,7 +118,7 @@ abstract class StreamHelper
 		}
 
 		$response = $response->withBody($stream)
-			->withHeader('content-type', 'application/octet-stream')
+			->withHeader('Content-Type', 'application/octet-stream')
 			->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
 			->withHeader('Content-Transfer-Encoding', 'binary')
 			->withHeader('Content-Encoding', 'none');

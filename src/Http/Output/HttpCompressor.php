@@ -12,7 +12,7 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * The Compressor class.
+ * The HttpCompressor class to support gzip encoding.
  *
  * @since  {DEPLOY_VERSION}
  */
@@ -46,7 +46,8 @@ class HttpCompressor
 	/**
 	 * Compressor constructor.
 	 *
-	 * @param string    $acceptEncoding
+	 * @param  string  $acceptEncoding  The Accept-Encoding value, most is "gzip, deflate".
+	 *                                  Keep null to get it from globals.
 	 */
 	public function __construct($acceptEncoding = null)
 	{
@@ -54,7 +55,7 @@ class HttpCompressor
 	}
 
 	/**
-	 * isSupported
+	 * Method to check zlib supported.
 	 *
 	 * @return  boolean
 	 */
@@ -64,7 +65,7 @@ class HttpCompressor
 	}
 
 	/**
-	 * parseEncoding
+	 * Method to parse Accept-Encoding to an array thar we can use it when compressing data.
 	 *
 	 * @return  void
 	 */
@@ -77,13 +78,13 @@ class HttpCompressor
 	 * Checks the accept encoding of the browser and compresses the data before
 	 * sending it to the client if possible.
 	 *
-	 * @param ResponseInterface $response
+	 * @param   ResponseInterface  $response  The Response object contains the data we want to encode.
 	 *
-	 * @return ResponseInterface Return Response object.
+	 * @return  ResponseInterface  Return Response object.
 	 *
-	 * @throws CompressException
+	 * @throws  CompressException
 	 *
-	 * @since    3.0
+	 * @since   3.0
 	 */
 	public function compress(ResponseInterface $response)
 	{
@@ -145,6 +146,8 @@ class HttpCompressor
 	 *                           be the default compression level of the zlib library.
 	 *
 	 * @return  string
+	 * 
+	 * @throws  CompressException
 	 */
 	public function encode($data, $encoding = FORCE_GZIP, $level = 4)
 	{
@@ -241,7 +244,7 @@ class HttpCompressor
 	/**
 	 * Method to set property encodedBy
 	 *
-	 * @param   string $encodedBy
+	 * @param   string  $encodedBy
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

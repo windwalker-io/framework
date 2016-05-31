@@ -32,12 +32,15 @@ class StreamOutput extends Output
 	protected $delay = null;
 
 	/**
-	 * respond
+	 * Method to send the application response to the client.  All headers will be sent prior to the main
+	 * application output data.
 	 *
-	 * @param ResponseInterface $response
-	 * @param bool              $returnBody
+	 * @param   ResponseInterface  $response    Respond body output.
+	 * @param   boolean            $returnBody  Return body as string.
 	 *
 	 * @return  void
+	 *
+	 * @since   3.0
 	 */
 	public function respond(ResponseInterface $response, $returnBody = false)
 	{
