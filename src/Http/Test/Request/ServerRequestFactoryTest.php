@@ -25,11 +25,11 @@ class ServerRequestFactoryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Request\ServerRequestFactory::create
+	 * @covers Windwalker\Http\Request\ServerRequestFactory::createFromGlobals
 	 */
 	public function testCreate()
 	{
-		$request = ServerRequestFactory::create();
+		$request = ServerRequestFactory::createFromGlobals();
 
 		$this->assertTrue($request instanceof ServerRequest);
 	}

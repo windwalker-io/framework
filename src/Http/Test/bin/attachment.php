@@ -15,9 +15,9 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 //
 //show($request->getUri());
 
-$server = \Windwalker\Http\WebServer::create(function ($request, ResponseInterface $response, $finalHandler)
+$server = \Windwalker\Http\WebHttpServer::create(function ($request, ResponseInterface $response, $finalHandler)
 {
-}, \Windwalker\Http\Request\ServerRequestFactory::create(), new \Windwalker\Http\Response\HtmlResponse);
+}, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(), new \Windwalker\Http\Response\HtmlResponse);
 
 $server->listen(function ($request, $response) use ($server)
 {

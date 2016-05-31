@@ -15,9 +15,9 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 //
 //show($request->getUri());
 
-show($_FILES);exit(' @Checkpoint');
+show($_SERVER);exit(' @Checkpoint');
 
-$server = \Windwalker\Http\WebServer::create(function ($request, ResponseInterface $response, $finalHandler)
+$server = \Windwalker\Http\WebHttpServer::create(function ($request, ResponseInterface $response, $finalHandler)
 {
 	// $response = $response->withHeader('Content-Type', 'application/json');
 
@@ -30,7 +30,7 @@ $server = \Windwalker\Http\WebServer::create(function ($request, ResponseInterfa
 	$response = $finalHandler($request, $response);
 
 	return $response;
-}, \Windwalker\Http\Request\ServerRequestFactory::create(), new \Windwalker\Http\Response\HtmlResponse);
+}, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(), new \Windwalker\Http\Response\HtmlResponse);
 
 $server->listen(function ($request, ResponseInterface $response) use ($server)
 {

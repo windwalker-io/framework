@@ -11,6 +11,7 @@ namespace Windwalker\Http;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Windwalker\Http\Helper\ServerHelper;
 use Windwalker\Http\Output\HttpCompressor;
 use Windwalker\Http\Output\OutputInterface;
 use Windwalker\Uri\PsrUri;
@@ -24,7 +25,7 @@ use Windwalker\Uri\UriData;
  *
  * @since  {DEPLOY_VERSION}
  */
-class WebServer extends Server
+class WebHttpServer extends HttpServer
 {
 	const CACHE_ENABLE        = true;
 	const CACHE_DISABLE       = false;
@@ -56,7 +57,7 @@ class WebServer extends Server
 	 *
 	 * @var  string
 	 */
-	protected $mimeType;
+	protected $contentType;
 
 	/**
 	 * Property charSet.
@@ -87,7 +88,7 @@ class WebServer extends Server
 	 * @param ResponseInterface       $response
 	 * @param OutputInterface         $output
 	 */
-	public function __construct(callable $handler, ServerRequestInterface $request, ResponseInterface $response, OutputInterface $output = null)
+	public function __construct(callable $handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		parent::__construct($handler, $request, $response, $output);
 
@@ -114,7 +115,7 @@ class WebServer extends Server
 
 		if (!$response->hasHeader('content-type'))
 		{
-			$response = $response->withHeader('content-type', $this->getMimeType() . '; charset=' . $this->getCharSet());
+			$response = $response->withHeader('content-type', $this->getContentType() . '; charset=' . $this->getCharSet());
 		}
 
 		$response = $this->prepareCache($response);
@@ -137,25 +138,25 @@ class WebServer extends Server
 		if ($this->getCachable() === static::CACHE_ENABLE)
 		{
 			// Expires.
-			$response = $response->withoutHeader('expires')->withHeader('expires', gmdate('D, d M Y H:i:s', time() + 900) . ' GMT');
+			$response = $response->withoutHeader('Expires')->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + 900) . ' GMT');
 
 			// Last modified.
 			if ($this->modifiedDate instanceof \DateTime)
 			{
 				$this->modifiedDate->setTimezone(new \DateTimeZone('UTC'));
 
-				$response = $response->withoutHeader('last-Modified')->withHeader('last-modified', $this->modifiedDate->format('D, d M Y H:i:s') . ' GMT');
+				$response = $response->withoutHeader('Last-Modified')->withHeader('Last-Modified', $this->modifiedDate->format('D, d M Y H:i:s') . ' GMT');
 			}
 		}
 		// Force uncachable
 		elseif ($this->getCachable() === static::CACHE_DISABLE)
 		{
 			// Expires in the past.
-			$response = $response->withoutHeader('expires')->withHeader('expires', 'Mon, 1 Jan 2001 00:00:00 GMT');
+			$response = $response->withoutHeader('Expires')->withHeader('Expires', 'Mon, 1 Jan 2001 00:00:00 GMT');
 
 			// Always modified.
-			$response = $response->withoutHeader('last-modified')->withHeader('last-modified', gmdate('D, d M Y H:i:s') . ' GMT');
-			$response = $response->withoutHeader('cache-control')->withHeader('cache-control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+			$response = $response->withoutHeader('Last-Modified')->withHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
+			$response = $response->withoutHeader('Cache-Control')->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 
 			// HTTP 1.0
 			$response = $response->withHeader('pragma', 'no-cache');
@@ -177,20 +178,18 @@ class WebServer extends Server
 	 */
 	protected function loadSystemUris($requestUri = null)
 	{
+		$server = $this->getRequest()->getServerParams();
 		$uri = $this->getSystemUri($requestUri);
 
 		$original = $requestUri ? new PsrUri($requestUri) : $this->getRequest()->getUri();
 
-		$this->uriData->current = $original->withQuery('')->withFragment('')->__toString();
-		$this->uriData->full = $original->__toString();
-
 		// Get the host and path from the URI.
 		$host = $uri->withQuery('')->withFragment('')->withPath('')->__toString();
 		$path = rtrim($uri->getPath(), '/\\');
-		$script = trim($_SERVER['SCRIPT_NAME'], '/');
+		$script = trim(ServerHelper::getValue($server, 'SCRIPT_NAME', ''), '/');
 
 		// Check if the path includes "index.php".
-		if (strpos($path, $script) === 0)
+		if ($script && strpos($path, $script) === 0)
 		{
 			// Remove the index.php portion of the path.
 			$path = substr_replace($path, '', strpos($path, $script), strlen($script));
@@ -200,10 +199,12 @@ class WebServer extends Server
 		$scriptName = pathinfo($script, PATHINFO_BASENAME);
 
 		// Set the base URI both as just a path and as the full URI.
-		$this->uriData->script = $scriptName;
-		$this->uriData->root = $host . $path . '/';
-		$this->uriData->host = $host;
-		$this->uriData->path = $path;
+		$this->uriData->full    = $original->__toString();
+		$this->uriData->current = $original->withQuery('')->withFragment('')->__toString();
+		$this->uriData->script  = $scriptName;
+		$this->uriData->root    = $host . $path . '/';
+		$this->uriData->host    = $host;
+		$this->uriData->path    = $path;
 
 		// Set the extended (non-base) part of the request URI as the route.
 		$route = substr_replace($this->uriData->current, '', 0, strlen($this->uriData->root));
@@ -239,16 +240,18 @@ class WebServer extends Server
 
 		$uri = $requestUri ? new PsrUri($requestUri) : $this->getRequest()->getUri();
 
+		$server = $this->getRequest()->getServerParams();
+
 		// If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
-		if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI']))
+		if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($server['REQUEST_URI']))
 		{
 			// We aren't expecting PATH_INFO within PHP_SELF so this should work.
-			$uri = $uri->withPath(rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+			$uri = $uri->withPath(rtrim(dirname(ServerHelper::getValue($server, 'PHP_SELF')), '/\\'));
 		}
+		// Pretty much everything else should be handled with SCRIPT_NAME.
 		else
-			// Pretty much everything else should be handled with SCRIPT_NAME.
 		{
-			$uri = $uri->withPath(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
+			$uri = $uri->withPath(rtrim(dirname(ServerHelper::getValue($server, 'SCRIPT_NAME')), '/\\'));
 		}
 
 		// Clear the unused parts of the requested URI.
@@ -262,21 +265,21 @@ class WebServer extends Server
 	 *
 	 * @return  string
 	 */
-	public function getMimeType()
+	public function getContentType()
 	{
-		return $this->mimeType;
+		return $this->contentType;
 	}
 
 	/**
 	 * Method to set property mimeType
 	 *
-	 * @param   string $mimeType
+	 * @param   string $contentType
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setMimeType($mimeType)
+	public function setContentType($contentType)
 	{
-		$this->mimeType = $mimeType;
+		$this->contentType = $contentType;
 
 		return $this;
 	}
@@ -308,7 +311,7 @@ class WebServer extends Server
 	/**
 	 * Method to get property ModifiedDate
 	 *
-	 * @return  string
+	 * @return  \DateTime
 	 */
 	public function getModifiedDate()
 	{
@@ -318,11 +321,11 @@ class WebServer extends Server
 	/**
 	 * Method to set property modifiedDate
 	 *
-	 * @param   string $modifiedDate
+	 * @param   \DateTime $modifiedDate
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setModifiedDate($modifiedDate)
+	public function setModifiedDate(\DateTime $modifiedDate)
 	{
 		$this->modifiedDate = $modifiedDate;
 
@@ -332,7 +335,7 @@ class WebServer extends Server
 	/**
 	 * Method to get property UriData
 	 *
-	 * @return  array
+	 * @return  UriData
 	 */
 	public function getUriData()
 	{

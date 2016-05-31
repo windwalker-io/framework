@@ -21,7 +21,7 @@ use Windwalker\Http\Response\Response;
  *
  * @since  {DEPLOY_VERSION}
  */
-class Server
+class HttpServer
 {
 	/**
 	 * Property handler.
@@ -64,16 +64,17 @@ class Server
 	 * - files; typically this will be the $_FILES superglobal
 	 *
 	 * @param callable $callback
-	 * @param array $server
-	 * @param array $query
-	 * @param array $body
-	 * @param array $cookies
-	 * @param array $files
+	 * @param array    $server
+	 * @param array    $query
+	 * @param array    $body
+	 * @param array    $cookies
+	 * @param array    $files
+	 * 
 	 * @return static
 	 */
-	public static function createFromGlobals(callable $callback, array $server, array $query, array $body, array $cookies, array $files)
+	public static function createFromGlobals(callable $callback, array $server = array(), array $query = array(), array $body = array(), array $cookies = array(), array $files = array())
 	{
-		$request  = ServerRequestFactory::create($server, $query, $body, $cookies, $files);
+		$request  = ServerRequestFactory::createFromGlobals($server, $query, $body, $cookies, $files);
 
 		return new static($callback, $request);
 	}
@@ -209,6 +210,30 @@ class Server
 	public function setOutput($output)
 	{
 		$this->output = $output;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Response
+	 *
+	 * @return  ResponseInterface
+	 */
+	public function getResponse()
+	{
+		return $this->response;
+	}
+
+	/**
+	 * Method to set property response
+	 *
+	 * @param   ResponseInterface $response
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setResponse($response)
+	{
+		$this->response = $response;
 
 		return $this;
 	}
