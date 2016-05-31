@@ -206,6 +206,17 @@ class StreamTest extends AbstractBaseTestCase
 		}
 
 		$this->assertTrue($stream->eof());
+
+		$stream->rewind();
+		$stream->read(8);
+
+		$this->assertTrue($stream->eof());
+
+		$stream->rewind();
+		$stream->seek(8);
+		$this->assertFalse($stream->eof());
+		$stream->read(1);
+		$this->assertTrue($stream->eof());
 	}
 
 	/**

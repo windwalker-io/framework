@@ -33,7 +33,7 @@ abstract class AbstractContentTypeResponse extends Response
 		parent::__construct(
 			$this->handleBody($data),
 			$status,
-			$this->addContentType($headers, $this->type . '; charset=utf-8')
+			$this->addContentTypeToHeader($headers, $this->type . '; charset=utf-8')
 		);
 	}
 
@@ -57,20 +57,24 @@ abstract class AbstractContentTypeResponse extends Response
 	{
 		$contentType = $this->normalizeContentType($contentType);
 
-		$this->type = $contentType;
+		$contentType = explode(';', $contentType, 2);
 
-		return $this->withHeader('Content-Type', $contentType);
+		$this->type = $contentType[0];
+
+		$contentType[0] .= ';' . (isset($contentType[1]) ? $contentType[1] : ' charset=utf-8');
+
+		return $this->withHeader('Content-Type', $contentType[0]);
 	}
 
 	/**
-	 * injectContentType
+	 * addContentTypeToHeader
 	 *
 	 * @param   array  $headers
 	 * @param   string $contentType
 	 *
 	 * @return array
 	 */
-	protected function addContentType($headers, $contentType)
+	protected function addContentTypeToHeader($headers, $contentType)
 	{
 		$keys = array_change_key_case(array_keys($headers), CASE_LOWER);
 

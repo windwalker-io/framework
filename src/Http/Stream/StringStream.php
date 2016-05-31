@@ -29,7 +29,14 @@ class StringStream extends Stream implements StreamInterface
 	 *
 	 * @var  integer
 	 */
-	protected $position = 0;
+	protected $pointer = 0;
+
+	/**
+	 * Property pointer.
+	 *
+	 * @var  integer
+	 */
+	protected $readPosition = 0;
 
 	/**
 	 * Property metadata.
@@ -128,7 +135,7 @@ class StringStream extends Stream implements StreamInterface
 
 		$this->resource = null;
 		$this->stream   = null;
-		$this->position = 0;
+		$this->pointer  = 0;
 		$this->seekable = true;
 		$this->writable = true;
 
@@ -163,7 +170,7 @@ class StringStream extends Stream implements StreamInterface
 			throw new \RuntimeException('No resource set.');
 		}
 
-		return $this->position;
+		return $this->pointer;
 	}
 
 	/**
@@ -173,7 +180,7 @@ class StringStream extends Stream implements StreamInterface
 	 */
 	public function eof()
 	{
-		return $this->position >= $this->getSize();
+		return $this->readPosition > $this->getSize();
 	}
 
 	/**
@@ -211,19 +218,19 @@ class StringStream extends Stream implements StreamInterface
 
 		if ($whence == SEEK_SET)
 		{
-			$this->position = $offset;
+			$this->pointer = $offset;
 		}
 		elseif ($whence == SEEK_CUR)
 		{
-			$this->position += $offset;
+			$this->pointer += $offset;
 		}
 		elseif ($whence == SEEK_END)
 		{
-			$this->position = $this->getSize();
-			$this->position += $offset;
+			$this->pointer = $this->getSize();
+			$this->pointer += $offset;
 		}
 
-		if ($this->position < 0)
+		if ($this->pointer < 0)
 		{
 			throw new \RuntimeException('Position should not less than 0.');
 		}
@@ -243,6 +250,8 @@ class StringStream extends Stream implements StreamInterface
 	 */
 	public function rewind()
 	{
+		$this->readPosition = 0;
+
 		return $this->seek(0);
 	}
 
@@ -268,12 +277,12 @@ class StringStream extends Stream implements StreamInterface
 	{
 		$length = strlen($string);
 
-		$start = substr($this->resource, 0, $this->position);
-		$end   = substr($this->resource, $this->position + $length);
+		$start = substr($this->resource, 0, $this->pointer);
+		$end   = substr($this->resource, $this->pointer + $length);
 
 		$this->resource = $start . $string . $end;
 
-		$this->position = strlen($start . $string);
+		$this->pointer = strlen($start . $string);
 
 		return $string;
 	}
@@ -301,9 +310,12 @@ class StringStream extends Stream implements StreamInterface
 	 */
 	public function read($length)
 	{
-		$result = substr($this->resource, $this->position, $length);
+		$this->readPosition = $this->pointer;
+		
+		$result = substr($this->resource, $this->readPosition, $length);
 
-		$this->position += $length;
+		$this->pointer += $length;
+		$this->readPosition = $this->pointer;
 
 		return $result;
 	}
@@ -322,7 +334,7 @@ class StringStream extends Stream implements StreamInterface
 			return '';
 		}
 
-		$result = substr($this->resource, $this->position);
+		$result = substr($this->resource, $this->pointer);
 
 		if ($result === false)
 		{
@@ -352,7 +364,7 @@ class StringStream extends Stream implements StreamInterface
 
 		$metadata['eof'] = $this->eof();
 		$metadata['seekable'] = $this->isSeekable();
-		$metadata['unread_bytes'] = $this->getSize() - $this->position;
+		$metadata['unread_bytes'] = $this->getSize() - $this->pointer;
 		$metadata['mode'] = 'rb';
 
 		if ($this->isWritable())

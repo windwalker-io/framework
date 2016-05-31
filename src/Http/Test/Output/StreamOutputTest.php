@@ -79,7 +79,7 @@ class StreamOutputTest extends \PHPUnit_Framework_TestCase
 
 		$this->instance->respond(new TextResponse('Flower'));
 
-		$this->assertEquals(6, $this->instance->waiting);
+		$this->assertEquals(7, $this->instance->waiting);
 	}
 
 	/**

@@ -8,8 +8,6 @@
 
 namespace Windwalker\Http\Response;
 
-use Windwalker\Http\Response\Response;
-
 /**
  * The HtmlResponse class.
  *

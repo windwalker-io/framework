@@ -18,6 +18,12 @@ use Windwalker\Http\Stream\Stream;
  */
 class EmptyResponse extends Response
 {
+	/**
+	 * EmptyResponse constructor.
+	 *
+	 * @param int   $status
+	 * @param array $headers
+	 */
 	public function __construct($status = 204, array $headers = array())
 	{
 		$body = new Stream('php://temp', 'r');

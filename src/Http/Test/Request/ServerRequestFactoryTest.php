@@ -183,7 +183,9 @@ class ServerRequestFactoryTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Method to test prepareUri().
 	 *
-	 * @return void
+	 * @param array  $servers
+	 * @param array  $headers
+	 * @param string $expected
 	 *
 	 * @covers Windwalker\Http\Request\ServerRequestFactory::prepareUri
 	 *

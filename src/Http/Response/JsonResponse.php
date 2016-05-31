@@ -49,11 +49,6 @@ class JsonResponse extends TextResponse
 	 */
 	protected function encode($data, $options = 0)
 	{
-		//		if (is_null($options))
-		//		{
-		//			$options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES;
-		//		}
-
 		// Check is already json string.
 		if (is_string($data) && strlen($data) >= 1)
 		{

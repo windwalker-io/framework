@@ -9,6 +9,7 @@
 namespace Windwalker\Http\Response;
 
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\Stream\Stream;
 use Windwalker\Http\Stream\StringStream;
 
 /**
@@ -29,8 +30,11 @@ class TextResponse extends AbstractContentTypeResponse
 	{
 		if (is_string($text))
 		{
-			$text = new StringStream($text, 'wb+');
-			$text->rewind();
+			$stream = new Stream('php://temp', 'wb+');
+			$stream->write($text);
+			$stream->rewind();
+
+			$text = $stream;
 		}
 
 		if (!$text instanceof StreamInterface)

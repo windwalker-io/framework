@@ -179,13 +179,21 @@ class StringStreamTest extends AbstractBaseTestCase
 	{
 		$stream = new StringStream('FOO BAR');
 
-		$stream->seek(2);
+		$stream->read(2);
 		$this->assertFalse($stream->eof());
 
-		$stream->seek(7);
+		$stream->rewind();
+		$stream->read(8);
 		$this->assertTrue($stream->eof());
 
-		$stream->seek(4096);
+		$stream->rewind();
+		$stream->seek(8);
+		$this->assertFalse($stream->eof());
+		$stream->read(1);
+		$this->assertTrue($stream->eof());
+
+		$stream->rewind();
+		$stream->read(4096);
 		$this->assertTrue($stream->eof());
 	}
 
