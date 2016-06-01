@@ -9,11 +9,11 @@
 namespace Windwalker\Environment;
 
 /**
- * The Server class.
+ * The Platform class.
  * 
  * @since  2.0
  */
-class Server implements ServerInterface
+class Platform
 {
 	/**
 	 * Property os.

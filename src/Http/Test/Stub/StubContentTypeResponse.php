@@ -20,11 +20,11 @@ use Windwalker\Http\Stream\Stream;
 class StubContentTypeResponse extends AbstractContentTypeResponse
 {
 	/**
-	 * handleBody
+	 * Handle body to stream object.
 	 *
-	 * @param   string $body
+	 * @param   string  $body  The body data.
 	 *
-	 * @return  StreamInterface
+	 * @return  StreamInterface  Converted to stream object.
 	 */
 	protected function handleBody($body)
 	{

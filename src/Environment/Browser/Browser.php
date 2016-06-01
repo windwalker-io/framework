@@ -6,7 +6,7 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Environment\Web;
+namespace Windwalker\Environment\Browser;
 
 /**
  * Class to model a Web Client.
@@ -15,7 +15,7 @@ namespace Windwalker\Environment\Web;
  *
  * @since  2.0
  */
-class WebClient
+class Browser
 {
 	const WINDOWS = 1;
 	const WINDOWS_PHONE = 2;
@@ -46,7 +46,7 @@ class WebClient
 	 * @var    integer
 	 * @since  2.0
 	 */
-	protected $platform;
+	protected $device;
 
 	/**
 	 * True if the web client is a mobile device.
@@ -354,67 +354,67 @@ class WebClient
 	 *
 	 * @since   2.0
 	 */
-	protected function detectPlatform($userAgent)
+	protected function detectDevice($userAgent)
 	{
 		// Attempt to detect the client platform.
 		if (stripos($userAgent, 'Windows') !== false)
 		{
-			$this->platform = self::WINDOWS;
+			$this->device = self::WINDOWS;
 
 			// Let's look at the specific mobile options in the Windows space.
 			if (stripos($userAgent, 'Windows Phone') !== false)
 			{
 				$this->mobile = true;
-				$this->platform = self::WINDOWS_PHONE;
+				$this->device = self::WINDOWS_PHONE;
 			}
 			elseif (stripos($userAgent, 'Windows CE') !== false)
 			{
 				$this->mobile = true;
-				$this->platform = self::WINDOWS_CE;
+				$this->device = self::WINDOWS_CE;
 			}
 		}
 		elseif (stripos($userAgent, 'iPhone') !== false)
 		{
 			// Interestingly 'iPhone' is present in all iOS devices so far including iPad and iPods.
 			$this->mobile = true;
-			$this->platform = self::IPHONE;
+			$this->device = self::IPHONE;
 
 			// Let's look at the specific mobile options in the iOS space.
 			if (stripos($userAgent, 'iPad') !== false)
 			{
-				$this->platform = self::IPAD;
+				$this->device = self::IPAD;
 			}
 			elseif (stripos($userAgent, 'iPod') !== false)
 			{
-				$this->platform = self::IPOD;
+				$this->device = self::IPOD;
 			}
 		}
 		elseif (stripos($userAgent, 'iPad') !== false)
 		{
 			// In case where iPhone is not mentioed in iPad user agent string
 			$this->mobile = true;
-			$this->platform = self::IPAD;
+			$this->device = self::IPAD;
 		}
 		elseif (stripos($userAgent, 'iPod') !== false)
 		{
 			// In case where iPhone is not mentioed in iPod user agent string
 			$this->mobile = true;
-			$this->platform = self::IPOD;
+			$this->device = self::IPOD;
 		}
 		elseif (preg_match('/macintosh|mac os x/i', $userAgent))
 		{
 			// This has to come after the iPhone check because mac strings are also present in iOS devices.
-			$this->platform = self::MAC;
+			$this->device = self::MAC;
 		}
 		elseif (stripos($userAgent, 'Blackberry') !== false)
 		{
 			$this->mobile = true;
-			$this->platform = self::BLACKBERRY;
+			$this->device = self::BLACKBERRY;
 		}
 		elseif (stripos($userAgent, 'Android') !== false)
 		{
 			$this->mobile = true;
-			$this->platform = self::ANDROID;
+			$this->device = self::ANDROID;
 			/*
 			 * Attempt to distinguish between Android phones and tablets
 			 * There is no totally foolproof method but certain rules almost always hold
@@ -426,12 +426,12 @@ class WebClient
 			if (stripos($userAgent, 'Android 3') !== false || stripos($userAgent, 'Tablet') !== false
 				|| stripos($userAgent, 'Mobile') === false || stripos($userAgent, 'Silk') !== false )
 			{
-				$this->platform = self::ANDROID_TABLET;
+				$this->device = self::ANDROID_TABLET;
 			}
 		}
 		elseif (stripos($userAgent, 'Linux') !== false)
 		{
-			$this->platform = self::LINUX;
+			$this->device = self::LINUX;
 		}
 
 		// Mark this detection routine as run.
@@ -468,14 +468,14 @@ class WebClient
 	 *
 	 * @return  int
 	 */
-	public function getPlatform($refresh = false)
+	public function getDevice($refresh = false)
 	{
 		if (empty($this->detection['platform']) || $refresh)
 		{
-			$this->detectPlatform($this->userAgent);
+			$this->detectDevice($this->userAgent);
 		}
 
-		return $this->platform;
+		return $this->device;
 	}
 
 	/**
@@ -489,7 +489,7 @@ class WebClient
 	{
 		if (empty($this->detection['platform']) || $refresh)
 		{
-			$this->detectPlatform($this->userAgent);
+			$this->detectDevice($this->userAgent);
 		}
 
 		return $this->mobile;
@@ -595,7 +595,7 @@ class WebClient
 	 *
 	 * @param   string $userAgent
 	 *
-	 * @return  WebClient  Return self to support chaining.
+	 * @return  Browser  Return self to support chaining.
 	 */
 	public function setUserAgent($userAgent)
 	{

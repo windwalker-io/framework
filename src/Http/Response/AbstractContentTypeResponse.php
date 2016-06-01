@@ -12,42 +12,46 @@ use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Response\Response;
 
 /**
- * The AbstractContentTypeResponse class.
+ * An response object contains content-type handler.
  *
  * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractContentTypeResponse extends Response
 {
 	/**
-	 * Property type.
+	 * Content type.
 	 *
 	 * @var  string
 	 */
 	protected $type = 'text/plain';
 
 	/**
-	 * HtmlResponse constructor.
+	 * Constructor.
+	 *
+	 * @param  string  $body     The body data.
+	 * @param  int     $status   The status code.
+	 * @param  array   $headers  The custom headers.
 	 */
-	public function __construct($data = '', $status = 200, array $headers = array())
+	public function __construct($body  = '', $status = 200, array $headers = array())
 	{
 		parent::__construct(
-			$this->handleBody($data),
+			$this->handleBody($body),
 			$status,
 			$this->addContentTypeToHeader($headers, $this->type . '; charset=utf-8')
 		);
 	}
 
 	/**
-	 * handleBody
+	 * Handle body to stream object.
 	 *
-	 * @param   string  $body
+	 * @param   string  $body  The body data.
 	 *
-	 * @return  StreamInterface
+	 * @return  StreamInterface  Converted to stream object.
 	 */
 	abstract protected function handleBody($body);
 
 	/**
-	 * Inject the provided Content-Type, if none is already present.
+	 * Add Content-Type to header.
 	 *
 	 * @param   string  $contentType  The content type.
 	 *
@@ -67,10 +71,10 @@ abstract class AbstractContentTypeResponse extends Response
 	}
 
 	/**
-	 * addContentTypeToHeader
+	 * Add content-type to headers variable if not exists.
 	 *
-	 * @param   array  $headers
-	 * @param   string $contentType
+	 * @param   array   $headers      The headers variable.
+	 * @param   string  $contentType  The content-type.
 	 *
 	 * @return array
 	 */
@@ -87,9 +91,9 @@ abstract class AbstractContentTypeResponse extends Response
 	}
 
 	/**
-	 * normalizeContentType
+	 * Normalize content-type.
 	 *
-	 * @param   string  $contentType
+	 * @param   string  $contentType  Content-type string.
 	 *
 	 * @return  string
 	 */

@@ -14,15 +14,17 @@ use Windwalker\Http\Stream\Stream;
 /**
  * The EmptyResponse class.
  *
+ * Always return empty data and is only readable. THe headers will still send.
+ *
  * @since  {DEPLOY_VERSION}
  */
 class EmptyResponse extends Response
 {
 	/**
-	 * EmptyResponse constructor.
+	 * Constructor.
 	 *
-	 * @param int   $status
-	 * @param array $headers
+	 * @param  int     $status   The status code.
+	 * @param  array   $headers  The custom headers.
 	 */
 	public function __construct($status = 204, array $headers = array())
 	{

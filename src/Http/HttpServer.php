@@ -24,28 +24,28 @@ use Windwalker\Http\Response\Response;
 class HttpServer
 {
 	/**
-	 * Property handler.
+	 * The callback to handle server task.
 	 *
 	 * @var  callable
 	 */
 	protected $handler;
 
 	/**
-	 * Property request.
+	 * Request object to contain request data.
 	 *
 	 * @var  ServerRequestInterface
 	 */
 	protected $request;
 
 	/**
-	 * Property response.
+	 * The response object to wrap body and headers.
 	 *
 	 * @var  ResponseInterface
 	 */
 	protected $response;
 
 	/**
-	 * Property emitter.
+	 * The output emitter.
 	 *
 	 * @var  OutputInterface
 	 */
@@ -57,26 +57,20 @@ class HttpServer
 	 * Creates a server instance from the callback and the following
 	 * PHP environmental values:
 	 *
-	 * - server; typically this will be the $_SERVER superglobal
-	 * - query; typically this will be the $_GET superglobal
-	 * - body; typically this will be the $_POST superglobal
-	 * - cookies; typically this will be the $_COOKIE superglobal
-	 * - files; typically this will be the $_FILES superglobal
-	 *
-	 * @param callable $callback
-	 * @param array    $server
-	 * @param array    $query
-	 * @param array    $body
-	 * @param array    $cookies
-	 * @param array    $files
+	 * @param   callable  $handler   The server handler.
+	 * @param   array     $server    The server variable. Typically this will be the $_SERVER superglobal.
+	 * @param   array     $query     The GET uri query. Typically this will be the $_GET superglobal.
+	 * @param   array     $body      The POST body. Typically this will be the $_POST superglobal.
+	 * @param   array     $cookies   The cookies. Typically this will be the $_COOKIE superglobal
+	 * @param   array     $files     The uploaded file data. Typically this will be the $_FILES superglobal.
 	 * 
-	 * @return static
+	 * @return  static  The Server instance.
 	 */
-	public static function createFromGlobals(callable $callback, array $server = array(), array $query = array(), array $body = array(), array $cookies = array(), array $files = array())
+	public static function createFromGlobals(callable $handler, array $server = array(), array $query = array(), array $body = array(), array $cookies = array(), array $files = array())
 	{
 		$request  = ServerRequestFactory::createFromGlobals($server, $query, $body, $cookies, $files);
 
-		return new static($callback, $request);
+		return new static($handler, $request);
 	}
 
 	/**
@@ -87,12 +81,12 @@ class HttpServer
 	 *
 	 * If no Response object is provided, one will be created.
 	 *
-	 * @param callable               $handler
-	 * @param ServerRequestInterface $request
-	 * @param ResponseInterface      $response
-	 * @param OutputInterface        $output
+	 * @param   callable                $handler   The server handler.
+	 * @param   ServerRequestInterface  $request   The Request object.
+	 * @param   ResponseInterface       $response  The Response object.
+	 * @param   OutputInterface         $output    The Output emitter object.
 	 *
-	 * @return static
+	 * @return  static  The Server instance.
 	 */
 	public static function create(callable $handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
@@ -107,10 +101,10 @@ class HttpServer
 	 *
 	 * If no Response object is provided, one will be created.
 	 *
-	 * @param callable                $handler
-	 * @param ServerRequestInterface  $request
-	 * @param ResponseInterface       $response
-	 * @param OutputInterface         $output
+	 * @param   callable                $handler   The server handler.
+	 * @param   ServerRequestInterface  $request   The Request object.
+	 * @param   ResponseInterface       $response  The Response object.
+	 * @param   OutputInterface         $output    The Output emitter object.
 	 */
 	public function __construct(callable $handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
@@ -121,13 +115,13 @@ class HttpServer
 	}
 
 	/**
-	 * listen
+	 * Execute the server.
 	 *
-	 * @param callable $finalHandler
+	 * @param   callable  $nextHandler  The next handler to support middleware pattern.
 	 */
-	public function listen(callable $finalHandler = null)
+	public function listen(callable $nextHandler = null)
 	{
-		$response = call_user_func($this->handler, $this->request, $this->response, $finalHandler);
+		$response = call_user_func($this->handler, $this->request, $this->response, $nextHandler);
 
 		if (!$response instanceof ResponseInterface)
 		{

@@ -9,7 +9,7 @@
 namespace Windwalker\Profiler\Test;
 
 use Windwalker\Environment\PhpHelper;
-use Windwalker\Environment\ServerHelper;
+use Windwalker\Environment\PlatformHelper;
 use Windwalker\IO\Cli\IO;
 use Windwalker\Profiler\Point\Point;
 use Windwalker\Profiler\Profiler;

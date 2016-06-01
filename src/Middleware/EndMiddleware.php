@@ -18,11 +18,11 @@ class EndMiddleware extends AbstractMiddleware
 	/**
 	 * Set next middleware.
 	 *
-	 * @param   object $object The middleware object.
+	 * @param   object $callable The middleware object.
 	 *
 	 * @return  EndMiddleware  Return self to support chaining.
 	 */
-	public function setNext($object)
+	public function setNext($callable)
 	{
 		return $this;
 	}

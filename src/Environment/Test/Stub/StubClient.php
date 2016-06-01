@@ -8,14 +8,14 @@
 
 namespace Windwalker\Environment\Test\Stub;
 
-use Windwalker\Environment\Web\WebClient;
+use Windwalker\Environment\Browser\Browser;
 
 /**
  * The StubClient class.
  * 
  * @since  2.0
  */
-class StubClient extends WebClient
+class StubClient extends Browser
 {
 	/**
 	 * Allows public access to protected method.
@@ -54,9 +54,9 @@ class StubClient extends WebClient
 	 *
 	 * @since   2.0
 	 */
-	public function detectPlatform($userAgent)
+	public function detectDevice($userAgent)
 	{
-		return parent::detectPlatform($userAgent);
+		return parent::detectDevice($userAgent);
 	}
 
 	/**

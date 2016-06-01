@@ -13,14 +13,14 @@ namespace Windwalker\Environment;
  * 
  * @since  2.0
  */
-class ServerHelper
+class PlatformHelper
 {
 	/**
 	 * Property server.
 	 *
-	 * @var Server
+	 * @var Platform
 	 */
-	protected static $server;
+	protected static $platform;
 
 	/**
 	 * isWindows
@@ -29,7 +29,7 @@ class ServerHelper
 	 */
 	public static function isWindows()
 	{
-		return static::getServer()->isWin();
+		return static::getPlatform()->isWin();
 	}
 
 	/**
@@ -39,7 +39,7 @@ class ServerHelper
 	 */
 	public static function isLinux()
 	{
-		return static::getServer()->isLinux();
+		return static::getPlatform()->isLinux();
 	}
 
 	/**
@@ -49,33 +49,33 @@ class ServerHelper
 	 */
 	public static function isUnix()
 	{
-		return static::getServer()->isUnix();
+		return static::getPlatform()->isUnix();
 	}
 
 	/**
 	 * getServer
 	 *
-	 * @return  Server
+	 * @return  Platform
 	 */
-	public static function getServer()
+	public static function getPlatform()
 	{
-		if (!static::$server)
+		if (!static::$platform)
 		{
-			static::$server = new Server;
+			static::$platform = new Platform;
 		}
 
-		return static::$server;
+		return static::$platform;
 	}
 
 	/**
 	 * Method to set property server
 	 *
-	 * @param   Server $server
+	 * @param   Platform $platform
 	 *
 	 * @return  void
 	 */
-	public static function setServer($server)
+	public static function setPlatform($platform)
 	{
-		static::$server = $server;
+		static::$platform = $platform;
 	}
 }

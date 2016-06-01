@@ -9,7 +9,7 @@
 namespace Windwalker\Environment\Test;
 
 use Windwalker\Environment\Test\Stub\StubClient;
-use Windwalker\Environment\Web\WebClient;
+use Windwalker\Environment\Browser\Browser;
 
 /**
  * Test class of WebClient
@@ -37,85 +37,85 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	{
 		// Platform, Mobile, Engine, Browser, Version, User Agent
 		return array(
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE,
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE,
 				'10', 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE,
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE,
 				'9', 'Mozilla/5.0 (Windows; U; MSIE 9.0; WIndows NT 9.0; en-US))'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '8',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '8',
 				'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; ' .
 				'.NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 1.0.3705; .NET CLR 1.1.4322)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '7.0b',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '7.0b',
 				'Mozilla/4.0(compatible; MSIE 7.0b; Windows NT 6.0)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '7.0b',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '7.0b',
 				'Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 5.1; Media Center PC 3.0; .NET CLR 1.0.3705; .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.1)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '7',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '7',
 				'Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 5.2)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '6.1',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '6.1',
 				'Mozilla/4.0 (compatible; MSIE 6.1; Windows XP)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '6',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '6',
 				'Mozilla/4.0 (compatible;MSIE 6.0;Windows 98;Q312461)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '7',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '7',
 				'Mozilla/4.0 (compatible; MSIE 7.0; AOL 9.6; AOLBuild 4340.128; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; ' .
 				'.NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '8',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '8',
 				'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; ' .
 				'.NET CLR 3.0.30729; .NET4.0C; Maxthon 2.0)'),
-			array(WebClient::WINDOWS, false, WebClient::TRIDENT, WebClient::IE, '7',
+			array(Browser::WINDOWS, false, Browser::TRIDENT, Browser::IE, '7',
 				'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; SlimBrowser)'),
-			array(WebClient::MAC, false, WebClient::WEBKIT, WebClient::CHROME, '13.0.782.32',
+			array(Browser::MAC, false, Browser::WEBKIT, Browser::CHROME, '13.0.782.32',
 				'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_3) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.32 Safari/535.1'),
-			array(WebClient::WINDOWS, false, WebClient::WEBKIT, WebClient::CHROME, '12.0.742.113',
+			array(Browser::WINDOWS, false, Browser::WEBKIT, Browser::CHROME, '12.0.742.113',
 				'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.113 Safari/534.30'),
-			array(WebClient::LINUX, false, WebClient::WEBKIT, WebClient::CHROME, '12.0.742.112',
+			array(Browser::LINUX, false, Browser::WEBKIT, Browser::CHROME, '12.0.742.112',
 				'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/10.04 Chromium/12.0.742.112 Chrome/12.0.742.112 Safari/534.30'),
-			array(WebClient::WINDOWS, false, WebClient::WEBKIT, WebClient::CHROME, '15.0.864.0',
+			array(Browser::WINDOWS, false, Browser::WEBKIT, Browser::CHROME, '15.0.864.0',
 				'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.864.0 Safari/535.2'),
-			array(WebClient::BLACKBERRY, true, WebClient::WEBKIT, WebClient::SAFARI, '6.0.0.546',
+			array(Browser::BLACKBERRY, true, Browser::WEBKIT, Browser::SAFARI, '6.0.0.546',
 				'Mozilla/5.0 (BlackBerry; U; BlackBerry 9700; pt) AppleWebKit/534.8+ (KHTML, like Gecko) Version/6.0.0.546 Mobile Safari/534.8+'),
-			array(WebClient::BLACKBERRY, true, WebClient::WEBKIT, '', '',
+			array(Browser::BLACKBERRY, true, Browser::WEBKIT, '', '',
 				'BlackBerry9700/5.0.0.862 Profile/MIDP-2.1 Configuration/CLDC-1.1 VendorID/120'),
-			array(WebClient::ANDROID_TABLET, true, WebClient::WEBKIT, WebClient::SAFARI, '999.9',
+			array(Browser::ANDROID_TABLET, true, Browser::WEBKIT, Browser::SAFARI, '999.9',
 				'Mozilla/5.0 (Linux; U; Android 2.3; en-us) AppleWebKit/999+ (KHTML, like Gecko) Safari/999.9'),
-			array(WebClient::ANDROID, true, WebClient::WEBKIT, WebClient::SAFARI, '4',
+			array(Browser::ANDROID, true, Browser::WEBKIT, Browser::SAFARI, '4',
 				'Mozilla/5.0 (Linux; U; Android 2.2.1; en-ca; LG-P505R Build/FRG83) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1'),
-			array(WebClient::ANDROID_TABLET, true, WebClient::WEBKIT, WebClient::SAFARI, '4',
+			array(Browser::ANDROID_TABLET, true, Browser::WEBKIT, Browser::SAFARI, '4',
 				'Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/534.13 (KHTML, like Gecko) Version/4.0 Safari/534.13'),
-			array(WebClient::ANDROID_TABLET, true, WebClient::WEBKIT, WebClient::SAFARI, '4',
+			array(Browser::ANDROID_TABLET, true, Browser::WEBKIT, Browser::SAFARI, '4',
 				'Mozilla/5.0 (Linux; U; Android 2.3.4; en-us; Silk/1.1.0-84) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 ' .
 				'Mobile Safari/533.1 Silk-Accelerated=false'),
-			array(WebClient::ANDROID_TABLET, true, WebClient::GECKO, WebClient::FIREFOX, '12',
+			array(Browser::ANDROID_TABLET, true, Browser::GECKO, Browser::FIREFOX, '12',
 				' Mozilla/5.0 (Android; Tablet; rv:12.0) Gecko/12.0 Firefox/12.0'),
-			array(WebClient::ANDROID_TABLET, true, WebClient::PRESTO, WebClient::OPERA, '11.5',
+			array(Browser::ANDROID_TABLET, true, Browser::PRESTO, Browser::OPERA, '11.5',
 				'Opera/9.80 (Android 3.2.1; Linux; Opera Tablet/ADR-1111101157; U; en) Presto/2.9.201 Version/11.50'),
-			array(WebClient::IPAD, true, WebClient::WEBKIT, WebClient::SAFARI, '4.0.4',
+			array(Browser::IPAD, true, Browser::WEBKIT, Browser::SAFARI, '4.0.4',
 				'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 ' .
 				'Mobile/7B314 Safari/531.21.10gin_lib.cc'),
-			array(WebClient::IPHONE, true, WebClient::WEBKIT, WebClient::SAFARI, '4.0.5',
+			array(Browser::IPHONE, true, Browser::WEBKIT, Browser::SAFARI, '4.0.5',
 				'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 ' .
 				'Mobile/8B5097d Safari/6531.22.7'),
-			array(WebClient::IPAD, true, WebClient::WEBKIT, WebClient::SAFARI, '4.0.4',
+			array(Browser::IPAD, true, Browser::WEBKIT, Browser::SAFARI, '4.0.4',
 				'Mozilla/5.0(iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 ' .
 				'Mobile/7B314 Safari/531.21.10gin_lib.cc'),
-			array(WebClient::IPOD, true, WebClient::WEBKIT, WebClient::SAFARI, '4.0.4',
+			array(Browser::IPOD, true, Browser::WEBKIT, Browser::SAFARI, '4.0.4',
 				'Mozilla/5.0(iPod; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 ' .
 				'Mobile/7B314 Safari/531.21.10gin_lib.cc'),
-			array(WebClient::WINDOWS, false, WebClient::WEBKIT, WebClient::SAFARI, '5.0.4',
+			array(Browser::WINDOWS, false, Browser::WEBKIT, Browser::SAFARI, '5.0.4',
 				'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27'),
-			array(WebClient::MAC, false, WebClient::WEBKIT, WebClient::SAFARI, '5.0.3',
+			array(Browser::MAC, false, Browser::WEBKIT, Browser::SAFARI, '5.0.3',
 				'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; ar) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4'),
-			array(WebClient::WINDOWS, false, WebClient::GECKO, WebClient::FIREFOX, '3.6.9',
+			array(Browser::WINDOWS, false, Browser::GECKO, Browser::FIREFOX, '3.6.9',
 				'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.2.9) Gecko/20100824 Firefox/3.6.9 ( .NET CLR 3.5.30729; .NET CLR 4.0.20506)'),
-			array(WebClient::WINDOWS, false, WebClient::GECKO, WebClient::FIREFOX, '4.0b8pre',
+			array(Browser::WINDOWS, false, Browser::GECKO, Browser::FIREFOX, '4.0b8pre',
 				'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:2.0b8pre) Gecko/20101213 Firefox/4.0b8pre'),
-			array(WebClient::WINDOWS, false, WebClient::GECKO, WebClient::FIREFOX, '5',
+			array(Browser::WINDOWS, false, Browser::GECKO, Browser::FIREFOX, '5',
 				'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:5.0) Gecko/20100101 Firefox/5.0'),
-			array(WebClient::WINDOWS, false, WebClient::GECKO, WebClient::FIREFOX, '6',
+			array(Browser::WINDOWS, false, Browser::GECKO, Browser::FIREFOX, '6',
 				'Mozilla/5.0 (Windows NT 5.0; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0'),
-			array(WebClient::MAC, false, WebClient::GECKO, '', '',
+			array(Browser::MAC, false, Browser::GECKO, '', '',
 				'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en; rv:1.9.2.14pre) Gecko/20101212 Camino/2.1a1pre (like Firefox/3.6.14pre)'),
-			array(WebClient::LINUX, false, WebClient::KHTML, '', '',
+			array(Browser::LINUX, false, Browser::KHTML, '', '',
 				'Mozilla/5.0 (compatible; Konqueror/4.4; Linux 2.6.32-22-generic; X11; en_US) KHTML/4.4.3 (like Gecko) Kubuntu'),
-			array('', false, WebClient::AMAYA, '', '', 'amaya/11.3.1 libwww/5.4.1')
+			array('', false, Browser::AMAYA, '', '', 'amaya/11.3.1 libwww/5.4.1')
 		);
 	}
 
@@ -329,11 +329,11 @@ class WebClientTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDetectPlatform($p, $m, $e, $b, $v, $ua)
 	{
-		$this->inspector->detectPlatform($ua);
+		$this->inspector->detectDevice($ua);
 
 		// Test the assertions.
 		$this->assertEquals($this->inspector->isMobile(), $m, 'Mobile detection failed.');
-		$this->assertEquals($this->inspector->getPlatform(), $p, 'Platform detection failed.');
+		$this->assertEquals($this->inspector->getDevice(), $p, 'Platform detection failed.');
 	}
 
 	/**

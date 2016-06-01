@@ -22,7 +22,7 @@ use Windwalker\Uri\PsrUri;
 class ServerRequestFactory
 {
 	/**
-	 * Function name to get apache request headers. This property is for test.
+	 * Function name to get apache request headers. This property is for test use.
 	 *
 	 * @var callable
 	 */
@@ -39,13 +39,14 @@ class ServerRequestFactory
 	 *
 	 * @see fromServer()
 	 *
-	 * @param array $server  $_SERVER superglobal
-	 * @param array $query   $_GET superglobal
-	 * @param array $body    $_POST superglobal
-	 * @param array $cookies $_COOKIE superglobal
-	 * @param array $files   $_FILES superglobal
+	 * @param  array  $server   The $_SERVER superglobal variable.
+	 * @param  array  $query    The $_GET superglobal variable.
+	 * @param  array  $body     The $_POST superglobal variable.
+	 * @param  array  $cookies  The $_COOKIE superglobal variable.
+	 * @param  array  $files    The $_FILES superglobal variable.
 	 *
 	 * @return ServerRequest
+	 *
 	 * @throws \InvalidArgumentException for invalid file values
 	 */
 	public static function createFromGlobals(array $server = array(), array $query = array(), array $body = null,
@@ -70,13 +71,11 @@ class ServerRequestFactory
 	}
 
 	/**
-	 * Marshal the $_SERVER array
+	 * Prepare the $_SERVER variables.
 	 *
-	 * Pre-processes and returns the $_SERVER superglobal.
+	 * @param   array  $server  The $_SERVER superglobal variable.
 	 *
-	 * @param array $server
-	 *
-	 * @return array
+	 * @return  array
 	 */
 	public static function prepareServers(array $server)
 	{
@@ -106,10 +105,11 @@ class ServerRequestFactory
 	 * Transforms each value into an UploadedFileInterface instance, and ensures
 	 * that nested arrays are normalized.
 	 *
-	 * @param array $files
+	 * @param   array  $files  THe $_FILES superglobal variable.
 	 *
-	 * @return UploadedFileInterface[]
-	 * @throws \InvalidArgumentException for unrecognized values
+	 * @return  UploadedFileInterface[]
+	 *
+	 * @throws  \InvalidArgumentException for unrecognized values
 	 */
 	public static function prepareFiles(array $files)
 	{
@@ -147,11 +147,11 @@ class ServerRequestFactory
 	}
 
 	/**
-	 * Marshal headers from $_SERVER
+	 * Get headers from $_SERVER.
 	 *
-	 * @param array $server
+	 * @param   array  $server  The $_SERVER superglobal variable.
 	 *
-	 * @return array
+	 * @return  array
 	 */
 	public static function prepareHeaders(array $server)
 	{
@@ -187,10 +187,10 @@ class ServerRequestFactory
 	/**
 	 * Marshal the URI from the $_SERVER array and headers
 	 *
-	 * @param array $server
-	 * @param array $headers
+	 * @param   array  $server   The $_SERVER superglobal.
+	 * @param   array  $headers  The headers variable from server.
 	 *
-	 * @return PsrUri
+	 * @return  PsrUri  Prepared Uri object.
 	 */
 	public static function prepareUri(array $server, array $headers)
 	{
@@ -243,9 +243,10 @@ class ServerRequestFactory
 	/**
 	 * Marshal the host and port from HTTP headers and/or the PHP environment
 	 *
-	 * @param \stdClass $accumulator
-	 * @param array     $server
-	 * @param array     $headers
+	 * @param   string  $host     The uri host.
+	 * @param   string  $port     The request port.
+	 * @param   array   $server   The $_SERVER superglobal.
+	 * @param   array   $headers  The headers variable from server.
 	 */
 	public static function getHostAndPortFromHeaders(&$host, &$port, array $server, array $headers)
 	{
@@ -286,12 +287,13 @@ class ServerRequestFactory
 	}
 
 	/**
-	 * Detect the base URI for the request
+	 * Get the base URI for the $_SERVER superglobal.
 	 *
-	 * Looks at a variety of criteria in order to attempt to autodetect a base
-	 * URI, including rewrite URIs, proxy URIs, etc.
+	 * Try to auto detect the base URI from different server system including IIS and Apache.
 	 *
-	 * From ZF2's Zend\Http\PhpEnvironment\Request class
+	 * This method based on ZF2's Zend\Http\PhpEnvironment\Request class
+	 *
+	 * @see  https://github.com/zendframework/zend-http/blob/master/src/PhpEnvironment/Request.php
 	 *
 	 * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
 	 * @license   http://framework.zend.com/license/new-bsd New BSD License
@@ -348,9 +350,9 @@ class ServerRequestFactory
 	/**
 	 * Strip the query string from a path
 	 *
-	 * @param mixed $path
+	 * @param   string  $path  The uri path.
 	 *
-	 * @return string
+	 * @return  string  The path striped.
 	 */
 	public static function stripQueryString($path)
 	{
@@ -367,10 +369,9 @@ class ServerRequestFactory
 	/**
 	 * Marshal the host and port from the request header
 	 *
-	 * @param \stdClass     $accumulator
-	 * @param string|array  $host
-	 *
-	 * @return void
+	 * @param string $host
+	 * @param string $port
+	 * @param string $headerHost
 	 */
 	protected static function getHostAndPortFromHeader(&$host, &$port, $headerHost)
 	{
@@ -389,14 +390,14 @@ class ServerRequestFactory
 	}
 
 	/**
-	 * Create and return an UploadedFile instance from a $_FILES specification.
+	 * Create an UploadedFile object for every uploaded file specifications.
 	 *
-	 * If the specification represents an array of values, this method will
-	 * delegate to normalizeNestedFileSpec() and return that return value.
+	 * If an element is array, will call getFlattenFileData() to normalize them to
+	 * a standard nested file list.
 	 *
-	 * @param array $value $_FILES struct
+	 * @param   array  $value  $_FILES  struct.
 	 *
-	 * @return UploadedFileInterface|UploadedFileInterface[]
+	 * @return  UploadedFileInterface|UploadedFileInterface[]
 	 */
 	private static function createUploadedFile(array $value)
 	{
@@ -421,9 +422,9 @@ class ServerRequestFactory
 	 * Loops through all nested files and returns a normalized array of
 	 * UploadedFileInterface instances.
 	 *
-	 * @param array $files
+	 * @param   array  $files  The file spec array.
 	 *
-	 * @return UploadedFileInterface[]
+	 * @return  UploadedFileInterface[]
 	 */
 	protected static function getFlattenFileData(array $files = array())
 	{
@@ -448,9 +449,9 @@ class ServerRequestFactory
 	/**
 	 * Return HTTP protocol version (X.Y)
 	 *
-	 * @param array $server
+	 * @param   array  $server  The $_SERVER supperglobal.
 	 *
-	 * @return string
+	 * @return  string  Protocol version.
 	 */
 	private static function getProtocolVersion(array $server)
 	{

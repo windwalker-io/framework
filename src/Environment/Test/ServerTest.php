@@ -8,7 +8,7 @@
 
 namespace Windwalker\Environment\Test;
 
-use Windwalker\Environment\Server;
+use Windwalker\Environment\Platform;
 
 /**
  * Test class of Server
@@ -20,7 +20,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test instance.
 	 *
-	 * @var Server
+	 * @var Platform
 	 */
 	protected $instance;
 
@@ -67,7 +67,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Server;
+		$this->instance = new Platform;
 
 		// Detect the native operating system type.
 		$this->os = strtoupper(substr(PHP_OS, 0, 3));

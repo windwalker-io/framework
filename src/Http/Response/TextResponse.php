@@ -20,31 +20,31 @@ use Windwalker\Http\Stream\StringStream;
 class TextResponse extends AbstractContentTypeResponse
 {
 	/**
-	 * Handle stream message body.
+	 * Handle body to stream object.
 	 *
-	 * @param   string $text
+	 * @param   string  $body  The body data.
 	 *
-	 * @return  StringStream
+	 * @return  StreamInterface  Converted to stream object.
 	 */
-	protected function handleBody($text)
+	protected function handleBody($body)
 	{
-		if (is_string($text))
+		if (is_string($body))
 		{
 			$stream = new Stream('php://temp', 'wb+');
-			$stream->write($text);
+			$stream->write($body);
 			$stream->rewind();
 
-			$text = $stream;
+			$body = $stream;
 		}
 
-		if (!$text instanceof StreamInterface)
+		if (!$body instanceof StreamInterface)
 		{
 			throw new \InvalidArgumentException(sprintf(
 				'Invalid body content type %s, please provide string or StreamInterface',
-				gettype($text)
+				gettype($body)
 			));
 		}
 
-		return $text;
+		return $body;
 	}
 }

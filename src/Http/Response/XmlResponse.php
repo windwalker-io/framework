@@ -16,14 +16,18 @@ namespace Windwalker\Http\Response;
 class XmlResponse extends TextResponse
 {
 	/**
-	 * Property type.
+	 * Content type.
 	 *
 	 * @var  string
 	 */
 	protected $type = 'application/xml';
 
 	/**
-	 * HtmlResponse constructor.
+	 * Constructor.
+	 *
+	 * @param  string  $xml      The XML body data.
+	 * @param  int     $status   The status code.
+	 * @param  array   $headers  The custom headers.
 	 */
 	public function __construct($xml = '', $status = 200, array $headers = array())
 	{
@@ -35,11 +39,11 @@ class XmlResponse extends TextResponse
 	}
 
 	/**
-	 * encode
+	 * Convert XML object to string.
 	 *
-	 * @param mixed $data
+	 * @param   \SimpleXMLElement|\DOMDocument|string  $data  XML object or data.
 	 *
-	 * @return  string
+	 * @return  string  Converted XML string.
 	 */
 	protected function toString($data)
 	{

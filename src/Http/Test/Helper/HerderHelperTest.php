@@ -9,6 +9,7 @@
 namespace Windwalker\Http\Test\Helper;
 
 use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\Response\Response;
 
 /**
  * Test class of HeaderHelper
@@ -304,5 +305,26 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 			array(array(), false),
 			array(null,  false),
 		);
+	}
+
+	/**
+	 * testPrepareAttachmentHeaders
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Http\Helper\HeaderHelper::prepareAttachmentHeaders
+	 */
+	public function testPrepareAttachmentHeaders()
+	{
+		$response = HeaderHelper::prepareAttachmentHeaders(new Response);
+		
+		$this->assertEquals(array('application/octet-stream'), $response->getHeader('Content-Type'));
+		$this->assertEquals(array('binary'), $response->getHeader('Content-Transfer-Encoding'));
+		$this->assertEquals(array('no-store, no-cache, must-revalidate'), $response->getHeader('Cache-Control'));
+		$this->assertEquals(array(), $response->getHeader('Content-Disposition'));
+
+		$response = HeaderHelper::prepareAttachmentHeaders(new Response, 'foo.zip');
+
+		$this->assertEquals(array('attachment; filename="foo.zip"'), $response->getHeader('Content-Disposition'));
 	}
 }

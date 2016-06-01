@@ -35,18 +35,18 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 	/**
 	 * Set next middleware.
 	 *
-	 * @param   object|MiddlewareInterface $object The middleware object.
+	 * @param   callable|MiddlewareInterface $callable The middleware object.
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setNext($object)
+	public function setNext($callable)
 	{
-		if (!($object instanceof MiddlewareInterface) && is_callable($object))
+		if (!($callable instanceof MiddlewareInterface) && is_callable($callable))
 		{
-			$object = new CallbackMiddleware($object);
+			$callable = new CallbackMiddleware($callable);
 		}
 
-		$this->next = $object;
+		$this->next = $callable;
 
 		return $this;
 	}

@@ -6,7 +6,7 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-use Windwalker\Environment\Server;
+use Windwalker\Environment\Platform;
 
 $autoload = __DIR__ . '/../../../vendor/autoload.php';
 
@@ -17,7 +17,7 @@ if (!is_file($autoload))
 
 include_once $autoload;
 
-$server = new Server;
+$server = new Platform;
 
 echo $server->getEntry();
 echo "\n";

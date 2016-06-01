@@ -50,9 +50,9 @@ class StreamOutput extends Output
 	}
 
 	/**
-	 * sendBody
+	 * Send body as response.
 	 *
-	 * @param ResponseInterface $response
+	 * @param   ResponseInterface  $response  Response object.
 	 *
 	 * @return  void
 	 */
@@ -106,11 +106,11 @@ class StreamOutput extends Output
 	}
 
 	/**
-	 * prepareContentLength
+	 * Prepare content-length header.
 	 *
-	 * @param ResponseInterface $response
+	 * @param   ResponseInterface  $response  The response object with headers.
 	 *
-	 * @return  ResponseInterface|static
+	 * @return  ResponseInterface
 	 */
 	protected function prepareContentLength(ResponseInterface $response)
 	{
@@ -200,7 +200,7 @@ class StreamOutput extends Output
 	}
 
 	/**
-	 * delay
+	 * Delay the output loop.
 	 *
 	 * @return  void
 	 */

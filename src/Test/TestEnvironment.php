@@ -9,14 +9,14 @@
 namespace Windwalker\Test;
 
 use Windwalker\Environment\PhpHelper;
-use Windwalker\Environment\ServerHelper;
+use Windwalker\Environment\PlatformHelper;
 
 /**
  * The TestEnvironment class.
  * 
  * @since  2.0
  */
-class TestEnvironment extends ServerHelper
+class TestEnvironment extends PlatformHelper
 {
 	/**
 	 * isCli

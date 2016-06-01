@@ -102,11 +102,11 @@ class WebHttpServer extends HttpServer
 	/**
 	 * listen
 	 *
-	 * @param callable $finalHandler
+	 * @param callable $nextHandler
 	 */
-	public function listen(callable $finalHandler = null)
+	public function listen(callable $nextHandler = null)
 	{
-		$response = call_user_func($this->handler, $this->request, $this->response, $finalHandler);
+		$response = call_user_func($this->handler, $this->request, $this->response, $nextHandler);
 
 		if (!$response instanceof ResponseInterface)
 		{

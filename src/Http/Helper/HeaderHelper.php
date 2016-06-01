@@ -8,6 +8,8 @@
 
 namespace Windwalker\Http\Helper;
 
+use Psr\Http\Message\ResponseInterface;
+
 /**
  * The HeaderHelper class.
  * 
@@ -281,5 +283,28 @@ abstract class HeaderHelper
 		$filtered = ucwords($filtered);
 
 		return str_replace(' ', '-', $filtered);
+	}
+
+	/**
+	 * Prepare attachment headers to response object.
+	 *
+	 * @param  ResponseInterface  $response  The response object.
+	 * @param  string             $filename  Download file name.
+	 *
+	 * @return  ResponseInterface
+	 */
+	public static function prepareAttachmentHeaders(ResponseInterface $response, $filename = null)
+	{
+		$response = $response->withHeader('Content-Type', 'application/octet-stream')
+			->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+			->withHeader('Content-Transfer-Encoding', 'binary')
+			->withHeader('Content-Encoding', 'none');
+
+		if ($filename !== null)
+		{
+			$response = $response->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+		}
+
+		return $response;
 	}
 }

@@ -18,40 +18,40 @@ class Environment
 	/**
 	 * Property server.
 	 *
-	 * @var  ServerInterface
+	 * @var  Platform
 	 */
-	public $server;
+	public $platform;
 
 	/**
 	 * Class init.
 	 *
-	 * @param ServerInterface $server
+	 * @param Platform $platform
 	 */
-	public function __construct(ServerInterface $server = null)
+	public function __construct(Platform $platform = null)
 	{
-		$this->server = $server ? : new Server;
+		$this->platform = $platform ? : new Platform;
 	}
 
 	/**
 	 * Method to get property Server
 	 *
-	 * @return  \Windwalker\Environment\ServerInterface
+	 * @return  \Windwalker\Environment\Platform
 	 */
-	public function getServer()
+	public function getPlatform()
 	{
-		return $this->server;
+		return $this->platform;
 	}
 
 	/**
 	 * Method to set property server
 	 *
-	 * @param   \Windwalker\Environment\ServerInterface $server
+	 * @param   \Windwalker\Environment\Platform $platform
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setServer($server)
+	public function setPlatform($platform)
 	{
-		$this->server = $server;
+		$this->platform = $platform;
 
 		return $this;
 	}

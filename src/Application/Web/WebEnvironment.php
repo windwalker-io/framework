@@ -10,7 +10,7 @@ namespace Windwalker\Application\Web;
 
 use Windwalker\Environment\Environment;
 use Windwalker\Environment\ServerInterface;
-use Windwalker\Environment\Web\WebClient;
+use Windwalker\Environment\Browser\Browser;
 
 /**
  * The WebEnvironment class.
@@ -24,7 +24,7 @@ class WebEnvironment extends Environment
 	/**
 	 * The web client object.
 	 *
-	 * @var    WebClient
+	 * @var    Browser
 	 * @since  2.0
 	 */
 	public $client;
@@ -32,22 +32,22 @@ class WebEnvironment extends Environment
 	/**
 	 * Constructor of this class.
 	 *
-	 * @param   WebClient        $client  The WebClient object to determine browser version.
-	 * @param   ServerInterface  $server  The server information object.
+	 * @param   Browser         $browser  The WebClient object to determine browser version.
+	 * @param   ServerInterface $platform The server information object.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(WebClient $client = null, ServerInterface $server = null)
+	public function __construct(Browser $browser = null, ServerInterface $platform = null)
 	{
-		$this->client = $client ? : new WebClient;
+		$this->client = $browser ? : new Browser;
 
-		parent::__construct($server);
+		parent::__construct($platform);
 	}
 
 	/**
 	 * Method to get Client object.
 	 *
-	 * @return  WebClient  The web client object.
+	 * @return  Browser  The web client object.
 	 *
 	 * @since   2.0
 	 */
@@ -59,7 +59,7 @@ class WebEnvironment extends Environment
 	/**
 	 * Method to set property client
 	 *
-	 * @param   WebClient $client  The web client object.
+	 * @param   Browser $client The web client object.
 	 *
 	 * @return  static  Return self to support chaining.
 	 *

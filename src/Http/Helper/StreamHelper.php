@@ -89,7 +89,8 @@ abstract class StreamHelper
 	 *
 	 * @param   string|resource    $source    The file source, can be file path or resource.
 	 * @param   ResponseInterface  $response  A custom Response object to contain your headers.
-	 * @param   array              $options   Options to provide some settings.
+	 * @param   array              $options   Options to provide some settings, currently supports
+	 *                                        "delay" and "filename".
 	 *
 	 * @return  void
 	 */
@@ -112,16 +113,9 @@ abstract class StreamHelper
 			$filename = $options['filename'];
 		}
 
-		if ($filename !== null)
-		{
-			$response = $response->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
-		}
+		$response = HeaderHelper::prepareAttachmentHeaders($response, $filename);
 
-		$response = $response->withBody($stream)
-			->withHeader('Content-Type', 'application/octet-stream')
-			->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
-			->withHeader('Content-Transfer-Encoding', 'binary')
-			->withHeader('Content-Encoding', 'none');
+		$response = $response->withBody($stream);
 
 		$output = static::$outputObject;
 

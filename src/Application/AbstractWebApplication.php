@@ -9,8 +9,8 @@
 namespace Windwalker\Application;
 
 use Windwalker\Http\Output\Output;
-use Windwalker\Environment\Web\WebClient;
-use Windwalker\Environment\Web\WebEnvironment;
+use Windwalker\Environment\Browser\Browser;
+use Windwalker\Environment\WebEnvironment;
 use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
@@ -145,7 +145,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// If gzip compression is enabled in configuration and the server is compliant, compress the output.
 		if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler'))
 		{
-			$this->output->compress($this->environment->client->getEncodings());
+			$this->output->compress($this->environment->browser->getEncodings());
 		}
 
 		return $this->output->respond($returnBody);
@@ -225,7 +225,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		else
 		{
 			// We have to use a JavaScript redirect here because MSIE doesn't play nice with utf-8 URLs.
-			if (($this->environment->client->getEngine() == WebClient::TRIDENT) && !ApplicationHelper::isAscii($url))
+			if (($this->environment->browser->getEngine() == Browser::TRIDENT) && !ApplicationHelper::isAscii($url))
 			{
 				$html = '<html><head>';
 				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->output->getCharSet() . '" />';
@@ -472,7 +472,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	public function detectRequestUri()
 	{
 		// First we need to detect the URI scheme.
-		if ($this->environment->client->isSSLConnection())
+		if ($this->environment->browser->isSSLConnection())
 		{
 			$scheme = 'https://';
 		}
@@ -512,7 +512,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Method to get property Environment
 	 *
-	 * @return  \Windwalker\Environment\Web\WebEnvironment
+	 * @return  \Windwalker\Environment\WebEnvironment
 	 *
 	 * @since   2.0
 	 */
@@ -524,7 +524,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Method to set property environment
 	 *
-	 * @param   \Windwalker\Environment\Web\WebEnvironment $environment
+	 * @param   \Windwalker\Environment\WebEnvironment $environment
 	 *
 	 * @return  static  Return self to support chaining.
 	 *

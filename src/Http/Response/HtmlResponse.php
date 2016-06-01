@@ -16,7 +16,7 @@ namespace Windwalker\Http\Response;
 class HtmlResponse extends TextResponse
 {
 	/**
-	 * Property type.
+	 * Content type.
 	 *
 	 * @var  string
 	 */

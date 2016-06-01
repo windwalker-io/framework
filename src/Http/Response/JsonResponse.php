@@ -21,14 +21,18 @@ use Windwalker\Http\Stream\StringStream;
 class JsonResponse extends TextResponse
 {
 	/**
-	 * Property type.
+	 * Content type.
 	 *
 	 * @var  string
 	 */
 	protected $type = 'application/json';
 
 	/**
-	 * HtmlResponse constructor.
+	 * Constructor.
+	 *
+	 * @param  string  $json     The JSON body data.
+	 * @param  int     $status   The status code.
+	 * @param  array   $headers  The custom headers.
 	 */
 	public function __construct($json = '', $status = 200, array $headers = array(), $options = 0)
 	{
@@ -40,12 +44,12 @@ class JsonResponse extends TextResponse
 	}
 
 	/**
-	 * encode
+	 * Encode json.
 	 *
-	 * @param mixed $data
-	 * @param int   $options
+	 * @param   mixed $data     The dat to convert.
+	 * @param   int   $options  The json_encode() options flag.
 	 *
-	 * @return  string
+	 * @return  string  Encoded json.
 	 */
 	protected function encode($data, $options = 0)
 	{

@@ -38,11 +38,11 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
 	protected $reasonPhrase;
 
 	/**
-	 * Class init.
+	 * Constructor.
 	 *
-	 * @param string $body
-	 * @param int    $status
-	 * @param array  $headers
+	 * @param  string  $body     The body data.
+	 * @param  int     $status   The status code.
+	 * @param  array   $headers  The custom headers.
 	 */
 	public function __construct($body = 'php://memory', $status = 200, array $headers = array())
 	{

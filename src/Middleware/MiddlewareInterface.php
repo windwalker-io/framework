@@ -32,9 +32,9 @@ interface MiddlewareInterface
 	/**
 	 * Set next middleware.
 	 *
-	 * @param   object|MiddlewareInterface $object The middleware object.
+	 * @param   object|MiddlewareInterface $callable The middleware object.
 	 *
 	 * @return  MiddlewareInterface  Return self to support chaining.
 	 */
-	public function setNext($object);
+	public function setNext($callable);
 }
