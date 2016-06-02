@@ -14,12 +14,17 @@ use Windwalker\IO\Filter\NullFilter;
 /**
  * Class Input
  *
- * @property-read    Input       $get
- * @property-read    Input       $post
- * @property-read    Input       $request
- * @property-read    Input       $server
- * @property-read    FilesInput  $files
- * @property-read    Cookie      $cookie
+ * @property-read    Input         $get
+ * @property-read    Input         $post
+ * @property-read    FormDataInput $put
+ * @property-read    FormDataInput $patch
+ * @property-read    FormDataInput $delete
+ * @property-read    FormDataInput $link
+ * @property-read    FormDataInput $unlink
+ * @property-read    Input         $request
+ * @property-read    Input         $server
+ * @property-read    FilesInput    $files
+ * @property-read    Cookie        $cookie
  *
  * @method      integer  getInt()       getInt($name, $default = null)    Get a signed integer.
  * @method      integer  getUint()      getUint($name, $default = null)   Get an unsigned integer.
@@ -167,6 +172,24 @@ class Input implements \Serializable, \Countable
 		}
 
 		return null;
+	}
+
+	/**
+	 * __set
+	 *
+	 * @param   string  $name
+	 * @param   Input   $value
+	 *
+	 * @return  void
+	 */
+	public function __set($name, $value)
+	{
+		if (!$value instanceof Input)
+		{
+			throw new \InvalidArgumentException('Input should be instance of Input object');
+		}
+
+		$this->inputs[$name] = $value;
 	}
 
 	/**

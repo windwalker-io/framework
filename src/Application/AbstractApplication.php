@@ -18,7 +18,6 @@ use Windwalker\Registry\Registry;
  * The Abstract Application Class.
  *
  * @property-read  Registry  $config
- * @property-read  Input     $input
  *
  * @since 2.0
  */
@@ -33,14 +32,6 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	protected $config;
 
 	/**
-	 * The application input object.
-	 *
-	 * @var    Input
-	 * @since  2.0
-	 */
-	protected $input = null;
-
-	/**
 	 * A logger object.
 	 *
 	 * @var    LoggerInterface
@@ -51,14 +42,12 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Class constructor of Application.
 	 *
-	 * @param   Input     $input   An optional argument to provide an Input object.
 	 * @param   Registry  $config  An optional argument to provide a Registry object to be config.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(Input $input = null, Registry $config = null)
+	public function __construct(Registry $config = null)
 	{
-		$this->input = $input instanceof Input ? $input : new Input;
 		$this->config = $config instanceof Registry ? $config : new Registry;
 
 		$this->init();
@@ -236,7 +225,6 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	{
 		$allowNames = array(
 			'config',
-			'input'
 		);
 
 		if (in_array($name, $allowNames))

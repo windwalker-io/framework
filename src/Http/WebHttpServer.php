@@ -57,14 +57,14 @@ class WebHttpServer extends HttpServer
 	 *
 	 * @var  string
 	 */
-	protected $contentType;
+	protected $contentType = 'text/html';
 
 	/**
 	 * Property charSet.
 	 *
 	 * @var  string
 	 */
-	protected $charSet;
+	protected $charSet = 'utf-8';
 
 	/**
 	 * Property modifiedDate.

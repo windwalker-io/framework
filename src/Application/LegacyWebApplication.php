@@ -8,26 +8,24 @@
 
 namespace Windwalker\Application;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Windwalker\Http\Output\Output;
 use Windwalker\Environment\Browser\Browser;
 use Windwalker\Environment\WebEnvironment;
-use Windwalker\Http\Request\ServerRequestFactory;
-use Windwalker\Http\WebHttpServer;
+use Windwalker\Http\Output\OutputInterface;
+use Windwalker\IO\Input;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
 use Windwalker\Registry\Registry;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Application for Web HTTP foundation.
  *
- * @property-read  WebEnvironment $environment
- * @property-read  WebHttpServer  $server
+ * @property-read  WebEnvironment   $environment
+ * @property-read  OutputInterface  $output
  *
  * @since 2.0
  */
-abstract class AbstractWebApplication extends AbstractApplication
+abstract class LegacyWebApplication extends AbstractApplication
 {
 	/**
 	 * The application environment object.
@@ -44,20 +42,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * @since  2.0
 	 */
 	protected $uri = null;
-
-	/**
-	 * Property request.
-	 *
-	 * @var  ServerRequestInterface
-	 */
-	protected $request;
-
-	/**
-	 * Property server.
-	 *
-	 * @var  WebHttpServer
-	 */
-	protected $server;
 
 	/**
 	 * Redirect HTTP codes.
@@ -80,6 +64,9 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Class constructor.
 	 *
+	 * @param   Input           $input        An optional argument to provide dependency injection for the application's
+	 *                                        input object.  If the argument is a Input object that object will become
+	 *                                        the application's input object, otherwise a default input object is created.
 	 * @param   Registry        $config       An optional argument to provide dependency injection for the application's
 	 *                                        config object.  If the argument is a Registry object that object will become
 	 *                                        the application's config object, otherwise a default config object is created.
@@ -89,14 +76,15 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(ServerRequestInterface $request = null, Registry $config = null, WebEnvironment $environment = null)
+	public function __construct(Input $input = null, Registry $config = null, WebEnvironment $environment = null)
 	{
-		$this->environment = $environment ? : new WebEnvironment;
-		$this->request = $request ? : ServerRequestFactory::createFromGlobals();
-		$this->server = WebHttpServer::create(array($this, 'dispatch'), $this->request);
+		$this->environment = $environment instanceof WebEnvironment  ? $environment : new WebEnvironment;
 
 		// Call the constructor as late as possible (it runs `init()`).
-		parent::__construct($config);
+		parent::__construct($input, $config);
+
+		// Set the system URIs.
+		$this->loadSystemUris();
 
 		// Set the execution datetime and timestamp;
 		$this->set('execution.datetime', gmdate('Y-m-d H:i:s'));
@@ -125,21 +113,12 @@ abstract class AbstractWebApplication extends AbstractApplication
 
 		// @event onBeforeRespond
 
+		// Send the application response.
+		$output = $this->respond($this->get('return_body', false));
+
 		// @event onAfterRespond
+		return $output;
 	}
-
-	/**
-	 * Method to run the application routines. Most likely you will want to instantiate a controller
-	 * and execute it, or perform some sort of task directly.
-	 *
-	 * @since   2.0
-	 */
-	protected function doExecute()
-	{
-		$this->server->listen();
-	}
-
-	abstract public function dispatch(Request $request, Response $response, callable $next = null);
 
 	/**
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
@@ -258,6 +237,189 @@ abstract class AbstractWebApplication extends AbstractApplication
 	}
 
 	/**
+	 * Method to load the system URI strings for the application.
+	 *
+	 * @param   string  $requestUri  An optional request URI to use instead of detecting one from the
+	 *                               server environment variables.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.0
+	 */
+	protected function loadSystemUris($requestUri = null)
+	{
+		if ($this->get('site_uri'))
+		{
+			$uri = new Uri($this->get('site_uri'));
+		}
+		else
+		{
+			$uri = $this->getSystemUri($requestUri);
+		}
+
+		$original = $uri->getOriginal();
+
+		$queryStart = strpos($original, '?');
+
+		if ($queryStart !== false)
+		{
+			$original = substr($original, 0, strpos($original, '?'));
+		}
+
+		$this->set('uri.current', $original);
+		$this->set('uri.full', $uri->getOriginal());
+
+		// Get the host and path from the URI.
+		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
+		$path = rtrim($uri->toString(array('path')), '/\\');
+		$script = trim($_SERVER['SCRIPT_NAME'], '/');
+
+		// Check if the path includes "index.php".
+		if (strpos($path, $script) === 0)
+		{
+			// Remove the index.php portion of the path.
+			$path = substr_replace($path, '', strpos($path, $script), strlen($script));
+			$path = rtrim($path, '/\\');
+		}
+
+		$scriptName = pathinfo($script, PATHINFO_BASENAME);
+
+		// Set the base URI both as just a path and as the full URI.
+		$this->set('uri.base.full', $host . $path . '/');
+		$this->set('uri.base.host', $host);
+		$this->set('uri.base.path', $path . '/');
+		$this->set('uri.script', $scriptName);
+
+		// Set the extended (non-base) part of the request URI as the route.
+		$route = substr_replace($this->get('uri.current'), '', 0, strlen($this->get('uri.base.full')));
+
+		// Only variables should be passed by reference so we use two lines.
+		$file = explode('/', $script);
+		$file = array_pop($file);
+
+		if (substr($route, 0, strlen($file)) == $file)
+		{
+			$route = trim(substr($route, strlen($file)), '/');
+		}
+
+		$this->set('uri.route', $route);
+
+		// Get an explicitly set media URI is present.
+		$mediaURI = trim($this->get('media_uri'));
+
+		if ($mediaURI)
+		{
+			if (strpos($mediaURI, '://') !== false)
+			{
+				$this->set('uri.media.full', $mediaURI);
+				$this->set('uri.media.path', $mediaURI);
+			}
+			else
+			{
+				// Normalise slashes.
+				$mediaURI = trim($mediaURI, '/\\');
+				$mediaURI = !empty($mediaURI) ? '/' . $mediaURI . '/' : '/';
+				$this->set('uri.media.full', $this->get('uri.base.host') . $mediaURI);
+				$this->set('uri.media.path', $mediaURI);
+			}
+		}
+		else
+			// No explicit media URI was set, build it dynamically from the base uri.
+		{
+			$this->set('uri.media.full', $this->get('uri.base.full') . 'media/');
+			$this->set('uri.media.path', $this->get('uri.base.path') . 'media/');
+		}
+	}
+
+	/**
+	 * Get system Uri object.
+	 *
+	 * @param   string  $requestUri  The request uri string.
+	 * @param   bool    $refresh     Refresh the uri.
+	 *
+	 * @return  Uri  The system Uri object.
+	 *
+	 * @since   2.0
+	 */
+	protected function getSystemUri($requestUri = null, $refresh = false)
+	{
+		if ($this->uri && !$refresh)
+		{
+			return $this->uri;
+		}
+
+		$requestUri = $requestUri ? : $this->detectRequestUri();
+
+		// Start with the requested URI.
+		$uri = new Uri($requestUri);
+
+		// If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
+		if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI']))
+		{
+			// We aren't expecting PATH_INFO within PHP_SELF so this should work.
+			$uri->setPath(rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+		}
+		else
+		// Pretty much everything else should be handled with SCRIPT_NAME.
+		{
+			$uri->setPath(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
+		}
+
+		// Clear the unused parts of the requested URI.
+		$uri->setQuery(null);
+		$uri->setFragment(null);
+
+		return $this->uri = $uri;
+	}
+
+	/**
+	 * Method to detect the requested URI from server environment variables.
+	 *
+	 * @return  string  The requested URI
+	 *
+	 * @since   2.0
+	 */
+	public function detectRequestUri()
+	{
+		// First we need to detect the URI scheme.
+		if ($this->environment->browser->isSSLConnection())
+		{
+			$scheme = 'https://';
+		}
+		else
+		{
+			$scheme = 'http://';
+		}
+
+		/*
+		 * There are some differences in the way that Apache and IIS populate server environment variables.  To
+		 * properly detect the requested URI we need to adjust our algorithm based on whether or not we are getting
+		 * information from Apache or IIS.
+		 */
+
+		// If PHP_SELF and REQUEST_URI are both populated then we will assume "Apache Mode".
+		if (!empty($_SERVER['PHP_SELF']) && !empty($_SERVER['REQUEST_URI']))
+		{
+			// The URI is built from the HTTP_HOST and REQUEST_URI environment variables in an Apache environment.
+			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		}
+		else
+			// If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
+		{
+			// IIS uses the SCRIPT_NAME variable instead of a REQUEST_URI variable... thanks, MS
+			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+
+			// If the QUERY_STRING variable exists append it to the URI string.
+			if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']))
+			{
+				$uri .= '?' . $_SERVER['QUERY_STRING'];
+			}
+		}
+
+		return trim($uri);
+	}
+
+	/**
 	 * Method to get property Environment
 	 *
 	 * @return  \Windwalker\Environment\WebEnvironment
@@ -296,7 +458,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	{
 		$allowNames = array(
 			'environment',
-			'server'
+			'output'
 		);
 
 		if (in_array($name, $allowNames))

@@ -10,6 +10,7 @@ namespace Windwalker\Application\Test;
 
 use Windwalker\Application\Test\Mock\MockResponse;
 use Windwalker\Application\Test\Stub\StubWeb;
+use Windwalker\Http\Output\Output;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -60,25 +61,13 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	public function test__construct()
 	{
 		$this->assertInstanceOf(
-			'Windwalker\\IO\\Input',
-			$this->instance->input,
-			'Input property wrong type'
-		);
-
-		$this->assertInstanceOf(
 			'Windwalker\\Registry\\Registry',
 			TestHelper::getValue($this->instance, 'config'),
 			'Config property wrong type'
 		);
 
 		$this->assertInstanceOf(
-			'Windwalker\\Application\\Web\\Output',
-			$this->instance->getOutput(),
-			'Output property wrong type'
-		);
-
-		$this->assertInstanceOf(
-			'Windwalker\\Environment\\Web\\WebEnvironment',
+			'Windwalker\\Environment\\WebEnvironment',
 			$this->instance->getEnvironment(),
 			'Environment property wrong type'
 		);
@@ -93,7 +82,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExecute()
 	{
-		$this->instance->setOutput(new MockResponse);
+		$this->instance->setOutput(new Output);
 
 		ob_start();
 		$this->instance->execute();
@@ -102,8 +91,8 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('Hello World', $this->instance->getBody());
 
 		$this->assertContains(
-			'Content-Type: text/html; charset=utf-8',
-			$this->instance->getOutput()->sentHeaders[0]
+			array('text/html; charset=utf-8'),
+			$this->instance->getOutput()->message->getHeader('Content-Type')
 		);
 	}
 
