@@ -21,16 +21,16 @@ The default environment maintains a server object provides us some information o
 ``` php
 $env = new Environment;
 
-$server = $env->getServer();
+$platform = $env->getPlatform();
 ```
 
-## The Server Object
+## The Platform Object
 
 ### Detect Running Environment
 
 ``` php
-$server->isWeb();
-$server->isCli();
+$platform->isWeb();
+$platform->isCli();
 ```
 
 Same as:
@@ -48,26 +48,26 @@ Get server OS information. The `getOS()` return first 3 letters from `getUname()
 List of `PHP_OS` please see: https://gist.github.com/asika32764/90e49a82c124858c9e1a 
 
 ``` php
-$sever->getOS();  // WIN, UNI, LIN, DAR ... etc.
-$sever->getUname(); // PHP_OS
+$platform->getOS();  // WIN, UNI, LIN, DAR ... etc.
+$platform->getUname(); // PHP_OS
 
-$sever->isWin();
-$sever->isLinux();
-$sever->isUnix();
+$platform->isWin();
+$platform->isLinux();
+$platform->isUnix();
 ```
 
 ### Get System Path
 
 ``` php
-$server->getWorkingDirectory();
+$platform->getWorkingDirectory();
 
-$server->getRoot();
+$platform->getRoot();
 
-$server->getEntry();
+$platform->getEntry();
 
-$server->getServerPublicRoot();
+$platform->getServerPublicRoot();
 
-$server->getRequestUri();
+$platform->getRequestUri();
 ```
 
 #### getWorkingDirectory()
@@ -111,9 +111,9 @@ Set first argument to `false` will return request path without params, same as `
 ### Get Request Information
 
 ``` php
-$server->getHost();
-$server->getScheme();
-$server->getPort();
+$platform->getHost();
+$platform->getScheme();
+$platform->getPort();
 ```
 
 ## The PhpHelper
@@ -167,36 +167,36 @@ use Windwalker\Environment\Web\WebEnvironment;
 
 $env = new WebEnvironment;
 
-$server = $env->getServer();
-$client = $env->getClient();
+$platform = $env->getPlatform();
+$browser = $env->getBrowser();
 ```
 
-## WebClient
+## Browser
 
 WebClient is a client detector help us know information about user's browser.
 
 ### Detect Browser
 
 ``` php
-$browser = $client->getBrowser();
-
 // Check is IE
-$browser == WebClient::IE;
+$browser->getBrowser() == Browser::IE;
 ```
 
 Available Browser Detection
 
 - IE
+- EDGE
 - FIREFOX
 - CHROME
 - SAFARI
 - OPERA
 - ANDROID_TABLET
+- VIVALDI
 
 ### Detect Browser Version
 
 ``` php
-$version = $client->getBrowserVersion();
+$version = $browser->getBrowserVersion();
 
 // Check version
 $version >= 11;
@@ -205,50 +205,51 @@ $version >= 11;
 ### Detect Browser Engine
 
 ``` php
-$engine = $client->getEngine();
+$engine = $browser->getEngine();
 
 // Check engine
-$engine == Client::WEBKIT
+$engine == Browser::ENGINE_WEBKIT
 ```
 
 Available Engines
 
-- TRIDENT
-- WEBKIT
-- GECKO
-- PRESTO
-- KHTML
-- AMAYA
+- ENGINE_TRIDENT
+- ENGINE_EDGE_HTML
+- ENGINE_WEBKIT
+- ENGINE_GECKO
+- ENGINE_PRESTO
+- ENGINE_KHTML
+- ENGINE_AMAYA
 
 ### Detect User's OS or Device
 
 ``` php
-$platform = $client->getPlatform();
+$device = $browser->getDevice();
 
 // Check platform
-$platform == Client::ANDROID
+$device == Browser::DEVICE_ANDROID
 ```
 
 Available Platforms
 
-- WINDOWS
-- WINDOWS_PHONE
-- WINDOWS_CE
-- IPHONE
-- IPAD
-- IPOD
-- MAC
-- BLACKBERRY
-- ANDROID
-- LINUX
+- DEVICE_WINDOWS
+- DEVICE_WINDOWS_PHONE
+- DEVICE_WINDOWS_CE
+- DEVICE_IPHONE
+- DEVICE_IPAD
+- DEVICE_IPOD
+- DEVICE_MAC
+- DEVICE_BLACKBERRY
+- DEVICE_ANDROID
+- DEVICE_LINUX
 
 ### Other Detection
  
 ``` php
-$client->isRobot();
-$client->isMobile();
-$client->getLanguages();
-$client->getEncodings();
-$client->isSSLConnection();
-$client->getUserAgent();
+$browser->isRobot();
+$browser->isMobile();
+$browser->getLanguages();
+$browser->getEncodings();
+$browser->isSSLConnection();
+$browser->getUserAgent();
 ```

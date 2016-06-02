@@ -15,7 +15,7 @@ use Windwalker\Environment\Platform;
  *
  * @since 2.0
  */
-class ServerTest extends \PHPUnit_Framework_TestCase
+class PlatformTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
@@ -168,7 +168,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\Environment\Server::getOS
+	 * @covers Windwalker\Environment\Platform::getOS
 	 */
 	public function testGetOS()
 	{
@@ -187,7 +187,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider getIsWinTestData
 	 *
-	 * @covers       Windwalker\Application\Environment\Server::isWin
+	 * @covers       Windwalker\Environment\Platform::isWin
 	 */
 	public function testIsWin($os, $value)
 	{
@@ -207,7 +207,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider getIsUnixTestData
 	 *
-	 * @covers Windwalker\Application\Environment\Server::isUnix
+	 * @covers Windwalker\Environment\Platform::isUnix
 	 */
 	public function testIsUnix($os, $value)
 	{
@@ -227,7 +227,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider getIsLinuxTestData
 	 *
-	 * @covers Windwalker\Application\Environment\Server::isLinux
+	 * @covers Windwalker\Environment\Platform::isLinux
 	 */
 	public function testIsLinux($os, $value)
 	{

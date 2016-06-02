@@ -15,7 +15,7 @@ use Windwalker\Environment\Browser\Browser;
  * 
  * @since  2.0
  */
-class StubClient extends Browser
+class StubBrowser extends Browser
 {
 	/**
 	 * Allows public access to protected method.
