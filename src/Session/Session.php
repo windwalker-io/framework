@@ -200,7 +200,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Start a session.
 	 *
-	 * @param   boolean  $restart  Do you want to restart first.
+	 * @param   bool  $restart  This argument has been deprecated.
 	 *
 	 * @return  boolean
 	 *
@@ -213,30 +213,23 @@ class Session implements \ArrayAccess, \IteratorAggregate
 			return true;
 		}
 
-		// Start session if not started
-		if ($restart)
-		{
-			$this->bridge->regenerate(true);
-		}
-		else
-		{
-			$sessionName = $this->bridge->getName();
+		$sessionName = $this->bridge->getName();
 
-			$cookie = $this->getCookie();
+		$cookie = $this->getCookie();
 
-			// If cookie do not have session id, try to get it from http queries.
-			if (empty($cookie[$sessionName]))
+		// If cookie do not have session id, try to get it from http queries.
+		if (empty($cookie[$sessionName]))
+		{
+			$sessionClean = isset($_GET[$sessionName]) ? $_GET[$sessionName] :  false;
+
+			if ($sessionClean)
 			{
-				$sessionClean = isset($_GET[$sessionName]) ? $_GET[$sessionName] :  false;
-
-				if ($sessionClean)
-				{
-					$this->bridge->getId($sessionClean);
-					setcookie($sessionName, '', time() - 3600);
-					$cookie[$sessionName] = '';
-				}
+				$this->bridge->getId($sessionClean);
+				setcookie($sessionName, '', time() - 3600);
+				$cookie[$sessionName] = '';
 			}
 		}
+
 
 		$this->bridge->start();
 
@@ -251,7 +244,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 		// Perform security checks
 		$this->validate();
 
-		if (!$restart && $this->state === static::STATE_EXPIRED)
+		if ($this->state === static::STATE_EXPIRED)
 		{
 			$this->restart();
 		}
@@ -318,7 +311,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 		// Re-register the session handler after a session has been destroyed, to avoid PHP bug
 		$this->registerHandler();
 
-		return $this->start(true);
+		$result = $this->start();
+
+		$this->regenerate(true);
+
+		return $result;
 	}
 
 	/**
