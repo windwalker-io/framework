@@ -45,15 +45,10 @@ class MysqlTable extends AbstractTable
 
 		foreach ($schema->getColumns() as $column)
 		{
-			$typeMapper = $this->getTypeMapper();
-			$type = $typeMapper::getType($column->getType());
-
-			$length = $column->getLength() ? : $typeMapper::getLength($column->getType());
-
-			$length = $length ? '(' . $length . ')' : null;
+			$column = $this->prepareColumn($column);
 
 			$columns[$column->getName()] = MysqlQueryBuilder::build(
-				$type . $length,
+				$column->getType() . $column->getLength(),
 				$column->getSigned() ? '' : 'UNSIGNED',
 				$column->getAllowNull() ? '' : 'NOT NULL',
 				$column->getDefault() !== false ? 'DEFAULT ' . $this->db->getQuery(true)->validValue($column->getDefault()) : '',
@@ -367,8 +362,6 @@ class MysqlTable extends AbstractTable
 	 */
 	protected function prepareColumn(Column $column)
 	{
-		$column = parent::prepareColumn($column);
-
 		$typeMapper = $this->getTypeMapper();
 
 		// Fix for Strict Mode
@@ -378,6 +371,8 @@ class MysqlTable extends AbstractTable
 
 			$column->defaultValue($default);
 		}
+
+		$column = parent::prepareColumn($column);
 
 		return $column;
 	}

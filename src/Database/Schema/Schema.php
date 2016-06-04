@@ -243,4 +243,24 @@ class Schema
 
 		return $this;
 	}
+
+	/**
+	 * getDateFormat
+	 *
+	 * @return  string
+	 */
+	public function getDateFormat()
+	{
+		return $this->getTable()->getDriver()->getQuery(true)->getDateFormat();
+	}
+
+	/**
+	 * getNullDate
+	 *
+	 * @return  string
+	 */
+	public function getNullDate()
+	{
+		return $this->getTable()->getDriver()->getQuery(true)->getNullDate();
+	}
 }

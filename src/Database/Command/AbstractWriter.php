@@ -98,7 +98,7 @@ abstract class AbstractWriter
 		}
 
 		// Update the primary key if it exists.
-		$id = $this->insertid();
+		$id = $this->insertId();
 
 		if ($key && $id && is_string($key))
 		{

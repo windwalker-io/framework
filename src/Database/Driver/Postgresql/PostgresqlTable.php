@@ -46,21 +46,10 @@ class PostgresqlTable extends AbstractTable
 
 		foreach ($schema->getColumns() as $column)
 		{
-			$typeMapper = $this->getTypeMapper();
-			$type = $typeMapper::getType($column->getType());
-
-			$length = $column->getLength() ? : $typeMapper::getLength($column->getType());
-
-			$length = $length ? '(' . $length . ')' : null;
-
-			if ($column->getAutoIncrement())
-			{
-				$column->type(PostgresqlType::SERIAL);
-				$options['sequences'][$column->getName()] = $this->table . '_' . $column->getName() . '_seq';
-			}
+			$column = $this->prepareColumn($column);
 
 			$columns[$column->getName()] = PostgresqlQueryBuilder::build(
-				$type . $length,
+				$column->getType() . $column->getLength(),
 				$column->getAllowNull() ? null : 'NOT NULL',
 				$column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
 			);
@@ -149,7 +138,7 @@ class PostgresqlTable extends AbstractTable
 		$query = PostgresqlQueryBuilder::addColumn(
 			$this->table,
 			$column->getName(),
-			$column->getType(),
+			$column->getType() . $column->getLength(),
 			$column->getAllowNull(),
 			$column->getDefault()
 		);
@@ -180,6 +169,12 @@ class PostgresqlTable extends AbstractTable
 		$length = $typeMapper::noLength($column->getType()) ? null : $column->getLength();
 
 		$column->length($length);
+
+		if ($column->getAutoIncrement())
+		{
+			$column->type(PostgresqlType::SERIAL);
+			$options['sequences'][$column->getName()] = $this->table . '_' . $column->getName() . '_seq';
+		}
 
 		return parent::prepareColumn($column);
 	}

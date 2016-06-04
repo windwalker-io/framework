@@ -127,6 +127,47 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	}
 
 	/**
+	 * testStrictModeCreate
+	 *
+	 * @return  void
+	 */
+	public function testStrictMode()
+	{
+		$table = $this->db->getTable('#__strict');
+
+		$table->create(function (Schema $schema)
+		{
+			$schema->primary('id')->comment('PK');
+			$schema->datetime('date')->allowNull(false)->defaultValue('');
+			$schema->varchar('data')->allowNull(false)->defaultValue('test');
+		});
+
+		$columns = $table->getColumnDetails();
+
+		$this->assertEquals('0000-00-00 00:00:00', $columns['date']->Default);
+
+		try
+		{
+			$this->db->setQuery('INSERT #__strict VALUES (1, "2013-07-12T03:00:00+07:00", "")')->execute();
+		}
+		catch (\PDOException $e)
+		{
+			// SQLSTATE[22007]: Invalid datetime format: 1292 Incorrect datetime value: '2013-07-12T03:00:00+07:00' for column 'date' at row 1
+			$this->assertEquals(22007, $e->getCode());
+		}
+
+		try
+		{
+			$this->db->setQuery('INSERT #__strict VALUES (1, "2013-07-12 03:00:00", NULL)')->execute();
+		}
+		catch (\PDOException $e)
+		{
+			// SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'data' cannot be null
+			$this->assertEquals(23000, $e->getCode());
+		}
+	}
+
+	/**
 	 * Method to test rename().
 	 *
 	 * @return void
