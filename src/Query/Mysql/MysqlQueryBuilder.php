@@ -17,7 +17,7 @@ use Windwalker\Query\QueryElement;
  *
  * @since 2.0
  */
-abstract class MysqlQueryBuilder extends AbstractQueryBuilder
+class MysqlQueryBuilder extends AbstractQueryBuilder
 {
 	const PRIMARY  = 'PRIMARY KEY';
 	const INDEX    = 'INDEX';
@@ -213,18 +213,18 @@ abstract class MysqlQueryBuilder extends AbstractQueryBuilder
 	 * dropTable
 	 *
 	 * @param string $table
-	 * @param bool   $ifExist
+	 * @param bool   $ifExists
 	 * @param string $option
 	 *
 	 * @return  string
 	 */
-	public static function dropTable($table, $ifExist = false, $option = '')
+	public static function dropTable($table, $ifExists = false, $option = '')
 	{
 		$query = static::getQuery();
 
 		return static::build(
 			'DROP TABLE',
-			$ifExist ? 'IF EXISTS' : null,
+			$ifExists ? 'IF EXISTS' : null,
 			$query->quoteName($table),
 			$option
 		);

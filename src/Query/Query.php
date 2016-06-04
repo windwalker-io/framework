@@ -2037,6 +2037,16 @@ class Query implements QueryInterface, PreparableInterface
 	}
 
 	/**
+	 * getBuilder
+	 *
+	 * @return  QueryBuilderInterface
+	 */
+	public function getBuilder()
+	{
+		return AbstractQueryBuilder::getInstance($this->getName());
+	}
+
+	/**
 	 * Unsetting PDO connection before going to sleep (this is needed if the query gets serialized)
 	 */
 	public function __sleep()

@@ -12,6 +12,7 @@ use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Key;
 use Windwalker\Database\Driver\Mysql\MysqlType;
+use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 
 /**
@@ -21,6 +22,23 @@ use Windwalker\Query\Mysql\MysqlQueryBuilder;
  */
 class MysqlTableTest extends AbstractMysqlTestCase
 {
+	/**
+	 * Property builder.
+	 *
+	 * @var  string
+	 */
+	protected $builder = 'Windwalker\Query\Mysql\MysqlQueryBuilder';
+
+	/**
+	 * getBuilder
+	 *
+	 * @return  string
+	 */
+	protected function getBuilder()
+	{
+		return $this->builder;
+	}
+
 	/**
 	 * Method to test getName().
 	 *
@@ -86,73 +104,28 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::create
+	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::_create
 	 */
 	public function testCreate()
 	{
+		$builder = static::$dbo->getQuery(true)->getBuilder();
+
 		$table = $this->db->getTable('#__cloud');
 
-		$table->addColumn('id', MysqlType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, null, 'PK', array('primary' => true))
-			->addColumn('name', DataType::VARCHAR, Column::SIGNED, Column::NOT_NULL, '', 'Name')
-			->addColumn('alias', 'varchar(255)', Column::SIGNED, Column::NOT_NULL, '', 'Alias')
-			->addIndex(Key::TYPE_INDEX, 'idx_name', 'name', 'Test')
-			->addIndex(Key::TYPE_UNIQUE, 'idx_alias', 'alias', 'Alias Index')
-			->create();
-
-		$columns = $table->getColumnDetails(true);
-
-		$this->assertEquals('int(11) unsigned', $columns['id']->Type);
-		$this->assertEquals('varchar(255)', $columns['name']->Type);
-		$this->assertEquals('UNI', $columns['alias']->Key);
-
-		static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
-
-		// Test Column types
-		$table = $this->db->getTable('#__cloud', true);
-
-		$table->addColumn(new Column\Primary('id'))
-			->addColumn(new Column\Varchar('name'))
-			->addColumn(new Column\Char('type'))
-			->addColumn(new Column\Timestamp('created'))
-			->addColumn(new Column\Bit('state'))
-			->addColumn(new Column\Integer('uid'))
-			->addColumn(new Column\Tinyint('status'))
-			->create();
-
-		$columns = $table->getColumnDetails(true);
-
-		$this->assertEquals('int(11) unsigned', $columns['id']->Type);
-		$this->assertEquals('varchar(255)', $columns['name']->Type);
-
-		static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
-	}
-
-	/**
-	 * Method to test create().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::create
-	 */
-	public function testDoCreate()
-	{
-		$table = $this->db->getTable('#__cloud');
-
-		$table->doCreate(
-			array(
-				'id' => 'int(11) UNSIGNED NOT NULL',
-				'name' => 'varchar(255) NOT NULL'
-			),
-			'id',
-			array(),
-			5,
-			true
-		);
+		$table->create(function (Schema $schema)
+		{
+		    $schema->primary('id')->comment('PK');
+			$schema->varchar('name')->allowNull(false);
+			$schema->varchar('alias');
+			$schema->addIndex('idx_name', 'name')->comment('Test');
+			$schema->addUniqueKey('idx_alias', 'alias')->comment('Alias Index');
+		});
 
 		$columns = $table->getColumnDetails();
 
 		$this->assertEquals('int(11) unsigned', $columns['id']->Type);
 		$this->assertEquals('varchar(255)', $columns['name']->Type);
+		$this->assertEquals('UNI', $columns['alias']->Key);
 	}
 
 	/**
@@ -279,10 +252,9 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$table = $this->db->getTable('#__categories');
 
-		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State', array('position' => 'AFTER ordering', 'length' => 1))
-			->save();
+		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State', array('position' => 'AFTER ordering', 'length' => 1));
 
-		$columns = $table->getColumns(true);
+		$columns = $table->getColumns();
 
 		$this->assertEquals(array('id', 'title', 'ordering', 'state', 'params'), $columns);
 	}
@@ -300,7 +272,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$table->dropColumn('state');
 
-		$columns = $table->getColumns(true);
+		$columns = $table->getColumns();
 
 		$this->assertEquals(array('id', 'title', 'ordering', 'params'), $columns);
 	}
@@ -316,8 +288,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addColumn(new Column\Varchar('foo'))
-			->save();
+		$table->addColumn(new Column\Varchar('foo'));
 
 		$table->modifyColumn(new Column\Integer('foo'));
 
@@ -376,8 +347,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addIndex('key', 'idx_ordering', array('ordering', 'id'))
-			->save();
+		$table->addIndex('key', 'idx_ordering', array('ordering', 'id'));
 
 		$indexes = $table->getIndexes();
 

@@ -17,7 +17,7 @@ use Windwalker\Query\QueryElement;
  *
  * @since 2.0
  */
-abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
+class PostgresqlQueryBuilder extends AbstractQueryBuilder
 {
 	const PRIMARY  = 'PRIMARY KEY';
 	const INDEX    = 'INDEX';
@@ -234,18 +234,18 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 * dropTable
 	 *
 	 * @param string $table
-	 * @param bool   $ifExist
+	 * @param bool   $ifExists
 	 * @param string $option
 	 *
 	 * @return  string
 	 */
-	public static function dropTable($table, $ifExist = false, $option = '')
+	public static function dropTable($table, $ifExists = false, $option = '')
 	{
 		$query = static::getQuery();
 
 		return static::build(
 			'DROP TABLE',
-			$ifExist ? 'IF EXISTS' : null,
+			$ifExists ? 'IF EXISTS' : null,
 			$query->quoteName($table),
 			$option
 		);
@@ -514,6 +514,21 @@ abstract class PostgresqlQueryBuilder extends AbstractQueryBuilder
 		}
 
 		return static::$query;
+	}
+
+	/**
+	 * changeColumn
+	 *
+	 * @param string $table
+	 * @param string $oldColumn
+	 * @param string $newColumn
+	 * @param string $type
+	 *
+	 * @return  string
+	 */
+	public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text')
+	{
+		// No use now
 	}
 }
 

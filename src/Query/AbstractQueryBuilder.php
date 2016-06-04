@@ -23,6 +23,32 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
 	public static $query = null;
 
 	/**
+	 * Property instance.
+	 *
+	 * @var  QueryBuilderInterface[]
+	 */
+	protected static $instance = array();
+
+	/**
+	 * getInstance
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  QueryBuilderInterface
+	 */
+	public static function getInstance($name)
+	{
+		if (!isset(static::$instance[strtolower($name)]))
+		{
+			$name = ucfirst($name);
+
+			static::$instance[strtolower($name)] = sprintf(__NAMESPACE__ . '\%s\%sQueryBuilder', $name, $name);
+		}
+
+		return static::$instance[strtolower($name)];
+	}
+
+	/**
 	 * build
 	 *
 	 * @return  string

@@ -692,7 +692,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 			}
 
 			// Lookup the fields for this table only once.
-			$fields = $this->db->getTable($table)->getColumnDetails(true);
+			$fields = $this->db->getTable($table)->getColumnDetails();
 
 			if (empty($fields))
 			{

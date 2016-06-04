@@ -88,7 +88,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::create
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::_create
 	 */
 	public function testCreate()
 	{
@@ -99,9 +99,9 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 			->addColumn('alias', 'varchar(255)', Column::SIGNED, Column::NOT_NULL, '', 'Alias')
 			->addIndex(Key::TYPE_INDEX, 'idx_name', 'name', 'Test')
 			->addIndex(Key::TYPE_UNIQUE, 'idx_alias', 'alias', 'Alias Index')
-			->create();
+			->_create();
 
-		$columns = $table->getColumnDetails(true);
+		$columns = $table->getColumnDetails();
 
 		$this->assertEquals('integer', $columns['id']->Type);
 		$this->assertEquals('varchar(255)', $columns['name']->Type);
@@ -119,9 +119,9 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 			->addColumn(new Column\Bit('state'))
 			->addColumn(new Column\Integer('uid'))
 			->addColumn(new Column\Tinyint('status'))
-			->create();
+			->_create();
 
-		$columns = $table->getColumnDetails(true);
+		$columns = $table->getColumnDetails();
 
 		$this->assertEquals('integer', $columns['id']->Type);
 		$this->assertEquals('varchar(255)', $columns['name']->Type);
@@ -134,7 +134,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::create
+	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::_create
 	 */
 	public function testDoCreate()
 	{
@@ -284,7 +284,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State')
 			->save();
 
-		$columns = $table->getColumns(true);
+		$columns = $table->getColumns();
 
 		$this->assertEquals(array('id', 'title', 'ordering', 'params', 'state'), $columns);
 	}
@@ -302,7 +302,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 
 		$table->dropColumn('state');
 
-		$columns = $table->getColumns(true);
+		$columns = $table->getColumns();
 
 		$this->assertEquals(array('id', 'title', 'ordering', 'params'), $columns);
 	}

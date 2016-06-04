@@ -11,8 +11,8 @@ namespace Windwalker\Database\Driver\Mysql;
 use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
+use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
-use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 
 /**
  * Class MysqlTable
@@ -22,42 +22,15 @@ use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 class MysqlTable extends AbstractTable
 {
 	/**
-	 * A cache to store Table columns.
-	 *
-	 * @var array
-	 */
-	protected $columnCache = array();
-
-	/**
-	 * Property columns.
-	 *
-	 * @var  Column[]
-	 */
-	protected $columns = array();
-
-	/**
-	 * Property indexes.
-	 *
-	 * @var  Key[]
-	 */
-	protected $indexes = array();
-
-	/**
-	 * Property primary.
-	 *
-	 * @var  array
-	 */
-	protected $primary = array();
-
-	/**
 	 * create
 	 *
-	 * @param bool  $ifNotExists
-	 * @param array $options
+	 * @param callable|Schema $schema
+	 * @param bool            $ifNotExists
+	 * @param array           $options
 	 *
-	 * @return  static
+	 * @return  $this
 	 */
-	public function create($ifNotExists = true, $options = array())
+	public function create($schema, $ifNotExists = true, $options = array())
 	{
 		$defaultOptions = array(
 			'auto_increment' => 1,
@@ -66,28 +39,38 @@ class MysqlTable extends AbstractTable
 		);
 
 		$options = array_merge($defaultOptions, $options);
-
+		$schema  = $this->callSchema($schema);
 		$columns = array();
+		$primary = array();
 
-		foreach ($this->columns as $column)
+		foreach ($schema->getColumns() as $column)
 		{
-			$length = $column->getLength();
+			$typeMapper = $this->getTypeMapper();
+			$type = $typeMapper::getType($column->getType());
+
+			$length = $column->getLength() ? : $typeMapper::getLength($column->getType());
 
 			$length = $length ? '(' . $length . ')' : null;
 
 			$columns[$column->getName()] = MysqlQueryBuilder::build(
-				$column->getType() . $length,
+				$type . $length,
 				$column->getSigned() ? '' : 'UNSIGNED',
 				$column->getAllowNull() ? '' : 'NOT NULL',
 				$column->getDefault() !== false ? 'DEFAULT ' . $this->db->getQuery(true)->validValue($column->getDefault()) : '',
 				$column->getAutoIncrement() ? 'AUTO_INCREMENT' : '',
 				$column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : ''
 			);
+
+			// Primary
+			if ($column->isPrimary())
+			{
+				$primary[] = $column->getName();
+			}
 		}
 
 		$keys = array();
 
-		foreach ($this->indexes as $index)
+		foreach ($schema->getIndexes() as $index)
 		{
 			$keys[$index->getName()] = array(
 				'type' => $index->getType(),
@@ -97,77 +80,63 @@ class MysqlTable extends AbstractTable
 			);
 		}
 
-		$this->doCreate($columns, $this->primary, $keys, $options['auto_increment'], $ifNotExists, $options);
+		$query = MysqlQueryBuilder::createTable($this->table, $columns, $primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['charset']);
 
-		return $this;
+		$this->db->setQuery($query)->execute();
+
+		return $this->reset();
 	}
 
 	/**
 	 * update
 	 *
+	 * @param   callable|Schema  $schema
+	 *
 	 * @return  static
 	 */
-	public function update()
+	public function update($schema)
 	{
-		foreach ($this->columns as $column)
+		$schema = $this->callSchema($schema);
+
+		foreach ($schema->getColumns() as $column)
 		{
-			$length = $column->getLength();
-
-			$length = $length ? '(' . $length . ')' : null;
-
-			$query = MysqlQueryBuilder::addColumn(
-				$this->table,
-				$column->getName(),
-				$column->getType() . $length,
-				$column->getSigned(),
-				$column->getAllowNull(),
-				$column->getDefault(),
-				$column->getPosition(),
-				$column->getComment()
-			);
-
-			$this->db->setQuery($query)->execute();
+			$this->addColumn($column);
 		}
 
-		foreach ($this->indexes as $index)
+		foreach ($schema->getIndexes() as $index)
 		{
-			$query = MysqlQueryBuilder::addIndex(
-				$this->table,
-				$index->getType(),
-				$index->getName(),
-				$index->getColumns(),
-				$index->getComment()
-			);
-
-			$this->db->setQuery($query)->execute();
+			$this->addIndex($index);
 		}
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
 	 * save
 	 *
-	 * @param bool  $ifNotExists
-	 * @param array $options
+	 * @param   callable|Schema  $schema
+	 * @param   bool             $ifNotExists
+	 * @param   array            $options
 	 *
 	 * @return  $this
 	 */
-	public function save($ifNotExists = true, $options = array())
+	public function save($schema, $ifNotExists = true, $options = array())
 	{
+		$schema = $this->callSchema($schema);
+
 		if ($this->exists())
 		{
-			$this->update();
+			$this->update($schema);
 		}
 		else
 		{
-			$this->create($ifNotExists, $options);
+			$this->create($schema, $ifNotExists, $options);
 		}
 
 		$database = $this->db->getDatabase();
 		$database::resetCache();
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -184,21 +153,7 @@ class MysqlTable extends AbstractTable
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
-	}
-
-	/**
-	 * reset
-	 *
-	 * @return  static
-	 */
-	public function reset()
-	{
-		$this->columns = array();
-		$this->primary = array();
-		$this->indexes = array();
-
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -224,31 +179,6 @@ class MysqlTable extends AbstractTable
 	}
 
 	/**
-	 * create
-	 *
-	 * @param string $columns
-	 * @param array  $pks
-	 * @param array  $keys
-	 * @param int    $autoIncrement
-	 * @param bool   $ifNotExists
-	 * @param array  $options
-	 *
-	 * @return $this
-	 */
-	public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null, $ifNotExists = true, $options = array())
-	{
-		$autoIncrement = isset($options['auto_increment']) ? $options['auto_increment'] : null;
-		$engine  = isset($options['engine']) ? $options['engine'] : 'InnoDB';
-		$charset = isset($options['charset']) ? $options['charset'] : 'utf8';
-
-		$query = MysqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $autoIncrement, $ifNotExists, $engine, $charset);
-
-		$this->db->setQuery($query)->execute();
-
-		return $this;
-	}
-
-	/**
 	 * addColumn
 	 *
 	 * @param string $name
@@ -270,27 +200,22 @@ class MysqlTable extends AbstractTable
 			$column = new Column($name, $type, $signed, $allowNull, $default, $comment, $options);
 		}
 
-		$type   = MysqlType::getType($column->getType());
-		$length = $column->getLength() ? : MysqlType::getLength($type);
+		$this->prepareColumn($column);
 
-		if ($type == MysqlType::DATETIME && $column->getDefault() === '')
-		{
-			$default = $this->db->getQuery(true)->getNullDate();
+		$query = MysqlQueryBuilder::addColumn(
+			$this->table,
+			$column->getName(),
+			$column->getType() . $column->getLength(),
+			$column->getSigned(),
+			$column->getAllowNull(),
+			$column->getDefault(),
+			$column->getPosition(),
+			$column->getComment()
+		);
 
-			$column->defaultValue($default);
-		}
+		$this->db->setQuery($query)->execute();
 
-		$column->type($type)
-			->length($length);
-
-		if ($column->isPrimary())
-		{
-			$this->primary[] = $column->getName();
-		}
-
-		$this->columns[] = $column;
-
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -306,7 +231,7 @@ class MysqlTable extends AbstractTable
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -358,7 +283,7 @@ class MysqlTable extends AbstractTable
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -412,7 +337,7 @@ class MysqlTable extends AbstractTable
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -452,9 +377,17 @@ class MysqlTable extends AbstractTable
 			$index = $type;
 		}
 
-		$this->indexes[] = $index;
+		$query = MysqlQueryBuilder::addIndex(
+			$this->table,
+			$index->getType(),
+			$index->getName(),
+			$index->getColumns(),
+			$index->getComment()
+		);
 
-		return $this;
+		$this->db->setQuery($query)->execute();
+
+		return $this->reset();
 	}
 
 	/**
@@ -470,7 +403,7 @@ class MysqlTable extends AbstractTable
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -492,7 +425,7 @@ class MysqlTable extends AbstractTable
 			return $this->db->getTable($newName);
 		}
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -540,85 +473,65 @@ class MysqlTable extends AbstractTable
 	}
 
 	/**
-	 * Get table columns.
+	 * getColumnDetails
 	 *
 	 * @param bool $refresh
 	 *
-	 * @return  array Table columns with type.
+	 * @return mixed
+	 * @internal param bool $full
+	 *
 	 */
-	public function getColumns($refresh = false)
+	public function getColumnDetails($refresh = false)
 	{
 		if (empty($this->columnCache) || $refresh)
 		{
-			$this->columnCache = array_keys($this->getColumnDetails());
+			$query = MysqlQueryBuilder::showTableColumns($this->table, true);
+
+			$this->columnCache = $this->db->setQuery($query)->loadAll('Field');
 		}
 
 		return $this->columnCache;
 	}
 
 	/**
-	 * getColumnDetails
-	 *
-	 * @param bool $full
-	 *
-	 * @return  mixed
-	 */
-	public function getColumnDetails($full = true)
-	{
-		$query = MysqlQueryBuilder::showTableColumns($this->table, $full);
-
-		return $this->db->setQuery($query)->loadAll('Field');
-	}
-
-	/**
-	 * getColumnDetail
-	 *
-	 * @param string $column
-	 * @param bool   $full
-	 *
-	 * @return  mixed
-	 */
-	public function getColumnDetail($column, $full = true)
-	{
-		$query = MysqlQueryBuilder::showTableColumns($this->table, $full, 'Field = ' . $this->db->quote($column));
-
-		return $this->db->setQuery($query)->loadOne();
-	}
-
-	/**
 	 * getIndexes
-	 *
-	 * @return  mixed
-	 */
-	public function getIndexes()
-	{
-		// Get the details columns information.
-		$this->db->setQuery('SHOW KEYS FROM ' . $this->db->quoteName($this->table));
-
-		return $this->db->loadAll();
-	}
-
-	/**
-	 * Method to get property Primary
 	 *
 	 * @return  array
 	 */
-	public function getPrimary()
+	public function getIndexes()
 	{
-		return $this->primary;
+		if (!$this->indexCache)
+		{
+			// Get the details columns information.
+			$this->db->setQuery('SHOW KEYS FROM ' . $this->db->quoteName($this->table));
+
+			$this->indexCache = $this->db->loadAll();
+		}
+
+		return $this->indexCache;
 	}
 
 	/**
-	 * Method to set property primary
+	 * prepareColumn
 	 *
-	 * @param   array $primary
+	 * @param Column $column
 	 *
-	 * @return  static  Return self to support chaining.
+	 * @return  Column
 	 */
-	public function setPrimary($primary)
+	protected function prepareColumn(Column $column)
 	{
-		$this->primary = (array) $primary;
+		$column = parent::prepareColumn($column);
 
-		return $this;
+		$typeMapper = $this->getTypeMapper();
+
+		// Fix for Strict Mode
+		if ($column->getType() == $typeMapper::DATETIME && $column->getDefault() === '')
+		{
+			$default = $this->db->getQuery(true)->getNullDate();
+
+			$column->defaultValue($default);
+		}
+
+		return $column;
 	}
 }

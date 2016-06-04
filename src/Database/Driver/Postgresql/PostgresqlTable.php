@@ -23,13 +23,6 @@ use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 class PostgresqlTable extends AbstractTable
 {
 	/**
-	 * A cache to store Table columns.
-	 *
-	 * @var array
-	 */
-	protected $columnCache = array();
-
-	/**
 	 * Property columns.
 	 *
 	 * @var  Column[]
@@ -58,7 +51,7 @@ class PostgresqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function create($ifNotExists = true, $options = array())
+	public function _create($ifNotExists = true, $options = array())
 	{
 		$defaultOptions = array(
 			'auto_increment' => 1,
@@ -195,7 +188,7 @@ class PostgresqlTable extends AbstractTable
 		}
 		else
 		{
-			$this->create($ifNotExists, $options);
+			$this->_create($ifNotExists, $options);
 		}
 
 		$database = $this->db->getDatabase();
@@ -688,118 +681,93 @@ class PostgresqlTable extends AbstractTable
 	}
 
 	/**
-	 * Get table columns.
+	 * getColumnDetails
 	 *
 	 * @param bool $refresh
 	 *
-	 * @return  array Table columns with type.
+	 * @return mixed
+	 * @internal param bool $full
+	 *
 	 */
-	public function getColumns($refresh = false)
+	public function getColumnDetails($refresh = false)
 	{
 		if (empty($this->columnCache) || $refresh)
 		{
-			$this->columnCache = array_keys($this->getColumnDetails());
+			$query = PostgresqlQueryBuilder::showTableColumns($this->db->replacePrefix($this->table));
+
+			$fields = $this->db->setQuery($query)->loadAll();
+
+			$result = array();
+
+			foreach ($fields as $field)
+			{
+				// Do some dirty translation to MySQL output.
+				$result[$field->column_name] = (object) array(
+					'column_name' => $field->column_name,
+					'type'        => $field->column_type,
+					'null'        => $field->Null,
+					'Default'     => $field->Default,
+					'Field'       => $field->column_name,
+					'Type'        => $field->column_type,
+					'Null'        => $field->Null,
+					'Extra'       => null,
+					'Privileges'  => null,
+					'Comment'     => $field->Comment
+				);
+			}
+
+			$keys = $this->getIndexes();
+
+			foreach ($result as $field)
+			{
+				if (preg_match("/^NULL::*/", $field->Default))
+				{
+					$field->Default = null;
+				}
+
+				if (strpos($field->Type, 'character varying') !== false)
+				{
+					$field->Type = str_replace('character varying', 'varchar', $field->Type);
+				}
+
+				if (strpos($field->Default, 'nextval') !== false)
+				{
+					$field->Extra = 'auto_increment';
+				}
+
+				// Find key
+				$index = null;
+
+				foreach ($keys as $key)
+				{
+					if ($key->column_name == $field->column_name)
+					{
+						$index = $key;
+						break;
+					}
+				}
+
+				if ($index)
+				{
+					if ($index->is_primary)
+					{
+						$field->Key = 'PRI';
+					}
+					elseif ($index->is_unique)
+					{
+						$field->Key = 'UNI';
+					}
+					else
+					{
+						$field->Key = 'MUL';
+					}
+				}
+			}
+			
+			$this->columnCache = $result;
 		}
 
 		return $this->columnCache;
-	}
-
-	/**
-	 * getColumnDetails
-	 *
-	 * @param bool $full
-	 *
-	 * @return  mixed
-	 */
-	public function getColumnDetails($full = true)
-	{
-		$query = PostgresqlQueryBuilder::showTableColumns($this->db->replacePrefix($this->table), $full);
-
-		$fields = $this->db->setQuery($query)->loadAll();
-
-		$result = array();
-
-		foreach ($fields as $field)
-		{
-			// Do some dirty translation to MySQL output.
-			$result[$field->column_name] = (object) array(
-				'column_name' => $field->column_name,
-				'type'        => $field->column_type,
-				'null'        => $field->Null,
-				'Default'     => $field->Default,
-				'Field'       => $field->column_name,
-				'Type'        => $field->column_type,
-				'Null'        => $field->Null,
-				'Extra'       => null,
-				'Privileges'  => null,
-				'Comment'     => $field->Comment
-			);
-		}
-
-		$keys = $this->getIndexes();
-
-		foreach ($result as $field)
-		{
-			if (preg_match("/^NULL::*/", $field->Default))
-			{
-				$field->Default = null;
-			}
-
-			if (strpos($field->Type, 'character varying') !== false)
-			{
-				$field->Type = str_replace('character varying', 'varchar', $field->Type);
-			}
-
-			if (strpos($field->Default, 'nextval') !== false)
-			{
-				$field->Extra = 'auto_increment';
-			}
-
-			// Find key
-			$index = null;
-
-			foreach ($keys as $key)
-			{
-				if ($key->column_name == $field->column_name)
-				{
-					$index = $key;
-					break;
-				}
-			}
-
-			if ($index)
-			{
-				if ($index->is_primary)
-				{
-					$field->Key = 'PRI';
-				}
-				elseif ($index->is_unique)
-				{
-					$field->Key = 'UNI';
-				}
-				else
-				{
-					$field->Key = 'MUL';
-				}
-			}
-		}
-
-		return $result;
-	}
-
-	/**
-	 * getColumnDetail
-	 *
-	 * @param string $column
-	 * @param bool   $full
-	 *
-	 * @return  mixed
-	 */
-	public function getColumnDetail($column, $full = true)
-	{
-		$columns = $this->getColumnDetails($full);
-
-		return isset($columns[$column]) ? $columns[$column] : null;
 	}
 
 	/**

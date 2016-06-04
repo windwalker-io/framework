@@ -6,11 +6,10 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Database\Command\Schema;
+namespace Windwalker\Database\Schema;
 
 use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Schema\Column;
-use Windwalker\Database\Schema\Key;
 
 /**
  * The Schema class.
@@ -33,6 +32,20 @@ use Windwalker\Database\Schema\Key;
  */
 class Schema
 {
+	/**
+	 * Property columns.
+	 *
+	 * @var  Column[]
+	 */
+	protected $columns = array();
+
+	/**
+	 * Property indexes.
+	 *
+	 * @var  Key[]
+	 */
+	protected $indexes = array();
+
 	/**
 	 * Property table.
 	 *
@@ -58,13 +71,39 @@ class Schema
 	 *
 	 * @return  Column
 	 */
-	public function addColumn($name, Column $column)
+	public function add($name, Column $column)
 	{
 		$column->name($name);
 
-		$this->table->addColumn($column);
+		return $this->addColumn($column);
+	}
+
+	/**
+	 * addColumn
+	 *
+	 * @param   Column $column
+	 *
+	 * @return  Column
+	 */
+	public function addColumn(Column $column)
+	{
+		$this->columns[$column->getName()] = $column;
 
 		return $column;
+	}
+
+	/**
+	 * addKey
+	 *
+	 * @param Key $key
+	 *
+	 * @return  Key
+	 */
+	public function addKey(Key $key)
+	{
+		$this->indexes[$key->getName()] = $key;
+
+		return $key;
 	}
 
 	/**
@@ -77,19 +116,7 @@ class Schema
 	 */
 	public function addIndex($name = null, $columns = null)
 	{
-		// Old style B/C
-		if (in_array($name, array(Key::TYPE_INDEX, Key::TYPE_PRIMARY, Key::TYPE_UNIQUE)))
-		{
-			$ref = new \ReflectionClass('Windwalker\Database\Schema\Key');
-
-			$this->getTable()->addIndex($key = $ref->newInstanceArgs(func_get_args()));
-
-			return $key;
-		}
-
-		$this->addIndex($key = new Key(Key::TYPE_INDEX, $name, $columns));
-
-		return $key;
+		return $this->addKey(new Key(Key::TYPE_INDEX, $name, $columns));
 	}
 
 	/**
@@ -102,7 +129,7 @@ class Schema
 	 */
 	public function addUniqueKey($name, $columns = array())
 	{
-		return $this->getTable()->addIndex(Key::TYPE_UNIQUE, $name, $columns);
+		return $this->addKey(new Key(Key::TYPE_UNIQUE, $name, $columns));
 	}
 
 	/**
@@ -115,7 +142,7 @@ class Schema
 	 */
 	public function addPrimaryKey($name, $columns)
 	{
-		return $this->getTable()->addIndex(Key::TYPE_PRIMARY, $name, $columns);
+		return $this->addKey(new Key(Key::TYPE_PRIMARY, $name, $columns));
 	}
 
 	/**
@@ -130,14 +157,19 @@ class Schema
 	{
 		$class = 'Windwalker\Database\Schema\Column\\' . ucfirst($name);
 
-		if (class_exists($class))
+		if (!class_exists($class))
 		{
-			$column = array_shift($arguments);
-
-			return $this->addColumn($column, new $class);
+			$class = 'Windwalker\Database\Schema\Column\\' . ucfirst($name) . 'Type';
 		}
 
-		throw new \BadMethodCallException(sprintf('DataType or index: %s not exists.', $name));
+		if (!class_exists($class))
+		{
+			throw new \BadMethodCallException(sprintf('DataType or index: %s not exists.', $name));
+		}
+
+		$column = array_shift($arguments);
+
+		return $this->add($column, new $class);
 	}
 
 	/**
@@ -160,6 +192,54 @@ class Schema
 	public function setTable($table)
 	{
 		$this->table = $table;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Columns
+	 *
+	 * @return  Column[]
+	 */
+	public function getColumns()
+	{
+		return $this->columns;
+	}
+
+	/**
+	 * Method to set property columns
+	 *
+	 * @param   Column[] $columns
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setColumns($columns)
+	{
+		$this->columns = $columns;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Indexes
+	 *
+	 * @return  Key[]
+	 */
+	public function getIndexes()
+	{
+		return $this->indexes;
+	}
+
+	/**
+	 * Method to set property indexes
+	 *
+	 * @param   Key[] $indexes
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setIndexes($indexes)
+	{
+		$this->indexes = $indexes;
 
 		return $this;
 	}

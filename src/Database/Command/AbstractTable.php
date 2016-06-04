@@ -11,6 +11,8 @@ namespace Windwalker\Database\Command;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Driver\DatabaseAwareTrait;
 use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\DataType;
+use Windwalker\Database\Schema\Schema;
 
 /**
  * Class DatabaseTable
@@ -27,18 +29,18 @@ abstract class AbstractTable
 	protected $table = null;
 
 	/**
-	 * Property schema.
+	 * A cache to store Table columns.
 	 *
-	 * @var  array
+	 * @var \stdClass[]
 	 */
-	protected $schema = array();
+	protected $columnCache = array();
 
 	/**
-	 * Property queries.
+	 * Property indexesCache.
 	 *
-	 * @var  array
+	 * @var  \stdClass[]
 	 */
-	protected $queries = array();
+	protected $indexCache;
 
 	/**
 	 * Property driver.
@@ -63,29 +65,33 @@ abstract class AbstractTable
 	/**
 	 * create
 	 *
-	 * @param bool  $ifNotExists
-	 * @param array $options
+	 * @param   callable $callback
+	 * @param   bool     $ifNotExists
+	 * @param   array    $options
 	 *
 	 * @return  static
 	 */
-	abstract public function create($ifNotExists = true, $options = array());
+	abstract public function create($callback, $ifNotExists = true, $options = array());
 
 	/**
 	 * update
 	 *
-	 * @return  static
+	 * @param  callable|Schema  $schema
+	 *
+	 * @return static
 	 */
-	abstract public function update();
+	abstract public function update($schema);
 
 	/**
 	 * save
 	 *
-	 * @param bool  $ifNotExists
-	 * @param array $options
+	 * @param   callable|Schema  $schema
+	 * @param   bool             $ifNotExists
+	 * @param   array            $options
 	 *
-	 * @return  static
+	 * @return  $this
 	 */
-	abstract public function save($ifNotExists = true, $options = array());
+	abstract public function save($schema, $ifNotExists = true, $options = array());
 
 	/**
 	 * drop
@@ -98,33 +104,11 @@ abstract class AbstractTable
 	abstract public function drop($ifExists = true, $option = '');
 
 	/**
-	 * reset
-	 *
-	 * @return  static
-	 */
-	abstract public function reset();
-
-	/**
 	 * exists
 	 *
 	 * @return  boolean
 	 */
 	abstract public function exists();
-
-	/**
-	 * create
-	 *
-	 * @param string $columns
-	 * @param array  $pks
-	 * @param array  $keys
-	 * @param int    $autoIncrement
-	 * @param bool   $ifNotExists
-	 * @param array  $options
-	 *
-	 * @return  $this
-	 */
-	abstract public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null,
-		$ifNotExists = true, $options = array());
 
 	/**
 	 * rename
@@ -168,30 +152,37 @@ abstract class AbstractTable
 	/**
 	 * Get table columns.
 	 *
-	 * @param bool $refresh
-	 *
-	 * @return  array Table columns with type.
+	 * @return array Table columns with type.
 	 */
-	abstract public function getColumns($refresh = false);
+	public function getColumns()
+	{
+		return array_keys($this->getColumnDetails());
+	}
 
 	/**
 	 * getColumnDetails
 	 *
-	 * @param bool $full
+	 * @param bool $refresh
 	 *
-	 * @return  mixed
+	 * @return mixed
+	 * @internal param bool $full
+	 *
 	 */
-	abstract public function getColumnDetails($full = true);
+	abstract public function getColumnDetails($refresh = false);
 
 	/**
 	 * getColumnDetail
 	 *
-	 * @param string $column
-	 * @param bool   $full
+	 * @param   string  $column
 	 *
-	 * @return  mixed
+	 * @return \stdClass
 	 */
-	abstract public function getColumnDetail($column, $full = true);
+	public function getColumnDetail($column)
+	{
+		$columns = $this->getColumnDetails();
+
+		return isset($columns[$column]) ? $columns[$column] : null;
+	}
 
 	/**
 	 * addColumn
@@ -273,7 +264,7 @@ abstract class AbstractTable
 	/**
 	 * getIndexes
 	 *
-	 * @return  static
+	 * @return  array
 	 */
 	abstract public function getIndexes();
 
@@ -321,6 +312,95 @@ abstract class AbstractTable
 	public function setDriver($db)
 	{
 		$this->db = $db;
+
+		return $this;
+	}
+
+	/**
+	 * getSchema
+	 *
+	 * @return  Schema
+	 */
+	public function getSchema()
+	{
+		return new Schema($this);
+	}
+
+	/**
+	 * callSchema
+	 *
+	 * @param   callable|Schema  $schema
+	 *
+	 * @return  Schema
+	 */
+	protected function callSchema($schema)
+	{
+		if (!$schema instanceof Schema && is_callable($schema))
+		{
+			$s = $this->getSchema();
+
+			call_user_func($schema, $s);
+
+			$schema = $s;
+		}
+
+		if (!$schema instanceof Schema)
+		{
+			throw new \InvalidArgumentException('Argument 1 should be Schema object.');
+		}
+
+		return $schema;
+	}
+
+	/**
+	 * getTypeMapper
+	 *
+	 * @return  DataType
+	 */
+	public function getTypeMapper()
+	{
+		$driver = ucfirst($this->db->getName());
+
+		return sprintf('Windwalker\Database\Driver\%s\%sType', $driver, $driver);
+	}
+
+	/**
+	 * prepareColumn
+	 *
+	 * @param Column $column
+	 *
+	 * @return  Column
+	 */
+	protected function prepareColumn(Column $column)
+	{
+		$typeMapper = $this->getTypeMapper();
+
+		$type   = $typeMapper::getType($column->getType());
+		$length = $column->getLength() ? : $typeMapper::getLength($type);
+
+		// Fix for Strict Mode
+		if ($type == $typeMapper::DATETIME && $column->getDefault() === '')
+		{
+			$default = $this->db->getQuery(true)->getNullDate();
+
+			$column->defaultValue($default);
+		}
+
+		$length = $length ? '(' . $length . ')' : null;
+
+		return $column->type($type)
+			->length($length);
+	}
+
+	/**
+	 * reset
+	 *
+	 * @return  static
+	 */
+	public function reset()
+	{
+		$this->columnCache = array();
+		$this->indexCache = array();
 
 		return $this;
 	}
