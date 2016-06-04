@@ -369,17 +369,22 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 * getTable
 	 *
 	 * @param string $name
-	 * @param bool   $new
+	 * @param bool   $reset
 	 *
 	 * @return  AbstractTable
 	 */
-	public function getTable($name, $new = false)
+	public function getTable($name, $reset = false)
 	{
-		if (empty($this->tables[$name]) || $new)
+		if (empty($this->tables[$name]))
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTable', ucfirst($this->name), ucfirst($this->name));
 
 			$this->tables[$name] = new $class($name, $this);
+		}
+
+		if ($reset)
+		{
+			$this->tables[$name]->reset();
 		}
 
 		return $this->tables[$name];
@@ -389,15 +394,14 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 * getTable
 	 *
 	 * @param string $name
-	 * @param bool   $new
 	 *
-	 * @return AbstractDatabase
+	 * @return  AbstractDatabase
 	 */
-	public function getDatabase($name = null, $new = false)
+	public function getDatabase($name = null)
 	{
 		$name = $name ? : $this->database;
 
-		if (empty($this->databases[$name]) || $new)
+		if (empty($this->databases[$name]))
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->name), ucfirst($this->name));
 
@@ -416,18 +420,17 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 * getReader
 	 *
 	 * @param Query $query
-	 * @param bool  $new
 	 *
-	 * @return AbstractReader
+	 * @return  AbstractReader
 	 */
-	public function getReader($query = null, $new = false)
+	public function getReader($query = null)
 	{
 		if ($query)
 		{
 			$this->setQuery($query);
 		}
 
-		if (!$this->reader || $new)
+		if (!$this->reader)
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sReader', ucfirst($this->name), ucfirst($this->name));
 
@@ -440,13 +443,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	/**
 	 * getWriter
 	 *
-	 * @param bool $new
-	 *
-	 * @return AbstractWriter
+	 * @return  AbstractWriter
 	 */
-	public function getWriter($new = false)
+	public function getWriter()
 	{
-		if (!$this->writer || $new)
+		if (!$this->writer)
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sWriter', ucfirst($this->name), ucfirst($this->name));
 
@@ -460,13 +461,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 * getWriter
 	 *
 	 * @param boolean $nested
-	 * @param bool    $new
 	 *
-	 * @return AbstractTransaction
+	 * @return  AbstractTransaction
 	 */
-	public function getTransaction($nested = true, $new = false)
+	public function getTransaction($nested = true)
 	{
-		if (!$this->transaction || $new)
+		if (!$this->transaction)
 		{
 			$class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTransaction', ucfirst($this->name), ucfirst($this->name));
 
@@ -483,7 +483,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 *
 	 * @return  DataIterator
 	 */
-	public function getIterator($class = 'stdClass')
+	public function getIterator($class = '\\stdClass')
 	{
 		return $this->getReader()->getIterator($class);
 	}
@@ -552,10 +552,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	/**
 	 * This function replaces a string identifier <var>$prefix</var> with the string held is the
 	 * <var>tablePrefix</var> class variable.
-	 *
-	 * This method is based on Joomla Framework.
-	 *
-	 * @see  https://github.com/joomla-framework/database/blob/master/src/DatabaseDriver.php
 	 *
 	 * @param   string  $sql     The SQL statement to prepare.
 	 * @param   string  $prefix  The common table prefix.
@@ -658,10 +654,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	/**
 	 * Splits a string of multiple queries into an array of individual queries.
 	 *
-	 * This method is based on Joomla Framework.
-	 *
-	 * @see  https://github.com/joomla-framework/database/blob/master/src/DatabaseDriver.php
-	 *
 	 * @param   string  $sql  Input SQL string with which to split into individual queries.
 	 *
 	 * @return  array  The queries from the input string separated into an array.
@@ -757,7 +749,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 *
 	 * @return  mixed
 	 */
-	public function loadAll($key = null, $class = 'stdClass')
+	public function loadAll($key = null, $class = '\\stdClass')
 	{
 		if (strtolower($class) == 'array')
 		{
@@ -779,7 +771,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 *
 	 * @return  mixed
 	 */
-	public function loadOne($class = 'stdClass')
+	public function loadOne($class = '\\stdClass')
 	{
 		if (strtolower($class) == 'array')
 		{

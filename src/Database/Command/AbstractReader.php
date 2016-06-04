@@ -18,7 +18,7 @@ use Windwalker\Query\Query;
  *
  * @since 2.0
  */
-abstract class AbstractReader
+abstract class AbstractReader implements \IteratorAggregate
 {
 	/**
 	 * Property driver.
@@ -26,6 +26,13 @@ abstract class AbstractReader
 	 * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
 	 */
 	protected $db;
+
+	/**
+	 * Property cursor.
+	 *
+	 * @var  resource
+	 */
+	protected $cursor;
 
 	/**
 	 * Constructor.
@@ -58,7 +65,14 @@ abstract class AbstractReader
 	 */
 	public function execute()
 	{
+		if ($this->cursor)
+		{
+			return $this;
+		}
+
 		$this->db->execute();
+
+		$this->cursor = $this->db->getCursor();
 
 		return $this;
 	}
@@ -66,15 +80,13 @@ abstract class AbstractReader
 	/**
 	 * getIterator
 	 *
-	 * @param string $class
-	 *
 	 * @return  DataIterator
 	 */
-	public function getIterator($class = '\\stdClass')
+	public function getIterator()
 	{
-		$this->db->execute();
+		$this->execute();
 
-		return new DataIterator($this, $class);
+		return new DataIterator($this, 'stdClass');
 	}
 
 	/**
@@ -87,7 +99,7 @@ abstract class AbstractReader
 	 */
 	public function loadResult()
 	{
-		$this->db->execute();
+		$this->execute();
 
 		// Get the first row from the result set as an array.
 		$row = $this->fetchArray();
@@ -116,7 +128,7 @@ abstract class AbstractReader
 	 */
 	public function loadColumn($offset = 0)
 	{
-		$this->db->execute();
+		$this->execute();
 
 		$array = array();
 
@@ -143,7 +155,7 @@ abstract class AbstractReader
 	 */
 	public function loadArray()
 	{
-		$this->db->execute();
+		$this->execute();
 
 		// Get the first row from the result set as an array.
 		$array = $this->fetchArray();
@@ -170,7 +182,7 @@ abstract class AbstractReader
 	 */
 	public function loadArrayList($key = null)
 	{
-		$this->db->execute();
+		$this->execute();
 
 		$array = array();
 
@@ -204,7 +216,7 @@ abstract class AbstractReader
 	 */
 	public function loadAssoc()
 	{
-		$this->db->execute();
+		$this->execute();
 
 		// Get the first row from the result set as an associative array.
 		$array = $this->fetchAssoc();
@@ -229,7 +241,7 @@ abstract class AbstractReader
 	 */
 	public function loadAssocList($key = null)
 	{
-		$this->db->execute();
+		$this->execute();
 
 		$array = array();
 
@@ -264,7 +276,7 @@ abstract class AbstractReader
 	 */
 	public function loadObject($class = 'stdClass')
 	{
-		$this->db->execute();
+		$this->execute();
 
 		// Get the first row from the result set as an object of type $class.
 		$object = $this->fetchObject($class);
@@ -292,7 +304,7 @@ abstract class AbstractReader
 	 */
 	public function loadObjectList($key = null, $class = 'stdClass')
 	{
-		$this->db->execute();
+		$this->execute();
 
 		$array = array();
 

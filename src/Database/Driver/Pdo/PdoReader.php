@@ -19,6 +19,13 @@ use Windwalker\Query\Query;
 class PdoReader extends AbstractReader
 {
 	/**
+	 * Property cursor.
+	 *
+	 * @var  \PDOStatement
+	 */
+	protected $cursor;
+
+	/**
 	 * Method to fetch a row from the result set cursor as an array.
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
@@ -51,9 +58,16 @@ class PdoReader extends AbstractReader
 	 *
 	 * @since   2.0
 	 */
-	public function fetchObject($class = '\\stdClass')
+	public function fetchObject($class = 'stdClass')
 	{
-		return $this->db->getCursor()->fetchObject($class);
+		$this->execute();
+
+		if (!$this->cursor)
+		{
+			return false;
+		}
+
+		return $this->cursor->fetchObject($class);
 	}
 
 	/**
@@ -69,7 +83,14 @@ class PdoReader extends AbstractReader
 	 */
 	public function fetch($type = \PDO::FETCH_ASSOC, $ori = null, $offset = 0)
 	{
-		return $this->db->getCursor()->fetch($type);
+		$this->execute();
+
+		if (!$this->cursor)
+		{
+			return false;
+		}
+
+		return $this->cursor->fetch($type);
 	}
 
 	/**
@@ -85,7 +106,14 @@ class PdoReader extends AbstractReader
 	 */
 	public function fetchAll($type = \PDO::FETCH_ASSOC, $args = null, $ctorArgs = null)
 	{
-		return $this->db->getCursor()->fetchAll($type);
+		$this->execute();
+
+		if (!$this->cursor)
+		{
+			return false;
+		}
+
+		return $this->cursor->fetchAll($type);
 	}
 
 	/**
@@ -95,7 +123,14 @@ class PdoReader extends AbstractReader
 	 */
 	public function count()
 	{
-		return $this->db->getCursor()->rowCount();
+		$this->execute();
+
+		if (!$this->cursor)
+		{
+			return 0;
+		}
+
+		return $this->cursor->rowCount();
 	}
 
 	/**
@@ -108,7 +143,14 @@ class PdoReader extends AbstractReader
 	 */
 	public function countAffected()
 	{
-		return $this->db->getCursor()->rowCount();
+		$this->execute();
+
+		if (!$this->cursor)
+		{
+			return 0;
+		}
+
+		return $this->cursor->rowCount();
 	}
 
 	/**

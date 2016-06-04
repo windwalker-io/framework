@@ -261,7 +261,7 @@ class MysqlTable extends AbstractTable
 			$this->table,
 			$index->getType(),
 			$index->getColumns(),
-			$index->getName(), 
+			$index->getName(),
 			$index->getComment()
 		);
 
