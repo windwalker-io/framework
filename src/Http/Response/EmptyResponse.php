@@ -28,7 +28,7 @@ class EmptyResponse extends Response
 	 */
 	public function __construct($status = 204, array $headers = array())
 	{
-		$body = new Stream('php://temp', 'r');
+		$body = new Stream('php://temp', Stream::MODE_READ_ONLY_FROM_BEGIN);
 
 		parent::__construct($body, $status, $headers);
 	}
