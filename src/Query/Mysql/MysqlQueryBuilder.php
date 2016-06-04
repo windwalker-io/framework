@@ -354,15 +354,13 @@ class MysqlQueryBuilder extends AbstractQueryBuilder
 	 *
 	 * @param string       $table
 	 * @param string       $type
-	 * @param string       $name
 	 * @param string|array $columns
+	 * @param string       $name
 	 * @param string       $comment
 	 *
-	 * @return  string
-	 *
-	 * @throws \InvalidArgumentException
+	 * @return string
 	 */
-	public static function addIndex($table, $type, $name, $columns, $comment = null)
+	public static function addIndex($table, $type, $columns, $name, $comment = null)
 	{
 		$query = static::getQuery();
 		$cols  = static::buildIndexDeclare($name, $columns);

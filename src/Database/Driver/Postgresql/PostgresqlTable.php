@@ -399,23 +399,20 @@ class PostgresqlTable extends AbstractTable
 
 			$columns = (array) $columns;
 
-			$index = new Key;
-
-			$index->name($name)
-				->type($type)
-				->columns($columns)
-				->comment($comment);
+			$index = new Key($type, $columns, $name, $comment);
 		}
 		else
 		{
 			$index = $type;
 		}
 
+		if ($this->hasIndex($index->getName()))
+		{
+			return $this;
+		}
+
 		$query = PostgresqlQueryBuilder::addIndex(
-			$this->table,
-			$index->getType(),
-			$index->getName(),
-			$index->getColumns()
+			$this->table, $index->getType(), $index->getColumns(), $index->getName()
 		);
 
 		$this->db->setQuery($query)->execute();

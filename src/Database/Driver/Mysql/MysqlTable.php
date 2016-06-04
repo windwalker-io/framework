@@ -250,23 +250,18 @@ class MysqlTable extends AbstractTable
 
 			$columns = (array) $columns;
 
-			$index = new Key;
-
-			$index->name($name)
-				->type($type)
-				->columns($columns)
-				->comment($comment);
+			$index = new Key($type, $columns, $name, $comment);
 		}
 		else
 		{
 			$index = $type;
 		}
-
+		
 		$query = MysqlQueryBuilder::addIndex(
 			$this->table,
 			$index->getType(),
-			$index->getName(),
 			$index->getColumns(),
+			$index->getName(), 
 			$index->getComment()
 		);
 

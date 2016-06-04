@@ -369,7 +369,7 @@ SQL;
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')}) COMMENT 'Test Index'";
 
-		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', array('alias', 'name'), 'Test Index');
+		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', array('alias', 'name'), 'idx_alias', 'Test Index');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -378,7 +378,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}) COMMENT 'Test Index'";
 
-		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'idx_alias', 'alias', 'Test Index');
+		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'alias', 'idx_alias', 'Test Index');
 
 		$this->assertEquals(
 			$this->format($expected),

@@ -347,7 +347,7 @@ SQL;
 	{
 		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlQueryBuilder::addIndex('foo', 'INDEX', 'idx_alias', array('alias', 'name'));
+		$actual = PostgresqlQueryBuilder::addIndex('foo', 'INDEX', array('alias', 'name'), 'idx_alias');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -356,7 +356,7 @@ SQL;
 
 		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')})";
 
-		$actual = PostgresqlQueryBuilder::addIndex('foo', 'INDEX', 'idx_alias', 'alias');
+		$actual = PostgresqlQueryBuilder::addIndex('foo', 'INDEX', 'alias', 'idx_alias');
 
 		$this->assertEquals(
 			$this->format($expected),

@@ -369,14 +369,12 @@ class PostgresqlQueryBuilder extends AbstractQueryBuilder
 	 *
 	 * @param string       $table
 	 * @param string       $type
-	 * @param string       $name
 	 * @param string|array $columns
+	 * @param string       $name
 	 *
-	 * @return  string
-	 *
-	 * @throws \InvalidArgumentException
+	 * @return string
 	 */
-	public static function addIndex($table, $type, $name, $columns)
+	public static function addIndex($table, $type, $columns, $name)
 	{
 		$cols = static::buildIndexDeclare($name, $columns, $table);
 
