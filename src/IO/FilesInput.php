@@ -51,7 +51,7 @@ class FilesInput extends Input
 	 * @see     JFilterInput::clean
 	 * @since   2.0
 	 */
-	public function get($name, $default = null, $filter = InputFilter::RAW, $separator = '.')
+	public function get($name, $default = null, $filter = 'raw', $separator = '.')
 	{
 		if (strpos($name, $separator))
 		{

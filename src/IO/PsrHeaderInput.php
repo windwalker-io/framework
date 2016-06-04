@@ -41,36 +41,35 @@ class PsrHeaderInput extends Input
 	/**
 	 * Gets a value from the input data.
 	 *
-	 * @param   string  $name     The name of the input property (usually the name of the files INPUT tag) to get.
-	 * @param   mixed   $default  The default value to return if the named property does not exist.
-	 * @param   string  $filter   The filter to apply to the value.
+	 * @param   string $name      Name of the value to get.
+	 * @param   mixed  $default   Default value to return if variable does not exist.
+	 * @param   string $filter    Filter to apply to the value.
+	 * @param   string $separator Separator for path.
 	 *
-	 * @return  mixed  The filtered input value.
+	 * @return mixed The filtered input value.
 	 *
-	 * @see     JFilterInput::clean
 	 * @since   2.0
 	 */
-	public function get($name, $default = null, $filter = InputFilter::STRING)
+	public function get($name, $default = null, $filter = 'cmd', $separator = '.')
 	{
 		$name = HeaderHelper::normalizeHeaderName($name);
 
-		return parent::get($name, $default, $filter);
+		return parent::get($name, $default, $filter, $separator);
 	}
 
 	/**
 	 * Sets a value
 	 *
-	 * @param   string $name  Name of the value to set.
-	 * @param   mixed  $value Value to assign to the input.
-	 *
-	 * @return  void
+	 * @param   string $name      Name of the value to set.
+	 * @param   mixed  $value     Value to assign to the input.
+	 * @param   string $separator Symbol to separate path.
 	 *
 	 * @since   2.0
 	 */
-	public function set($name, $value)
+	public function set($name, $value, $separator = '.')
 	{
 		$name = HeaderHelper::normalizeHeaderName($name);
 
-		parent::set($name, $value);
+		parent::set($name, $value, $separator);
 	}
 }

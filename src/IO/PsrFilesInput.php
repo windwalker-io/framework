@@ -8,9 +8,6 @@
 
 namespace Windwalker\IO;
 
-use Psr\Http\Message\UploadedFileInterface;
-use Windwalker\Filter\InputFilter;
-
 /**
  * Windwalker Input Files Class
  *
@@ -34,82 +31,30 @@ class PsrFilesInput extends Input
 	/**
 	 * Gets a value from the input data.
 	 *
-	 * @param   string  $name     The name of the input property (usually the name of the files INPUT tag) to get.
-	 * @param   mixed   $default  The default value to return if the named property does not exist.
-	 * @param   string  $filter   The filter to apply to the value.
+	 * @param   string $name      Name of the value to get.
+	 * @param   mixed  $default   Default value to return if variable does not exist.
+	 * @param   string $filter    Filter to apply to the value.
+	 * @param   string $separator Separator for path.
 	 *
-	 * @return  UploadedFileInterface|UploadedFileInterface[]  The filtered input value.
-	 *
-	 * @see     JFilterInput::clean
-	 * @since   2.0
-	 */
-	public function get($name, $default = null, $filter = InputFilter::RAW)
-	{
-		return parent::get($name, $default, $filter);
-	}
-
-	/**
-	 * getByPath
-	 *
-	 * @param   string  $paths
-	 * @param   mixed   $default
-	 * @param   string  $filter
-	 * @param   string  $separator
-	 *
-	 * @return  UploadedFileInterface|UploadedFileInterface[]
-	 */
-	public function getByPath($paths, $default = null, $filter = InputFilter::CMD, $separator = '.')
-	{
-		return parent::getByPath($paths, $default, $filter, $separator);
-	}
-
-	/**
-	 * setByPath
-	 *
-	 * @param string  $paths
-	 * @param mixed   $value
-	 * @param string  $separator
-	 *
-	 * @return bool
-	 */
-	public function setByPath($paths, $value, $separator = '.')
-	{
-		return true;
-	}
-
-	/**
-	 * Gets an array of values from the request.
-	 *
-	 * @param   array  $vars        Associative array of keys and filter types to apply.
-	 *                              If empty and datasource is null, all the input data will be returned
-	 *                              but filtered using the default case in JFilterInput::clean.
-	 * @param   mixed  $datasource  Array to retrieve data from, or null
-	 *
-	 * @return  mixed  The filtered input data.
+	 * @return mixed The filtered input value.
 	 *
 	 * @since   2.0
 	 */
-	public function getArray(array $vars = array(), $datasource = null)
+	public function get($name, $default = null, $filter = 'raw', $separator = '.')
 	{
-		if (is_array($vars) && $datasource === null)
-		{
-			return $this->data;
-		}
-		
-		return parent::getArray($vars, $datasource);
+		return parent::get($name, $default, $filter, $separator);
 	}
 
 	/**
-	 * Sets a value.
+	 * Sets a value
 	 *
-	 * @param   string  $name   The name of the input property to set.
-	 * @param   mixed   $value  The value to assign to the input property.
-	 *
-	 * @return  void
+	 * @param   string $name      Name of the value to set.
+	 * @param   mixed  $value     Value to assign to the input.
+	 * @param   string $separator Symbol to separate path.
 	 *
 	 * @since   2.0
 	 */
-	public function set($name, $value)
+	public function set($name, $value, $separator = '.')
 	{
 	}
 }

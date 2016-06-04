@@ -151,7 +151,7 @@ abstract class ServerHelper
 		foreach ($parts as $part)
 		{
 			// If this is the last part, break
-			if ($part == "--\r\n")
+			if (strpos($part, '--') === 0)
 			{
 				break;
 			}

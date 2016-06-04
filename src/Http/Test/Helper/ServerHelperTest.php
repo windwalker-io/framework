@@ -117,9 +117,15 @@ Apple
 ------WebKitFormBoundary8zi5vcW6H9OgqKSj--
 DATA;
 
+		$input = str_replace("\r\n", "\n", $input);
+		$input = str_replace("\n", "\r\n", $input);
+
 		$this->assertEquals(
-			array('flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'),
-			ServerHelper::parseFormData($input, $type)
+			array(
+				'data' => array('flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'),
+				'files' => array()
+			),
+			ServerHelper::parseFormData($input)
 		);
 	}
 }

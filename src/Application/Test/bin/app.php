@@ -30,7 +30,7 @@ $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create([
 
 		show($input->files->get('image.foo.1', '.'));
 		
-		show($input);
+		show($request->getBody());
 		
 		exit(' @Checkpoint');
 		
