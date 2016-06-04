@@ -459,7 +459,7 @@ class Query implements QueryInterface, PreparableInterface
 
 		if (is_null($this->call))
 		{
-			$this->call = new QueryElement('CALL', $columns);
+			$this->call = $this->element('CALL', $columns);
 		}
 		else
 		{
@@ -611,7 +611,7 @@ class Query implements QueryInterface, PreparableInterface
 	{
 		if (is_null($this->columns))
 		{
-			$this->columns = new QueryElement('()', $columns);
+			$this->columns = $this->element('()', $columns);
 		}
 		else
 		{
@@ -669,7 +669,7 @@ class Query implements QueryInterface, PreparableInterface
 	public function delete($table = null)
 	{
 		$this->type = 'delete';
-		$this->delete = new QueryElement('DELETE', null);
+		$this->delete = $this->element('DELETE', null);
 
 		if (!empty($table))
 		{
@@ -775,7 +775,7 @@ class Query implements QueryInterface, PreparableInterface
 
 		if (is_null($this->exec))
 		{
-			$this->exec = new QueryElement('EXEC', $columns);
+			$this->exec = $this->element('EXEC', $columns);
 		}
 		else
 		{
@@ -818,7 +818,7 @@ class Query implements QueryInterface, PreparableInterface
 
 		if (is_null($this->from))
 		{
-			$this->from = new QueryElement('FROM', $tables);
+			$this->from = $this->element('FROM', $tables);
 		}
 		else
 		{
@@ -855,6 +855,34 @@ class Query implements QueryInterface, PreparableInterface
 	}
 
 	/**
+	 * element
+	 *
+	 * @param   string  $name      The name of the element.
+	 * @param   mixed   $elements  String or array.
+	 * @param   string  $glue      The glue for elements.
+	 *
+	 * @return  QueryElement
+	 */
+	public function element($name, $elements, $glue = ',')
+	{
+		return new QueryElement($name, $elements, $glue);
+	}
+
+	/**
+	 * ele
+	 *
+	 * @param   string  $name      The name of the element.
+	 * @param   mixed   $elements  String or array.
+	 * @param   string  $glue      The glue for elements.
+	 *
+	 * @return  QueryElement
+	 */
+	public function ele($name, $elements, $glue = ',')
+	{
+		return $this->element($name, $elements, $glue);
+	}
+
+	/**
 	 * Add a grouping column to the GROUP clause of the query.
 	 *
 	 * Usage:
@@ -870,7 +898,7 @@ class Query implements QueryInterface, PreparableInterface
 	{
 		if (is_null($this->group))
 		{
-			$this->group = new QueryElement('GROUP BY', $columns);
+			$this->group = $this->element('GROUP BY', $columns);
 		}
 		else
 		{
@@ -898,7 +926,7 @@ class Query implements QueryInterface, PreparableInterface
 		if (is_null($this->having))
 		{
 			$glue = strtoupper($glue);
-			$this->having = new QueryElement('HAVING', $conditions, " $glue ");
+			$this->having = $this->element('HAVING', $conditions, " $glue ");
 		}
 		else
 		{
@@ -948,7 +976,7 @@ class Query implements QueryInterface, PreparableInterface
 	public function insert($table, $incrementField=false)
 	{
 		$this->type = 'insert';
-		$this->insert = new QueryElement('INSERT INTO', $table);
+		$this->insert = $this->element('INSERT INTO', $table);
 		$this->autoIncrementField = $incrementField;
 
 		return $this;
@@ -980,7 +1008,7 @@ class Query implements QueryInterface, PreparableInterface
 			$table = $table . ($conditions ? ' ON ' . implode(' AND ', (array) $conditions) : '');
 		}
 
-		$this->join[] = new QueryElement(strtoupper($type) . ' JOIN', (array) $table);
+		$this->join[] = $this->element(strtoupper($type) . ' JOIN', (array) $table);
 
 		return $this;
 	}
@@ -1043,7 +1071,7 @@ class Query implements QueryInterface, PreparableInterface
 	{
 		if (is_null($this->order))
 		{
-			$this->order = new QueryElement('ORDER BY', $columns);
+			$this->order = $this->element('ORDER BY', $columns);
 		}
 		else
 		{
@@ -1324,7 +1352,7 @@ class Query implements QueryInterface, PreparableInterface
 
 		if (is_null($this->select))
 		{
-			$this->select = new QueryElement('SELECT', $columns);
+			$this->select = $this->element('SELECT', $columns);
 		}
 		else
 		{
@@ -1354,7 +1382,7 @@ class Query implements QueryInterface, PreparableInterface
 		if (is_null($this->set))
 		{
 			$glue = strtoupper($glue);
-			$this->set = new QueryElement('SET', $conditions, PHP_EOL . "\t$glue ");
+			$this->set = $this->element('SET', $conditions, PHP_EOL . "\t$glue ");
 		}
 		else
 		{
@@ -1401,7 +1429,7 @@ class Query implements QueryInterface, PreparableInterface
 	public function update($table)
 	{
 		$this->type = 'update';
-		$this->update = new QueryElement('UPDATE', $table);
+		$this->update = $this->element('UPDATE', $table);
 
 		return $this;
 	}
@@ -1433,7 +1461,7 @@ class Query implements QueryInterface, PreparableInterface
 
 		if (is_null($this->values))
 		{
-			$this->values = new QueryElement('()', $values, '),' . PHP_EOL . '(');
+			$this->values = $this->element('()', $values, '),' . PHP_EOL . '(');
 		}
 		else
 		{
@@ -1464,7 +1492,7 @@ class Query implements QueryInterface, PreparableInterface
 		{
 			$glue = strtoupper($glue);
 
-			$this->where = new QueryElement('WHERE', $conditions, " $glue ");
+			$this->where = $this->element('WHERE', $conditions, " $glue ");
 		}
 		else
 		{
@@ -1539,7 +1567,7 @@ class Query implements QueryInterface, PreparableInterface
 		// Get the QueryElement if it does not exist
 		if (is_null($this->union))
 		{
-			$this->union = new QueryElement($name, $query, "$glue");
+			$this->union = $this->element($name, $query, "$glue");
 		}
 		else
 			// Otherwise append the second UNION.
@@ -1595,7 +1623,7 @@ class Query implements QueryInterface, PreparableInterface
 		// Get the JDatabaseQueryElement if it does not exist
 		if (is_null($this->unionAll))
 		{
-			$this->union = new QueryElement('()', $query, $glue);
+			$this->union = $this->element('()', $query, $glue);
 		}
 
 		// Otherwise append the second UNION.
@@ -1878,7 +1906,7 @@ class Query implements QueryInterface, PreparableInterface
 	 * @param   integer        $length          The length of the variable. Usually required for OUTPUT parameters.
 	 * @param   array          $driverOptions   Optional driver options to be used.
 	 *
-	 * @return  PreparableInterface
+	 * @return  static
 	 *
 	 * @since   2.0
 	 */
