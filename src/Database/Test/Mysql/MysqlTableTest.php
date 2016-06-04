@@ -115,8 +115,10 @@ class MysqlTableTest extends AbstractMysqlTestCase
 		    $schema->primary('id')->comment('PK');
 			$schema->varchar('name')->allowNull(false);
 			$schema->varchar('alias');
-			$schema->addIndex('idx_name', 'name')->comment('Test');
-			$schema->addUniqueKey('idx_alias', 'alias')->comment('Alias Index');
+			$schema->float('float');
+			$schema->addIndex('name', 'idx_name')->comment('Test');
+			$schema->addIndex('float');
+			$schema->addUniqueKey('alias', 'idx_alias')->comment('Alias Index');
 		});
 
 		$columns = $table->getColumnDetails();
@@ -124,6 +126,9 @@ class MysqlTableTest extends AbstractMysqlTestCase
 		$this->assertEquals('int(11) unsigned', $columns['id']->Type);
 		$this->assertEquals('varchar(255)', $columns['name']->Type);
 		$this->assertEquals('UNI', $columns['alias']->Key);
+		$this->assertEquals('float(10,2) unsigned', $columns['float']->Type);
+
+		$this->assertTrue($table->hasIndex('idx_cloud_float'));
 	}
 
 	/**
@@ -386,7 +391,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addIndex('key', 'idx_ordering', array('ordering', 'id'));
+		$table->addIndex('key', array('ordering', 'id'), 'idx_ordering');
 
 		$indexes = $table->getIndexes();
 

@@ -338,14 +338,14 @@ abstract class AbstractTable
 	 * addIndex
 	 *
 	 * @param string $type
-	 * @param string $name
 	 * @param array  $columns
+	 * @param string $name
 	 * @param string $comment
 	 * @param array  $options
 	 *
-	 * @return  static
+	 * @return static
 	 */
-	abstract public function addIndex($type, $name = null, $columns = array(), $comment = null, $options = array());
+	abstract public function addIndex($type, $columns = array(), $name = null, $comment = null, $options = array());
 
 	/**
 	 * dropIndex

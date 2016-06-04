@@ -20,7 +20,8 @@ abstract class PostgresqlType extends DataType
 {
 	const INTEGER = 'integer';
 	const BOOLEAN = 'bool';
-	const SERIAL = 'serial';
+	const SERIAL  = 'serial';
+	const REAL    = 'real';
 
 	/**
 	 * Property types.
@@ -28,9 +29,9 @@ abstract class PostgresqlType extends DataType
 	 * @var  array
 	 */
 	public static $defaultLengths = array(
-		self::INTEGER => null,
-		self::SERIAL  => null,
-		self::SMALLINT  => null,
+		self::INTEGER  => null,
+		self::SERIAL   => null,
+		self::SMALLINT => null
 	);
 
 	/**
@@ -43,11 +44,12 @@ abstract class PostgresqlType extends DataType
 	protected static $typeMapping = array(
 		DataType::TINYINT  => self::SMALLINT,
 		DataType::DATETIME => self::TIMESTAMP,
-		'tinytext' => self::TEXT,
-		'mediumtext' => self::TEXT,
+		'tinytext'         => self::TEXT,
+		'mediumtext'       => self::TEXT,
 		DataType::LONGTEXT => self::TEXT,
 		// MysqlType::ENUM => self::VARCHAR, // Postgres support ENUM after 8.3
-		MysqlType::SET => self::TEXT
+		MysqlType::SET     => self::TEXT,
+		MysqlType::FLOAT   => self::REAL,
 	);
 
 	/**
@@ -58,7 +60,8 @@ abstract class PostgresqlType extends DataType
 	protected static $noLength = array(
 		self::INTEGER,
 		self::SMALLINT,
-		self::SERIAL
+		self::SERIAL,
+		self::REAL
 	);
 
 	/**

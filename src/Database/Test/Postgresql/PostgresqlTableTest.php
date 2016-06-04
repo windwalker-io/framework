@@ -100,8 +100,10 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 			$schema->primary('id')->signed(false)->comment('PK');
 			$schema->varchar('name')->allowNull(false);
 			$schema->varchar('alias');
-			$schema->addIndex('idx_name', 'name')->comment('Test');
-			$schema->addUniqueKey('idx_alias', 'alias')->comment('Alias Index');
+			$schema->float('float');
+			$schema->addIndex('name', 'idx_name')->comment('Test');
+			$schema->addIndex('float');
+			$schema->addUniqueKey('alias', 'idx_alias')->comment('Alias Index');
 		});
 
 		$columns = $table->getColumnDetails();
@@ -109,6 +111,9 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 		$this->assertEquals('integer', $columns['id']->Type);
 		$this->assertEquals('varchar(255)', $columns['name']->Type);
 		$this->assertEquals('UNI', $columns['alias']->Key);
+		$this->assertEquals('real', $columns['float']->Type);
+
+		$this->assertTrue($table->hasIndex('idx_cloud_float'));
 	}
 
 	/**
@@ -330,7 +335,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addIndex('INDEX', 'idx_ordering', array('ordering', 'id'));
+		$table->addIndex('INDEX', array('ordering', 'id'), 'idx_ordering');
 
 		$indexes = $table->getIndexes();
 

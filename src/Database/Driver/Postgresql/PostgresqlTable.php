@@ -381,15 +381,14 @@ class PostgresqlTable extends AbstractTable
 	 * addIndex
 	 *
 	 * @param string       $type
-	 * @param string       $name
 	 * @param array|string $columns
+	 * @param string       $name
 	 * @param string       $comment
 	 * @param array        $options
 	 *
-	 * @throws  \InvalidArgumentException
-	 * @return  mixed
+	 * @return mixed
 	 */
-	public function addIndex($type, $name = null, $columns = array(), $comment = null, $options = array())
+	public function addIndex($type, $columns = array(), $name = null, $comment = null, $options = array())
 	{
 		if (!$type instanceof Key)
 		{
@@ -399,8 +398,6 @@ class PostgresqlTable extends AbstractTable
 			}
 
 			$columns = (array) $columns;
-
-			$name = $name ? : $columns[0];
 
 			$index = new Key;
 

@@ -101,6 +101,16 @@ class Schema
 	 */
 	public function addKey(Key $key)
 	{
+		$name = $key->getName();
+
+		if (!$name)
+		{
+			$columns = (array) $key->getColumns();
+			$name = 'idx_' . trim($this->table->getName(), '#_') . '_' . $columns[0];
+
+			$key->name($name);
+		}
+
 		$this->indexes[$key->getName()] = $key;
 
 		return $key;
@@ -109,40 +119,39 @@ class Schema
 	/**
 	 * addIndex
 	 *
-	 * @param string $name
 	 * @param array  $columns
+	 * @param string $name
 	 *
-	 * @return  Key
+	 * @return Key
 	 */
-	public function addIndex($name = null, $columns = null)
+	public function addIndex($columns, $name = null)
 	{
-		return $this->addKey(new Key(Key::TYPE_INDEX, $name, $columns));
+		return $this->addKey(new Key(Key::TYPE_INDEX, (array) $columns, $name));
 	}
 
 	/**
 	 * addUniqueKey
 	 *
-	 * @param string $name
 	 * @param array  $columns
+	 * @param string $name
 	 *
-	 * @return  Key
+	 * @return Key
 	 */
-	public function addUniqueKey($name, $columns = array())
+	public function addUniqueKey($columns, $name = null)
 	{
-		return $this->addKey(new Key(Key::TYPE_UNIQUE, $name, $columns));
+		return $this->addKey(new Key(Key::TYPE_UNIQUE, (array) $columns, $name));
 	}
 
 	/**
 	 * addPrimaryKey
 	 *
-	 * @param string $name
 	 * @param array  $columns
 	 *
-	 * @return  Key
+	 * @return Key
 	 */
-	public function addPrimaryKey($name, $columns)
+	public function addPrimaryKey($columns)
 	{
-		return $this->addKey(new Key(Key::TYPE_PRIMARY, $name, $columns));
+		return $this->addKey(new Key(Key::TYPE_PRIMARY, (array) $columns, null));
 	}
 
 	/**

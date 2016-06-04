@@ -61,16 +61,16 @@ class Key
 	/**
 	 * Key constructor.
 	 *
-	 * @param string $name
 	 * @param int    $type
 	 * @param array  $columns
+	 * @param string $name
 	 * @param string $comment
 	 */
-	public function __construct($type = null, $name = null, $columns = array(), $comment = null)
+	public function __construct($type = null, $columns = array(), $name = null, $comment = null)
 	{
 		$this->name    = $name;
 		$this->type    = $type;
-		$this->columns = $columns;
+		$this->columns = (array) $columns;
 		$this->comment = $comment;
 	}
 
