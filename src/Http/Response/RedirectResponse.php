@@ -9,7 +9,6 @@
 namespace Windwalker\Http\Response;
 
 use Psr\Http\Message\UriInterface;
-use Windwalker\Http\Response\Response;
 use Windwalker\Http\Stream\Stream;
 
 /**

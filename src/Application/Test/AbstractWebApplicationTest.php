@@ -10,7 +10,13 @@ namespace Windwalker\Application\Test;
 
 use Windwalker\Application\Test\Mock\MockResponse;
 use Windwalker\Application\Test\Stub\StubWeb;
+use Windwalker\Environment\WebEnvironment;
+use Windwalker\Http\Helper\HeaderHelper;
+use Windwalker\Http\Output\NoHeaderOutput;
 use Windwalker\Http\Output\Output;
+use Windwalker\Http\Request\ServerRequestFactory;
+use Windwalker\Http\Test\Mock\MockOutput;
+use Windwalker\Http\WebHttpServer;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -35,12 +41,12 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$_SERVER['HTTP_HOST'] = 'foo.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
+		$server['HTTP_HOST'] = 'foo.com';
+		$server['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$server['REQUEST_URI'] = '/index.php';
+		$server['SCRIPT_NAME'] = '/index.php';
 
-		$this->instance = new StubWeb;
+		$this->instance = new StubWeb(ServerRequestFactory::createFromGlobals($server));
 	}
 
 	/**
@@ -61,16 +67,22 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	public function test__construct()
 	{
 		$this->assertInstanceOf(
-			'Windwalker\\Registry\\Registry',
-			TestHelper::getValue($this->instance, 'config'),
+			'Windwalker\Registry\Registry',
+			$this->instance->config,
 			'Config property wrong type'
 		);
 
 		$this->assertInstanceOf(
-			'Windwalker\\Environment\\WebEnvironment',
-			$this->instance->getEnvironment(),
+			'Windwalker\Environment\WebEnvironment',
+			$this->instance->environment,
 			'Environment property wrong type'
 		);
+
+		$this->assertInstanceOf('Windwalker\Http\WebHttpServer', $this->instance->server);
+		
+		$this->assertInstanceOf('Windwalker\Http\Request\ServerRequest', $this->instance->request);
+
+		$this->assertInstanceOf('Windwalker\Uri\UriData', $this->instance->uri);
 	}
 
 	/**
@@ -82,44 +94,18 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExecute()
 	{
-		$this->instance->setOutput(new Output);
-
+		$this->instance->server->setOutput(new MockOutput);
+		
 		ob_start();
 		$this->instance->execute();
 		ob_end_clean();
 
-		$this->assertEquals('Hello World', $this->instance->getBody());
+		$this->assertEquals('Hello World', $this->instance->server->getOutput()->output);
 
 		$this->assertContains(
-			array('text/html; charset=utf-8'),
-			$this->instance->getOutput()->message->getHeader('Content-Type')
+			'text/html; charset=utf-8',
+			$this->instance->server->getOutput()->message->getHeader('Content-Type')
 		);
-	}
-
-	/**
-	 * Method to test respond().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Application\AbstractWebApplication::respond
-	 */
-	public function testRespond()
-	{
-		$this->instance->setOutput(new MockResponse);
-
-		$this->instance->setBody('Hello World');
-
-		$this->assertEquals('Hello World', $this->instance->respond(true));
-
-		ob_start();
-
-		$this->instance->respond();
-
-		$return = ob_get_contents();
-
-		ob_end_clean();
-
-		$this->assertEquals('Hello World', $return);
 	}
 
 	/**
@@ -131,10 +117,8 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__toString()
 	{
-		$this->instance->setOutput(new MockResponse);
-
-		$this->instance->setBody('Hello World');
-
+		$this->instance->server->setOutput(new NoHeaderOutput);
+		
 		$this->assertEquals('Hello World', (string) $this->instance);
 	}
 
@@ -147,198 +131,56 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRedirect()
 	{
-		$this->instance->setOutput(new MockResponse);
+		$this->instance->server->setOutput(new MockOutput);
 
 		$this->instance->redirect('/foo');
 
-		$headers = $this->instance->getOutput()->sentHeaders;
+		$headers = $this->instance->server->getOutput()->message->getHeaders();
 
 		$array = array(
-			'HTTP/2.0 303 See Other',
 			'Location: http://foo.com/foo',
-			'Content-Type: text/html; charset=utf-8'
+			'Content-Length: 0'
 		);
 
-		$this->assertEquals($array, $headers);
-
-		// Boolean
-		$this->instance->getOutput()->sentHeaders = array();
-
-		$this->instance->redirect('/foo', true);
-
-		$headers = $this->instance->getOutput()->sentHeaders;
-
-		$this->assertEquals('HTTP/2.0 301 Moved Permanently', $headers[0]);
+		$this->assertEquals($array, HeaderHelper::toHeaderLine($headers));
+		$this->assertEquals('HTTP/1.1 303 See Other', $this->instance->server->getOutput()->status);
 
 		// Code
-		$this->instance->getOutput()->sentHeaders = array();
+		$this->instance->server->setOutput(new MockOutput);
 
 		$this->instance->redirect('/foo', 307);
 
-		$headers = $this->instance->getOutput()->sentHeaders;
-
-		$this->assertEquals('HTTP/2.0 307 Temporary Redirect', $headers[0]);
-
-		// String
-		$this->instance->getOutput()->sentHeaders = array();
-
-		$this->instance->redirect('/foo', 305);
-
-		$headers = $this->instance->getOutput()->sentHeaders;
-
-		$this->assertEquals('HTTP/2.0 305 Use Proxy', $headers[0]);
-
-		// Other
-		$this->instance->getOutput()->sentHeaders = array();
-
-		$this->instance->redirect('/foo', 'foo');
-
-		$headers = $this->instance->getOutput()->sentHeaders;
-
-		$this->assertEquals('HTTP/2.0 301 Moved Permanently', $headers[0]);
+		$this->assertEquals('HTTP/1.1 307 Temporary Redirect', $this->instance->server->getOutput()->status);
 	}
 
 	/**
-	 * Method to test setHeader().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Application\AbstractWebApplication::setHeader
-	 */
-	public function testSetHeader()
-	{
-		$this->instance->setOutput(new MockResponse);
-
-		$this->instance->setHeader('Ethnic', 'We are borg.');
-
-		$this->assertEquals('We are borg.', $this->instance->getOutput()->headers[0]['value']);
-	}
-
-	/**
-	 * Method to test setBody().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Application\AbstractWebApplication::setBody
-	 */
-	public function testGetAndSetBody()
-	{
-		$this->instance->setBody('Flying bird.');
-
-		$this->assertEquals('Flying bird.', $this->instance->getBody());
-	}
-
-	/**
-	 * Method to test getOutput().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Application\AbstractWebApplication::getOutput
-	 */
-	public function testGetAndSetOutput()
-	{
-		$this->instance->setOutput(new MockResponse);
-
-		$this->assertInstanceOf('Windwalker\\Application\\Test\\Mock\\MockOutput', $this->instance->getOutput());
-	}
-
-	/**
-	 * testLoadSystemUris
-	 *
-	 * @param string $host
-	 * @param string $self
-	 * @param string $uri
-	 * @param string $script
-	 * @param array  $tests
-	 *
-	 * @dataProvider getServerData
+	 * testGetAndSetServer
 	 *
 	 * @return  void
 	 */
-	public function testLoadSystemUris($host, $self, $uri, $script, $tests)
+	public function testGetAndSetServer()
 	{
-		$_SERVER['HTTP_HOST'] = $host;
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['PHP_SELF'] = $self;
-		$_SERVER['REQUEST_URI'] = $uri;
-		$_SERVER['SCRIPT_NAME'] = $script;
-
-		$app = new StubWeb(null, null, null, new MockResponse);
-
-		foreach ($tests as $name => $value)
-		{
-			$this->assertEquals($value, $app->get($name), $name . ' not matched.');
-		}
+		$server = $this->instance->getServer();
+		
+		$this->instance->setServer($server2 = WebHttpServer::createFromGlobals('trim'));
+		
+		$this->assertNotSame($server, $this->instance->getServer());
+		$this->assertSame($server2, $this->instance->getServer());
+		
+		$this->assertSame($this->instance->request, $this->instance->getServer()->getRequest());
+		$this->assertSame($this->instance->uri, $this->instance->getServer()->getUriData());
 	}
 
 	/**
-	 * getServerData
+	 * testGetAndSetEnvironment
 	 *
-	 * @return  array
+	 * @return  void
 	 */
-	public function getServerData()
+	public function testGetAndSetEnvironment()
 	{
-		return array(
-			array(
-				'foo.com',
-				'/index.php',
-				'/index.php',
-				'/index.php',
-				array(
-					'uri.current'    => 'http://foo.com/index.php',
-					'uri.base.full'  => 'http://foo.com/',
-					'uri.base.host'  => 'http://foo.com',
-					'uri.base.path'  => '/',
-					'uri.route'      => '',
-					'uri.media.full' => 'http://foo.com/media/',
-					'uri.media.path' => '/media/'
-				)
-			),
-			array(
-				'foo.com',
-				'/www/index.php',
-				'/www/index.php',
-				'/www/index.php',
-				array(
-					'uri.current'    => 'http://foo.com/www/index.php',
-					'uri.base.full'  => 'http://foo.com/www/',
-					'uri.base.host'  => 'http://foo.com',
-					'uri.base.path'  => '/www/',
-					'uri.route'      => '',
-					'uri.media.full' => 'http://foo.com/www/media/',
-					'uri.media.path' => '/www/media/'
-				)
-			),
-			array(
-				'foo.com',
-				'/www/index.php/foo/bar',
-				'/www/index.php/foo/bar',
-				'/www/index.php',
-				array(
-					'uri.current'    => 'http://foo.com/www/index.php/foo/bar',
-					'uri.base.full'  => 'http://foo.com/www/',
-					'uri.base.host'  => 'http://foo.com',
-					'uri.base.path'  => '/www/',
-					'uri.route'      => 'foo/bar',
-					'uri.media.full' => 'http://foo.com/www/media/',
-					'uri.media.path' => '/www/media/'
-				)
-			),
-			array(
-				'foo.com',
-				'/www/index.php',
-				'/www/foo/bar',
-				'/www/index.php',
-				array(
-					'uri.current'    => 'http://foo.com/www/foo/bar',
-					'uri.base.full'  => 'http://foo.com/www/',
-					'uri.base.host'  => 'http://foo.com',
-					'uri.base.path'  => '/www/',
-					'uri.route'      => 'foo/bar',
-					'uri.media.full' => 'http://foo.com/www/media/',
-					'uri.media.path' => '/www/media/'
-				)
-			)
-		);
+		$this->instance->setEnvironment($env = new WebEnvironment);
+
+		$this->assertSame($this->instance->browser, $this->instance->environment->getBrowser());
+		$this->assertSame($this->instance->platform, $this->instance->getEnvironment()->getPlatform());
 	}
 }

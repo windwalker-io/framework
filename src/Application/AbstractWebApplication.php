@@ -28,6 +28,8 @@ use Windwalker\Uri\UriData;
  * Application for Web HTTP foundation.
  *
  * @property-read  WebEnvironment $environment
+ * @property-read  Browser        $browser
+ * @property-read  Platform       $platform
  * @property-read  WebHttpServer  $server
  * @property-read  ServerRequest  $request
  * @property-read  UriData        $uri
@@ -176,7 +178,11 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function __toString()
 	{
-		return $this->execute();
+		ob_start();
+		
+		$this->execute();
+		
+		return ob_get_clean();
 	}
 
 	/**
@@ -278,8 +284,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 	public function setEnvironment(WebEnvironment $environment)
 	{
 		$this->environment = $environment;
-		$this->browser     = $environment->getBrowser();
-		$this->platform    = $environment->getPlatform();
 
 		return $this;
 	}
@@ -350,9 +354,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function setServer(WebHttpServer $server)
 	{
-		$this->server  = $server;
-		$this->request = $server->getRequest();
-		$this->uri     = $server->getUriData();
+		$this->server = $server;
 
 		return $this;
 	}
