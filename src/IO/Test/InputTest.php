@@ -127,7 +127,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 
 		$cookies = $instance->cookie;
 		$this->assertInstanceOf('Windwalker\IO\Input', $cookies);
-		$this->assertInstanceOf('Windwalker\IO\Cookie', $cookies);
+		$this->assertInstanceOf('Windwalker\IO\CookieInput', $cookies);
 
 		// If nothing is returned
 		$this->assertEquals(null, $instance->foobar);
@@ -337,67 +337,6 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Windwalker\Input\Input::getArray method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Windwalker\Input\Input::get
-	 * @since   2.0
-	 */
-	public function testGetArray()
-	{
-		$array = array(
-			'var1' => 'value1',
-			'var2' => 34,
-			'var3' => array('test')
-		);
-
-		$input = $this->newInstance($array);
-
-		$this->assertEquals(
-			$array,
-			$input->getArray(
-				array('var1' => 'raw', 'var2' => 'raw', 'var3' => 'raw')
-			)
-		);
-
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * Test the Windwalker\Input\Input::get method using a nested data set.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Windwalker\Input\Input::get
-	 * @since   2.0
-	 */
-	public function testGetArrayNested()
-	{
-		$array = array(
-			'var2' => 34,
-			'var3' => array('var2' => 'test'),
-			'var4' => array('var1' => array('var2' => 'test'))
-		);
-
-		$input = $this->newInstance($array);
-
-		$this->assertEquals(
-			array('var4' => array('var1' => array('var2' => 'test'))),
-			$input->getArray(
-				array(
-					'var4' => array(
-						'var1' => array('var2' => 'test')
-					)
-				)
-			)
-		);
-	}
-
-	/**
 	 * testGetByPath
 	 *
 	 * @covers  Windwalker\Input\Input::getByPath
@@ -414,9 +353,9 @@ class InputTest extends \PHPUnit_Framework_TestCase
 
 		$input = $this->newInstance($array);
 
-		$this->assertEquals('test', $input->getByPath('var4.var1.var2'));
-		$this->assertEquals('default', $input->getByPath('var2.foo.bar', 'default'));
-		$this->assertEquals('123', $input->getByPath('var3.var2', null, InputFilter::INTEGER));
+		$this->assertEquals('test',    $input->get('var4.var1.var2', '.'));
+		$this->assertEquals('default', $input->get('var2.foo.bar', 'default', '.'));
+		$this->assertEquals('123',     $input->get('var3.var2', null, InputFilter::INTEGER, '.'));
 	}
 
 	/**
@@ -436,9 +375,9 @@ class InputTest extends \PHPUnit_Framework_TestCase
 
 		$input = $this->newInstance($array);
 
-		$input->setByPath('var3.var2', '2567-flower');
+		$input->set('var3.var2', '2567-flower', '.');
 
-		$this->assertEquals('2567', $input->getByPath('var3.var2', null, InputFilter::INTEGER));
+		$this->assertEquals('2567', $input->get('var3.var2', null, InputFilter::INTEGER, '.'));
 	}
 
 	/**
@@ -462,7 +401,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 
 		$input = $this->newInstance($array);
 
-		$this->assertEquals($input->getArray(), $array);
+		$this->assertEquals($input->toArray(), $array);
 	}
 
 	/**

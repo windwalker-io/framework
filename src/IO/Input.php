@@ -8,23 +8,26 @@
 
 namespace Windwalker\IO;
 
+use Psr\Http\Message\UploadedFileInterface;
 use Windwalker\Filter\InputFilter;
 use Windwalker\IO\Filter\NullFilter;
 
 /**
  * Class Input
  *
- * @property-read    Input         $get
- * @property-read    Input         $post
- * @property-read    FormDataInput $put
- * @property-read    FormDataInput $patch
- * @property-read    FormDataInput $delete
- * @property-read    FormDataInput $link
- * @property-read    FormDataInput $unlink
- * @property-read    Input         $request
- * @property-read    Input         $server
- * @property-read    FilesInput    $files
- * @property-read    Cookie        $cookie
+ * @property    Input         $get
+ * @property    Input         $post
+ * @property    FormDataInput $put
+ * @property    FormDataInput $patch
+ * @property    FormDataInput $delete
+ * @property    FormDataInput $link
+ * @property    FormDataInput $unlink
+ * @property    Input         $request
+ * @property    Input         $server
+ * @property    Input         $env
+ * @property    Input         $header
+ * @property    FilesInput    $files
+ * @property    CookieInput   $cookie
  *
  * @method      integer  getInt()       getInt($name, $default = null)    Get a signed integer.
  * @method      integer  getUint()      getUint($name, $default = null)   Get an unsigned integer.
@@ -36,6 +39,7 @@ use Windwalker\IO\Filter\NullFilter;
  * @method      string   getCmd()       getCmd($name, $default = null)
  * @method      string   getBase64()    getBase64($name, $default = null)
  * @method      string   getString()    getString($name, $default = null)
+ * @method      string   getArray()     getArray($name, $default = null)
  * @method      string   getHtml()      getHtml($name, $default = null)
  * @method      string   getPath()      getPath($name, $default = null)
  * @method      string   getUsername()  getUsername($name, $default = null)
@@ -71,6 +75,13 @@ class Input implements \Serializable, \Countable
 	 * @since  2.0
 	 */
 	protected $filter = null;
+
+	/**
+	 * Property method.
+	 *
+	 * @var  string
+	 */
+	protected $method;
 
 	/**
 	 * Constructor.
@@ -188,6 +199,9 @@ class Input implements \Serializable, \Countable
 		{
 			throw new \InvalidArgumentException('Input should be instance of Input object');
 		}
+		
+		$value->setMethod(strtoupper($this->getMethod()));
+		$value->setFilter(($this->filter instanceof NullFilter) ? null : $this->filter);
 
 		$this->inputs[$name] = $value;
 	}
@@ -208,233 +222,88 @@ class Input implements \Serializable, \Countable
 	/**
 	 * Gets a value from the input data.
 	 *
-	 * @param   string  $name     Name of the value to get.
-	 * @param   mixed   $default  Default value to return if variable does not exist.
-	 * @param   string  $filter   Filter to apply to the value.
+	 * @param   string $name      Name of the value to get.
+	 * @param   mixed  $default   Default value to return if variable does not exist.
+	 * @param   string $filter    Filter to apply to the value.
+	 * @param   string $separator Separator for path.
 	 *
-	 * @return  mixed  The filtered input value.
-	 *
-	 * @since   2.0
-	 */
-	public function get($name, $default = null, $filter = 'cmd')
-	{
-		if (isset($this->data[$name]))
-		{
-			return $this->filter->clean($this->data[$name], $filter);
-		}
-
-		return $default;
-	}
-
-	/**
-	 * Gets an array of values from the request.
-	 *
-	 * @param   array  $vars        Associative array of keys and filter types to apply.
-	 *                              If empty and datasource is null, all the input data will be returned
-	 *                              but filtered using the default case in JFilterInput::clean.
-	 * @param   mixed  $datasource  Array to retrieve data from, or null
-	 *
-	 * @return  mixed  The filtered input data.
+	 * @return mixed The filtered input value.
 	 *
 	 * @since   2.0
 	 */
-	public function getArray(array $vars = array(), $datasource = null)
+	public function get($name, $default = null, $filter = 'cmd', $separator = '.')
 	{
-		if (empty($vars) && is_null($datasource))
+		$value = static::getByPath($this->data, $name, $separator);
+
+		if ($value === null)
 		{
-			$vars = $this->data;
+			return $default;
 		}
 
-		$results = array();
-
-		foreach ($vars as $k => $v)
-		{
-			if (is_array($v))
-			{
-				if (is_null($datasource))
-				{
-					if ($this instanceof FilesInput)
-					{
-						$results[$k] = $this->getArray($this->get($k, null, 'array'), $this->get($k, null, 'array'));
-					}
-					else
-					{
-						$results[$k] = $this->getArray($v, $this->get($k, null, 'array'));
-					}
-				}
-				else
-				{
-					$results[$k] = $this->getArray($v, $datasource[$k]);
-				}
-			}
-			else
-			{
-				if (is_null($datasource))
-				{
-					$results[$k] = $this->get($k, null, $v);
-				}
-				elseif (isset($datasource[$k]))
-				{
-					$results[$k] = $this->filter->clean($datasource[$k], $v);
-				}
-				else
-				{
-					$results[$k] = $this->filter->clean(null, $v);
-				}
-			}
-		}
-
-		return $results;
+		return $this->filter->clean($value, $filter);
 	}
 
 	/**
 	 * Sets a value
 	 *
-	 * @param   string  $name   Name of the value to set.
-	 * @param   mixed   $value  Value to assign to the input.
-	 *
-	 * @return  void
+	 * @param   string $name       Name of the value to set.
+	 * @param   mixed  $value      Value to assign to the input.
+	 * @param   string $separator  Symbol to separate path.
 	 *
 	 * @since   2.0
 	 */
-	public function set($name, $value)
+	public function set($name, $value, $separator = '.')
 	{
-		$this->data[$name] = $value;
+		static::setByPath($this->data, $name, $value, $separator);
 	}
 
 	/**
 	 * Define a value. The value will only be set if there's no value for the name or if it is null.
 	 *
-	 * @param   string  $name   Name of the value to define.
-	 * @param   mixed   $value  Value to assign to the input.
-	 *
-	 * @return  void
+	 * @param   string  $name       Name of the value to define.
+	 * @param   mixed   $value      Value to assign to the input.
+	 * @param   string  $separator  Symbol to separate paths.
 	 *
 	 * @since   2.0
 	 */
-	public function def($name, $value)
+	public function def($name, $value, $separator = '.')
 	{
-		if (isset($this->data[$name]))
+		if ($this->exists($name, $separator))
 		{
 			return;
 		}
 
-		$this->data[$name] = $value;
+		$this->set($name, $value, $separator);
 	}
 
 	/**
 	 * Check if a value name exists.
 	 *
-	 * @param   string  $name  Value name
+	 * @param   string  $name       Value name
+	 * @param   string  $separator  Symbol to separate path.
 	 *
-	 * @return  boolean
+	 * @return bool
 	 *
 	 * @since   2.0
 	 */
-	public function exists($name)
+	public function exists($name, $separator = '.')
 	{
-		return isset($this->data[$name]);
+		return $this->get($name, null, 'raw', $separator) !== null;
 	}
 
 	/**
 	 * extract
 	 *
-	 * @param   string $name
+	 * @param   string  $name
+	 * @param   string  $separator
 	 *
 	 * @return  static
 	 */
-	public function extract($name)
+	public function extract($name, $separator = '.')
 	{
-		return new static($this->get($name, array(), 'raw'));
-	}
+		$filter = $this->filter instanceof NullFilter ? null : $this->filter;
 
-	/**
-	 * getByPath
-	 *
-	 * @param   string  $paths
-	 * @param   mixed   $default
-	 * @param   string  $filter
-	 *
-	 * @return  array|null
-	 */
-	public function getByPath($paths, $default = null, $filter = InputFilter::CMD)
-	{
-		if (empty($paths))
-		{
-			return null;
-		}
-
-		$args = is_array($paths) ? $paths : explode('.', $paths);
-
-		$dataTmp = $this->data;
-
-		foreach ($args as $arg)
-		{
-			if (is_object($dataTmp) && !empty($dataTmp->$arg))
-			{
-				$dataTmp = $dataTmp->$arg;
-			}
-			elseif (is_array($dataTmp) && !empty($dataTmp[$arg]))
-			{
-				$dataTmp = $dataTmp[$arg];
-			}
-			else
-			{
-				return $default;
-			}
-		}
-
-		return $this->filter->clean($dataTmp, $filter);
-	}
-
-	/**
-	 * setByPath
-	 *
-	 * @param string $paths
-	 * @param mixed  $value
-	 *
-	 * @return  bool
-	 */
-	public function setByPath($paths, $value)
-	{
-		if (empty($paths))
-		{
-			return false;
-		}
-
-		$args = is_array($paths) ? $paths : explode('.', $paths);
-
-		$dataTmp = &$this->data;
-
-		foreach ($args as $arg)
-		{
-			if (is_object($dataTmp))
-			{
-				if (empty($dataTmp->$arg))
-				{
-					$dataTmp->$arg = array();
-				}
-
-				$dataTmp = &$dataTmp->$arg;
-			}
-			elseif (is_array($dataTmp))
-			{
-				if (empty($dataTmp[$arg]))
-				{
-					$dataTmp[$arg] = array();
-				}
-
-				$dataTmp = &$dataTmp[$arg];
-			}
-			else
-			{
-				$dataTmp = array();
-			}
-		}
-
-		$dataTmp = $value;
-
-		return true;
+		return new static($this->get($name, array(), 'raw', $separator), $filter);
 	}
 
 	/**
@@ -473,12 +342,31 @@ class Input implements \Serializable, \Countable
 	 */
 	public function getMethod()
 	{
-		if (isset($_SERVER['REQUEST_METHOD']))
+		if (!$this->method)
 		{
-			return strtoupper($_SERVER['REQUEST_METHOD']);
+			if (isset($_SERVER['REQUEST_METHOD']))
+			{
+				$this->method = strtoupper($_SERVER['REQUEST_METHOD']);
+			}
 		}
 
-		return null;
+		return $this->method;
+	}
+
+	/**
+	 * Method to set property method
+	 *
+	 * @param   string $method
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function setMethod($method)
+	{
+		$this->method = (string) strtoupper($method);
+
+		return $this;
 	}
 
 	/**
@@ -598,5 +486,194 @@ class Input implements \Serializable, \Countable
 		$this->data = $data;
 
 		return $this;
+	}
+
+	/**
+	 * Method to get property Filter
+	 *
+	 * @return  InputFilter
+	 */
+	public function getFilter()
+	{
+		return $this->filter;
+	}
+
+	/**
+	 * Method to set property filter
+	 *
+	 * @param   InputFilter $filter
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setFilter($filter)
+	{
+		$this->filter = $filter;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Data
+	 *
+	 * @return  array
+	 */
+	public function getRawData()
+	{
+		return $this->data;
+	}
+
+	/**
+	 * toArray
+	 *
+	 * @param string $filter
+	 *
+	 * @return array
+	 */
+	public function toArray($filter = 'raw')
+	{
+		return $this->convertToArray($this->data, $filter);
+	}
+
+	/**
+	 * convertToArray
+	 *
+	 * @param array  $data
+	 * @param string $filter
+	 *
+	 * @return  array
+	 */
+	protected function convertToArray($data, $filter = 'raw')
+	{
+		$array = array();
+		
+		foreach ($data as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$array[$key] = $this->convertToArray($value);
+			}
+			else
+			{
+				$array[$key] = $this->filter->clean($value, $filter);
+			}
+		}
+		
+		return $array;
+	}
+
+	/**
+	 * Get data from array or object by path.
+	 *
+	 * Example: `ArrayHelper::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
+	 *
+	 * @param mixed  $data      An array or object to get value.
+	 * @param mixed  $path     The key path.
+	 * @param string $separator Separator of paths.
+	 *
+	 * @return  mixed Found value, null if not exists.
+	 *
+	 * @since   3.0
+	 */
+	public static function getByPath($data, $path, $separator = '.')
+	{
+		$nodes = array_values(array_filter(explode($separator, $path), 'strlen'));
+
+		if (empty($nodes))
+		{
+			return null;
+		}
+
+		$dataTmp = $data;
+
+		foreach ($nodes as $arg)
+		{
+			if ($dataTmp instanceof \ArrayAccess && isset($dataTmp[$arg]))
+			{
+				$dataTmp = $dataTmp[$arg];
+			}
+			elseif (is_array($dataTmp) && isset($dataTmp[$arg]))
+			{
+				$dataTmp = $dataTmp[$arg];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		return $dataTmp;
+	}
+
+	/**
+	 * setByPath
+	 *
+	 * @param mixed  &$data
+	 * @param string $path
+	 * @param mixed  $value
+	 * @param string $separator
+	 * @param string $storeType
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.0
+	 */
+	public static function setByPath(&$data, $path, $value, $separator = '.', $storeType = 'array')
+	{
+		$nodes = array_values(array_filter(explode($separator, $path), 'strlen'));
+
+		if (empty($nodes))
+		{
+			return false;
+		}
+
+		/**
+		 * A closure as inner function to create data store.
+		 *
+		 * @param string $type
+		 *
+		 * @return  array
+		 *
+		 * @throws \InvalidArgumentException
+		 */
+		$createStore = function($type)
+		{
+			if (strtolower($type) == 'array')
+			{
+				return array();
+			}
+
+			if (class_exists($type))
+			{
+				return new $type;
+			}
+
+			throw new \InvalidArgumentException(sprintf('Type or class: %s not exists', $type));
+		};
+
+		$dataTmp = &$data;
+
+		foreach ($nodes as $node)
+		{
+			if (is_array($dataTmp))
+			{
+				if (empty($dataTmp[$node]))
+				{
+					$dataTmp[$node] = $createStore($storeType);
+				}
+
+				$dataTmp = &$dataTmp[$node];
+			}
+			else
+			{
+				// If a node is value but path is not go to the end, we replace this value as a new store.
+				// Then next node can insert new value to this store.
+				$dataTmp = &$createStore($storeType);
+			}
+		}
+
+		// Now, path go to the end, means we get latest node, set value to this node.
+		$dataTmp = $value;
+
+		return true;
 	}
 }

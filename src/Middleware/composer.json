@@ -17,6 +17,9 @@
             "Windwalker\\Middleware\\": ""
         }
     },
+    "suggest": {
+        "psr/http-message": "Install 1.* to support Psr7MiddlewareInterface."
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "2.2-dev"

@@ -53,7 +53,7 @@ class CliInput extends Input implements CliInputInterface
 	public function prepareSource(&$source = null, $reference = false)
 	{
 		// Get the command line options
-		$this->parseArguments();
+		$this->parseArguments($source);
 	}
 
 	/**
@@ -80,17 +80,18 @@ class CliInput extends Input implements CliInputInterface
 	/**
 	 * Gets a value from the input data.
 	 *
-	 * @param   string  $name     Name of the value to get.
-	 * @param   mixed   $default  Default value to return if variable does not exist.
-	 * @param   string  $filter   Filter to apply to the value.
+	 * @param   string  $name      Name of the value to get.
+	 * @param   mixed   $default   Default value to return if variable does not exist.
+	 * @param   string  $filter    Filter to apply to the value.
+	 * @param   string  $separator Symbol to separate path.
 	 *
-	 * @return  mixed  The filtered input value.
+	 * @return mixed The filtered input value.
 	 *
 	 * @since   2.0
 	 */
-	public function get($name, $default = null, $filter = 'string')
+	public function get($name, $default = null, $filter = 'string', $separator = '.')
 	{
-		return parent::get($name, $default, $filter);
+		return parent::get($name, $default, $filter, $separator);
 	}
 
 	/**
@@ -102,7 +103,7 @@ class CliInput extends Input implements CliInputInterface
 	 */
 	public function all()
 	{
-		return $this->getArray();
+		return $this->toArray();
 	}
 
 	/**
@@ -153,13 +154,13 @@ class CliInput extends Input implements CliInputInterface
 	/**
 	 * Initialise the options and arguments
 	 *
-	 * @return  void
+	 * @param   array  $source
 	 *
 	 * @since   2.0
 	 */
-	protected function parseArguments()
+	protected function parseArguments($source = null)
 	{
-		$argv = $_SERVER['argv'];
+		$argv = $source ? : $_SERVER['argv'];
 
 		$this->calledScript = array_shift($argv);
 

@@ -75,7 +75,7 @@ class FormDataInputTest extends \PHPUnit_Framework_TestCase
 		);
 
 		// Src from GLOBAL
-		FormDataInput::setRawData(null);
+		FormDataInput::setRawFormData(null);
 
 		$_SERVER['CONTENT_TYPE'] = 'multipart/form-data; boundary=----WebKitFormBoundary8zi5vcW6H9OgqKSj';
 

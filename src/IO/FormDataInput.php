@@ -71,7 +71,7 @@ class FormDataInput extends Input
 	 *
 	 * @since   2.0
 	 */
-	public static function getRawData()
+	public static function getRawFormData()
 	{
 		return static::$raw;
 	}
@@ -83,7 +83,7 @@ class FormDataInput extends Input
 	 *
 	 * @return  string
 	 */
-	public static function setRawData($data)
+	public static function setRawFormData($data)
 	{
 		static::$raw = $data;
 	}

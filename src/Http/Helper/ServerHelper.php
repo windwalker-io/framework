@@ -9,6 +9,7 @@
 namespace Windwalker\Http\Helper;
 
 use Psr\Http\Message\UploadedFileInterface;
+use Windwalker\Http\UploadedFile;
 
 /**
  * The ServerHelper class.
@@ -127,5 +128,159 @@ abstract class ServerHelper
 		}
 
 		return $out;
+	}
+
+	/**
+	 * parseFormData
+	 *
+	 * @param string $input
+	 *
+	 * @return array
+	 *
+	 * @link  http://stackoverflow.com/questions/5483851/manually-parse-raw-http-data-with-php/5488449#5488449
+	 */
+	public static function parseFormData($input)
+	{
+		$boundary = substr($input, 0, strpos($input, "\r\n"));
+
+		// Fetch each part
+		$parts = array_slice(explode($boundary, $input), 1);
+		$data  = array();
+		$files = array();
+
+		foreach ($parts as $part)
+		{
+			// If this is the last part, break
+			if ($part == "--\r\n")
+			{
+				break;
+			}
+
+			// Separate content from headers
+			$part = ltrim($part, "\r\n");
+
+			list($rawHeaders, $content) = explode("\r\n\r\n", $part, 2);
+
+			$content = substr($content, 0, strlen($content) - 2);
+
+			// Parse the headers list
+			$rawHeaders = explode("\r\n", $rawHeaders);
+			$headers    = array();
+
+			foreach ($rawHeaders as $header)
+			{
+				list($name, $value) = explode(':', $header, 2);
+
+				$headers[strtolower($name)] = ltrim($value, ' ');
+			}
+
+			// Parse the Content-Disposition to get the field name, etc.
+			if (isset($headers['content-disposition']))
+			{
+				$filename = null;
+
+				preg_match(
+					'/^form-data; *name="([^"]+)"(?:; *filename="([^"]+)")?/',
+					$headers['content-disposition'],
+					$matches
+				);
+
+				$field = $matches[1];
+				$fileName  = (isset($matches[2]) ? $matches[2] : null);
+
+				$fieldName = str_replace(array('[', '][', ']'), array('.', '.', ''), $field);
+
+				// If we have no filename, save the data. Otherwise, save the file.
+				if ($fileName === null)
+				{
+					static::setByPath($data, $fieldName, $content);
+				}
+				else
+				{
+					$tempFile = tempnam(sys_get_temp_dir(), 'sfy');
+
+					file_put_contents($tempFile, $content);
+					
+					$content = array(
+						'name'     => $fileName,
+						'type'     => $headers['content-type'],
+						'tmp_name' => $tempFile,
+						'error'    => 0,
+						'size'     => filesize($tempFile)
+					);
+
+					static::setByPath($files, $fieldName, $content);
+
+					register_shutdown_function(
+						function () use ($tempFile)
+						{
+							@unlink($tempFile);
+						}
+					);
+				}
+			}
+		}
+
+		return array(
+			'data'  => $data,
+			'files' => $files
+		);
+	}
+
+	/**
+	 * setByPath
+	 *
+	 * @param mixed  &$data
+	 * @param string $path
+	 * @param mixed  $value
+	 * @param string $separator
+	 *
+	 * @return  boolean
+	 *
+	 * @since   2.0
+	 */
+	public static function setByPath(array &$data, $path, $value, $separator = '.')
+	{
+		$nodes = array_values(explode($separator, $path));
+
+		if (empty($nodes))
+		{
+			return false;
+		}
+
+		$dataTmp = &$data;
+
+		foreach ($nodes as $node)
+		{
+			if (is_array($dataTmp))
+			{
+				if ((string) $node === '')
+				{
+					$tmp = array();
+					$dataTmp[] = &$tmp;
+					$dataTmp = &$tmp;
+				}
+				else
+				{
+					if (empty($dataTmp[$node]))
+					{
+						$dataTmp[$node] = array();
+					}
+
+					$dataTmp = &$dataTmp[$node];
+				}
+			}
+			else
+			{
+				// If a node is value but path is not go to the end, we replace this value as a new store.
+				// Then next node can insert new value to this store.
+				$dataTmp = &$value;
+			}
+		}
+
+		// Now, path go to the end, means we get latest node, set value to this node.
+		$dataTmp = $value;
+
+		return true;
 	}
 }

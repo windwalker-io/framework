@@ -22,14 +22,14 @@ class PhpInputStream extends Stream implements StreamInterface
 	 *
 	 * @var  string
 	 */
-	protected $cache;
+	protected static $cache;
 
 	/**
 	 * Property reachedEof.
 	 *
 	 * @var  boolean
 	 */
-	protected $reachedEof;
+	protected static $reachedEof;
 
 	/**
 	 * Class init.
@@ -38,7 +38,7 @@ class PhpInputStream extends Stream implements StreamInterface
 	 */
 	public function __construct($stream = 'php://input')
 	{
-		parent::__construct($stream, self::MODE_READ_ONLY_FROM_BEGIN);
+		parent::__construct($stream, static::MODE_READ_ONLY_FROM_BEGIN);
 	}
 
 	/**
@@ -58,14 +58,14 @@ class PhpInputStream extends Stream implements StreamInterface
 	 */
 	public function __toString()
 	{
-		if ($this->reachedEof)
+		if (static::$reachedEof)
 		{
-			return $this->cache;
+			return static::$cache;
 		}
 
 		$this->getContents();
 
-		return $this->cache;
+		return static::$cache;
 	}
 
 	/**
@@ -94,9 +94,9 @@ class PhpInputStream extends Stream implements StreamInterface
 	{
 		$content = parent::read($length);
 
-		if ($content && !$this->reachedEof)
+		if ($content && !static::$reachedEof)
 		{
-			$this->cache .= $content;
+			static::$cache .= $content;
 		}
 
 		if ($this->eof())
@@ -116,16 +116,16 @@ class PhpInputStream extends Stream implements StreamInterface
 	 */
 	public function getContents($maxLength = -1)
 	{
-		if ($this->reachedEof)
+		if (static::$reachedEof)
 		{
-			return $this->cache;
+			return static::$cache;
 		}
 
-		$this->cache .= $contents = stream_get_contents($this->resource, $maxLength);
+		static::$cache .= $contents = stream_get_contents($this->resource, $maxLength);
 
 		if ($maxLength === -1 || $this->eof())
 		{
-			$this->reachedEof = true;
+			static::$reachedEof = true;
 		}
 
 		return $contents;

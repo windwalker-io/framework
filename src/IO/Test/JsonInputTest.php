@@ -75,7 +75,7 @@ class JsonInputTest extends \PHPUnit_Framework_TestCase
 		);
 
 		// Src from GLOBAL
-		JsonInput::setRawData(null);
+		JsonInput::setRawFormData(null);
 
 		$GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
 		$json = new JsonInput;
@@ -102,7 +102,7 @@ class JsonInputTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(
 			$GLOBALS['HTTP_RAW_POST_DATA'],
-			$json->getRawData()
+			$json->getRawFormData()
 		);
 	}
 }

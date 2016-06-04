@@ -133,7 +133,7 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($data, $this->instance->get('foo'));
 
 		// We don't convert data structure for getByPath() now.
-		$this->assertEquals('n', $this->instance->getByPath('foo.name.myfile'));
+		$this->assertEquals('n', $this->instance->get('foo.name.myfile', '.'));
 	}
 
 	/**

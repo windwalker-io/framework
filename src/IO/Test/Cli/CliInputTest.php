@@ -69,14 +69,13 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\IO\Cli\Input\CliInput::get
-	 * @TODO   Implement testGet().
 	 */
 	public function testGet()
 	{
-		$_SERVER['argv'] = array('/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura');
+		$argv = array('/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura');
 
-		$this->instance = new CliInput;
-
+		$this->instance = new CliInput($argv);
+		
 		$this->assertEquals(
 			'bar',
 			$this->instance->get('foo'),

@@ -13,7 +13,7 @@ namespace Windwalker\IO;
  *
  * @since  2.0
  */
-class Cookie extends Input
+class CookieInput extends Input
 {
 	/**
 	 * Prepare source.
@@ -25,7 +25,14 @@ class Cookie extends Input
 	 */
 	public function prepareSource(&$source = null, $reference = false)
 	{
-		$this->data = &$_COOKIE;
+		if ($source)
+		{
+			$this->data = $source;
+		}
+		else
+		{
+			$this->data = &$_COOKIE;
+		}
 	}
 
 	/**

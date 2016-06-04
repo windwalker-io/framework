@@ -8,22 +8,29 @@
 
 namespace Windwalker\Application;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Windwalker\Environment\Browser\Browser;
+use Windwalker\Environment\Platform;
 use Windwalker\Environment\WebEnvironment;
+use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\Request\ServerRequestFactory;
+use Windwalker\Http\Response\RedirectResponse;
 use Windwalker\Http\WebHttpServer;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
 use Windwalker\Registry\Registry;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Windwalker\Uri\UriData;
 
 /**
  * Application for Web HTTP foundation.
  *
  * @property-read  WebEnvironment $environment
  * @property-read  WebHttpServer  $server
+ * @property-read  ServerRequest  $request
+ * @property-read  UriData        $uri
  *
  * @since 2.0
  */
@@ -38,12 +45,18 @@ abstract class AbstractWebApplication extends AbstractApplication
 	protected $environment;
 
 	/**
-	 * The system Uri object.
+	 * Property browser.
 	 *
-	 * @var    Uri
-	 * @since  2.0
+	 * @var  Browser
 	 */
-	protected $uri = null;
+	protected $browser;
+
+	/**
+	 * Property platform.
+	 *
+	 * @var  Platform
+	 */
+	protected $platform;
 
 	/**
 	 * Property request.
@@ -60,40 +73,38 @@ abstract class AbstractWebApplication extends AbstractApplication
 	protected $server;
 
 	/**
-	 * Redirect HTTP codes.
+	 * Property uri.
 	 *
-	 * @var    array
-	 * @since  2.1.9
+	 * @var  UriData
 	 */
-	protected $redirectCodes = array(
-		300 => 'HTTP/2.0 300 Multiple Choices',
-		301 => 'HTTP/2.0 301 Moved Permanently',
-		302 => 'HTTP/2.0 302 Found',
-		303 => 'HTTP/2.0 303 See Other',
-		304 => 'Not Modified',
-		305 => 'HTTP/2.0 305 Use Proxy',
-		306 => 'HTTP/2.0 306 (Unused)',
-		307 => 'HTTP/2.0 307 Temporary Redirect',
-		308 => 'Permanent Redirect'
-	);
+	protected $uri;
+
+	/**
+	 * Property finalHandler.
+	 *
+	 * @var  callable
+	 */
+	protected $finalHandler;
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param   Registry        $config       An optional argument to provide dependency injection for the application's
-	 *                                        config object.  If the argument is a Registry object that object will become
-	 *                                        the application's config object, otherwise a default config object is created.
-	 * @param   WebEnvironment          $environment An optional argument to provide dependency injection for the application's
-	 *                                        client object.  If the argument is a Web\WebEnvironment object that object will become
-	 *                                        the application's client object, otherwise a default client object is created.
+	 * @param   Request        $request       An optional argument to provide dependency injection for the Http request object.
+	 * @param   Registry       $config        An optional argument to provide dependency injection for the application's
+	 *                                        config object.
+	 * @param   WebEnvironment $environment   An optional argument to provide dependency injection for the application's
+	 *                                        environment object.
 	 *
 	 * @since   2.0
 	 */
 	public function __construct(ServerRequestInterface $request = null, Registry $config = null, WebEnvironment $environment = null)
 	{
-		$this->environment = $environment ? : new WebEnvironment;
-		$this->request = $request ? : ServerRequestFactory::createFromGlobals();
-		$this->server = WebHttpServer::create(array($this, 'dispatch'), $this->request);
+		$request     = $request     ? : ServerRequestFactory::createFromGlobals();
+		$environment = $environment ? : new WebEnvironment;
+		$server      = WebHttpServer::create(array($this, 'dispatch'), $request);
+
+		$this->setEnvironment($environment);
+		$this->setServer($server);
 
 		// Call the constructor as late as possible (it runs `init()`).
 		parent::__construct($config);
@@ -117,13 +128,15 @@ abstract class AbstractWebApplication extends AbstractApplication
 		// @event onBeforeExecute
 
 		// Perform application routines.
-		$this->doExecute();
+		$response = $this->doExecute();
 
 		// @event onAfterExecute
 
 		$this->postExecute();
 
 		// @event onBeforeRespond
+
+		$this->server->getOutput()->respond($response);
 
 		// @event onAfterRespond
 	}
@@ -132,29 +145,27 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * Method to run the application routines. Most likely you will want to instantiate a controller
 	 * and execute it, or perform some sort of task directly.
 	 *
+	 * @return  ResponseInterface
+	 *
 	 * @since   2.0
 	 */
 	protected function doExecute()
 	{
-		$this->server->listen();
+		return $this->server->execute($this->getFinalHandler());
 	}
-
-	abstract public function dispatch(Request $request, Response $response, callable $next = null);
 
 	/**
-	 * Method to send the application response to the client.  All headers will be sent prior to the main
-	 * application output data.
+	 * Method as the Psr7 WebHttpServer handler.
 	 *
-	 * @param   boolean  $returnBody  Return body or just output it.
+	 * @param  Request  $request   The Psr7 ServerRequest to get request params.
+	 * @param  Response $response  The Psr7 Response interface to [re[are respond data.
+	 * @param  callable $next      The next handler to support middleware pattern.
 	 *
-	 * @return  string  The rendered body string.
+	 * @return  Response  The returned response object.
 	 *
-	 * @since   2.0
+	 * @since   3.0
 	 */
-	public function respond($returnBody = false)
-	{
-		return $this->output->respond($returnBody);
-	}
+	abstract public function dispatch(Request $request, Response $response, callable $next = null);
 
 	/**
 	 * Magic method to render output.
@@ -165,7 +176,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function __toString()
 	{
-		return $this->respond(true);
+		return $this->execute();
 	}
 
 	/**
@@ -184,12 +195,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function redirect($url, $code = 303)
 	{
-		// Check for relative internal links.
-		if (preg_match('#^index\.php#', $url))
-		{
-			$url = $this->get('uri.base.full') . $url;
-		}
-
 		// Perform a basic sanity check to make sure we don't have any CRLF garbage.
 		$url = preg_split("/[\r\n]/", $url);
 		$url = $url[0];
@@ -202,7 +207,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		if (!preg_match('#^[a-z]+\://#i', $url))
 		{
 			// Get a URI instance for the requested URI.
-			$uri = new Uri($this->get('uri.current'));
+			$uri = new Uri($this->server->uri->current);
 
 			// Get a base URL to prepend from the requested URI.
 			$prefix = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
@@ -212,8 +217,8 @@ abstract class AbstractWebApplication extends AbstractApplication
 			{
 				$url = $prefix . $url;
 			}
+			// It's relative to where we are now, so lets add that.
 			else
-				// It's relative to where we are now, so lets add that.
 			{
 				$parts = explode('/', $uri->toString(array('path')));
 				array_pop($parts);
@@ -223,17 +228,17 @@ abstract class AbstractWebApplication extends AbstractApplication
 		}
 
 		// If the headers have already been sent we need to send the redirect statement via JavaScript.
-		if ($this->output->checkHeadersSent())
+		if ($this->checkHeadersSent())
 		{
 			echo "<script>document.location.href='$url';</script>\n";
 		}
 		else
 		{
 			// We have to use a JavaScript redirect here because MSIE doesn't play nice with utf-8 URLs.
-			if (($this->environment->browser->getEngine() == Browser::TRIDENT) && !ApplicationHelper::isAscii($url))
+			if (($this->environment->browser->getEngine() == Browser::ENGINE_TRIDENT) && !ApplicationHelper::isAscii($url))
 			{
 				$html = '<html><head>';
-				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->output->getCharSet() . '" />';
+				$html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->server->getCharSet() . '" />';
 				$html .= '<script>document.location.href=\'' . $url . '\';</script>';
 				$html .= '</head><body></body></html>';
 
@@ -241,15 +246,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			}
 			else
 			{
-				// All other cases use the more efficient HTTP header for redirection.
-				if (!array_key_exists((int) $code, $this->redirectCodes))
-				{
-					$code = $code ? 301 : 303;
-				}
-
-				$this->output->header($this->redirectCodes[$code]);
-				$this->output->header('Location: ' . $url);
-				$this->output->header('Content-Type: text/html; charset=' . $this->output->getCharSet());
+				$this->server->getOutput()->respond(new RedirectResponse($url, $code));
 			}
 		}
 
@@ -278,11 +275,134 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @since   2.0
 	 */
-	public function setEnvironment($environment)
+	public function setEnvironment(WebEnvironment $environment)
 	{
 		$this->environment = $environment;
+		$this->browser     = $environment->getBrowser();
+		$this->platform    = $environment->getPlatform();
 
 		return $this;
+	}
+
+	/**
+	 * Method to get property FinalHandler
+	 *
+	 * @return  callable
+	 *
+	 * @since   3.0
+	 */
+	public function getFinalHandler()
+	{
+		return $this->finalHandler;
+	}
+
+	/**
+	 * Method to set property finalHandler
+	 *
+	 * @param   callable $finalHandler
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function setFinalHandler(callable $finalHandler)
+	{
+		$this->finalHandler = $finalHandler;
+
+		return $this;
+	}
+
+	/**
+	 * Method to check to see if headers have already been sent.
+	 * We wrap headers_sent() function with this method for testing reason.
+	 *
+	 * @return  boolean  True if the headers have already been sent.
+	 *
+	 * @see     headers_sent()
+	 *
+	 * @since   3.0
+	 */
+	public function checkHeadersSent()
+	{
+		return headers_sent();
+	}
+
+	/**
+	 * Method to get property Server
+	 *
+	 * @return  WebHttpServer
+	 *
+	 * @since   3.0
+	 */
+	public function getServer()
+	{
+		return $this->server;
+	}
+
+	/**
+	 * Method to set property server
+	 *
+	 * @param   WebHttpServer $server
+	 *
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function setServer(WebHttpServer $server)
+	{
+		$this->server  = $server;
+		$this->request = $server->getRequest();
+		$this->uri     = $server->getUriData();
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Request
+	 *
+	 * @return  Request
+	 *
+	 * @since   3.0
+	 */
+	public function getRequest()
+	{
+		return $this->server->getRequest();
+	}
+
+	/**
+	 * Method to get property Uri
+	 *
+	 * @return  UriData
+	 *
+	 * @since   3.0
+	 */
+	public function getUri()
+	{
+		return $this->server->getUriData();
+	}
+
+	/**
+	 * Method to get property Browser
+	 *
+	 * @return  Browser
+	 *
+	 * @since   3.0
+	 */
+	public function getBrowser()
+	{
+		return $this->environment->getBrowser();
+	}
+
+	/**
+	 * Method to get property Platform
+	 *
+	 * @return  Platform
+	 *
+	 * @since   3.0
+	 */
+	public function getPlatform()
+	{
+		return $this->environment->getPlatform();
 	}
 
 	/**
@@ -302,6 +422,20 @@ abstract class AbstractWebApplication extends AbstractApplication
 		if (in_array($name, $allowNames))
 		{
 			return $this->$name;
+		}
+
+		$getters = array(
+			'uri',
+			'request',
+			'browser',
+			'platform'
+		);
+
+		if (in_array(strtolower($name), $getters))
+		{
+			$method = 'get' . ucfirst($name);
+
+			return $this->$method();
 		}
 
 		return parent::__get($name);

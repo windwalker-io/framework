@@ -89,4 +89,37 @@ class ServerHelperTest extends \PHPUnit_Framework_TestCase
 			'This test has not been implemented yet.'
 		);
 	}
+
+	/**
+	 * testParseFormData
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Http\Helper\ServerHelper::parseFormData
+	 */
+	public function testParseFormData()
+	{
+		$type = 'multipart/form-data; boundary=----WebKitFormBoundary8zi5vcW6H9OgqKSj';
+
+		$input = <<<DATA
+------WebKitFormBoundary8zi5vcW6H9OgqKSj
+Content-Disposition: form-data; name="flower"
+
+SAKURA
+------WebKitFormBoundary8zi5vcW6H9OgqKSj
+Content-Disposition: form-data; name="tree"
+
+Marabutan
+------WebKitFormBoundary8zi5vcW6H9OgqKSj
+Content-Disposition: form-data; name="fruit"
+
+Apple
+------WebKitFormBoundary8zi5vcW6H9OgqKSj--
+DATA;
+
+		$this->assertEquals(
+			array('flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'),
+			ServerHelper::parseFormData($input, $type)
+		);
+	}
 }

@@ -41,17 +41,23 @@ class FilesInput extends Input
 	/**
 	 * Gets a value from the input data.
 	 *
-	 * @param   string  $name     The name of the input property (usually the name of the files INPUT tag) to get.
-	 * @param   mixed   $default  The default value to return if the named property does not exist.
-	 * @param   string  $filter   The filter to apply to the value.
+	 * @param   string  $name       The name of the input property (usually the name of the files INPUT tag) to get.
+	 * @param   mixed   $default    The default value to return if the named property does not exist.
+	 * @param   string  $filter     The filter to apply to the value.
+	 * @param   string  $separator  The symbol to separate path.
 	 *
-	 * @return  mixed  The filtered input value.
+	 * @return mixed The filtered input value.
 	 *
 	 * @see     JFilterInput::clean
 	 * @since   2.0
 	 */
-	public function get($name, $default = null, $filter = InputFilter::CMD)
+	public function get($name, $default = null, $filter = InputFilter::RAW, $separator = '.')
 	{
+		if (strpos($name, $separator))
+		{
+			return parent::get($name, $default, $filter, $separator);
+		}
+
 		if (isset($this->data[$name]))
 		{
 			$results = $this->decodeData(

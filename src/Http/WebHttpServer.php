@@ -106,6 +106,20 @@ class WebHttpServer extends HttpServer
 	 */
 	public function listen(callable $nextHandler = null)
 	{
+		$response = $this->execute($nextHandler);
+
+		$this->output->respond($response);
+	}
+
+	/**
+	 * execute
+	 *
+	 * @param callable $nextHandler
+	 *
+	 * @return  ResponseInterface
+	 */
+	public function execute(callable $nextHandler = null)
+	{
 		$response = call_user_func($this->handler, $this->request, $this->response, $nextHandler);
 
 		if (!$response instanceof ResponseInterface)
@@ -118,9 +132,7 @@ class WebHttpServer extends HttpServer
 			$response = $response->withHeader('content-type', $this->getContentType() . '; charset=' . $this->getCharSet());
 		}
 
-		$response = $this->prepareCache($response);
-
-		$this->output->respond($response);
+		return $this->prepareCache($response);
 	}
 
 	/**
@@ -345,7 +357,7 @@ class WebHttpServer extends HttpServer
 	/**
 	 * Method to set property uriData
 	 *
-	 * @param   array $uriData
+	 * @param   array|UriData  $uriData
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

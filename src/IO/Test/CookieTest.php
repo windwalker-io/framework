@@ -8,7 +8,7 @@
 
 namespace Windwalker\IO\Test;
 
-use Windwalker\IO\Cookie;
+use Windwalker\IO\CookieInput;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -21,7 +21,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test instance.
 	 *
-	 * @var Cookie
+	 * @var CookieInput
 	 */
 	protected $instance;
 
@@ -33,7 +33,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Cookie;
+		$this->instance = new CookieInput;
 	}
 
 	/**
@@ -57,7 +57,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 	public function test__construct()
 	{
 		// Default constructor call
-		$instance = new Cookie;
+		$instance = new CookieInput;
 
 		$this->assertEquals(
 			$_COOKIE,
@@ -75,7 +75,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSet()
 	{
-		$instance = new Cookie;
+		$instance = new CookieInput;
 		$instance->set('foo', 'bar');
 
 		$data = TestHelper::getValue($instance, 'data');

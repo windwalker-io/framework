@@ -11,6 +11,7 @@ namespace Windwalker\Http\Request;
 use Psr\Http\Message\UploadedFileInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\ServerHelper;
+use Windwalker\Http\Stream\PhpInputStream;
 use Windwalker\Http\UploadedFile;
 use Windwalker\Uri\PsrUri;
 
@@ -39,33 +40,55 @@ class ServerRequestFactory
 	 *
 	 * @see fromServer()
 	 *
-	 * @param  array  $server   The $_SERVER superglobal variable.
-	 * @param  array  $query    The $_GET superglobal variable.
-	 * @param  array  $body     The $_POST superglobal variable.
-	 * @param  array  $cookies  The $_COOKIE superglobal variable.
-	 * @param  array  $files    The $_FILES superglobal variable.
+	 * @param  array $server     The $_SERVER superglobal variable.
+	 * @param  array $query      The $_GET superglobal variable.
+	 * @param  array $parsedBody The $_POST superglobal variable.
+	 * @param  array $cookies    The $_COOKIE superglobal variable.
+	 * @param  array $files      The $_FILES superglobal variable.
 	 *
 	 * @return ServerRequest
 	 *
 	 * @throws \InvalidArgumentException for invalid file values
 	 */
-	public static function createFromGlobals(array $server = array(), array $query = array(), array $body = null,
+	public static function createFromGlobals(array $server = array(), array $query = array(), array $parsedBody = null,
 		array $cookies = array(), array $files = array())
 	{
 		$server  = static::prepareServers($server ? : $_SERVER);
-		$files   = static::prepareFiles($files ? : $_FILES);
 		$headers = static::prepareHeaders($server);
+
+		$body = new PhpInputStream;
+
+		$method = ServerHelper::getValue($server, 'REQUEST_METHOD', 'GET');
+
+		$decodedBody  = $_POST;
+		$decodedFiles = $_FILES;
+
+		if (in_array(strtoupper($method), array('PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK')))
+		{
+			$type = HeaderHelper::getValue($headers, 'Content-Type');
+
+			if (strpos($type, 'application/x-www-form-urlencoded') !== false)
+			{
+				parse_str($body->__toString(), $decodedBody);
+			}
+			elseif (strpos($type, 'multipart/form-data') !== false)
+			{
+				list($decodedBody, $decodedFiles) = array_values(ServerHelper::parseFormData($body->__toString()));
+			}
+		}
+
+		$files = static::prepareFiles($files ? : $decodedFiles);
 
 		return new ServerRequest(
 			$server,
 			$files,
 			static::prepareUri($server, $headers),
-			ServerHelper::getValue($server, 'REQUEST_METHOD', 'GET'),
-			'php://input',
+			$method,
+			$body,
 			$headers,
 			$cookies ? : $_COOKIE,
 			$query   ? : $_GET,
-			$body    ? : $_POST,
+			$parsedBody ? : $decodedBody,
 			static::getProtocolVersion($server)
 		);
 	}
