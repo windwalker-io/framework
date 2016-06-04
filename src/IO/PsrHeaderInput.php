@@ -8,7 +8,6 @@
 
 namespace Windwalker\IO;
 
-use Windwalker\Filter\InputFilter;
 use Windwalker\Http\Helper\HeaderHelper;
 
 /**

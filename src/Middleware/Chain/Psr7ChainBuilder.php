@@ -56,7 +56,7 @@ class Psr7ChainBuilder implements Psr7MiddlewareInterface
 	 *
 	 * @return  static
 	 */
-	public function push(callable $middleware)
+	public function push($middleware)
 	{
 		$this->queue[] = $middleware;
 
@@ -70,7 +70,7 @@ class Psr7ChainBuilder implements Psr7MiddlewareInterface
 	 *
 	 * @return  static
 	 */
-	public function unshift(callable $middleware)
+	public function unshift($middleware)
 	{
 		array_unshift($this->queue, $middleware);
 
@@ -86,7 +86,7 @@ class Psr7ChainBuilder implements Psr7MiddlewareInterface
 	 *
 	 * @return  Response
 	 */
-	public function __invoke(Request $request, Response $response, callable $next = null)
+	public function __invoke(Request $request, Response $response,  $next = null)
 	{
 		$runner = new Psr7Runner($this->queue);
 

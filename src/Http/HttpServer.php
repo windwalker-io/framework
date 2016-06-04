@@ -66,7 +66,7 @@ class HttpServer
 	 * 
 	 * @return  static  The Server instance.
 	 */
-	public static function createFromGlobals(callable $handler, array $server = array(), array $query = array(), array $body = array(), array $cookies = array(), array $files = array())
+	public static function createFromGlobals($handler, array $server = array(), array $query = array(), array $body = array(), array $cookies = array(), array $files = array())
 	{
 		$request  = ServerRequestFactory::createFromGlobals($server, $query, $body, $cookies, $files);
 
@@ -88,7 +88,7 @@ class HttpServer
 	 *
 	 * @return  static  The Server instance.
 	 */
-	public static function create(callable $handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
+	public static function create($handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		return new static($handler, $request, $response, $output);
 	}
@@ -106,7 +106,7 @@ class HttpServer
 	 * @param   ResponseInterface       $response  The Response object.
 	 * @param   OutputInterface         $output    The Output emitter object.
 	 */
-	public function __construct(callable $handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
+	public function __construct($handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		$this->handler  = $handler;
 		$this->request  = $request;
@@ -119,7 +119,7 @@ class HttpServer
 	 *
 	 * @param   callable  $nextHandler  The next handler to support middleware pattern.
 	 */
-	public function listen(callable $nextHandler = null)
+	public function listen($nextHandler = null)
 	{
 		$response = call_user_func($this->handler, $this->request, $this->response, $nextHandler);
 

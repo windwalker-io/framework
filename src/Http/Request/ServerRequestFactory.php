@@ -110,7 +110,7 @@ class ServerRequestFactory
 			return $server;
 		}
 
-		$apacheRequestHeaders = array_change_key_case($apacheRequestHeaders(), CASE_LOWER);
+		$apacheRequestHeaders = array_change_key_case(call_user_func($apacheRequestHeaders), CASE_LOWER);
 
 		if (isset($apacheRequestHeaders['authorization']))
 		{

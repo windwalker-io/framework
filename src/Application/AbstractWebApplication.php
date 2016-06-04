@@ -167,7 +167,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @since   3.0
 	 */
-	abstract public function dispatch(Request $request, Response $response, callable $next = null);
+	abstract public function dispatch(Request $request, Response $response, $next = null);
 
 	/**
 	 * Magic method to render output.
@@ -309,7 +309,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * @since   3.0
 	 */
-	public function setFinalHandler(callable $finalHandler)
+	public function setFinalHandler($finalHandler)
 	{
 		$this->finalHandler = $finalHandler;
 

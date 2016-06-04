@@ -13,7 +13,7 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 class Application extends \Windwalker\Application\AbstractWebApplication
 {
-	public function dispatch(Request $request, Response $response, callable $next = null)
+	public function dispatch(Request $request, Response $response,  $next = null)
 	{
 		$response->getBody()->write('Hello World');
 
@@ -24,7 +24,7 @@ class Application extends \Windwalker\Application\AbstractWebApplication
 }
 
 $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create([
-	function (Request $request, Response $response, callable $next = null)
+	function (Request $request, Response $response,  $next = null)
 	{
 		$input = \Windwalker\IO\PsrInput::create($request);
 
@@ -43,7 +43,7 @@ $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create([
 
 		return $next($request, $response);
 	},
-	function (Request $request, Response $response, callable $next = null)
+	function (Request $request, Response $response,  $next = null)
 	{
 		$body = $response->getBody()->__toString();
 

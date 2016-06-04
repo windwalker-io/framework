@@ -51,7 +51,7 @@ class StubWeb extends AbstractWebApplication
 	 *
 	 * @since   3.0
 	 */
-	public function dispatch(Request $request, Response $response, callable $next = null)
+	public function dispatch(Request $request, Response $response, $next = null)
 	{
 		$response->getBody()->write('Hello World');
 

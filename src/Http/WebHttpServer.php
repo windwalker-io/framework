@@ -88,7 +88,7 @@ class WebHttpServer extends HttpServer
 	 * @param ResponseInterface       $response
 	 * @param OutputInterface         $output
 	 */
-	public function __construct(callable $handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
+	public function __construct($handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		parent::__construct($handler, $request, $response, $output);
 
@@ -104,7 +104,7 @@ class WebHttpServer extends HttpServer
 	 *
 	 * @param callable $nextHandler
 	 */
-	public function listen(callable $nextHandler = null)
+	public function listen($nextHandler = null)
 	{
 		$response = $this->execute($nextHandler);
 
@@ -118,7 +118,7 @@ class WebHttpServer extends HttpServer
 	 *
 	 * @return  ResponseInterface
 	 */
-	public function execute(callable $nextHandler = null)
+	public function execute($nextHandler = null)
 	{
 		$response = call_user_func($this->handler, $this->request, $this->response, $nextHandler);
 

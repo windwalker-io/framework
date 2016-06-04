@@ -49,14 +49,14 @@ class Psr7Runner implements Psr7MiddlewareInterface
 	 *
 	 * @return  Response
 	 */
-	public function __invoke(Request $request, Response $response, callable $next = null)
+	public function __invoke(Request $request, Response $response,  $next = null)
 	{
 		$handler = array_shift($this->queue);
 
 		// If no more handler, add an End Middleware
 		if (!$handler)
 		{
-			$handler = function (Request $request, Response $response, callable $next = null)
+			$handler = function (Request $request, Response $response,  $next = null)
 			{
 			    return $response;
 			};

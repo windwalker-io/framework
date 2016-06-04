@@ -68,7 +68,7 @@ class AbstractMessageTest extends AbstractBaseTestCase
 		// Wrong type
 		$this->assertExpectedException(function () use ($message)
 		{
-			$this->message->withProtocolVersion(1.0);
+			$message->withProtocolVersion(1.0);
 		}, 'InvalidArgumentException');
 	}
 
