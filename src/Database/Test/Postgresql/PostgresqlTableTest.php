@@ -12,6 +12,7 @@ use Windwalker\Database\Driver\Postgresql\PostgresqlType;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Key;
+use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 
 /**
@@ -88,73 +89,26 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::_create
+	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::_create
 	 */
 	public function testCreate()
 	{
 		$table = $this->db->getTable('#__cloud');
 
-		$table->addColumn('id', PostgresqlType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, '', 'PK', array('primary' => true))
-			->addColumn('name', DataType::VARCHAR, Column::SIGNED, Column::NOT_NULL, '', 'Name')
-			->addColumn('alias', 'varchar(255)', Column::SIGNED, Column::NOT_NULL, '', 'Alias')
-			->addIndex(Key::TYPE_INDEX, 'idx_name', 'name', 'Test')
-			->addIndex(Key::TYPE_UNIQUE, 'idx_alias', 'alias', 'Alias Index')
-			->_create();
+		$table->create(function (Schema $schema)
+		{
+			$schema->primary('id')->signed(false)->comment('PK');
+			$schema->varchar('name')->allowNull(false);
+			$schema->varchar('alias');
+			$schema->addIndex('idx_name', 'name')->comment('Test');
+			$schema->addUniqueKey('idx_alias', 'alias')->comment('Alias Index');
+		});
 
 		$columns = $table->getColumnDetails();
 
 		$this->assertEquals('integer', $columns['id']->Type);
 		$this->assertEquals('varchar(255)', $columns['name']->Type);
 		$this->assertEquals('UNI', $columns['alias']->Key);
-
-		static::$dbo->setQuery(PostgresqlQueryBuilder::dropTable('#__cloud', true))->execute();
-
-		// Test Column types
-		$table = $this->db->getTable('#__cloud', true);
-
-		$table->addColumn(new Column\Primary('id'))
-			->addColumn(new Column\Varchar('name'))
-			->addColumn(new Column\Char('type'))
-			->addColumn(new Column\Timestamp('created'))
-			->addColumn(new Column\Bit('state'))
-			->addColumn(new Column\Integer('uid'))
-			->addColumn(new Column\Tinyint('status'))
-			->_create();
-
-		$columns = $table->getColumnDetails();
-
-		$this->assertEquals('integer', $columns['id']->Type);
-		$this->assertEquals('varchar(255)', $columns['name']->Type);
-
-		static::$dbo->setQuery(PostgresqlQueryBuilder::dropTable('#__cloud', true))->execute();
-	}
-
-	/**
-	 * Method to test create().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTable::_create
-	 */
-	public function testDoCreate()
-	{
-		$table = $this->db->getTable('#__cloud');
-
-		$table->doCreate(
-			array(
-				'id' => 'integer NOT NULL',
-				'name' => 'varchar(255) NOT NULL'
-			),
-			'id',
-			array(),
-			5,
-			true
-		);
-
-		$columns = $table->getColumnDetails();
-
-		$this->assertEquals('integer', $columns['id']->Type);
-		$this->assertEquals('varchar(255)', $columns['name']->Type);
 	}
 
 	/**
@@ -281,8 +235,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories');
 
-		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State')
-			->save();
+		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State');
 
 		$columns = $table->getColumns();
 
@@ -318,8 +271,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addColumn(new Column\Varchar('foo'))
-			->save();
+		$table->addColumn(new Column\Varchar('foo'));
 
 		$table->modifyColumn(new Column\Integer('foo', 3));
 
@@ -378,8 +330,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addIndex('INDEX', 'idx_ordering', array('ordering', 'id'))
-			->save();
+		$table->addIndex('INDEX', 'idx_ordering', array('ordering', 'id'));
 
 		$indexes = $table->getIndexes();
 

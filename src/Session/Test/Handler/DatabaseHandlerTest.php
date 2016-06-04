@@ -10,7 +10,9 @@ namespace Windwalker\Session\Test\Handler;
 
 use Windwalker\Database\Schema\Column\Text;
 use Windwalker\Database\Schema\Column\Varchar;
+use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
+use Windwalker\DataMapper\DataMapper;
 use Windwalker\Session\Database\WindwalkerAdapter;
 use Windwalker\Session\Handler\DatabaseHandler;
 
@@ -44,11 +46,12 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
 	{
 		parent::setUpBeforeClass();
 
-		static::$dbo->getTable('windwalker_sessions')
-			->addColumn(new Varchar('id'))
-			->addColumn(new Text('data'))
-			->addColumn(new Varchar('time'))
-			->save();
+		static::$dbo->getTable('windwalker_sessions')->save(function (Schema $schema)
+		{
+			$schema->varchar('id')->allowNull(false);
+			$schema->text('data');
+			$schema->varchar('time');
+		});
 	}
 
 	/**

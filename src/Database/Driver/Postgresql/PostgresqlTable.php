@@ -12,6 +12,7 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
+use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Mysql\MysqlQueryBuilder;
 use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 
@@ -23,27 +24,6 @@ use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
 class PostgresqlTable extends AbstractTable
 {
 	/**
-	 * Property columns.
-	 *
-	 * @var  Column[]
-	 */
-	protected $columns = array();
-
-	/**
-	 * Property indexes.
-	 *
-	 * @var  Key[]
-	 */
-	protected $indexes = array();
-
-	/**
-	 * Property primary.
-	 *
-	 * @var  array
-	 */
-	protected $primary = array();
-
-	/**
 	 * create
 	 *
 	 * @param bool  $ifNotExists
@@ -51,21 +31,25 @@ class PostgresqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function _create($ifNotExists = true, $options = array())
+	public function create($schema, $ifNotExists = true, $options = array())
 	{
 		$defaultOptions = array(
 			'auto_increment' => 1,
 			'sequences' => array()
 		);
 
-		$options = array_merge($defaultOptions, $options);
-
-		$columns = array();
+		$options  = array_merge($defaultOptions, $options);
+		$schema   = $this->callSchema($schema);
+		$columns  = array();
 		$comments = array();
+		$primary  = array();
 
-		foreach ($this->columns as $column)
+		foreach ($schema->getColumns() as $column)
 		{
-			$length = $column->getLength();
+			$typeMapper = $this->getTypeMapper();
+			$type = $typeMapper::getType($column->getType());
+
+			$length = $column->getLength() ? : $typeMapper::getLength($column->getType());
 
 			$length = $length ? '(' . $length . ')' : null;
 
@@ -75,22 +59,29 @@ class PostgresqlTable extends AbstractTable
 				$options['sequences'][$column->getName()] = $this->table . '_' . $column->getName() . '_seq';
 			}
 
-			$columns[$column->getName()] = MysqlQueryBuilder::build(
-				$column->getType() . $length,
+			$columns[$column->getName()] = PostgresqlQueryBuilder::build(
+				$type . $length,
 				$column->getAllowNull() ? null : 'NOT NULL',
 				$column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
 			);
 
+			// Comment
 			if ($column->getComment())
 			{
 				$comments[$column->getName()] = $column->getComment();
+			}
+
+			// Primary
+			if ($column->isPrimary())
+			{
+				$primary[] = $column->getName();
 			}
 		}
 
 		$keys = array();
 		$keyComments = array();
 
-		foreach ($this->indexes as $index)
+		foreach ($schema->getIndexes() as $index)
 		{
 			$keys[$index->getName()] = array(
 				'type' => strtoupper($index->getType()),
@@ -107,168 +98,10 @@ class PostgresqlTable extends AbstractTable
 		$options['comments'] = $comments;
 		$options['key_comments'] = $keyComments;
 
-		$this->doCreate($columns, $this->primary, $keys, $options['auto_increment'], $ifNotExists, $options);
-
-		return $this;
-	}
-
-	/**
-	 * update
-	 *
-	 * @return  static
-	 */
-	public function update()
-	{
-		foreach ($this->columns as $column)
-		{
-			$length = $column->getLength();
-
-			$length = $length ? '(' . $length . ')' : null;
-
-			$sequence = null;
-
-			if ($column->getAutoIncrement())
-			{
-				$column->type(PostgresqlType::SERIAL);
-			}
-
-			$query = PostgresqlQueryBuilder::addColumn(
-				$this->table,
-				$column->getName(),
-				$column->getType() . $length,
-				$column->getAllowNull(),
-				$column->getDefault()
-			);
-
-			$this->db->setQuery($query)->execute();
-
-			if ($column->getComment())
-			{
-				$query = PostgresqlQueryBuilder::comment('COLUMN', $this->table, $column->getName(), $column->getComment());
-
-				$this->db->setQuery($query)->execute();
-			}
-		}
-
-		foreach ($this->indexes as $index)
-		{
-			$query = PostgresqlQueryBuilder::addIndex(
-				$this->table,
-				$index->getType(),
-				$index->getName(),
-				$index->getColumns()
-			);
-
-			$this->db->setQuery($query)->execute();
-
-			if ($index->getComment())
-			{
-				$query = PostgresqlQueryBuilder::comment('INDEX', 'public', $index->getName(), $index->getComment());
-
-				$this->db->setQuery($query)->execute();
-			}
-		}
-
-		return $this;
-	}
-
-	/**
-	 * save
-	 *
-	 * @param bool  $ifNotExists
-	 * @param array $options
-	 *
-	 * @return  $this
-	 */
-	public function save($ifNotExists = true, $options = array())
-	{
-		if ($this->exists())
-		{
-			$this->update();
-		}
-		else
-		{
-			$this->_create($ifNotExists, $options);
-		}
-
-		$database = $this->db->getDatabase();
-		$database::resetCache();
-
-		return $this;
-	}
-
-	/**
-	 * drop
-	 *
-	 * @param bool   $ifExists
-	 * @param string $option
-	 *
-	 * @return  static
-	 */
-	public function drop($ifExists = true, $option = '')
-	{
-		$query = MysqlQueryBuilder::dropTable($this->table, $ifExists, $option);
-
-		$this->db->setQuery($query)->execute();
-
-		return $this;
-	}
-
-	/**
-	 * reset
-	 *
-	 * @return  static
-	 */
-	public function reset()
-	{
-		$this->columns = array();
-		$this->primary = array();
-		$this->indexes = array();
-
-		return $this;
-	}
-
-	/**
-	 * exists
-	 *
-	 * @return  boolean
-	 */
-	public function exists()
-	{
-		$database = $this->db->getDatabase();
-
-		return $database->tableExists($this->table);
-	}
-
-	/**
-	 * getDetail
-	 *
-	 * @return  array|boolean
-	 */
-	public function getDetail()
-	{
-		return $this->db->getDatabase()->getTableDetail($this->table);
-	}
-
-	/**
-	 * create
-	 *
-	 * @param string $columns
-	 * @param array  $pks
-	 * @param array  $keys
-	 * @param int    $autoIncrement
-	 * @param bool   $ifNotExists
-	 * @param array  $options
-	 *
-	 * @return $this
-	 */
-	public function doCreate($columns, $pks = array(), $keys = array(), $autoIncrement = null, $ifNotExists = true,
-		$options = array())
-	{
 		$inherits = isset($options['inherits']) ? $options['inherits'] : null;
 		$tablespace = isset($options['tablespace']) ? $options['tablespace'] : null;
 
-		$query = PostgresqlQueryBuilder::createTable($this->table, $columns, $pks, $keys, $inherits, $ifNotExists, $tablespace);
+		$query = PostgresqlQueryBuilder::createTable($this->table, $columns, $primary, $keys, $inherits, $ifNotExists, $tablespace);
 
 		$comments = isset($options['comments']) ? $options['comments'] : array();
 		$keyComments = isset($options['key_comments']) ? $options['key_comments'] : array();
@@ -286,7 +119,7 @@ class PostgresqlTable extends AbstractTable
 
 		DatabaseHelper::batchQuery($this->db, $query);
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -311,38 +144,44 @@ class PostgresqlTable extends AbstractTable
 			$column = new Column($name, $type, $signed, $allowNull, $default, $comment, $options);
 		}
 
-		$type   = PostgresqlType::getType($column->getType());
-		$length = $column->getLength() ? : PostgresqlType::getLength($type);
+		$this->prepareColumn($column);
 
-		$length = PostgresqlType::noLength($type) ? null : $length;
-
-		$column->type($type)
-			->length($length);
-
-		if ($column->isPrimary())
-		{
-			$this->primary[] = $column->getName();
-		}
-
-		$this->columns[] = $column;
-
-		return $this;
-	}
-
-	/**
-	 * dropColumn
-	 *
-	 * @param string $name
-	 *
-	 * @return  mixed
-	 */
-	public function dropColumn($name)
-	{
-		$query = PostgresqlQueryBuilder ::dropColumn($this->table, $name);
+		$query = PostgresqlQueryBuilder::addColumn(
+			$this->table,
+			$column->getName(),
+			$column->getType(),
+			$column->getAllowNull(),
+			$column->getDefault()
+		);
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
+		if ($column->getComment())
+		{
+			$query = PostgresqlQueryBuilder::comment('COLUMN', $this->table, $column->getName(), $column->getComment());
+			$this->db->setQuery($query)->execute();
+		}
+
+		return $this->reset();
+	}
+
+	/**
+	 * prepareColumn
+	 *
+	 * @param Column $column
+	 *
+	 * @return  Column
+	 */
+	protected function prepareColumn(Column $column)
+	{
+		/** @var PostgresqlType $typeMapper */
+		$typeMapper = $this->getTypeMapper();
+
+		$length = $typeMapper::noLength($column->getType()) ? null : $column->getLength();
+
+		$column->length($length);
+
+		return parent::prepareColumn($column);
 	}
 
 	/**
@@ -416,7 +255,7 @@ class PostgresqlTable extends AbstractTable
 
 		DatabaseHelper::batchQuery($this->db, $sql);
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -501,7 +340,7 @@ class PostgresqlTable extends AbstractTable
 
 		DatabaseHelper::batchQuery($this->db, $sql);
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -580,7 +419,21 @@ class PostgresqlTable extends AbstractTable
 			$index = $type;
 		}
 
-		$this->indexes[] = $index;
+		$query = PostgresqlQueryBuilder::addIndex(
+			$this->table,
+			$index->getType(),
+			$index->getName(),
+			$index->getColumns()
+		);
+
+		$this->db->setQuery($query)->execute();
+
+		if ($index->getComment())
+		{
+			$query = PostgresqlQueryBuilder::comment('INDEX', 'public', $index->getName(), $index->getComment());
+
+			$this->db->setQuery($query)->execute();
+		}
 
 		return $this;
 	}
@@ -637,57 +490,11 @@ class PostgresqlTable extends AbstractTable
 	}
 
 	/**
-	 * Locks a table in the database.
-	 *
-	 * @return  static  Returns this object to support chaining.
-	 *
-	 * @since   2.0
-	 * @throws  \RuntimeException
-	 */
-	public function lock()
-	{
-		$this->db->setQuery('LOCK TABLES ' . $this->db->quoteName($this->table) . ' WRITE');
-
-		return $this;
-	}
-
-	/**
-	 * unlock
-	 *
-	 * @return  static  Returns this object to support chaining.
-	 *
-	 * @throws  \RuntimeException
-	 */
-	public function unlock()
-	{
-		$this->db->setQuery('UNLOCK TABLES')->execute();
-
-		return $this;
-	}
-
-	/**
-	 * Method to truncate a table.
-	 *
-	 * @return  static
-	 *
-	 * @since   2.0
-	 * @throws  \RuntimeException
-	 */
-	public function truncate()
-	{
-		$this->db->setQuery('TRUNCATE TABLE ' . $this->db->quoteName($this->table))->execute();
-
-		return $this;
-	}
-
-	/**
 	 * getColumnDetails
 	 *
 	 * @param bool $refresh
 	 *
 	 * @return mixed
-	 * @internal param bool $full
-	 *
 	 */
 	public function getColumnDetails($refresh = false)
 	{
@@ -819,30 +626,6 @@ ORDER BY t.relname, i.relname;');
 	}
 
 	/**
-	 * Method to get property Primary
-	 *
-	 * @return  array
-	 */
-	public function getPrimary()
-	{
-		return $this->primary;
-	}
-
-	/**
-	 * Method to set property primary
-	 *
-	 * @param   array $primary
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setPrimary($primary)
-	{
-		$this->primary = (array) $primary;
-
-		return $this;
-	}
-
-	/**
 	 * Get the details list of sequences for a table.
 	 *
 	 * @param   string  $table  The name of the table.
@@ -859,22 +642,27 @@ ORDER BY t.relname, i.relname;');
 
 		if ( in_array($table, $tableList) )
 		{
-			$name = array('s.relname', 'n.nspname', 't.relname', 'a.attname', 'info.data_type',
-				'info.minimum_value', 'info.maximum_value', 'info.increment', 'info.cycle_option');
-
-			$as = array('sequence', 'schema', 'table', 'column', 'data_type',
-				'minimum_value', 'maximum_value', 'increment', 'cycle_option');
+			$name = array(
+				's.relname AS sequence', 
+				'n.nspname AS schema', 
+				't.relname AS table', 
+				'a.attname AS column', 
+				'info.data_type AS data_type',
+				'info.minimum_value AS minimum_value', 
+				'info.maximum_value AS maximum_value', 
+				'info.increment AS increment', 
+				'info.cycle_option AS cycle_option'
+			);
 
 			if (version_compare($this->db->getVersion(), '9.1.0') >= 0)
 			{
-				$name[] .= 'info.start_value';
-				$as[] .= 'start_value';
+				$name[] .= 'info.start_value AS start_value';
 			}
 
 			// Get the details columns information.
 			$query = $this->db->getQuery(true);
 
-			$query->select($this->db->quoteName($name, $as))
+			$query->select($this->db->quoteName($name))
 				->from('pg_class AS s')
 				->leftJoin("pg_depend d ON d.objid=s.oid AND d.classid='pg_class'::regclass AND d.refclassid='pg_class'::regclass")
 				->leftJoin('pg_class t ON t.oid=d.refobjid')

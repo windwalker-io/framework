@@ -108,8 +108,6 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 */
 	public function testCreate()
 	{
-		$builder = static::$dbo->getQuery(true)->getBuilder();
-
 		$table = $this->db->getTable('#__cloud');
 
 		$table->create(function (Schema $schema)

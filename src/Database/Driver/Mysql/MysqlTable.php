@@ -88,97 +88,6 @@ class MysqlTable extends AbstractTable
 	}
 
 	/**
-	 * update
-	 *
-	 * @param   callable|Schema  $schema
-	 *
-	 * @return  static
-	 */
-	public function update($schema)
-	{
-		$schema = $this->callSchema($schema);
-
-		foreach ($schema->getColumns() as $column)
-		{
-			$this->addColumn($column);
-		}
-
-		foreach ($schema->getIndexes() as $index)
-		{
-			$this->addIndex($index);
-		}
-
-		return $this->reset();
-	}
-
-	/**
-	 * save
-	 *
-	 * @param   callable|Schema  $schema
-	 * @param   bool             $ifNotExists
-	 * @param   array            $options
-	 *
-	 * @return  $this
-	 */
-	public function save($schema, $ifNotExists = true, $options = array())
-	{
-		$schema = $this->callSchema($schema);
-
-		if ($this->exists())
-		{
-			$this->update($schema);
-		}
-		else
-		{
-			$this->create($schema, $ifNotExists, $options);
-		}
-
-		$database = $this->db->getDatabase();
-		$database::resetCache();
-
-		return $this->reset();
-	}
-
-	/**
-	 * drop
-	 *
-	 * @param bool   $ifExists
-	 * @param string $option
-	 *
-	 * @return  static
-	 */
-	public function drop($ifExists = true, $option = '')
-	{
-		$query = MysqlQueryBuilder::dropTable($this->table, $ifExists, $option);
-
-		$this->db->setQuery($query)->execute();
-
-		return $this->reset();
-	}
-
-	/**
-	 * exists
-	 *
-	 * @return  boolean
-	 */
-	public function exists()
-	{
-		$database = $this->db->getDatabase();
-
-		return $database->tableExists($this->table);
-	}
-
-	/**
-	 * getDetail
-	 *
-	 * @return  array|boolean
-	 */
-	public function getDetail()
-	{
-		return $this->db->getDatabase()->getTableDetail($this->table);
-	}
-
-	/**
 	 * addColumn
 	 *
 	 * @param string $name
@@ -212,22 +121,6 @@ class MysqlTable extends AbstractTable
 			$column->getPosition(),
 			$column->getComment()
 		);
-
-		$this->db->setQuery($query)->execute();
-
-		return $this->reset();
-	}
-
-	/**
-	 * dropColumn
-	 *
-	 * @param string $name
-	 *
-	 * @return  mixed
-	 */
-	public function dropColumn($name)
-	{
-		$query = MysqlQueryBuilder::dropColumn($this->table, $name);
 
 		$this->db->setQuery($query)->execute();
 
@@ -429,57 +322,11 @@ class MysqlTable extends AbstractTable
 	}
 
 	/**
-	 * Locks a table in the database.
-	 *
-	 * @return  static  Returns this object to support chaining.
-	 *
-	 * @since   2.0
-	 * @throws  \RuntimeException
-	 */
-	public function lock()
-	{
-		$this->db->setQuery('LOCK TABLES ' . $this->db->quoteName($this->table) . ' WRITE');
-
-		return $this;
-	}
-
-	/**
-	 * unlock
-	 *
-	 * @return  static  Returns this object to support chaining.
-	 *
-	 * @throws  \RuntimeException
-	 */
-	public function unlock()
-	{
-		$this->db->setQuery('UNLOCK TABLES')->execute();
-
-		return $this;
-	}
-
-	/**
-	 * Method to truncate a table.
-	 *
-	 * @return  static
-	 *
-	 * @since   2.0
-	 * @throws  \RuntimeException
-	 */
-	public function truncate()
-	{
-		$this->db->setQuery('TRUNCATE TABLE ' . $this->db->quoteName($this->table))->execute();
-
-		return $this;
-	}
-
-	/**
 	 * getColumnDetails
 	 *
 	 * @param bool $refresh
 	 *
 	 * @return mixed
-	 * @internal param bool $full
-	 *
 	 */
 	public function getColumnDetails($refresh = false)
 	{

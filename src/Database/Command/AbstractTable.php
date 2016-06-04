@@ -65,9 +65,9 @@ abstract class AbstractTable
 	/**
 	 * create
 	 *
-	 * @param   callable $callback
-	 * @param   bool     $ifNotExists
-	 * @param   array    $options
+	 * @param   callable|Schema $callback
+	 * @param   bool            $ifNotExists
+	 * @param   array           $options
 	 *
 	 * @return  static
 	 */
@@ -76,11 +76,26 @@ abstract class AbstractTable
 	/**
 	 * update
 	 *
-	 * @param  callable|Schema  $schema
+	 * @param   callable|Schema  $schema
 	 *
-	 * @return static
+	 * @return  static
 	 */
-	abstract public function update($schema);
+	public function update($schema)
+	{
+		$schema = $this->callSchema($schema);
+
+		foreach ($schema->getColumns() as $column)
+		{
+			$this->addColumn($column);
+		}
+
+		foreach ($schema->getIndexes() as $index)
+		{
+			$this->addIndex($index);
+		}
+
+		return $this->reset();
+	}
 
 	/**
 	 * save
@@ -91,7 +106,24 @@ abstract class AbstractTable
 	 *
 	 * @return  $this
 	 */
-	abstract public function save($schema, $ifNotExists = true, $options = array());
+	public function save($schema, $ifNotExists = true, $options = array())
+	{
+		$schema = $this->callSchema($schema);
+
+		if ($this->exists())
+		{
+			$this->update($schema);
+		}
+		else
+		{
+			$this->create($schema, $ifNotExists, $options);
+		}
+
+		$database = $this->db->getDatabase();
+		$database::resetCache();
+
+		return $this->reset();
+	}
 
 	/**
 	 * drop
@@ -101,14 +133,28 @@ abstract class AbstractTable
 	 *
 	 * @return  static
 	 */
-	abstract public function drop($ifExists = true, $option = '');
+	public function drop($ifExists = true, $option = '')
+	{
+		$builder = $this->db->getQuery(true)->getBuilder();
+
+		$query = $builder::dropTable($this->table, $ifExists, $option);
+
+		$this->db->setQuery($query)->execute();
+
+		return $this;
+	}
 
 	/**
 	 * exists
 	 *
 	 * @return  boolean
 	 */
-	abstract public function exists();
+	public function exists()
+	{
+		$database = $this->db->getDatabase();
+
+		return $database->tableExists($this->table);
+	}
 
 	/**
 	 * rename
@@ -128,7 +174,12 @@ abstract class AbstractTable
 	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
-	abstract public function lock();
+	public function lock()
+	{
+		$this->db->setQuery('LOCK TABLES ' . $this->db->quoteName($this->table) . ' WRITE');
+
+		return $this;
+	}
 
 	/**
 	 * unlock
@@ -137,7 +188,12 @@ abstract class AbstractTable
 	 *
 	 * @throws  \RuntimeException
 	 */
-	abstract public function unlock();
+	public function unlock()
+	{
+		$this->db->setQuery('UNLOCK TABLES')->execute();
+
+		return $this;
+	}
 
 	/**
 	 * Method to truncate a table.
@@ -147,7 +203,22 @@ abstract class AbstractTable
 	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
-	abstract public function truncate();
+	public function truncate()
+	{
+		$this->db->setQuery('TRUNCATE TABLE ' . $this->db->quoteName($this->table))->execute();
+
+		return $this;
+	}
+
+	/**
+	 * getDetail
+	 *
+	 * @return  array|boolean
+	 */
+	public function getDetail()
+	{
+		return $this->db->getDatabase()->getTableDetail($this->table);
+	}
 
 	/**
 	 * Get table columns.
@@ -165,8 +236,6 @@ abstract class AbstractTable
 	 * @param bool $refresh
 	 *
 	 * @return mixed
-	 * @internal param bool $full
-	 *
 	 */
 	abstract public function getColumnDetails($refresh = false);
 
@@ -204,9 +273,18 @@ abstract class AbstractTable
 	 *
 	 * @param string $name
 	 *
-	 * @return  static
+	 * @return  mixed
 	 */
-	abstract public function dropColumn($name);
+	public function dropColumn($name)
+	{
+		$builder = $this->db->getQuery(true)->getBuilder();
+
+		$query = $builder ::dropColumn($this->table, $name);
+
+		$this->db->setQuery($query)->execute();
+
+		return $this;
+	}
 
 	/**
 	 * modifyColumn
@@ -377,14 +455,6 @@ abstract class AbstractTable
 
 		$type   = $typeMapper::getType($column->getType());
 		$length = $column->getLength() ? : $typeMapper::getLength($type);
-
-		// Fix for Strict Mode
-		if ($type == $typeMapper::DATETIME && $column->getDefault() === '')
-		{
-			$default = $this->db->getQuery(true)->getNullDate();
-
-			$column->defaultValue($default);
-		}
 
 		$length = $length ? '(' . $length . ')' : null;
 
