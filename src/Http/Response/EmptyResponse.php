@@ -8,7 +8,7 @@
 
 namespace Windwalker\Http\Response;
 
-use Windwalker\Http\Response\Response;
+use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Stream\Stream;
 
 /**
@@ -28,8 +28,19 @@ class EmptyResponse extends Response
 	 */
 	public function __construct($status = 204, array $headers = array())
 	{
-		$body = new Stream('php://temp', Stream::MODE_READ_ONLY_FROM_BEGIN);
+		$body = new Stream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
 
 		parent::__construct($body, $status, $headers);
+	}
+
+	/**
+	 * Gets the body of the message.
+	 *
+	 * @return StreamInterface Returns the body as a stream.
+	 */
+	public function getBody()
+	{
+		// Always return empty stream
+		return new Stream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
 	}
 }
