@@ -238,8 +238,6 @@ class PdoDriver extends AbstractDatabaseDriver
 	 */
 	public function setQuery($query, $driverOptions = array())
 	{
-		$this->connect()->freeResult();
-
 		$this->driverOptions = $driverOptions;
 
 		// Store reference to the DatabaseQuery instance:

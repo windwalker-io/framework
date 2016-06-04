@@ -67,7 +67,7 @@ class PdoReader extends AbstractReader
 			return false;
 		}
 
-		return $this->cursor->fetchObject($class);
+		return $this->getCursor()->fetchObject($class);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class PdoReader extends AbstractReader
 			return false;
 		}
 
-		return $this->cursor->fetch($type);
+		return $this->getCursor()->fetch($type);
 	}
 
 	/**
@@ -113,44 +113,44 @@ class PdoReader extends AbstractReader
 			return false;
 		}
 
-		return $this->cursor->fetchAll($type);
+		return $this->getCursor()->fetchAll($type);
 	}
 
 	/**
 	 * count
 	 *
-	 * @return  integer
+	 * @param  \PDOStatement $cursor
+	 *
+	 * @return int
 	 */
-	public function count()
+	public function count($cursor = null)
 	{
-		$this->execute();
-
-		if (!$this->cursor)
-		{
-			return 0;
-		}
-
-		return $this->cursor->rowCount();
+		return $this->countAffected();
 	}
 
 	/**
 	 * Get the number of affected rows for the previous executed SQL statement.
 	 * Only applicable for DELETE, INSERT, or UPDATE statements.
 	 *
-	 * @return  integer  The number of affected rows.
+	 * @param  \PDOStatement $cursor
+	 *
+	 * @return int The number of affected rows.
 	 *
 	 * @since   2.0
 	 */
-	public function countAffected()
+	public function countAffected($cursor = null)
 	{
-		$this->execute();
+		if (!$cursor instanceof \PDOStatement)
+		{
+			$cursor = $this->getCursor();
+		}
 
-		if (!$this->cursor)
+		if (!$cursor)
 		{
 			return 0;
 		}
 
-		return $this->cursor->rowCount();
+		return $cursor->rowCount();
 	}
 
 	/**
@@ -164,6 +164,16 @@ class PdoReader extends AbstractReader
 	{
 		// Error suppress this to prevent PDO warning us that the driver doesn't support this operation.
 		return @$this->db->getConnection()->lastInsertId();
+	}
+
+	/**
+	 * Method to get property Cursor
+	 *
+	 * @return  \PDOStatement
+	 */
+	public function getCursor()
+	{
+		return parent::getCursor();
 	}
 }
 

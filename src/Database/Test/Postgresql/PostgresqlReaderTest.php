@@ -179,13 +179,31 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 
 		$iterator = $reader->getIterator();
 
-		$this->assertInstanceOf('Windwalker\\Database\\Iterator\\DataIterator', $iterator);
+		$this->assertInstanceOf('Windwalker\Database\Iterator\DataIterator', $iterator);
 
 		$items = iterator_to_array($iterator);
 
 		$this->assertEquals('Alstroemeria', $items[0]->title);
 
 		$this->assertEquals('Amaryllis', $items[1]->title);
+
+		// Test nested
+		$array = array();
+
+		foreach ($r1 = $this->db->getReader('SELECT * FROM #__categories LIMIT 3') as $cat)
+		{
+			foreach ($r2 = $this->db->getReader("SELECT * FROM #__flower WHERE catid={$cat->id} LIMIT 2") as $flower)
+			{
+				$array[$cat->title][] = $flower->title;
+			}
+		}
+
+		$expected = array(
+			'Foo' => array('Anemone', 'Apple Blossom'),
+			'Bar' => array('Alstroemeria', 'Amaryllis'),
+		);
+
+		$this->assertEquals($expected, $array);
 	}
 
 	/**

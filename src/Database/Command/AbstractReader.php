@@ -99,8 +99,6 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadResult()
 	{
-		$this->execute();
-
 		// Get the first row from the result set as an array.
 		$row = $this->fetchArray();
 
@@ -128,8 +126,6 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadColumn($offset = 0)
 	{
-		$this->execute();
-
 		$array = array();
 
 		// Get all of the rows from the result set as arrays.
@@ -155,8 +151,6 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadArray()
 	{
-		$this->execute();
-
 		// Get the first row from the result set as an array.
 		$array = $this->fetchArray();
 
@@ -182,8 +176,6 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadArrayList($key = null)
 	{
-		$this->execute();
-
 		$array = array();
 
 		// Get all of the rows from the result set as arrays.
@@ -216,8 +208,6 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadAssoc()
 	{
-		$this->execute();
-
 		// Get the first row from the result set as an associative array.
 		$array = $this->fetchAssoc();
 
@@ -241,8 +231,6 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadAssocList($key = null)
 	{
-		$this->execute();
-
 		$array = array();
 
 		// Get all of the rows from the result set.
@@ -330,9 +318,11 @@ abstract class AbstractReader implements \IteratorAggregate
 	/**
 	 * count
 	 *
-	 * @return  mixed
+	 * @param  resource $cursor
+	 *
+	 * @return mixed
 	 */
-	abstract public function count();
+	abstract public function count($cursor = null);
 
 	/**
 	 * Method to fetch a row from the result set cursor as an array.
@@ -367,11 +357,13 @@ abstract class AbstractReader implements \IteratorAggregate
 	 * Get the number of affected rows for the previous executed SQL statement.
 	 * Only applicable for DELETE, INSERT, or UPDATE statements.
 	 *
-	 * @return  integer  The number of affected rows.
+	 * @param  resource $cursor
+	 *
+	 * @return int The number of affected rows.
 	 *
 	 * @since   2.0
 	 */
-	abstract public function countAffected();
+	abstract public function countAffected($cursor = null);
 
 	/**
 	 * Method to get the auto-incremented value from the last INSERT statement.
@@ -385,11 +377,11 @@ abstract class AbstractReader implements \IteratorAggregate
 	/**
 	 * freeResult
 	 *
-	 * @return  $this
+	 * @return $this
 	 */
 	public function freeResult()
 	{
-		$this->db->freeResult();
+		$this->db->freeResult($this->cursor);
 
 		return $this;
 	}
@@ -414,6 +406,30 @@ abstract class AbstractReader implements \IteratorAggregate
 	public function setDriver($db)
 	{
 		$this->db = $db;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Cursor
+	 *
+	 * @return  resource
+	 */
+	public function getCursor()
+	{
+		return $this->cursor ? : $this->db->getCursor();
+	}
+
+	/**
+	 * Method to set property cursor
+	 *
+	 * @param   resource $cursor
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setCursor($cursor)
+	{
+		$this->cursor = $cursor;
 
 		return $this;
 	}

@@ -11,6 +11,7 @@ namespace Windwalker\Database\Command;
 use Windwalker\Database\Driver\DatabaseAwareTrait;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
+use Windwalker\Query\Query;
 
 /**
  * Class DatabaseWriter
@@ -25,6 +26,13 @@ abstract class AbstractWriter
 	 * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
 	 */
 	protected $db;
+
+	/**
+	 * Property cursor.
+	 *
+	 * @var  resource
+	 */
+	protected $cursor;
 
 	/**
 	 * Constructor.
@@ -92,10 +100,7 @@ abstract class AbstractWriter
 			->values(array($values));
 
 		// Set the query and execute the insert.
-		if (!$this->db->setQuery($query)->execute())
-		{
-			return false;
-		}
+		$this->execute($query);
 
 		// Update the primary key if it exists.
 		$id = $this->insertId();
@@ -191,7 +196,9 @@ abstract class AbstractWriter
 		}
 
 		// Set the query and execute the update.
-		return $this->db->setQuery($query)->execute();
+		$this->execute($query);
+		
+		return true;
 	}
 
 	/**
@@ -351,7 +358,9 @@ abstract class AbstractWriter
 
 		$query->update($table);
 
-		return $this->db->setQuery($query)->execute();
+		$this->execute($query);
+		
+		return true;
 	}
 
 	/**
@@ -364,7 +373,8 @@ abstract class AbstractWriter
 	 */
 	public function countAffected()
 	{
-		return $this->db->getReader()->countAffected();
+		// Get previous Reader to count affected
+		return $this->db->getReader(null, true)->countAffected($this->getCursor());
 	}
 
 	/**
@@ -376,7 +386,23 @@ abstract class AbstractWriter
 	 */
 	public function insertId()
 	{
-		return $this->db->getReader()->insertId();
+		return $this->db->getReader(null, true)->insertId();
+	}
+
+	/**
+	 * execute
+	 *
+	 * @param   string|Query  $query
+	 *
+	 * @return  static
+	 */
+	public function execute($query)
+	{
+		$this->db->setQuery($query)->execute();
+
+		$this->cursor = $this->db->getCursor();
+
+		return $this;
 	}
 
 	/**
@@ -399,6 +425,30 @@ abstract class AbstractWriter
 	public function setDriver($db)
 	{
 		$this->db = $db;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Cursor
+	 *
+	 * @return  resource
+	 */
+	public function getCursor()
+	{
+		return $this->cursor ? : $this->db->getCursor();
+	}
+
+	/**
+	 * Method to set property cursor
+	 *
+	 * @param   resource $cursor
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setCursor($cursor)
+	{
+		$this->cursor = $cursor;
 
 		return $this;
 	}

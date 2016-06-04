@@ -195,18 +195,22 @@ class MysqlReaderTest extends AbstractMysqlTestCase
 		$this->assertEquals('Amaryllis', $items[1]->title);
 
 		// Test nested
-		$first = array();
-		$second = array();
+		$array = array();
 
 		foreach ($r1 = $this->db->getReader('SELECT * FROM #__categories LIMIT 3') as $cat)
 		{
-			foreach ($r2 = $this->db->getReader("SELECT * FROM #__flower WHERE catid={$cat->id} LIMIT 3") as $flower)
+			foreach ($r2 = $this->db->getReader("SELECT * FROM #__flower WHERE catid={$cat->id} LIMIT 2") as $flower)
 			{
-				$second[$cat->title][] = $flower->title;
+				$array[$cat->title][] = $flower->title;
 			}
 		}
 
-		show($second);
+		$expected = array(
+			'Foo' => array('Anemone', 'Apple Blossom'),
+			'Bar' => array('Alstroemeria', 'Amaryllis'),
+		);
+
+		$this->assertEquals($expected, $array);
 	}
 
 	/**
