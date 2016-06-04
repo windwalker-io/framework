@@ -107,9 +107,8 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
 		$xml = new \DOMDocument;
 		$xml->loadXML("<root />");
 
-		$child = $xml->createElement('foo');
+		$child = $xml->createElement('foo', 'bar');
 		$child->setAttribute('flower', 'sakura');
-		$child->textContent = 'bar';
 
 		$xml->firstChild->appendChild($child);
 

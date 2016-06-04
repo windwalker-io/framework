@@ -103,16 +103,15 @@ class FilesInput extends Input
 	}
 
 	/**
-	 * Sets a value.
+	 * Sets a value
 	 *
-	 * @param   string  $name   The name of the input property to set.
-	 * @param   mixed   $value  The value to assign to the input property.
-	 *
-	 * @return  void
+	 * @param   string $name      Name of the value to set.
+	 * @param   mixed  $value     Value to assign to the input.
+	 * @param   string $separator Symbol to separate path.
 	 *
 	 * @since   2.0
 	 */
-	public function set($name, $value)
+	public function set($name, $value, $separator = '.')
 	{
 	}
 }
