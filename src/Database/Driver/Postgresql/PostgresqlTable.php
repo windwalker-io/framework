@@ -430,7 +430,7 @@ class PostgresqlTable extends AbstractTable
 			$this->db->setQuery($query)->execute();
 		}
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -439,10 +439,15 @@ class PostgresqlTable extends AbstractTable
 	 * @param string $name
 	 * @param bool   $constraint
 	 *
-	 * @return mixed
+	 * @return static
 	 */
 	public function dropIndex($name, $constraint = false)
 	{
+		if (!$constraint && !$this->hasIndex($name))
+		{
+			return $this;
+		}
+
 		if ($constraint)
 		{
 			$query = PostgresqlQueryBuilder::dropConstraint($this->table, $name, true, 'RESTRICT');
@@ -454,7 +459,7 @@ class PostgresqlTable extends AbstractTable
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**

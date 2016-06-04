@@ -283,10 +283,15 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @param string  $name
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
 	public function dropIndex($name)
 	{
+		if (!$this->hasIndex($name))
+		{
+			return $this;
+		}
+		
 		$query = MysqlQueryBuilder::dropIndex($this->table, $name);
 
 		$this->db->setQuery($query)->execute();

@@ -254,6 +254,18 @@ abstract class AbstractTable
 	}
 
 	/**
+	 * hasColumn
+	 *
+	 * @param   string  $column
+	 *
+	 * @return  boolean
+	 */
+	public function hasColumn($column)
+	{
+		return (bool) $this->getColumnDetail($column);
+	}
+
+	/**
 	 * addColumn
 	 *
 	 * @param string $name
@@ -273,17 +285,22 @@ abstract class AbstractTable
 	 *
 	 * @param string $name
 	 *
-	 * @return  mixed
+	 * @return  static
 	 */
 	public function dropColumn($name)
 	{
+		if (!$this->hasColumn($name))
+		{
+			return $this;
+		}
+
 		$builder = $this->db->getQuery(true)->getBuilder();
 
-		$query = $builder ::dropColumn($this->table, $name);
+		$query = $builder::dropColumn($this->table, $name);
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -345,6 +362,28 @@ abstract class AbstractTable
 	 * @return  array
 	 */
 	abstract public function getIndexes();
+
+	/**
+	 * hasIndex
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  boolean
+	 */
+	public function hasIndex($name)
+	{
+		$indexes = $this->getIndexes();
+
+		foreach ($indexes as $index)
+		{
+			if ($index->Key_name == $name)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	/**
 	 * Method to get property Table
