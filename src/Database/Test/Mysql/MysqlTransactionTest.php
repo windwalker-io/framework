@@ -9,6 +9,7 @@
 namespace Windwalker\Database\Test\Mysql;
 
 use Windwalker\Database\Driver\Mysql\MysqlTransaction;
+use Windwalker\DataMapper\DataMapper;
 
 /**
  * Test class of MysqlTransaction
@@ -55,37 +56,6 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 		$tran->setNested(false);
 
 		$this->assertFalse($tran->getNested());
-	}
-
-	/**
-	 * Method to test getDriver().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::getDriver
-	 */
-	public function testGetDriver()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * Method to test setDriver().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::setDriver
-	 * @TODO   Implement testSetDriver().
-	 */
-	public function testSetDriver()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
 	}
 
 	/**
@@ -136,5 +106,36 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 		$result = $this->db->getReader('SELECT title FROM #__flower WHERE title = "A"')->loadResult();
 
 		$this->assertEquals('A', $result);
+	}
+
+	/**
+	 * Method to test getDriver().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Database\Command\AbstractTransaction::getDriver
+	 */
+	public function testGetDriver()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test setDriver().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Database\Command\AbstractTransaction::setDriver
+	 * @TODO   Implement testSetDriver().
+	 */
+	public function testSetDriver()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
 	}
 }

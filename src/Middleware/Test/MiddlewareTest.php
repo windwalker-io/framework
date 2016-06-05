@@ -82,6 +82,6 @@ class MiddlewareTest extends AbstractBaseTestCase
 <<< Caesar
 EOF;
 
-		$this->assertStringDataEquals($expected, $this->instance->call());
+		$this->assertStringDataEquals($expected, $this->instance->execute());
 	}
 }

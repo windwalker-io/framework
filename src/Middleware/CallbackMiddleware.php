@@ -39,7 +39,7 @@ class CallbackMiddleware extends AbstractMiddleware
 	 *
 	 * @return  mixed
 	 */
-	public function call()
+	public function execute()
 	{
 		return call_user_func($this->handler, $this->next);
 	}

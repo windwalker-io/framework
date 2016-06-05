@@ -65,4 +65,4 @@ $c = new ChainBuilder;
 $c->add('TestA')
 	->add(new TestB);
 
-$c->call();
+$c->execute();

@@ -53,16 +53,16 @@ class CallbackMiddlewareTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Middleware\CallbackMiddleware::call
+	 * @covers Windwalker\Middleware\CallbackMiddleware::execute
 	 */
-	public function testCall()
+	public function testExecute()
 	{
 		$this->instance->setHandler(
 			function($next)
 			{
 				$r = "Coriolanus\n";
 
-				$r .= $next->call();
+				$r .= $next->execute();
 
 				return $r .= "Coriolanus\n";
 			}
@@ -81,7 +81,7 @@ Coriolanus
 Coriolanus
 EOF;
 
-		$this->assertStringSafeEquals($data, $this->instance->call());
+		$this->assertStringSafeEquals($data, $this->instance->execute());
 	}
 
 	/**

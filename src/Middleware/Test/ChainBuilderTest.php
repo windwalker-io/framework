@@ -66,10 +66,11 @@ class ChainBuilderTest extends AbstractBaseTestCase
 		$builder->add(new StubCaesarMiddleware)
 			->add(new StubOthelloMiddleware);
 
-		$wares = TestHelper::getValue($builder, 'stack');
+		// The ordering will be reverse
+		$wares = array_values(iterator_to_array(TestHelper::getValue($builder, 'stack')));
 
-		$this->assertTrue($wares[0] instanceof StubCaesarMiddleware);
-		$this->assertTrue($wares[1] instanceof StubOthelloMiddleware);
+		$this->assertTrue($wares[0] instanceof StubOthelloMiddleware);
+		$this->assertTrue($wares[1] instanceof StubCaesarMiddleware);
 	}
 
 	/**
@@ -77,15 +78,49 @@ class ChainBuilderTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Middleware\Chain\ChainBuilder::call
+	 * @covers Windwalker\Middleware\Chain\execute::run
 	 */
 	public function testCall()
 	{
-		$data = ">>> Caesar
+		$data = "
+>>> Othello
+>>> Caesar
+<<< Caesar
+<<< Othello";
+
+		$this->assertStringSafeEquals($data, $this->instance->execute());
+	}
+
+	public function testExecuteByArray()
+	{
+		$middlewares = array(
+			new StubOthelloMiddleware,
+			new StubCaesarMiddleware
+		);
+
+		$builder = new ChainBuilder($middlewares);
+
+		$data = "
+>>> Othello
+>>> Caesar
+<<< Caesar
+<<< Othello";
+
+		$this->assertStringSafeEquals($data, $builder->execute());
+
+		$middlewares = array(
+			new StubOthelloMiddleware,
+			new StubCaesarMiddleware
+		);
+
+		$builder = new ChainBuilder($middlewares, ChainBuilder::SORT_ASC);
+
+		$data = "
+>>> Caesar
 >>> Othello
 <<< Othello
 <<< Caesar";
 
-		$this->assertStringDataEquals($data, $this->instance->call());
+		$this->assertStringSafeEquals($data, $builder->execute());
 	}
 }

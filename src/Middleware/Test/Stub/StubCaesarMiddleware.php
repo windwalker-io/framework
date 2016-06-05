@@ -22,11 +22,11 @@ class StubCaesarMiddleware extends AbstractMiddleware
 	 *
 	 * @return  mixed
 	 */
-	public function call()
+	public function execute()
 	{
 		$r = ">>> Caesar\n";
 
-		$r .= $this->next->call();
+		$r .= $this->next->execute();
 
 		$r .= "<<< Caesar\n";
 

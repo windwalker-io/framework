@@ -22,11 +22,11 @@ class StubOthelloMiddleware extends AbstractMiddleware
 	 *
 	 * @return  mixed
 	 */
-	public function call()
+	public function execute()
 	{
 		$r = ">>> Othello\n";
 
-		$r .= $this->next->call();
+		$r .= $this->next->execute();
 
 		$r .= "<<< Othello\n";
 

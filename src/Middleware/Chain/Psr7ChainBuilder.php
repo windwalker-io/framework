@@ -11,6 +11,7 @@ namespace Windwalker\Middleware\Chain;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Windwalker\Middleware\MiddlewareInterface;
+use Windwalker\Middleware\Psr7Middleware;
 use Windwalker\Middleware\Psr7MiddlewareInterface;
 
 /**
@@ -18,63 +19,27 @@ use Windwalker\Middleware\Psr7MiddlewareInterface;
  *
  * @since  {DEPLOY_VERSION}
  */
-class Psr7ChainBuilder implements Psr7MiddlewareInterface
+class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
 {
 	/**
-	 * Property queue.
+	 * Add a middleware into chain.
 	 *
-	 * @var  array
+	 * @param mixed $middleware The middleware, can be a object, class name, callback, or middleware object.
+	 *                          These type will all convert to middleware object and store in chain.
+	 *
+	 * @throws  \LogicException
+	 * @throws  \InvalidArgumentException
+	 *
+	 * @return  static Return self to support chaining.
 	 */
-	protected $queue = array();
-
-	/**
-	 * create
-	 *
-	 * @param array $queue
-	 *
-	 * @return  static
-	 */
-	public static function create(array $queue = array())
+	public function add($middleware)
 	{
-		return new static($queue);
-	}
+		if (!$middleware instanceof Psr7MiddlewareInterface)
+		{
+			$middleware = new Psr7Middleware($middleware);
+		}
 
-	/**
-	 * Psr7ChainBuilder constructor.
-	 *
-	 * @param array $queue
-	 */
-	public function __construct(array $queue = array())
-	{
-		$this->setQueue($queue);
-	}
-
-	/**
-	 * add
-	 *
-	 * @param callable $middleware
-	 *
-	 * @return  static
-	 */
-	public function push($middleware)
-	{
-		$this->queue[] = $middleware;
-
-		return $this;
-	}
-
-	/**
-	 * unshift
-	 *
-	 * @param callable $middleware
-	 *
-	 * @return  static
-	 */
-	public function unshift($middleware)
-	{
-		array_unshift($this->queue, $middleware);
-
-		return $this;
+		return parent::add($middleware);
 	}
 
 	/**
@@ -86,34 +51,41 @@ class Psr7ChainBuilder implements Psr7MiddlewareInterface
 	 *
 	 * @return  Response
 	 */
-	public function __invoke(Request $request, Response $response,  $next = null)
+	public function __invoke(Request $request, Response $response, $next = null)
 	{
-		$runner = new Psr7Runner($this->queue);
+		if (!count($this->stack))
+		{
+			return null;
+		}
 
-		return $runner($request, $response);
+		// Start call chaining.
+		return $this->stack->top()->execute($request, $response);
 	}
 
 	/**
-	 * Method to get property Queue
+	 * Call chaining.
 	 *
-	 * @return  array
+	 * @param Request  $request
+	 * @param Response $response
+	 *
+	 * @return Response
 	 */
-	public function getQueue()
+	public function execute(Request $request = null, Response $response = null)
 	{
-		return $this->queue;
+		// Start call chaining.
+		return call_user_func($this, $request, $response);
 	}
 
 	/**
-	 * Method to set property queue
+	 * getEndMiddleware
 	 *
-	 * @param   array $queue
-	 *
-	 * @return  static  Return self to support chaining.
+	 * @return  Psr7MiddlewareInterface|callable
 	 */
-	public function setQueue(array $queue)
+	protected function getEndMiddleware()
 	{
-		$this->queue = $queue;
-
-		return $this;
+		return new Psr7Middleware(function ($request, $response)
+		{
+			return $response;
+		});
 	}
 }

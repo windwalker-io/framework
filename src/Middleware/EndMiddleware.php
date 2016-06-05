@@ -42,7 +42,7 @@ class EndMiddleware extends AbstractMiddleware
 	 *
 	 * @return  mixed
 	 */
-	public function call()
+	public function execute()
 	{
 	}
 }

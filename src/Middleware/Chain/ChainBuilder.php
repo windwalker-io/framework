@@ -19,17 +19,33 @@ use Windwalker\Middleware\MiddlewareInterface;
  */
 class ChainBuilder
 {
+	const SORT_ASC = 'ASC';
+	const SORT_DESC = 'DESC';
+
 	/**
 	 * The middleware chain.
 	 *
-	 * @var  MiddlewareInterface[]
+	 * @var  MiddlewareInterface[]|\SplStack
 	 */
 	protected $stack = array();
 
 	/**
+	 * ChainBuilder constructor.
+	 *
+	 * @param MiddlewareInterface[] $middlewares
+	 * @param string                $sort
+	 */
+	public function __construct(array $middlewares = array(), $sort = self::SORT_DESC)
+	{
+		$this->stack = $this->createStack();
+
+		$this->addMiddlewares($middlewares, $sort);
+	}
+
+	/**
 	 * Add a middleware into chain.
 	 *
-	 * @param mixed $element The middleware, can be a object, class name, callback, or middleware object.
+	 * @param mixed $middleware The middleware, can be a object, class name, callback, or middleware object.
 	 *                       These type will all convert to middleware object and store in chain.
 	 *
 	 * @throws  \LogicException
@@ -37,11 +53,11 @@ class ChainBuilder
 	 *
 	 * @return  static Return self to support chaining.
 	 */
-	public function add($element)
+	public function add($middleware)
 	{
-		if (is_string($element))
+		if (is_string($middleware) && class_exists($middleware))
 		{
-			$reflection = new \ReflectionClass($element);
+			$reflection = new \ReflectionClass($middleware);
 
 			if (!$reflection->isInstantiable())
 			{
@@ -54,18 +70,20 @@ class ChainBuilder
 
 			$object = $reflection->newInstanceArgs($args);
 		}
-		elseif (is_callable($element))
+		elseif ($middleware instanceof MiddlewareInterface)
 		{
-			$object = new CallbackMiddleware($element);
+			$object = $middleware;
 		}
-		elseif (is_subclass_of($element, 'Windwalker\\Middleware\\MiddlewareInterface'))
+		elseif (is_callable($middleware))
 		{
-			$object = $element;
+			$object = new CallbackMiddleware($middleware);
 		}
 		else
 		{
 			throw new \InvalidArgumentException('Not valid MiddleChaining element.');
 		}
+
+		$object->setNext($this->stack->top());
 
 		$this->stack[] = $object;
 
@@ -77,38 +95,71 @@ class ChainBuilder
 	 *
 	 * @return  mixed
 	 */
-	public function call()
+	public function execute()
 	{
 		if (!count($this->stack))
 		{
 			return null;
 		}
 
-		// Set end middleware
-		$last = end($this->stack);
-
-		if (!($last instanceof EndMiddleware))
-		{
-			$this->stack[] = new EndMiddleware;
-		}
-
-		reset($this->stack);
-
-		// Set chaining
-		/** @var MiddlewareInterface $previous */
-		$previous = null;
-
-		foreach ($this->stack as $ware)
-		{
-			if ($previous)
-			{
-				$previous->setNext($ware);
-			}
-
-			$previous = $ware;
-		}
-
 		// Start call chaining.
-		return $this->stack[0]->call();
+		return $this->stack->top()->execute();
+	}
+
+	/**
+	 * createStack
+	 *
+	 * @return  \SplStack
+	 */
+	protected function createStack()
+	{
+		$stack = new \SplStack;
+		$stack->setIteratorMode(\SplDoublyLinkedList::IT_MODE_LIFO | \SplDoublyLinkedList::IT_MODE_KEEP);
+		$stack[] = $this->getEndMiddleware();
+
+		return $stack;
+	}
+
+	/**
+	 * reset
+	 *
+	 * @return  void
+	 */
+	protected function reset()
+	{
+		$this->stack = $this->createStack();
+	}
+
+	/**
+	 * addMiddlewares
+	 *
+	 * @param array  $middlewares
+	 * @param string $sort
+	 *
+	 * @return  static
+	 */
+	public function addMiddlewares(array $middlewares, $sort = self::SORT_DESC)
+	{
+		if ($sort == static::SORT_DESC)
+		{
+			$middlewares = array_reverse($middlewares);
+		}
+
+		foreach ($middlewares as $middleware)
+		{
+			$this->add($middleware);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * getEndMiddleware
+	 *
+	 * @return  MiddlewareInterface
+	 */
+	protected function getEndMiddleware()
+	{
+		return new EndMiddleware;
 	}
 }

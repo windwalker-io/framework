@@ -20,7 +20,7 @@ interface MiddlewareInterface
 	 *
 	 * @return  mixed
 	 */
-	public function call();
+	public function execute();
 
 	/**
 	 * Get next middleware.
