@@ -20,13 +20,15 @@ class StubCaesarMiddleware extends AbstractMiddleware
 	/**
 	 * Call next middleware.
 	 *
-	 * @return  mixed
+	 * @param  array $data
+	 *
+	 * @return mixed
 	 */
-	public function execute()
+	public function execute($data = null)
 	{
 		$r = ">>> Caesar\n";
 
-		$r .= $this->next->execute();
+		$r .= $this->next->execute($data);
 
 		$r .= "<<< Caesar\n";
 

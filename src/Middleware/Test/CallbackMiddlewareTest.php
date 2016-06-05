@@ -58,11 +58,11 @@ class CallbackMiddlewareTest extends AbstractBaseTestCase
 	public function testExecute()
 	{
 		$this->instance->setHandler(
-			function($next)
+			function($data, $next)
 			{
 				$r = "Coriolanus\n";
 
-				$r .= $next->execute();
+				$r .= $next->execute($data);
 
 				return $r .= "Coriolanus\n";
 			}

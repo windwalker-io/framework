@@ -68,5 +68,6 @@ abstract class AbstractMysqlTestCase extends AbstractDatabaseTestCase
 	 */
 	protected function tearDown()
 	{
+		$this->db->resetMiddlewares();
 	}
 }

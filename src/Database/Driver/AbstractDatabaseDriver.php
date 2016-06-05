@@ -17,6 +17,8 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Command\AbstractTransaction;
 use Windwalker\Database\Command\AbstractWriter;
 use Windwalker\Database\Iterator\DataIterator;
+use Windwalker\Middleware\Chain\ChainBuilder;
+use Windwalker\Middleware\MiddlewareInterface;
 use Windwalker\Query\Query;
 
 /**
@@ -159,6 +161,13 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	);
 
 	/**
+	 * Property middlewares.
+	 *
+	 * @var  ChainBuilder
+	 */
+	protected $middlewares;
+
+	/**
 	 * Property independentQuery.
 	 *
 	 * @var  Query
@@ -183,6 +192,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 
 		// Set class options.
 		$this->options = $options;
+
+		if (class_exists('Windwalker\Middleware\Chain\ChainBuilder'))
+		{
+			$this->resetMiddlewares();
+		}
 	}
 
 	/**
@@ -227,23 +241,29 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 		}
 
 		// Take a local copy so that we don't modify the original query and cause issues later
-		$sql = $this->replacePrefix((string) $this->query);
+//		$sql = $this->replacePrefix((string) $this->query);
 
 		// Increment the query counter.
 		$this->count++;
 
 		// If debugging is enabled then let's log the query.
-		if ($this->debug)
-		{
-			// Add the query to the object queue.
-			$this->log(LogLevel::DEBUG, 'Executed: {sql}', array('sql' => $sql));
-		}
+//		if ($this->debug)
+//		{
+//			// Add the query to the object queue.
+//			$this->log(LogLevel::DEBUG, 'Executed: {sql}', array('sql' => $sql));
+//		}
 
-		!is_callable($this->profiler['before']) or call_user_func($this->profiler['before'], $this, $sql);
+//		!is_callable($this->profiler['before']) or call_user_func($this->profiler['before'], $this, $sql);
 
 		try
 		{
-			$this->doExecute();
+			// Prepare middleware data
+			$data = new \stdClass;
+			$data->debug = &$this->debug;
+			$data->query = &$this->query;
+			$data->db    = $this;
+
+			$this->middlewares->execute($data);
 		}
 		catch (\RuntimeException $e)
 		{
@@ -253,7 +273,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 			throw $e;
 		}
 
-		!is_callable($this->profiler['after']) or call_user_func($this->profiler['after'], $this, $this->lastQuery);
+//		!is_callable($this->profiler['after']) or call_user_func($this->profiler['after'], $this, $this->lastQuery);
 
 		return $this;
 	}
@@ -959,6 +979,43 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 		$this->database = $database;
 
 		$this->options['database'] = $database;
+
+		return $this;
+	}
+
+	/**
+	 * addMiddleware
+	 *
+	 * @param  MiddlewareInterface|callable $middleware
+	 *
+	 * @return  static
+	 */
+	public function addMiddleware($middleware)
+	{
+		$this->getMiddlewares()->add($middleware);
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Middlewares
+	 *
+	 * @return  ChainBuilder
+	 */
+	public function getMiddlewares()
+	{
+		return $this->middlewares;
+	}
+
+	/**
+	 * Method to set property middlewares
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function resetMiddlewares()
+	{
+		$this->middlewares = new ChainBuilder;
+		$this->middlewares->add(array($this, 'doExecute'));
 
 		return $this;
 	}

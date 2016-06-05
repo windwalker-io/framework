@@ -10,6 +10,7 @@ namespace Windwalker\Middleware\Test;
 
 use Windwalker\Middleware\EndMiddleware;
 use Windwalker\Middleware\Test\Stub\StubCaesarMiddleware;
+use Windwalker\Middleware\Test\Stub\StubDataMiddleware;
 use Windwalker\Middleware\Test\Stub\StubOthelloMiddleware;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
@@ -83,5 +84,29 @@ class MiddlewareTest extends AbstractBaseTestCase
 EOF;
 
 		$this->assertStringDataEquals($expected, $this->instance->execute());
+	}
+
+	/**
+	 * testExecuteWithData
+	 *
+	 * @return  void
+	 */
+	public function testExecuteWithData()
+	{
+		$othello = $this->instance->getNext();
+
+		$othello->setNext($dm = new StubDataMiddleware);
+		$dm->setNext(new EndMiddleware);
+
+		$expected = <<<EOF
+>>> Caesar
+>>> Othello
+>>> Hamlet
+<<< Hamlet
+<<< Othello
+<<< Caesar
+EOF;
+
+		$this->assertStringSafeEquals($expected, $this->instance->execute((object) array('title' => 'Hamlet')));
 	}
 }

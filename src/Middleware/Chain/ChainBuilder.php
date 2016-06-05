@@ -27,7 +27,7 @@ class ChainBuilder
 	 *
 	 * @var  MiddlewareInterface[]|\SplStack
 	 */
-	protected $stack = array();
+	protected $stack;
 
 	/**
 	 * ChainBuilder constructor.
@@ -93,9 +93,11 @@ class ChainBuilder
 	/**
 	 * Call chaining.
 	 *
-	 * @return  mixed
+	 * @param  mixed $data
+	 *
+	 * @return mixed
 	 */
-	public function execute()
+	public function execute($data = null)
 	{
 		if (!count($this->stack))
 		{
@@ -103,7 +105,7 @@ class ChainBuilder
 		}
 
 		// Start call chaining.
-		return $this->stack->top()->execute();
+		return $this->stack->top()->execute($data);
 	}
 
 	/**
@@ -118,6 +120,30 @@ class ChainBuilder
 		$stack[] = $this->getEndMiddleware();
 
 		return $stack;
+	}
+
+	/**
+	 * Method to get property Stack
+	 *
+	 * @return  \SplStack|MiddlewareInterface[]
+	 */
+	public function getStack()
+	{
+		return $this->stack;
+	}
+
+	/**
+	 * Method to set property stack
+	 *
+	 * @param   \SplStack $stack
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setStack(\SplStack $stack)
+	{
+		$this->stack = $stack;
+
+		return $this;
 	}
 
 	/**

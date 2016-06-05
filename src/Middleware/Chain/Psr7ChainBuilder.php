@@ -70,7 +70,7 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
 	 *
 	 * @return Response
 	 */
-	public function execute(Request $request = null, Response $response = null)
+	public function execute($request = null, $response = null)
 	{
 		// Start call chaining.
 		return call_user_func($this, $request, $response);

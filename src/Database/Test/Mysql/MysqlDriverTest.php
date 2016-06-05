@@ -8,7 +8,9 @@
 
 namespace Windwalker\Database\Test\Mysql;
 
+use Windwalker\Middleware\MiddlewareInterface;
 use Windwalker\Query\Mysql\MysqlQuery;
+use Windwalker\Query\Query;
 
 /**
  * Test class of MysqlDriver
@@ -615,6 +617,28 @@ SQL;
 	}
 
 	/**
+	 * testMiddleware
+	 *
+	 * @return  void
+	 */
+	public function testMiddleware()
+	{
+		$this->db->addMiddleware(function (\stdClass $data, MiddlewareInterface $next)
+		{
+			/** @var Query $query */
+			$query = $data->query;
+
+			$query->limit(3);
+
+			return $next->execute($data);
+		});
+
+		$items = $this->db->setQuery($this->db->getQuery(true)->select('*')->from('#__flower'))->loadAll();
+
+		$this->assertCount(3, $items);
+	}
+
+	/**
 	 * Method to test disconnect().
 	 *
 	 * @return void
@@ -623,6 +647,9 @@ SQL;
 	 */
 	public function testSetProfilerHandler()
 	{
+		// TODO: Use middleware rewrite profiler
+		$this->markTestSkipped('Wait for Middleware');
+
 		$profiler = array();
 
 		$this->db->setProfilerHandler(

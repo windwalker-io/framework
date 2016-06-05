@@ -40,7 +40,7 @@ class Psr7Middleware extends CallbackMiddleware implements Psr7MiddlewareInterfa
 	 *
 	 * @return Response
 	 */
-	public function execute(Request $request = null, Response $response = null)
+	public function execute($request = null, $response = null)
 	{
 		return call_user_func($this, $request, $response);
 	}

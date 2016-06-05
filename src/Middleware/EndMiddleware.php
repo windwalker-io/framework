@@ -40,9 +40,11 @@ class EndMiddleware extends AbstractMiddleware
 	/**
 	 * Call next middleware.
 	 *
-	 * @return  mixed
+	 * @param  array $data
+	 *
+	 * @return mixed
 	 */
-	public function execute()
+	public function execute($data = null)
 	{
 	}
 }
