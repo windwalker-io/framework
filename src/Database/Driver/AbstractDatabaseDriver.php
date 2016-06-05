@@ -151,16 +151,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	protected $lastQuery;
 
 	/**
-	 * Property profiler.
-	 *
-	 * @var  \Closure[]
-	 */
-	protected $profiler = array(
-		'before' => null,
-		'after' => null
-	);
-
-	/**
 	 * Property middlewares.
 	 *
 	 * @var  ChainBuilder
@@ -226,7 +216,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	/**
 	 * Execute the SQL statement.
 	 *
-	 * @return  static  Return self to support chaining.
+	 * @return  resource|false  Return Resource to do more or false if query failure.
 	 *
 	 * @since   2.0
 	 * @throws  \RuntimeException
@@ -235,47 +225,27 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	{
 		$this->connect();
 
-		if (!is_object($this->connection))
+		if (!$this->connection)
 		{
 			throw new \RuntimeException('Database disconnected.');
 		}
 
-		// Take a local copy so that we don't modify the original query and cause issues later
-//		$sql = $this->replacePrefix((string) $this->query);
-
 		// Increment the query counter.
 		$this->count++;
 
-		// If debugging is enabled then let's log the query.
-//		if ($this->debug)
-//		{
-//			// Add the query to the object queue.
-//			$this->log(LogLevel::DEBUG, 'Executed: {sql}', array('sql' => $sql));
-//		}
-
-//		!is_callable($this->profiler['before']) or call_user_func($this->profiler['before'], $this, $sql);
-
-		try
+		if ($this->middlewares)
 		{
 			// Prepare middleware data
 			$data = new \stdClass;
 			$data->debug = &$this->debug;
 			$data->query = &$this->query;
+			$data->sql   = $this->replacePrefix((string) $this->query);
 			$data->db    = $this;
 
-			$this->middlewares->execute($data);
-		}
-		catch (\RuntimeException $e)
-		{
-			// Throw the normal query exception.
-			$this->log(LogLevel::ERROR, 'Database query failed (error #{code}): {message}', array('code' => $e->getCode(), 'message' => $e->getMessage()));
-
-			throw $e;
+			return $this->middlewares->execute($data);
 		}
 
-//		!is_callable($this->profiler['after']) or call_user_func($this->profiler['after'], $this, $this->lastQuery);
-
-		return $this;
+		return $this->doExecute();
 	}
 
 	/**
@@ -297,7 +267,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	/**
 	 * Execute the SQL statement.
 	 *
-	 * @return  mixed  A database cursor resource on success, boolean false on failure.
+	 * @return  resource|false  A database cursor resource on success, boolean false on failure.
 	 *
 	 * @since   2.0
 	 * @throws  \RuntimeException
@@ -928,22 +898,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	}
 
 	/**
-	 * Method to set property profiler
-	 *
-	 * @param \Closure $before
-	 * @param \Closure $after
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setProfilerHandler($before = null, $after = null)
-	{
-		$this->profiler['before'] = $before;
-		$this->profiler['after'] = $after;
-
-		return $this;
-	}
-
-	/**
 	 * Method to get property Options
 	 *
 	 * @return  array
@@ -989,6 +943,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 * @param  MiddlewareInterface|callable $middleware
 	 *
 	 * @return  static
+	 * 
+	 * @since   3.0
 	 */
 	public function addMiddleware($middleware)
 	{
@@ -1001,6 +957,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 * Method to get property Middlewares
 	 *
 	 * @return  ChainBuilder
+	 * 
+	 * @since   3.0
 	 */
 	public function getMiddlewares()
 	{
@@ -1011,6 +969,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	 * Method to set property middlewares
 	 *
 	 * @return  static  Return self to support chaining.
+	 *                  
+	 * @since   3.0
 	 */
 	public function resetMiddlewares()
 	{

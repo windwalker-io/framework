@@ -250,7 +250,7 @@ class PdoDriver extends AbstractDatabaseDriver
 	 * Execute the SQL statement.
 	 *
 	 * @throws \RuntimeException
-	 * @return  mixed  A database cursor resource on success, boolean false on failure.
+	 * @return  resource|false  A database cursor resource on success, boolean false on failure.
 	 *
 	 * @since   2.0
 	 */
@@ -289,7 +289,7 @@ class PdoDriver extends AbstractDatabaseDriver
 
 		$this->lastQuery = $this->cursor->queryString;
 
-		return $this;
+		return $this->cursor;
 	}
 
 	/**

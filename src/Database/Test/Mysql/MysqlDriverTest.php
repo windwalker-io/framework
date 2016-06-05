@@ -617,66 +617,6 @@ SQL;
 	}
 
 	/**
-	 * testMiddleware
-	 *
-	 * @return  void
-	 */
-	public function testMiddleware()
-	{
-		$this->db->addMiddleware(function (\stdClass $data, MiddlewareInterface $next)
-		{
-			/** @var Query $query */
-			$query = $data->query;
-
-			$query->limit(3);
-
-			return $next->execute($data);
-		});
-
-		$items = $this->db->setQuery($this->db->getQuery(true)->select('*')->from('#__flower'))->loadAll();
-
-		$this->assertCount(3, $items);
-	}
-
-	/**
-	 * Method to test disconnect().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::setProfilerHandler
-	 */
-	public function testSetProfilerHandler()
-	{
-		// TODO: Use middleware rewrite profiler
-		$this->markTestSkipped('Wait for Middleware');
-
-		$profiler = array();
-
-		$this->db->setProfilerHandler(
-			function($db, $sql) use (&$profiler)
-			{
-				$profiler['db'] = $db;
-				$profiler['sql'] = $sql;
-				$profiler['before'] = true;
-			},
-			function($db, $sql) use (&$profiler)
-			{
-				$profiler['db'] = $db;
-				$profiler['sql'] = $sql;
-				$profiler['after'] = true;
-			}
-		);
-
-		$this->db->setQuery('SELECT * FROM #__flower')->execute();
-
-		$this->assertSame($this->db, $profiler['db']);
-		$this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flower', $profiler['sql']);
-
-		$this->assertTrue($profiler['before']);
-		$this->assertTrue($profiler['after']);
-	}
-
-	/**
 	 * Method to test connect().
 	 *
 	 * @return void

@@ -18,7 +18,7 @@ interface MiddlewareInterface
 	/**
 	 * Call next middleware.
 	 *
-	 * @param  array $data
+	 * @param  mixed $data
 	 *
 	 * @return mixed
 	 */
