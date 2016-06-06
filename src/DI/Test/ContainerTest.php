@@ -315,7 +315,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers Windwalker\DI\Container::createObject
 	 */
-	public function testcreateObject()
+	public function testCreateObject()
 	{
 		$container = new Container;
 
@@ -384,7 +384,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers Windwalker\DI\Container::createSharedObject
 	 */
-	public function testcreateSharedObject()
+	public function testCreateSharedObject()
 	{
 		$container = new Container;
 
@@ -392,6 +392,22 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 		$foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
 
 		$this->assertSame($foo, $foo2);
+	}
+
+	/**
+	 * Method to test creating a class with arguments which not available for default value.
+	 *
+	 * @see  https://github.com/ventoviro/windwalker/issues/318
+	 *
+	 * @return  void
+	 */
+	public function testCreateObjectWithNoDefaultValueAvailable()
+	{
+		$container = new Container;
+
+		$obj = $container->createObject('ArrayIterator');
+
+		$this->assertInstanceOf('ArrayIterator', $obj);
 	}
 
 	/**
