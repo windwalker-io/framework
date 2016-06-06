@@ -42,7 +42,7 @@ class PostgresqlDatabase extends AbstractDatabase
 	 */
 	public function create($ifNotExists = false, $charset = 'utf8')
 	{
-		$query = PostgresqlQueryBuilder::createDatabase($this->database, $charset);
+		$query = PostgresqlQueryBuilder::createDatabase($this->name, $charset);
 
 		$this->db->setQuery($query)->execute();
 
@@ -75,23 +75,11 @@ class PostgresqlDatabase extends AbstractDatabase
 
 		$this->db->setQuery($query)->execute();
 
-		$query = PostgresqlQueryBuilder::dropDatabase($this->database, $ifExists);
+		$query = PostgresqlQueryBuilder::dropDatabase($this->name, $ifExists);
 
 		$this->db->setQuery($query)->execute();
 
 		return $this;
-	}
-
-	/**
-	 * exists
-	 *
-	 * @return  boolean
-	 */
-	public function exists()
-	{
-		$databases = $this->db->listDatabases();
-
-		return in_array($this->database, $databases);
 	}
 
 	/**
@@ -134,77 +122,6 @@ class PostgresqlDatabase extends AbstractDatabase
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Method to get an array of all tables in the database.
-	 *
-	 * @param bool $refresh
-	 *
-	 * @return  array  An array of all the tables in the database.
-	 *
-	 * @since   2.0
-	 */
-	public function getTables($refresh = false)
-	{
-		if (empty(static::$tablesCache) || $refresh)
-		{
-			static::$tablesCache = array_keys($this->getTableDetails(false));
-		}
-
-		return static::$tablesCache;
-	}
-
-	/**
-	 * getTableDetails
-	 *
-	 * @return  object[]
-	 */
-	public function getTableDetails()
-	{
-		if (isset(static::$tableDetailsCache[$this->database]))
-		{
-			return static::$tableDetailsCache[$this->database];
-		}
-
-		$query = PostgresqlQueryBuilder::showDbTables($this->database);
-
-		$details = $this->db->setQuery($query)->loadAll('Name');
-
-		return static::$tableDetailsCache[$this->database] = $details;
-	}
-
-	/**
-	 * getTableDetail
-	 *
-	 * @param bool $table
-	 *
-	 * @return  mixed
-	 */
-	public function getTableDetail($table)
-	{
-		$tables = $this->getTableDetails();
-
-		$table = $this->db->replacePrefix($table);
-
-		if (!isset($tables[$table]))
-		{
-			return false;
-		}
-
-		return $tables[$table];
-	}
-
-	/**
-	 * tableExists
-	 *
-	 * @param string $table
-	 *
-	 * @return  boolean
-	 */
-	public function tableExists($table)
-	{
-		return (bool) $this->getTableDetail($table);
 	}
 }
 

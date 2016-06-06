@@ -23,12 +23,12 @@ abstract class AbstractDatabase
 	 *
 	 * @var  string
 	 */
-	protected $database = null;
+	protected $name = null;
 
 	/**
 	 * Property driver.
 	 *
-	 * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
+	 * @var  AbstractDatabaseDriver
 	 */
 	protected $db;
 
@@ -37,24 +37,17 @@ abstract class AbstractDatabase
 	 *
 	 * @var  array
 	 */
-	protected static $tablesCache = array();
-
-	/**
-	 * Property tableDetailsCache.
-	 *
-	 * @var  array
-	 */
-	protected static $tableDetailsCache = array();
+	protected $tableCache = array();
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string         $database
+	 * @param string                 $name
 	 * @param AbstractDatabaseDriver $db
 	 */
-	public function __construct($database, AbstractDatabaseDriver $db)
+	public function __construct($name, AbstractDatabaseDriver $db)
 	{
-		$this->database = $database;
+		$this->name = $name;
 
 		$this->db = $db;
 	}
@@ -90,7 +83,12 @@ abstract class AbstractDatabase
 	 *
 	 * @return  boolean
 	 */
-	abstract public function exists();
+	public function exists()
+	{
+		$databases = $this->db->listDatabases();
+
+		return in_array($this->name, $databases);
+	}
 
 	/**
 	 * renameDatabase
@@ -103,22 +101,58 @@ abstract class AbstractDatabase
 	abstract public function rename($newName, $returnNew = true);
 
 	/**
+	 * getTable
+	 *
+	 * @param string $name
+	 * @param bool   $new
+	 *
+	 * @return  AbstractTable
+	 */
+	public function getTable($name, $new = false)
+	{
+		$table = $this->db->getTable($name, $new);
+		
+		$table->setDatabase($this);
+
+		return $table;
+	}
+
+	/**
 	 * Method to get an array of all tables in the database.
 	 *
 	 * @param bool $refresh
 	 *
-	 * @return  array  An array of all the tables in the database.
+	 * @return  \stdClass[]  An array of all the tables in the database.
 	 *
 	 * @since   2.0
 	 */
-	abstract public function getTables($refresh = false);
+	public function getTables($refresh = false)
+	{
+		return array_keys($this->getTableDetails($refresh));
+	}
 
 	/**
 	 * getTableDetails
 	 *
-	 * @return  mixed
+	 * @param  boolean $refresh
+	 *
+	 * @return \stdClass[]
 	 */
-	abstract public function getTableDetails();
+	public function getTableDetails($refresh = false)
+	{
+		if (!isset($this->tableCache[$this->name]) || $refresh)
+		{
+			$builder = $this->db->getQuery(true)->getBuilder();
+
+			$query = $builder::showDbTables($this->name);
+
+			$details = $this->db->setQuery($query)->loadAll('Name');
+
+			$this->tableCache[$this->name] = $details;
+		}
+
+		return $this->tableCache[$this->name];
+	}
 
 	/**
 	 * getTableDetail
@@ -127,7 +161,19 @@ abstract class AbstractDatabase
 	 *
 	 * @return  mixed
 	 */
-	abstract public function getTableDetail($table);
+	public function getTableDetail($table)
+	{
+		$tables = $this->getTableDetails();
+
+		$table = $this->db->replacePrefix($table);
+
+		if (!isset($tables[$table]))
+		{
+			return false;
+		}
+
+		return $tables[$table];
+	}
 
 	/**
 	 * tableExists
@@ -136,7 +182,10 @@ abstract class AbstractDatabase
 	 *
 	 * @return  boolean
 	 */
-	abstract public function tableExists($table);
+	public function tableExists($table)
+	{
+		return (bool) $this->getTableDetail($table);
+	}
 
 	/**
 	 * Method to get property Table
@@ -145,7 +194,7 @@ abstract class AbstractDatabase
 	 */
 	public function getName()
 	{
-		return $this->database;
+		return $this->name;
 	}
 
 	/**
@@ -157,7 +206,7 @@ abstract class AbstractDatabase
 	 */
 	public function setName($name)
 	{
-		$this->database = $name;
+		$this->name = $name;
 
 		return $this;
 	}
@@ -189,12 +238,13 @@ abstract class AbstractDatabase
 	/**
 	 * resetCache
 	 *
-	 * @return  void
+	 * @return  static
 	 */
-	public static function resetCache()
+	public function reset()
 	{
-		static::$tablesCache = array();
-		static::$tableDetailsCache = array();
+		$this->tableCache = array();
+		
+		return $this;
 	}
 }
 

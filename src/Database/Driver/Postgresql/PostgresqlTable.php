@@ -90,7 +90,7 @@ class PostgresqlTable extends AbstractTable
 		$inherits = isset($options['inherits']) ? $options['inherits'] : null;
 		$tablespace = isset($options['tablespace']) ? $options['tablespace'] : null;
 
-		$query = PostgresqlQueryBuilder::createTable($this->table, $columns, $primary, $keys, $inherits, $ifNotExists, $tablespace);
+		$query = PostgresqlQueryBuilder::createTable($this->getName(), $columns, $primary, $keys, $inherits, $ifNotExists, $tablespace);
 
 		$comments = isset($options['comments']) ? $options['comments'] : array();
 		$keyComments = isset($options['key_comments']) ? $options['key_comments'] : array();
@@ -98,7 +98,7 @@ class PostgresqlTable extends AbstractTable
 		// Comments
 		foreach ($comments as $name => $comment)
 		{
-			$query .= ";\n" . PostgresqlQueryBuilder::comment('COLUMN', $this->table, $name, $comment);
+			$query .= ";\n" . PostgresqlQueryBuilder::comment('COLUMN', $this->getName(), $name, $comment);
 		}
 
 		foreach ($keyComments as $name => $comment)
@@ -136,7 +136,7 @@ class PostgresqlTable extends AbstractTable
 		$this->prepareColumn($column);
 
 		$query = PostgresqlQueryBuilder::addColumn(
-			$this->table,
+			$this->getName(),
 			$column->getName(),
 			$column->getType() . $column->getLength(),
 			$column->getAllowNull(),
@@ -147,7 +147,7 @@ class PostgresqlTable extends AbstractTable
 
 		if ($column->getComment())
 		{
-			$query = PostgresqlQueryBuilder::comment('COLUMN', $this->table, $column->getName(), $column->getComment());
+			$query = PostgresqlQueryBuilder::comment('COLUMN', $this->getName(), $column->getName(), $column->getComment());
 			$this->db->setQuery($query)->execute();
 		}
 
@@ -173,7 +173,7 @@ class PostgresqlTable extends AbstractTable
 		if ($column->getAutoIncrement())
 		{
 			$column->type(PostgresqlType::SERIAL);
-			$options['sequences'][$column->getName()] = $this->table . '_' . $column->getName() . '_seq';
+			$options['sequences'][$column->getName()] = $this->getName() . '_' . $column->getName() . '_seq';
 		}
 
 		return parent::prepareColumn($column);
@@ -215,7 +215,7 @@ class PostgresqlTable extends AbstractTable
 
 		// Type
 		$sql = PostgresqlQueryBuilder::build(
-			'ALTER TABLE ' . $query->quoteName($this->table),
+			'ALTER TABLE ' . $query->quoteName($this->getName()),
 			'ALTER COLUMN',
 			$query->quoteName($name),
 			'TYPE',
@@ -224,7 +224,7 @@ class PostgresqlTable extends AbstractTable
 		);
 
 		$sql .= ";\n" . PostgresqlQueryBuilder::build(
-			'ALTER TABLE ' . $query->quoteName($this->table),
+			'ALTER TABLE ' . $query->quoteName($this->getName()),
 			'ALTER COLUMN',
 			$query->quoteName($name),
 			$allowNull ? 'DROP' : 'SET',
@@ -234,7 +234,7 @@ class PostgresqlTable extends AbstractTable
 		if (!is_null($default))
 		{
 			$sql .= ";\n" . PostgresqlQueryBuilder::build(
-				'ALTER TABLE ' . $query->quoteName($this->table),
+				'ALTER TABLE ' . $query->quoteName($this->getName()),
 				'ALTER COLUMN',
 				$query->quoteName($name),
 				'SET DEFAULT' . $query->quote($default)
@@ -243,7 +243,7 @@ class PostgresqlTable extends AbstractTable
 
 		$sql .= ";\n" . PostgresqlQueryBuilder::comment(
 			'COLUMN',
-			$this->table,
+			$this->getName(),
 			$name,
 			$comment
 		);
@@ -290,7 +290,7 @@ class PostgresqlTable extends AbstractTable
 
 		// Type
 		$sql = PostgresqlQueryBuilder::build(
-			'ALTER TABLE ' . $query->quoteName($this->table),
+			'ALTER TABLE ' . $query->quoteName($this->getName()),
 			'ALTER COLUMN',
 			$query->quoteName($oldName),
 			'TYPE',
@@ -300,7 +300,7 @@ class PostgresqlTable extends AbstractTable
 
 		// Not NULL
 		$sql .= ";\n" . PostgresqlQueryBuilder::build(
-			'ALTER TABLE ' . $query->quoteName($this->table),
+			'ALTER TABLE ' . $query->quoteName($this->getName()),
 			'ALTER COLUMN',
 			$query->quoteName($oldName),
 			$allowNull ? 'DROP' : 'SET',
@@ -311,7 +311,7 @@ class PostgresqlTable extends AbstractTable
 		if (!is_null($default))
 		{
 			$sql .= ";\n" . PostgresqlQueryBuilder::build(
-				'ALTER TABLE ' . $query->quoteName($this->table),
+				'ALTER TABLE ' . $query->quoteName($this->getName()),
 				'ALTER COLUMN',
 				$query->quoteName($oldName),
 				'SET DEFAULT' . $query->quote($default)
@@ -321,14 +321,14 @@ class PostgresqlTable extends AbstractTable
 		// Comment
 		$sql .= ";\n" . PostgresqlQueryBuilder::comment(
 			'COLUMN',
-			$this->table,
+			$this->getName(),
 			$oldName,
 			$comment
 		);
 
 		// Rename
 		$sql .= ";\n" . PostgresqlQueryBuilder::renameColumn(
-			$this->table,
+			$this->getName(),
 			$oldName,
 			$name
 		);
@@ -412,7 +412,10 @@ class PostgresqlTable extends AbstractTable
 		}
 
 		$query = PostgresqlQueryBuilder::addIndex(
-			$this->table, $index->getType(), $index->getColumns(), $index->getName()
+			$this->getName(), 
+			$index->getType(), 
+			$index->getColumns(), 
+			$index->getName()
 		);
 
 		$this->db->setQuery($query)->execute();
@@ -444,7 +447,7 @@ class PostgresqlTable extends AbstractTable
 
 		if ($constraint)
 		{
-			$query = PostgresqlQueryBuilder::dropConstraint($this->table, $name, true, 'RESTRICT');
+			$query = PostgresqlQueryBuilder::dropConstraint($this->getName(), $name, true, 'RESTRICT');
 		}
 		else
 		{
@@ -468,7 +471,7 @@ class PostgresqlTable extends AbstractTable
 	{
 		$this->db->setQuery(PostgresqlQueryBuilder::build(
 			'ALTER TABLE',
-			$this->db->quoteName($this->table),
+			$this->db->quoteName($this->getName()),
 			'RENAME TO',
 			$this->db->quoteName($newName)
 		));
@@ -494,7 +497,7 @@ class PostgresqlTable extends AbstractTable
 	{
 		if (empty($this->columnCache) || $refresh)
 		{
-			$query = PostgresqlQueryBuilder::showTableColumns($this->db->replacePrefix($this->table));
+			$query = PostgresqlQueryBuilder::showTableColumns($this->db->replacePrefix($this->getName()));
 
 			$fields = $this->db->setQuery($query)->loadAll();
 
@@ -594,14 +597,14 @@ WHERE t.oid = ix.indrelid
 	AND a.attrelid = t.oid
 	AND a.attnum = ANY(ix.indkey)
 	AND t.relkind = \'r\'
-	AND t.relname = ' . $this->db->quote($this->db->replacePrefix($this->table)) . '
+	AND t.relname = ' . $this->db->quote($this->db->replacePrefix($this->getName())) . '
 ORDER BY t.relname, i.relname;');
 
 		$keys = $this->db->loadAll();
 
 		foreach ($keys as $key)
 		{
-			$key->Table = $this->table;
+			$key->Table = $this->getName();
 			$key->Non_unique = !$key->is_unique;
 			$key->Key_name = $key->index_name;
 			$key->Column_name = $key->column_name;

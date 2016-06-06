@@ -36,6 +36,10 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 		$table = $this->db->getTable('#__flower');
 
 		$this->assertEquals('#__flower', $table->getName());
+
+		$table->setDatabase($this->db->getDatabase());
+
+		$this->assertEquals('windwalker_test.#__flower', $table->getName());
 	}
 
 	/**

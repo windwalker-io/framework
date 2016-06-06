@@ -75,7 +75,7 @@ class MysqlTable extends AbstractTable
 			);
 		}
 
-		$query = MysqlQueryBuilder::createTable($this->table, $columns, $primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['charset']);
+		$query = MysqlQueryBuilder::createTable($this->getName(), $columns, $primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['charset']);
 
 		$this->db->setQuery($query)->execute();
 
@@ -107,7 +107,7 @@ class MysqlTable extends AbstractTable
 		$this->prepareColumn($column);
 
 		$query = MysqlQueryBuilder::addColumn(
-			$this->table,
+			$this->getName(),
 			$column->getName(),
 			$column->getType() . $column->getLength(),
 			$column->getSigned(),
@@ -159,7 +159,7 @@ class MysqlTable extends AbstractTable
 		$length = $length ? '(' . $length . ')' : null;
 
 		$query = MysqlQueryBuilder::modifyColumn(
-			$this->table,
+			$this->getName(),
 			$name,
 			$type . $length,
 			$signed,
@@ -212,7 +212,7 @@ class MysqlTable extends AbstractTable
 		$length = $length ? '(' . $length . ')' : null;
 
 		$query = MysqlQueryBuilder::changeColumn(
-			$this->table,
+			$this->getName(),
 			$oldName,
 			$newName,
 			$type . $length,
@@ -258,7 +258,7 @@ class MysqlTable extends AbstractTable
 		}
 		
 		$query = MysqlQueryBuilder::addIndex(
-			$this->table,
+			$this->getName(),
 			$index->getType(),
 			$index->getColumns(),
 			$index->getName(),
@@ -284,7 +284,7 @@ class MysqlTable extends AbstractTable
 			return $this;
 		}
 		
-		$query = MysqlQueryBuilder::dropIndex($this->table, $name);
+		$query = MysqlQueryBuilder::dropIndex($this->getName(), $name);
 
 		$this->db->setQuery($query)->execute();
 
@@ -301,7 +301,7 @@ class MysqlTable extends AbstractTable
 	 */
 	public function rename($newName, $returnNew = true)
 	{
-		$this->db->setQuery('RENAME TABLE ' . $this->db->quoteName($this->table) . ' TO ' . $this->db->quoteName($newName));
+		$this->db->setQuery('RENAME TABLE ' . $this->db->quoteName($this->getName()) . ' TO ' . $this->db->quoteName($newName));
 
 		$this->db->execute();
 
@@ -324,7 +324,7 @@ class MysqlTable extends AbstractTable
 	{
 		if (empty($this->columnCache) || $refresh)
 		{
-			$query = MysqlQueryBuilder::showTableColumns($this->table, true);
+			$query = MysqlQueryBuilder::showTableColumns($this->getName(), true);
 
 			$this->columnCache = $this->db->setQuery($query)->loadAll('Field');
 		}
@@ -342,7 +342,7 @@ class MysqlTable extends AbstractTable
 		if (!$this->indexCache)
 		{
 			// Get the details columns information.
-			$this->db->setQuery('SHOW KEYS FROM ' . $this->db->quoteName($this->table));
+			$this->db->setQuery('SHOW KEYS FROM ' . $this->db->quoteName($this->getName()));
 
 			$this->indexCache = $this->db->loadAll();
 		}

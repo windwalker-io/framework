@@ -25,7 +25,7 @@ class MysqlDatabase extends AbstractDatabase
 	 */
 	public function select()
 	{
-		$this->db->setQuery('USE ' . $this->db->quoteName($this->database))->execute();
+		$this->db->setQuery('USE ' . $this->db->quoteName($this->name))->execute();
 
 		return $this;
 	}
@@ -39,9 +39,9 @@ class MysqlDatabase extends AbstractDatabase
 	 *
 	 * @return  static
 	 */
-	public function create($ifNotExists = false, $charset = 'utf8', $collate = 'utf8_general_ci')
+	public function create($ifNotExists = false, $charset = 'utf8', $collate = 'utf8_unicode_ci')
 	{
-		$query = MysqlQueryBuilder::createDatabase($this->database, $ifNotExists, $charset, $collate);
+		$query = MysqlQueryBuilder::createDatabase($this->name, $ifNotExists, $charset, $collate);
 
 		$this->db->setQuery($query)->execute();
 
@@ -57,23 +57,11 @@ class MysqlDatabase extends AbstractDatabase
 	 */
 	public function drop($ifExists = false)
 	{
-		$query = MysqlQueryBuilder::dropDatabase($this->database, $ifExists);
+		$query = MysqlQueryBuilder::dropDatabase($this->name, $ifExists);
 
 		$this->db->setQuery($query)->execute();
 
 		return $this;
-	}
-
-	/**
-	 * exists
-	 *
-	 * @return  boolean
-	 */
-	public function exists()
-	{
-		$databases = $this->db->listDatabases();
-
-		return in_array($this->database, $databases);
 	}
 
 	/**
@@ -90,7 +78,7 @@ class MysqlDatabase extends AbstractDatabase
 		// @see: http://stackoverflow.com/questions/67093/how-do-i-quickly-rename-a-mysql-database-change-schema-name?page=1&tab=votes#tab-top
 		$newDatabase = $this->db->getDatabase($newName)->create();
 
-		$tables = $this->db->getReader(MysqlQueryBuilder::showDbTables($this->database))->loadObjectList();
+		$tables = $this->db->getReader(MysqlQueryBuilder::showDbTables($this->name))->loadObjectList();
 
 		foreach ($tables as $table)
 		{
@@ -99,7 +87,7 @@ class MysqlDatabase extends AbstractDatabase
 			$this->db->setQuery(
 				sprintf(
 					'RENAME TABLE %s.%s TO %s.%s',
-					$this->db->quoteName($this->database),
+					$this->db->quoteName($this->name),
 					$this->db->quoteName($name),
 					$this->db->quoteName($newName),
 					$this->db->quoteName($name)
@@ -115,77 +103,6 @@ class MysqlDatabase extends AbstractDatabase
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Method to get an array of all tables in the database.
-	 *
-	 * @param bool $refresh
-	 *
-	 * @return  array  An array of all the tables in the database.
-	 *
-	 * @since   2.0
-	 */
-	public function getTables($refresh = false)
-	{
-		if (empty(static::$tablesCache) || $refresh)
-		{
-			static::$tablesCache = array_keys($this->getTableDetails(false));
-		}
-
-		return static::$tablesCache;
-	}
-
-	/**
-	 * getTableDetails
-	 *
-	 * @return  object[]
-	 */
-	public function getTableDetails()
-	{
-		if (isset(static::$tableDetailsCache[$this->database]))
-		{
-			return static::$tableDetailsCache[$this->database];
-		}
-
-		$query = MysqlQueryBuilder::showDbTables($this->database);
-
-		$details = $this->db->setQuery($query)->loadAll('Name');
-
-		return static::$tableDetailsCache[$this->database] = $details;
-	}
-
-	/**
-	 * getTableDetail
-	 *
-	 * @param bool $table
-	 *
-	 * @return  mixed
-	 */
-	public function getTableDetail($table)
-	{
-		$tables = $this->getTableDetails();
-		
-		$table = $this->db->replacePrefix($table);
-
-		if (!isset($tables[$table]))
-		{
-			return false;
-		}
-
-		return $tables[$table];
-	}
-
-	/**
-	 * tableExists
-	 *
-	 * @param string $table
-	 *
-	 * @return  boolean
-	 */
-	public function tableExists($table)
-	{
-		return (bool) $this->getTableDetail($table);
 	}
 }
 

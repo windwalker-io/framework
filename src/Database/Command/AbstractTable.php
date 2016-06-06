@@ -26,7 +26,7 @@ abstract class AbstractTable
 	 *
 	 * @var  string
 	 */
-	protected $table = null;
+	protected $name = null;
 
 	/**
 	 * A cache to store Table columns.
@@ -43,6 +43,13 @@ abstract class AbstractTable
 	protected $indexCache;
 
 	/**
+	 * Property database.
+	 *
+	 * @var  AbstractDatabase
+	 */
+	protected $database;
+
+	/**
 	 * Property driver.
 	 *
 	 * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
@@ -57,7 +64,7 @@ abstract class AbstractTable
 	 */
 	public function __construct($table, AbstractDatabaseDriver $db)
 	{
-		$this->table = $table;
+		$this->name = $table;
 
 		$this->db = $db;
 	}
@@ -120,7 +127,7 @@ abstract class AbstractTable
 		}
 
 		$database = $this->db->getDatabase();
-		$database::resetCache();
+		$database->reset();
 
 		return $this->reset();
 	}
@@ -137,11 +144,11 @@ abstract class AbstractTable
 	{
 		$builder = $this->db->getQuery(true)->getBuilder();
 
-		$query = $builder::dropTable($this->table, $ifExists, $option);
+		$query = $builder::dropTable($this->getName(), $ifExists, $option);
 
 		$this->db->setQuery($query)->execute();
 
-		return $this;
+		return $this->reset();
 	}
 
 	/**
@@ -153,7 +160,7 @@ abstract class AbstractTable
 	{
 		$database = $this->db->getDatabase();
 
-		return $database->tableExists($this->table);
+		return $database->tableExists($this->getName());
 	}
 
 	/**
@@ -176,7 +183,7 @@ abstract class AbstractTable
 	 */
 	public function lock()
 	{
-		$this->db->setQuery('LOCK TABLES ' . $this->db->quoteName($this->table) . ' WRITE');
+		$this->db->setQuery('LOCK TABLES ' . $this->db->quoteName($this->getName()) . ' WRITE');
 
 		return $this;
 	}
@@ -205,7 +212,7 @@ abstract class AbstractTable
 	 */
 	public function truncate()
 	{
-		$this->db->setQuery('TRUNCATE TABLE ' . $this->db->quoteName($this->table))->execute();
+		$this->db->setQuery('TRUNCATE TABLE ' . $this->db->quoteName($this->getName()))->execute();
 
 		return $this;
 	}
@@ -217,17 +224,19 @@ abstract class AbstractTable
 	 */
 	public function getDetail()
 	{
-		return $this->db->getDatabase()->getTableDetail($this->table);
+		return $this->db->getDatabase()->getTableDetail($this->getName());
 	}
 
 	/**
 	 * Get table columns.
 	 *
+	 * @param bool $refresh
+	 *
 	 * @return array Table columns with type.
 	 */
-	public function getColumns()
+	public function getColumns($refresh = false)
 	{
-		return array_keys($this->getColumnDetails());
+		return array_keys($this->getColumnDetails($refresh));
 	}
 
 	/**
@@ -296,7 +305,7 @@ abstract class AbstractTable
 
 		$builder = $this->db->getQuery(true)->getBuilder();
 
-		$query = $builder::dropColumn($this->table, $name);
+		$query = $builder::dropColumn($this->getName(), $name);
 
 		$this->db->setQuery($query)->execute();
 
@@ -392,19 +401,24 @@ abstract class AbstractTable
 	 */
 	public function getName()
 	{
-		return $this->table;
+		if ($this->database instanceof AbstractDatabase)
+		{
+			return $this->database->getName() . '.' . $this->name;
+		}
+
+		return $this->name;
 	}
 
 	/**
 	 * Method to set property table
 	 *
-	 * @param   null|string $table
+	 * @param   string $name
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setName($table)
+	public function setName($name)
 	{
-		$this->table = $table;
+		$this->name = $name;
 
 		return $this;
 	}
@@ -467,6 +481,30 @@ abstract class AbstractTable
 		}
 
 		return $schema;
+	}
+
+	/**
+	 * Method to get property Database
+	 *
+	 * @return  AbstractDatabase
+	 */
+	public function getDatabase()
+	{
+		return $this->database;
+	}
+
+	/**
+	 * Method to set property database
+	 *
+	 * @param   AbstractDatabase $database
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDatabase(AbstractDatabase $database)
+	{
+		$this->database = $database;
+
+		return $this;
 	}
 
 	/**
