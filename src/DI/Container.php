@@ -225,7 +225,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	protected function getMethodArgs(\ReflectionMethod $method)
 	{
 		$methodArgs = array();
-		
+
 		foreach ($method->getParameters() as $param)
 		{
 			$dependency = $param->getClass();
