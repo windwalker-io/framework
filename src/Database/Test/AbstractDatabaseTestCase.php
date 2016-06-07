@@ -11,6 +11,7 @@ namespace Windwalker\Database\Test;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Test\TestHelper;
 
 /**
  * Class DatabaseTestCase
@@ -245,6 +246,15 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 	 */
 	protected function tearDown()
 	{
+		$this->db->resetMiddlewares();
+
+		$tables = TestHelper::getValue($this->db, 'tables');
+
+		foreach ((array) $tables as $table)
+		{
+			$table->reset();
+		}
+
 		$this->db = null;
 	}
 }

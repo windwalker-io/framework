@@ -59,15 +59,4 @@ abstract class AbstractMysqlTestCase extends AbstractDatabaseTestCase
 		$this->db = static::$dbo;
 		$this->connection = $this->db->getConnection();
 	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		$this->db->resetMiddlewares();
-	}
 }

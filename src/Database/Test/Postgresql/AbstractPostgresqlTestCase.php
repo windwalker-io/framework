@@ -68,5 +68,6 @@ abstract class AbstractPostgresqlTestCase extends AbstractDatabaseTestCase
 	 */
 	protected function tearDown()
 	{
+		parent::tearDown();
 	}
 }

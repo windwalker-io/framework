@@ -401,7 +401,7 @@ abstract class AbstractTable
 	 */
 	public function getName()
 	{
-		if ($this->database instanceof AbstractDatabase)
+		if ($this->database instanceof AbstractDatabase && $this->database->getName() != $this->db->getCurrentDatabase())
 		{
 			return $this->database->getName() . '.' . $this->name;
 		}
@@ -500,8 +500,13 @@ abstract class AbstractTable
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setDatabase(AbstractDatabase $database)
+	public function setDatabase($database)
 	{
+		if (is_string($database))
+		{
+			$database = $this->db->getDatabase($database);
+		}
+
 		$this->database = $database;
 
 		return $this;
@@ -548,6 +553,7 @@ abstract class AbstractTable
 	{
 		$this->columnCache = array();
 		$this->indexCache = array();
+		$this->database = null;
 
 		return $this;
 	}

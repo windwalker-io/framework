@@ -335,7 +335,7 @@ abstract class AbstractWriter
 		$query = QueryHelper::buildWheres($query, $conditions);
 
 		// Build update values.
-		$fields = array_keys($this->db->getTable($table)->getColumns());
+		$fields = $this->db->getTable($table)->getColumns();
 
 		$hasField = false;
 

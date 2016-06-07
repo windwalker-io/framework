@@ -25,6 +25,16 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	protected static $debug = true;
 
 	/**
+	 * tearDown
+	 *
+	 * @return  void
+	 */
+	public function tearDown()
+	{
+		parent::tearDown();
+	}
+
+	/**
 	 * Method to test getName().
 	 *
 	 * @return void
@@ -37,9 +47,9 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 
 		$this->assertEquals('#__flower', $table->getName());
 
-		$table->setDatabase($this->db->getDatabase());
+		$table->setDatabase($this->db->getDatabase('yoo'));
 
-		$this->assertEquals('windwalker_test.#__flower', $table->getName());
+		$this->assertEquals('yoo.#__flower', $table->getName());
 	}
 
 	/**

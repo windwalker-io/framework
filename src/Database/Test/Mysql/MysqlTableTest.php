@@ -54,7 +54,11 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$table->setDatabase($this->db->getDatabase());
 
-		$this->assertEquals('windwalker_test.#__flower', $table->getName());
+		$this->assertEquals('#__flower', $table->getName());
+
+		$table->setDatabase($this->db->getDatabase('foo'));
+
+		$this->assertEquals('foo.#__flower', $table->getName());
 	}
 
 	/**
