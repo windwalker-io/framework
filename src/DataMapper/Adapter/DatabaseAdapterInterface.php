@@ -83,7 +83,7 @@ interface DatabaseAdapterInterface
 	 *
 	 * @return  array
 	 */
-	public function getFields($table);
+	public function getColumnDetails($table);
 
 	/**
 	 * transactionStart

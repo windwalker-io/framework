@@ -16,23 +16,12 @@ use Windwalker\Database\Schema\DataType;
  * 
  * @since  2.1
  */
-abstract class PostgresqlType extends DataType
+class PostgresqlType extends DataType
 {
 	const INTEGER = 'integer';
 	const BOOLEAN = 'bool';
 	const SERIAL  = 'serial';
 	const REAL    = 'real';
-
-	/**
-	 * Property types.
-	 *
-	 * @var  array
-	 */
-	public static $defaultLengths = array(
-		self::INTEGER  => null,
-		self::SERIAL   => null,
-		self::SMALLINT => null
-	);
 
 	/**
 	 * Property typeMapping.
@@ -50,6 +39,21 @@ abstract class PostgresqlType extends DataType
 		// MysqlType::ENUM => self::VARCHAR, // Postgres support ENUM after 8.3
 		MysqlType::SET     => self::TEXT,
 		MysqlType::FLOAT   => self::REAL,
+	);
+
+	/**
+	 * "Default Length", "Default Value", "PHP Type"
+	 *
+	 * @var  array
+	 */
+	public static $typeDefinitions = array(
+		self::BOOLEAN   => array(1,    0, 'boolean'),
+		self::SERIAL    => array(null, 0, 'integer'),
+		self::INTEGER   => array(null, 0, 'integer'),
+		self::SMALLINT  => array(null, 0, 'integer'),
+		self::REAL      => array(null, 0, 'float'),
+		self::TIMESTAMP => array(null, '1970-01-01 00:00:00', 'string'),
+		self::INTERVAL  => array(16,   0, 'string'),
 	);
 
 	/**

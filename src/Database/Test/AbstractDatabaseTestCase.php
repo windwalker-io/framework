@@ -156,6 +156,16 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 	}
 
 	/**
+	 * getTearDownSql
+	 *
+	 * @return  string
+	 */
+	protected static function getTearDownSql()
+	{
+		return 'DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname);
+	}
+
+	/**
 	 * setupFixtures
 	 *
 	 * @return  void
@@ -165,16 +175,6 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 		$queries = static::getSetupSql();
 
 		DatabaseHelper::batchQuery(static::$dbo, $queries);
-	}
-
-	/**
-	 * getTearDownSql
-	 *
-	 * @return  string
-	 */
-	protected static function getTearDownSql()
-	{
-		return 'DROP DATABASE IF EXISTS ' . self::$dbo->quoteName(static::$dbname);
 	}
 
 	/**

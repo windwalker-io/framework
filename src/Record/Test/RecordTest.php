@@ -34,7 +34,9 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	protected function setUp()
 	{
-		// $this->instance = new Record;
+		parent::setUp();
+
+		 $this->instance = new Record('articles');
 	}
 
 	/**
@@ -45,6 +47,17 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	protected function tearDown()
 	{
+		parent::tearDown();
+	}
+
+	/**
+	 * getInstallSql
+	 *
+	 * @return  string
+	 */
+	protected static function getSetupSql()
+	{
+		return file_get_contents(__DIR__ . '/Stub/fixtures.sql');
 	}
 
 	/**
@@ -56,28 +69,19 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function test__set()
 	{
-		$record = new Record('#__flower');
+		$record = $this->instance;
 
 		$record->set('catid', 1);
 
-		$data = TestHelper::getValue($record, 'data');
+		$data = (object) TestHelper::getValue($record, 'data');
 
 		$this->assertEquals(1, $data->catid);
 
 		$record->catid = 3;
 
-		$data = TestHelper::getValue($record, 'data');
+		$data = (object) TestHelper::getValue($record, 'data');
 
 		$this->assertEquals(3, $data->catid);
-
-		// Alias
-		$record->setAlias('foo', 'catid');
-
-		$record->foo = 6;
-
-		$data = TestHelper::getValue($record, 'data');
-
-		$this->assertEquals(6, $data->catid);
 	}
 
 	/**
@@ -89,7 +93,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function test__get()
 	{
-		$record = new Record('#__flower');
+		$record = $this->instance;
 
 		$record->setAlias('foo', 'catid');
 
@@ -111,18 +115,24 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::save
-	 * @TODO   Implement testSave().
 	 */
 	public function testSave()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$key = $this->instance->getKeyName();
+
+		$data = array(
+			'title' => 'Test'
 		);
+
+		$this->instance->bind($data)->store();
+
+		$flower = $this->db->setQuery('SELECT * FROM articles ORDER BY id DESC')->loadOne();
+
+		$this->assertEquals('Test', $flower->title);
 	}
 
 	/**
-	 * Method to test bind().
+	 * Method to test bind(). 
 	 *
 	 * @return void
 	 *
@@ -131,7 +141,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testBind()
 	{
-		$record = new Record('ww_flower');
+		$record = $this->instance;
 
 		$record->bind(
 			array(
@@ -220,10 +230,11 @@ class RecordTest extends AbstractMysqlTestCase
 		$data = array(
 			'title'   => 'Lancelot',
 			'meaning' => 'First Knight',
+			'ordering' => 123456,
 			'params' => ''
 		);
 
-		$record = new Record('ww_flower');
+		$record = $this->instance;
 
 		$record->bind($data);
 
@@ -231,11 +242,11 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$record->store();
 
-		$record = new Record('ww_flower');
+		$record = new Record('articles');
 
 		$record->load(array('title' => 'Lancelot'));
 
-		$this->assertEquals('First Knight', $record->meaning);
+		$this->assertEquals(123456, $record->ordering);
 	}
 
 	/**
@@ -304,7 +315,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 	public function testHasField()
 	{
-		$record = new Record('ww_flower');
+		$record = $this->instance;
 
 		$this->assertTrue($record->hasField('title'));
 		$this->assertFalse($record->hasField('chicken'));
@@ -319,6 +330,22 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @TODO   Implement testGetTableName().
 	 */
 	public function testGetTableName()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test setTableName().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::setTableName
+	 * @TODO   Implement testSetTableName().
+	 */
+	public function testSetTableName()
 	{
 		// Remove the following lines when you implement this test.
 		$this->markTestIncomplete(
@@ -343,22 +370,295 @@ class RecordTest extends AbstractMysqlTestCase
 	}
 
 	/**
+	 * Method to test toObject().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::toObject
+	 * @TODO   Implement testToObject().
+	 */
+	public function testToObject()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test toArray().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::toArray
+	 * @TODO   Implement testToArray().
+	 */
+	public function testToArray()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test __isset().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::__isset
+	 * @TODO   Implement test__isset().
+	 */
+	public function test__isset()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
 	 * Method to test __clone().
 	 *
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::__clone
+	 * @TODO   Implement test__clone().
 	 */
 	public function test__clone()
 	{
-		$record = new Record('#__flower');
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 
-		$record->title = 'sakura';
+	/**
+	 * Method to test q().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::q
+	 * @TODO   Implement testQ().
+	 */
+	public function testQ()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 
-		$new = clone $record;
+	/**
+	 * Method to test qn().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::qn
+	 * @TODO   Implement testQn().
+	 */
+	public function testQn()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 
-		$new->title = 'sunflower';
+	/**
+	 * Method to test valueExists().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::valueExists
+	 * @TODO   Implement testValueExists().
+	 */
+	public function testValueExists()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 
-		$this->assertEquals('sakura', $record->title);
+	/**
+	 * Method to test setAlias().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::setAlias
+	 * @covers Windwalker\Record\Record::resolveAlias
+	 */
+	public function testAlias()
+	{
+		$record = $this->instance;
+
+		// Get by alias
+		$record->setAlias('foo', 'catid');
+
+		$record->bind(array(
+			'id' => 1,
+			'foo' => 6,
+			'title' => 'Sakura'
+		));
+
+		$this->assertEquals(6, $record->catid);
+		$this->assertEquals('Sakura', $record->title);
+
+		// Test resolve
+		$this->assertEquals('catid', $record->resolveAlias('foo'));
+
+		// Set by alias
+		$record->setAlias('bar', 'air');
+
+		$record->bar = 8;
+
+		$data = (object) TestHelper::getValue($record, 'data');
+
+		$this->assertEquals(8, $data->air);
+	}
+
+	/**
+	 * Method to test offsetExists().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::offsetExists
+	 * @TODO   Implement testOffsetExists().
+	 */
+	public function testOffsetExists()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test offsetGet().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::offsetGet
+	 * @TODO   Implement testOffsetGet().
+	 */
+	public function testOffsetGet()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test offsetSet().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::offsetSet
+	 * @TODO   Implement testOffsetSet().
+	 */
+	public function testOffsetSet()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test offsetUnset().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::offsetUnset
+	 * @TODO   Implement testOffsetUnset().
+	 */
+	public function testOffsetUnset()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test triggerEvent().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::triggerEvent
+	 * @TODO   Implement testTriggerEvent().
+	 */
+	public function testTriggerEvent()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test getDispatcher().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::getDispatcher
+	 * @TODO   Implement testGetDispatcher().
+	 */
+	public function testGetDispatcher()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test setDispatcher().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::setDispatcher
+	 * @TODO   Implement testSetDispatcher().
+	 */
+	public function testSetDispatcher()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test getDb().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::getDb
+	 * @TODO   Implement testGetDb().
+	 */
+	public function testGetDb()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
+
+	/**
+	 * Method to test setDb().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\Record\Record::setDb
+	 * @TODO   Implement testSetDb().
+	 */
+	public function testSetDb()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
 	}
 }

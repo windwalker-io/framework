@@ -269,6 +269,6 @@ class DataMapper extends AbstractDataMapper
 	{
 		$table = $table ? : $this->table;
 
-		return $this->db->getFields($table);
+		return $this->db->getColumnDetails($table);
 	}
 }

@@ -78,7 +78,7 @@ abstract class AbstractWriter
 			}
 
 			// Only process non-null scalars.
-			if (is_array($v) or is_object($v) or $v === null)
+			if (is_array($v) || is_object($v) || $v === null)
 			{
 				continue;
 			}

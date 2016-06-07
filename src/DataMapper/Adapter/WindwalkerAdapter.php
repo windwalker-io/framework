@@ -185,9 +185,9 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	 *
 	 * @return  array
 	 */
-	public function getFields($table)
+	public function getColumnDetails($table)
 	{
-		return $this->db->getTable($table)->getColumns();
+		return $this->db->getTable($table)->getColumnDetails();
 	}
 
 	/**
@@ -197,9 +197,9 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	 *
 	 * @return  $this
 	 */
-	public function transactionStart($asSavePoint = false)
+	public function transactionStart($asSavePoint = true)
 	{
-		$this->db->getTransaction()->start();
+		$this->db->getTransaction($asSavePoint)->start();
 
 		return $this;
 	}
@@ -211,9 +211,9 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	 *
 	 * @return  $this
 	 */
-	public function transactionCommit($asSavePoint = false)
+	public function transactionCommit($asSavePoint = true)
 	{
-		$this->db->getTransaction()->commit($asSavePoint);
+		$this->db->getTransaction($asSavePoint)->commit();
 
 		return $this;
 	}
@@ -225,9 +225,9 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	 *
 	 * @return  $this
 	 */
-	public function transactionRollback($asSavePoint = false)
+	public function transactionRollback($asSavePoint = true)
 	{
-		$this->db->getTransaction()->rollback($asSavePoint);
+		$this->db->getTransaction($asSavePoint)->rollback();
 
 		return $this;
 	}

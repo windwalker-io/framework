@@ -540,8 +540,32 @@ abstract class AbstractTable
 
 		$length = $length ? '(' . $length . ')' : null;
 
+		// Prepare default value
+		$this->prepareDefaultValue($column);
+
 		return $column->type($type)
 			->length($length);
+	}
+
+	/**
+	 * prepareDefaultValue
+	 *
+	 * @param Column $column
+	 *
+	 * @return  string
+	 */
+	protected function prepareDefaultValue(Column $column)
+	{
+		$typeMapper = $this->getTypeMapper();
+
+		$default = $column->getDefault();
+
+		if (!$column->getAllowNull() && $default === null && !$column->isPrimary())
+		{
+			$default = $typeMapper::getDefaultValue($column->getType());
+		}
+
+		return $default;
 	}
 
 	/**

@@ -14,19 +14,19 @@ use Windwalker\Database\Schema\Column;
 /**
  * The Schema class.
  *
- * @method  Column  bit($name)
- * @method  Column  char($name)
- * @method  Column  datetime($name)
- * @method  Column  decimal($name)
- * @method  Column  double($name)
- * @method  Column  float($name)
- * @method  Column  integer($name)
- * @method  Column  logintext($name)
- * @method  Column  primary($name)
- * @method  Column  text($name)
- * @method  Column  timestamp($name)
- * @method  Column  tinyint($name)
- * @method  Column  varchar($name)
+ * @method  Column\Bit        bit($name)
+ * @method  Column\Char       char($name)
+ * @method  Column\Datetime   datetime($name)
+ * @method  Column\Decimal    decimal($name)
+ * @method  Column\Double     double($name)
+ * @method  Column\FloatType  float($name)
+ * @method  Column\Integer    integer($name)
+ * @method  Column\Longtext   logintext($name)
+ * @method  Column\Primary    primary($name)
+ * @method  Column\Text       text($name)
+ * @method  Column\Timestamp  timestamp($name)
+ * @method  Column\Tinyint    tinyint($name)
+ * @method  Column\Varchar    varchar($name)
  *
  * @since  2.1.8
  */

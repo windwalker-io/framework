@@ -130,7 +130,7 @@ class WindwalkerAdapterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\Adapter\WindwalkerAdapter::getFields
+	 * @covers Windwalker\DataMapper\Adapter\WindwalkerAdapter::getColumnDetails
 	 * @TODO   Implement testGetFields().
 	 */
 	public function testGetFields()

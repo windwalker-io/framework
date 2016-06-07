@@ -10,6 +10,7 @@ namespace Windwalker\Record;
 
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Database\Schema\DataType;
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherInterface;
 use Windwalker\Event\Event;
@@ -532,22 +533,36 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		// Filter non-necessary field
 		$data = array();
 
-		foreach ($this->getFields() as $field => $detail)
+		$update = (bool) $this->hasPrimaryKey();
+
+		if (!$update || $updateNulls)
 		{
-			if ($this->data->$field === null && $updateNulls)
+			foreach ($this->getFields() as $field => $detail)
 			{
-				$this->data->$field = $detail->Default;
+				if ($this->$field === null)
+				{
+					$data[$field] = $detail->Default;
+				}
+				else
+				{
+					$data[$field] = $this->$field;
+				}
 			}
-			else
-			{
-				$data[$field] = $this->data->$field;
-			}
+		}
+		elseif ($update && !$updateNulls)
+		{
+			// Load old first
+			$data = $this->data;
+			$this->load($this->get($this->getKeyName()));
+			$this->bind($data);
+
+			$data = $this->data;
 		}
 
 		// If a primary key exists update the object, otherwise insert it.
-		if ($this->hasPrimaryKey())
+		if ($update)
 		{
-			$this->db->getWriter()->updateOne($this->table, $data, $this->keys, $updateNulls);
+			$this->db->getWriter()->updateOne($this->table, $data, $this->keys, true);
 		}
 		else
 		{
@@ -694,15 +709,79 @@ class Record implements \ArrayAccess, \IteratorAggregate
 			// Lookup the fields for this table only once.
 			$fields = $this->db->getTable($table)->getColumnDetails();
 
+			foreach ($fields as $field)
+			{
+				$this->addField($field);
+			}
+
 			if (empty($fields))
 			{
 				throw new \UnexpectedValueException(sprintf('No columns found for %s table', $this->table));
 			}
-
-			$this->fields = static::$fieldsCache[$table] = $fields;
 		}
 
 		return $this->fields;
+	}
+
+	/**
+	 * addField
+	 *
+	 * @param  string $field
+	 * @param  string $default
+	 *
+	 * @return  static
+	 */
+	public function addField($field, $default = null)
+	{
+		if ($default !== null && (is_array($default) || is_object($default)))
+		{
+			throw new \InvalidArgumentException(sprintf('Default value should be scalar, %s given.', gettype($default)));
+		}
+
+		$defaultProfile = array(
+			'Field'      => '',
+			'Type'      => '',
+			'Collation' => 'utf8_unicode_ci',
+			'Null'      => 'NO',
+			'Key'       => '',
+			'Default'   => '',
+			'Extra'     => '',
+			'Privileges' => 'select,insert,update,references',
+			'Comment'    => ''
+		);
+
+		if (is_string($field))
+		{
+			$field = array_merge($defaultProfile, array(
+				'Field'    => $field,
+				'Type'    => gettype($default),
+				'Default' => $default
+			));
+		}
+
+		if (is_array($field) || is_object($field))
+		{
+			$field = array_merge($defaultProfile, (array) $field);
+		}
+
+		if (strtolower($field['Null']) == 'no' && $field['Default'] === null 
+			&& $field['Key'] != 'PRI' && $this->getKeyName() != $field['Field'])
+		{
+			$type = $field['Type'];
+			
+			list($type,) = explode('(', $type, 2);
+			$type = strtolower($type);
+			
+			$typeMapper = DataType::getInstance($this->db->getName());
+
+			$field['Default'] = $typeMapper->getDefaultValue($type);
+		}
+
+		$field = (object) $field;
+
+		$this->fields[$field->Field] = $field;
+
+		return $this;
 	}
 
 	/**

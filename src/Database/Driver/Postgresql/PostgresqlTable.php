@@ -166,7 +166,9 @@ class PostgresqlTable extends AbstractTable
 		/** @var PostgresqlType $typeMapper */
 		$typeMapper = $this->getTypeMapper();
 
-		$length = $typeMapper::noLength($column->getType()) ? null : $column->getLength();
+		$type = $typeMapper::getType($column->getType());
+
+		$length = $typeMapper::noLength($type) ? null : $column->getLength();
 
 		$column->length($length);
 

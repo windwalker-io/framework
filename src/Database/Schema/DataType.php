@@ -16,7 +16,7 @@ namespace Windwalker\Database\Schema;
  * 
  * @since  2.0
  */
-abstract class DataType
+class DataType
 {
 	// BOOLEAN
 	const BOOLEAN = 'boolean';
@@ -68,24 +68,64 @@ abstract class DataType
 	protected static $typeMapping = array();
 
 	/**
-	 * Property types.
+	 * "Default Length", "Default Value", "PHP Type"
 	 *
 	 * @var  array
 	 */
-	public static $defaultLengths = array(
-		// VARCHAR
-		self::VARCHAR => 255,
-		self::CHAR => 255,
+	public static $typeDefinitions = array(
+		self::BOOLEAN => array(1, 0, 'boolean'),
 
-		// NUMERIC
-		self::INTEGER => 11,
-		self::TINYINT => 4,
-		self::SMALLINT => 6,
-		self::BIT => 1,
-		self::DECIMAL => '10,2',
-		self::DOUBLE => '10,2',
-		self::FLOAT => '10,2',
+		self::CHAR     => array(255, '', 'string'),
+		self::VARCHAR  => array(255, '', 'string'),
+		self::TEXT     => array(null, '', 'string'),
+		self::LONGTEXT => array(null, '', 'string'),
+
+		self::BIT         => array(1, 0, 'integer'),
+		self::BIT_VARYING => array(1, 0, 'integer'),
+
+		self::INTEGER  => array(11, 0, 'integer'),
+		self::SMALLINT => array(6,  0, 'integer'),
+		self::TINYINT  => array(4,  0, 'integer'),
+		self::NUMERIC  => array(10, 0, 'integer'),
+
+		self::DECIMAL => array('10,2', 0, 'float'),
+		self::FLOAT   => array('10,2', 0, 'float'),
+		self::REAL    => array('10,2', 0, 'float'),
+		self::DOUBLE  => array('10,2', 0, 'float'),
+
+		self::DATE => array(null, '0000-00-00', 'string'),
+		self::TIME => array(null, '00:00:00', 'string'),
+		self::TIMESTAMP => array(null, '0', 'string'),
+		self::DATETIME  => array(null, '0000-00-00 00:00:00', 'string'),
 	);
+
+	/**
+	 * Property instances.
+	 *
+	 * @var  static[]
+	 */
+	protected static $instances = array();
+
+	/**
+	 * getInstance
+	 *
+	 * @param   string  $driver
+	 *
+	 * @return  static
+	 */
+	public static function getInstance($driver)
+	{
+		$driver = ucfirst($driver);
+
+		if (!isset(static::$instances[$driver]))
+		{
+			$class = sprintf('Windwalker\Database\Driver\%s\%sType', $driver, $driver);
+
+			static::$instances[$driver] = new $class;
+		}
+
+		return static::$instances[$driver];
+	}
 
 	/**
 	 * getLength
@@ -96,16 +136,53 @@ abstract class DataType
 	 */
 	public static function getLength($type)
 	{
+		return static::getProfile($type, 0);
+	}
+
+	/**
+	 * getDefaultValue
+	 *
+	 * @param   string  $type
+	 *
+	 * @return  string
+	 */
+	public static function getDefaultValue($type)
+	{
+		return static::getProfile($type, 1);
+	}
+
+	/**
+	 * getPhpType
+	 *
+	 * @param   string  $type
+	 *
+	 * @return  string
+	 */
+	public static function getPhpType($type)
+	{
+		return static::getProfile($type, 2);
+	}
+
+	/**
+	 * getProfile
+	 *
+	 * @param string  $type
+	 * @param integer $key
+	 *
+	 * @return  string
+	 */
+	protected static function getProfile($type, $key = null)
+	{
 		$type = strtolower($type);
 
-		if (array_key_exists($type, static::$defaultLengths))
+		if (array_key_exists($type, static::$typeDefinitions))
 		{
-			return static::$defaultLengths[$type];
+			return static::$typeDefinitions[$type][$key];
 		}
 
-		if (array_key_exists($type, self::$defaultLengths))
+		if (array_key_exists($type, self::$typeDefinitions))
 		{
-			return self::$defaultLengths[$type];
+			return self::$typeDefinitions[$type][$key];
 		}
 
 		return null;

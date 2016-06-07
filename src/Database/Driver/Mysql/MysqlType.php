@@ -15,7 +15,7 @@ use Windwalker\Database\Schema\DataType;
  * 
  * @since  2.0
  */
-abstract class MysqlType extends DataType
+class MysqlType extends DataType
 {
 	const INTEGER = 'int';
 	const BOOLEAN = 'bool';
@@ -29,6 +29,18 @@ abstract class MysqlType extends DataType
 	 */
 	public static $defaultLengths = array(
 		self::INTEGER => 11,
+	);
+
+	/**
+	 * "Length", "Default", "PHP Type"
+	 *
+	 * @var  array
+	 */
+	public static $typeDefinitions = array(
+		self::BOOLEAN  => array(1,  0, 'boolean'),
+		self::INTEGER  => array(11, 0, 'integer'),
+		self::ENUM     => array(null,  '', 'string'),
+		self::SET      => array(null,  '', 'string'),
 	);
 
 	/**
