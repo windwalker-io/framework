@@ -349,28 +349,4 @@ class MysqlTable extends AbstractTable
 
 		return $this->indexCache;
 	}
-
-	/**
-	 * prepareColumn
-	 *
-	 * @param Column $column
-	 *
-	 * @return  Column
-	 */
-	protected function prepareColumn(Column $column)
-	{
-		$typeMapper = $this->getTypeMapper();
-
-		// Fix for Strict Mode
-		if ($column->getType() == $typeMapper::DATETIME && $column->getDefault() === '')
-		{
-			$default = $this->db->getQuery(true)->getNullDate();
-
-			$column->defaultValue($default);
-		}
-
-		$column = parent::prepareColumn($column);
-
-		return $column;
-	}
 }

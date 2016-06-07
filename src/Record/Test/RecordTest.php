@@ -9,7 +9,9 @@
 namespace Windwalker\Record\Test;
 
 use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
+use Windwalker\Query\Query;
 use Windwalker\Record\Record;
+use Windwalker\Record\Test\Stub\StubRecord;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -118,17 +120,54 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testSave()
 	{
+		// Test create
 		$key = $this->instance->getKeyName();
 
 		$data = array(
 			'title' => 'Test'
 		);
 
-		$this->instance->bind($data)->store();
+		$this->instance->save($data);
 
 		$flower = $this->db->setQuery('SELECT * FROM articles ORDER BY id DESC')->loadOne();
 
 		$this->assertEquals('Test', $flower->title);
+
+		// Test update
+		$data = array(
+			$key => 1,
+			'title' => 'YOO',
+			'extra_field' => 'BAR' // will not saved
+		);
+
+		$this->instance->reset(true)->save($data);
+
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 1')->loadOne();
+
+		$this->assertEquals('YOO', $flower->title);
+		$this->assertEquals('2000-12-14 01:53:02', $flower->created);
+
+		// Test Update nulls
+		$this->instance->reset(true)->save($data, true);
+
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 1')->loadOne();
+
+		$this->assertEquals('0000-00-00 00:00:00', $flower->created);
+
+		// Test save null data
+		$data = array(
+			$key => 2,
+			'title' => null,
+			'alias' => null,
+			'extra_field' => 'BAR' // will not saved
+		);
+
+		$this->instance->reset(true)->save($data, true);
+
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 2')->loadOne();
+
+		$this->assertSame('', $flower->title);
+		$this->assertSame(null, $flower->alias);
 	}
 
 	/**
@@ -137,7 +176,6 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::bind
-	 * @TODO   Implement testBind().
 	 */
 	public function testBind()
 	{
@@ -160,14 +198,12 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::load
-	 * @TODO   Implement testLoad().
 	 */
 	public function testLoad()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->load(3);
+
+		$this->assertEquals('Illo', $this->instance->title);
 	}
 
 	/**
@@ -176,14 +212,18 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::delete
-	 * @TODO   Implement testDelete().
 	 */
 	public function testDelete()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 5')->loadOne();
+
+		$this->assertEquals('Ipsam reprehenderit', $flower->title);
+
+		$this->instance->delete(5);
+
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 5')->loadOne();
+
+		$this->assertFalse($flower);
 	}
 
 	/**
@@ -192,7 +232,6 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::reset
-	 * @TODO   Implement testReset().
 	 */
 	public function testReset()
 	{
@@ -208,14 +247,20 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::check
-	 * @TODO   Implement testCheck().
 	 */
 	public function testCheck()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$record = new StubRecord('articles');
+
+		$this->assertExpectedException(function () use ($record)
+		{
+			$record->check();
+		}, new \RuntimeException, 'Record save error');
+
+		$this->assertExpectedException(function () use ($record)
+		{
+			$record->save(array());
+		}, new \RuntimeException, 'Record save error');
 	}
 
 	/**
@@ -227,6 +272,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testStore()
 	{
+		// Test create
 		$data = array(
 			'title'   => 'Lancelot',
 			'meaning' => 'First Knight',
@@ -247,6 +293,20 @@ class RecordTest extends AbstractMysqlTestCase
 		$record->load(array('title' => 'Lancelot'));
 
 		$this->assertEquals(123456, $record->ordering);
+
+		// Test update
+		$key = $this->instance->getKeyName();
+
+		$data = array(
+			$key => 1,
+			'title' => 'YOO'
+		);
+
+		$this->instance->reset()->bind($data)->store();
+
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 1')->loadOne();
+
+		$this->assertEquals('YOO', $flower->title);
 	}
 
 	/**
@@ -255,14 +315,16 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::hasPrimaryKey
-	 * @TODO   Implement testHasPrimaryKey().
 	 */
 	public function testHasPrimaryKey()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertFalse($this->instance->hasPrimaryKey());
+
+		$key = $this->instance->getKeyName();
+
+		$this->instance->$key = 123;
+
+		$this->assertTrue($this->instance->hasPrimaryKey());
 	}
 
 	/**
@@ -271,14 +333,26 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::appendPrimaryKeys
-	 * @TODO   Implement testAppendPrimaryKeys().
 	 */
 	public function testAppendPrimaryKeys()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$query = $this->db->getQuery(true);
+
+		$record = new Record('articles', array('id', 'alias'), $this->db);
+		$record->bind(array(
+			'id' => 123,
+			'alias' => 'yoo'
+		));
+
+		$record->appendPrimaryKeys($query);
+
+		$this->assertStringSafeEquals("WHERE `id` = '123' AND `alias` = 'yoo'", (string) $query->where);
+
+		$query = $this->db->getQuery(true);
+
+		$record->appendPrimaryKeys($query, array('id' => 456, 'alias' => 'qqqqq'));
+
+		$this->assertStringSafeEquals("WHERE `id` = '456' AND `alias` = 'qqqqq'", (string) $query->where);
 	}
 
 	/**
@@ -287,14 +361,13 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::getKeyName
-	 * @TODO   Implement testGetKeyName().
 	 */
 	public function testGetKeyName()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$record = new Record('articles', array('id', 'alias'), $this->db);
+
+		$this->assertEquals('id', $record->getKeyName());
+		$this->assertEquals(array('id', 'alias'), $record->getKeyName(true));
 	}
 
 	/**
@@ -303,14 +376,16 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::getFields
-	 * @TODO   Implement testGetFields().
 	 */
 	public function testGetFields()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$fields = $this->instance->getFields();
+
+		$expected = $this->db->getTable('articles')->getColumnDetails(true);
+
+		$expected['created']->Default = $this->db->getQuery(true)->getNullDate();
+
+		$this->assertEquals($expected, $fields);
 	}
 
 	public function testHasField()
@@ -327,14 +402,10 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::getTableName
-	 * @TODO   Implement testGetTableName().
 	 */
 	public function testGetTableName()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('articles', $this->instance->getTableName());
 	}
 
 	/**
@@ -359,14 +430,12 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::getIterator
-	 * @TODO   Implement testGetIterator().
 	 */
 	public function testGetIterator()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->load(7);
+
+		$this->assertEquals($this->instance->toArray(), iterator_to_array($this->instance));
 	}
 
 	/**
@@ -391,14 +460,14 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::toArray
-	 * @TODO   Implement testToArray().
 	 */
 	public function testToArray()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->load(7);
+
+		$array = $this->instance->toArray();
+
+		$this->assertEquals($this->instance->title, $array['title']);
 	}
 
 	/**
@@ -407,14 +476,11 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::__isset
-	 * @TODO   Implement test__isset().
 	 */
 	public function test__isset()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertTrue(isset($this->instance->title));
+		$this->assertFalse(isset($this->instance->chicken));
 	}
 
 	/**
@@ -423,14 +489,18 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::__clone
-	 * @TODO   Implement test__clone().
 	 */
 	public function test__clone()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->load(7);
+
+		$clone = clone $this->instance;
+
+		$clone->load(8);
+
+		$this->assertNotSame($clone, $this->instance);
+
+		$this->assertNotEquals($clone->title, $this->instance->title);
 	}
 
 	/**
@@ -471,14 +541,14 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::valueExists
-	 * @TODO   Implement testValueExists().
 	 */
 	public function testValueExists()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertTrue($this->instance->valueExists('alias', 'ut-qui-sed'));
+
+		$this->instance->load(array('alias' => 'ut-qui-sed'));
+
+		$this->assertFalse($this->instance->valueExists('id'));
 	}
 
 	/**
@@ -524,14 +594,11 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::offsetExists
-	 * @TODO   Implement testOffsetExists().
 	 */
 	public function testOffsetExists()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertTrue(isset($this->instance['title']));
+		$this->assertFalse(isset($this->instance['chicken']));
 	}
 
 	/**
@@ -540,14 +607,13 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::offsetGet
-	 * @TODO   Implement testOffsetGet().
 	 */
 	public function testOffsetGet()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance->load(12);
+
+		$this->assertEquals('Quidem sequi', $this->instance['title']);
+		$this->assertEquals(null, $this->instance['chicken']);
 	}
 
 	/**
@@ -556,14 +622,16 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::offsetSet
-	 * @TODO   Implement testOffsetSet().
 	 */
 	public function testOffsetSet()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance['title'] = 'ABC';
+		$this->instance['Extra'] = 'foo';
+
+		$array = $this->instance->toArray();
+
+		$this->assertEquals('ABC', $array['title']);
+		$this->assertEquals('foo', $array['Extra']);
 	}
 
 	/**
@@ -572,14 +640,16 @@ class RecordTest extends AbstractMysqlTestCase
 	 * @return void
 	 *
 	 * @covers Windwalker\Record\Record::offsetUnset
-	 * @TODO   Implement testOffsetUnset().
 	 */
 	public function testOffsetUnset()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->instance['title'] = 'ABC';
+
+		$this->assertEquals('ABC', $this->instance['title']);
+
+		unset($this->instance['title']);
+
+		$this->assertEquals(null, $this->instance['title']);
 	}
 
 	/**

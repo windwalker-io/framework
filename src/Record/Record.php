@@ -235,25 +235,22 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * property name.  The rows that will be reordered are those whose value matches
 	 * the AbstractTable instance for the property specified.
 	 *
-	 * @param   mixed  $src     An associative array or object to bind to the AbstractTable instance.
-	 * @param   mixed  $ignore  An optional array or space separated list of properties
-	 *                          to ignore while binding.
+	 * @param   mixed    $src          An associative array or object to bind to the AbstractTable instance.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  $this  Method allows chaining
 	 *
 	 * @since   2.0
 	 */
-	public function save($src, $ignore = '')
+	public function save($src, $updateNulls = false)
 	{
-		$this
+		return $this
 			// Attempt to bind the source to the instance.
-			->bind($src, $ignore)
+			->bind($src)
 			// Run any sanity checks on the instance and verify that it is ready for storage.
 			->check()
 			// Attempt to store the properties to the database table.
-			->store();
-
-		return $this;
+			->store($updateNulls);
 	}
 
 	/**
@@ -261,15 +258,14 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed  $src     An associative array or object to bind to the AbstractTable instance.
-	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $src  An associative array or object to bind to the AbstractTable instance.
 	 *
 	 * @return  static  Method allows chaining
 	 *
 	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function bind($src, $ignore = array())
+	public function bind($src)
 	{
 		// If the source value is not an array or object return false.
 		if (!is_object($src) && !is_array($src))
@@ -288,33 +284,23 @@ class Record implements \ArrayAccess, \IteratorAggregate
 			$src = get_object_vars($src);
 		}
 
-		// If the ignore value is a string, explode it over spaces.
-		if (!is_array($ignore))
-		{
-			$ignore = explode(' ', $ignore);
-		}
-
 		$fields = $this->getFields();
 
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
 			'src'    => &$src,
-			'fields' => $fields,
-			'ignore' => &$ignore
+			'fields' => $fields
 		));
 
 		// Bind the source value, excluding the ignored fields.
 		foreach ($src as $k => $v)
 		{
 			// Only process fields not in the ignore array.
-			if (!in_array($k, $ignore))
-			{
-				$k = $this->resolveAlias($k);
+			$k = $this->resolveAlias($k);
 
-				if (array_key_exists($k, $fields))
-				{
-					$this->data->$k = $v;
-				}
+			if (array_key_exists($k, $fields))
+			{
+				$this->data->$k = $v;
 			}
 		}
 
@@ -519,7 +505,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
-	 * @return  $this  Method allows chaining
+	 * @return  static  Method allows chaining
 	 *
 	 * @since   2.0
 	 */
@@ -535,34 +521,34 @@ class Record implements \ArrayAccess, \IteratorAggregate
 
 		$update = (bool) $this->hasPrimaryKey();
 
+		/*
+		 * If is create, or update with null values, we must check all NOT NULL
+		 * fields uses default value instead NULL value. This helps us get rid of
+		 * this Mysql warning in STRICT_TRANS_TABLE mode.
+		 */
 		if (!$update || $updateNulls)
 		{
 			foreach ($this->getFields() as $field => $detail)
 			{
-				if ($this->$field === null)
+				$data[$field] = $this->$field;
+
+				// This field is null and the db column is not nullable, use db default value.
+				if ($data[$field] === null && strtolower($detail->Null) == 'no')
 				{
 					$data[$field] = $detail->Default;
 				}
-				else
-				{
-					$data[$field] = $this->$field;
-				}
 			}
 		}
-		elseif ($update && !$updateNulls)
+		// Otherwise we just send current data
+		else
 		{
-			// Load old first
-			$data = $this->data;
-			$this->load($this->get($this->getKeyName()));
-			$this->bind($data);
-
-			$data = $this->data;
+			$data = (array) $this->data;
 		}
 
 		// If a primary key exists update the object, otherwise insert it.
 		if ($update)
 		{
-			$this->db->getWriter()->updateOne($this->table, $data, $this->keys, true);
+			$this->db->getWriter()->updateOne($this->table, $data, $this->keys, $updateNulls);
 		}
 		else
 		{
@@ -642,16 +628,25 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		}
 		else
 		{
-			if (is_string($pk))
+			if (!is_array($pk) && !is_object($pk))
 			{
+				if (count($this->keys))
+				{
+					throw new \InvalidArgumentException(sprintf(
+						'%s has %s keys, please do not send only one value.',
+						__CLASS__,
+						count($this->keys)
+					));
+				}
+
 				$pk = array($this->keys[0] => $pk);
 			}
 
-			$pk = (object) $pk;
+			$pk = (array) $pk;
 
 			foreach ($this->keys AS $k)
 			{
-				$query->where($this->db->quoteName($k) . ' = ' . $this->db->quote($pk->$k));
+				$query->where($this->db->quoteName($k) . ' = ' . $this->db->quote($pk[$k]));
 			}
 		}
 
@@ -821,6 +816,10 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	{
 		$this->table = $table;
 
+		$this->fields = null;
+
+		$this->getFields();
+
 		return $this;
 	}
 
@@ -907,17 +906,24 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Check a field value exists in database or not, to keep a field unique.
 	 *
-	 * @param   string  $field  The field name to check.
+	 * @param   string $field The field name to check.
 	 *
-	 * @return  boolean
+	 * @param null     $value
+	 *
+	 * @return bool
 	 */
-	public function valueExists($field)
+	public function valueExists($field, $value = null)
 	{
 		$record = new static($this->table, $this->keys, $this->db);
+		
+		if ($value === null)
+		{
+			$value = $this->$field;
+		}
 
-		$record->load(array($field => $this->$field));
+		$record->load(array($field => $value));
 
-		if ($record->$field != $this->$field)
+		if ($record->$field != $value)
 		{
 			return false;
 		}

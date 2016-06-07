@@ -151,7 +151,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 		$table->create(function (Schema $schema)
 		{
 			$schema->primary('id')->comment('PK');
-			$schema->datetime('date')->allowNull(false)->defaultValue('');
+			$schema->datetime('date')->allowNull(false)->defaultValue(null);
 			$schema->varchar('data')->allowNull(false)->defaultValue('test');
 		});
 

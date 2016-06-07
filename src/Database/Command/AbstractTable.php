@@ -552,7 +552,7 @@ abstract class AbstractTable
 	 *
 	 * @param Column $column
 	 *
-	 * @return  string
+	 * @return  Column
 	 */
 	protected function prepareDefaultValue(Column $column)
 	{
@@ -563,9 +563,11 @@ abstract class AbstractTable
 		if (!$column->getAllowNull() && $default === null && !$column->isPrimary())
 		{
 			$default = $typeMapper::getDefaultValue($column->getType());
+
+			$column->defaultValue($default);
 		}
 
-		return $default;
+		return $column;
 	}
 
 	/**
