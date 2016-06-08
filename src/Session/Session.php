@@ -200,19 +200,36 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Start a session.
 	 *
-	 * @param   bool  $restart  This argument has been deprecated.
-	 *
 	 * @return  boolean
 	 *
 	 * @since   2.0
 	 */
-	public function start($restart = false)
+	public function start()
 	{
 		if ($this->state === static::STATE_ACTIVE)
 		{
 			return true;
 		}
 
+		$this->doStart();
+
+		if ($this->state === static::STATE_EXPIRED)
+		{
+			$this->restart();
+		}
+
+		return true;
+	}
+
+	/**
+	 * doStart
+	 *
+	 * @return  boolean
+	 *
+	 * @since  3.0
+	 */
+	protected function doStart()
+	{
 		$sessionName = $this->bridge->getName();
 
 		$cookie = $this->getCookie();
@@ -230,7 +247,6 @@ class Session implements \ArrayAccess, \IteratorAggregate
 			}
 		}
 
-
 		$this->bridge->start();
 
 		$this->prepareBagsData($this->bags);
@@ -243,11 +259,6 @@ class Session implements \ArrayAccess, \IteratorAggregate
 
 		// Perform security checks
 		$this->validate();
-
-		if ($this->state === static::STATE_EXPIRED)
-		{
-			$this->restart();
-		}
 
 		return true;
 	}
@@ -311,7 +322,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 		// Re-register the session handler after a session has been destroyed, to avoid PHP bug
 		$this->registerHandler();
 
-		$result = $this->start();
+		$result = $this->doStart();
 
 		$this->regenerate(true);
 
@@ -457,21 +468,6 @@ class Session implements \ArrayAccess, \IteratorAggregate
 			}
 		}
 
-		// Check for clients browser
-		if ($this->getOption('fix_browser', true) && isset($_SERVER['HTTP_USER_AGENT']))
-		{
-			$browser = $this->get('session.client.browser');
-
-			if ($browser === null)
-			{
-				$this->set('session.client.browser', $_SERVER['HTTP_USER_AGENT']);
-			}
-			elseif ($_SERVER['HTTP_USER_AGENT'] !== $browser)
-			{
-				// Nothing to do.
-			}
-		}
-
 		return true;
 	}
 
@@ -540,7 +536,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 			
 			return false;
 		}
-
+		
 		return $this->getBag($namespace)->get($name, $default);
 	}
 
