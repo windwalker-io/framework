@@ -11,6 +11,7 @@ namespace Windwalker\Record;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Schema\DataType;
+use Windwalker\DataMapper\Entity\Entity;
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherInterface;
 use Windwalker\Event\Event;
@@ -23,7 +24,7 @@ use Windwalker\Record\Exception\NoResultException;
  *
  * @since 2.0
  */
-class Record implements \ArrayAccess, \IteratorAggregate
+class Record extends Entity
 {
 	const UPDATE_NULLS = true;
 
@@ -36,12 +37,11 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	protected $table = '';
 
 	/**
-	 * The fields of the database table.
+	 * Property data.
 	 *
-	 * @var    \stdClass
-	 * @since  2.0
+	 * @var  array
 	 */
-	protected $data = null;
+	protected $data = array();
 
 	/**
 	 * Name of the primary key fields in the table.
@@ -114,7 +114,6 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		// Set internal variables.
 		$this->table = $this->table ? : $table;
 		$this->db    = $db;
-		$this->data  = new \stdClass;
 
 		if (!$this->keys)
 		{
@@ -137,94 +136,12 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		}
 
 		// Initialise the table properties.
-		$fields = $this->getFields();
-
-		if ($fields)
-		{
-			foreach ($fields as $name => $v)
-			{
-				// Add the field if it is not already present.
-				$this->data->$name = null;
-			}
-		}
+		$this->reset();
 
 		if (!$this->table)
 		{
 			throw new \InvalidArgumentException('Table name should not empty.');
 		}
-	}
-
-	/**
-	 * Magic setter to set a table field.
-	 *
-	 * @param   string  $key    The key name.
-	 * @param   mixed   $value  The value to set.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.0
-	 * @throws  \InvalidArgumentException
-	 */
-	public function __set($key, $value)
-	{
-		$this->set($key, $value);
-	}
-
-	/**
-	 * Magic getter to get a table field.
-	 *
-	 * @param   string  $key  The key name.
-	 *
-	 * @return  mixed
-	 *
-	 * @since   2.0
-	 * @throws  \InvalidArgumentException
-	 */
-	public function __get($key)
-	{
-		return $this->get($key);
-	}
-
-	/**
-	 * Magic setter to set a table field.
-	 *
-	 * @param   string  $key    The key name.
-	 * @param   mixed   $value  The value to set.
-	 *
-	 * @return  static
-	 *
-	 * @since   2.0
-	 * @throws  \InvalidArgumentException
-	 */
-	public function set($key, $value)
-	{
-		$key = $this->resolveAlias($key);
-
-		$this->data->$key = $value;
-
-		return $this;
-	}
-
-	/**
-	 * Magic getter to get a table field.
-	 *
-	 * @param   string $key      The key name.
-	 * @param   null   $default  The default value.
-	 *
-	 * @return  mixed
-	 *
-	 * @since   2.0
-	 */
-	public function get($key, $default = null)
-	{
-		$key = $this->resolveAlias($key);
-
-		if (property_exists($this->data, $key))
-		{
-			return $this->data->$key;
-		}
-
-		return $default;
 	}
 
 	/**
@@ -248,7 +165,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 			// Attempt to bind the source to the instance.
 			->bind($src)
 			// Run any sanity checks on the instance and verify that it is ready for storage.
-			->check()
+			->validate()
 			// Attempt to store the properties to the database table.
 			->store($updateNulls);
 	}
@@ -258,14 +175,14 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed  $src  An associative array or object to bind to the AbstractTable instance.
+	 * @param   mixed $src           An associative array or object to bind to the AbstractTable instance.
+	 * @param   bool  $replaceNulls  Replace NULL value.
 	 *
-	 * @return  static  Method allows chaining
+	 * @return static Method allows chaining
 	 *
 	 * @since   2.0
-	 * @throws  \InvalidArgumentException
 	 */
-	public function bind($src)
+	public function bind($src, $replaceNulls = false)
 	{
 		// If the source value is not an array or object return false.
 		if (!is_object($src) && !is_array($src))
@@ -284,23 +201,29 @@ class Record implements \ArrayAccess, \IteratorAggregate
 			$src = get_object_vars($src);
 		}
 
-		$fields = $this->getFields();
+		$fields = $this->loadFields();
 
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
 			'src'    => &$src,
-			'fields' => $fields
+			'fields' => $fields,
+			'replaceNulls' => &$replaceNulls
 		));
 
 		// Bind the source value, excluding the ignored fields.
 		foreach ($src as $k => $v)
 		{
-			// Only process fields not in the ignore array.
+			if ($v === null && !$replaceNulls)
+			{
+				continue;
+			}
+
+			// Only process values in fields
 			$k = $this->resolveAlias($k);
 
 			if (array_key_exists($k, $fields))
 			{
-				$this->data->$k = $v;
+				$this->data[$k] = $v;
 			}
 		}
 
@@ -385,7 +308,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		{
 			// Check that $field is in the table.
 
-			if (isset($this->data->$field) || is_null($this->data->$field))
+			if (isset($this->data[$field]) || is_null($this->data[$field]))
 			{
 				// Add the search tuple to the query.
 				$query->where($this->db->quoteName($field) . ' = ' . $this->db->quote($value));
@@ -458,30 +381,6 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Method to reset class properties to the defaults set in the class
-	 * definition. It will ignore the primary key as well as any private class
-	 * properties.
-	 *
-	 * @param bool $clear
-	 *
-	 * @return  static
-	 *
-	 * @since   2.0
-	 */
-	public function reset($clear = false)
-	{
-		$this->data = new \stdClass;
-
-		// Get the default values for the class from the table.
-		foreach ($this->getFields() as $k => $v)
-		{
-			$this->$k = $clear ? null : $v->Default;
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Method to perform sanity checks on the AbstractTable instance properties to ensure
 	 * they are safe to store in the database.  Child classes should override this
 	 * method to make sure the data they are storing in the database is safe and
@@ -490,8 +389,10 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	 * @return  static  Method allows chaining
 	 *
 	 * @since   2.0
+	 *
+	 * @throws  \RuntimeException
 	 */
-	public function check()
+	public function validate()
 	{
 		return $this;
 	}
@@ -528,7 +429,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		 */
 		if (!$update || $updateNulls)
 		{
-			foreach ($this->getFields() as $field => $detail)
+			foreach ($this->loadFields() as $field => $detail)
 			{
 				$data[$field] = $this->$field;
 
@@ -555,10 +456,71 @@ class Record implements \ArrayAccess, \IteratorAggregate
 			$this->db->getWriter()->insertOne($this->table, $data, $this->keys[0]);
 		}
 
-		$this->data->{$this->keys[0]} = $data[$this->keys[0]];
+		$this->data[$this->keys[0]] = $data[$this->keys[0]];
 
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+
+		return $this;
+	}
+
+	/**
+	 * addField
+	 *
+	 * @param  string $field
+	 * @param  string $default
+	 *
+	 * @return  static
+	 */
+	public function addField($field, $default = null)
+	{
+		if ($default !== null && (is_array($default) || is_object($default)))
+		{
+			throw new \InvalidArgumentException(sprintf('Default value should be scalar, %s given.', gettype($default)));
+		}
+
+		$defaultProfile = array(
+			'Field'      => '',
+			'Type'      => '',
+			'Collation' => 'utf8_unicode_ci',
+			'Null'      => 'NO',
+			'Key'       => '',
+			'Default'   => '',
+			'Extra'     => '',
+			'Privileges' => 'select,insert,update,references',
+			'Comment'    => ''
+		);
+
+		if (is_string($field))
+		{
+			$field = array_merge($defaultProfile, array(
+				'Field'    => $field,
+				'Type'    => gettype($default),
+				'Default' => $default
+			));
+		}
+
+		if (is_array($field) || is_object($field))
+		{
+			$field = array_merge($defaultProfile, (array) $field);
+		}
+
+		if (strtolower($field['Null']) == 'no' && $field['Default'] === null
+			&& $field['Key'] != 'PRI' && $this->getKeyName() != $field['Field'])
+		{
+			$type = $field['Type'];
+
+			list($type,) = explode('(', $type, 2);
+			$type = strtolower($type);
+
+			$typeMapper = DataType::getInstance($this->db->getName());
+
+			$field['Default'] = $typeMapper->getDefaultValue($type);
+		}
+
+		$field = (object) $field;
+
+		$this->fields[$field->Field] = $field;
 
 		return $this;
 	}
@@ -574,37 +536,21 @@ class Record implements \ArrayAccess, \IteratorAggregate
 	{
 		if ($this->autoIncrement)
 		{
-			$empty = true;
-
-			foreach ($this->keys as $key)
-			{
-				$empty = $empty && !$this->$key;
-			}
-		}
-		else
-		{
-			$query = $this->db->getQuery(true);
-
-			$query->select('COUNT(*)')
-				->from($this->table);
-
-			$this->appendPrimaryKeys($query);
-
-			$this->db->setQuery($query);
-
-			$count = $this->db->loadResult();
-
-			if ($count == 1)
-			{
-				$empty = false;
-			}
-			else
-			{
-				$empty = true;
-			}
+			return parent::hasPrimaryKey();
 		}
 
-		return !$empty;
+		$query = $this->db->getQuery(true);
+
+		$query->select('COUNT(*)')
+			->from($this->table);
+
+		$this->appendPrimaryKeys($query);
+
+		$this->db->setQuery($query);
+
+		$count = $this->db->loadResult();
+
+		return $count != 1;
 	}
 
 	/**
@@ -651,232 +597,6 @@ class Record implements \ArrayAccess, \IteratorAggregate
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Method to get the primary key field name for the table.
-	 *
-	 * @param   boolean  $multiple  True to return all primary keys (as an array) or false to return just the first one (as a string).
-	 *
-	 * @return  mixed  Array of primary key field names or string containing the first primary key field.
-	 *
-	 * @since   2.0
-	 */
-	public function getKeyName($multiple = false)
-	{
-		// Count the number of keys
-		if (count($this->keys))
-		{
-			if ($multiple)
-			{
-				// If we want multiple keys, return the raw array.
-				return $this->keys;
-			}
-			else
-			{
-				// If we want the standard method, just return the first key.
-				return $this->keys[0];
-			}
-		}
-
-		return '';
-	}
-
-	/**
-	 * Get the columns from database table.
-	 *
-	 * @return  array  An array of the field names, or false if an error occurs.
-	 *
-	 * @since   2.0
-	 * @throws  \UnexpectedValueException
-	 */
-	public function getFields()
-	{
-		if ($this->fields === null)
-		{
-			$table = $this->getTableName();
-
-			if (isset(static::$fieldsCache[$table]))
-			{
-				return $this->fields = static::$fieldsCache[$table];
-			}
-
-			// Lookup the fields for this table only once.
-			$fields = $this->db->getTable($table)->getColumnDetails();
-
-			foreach ($fields as $field)
-			{
-				$this->addField($field);
-			}
-
-			if (empty($fields))
-			{
-				throw new \UnexpectedValueException(sprintf('No columns found for %s table', $this->table));
-			}
-		}
-
-		return $this->fields;
-	}
-
-	/**
-	 * addField
-	 *
-	 * @param  string $field
-	 * @param  string $default
-	 *
-	 * @return  static
-	 */
-	public function addField($field, $default = null)
-	{
-		if ($default !== null && (is_array($default) || is_object($default)))
-		{
-			throw new \InvalidArgumentException(sprintf('Default value should be scalar, %s given.', gettype($default)));
-		}
-
-		$defaultProfile = array(
-			'Field'      => '',
-			'Type'      => '',
-			'Collation' => 'utf8_unicode_ci',
-			'Null'      => 'NO',
-			'Key'       => '',
-			'Default'   => '',
-			'Extra'     => '',
-			'Privileges' => 'select,insert,update,references',
-			'Comment'    => ''
-		);
-
-		if (is_string($field))
-		{
-			$field = array_merge($defaultProfile, array(
-				'Field'    => $field,
-				'Type'    => gettype($default),
-				'Default' => $default
-			));
-		}
-
-		if (is_array($field) || is_object($field))
-		{
-			$field = array_merge($defaultProfile, (array) $field);
-		}
-
-		if (strtolower($field['Null']) == 'no' && $field['Default'] === null 
-			&& $field['Key'] != 'PRI' && $this->getKeyName() != $field['Field'])
-		{
-			$type = $field['Type'];
-			
-			list($type,) = explode('(', $type, 2);
-			$type = strtolower($type);
-			
-			$typeMapper = DataType::getInstance($this->db->getName());
-
-			$field['Default'] = $typeMapper->getDefaultValue($type);
-		}
-
-		$field = (object) $field;
-
-		$this->fields[$field->Field] = $field;
-
-		return $this;
-	}
-
-	/**
-	 * Method to check a field exists or not.
-	 *
-	 * @param string $name
-	 *
-	 * @return  boolean
-	 */
-	public function hasField($name)
-	{
-		$name = $this->resolveAlias($name);
-
-		return array_key_exists($name, (array) $this->fields);
-	}
-
-	/**
-	 * Get the table name.
-	 *
-	 * @return  string
-	 *
-	 * @since   2.0
-	 */
-	public function getTableName()
-	{
-		return $this->table;
-	}
-
-	/**
-	 * Method to set property table
-	 *
-	 * @param   string $table
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setTableName($table)
-	{
-		$this->table = $table;
-
-		$this->fields = null;
-
-		$this->getFields();
-
-		return $this;
-	}
-
-	/**
-	 * Get an iterator object.
-	 *
-	 * @return  \ArrayIterator
-	 *
-	 * @since   2.0
-	 */
-	public function getIterator()
-	{
-		return new \ArrayIterator($this->data);
-	}
-
-	/**
-	 * toObject
-	 *
-	 * @return  \stdClass
-	 */
-	public function toObject()
-	{
-		return $this->data;
-	}
-
-	/**
-	 * toArray
-	 *
-	 * @return  array
-	 */
-	public function toArray()
-	{
-		return get_object_vars($this->data);
-	}
-
-	/**
-	 * __isset
-	 *
-	 * @param   string  $name
-	 *
-	 * @return  boolean
-	 */
-	public function __isset($name)
-	{
-		return $this->hasField($name);
-	}
-
-	/**
-	 * Clone the table.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.0
-	 */
-	public function __clone()
-	{
-		$this->data = clone $this->data;
 	}
 
 	/**
@@ -944,98 +664,7 @@ class Record implements \ArrayAccess, \IteratorAggregate
 
 		return false;
 	}
-
-	/**
-	 * Set column alias.
-	 *
-	 * @param   string  $name
-	 * @param   string  $alias
-	 *
-	 * @return  static
-	 */
-	public function setAlias($name, $alias)
-	{
-		if ($alias === null && isset($this->aliases[$name]))
-		{
-			unset($this->aliases[$name]);
-		}
-		else
-		{
-			$this->aliases[$name] = $alias;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Resolve alias.
-	 *
-	 * @param   string $name
-	 *
-	 * @return  string
-	 */
-	public function resolveAlias($name)
-	{
-		if (isset($this->aliases[$name]))
-		{
-			return $this->aliases[$name];
-		}
-
-		return $name;
-	}
-
-	/**
-	 * Is a property exists or not.
-	 *
-	 * @param mixed $offset Offset key.
-	 *
-	 * @return  boolean
-	 */
-	public function offsetExists($offset)
-	{
-		return $this->hasField($offset);
-	}
-
-	/**
-	 * Get a property.
-	 *
-	 * @param mixed $offset Offset key.
-	 *
-	 * @throws  \InvalidArgumentException
-	 * @return  mixed The value to return.
-	 */
-	public function offsetGet($offset)
-	{
-		return $this->get($offset);
-	}
-
-	/**
-	 * Set a value to property.
-	 *
-	 * @param mixed $offset Offset key.
-	 * @param mixed $value  The value to set.
-	 *
-	 * @throws  \InvalidArgumentException
-	 * @return  void
-	 */
-	public function offsetSet($offset, $value)
-	{
-		$this->set($offset, $value);
-	}
-
-	/**
-	 * Unset a property.
-	 *
-	 * @param mixed $offset Offset key to unset.
-	 *
-	 * @throws  \InvalidArgumentException
-	 * @return  void
-	 */
-	public function offsetUnset($offset)
-	{
-		$this->data->$offset = null;
-	}
-
+	
 	/**
 	 * triggerEvent
 	 *

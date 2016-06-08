@@ -9,6 +9,8 @@
 namespace Windwalker\DataMapper\Entity;
 
 use Windwalker\Data\Data;
+use Windwalker\Database\Schema\DataType;
+use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
 use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 
 /**
@@ -48,22 +50,30 @@ class Entity extends Data
 	protected $fields = null;
 
 	/**
+	 * Property db.
+	 *
+	 * @var  DatabaseAdapterInterface
+	 */
+	protected $db;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param string $table
-	 * @param array  $fields
-	 * @param mixed  $data
+	 * @param string                    $table
+	 * @param array                     $fields
+	 * @param mixed                     $data
+	 * @param DatabaseAdapterInterface  $db
 	 */
-	public function __construct($table = null, $fields = null, $data = null)
+	public function __construct($table = null, $fields = null, $data = null, $db = null)
 	{
+		$this->db = $db ? : WindwalkerAdapter::getInstance();
 		$this->table = $table;
 
-		if ($fields === null)
+		if ($fields === null && $this->table)
 		{
-			$fields = $this->loadFields($table);
+			$this->loadFields();
 		}
-
-		if ($fields)
+		elseif (is_array($fields))
 		{
 			$this->addFields($fields);
 		}
@@ -73,25 +83,6 @@ class Entity extends Data
 		parent::__construct($data);
 
 		$this->init();
-	}
-
-	/**
-	 * loadFields
-	 *
-	 * @param   string  $table
-	 *
-	 * @return  \stdClass[]
-	 */
-	public function loadFields($table = null)
-	{
-		$table = $table ? : $this->table;
-
-		if ($table)
-		{
-			return WindwalkerAdapter::getInstance()->getColumnDetails($table);
-		}
-
-		return array();
 	}
 
 	/**
@@ -131,6 +122,144 @@ class Entity extends Data
 	}
 
 	/**
+	 * Method to get the primary key field name for the table.
+	 *
+	 * @param   boolean  $multiple  True to return all primary keys (as an array) or false to return just the first one (as a string).
+	 *
+	 * @return  array|mixed  Array of primary key field names or string containing the first primary key field.
+	 *
+	 * @since   2.0
+	 */
+	public function getKeyName($multiple = false)
+	{
+		// Count the number of keys
+		if (count($this->keys))
+		{
+			if ($multiple)
+			{
+				// If we want multiple keys, return the raw array.
+				return $this->keys;
+			}
+			else
+			{
+				// If we want the standard method, just return the first key.
+				return $this->keys[0];
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Validate that the primary key has been set.
+	 *
+	 * @return  boolean  True if the primary key(s) have been set.
+	 *
+	 * @since   2.0
+	 */
+	public function hasPrimaryKey()
+	{
+		$empty = true;
+
+		foreach ($this->keys as $key)
+		{
+			$empty = $empty && !$this->$key;
+		}
+
+		return !$empty;
+	}
+
+	/**
+	 * loadFields
+	 *
+	 * @param bool $reset
+	 *
+	 * @return \stdClass[]
+	 */
+	public function loadFields($reset = false)
+	{
+		if (!$this->table)
+		{
+			return $this->fields;
+		}
+
+		if ($this->fields === null || $reset)
+		{
+			$table = $this->getTableName();
+
+			$fields = WindwalkerAdapter::getInstance()->getColumnDetails($table);
+
+			foreach ($fields as $field)
+			{
+				$this->addField($field);
+			}
+
+			return $this->fields;
+		}
+
+		return $this->fields;
+	}
+
+	/**
+	 * addField
+	 *
+	 * @param  string $field
+	 * @param  string $default
+	 *
+	 * @return  static
+	 */
+	public function addField($field, $default = null)
+	{
+		if ($default !== null && (is_array($default) || is_object($default)))
+		{
+			throw new \InvalidArgumentException(sprintf('Default value should be scalar, %s given.', gettype($default)));
+		}
+
+		$defaultProfile = array(
+			'Field'      => '',
+			'Type'      => '',
+			'Collation' => 'utf8_unicode_ci',
+			'Null'      => 'NO',
+			'Key'       => '',
+			'Default'   => '',
+			'Extra'     => '',
+			'Privileges' => 'select,insert,update,references',
+			'Comment'    => ''
+		);
+
+		if (is_string($field))
+		{
+			$field = array_merge($defaultProfile, array(
+				'Field'    => $field,
+				'Type'    => gettype($default),
+				'Default' => $default
+			));
+		}
+
+		if (is_array($field) || is_object($field))
+		{
+			$field = array_merge($defaultProfile, (array) $field);
+		}
+
+		if (strtolower($field['Null']) == 'no' && $field['Default'] === null
+			&& $field['Key'] != 'PRI' && $this->getKeyName() != $field['Field'])
+		{
+			$type = $field['Type'];
+
+			list($type,) = explode('(', $type, 2);
+			$type = strtolower($type);
+
+			$field['Default'] = $this->db->getColumnDefaultValue($type);
+		}
+
+		$field = (object) $field;
+
+		$this->fields[$field->Field] = $field;
+
+		return $this;
+	}
+
+	/**
 	 * Add a field to this entity.
 	 *
 	 * @param array $fields Fields array.
@@ -148,57 +277,6 @@ class Entity extends Data
 	}
 
 	/**
-	 * Add a field.
-	 *
-	 * @param string  $field    Field name.
-	 * @param mixed   $default  The default value of this field.
-	 *
-	 * @return Entity Return self to support chaining.
-	 */
-	public function addField($field, $default = null)
-	{
-		if ($default !== null && (is_array($default) || is_object($default)))
-		{
-			throw new \InvalidArgumentException(sprintf('Default value should be scalar, %s given.', gettype($default)));
-		}
-		
-		$defaultProfile = array(
-			'Name'      => '',
-			'Type'      => '',
-			'Collation' => 'utf8_unicode_ci',
-			'Null'      => 'NO',
-			'Key'       => '',
-			'Default'   => '',
-			'Extra'     => '',
-			'Privileges' => 'select,insert,update,references',
-			'Comment'    => ''
-		);
-
-		if (is_string($field))
-		{
-			$field = (object) array_merge($defaultProfile, array(
-				'Name'    => $field,
-				'Type'    => gettype($default),
-				'Default' => $default
-			));
-		}
-
-		if (is_array($field) || is_object($field))
-		{
-			$field = array_merge($defaultProfile, (array) $field);
-		}
-
-		if ($field['Null'] == 'No' && $field['Default'] === null)
-		{
-			$field['Default'] = '';
-		}
-
-		$this->fields[$field] = $field;
-
-		return $this;
-	}
-
-	/**
 	 * Remove field from this entity.
 	 *
 	 * @param string $field Field name.
@@ -207,7 +285,10 @@ class Entity extends Data
 	 */
 	public function removeField($field)
 	{
+		$field = $this->resolveAlias($field);
+		
 		unset($this->fields[$field]);
+		unset($this->data[$field]);
 
 		return $this;
 	}
@@ -235,7 +316,7 @@ class Entity extends Data
 	 */
 	public function getIterator()
 	{
-		return new \ArrayIterator($this->data);
+		return new \ArrayIterator($this->dump());
 	}
 
 	/**
@@ -310,6 +391,31 @@ class Entity extends Data
 	}
 
 	/**
+	 * Set value.
+	 *
+	 * @param string $field The field to set.
+	 * @param mixed  $value The value to set.
+	 *
+	 * @return  void
+	 */
+	public function __set($field, $value = null)
+	{
+		$this->set($field, $value);
+	}
+
+	/**
+	 * Get value.
+	 *
+	 * @param string $field The field to get.
+	 *
+	 * @return  mixed The value we want ot get.
+	 */
+	public function __get($field)
+	{
+		return $this->get($field);
+	}
+
+	/**
 	 * Magic setter to set a table field.
 	 *
 	 * @param   string  $key    The key name.
@@ -320,7 +426,7 @@ class Entity extends Data
 	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function set($key, $value)
+	public function set($key, $value = null)
 	{
 		$key = $this->resolveAlias($key);
 
@@ -352,24 +458,134 @@ class Entity extends Data
 	}
 
 	/**
-	 * reset
+	 * Is a property exists or not.
 	 *
-	 * @param bool $useDefault
+	 * @param mixed $offset Offset key.
+	 *
+	 * @return  boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return $this->hasField($offset);
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @param mixed $offset Offset key.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  mixed The value to return.
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value to property.
+	 *
+	 * @param mixed $offset Offset key.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Unset a property.
+	 *
+	 * @param mixed $offset Offset key to unset.
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  void
+	 */
+	public function offsetUnset($offset)
+	{
+		$this->data[$offset] = null;
+	}
+
+	/**
+	 * Count this object.
+	 *
+	 * @return  int
+	 */
+	public function count()
+	{
+		return count($this->data);
+	}
+
+	/**
+	 * Method to check a field exists.
+	 *
+	 * @param string $field The field name to check.
+	 *
+	 * @return  boolean True if exists.
+	 */
+	public function exists($field)
+	{
+		return $this->hasField($field);
+	}
+
+	/**
+	 * Is this object empty?
+	 *
+	 * @return  boolean
+	 */
+	public function isNull()
+	{
+		$data = array_unique($this->data);
+
+		return count($data) == 1 && $data[0] === null;
+	}
+
+	/**
+	 * Dump all data as array
+	 *
+	 * @param bool $all
+	 *
+	 * @return array
+	 */
+	public function dump($all = false)
+	{
+		if ($all)
+		{
+			return $this->toArray();
+		}
+
+		$data = array();
+
+		foreach (array_keys($this->loadFields()) as $field)
+		{
+			$data[$field] = $this->data[$field];
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Method to reset class properties to the defaults set in the class
+	 * definition. It will ignore the primary key as well as any private class
+	 * properties.
+	 *
+	 * @param bool $empty
 	 *
 	 * @return  static
+	 *
+	 * @since   2.0
 	 */
-	public function reset($useDefault = true)
+	public function reset($empty = false)
 	{
-		foreach ($this->data as $key => $value)
+		$this->data = array();
+
+		// Get the default values for the class from the table.
+		foreach ((array) $this->loadFields() as $k => $v)
 		{
-			$default = null;
-
-			if ($useDefault && isset($this->fields[$key]->Default))
-			{
-				$default = $this->fields[$key]->Default;
-			}
-
-			$this->data[$key] = $default;
+			$this->data[$k] = $empty ? null : $v->Default;
 		}
 
 		return $this;

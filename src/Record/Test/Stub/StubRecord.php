@@ -27,10 +27,10 @@ class StubRecord extends Record
 	 *
 	 * @since   2.0
 	 */
-	public function check()
+	public function validate()
 	{
 		throw new \RuntimeException('Record save error');
 
-		return parent::check();
+		return parent::validate();
 	}
 }

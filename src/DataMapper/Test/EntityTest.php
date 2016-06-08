@@ -32,7 +32,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Entity($this->getTestFields(), $this->getTestData());
+		$this->instance = new Entity(null, $this->getTestFields(), $this->getTestData());
 	}
 
 	/**
@@ -83,8 +83,10 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__construct()
 	{
+		$dump = $this->instance->dump();
+
 		$this->assertEquals('Sakura', $this->instance->title);
-		$this->assertEquals(null, $this->instance->user);
+		$this->assertEquals(false, isset($dump['user']));
 	}
 
 	/**
@@ -102,8 +104,10 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 		$entity->bind($this->getTestData());
 
-		$this->assertNull($entity->params);
-		$this->assertEquals('Sakura', $entity->title);
+		$entity = $entity->dump();
+
+		$this->assertFalse(isset($entity['params']));
+		$this->assertEquals('Sakura', $entity['title']);
 	}
 
 	/**
@@ -135,6 +139,8 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 		$this->instance->bind($this->getTestData());
 
-		$this->assertNull($this->instance->content);
+		$data = $this->instance->dump();
+
+		$this->assertFalse(isset($data['content']));
 	}
 }

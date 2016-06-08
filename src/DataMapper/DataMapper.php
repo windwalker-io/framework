@@ -74,7 +74,9 @@ class DataMapper extends AbstractDataMapper
 					$data = $this->bindData($data);
 				}
 
-				$entity = new Entity($this->getFields($this->table), $data);
+				$entity = new Entity($this->table, $this->getFields($this->table), $data, $this->db);
+
+				$entity = $this->prepareDefaultValue($entity);
 
 				$pk = $this->getPrimaryKey();
 
@@ -121,7 +123,12 @@ class DataMapper extends AbstractDataMapper
 					$data = $this->bindData($data);
 				}
 
-				$entity = new Entity($this->getFields($this->table), $data);
+				$entity = new Entity($this->table, $this->getFields($this->table), $data, $this->db);
+
+				if ($updateNulls)
+				{
+					$entity = $this->prepareDefaultValue($entity);
+				}
 
 				$this->db->updateOne($this->table, $entity, $condFields, $updateNulls);
 
@@ -270,5 +277,26 @@ class DataMapper extends AbstractDataMapper
 		$table = $table ? : $this->table;
 
 		return $this->db->getColumnDetails($table);
+	}
+
+	/**
+	 * prepareDefaultValue
+	 *
+	 * @param Entity $entity
+	 *
+	 * @return  Entity
+	 */
+	protected function prepareDefaultValue(Entity $entity)
+	{
+		foreach ($entity->loadFields() as $field => $detail)
+		{
+			// This field is null and the db column is not nullable, use db default value.
+			if ($entity[$field] === null && strtolower($detail->Null) == 'no')
+			{
+				$entity[$field] = $detail->Default;
+			}
+		}
+
+		return $entity;
 	}
 }

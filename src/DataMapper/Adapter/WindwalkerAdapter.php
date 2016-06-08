@@ -12,6 +12,7 @@ use Windwalker\Data\DataSet;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
+use Windwalker\Database\Schema\DataType;
 
 /**
  * Class WindwalkerAdapter
@@ -120,7 +121,7 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	 *
 	 * @return  mixed  Data set data with inserted id.
 	 */
-	public function create($table, $data, $pk = null)
+	public function create($table, &$data, $pk = null)
 	{
 		return $this->db->getWriter()->insertOne($table, $data, $pk);
 	}
@@ -230,5 +231,17 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 		$this->db->getTransaction($asSavePoint)->rollback();
 
 		return $this;
+	}
+
+	/**
+	 * getTypeDefaultValue
+	 *
+	 * @param   string $type
+	 *
+	 * @return  mixed
+	 */
+	public function getColumnDefaultValue($type)
+	{
+		return DataType::getInstance($this->db->getName())->getDefaultValue($type);
 	}
 }

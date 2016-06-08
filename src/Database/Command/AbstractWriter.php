@@ -60,16 +60,30 @@ abstract class AbstractWriter
 	{
 		$fields = array();
 		$values = array();
+		$item = array();
 
 		if (!is_array($data) && !is_object($data))
 		{
 			throw new \InvalidArgumentException('Please give me array or object to insert.');
 		}
 
+		if ($data instanceof \Traversable)
+		{
+			$item = iterator_to_array($data);
+		}
+		elseif (is_object($data))
+		{
+			$item = get_object_vars($data);
+		}
+		else
+		{
+			$item = $data;
+		}
+
 		$query = $this->db->getQuery(true);
 
 		// Iterate over the object variables to build the query fields and values.
-		foreach (get_object_vars((object) $data) as $k => $v)
+		foreach ($item as $k => $v)
 		{
 			// Convert stringable object
 			if (is_object($v) && is_callable(array($v, '__toString')))
@@ -141,6 +155,19 @@ abstract class AbstractWriter
 			throw new \InvalidArgumentException('Please give me array or object to update.');
 		}
 
+		if ($data instanceof \Traversable)
+		{
+			$item = iterator_to_array($data);
+		}
+		elseif (is_object($data))
+		{
+			$item = get_object_vars($data);
+		}
+		else
+		{
+			$item = $data;
+		}
+
 		$query = $this->db->getQuery(true);
 
 		$key = (array) $key;
@@ -149,7 +176,7 @@ abstract class AbstractWriter
 		$query->update($query->quoteName($table));
 
 		// Iterate over the object variables to build the query fields/value pairs.
-		foreach (get_object_vars((object) $data) as $k => $v)
+		foreach ($item as $k => $v)
 		{
 			// Convert stringable object
 			if (is_object($v) && is_callable(array($v, '__toString')))

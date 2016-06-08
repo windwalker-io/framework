@@ -303,7 +303,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 		{
 			call_user_func_array($callback, array(&$value, $key, $userdata));
 
-			$this->$key = $value;
+			$this[$key] = $value;
 		}
 
 		return $this;

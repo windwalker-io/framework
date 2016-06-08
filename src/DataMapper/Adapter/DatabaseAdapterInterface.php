@@ -37,7 +37,7 @@ interface DatabaseAdapterInterface
 	 *
 	 * @return  mixed  Data set data with inserted id.
 	 */
-	public function create($table, $data, $pk = null);
+	public function create($table, &$data, $pk = null);
 
 	/**
 	 * Do update action.
@@ -111,4 +111,13 @@ interface DatabaseAdapterInterface
 	 * @return  $this
 	 */
 	public function transactionRollback($asSavePoint = false);
+
+	/**
+	 * getTypeDefaultValue
+	 *
+	 * @param   string  $type
+	 *
+	 * @return  mixed
+	 */
+	public function getColumnDefaultValue($type);
 }

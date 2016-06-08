@@ -172,7 +172,7 @@ class NestedRecord extends Record
 	 * @throws  \RuntimeException on database error.
 	 * @throws  \UnexpectedValueException
 	 */
-	public function check()
+	public function validate()
 	{
 		// Check that the parent_id field is valid.
 		if ($this->parent_id == 0)
@@ -784,7 +784,7 @@ class NestedRecord extends Record
 	 */
 	public function rebuildPath($pk = null)
 	{
-		$fields = $this->getFields();
+		$fields = $this->loadFields();
 
 		// If there is no alias or path field, just return true.
 		if (!array_key_exists('alias', $fields) || !array_key_exists('path', $fields))
@@ -849,9 +849,11 @@ class NestedRecord extends Record
 		$record->alias = 'root';
 		$record->access = 1;
 
+		$record->store();
+
 		static::$rootId = $record->$key;
 
-		return $record->store();
+		return true;
 	}
 
 	/**
@@ -859,13 +861,13 @@ class NestedRecord extends Record
 	 * definition. It will ignore the primary key as well as any private class
 	 * properties (except $_errors).
 	 *
-	 * @param bool $clear
+	 * @param bool $empty
 	 *
 	 * @return  static
 	 *
 	 * @since   3.2.1
 	 */
-	public function reset($clear = false)
+	public function reset($empty = false)
 	{
 		parent::reset();
 

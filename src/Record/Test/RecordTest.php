@@ -246,7 +246,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::check
+	 * @covers Windwalker\Record\Record::validate
 	 */
 	public function testCheck()
 	{
@@ -254,7 +254,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$this->assertExpectedException(function () use ($record)
 		{
-			$record->check();
+			$record->validate();
 		}, new \RuntimeException, 'Record save error');
 
 		$this->assertExpectedException(function () use ($record)
@@ -379,7 +379,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testGetFields()
 	{
-		$fields = $this->instance->getFields();
+		$fields = $this->instance->loadFields();
 
 		$expected = $this->db->getTable('articles')->getColumnDetails(true);
 
@@ -388,6 +388,11 @@ class RecordTest extends AbstractMysqlTestCase
 		$this->assertEquals($expected, $fields);
 	}
 
+	/**
+	 * testHasField
+	 *
+	 * @return  void
+	 */
 	public function testHasField()
 	{
 		$record = $this->instance;

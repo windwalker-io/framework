@@ -83,13 +83,13 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @expectedException \UnexpectedValueException
 	 *
-	 * @covers Windwalker\Record\NestedRecord::check
+	 * @covers Windwalker\Record\NestedRecord::validate
 	 */
 	public function testCheckParentIdZero()
 	{
 		$this->instance->parent_id = 0;
 
-		$this->instance->check();
+		$this->instance->validate();
 	}
 
 	/**
@@ -99,13 +99,13 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @expectedException \UnexpectedValueException
 	 *
-	 * @covers Windwalker\Record\NestedRecord::check
+	 * @covers Windwalker\Record\NestedRecord::validate
 	 */
 	public function testCheckParentIdNotExists()
 	{
 		$this->instance->parent_id = 99;
 
-		$this->instance->check();
+		$this->instance->validate();
 	}
 
 	/**
