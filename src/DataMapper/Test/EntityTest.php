@@ -32,7 +32,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Entity(null, $this->getTestFields(), $this->getTestData());
+		$this->instance = new Entity($this->getTestFields(), $this->getTestData());
 	}
 
 	/**

@@ -379,7 +379,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testGetFields()
 	{
-		$fields = $this->instance->loadFields();
+		$fields = $this->instance->getFields();
 
 		$expected = $this->db->getTable('articles')->getColumnDetails(true);
 
@@ -440,7 +440,7 @@ class RecordTest extends AbstractMysqlTestCase
 	{
 		$this->instance->load(7);
 
-		$this->assertEquals($this->instance->toArray(), iterator_to_array($this->instance));
+		$this->assertEquals($this->instance->dump(), iterator_to_array($this->instance));
 	}
 
 	/**
@@ -464,13 +464,13 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::toArray
+	 * @covers Windwalker\Record\Record::dump
 	 */
-	public function testToArray()
+	public function testDump()
 	{
 		$this->instance->load(7);
 
-		$array = $this->instance->toArray();
+		$array = $this->instance->dump();
 
 		$this->assertEquals($this->instance->title, $array['title']);
 	}
@@ -633,7 +633,7 @@ class RecordTest extends AbstractMysqlTestCase
 		$this->instance['title'] = 'ABC';
 		$this->instance['Extra'] = 'foo';
 
-		$array = $this->instance->toArray();
+		$array = $this->instance->dump(true);
 
 		$this->assertEquals('ABC', $array['title']);
 		$this->assertEquals('foo', $array['Extra']);

@@ -415,11 +415,11 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testGetPrimaryKey()
 	{
-		$this->assertEquals('id', $this->instance->getPrimaryKey());
+		$this->assertEquals('id', $this->instance->getKeyName());
 
 		$mapper = new DataMapper('ww_flower', array('a', 'b'));
 
-		$this->assertEquals(array('a', 'b'), $mapper->getPrimaryKey());
+		$this->assertEquals(array('a', 'b'), $mapper->getKeyName(true));
 	}
 
 	/**

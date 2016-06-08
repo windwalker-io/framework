@@ -27,15 +27,15 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Constructor.
 	 *
-	 * @param   string                    $table  Table name.
-	 * @param   string|array              $pk     Primary key.
-	 * @param   DatabaseAdapterInterface  $db     Database adapter.
+	 * @param   string                   $table Table name.
+	 * @param   string|array             $keys  Primary key.
+	 * @param   DatabaseAdapterInterface $db    Database adapter.
 	 */
-	public function __construct($table = null, $pk = 'id', DatabaseAdapterInterface $db = null)
+	public function __construct($table = null, $keys = 'id', DatabaseAdapterInterface $db = null)
 	{
 		$this->db = $db ? : AbstractDatabaseAdapter::getInstance();
 
-		parent::__construct($table, $pk);
+		parent::__construct($table, $keys);
 	}
 
 	/**
@@ -74,11 +74,11 @@ class DataMapper extends AbstractDataMapper
 					$data = $this->bindData($data);
 				}
 
-				$entity = new Entity($this->table, $this->getFields($this->table), $data, $this->db);
+				$entity = new Entity($this->getFields($this->table), $data);
 
 				$entity = $this->prepareDefaultValue($entity);
 
-				$pk = $this->getPrimaryKey();
+				$pk = $this->getKeyName();
 
 				$this->db->create($this->table, $entity, $pk);
 
@@ -123,7 +123,7 @@ class DataMapper extends AbstractDataMapper
 					$data = $this->bindData($data);
 				}
 
-				$entity = new Entity($this->table, $this->getFields($this->table), $data, $this->db);
+				$entity = new Entity($this->getFields($this->table), $data);
 
 				if ($updateNulls)
 				{
@@ -274,9 +274,33 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function getFields($table = null)
 	{
+		if ($this->fields !== null)
+		{
+			return $this->fields;
+		}
+
 		$table = $table ? : $this->table;
 
-		return $this->db->getColumnDetails($table);
+		$fields = $this->db->getColumnDetails($table);
+
+		foreach ($fields as $field)
+		{
+			if (strtolower($field->Null) == 'no' && $field->Default === null
+				&& $field->Key != 'PRI' && $this->getKeyName() != $field->Field)
+			{
+				$type = $field->Type;
+
+				list($type,) = explode('(', $type, 2);
+				$type = strtolower($type);
+
+				$field->Default = $this->db->getColumnDefaultValue($type);
+			}
+
+			$field = (object) $field;
+			$this->fields[$field->Field] = $field;
+		}
+
+		return $this->fields;
 	}
 
 	/**
@@ -288,7 +312,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function prepareDefaultValue(Entity $entity)
 	{
-		foreach ($entity->loadFields() as $field => $detail)
+		foreach ($entity->getFields() as $field => $detail)
 		{
 			// This field is null and the db column is not nullable, use db default value.
 			if ($entity[$field] === null && strtolower($detail->Null) == 'no')

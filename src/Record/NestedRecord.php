@@ -784,7 +784,7 @@ class NestedRecord extends Record
 	 */
 	public function rebuildPath($pk = null)
 	{
-		$fields = $this->loadFields();
+		$fields = $this->getFields();
 
 		// If there is no alias or path field, just return true.
 		if (!array_key_exists('alias', $fields) || !array_key_exists('path', $fields))

@@ -42,7 +42,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $pk = null;
+	protected $keys = null;
 
 	/**
 	 * Table fields.
@@ -96,16 +96,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * We don't dependency on database in abstract class, that means you can use other data provider.
 	 *
-	 * @param   string  $table  Table name.
-	 * @param   string  $pk     The primary key.
+	 * @param   string $table Table name.
+	 * @param   string $keys  The primary key.
 	 *
 	 * @throws  \Exception
 	 * @since   2.0
 	 */
-	public function __construct($table = null, $pk = 'id')
+	public function __construct($table = null, $keys = 'id')
 	{
 		$this->table = $this->table ? : $table;
-		$this->pk = $this->pk ? : $pk;
+		$this->keys  = $this->keys ? : (array) $keys;
 
 		if (!$this->table)
 		{
@@ -156,7 +156,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		{
 			$cond = array();
 
-			foreach ((array) $this->getPrimaryKey() as $field)
+			foreach ((array) $this->getKeyName(true) as $field)
 			{
 				$cond[$field] = $conditions;
 			}
@@ -414,7 +414,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		// Handling conditions
-		$condFields = $condFields ? : $this->getPrimaryKey();
+		$condFields = $condFields ? : $this->getKeyName(true);
 
 		$result = $this->doUpdate($dataset, (array) $condFields, $updateNulls);
 
@@ -510,7 +510,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		{
 			$cond = array();
 
-			foreach ((array) $this->getPrimaryKey() as $field)
+			foreach ((array) $this->getKeyName(true) as $field)
 			{
 				$cond[$field] = $conditions;
 			}
@@ -548,7 +548,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function save($dataset, $condFields = null, $updateNulls = false)
 	{
 		// Handling conditions
-		$condFields = $condFields ? : $this->getPrimaryKey();
+		$condFields = $condFields ? : $this->getKeyName(true);
 
 		$condFields = (array) $condFields;
 
@@ -656,7 +656,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		{
 			$cond = array();
 
-			foreach ((array) $this->getPrimaryKey() as $field)
+			foreach ((array) $this->getKeyName(true) as $field)
 			{
 				$cond[$field] = $conditions;
 			}
@@ -750,7 +750,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function getPrimaryKey()
 	{
-		return $this->pk ? : 'id';
+		return $this->keys ? : array('id');
 	}
 
 	/**
@@ -995,5 +995,53 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$this->dispatcher = $dispatcher;
 
 		return $this;
+	}
+
+	/**
+	 * Method to get the primary key field name for the table.
+	 *
+	 * @param   boolean  $multiple  True to return all primary keys (as an array) or false to return just the first one (as a string).
+	 *
+	 * @return  array|mixed  Array of primary key field names or string containing the first primary key field.
+	 *
+	 * @since   3.0
+	 */
+	public function getKeyName($multiple = false)
+	{
+		// Count the number of keys
+		if (count($this->keys))
+		{
+			if ($multiple)
+			{
+				// If we want multiple keys, return the raw array.
+				return $this->keys;
+			}
+			else
+			{
+				// If we want the standard method, just return the first key.
+				return $this->keys[0];
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Validate that the primary key has been set.
+	 *
+	 * @return  boolean  True if the primary key(s) have been set.
+	 *
+	 * @since   3.0
+	 */
+	public function hasPrimaryKey()
+	{
+		$empty = true;
+
+		foreach ($this->keys as $key)
+		{
+			$empty = $empty && !$this->$key;
+		}
+
+		return !$empty;
 	}
 }

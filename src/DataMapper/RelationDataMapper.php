@@ -61,7 +61,7 @@ class RelationDataMapper extends DataMapper
 	{
 		$this->db = $db ? : AbstractDatabaseAdapter::getInstance();
 
-		$this->pk = $pk ? : $alias . '.' . $pk;
+		$this->keys = $pk ? : $alias . '.' . $pk;
 
 		$this->tables = new DataSet;
 

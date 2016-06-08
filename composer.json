@@ -3,7 +3,7 @@
     "description": "A Modern PHP framework.",
     "homepage": "https://github.com/ventoviro/windwalker",
     "license": "LGPL-2.0+",
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Simon Asika",

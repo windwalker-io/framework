@@ -201,7 +201,7 @@ class Record extends Entity
 			$src = get_object_vars($src);
 		}
 
-		$fields = $this->loadFields();
+		$fields = $this->getFields();
 
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
@@ -429,7 +429,7 @@ class Record extends Entity
 		 */
 		if (!$update || $updateNulls)
 		{
-			foreach ($this->loadFields() as $field => $detail)
+			foreach ($this->getFields() as $field => $detail)
 			{
 				$data[$field] = $this->$field;
 
@@ -462,6 +462,63 @@ class Record extends Entity
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
 		return $this;
+	}
+
+	/**
+	 * Get the table name.
+	 *
+	 * @return  string
+	 *
+	 * @since   2.0
+	 */
+	public function getTableName()
+	{
+		return $this->table;
+	}
+
+	/**
+	 * Method to set property table
+	 *
+	 * @param   string $table
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setTableName($table)
+	{
+		$this->table = $table;
+
+		return $this;
+	}
+
+	/**
+	 * loadFields
+	 *
+	 * @param bool $reset
+	 *
+	 * @return \stdClass[]
+	 */
+	public function getFields($reset = false)
+	{
+		if (!$this->table)
+		{
+			return $this->fields;
+		}
+
+		if ($this->fields === null || $reset)
+		{
+			$table = $this->getTableName();
+
+			$fields = $this->db->getTable($table)->getColumnDetails();
+
+			foreach ($fields as $field)
+			{
+				$this->addField($field);
+			}
+
+			return $this->fields;
+		}
+
+		return $this->fields;
 	}
 
 	/**
@@ -526,6 +583,35 @@ class Record extends Entity
 	}
 
 	/**
+	 * Method to get the primary key field name for the table.
+	 *
+	 * @param   boolean  $multiple  True to return all primary keys (as an array) or false to return just the first one (as a string).
+	 *
+	 * @return  array|mixed  Array of primary key field names or string containing the first primary key field.
+	 *
+	 * @since   2.0
+	 */
+	public function getKeyName($multiple = false)
+	{
+		// Count the number of keys
+		if (count($this->keys))
+		{
+			if ($multiple)
+			{
+				// If we want multiple keys, return the raw array.
+				return $this->keys;
+			}
+			else
+			{
+				// If we want the standard method, just return the first key.
+				return $this->keys[0];
+			}
+		}
+
+		return '';
+	}
+
+	/**
 	 * Validate that the primary key has been set.
 	 *
 	 * @return  boolean  True if the primary key(s) have been set.
@@ -536,7 +622,14 @@ class Record extends Entity
 	{
 		if ($this->autoIncrement)
 		{
-			return parent::hasPrimaryKey();
+			$empty = true;
+
+			foreach ($this->keys as $key)
+			{
+				$empty = $empty && !$this->$key;
+			}
+
+			return !$empty;
 		}
 
 		$query = $this->db->getQuery(true);
@@ -756,6 +849,30 @@ class Record extends Entity
 	public function setDb($db)
 	{
 		$this->db = $db;
+
+		return $this;
+	}
+
+	/**
+	 * Method to reset class properties to the defaults set in the class
+	 * definition. It will ignore the primary key as well as any private class
+	 * properties.
+	 *
+	 * @param bool $empty
+	 *
+	 * @return  static
+	 *
+	 * @since   2.0
+	 */
+	public function reset($empty = false)
+	{
+		$this->data = array();
+
+		// Get the default values for the class from the table.
+		foreach ((array) $this->getFields() as $k => $v)
+		{
+			$this->data[$k] = $empty ? null : $v->Default;
+		}
 
 		return $this;
 	}

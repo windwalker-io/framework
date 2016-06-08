@@ -9,9 +9,6 @@
 namespace Windwalker\DataMapper\Entity;
 
 use Windwalker\Data\Data;
-use Windwalker\Database\Schema\DataType;
-use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
-use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 
 /**
  * Entity is a Data object sub class, we can set fields of this object
@@ -19,15 +16,6 @@ use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
  */
 class Entity extends Data
 {
-	/**
-	 * Name of the database table to model.
-	 *
-	 * @var    string
-	 *
-	 * @since  3.0
-	 */
-	protected $table = '';
-
 	/**
 	 * Property data.
 	 *
@@ -50,30 +38,14 @@ class Entity extends Data
 	protected $fields = null;
 
 	/**
-	 * Property db.
-	 *
-	 * @var  DatabaseAdapterInterface
-	 */
-	protected $db;
-
-	/**
 	 * Constructor.
 	 *
-	 * @param string                    $table
-	 * @param array                     $fields
-	 * @param mixed                     $data
-	 * @param DatabaseAdapterInterface  $db
+	 * @param array $fields
+	 * @param mixed $data
 	 */
-	public function __construct($table = null, $fields = null, $data = null, $db = null)
+	public function __construct($fields = null, $data = null)
 	{
-		$this->db = $db ? : WindwalkerAdapter::getInstance();
-		$this->table = $table;
-
-		if ($fields === null && $this->table)
-		{
-			$this->loadFields();
-		}
-		elseif (is_array($fields))
+		if (is_array($fields))
 		{
 			$this->addFields($fields);
 		}
@@ -96,107 +68,12 @@ class Entity extends Data
 	}
 
 	/**
-	 * Get the table name.
-	 *
-	 * @return  string
-	 *
-	 * @since   2.0
-	 */
-	public function getTableName()
-	{
-		return $this->table;
-	}
-
-	/**
-	 * Method to set property table
-	 *
-	 * @param   string $table
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setTableName($table)
-	{
-		$this->table = $table;
-
-		return $this;
-	}
-
-	/**
-	 * Method to get the primary key field name for the table.
-	 *
-	 * @param   boolean  $multiple  True to return all primary keys (as an array) or false to return just the first one (as a string).
-	 *
-	 * @return  array|mixed  Array of primary key field names or string containing the first primary key field.
-	 *
-	 * @since   2.0
-	 */
-	public function getKeyName($multiple = false)
-	{
-		// Count the number of keys
-		if (count($this->keys))
-		{
-			if ($multiple)
-			{
-				// If we want multiple keys, return the raw array.
-				return $this->keys;
-			}
-			else
-			{
-				// If we want the standard method, just return the first key.
-				return $this->keys[0];
-			}
-		}
-
-		return '';
-	}
-
-	/**
-	 * Validate that the primary key has been set.
-	 *
-	 * @return  boolean  True if the primary key(s) have been set.
-	 *
-	 * @since   2.0
-	 */
-	public function hasPrimaryKey()
-	{
-		$empty = true;
-
-		foreach ($this->keys as $key)
-		{
-			$empty = $empty && !$this->$key;
-		}
-
-		return !$empty;
-	}
-
-	/**
 	 * loadFields
 	 *
-	 * @param bool $reset
-	 *
-	 * @return \stdClass[]
+	 * @return  \stdClass[]
 	 */
-	public function loadFields($reset = false)
+	public function getFields()
 	{
-		if (!$this->table)
-		{
-			return $this->fields;
-		}
-
-		if ($this->fields === null || $reset)
-		{
-			$table = $this->getTableName();
-
-			$fields = WindwalkerAdapter::getInstance()->getColumnDetails($table);
-
-			foreach ($fields as $field)
-			{
-				$this->addField($field);
-			}
-
-			return $this->fields;
-		}
-
 		return $this->fields;
 	}
 
@@ -239,17 +116,6 @@ class Entity extends Data
 		if (is_array($field) || is_object($field))
 		{
 			$field = array_merge($defaultProfile, (array) $field);
-		}
-
-		if (strtolower($field['Null']) == 'no' && $field['Default'] === null
-			&& $field['Key'] != 'PRI' && $this->getKeyName() != $field['Field'])
-		{
-			$type = $field['Type'];
-
-			list($type,) = explode('(', $type, 2);
-			$type = strtolower($type);
-
-			$field['Default'] = $this->db->getColumnDefaultValue($type);
 		}
 
 		$field = (object) $field;
@@ -317,26 +183,6 @@ class Entity extends Data
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->dump());
-	}
-
-	/**
-	 * toObject
-	 *
-	 * @return  \stdClass
-	 */
-	public function toObject()
-	{
-		return (object) $this->data;
-	}
-
-	/**
-	 * toArray
-	 *
-	 * @return  array
-	 */
-	public function toArray()
-	{
-		return $this->data;
 	}
 
 	/**
@@ -554,12 +400,12 @@ class Entity extends Data
 	{
 		if ($all)
 		{
-			return $this->toArray();
+			return $this->data;
 		}
 
 		$data = array();
 
-		foreach (array_keys($this->loadFields()) as $field)
+		foreach (array_keys($this->getFields()) as $field)
 		{
 			$data[$field] = $this->data[$field];
 		}
@@ -572,20 +418,18 @@ class Entity extends Data
 	 * definition. It will ignore the primary key as well as any private class
 	 * properties.
 	 *
-	 * @param bool $empty
-	 *
 	 * @return  static
 	 *
 	 * @since   2.0
 	 */
-	public function reset($empty = false)
+	public function reset()
 	{
 		$this->data = array();
 
 		// Get the default values for the class from the table.
-		foreach ((array) $this->loadFields() as $k => $v)
+		foreach ((array) $this->getFields() as $k => $v)
 		{
-			$this->data[$k] = $empty ? null : $v->Default;
+			$this->data[$k] = null;
 		}
 
 		return $this;
