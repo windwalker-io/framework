@@ -502,7 +502,7 @@ class PostgresqlTable extends AbstractTable
 			$query = PostgresqlQueryBuilder::showTableColumns($this->db->replacePrefix($this->getName()));
 
 			$fields = $this->db->setQuery($query)->loadAll();
-show((string)$query, $fields);
+
 			$result = array();
 
 			foreach ($fields as $field)
