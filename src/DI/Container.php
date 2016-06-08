@@ -225,7 +225,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	protected function getMethodArgs(\ReflectionMethod $method)
 	{
 		$methodArgs = array();
-
+		
 		foreach ($method->getParameters() as $param)
 		{
 			$dependency = $param->getClass();
@@ -257,7 +257,10 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 			// Finally, if there is a default parameter, use it.
 			if ($param->isOptional())
 			{
-				$methodArgs[] = $param->getDefaultValue();
+				if ($param->isDefaultValueAvailable())
+				{
+					$methodArgs[] = $param->getDefaultValue();
+				}
 
 				continue;
 			}
