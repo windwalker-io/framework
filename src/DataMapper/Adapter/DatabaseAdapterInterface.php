@@ -54,7 +54,7 @@ interface DatabaseAdapterInterface
 	public function updateOne($table, $data, array $condFields = array(), $updateNulls = false);
 
 	/**
-	 * Do updateAll action.
+	 * Do updateWith action.
 	 *
 	 * @param string  $table      The table name.
 	 * @param mixed   $data       The data we want to update to every rows.
@@ -63,7 +63,7 @@ interface DatabaseAdapterInterface
 	 * @throws \Exception
 	 * @return  boolean
 	 */
-	public function updateAll($table, $data, array $conditions = array());
+	public function updateBatch($table, $data, array $conditions = array());
 
 	/**
 	 * Do delete action, this method should be override by sub class.
@@ -119,5 +119,12 @@ interface DatabaseAdapterInterface
 	 *
 	 * @return  mixed
 	 */
-	public function getColumnDefaultValue($type);
+	public function getDataTypeDefaultValue($type);
+
+	/**
+	 * getDriver
+	 *
+	 * @return  mixed
+	 */
+	public function getDriver();
 }

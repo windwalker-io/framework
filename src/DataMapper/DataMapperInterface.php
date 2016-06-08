@@ -138,7 +138,7 @@ interface DataMapperInterface
 	 *
 	 * @return  mixed Updated data set.
 	 */
-	public function UpdateAll($data, $conditions = array());
+	public function updateBatch($data, $conditions = array());
 
 	/**
 	 * Same as update(), just update one row.

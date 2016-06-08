@@ -9,6 +9,7 @@
 namespace Windwalker\Record\Test;
 
 use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
+use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 use Windwalker\Query\Query;
 use Windwalker\Record\Record;
 use Windwalker\Record\Test\Stub\StubRecord;
@@ -38,7 +39,9 @@ class RecordTest extends AbstractMysqlTestCase
 	{
 		parent::setUp();
 
-		 $this->instance = new Record('articles');
+		WindwalkerAdapter::setInstance(new WindwalkerAdapter($this->db));
+
+		$this->instance = new Record('articles');
 	}
 
 	/**
@@ -328,34 +331,6 @@ class RecordTest extends AbstractMysqlTestCase
 	}
 
 	/**
-	 * Method to test appendPrimaryKeys().
-	 *
-	 * @return void
-	 *
-	 * @covers Windwalker\Record\Record::appendPrimaryKeys
-	 */
-	public function testAppendPrimaryKeys()
-	{
-		$query = $this->db->getQuery(true);
-
-		$record = new Record('articles', array('id', 'alias'), $this->db);
-		$record->bind(array(
-			'id' => 123,
-			'alias' => 'yoo'
-		));
-
-		$record->appendPrimaryKeys($query);
-
-		$this->assertStringSafeEquals("WHERE `id` = '123' AND `alias` = 'yoo'", (string) $query->where);
-
-		$query = $this->db->getQuery(true);
-
-		$record->appendPrimaryKeys($query, array('id' => 456, 'alias' => 'qqqqq'));
-
-		$this->assertStringSafeEquals("WHERE `id` = '456' AND `alias` = 'qqqqq'", (string) $query->where);
-	}
-
-	/**
 	 * Method to test getKeyName().
 	 *
 	 * @return void
@@ -364,7 +339,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testGetKeyName()
 	{
-		$record = new Record('articles', array('id', 'alias'), $this->db);
+		$record = new Record('articles', array('id', 'alias'));
 
 		$this->assertEquals('id', $record->getKeyName());
 		$this->assertEquals(array('id', 'alias'), $record->getKeyName(true));

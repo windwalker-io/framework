@@ -151,20 +151,34 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function find($conditions = array(), $order = null, $start = null, $limit = null)
 	{
-		// Handling conditions
-		if (!is_array($conditions) && !is_object($conditions))
+		if ($conditions instanceof \Traversable)
 		{
-			$cond = array();
-
-			foreach ((array) $this->getKeyName(true) as $field)
-			{
-				$cond[$field] = $conditions;
-			}
-
-			$conditions = $cond;
+			$conditions = iterator_to_array($conditions);
 		}
+		elseif (is_object($conditions))
+		{
+			$conditions = get_object_vars($conditions);
+		}
+		
+		if (!is_array($conditions))
+		{
+			// Load by primary key.
+			$keyCount = count($this->getKeyName(true));
 
-		$conditions = (array) $conditions;
+			if ($keyCount)
+			{
+				if ($keyCount > 1)
+				{
+					throw new \InvalidArgumentException('Table has multiple primary keys specified, only one primary key value provided.');
+				}
+
+				$conditions = array($this->getKeyName() => $conditions);
+			}
+			else
+			{
+				throw new \RuntimeException('No primary keys defined.');
+			}
+		}
 
 		$order = (array) $order;
 
@@ -473,7 +487,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @throws \InvalidArgumentException
 	 * @return  boolean
 	 */
-	public function updateAll($data, $conditions = array())
+	public function updateBatch($data, $conditions = array())
 	{
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
@@ -481,7 +495,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			'conditions'  => &$conditions
 		));
 
-		$result = $this->doUpdateAll($data, $conditions);
+		$result = $this->doUpdateBatch($data, $conditions);
 
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
@@ -651,20 +665,34 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 */
 	public function delete($conditions)
 	{
-		// Handling conditions
-		if (!is_array($conditions) && !is_object($conditions))
+		if ($conditions instanceof \Traversable)
 		{
-			$cond = array();
-
-			foreach ((array) $this->getKeyName(true) as $field)
-			{
-				$cond[$field] = $conditions;
-			}
-
-			$conditions = $cond;
+			$conditions = iterator_to_array($conditions);
+		}
+		elseif (is_object($conditions))
+		{
+			$conditions = get_object_vars($conditions);
 		}
 
-		$conditions = (array) $conditions;
+		if (!is_array($conditions))
+		{
+			// Load by primary key.
+			$keyCount = count($this->getKeyName(true));
+
+			if ($keyCount)
+			{
+				if ($keyCount > 1)
+				{
+					throw new \InvalidArgumentException('Table has multiple primary keys specified, only one primary key value provided.');
+				}
+
+				$conditions = array($this->getKeyName() => $conditions);
+			}
+			else
+			{
+				throw new \RuntimeException('No primary keys defined.');
+			}
+		}
 
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
@@ -722,7 +750,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  boolean
 	 */
-	abstract protected function doUpdateAll($data, array $conditions);
+	abstract protected function doUpdateBatch($data, array $conditions);
 
 	/**
 	 * Do flush action, this method should be override by sub class.
@@ -744,14 +772,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	abstract protected function doDelete(array $conditions);
 
 	/**
-	 * Get primary key.
+	 * Get table fields.
 	 *
-	 * @return  array|string Primary key.
+	 * @param string $table Table name.
+	 *
+	 * @return  array
 	 */
-	public function getPrimaryKey()
-	{
-		return $this->keys ? : array('id');
-	}
+	abstract public function getFields($table = null);
 
 	/**
 	 * Get table name.

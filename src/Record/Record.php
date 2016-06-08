@@ -8,9 +8,9 @@
 
 namespace Windwalker\Record;
 
-use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
-use Windwalker\Database\Schema\DataType;
+use Windwalker\DataMapper\AbstractDataMapper;
+use Windwalker\DataMapper\DataMapper;
 use Windwalker\DataMapper\Entity\Entity;
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherInterface;
@@ -96,24 +96,28 @@ class Record extends Entity
 	protected static $fieldsCache = array();
 
 	/**
+	 * Property mapper.
+	 *
+	 * @var  AbstractDataMapper
+	 */
+	protected $mapper;
+
+	/**
 	 * Object constructor to set table and key fields.  In most cases this will
 	 * be overridden by child classes to explicitly set the table and key fields
 	 * for a particular database table.
 	 *
-	 * @param   string          $table  Name of the table to model.
-	 * @param   mixed           $keys   Name of the primary key field in the table or array of field names that
-	 *                                  compose the primary key.
-	 * @param   AbstractDatabaseDriver  $db     DatabaseDriver object.
+	 * @param   string             $table   Name of the table to model.
+	 * @param   mixed              $keys    Name of the primary key field in the table or array of field names that
+	 *                                      compose the primary key.
+	 * @param   AbstractDataMapper $mapper  The DataMapper Adapter to access database.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($table = null, $keys = 'id', AbstractDatabaseDriver $db = null)
+	public function __construct($table = null, $keys = 'id', AbstractDataMapper $mapper = null)
 	{
-		$db = $db ? : DatabaseFactory::getDbo();
-
 		// Set internal variables.
 		$this->table = $this->table ? : $table;
-		$this->db    = $db;
 
 		if (!$this->keys)
 		{
@@ -134,6 +138,9 @@ class Record extends Entity
 		{
 			$this->autoIncrement = (count($keys) == 1) ? true : false;
 		}
+
+		$this->mapper = new DataMapper($this->table, $keys);
+		$this->db = $this->mapper->getDb()->getDriver();
 
 		// Initialise the table properties.
 		$this->reset();
@@ -250,6 +257,18 @@ class Record extends Entity
 	 */
 	public function load($keys = null, $reset = true)
 	{
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'conditions'  => &$keys,
+			'reset' => &$reset
+		));
+
+		if ($reset)
+		{
+			$this->reset();
+		}
+
+		// If keys empty, use inner values as keys.
 		if (empty($keys))
 		{
 			$empty = true;
@@ -268,69 +287,17 @@ class Record extends Entity
 				return $this;
 			}
 		}
-		elseif (!is_array($keys))
-		{
-			// Load by primary key.
-			$keyCount = count($this->keys);
 
-			if ($keyCount)
-			{
-				if ($keyCount > 1)
-				{
-					throw new \InvalidArgumentException('Table has multiple primary keys specified, only one primary key value provided.');
-				}
-
-				$keys = array($this->getKeyName() => $keys);
-			}
-			else
-			{
-				throw new \RuntimeException('No table keys defined.');
-			}
-		}
-
-		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
-			'conditions'  => &$keys,
-			'reset' => &$reset
-		));
-
-		if ($reset)
-		{
-			$this->reset();
-		}
-
-		// Initialise the query.
-		$query = $this->db->getQuery(true);
-		$query->select('*');
-		$query->from($this->db->quoteName($this->table));
-
-		foreach ($keys as $field => $value)
-		{
-			// Check that $field is in the table.
-
-			if (isset($this->data[$field]) || is_null($this->data[$field]))
-			{
-				// Add the search tuple to the query.
-				$query->where($this->db->quoteName($field) . ' = ' . $this->db->quote($value));
-			}
-			else
-			{
-				throw new \UnexpectedValueException(sprintf('Missing field in database: %s &#160; %s.', get_class($this), $field));
-			}
-		}
-
-		$this->db->setQuery($query);
-
-		$row = $this->db->loadOne();
+		$result = $this->getDataMapper()->findOne($keys);
 
 		// Check that we have a result.
-		if (empty($row))
+		if ($result->isNull())
 		{
 			throw new NoResultException('No result.');
 		}
 
 		// Bind the object with the row and return.
-		$row = $this->bind($row);
+		$row = $this->bind($result);
 
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
@@ -343,36 +310,34 @@ class Record extends Entity
 	/**
 	 * Method to delete a row from the database table by primary key value.
 	 *
-	 * @param   mixed  $pKey  An optional primary key value to delete.  If not set the instance property value is used.
+	 * @param   mixed $conditions An optional primary key value to delete.  If not set the instance property value is used.
 	 *
-	 * @return  $this  Method allows chaining
+	 * @return  static  Method allows chaining
 	 *
 	 * @since   2.0
 	 * @throws  \UnexpectedValueException
 	 */
-	public function delete($pKey = null)
+	public function delete($conditions = null)
 	{
 		$key = $this->getKeyName();
 
-		$pKey = (is_null($pKey)) ? $this->$key : $pKey;
+		$conditions = (is_null($conditions)) ? $this->$key : $conditions;
 
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
-			'conditions'  => &$pKey
+			'conditions'  => &$conditions
 		));
 
 		// If no primary key is given, return false.
-		if ($pKey === null)
+		if ($conditions === null)
 		{
 			throw new \UnexpectedValueException('Null primary key not allowed.');
 		}
 
-		// Delete the row by primary key.
-		$this->db->setQuery(
-			$this->db->getQuery(true)
-				->delete($this->db->quoteName($this->table))
-				->where($this->db->quoteName($key) . ' = ' . $this->db->quote($pKey))
-		)->execute();
+		if (!$this->getDataMapper()->delete($conditions))
+		{
+			throw new \RuntimeException('Delete fail with unknown reason.');
+		}
 
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
@@ -417,46 +382,8 @@ class Record extends Entity
 			'updateNulls' => &$updateNulls
 		));
 
-		// Filter non-necessary field
-		$data = array();
-
-		$update = (bool) $this->hasPrimaryKey();
-
-		/*
-		 * If is create, or update with null values, we must check all NOT NULL
-		 * fields uses default value instead NULL value. This helps us get rid of
-		 * this Mysql warning in STRICT_TRANS_TABLE mode.
-		 */
-		if (!$update || $updateNulls)
-		{
-			foreach ($this->getFields() as $field => $detail)
-			{
-				$data[$field] = $this->$field;
-
-				// This field is null and the db column is not nullable, use db default value.
-				if ($data[$field] === null && strtolower($detail->Null) == 'no')
-				{
-					$data[$field] = $detail->Default;
-				}
-			}
-		}
-		// Otherwise we just send current data
-		else
-		{
-			$data = (array) $this->data;
-		}
-
 		// If a primary key exists update the object, otherwise insert it.
-		if ($update)
-		{
-			$this->db->getWriter()->updateOne($this->table, $data, $this->keys, $updateNulls);
-		}
-		else
-		{
-			$this->db->getWriter()->insertOne($this->table, $data, $this->keys[0]);
-		}
-
-		$this->data[$this->keys[0]] = $data[$this->keys[0]];
+		$this->getDataMapper()->saveOne($this, $this->getKeyName(true), $updateNulls);
 
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
@@ -506,80 +433,13 @@ class Record extends Entity
 
 		if ($this->fields === null || $reset)
 		{
-			$table = $this->getTableName();
-
-			$fields = $this->db->getTable($table)->getColumnDetails();
-
-			foreach ($fields as $field)
+			foreach ($this->getDataMapper()->getFields() as $field)
 			{
 				$this->addField($field);
 			}
-
-			return $this->fields;
 		}
 
 		return $this->fields;
-	}
-
-	/**
-	 * addField
-	 *
-	 * @param  string $field
-	 * @param  string $default
-	 *
-	 * @return  static
-	 */
-	public function addField($field, $default = null)
-	{
-		if ($default !== null && (is_array($default) || is_object($default)))
-		{
-			throw new \InvalidArgumentException(sprintf('Default value should be scalar, %s given.', gettype($default)));
-		}
-
-		$defaultProfile = array(
-			'Field'      => '',
-			'Type'      => '',
-			'Collation' => 'utf8_unicode_ci',
-			'Null'      => 'NO',
-			'Key'       => '',
-			'Default'   => '',
-			'Extra'     => '',
-			'Privileges' => 'select,insert,update,references',
-			'Comment'    => ''
-		);
-
-		if (is_string($field))
-		{
-			$field = array_merge($defaultProfile, array(
-				'Field'    => $field,
-				'Type'    => gettype($default),
-				'Default' => $default
-			));
-		}
-
-		if (is_array($field) || is_object($field))
-		{
-			$field = array_merge($defaultProfile, (array) $field);
-		}
-
-		if (strtolower($field['Null']) == 'no' && $field['Default'] === null
-			&& $field['Key'] != 'PRI' && $this->getKeyName() != $field['Field'])
-		{
-			$type = $field['Type'];
-
-			list($type,) = explode('(', $type, 2);
-			$type = strtolower($type);
-
-			$typeMapper = DataType::getInstance($this->db->getName());
-
-			$field['Default'] = $typeMapper->getDefaultValue($type);
-		}
-
-		$field = (object) $field;
-
-		$this->fields[$field->Field] = $field;
-
-		return $this;
 	}
 
 	/**
@@ -632,88 +492,14 @@ class Record extends Entity
 			return !$empty;
 		}
 
-		$query = $this->db->getQuery(true);
+		$conditions = array();
 
-		$query->select('COUNT(*)')
-			->from($this->table);
-
-		$this->appendPrimaryKeys($query);
-
-		$this->db->setQuery($query);
-
-		$count = $this->db->loadResult();
-
-		return $count != 1;
-	}
-
-	/**
-	 * Method to append the primary keys for this table to a query.
-	 *
-	 * @param   Query  $query  A query object to append.
-	 * @param   mixed  $pk     Optional primary key parameter.
-	 *
-	 * @return  $this  Method allows chaining
-	 *
-	 * @since   2.0
-	 */
-	public function appendPrimaryKeys(Query $query, $pk = null)
-	{
-		if (is_null($pk))
+		foreach ($this->getKeyName(true) as $key)
 		{
-			foreach ($this->keys as $k)
-			{
-				$query->where($this->db->quoteName($k) . ' = ' . $this->db->quote($this->$k));
-			}
-		}
-		else
-		{
-			if (!is_array($pk) && !is_object($pk))
-			{
-				if (count($this->keys))
-				{
-					throw new \InvalidArgumentException(sprintf(
-						'%s has %s keys, please do not send only one value.',
-						__CLASS__,
-						count($this->keys)
-					));
-				}
-
-				$pk = array($this->keys[0] => $pk);
-			}
-
-			$pk = (array) $pk;
-
-			foreach ($this->keys AS $k)
-			{
-				$query->where($this->db->quoteName($k) . ' = ' . $this->db->quote($pk[$k]));
-			}
+			$conditions[$key] = $this->$key;
 		}
 
-		return $this;
-	}
-
-	/**
-	 * Quick quote.
-	 *
-	 * @param string $value
-	 *
-	 * @return  string
-	 */
-	public function q($value)
-	{
-		return $this->db->quote($value);
-	}
-
-	/**
-	 * Quick quote name.
-	 *
-	 * @param string $value
-	 *
-	 * @return  mixed
-	 */
-	public function qn($value)
-	{
-		return $this->db->quoteName($value);
+		return $this->getDataMapper()->find($conditions);
 	}
 
 	/**
@@ -727,7 +513,7 @@ class Record extends Entity
 	 */
 	public function valueExists($field, $value = null)
 	{
-		$record = new static($this->table, $this->keys, $this->db);
+		$record = new static($this->table, $this->keys, $this->mapper);
 		
 		if ($value === null)
 		{
@@ -830,30 +616,6 @@ class Record extends Entity
 	}
 
 	/**
-	 * Method to get property Db
-	 *
-	 * @return  AbstractDatabaseDriver
-	 */
-	public function getDb()
-	{
-		return $this->db;
-	}
-
-	/**
-	 * Method to set property db
-	 *
-	 * @param   AbstractDatabaseDriver $db
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setDb($db)
-	{
-		$this->db = $db;
-
-		return $this;
-	}
-
-	/**
 	 * Method to reset class properties to the defaults set in the class
 	 * definition. It will ignore the primary key as well as any private class
 	 * properties.
@@ -873,6 +635,35 @@ class Record extends Entity
 		{
 			$this->data[$k] = $empty ? null : $v->Default;
 		}
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Mapper
+	 *
+	 * @return  AbstractDataMapper
+	 */
+	public function getDataMapper()
+	{
+		if (!$this->mapper)
+		{
+			$this->mapper = new DataMapper($this->table, $this->keys);
+		}
+
+		return $this->mapper;
+	}
+
+	/**
+	 * Method to set property mapper
+	 *
+	 * @param   AbstractDataMapper $mapper
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDataMapper($mapper)
+	{
+		$this->mapper = $mapper;
 
 		return $this;
 	}

@@ -178,16 +178,17 @@ class QueryHelper
 	 * buildConditions
 	 *
 	 * @param Query $query
-	 * @param array         $conditions
+	 * @param array $conditions
+	 * @param bool  $allowNulls
 	 *
-	 * @return  Query
+	 * @return Query
 	 */
-	public static function buildWheres(Query $query, array $conditions)
+	public static function buildWheres(Query $query, array $conditions, $allowNulls = true)
 	{
 		foreach ($conditions as $key => $value)
 		{
 			// NULL
-			if ($value === null)
+			if ($value === null && $allowNulls)
 			{
 				$query->where($query->format('%n = NULL', $key));
 			}
@@ -207,7 +208,16 @@ class QueryHelper
 			// If is array or object, we use "IN" condition.
 			elseif (is_array($value) || is_object($value))
 			{
-				$value = array_map(array($query, 'quote'), (array) $value);
+				if ($value instanceof \Traversable)
+				{
+					$value = iterator_to_array($value);
+				}
+				elseif (is_object($value))
+				{
+					$value = get_object_vars($value);
+				}
+
+				$value = array_map(array($query, 'quote'), $value);
 
 				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
 			}

@@ -20,7 +20,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * The DB adapter.
 	 *
-	 * @var AbstractDatabaseAdapter
+	 * @var DatabaseAdapterInterface
 	 */
 	protected $db = null;
 
@@ -156,13 +156,13 @@ class DataMapper extends AbstractDataMapper
 	 * @throws  \Exception
 	 * @return  boolean
 	 */
-	protected function doUpdateAll($data, array $conditions)
+	protected function doUpdateBatch($data, array $conditions)
 	{
 		!$this->useTransaction ? : $this->db->transactionStart(true);
 
 		try
 		{
-			$result = $this->db->updateAll($this->table, $data, $conditions);
+			$result = $this->db->updateBatch($this->table, $data, $conditions);
 		}
 		catch (\Exception $e)
 		{
@@ -244,7 +244,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Get DB adapter.
 	 *
-	 * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver Db adapter.
+	 * @return  DatabaseAdapterInterface Db adapter.
 	 */
 	public function getDb()
 	{
@@ -254,7 +254,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Set db adapter.
 	 *
-	 * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db Db adapter.
+	 * @param   DatabaseAdapterInterface $db Db adapter.
 	 *
 	 * @return  DataMapper  Return self to support chaining.
 	 */
@@ -272,7 +272,7 @@ class DataMapper extends AbstractDataMapper
 	 *
 	 * @return  array
 	 */
-	protected function getFields($table = null)
+	public function getFields($table = null)
 	{
 		if ($this->fields !== null)
 		{
@@ -293,7 +293,7 @@ class DataMapper extends AbstractDataMapper
 				list($type,) = explode('(', $type, 2);
 				$type = strtolower($type);
 
-				$field->Default = $this->db->getColumnDefaultValue($type);
+				$field->Default = $this->db->getDataTypeDefaultValue($type);
 			}
 
 			$field = (object) $field;
@@ -304,7 +304,9 @@ class DataMapper extends AbstractDataMapper
 	}
 
 	/**
-	 * prepareDefaultValue
+	 * If creating item or updating with null values, we must check all NOT NULL
+	 * fields are using valid default value instead NULL value. This helps us get rid of
+	 * this Mysql warning in STRICT_TRANS_TABLE mode.
 	 *
 	 * @param Entity $entity
 	 *

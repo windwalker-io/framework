@@ -78,7 +78,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	 *
 	 * @return  boolean
 	 */
-	protected function doUpdateAll($data, array $conditions)
+	protected function doUpdateBatch($data, array $conditions)
 	{
 		return true;
 	}
@@ -106,5 +106,17 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	protected function doDelete(array $conditions)
 	{
 		return true;
+	}
+
+	/**
+	 * Get table fields.
+	 *
+	 * @param string $table Table name.
+	 *
+	 * @return  array
+	 */
+	public function getFields($table = null)
+	{
+		return array();
 	}
 }

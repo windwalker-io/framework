@@ -8,6 +8,11 @@
 
 namespace Windwalker\Record;
 
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\DataMapper\AbstractDataMapper;
+use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
+use Windwalker\DataMapper\DataMapper;
+
 /**
  * The NestedRecord class.
  * 
@@ -71,6 +76,28 @@ class NestedRecord extends Record
 	protected static $rootId = null;
 
 	/**
+	 * Object constructor to set table and key fields.  In most cases this will
+	 * be overridden by child classes to explicitly set the table and key fields
+	 * for a particular database table.
+	 *
+	 * @param   string             $table   Name of the table to model.
+	 * @param   mixed              $keys    Name of the primary key field in the table or array of field names that
+	 *                                      compose the primary key.
+	 * @param   AbstractDataMapper $mapper  The DataMapper Adapter to access database.
+	 *
+	 * @since   3.0
+	 */
+	public function __construct($table = null, $keys = 'id', AbstractDataMapper $mapper = null)
+	{
+		parent::__construct($table, $keys, $mapper);
+
+		if (!$this->mapper instanceof DataMapper || !$this->mapper->getDb() instanceof WindwalkerAdapter)
+		{
+			throw new \LogicException(sprintf('%s only support Windwalker Database currently'));
+		}
+	}
+
+	/**
 	 * Method to get an array of nodes from a given node to its root.
 	 *
 	 * @param   integer  $pk         Primary key of the node for which to get the path.
@@ -88,7 +115,7 @@ class NestedRecord extends Record
 		// Get the path from the node to the root.
 		$query = $this->db->getQuery(true)
 			->select('p.' . $k . ', p.parent_id, p.level, p.lft, p.rgt')
-			->from($this->qn($this->table) . ' AS n, ' . $this->qn($this->table) . ' AS p')
+			->from($this->db->quoteName($this->table) . ' AS n, ' . $this->db->quoteName($this->table) . ' AS p')
 			->where('n.lft BETWEEN p.lft AND p.rgt')
 			->where('n.' . $k . ' = ' . (int) $pk)
 			->order('p.lft');
@@ -119,7 +146,7 @@ class NestedRecord extends Record
 		// Get the node and children as a tree.
 		$query = $this->db->getQuery(true)
 			->select('n.' . $k . ', n.parent_id, n.level, n.lft, n.rgt')
-			->from($this->qn($this->table) . ' AS n, ' . $this->qn($this->table) . ' AS p')
+			->from($this->db->quoteName($this->table) . ' AS n, ' . $this->db->quoteName($this->table) . ' AS p')
 			->where('n.lft BETWEEN p.lft AND p.rgt')
 			->where('p.' . $k . ' = ' . $pk)
 			->order('n.lft');
@@ -181,7 +208,7 @@ class NestedRecord extends Record
 		}
 
 		$query = $this->db->getQuery(true)
-			->select('COUNT(' . $this->qn($this->getKeyName()) . ')')
+			->select('COUNT(' . $this->db->quoteName($this->getKeyName()) . ')')
 			->from($this->table)
 			->where($this->getKeyName() . ' = ' . $this->parent_id);
 
@@ -353,7 +380,7 @@ class NestedRecord extends Record
 		$query = $this->db->getQuery(true)
 			->select($k)
 			->from($this->table)
-			->where('parent_id = ' . $this->q($this->parent_id));
+			->where('parent_id = ' . $this->db->quote($this->parent_id));
 
 		if ($where)
 		{

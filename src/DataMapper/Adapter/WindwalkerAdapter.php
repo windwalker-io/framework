@@ -153,7 +153,7 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	 * @throws \Exception
 	 * @return  boolean
 	 */
-	public function updateAll($table, $data, array $conditions = array())
+	public function updateBatch($table, $data, array $conditions = array())
 	{
 		return (boolean) $this->db->getWriter()->updateBatch($table, $data, $conditions);
 	}
@@ -176,7 +176,7 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 
 		$query->delete($table);
 
-		return $this->db->setQuery($query)->execute();
+		return (bool) $this->db->setQuery($query)->execute();
 	}
 
 	/**
@@ -240,8 +240,18 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	 *
 	 * @return  mixed
 	 */
-	public function getColumnDefaultValue($type)
+	public function getDataTypeDefaultValue($type)
 	{
 		return DataType::getInstance($this->db->getName())->getDefaultValue($type);
+	}
+
+	/**
+	 * getDriver
+	 *
+	 * @return  AbstractDatabaseDriver
+	 */
+	public function getDriver()
+	{
+		return $this->db;
 	}
 }

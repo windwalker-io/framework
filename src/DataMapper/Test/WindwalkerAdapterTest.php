@@ -98,7 +98,7 @@ class WindwalkerAdapterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\Adapter\WindwalkerAdapter::updateAll
+	 * @covers Windwalker\DataMapper\Adapter\WindwalkerAdapter::updateBatch
 	 * @TODO   Implement testUpdateAll().
 	 */
 	public function testUpdateAll()

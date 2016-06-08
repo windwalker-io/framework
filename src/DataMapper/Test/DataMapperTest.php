@@ -81,6 +81,15 @@ class DataMapperTest extends DatabaseTest
 		$dataset = $datamapper->find(array('state' => 1), 'ordering DESC', 2, 3);
 
 		$this->assertEquals(array(null, null, null), $dataset->catid);
+
+		// Test find with no conditions
+		$dataset = $datamapper->find();
+
+		$this->assertFalse($dataset->isNull());
+
+		$dataset = $datamapper->find(null);
+
+		$this->assertTrue($dataset->isNull());
 	}
 
 	/**
@@ -304,13 +313,13 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::updateAll
+	 * @covers Windwalker\DataMapper\updateBatch::updateWith
 	 */
 	public function testUpdateAll()
 	{
 		$data = array('state' => 0);
 
-		$this->instance->updateAll($data, array('id' => array(4, 5, 6)));
+		$this->instance->updateBatch($data, array('id' => array(4, 5, 6)));
 
 		$dataset = $this->loadToDataset('SELECT * FROM ww_flower WHERE id IN(4, 5, 6)');
 
@@ -411,9 +420,9 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getPrimaryKey
+	 * @covers Windwalker\DataMapper\AbstractDataMapper::getKeyName
 	 */
-	public function testGetPrimaryKey()
+	public function testGetKeyName()
 	{
 		$this->assertEquals('id', $this->instance->getKeyName());
 
