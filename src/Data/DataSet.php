@@ -320,11 +320,57 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	/**
 	 * Dump all data as array.
 	 *
-	 * @return  Data[]
+	 * @param bool $recursive
+	 *
+	 * @return Data[]
 	 */
-	public function dump()
+	public function dump($recursive = false)
 	{
-		return $this->data;
+		$dataset = $this->data;
+
+		if ($recursive)
+		{
+			$dataset = $this->allToArray($dataset);
+		}
+
+		return $dataset;
+	}
+
+	/**
+	 * allToArray
+	 *
+	 * @param   mixed  $value
+	 *
+	 * @return  array
+	 */
+	public static function allToArray($value)
+	{
+		if ($value instanceof DataSetInterface)
+		{
+			$value = $value->dump(true);
+		}
+		elseif ($value instanceof DataInterface)
+		{
+			$value = $value->dump();
+		}
+		elseif ($value instanceof \Traversable)
+		{
+			$value = iterator_to_array($value);
+		}
+		elseif (is_object($value))
+		{
+			$value = get_object_vars($value);
+		}
+
+		if (is_array($value))
+		{
+			foreach ($value as &$v)
+			{
+				$v = static::allToArray($v);
+			}
+		}
+
+		return $value;
 	}
 
 	/**

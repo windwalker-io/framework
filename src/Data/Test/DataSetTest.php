@@ -304,6 +304,32 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	public function testDump()
 	{
 		$this->assertEquals($this->getTestData(), $this->instance->dump());
+		
+		$dataset = new DataSet(array(
+			new Data(array(
+				'iterator' => new \ArrayObject(array(
+					'foo' => 'bar'
+				)),
+				'object' => (object) array(
+					'baz' => 'yoo'
+				),
+				'scalar' => 123
+			))
+		));
+
+		$expected = array (
+			array (
+				'iterator' => array (
+					'foo' => 'bar',
+				),
+				'object' => array (
+					'baz' => 'yoo',
+				),
+				'scalar' => 123,
+			)
+		);
+		
+		$this->assertEquals($expected, $dataset->dump(true));
 	}
 
 	/**

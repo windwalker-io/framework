@@ -41,7 +41,9 @@ interface DataSetInterface
 	/**
 	 * Dump all data as array.
 	 *
-	 * @return  Data[]
+	 * @param bool $recursive
+	 *
+	 * @return Data[]
 	 */
-	public function dump();
+	public function dump($recursive = false);
 }
