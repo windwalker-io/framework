@@ -8,28 +8,28 @@
 
 namespace Windwalker\Query\Test\Postgresql;
 
-use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
+use Windwalker\Query\Postgresql\PostgresqlGrammar;
 use Windwalker\Database\Test\AbstractQueryTestCase;
 
 /**
- * Test class of PostgresqlQueryBuilder
+ * Test class of PostgresqlGrammar
  *
  * @since 2.0
  */
-class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
+class PostgresqlGrammarTest extends AbstractQueryTestCase
 {
 	/**
 	 * Method to test showDatabases().
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::listDatabases
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::listDatabases
 	 */
 	public function testShowDatabases()
 	{
 		$expected = "SELECT datname FROM pg_database WHERE a = b AND datistemplate = false;";
 
-		$actual = PostgresqlQueryBuilder::listDatabases('a = b');
+		$actual = PostgresqlGrammar::listDatabases('a = b');
 
 		$this->assertEquals($this->format($expected), $this->format($actual));
 	}
@@ -39,13 +39,13 @@ class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::createDatabase
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::createDatabase
 	 */
 	public function testCreateDatabase()
 	{
 		$expected = "CREATE DATABASE {$this->qn('foo')}";
 
-		$actual = PostgresqlQueryBuilder::createDatabase('foo');
+		$actual = PostgresqlGrammar::createDatabase('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -54,7 +54,7 @@ class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
 
 		$expected = "CREATE DATABASE {$this->qn('foo')} ENCODING 'utf8'";
 
-		$actual = PostgresqlQueryBuilder::createDatabase('foo', 'utf8');
+		$actual = PostgresqlGrammar::createDatabase('foo', 'utf8');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -63,7 +63,7 @@ class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
 
 		$expected = "CREATE DATABASE {$this->qn('foo')} ENCODING 'utf8' OWNER {$this->qn('bar')}";
 
-		$actual = PostgresqlQueryBuilder::createDatabase('foo', 'utf8', 'bar');
+		$actual = PostgresqlGrammar::createDatabase('foo', 'utf8', 'bar');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -76,13 +76,13 @@ class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::dropDatabase
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::dropDatabase
 	 */
 	public function testDropDatabase()
 	{
 		$expected = "DROP DATABASE {$this->qn('foo')}";
 
-		$actual = PostgresqlQueryBuilder::dropDatabase('foo');
+		$actual = PostgresqlGrammar::dropDatabase('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -91,7 +91,7 @@ class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
 
 		$expected = "DROP DATABASE IF EXISTS {$this->qn('foo')}";
 
-		$actual = PostgresqlQueryBuilder::dropDatabase('foo', true);
+		$actual = PostgresqlGrammar::dropDatabase('foo', true);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -104,7 +104,7 @@ class PostgresqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::showTableColumns
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::showTableColumns
 	 */
 	public function testShowTableColumns()
 	{
@@ -124,7 +124,7 @@ WHERE attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='foo'
 ORDER BY attr.attnum
 SQL;
 
-		$actual = PostgresqlQueryBuilder::showTableColumns('foo');
+		$actual = PostgresqlGrammar::showTableColumns('foo');
 
 		$this->assertEquals(
 			\SqlFormatter::format($expected, false),
@@ -137,7 +137,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::showDbTables
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::showDbTables
 	 */
 	public function testShowDbTables()
 	{
@@ -150,7 +150,7 @@ ORDER BY
   table_name ASC
 SQL;
 
-		$actual = PostgresqlQueryBuilder::showDbTables('foo');
+		$actual = PostgresqlGrammar::showDbTables('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -163,7 +163,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::createTable
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::createTable
 	 */
 	public function testCreateTable()
 	{
@@ -188,7 +188,7 @@ SQL;
 			array('type' => 'INDEX', 'name' => 'idx_alias', 'columns' => 'email')
 		);
 
-		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 'bar', true, 'tablespace');
+		$actual = PostgresqlGrammar::createTable('foo', $columns, 'id', $keys, 'bar', true, 'tablespace');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -215,7 +215,7 @@ SQL;
 			array('type' => 'UNIQUE INDEX', 'name' => 'idx_alias', 'columns' => array('email', 'id'))
 		);
 
-		$actual = PostgresqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, null, false, null);
+		$actual = PostgresqlGrammar::createTable('foo', $columns, array('id', 'email'), $keys, null, false, null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -228,13 +228,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::dropTable
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::dropTable
 	 */
 	public function testDropTable()
 	{
 		$expected = "DROP TABLE {$this->qn('foo')}";
 
-		$actual = PostgresqlQueryBuilder::dropTable('foo');
+		$actual = PostgresqlGrammar::dropTable('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -243,7 +243,7 @@ SQL;
 
 		$expected = "DROP TABLE IF EXISTS {$this->qn('foo')}";
 
-		$actual = PostgresqlQueryBuilder::dropTable('foo', true);
+		$actual = PostgresqlGrammar::dropTable('foo', true);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -256,13 +256,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::alterColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::alterColumn
 	 */
 	public function testAlterColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL SET DEFAULT '1'";
 
-		$actual = PostgresqlQueryBuilder::alterColumn('ADD', 'foo', 'bar', 'int(11)', true, '1');
+		$actual = PostgresqlGrammar::alterColumn('ADD', 'foo', 'bar', 'int(11)', true, '1');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -271,7 +271,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
 
-		$actual = PostgresqlQueryBuilder::alterColumn('RENAME', 'foo', array('bar', 'yoo'), null, false, null);
+		$actual = PostgresqlGrammar::alterColumn('RENAME', 'foo', array('bar', 'yoo'), null, false, null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -284,13 +284,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::addColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::addColumn
 	 */
 	public function testAddColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL DEFAULT '1'";
 
-		$actual = PostgresqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', false, '1');
+		$actual = PostgresqlGrammar::addColumn('foo', 'bar', 'int(11)', false, '1');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -303,13 +303,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::renameColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::renameColumn
 	 */
 	public function testRenameColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
 
-		$actual = PostgresqlQueryBuilder::renameColumn('foo', 'bar', 'yoo');
+		$actual = PostgresqlGrammar::renameColumn('foo', 'bar', 'yoo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -322,13 +322,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::dropColumn
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::dropColumn
 	 */
 	public function testDropColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} DROP {$this->qn('bar')}";
 
-		$actual = PostgresqlQueryBuilder::dropColumn('foo', 'bar');
+		$actual = PostgresqlGrammar::dropColumn('foo', 'bar');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -341,13 +341,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::addIndex
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::addIndex
 	 */
 	public function testAddIndex()
 	{
 		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlQueryBuilder::addIndex('foo', 'INDEX', array('alias', 'name'), 'idx_alias');
+		$actual = PostgresqlGrammar::addIndex('foo', 'INDEX', array('alias', 'name'), 'idx_alias');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -356,7 +356,7 @@ SQL;
 
 		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')})";
 
-		$actual = PostgresqlQueryBuilder::addIndex('foo', 'INDEX', 'alias', 'idx_alias');
+		$actual = PostgresqlGrammar::addIndex('foo', 'INDEX', 'alias', 'idx_alias');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -369,13 +369,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::buildIndexDeclare
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::buildIndexDeclare
 	 */
 	public function testBuildIndexDeclare()
 	{
 		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')})";
 
-		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias', null);
+		$actual = PostgresqlGrammar::buildIndexDeclare('idx_alias', 'alias', null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -384,7 +384,7 @@ SQL;
 
 		$expected = "{$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'), 'foo');
+		$actual = PostgresqlGrammar::buildIndexDeclare('idx_alias', array('alias', 'name'), 'foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -397,13 +397,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::dropIndex
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::dropIndex
 	 */
 	public function testDropIndex()
 	{
 		$expected = "DROP INDEX {$this->qn('bar')}";
 
-		$actual = PostgresqlQueryBuilder::dropIndex('bar');
+		$actual = PostgresqlGrammar::dropIndex('bar');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -412,7 +412,7 @@ SQL;
 
 		$expected = "DROP INDEX CONCURRENTLY IF EXISTS {$this->qn('bar')}";
 
-		$actual = PostgresqlQueryBuilder::dropIndex('bar', true, true);
+		$actual = PostgresqlGrammar::dropIndex('bar', true, true);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -425,13 +425,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::build
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::build
 	 */
 	public function testBuild()
 	{
 		$expected = "FLOWER SAKURA SUNFLOWER OLIVE";
 
-		$actual = PostgresqlQueryBuilder::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
+		$actual = PostgresqlGrammar::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -444,14 +444,14 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlQueryBuilder::getQuery
+	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::getQuery
 	 */
 	public function testGetQuery()
 	{
-		$this->assertInstanceOf('Windwalker\\Query\\Postgresql\\PostgresqlQuery', PostgresqlQueryBuilder::getQuery());
+		$this->assertInstanceOf('Windwalker\\Query\\Postgresql\\PostgresqlQuery', PostgresqlGrammar::getQuery());
 
-		$this->assertSame(PostgresqlQueryBuilder::getQuery(), PostgresqlQueryBuilder::getQuery());
+		$this->assertSame(PostgresqlGrammar::getQuery(), PostgresqlGrammar::getQuery());
 
-		$this->assertNotSame(PostgresqlQueryBuilder::getQuery(), PostgresqlQueryBuilder::getQuery(true));
+		$this->assertNotSame(PostgresqlGrammar::getQuery(), PostgresqlGrammar::getQuery(true));
 	}
 }

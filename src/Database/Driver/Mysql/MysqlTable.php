@@ -12,7 +12,7 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
 use Windwalker\Database\Schema\Schema;
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Mysql\MysqlGrammar;
 
 /**
  * Class MysqlTable
@@ -47,7 +47,7 @@ class MysqlTable extends AbstractTable
 		{
 			$column = $this->prepareColumn($column);
 
-			$columns[$column->getName()] = MysqlQueryBuilder::build(
+			$columns[$column->getName()] = MysqlGrammar::build(
 				$column->getType() . $column->getLength(),
 				$column->getSigned() ? '' : 'UNSIGNED',
 				$column->getAllowNull() ? '' : 'NOT NULL',
@@ -75,7 +75,7 @@ class MysqlTable extends AbstractTable
 			);
 		}
 
-		$query = MysqlQueryBuilder::createTable($this->getName(), $columns, $primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['charset']);
+		$query = MysqlGrammar::createTable($this->getName(), $columns, $primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['charset']);
 
 		$this->db->setQuery($query)->execute();
 
@@ -106,7 +106,7 @@ class MysqlTable extends AbstractTable
 
 		$this->prepareColumn($column);
 
-		$query = MysqlQueryBuilder::addColumn(
+		$query = MysqlGrammar::addColumn(
 			$this->getName(),
 			$column->getName(),
 			$column->getType() . $column->getLength(),
@@ -158,7 +158,7 @@ class MysqlTable extends AbstractTable
 		$length = isset($length) ? $length : MysqlType::getLength($type);
 		$length = $length ? '(' . $length . ')' : null;
 
-		$query = MysqlQueryBuilder::modifyColumn(
+		$query = MysqlGrammar::modifyColumn(
 			$this->getName(),
 			$name,
 			$type . $length,
@@ -211,7 +211,7 @@ class MysqlTable extends AbstractTable
 		$length = isset($length) ? $length : MysqlType::getLength($type);
 		$length = $length ? '(' . $length . ')' : null;
 
-		$query = MysqlQueryBuilder::changeColumn(
+		$query = MysqlGrammar::changeColumn(
 			$this->getName(),
 			$oldName,
 			$newName,
@@ -257,7 +257,7 @@ class MysqlTable extends AbstractTable
 			$index = $type;
 		}
 		
-		$query = MysqlQueryBuilder::addIndex(
+		$query = MysqlGrammar::addIndex(
 			$this->getName(),
 			$index->getType(),
 			$index->getColumns(),
@@ -284,7 +284,7 @@ class MysqlTable extends AbstractTable
 			return $this;
 		}
 		
-		$query = MysqlQueryBuilder::dropIndex($this->getName(), $name);
+		$query = MysqlGrammar::dropIndex($this->getName(), $name);
 
 		$this->db->setQuery($query)->execute();
 
@@ -324,7 +324,7 @@ class MysqlTable extends AbstractTable
 	{
 		if (empty($this->columnCache) || $refresh)
 		{
-			$query = MysqlQueryBuilder::showTableColumns($this->getName(), true);
+			$query = MysqlGrammar::showTableColumns($this->getName(), true);
 
 			$this->columnCache = $this->db->setQuery($query)->loadAll('Field');
 		}

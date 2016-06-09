@@ -8,16 +8,16 @@
 
 namespace Windwalker\Query\Postgresql;
 
-use Windwalker\Query\AbstractQueryBuilder;
+use Windwalker\Query\AbstractQueryGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
 
 /**
- * Class PostgresqlQueryBuilder
+ * Class PostgresqlQueryGrammar
  *
  * @since 2.0
  */
-class PostgresqlQueryBuilder extends AbstractQueryBuilder
+class PostgresqlGrammar extends AbstractQueryGrammar
 {
 	const PRIMARY  = 'PRIMARY KEY';
 	const INDEX    = 'INDEX';

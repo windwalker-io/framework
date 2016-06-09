@@ -9,11 +9,11 @@
 namespace Windwalker\Query;
 
 /**
- * Class QueryBuilder
+ * Class QueryGrammar
  *
  * @since 2.0
  */
-abstract class AbstractQueryBuilder implements QueryBuilderInterface
+abstract class AbstractQueryGrammar implements QueryGrammarInterface
 {
 	/**
 	 * Property query.
@@ -25,7 +25,7 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
 	/**
 	 * Property instance.
 	 *
-	 * @var  QueryBuilderInterface[]
+	 * @var  QueryGrammarInterface[]
 	 */
 	protected static $instance = array();
 
@@ -34,7 +34,7 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
 	 *
 	 * @param   string  $name
 	 *
-	 * @return  QueryBuilderInterface
+	 * @return  QueryGrammarInterface
 	 */
 	public static function getInstance($name)
 	{
@@ -42,7 +42,7 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
 		{
 			$name = ucfirst($name);
 
-			static::$instance[strtolower($name)] = sprintf(__NAMESPACE__ . '\%s\%sQueryBuilder', $name, $name);
+			static::$instance[strtolower($name)] = sprintf(__NAMESPACE__ . '\%s\%sGrammar', $name, $name);
 		}
 
 		return static::$instance[strtolower($name)];

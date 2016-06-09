@@ -9,7 +9,7 @@
 namespace Windwalker\Database\Test\Mysql;
 
 use Windwalker\Database\Driver\Mysql\MysqlDriver;
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Mysql\MysqlGrammar;
 
 /**
  * Test class of MysqlDatabase
@@ -205,8 +205,8 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 			return;
 		}
 
-		$this->db->setQuery(MysqlQueryBuilder::dropDatabase('windwalker_foo_test', true))->execute();
-		$this->db->setQuery(MysqlQueryBuilder::dropDatabase('windwalker_bar_test', true))->execute();
+		$this->db->setQuery(MysqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
+		$this->db->setQuery(MysqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();
 
 		parent::__destruct();
 	}
@@ -218,8 +218,8 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 */
 	public static function tearDownAfterClass()
 	{
-		static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase('windwalker_foo_test', true))->execute();
-		static::$dbo->setQuery(MysqlQueryBuilder::dropDatabase('windwalker_bar_test', true))->execute();
+		static::$dbo->setQuery(MysqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
+		static::$dbo->setQuery(MysqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();
 
 		parent::tearDownAfterClass();
 	}

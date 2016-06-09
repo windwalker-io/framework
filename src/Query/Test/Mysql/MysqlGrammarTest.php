@@ -8,15 +8,15 @@
 
 namespace Windwalker\Query\Test\Mysql;
 
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Mysql\MysqlGrammar;
 use Windwalker\Database\Test\AbstractQueryTestCase;
 
 /**
- * Test class of MysqlQueryBuilder
+ * Test class of MysqlGrammar
  *
  * @since 2.0
  */
-class MysqlQueryBuilderTest extends AbstractQueryTestCase
+class MysqlGrammarTest extends AbstractQueryTestCase
 {
 	/**
 	 * Property quote.
@@ -30,13 +30,13 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::listDatabases
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::listDatabases
 	 */
 	public function testShowDatabases()
 	{
 		$expected = "SHOW DATABASES WHERE a = b";
 
-		$actual = MysqlQueryBuilder::listDatabases('a = b');
+		$actual = MysqlGrammar::listDatabases('a = b');
 
 		$this->assertEquals($this->format($expected), $this->format($actual));
 	}
@@ -46,13 +46,13 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::createDatabase
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::createDatabase
 	 */
 	public function testCreateDatabase()
 	{
 		$expected = "CREATE DATABASE {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::createDatabase('foo');
+		$actual = MysqlGrammar::createDatabase('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -61,7 +61,7 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 
 		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::createDatabase('foo', true);
+		$actual = MysqlGrammar::createDatabase('foo', true);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -70,7 +70,7 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 
 		$expected = "CREATE DATABASE IF NOT EXISTS {$this->qn('foo')} CHARACTER SET='utf8' COLLATE='bar'";
 
-		$actual = MysqlQueryBuilder::createDatabase('foo', true, 'utf8', 'bar');
+		$actual = MysqlGrammar::createDatabase('foo', true, 'utf8', 'bar');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -83,13 +83,13 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropDatabase
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::dropDatabase
 	 */
 	public function testDropDatabase()
 	{
 		$expected = "DROP DATABASE {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::dropDatabase('foo');
+		$actual = MysqlGrammar::dropDatabase('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -98,7 +98,7 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 
 		$expected = "DROP DATABASE IF EXISTS {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::dropDatabase('foo', true);
+		$actual = MysqlGrammar::dropDatabase('foo', true);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -111,13 +111,13 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showTableColumns
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::showTableColumns
 	 */
 	public function testShowTableColumns()
 	{
 		$expected = "SHOW COLUMNS FROM {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::showTableColumns('foo');
+		$actual = MysqlGrammar::showTableColumns('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -126,7 +126,7 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 
 		$expected = "SHOW FULL COLUMNS FROM {$this->qn('foo')} WHERE a = b";
 
-		$actual = MysqlQueryBuilder::showTableColumns('foo', true, 'a = b');
+		$actual = MysqlGrammar::showTableColumns('foo', true, 'a = b');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -139,13 +139,13 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::showDbTables
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::showDbTables
 	 */
 	public function testShowDbTables()
 	{
 		$expected = "SHOW TABLE STATUS FROM {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::showDbTables('foo');
+		$actual = MysqlGrammar::showDbTables('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -154,7 +154,7 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 
 		$expected = "SHOW TABLE STATUS FROM {$this->qn('foo')} WHERE a = b";
 
-		$actual = MysqlQueryBuilder::showDbTables('foo', 'a = b');
+		$actual = MysqlGrammar::showDbTables('foo', 'a = b');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -167,7 +167,7 @@ class MysqlQueryBuilderTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::createTable
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::createTable
 	 */
 	public function testCreateTable()
 	{
@@ -191,7 +191,7 @@ SQL;
 			array('type' => 'KEY', 'name' => 'idx_alias', 'columns' => 'email')
 		);
 
-		$actual = MysqlQueryBuilder::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
+		$actual = MysqlGrammar::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -218,7 +218,7 @@ SQL;
 			array('type' => 'UNIQUE KEY', 'name' => 'idx_alias', 'columns' => array('email', 'id'))
 		);
 
-		$actual = MysqlQueryBuilder::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
+		$actual = MysqlGrammar::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -231,13 +231,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropTable
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::dropTable
 	 */
 	public function testDropTable()
 	{
 		$expected = "DROP TABLE {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::dropTable('foo');
+		$actual = MysqlGrammar::dropTable('foo');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -246,7 +246,7 @@ SQL;
 
 		$expected = "DROP TABLE IF EXISTS {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::dropTable('foo', true);
+		$actual = MysqlGrammar::dropTable('foo', true);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -259,13 +259,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::alterColumn
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::alterColumn
 	 */
 	public function testAlterColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
-		$actual = MysqlQueryBuilder::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
+		$actual = MysqlGrammar::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -274,7 +274,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} text AFTER {$this->qn('id')}";
 
-		$actual = MysqlQueryBuilder::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', true, true, null, 'AFTER id', null);
+		$actual = MysqlGrammar::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', true, true, null, 'AFTER id', null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -287,13 +287,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::addColumn
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::addColumn
 	 */
 	public function testAddColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
-		$actual = MysqlQueryBuilder::addColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
+		$actual = MysqlGrammar::addColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -306,13 +306,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::changeColumn
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::changeColumn
 	 */
 	public function testChangeColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
-		$actual = MysqlQueryBuilder::changeColumn('foo', 'bar', 'yoo', 'int(11)', false, false, '1', 'FIRST', 'Test');
+		$actual = MysqlGrammar::changeColumn('foo', 'bar', 'yoo', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -325,13 +325,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::modifyColumn
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::modifyColumn
 	 */
 	public function testModifyColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
 
-		$actual = MysqlQueryBuilder::modifyColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
+		$actual = MysqlGrammar::modifyColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -344,13 +344,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropColumn
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::dropColumn
 	 */
 	public function testDropColumn()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} DROP {$this->qn('bar')}";
 
-		$actual = MysqlQueryBuilder::dropColumn('foo', 'bar');
+		$actual = MysqlGrammar::dropColumn('foo', 'bar');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -363,13 +363,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::addIndex
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::addIndex
 	 */
 	public function testAddIndex()
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')}) COMMENT 'Test Index'";
 
-		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', array('alias', 'name'), 'idx_alias', 'Test Index');
+		$actual = MysqlGrammar::addIndex('foo', 'KEY', array('alias', 'name'), 'idx_alias', 'Test Index');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -378,7 +378,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}) COMMENT 'Test Index'";
 
-		$actual = MysqlQueryBuilder::addIndex('foo', 'KEY', 'alias', 'idx_alias', 'Test Index');
+		$actual = MysqlGrammar::addIndex('foo', 'KEY', 'alias', 'idx_alias', 'Test Index');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -391,13 +391,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::buildIndexDeclare
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::buildIndexDeclare
 	 */
 	public function testBuildIndexDeclare()
 	{
 		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')})";
 
-		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', 'alias');
+		$actual = MysqlGrammar::buildIndexDeclare('idx_alias', 'alias');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -406,7 +406,7 @@ SQL;
 
 		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = MysqlQueryBuilder::buildIndexDeclare('idx_alias', array('alias', 'name'));
+		$actual = MysqlGrammar::buildIndexDeclare('idx_alias', array('alias', 'name'));
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -419,13 +419,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::dropIndex
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::dropIndex
 	 */
 	public function testDropIndex()
 	{
 		$expected = "DROP INDEX {$this->qn('bar')} ON {$this->qn('foo')}";
 
-		$actual = MysqlQueryBuilder::dropIndex('foo', 'bar');
+		$actual = MysqlGrammar::dropIndex('foo', 'bar');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -438,13 +438,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::build
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::build
 	 */
 	public function testBuild()
 	{
 		$expected = "FLOWER SAKURA SUNFLOWER OLIVE";
 
-		$actual = MysqlQueryBuilder::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
+		$actual = MysqlGrammar::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -457,13 +457,13 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::replace
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::replace
 	 */
 	public function testReplace()
 	{
 		$expected = "REPLACE INTO {$this->qn('foo')} (a,b) VALUES (c, d, e), (f, g, h)";
 
-		$actual = MysqlQueryBuilder::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
+		$actual = MysqlGrammar::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -476,14 +476,14 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlQueryBuilder::getQuery
+	 * @covers Windwalker\Query\Mysql\MysqlGrammar::getQuery
 	 */
 	public function testGetQuery()
 	{
-		$this->assertInstanceOf('Windwalker\\Query\\Mysql\\MysqlQuery', MysqlQueryBuilder::getQuery());
+		$this->assertInstanceOf('Windwalker\\Query\\Mysql\\MysqlQuery', MysqlGrammar::getQuery());
 
-		$this->assertSame(MysqlQueryBuilder::getQuery(), MysqlQueryBuilder::getQuery());
+		$this->assertSame(MysqlGrammar::getQuery(), MysqlGrammar::getQuery());
 
-		$this->assertNotSame(MysqlQueryBuilder::getQuery(), MysqlQueryBuilder::getQuery(true));
+		$this->assertNotSame(MysqlGrammar::getQuery(), MysqlGrammar::getQuery(true));
 	}
 }

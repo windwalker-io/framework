@@ -2067,11 +2067,11 @@ class Query implements QueryInterface, PreparableInterface
 	/**
 	 * getBuilder
 	 *
-	 * @return  QueryBuilderInterface
+	 * @return  QueryGrammarInterface
 	 */
-	public function getBuilder()
+	public function getGrammar()
 	{
-		return AbstractQueryBuilder::getInstance($this->getName());
+		return AbstractQueryGrammar::getInstance($this->getName());
 	}
 
 	/**

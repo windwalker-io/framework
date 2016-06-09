@@ -142,7 +142,7 @@ abstract class AbstractTable
 	 */
 	public function drop($ifExists = true, $option = '')
 	{
-		$builder = $this->db->getQuery(true)->getBuilder();
+		$builder = $this->db->getQuery(true)->getGrammar();
 
 		$query = $builder::dropTable($this->getName(), $ifExists, $option);
 
@@ -303,7 +303,7 @@ abstract class AbstractTable
 			return $this;
 		}
 
-		$builder = $this->db->getQuery(true)->getBuilder();
+		$builder = $this->db->getQuery(true)->getGrammar();
 
 		$query = $builder::dropColumn($this->getName(), $name);
 

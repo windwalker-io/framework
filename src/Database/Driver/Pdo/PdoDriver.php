@@ -356,14 +356,14 @@ class PdoDriver extends AbstractDatabaseDriver
 	 */
 	public function listDatabases()
 	{
-		$builder = sprintf('Windwalker\\Query\\%s\\%sQueryBuilder', $this->name, $this->name);
+		$builder = sprintf('Windwalker\\Query\\%s\\%sGrammar', $this->name, $this->name);
 
 		if (!class_exists($builder))
 		{
 			throw new \LogicException($builder . ' not found, you should implement ' . __METHOD__ . ' in current deriver class.');
 		}
 
-		/** @var $builder \Windwalker\Query\QueryBuilderInterface */
+		/** @var $builder \Windwalker\Query\QueryGrammarInterface */
 
 		return $this->setQuery($builder::listDatabases())->loadColumn();
 	}

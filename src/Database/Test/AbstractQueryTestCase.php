@@ -12,7 +12,7 @@ use Windwalker\Test\Helper\TestStringHelper;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * The AbstractQueryBuilderTestCase class.
+ * The AbstractQueryTestCase class.
  *
  * @since  2.1
  */

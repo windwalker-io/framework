@@ -13,7 +13,7 @@ use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Key;
 use Windwalker\Database\Driver\Mysql\MysqlType;
 use Windwalker\Database\Schema\Schema;
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Mysql\MysqlGrammar;
 
 /**
  * Test class of MysqlTable
@@ -27,7 +27,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @var  string
 	 */
-	protected $builder = 'Windwalker\Query\Mysql\MysqlQueryBuilder';
+	protected $builder = 'Windwalker\Query\Mysql\MysqlQueryGrammar';
 
 	/**
 	 * getBuilder
@@ -452,7 +452,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 		{
 			try
 			{
-				static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__cloud', true))->execute();
+				static::$dbo->setQuery(MysqlGrammar::dropTable('#__cloud', true))->execute();
 			}
 			catch (\Exception $e)
 			{
@@ -461,7 +461,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 			try
 			{
-				static::$dbo->setQuery(MysqlQueryBuilder::dropTable('#__wind', true))->execute();
+				static::$dbo->setQuery(MysqlGrammar::dropTable('#__wind', true))->execute();
 			}
 			catch (\Exception $e)
 			{

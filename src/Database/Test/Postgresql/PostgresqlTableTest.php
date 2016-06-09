@@ -13,7 +13,7 @@ use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Key;
 use Windwalker\Database\Schema\Schema;
-use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
+use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
  * Test class of PostgresqlTable
@@ -407,7 +407,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 		{
 			try
 			{
-				static::$dbo->setQuery(PostgresqlQueryBuilder::dropTable('#__cloud', true))->execute();
+				static::$dbo->setQuery(PostgresqlGrammar::dropTable('#__cloud', true))->execute();
 			}
 			catch (\Exception $e)
 			{
@@ -416,7 +416,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 
 			try
 			{
-				static::$dbo->setQuery(PostgresqlQueryBuilder::dropTable('#__wind', true))->execute();
+				static::$dbo->setQuery(PostgresqlGrammar::dropTable('#__wind', true))->execute();
 			}
 			catch (\Exception $e)
 			{

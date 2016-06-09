@@ -8,16 +8,16 @@
 
 namespace Windwalker\Query\Mysql;
 
-use Windwalker\Query\AbstractQueryBuilder;
+use Windwalker\Query\AbstractQueryGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
 
 /**
- * Class MysqlQueryBuilder
+ * Class MysqlQueryGrammar
  *
  * @since 2.0
  */
-class MysqlQueryBuilder extends AbstractQueryBuilder
+class MysqlGrammar extends AbstractQueryGrammar
 {
 	const PRIMARY  = 'PRIMARY KEY';
 	const INDEX    = 'INDEX';

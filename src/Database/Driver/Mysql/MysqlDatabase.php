@@ -9,7 +9,7 @@
 namespace Windwalker\Database\Driver\Mysql;
 
 use Windwalker\Database\Command\AbstractDatabase;
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
+use Windwalker\Query\Mysql\MysqlGrammar;
 
 /**
  * Class MysqlDatabase
@@ -41,7 +41,7 @@ class MysqlDatabase extends AbstractDatabase
 	 */
 	public function create($ifNotExists = false, $charset = 'utf8', $collate = 'utf8_unicode_ci')
 	{
-		$query = MysqlQueryBuilder::createDatabase($this->name, $ifNotExists, $charset, $collate);
+		$query = MysqlGrammar::createDatabase($this->name, $ifNotExists, $charset, $collate);
 
 		$this->db->setQuery($query)->execute();
 
@@ -57,7 +57,7 @@ class MysqlDatabase extends AbstractDatabase
 	 */
 	public function drop($ifExists = false)
 	{
-		$query = MysqlQueryBuilder::dropDatabase($this->name, $ifExists);
+		$query = MysqlGrammar::dropDatabase($this->name, $ifExists);
 
 		$this->db->setQuery($query)->execute();
 
@@ -78,7 +78,7 @@ class MysqlDatabase extends AbstractDatabase
 		// @see: http://stackoverflow.com/questions/67093/how-do-i-quickly-rename-a-mysql-database-change-schema-name?page=1&tab=votes#tab-top
 		$newDatabase = $this->db->getDatabase($newName)->create();
 
-		$tables = $this->db->getReader(MysqlQueryBuilder::showDbTables($this->name))->loadObjectList();
+		$tables = $this->db->getReader(MysqlGrammar::showDbTables($this->name))->loadObjectList();
 
 		foreach ($tables as $table)
 		{

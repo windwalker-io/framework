@@ -9,7 +9,7 @@
 namespace Windwalker\Database\Driver\Postgresql;
 
 use Windwalker\Database\Command\AbstractDatabase;
-use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
+use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
  * Class PostgresqlDatabase
@@ -42,7 +42,7 @@ class PostgresqlDatabase extends AbstractDatabase
 	 */
 	public function create($ifNotExists = false, $charset = 'utf8')
 	{
-		$query = PostgresqlQueryBuilder::createDatabase($this->name, $charset);
+		$query = PostgresqlGrammar::createDatabase($this->name, $charset);
 
 		$this->db->setQuery($query)->execute();
 
@@ -75,7 +75,7 @@ class PostgresqlDatabase extends AbstractDatabase
 
 		$this->db->setQuery($query)->execute();
 
-		$query = PostgresqlQueryBuilder::dropDatabase($this->name, $ifExists);
+		$query = PostgresqlGrammar::dropDatabase($this->name, $ifExists);
 
 		$this->db->setQuery($query)->execute();
 

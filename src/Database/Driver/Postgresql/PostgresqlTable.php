@@ -13,8 +13,8 @@ use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
 use Windwalker\Database\Schema\Schema;
-use Windwalker\Query\Mysql\MysqlQueryBuilder;
-use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
+use Windwalker\Query\Mysql\MysqlGrammar;
+use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
  * Class PostgresqlTable
@@ -48,7 +48,7 @@ class PostgresqlTable extends AbstractTable
 		{
 			$column = $this->prepareColumn($column);
 
-			$columns[$column->getName()] = PostgresqlQueryBuilder::build(
+			$columns[$column->getName()] = PostgresqlGrammar::build(
 				$column->getType() . $column->getLength(),
 				$column->getAllowNull() ? null : 'NOT NULL',
 				$column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
@@ -90,7 +90,7 @@ class PostgresqlTable extends AbstractTable
 		$inherits = isset($options['inherits']) ? $options['inherits'] : null;
 		$tablespace = isset($options['tablespace']) ? $options['tablespace'] : null;
 
-		$query = PostgresqlQueryBuilder::createTable($this->getName(), $columns, $primary, $keys, $inherits, $ifNotExists, $tablespace);
+		$query = PostgresqlGrammar::createTable($this->getName(), $columns, $primary, $keys, $inherits, $ifNotExists, $tablespace);
 
 		$comments = isset($options['comments']) ? $options['comments'] : array();
 		$keyComments = isset($options['key_comments']) ? $options['key_comments'] : array();
@@ -98,12 +98,12 @@ class PostgresqlTable extends AbstractTable
 		// Comments
 		foreach ($comments as $name => $comment)
 		{
-			$query .= ";\n" . PostgresqlQueryBuilder::comment('COLUMN', $this->getName(), $name, $comment);
+			$query .= ";\n" . PostgresqlGrammar::comment('COLUMN', $this->getName(), $name, $comment);
 		}
 
 		foreach ($keyComments as $name => $comment)
 		{
-			$query .= ";\n" . PostgresqlQueryBuilder::comment('INDEX', 'public', $name, $comment);
+			$query .= ";\n" . PostgresqlGrammar::comment('INDEX', 'public', $name, $comment);
 		}
 
 		DatabaseHelper::batchQuery($this->db, $query);
@@ -135,7 +135,7 @@ class PostgresqlTable extends AbstractTable
 
 		$this->prepareColumn($column);
 
-		$query = PostgresqlQueryBuilder::addColumn(
+		$query = PostgresqlGrammar::addColumn(
 			$this->getName(),
 			$column->getName(),
 			$column->getType() . $column->getLength(),
@@ -147,7 +147,7 @@ class PostgresqlTable extends AbstractTable
 
 		if ($column->getComment())
 		{
-			$query = PostgresqlQueryBuilder::comment('COLUMN', $this->getName(), $column->getName(), $column->getComment());
+			$query = PostgresqlGrammar::comment('COLUMN', $this->getName(), $column->getName(), $column->getComment());
 			$this->db->setQuery($query)->execute();
 		}
 
@@ -216,7 +216,7 @@ class PostgresqlTable extends AbstractTable
 		$query = $this->db->getQuery(true);
 
 		// Type
-		$sql = PostgresqlQueryBuilder::build(
+		$sql = PostgresqlGrammar::build(
 			'ALTER TABLE ' . $query->quoteName($this->getName()),
 			'ALTER COLUMN',
 			$query->quoteName($name),
@@ -225,7 +225,7 @@ class PostgresqlTable extends AbstractTable
 			$this->usingTextToNumeric($name, $type)
 		);
 
-		$sql .= ";\n" . PostgresqlQueryBuilder::build(
+		$sql .= ";\n" . PostgresqlGrammar::build(
 			'ALTER TABLE ' . $query->quoteName($this->getName()),
 			'ALTER COLUMN',
 			$query->quoteName($name),
@@ -235,7 +235,7 @@ class PostgresqlTable extends AbstractTable
 
 		if (!is_null($default))
 		{
-			$sql .= ";\n" . PostgresqlQueryBuilder::build(
+			$sql .= ";\n" . PostgresqlGrammar::build(
 				'ALTER TABLE ' . $query->quoteName($this->getName()),
 				'ALTER COLUMN',
 				$query->quoteName($name),
@@ -243,7 +243,7 @@ class PostgresqlTable extends AbstractTable
 			);
 		}
 
-		$sql .= ";\n" . PostgresqlQueryBuilder::comment(
+		$sql .= ";\n" . PostgresqlGrammar::comment(
 			'COLUMN',
 			$this->getName(),
 			$name,
@@ -291,7 +291,7 @@ class PostgresqlTable extends AbstractTable
 		$query = $this->db->getQuery(true);
 
 		// Type
-		$sql = PostgresqlQueryBuilder::build(
+		$sql = PostgresqlGrammar::build(
 			'ALTER TABLE ' . $query->quoteName($this->getName()),
 			'ALTER COLUMN',
 			$query->quoteName($oldName),
@@ -301,7 +301,7 @@ class PostgresqlTable extends AbstractTable
 		);
 
 		// Not NULL
-		$sql .= ";\n" . PostgresqlQueryBuilder::build(
+		$sql .= ";\n" . PostgresqlGrammar::build(
 			'ALTER TABLE ' . $query->quoteName($this->getName()),
 			'ALTER COLUMN',
 			$query->quoteName($oldName),
@@ -312,7 +312,7 @@ class PostgresqlTable extends AbstractTable
 		// Default
 		if (!is_null($default))
 		{
-			$sql .= ";\n" . PostgresqlQueryBuilder::build(
+			$sql .= ";\n" . PostgresqlGrammar::build(
 				'ALTER TABLE ' . $query->quoteName($this->getName()),
 				'ALTER COLUMN',
 				$query->quoteName($oldName),
@@ -321,7 +321,7 @@ class PostgresqlTable extends AbstractTable
 		}
 
 		// Comment
-		$sql .= ";\n" . PostgresqlQueryBuilder::comment(
+		$sql .= ";\n" . PostgresqlGrammar::comment(
 			'COLUMN',
 			$this->getName(),
 			$oldName,
@@ -329,7 +329,7 @@ class PostgresqlTable extends AbstractTable
 		);
 
 		// Rename
-		$sql .= ";\n" . PostgresqlQueryBuilder::renameColumn(
+		$sql .= ";\n" . PostgresqlGrammar::renameColumn(
 			$this->getName(),
 			$oldName,
 			$name
@@ -413,7 +413,7 @@ class PostgresqlTable extends AbstractTable
 			return $this;
 		}
 
-		$query = PostgresqlQueryBuilder::addIndex(
+		$query = PostgresqlGrammar::addIndex(
 			$this->getName(), 
 			$index->getType(), 
 			$index->getColumns(), 
@@ -424,7 +424,7 @@ class PostgresqlTable extends AbstractTable
 
 		if ($index->getComment())
 		{
-			$query = PostgresqlQueryBuilder::comment('INDEX', 'public', $index->getName(), $index->getComment());
+			$query = PostgresqlGrammar::comment('INDEX', 'public', $index->getName(), $index->getComment());
 
 			$this->db->setQuery($query)->execute();
 		}
@@ -449,11 +449,11 @@ class PostgresqlTable extends AbstractTable
 
 		if ($constraint)
 		{
-			$query = PostgresqlQueryBuilder::dropConstraint($this->getName(), $name, true, 'RESTRICT');
+			$query = PostgresqlGrammar::dropConstraint($this->getName(), $name, true, 'RESTRICT');
 		}
 		else
 		{
-			$query = PostgresqlQueryBuilder::dropIndex($name, true);
+			$query = PostgresqlGrammar::dropIndex($name, true);
 		}
 
 		$this->db->setQuery($query)->execute();
@@ -471,7 +471,7 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function rename($newName, $returnNew = true)
 	{
-		$this->db->setQuery(PostgresqlQueryBuilder::build(
+		$this->db->setQuery(PostgresqlGrammar::build(
 			'ALTER TABLE',
 			$this->db->quoteName($this->getName()),
 			'RENAME TO',
@@ -499,7 +499,7 @@ class PostgresqlTable extends AbstractTable
 	{
 		if (empty($this->columnCache) || $refresh)
 		{
-			$query = PostgresqlQueryBuilder::showTableColumns($this->db->replacePrefix($this->getName()));
+			$query = PostgresqlGrammar::showTableColumns($this->db->replacePrefix($this->getName()));
 
 			$fields = $this->db->setQuery($query)->loadAll();
 

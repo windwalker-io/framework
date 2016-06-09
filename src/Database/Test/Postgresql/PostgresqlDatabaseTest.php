@@ -9,7 +9,7 @@
 namespace Windwalker\Database\Test\Postgresql;
 
 use Windwalker\Database\Driver\Postgresql\PostgresqlDriver;
-use Windwalker\Query\Postgresql\PostgresqlQueryBuilder;
+use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
  * Test class of PostgresqlDatabase
@@ -205,8 +205,8 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 			return;
 		}
 
-		$this->db->setQuery(PostgresqlQueryBuilder::dropDatabase('windwalker_foo_test', true))->execute();
-		$this->db->setQuery(PostgresqlQueryBuilder::dropDatabase('windwalker_bar_test', true))->execute();
+		$this->db->setQuery(PostgresqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
+		$this->db->setQuery(PostgresqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();
 
 		parent::__destruct();
 	}
@@ -218,8 +218,8 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 */
 	public static function tearDownAfterClass()
 	{
-		static::$dbo->setQuery(PostgresqlQueryBuilder::dropDatabase('windwalker_foo_test', true))->execute();
-		static::$dbo->setQuery(PostgresqlQueryBuilder::dropDatabase('windwalker_bar_test', true))->execute();
+		static::$dbo->setQuery(PostgresqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
+		static::$dbo->setQuery(PostgresqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();
 
 		parent::tearDownAfterClass();
 	}

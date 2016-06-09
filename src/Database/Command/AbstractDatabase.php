@@ -142,7 +142,7 @@ abstract class AbstractDatabase
 	{
 		if (!isset($this->tableCache[$this->name]) || $refresh)
 		{
-			$builder = $this->db->getQuery(true)->getBuilder();
+			$builder = $this->db->getQuery(true)->getGrammar();
 
 			$query = $builder::showDbTables($this->name);
 

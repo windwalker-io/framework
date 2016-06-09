@@ -9,11 +9,11 @@
 namespace Windwalker\Query;
 
 /**
- * Class QueryBuilder
+ * QueryGrammar interface
  *
  * @since 2.0
  */
-interface QueryBuilderInterface
+interface QueryGrammarInterface
 {
 	/**
 	 * showDatabases
