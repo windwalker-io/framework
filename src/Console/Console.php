@@ -166,26 +166,33 @@ class Console extends AbstractConsole
 	/**
 	 * executeByPath
 	 *
-	 * @param string $path
-	 * @param IO     $io
+	 * @param string      $arguments
+	 * @param array       $options
+	 * @param IOInterface $io
 	 *
-	 * @return  int
+	 * @return int
+	 * @throws \Exception
 	 */
-	public function executeByPath($path, $io = null)
+	public function executeByPath($arguments, array $options = array(), IOInterface $io = null)
 	{
-		$io = $io ? : $this->io;
+		$io = $io ? : clone $this->io;
 
-		$command = $this->getCommand($path);
-
-		if (!$command)
+		// Path
+		if (is_string($arguments))
 		{
-			throw new \UnexpectedValueException('Command: ' . $path . ' not found.');
+			$arguments = str_replace('/', ' ', $arguments);
+			$arguments = array_filter(explode(' ', $arguments), 'strlen');
 		}
 
-		$command->setIO($io);
-		$command->setApplication($this);
+		$io->setArguments($arguments);
 
-		return $this->doExecute($command);
+		// Options
+		foreach ($options as $key => $value)
+		{
+			$io->setOption($key, $value);
+		}
+
+		return $this->getRootCommand()->setIO($io)->execute();
 	}
 
 	/**

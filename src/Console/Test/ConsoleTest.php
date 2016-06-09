@@ -118,7 +118,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->addCommand(new FooCommand);
 
-		$code = $this->instance->executeByPath('foo/aaa/bbb', $this->instance->io);
+		$code = $this->instance->executeByPath('foo aaa bbb', array(), $this->instance->io);
 
 		$output = $this->instance->io->getTestOutput();
 

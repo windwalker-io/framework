@@ -33,13 +33,13 @@ class AaaCommand extends Command
 	 */
 	public function init()
 	{
-		$this->addCommand(new Aaa\BbbCommand)
-			->addOption(
-				array('a', 'aaa', 'a3'),
-				true,
-				'AAA options',
-				true
-			);
+		$this->addCommand(new Aaa\BbbCommand);
+
+		$this->addGlobalOption('a')
+			->alias('aaa')
+			->alias('a3')
+			->defaultValue(true)
+			->description('AAA options');
 	}
 
 	/**
