@@ -55,7 +55,7 @@ class SelectPrompterTest extends AbstractPrompterTest
 		// Invalidate input test
 		$this->setStream("4\n5\n6\n7\n8");
 
-		$in = $this->instance->setAttempt(5)
+		$in = $this->instance->setAttemptTimes(5)
 			->ask('Please select an option []:', 2);
 
 		$outputCompare = <<<EOF
