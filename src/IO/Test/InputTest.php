@@ -405,6 +405,32 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test the Windwalker\Input\Input::compact method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Input\Input::compact
+	 * @since   2.0
+	 */
+	public function testCompact()
+	{
+		$array = array(
+			'var1' => 'value1',
+			'var2' => 34,
+			'var3' => array('test')
+		);
+
+		$input = $this->newInstance($array);
+
+		$this->assertEquals(
+			$array,
+			$input->compact(
+				array('var1' => 'raw', 'var2' => 'raw', 'var3' => 'raw')
+			)
+		);
+	}
+
+	/**
 	 * Method to test __call().
 	 *
 	 * @return void

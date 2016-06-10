@@ -292,6 +292,62 @@ class Input implements \Serializable, \Countable
 	}
 
 	/**
+	 * Gets an array of values from the request.
+	 *
+	 * @param   array  $vars        Associative array of keys and filter types to apply.
+	 *                              If empty and datasource is null, all the input data will be returned
+	 *                              but filtered using the default case in JFilterInput::clean.
+	 * @param   mixed  $datasource  Array to retrieve data from, or null
+	 *
+	 * @return  mixed  The filtered input data.
+	 *
+	 * @since   2.0
+	 */
+	public function compact(array $vars = array(), $datasource = null)
+	{
+		$results = array();
+
+		foreach ($vars as $k => $v)
+		{
+			if (is_array($v))
+			{
+				if (is_null($datasource))
+				{
+					if ($this instanceof FilesInput)
+					{
+						$results[$k] = $this->compact($this->get($k, null, 'array'), $this->get($k, null, 'array'));
+					}
+					else
+					{
+						$results[$k] = $this->compact($v, $this->get($k, null, 'array'));
+					}
+				}
+				else
+				{
+					$results[$k] = $this->compact($v, $datasource[$k]);
+				}
+			}
+			else
+			{
+				if (is_null($datasource))
+				{
+					$results[$k] = $this->get($k, null, $v);
+				}
+				elseif (isset($datasource[$k]))
+				{
+					$results[$k] = $this->filter->clean($datasource[$k], $v);
+				}
+				else
+				{
+					$results[$k] = $this->filter->clean(null, $v);
+				}
+			}
+		}
+
+		return $results;
+	}
+
+	/**
 	 * extract
 	 *
 	 * @param   string  $name
