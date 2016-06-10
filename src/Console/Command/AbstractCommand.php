@@ -162,7 +162,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	{
 		$this->prepareExecute();
 
-		// Show help or not
+		// Show help or not if command has no logic
 		if (!count($this->children) && $this->console instanceof AbstractConsole && $this->console->get('show_help'))
 		{
 			$this->io->out($this->console->describeCommand($this));
@@ -173,6 +173,14 @@ abstract class AbstractCommand implements \ArrayAccess
 		if (count($this->children) && count($this->io->getArguments()))
 		{
 			$name = $this->io->getArgument(0);
+
+			// Show help if a command also has logic
+			if ($this->console instanceof AbstractConsole && $this->console->get('show_help') && isset($this->children[$name]))
+			{
+				$this->io->out($this->console->describeCommand($this->children[$name]));
+
+				return $this->postExecute(true);
+			}
 
 			try
 			{
