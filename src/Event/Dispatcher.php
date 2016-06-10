@@ -179,7 +179,7 @@ class Dispatcher implements DispatcherInterface
 	 * If no events are specified, it will be registered to all events matching it's methods name.
 	 * In the case of a closure, you must specify at least one event name.
 	 *
-	 * @param   object|\Closure  $listener    The listener
+	 * @param   object|callable  $listener    The listener
 	 * @param   array|integer    $priorities  An associative array of event names as keys
 	 *                                        and the corresponding listener priority as values.
 	 *
@@ -253,6 +253,20 @@ class Dispatcher implements DispatcherInterface
 		}
 
 		return $this;
+	}
+
+	/**
+	 * on
+	 *
+	 * @param string   $event
+	 * @param callable $callable
+	 * @param int      $priority
+	 *
+	 * @return  static
+	 */
+	public function listen($event, $callable, $priority = ListenerPriority::NORMAL)
+	{
+		return $this->addListener($callable, array($event => $priority));
 	}
 
 	/**

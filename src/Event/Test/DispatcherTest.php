@@ -321,6 +321,23 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test the addListener method by specifying the events and priorities.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Event\Dispatcher::listen
+	 * @since   2.0
+	 */
+	public function testAddSingleListener()
+	{
+		$listener = function (Event $event) { };
+
+		$this->instance->listen('onBeforeSomething', $listener, ListenerPriority::MIN);
+
+		$this->assertEquals(ListenerPriority::MIN, $this->instance->getListenerPriority($listener, 'onBeforeSomething'));
+	}
+
+	/**
 	 * Test the addListener method by specifying less events than its methods.
 	 *
 	 * @return  void

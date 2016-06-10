@@ -39,4 +39,15 @@ interface DispatcherInterface
 	 * @since   2.0
 	 */
 	public function addListener($listener, $priorities = array());
+
+	/**
+	 * Add single listener.
+	 *
+	 * @param string   $event
+	 * @param callable $callable
+	 * @param int      $priority
+	 *
+	 * @return  static
+	 */
+	public function listen($event, $callable, $priority = ListenerPriority::NORMAL);
 }
