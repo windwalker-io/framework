@@ -17,13 +17,17 @@ use Windwalker\Authentication\Method\MethodInterface;
  */
 class Authentication
 {
-	const SUCCESS = 1;
+	const SUCCESS = 'SUCCESS';
 
-	const INVALID_CREDENTIAL = 2;
+	const INVALID_CREDENTIAL = 'INVALID_CREDENTIAL';
 
-	const EMPTY_CREDENTIAL = 3;
+	const EMPTY_CREDENTIAL = 'EMPTY_CREDENTIAL';
 
-	const USER_NOT_FOUND = 4;
+	const USER_NOT_FOUND = 'USER_NOT_FOUND';
+
+	const INVALID_USERNAME = 'INVALID_USERNAME';
+
+	const INVALID_PASSWORD = 'INVALID_PASSWORD';
 
 	/**
 	 * Property results.
