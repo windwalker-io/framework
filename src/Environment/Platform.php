@@ -30,6 +30,23 @@ class Platform
 	protected $uname = PHP_OS;
 
 	/**
+	 * Property globals.
+	 *
+	 * @var  array
+	 */
+	protected $server = array();
+
+	/**
+	 * Platform constructor.
+	 *
+	 * @param array $server
+	 */
+	public function __construct(array $server = array())
+	{
+		$this->server = $server ? : $_SERVER;
+	}
+
+	/**
 	 * isWeb
 	 *
 	 * @return  boolean
@@ -179,7 +196,7 @@ class Platform
 	 */
 	public function getServerPublicRoot()
 	{
-		return $this->getGlobals('_SERVER', 'DOCUMENT_ROOT');
+		return $this->getServerParam('DOCUMENT_ROOT');
 	}
 
 	/**
@@ -195,7 +212,7 @@ class Platform
 
 		$wdir = $this->getWorkingDirectory();
 
-		$file = $this->getGlobals('_SERVER', $key);
+		$file = $this->getServerParam($key);
 
 		if (strpos($file, $wdir) === 0)
 		{
@@ -223,10 +240,10 @@ class Platform
 	{
 		if ($withParams)
 		{
-			return $this->getGlobals('_SERVER', 'REQUEST_URI');
+			return $this->getServerParam('REQUEST_URI');
 		}
 
-		return $this->getGlobals('_SERVER', 'PHP_SELF');
+		return $this->getServerParam('PHP_SELF');
 	}
 
 	/**
@@ -236,7 +253,7 @@ class Platform
 	 */
 	public function getHost()
 	{
-		return $this->getGlobals('_SERVER', 'HTTP_HOST');
+		return $this->getServerParam('HTTP_HOST');
 	}
 
 	/**
@@ -246,7 +263,7 @@ class Platform
 	 */
 	public function getPort()
 	{
-		return $this->getGlobals('_SERVER', 'SERVER_PORT');
+		return $this->getServerParam('SERVER_PORT');
 	}
 
 	/**
@@ -256,28 +273,22 @@ class Platform
 	 */
 	public function getScheme()
 	{
-		return $this->getGlobals('_SERVER', 'REQUEST_SCHEME');
+		return $this->getServerParam('REQUEST_SCHEME');
 	}
 
 	/**
-	 * getGlobals
+	 * getServerParam
 	 *
-	 * @param string $type
 	 * @param string $key
 	 * @param mixed  $default
 	 *
 	 * @return  mixed
 	 */
-	protected function getGlobals($type, $key, $default = null)
+	protected function getServerParam($key, $default = null)
 	{
-		if (!isset($GLOBALS['_SERVER']))
+		if (isset($this->server[$key]))
 		{
-			$GLOBALS['_SERVER'] = $_SERVER;
-		}
-
-		if (isset($GLOBALS[$type][$key]))
-		{
-			return $GLOBALS[$type][$key];
+			return $this->server[$key];
 		}
 
 		return $default;
