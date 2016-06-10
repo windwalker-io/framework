@@ -8,6 +8,8 @@
 
 namespace Windwalker\Console\Prompter;
 
+use Windwalker\Console\IO\IOInterface;
+
 /**
  * Callback validate prompter.
  *
@@ -61,6 +63,26 @@ class CallbackPrompter extends AbstractPrompter
 	 * @since  2.0
 	 */
 	protected $closeMessage = '  Valid fail and close.';
+
+	/**
+	 * Constructor.
+	 *
+	 * @param   string      $question The question you want to ask.
+	 * @param   callable    $handler  The callback handler.
+	 * @param   mixed       $default  $default   The default value.
+	 * @param   IOInterface $io       The input object.
+	 *
+	 * @since   2.0
+	 */
+	public function __construct($question = null, $handler = null, $default = null, IOInterface $io = null)
+	{
+		parent::__construct($question, $default, $io);
+
+		if ($handler !== null)
+		{
+			$this->setHandler($handler);
+		}
+	}
 
 	/**
 	 * Show prompt to ask user.
@@ -147,7 +169,7 @@ class CallbackPrompter extends AbstractPrompter
 	 *
 	 * @since   2.0
 	 */
-	public function setAttempt($attempt)
+	public function setAttemptTimes($attempt)
 	{
 		$this->attempt = $attempt;
 

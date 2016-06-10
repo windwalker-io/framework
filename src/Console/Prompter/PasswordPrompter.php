@@ -76,7 +76,7 @@ class PasswordPrompter extends CallbackPrompter
 		// Default handler
 		$closure = function($value)
 		{
-			return (bool) $value;
+			return count($value);
 		};
 
 		$this->setHandler($closure);

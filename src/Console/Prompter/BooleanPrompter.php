@@ -48,7 +48,7 @@ class BooleanPrompter extends TextPrompter
 	 * @param   string  $msg      Question.
 	 * @param   string  $default  Default value.
 	 *
-	 * @return  string  The value that use input.
+	 * @return  boolean  The value that use input.
 	 *
 	 * @since   2.0
 	 */
@@ -58,7 +58,7 @@ class BooleanPrompter extends TextPrompter
 
 		if (is_null($value))
 		{
-			return $value;
+			return (bool) $value;
 		}
 
 		$value = strtolower($value);
@@ -72,7 +72,7 @@ class BooleanPrompter extends TextPrompter
 			return false;
 		}
 
-		return $default;
+		return (bool) $default;
 	}
 
 	/**

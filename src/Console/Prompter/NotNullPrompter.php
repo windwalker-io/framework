@@ -40,7 +40,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @since  2.0
 	 */
-	protected $noValidMessage = '  No value?';
+	protected $noValidMessage = '  Please enter something.';
 
 	/**
 	 * Returning message if valid fail and close.
@@ -49,7 +49,7 @@ class NotNullPrompter extends ValidatePrompter
 	 *
 	 * @since  2.0
 	 */
-	protected $closeMessage = '  Please enter something.';
+	protected $closeMessage = '  No value and closed.';
 
 	/**
 	 * Get callable handler.
