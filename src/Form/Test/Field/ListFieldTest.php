@@ -38,14 +38,15 @@ class ListFieldTest extends AbstractDomTestCase
 			'flower',
 			'Flower',
 			array(
-				new \Windwalker\Html\Option('', ''),
-				new \Windwalker\Html\Option(1, 'Yes'),
-				new \Windwalker\Html\Option(0, 'No'),
+				new \Windwalker\Html\Option('', '')
 			),
 			array(
 				'class' => 'stub-flower'
 			)
 		);
+
+		$this->instance->option(1, 'Yes')
+			->option(0, 'No');
 
 		$this->instance->setAttribute('size',     10);
 		$this->instance->setAttribute('readonly', false);
@@ -125,14 +126,14 @@ HTML;
 				'Asia' => array(
 					new Option('Tokyo', 'Asia/Tokyo', array('class' => 'opt')),
 					new Option('Taipei', 'Asia/Taipei')
-				),
-				'Europe' => array(
-					new Option('Paris', 'Europe/Paris')
 				)
-				,
-				new Option('UTC', 'UTC'),
 			)
 		);
+
+		$field->group('Europe', function (ListField $field)
+		{
+			$field->option('Paris', 'Europe/Paris');
+		})->option('UTC', 'UTC');
 
 		$html = <<<HTML
 <select name="timezone" id="input-timezone">

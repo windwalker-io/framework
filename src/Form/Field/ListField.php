@@ -34,6 +34,13 @@ class ListField extends AbstractField
 	protected $options = array();
 
 	/**
+	 * Property currentGroup.
+	 *
+	 * @var  string
+	 */
+	protected $currentGroup;
+
+	/**
 	 * @param string $name
 	 * @param null   $label
 	 * @param array  $options
@@ -125,6 +132,11 @@ class ListField extends AbstractField
 	{
 		$options = array($option);
 
+		if ($group === null)
+		{
+			$group = $this->currentGroup;
+		}
+
 		$this->setOptions($options, $group);
 
 		return $this;
@@ -143,6 +155,25 @@ class ListField extends AbstractField
 	public function option($text = null, $value = null, $attribs = array(), $group = null)
 	{
 		$this->addOption(new Option($text, $value, $attribs), $group);
+
+		return $this;
+	}
+
+	/**
+	 * optionGroup
+	 *
+	 * @param string   $name
+	 * @param \Closure $callback
+	 *
+	 * @return  static
+	 */
+	public function group($name, \Closure $callback)
+	{
+		$this->currentGroup = $name;
+
+		$callback($this);
+
+		$this->currentGroup = null;
 
 		return $this;
 	}

@@ -51,4 +51,18 @@ class CustomHtmlField extends AbstractField
 
 		return $content;
 	}
+
+	/**
+	 * content
+	 *
+	 * @param   string  $content
+	 *
+	 * @return  static
+	 */
+	public function content($content)
+	{
+		$this->set('content', $content);
+
+		return $this;
+	}
 }

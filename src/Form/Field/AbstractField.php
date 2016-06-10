@@ -304,8 +304,6 @@ abstract class AbstractField
 	/**
 	 * validate
 	 *
-	 * @throws \Windwalker\Form\Exception\FieldRequiredFailException
-	 * @throws \Windwalker\Form\Exception\FieldValidateFailException
 	 * @return  ValidateResult
 	 */
 	public function validate()
@@ -754,6 +752,34 @@ abstract class AbstractField
 	public function readonly($value = true)
 	{
 		$this->setAttribute('readonly', $value);
+
+		return $this;
+	}
+
+	/**
+	 * class
+	 *
+	 * @param   string  $value
+	 *
+	 * @return  static
+	 */
+	public function class($value)
+	{
+		$this->setAttribute('class', $value);
+
+		return $this;
+	}
+
+	/**
+	 * labelClass
+	 *
+	 * @param   string  $value
+	 *
+	 * @return  static
+	 */
+	public function labelClass($value)
+	{
+		$this->setAttribute('labelClass', $value);
 
 		return $this;
 	}
