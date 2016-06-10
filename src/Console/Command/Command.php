@@ -26,7 +26,7 @@ class Command extends AbstractCommand
 	{
 		$this->io->setArguments(array($this->name));
 
-		$output = $this->app->describeCommand($this);
+		$output = $this->console->describeCommand($this);
 
 		$this->out($output);
 

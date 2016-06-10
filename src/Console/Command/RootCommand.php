@@ -79,31 +79,31 @@ HELP
 	 */
 	protected function prepareExecute()
 	{
-		if (!($this->app instanceof Console\AbstractConsole))
+		if (!($this->console instanceof Console\AbstractConsole))
 		{
 			throw new \Exception('RootCommand::$app should have Console Application');
 		}
 
 		if (!$this->getOption('ansi') || strtolower($this->getOption('ansi')) == 'off')
 		{
-			$this->app->set('ansi', false);
+			$this->console->set('ansi', false);
 
 			$this->io->useColor(false);
 		}
 
 		if ($this->getOption('quiet'))
 		{
-			$this->app->set('quiet', true);
+			$this->console->set('quiet', true);
 		}
 
 		if ($this->getOption('verbose'))
 		{
-			$this->app->set('verbose', true);
+			$this->console->set('verbose', true);
 		}
 
 		if ($this->getOption('help'))
 		{
-			$this->app->set('show_help', true);
+			$this->console->set('show_help', true);
 		}
 	}
 }

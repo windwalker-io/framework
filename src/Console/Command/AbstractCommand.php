@@ -30,7 +30,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since  2.0
 	 */
-	public $app;
+	public $console;
 
 	/**
 	 * The Cli input object.
@@ -163,9 +163,9 @@ abstract class AbstractCommand implements \ArrayAccess
 		$this->prepareExecute();
 
 		// Show help or not
-		if (!count($this->children) && $this->app instanceof AbstractConsole && $this->app->get('show_help'))
+		if (!count($this->children) && $this->console instanceof AbstractConsole && $this->console->get('show_help'))
 		{
-			$this->io->out($this->app->describeCommand($this));
+			$this->io->out($this->console->describeCommand($this));
 
 			return $this->postExecute(true);
 		}
@@ -285,7 +285,7 @@ abstract class AbstractCommand implements \ArrayAccess
 		}
 
 		$subCommand->setIO($io)
-			->setApplication($this->app);
+			->setApplication($this->console);
 
 		return $subCommand->execute();
 	}
@@ -363,7 +363,7 @@ abstract class AbstractCommand implements \ArrayAccess
 		}
 
 		// Set argument detail
-		$command->setApplication($this->app)
+		$command->setApplication($this->console)
 			->setIO($this->io);
 
 		if ($description !== null)
@@ -796,7 +796,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function getApplication()
 	{
-		return $this->app;
+		return $this->console;
 	}
 
 	/**
@@ -810,7 +810,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function setApplication($application)
 	{
-		$this->app = $application;
+		$this->console = $application;
 
 		return $this;
 	}
@@ -932,7 +932,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function renderException(\Exception $exception)
 	{
-		$verbose = $this->app ? $this->app->get('verbose', 0) : 0;
+		$verbose = $this->console ? $this->console->get('verbose', 0) : 0;
 
 		if (!$verbose)
 		{
@@ -987,7 +987,7 @@ EOF;
 	 */
 	public function out($text = '', $nl = true)
 	{
-		$quiet = $this->app ? $this->app->get('quiet', false) : false;
+		$quiet = $this->console ? $this->console->get('quiet', false) : false;
 
 		if (!$quiet)
 		{
