@@ -21,7 +21,7 @@ use Windwalker\Database\Schema\Column;
  * @method  Column\Double     double($name)
  * @method  Column\FloatType  float($name)
  * @method  Column\Integer    integer($name)
- * @method  Column\Longtext   logintext($name)
+ * @method  Column\Longtext   longtext($name)
  * @method  Column\Primary    primary($name)
  * @method  Column\Text       text($name)
  * @method  Column\Timestamp  timestamp($name)
@@ -257,6 +257,8 @@ class Schema
 	 * getDateFormat
 	 *
 	 * @return  string
+	 *
+	 * @since   3.0
 	 */
 	public function getDateFormat()
 	{
@@ -267,6 +269,8 @@ class Schema
 	 * getNullDate
 	 *
 	 * @return  string
+	 *
+	 * @since   3.0
 	 */
 	public function getNullDate()
 	{
