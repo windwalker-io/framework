@@ -9,7 +9,7 @@
 namespace Windwalker\Renderer;
 
 use Windwalker\Edge\Compiler\EdgeCompiler;
-use Windwalker\Edge\EdgeEnvironment;
+use Windwalker\Edge\Edge;
 
 /**
  * The EdgeRenderer class.
@@ -56,7 +56,7 @@ class EdgeRenderer extends AbstractEngineRenderer
 	/**
 	 * Property engine.
 	 *
-	 * @var  EdgeEnvironment
+	 * @var  Edge
 	 */
 	protected $engine;
 
@@ -102,13 +102,13 @@ class EdgeRenderer extends AbstractEngineRenderer
 	 *
 	 * @param   boolean $new
 	 *
-	 * @return  EdgeEnvironment
+	 * @return  Edge
 	 */
 	public function getEngine($new = false)
 	{
 		if (!$this->engine || $new)
 		{
-			$this->engine = new EdgeEnvironment(new EdgeCompiler);
+			$this->engine = new Edge(new EdgeCompiler);
 		}
 
 		return $this->engine;
@@ -117,7 +117,7 @@ class EdgeRenderer extends AbstractEngineRenderer
 	/**
 	 * Method to set property engine
 	 *
-	 * @param   EdgeEnvironment $engine
+	 * @param   Edge $engine
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

@@ -15,21 +15,12 @@ use Windwalker\Edge\Extension\EdgeExtensionInterface;
  *
  * @since  {DEPLOY_VERSION}
  */
-class EdgeCompiler
+class EdgeCompiler implements EdgeCompilerInterface
 {
-	/**
-	 * All of the registered extensions.
-	 *
-	 * @var EdgeExtensionInterface[]
-	 */
-	protected $extensions = array();
-
 	/**
 	 * All custom "directive" handlers.
 	 *
-	 * This was implemented as a more usable "extend" in 5.1.
-	 *
-	 * @var array
+	 * @var callable[]
 	 */
 	protected $directives = array();
 
@@ -164,6 +155,20 @@ class EdgeCompiler
 	}
 
 	/**
+	 * Method to set property directives
+	 *
+	 * @param   callable[] $directives
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDirectives(array $directives)
+	{
+		$this->directives = $directives;
+
+		return $this;
+	}
+
+	/**
 	 * Execute the user defined extensions.
 	 *
 	 * @param  string $value
@@ -285,19 +290,9 @@ class EdgeCompiler
 			{
 				$match[0] = call_user_func($this->directives[$match[1]], isset($match[3]) ? $match[3] : null);
 			}
-			elseif (method_exists($this, $method = 'compile'.ucfirst($match[1])))
+			elseif (method_exists($this, $method = 'compile' . ucfirst($match[1])))
 			{
 				$match[0] = $this->$method(isset($match[3]) ? $match[3] : null);
-			}
-			else
-			{
-				foreach ($this->extensions as $extension)
-				{
-					foreach ($extension->getDirectives() as $name => $directive)
-					{
-						$match[0] = call_user_func($directive, isset($match[3]) ? $match[3] : null);
-					}
-				}
 			}
 
 			return isset($match[3]) ? $match[0] : $match[0] . $match[2];
@@ -746,7 +741,7 @@ class EdgeCompiler
 	{
 		$expression = $this->stripParentheses($expression);
 
-		$data = "<?php echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__hash'))); ?>";
+		$data = "<?php echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__path'))); ?>";
 
 		$this->footer[] = $data;
 
@@ -763,7 +758,7 @@ class EdgeCompiler
 	{
 		$expression = $this->stripParentheses($expression);
 
-		return "<?php echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__hash'))); ?>";
+		return "<?php echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__path'))); ?>";
 	}
 
 	/**
@@ -776,7 +771,7 @@ class EdgeCompiler
 	{
 		$expression = $this->stripParentheses($expression);
 
-		return "<?php if (\$__env->exists($expression)) echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__hash'))); ?>";
+		return "<?php if (\$__env->exists($expression)) echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__path'))); ?>";
 	}
 
 	/**

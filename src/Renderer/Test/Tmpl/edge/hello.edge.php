@@ -8,4 +8,9 @@
 
 @section('content')
     <p>This is my body content.</p>
+
+    @foreach (array() as $a)
+        
+    @endforeach
+    
 @stop

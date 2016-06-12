@@ -7,6 +7,9 @@
  */
 
 use Windwalker\Cache\Storage\RawFileStorage;
+use Windwalker\Edge\Cache\EdgeArrayCache;
+use Windwalker\Edge\Cache\EdgeFileCache;
+use Windwalker\Edge\Compiler\EdgeCompiler;
 
 include_once __DIR__ . '/../../../../vendor/autoload.php';
 
@@ -16,13 +19,8 @@ $finder = new \Windwalker\Edge\Loader\EdgeFileLoader;
 
 $finder->addPath(__DIR__ . '/edge');
 
-$edge = new \Windwalker\Edge\EdgeEnvironment($finder, new \Windwalker\Edge\Compiler\EdgeCompiler);
+$edge = new \Windwalker\Edge\Edge($finder, new EdgeCompiler, new EdgeArrayCache());
 
-$storage = new RawFileStorage(__DIR__ . '/cache');
-
-$storage->denyAccess(false);
-$storage->setFileFormat('.php');
-
-$edge->setCacheStorage($storage);
+$edge->addExtension(new \Windwalker\Edge\Extension\BasicExtension);
 
 echo $edge->render('hello');

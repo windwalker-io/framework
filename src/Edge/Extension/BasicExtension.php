@@ -30,11 +30,16 @@ class BasicExtension implements EdgeExtensionInterface
 
 	public function compileForeach($expression)
 	{
-		return '<?php endforeach; ?>';
+		return "<?php foreach{$expression}: ?>";
 	}
 
 	public function compileEndforeach($expression)
 	{
-		return "<?php foreach{$expression}: ?>";
+		return '<?php endforeach; ?><span />';
+	}
+
+	public function getGlobals()
+	{
+		return array();
 	}
 }

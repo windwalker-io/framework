@@ -23,7 +23,7 @@ class RuntimeStorage extends AbstractCacheStorage
 	 *
 	 * @var  array
 	 */
-	protected $store = array();
+	protected $data = array();
 
 	/**
 	 * Method to determine whether a storage entry has been set for a key.
@@ -34,7 +34,7 @@ class RuntimeStorage extends AbstractCacheStorage
 	 */
 	public function exists($key)
 	{
-		return isset($this->store[$key]);
+		return isset($this->data[$key]);
 	}
 
 	/**
@@ -49,9 +49,9 @@ class RuntimeStorage extends AbstractCacheStorage
 	{
 		$item = new CacheItem($key);
 
-		if (isset($this->store[$key]))
+		if (isset($this->data[$key]))
 		{
-			$item->setValue($this->store[$key]);
+			$item->setValue($this->data[$key]);
 		}
 
 		return $item;
@@ -70,7 +70,7 @@ class RuntimeStorage extends AbstractCacheStorage
 		$key = $item->getKey();
 		$value = $item->getValue();
 
-		$this->store[$key] = $value;
+		$this->data[$key] = $value;
 
 		return $this;
 	}
@@ -84,9 +84,9 @@ class RuntimeStorage extends AbstractCacheStorage
 	 */
 	public function removeItem($key)
 	{
-		if (array_key_exists($key, $this->store))
+		if (array_key_exists($key, $this->data))
 		{
-			unset($this->store[$key]);
+			unset($this->data[$key]);
 		}
 
 		return $this;
@@ -99,7 +99,31 @@ class RuntimeStorage extends AbstractCacheStorage
 	 */
 	public function clear()
 	{
-		$this->store = array();
+		$this->data = array();
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Data
+	 *
+	 * @return  array
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+
+	/**
+	 * Method to set property data
+	 *
+	 * @param   array $data
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setData($data)
+	{
+		$this->data = $data;
 
 		return $this;
 	}

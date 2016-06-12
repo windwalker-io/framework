@@ -6,18 +6,21 @@
  * @license    GNU General Public License version 2 or later.
  */
 
-namespace Windwalker\Edge\Extension;
+namespace Windwalker\Edge\Loader;
 
 /**
- * The EdgeExtensionInterface class.
+ * Interface EdgeLoaderInterface
  *
  * @since  {DEPLOY_VERSION}
  */
-interface EdgeExtensionInterface
+interface EdgeLoaderInterface
 {
-	public function getName();
-
-	public function getDirectives();
-
-	public function getGlobals();
+	/**
+	 * load
+	 *
+	 * @param   string  $key
+	 *
+	 * @return  string
+	 */
+	public function find($key);
 }
