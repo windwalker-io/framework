@@ -280,7 +280,7 @@ class FileStorage extends AbstractCacheStorage
 	 * @since   2.0
 	 * @throws  \RuntimeException if the cache path is invalid.
 	 */
-	protected function fetchStreamUri($key)
+	public function fetchStreamUri($key)
 	{
 		$filePath = $this->path;
 
@@ -380,6 +380,20 @@ class FileStorage extends AbstractCacheStorage
 	public function setPath($path)
 	{
 		$this->path = $path;
+
+		return $this;
+	}
+
+	/**
+	 * setFileFormat
+	 *
+	 * @param   string  $format
+	 *
+	 * @return  static
+	 */
+	public function setFileFormat($format)
+	{
+		$this->options['format'] = $format;
 
 		return $this;
 	}

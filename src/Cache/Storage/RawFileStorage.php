@@ -45,7 +45,7 @@ class RawFileStorage extends FileStorage
 	 */
 	protected function serialize($data)
 	{
-		if (is_array($data) || (is_object($data) && !method_exists($data, '_toString')))
+		if (is_array($data) || (is_object($data) && !method_exists($data, '__toString')))
 		{
 			throw new \InvalidArgumentException(__CLASS__ . ' can not handle an array or non-stringable object.');
 		}

@@ -746,7 +746,7 @@ class EdgeCompiler
 	{
 		$expression = $this->stripParentheses($expression);
 
-		$data = "<?php echo \$__env->render($expression, array_except(get_defined_vars(), array('__data', '__path'))); ?>";
+		$data = "<?php echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__hash'))); ?>";
 
 		$this->footer[] = $data;
 
@@ -763,7 +763,7 @@ class EdgeCompiler
 	{
 		$expression = $this->stripParentheses($expression);
 
-		return "<?php echo \$__env->render($expression, array_except(get_defined_vars(), array('__data', '__path'))); ?>";
+		return "<?php echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__hash'))); ?>";
 	}
 
 	/**
@@ -776,7 +776,7 @@ class EdgeCompiler
 	{
 		$expression = $this->stripParentheses($expression);
 
-		return "<?php if (\$__env->exists($expression)) echo \$__env->render($expression, array_except(get_defined_vars(), array('__data', '__path'))); ?>";
+		return "<?php if (\$__env->exists($expression)) echo \$__env->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__hash'))); ?>";
 	}
 
 	/**

@@ -19,9 +19,9 @@ class EdgeFileLoader
 
 	protected $paths = array();
 
-	public function loadFile($file)
+	public function load($key)
 	{
-		$file = $this->normalize($file);
+		$key = $this->normalize($key);
 
 		$filePath = null;
 
@@ -29,9 +29,9 @@ class EdgeFileLoader
 		{
 			foreach ($this->extensions as $ext)
 			{
-				if (is_file($path . '/' . $file . $ext))
+				if (is_file($path . '/' . $key . $ext))
 				{
-					$filePath = $path . '/' . $file . $ext;
+					$filePath = $path . '/' . $key . $ext;
 
 					break 2;
 				}
@@ -40,7 +40,7 @@ class EdgeFileLoader
 
 		if ($filePath === null)
 		{
-			throw new \UnexpectedValueException('File not found: ' . $file);
+			throw new \UnexpectedValueException('File not found: ' . $key);
 		}
 
 		return $filePath;

@@ -8,6 +8,12 @@
 
 namespace Windwalker\Edge;
 
+use Windwalker\Cache\Cache;
+use Windwalker\Cache\CacheInterface;
+use Windwalker\Cache\DataHandler\RawDataHandler;
+use Windwalker\Cache\Storage\CacheStorageInterface;
+use Windwalker\Cache\Storage\FileStorage;
+use Windwalker\Cache\Storage\RuntimeStorage;
 use Windwalker\Edge\Compiler\EdgeCompiler;
 use Windwalker\Edge\Loader\EdgeFileLoader;
 
@@ -26,11 +32,18 @@ class EdgeEnvironment
 	protected $compiler;
 
 	/**
-	 * Property finder.
+	 * Property cache.
 	 *
-	 * @var
+	 * @var  CacheInterface
 	 */
-	protected $finder;
+	protected $cache;
+
+	/**
+	 * Property storage.
+	 *
+	 * @var  CacheStorageInterface
+	 */
+	protected $storage;
 
 	/**
 	 * Property globals.
@@ -84,15 +97,18 @@ class EdgeEnvironment
 	/**
 	 * EdgeEnvironment constructor.
 	 *
-	 * @param              $loader
-	 * @param EdgeCompiler $compiler
+	 * @param                       $loader
+	 * @param EdgeCompiler          $compiler
+	 * @param CacheStorageInterface $storage
 	 */
-	public function __construct($loader, EdgeCompiler $compiler)
+	public function __construct($loader, EdgeCompiler $compiler, CacheStorageInterface $storage = null)
 	{
 		$this->compiler = $compiler;
 
 		$this->globals['__env'] = $this;
 		$this->loader = $loader;
+
+		$this->setCacheStorage($storage);
 	}
 
 	/**
@@ -110,23 +126,60 @@ class EdgeEnvironment
 		return $this;
 	}
 
-	public function render($path, $data = array())
+	public function render($__path, $__data = array())
 	{
 		// TODO: Aliases
 
-		$file = $this->loader->loadFile($path);
+		$__file = $this->loader->load($__path);
 
-		$code = $this->compiler->compile(file_get_contents($file));
-//show($code);
-		extract($data);
+		$__hash = md5($__file);
+
+		if (!$this->cache->exists($__hash))
+		{
+			$this->cache->set($__hash, $this->compiler->compile(file_get_contents($__file)));
+		}
+
+		extract($__data);
 
 		$__env = $this;
 
 		ob_start();
 
-		eval(' ?>' . $code . '<?php ');
+		if ($this->getCacheStorage() instanceof FileStorage)
+		{
+			include $this->getCacheStorage()->fetchStreamUri($__hash);
+		}
+		else
+		{
+			eval(' ?>' . $this->cache->get($__hash) . '<?php ');
+		}
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Method to set property storage
+	 *
+	 * @param   CacheStorageInterface $storage
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setCacheStorage($storage)
+	{
+		$this->storage = $storage ? : new RuntimeStorage;
+		$this->cache = new Cache($this->storage, new RawDataHandler);
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Storage
+	 *
+	 * @return  CacheStorageInterface|FileStorage
+	 */
+	public function getCacheStorage()
+	{
+		return $this->storage;
 	}
 
 	/**
@@ -399,5 +452,26 @@ class EdgeEnvironment
 	public function doneRendering()
 	{
 		return $this->renderCount == 0;
+	}
+
+	/**
+	 * arrayExcept
+	 *
+	 * @param array $array
+	 * @param array $fields
+	 *
+	 * @return  array
+	 */
+	public function arrayExcept(array $array, array $fields)
+	{
+		foreach ($fields as $field)
+		{
+			if (array_key_exists($field, $array))
+			{
+				unset($array[$field]);
+			}
+		}
+
+		return $array;
 	}
 }
