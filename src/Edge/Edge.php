@@ -103,13 +103,21 @@ class Edge
 	 */
 	public function __construct(EdgeLoaderInterface $loader = null, EdgeCompilerInterface $compiler = null, EdgeCacheInterface $cache)
 	{
-		$this->compiler = $compiler ? : new EdgeCompiler;
-		$this->loader   = $loader   ? : new EdgeFileLoader;
-		$this->cache    = $cache    ? : new EdgeArrayCache;
+		$this->compiler = $compiler ?: new EdgeCompiler;
+		$this->loader   = $loader ?: new EdgeFileLoader;
+		$this->cache    = $cache ?: new EdgeArrayCache;
 
 		$this->globals['__env'] = $this;
 	}
 
+	/**
+	 * render
+	 *
+	 * @param string $__path
+	 * @param array  $__data
+	 *
+	 * @return  string
+	 */
 	public function render($__path, $__data = array())
 	{
 		// TODO: Aliases
@@ -120,16 +128,21 @@ class Edge
 
 		if ($this->cache->isExpired($__path))
 		{
-			$compiler = $this->prepareDirectives(clone $this->compiler);
+			$compiler = $this->prepareExtensions(clone $this->compiler);
 
 			$this->cache->store($__path, $compiler->compile($this->loader->load($__path)));
 
 			unset($compiler);
 		}
 
-		$__data = array_merge($this->globals, $__data);
+		$__data = array_merge($this->getGlobals(true), $__data);
 
-		extract($__data);
+		foreach ($__data as $key => $value)
+		{
+			$$key = $value;
+		}
+
+		unset($__data);
 
 		ob_start();
 
@@ -155,6 +168,7 @@ class Edge
 	 * Normalize a view name.
 	 *
 	 * @param  string $name
+	 *
 	 * @return string
 	 */
 	protected function normalizeName($name)
@@ -165,19 +179,36 @@ class Edge
 	}
 
 	/**
+	 * escape
+	 *
+	 * @param  string $string
+	 *
+	 * @return  string
+	 */
+	public function escape($string)
+	{
+		return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+	}
+
+	/**
 	 * Start injecting content into a section.
 	 *
-	 * @param  string  $section
-	 * @param  string  $content
+	 * @param  string $section
+	 * @param  string $content
+	 *
 	 * @return void
 	 */
 	public function startSection($section, $content = '')
 	{
-		if ($content === '') {
-			if (ob_start()) {
+		if ($content === '')
+		{
+			if (ob_start())
+			{
 				$this->sectionStack[] = $section;
 			}
-		} else {
+		}
+		else
+		{
 			$this->extendSection($section, $content);
 		}
 	}
@@ -185,8 +216,9 @@ class Edge
 	/**
 	 * Inject inline content into a section.
 	 *
-	 * @param  string  $section
-	 * @param  string  $content
+	 * @param  string $section
+	 * @param  string $content
+	 *
 	 * @return void
 	 */
 	public function inject($section, $content)
@@ -201,7 +233,8 @@ class Edge
 	 */
 	public function yieldSection()
 	{
-		if (empty($this->sectionStack)) {
+		if (empty($this->sectionStack))
+		{
 			return '';
 		}
 
@@ -211,21 +244,26 @@ class Edge
 	/**
 	 * Stop injecting content into a section.
 	 *
-	 * @param  bool  $overwrite
+	 * @param  bool $overwrite
+	 *
 	 * @return string
 	 * @throws \InvalidArgumentException
 	 */
 	public function stopSection($overwrite = false)
 	{
-		if (empty($this->sectionStack)) {
+		if (empty($this->sectionStack))
+		{
 			throw new \InvalidArgumentException('Cannot end a section without first starting one.');
 		}
 
 		$last = array_pop($this->sectionStack);
 
-		if ($overwrite) {
+		if ($overwrite)
+		{
 			$this->sections[$last] = ob_get_clean();
-		} else {
+		}
+		else
+		{
 			$this->extendSection($last, ob_get_clean());
 		}
 
@@ -240,15 +278,19 @@ class Edge
 	 */
 	public function appendSection()
 	{
-		if (empty($this->sectionStack)) {
+		if (empty($this->sectionStack))
+		{
 			throw new \InvalidArgumentException('Cannot end a section without first starting one.');
 		}
 
 		$last = array_pop($this->sectionStack);
 
-		if (isset($this->sections[$last])) {
+		if (isset($this->sections[$last]))
+		{
 			$this->sections[$last] .= ob_get_clean();
-		} else {
+		}
+		else
+		{
 			$this->sections[$last] = ob_get_clean();
 		}
 
@@ -258,13 +300,15 @@ class Edge
 	/**
 	 * Append content to a given section.
 	 *
-	 * @param  string  $section
-	 * @param  string  $content
+	 * @param  string $section
+	 * @param  string $content
+	 *
 	 * @return void
 	 */
 	protected function extendSection($section, $content)
 	{
-		if (isset($this->sections[$section])) {
+		if (isset($this->sections[$section]))
+		{
 			$content = str_replace('@parent', $content, $this->sections[$section]);
 		}
 
@@ -274,15 +318,17 @@ class Edge
 	/**
 	 * Get the string contents of a section.
 	 *
-	 * @param  string  $section
-	 * @param  string  $default
+	 * @param  string $section
+	 * @param  string $default
+	 *
 	 * @return string
 	 */
 	public function yieldContent($section, $default = '')
 	{
 		$sectionContent = $default;
 
-		if (isset($this->sections[$section])) {
+		if (isset($this->sections[$section]))
+		{
 			$sectionContent = $this->sections[$section];
 		}
 
@@ -296,17 +342,22 @@ class Edge
 	/**
 	 * Start injecting content into a push section.
 	 *
-	 * @param  string  $section
-	 * @param  string  $content
+	 * @param  string $section
+	 * @param  string $content
+	 *
 	 * @return void
 	 */
 	public function startPush($section, $content = '')
 	{
-		if ($content === '') {
-			if (ob_start()) {
+		if ($content === '')
+		{
+			if (ob_start())
+			{
 				$this->pushStack[] = $section;
 			}
-		} else {
+		}
+		else
+		{
 			$this->extendPush($section, $content);
 		}
 	}
@@ -319,7 +370,8 @@ class Edge
 	 */
 	public function stopPush()
 	{
-		if (empty($this->pushStack)) {
+		if (empty($this->pushStack))
+		{
 			throw new \InvalidArgumentException('Cannot end a section without first starting one.');
 		}
 
@@ -333,18 +385,24 @@ class Edge
 	/**
 	 * Append content to a given push section.
 	 *
-	 * @param  string  $section
-	 * @param  string  $content
+	 * @param  string $section
+	 * @param  string $content
+	 *
 	 * @return void
 	 */
 	protected function extendPush($section, $content)
 	{
-		if (! isset($this->pushes[$section])) {
+		if (!isset($this->pushes[$section]))
+		{
 			$this->pushes[$section] = [];
 		}
-		if (! isset($this->pushes[$section][$this->renderCount])) {
+
+		if (!isset($this->pushes[$section][$this->renderCount]))
+		{
 			$this->pushes[$section][$this->renderCount] = $content;
-		} else {
+		}
+		else
+		{
 			$this->pushes[$section][$this->renderCount] .= $content;
 		}
 	}
@@ -352,17 +410,64 @@ class Edge
 	/**
 	 * Get the string contents of a push section.
 	 *
-	 * @param  string  $section
-	 * @param  string  $default
+	 * @param  string $section
+	 * @param  string $default
+	 *
 	 * @return string
 	 */
 	public function yieldPushContent($section, $default = '')
 	{
-		if (! isset($this->pushes[$section])) {
+		if (!isset($this->pushes[$section]))
+		{
 			return $default;
 		}
 
 		return implode(array_reverse($this->pushes[$section]));
+	}
+
+	/**
+	 * Get the rendered contents of a partial from a loop.
+	 *
+	 * @param  string $view
+	 * @param  array  $data
+	 * @param  string $iterator
+	 * @param  string $empty
+	 *
+	 * @return string
+	 */
+	public function renderEach($view, $data, $iterator, $empty = 'raw|')
+	{
+		$result = '';
+
+		// If is actually data in the array, we will loop through the data and append
+		// an instance of the partial view to the final result HTML passing in the
+		// iterated value of this data array, allowing the views to access them.
+		if (count($data) > 0)
+		{
+			foreach ($data as $key => $value)
+			{
+				$data = array('key' => $key, $iterator => $value);
+
+				$result .= $this->render($view, $data);
+			}
+		}
+
+		// If there is no data in the array, we will render the contents of the empty
+		// view. Alternatively, the "empty view" could be a raw string that begins
+		// with "raw|" for convenience and to let this know that it is a string.
+		else
+		{
+			if (starts_with($empty, 'raw|'))
+			{
+				$result = substr($empty, 4);
+			}
+			else
+			{
+				$result = $this->render($empty);
+			}
+		}
+
+		return $result;
 	}
 
 	/**
@@ -374,10 +479,10 @@ class Edge
 	{
 		$this->renderCount = 0;
 
-		$this->sections = [];
+		$this->sections     = [];
 		$this->sectionStack = [];
 
-		$this->pushes = [];
+		$this->pushes    = [];
 		$this->pushStack = [];
 	}
 
@@ -388,7 +493,8 @@ class Edge
 	 */
 	public function flushSectionsIfDoneRendering()
 	{
-		if ($this->doneRendering()) {
+		if ($this->doneRendering())
+		{
 			$this->flushSections();
 		}
 	}
@@ -430,13 +536,18 @@ class Edge
 	 *
 	 * @return EdgeCompilerInterface
 	 */
-	public function prepareDirectives(EdgeCompilerInterface $compiler)
+	public function prepareExtensions(EdgeCompilerInterface $compiler)
 	{
-		foreach ($this->extensions as $extension)
+		foreach ($this->getExtensions() as $extension)
 		{
-			foreach ($extension->getDirectives() as $name => $directive)
+			foreach ((array) $extension->getDirectives() as $name => $directive)
 			{
 				$compiler->directive($name, $directive);
+			}
+
+			foreach ((array) $extension->getParsers() as $parser)
+			{
+				$compiler->parser($parser);
 			}
 		}
 
@@ -479,9 +590,9 @@ class Edge
 		{
 			$temp = array();
 
-			foreach ($this->getExtensions() as $extension)
+			foreach ((array) $this->getExtensions() as $extension)
 			{
-				$temp = array_merge($temp, $extension->getGlobals());
+				$temp = array_merge($temp, (array) $extension->getGlobals());
 			}
 
 			$globals = array_merge($temp, $globals);
@@ -606,7 +717,7 @@ class Edge
 	/**
 	 * removeExtension
 	 *
-	 * @param   string  $name
+	 * @param   string $name
 	 *
 	 * @return  static
 	 */
@@ -623,7 +734,7 @@ class Edge
 	/**
 	 * hasExtension
 	 *
-	 * @param   string  $name
+	 * @param   string $name
 	 *
 	 * @return  boolean
 	 */
@@ -635,7 +746,7 @@ class Edge
 	/**
 	 * getExtension
 	 *
-	 * @param   string  $name
+	 * @param   string $name
 	 *
 	 * @return  EdgeExtensionInterface
 	 */

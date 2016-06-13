@@ -19,23 +19,36 @@ use Windwalker\Cache\Storage\CacheStorageInterface;
 class EdgeFileLoader implements EdgeLoaderInterface
 {
 	/**
-	 * Property cache.
+	 * Property extensions.
 	 *
-	 * @var  CacheInterface
+	 * @var  array
 	 */
-	protected $cache;
-
-	/**
-	 * Property storage.
-	 *
-	 * @var  CacheStorageInterface
-	 */
-	protected $storage;
-
 	protected $extensions = array('.edge.php', '.blade.php');
 
+	/**
+	 * Property paths.
+	 *
+	 * @var  array
+	 */
 	protected $paths = array();
 
+	/**
+	 * EdgeFileLoader constructor.
+	 *
+	 * @param array $paths
+	 */
+	public function __construct(array $paths = array())
+	{
+		$this->paths = $paths;
+	}
+
+	/**
+	 * find
+	 *
+	 * @param string $key
+	 *
+	 * @return  string
+	 */
 	public function find($key)
 	{
 		$key = $this->normalize($key);
@@ -74,10 +87,33 @@ class EdgeFileLoader implements EdgeLoaderInterface
 	{
 		return file_get_contents($path);
 	}
-	
+
+	/**
+	 * addPath
+	 *
+	 * @param   string  $path
+	 *
+	 * @return  static
+	 */
 	public function addPath($path)
 	{
 		$this->paths[] = $path;
+
+		return $this;
+	}
+
+	/**
+	 * prependPath
+	 *
+	 * @param   string  $path
+	 *
+	 * @return  static
+	 */
+	public function prependPath($path)
+	{
+		array_unshift($this->paths, $path);
+
+		return $this;
 	}
 
 	/**
@@ -90,5 +126,67 @@ class EdgeFileLoader implements EdgeLoaderInterface
 	protected function normalize($path)
 	{
 		return str_replace('.', '/', $path);
+	}
+
+	/**
+	 * Method to get property Paths
+	 *
+	 * @return  array
+	 */
+	public function getPaths()
+	{
+		return $this->paths;
+	}
+
+	/**
+	 * Method to set property paths
+	 *
+	 * @param   array $paths
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setPaths($paths)
+	{
+		$this->paths = $paths;
+
+		return $this;
+	}
+
+	/**
+	 * addExtension
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  static
+	 */
+	public function addExtension($name)
+	{
+		$this->extensions[] = $name;
+		
+		return $this;
+	}
+
+	/**
+	 * Method to get property Extensions
+	 *
+	 * @return  array
+	 */
+	public function getExtensions()
+	{
+		return $this->extensions;
+	}
+
+	/**
+	 * Method to set property extensions
+	 *
+	 * @param   array $extensions
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setExtensions($extensions)
+	{
+		$this->extensions = $extensions;
+
+		return $this;
 	}
 }

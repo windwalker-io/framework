@@ -29,7 +29,16 @@ interface EdgeCompilerInterface
 	 *
 	 * @param  string  $name
 	 * @param  callable  $handler
-	 * @return void
+	 * @return static
 	 */
-	public function directive($name, callable $handler);
+	public function directive($name, $handler);
+
+	/**
+	 * parser
+	 *
+	 * @param   callable  $handler
+	 *
+	 * @return  static
+	 */
+	public function parser($handler);
 }

@@ -21,6 +21,6 @@ $finder->addPath(__DIR__ . '/edge');
 
 $edge = new \Windwalker\Edge\Edge($finder, new EdgeCompiler, new EdgeArrayCache());
 
-$edge->addExtension(new \Windwalker\Edge\Extension\BasicExtension);
+//$edge->addExtension(new \Windwalker\Edge\Extension\BasicExtension);
 
 echo $edge->render('hello');
