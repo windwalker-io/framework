@@ -70,7 +70,9 @@ class EdgeFileLoader implements EdgeLoaderInterface
 
 		if ($filePath === null)
 		{
-			throw new \UnexpectedValueException('File not found: ' . $key);
+			$paths = implode(" |\n ", $this->paths);
+
+			throw new \UnexpectedValueException('View file not found: ' . $key . ".\n (Paths: " . $paths . ')');
 		}
 
 		return $filePath;

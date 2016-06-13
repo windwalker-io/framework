@@ -763,7 +763,7 @@ abstract class AbstractField
 	 *
 	 * @return  static
 	 */
-	public function class($value)
+	public function setClass($value)
 	{
 		$this->setAttribute('class', $value);
 

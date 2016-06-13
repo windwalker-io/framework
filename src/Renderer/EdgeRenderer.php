@@ -8,8 +8,16 @@
 
 namespace Windwalker\Renderer;
 
+use Windwalker\Edge\Cache\EdgeArrayCache;
+use Windwalker\Edge\Cache\EdgeCacheInterface;
+use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Compiler\EdgeCompiler;
+use Windwalker\Edge\Compiler\EdgeCompilerInterface;
 use Windwalker\Edge\Edge;
+use Windwalker\Edge\Extension\EdgeExtensionInterface;
+use Windwalker\Edge\Loader\EdgeFileLoader;
+use Windwalker\Edge\Loader\EdgeLoaderInterface;
+use Windwalker\Renderer\Edge\GlobalContainer;
 
 /**
  * The EdgeRenderer class.
@@ -19,83 +27,32 @@ use Windwalker\Edge\Edge;
 class EdgeRenderer extends AbstractEngineRenderer
 {
 	/**
-	 * All of the finished, captured sections.
+	 * Property compiler.
 	 *
-	 * @var array
+	 * @var  EdgeCompilerInterface
 	 */
-	protected $sections = array();
+	protected $compiler;
 
 	/**
-	 * The stack of in-progress sections.
+	 * Property loader.
 	 *
-	 * @var array
+	 * @var  EdgeLoaderInterface
 	 */
-	protected $sectionStack = [];
+	protected $loader;
 
 	/**
-	 * All of the finished, captured push sections.
+	 * Property cache.
 	 *
-	 * @var array
+	 * @var  EdgeCacheInterface
 	 */
-	protected $pushes = [];
+	protected $cache;
 
 	/**
-	 * The stack of in-progress push sections.
+	 * Property extensions.
 	 *
-	 * @var array
+	 * @var  callable[]
 	 */
-	protected $pushStack = [];
-
-	/**
-	 * The number of active rendering operations.
-	 *
-	 * @var int
-	 */
-	protected $renderCount = 0;
-
-	/**
-	 * Property engine.
-	 *
-	 * @var  Edge
-	 */
-	protected $engine;
-
-	/**
-	 * render
-	 *
-	 * @param string $file
-	 * @param array  $data
-	 *
-	 * @return  string
-	 */
-	public function render($file, $__data = array())
-	{
-		$this->prepareData($__data);
-
-		$__filePath = $this->findFile($file);
-
-		if (!$__filePath)
-		{
-			$__paths = $this->dumpPaths();
-
-			$__paths = "\n " . implode(" |\n ", $__paths);
-
-			throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $__paths));
-		}
-
-		return $this->getEngine()->render($__filePath, $__data);
-	}
-
-	/**
-	 * prepareData
-	 *
-	 * @param   array &$data
-	 *
-	 * @return  void
-	 */
-	protected function prepareData(&$data)
-	{
-	}
+	protected $extensions = array();
 
 	/**
 	 * Method to get property Engine
@@ -108,7 +65,24 @@ class EdgeRenderer extends AbstractEngineRenderer
 	{
 		if (!$this->engine || $new)
 		{
-			$this->engine = new Edge(new EdgeCompiler);
+			$edge = new Edge($this->getLoader(), $this->getCompiler(), $this->getCache());
+
+			foreach (GlobalContainer::getExtensions() as $name => $extension)
+			{
+				$edge->addExtension($extension, $name);
+			}
+
+			foreach ($this->getExtensions() as $name => $extension)
+			{
+				$edge->addExtension($extension, $name);
+			}
+
+			foreach (GlobalContainer::getGlobals() as $key => $value)
+			{
+				$edge->addGlobal($key, $value);
+			}
+
+			$this->engine = $edge;
 		}
 
 		return $this->engine;
@@ -123,19 +97,169 @@ class EdgeRenderer extends AbstractEngineRenderer
 	 */
 	public function setEngine($engine)
 	{
-		$this->engine;
+		if (!$this->engine instanceof Edge)
+		{
+			throw new \InvalidArgumentException('Engine should be instance of Edge');
+		}
+
+		$this->engine = $engine;
+
+		return $this;
 	}
 
 	/**
-	 * finFile
+	 * render
 	 *
 	 * @param string $file
-	 * @param string $ext
+	 * @param array  $data
 	 *
 	 * @return  string
 	 */
-	public function findFile($file, $ext = 'blade.php')
+	public function render($file, $data = array())
 	{
-		return parent::findFile($file, $ext);
+		if ($data instanceof \Traversable)
+		{
+			$data = iterator_to_array($data);
+		}
+
+		if (is_object($data))
+		{
+			$data = get_object_vars($data);
+		}
+
+		return $this->getEngine()->render($file, (array) $data);
+	}
+
+	/**
+	 * Method to get property Compiler
+	 *
+	 * @return  EdgeCompilerInterface
+	 */
+	public function getCompiler()
+	{
+		if (!$this->compiler)
+		{
+			$this->compiler = new EdgeCompiler;
+		}
+
+		return $this->compiler;
+	}
+
+	/**
+	 * Method to set property compiler
+	 *
+	 * @param   EdgeCompilerInterface $compiler
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setCompiler($compiler)
+	{
+		$this->compiler = $compiler;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Loader
+	 *
+	 * @return  EdgeLoaderInterface
+	 */
+	public function getLoader()
+	{
+		if (!$this->loader)
+		{
+			$this->loader = new EdgeFileLoader;
+		}
+
+		return $this->loader;
+	}
+
+	/**
+	 * Method to set property loader
+	 *
+	 * @param   EdgeLoaderInterface $loader
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setLoader($loader)
+	{
+		$this->loader = $loader;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Cache
+	 *
+	 * @return  EdgeCacheInterface
+	 */
+	public function getCache()
+	{
+		if (!$this->cache)
+		{
+			if ($this->config->exists('cache_path'))
+			{
+				$this->cache = new EdgeFileCache($this->config->get('cache_path'));
+			}
+			else
+			{
+				$this->cache = new EdgeArrayCache;
+			}
+		}
+
+		return $this->cache;
+	}
+
+	/**
+	 * Method to set property cache
+	 *
+	 * @param   EdgeCacheInterface $cache
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setCache($cache)
+	{
+		$this->cache = $cache;
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Extensions
+	 *
+	 * @return  EdgeExtensionInterface[]
+	 */
+	public function getExtensions()
+	{
+		return $this->extensions;
+	}
+
+	/**
+	 * Method to set property extensions
+	 *
+	 * @param   EdgeExtensionInterface[] $extensions
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setExtensions($extensions)
+	{
+		$this->extensions = $extensions;
+
+		return $this;
+	}
+
+	/**
+	 * addExtension
+	 *
+	 * @param   EdgeExtensionInterface $extension
+	 * @param   string                 $name
+	 *
+	 * @return static
+	 */
+	public function addExtension(EdgeExtensionInterface $extension, $name = null)
+	{
+		$this->extensions[$name ? : $extension->getName()] = $extension;
+
+		return $this;
 	}
 }

@@ -11,6 +11,10 @@ namespace Windwalker\Edge\Compiler;
 /**
  * The EdgeCompiler class.
  *
+ * This is a modified version of Laravel Blade engine.
+ *
+ * @see  https://github.com/illuminate/view/blob/master/Compilers/BladeCompiler.php
+ *
  * @since  {DEPLOY_VERSION}
  */
 class EdgeCompiler implements EdgeCompilerInterface
@@ -83,7 +87,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 *
 	 * @var array
 	 */
-	protected $verbatimBlocks = [];
+	protected $verbatimBlocks = array();
 
 	/**
 	 * Counter to keep track of nested forelse statements.
@@ -97,13 +101,20 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 *
 	 * @var array
 	 */
-	protected $compilers = [
+	protected $compilers = array(
 		'Parsers',
 		'Statements',
 		'Comments',
 		'Echos',
-	];
+	);
 
+	/**
+	 * compile
+	 *
+	 * @param string $value
+	 *
+	 * @return  string
+	 */
 	public function compile($value)
 	{
 		$result = '';
@@ -113,7 +124,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 			$value = $this->storeVerbatimBlocks($value);
 		}
 
-		$this->footer = [];
+		$this->footer = array();
 
 		// Here we will loop through all of the tokens returned by the Zend lexer and
 		// parse each one into the corresponding valid PHP. We will then have this
@@ -308,25 +319,32 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function compileStatements($value)
 	{
-		$callback = function ($match)
+		return preg_replace_callback('/\B@(@?\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x', array($this, 'compileStatement'), $value);
+	}
+
+	/**
+	 * compileStatement
+	 *
+	 * @param array $match
+	 *
+	 * @return  string
+	 */
+	protected function compileStatement(array $match)
+	{
+		if (strpos($match[1], '@') !== false)
 		{
-			if (strpos($match[1], '@') !== false)
-			{
-				$match[0] = isset($match[3]) ? $match[1] . $match[3] : $match[1];
-			}
-			elseif (isset($this->directives[$match[1]]))
-			{
-				$match[0] = call_user_func($this->directives[$match[1]], isset($match[3]) ? $match[3] : null);
-			}
-			elseif (method_exists($this, $method = 'compile' . ucfirst($match[1])))
-			{
-				$match[0] = $this->$method(isset($match[3]) ? $match[3] : null);
-			}
+			$match[0] = isset($match[3]) ? $match[1] . $match[3] : $match[1];
+		}
+		elseif (isset($this->directives[$match[1]]))
+		{
+			$match[0] = call_user_func($this->directives[$match[1]], isset($match[3]) ? $match[3] : null);
+		}
+		elseif (method_exists($this, $method = 'compile' . ucfirst($match[1])))
+		{
+			$match[0] = $this->$method(isset($match[3]) ? $match[3] : null);
+		}
 
-			return isset($match[3]) ? $match[0] : $match[0] . $match[2];
-		};
-
-		return preg_replace_callback('/\B@(@?\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x', $callback, $value);
+		return isset($match[3]) ? $match[0] : $match[0] . $match[2];
 	}
 
 	/**
@@ -954,7 +972,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	public function setRawTags($openTag, $closeTag)
 	{
-		$this->rawTags = [preg_quote($openTag), preg_quote($closeTag)];
+		$this->rawTags = array(preg_quote($openTag), preg_quote($closeTag));
 	}
 
 	/**
@@ -970,7 +988,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	{
 		$property = ($escaped === true) ? 'escapedTags' : 'contentTags';
 
-		$this->{$property} = [preg_quote($openTag), preg_quote($closeTag)];
+		$this->{$property} = array(preg_quote($openTag), preg_quote($closeTag));
 	}
 
 	/**

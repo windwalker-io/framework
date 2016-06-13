@@ -18,7 +18,11 @@ use Windwalker\Edge\Loader\EdgeFileLoader;
 use Windwalker\Edge\Loader\EdgeLoaderInterface;
 
 /**
- * The EdgeEnvironment class.
+ * The Edge template engine.
+ *
+ * This is a modified version of Laravel Blade engine.
+ *
+ * @see  https://github.com/illuminate/view/blob/master/Factory.php
  *
  * @since  {DEPLOY_VERSION}
  */
@@ -101,11 +105,11 @@ class Edge
 	 * @param EdgeCompilerInterface $compiler
 	 * @param EdgeCacheInterface    $cache
 	 */
-	public function __construct(EdgeLoaderInterface $loader = null, EdgeCompilerInterface $compiler = null, EdgeCacheInterface $cache)
+	public function __construct(EdgeLoaderInterface $loader = null, EdgeCompilerInterface $compiler = null, EdgeCacheInterface $cache = null)
 	{
-		$this->compiler = $compiler ?: new EdgeCompiler;
-		$this->loader   = $loader ?: new EdgeFileLoader;
-		$this->cache    = $cache ?: new EdgeArrayCache;
+		$this->compiler = $compiler ? : new EdgeCompiler;
+		$this->loader   = $loader   ? : new EdgeFileLoader;
+		$this->cache    = $cache    ? : new EdgeArrayCache;
 
 		$this->globals['__env'] = $this;
 	}
@@ -394,7 +398,7 @@ class Edge
 	{
 		if (!isset($this->pushes[$section]))
 		{
-			$this->pushes[$section] = [];
+			$this->pushes[$section] = array();
 		}
 
 		if (!isset($this->pushes[$section][$this->renderCount]))
@@ -479,11 +483,11 @@ class Edge
 	{
 		$this->renderCount = 0;
 
-		$this->sections     = [];
-		$this->sectionStack = [];
+		$this->sections     = array();
+		$this->sectionStack = array();
 
-		$this->pushes    = [];
-		$this->pushStack = [];
+		$this->pushes    = array();
+		$this->pushStack = array();
 	}
 
 	/**
