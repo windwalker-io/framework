@@ -392,6 +392,46 @@ class Record extends Entity
 	}
 
 	/**
+	 * create
+	 *
+	 * @return  static
+	 */
+	public function create()
+	{
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array());
+
+		$this->getDataMapper()->createOne($this);
+
+		// Event
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+
+		return $this;
+	}
+
+	/**
+	 * update
+	 *
+	 * @param bool $updateNulls
+	 *
+	 * @return  static
+	 */
+	public function update($updateNulls = false)
+	{
+		// Event
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+			'updateNulls' => &$updateNulls
+		));
+
+		$this->getDataMapper()->updateOne($this, $this->getKeyName(true), $updateNulls);
+
+		// Event
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+
+		return $this;
+	}
+
+	/**
 	 * Get the table name.
 	 *
 	 * @return  string

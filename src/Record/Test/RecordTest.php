@@ -313,6 +313,64 @@ class RecordTest extends AbstractMysqlTestCase
 	}
 
 	/**
+	 * testCreate
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Record\Record::create
+	 */
+	public function testCreate()
+	{
+		// Test create with id
+		$data = array(
+			'title'    => 'Lodovico',
+			'meaning'  => 'Kinsman to Brabantio',
+			'ordering' => 123456,
+			'params'   => ''
+		);
+
+		$record = $this->instance;
+
+		$record->bind($data);
+
+		$record->create();
+
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE title = "Lodovico"')->loadOne();
+
+		$this->assertEquals('Lodovico', $flower->title);
+		$this->assertEquals($record->id, $flower->id);
+
+		// Test create with no id
+		$data = array(
+			'id'       => 3000,
+			'title'    => 'Brabantio',
+			'meaning'  => 'senator',
+			'ordering' => 123456,
+			'params'   => ''
+		);
+
+		$record = $this->instance;
+
+		$record->bind($data);
+
+		$record->create();
+
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 3000')->loadOne();
+
+		$this->assertEquals('Brabantio', $flower->title);
+	}
+
+	/**
+	 * testUpdate
+	 *
+	 * @return  void
+	 */
+	public function testUpdate()
+	{
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	/**
 	 * Method to test hasPrimaryKey().
 	 *
 	 * @return void
