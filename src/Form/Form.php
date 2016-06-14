@@ -11,6 +11,7 @@ namespace Windwalker\Form;
 use Windwalker\Form\Exception\FormValidFailException;
 use Windwalker\Form\Field\AbstractField;
 use Windwalker\Form\Field\ListField;
+use Windwalker\Form\Renderer\FormRendererInterface;
 use Windwalker\Form\Validate\ValidateResult;
 
 if (!class_exists('CallbackFilterIterator'))
@@ -63,9 +64,9 @@ class Form implements \IteratorAggregate
 	/**
 	 * Property fieldRenderHandler.
 	 *
-	 * @var  callable|object
+	 * @var  FormRendererInterface
 	 */
-	protected $fieldRenderHandler;
+	protected $renderer;
 
 	/**
 	 * Property errors.
@@ -655,12 +656,7 @@ class Form implements \IteratorAggregate
 	public function renderField($name, $group = '')
 	{
 		$field = $this->getField($name, $group);
-
-		if ($this->fieldRenderHandler)
-		{
-			return call_user_func($this->fieldRenderHandler, $field, $this);
-		}
-
+		
 		return $field->render();
 	}
 
@@ -678,14 +674,7 @@ class Form implements \IteratorAggregate
 
 		foreach ($this->getFields($fieldset, $group) as $field)
 		{
-			if ($this->fieldRenderHandler)
-			{
-				$output .= "\n" .  call_user_func($this->fieldRenderHandler, $field, $this);
-			}
-			else
-			{
-				$output .= "\n" . $field->render();
-			}
+			$output .= "\n" . $field->render();
 		}
 
 		return $output;
@@ -781,28 +770,23 @@ class Form implements \IteratorAggregate
 	/**
 	 * Method to get property FieldRenderHandler
 	 *
-	 * @return  callable|object
+	 * @return  FormRendererInterface
 	 */
-	public function getFieldRenderHandler()
+	public function getRenderer()
 	{
-		return $this->fieldRenderHandler;
+		return $this->renderer;
 	}
 
 	/**
 	 * Method to set property fieldRenderHandler
 	 *
-	 * @param   callable|object $fieldRenderHandler
+	 * @param   FormRendererInterface $renderer
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setFieldRenderHandler($fieldRenderHandler)
+	public function setRenderer(FormRendererInterface $renderer = null)
 	{
-		if (!is_callable($fieldRenderHandler))
-		{
-			throw new \InvalidArgumentException('Field render handler should be callable or an object with __invoke() method.');
-		}
-
-		$this->fieldRenderHandler = $fieldRenderHandler;
+		$this->renderer = $renderer;
 
 		return $this;
 	}

@@ -193,6 +193,11 @@ abstract class AbstractField
 	{
 		$attrs = $this->prepareAttributes();
 
+		if ($this->form && $this->form->getRenderer())
+		{
+			return $this->form->getRenderer()->renderInput($this, $attrs);
+		}
+
 		return $this->buildInput($attrs);
 	}
 
@@ -243,6 +248,11 @@ abstract class AbstractField
 		$attrs['for']   = $this->getAttribute('for', $this->getId());
 		$attrs['title'] = $this->getAttribute('description');
 
+		if ($this->form && $this->form->getRenderer())
+		{
+			return $this->form->getRenderer()->renderLabel($this, $attrs);
+		}
+
 		$label = $this->getLabel();
 
 		if ($this->required)
@@ -270,11 +280,16 @@ abstract class AbstractField
 	 */
 	public function render()
 	{
-		$label = $this->renderLabel();
-		$input = $this->renderInput();
-
 		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
 		$attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
+
+		if ($this->form && $this->form->getRenderer())
+		{
+			return $this->form->getRenderer()->renderField($this, $attrs);
+		}
+
+		$label = $this->renderLabel();
+		$input = $this->renderInput();
 
 		return (string) new HtmlElement('div', $label . $input, $attrs);
 	}

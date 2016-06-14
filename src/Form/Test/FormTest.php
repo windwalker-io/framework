@@ -13,6 +13,7 @@ use Windwalker\Form\Field\TextField;
 use Windwalker\Form\FieldHelper;
 use Windwalker\Form\FilterHelper;
 use Windwalker\Form\Form;
+use Windwalker\Form\Test\Mock\MockFormRenderer;
 use Windwalker\Form\Test\Stub\StubFieldDefinition;
 use Windwalker\Form\ValidatorHelper;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
@@ -515,12 +516,9 @@ class FormTest extends AbstractBaseTestCase
 
 		// Use renderer
 
-		$form->setFieldRenderHandler(function(AbstractField $field, $form)
-		{
-			return 'Happy Field: ' . $field->getName();
-		});
+		$form->setRenderer(new MockFormRenderer);
 
-		$this->assertEquals('Happy Field: id', $form->renderField('id'));
+		$this->assertEquals('<mock id="input-windwalker-id-control" class="text-field ">Hello World: windwalker[id]</mock>', $form->renderField('id'));
 	}
 
 	/**
@@ -596,36 +594,13 @@ class FormTest extends AbstractBaseTestCase
 	 */
 	public function testSetAndGetFieldRendererHandler()
 	{
-		$renderer = function () {
-			return 'Test';
-		};
+		$renderer = new MockFormRenderer;
 
 		$form = new Form;
 		$form->add('test', new TextField);
 
-		$form->setFieldRenderHandler($renderer);
+		$form->setRenderer($renderer);
 
-		$this->assertEquals('Test', trim($form->renderFields()));
-
-		$form->setFieldRenderHandler(new FormTestRendererHandlerer);
-
-		$this->assertEquals('Flower', trim($form->renderFields()));
-
-		$this->assertExpectedException(function () use ($form)
-		{
-			$form->setFieldRenderHandler(new \stdClass);
-		}, new \InvalidArgumentException);
-	}
-}
-
-class FormTestRendererHandlerer {
-	public function __invoke()
-	{
-		return $this->render();
-	}
-
-	public function render()
-	{
-		return 'Flower';
+		$this->assertEquals('<mock id="input-test-control" class="text-field ">Hello World: test</mock>', trim($form->renderFields()));
 	}
 }
