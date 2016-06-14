@@ -479,9 +479,6 @@ abstract class AbstractField
 	 */
 	public function setGroup($group)
 	{
-		// B/C
-		$group = str_replace('.', '/', $group);
-
 		$this->fieldName = null;
 
 		$this->group = $group;

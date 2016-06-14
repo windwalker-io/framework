@@ -102,7 +102,7 @@ HTML;
 		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 
 		// Group
-		$this->instance->setGroup('foo.bar');
+		$this->instance->setGroup('foo/bar');
 
 		$expect = <<<HTML
 <input type="text" name="windwalker[foo][bar][flower]" id="input-windwalker-foo-bar-flower" class="stub-flower" value="sakura" />
@@ -385,7 +385,7 @@ HTML;
 
 		$this->assertEquals('windwalker[flower]', $this->instance->getFieldName());
 
-		$this->instance->setGroup('foo.bar');
+		$this->instance->setGroup('foo/bar');
 		$this->instance->setName('yoo');
 
 		$this->assertEquals('windwalker[foo][bar][yoo]', $this->instance->getFieldName(true));
@@ -422,7 +422,7 @@ HTML;
 
 		$this->assertHtmlFormatEquals($expect, $this->instance->renderInput());
 
-		$this->instance->setGroup('wind.walker');
+		$this->instance->setGroup('wind/walker');
 
 		$expect = <<<HTML
 <input type="text" name="wind[walker][flower]" id="input-wind-walker-flower" class="stub-flower" />
