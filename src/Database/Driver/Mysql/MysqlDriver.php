@@ -31,8 +31,6 @@ class MysqlDriver extends PdoDriver
 	 */
 	public static function isSupported()
 	{
-		show(\PDO::getAvailableDrivers());
-
 		return in_array('mysql', \PDO::getAvailableDrivers());
 	}
 

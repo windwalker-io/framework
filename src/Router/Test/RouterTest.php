@@ -267,4 +267,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame($matcher, $this->instance->getMatcher());
 	}
+
+	/**
+	 * testGroup
+	 *
+	 * @return  void
+	 *
+	 * @covers Windwalker\Router\Router::group
+	 */
+	public function testGroup()
+	{
+		$this->instance->group('/sky', function (Router $router)
+		{
+		    $router->addRoute(new Route(null, 'flower/(id)/(alias)', array('_controller' => 'FlowerController')));
+		});
+
+		$result = $this->instance->match('/sky/flower/5/foo');
+
+		$result = $result->getVariables();
+
+		$this->assertEquals('FlowerController', $result['_controller']);
+		$this->assertEquals('foo', $result['alias']);
+	}
 }

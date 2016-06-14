@@ -37,13 +37,6 @@ class Route implements \IteratorAggregate
 	protected $regex = null;
 
 	/**
-	 * Property vars.
-	 *
-	 * @var  array
-	 */
-	protected $vars = array();
-
-	/**
 	 * Property allowMethods.
 	 *
 	 * @var  array
@@ -176,30 +169,6 @@ class Route implements \IteratorAggregate
 	public function setRegex($regex)
 	{
 		$this->regex = $regex;
-
-		return $this;
-	}
-
-	/**
-	 * getVars
-	 *
-	 * @return  array
-	 */
-	public function getVars()
-	{
-		return $this->vars;
-	}
-
-	/**
-	 * setVars
-	 *
-	 * @param   array $vars
-	 *
-	 * @return  Route  Return self to support chaining.
-	 */
-	public function setVars($vars)
-	{
-		$this->vars = $vars;
 
 		return $this;
 	}
@@ -529,9 +498,9 @@ class Route implements \IteratorAggregate
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setExtra($extra)
+	public function setExtra(array $extra)
 	{
-		$this->extra = (array) $extra;
+		$this->extra = $extra;
 
 		return $this;
 	}
@@ -544,5 +513,15 @@ class Route implements \IteratorAggregate
 	public function getIterator()
 	{
 		return new \ArrayIterator(get_object_vars($this));
+	}
+
+	/**
+	 * getAllData
+	 *
+	 * @return  array
+	 */
+	public function getAllData()
+	{
+		return get_object_vars($this);
 	}
 }

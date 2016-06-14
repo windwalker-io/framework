@@ -34,6 +34,13 @@ class Router
 	protected $matcher;
 
 	/**
+	 * Property group.
+	 *
+	 * @var  string
+	 */
+	protected $group;
+
+	/**
 	 * Class init.
 	 *
 	 * @param array            $routes
@@ -107,6 +114,15 @@ class Router
 			$route = new Route($name, $pattern, $variables, $method, $options);
 		}
 
+		// Group
+		if ($this->group)
+		{
+			$pattern = $route->getPattern();
+			$pattern = rtrim($this->group, '/') . '/' . ltrim($pattern, '/');
+			$route->setPattern($pattern);
+		}
+
+		// Add route
 		if ($name = $route->getName())
 		{
 			$this->routes[$name] = $route;
@@ -161,6 +177,25 @@ class Router
 		{
 			$this->addRoute($route);
 		}
+
+		return $this;
+	}
+
+	/**
+	 * group
+	 *
+	 * @param   string   $prefix
+	 * @param   \Closure $callback
+	 *
+	 * @return  static
+	 */
+	public function group($prefix, \Closure $callback)
+	{
+		$this->group = $prefix;
+
+		call_user_func($callback, $this);
+
+		$this->group = null;
 
 		return $this;
 	}

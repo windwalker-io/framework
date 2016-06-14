@@ -25,6 +25,8 @@ class RestRouter extends SingleActionRouter
 		'PATCH' => 'Update',
 		'DELETE' => 'Delete',
 		'HEAD' => 'Head',
+		'LINK' => 'Link',
+		'UNLINK' => 'Unlink',
 		'OPTIONS' => 'Options'
 	);
 
