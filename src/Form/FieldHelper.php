@@ -48,6 +48,10 @@ class FieldHelper extends AbstractFormElementHelper
 		{
 			$field = static::createByXml($field, $namespaces);
 		}
+		elseif (is_string($field) && class_exists($field))
+		{
+			$field = new $field;
+		}
 		elseif (is_string($field))
 		{
 			$xml = new \SimpleXMLElement($field);

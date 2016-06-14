@@ -66,12 +66,12 @@ class Schema
 	/**
 	 * addColumn
 	 *
-	 * @param string $name
-	 * @param Column $column
+	 * @param string        $name
+	 * @param Column|string $column
 	 *
 	 * @return  Column
 	 */
-	public function add($name, Column $column)
+	public function add($name, $column)
 	{
 		$column->name($name);
 
@@ -81,12 +81,22 @@ class Schema
 	/**
 	 * addColumn
 	 *
-	 * @param   Column $column
+	 * @param   Column|string $column
 	 *
 	 * @return  Column
 	 */
-	public function addColumn(Column $column)
+	public function addColumn($column)
 	{
+		if (is_string($column) && class_exists($column))
+		{
+			$column = new $column;
+		}
+
+		if (!$column instanceof Column)
+		{
+			throw new \InvalidArgumentException(__METHOD__ . ' argument 1 need Column instance.');
+		}
+
 		$this->columns[$column->getName()] = $column;
 
 		return $column;

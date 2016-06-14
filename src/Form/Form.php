@@ -159,22 +159,32 @@ class Form implements \IteratorAggregate
 	/**
 	 * Add a field.
 	 *
-	 * @param string        $name
-	 * @param AbstractField $field
-	 * @param string        $fieldset
-	 * @param string        $group
+	 * @param string               $name
+	 * @param AbstractField|string $field
+	 * @param string               $fieldset
+	 * @param string               $group
 	 *
 	 * @return AbstractField|ListField
 	 */
-	public function add($name, AbstractField $field = null, $fieldset = null, $group = null)
+	public function add($name, $field = null, $fieldset = null, $group = null)
 	{
-		if ($field)
+		if ($name instanceof AbstractField)
 		{
-			$field->setName($name);
+			$field = $name;
 		}
 		else
 		{
-			$field = $name;
+			if (is_string($field) && class_exists($field))
+			{
+				$field = new $field;
+			}
+
+			if (!$field instanceof AbstractField)
+			{
+				throw new \InvalidArgumentException(__METHOD__ . ' argument 2 should be sub class of AbstractField.');
+			}
+
+			$field->setName($name);
 		}
 
 		return $this->addField($field, $fieldset, $group);
@@ -250,22 +260,29 @@ class Form implements \IteratorAggregate
 	}
 
 	/**
-	 * define
+	 * fieldset
 	 *
-	 * @param AbstractField $field
-	 * @param \Closure      $closure
-	 * @param string        $fieldset
-	 * @param string        $group
+	 * @param string   $fieldset
+	 * @param \Closure $handler
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
-	public function define(AbstractField $field, \Closure $closure, $fieldset = null, $group = null)
+	public function fieldset($fieldset, \Closure $handler)
 	{
-		$field = $closure($field, $fieldset, $group);
+		return $this->wrap($fieldset, null, $handler);
+	}
 
-		$this->addField($field, $fieldset, $group);
-
-		return $this;
+	/**
+	 * group
+	 *
+	 * @param string   $group
+	 * @param \Closure $handler
+	 *
+	 * @return  static
+	 */
+	public function group($group, \Closure $handler)
+	{
+		return $this->wrap(null, $group, $handler);
 	}
 
 	/**

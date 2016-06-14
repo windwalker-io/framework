@@ -365,6 +365,11 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function addCommand($command, $description = null, $options = array(), \Closure $handler = null)
 	{
+		if (is_string($command) && class_exists($command) && is_subclass_of($command, __CLASS__))
+		{
+			$command = new $command;
+		}
+
 		if (!($command instanceof AbstractCommand))
 		{
 			$command = new static($command, $this->io, $this);

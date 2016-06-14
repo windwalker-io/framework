@@ -96,7 +96,7 @@ class Router
 	 * @param array        $method
 	 * @param array        $options
 	 *
-	 * @return  static
+	 * @return  Route
 	 */
 	public function addRoute($name, $pattern = null, $variables = array(), $method = array(), $options = array())
 	{
@@ -132,7 +132,7 @@ class Router
 			$this->routes[] = $route;
 		}
 
-		return $this;
+		return $route;
 	}
 
 	/**
