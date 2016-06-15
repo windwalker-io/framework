@@ -40,7 +40,7 @@ trait DispatcherAwareTrait
 	/**
 	 * getDispatcher
 	 *
-	 * @return  \Windwalker\Event\Dispatcher
+	 * @return  DispatcherInterface
 	 */
 	public function getDispatcher()
 	{
@@ -50,11 +50,11 @@ trait DispatcherAwareTrait
 	/**
 	 * setDispatcher
 	 *
-	 * @param   \Windwalker\Event\Dispatcher $dispatcher
+	 * @param   DispatcherInterface $dispatcher
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setDispatcher($dispatcher)
+	public function setDispatcher(DispatcherInterface $dispatcher)
 	{
 		$this->dispatcher = $dispatcher;
 

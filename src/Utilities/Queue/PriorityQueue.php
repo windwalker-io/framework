@@ -34,7 +34,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	 * @param array|\SplPriorityQueue $array
 	 * @param int                     $priority
 	 */
-	public function __construct($array = array(), $priority = Priority::NORMAL)
+	public function __construct($array = array(), $priority = self::NORMAL)
 	{
 		if ($array instanceof \SplPriorityQueue)
 		{

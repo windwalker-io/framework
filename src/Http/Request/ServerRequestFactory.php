@@ -491,6 +491,6 @@ class ServerRequestFactory
 			));
 		}
 
-		return $matches['version'];
+		return $matches[2];
 	}
 }

@@ -197,7 +197,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function loadFile($file, $format = Format::JSON, $options = array())
 	{
-		$this->load(RegistryHelper::loadFile($file, $format, $options), false);
+		$raw = isset($options['load_raw']) ? $options['load_raw'] : false;
+		
+		$this->load(RegistryHelper::loadFile($file, $format, $options), $raw);
 
 		return $this;
 	}
@@ -215,7 +217,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function loadString($data, $format = Format::JSON, $options = array())
 	{
-		$this->load(RegistryHelper::loadString($data, $format, $options), false);
+		$raw = isset($options['load_raw']) ? $options['load_raw'] : false;
+		
+		$this->load(RegistryHelper::loadString($data, $format, $options), $raw);
 
 		return $this;
 	}
@@ -468,7 +472,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 					$parent[$key] = array();
 				}
 
-				$this->bindData($parent[$key], $value);
+				$this->bindData($parent[$key], $value, $raw);
 			}
 			else
 			{

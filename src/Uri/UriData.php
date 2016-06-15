@@ -20,6 +20,9 @@ use Traversable;
  * @property string route
  * @property string host
  * @property string path
+ * @property string scheme
+ * @property string isSsl
+ * @property int    port
  *
  * @since  {DEPLOY_VERSION}
  */

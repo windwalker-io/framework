@@ -102,7 +102,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	public function __construct(ServerRequestInterface $request = null, Registry $config = null, WebEnvironment $environment = null)
 	{
 		$request     = $request     ? : ServerRequestFactory::createFromGlobals();
-		$environment = $environment ? : new WebEnvironment;
+		$environment = $environment ? : WebEnvironment::create($request->getServerParams());
 		$server      = WebHttpServer::create(array($this, 'dispatch'), $request);
 
 		$this->setEnvironment($environment);
@@ -160,7 +160,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * Method as the Psr7 WebHttpServer handler.
 	 *
 	 * @param  Request  $request   The Psr7 ServerRequest to get request params.
-	 * @param  Response $response  The Psr7 Response interface to [re[are respond data.
+	 * @param  Response $response  The Psr7 Response interface to prepare respond data.
 	 * @param  callable $next      The next handler to support middleware pattern.
 	 *
 	 * @return  Response  The returned response object.
