@@ -20,8 +20,8 @@ class XmlFormat implements FormatInterface
 	 * -    If more than two levels of nested groups are necessary, since INI is not
 	 * useful, XML or another format should be used.
 	 *
-	 * @param   object  $struct   Data source object.
-	 * @param   array   $options  Options used by the formatter.
+	 * @param   mixed  $struct   Data source object.
+	 * @param   array  $options  Options used by the formatter.
 	 *
 	 * @return  string  XML formatted string.
 	 *
