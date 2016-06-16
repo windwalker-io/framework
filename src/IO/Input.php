@@ -363,6 +363,55 @@ class Input implements \Serializable, \Countable
 	}
 
 	/**
+	 * merge
+	 *
+	 * @param array $array
+	 * @param bool  $recursive
+	 *
+	 * @return  static
+	 */
+	public function merge(array $array, $recursive = false)
+	{
+		if ($recursive)
+		{
+			$this->data = static::mergeRecursive($this->data, $array);
+		}
+		else
+		{
+			$this->data = array_merge($array);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * mergeRecursive
+	 *
+	 * @param array $array1
+	 * @param array $array2
+	 *
+	 * @return  array
+	 */
+	protected static function mergeRecursive(array $array1, array $array2)
+	{
+		$merged = $array1;
+
+		foreach ($array2 as $key => &$value)
+		{
+			if (is_array($value) && isset($merged[$key]) && is_array($merged[$key]))
+			{
+				$merged[$key] = static::merge($merged [$key], $value);
+			}
+			else
+			{
+				$merged[$key] = $value;
+			}
+		}
+
+		return $merged;
+	}
+
+	/**
 	 * Magic method to get filtered input data.
 	 *
 	 * @param   string  $name       Name of the filter type prefixed with 'get'.

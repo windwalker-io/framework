@@ -606,7 +606,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function clean($namespace = 'default')
 	{
-		$this->getBag($namespace)->clean();
+		$this->getBag($namespace)->clear();
 
 		return $this;
 	}

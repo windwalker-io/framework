@@ -99,7 +99,7 @@ class SessionBag implements SessionBagInterface
 	 *
 	 * @return  $this
 	 */
-	public function clean()
+	public function clear()
 	{
 		$this->data = array();
 

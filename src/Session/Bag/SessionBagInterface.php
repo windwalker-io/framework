@@ -38,7 +38,7 @@ interface SessionBagInterface
 	 * @param string $key
 	 * @param mixed  $value
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
 	public function set($key, $value);
 
@@ -61,8 +61,8 @@ interface SessionBagInterface
 	/**
 	 * clean
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
-	public function clean();
+	public function clear();
 }
 
