@@ -13,7 +13,7 @@ use Windwalker\Http\Request\ServerRequest;
 use Windwalker\Http\Response\Response;
 use Windwalker\Middleware\Chain\ChainBuilder;
 use Windwalker\Middleware\Chain\Psr7ChainBuilder;
-use Windwalker\Middleware\Psr7MiddlewareInterface;
+use Windwalker\Middleware\Psr7InvokableInterface;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
@@ -64,7 +64,7 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
 		{
 			$res->getBody()->write(">>> $string\n");
 
-			/** @var Psr7MiddlewareInterface $next */
+			/** @var Psr7InvokableInterface $next */
 			$res = call_user_func($next, $req, $res);
 
 			$res->getBody()->write("<<< $string\n");

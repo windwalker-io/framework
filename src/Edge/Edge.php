@@ -159,7 +159,7 @@ class Edge
 			eval(' ?>' . $this->cache->load($__path) . '<?php ');
 		}
 
-		$result = ob_get_clean();
+		$result = ltrim(ob_get_clean());
 
 		$this->decrementRender();
 

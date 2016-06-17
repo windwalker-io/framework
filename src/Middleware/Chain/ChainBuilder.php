@@ -188,4 +188,14 @@ class ChainBuilder
 	{
 		return new EndMiddleware;
 	}
+
+	/**
+	 * dumpStack
+	 *
+	 * @return  array
+	 */
+	public function dumpStack()
+	{
+		return iterator_to_array(clone $this->stack);
+	}
 }

@@ -12,14 +12,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Windwalker\Middleware\MiddlewareInterface;
 use Windwalker\Middleware\Psr7Middleware;
-use Windwalker\Middleware\Psr7MiddlewareInterface;
+use Windwalker\Middleware\Psr7InvokableInterface;
 
 /**
  * The Psr7ChainBuilder class.
  *
  * @since  {DEPLOY_VERSION}
  */
-class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
+class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
 {
 	/**
 	 * Add a middleware into chain.
@@ -34,7 +34,7 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
 	 */
 	public function add($middleware)
 	{
-		if (!$middleware instanceof Psr7MiddlewareInterface)
+		if (!$middleware instanceof Psr7InvokableInterface)
 		{
 			$middleware = new Psr7Middleware($middleware);
 		}
@@ -79,7 +79,7 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
 	/**
 	 * getEndMiddleware
 	 *
-	 * @return  Psr7MiddlewareInterface|callable
+	 * @return  Psr7InvokableInterface|callable
 	 */
 	protected function getEndMiddleware()
 	{

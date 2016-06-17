@@ -16,7 +16,7 @@ use Psr\Http\Message\ResponseInterface as Response;
  *
  * @since  {DEPLOY_VERSION}
  */
-class Psr7Middleware extends CallbackMiddleware implements Psr7MiddlewareInterface
+class Psr7Middleware extends CallbackMiddleware implements Psr7InvokableInterface
 {
 	/**
 	 * Middleware logic to be invoked.

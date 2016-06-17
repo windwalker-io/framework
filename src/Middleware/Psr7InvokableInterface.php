@@ -12,11 +12,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 /**
- * Interface Psr7MiddleInterface
+ * Interface Psr7InvokableInterface
  *
  * @since  {DEPLOY_VERSION}
  */
-interface Psr7MiddlewareInterface
+interface Psr7InvokableInterface
 {
 	/**
 	 * Middleware logic to be invoked.
