@@ -72,7 +72,7 @@ class EdgeFileCache implements EdgeCacheInterface
 	 */
 	public function getCacheFile($key)
 	{
-		return $this->path . '/~' . $key . '.php';
+		return $this->path . '/~' . $key;
 	}
 
 	/**

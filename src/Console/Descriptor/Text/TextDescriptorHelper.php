@@ -86,8 +86,8 @@ EOF;
 			throw new \RuntimeException(sprintf('Help descriptor need Console object in %s command.', get_class($command)));
 		}
 
-		$consoleName = $console->getName();
-		$version     = $console->getVersion();
+		$consoleTitle = $console->getTitle();
+		$version      = $console->getVersion();
 
 		$commandName = $command->getName();
 		$description = $command->getDescription();
@@ -107,7 +107,7 @@ EOF;
 
 		$template = sprintf(
 			$this->template,
-			$consoleName,
+			$consoleTitle,
 			$version,
 			$commandName,
 			$description,

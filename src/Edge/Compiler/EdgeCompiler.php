@@ -66,7 +66,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 *
 	 * @var string
 	 */
-	protected $echoFormat = '\$this->escape(%s)';
+	protected $echoFormat = '$this->escape(%s)';
 
 	/**
 	 * Array of footer lines to be added to template.
@@ -474,7 +474,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function compileShow($expression)
 	{
-		return '<?php echo $__env->yieldSection(); ?>';
+		return '<?php echo $this->yieldSection(); ?>';
 	}
 
 	/**
@@ -498,7 +498,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function compileAppend($expression)
 	{
-		return '<?php $__env->appendSection(); ?>';
+		return '<?php $this->appendSection(); ?>';
 	}
 
 	/**
@@ -510,7 +510,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function compileEndsection($expression)
 	{
-		return '<?php $__env->stopSection(); ?>';
+		return '<?php $this->stopSection(); ?>';
 	}
 
 	/**
@@ -522,7 +522,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function compileStop($expression)
 	{
-		return '<?php $__env->stopSection(); ?>';
+		return '<?php $this->stopSection(); ?>';
 	}
 
 	/**
@@ -534,7 +534,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function compileOverwrite($expression)
 	{
-		return '<?php $__env->stopSection(true); ?>';
+		return '<?php $this->stopSection(true); ?>';
 	}
 
 	/**
@@ -872,7 +872,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function compileEndpush($expression)
 	{
-		return '<?php $__env->stopPush(); ?>';
+		return '<?php $this->stopPush(); ?>';
 	}
 
 	/**
