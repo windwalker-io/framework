@@ -8,6 +8,7 @@
 
 namespace Windwalker\Http\Request;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Helper\ServerHelper;
@@ -46,7 +47,7 @@ class ServerRequestFactory
 	 * @param  array $cookies    The $_COOKIE superglobal variable.
 	 * @param  array $files      The $_FILES superglobal variable.
 	 *
-	 * @return ServerRequest
+	 * @return ServerRequestInterface
 	 *
 	 * @throws \InvalidArgumentException for invalid file values
 	 */
@@ -91,6 +92,34 @@ class ServerRequestFactory
 			$parsedBody ? : $decodedBody,
 			static::getProtocolVersion($server)
 		);
+	}
+
+	/**
+	 * createFromUri
+	 *
+	 * @param string $uri
+	 * @param string $script
+	 * @param array  $server
+	 * @param array  $query
+	 * @param array  $parsedBody
+	 * @param array  $cookies
+	 * @param array  $files
+	 *
+	 * @return  ServerRequestInterface
+	 */
+	public static function createFromUri($uri, $script = null, array $server = array(), array $query = array(), array $parsedBody = null,
+		array $cookies = array(), array $files = array())
+	{
+		$server = $server ? : $_SERVER;
+
+		if ($script)
+		{
+			$server['SCRIPT_NAME'] = $script;
+		}
+
+		$request = static::createFromGlobals($server, $query, $parsedBody, $cookies, $files);
+
+		return $request->withUri(new PsrUri($uri));
 	}
 
 	/**
