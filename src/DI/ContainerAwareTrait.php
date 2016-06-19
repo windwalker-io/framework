@@ -21,7 +21,7 @@ trait ContainerAwareTrait
 	 * @var    Container
 	 * @since  2.0
 	 */
-	private $container;
+	protected $container;
 
 	/**
 	 * Get the DI container.

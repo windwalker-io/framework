@@ -11,18 +11,8 @@ namespace Windwalker\Event;
 /**
  * Interface DispatcherInterface
  */
-interface DispatcherInterface
+interface DispatcherInterface extends EventTriggerableInterface
 {
-	/**
-	 * Trigger an event.
-	 *
-	 * @param   EventInterface|string  $event  The event object or name.
-	 * @param   array                  $args   The arguments.
-	 *
-	 * @return  EventInterface  The event after being passed through all listeners.
-	 */
-	public function triggerEvent($event, $args = array());
-
 	/**
 	 * Add a listener to this dispatcher, only if not already registered to these events.
 	 * If no events are specified, it will be registered to all events matching it's methods name.
@@ -32,7 +22,7 @@ interface DispatcherInterface
 	 * @param   array|integer    $priorities  An associative array of event names as keys
 	 *                                        and the corresponding listener priority as values.
 	 *
-	 * @return  DispatcherInterface  This method is chainable.
+	 * @return  static  This method is chainable.
 	 *
 	 * @throws  \InvalidArgumentException
 	 *
@@ -48,6 +38,8 @@ interface DispatcherInterface
 	 * @param int      $priority
 	 *
 	 * @return  static
+	 *
+	 * @since   3.0
 	 */
 	public function listen($event, $callable, $priority = ListenerPriority::NORMAL);
 }

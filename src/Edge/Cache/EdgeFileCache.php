@@ -97,7 +97,14 @@ class EdgeFileCache implements EdgeCacheInterface
 	 */
 	public function store($path, $value)
 	{
-		file_put_contents($this->getCacheFile($this->getCacheKey($path)), $value);
+		$file = $this->getCacheFile($this->getCacheKey($path));
+		
+		if (!is_dir(dirname($file)))
+		{
+			mkdir(dirname($file), 0755, true);
+		}
+
+		file_put_contents($file, $value);
 
 		return $this;
 	}

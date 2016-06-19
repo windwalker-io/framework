@@ -434,6 +434,11 @@ class Input implements \Serializable, \Countable
 				$default = $arguments[1];
 			}
 
+			if (!array_key_exists(0, $arguments))
+			{
+				throw new \BadMethodCallException(get_called_class() . '::' . $name . '() has no argument.');
+			}
+
 			return $this->get($arguments[0], $default, $filter);
 		}
 	}
@@ -573,7 +578,7 @@ class Input implements \Serializable, \Countable
 
 		foreach ($inputs as $key => $input)
 		{
-			$return[$key] = $input->getArray();
+			$return[$key] = $input->toArray();
 		}
 
 		return $return;

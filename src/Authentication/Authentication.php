@@ -51,6 +51,16 @@ class Authentication
 	protected $credential;
 
 	/**
+	 * Authentication constructor.
+	 *
+	 * @param Method\MethodInterface[] $methods
+	 */
+	public function __construct(array $methods = array())
+	{
+		$this->methods = $methods;
+	}
+
+	/**
 	 * authenticate
 	 *
 	 * @param Credential $credential
