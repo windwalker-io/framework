@@ -15,7 +15,7 @@ use Windwalker\Authentication\Method\MethodInterface;
  * 
  * @since  2.0
  */
-class Authentication
+class Authentication implements AuthenticationInterface
 {
 	const SUCCESS = 'SUCCESS';
 

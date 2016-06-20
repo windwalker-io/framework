@@ -60,8 +60,9 @@ class Build extends AbstractCliApplication
 	 * @var  array
 	 */
 	protected $subtrees = array(
-		'application' => 'Application',
+		'application'    => 'Application',
 		'authentication' => 'Authentication',
+		'authorisation'  => 'Authorisation',
 		'cache'      => 'Cache',
 		'compare'    => 'Compare',
 		'console'    => 'Console',
