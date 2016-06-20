@@ -175,9 +175,9 @@ abstract class AbstractCommand implements \ArrayAccess
 			$name = $this->io->getArgument(0);
 
 			// Show help if a command also has logic
-			if ($this->console instanceof AbstractConsole && $this->console->get('show_help') && isset($this->children[$name]))
+			if ($this->console instanceof AbstractConsole && $this->console->get('show_help') && !isset($this->children[$name]))
 			{
-				$this->io->out($this->console->describeCommand($this->children[$name]));
+				$this->io->out($this->console->describeCommand($this));
 
 				return $this->postExecute(true);
 			}
