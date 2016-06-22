@@ -30,7 +30,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since  2.0
 	 */
-	public $console;
+	protected $console;
 
 	/**
 	 * The Cli input object.
@@ -428,7 +428,7 @@ abstract class AbstractCommand implements \ArrayAccess
 			return $value;
 		}
 
-		if (is_callable($default))
+		if ($default instanceof \Closure)
 		{
 			return $default();
 		}
