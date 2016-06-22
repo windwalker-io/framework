@@ -75,13 +75,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 	protected $server;
 
 	/**
-	 * Property uri.
-	 *
-	 * @var  UriData
-	 */
-	protected $uri;
-
-	/**
 	 * Property finalHandler.
 	 *
 	 * @var  callable
