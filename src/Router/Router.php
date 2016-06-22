@@ -240,7 +240,7 @@ class Router
 	 */
 	public function build($name, $queries = array(), $rootSlash = false)
 	{
-		if (!array_key_exists($name, $this->routes))
+		if (!$this->hasRoute($name))
 		{
 			throw new \OutOfRangeException('Route: ' . $name . ' not found.');
 		}
