@@ -34,7 +34,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param   mixed    $values       The data array or object.
 	 * @param   boolean  $replaceNulls Replace null or not.
 	 *
-	 * @return  Data Return self to support chaining.
+	 * @return  static Return self to support chaining.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
