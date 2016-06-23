@@ -8,7 +8,6 @@
 
 namespace Windwalker\Form;
 
-use Windwalker\Form\Exception\FormValidFailException;
 use Windwalker\Form\Field\AbstractField;
 use Windwalker\Form\Field\ListField;
 use Windwalker\Form\Renderer\FormRendererInterface;
