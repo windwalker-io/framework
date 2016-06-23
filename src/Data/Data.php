@@ -161,13 +161,25 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
+	 * __unset
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  void
+	 */
+	public function __unset($name)
+	{
+		unset($this->$name);
+	}
+
+	/**
 	 * Retrieve an external iterator
 	 *
 	 * @return \Traversable An instance of an object implementing Iterator or Traversable
 	 */
 	public function getIterator()
 	{
-		return new \ArrayIterator($this);
+		return new \ArrayIterator(get_object_vars($this));
 	}
 
 	/**

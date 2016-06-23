@@ -262,6 +262,18 @@ class Entity extends Data
 	}
 
 	/**
+	 * __unset
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  void
+	 */
+	public function __unset($name)
+	{
+		$this->set($name, null);
+	}
+
+	/**
 	 * Magic setter to set a table field.
 	 *
 	 * @param   string  $key    The key name.

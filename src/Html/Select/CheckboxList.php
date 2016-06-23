@@ -31,7 +31,7 @@ class CheckboxList extends AbstractInputList
 	 *
 	 * @return  void
 	 */
-	protected function prepareOptions()
+	public function prepareOptions()
 	{
 		parent::prepareOptions();
 
