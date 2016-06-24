@@ -126,6 +126,11 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
+		if ($this->hasColumn($name))
+		{
+			return $this;
+		}
+
 		$column = $name;
 
 		if (!($column instanceof Column))
@@ -196,6 +201,11 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
+		if (!$this->hasColumn($name))
+		{
+			return $this;
+		}
+		
 		$column = $name;
 
 		if ($column instanceof Column)
@@ -271,6 +281,11 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
+		if (!$this->hasColumn($oldName))
+		{
+			return $this;
+		}
+		
 		$column = $name = $newName;
 
 		if ($column instanceof Column)
@@ -392,6 +407,11 @@ class PostgresqlTable extends AbstractTable
 	 */
 	public function addIndex($type, $columns = array(), $name = null, $comment = null, $options = array())
 	{
+		if ($this->hasIndex($name))
+		{
+			$this->dropIndex($name);
+		}
+
 		if (!$type instanceof Key)
 		{
 			if (!$columns)

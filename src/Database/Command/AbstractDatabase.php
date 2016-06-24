@@ -122,7 +122,7 @@ abstract class AbstractDatabase
 	 *
 	 * @param bool $refresh
 	 *
-	 * @return  \stdClass[]  An array of all the tables in the database.
+	 * @return  array  An array of all the tables in the database.
 	 *
 	 * @since   2.0
 	 */
