@@ -142,10 +142,23 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param mixed  $value The value to set.
 	 *
 	 * @return  void
+	 * @throws \InvalidArgumentException
 	 */
 	public function __set($field, $value = null)
 	{
 		$this->set($field, $value);
+	}
+
+	/**
+	 * __isset
+	 *
+	 * @param   string  $field
+	 *
+	 * @return  boolean
+	 */
+	public function __isset($field)
+	{
+		return isset($this->$field);
 	}
 
 	/**

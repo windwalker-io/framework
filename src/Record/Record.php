@@ -244,16 +244,15 @@ class Record extends Entity
 	 * Method to load a row from the database by primary key and bind the fields
 	 * to the AbstractTable instance properties.
 	 *
-	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+	 * @param   mixed   $keys    An optional primary key value to load the row by, or an array of fields to match.  If not
 	 *                           set the instance property value is used.
-	 * @param   boolean  $reset  True to reset the default values before loading the new row.
+	 * @param   boolean $reset   True to reset the default values before loading the new row.
 	 *
 	 * @return  static  Method allows chaining
 	 *
 	 * @since   2.0
-	 * @throws  \RuntimeException
-	 * @throws  \UnexpectedValueException
-	 * @throws  \InvalidArgumentException
+	 *
+	 * @throws  NoResultException
 	 */
 	public function load($keys = null, $reset = true)
 	{
