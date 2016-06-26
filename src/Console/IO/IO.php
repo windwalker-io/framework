@@ -8,9 +8,7 @@
 
 namespace Windwalker\Console\IO;
 
-use Windwalker\IO\Cli\Color\ColorProcessor;
 use Windwalker\IO\Cli\Color\ColorStyle;
-use Windwalker\IO\Cli\Color\NoColorProcessor;
 use Windwalker\IO\Cli\IO as WindwalkerIO;
 use Windwalker\IO\Cli\Output\ColorfulOutputInterface;
 

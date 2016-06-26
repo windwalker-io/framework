@@ -8,7 +8,6 @@
 
 namespace Windwalker\Form\Test;
 
-use Windwalker\Form\Field\AbstractField;
 use Windwalker\Form\Field\TextField;
 use Windwalker\Form\FieldHelper;
 use Windwalker\Form\FilterHelper;

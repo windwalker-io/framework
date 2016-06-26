@@ -8,8 +8,6 @@
 
 namespace Windwalker\Language\Format;
 
-use Windwalker\Language\LanguageNormalize;
-
 /**
  * Class AbstractFormat
  *

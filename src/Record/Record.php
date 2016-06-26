@@ -121,17 +121,7 @@ class Record extends Entity
 
 		if (!$this->keys)
 		{
-			// Set the key to be an array.
-			if (is_string($keys))
-			{
-				$keys = array($keys);
-			}
-			elseif (is_object($keys))
-			{
-				$keys = (array) $keys;
-			}
-
-			$this->keys = $keys;
+			$this->keys = (array) $keys;
 		}
 
 		if ($this->autoIncrement === null)
@@ -139,7 +129,7 @@ class Record extends Entity
 			$this->autoIncrement = (count($keys) == 1) ? true : false;
 		}
 
-		$this->mapper = new DataMapper($this->table, $keys);
+		$this->mapper = $mapper ? : new DataMapper($this->table, $keys);
 		$this->db = $this->mapper->getDb()->getDriver();
 
 		// Initialise the table properties.

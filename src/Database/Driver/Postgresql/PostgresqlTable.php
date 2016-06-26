@@ -12,8 +12,6 @@ use Windwalker\Database\Command\AbstractTable;
 use Windwalker\Database\DatabaseHelper;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\Key;
-use Windwalker\Database\Schema\Schema;
-use Windwalker\Query\Mysql\MysqlGrammar;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**

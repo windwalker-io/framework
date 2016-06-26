@@ -8,8 +8,6 @@
 
 namespace Windwalker\IO;
 
-use Windwalker\Filter\InputFilter;
-
 /**
  * Windwalker Input Files Class
  *

@@ -230,23 +230,6 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 */
 	protected function doStart()
 	{
-		$sessionName = $this->bridge->getName();
-
-		$cookie = $this->getCookie();
-
-		// If cookie do not have session id, try to get it from http queries.
-		if (empty($cookie[$sessionName]))
-		{
-			$sessionClean = isset($_GET[$sessionName]) ? $_GET[$sessionName] :  false;
-
-			if ($sessionClean)
-			{
-				$this->bridge->getId($sessionClean);
-				setcookie($sessionName, '', time() - 3600);
-				$cookie[$sessionName] = '';
-			}
-		}
-
 		$this->bridge->start();
 
 		$this->prepareBagsData($this->bags);

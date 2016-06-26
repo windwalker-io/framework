@@ -8,8 +8,6 @@
 
 namespace Windwalker\Language\Format;
 
-use Symfony\Component\Yaml\Yaml;
-
 /**
  * Class JsonFormat
  *

@@ -8,7 +8,6 @@
 
 namespace Windwalker\Record;
 
-use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\DataMapper\AbstractDataMapper;
 use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 use Windwalker\DataMapper\DataMapper;

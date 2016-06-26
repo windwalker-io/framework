@@ -8,7 +8,6 @@
 
 namespace Windwalker\Database\Command;
 
-use Windwalker\Database\Driver\DatabaseAwareTrait;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**

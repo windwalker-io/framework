@@ -8,7 +8,6 @@
 
 namespace Windwalker\IO;
 
-use Psr\Http\Message\UploadedFileInterface;
 use Windwalker\Filter\InputFilter;
 use Windwalker\IO\Filter\NullFilter;
 

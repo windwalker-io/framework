@@ -8,11 +8,6 @@
 
 namespace Windwalker\Http\Response;
 
-use Psr\Http\Message\StreamInterface;
-use Windwalker\Http\Response\Response;
-use Windwalker\Http\Stream\Stream;
-use Windwalker\Http\Stream\StringStream;
-
 /**
  * The HtmlResponse class.
  *

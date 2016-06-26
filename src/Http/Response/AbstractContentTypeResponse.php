@@ -9,7 +9,6 @@
 namespace Windwalker\Http\Response;
 
 use Psr\Http\Message\StreamInterface;
-use Windwalker\Http\Response\Response;
 
 /**
  * An response object contains content-type handler.

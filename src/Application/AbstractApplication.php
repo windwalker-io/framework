@@ -11,7 +11,6 @@ namespace Windwalker\Application;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Windwalker\IO\Input;
 use Windwalker\Registry\Registry;
 
 /**

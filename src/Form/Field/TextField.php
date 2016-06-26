@@ -8,8 +8,6 @@
 
 namespace Windwalker\Form\Field;
 
-use Windwalker\Form\Field\AbstractField;
-
 /**
  * The TextField class.
  * 

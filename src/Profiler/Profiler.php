@@ -8,7 +8,6 @@
 
 namespace Windwalker\Profiler;
 
-use Windwalker\Environment\PhpHelper;
 use Windwalker\Profiler\Point\CollectorInterface;
 use Windwalker\Profiler\Point\Point;
 use Windwalker\Profiler\Point\PointInterface;

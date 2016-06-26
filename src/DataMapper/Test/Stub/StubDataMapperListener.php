@@ -8,7 +8,6 @@
 
 namespace Windwalker\DataMapper\Test\Stub;
 
-use Windwalker\Data\Data;
 use Windwalker\Event\Event;
 
 /**
