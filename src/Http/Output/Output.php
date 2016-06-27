@@ -26,7 +26,7 @@ class Output implements OutputInterface
 	 * @param   ResponseInterface  $response    Respond body output.
 	 * @param   boolean            $returnBody  Return body as string.
 	 *
-	 * @return  string|StreamInterface
+	 * @return  ResponseInterface
 	 *
 	 * @since   3.0
 	 */
@@ -37,7 +37,7 @@ class Output implements OutputInterface
 
 		if ($returnBody)
 		{
-			return $response->getBody();
+			return $response;
 		}
 
 		$this->sendBody($response);

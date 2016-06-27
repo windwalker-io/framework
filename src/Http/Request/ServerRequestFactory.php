@@ -117,6 +117,8 @@ class ServerRequestFactory
 			$server['SCRIPT_NAME'] = $script;
 		}
 
+		$server['SCRIPT_NAME'] = '/' . ltrim($server['SCRIPT_NAME'], '/');
+
 		$request = static::createFromGlobals($server, $query, $parsedBody, $cookies, $files);
 
 		return $request->withUri(new PsrUri($uri));
