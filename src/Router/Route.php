@@ -275,7 +275,7 @@ class Route implements \IteratorAggregate
 		$this->setPort($options['port']);
 		$this->setSslPort($options['sslPort']);
 		$this->setRequirements($options['requirements']);
-		$this->setExtra($options['extra']);
+		$this->setExtraValues($options['extra']);
 
 		return $this;
 	}
@@ -486,7 +486,7 @@ class Route implements \IteratorAggregate
 	 *
 	 * @return  array
 	 */
-	public function getExtra()
+	public function getExtraValues()
 	{
 		return $this->extra;
 	}
@@ -498,9 +498,42 @@ class Route implements \IteratorAggregate
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setExtra(array $extra)
+	public function setExtraValues(array $extra)
 	{
 		$this->extra = $extra;
+
+		return $this;
+	}
+
+	/**
+	 * getExtra
+	 *
+	 * @param string $name
+	 * @param mixed  $default
+	 *
+	 * @return  mixed
+	 */
+	public function getExtra($name, $default = null)
+	{
+		if (isset($this->extra[$name]))
+		{
+			return $this->extra[$name];
+		}
+
+		return $default;
+	}
+
+	/**
+	 * setExtra
+	 *
+	 * @param   string  $name
+	 * @param   mixed   $value
+	 *
+	 * @return  static
+	 */
+	public function setExtra($name, $value)
+	{
+		$this->extra[$name] = $value;
 
 		return $this;
 	}
