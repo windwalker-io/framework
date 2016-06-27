@@ -8,6 +8,8 @@
 
 namespace Windwalker\IO;
 
+use Psr\Http\Message\UploadedFileInterface;
+
 /**
  * Windwalker Input Files Class
  *
@@ -36,7 +38,7 @@ class PsrFilesInput extends Input
 	 * @param   string $filter    Filter to apply to the value.
 	 * @param   string $separator Separator for path.
 	 *
-	 * @return mixed The filtered input value.
+	 * @return UploadedFileInterface The filtered input value.
 	 *
 	 * @since   2.0
 	 */

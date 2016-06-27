@@ -11,6 +11,7 @@ namespace Windwalker\Console\Command;
 use Windwalker\Console\AbstractConsole;
 use Windwalker\Console\Console;
 use Windwalker\Console\Exception\CommandNotFoundException;
+use Windwalker\Console\Exception\WrongArgumentException;
 use Windwalker\Console\Option\Option;
 use Windwalker\Console\Option\OptionSet;
 use Windwalker\Console\IO\IO;
@@ -191,6 +192,12 @@ abstract class AbstractCommand implements \ArrayAccess
 				$e->getCommand()->renderAlternatives($e->getChild(), $e);
 
 				return $e->getCode();
+			}
+			catch (WrongArgumentException $e)
+			{
+				$command = $this->getChild($name);
+
+				throw new \RuntimeException($e->getMessage() . "\n\n" . $command->getUsage(), $e->getCode(), $e);
 			}
 			catch (\Exception $e)
 			{

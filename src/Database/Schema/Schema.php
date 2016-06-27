@@ -116,7 +116,7 @@ class Schema
 		if (!$name)
 		{
 			$columns = (array) $key->getColumns();
-			$name = 'idx_' . trim($this->table->getName(), '#_') . '_' . $columns[0];
+			$name = 'idx_' . trim($this->table->getName(), '#_') . '_' . implode('_', $columns);
 
 			$key->name($name);
 		}

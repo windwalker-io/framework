@@ -25,7 +25,7 @@ use Windwalker\IO\Filter\NullFilter;
  * @property    Input         $server
  * @property    Input         $env
  * @property    Input         $header
- * @property    FilesInput    $files
+ * @property    FilesInput|PsrFilesInput  $files
  * @property    CookieInput   $cookie
  *
  * @method      integer  getInt()       getInt($name, $default = null)    Get a signed integer.
