@@ -182,7 +182,7 @@ class Entity extends Data
 	 */
 	public function getIterator()
 	{
-		return new \ArrayIterator($this->dump());
+		return new \ArrayIterator($this->dump(true));
 	}
 
 	/**

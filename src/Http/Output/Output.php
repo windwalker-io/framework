@@ -32,8 +32,11 @@ class Output implements OutputInterface
 	 */
 	public function respond(ResponseInterface $response, $returnBody = false)
 	{
-		$this->sendStatusLine($response);
-		$this->sendHeaders($response);
+		if (!$this->headersSent())
+		{
+			$this->sendStatusLine($response);
+			$this->sendHeaders($response);
+		}
 
 		if ($returnBody)
 		{
@@ -117,5 +120,18 @@ class Output implements OutputInterface
 		$reasonPhrase = ($reasonPhrase ? ' ' . $reasonPhrase : '');
 
 		$this->header(sprintf('HTTP/%s %d%s', $response->getProtocolVersion(), $response->getStatusCode(), $reasonPhrase));
+	}
+
+	/**
+	 * checkHeaderSent
+	 *
+	 * @param string $filename
+	 * @param int    $linenum
+	 *
+	 * @return bool
+	 */
+	public function headersSent(&$filename = null, &$linenum = null)
+	{
+		return headers_sent($filename, $linenum);
 	}
 }

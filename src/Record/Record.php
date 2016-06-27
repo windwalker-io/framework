@@ -218,10 +218,7 @@ class Record extends Entity
 			// Only process values in fields
 			$k = $this->resolveAlias($k);
 
-			if (array_key_exists($k, $fields))
-			{
-				$this->data[$k] = $v;
-			}
+			$this->data[$k] = $v;
 		}
 
 		// Event
