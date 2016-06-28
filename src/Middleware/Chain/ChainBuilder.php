@@ -30,6 +30,13 @@ class ChainBuilder
 	protected $stack;
 
 	/**
+	 * Property endMiddleware.
+	 *
+	 * @var  MiddlewareInterface
+	 */
+	protected $endMiddleware;
+
+	/**
 	 * ChainBuilder constructor.
 	 *
 	 * @param MiddlewareInterface[] $middlewares
@@ -54,6 +61,27 @@ class ChainBuilder
 	 * @return  static Return self to support chaining.
 	 */
 	public function add($middleware)
+	{
+		$object = $this->marshalMiddleware($middleware);
+
+		if (count($this->stack))
+		{
+			$object->setNext($this->stack->top());
+		}
+
+		$this->stack[] = $object;
+
+		return $this;
+	}
+
+	/**
+	 * marshalMiddleware
+	 *
+	 * @param   mixed  $middleware
+	 *
+	 * @return  MiddlewareInterface
+	 */
+	protected function marshalMiddleware($middleware)
 	{
 		if (is_string($middleware) && class_exists($middleware))
 		{
@@ -83,11 +111,7 @@ class ChainBuilder
 			throw new \InvalidArgumentException('Not valid MiddleChaining element.');
 		}
 
-		$object->setNext($this->stack->top());
-
-		$this->stack[] = $object;
-
-		return $this;
+		return $object;
 	}
 
 	/**
@@ -99,13 +123,33 @@ class ChainBuilder
 	 */
 	public function execute($data = null)
 	{
+		if ($this->getEndMiddleware())
+		{
+			$end = $this->getEndMiddleware();
+
+			if (count($this->stack))
+			{
+				$this->stack->bottom()->setNext($end);
+			}
+			
+			$this->stack->unshift($end);
+		}
+
 		if (!count($this->stack))
 		{
 			return null;
 		}
 
 		// Start call chaining.
-		return $this->stack->top()->execute($data);
+		$result = $this->stack->top()->execute($data);
+
+		// Remove end middleware so we can re-use this chain.
+		if ($this->getEndMiddleware())
+		{
+			$this->stack->shift();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -117,7 +161,6 @@ class ChainBuilder
 	{
 		$stack = new \SplStack;
 		$stack->setIteratorMode(\SplDoublyLinkedList::IT_MODE_LIFO | \SplDoublyLinkedList::IT_MODE_KEEP);
-		$stack[] = $this->getEndMiddleware();
 
 		return $stack;
 	}
@@ -186,7 +229,28 @@ class ChainBuilder
 	 */
 	protected function getEndMiddleware()
 	{
-		return new EndMiddleware;
+		if (!$this->endMiddleware)
+		{
+			$this->endMiddleware = new EndMiddleware;
+		}
+
+		return $this->endMiddleware;
+	}
+
+	/**
+	 * Method to set property endMiddleware
+	 *
+	 * @param   MiddlewareInterface|callable $middleware
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setEndMiddleware($middleware)
+	{
+		$object = $this->marshalMiddleware($middleware);
+
+		$this->endMiddleware = $object;
+
+		return $this;
 	}
 
 	/**

@@ -34,12 +34,24 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
 	 */
 	public function add($middleware)
 	{
+		return parent::add($middleware);
+	}
+
+	/**
+	 * marshalMiddleware
+	 *
+	 * @param   mixed $middleware
+	 *
+	 * @return  MiddlewareInterface
+	 */
+	protected function marshalMiddleware($middleware)
+	{
 		if (!$middleware instanceof Psr7InvokableInterface)
 		{
 			$middleware = new Psr7Middleware($middleware);
 		}
 
-		return parent::add($middleware);
+		return parent::marshalMiddleware($middleware);
 	}
 
 	/**
@@ -53,13 +65,33 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
 	 */
 	public function __invoke(Request $request, Response $response, $next = null)
 	{
+		if ($this->getEndMiddleware())
+		{
+			$end = $this->getEndMiddleware();
+
+			if (count($this->stack))
+			{
+				$this->stack->bottom()->setNext($end);
+			}
+
+			$this->stack->unshift($end);
+		}
+
 		if (!count($this->stack))
 		{
 			return null;
 		}
 
 		// Start call chaining.
-		return $this->stack->top()->execute($request, $response);
+		$result = $this->stack->top()->execute($request, $response);
+
+		// Remove end middleware so we can re-use this chain.
+		if ($this->getEndMiddleware())
+		{
+			$this->stack->shift();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -83,9 +115,14 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
 	 */
 	protected function getEndMiddleware()
 	{
-		return new Psr7Middleware(function ($request, $response)
+		if (!$this->endMiddleware)
 		{
-			return $response;
-		});
+			$this->endMiddleware = new Psr7Middleware(function ($request, $response)
+			{
+				return $response;
+			});
+		}
+
+		return $this->endMiddleware;
 	}
 }
