@@ -173,6 +173,14 @@ abstract class AbstractCommand implements \ArrayAccess
 		{
 			$name = $this->io->getArgument(0);
 
+			// Show help if a command also has logic
+			if ($this->app instanceof AbstractConsole && $this->app->get('show_help') && isset($this->children[$name]))
+			{
+				$this->io->out($this->app->describeCommand($this->children[$name]));
+
+				return $this->postExecute(true);
+			}
+
 			try
 			{
 				return $this->executeSubCommand($name);
