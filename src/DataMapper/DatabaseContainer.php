@@ -21,7 +21,7 @@ class DatabaseContainer
 	/**
 	 * Property db.
 	 *
-	 * @var  AbstractDatabaseDriver
+	 * @var  AbstractDatabaseDriver|callable
 	 */
 	protected static $db;
 
@@ -36,6 +36,11 @@ class DatabaseContainer
 	 */
 	public static function getDb($driver = null, $option = array(), $forceNew = false)
 	{
+		if (is_callable(static::$db))
+		{
+			static::$db = call_user_func(static::$db);
+		}
+
 		if (!static::$db || $forceNew)
 		{
 			static::$db = DatabaseFactory::getDbo($driver, $option, $forceNew);
@@ -47,12 +52,17 @@ class DatabaseContainer
 	/**
 	 * Method to set property db
 	 *
-	 * @param   AbstractDatabaseDriver $db
+	 * @param   AbstractDatabaseDriver|callable $db
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public static function setDb(AbstractDatabaseDriver $db)
+	public static function setDb($db)
 	{
+		if (!is_callable($db) && !$db instanceof AbstractDatabaseDriver)
+		{
+			throw new \InvalidArgumentException('Please use AbstractDatabaseDriver or callable as global database driver.');
+		}
+
 		static::$db = $db;
 	}
 }
