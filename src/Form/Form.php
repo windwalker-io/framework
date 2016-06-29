@@ -8,7 +8,6 @@
 
 namespace Windwalker\Form;
 
-use Windwalker\Form\Exception\FormValidFailException;
 use Windwalker\Form\Field\AbstractField;
 use Windwalker\Form\Field\ListField;
 use Windwalker\Form\Renderer\FormRendererInterface;
@@ -432,7 +431,7 @@ class Form implements \IteratorAggregate
 		/**
 		 * Filter field callback.
 		 *
-		 * @param AbstractField          $current
+		 * @param AbstractField           $current
 		 * @param string                  $key
 		 * @param \CallbackFilterIterator $iterator
 		 *
@@ -459,7 +458,7 @@ class Form implements \IteratorAggregate
 	/**
 	 * Method to get property Fieldsets
 	 *
-	 * @return  \string[]
+	 * @return  array
 	 */
 	public function getFieldsets()
 	{
@@ -469,7 +468,7 @@ class Form implements \IteratorAggregate
 	/**
 	 * Method to get property Groups
 	 *
-	 * @return  \string[]
+	 * @return  array
 	 */
 	public function getGroups()
 	{
@@ -484,7 +483,7 @@ class Form implements \IteratorAggregate
 	 * @param mixed  $value
 	 * @param string $group
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
 	public function setAttribute($field, $name, $value, $group = null)
 	{
@@ -506,7 +505,7 @@ class Form implements \IteratorAggregate
 	 * @param mixed  $default
 	 * @param string $group
 	 *
-	 * @return  mixed|null
+	 * @return  mixed
 	 */
 	public function getAttribute($field, $name, $default = null, $group = null)
 	{
@@ -528,7 +527,7 @@ class Form implements \IteratorAggregate
 	 * @param string $fieldset
 	 * @param string $group
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
 	public function setAttributes($name, $value, $fieldset = null, $group = null)
 	{
@@ -565,7 +564,7 @@ class Form implements \IteratorAggregate
 	 *
 	 * @param array $data
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
 	public function bind($data)
 	{
@@ -574,6 +573,36 @@ class Form implements \IteratorAggregate
 			$value = FormHelper::getByPath($data, $name);
 
 			$field->setValue($value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * reset
+	 *
+	 * @return  static
+	 */
+	public function clearValues()
+	{
+		foreach ($this->fields as $name => $field)
+		{
+			$field->setValue(null);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * reset
+	 *
+	 * @return  static
+	 */
+	public function reset()
+	{
+		foreach ($this->fields as $name => $field)
+		{
+			$this->removeFields();
 		}
 
 		return $this;

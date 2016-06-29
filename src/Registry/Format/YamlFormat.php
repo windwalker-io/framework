@@ -46,12 +46,10 @@ class YamlFormat implements FormatInterface
 	 */
 	static public function structToString($struct, array $options = array())
 	{
-		$array = json_decode(json_encode($struct), true);
-
 		$inline = RegistryHelper::getValue($options, 'inline', 2);
 		$indent = RegistryHelper::getValue($options, 'indent', 0);
 
-		return static::getDumper()->dump($array, $inline, $indent);
+		return static::getDumper()->dump($struct, $inline, $indent);
 	}
 
 	/**
@@ -67,9 +65,7 @@ class YamlFormat implements FormatInterface
 	 */
 	static public function stringToStruct($data, array $options = array())
 	{
-		$array = static::getParser()->parse(trim($data));
-
-		return json_decode(json_encode($array));
+		return static::getParser()->parse(trim($data));
 	}
 
 	/**

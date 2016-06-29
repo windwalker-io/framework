@@ -47,7 +47,7 @@ class FlashBag extends SessionBag implements FlashBagInterface
 	{
 		$all = $this->all();
 
-		$this->clean();
+		$this->clear();
 
 		return $all;
 	}

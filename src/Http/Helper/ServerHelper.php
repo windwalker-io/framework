@@ -9,7 +9,6 @@
 namespace Windwalker\Http\Helper;
 
 use Psr\Http\Message\UploadedFileInterface;
-use Windwalker\Http\UploadedFile;
 
 /**
  * The ServerHelper class.

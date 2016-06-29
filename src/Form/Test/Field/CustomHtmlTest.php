@@ -9,7 +9,6 @@
 namespace Windwalker\Form\Test\Field;
 
 use Windwalker\Dom\HtmlElement;
-use Windwalker\Form\Field\ButtonField;
 use Windwalker\Form\Field\CustomHtmlField;
 use Windwalker\Form\Field\TextField;
 use Windwalker\Dom\Test\AbstractDomTestCase;

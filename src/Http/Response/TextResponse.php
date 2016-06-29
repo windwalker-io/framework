@@ -10,7 +10,6 @@ namespace Windwalker\Http\Response;
 
 use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Stream\Stream;
-use Windwalker\Http\Stream\StringStream;
 
 /**
  * The TextResponse class.

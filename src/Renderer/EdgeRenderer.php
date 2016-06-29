@@ -168,7 +168,7 @@ class EdgeRenderer extends AbstractEngineRenderer
 	{
 		if (!$this->loader)
 		{
-			$this->loader = new EdgeFileLoader;
+			$this->loader = new EdgeFileLoader($this->dumpPaths());
 		}
 
 		return $this->loader;

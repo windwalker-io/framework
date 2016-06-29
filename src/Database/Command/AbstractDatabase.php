@@ -8,7 +8,6 @@
 
 namespace Windwalker\Database\Command;
 
-use Windwalker\Database\Driver\DatabaseAwareTrait;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**
@@ -122,7 +121,7 @@ abstract class AbstractDatabase
 	 *
 	 * @param bool $refresh
 	 *
-	 * @return  \stdClass[]  An array of all the tables in the database.
+	 * @return  array  An array of all the tables in the database.
 	 *
 	 * @since   2.0
 	 */

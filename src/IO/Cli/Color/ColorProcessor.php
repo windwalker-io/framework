@@ -134,7 +134,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 *
 	 * @since   2.0
 	 */
-	protected function replaceColors($text, $tag, $match, Colorstyle $style)
+	protected function replaceColors($text, $tag, $match, ColorStyle $style)
 	{
 		$replace = $this->noColors
 			? $match

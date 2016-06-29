@@ -15,7 +15,7 @@ use Windwalker\Authentication\Method\MethodInterface;
  * 
  * @since  2.0
  */
-class Authentication
+class Authentication implements AuthenticationInterface
 {
 	const SUCCESS = 'SUCCESS';
 
@@ -49,6 +49,16 @@ class Authentication
 	 * @var Credential
 	 */
 	protected $credential;
+
+	/**
+	 * Authentication constructor.
+	 *
+	 * @param Method\MethodInterface[] $methods
+	 */
+	public function __construct(array $methods = array())
+	{
+		$this->methods = $methods;
+	}
 
 	/**
 	 * authenticate

@@ -25,7 +25,7 @@ interface OutputInterface
 	 * @param   ResponseInterface  $response    Respond body output.
 	 * @param   boolean            $returnBody  Return body as string.
 	 *
-	 * @return  string|StreamInterface
+	 * @return  ResponseInterface
 	 * 
 	 * @since   3.0
 	 */

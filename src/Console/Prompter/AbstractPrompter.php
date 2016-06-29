@@ -10,6 +10,7 @@ namespace Windwalker\Console\Prompter;
 
 use Windwalker\Console\IO\IOFactory;
 use Windwalker\Console\IO\IOInterface;
+use Windwalker\Console\IO\NullInput;
 
 /**
  * Prompter class.
@@ -107,7 +108,7 @@ abstract class AbstractPrompter implements PrompterInterface
 	{
 		$question = $question ? : $this->question;
 
-		if ($question)
+		if ($question && !$this->io->getInput() instanceof NullInput)
 		{
 			$this->io->out()->out($question, false);
 		}

@@ -324,9 +324,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	/**
 	 * Convenience method for creating shared keys.
 	 *
-	 * @param   string    $key        Name of dataStore key to set.
-	 * @param   callable  $callback   Callable function to run when requesting the specified $key.
-	 * @param   bool      $protected  True to create and store a shared instance.
+	 * @param   string          $key        Name of dataStore key to set.
+	 * @param   callable|mixed  $callback   Callable function to run when requesting the specified $key.
+	 * @param   bool            $protected  True to create and store a shared instance.
 	 *
 	 * @return  Container  This object for chaining.
 	 *

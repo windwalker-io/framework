@@ -35,6 +35,11 @@ class RegistryHelper
 	 */
 	public static function loadFile($file, $format = Format::JSON, $options = array())
 	{
+		if (!is_file($file))
+		{
+			throw new \InvalidArgumentException('No such file: ' . $file);
+		}
+
 		if (strtolower($format) == Format::PHP)
 		{
 			$data = include $file;

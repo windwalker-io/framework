@@ -11,6 +11,7 @@ namespace Windwalker\Console\Command;
 use Windwalker\Console\AbstractConsole;
 use Windwalker\Console\Console;
 use Windwalker\Console\Exception\CommandNotFoundException;
+use Windwalker\Console\Exception\WrongArgumentException;
 use Windwalker\Console\Option\Option;
 use Windwalker\Console\Option\OptionSet;
 use Windwalker\Console\IO\IO;
@@ -30,7 +31,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since  2.0
 	 */
-	public $console;
+	protected $console;
 
 	/**
 	 * The Cli input object.
@@ -175,9 +176,9 @@ abstract class AbstractCommand implements \ArrayAccess
 			$name = $this->io->getArgument(0);
 
 			// Show help if a command also has logic
-			if ($this->console instanceof AbstractConsole && $this->console->get('show_help') && isset($this->children[$name]))
+			if ($this->console instanceof AbstractConsole && $this->console->get('show_help') && !isset($this->children[$name]))
 			{
-				$this->io->out($this->console->describeCommand($this->children[$name]));
+				$this->io->out($this->console->describeCommand($this));
 
 				return $this->postExecute(true);
 			}
@@ -191,6 +192,12 @@ abstract class AbstractCommand implements \ArrayAccess
 				$e->getCommand()->renderAlternatives($e->getChild(), $e);
 
 				return $e->getCode();
+			}
+			catch (WrongArgumentException $e)
+			{
+				$command = $this->getChild($name);
+
+				throw new \RuntimeException($e->getMessage() . "\n\n" . $command->getUsage(), $e->getCode(), $e);
 			}
 			catch (\Exception $e)
 			{
@@ -428,7 +435,7 @@ abstract class AbstractCommand implements \ArrayAccess
 			return $value;
 		}
 
-		if (is_callable($default))
+		if ($default instanceof \Closure)
 		{
 			return $default();
 		}

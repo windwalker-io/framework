@@ -8,7 +8,6 @@
 
 namespace Windwalker\Registry\Test;
 
-use Windwalker\Profiler\Profiler;
 use Windwalker\Registry\Registry;
 use Windwalker\Registry\RegistryHelper;
 use Windwalker\Registry\Test\Stubs\StubDumpable;

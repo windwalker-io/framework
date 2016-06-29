@@ -28,9 +28,9 @@ class Console extends AbstractConsole
 	 *
 	 * @var  string
 	 *
-	 * @since  2.0
+	 * @since  3.0
 	 */
-	protected $name = 'Windwalker Console';
+	protected $title = 'Windwalker Console';
 
 	/**
 	 * Version of this application.
@@ -238,13 +238,13 @@ class Console extends AbstractConsole
 	 *
 	 * If a command with the same name already exists, it will be overridden.
 	 *
-	 * @param   AbstractCommand  $command  A Console object.
+	 * @param   AbstractCommand|string  $command  A Console object.
 	 *
 	 * @return  AbstractCommand  The registered command.
 	 *
 	 * @since  2.0
 	 */
-	public function addCommand(AbstractCommand $command)
+	public function addCommand($command)
 	{
 		$this->getRootCommand()->addCommand($command);
 
@@ -293,34 +293,6 @@ class Console extends AbstractConsole
 	public function getRootCommand()
 	{
 		return $this->rootCommand;
-	}
-
-	/**
-	 * Get name of this application.
-	 *
-	 * @return string  Application name.
-	 *
-	 * @since  2.0
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
-
-	/**
-	 * Set name of this application.
-	 *
-	 * @param   string  $name  Name of this application.
-	 *
-	 * @return  Console  Return this object to support chaining.
-	 *
-	 * @since  2.0
-	 */
-	public function setName($name)
-	{
-		$this->name = $name;
-
-		return $this;
 	}
 
 	/**
@@ -429,5 +401,29 @@ class Console extends AbstractConsole
 	public function getHelp()
 	{
 		return $this->help;
+	}
+
+	/**
+	 * Method to get property Title
+	 *
+	 * @return  string
+	 */
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+	/**
+	 * Method to set property title
+	 *
+	 * @param   string $title
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setTitle($title)
+	{
+		$this->title = $title;
+
+		return $this;
 	}
 }

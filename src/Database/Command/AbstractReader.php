@@ -10,7 +10,6 @@ namespace Windwalker\Database\Command;
 
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Iterator\DataIterator;
-use Windwalker\Database\Driver\DatabaseAwareTrait;
 use Windwalker\Query\Query;
 
 /**

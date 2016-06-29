@@ -31,9 +31,6 @@ $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create([
 		show($input->files->get('image.foo.1', '.'));
 		
 		show($request->getBody());
-		
-		exit(' @Checkpoint');
-		
 	    $body = $response->getBody()->__toString();
 
 		$body = ">>>AAA\n" . $body . "\n<<<AAA";

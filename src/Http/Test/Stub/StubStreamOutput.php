@@ -119,7 +119,7 @@ class StubStreamOutput extends StreamOutput
 	 *
 	 * @return  bool
 	 */
-	public function checkHeaderSent()
+	public function headersSent()
 	{
 		return false;
 	}

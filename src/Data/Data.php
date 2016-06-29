@@ -34,7 +34,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param   mixed    $values       The data array or object.
 	 * @param   boolean  $replaceNulls Replace null or not.
 	 *
-	 * @return  Data Return self to support chaining.
+	 * @return  static Return self to support chaining.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
@@ -142,10 +142,23 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @param mixed  $value The value to set.
 	 *
 	 * @return  void
+	 * @throws \InvalidArgumentException
 	 */
 	public function __set($field, $value = null)
 	{
 		$this->set($field, $value);
+	}
+
+	/**
+	 * __isset
+	 *
+	 * @param   string  $field
+	 *
+	 * @return  boolean
+	 */
+	public function __isset($field)
+	{
+		return isset($this->$field);
 	}
 
 	/**
@@ -161,13 +174,25 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
+	 * __unset
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  void
+	 */
+	public function __unset($name)
+	{
+		unset($this->$name);
+	}
+
+	/**
 	 * Retrieve an external iterator
 	 *
 	 * @return \Traversable An instance of an object implementing Iterator or Traversable
 	 */
 	public function getIterator()
 	{
-		return new \ArrayIterator($this);
+		return new \ArrayIterator(get_object_vars($this));
 	}
 
 	/**

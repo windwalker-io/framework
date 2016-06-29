@@ -8,9 +8,6 @@
 
 namespace Windwalker\Edge\Loader;
 
-use Windwalker\Cache\CacheInterface;
-use Windwalker\Cache\Storage\CacheStorageInterface;
-
 /**
  * The EdgeFileLoader class.
  *

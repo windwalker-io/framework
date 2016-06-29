@@ -8,7 +8,6 @@
 
 namespace Windwalker\IO;
 
-use Psr\Http\Message\UploadedFileInterface;
 use Windwalker\Filter\InputFilter;
 use Windwalker\IO\Filter\NullFilter;
 
@@ -26,7 +25,7 @@ use Windwalker\IO\Filter\NullFilter;
  * @property    Input         $server
  * @property    Input         $env
  * @property    Input         $header
- * @property    FilesInput    $files
+ * @property    FilesInput|PsrFilesInput  $files
  * @property    CookieInput   $cookie
  *
  * @method      integer  getInt()       getInt($name, $default = null)    Get a signed integer.
@@ -363,6 +362,55 @@ class Input implements \Serializable, \Countable
 	}
 
 	/**
+	 * merge
+	 *
+	 * @param array $array
+	 * @param bool  $recursive
+	 *
+	 * @return  static
+	 */
+	public function merge(array $array, $recursive = false)
+	{
+		if ($recursive)
+		{
+			$this->data = static::mergeRecursive($this->data, $array);
+		}
+		else
+		{
+			$this->data = array_merge($array);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * mergeRecursive
+	 *
+	 * @param array $array1
+	 * @param array $array2
+	 *
+	 * @return  array
+	 */
+	protected static function mergeRecursive(array $array1, array $array2)
+	{
+		$merged = $array1;
+
+		foreach ($array2 as $key => &$value)
+		{
+			if (is_array($value) && isset($merged[$key]) && is_array($merged[$key]))
+			{
+				$merged[$key] = static::merge($merged [$key], $value);
+			}
+			else
+			{
+				$merged[$key] = $value;
+			}
+		}
+
+		return $merged;
+	}
+
+	/**
 	 * Magic method to get filtered input data.
 	 *
 	 * @param   string  $name       Name of the filter type prefixed with 'get'.
@@ -383,6 +431,11 @@ class Input implements \Serializable, \Countable
 			if (isset($arguments[1]))
 			{
 				$default = $arguments[1];
+			}
+
+			if (!array_key_exists(0, $arguments))
+			{
+				throw new \BadMethodCallException(get_called_class() . '::' . $name . '() has no argument.');
 			}
 
 			return $this->get($arguments[0], $default, $filter);
@@ -524,7 +577,7 @@ class Input implements \Serializable, \Countable
 
 		foreach ($inputs as $key => $input)
 		{
-			$return[$key] = $input->getArray();
+			$return[$key] = $input->toArray();
 		}
 
 		return $return;

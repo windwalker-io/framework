@@ -8,18 +8,18 @@
 
 namespace Windwalker\Middleware\Chain;
 
-use Psr\Http\Message\RequestInterface as Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Windwalker\Middleware\MiddlewareInterface;
 use Windwalker\Middleware\Psr7Middleware;
-use Windwalker\Middleware\Psr7MiddlewareInterface;
+use Windwalker\Middleware\Psr7InvokableInterface;
 
 /**
  * The Psr7ChainBuilder class.
  *
  * @since  {DEPLOY_VERSION}
  */
-class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
+class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
 {
 	/**
 	 * Add a middleware into chain.
@@ -34,12 +34,24 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
 	 */
 	public function add($middleware)
 	{
-		if (!$middleware instanceof Psr7MiddlewareInterface)
+		return parent::add($middleware);
+	}
+
+	/**
+	 * marshalMiddleware
+	 *
+	 * @param   mixed $middleware
+	 *
+	 * @return  MiddlewareInterface
+	 */
+	protected function marshalMiddleware($middleware)
+	{
+		if (!$middleware instanceof Psr7InvokableInterface)
 		{
 			$middleware = new Psr7Middleware($middleware);
 		}
 
-		return parent::add($middleware);
+		return parent::marshalMiddleware($middleware);
 	}
 
 	/**
@@ -53,13 +65,33 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
 	 */
 	public function __invoke(Request $request, Response $response, $next = null)
 	{
+		if ($this->getEndMiddleware())
+		{
+			$end = $this->getEndMiddleware();
+
+			if (count($this->stack))
+			{
+				$this->stack->bottom()->setNext($end);
+			}
+
+			$this->stack->unshift($end);
+		}
+
 		if (!count($this->stack))
 		{
 			return null;
 		}
 
 		// Start call chaining.
-		return $this->stack->top()->execute($request, $response);
+		$result = $this->stack->top()->execute($request, $response);
+
+		// Remove end middleware so we can re-use this chain.
+		if ($this->getEndMiddleware())
+		{
+			$this->stack->shift();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -79,13 +111,18 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7MiddlewareInterface
 	/**
 	 * getEndMiddleware
 	 *
-	 * @return  Psr7MiddlewareInterface|callable
+	 * @return  Psr7InvokableInterface|callable
 	 */
 	protected function getEndMiddleware()
 	{
-		return new Psr7Middleware(function ($request, $response)
+		if (!$this->endMiddleware)
 		{
-			return $response;
-		});
+			$this->endMiddleware = new Psr7Middleware(function ($request, $response)
+			{
+				return $response;
+			});
+		}
+
+		return $this->endMiddleware;
 	}
 }

@@ -9,7 +9,6 @@
 namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\HtmlElement;
-use Windwalker\Form\Field\AbstractField;
 
 /**
  * The SpacerField class.

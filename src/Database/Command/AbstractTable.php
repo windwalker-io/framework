@@ -9,7 +9,6 @@
 namespace Windwalker\Database\Command;
 
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
-use Windwalker\Database\Driver\DatabaseAwareTrait;
 use Windwalker\Database\Schema\Column;
 use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Schema;

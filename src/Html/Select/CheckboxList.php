@@ -8,8 +8,6 @@
 
 namespace Windwalker\Html\Select;
 
-use Windwalker\Dom\HtmlElement;
-use Windwalker\Dom\HtmlElements;
 use Windwalker\Html\Option;
 
 /**
@@ -31,7 +29,7 @@ class CheckboxList extends AbstractInputList
 	 *
 	 * @return  void
 	 */
-	protected function prepareOptions()
+	public function prepareOptions()
 	{
 		parent::prepareOptions();
 

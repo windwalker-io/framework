@@ -141,12 +141,14 @@ class Edge
 
 		$__data = array_merge($this->getGlobals(true), $__data);
 
-		foreach ($__data as $key => $value)
+		foreach ($__data as $__key => $__value)
 		{
-			$$key = $value;
+			$$__key = $__value;
 		}
 
 		unset($__data);
+		unset($__value);
+		unset($__key);
 
 		ob_start();
 
@@ -159,7 +161,7 @@ class Edge
 			eval(' ?>' . $this->cache->load($__path) . '<?php ');
 		}
 
-		$result = ob_get_clean();
+		$result = ltrim(ob_get_clean());
 
 		$this->decrementRender();
 
@@ -191,7 +193,7 @@ class Edge
 	 */
 	public function escape($string)
 	{
-		return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+		return htmlspecialchars((string) $string, ENT_COMPAT, 'UTF-8');
 	}
 
 	/**

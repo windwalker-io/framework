@@ -8,9 +8,6 @@
 
 namespace Windwalker\Cache\Storage;
 
-use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Item\CacheItemInterface;
-
 /**
  * Filesystem cache driver.
  *

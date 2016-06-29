@@ -78,7 +78,7 @@ class AutoExpiredFlashBag extends FlashBag
 	{
 		$all = $this->all();
 
-		$this->clean();
+		$this->clear();
 
 		return $all;
 	}
@@ -98,7 +98,7 @@ class AutoExpiredFlashBag extends FlashBag
 	 *
 	 * @return  $this
 	 */
-	public function clean()
+	public function clear()
 	{
 		$this->data['last'] = array();
 

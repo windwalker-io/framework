@@ -191,14 +191,17 @@ class Dispatcher implements DispatcherInterface
 	 */
 	public function addListener($listener, $priorities = array())
 	{
-		if (!is_object($listener))
-		{
-			throw new \InvalidArgumentException('The given listener is not an object or a Closure.');
-		}
-
 		// We deal with a callable.
 		if (is_callable($listener))
 		{
+			if (is_string($listener) || is_array($listener))
+			{
+				$listener = function (EventInterface $event) use ($listener)
+				{
+					return call_user_func($listener, $event);
+				};
+			}
+
 			if (empty($priorities))
 			{
 				throw new \InvalidArgumentException('No event name(s) and priority specified for the Closure listener.');

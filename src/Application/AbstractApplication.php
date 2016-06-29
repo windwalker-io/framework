@@ -11,7 +11,6 @@ namespace Windwalker\Application;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Windwalker\IO\Input;
 use Windwalker\Registry\Registry;
 
 /**
@@ -48,7 +47,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 */
 	public function __construct(Registry $config = null)
 	{
-		$this->config = $config instanceof Registry ? $config : new Registry;
+		$this->config = $config instanceof Registry ? $config : new Registry($config);
 
 		$this->init();
 	}
