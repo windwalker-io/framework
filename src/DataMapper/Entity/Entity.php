@@ -176,13 +176,14 @@ class Entity extends Data
 	/**
 	 * Get an iterator object.
 	 *
-	 * @return  \ArrayIterator
+	 * @param bool $all
 	 *
+	 * @return \ArrayIterator
 	 * @since   2.0
 	 */
-	public function getIterator()
+	public function getIterator($all = false)
 	{
-		return new \ArrayIterator($this->dump(true));
+		return new \ArrayIterator($this->dump($all));
 	}
 
 	/**
