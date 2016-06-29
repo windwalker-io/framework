@@ -35,7 +35,7 @@ interface PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array());
+	public function bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array());
 
 	/**
 	 * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then that item is

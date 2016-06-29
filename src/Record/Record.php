@@ -121,17 +121,7 @@ class Record extends Entity
 
 		if (!$this->keys)
 		{
-			// Set the key to be an array.
-			if (is_string($keys))
-			{
-				$keys = array($keys);
-			}
-			elseif (is_object($keys))
-			{
-				$keys = (array) $keys;
-			}
-
-			$this->keys = $keys;
+			$this->keys = (array) $keys;
 		}
 
 		if ($this->autoIncrement === null)

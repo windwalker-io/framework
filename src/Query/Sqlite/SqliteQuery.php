@@ -60,7 +60,7 @@ class SqliteQuery extends Query
 	 *
 	 * @since   2.0
 	 */
-	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
+	public function bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
 	{
 		// Case 1: Empty Key (reset $bounded array)
 		if (empty($key))

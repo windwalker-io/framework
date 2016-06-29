@@ -21,6 +21,15 @@ interface QueryInterface
 	public function __toString();
 
 	/**
+	 * Get clause  value.
+	 *
+	 * @param   string  $clause  Get query clause.
+	 *
+	 * @return  QueryElement|mixed
+	 */
+	public function get($clause);
+
+	/**
 	 * Add a single column, or array of columns to the CALL clause of the query.
 	 *
 	 * Note that you must not mix insert, update, delete and select method calls when building a query.
@@ -165,13 +174,35 @@ interface QueryInterface
 	 * $query->group('id')->having('COUNT(id) > 5');
 	 *
 	 * @param   mixed   $conditions  A string or array of columns.
-	 * @param   string  $glue        The glue by which to join the conditions. Defaults to AND.
+	 * @param   mixed  ...$args     Support more arguments to format query.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function having($conditions, $glue = 'AND');
+	public function having($conditions);
+
+	/**
+	 * Add a single condition, or an array of conditions to the HAVING clause and wrap with OR elements.
+	 *
+	 * Usage:
+	 * $query->orHaving(array('a < 5', 'b > 6'));
+	 * $query->orHaving('a < 5', 'b > 6');
+	 * $query->orHaving(function ($query)
+	 * {
+	 *     $query->having('a < 5')->having('b > 6');
+	 * });
+	 *
+	 * Result:
+	 * HAVING ... AND (a < 5 OR b > 6)
+	 *
+	 * @param   mixed|callable   $conditions  A string, array of where conditions or callback to support logic.
+	 *
+	 * @return static  Returns this object to allow chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function orHaving($conditions);
 
 	/**
 	 * Add an INNER JOIN clause to the query.
@@ -213,15 +244,15 @@ interface QueryInterface
 	 * Usage:
 	 * $query->join('INNER', 'b ON b.id = a.id);
 	 *
-	 * @param   string  $type        The type of join. This string is prepended to the JOIN keyword.
-	 * @param   string  $table       The table name with alias.
-	 * @param   string  $conditions  A string or array of conditions.
+	 * @param   string        $type        The type of join. This string is prepended to the JOIN keyword.
+	 * @param   string        $table       The table name with alias.
+	 * @param   string|array  $conditions  A string or array of conditions.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function join($type, $table, $conditions);
+	public function join($type, $table, $conditions = array());
 
 	/**
 	 * Add a LEFT JOIN clause to the query.
@@ -451,15 +482,36 @@ interface QueryInterface
 	 * $query->where('a = 1')->where('b = 2');
 	 * $query->where(array('a = 1', 'b = 2'));
 	 *
-	 * @param   mixed   $conditions  A string or array of where conditions.
-	 * @param   string  $glue        The glue by which to join the conditions. Defaults to AND.
-	 *                               Note that the glue is set on first use and cannot be changed.
+	 * @param   mixed  $conditions  A string or array of where conditions.
+	 * @param   mixed  ...$args     Support more arguments to format query.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function where($conditions, $glue = 'AND');
+	public function where($conditions);
+
+	/**
+	 * Add a single condition, or an array of conditions to the WHERE clause and wrap with OR elements.
+	 *
+	 * Usage:
+	 * $query->orWhere(array('a < 5', 'b > 6'));
+	 * $query->orWhere('a < 5', 'b > 6');
+	 * $query->orWhere(function ($query)
+	 * {
+	 *     $query->where('a < 5')->where('b > 6');
+	 * });
+	 *
+	 * Result:
+	 * WHERE ... AND (a < 5 OR b > 6)
+	 *
+	 * @param   mixed|callable   $conditions  A string, array of where conditions or callback to support logic.
+	 *
+	 * @return static  Returns this object to allow chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function orWhere($conditions);
 
 	/**
 	 * Add a query to UNION with the current query.
@@ -553,6 +605,7 @@ interface QueryInterface
 	 * The argument index used for unspecified tokens is incremented only when used.
 	 *
 	 * @param   string  $format  The formatting string.
+	 * @param   mixed   $_       More arguments to format. [optional]
 	 *
 	 * @return  string  Returns a string produced according to the formatting string.
 	 *
@@ -560,4 +613,3 @@ interface QueryInterface
 	 */
 	public function format($format);
 }
-

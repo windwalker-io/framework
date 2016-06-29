@@ -34,11 +34,6 @@ abstract class DatabaseTest extends AbstractDatabaseTestCase
 	public static function setUpBeforeClass()
 	{
 		parent::setUpBeforeClass();
-
-		if (static::$dbo)
-		{
-			AbstractDatabaseAdapter::setInstance(new WindwalkerAdapter(static::$dbo));
-		}
 	}
 
 	/**

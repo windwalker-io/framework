@@ -424,6 +424,18 @@ class Query implements QueryInterface, PreparableInterface
 	}
 
 	/**
+	 * Get clause  value.
+	 *
+	 * @param   string  $clause  Get query clause.
+	 *
+	 * @return  QueryElement|mixed
+	 */
+	public function get($clause)
+	{
+		return isset($this->$clause) ? $this->$clause : null;
+	}
+
+	/**
 	 * Magic function to get protected variable value
 	 *
 	 * @param   string  $name  The name of the variable.
@@ -434,7 +446,7 @@ class Query implements QueryInterface, PreparableInterface
 	 */
 	public function __get($name)
 	{
-		return isset($this->$name) ? $this->$name : null;
+		return $this->get($name);
 	}
 
 	/**
@@ -915,22 +927,76 @@ class Query implements QueryInterface, PreparableInterface
 	 * $query->group('id')->having('COUNT(id) > 5');
 	 *
 	 * @param   mixed   $conditions  A string or array of columns.
-	 * @param   string  $glue        The glue by which to join the conditions. Defaults to AND.
+	 * @param   mixed  ...$args     Support more arguments to format query.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function having($conditions, $glue = 'AND')
+	public function having($conditions)
 	{
 		if (is_null($this->having))
 		{
-			$glue = strtoupper($glue);
-			$this->having = $this->element('HAVING', $conditions, " $glue ");
+			$this->having = $this->element('HAVING', array(), " AND ");
 		}
-		else
+
+		$args = func_get_args();
+
+		if (!is_array($conditions) && count($args) > 1)
 		{
-			$this->having->append($conditions);
+			$conditions = call_user_func_array(array($this, 'format'), $args);
+		}
+
+		$this->having->append($conditions);
+
+		return $this;
+	}
+
+	/**
+	 * Add a single condition, or an array of conditions to the HAVING clause and wrap with OR elements.
+	 *
+	 * Usage:
+	 * $query->orHaving(array('a < 5', 'b > 6'));
+	 * $query->orHaving('a < 5', 'b > 6');
+	 * $query->orHaving(function ($query)
+	 * {
+	 *     $query->having('a < 5')->having('b > 6');
+	 * });
+	 *
+	 * Result:
+	 * HAVING ... AND (a < 5 OR b > 6)
+	 *
+	 * @param   mixed|callable   $conditions  A string, array of where conditions or callback to support logic.
+	 *
+	 * @return static  Returns this object to allow chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function orHaving($conditions)
+	{
+		if (is_string($conditions))
+		{
+			$conditions = (array) $conditions;
+		}
+
+		if (is_array($conditions))
+		{
+			$args = func_get_args();
+			array_shift($args);
+
+			$conditions = array_merge($conditions, $args);
+
+			$this->having((string) new QueryElement('()', $conditions, ' OR '));
+		}
+		elseif (is_callable($conditions))
+		{
+			$query = new static($this->connection);
+
+			$query->having = new QueryElement('()', array(), ' OR ');
+
+			call_user_func($conditions, $query);
+
+			$this->having((string) $query->having);
 		}
 
 		return $this;
@@ -986,11 +1052,11 @@ class Query implements QueryInterface, PreparableInterface
 	 * Add a JOIN clause to the query.
 	 *
 	 * Usage:
-	 * $query->join('INNER', 'b ON b.id = a.id);
+	 * $query->join('INNER', 'table AS b', 'b.id = a.id');
 	 *
-	 * @param   string  $type        The type of join. This string is prepended to the JOIN keyword.
-	 * @param   string  $table       The table name with alias.
-	 * @param   array   $conditions  A string or array of conditions.
+	 * @param   string        $type        The type of join. This string is prepended to the JOIN keyword.
+	 * @param   string        $table       The table name with alias.
+	 * @param   string|array  $conditions  A string or array of conditions.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
@@ -1477,26 +1543,79 @@ class Query implements QueryInterface, PreparableInterface
 	 * Usage:
 	 * $query->where('a = 1')->where('b = 2');
 	 * $query->where(array('a = 1', 'b = 2'));
+	 * $query->where('%n = %q', 'a', 'b');
 	 *
 	 * @param   mixed   $conditions  A string or array of where conditions.
-	 * @param   string  $glue        The glue by which to join the conditions. Defaults to AND.
-	 *                               Note that the glue is set on first use and cannot be changed.
+	 * @param   mixed  ...$args     Support more arguments to format query.
 	 *
 	 * @return static  Returns this object to allow chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function where($conditions, $glue = 'AND')
+	public function where($conditions)
 	{
 		if (is_null($this->where))
 		{
-			$glue = strtoupper($glue);
-
-			$this->where = $this->element('WHERE', $conditions, " $glue ");
+			$this->where = $this->element('WHERE', array(), ' AND ');
 		}
-		else
+
+		$args = func_get_args();
+
+		if (!is_array($conditions) && count($args) > 1)
 		{
-			$this->where->append($conditions);
+			$conditions = call_user_func_array(array($this, 'format'), $args);
+		}
+
+		$this->where->append($conditions);
+
+		return $this;
+	}
+
+	/**
+	 * Add a single condition, or an array of conditions to the WHERE clause and wrap with OR elements.
+	 *
+	 * Usage:
+	 * $query->orWhere(array('a < 5', 'b > 6'));
+	 * $query->orWhere('a < 5', 'b > 6');
+	 * $query->orWhere(function ($query)
+	 * {
+	 *     $query->where('a < 5')->where('b > 6');
+	 * });
+	 *
+	 * Result:
+	 * WHERE ... AND (a < 5 OR b > 6)
+	 *
+	 * @param   mixed|callable   $conditions  A string, array of where conditions or callback to support logic.
+	 *
+	 * @return static  Returns this object to allow chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function orWhere($conditions)
+	{
+		if (is_string($conditions))
+		{
+			$conditions = (array) $conditions;
+		}
+
+		if (is_array($conditions))
+		{
+			$args = func_get_args();
+			array_shift($args);
+
+			$conditions = array_merge($conditions, $args);
+
+			$this->where(new QueryElement('()', $conditions, ' OR '));
+		}
+		elseif (is_callable($conditions))
+		{
+			$query = new static($this->connection);
+
+			$query->where = new QueryElement('()', array(), ' OR ');
+
+			call_user_func($conditions, $query);
+
+			$this->where((string) $query->where);
 		}
 
 		return $this;
@@ -1910,7 +2029,7 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
+	public function bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
 	{
 		// Case 1: Empty Key (reset $bounded array)
 		if (empty($key))
@@ -1933,7 +2052,7 @@ class Query implements QueryInterface, PreparableInterface
 
 		$obj = new \stdClass;
 
-		$obj->value    = &$value;
+		$obj->value    = $value;
 		$obj->dataType = $dataType;
 		$obj->length   = $length;
 		$obj->driverOptions = $driverOptions;

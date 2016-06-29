@@ -982,7 +982,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		$innerListener = array($this, $event->getName());
 
-		if (!$event->isStopped() && is_callable($innerListener))
+		if (!$event->isStopped() && method_exists($this, $event->getName()))
 		{
 			call_user_func($innerListener, $event);
 		}

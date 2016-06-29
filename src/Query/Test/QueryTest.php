@@ -414,6 +414,52 @@ class QueryTest extends AbstractQueryTestCase
 	}
 
 	/**
+	 * testOrWhere
+	 *
+	 * @return  void
+	 */
+	public function testOrHaving()
+	{
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->having('a = b')
+			->orHaving(array('c = d', 'e = f', 'g = h'))
+			->order('id');
+
+		$sql = 'SELECT * FROM foo HAVING a = b AND (c = d OR e = f OR g = h) ORDER BY id';
+
+		$this->assertEquals($this->format($sql), $this->format($query));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->having('a = b')
+			->orHaving('z = x', 't = u')
+			->order('id');
+
+		$sql = 'SELECT * FROM foo HAVING a = b AND (z = x OR t = u)  ORDER BY id';
+
+		$this->assertEquals($this->format($sql), $this->format($query));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->having('a = b')
+			->orHaving(function (Query $query)
+			{
+				$query->having('c = d')
+					->having('e = f')
+					->having('g = h');
+			})
+			->order('id');
+
+		$sql = 'SELECT * FROM foo HAVING a = b AND (c = d OR e = f OR g = h)  ORDER BY id';
+
+		$this->assertEquals($this->format($sql), $this->format($query));
+	}
+
+	/**
 	 * Method to test innerJoin().
 	 *
 	 * @return void
@@ -1024,6 +1070,52 @@ class QueryTest extends AbstractQueryTestCase
 			->where('flower = "sakura"');
 
 		$this->assertEquals('DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"', trim((string) $query));
+	}
+
+	/**
+	 * testOrWhere
+	 *
+	 * @return  void
+	 */
+	public function testOrWhere()
+	{
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->orWhere(array('c = d', 'e = f', 'g = h'))
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b AND (c = d OR e = f OR g = h) ORDER BY id';
+
+		$this->assertEquals($this->format($sql), $this->format($query));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->orWhere('z = x', 't = u')
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b AND (z = x OR t = u)  ORDER BY id';
+
+		$this->assertEquals($this->format($sql), $this->format($query));
+
+		$query = $this->getQuery()
+			->select('*')
+			->from('foo')
+			->where('a = b')
+			->orWhere(function (Query $query)
+			{
+				$query->where('c = d')
+					->where('e = f')
+					->where('g = h');
+			})
+			->order('id');
+
+		$sql = 'SELECT * FROM foo WHERE a = b AND (c = d OR e = f OR g = h)  ORDER BY id';
+
+		$this->assertEquals($this->format($sql), $this->format($query));
 	}
 
 	/**

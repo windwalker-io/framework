@@ -10,8 +10,10 @@ namespace Windwalker\DataMapper;
 
 use Windwalker\Data\Data;
 use Windwalker\Data\DataSet;
-use Windwalker\DataMapper\Adapter\AbstractDatabaseAdapter;
-use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
+use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Database\Query\QueryHelper;
+use Windwalker\Query\Query;
 
 /**
  * Relation Database Mapper.
@@ -37,14 +39,14 @@ class RelationDataMapper extends DataMapper
 	/**
 	 * getInstance
 	 *
-	 * @param string                   $alias  Table alias.
-	 * @param string                   $table  Table name.
-	 * @param string|array             $pk     Primary key.
-	 * @param DatabaseAdapterInterface $db     Database adapter.
+	 * @param string                 $alias  Table alias.
+	 * @param string                 $table  Table name.
+	 * @param string|array           $pk     Primary key.
+	 * @param AbstractDatabaseDriver $db     Database adapter.
 	 *
 	 * @return  static
 	 */
-	public static function getInstance($alias = null, $table = null, $pk = 'id', DatabaseAdapterInterface $db = null)
+	public static function newInstance($alias = null, $table = null, $pk = 'id', AbstractDatabaseDriver $db = null)
 	{
 		return new static($alias, $table, $pk, $db);
 	}
@@ -52,14 +54,14 @@ class RelationDataMapper extends DataMapper
 	/**
 	 * Constructor.
 	 *
-	 * @param string                   $alias  Table alias.
-	 * @param string                   $table  Table name.
-	 * @param string|array             $pk     Primary key.
-	 * @param DatabaseAdapterInterface $db     Database adapter.
+	 * @param string                 $alias  Table alias.
+	 * @param string                 $table  Table name.
+	 * @param string|array           $pk     Primary key.
+	 * @param AbstractDatabaseDriver $db     Database adapter.
 	 */
-	public function __construct($alias, $table, $pk = 'id', DatabaseAdapterInterface $db = null)
+	public function __construct($alias, $table, $pk = 'id', AbstractDatabaseDriver $db = null)
 	{
-		$this->db = $db ? : AbstractDatabaseAdapter::getInstance();
+		$this->db = $db ? : DatabaseFactory::getDbo();
 
 		$this->keys = $pk ? : $alias . '.' . $pk;
 
@@ -71,6 +73,39 @@ class RelationDataMapper extends DataMapper
 		}
 
 		$this->init();
+	}
+
+	/**
+	 * getFindQuery
+	 *
+	 * @param   array   $conditions Where conditions, you can use array or Compare object.
+	 * @param   array   $orders     Order sort, can ba string, array or object.
+	 * @param   integer $start      Limit start number.
+	 * @param   integer $limit      Limit rows.
+	 *
+	 * @return  \Windwalker\Query\Query
+	 */
+	protected function getFindQuery(array $conditions, array $orders, $start, $limit)
+	{
+		$query = $this->getQuery();
+		
+		$queryHelper = new QueryHelper($this->db);
+
+		foreach ($this->tables as $tableData)
+		{
+			$queryHelper->addTable($tableData->alias, $tableData->table, $tableData->conditions, $tableData->joinType);
+		}
+
+		$queryHelper->registerQueryTables($query);
+
+		if (!$query->get('select'))
+		{
+			$query->select($queryHelper->getSelectFields());
+		}
+
+		$this->query = $query;
+
+		return parent::getFindQuery($conditions, $orders, $start, $limit);
 	}
 
 	/**
@@ -114,35 +149,6 @@ class RelationDataMapper extends DataMapper
 	public function removeTable($alias)
 	{
 		unset($this->tables[$alias]);
-
-		return $this;
-	}
-
-	/**
-	 * Do find action.
-	 *
-	 * @param array   $conditions Where conditions, you can use array or Compare object.
-	 * @param array   $orders     Order sort, can ba string, array or object.
-	 * @param integer $start      Limit start number.
-	 * @param integer $limit      Limit rows.
-	 *
-	 * @return  mixed Found rows data set.
-	 */
-	protected function doFind(array $conditions, array $orders, $start, $limit)
-	{
-		return $this->db->find($this->tables, $this->selectFields, $conditions, $orders, $start, $limit, $this->options);
-	}
-
-	/**
-	 * group
-	 *
-	 * @param  string $condition
-	 *
-	 * @return  static
-	 */
-	public function group($condition)
-	{
-		$this->options['group'] = $condition;
 
 		return $this;
 	}

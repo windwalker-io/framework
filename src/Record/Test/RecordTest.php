@@ -39,8 +39,6 @@ class RecordTest extends AbstractMysqlTestCase
 	{
 		parent::setUp();
 
-		WindwalkerAdapter::setInstance(new WindwalkerAdapter($this->db));
-
 		$this->instance = new Record('articles');
 	}
 

@@ -8,14 +8,32 @@
 
 namespace Windwalker\DataMapper;
 
-use Windwalker\Data\DataSet;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
 use Windwalker\DataMapper\Entity\Entity;
+use Windwalker\Query\Query;
+use Windwalker\Query\QueryInterface;
 
 /**
  * Main Database Mapper class.
+ *
+ * @see  QueryInterface
+ * @see  Query
+ *
+ * @method  $this  call($columns)
+ * @method  $this  group($columns)
+ * @method  $this  having($conditions, ...$args)
+ * @method  $this  innerJoin($table, $condition = array())
+ * @method  $this  join($type, $table, $conditions)
+ * @method  $this  leftJoin($table, $condition = array())
+ * @method  $this  order($columns)
+ * @method  $this  limit($limit = null, $offset = null)
+ * @method  $this  outerJoin($table, $condition = array())
+ * @method  $this  rightJoin($table, $condition = array())
+ * @method  $this  select($columns)
+ * @method  $this  where($conditions, ...$args)
+ * @method  $this  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
  */
 class DataMapper extends AbstractDataMapper
 {
@@ -25,6 +43,13 @@ class DataMapper extends AbstractDataMapper
 	 * @var AbstractDatabaseDriver
 	 */
 	protected $db = null;
+
+	/**
+	 * Property query.
+	 *
+	 * @var  QueryInterface
+	 */
+	protected $query;
 
 	/**
 	 * Constructor.
@@ -52,7 +77,29 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
-		$query = $this->db->getQuery(true);
+		$query = $this->getFindQuery($conditions, $orders, $start, $limit);
+
+		$result = $this->db->setQuery($query)->loadAll();
+
+		// Reset query
+		$this->query = null;
+
+		return $result;
+	}
+
+	/**
+	 * getFindQuery
+	 *
+	 * @param   array    $conditions  Where conditions, you can use array or Compare object.
+	 * @param   array    $orders      Order sort, can ba string, array or object.
+	 * @param   integer  $start       Limit start number.
+	 * @param   integer  $limit       Limit rows.
+	 *
+	 * @return  \Windwalker\Query\Query
+	 */
+	protected function getFindQuery(array $conditions, array $orders, $start, $limit)
+	{
+		$query = $this->getQuery();
 
 		// Conditions.
 		QueryHelper::buildWheres($query, $conditions);
@@ -63,23 +110,20 @@ class DataMapper extends AbstractDataMapper
 			$query->order($order);
 		}
 
-		$query->from($this->table);
+		if ($this->table !== null)
+		{
+			$query->from($this->table);
+		}
 
 		// Build query
-		$query->select($this->selectFields ? : '*')
-			->limit($limit, $start);
+		$query->limit($limit, $start);
 
-		if (isset($options['group']))
+		if (!$query->get('select'))
 		{
-			$query->group($options['group']);
+			$query->select('*');
 		}
 
-		if (isset($options['having']))
-		{
-			$query->having($options['having']);
-		}
-
-		return $this->db->setQuery($query)->loadAll();
+		return $query;
 	}
 
 	/**
@@ -393,5 +437,69 @@ class DataMapper extends AbstractDataMapper
 		}
 
 		return $entity;
+	}
+
+	/**
+	 * Method to get property Query
+	 *
+	 * @param bool $new
+	 *
+	 * @return QueryInterface
+	 */
+	public function getQuery($new = false)
+	{
+		if (!$this->query || $new)
+		{
+			$this->query = $this->db->getQuery(true);
+		}
+
+		return $this->query;
+	}
+
+	/**
+	 * Method to set property query
+	 *
+	 * @param   QueryInterface $query
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setQuery(QueryInterface $query)
+	{
+		$this->query = $query;
+
+		return $this;
+	}
+
+	/**
+	 * __call
+	 *
+	 * @param   string  $name
+	 * @param   array   $args
+	 *
+	 * @return  mixed
+	 */
+	public function __call($name, $args)
+	{
+		$allowMethods = array(
+			'call',
+			'group',
+			'having',
+			'order',
+			'limit',
+			'select',
+			'where',
+			'bind'
+		);
+
+		if (in_array($name, $allowMethods))
+		{
+			$query = $this->getQuery();
+
+			call_user_func_array(array($query, $name), $args);
+
+			return $this;
+		}
+
+		throw new \BadMethodCallException(sprintf('Method %s not exists in %s', $name, get_called_class()));
 	}
 }

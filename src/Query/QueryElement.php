@@ -135,4 +135,28 @@ class QueryElement
 			}
 		}
 	}
+
+	/**
+	 * Method to get property Glue
+	 *
+	 * @return  string
+	 */
+	public function getGlue()
+	{
+		return $this->glue;
+	}
+
+	/**
+	 * Method to set property glue
+	 *
+	 * @param   string $glue
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setGlue($glue)
+	{
+		$this->glue = $glue;
+
+		return $this;
+	}
 }

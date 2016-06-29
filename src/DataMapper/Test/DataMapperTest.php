@@ -76,7 +76,7 @@ class DataMapperTest extends DatabaseTest
 
 		$datamapper = new DataMapper('ww_flower');
 
-		$datamapper->setSelectFields(array('id', 'state'));
+		$datamapper->select(array('id', 'state'));
 
 		$dataset = $datamapper->find(array('state' => 1), 'ordering DESC', 2, 3);
 

@@ -13,6 +13,7 @@ use Windwalker\Database\DatabaseFactory;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
+use Windwalker\Query\QueryInterface;
 
 /**
  * Class QueryHelper
@@ -68,7 +69,7 @@ class QueryHelper
 
 		if ($condition)
 		{
-			$condition = (string) new QueryElement('ON', $condition, ' AND ');
+			$condition = (string) new QueryElement('', $condition, ' AND ');
 		}
 		else
 		{
@@ -150,11 +151,11 @@ class QueryHelper
 	/**
 	 * registerQueryTables
 	 *
-	 * @param Query $query
+	 * @param QueryInterface $query
 	 *
-	 * @return  Query
+	 * @return  QueryInterface
 	 */
-	public function registerQueryTables(Query $query)
+	public function registerQueryTables(QueryInterface $query)
 	{
 		foreach ($this->tables as $alias => $table)
 		{
@@ -166,7 +167,8 @@ class QueryHelper
 			{
 				$query->join(
 					$table['join'],
-					$query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias) . ' ' . $table['condition']
+					$query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias),
+					$table['condition']
 				);
 			}
 		}
@@ -177,13 +179,13 @@ class QueryHelper
 	/**
 	 * buildConditions
 	 *
-	 * @param Query $query
-	 * @param array $conditions
-	 * @param bool  $allowNulls
+	 * @param QueryInterface $query
+	 * @param array          $conditions
+	 * @param bool           $allowNulls
 	 *
 	 * @return Query
 	 */
-	public static function buildWheres(Query $query, array $conditions, $allowNulls = true)
+	public static function buildWheres(QueryInterface $query, array $conditions, $allowNulls = true)
 	{
 		foreach ($conditions as $key => $value)
 		{
