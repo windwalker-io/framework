@@ -164,7 +164,7 @@ class PostgresqlTable extends AbstractTable
 	protected function prepareColumn(Column $column)
 	{
 		/** @var PostgresqlType $typeMapper */
-		$typeMapper = $this->getTypeMapper();
+		$typeMapper = $this->getDataType();
 
 		$type = $typeMapper::getType($column->getType());
 

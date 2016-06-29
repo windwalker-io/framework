@@ -47,9 +47,9 @@ abstract class AbstractWriter
 	/**
 	 * Inserts a row into a table based on an object's properties.
 	 *
-	 * @param   string $table  The name of the database table to insert into.
-	 * @param   array  &$data  A reference to an object whose public properties match the table fields.
-	 * @param   string $key    The name of the primary key. If provided the object property is updated.
+	 * @param   string        $table  The name of the database table to insert into.
+	 * @param   array|object  &$data  A reference to an object whose public properties match the table fields.
+	 * @param   string        $key    The name of the primary key. If provided the object property is updated.
 	 *
 	 * @throws \InvalidArgumentException
 	 * @return  static
@@ -137,10 +137,10 @@ abstract class AbstractWriter
 	/**
 	 * Updates a row in a table based on an object's properties.
 	 *
-	 * @param   string  $table       The name of the database table to update.
-	 * @param   array   $data        A reference to an object whose public properties match the table fields.
-	 * @param   array   $key         The name of the primary key.
-	 * @param   boolean $updateNulls True to update null fields or false to ignore them.
+	 * @param   string         $table       The name of the database table to update.
+	 * @param   array|object   $data        A reference to an object whose public properties match the table fields.
+	 * @param   array          $key         The name of the primary key.
+	 * @param   boolean        $updateNulls True to update null fields or false to ignore them.
 	 *
 	 * @throws \InvalidArgumentException
 	 *
@@ -387,6 +387,28 @@ abstract class AbstractWriter
 
 		$this->execute($query);
 		
+		return true;
+	}
+
+	/**
+	 * delete
+	 *
+	 * @param string $table
+	 * @param array  $conditions
+	 *
+	 * @return  boolean
+	 */
+	public function delete($table, array $conditions = array())
+	{
+		$query = $this->db->getQuery(true);
+
+		// Conditions.
+		QueryHelper::buildWheres($query, $conditions);
+
+		$query->delete($table);
+
+		$this->db->setQuery($query)->execute();
+
 		return true;
 	}
 

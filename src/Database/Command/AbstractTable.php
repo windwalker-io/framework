@@ -517,11 +517,13 @@ abstract class AbstractTable
 	 *
 	 * @return  DataType
 	 */
-	public function getTypeMapper()
+	public function getDataType()
 	{
 		$driver = ucfirst($this->db->getName());
 
-		return sprintf('Windwalker\Database\Driver\%s\%sType', $driver, $driver);
+		$class = sprintf('Windwalker\Database\Driver\%s\%sType', $driver, $driver);
+
+		return new $class;
 	}
 
 	/**
@@ -533,7 +535,7 @@ abstract class AbstractTable
 	 */
 	protected function prepareColumn(Column $column)
 	{
-		$typeMapper = $this->getTypeMapper();
+		$typeMapper = $this->getDataType();
 
 		$type   = $typeMapper::getType($column->getType());
 		$length = $column->getLength() ? : $typeMapper::getLength($type);
@@ -556,7 +558,7 @@ abstract class AbstractTable
 	 */
 	protected function prepareDefaultValue(Column $column)
 	{
-		$typeMapper = $this->getTypeMapper();
+		$typeMapper = $this->getDataType();
 
 		$default = $column->getDefault();
 

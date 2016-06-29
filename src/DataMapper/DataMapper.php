@@ -8,8 +8,10 @@
 
 namespace Windwalker\DataMapper;
 
-use Windwalker\DataMapper\Adapter\AbstractDatabaseAdapter;
-use Windwalker\DataMapper\Adapter\DatabaseAdapterInterface;
+use Windwalker\Data\DataSet;
+use Windwalker\Database\DatabaseFactory;
+use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\Database\Query\QueryHelper;
 use Windwalker\DataMapper\Entity\Entity;
 
 /**
@@ -20,20 +22,20 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * The DB adapter.
 	 *
-	 * @var DatabaseAdapterInterface
+	 * @var AbstractDatabaseDriver
 	 */
 	protected $db = null;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   string                   $table Table name.
-	 * @param   string|array             $keys  Primary key.
-	 * @param   DatabaseAdapterInterface $db    Database adapter.
+	 * @param   string                 $table Table name.
+	 * @param   string|array           $keys  Primary key.
+	 * @param   AbstractDatabaseDriver $db    Database adapter.
 	 */
-	public function __construct($table = null, $keys = 'id', DatabaseAdapterInterface $db = null)
+	public function __construct($table = null, $keys = 'id', AbstractDatabaseDriver $db = null)
 	{
-		$this->db = $db ? : AbstractDatabaseAdapter::getInstance();
+		$this->db = $db ? : DatabaseFactory::getDbo();
 
 		parent::__construct($table, $keys);
 	}
@@ -50,20 +52,49 @@ class DataMapper extends AbstractDataMapper
 	 */
 	protected function doFind(array $conditions, array $orders, $start, $limit)
 	{
-		return $this->db->find($this->table, $this->selectFields, $conditions, $orders, $start, $limit);
+		$query = $this->db->getQuery(true);
+
+		// Conditions.
+		QueryHelper::buildWheres($query, $conditions);
+
+		// Loop ordering
+		foreach ($orders as $order)
+		{
+			$query->order($order);
+		}
+
+		$query->from($this->table);
+
+		// Build query
+		$query->select($this->selectFields ? : '*')
+			->limit($limit, $start);
+
+		if (isset($options['group']))
+		{
+			$query->group($options['group']);
+		}
+
+		if (isset($options['having']))
+		{
+			$query->having($options['having']);
+		}
+
+		return $this->db->setQuery($query)->loadAll();
 	}
 
 	/**
 	 * Do create action.
 	 *
-	 * @param mixed $dataset The data set contains data we want to store.
+	 * @param  mixed $dataset The data set contains data we want to store.
 	 *
+	 * @return mixed
+	 * 
 	 * @throws \Exception
-	 * @return  mixed  Data set data with inserted id.
+	 * @throws \Throwable
 	 */
 	protected function doCreate($dataset)
 	{
-		!$this->useTransaction ? : $this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->start();
 
 		try
 		{
@@ -80,7 +111,7 @@ class DataMapper extends AbstractDataMapper
 
 				$pk = $this->getKeyName();
 
-				$this->db->create($this->table, $entity, $pk);
+				$this->db->getWriter()->insertOne($this->table, $entity, $pk);
 
 				$data->$pk = $entity->$pk;
 
@@ -89,12 +120,18 @@ class DataMapper extends AbstractDataMapper
 		}
 		catch (\Exception $e)
 		{
-			!$this->useTransaction ? : $this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
+
+			throw $e;
+		}
+		catch (\Throwable $e)
+		{
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
 
 			throw $e;
 		}
 
-		!$this->useTransaction ? : $this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->commit();
 
 		return $dataset;
 	}
@@ -102,17 +139,19 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Do update action.
 	 *
-	 * @param   mixed  $dataset     Data set contain data we want to update.
-	 * @param   array  $condFields  The where condition tell us record exists or not, if not set,
+	 * @param   mixed $dataset      Data set contain data we want to update.
+	 * @param   array $condFields   The where condition tell us record exists or not, if not set,
 	 *                              will use primary key instead.
 	 * @param   bool  $updateNulls  Update empty fields or not.
 	 *
-	 * @throws  \Exception
-	 * @return  mixed Updated data set.
+	 * @return  mixed
+	 *
+	 * @throws \Exception
+	 * @throws \Throwable
 	 */
 	protected function doUpdate($dataset, array $condFields, $updateNulls = false)
 	{
-		!$this->useTransaction ? : $this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->start();
 
 		try
 		{
@@ -130,19 +169,25 @@ class DataMapper extends AbstractDataMapper
 					$entity = $this->prepareDefaultValue($entity);
 				}
 
-				$this->db->updateOne($this->table, $entity, $condFields, $updateNulls);
+				$this->db->getWriter()->updateOne($this->table, $entity, $condFields, $updateNulls);
 
 				$dataset[$k] = $data;
 			}
 		}
 		catch (\Exception $e)
 		{
-			!$this->useTransaction ? : $this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
+
+			throw $e;
+		}
+		catch (\Throwable $e)
+		{
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
 
 			throw $e;
 		}
 
-		!$this->useTransaction ? : $this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->commit();
 
 		return $dataset;
 	}
@@ -150,28 +195,36 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Do updateAll action.
 	 *
-	 * @param   mixed  $data        The data we want to update to every rows.
-	 * @param   mixed  $conditions  Where conditions, you can use array or Compare object.
+	 * @param   mixed $data       The data we want to update to every rows.
+	 * @param   mixed $conditions Where conditions, you can use array or Compare object.
 	 *
-	 * @throws  \Exception
 	 * @return  boolean
+	 *
+	 * @throws \Exception
+	 * @throws \Throwable
 	 */
 	protected function doUpdateBatch($data, array $conditions)
 	{
-		!$this->useTransaction ? : $this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->start();
 
 		try
 		{
-			$result = $this->db->updateBatch($this->table, $data, $conditions);
+			$result = $this->db->getWriter()->updateBatch($this->table, $data, $conditions);
 		}
 		catch (\Exception $e)
 		{
-			!$this->useTransaction ? : $this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
+
+			throw $e;
+		}
+		catch (\Throwable $e)
+		{
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
 
 			throw $e;
 		}
 
-		!$this->useTransaction ? : $this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->commit();
 
 		return $result;
 	}
@@ -179,36 +232,44 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Do flush action, this method should be override by sub class.
 	 *
-	 * @param mixed $dataset    Data set contain data we want to update.
-	 * @param mixed $conditions Where conditions, you can use array or Compare object.
+	 * @param   mixed $dataset    Data set contain data we want to update.
+	 * @param   mixed $conditions Where conditions, you can use array or Compare object.
 	 *
+	 * @return  mixed
+	 * 
 	 * @throws \Exception
-	 * @return  mixed Updated data set.
+	 * @throws \Throwable
 	 */
 	protected function doFlush($dataset, array $conditions)
 	{
-		!$this->useTransaction ? : $this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->start();
 
 		try
 		{
 			if (!$this->delete($conditions))
 			{
-				throw new \Exception(sprintf('Delete row fail when updating relations table: %s', $this->table));
+				throw new \RuntimeException(sprintf('Delete row fail when updating relations table: %s', $this->table));
 			}
 
 			if (!$this->create($dataset))
 			{
-				throw new \Exception(sprintf('Insert row fail when updating relations table: %s', $this->table));
+				throw new \RuntimeException(sprintf('Insert row fail when updating relations table: %s', $this->table));
 			}
 		}
 		catch (\Exception $e)
 		{
-			!$this->useTransaction ? : $this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
+
+			throw $e;
+		}
+		catch (\Throwable $e)
+		{
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
 
 			throw $e;
 		}
 
-		!$this->useTransaction ? : $this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->commit();
 
 		return $dataset;
 	}
@@ -216,27 +277,35 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Do delete action, this method should be override by sub class.
 	 *
-	 * @param mixed $conditions Where conditions, you can use array or Compare object.
+	 * @param   mixed $conditions Where conditions, you can use array or Compare object.
+	 *
+	 * @return  boolean
 	 *
 	 * @throws \Exception
-	 * @return  boolean Will be always true.
+	 * @throws \Throwable
 	 */
 	protected function doDelete(array $conditions)
 	{
-		!$this->useTransaction ? : $this->db->transactionStart(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->start();
 
 		try
 		{
-			$result = $this->db->delete($this->table, $conditions);
+			$result = $this->db->getWriter()->delete($this->table, $conditions);
 		}
 		catch (\Exception $e)
 		{
-			!$this->useTransaction ? : $this->db->transactionRollback(true);
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
+
+			throw $e;
+		}
+		catch (\Throwable $e)
+		{
+			!$this->useTransaction ? : $this->db->getTransaction(true)->rollback();
 
 			throw $e;
 		}
 
-		!$this->useTransaction ? : $this->db->transactionCommit(true);
+		!$this->useTransaction ? : $this->db->getTransaction(true)->commit();
 
 		return $result;
 	}
@@ -244,7 +313,7 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Get DB adapter.
 	 *
-	 * @return  DatabaseAdapterInterface Db adapter.
+	 * @return  AbstractDatabaseDriver Db adapter.
 	 */
 	public function getDb()
 	{
@@ -254,11 +323,11 @@ class DataMapper extends AbstractDataMapper
 	/**
 	 * Set db adapter.
 	 *
-	 * @param   DatabaseAdapterInterface $db Db adapter.
+	 * @param   AbstractDatabaseDriver $db Db adapter.
 	 *
 	 * @return  DataMapper  Return self to support chaining.
 	 */
-	public function setDb($db)
+	public function setDb(AbstractDatabaseDriver $db)
 	{
 		$this->db = $db;
 
@@ -281,7 +350,7 @@ class DataMapper extends AbstractDataMapper
 
 		$table = $table ? : $this->table;
 
-		$fields = $this->db->getColumnDetails($table);
+		$fields = $this->db->getTable($table)->getColumnDetails();
 
 		foreach ($fields as $field)
 		{
@@ -293,7 +362,7 @@ class DataMapper extends AbstractDataMapper
 				list($type,) = explode('(', $type, 2);
 				$type = strtolower($type);
 
-				$field->Default = $this->db->getDataTypeDefaultValue($type);
+				$field->Default = $this->db->getTable($table)->getDataType()->getDefaultValue($type);
 			}
 
 			$field = (object) $field;

@@ -503,6 +503,6 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testGetAndSetDb()
 	{
-		$this->assertInstanceOf('Windwalker\\DataMapper\\Adapter\\WindwalkerAdapter', $this->instance->getDb());
+		$this->assertInstanceOf('Windwalker\\Database\\Driver\\AbstractDatabaseDriver', $this->instance->getDb());
 	}
 }
