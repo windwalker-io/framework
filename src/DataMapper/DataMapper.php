@@ -60,7 +60,7 @@ class DataMapper extends AbstractDataMapper
 	 */
 	public function __construct($table = null, $keys = 'id', AbstractDatabaseDriver $db = null)
 	{
-		$this->db = $db ? : DatabaseFactory::getDbo();
+		$this->db = $db ? : DatabaseContainer::getDb();
 
 		parent::__construct($table, $keys);
 	}
