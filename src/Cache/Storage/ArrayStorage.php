@@ -15,7 +15,7 @@ use Windwalker\Cache\Item\CacheItem;
  *
  * @since 2.0
  */
-class RuntimeStorage extends AbstractCacheStorage
+class ArrayStorage extends AbstractCacheStorage
 {
 	/**
 	 * Property storage.

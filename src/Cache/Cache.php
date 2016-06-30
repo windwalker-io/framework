@@ -8,11 +8,11 @@
 
 namespace Windwalker\Cache;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Storage\CacheStorageInterface;
-use Windwalker\Cache\Storage\RuntimeStorage;
+use Windwalker\Cache\Storage\ArrayStorage;
 
 /**
  * Class Cache
@@ -24,7 +24,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * Property storage.
 	 *
-	 * @var  CacheStorageInterface
+	 * @var  CacheItemPoolInterface
 	 */
 	protected $storage = null;
 
@@ -38,12 +38,12 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * Class init.
 	 *
-	 * @param CacheStorageInterface $storage
-	 * @param SerializerInterface   $handler
+	 * @param CacheItemPoolInterface $storage
+	 * @param SerializerInterface    $handler
 	 */
-	public function __construct(CacheStorageInterface $storage = null, SerializerInterface $handler = null)
+	public function __construct(CacheItemPoolInterface $storage = null, SerializerInterface $handler = null)
 	{
-		$this->storage = $storage ?: new RuntimeStorage;
+		$this->storage = $storage ?: new ArrayStorage;
 		$this->handler = $handler ?: new PhpSerializer;
 	}
 
@@ -189,7 +189,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * getStorage
 	 *
-	 * @return  \Windwalker\Cache\Storage\CacheStorageInterface
+	 * @return  CacheItemPoolInterface
 	 */
 	public function getStorage()
 	{
@@ -199,7 +199,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * setStorage
 	 *
-	 * @param   \Windwalker\Cache\Storage\CacheStorageInterface $storage
+	 * @param   CacheItemPoolInterface $storage
 	 *
 	 * @return  Cache  Return self to support chaining.
 	 */
