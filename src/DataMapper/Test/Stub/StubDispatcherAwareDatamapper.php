@@ -27,6 +27,13 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	public $args = array();
 
 	/**
+	 * Property select.
+	 *
+	 * @var  array
+	 */
+	public $select = array();
+
+	/**
 	 * Do find action, this method should be override by sub class.
 	 *
 	 * @param array   $conditions Where conditions, you can use array or Compare object.
@@ -118,5 +125,19 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	public function getFields($table = null)
 	{
 		return array();
+	}
+
+	/**
+	 * select
+	 *
+	 * @param   string|array $column
+	 *
+	 * @return  static
+	 */
+	public function select($column)
+	{
+		array_merge($this->select, (array) $column);
+
+		return $this;
 	}
 }

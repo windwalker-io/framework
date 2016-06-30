@@ -322,7 +322,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			throw new \InvalidArgumentException('Column name should be string.');
 		}
 
-		$dataset = $this->select($column)->find($conditions, $order, $start, $limit);
+		$dataset = $this->find($conditions, $order, $start, $limit);
 
 		$result = array();
 
@@ -764,15 +764,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @return  boolean Will be always true.
 	 */
 	abstract protected function doDelete(array $conditions);
-
-	/**
-	 * select
-	 *
-	 * @param   string|array  $column
-	 *
-	 * @return  static
-	 */
-	abstract public function select($column);
 
 	/**
 	 * Get table fields.
