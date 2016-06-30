@@ -322,13 +322,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			throw new \InvalidArgumentException('Column name should be string.');
 		}
 
-		$bakSelect = $this->selectFields;
-
-		$this->setSelectFields($column);
-
-		$dataset = $this->find($conditions, $order, $start, $limit);
-
-		$this->setSelectFields($bakSelect);
+		$dataset = $this->select($column)->find($conditions, $order, $start, $limit);
 
 		$result = array();
 
@@ -772,6 +766,15 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	abstract protected function doDelete(array $conditions);
 
 	/**
+	 * select
+	 *
+	 * @param   string|array  $column
+	 *
+	 * @return  static
+	 */
+	abstract public function select($column);
+
+	/**
 	 * Get table fields.
 	 *
 	 * @param string $table Table name.
@@ -933,30 +936,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		return $this->useTransaction;
-	}
-
-	/**
-	 * Method to get property SelectFields
-	 *
-	 * @return  array
-	 */
-	public function getSelectFields()
-	{
-		return $this->selectFields;
-	}
-
-	/**
-	 * Method to set property selectFields
-	 *
-	 * @param   array $selectFields
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setSelectFields($selectFields)
-	{
-		$this->selectFields = (array) $selectFields;
-
-		return $this;
 	}
 
 	/**
