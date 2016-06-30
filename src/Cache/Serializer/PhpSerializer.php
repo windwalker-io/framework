@@ -6,14 +6,14 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Cache\DataHandler;
+namespace Windwalker\Cache\Serializer;
 
 /**
- * Class JsonHandler
+ * Class SerializeHandler
  *
  * @since 2.0
  */
-class JsonHandler implements DataHandlerInterface
+class PhpSerializer implements SerializerInterface
 {
 	/**
 	 * Encode data.
@@ -22,9 +22,9 @@ class JsonHandler implements DataHandlerInterface
 	 *
 	 * @return  string
 	 */
-	public function encode($data)
+	public function serialize($data)
 	{
-		return json_encode($data);
+		return serialize($data);
 	}
 
 	/**
@@ -34,9 +34,9 @@ class JsonHandler implements DataHandlerInterface
 	 *
 	 * @return  mixed
 	 */
-	public function decode($data)
+	public function unserialize($data)
 	{
-		return json_decode($data);
+		return unserialize($data);
 	}
 }
 

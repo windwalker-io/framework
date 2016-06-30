@@ -8,8 +8,8 @@
 
 namespace Windwalker\Cache\Storage;
 
+use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Item\CacheItemInterface;
 
 /**
  * StaticRuntime Storage.
@@ -47,11 +47,16 @@ class StaticRuntimeStorage extends AbstractCacheStorage
 	 */
 	public function getItem($key)
 	{
+		if (!$this->exists($key))
+		{
+			return new CacheItem($key);
+		}
+		
 		$item = new CacheItem($key);
 
 		if (isset(static::$store[$key]))
 		{
-			$item->setValue(static::$store[$key]);
+			$item->set(static::$store[$key]);
 		}
 
 		return $item;
@@ -65,10 +70,10 @@ class StaticRuntimeStorage extends AbstractCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function setItem($item, $ttl = null)
+	public function save(CacheItemInterface $item, $ttl = null)
 	{
 		$key = $item->getKey();
-		$value = $item->getValue();
+		$value = $item->get();
 
 		static::$store[$key] = $value;
 
@@ -82,7 +87,7 @@ class StaticRuntimeStorage extends AbstractCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function removeItem($key)
+	public function deleteItem($key)
 	{
 		if (array_key_exists($key, static::$store))
 		{

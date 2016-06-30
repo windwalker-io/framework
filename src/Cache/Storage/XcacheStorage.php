@@ -8,9 +8,8 @@
 
 namespace Windwalker\Cache\Storage;
 
+use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Item\CacheItemInterface;
-
 /**
  * Class XcacheStorage
  *
@@ -59,11 +58,16 @@ class XcacheStorage extends AbstractCacheStorage
 	 */
 	public function getItem($key)
 	{
+		if (!$this->exists($key))
+		{
+			return new CacheItem($key);
+		}
+		
 		$item = new CacheItem($key);
 
 		if ($this->exists($key))
 		{
-			$item->setValue(xcache_get($key));
+			$item->set(xcache_get($key));
 		}
 
 		return $item;
@@ -77,9 +81,9 @@ class XcacheStorage extends AbstractCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function setItem($item, $ttl = null)
+	public function save(CacheItemInterface $item, $ttl = null)
 	{
-		xcache_set($item->getKey(), $item->getValue(), $ttl);
+		xcache_set($item->getKey(), $item->get(), $ttl);
 
 		return $this;
 	}
@@ -91,7 +95,7 @@ class XcacheStorage extends AbstractCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function removeItem($key)
+	public function deleteItem($key)
 	{
 		xcache_unset($key);
 

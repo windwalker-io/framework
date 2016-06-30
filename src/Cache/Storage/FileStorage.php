@@ -8,8 +8,8 @@
 
 namespace Windwalker\Cache\Storage;
 
+use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Item\CacheItemInterface;
 
 /**
  * Filesystem cache driver for the Windwalker Framework.
@@ -157,7 +157,7 @@ class FileStorage extends AbstractCacheStorage
 			$data = substr($data, strlen($this->options['deny_code']));
 		}
 
-		$item->setValue($data);
+		$item->set($data);
 
 		return $item;
 	}
@@ -171,7 +171,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @since   2.0
 	 */
-	public function removeItem($key)
+	public function deleteItem($key)
 	{
 		return (bool) @unlink($this->fetchStreamUri($key));
 	}
@@ -179,15 +179,14 @@ class FileStorage extends AbstractCacheStorage
 	/**
 	 * Persisting our data in the cache, uniquely referenced by a key with an optional expiration TTL time.
 	 *
-	 * @param CacheItem                   $item The cache item to store.
-	 * @param int|\DateInterval|\DateTime $ttl  The Time To Live of an item.
+	 * @param CacheItemInterface  $item The cache item to store.
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function setItem($item, $ttl = null)
+	public function save(CacheItemInterface $item)
 	{
 		$key = $item->getKey();
-		$value = $item->getValue();
+		$value = $item->get();
 
 		$fileName = $this->fetchStreamUri($key);
 
@@ -229,7 +228,7 @@ class FileStorage extends AbstractCacheStorage
 			{
 				try
 				{
-					$this->removeItem($key);
+					$this->deleteItem($key);
 				}
 				catch (\RuntimeException $e)
 				{

@@ -8,8 +8,8 @@
 
 namespace Windwalker\Cache;
 
-use Windwalker\Cache\DataHandler\DataHandlerInterface;
-use Windwalker\Cache\DataHandler\SerializeHandler;
+use Windwalker\Cache\Serializer\SerializerInterface;
+use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Item\CacheItem;
 use Windwalker\Cache\Storage\CacheStorageInterface;
 use Windwalker\Cache\Storage\RuntimeStorage;
@@ -31,7 +31,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * Property handler.
 	 *
-	 * @var  DataHandlerInterface
+	 * @var  SerializerInterface
 	 */
 	protected $handler = null;
 
@@ -39,12 +39,12 @@ class Cache implements CacheInterface, \ArrayAccess
 	 * Class init.
 	 *
 	 * @param CacheStorageInterface $storage
-	 * @param DataHandlerInterface  $handler
+	 * @param SerializerInterface   $handler
 	 */
-	public function __construct(CacheStorageInterface $storage = null, DataHandlerInterface $handler = null)
+	public function __construct(CacheStorageInterface $storage = null, SerializerInterface $handler = null)
 	{
 		$this->storage = $storage ?: new RuntimeStorage;
-		$this->handler = $handler ?: new SerializeHandler;
+		$this->handler = $handler ?: new PhpSerializer;
 	}
 
 	/**
@@ -59,31 +59,29 @@ class Cache implements CacheInterface, \ArrayAccess
 	 */
 	public function get($key)
 	{
-		$value = $this->storage->getItem($key)->getValue();
+		$value = $this->storage->getItem($key)->get();
 
 		if ($value === null)
 		{
 			return $value;
 		}
 
-		return $this->handler->decode($value);
+		return $this->handler->serialize($value);
 	}
 
 	/**
 	 * Persisting our data in the cache, uniquely referenced by a key with an optional expiration TTL time.
 	 *
-	 * @param string       $key The key of the item to store
-	 * @param mixed        $val The value of the item to store
-	 * @param null|integer $ttl Optional. The TTL value of this item. If no value is sent and the driver supports TTL
-	 *                          then the library may set a default value for it or let the driver take care of that.
+	 * @param string $key The key of the item to store
+	 * @param mixed  $val The value of the item to store
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public function set($key, $val, $ttl = null)
+	public function set($key, $val)
 	{
-		$item = new CacheItem($key, $this->handler->encode($val));
+		$item = new CacheItem($key, $this->handler->serialize($val));
 
-		$this->storage->setItem($item, $ttl);
+		$this->storage->save($item);
 
 		return $this;
 	}
@@ -97,7 +95,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	 */
 	public function remove($key)
 	{
-		$this->storage->removeItem($key);
+		$this->storage->deleteItem($key);
 
 		return $this;
 	}
@@ -128,15 +126,16 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * Persisting a set of key => value pairs in the cache, with an optional TTL.
 	 *
-	 * @param array        $items An array of key => value pairs for a multiple-set operation.
-	 * @param null|integer $ttl   Optional. The TTL value of this item. If no value is sent and the driver supports TTL
-	 *                            then the library may set a default value for it or let the driver take care of that.
+	 * @param array $items An array of key => value pairs for a multiple-set operation.
 	 *
 	 * @return static Return self to support chaining.
 	 */
-	public function setMultiple(array $items, $ttl = null)
+	public function setMultiple(array $items)
 	{
-		$this->storage->setItems($items, $ttl);
+		foreach ($items as $item)
+		{
+			$this->storage->save($item, $ttl);
+		}
 
 		return $this;
 	}
@@ -150,7 +149,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	 */
 	public function removeMultiple(array $keys)
 	{
-		$this->storage->removeItems($keys);
+		$this->storage->deleteItems($keys);
 
 		return $this;
 	}
@@ -160,24 +159,25 @@ class Cache implements CacheInterface, \ArrayAccess
 	 *
 	 * @param string   $key
 	 * @param callable $callable
-	 * @param array    $args
 	 *
 	 * @throws \InvalidArgumentException
 	 * @return  mixed
 	 */
-	public function call($key, $callable, $args = array())
+	public function call($key, $callable)
 	{
-		$args = (array) $args;
-
 		if (!is_callable($callable))
 		{
 			throw new \InvalidArgumentException('Not a valid callable.');
 		}
 
-		if ($this->storage->exists($key))
+		if ($this->exists($key))
 		{
 			return $this->get($key);
 		}
+		
+		$args = func_get_args();
+		array_shift($args);
+		array_shift($args);
 
 		$value = call_user_func_array($callable, $args);
 
@@ -219,7 +219,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	 */
 	public function exists($key)
 	{
-		return $this->storage->exists($key);
+		return $this->storage->hasItem($key);
 	}
 
 	/**

@@ -8,8 +8,8 @@
 
 namespace Windwalker\Cache\Storage;
 
+use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Item\CacheItemInterface;
 
 /**
  * Class NullStorage
@@ -40,7 +40,7 @@ class NullStorage extends AbstractCacheStorage
 	 */
 	public function getItem($key)
 	{
-		return new CacheItem($item);
+		return new CacheItem($key);
 	}
 
 	/**
@@ -51,7 +51,7 @@ class NullStorage extends AbstractCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function setItem($item, $ttl = null)
+	public function save(CacheItemInterface $item, $ttl = null)
 	{
 		return $this;
 	}
@@ -63,7 +63,7 @@ class NullStorage extends AbstractCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function removeItem($key)
+	public function deleteItem($key)
 	{
 		return $this;
 	}

@@ -6,12 +6,12 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Cache\DataHandler;
+namespace Windwalker\Cache\Serializer;
 
 /**
  * Interface DataHandlerInterface
  */
-interface DataHandlerInterface
+interface SerializerInterface
 {
 	/**
 	 * Encode data.
@@ -20,7 +20,7 @@ interface DataHandlerInterface
 	 *
 	 * @return  string
 	 */
-	public function encode($data);
+	public function serialize($data);
 
 	/**
 	 * Decode data.
@@ -29,6 +29,5 @@ interface DataHandlerInterface
 	 *
 	 * @return  mixed
 	 */
-	public function decode($data);
+	public function unserialize($data);
 }
-

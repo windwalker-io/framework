@@ -8,6 +8,8 @@
 
 namespace Windwalker\Cache\Item;
 
+use Psr\Cache\CacheItemInterface;
+
 /**
  * Class CacheItem
  *
@@ -21,7 +23,7 @@ class CacheItem implements CacheItemInterface
 	 * @var    string
 	 * @since  2.0
 	 */
-	private $key;
+	protected $key;
 
 	/**
 	 * The value of the cache item.
@@ -29,7 +31,7 @@ class CacheItem implements CacheItemInterface
 	 * @var    mixed
 	 * @since  2.0
 	 */
-	private $value;
+	protected $value;
 
 	/**
 	 * Whether the cache item is value or not.
@@ -37,21 +39,43 @@ class CacheItem implements CacheItemInterface
 	 * @var    boolean
 	 * @since  2.0
 	 */
-	private $hit;
+	protected $hit;
+
+	/**
+	 * Property expiration.
+	 *
+	 * @var  \DateTimeInterface
+	 */
+	protected $expiration;
+
+	/**
+	 * Property defaultExpiration.
+	 *
+	 * @var  string
+	 */
+	protected $defaultExpiration = 'now +1 year';
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param   string $key   The key for the cache item.
-	 * @param   mixed  $value The value for the cache item.
+	 * @param   string             $key   The key for the cache item.
+	 * @param   mixed              $value The value for the cache item.
+	 * @param   \DateTimeInterface $ttl   The expire time.
+	 * @param   bool               $hit   Was this item retrived from cache?
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($key, $value = null)
+	public function __construct($key, $value = null, $ttl = null, $hit = false)
 	{
+		if (strpbrk($key, '{}()/\@:'))
+		{
+			throw new \InvalidArgumentException('Item key name contains invalid characters.' . $key);
+		}
+
 		$this->key = $key;
 		$this->value = $value;
-		$this->hit = false;
+		$this->hit = $hit;
+		$this->expiresAt($ttl);
 	}
 
 	/**
@@ -73,8 +97,13 @@ class CacheItem implements CacheItemInterface
 	 *
 	 * @since   2.0
 	 */
-	public function getValue()
+	public function get()
 	{
+		if ($this->isHit() === false)
+		{
+			return null;
+		}
+
 		return $this->value;
 	}
 
@@ -87,7 +116,7 @@ class CacheItem implements CacheItemInterface
 	 *
 	 * @return  CacheItem
 	 */
-	public function setValue($value)
+	public function set($value)
 	{
 		$this->value = $value;
 		$this->hit = true;
@@ -104,7 +133,84 @@ class CacheItem implements CacheItemInterface
 	 */
 	public function isHit()
 	{
+		if (new \DateTime > $this->expiration)
+		{
+			$this->hit = false;
+		}
+
 		return $this->hit;
 	}
-}
 
+	/**
+	 * Sets the expiration time for this cache item.
+	 *
+	 * @param \DateTimeInterface $expiration
+	 *   The point in time after which the item MUST be considered expired.
+	 *   If null is passed explicitly, a default value MAY be used. If none is set,
+	 *   the value should be stored permanently or for as long as the
+	 *   implementation allows.
+	 *
+	 * @return static
+	 *   The called object.
+	 */
+	public function expiresAt($expiration)
+	{
+		if ($expiration instanceof \DateTimeInterface)
+		{
+			$this->expiration = $expiration;
+
+		}
+		elseif ($expiration === null)
+		{
+			$this->expiration = new \DateTime($this->defaultExpiration);
+		}
+		else
+		{
+			throw new \InvalidArgumentException('Invalid DateTime format.');
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Sets the expiration time for this cache item.
+	 *
+	 * @param int|\DateInterval $time
+	 *   The period of time from the present after which the item MUST be considered
+	 *   expired. An integer parameter is understood to be the time in seconds until
+	 *   expiration. If null is passed explicitly, a default value MAY be used.
+	 *   If none is set, the value should be stored permanently or for as long as the
+	 *   implementation allows.
+	 *
+	 * @return static
+	 *   The called object.
+	 */
+	public function expiresAfter($time)
+	{
+		if ($time instanceof \DateTimeInterface)
+		{
+			$this->expiration = new \DateTime;
+			$this->expiration->add($time);
+		}
+		elseif ($time === null)
+		{
+			$this->expiration = new \DateTime($this->defaultExpiration);
+		}
+		else
+		{
+			throw new \InvalidArgumentException('Invalid DateTime format.');
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Expiration
+	 *
+	 * @return  \DateTimeInterface
+	 */
+	public function getExpiration()
+	{
+		return $this->expiration;
+	}
+}

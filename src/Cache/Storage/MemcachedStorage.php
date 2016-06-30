@@ -8,8 +8,8 @@
 
 namespace Windwalker\Cache\Storage;
 
+use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Item\CacheItemInterface;
 
 /**
  * Class MemcachedStorage
@@ -63,6 +63,11 @@ class MemcachedStorage extends AbstractDriverCacheStorage
 	 */
 	public function getItem($key)
 	{
+		if (!$this->exists($key))
+		{
+			return new CacheItem($key);
+		}
+
 		$this->connect();
 
 		$value = $this->driver->get($key);
@@ -72,7 +77,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
 
 		if ($code === \Memcached::RES_SUCCESS)
 		{
-			$item->setValue($value);
+			$item->set($value);
 		}
 
 		return $item;
@@ -81,18 +86,17 @@ class MemcachedStorage extends AbstractDriverCacheStorage
 	/**
 	 * Persisting our data in the cache, uniquely referenced by a key with an optional expiration TTL time.
 	 *
-	 * @param CacheItemInterface          $item The cache item to store.
-	 * @param int|\DateInterval|\DateTime $ttl  The Time To Live of an item.
+	 * @param CacheItemInterface  $item  The cache item to store.
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function setItem($item, $ttl = null)
+	public function save(CacheItemInterface $item)
 	{
 		$this->connect();
 
-		$ttl = $ttl ? : $this->ttl;
+		$ttl = $this->ttl;
 
-		$this->driver->set($item->getKey(), $item->getValue(), $ttl);
+		$this->driver->set($item->getKey(), $item->get(), $ttl);
 
 		return (bool) ($this->driver->getResultCode() == \Memcached::RES_SUCCESS);
 	}
@@ -104,7 +108,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function removeItem($key)
+	public function deleteItem($key)
 	{
 		$this->connect();
 

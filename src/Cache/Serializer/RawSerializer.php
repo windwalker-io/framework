@@ -6,14 +6,14 @@
  * @license    GNU General Public License version 2 or later.
  */
 
-namespace Windwalker\Cache\DataHandler;
+namespace Windwalker\Cache\Serializer;
 
 /**
  * The RawDataHandler class.
  * 
  * @since  2.1.2
  */
-class RawDataHandler implements DataHandlerInterface
+class RawSerializer implements SerializerInterface
 {
 	/**
 	 * Encode data.
@@ -22,7 +22,7 @@ class RawDataHandler implements DataHandlerInterface
 	 *
 	 * @return  string
 	 */
-	public function encode($data)
+	public function serialize($data)
 	{
 		return $data;
 	}
@@ -34,7 +34,7 @@ class RawDataHandler implements DataHandlerInterface
 	 *
 	 * @return  mixed
 	 */
-	public function decode($data)
+	public function unserialize($data)
 	{
 		return $data;
 	}

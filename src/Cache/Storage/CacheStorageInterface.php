@@ -8,7 +8,7 @@
 
 namespace Windwalker\Cache\Storage;
 
-use Windwalker\Cache\Item\CacheItemInterface;
+use Psr\Cache\CacheItemInterface;
 
 /**
  * Class CacheStorageInterface
@@ -18,15 +18,6 @@ use Windwalker\Cache\Item\CacheItemInterface;
 interface CacheStorageInterface
 {
 	/**
-	 * Method to determine whether a storage entry has been set for a key.
-	 *
-	 * @param   string  $key  The storage entry identifier.
-	 *
-	 * @return  boolean
-	 */
-	public function exists($key);
-
-	/**
 	 * Here we pass in a cache key to be fetched from the cache.
 	 * A CacheItem object will be constructed and returned to us
 	 *
@@ -35,25 +26,6 @@ interface CacheStorageInterface
 	 * @return CacheItemInterface  The newly populated CacheItem class representing the stored data in the cache
 	 */
 	public function getItem($key);
-
-	/**
-	 * Persisting our data in the cache, uniquely referenced by a key with an optional expiration TTL time.
-	 *
-	 * @param CacheItemInterface          $item The cache item to store.
-	 * @param int|\DateInterval|\DateTime $ttl  The Time To Live of an item.
-	 *
-	 * @return static Return self to support chaining
-	 */
-	public function setItem($item, $ttl = null);
-
-	/**
-	 * Remove an item from the cache by its unique key
-	 *
-	 * @param string $key The unique cache key of the item to remove
-	 *
-	 * @return static Return self to support chaining
-	 */
-	public function removeItem($key);
 
 	/**
 	 * getItems
@@ -67,13 +39,29 @@ interface CacheStorageInterface
 	public function getItems(array $keys);
 
 	/**
-	 * setItems
+	 * Method to determine whether a storage entry has been set for a key.
 	 *
-	 * @param array $items
+	 * @param   string  $key  The storage entry identifier.
 	 *
-	 * @return  static Return self to support chaining
+	 * @return  boolean
 	 */
-	public function setItems(array $items);
+	public function hasItem($key);
+
+	/**
+	 * This will wipe out the entire cache's keys
+	 *
+	 * @return static Return self to support chaining
+	 */
+	public function clear();
+
+	/**
+	 * Remove an item from the cache by its unique key
+	 *
+	 * @param string $key The unique cache key of the item to remove
+	 *
+	 * @return static Return self to support chaining
+	 */
+	public function deleteItem($key);
 
 	/**
 	 * Removes multiple items from the pool.
@@ -82,13 +70,34 @@ interface CacheStorageInterface
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function removeItems(array $keys);
+	public function deleteItems(array $keys);
 
 	/**
-	 * This will wipe out the entire cache's keys
+	 * Persisting our data in the cache, uniquely referenced by a key with an optional expiration TTL time.
+	 *
+	 * @param CacheItemInterface  $item The cache item to store.
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function clear();
+	public function save($item);
+
+	/**
+	 * Sets a cache item to be persisted later.
+	 *
+	 * @param CacheItemInterface $item
+	 *   The cache item to save.
+	 *
+	 * @return bool
+	 *   False if the item could not be queued or if a commit was attempted and failed. True otherwise.
+	 */
+	public function saveDeferred(CacheItemInterface $item);
+
+	/**
+	 * Persists any deferred cache items.
+	 *
+	 * @return bool
+	 *   True if all not-yet-saved items were successfully saved or there were none. False otherwise.
+	 */
+	public function commit();
 }
 

@@ -3,7 +3,7 @@
     "description": "A Modern PHP framework.",
     "homepage": "https://github.com/ventoviro/windwalker",
     "license": "LGPL-2.0+",
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "authors": [
         {
             "name": "Simon Asika",
@@ -12,14 +12,15 @@
     ],
     "require": {
         "psr/log": "~1.0",
-        "psr/http-message": "~1.0"
+        "psr/http-message": "~1.0",
+        "psr/cache": "~1.0"
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",
         "symfony/yaml": "~3.0",
 
         "twig/twig": "~1.0",
-        "illuminate/view": "4.1.*",
+        "illuminate/view": "4.1.*|~5.0",
         "mustache/mustache": "~2.0",
         "league/plates": "~3.0"
     },

@@ -8,8 +8,8 @@
 
 namespace Windwalker\Cache\Storage;
 
+use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
-use Windwalker\Cache\Item\CacheItemInterface;
 
 /**
  * Class RedisStorage
@@ -75,6 +75,11 @@ class RedisStorage extends AbstractDriverCacheStorage
 	 */
 	public function getItem($key)
 	{
+		if (!$this->exists($key))
+		{
+			return new CacheItem($key);
+		}
+		
 		$this->connect();
 
 		$value = $this->driver->get($key);
@@ -83,7 +88,7 @@ class RedisStorage extends AbstractDriverCacheStorage
 
 		if ($value !== false)
 		{
-			$item->setValue($value);
+			$item->set($value);
 		}
 
 		return $item;
@@ -97,11 +102,11 @@ class RedisStorage extends AbstractDriverCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function setItem($item, $ttl = null)
+	public function save(CacheItemInterface $item, $ttl = null)
 	{
 		$this->connect();
 
-		if (!$this->driver->set($item->getKey(), $item->getValue()))
+		if (!$this->driver->set($item->getKey(), $item->get()))
 		{
 			return false;
 		}
@@ -121,7 +126,7 @@ class RedisStorage extends AbstractDriverCacheStorage
 	 *
 	 * @return static Return self to support chaining
 	 */
-	public function removeItem($key)
+	public function deleteItem($key)
 	{
 		$this->connect();
 

@@ -6,14 +6,14 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Cache\DataHandler;
+namespace Windwalker\Cache\Serializer;
 
 /**
  * Class RawHandler
  *
  * @since 2.0
  */
-class StringHandler implements DataHandlerInterface
+class StringSerializer implements SerializerInterface
 {
 	/**
 	 * Encode data.
@@ -23,7 +23,7 @@ class StringHandler implements DataHandlerInterface
 	 * @throws \InvalidArgumentException
 	 * @return  string
 	 */
-	public function encode($data)
+	public function serialize($data)
 	{
 		if (is_array($data) || (is_object($data) && !method_exists($data, '_toString')))
 		{
@@ -40,7 +40,7 @@ class StringHandler implements DataHandlerInterface
 	 *
 	 * @return  mixed
 	 */
-	public function decode($data)
+	public function unserialize($data)
 	{
 		return $data;
 	}

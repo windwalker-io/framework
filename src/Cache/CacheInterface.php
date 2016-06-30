@@ -22,14 +22,15 @@ interface CacheInterface
 	/**
 	 * Persisting our data in the cache, uniquely referenced by a key with an optional expiration TTL time.
 	 *
-	 * @param string       $key The key of the item to store
-	 * @param mixed        $val The value of the item to store
-	 * @param null|integer $ttl Optional. The TTL value of this item. If no value is sent and the driver supports TTL
+	 * @param string $key The key of the item to store
+	 * @param mixed  $val The value of the item to store
+	 *
+	 * @return bool
+	 * @internal param int|null $ttl Optional. The TTL value of this item. If no value is sent and the driver supports TTL
 	 *                          then the library may set a default value for it or let the driver take care of that.
 	 *
-	 * @return boolean
 	 */
-	public function set($key, $val, $ttl = null);
+	public function set($key, $val);
 
 	/**
 	 * Remove an item from the cache by its unique key
@@ -53,13 +54,14 @@ interface CacheInterface
 	/**
 	 * Persisting a set of key => value pairs in the cache, with an optional TTL.
 	 *
-	 * @param array        $items An array of key => value pairs for a multiple-set operation.
-	 * @param null|integer $ttl   Optional. The TTL value of this item. If no value is sent and the driver supports TTL
-	 *                            then the library may set a default value for it or let the driver take care of that.
+	 * @param array $items An array of key => value pairs for a multiple-set operation.
 	 *
 	 * @return static Return self to support chaining.
+	 * @internal param int|null $ttl Optional. The TTL value of this item. If no value is sent and the driver supports TTL
+	 *                            then the library may set a default value for it or let the driver take care of that.
+	 *
 	 */
-	public function setMultiple(array $items, $ttl = null);
+	public function setMultiple(array $items);
 
 	/**
 	 * Remove multiple cache items in a single operation
