@@ -66,7 +66,7 @@ class Cache implements CacheInterface, \ArrayAccess
 			return $value;
 		}
 
-		return $this->serializer->serialize($value);
+		return $this->serializer->unserialize($value);
 	}
 
 	/**
@@ -136,7 +136,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	{
 		foreach ($items as $item)
 		{
-			$this->storage->save($item, $ttl);
+			$this->storage->save($item);
 		}
 
 		return $this;
