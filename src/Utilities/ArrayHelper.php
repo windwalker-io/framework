@@ -1011,7 +1011,7 @@ abstract class ArrayHelper
 	 *                             Example:
 	 *                             array(
 	 *                                 'id'         => 6,   // Get all elements where id=6
-	 *                                 '>published' => 0    // Get all elements where published>0
+	 *                                 'published>' => 0    // Get all elements where published>0
 	 *                             );
 	 * @param   boolean  $strict   Use strict to compare equals.
 	 * @param   boolean  $keepKey  Keep origin array keys.
