@@ -92,25 +92,17 @@ class PhpRenderer extends AbstractRenderer
 			throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $__paths));
 		}
 
-		// For B/C
-		$data = $__data;
-
-		if ($this->config->get('local_variables', false))
+		foreach ($__data as $key => $value)
 		{
-			foreach ($__data as $key => $value)
+			if ($key == 'data')
 			{
-				if ($key == 'data')
-				{
-					$key = '_data';
-				}
-
-				$$key = $value;
+				$key = '_data';
 			}
+
+			$$key = $value;
 		}
-		else
-		{
-			unset($__data);
-		}
+
+		unset($__data);
 
 		// Start an output buffer.
 		ob_start();
