@@ -390,17 +390,18 @@ class Entity extends Data
 		return $this->hasField($field);
 	}
 
-	/**
-	 * Is this object empty?
-	 *
-	 * @return  boolean
-	 */
-	public function isNull()
-	{
-		$data = array_unique($this->data);
-
-		return count($data) == 1 && $data[0] === null;
-	}
+//	/**
+//	 * Is this object empty?
+//	 *
+//	 * @return  boolean
+//	 */
+//	public function isNull()
+//	{
+//		// TODO: Default value could make this method not worl
+//		$data = array_unique($this->data);
+//
+//		return count($data) == 1 && $data[0] === null;
+//	}
 
 	/**
 	 * Dump all data as array

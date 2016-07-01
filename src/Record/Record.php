@@ -121,8 +121,10 @@ class Record extends Entity
 
 		if (!$this->keys)
 		{
-			$this->keys = (array) $keys;
+			$this->keys = $keys;
 		}
+
+		$this->keys = (array) $this->keys;
 
 		if ($this->autoIncrement === null)
 		{
@@ -218,10 +220,7 @@ class Record extends Entity
 			// Only process values in fields
 			$k = $this->resolveAlias($k);
 
-			if (array_key_exists($k, $fields))
-			{
-				$this->data[$k] = $v;
-			}
+			$this->data[$k] = $v;
 		}
 
 		// Event
