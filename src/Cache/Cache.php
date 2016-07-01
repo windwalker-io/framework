@@ -33,18 +33,18 @@ class Cache implements CacheInterface, \ArrayAccess
 	 *
 	 * @var  SerializerInterface
 	 */
-	protected $handler = null;
+	protected $serializer = null;
 
 	/**
 	 * Class init.
 	 *
 	 * @param CacheItemPoolInterface $storage
-	 * @param SerializerInterface    $handler
+	 * @param SerializerInterface    $serializer
 	 */
-	public function __construct(CacheItemPoolInterface $storage = null, SerializerInterface $handler = null)
+	public function __construct(CacheItemPoolInterface $storage = null, SerializerInterface $serializer = null)
 	{
-		$this->storage = $storage ?: new ArrayStorage;
-		$this->handler = $handler ?: new PhpSerializer;
+		$this->storage    = $storage ?: new ArrayStorage;
+		$this->serializer = $serializer ?: new PhpSerializer;
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Cache implements CacheInterface, \ArrayAccess
 			return $value;
 		}
 
-		return $this->handler->serialize($value);
+		return $this->serializer->serialize($value);
 	}
 
 	/**
@@ -79,7 +79,9 @@ class Cache implements CacheInterface, \ArrayAccess
 	 */
 	public function set($key, $val)
 	{
-		$item = new CacheItem($key, $this->handler->serialize($val));
+		$item = new CacheItem($key);
+
+		$item->set($this->serializer->serialize($val));
 
 		$this->storage->save($item);
 
@@ -227,21 +229,21 @@ class Cache implements CacheInterface, \ArrayAccess
 	 *
 	 * @return  null
 	 */
-	public function getHandler()
+	public function getSerializer()
 	{
-		return $this->handler;
+		return $this->serializer;
 	}
 
 	/**
 	 * setHandler
 	 *
-	 * @param   null $handler
+	 * @param   SerializerInterface $serializer
 	 *
 	 * @return  Cache  Return self to support chaining.
 	 */
-	public function setHandler($handler)
+	public function setSerializer($serializer)
 	{
-		$this->handler = $handler;
+		$this->serializer = $serializer;
 
 		return $this;
 	}
