@@ -861,15 +861,16 @@ class NestedRecord extends Record
 	 * definition. It will ignore the primary key as well as any private class
 	 * properties (except $_errors).
 	 *
-	 * @param bool $empty
+	 * @param bool $loadDefault
 	 *
 	 * @return  static
+	 * @throws \InvalidArgumentException
 	 *
 	 * @since   3.2.1
 	 */
-	public function reset($empty = false)
+	public function reset($loadDefault = true)
 	{
-		parent::reset();
+		parent::reset($loadDefault);
 
 		// Reset the location properties.
 		$this->setLocation(0);
