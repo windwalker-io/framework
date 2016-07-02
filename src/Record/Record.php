@@ -124,6 +124,8 @@ class Record extends Entity
 			$this->keys = (array) $keys;
 		}
 
+		$this->keys = (array) $this->keys;
+
 		if ($this->autoIncrement === null)
 		{
 			$this->autoIncrement = (count($keys) == 1) ? true : false;
