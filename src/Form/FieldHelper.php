@@ -74,7 +74,7 @@ class FieldHelper extends AbstractFormElementHelper
 	 *
 	 * @return  AbstractField
 	 */
-	public static function createByXml(\SimpleXmlElement $xml, \SplPriorityQueue $namespaces = null)
+	public static function createByXml(\SimpleXMLElement $xml, \SplPriorityQueue $namespaces = null)
 	{
 		$type = XmlHelper::get($xml, 'type', 'text');
 
@@ -104,7 +104,7 @@ class FieldHelper extends AbstractFormElementHelper
 	 *
 	 * @return  string|bool
 	 */
-	protected static function findFieldClass($name, \SplPriorityQueue $namespaces = null)
+	public static function findFieldClass($name, \SplPriorityQueue $namespaces = null)
 	{
 		$namespaces = $namespaces ? : static::getNamespaces();
 
