@@ -344,7 +344,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @param   boolean $forceNew True to force creation and return of a new instance.
 	 *
 	 * @return  mixed   Results of running the $callback for the specified $key.
-	 * @throws \OutOfRangeException
+	 * @throws \UnexpectedValueException
 	 *
 	 * @since   2.0
 	 */
@@ -354,7 +354,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
 		if (is_null($store))
 		{
-			throw new \OutOfRangeException(sprintf('Key %s has not been registered with the container.', $key));
+			throw new \UnexpectedValueException(sprintf('Key %s has not been registered with the container.', $key));
 		}
 
 		return $store->get($this, $forceNew);
