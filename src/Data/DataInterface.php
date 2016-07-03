@@ -45,4 +45,13 @@ interface DataInterface
 	 * @return  array
 	 */
 	public function dump();
+
+	/**
+	 * __get
+	 *
+	 * @param   string  $name
+	 *
+	 * @return  mixed
+	 */
+	public function __get($name);
 }

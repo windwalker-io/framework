@@ -649,20 +649,40 @@ class Record extends Entity
 	 * definition. It will ignore the primary key as well as any private class
 	 * properties.
 	 *
-	 * @param bool $empty
+	 * @param bool $loadDefault
 	 *
 	 * @return  static
 	 *
 	 * @since   2.0
 	 */
-	public function reset($empty = false)
+	public function reset($loadDefault = true)
 	{
 		$this->data = array();
 
 		// Get the default values for the class from the table.
 		foreach ((array) $this->getFields() as $k => $v)
 		{
-			$this->data[$k] = $empty ? null : $v->Default;
+			$this->data[$k] = $loadDefault ? $v->Default : null;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * loadDefault
+	 *
+	 * @param bool $replace
+	 *
+	 * @return static
+	 */
+	public function loadDefault($replace = false)
+	{
+		foreach ((array) $this->getFields() as $k => $v)
+		{
+			if ($replace || $this->data[$k] === null)
+			{
+				$this->data[$k] = $v->Default;
+			}
 		}
 
 		return $this;
