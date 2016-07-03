@@ -17,6 +17,9 @@ use Windwalker\Edge\Extension\EdgeExtensionInterface;
 use Windwalker\Edge\Loader\EdgeFileLoader;
 use Windwalker\Edge\Loader\EdgeLoaderInterface;
 
+// Simple fix for Blade escape
+include_once __DIR__ . '/compat.php';
+
 /**
  * The Edge template engine.
  *
@@ -117,18 +120,18 @@ class Edge
 	/**
 	 * render
 	 *
-	 * @param string $__path
+	 * @param string $__layout
 	 * @param array  $__data
 	 *
 	 * @return  string
 	 */
-	public function render($__path, $__data = array())
+	public function render($__layout, $__data = array())
 	{
 		// TODO: Aliases
 
 		$this->incrementRender();
 
-		$__path = $this->loader->find($__path);
+		$__path = $this->loader->find($__layout);
 
 		if ($this->cache->isExpired($__path))
 		{
@@ -152,13 +155,28 @@ class Edge
 
 		ob_start();
 
-		if ($this->cache instanceof EdgeFileCache)
+		try
 		{
-			include $this->cache->getCacheFile($this->cache->getCacheKey($__path));
+			if ($this->cache instanceof EdgeFileCache)
+			{
+				include $this->cache->getCacheFile($this->cache->getCacheKey($__path));
+			}
+			else
+			{
+				eval(' ?>' . $this->cache->load($__path) . '<?php ');
+			}
 		}
-		else
+		catch (\Exception $e)
 		{
-			eval(' ?>' . $this->cache->load($__path) . '<?php ');
+			$this->wrapException($e, $__path, $__layout);
+
+			return null;
+		}
+		catch (\Throwable $e)
+		{
+			$this->wrapException($e, $__path, $__layout);
+
+			return null;
 		}
 
 		$result = ltrim(ob_get_clean());
@@ -168,6 +186,24 @@ class Edge
 		$this->flushSectionsIfDoneRendering();
 
 		return $result;
+	}
+
+	/**
+	 * wrapException
+	 *
+	 * @param \Exception|\Throwable $e
+	 * @param string                $path
+	 *
+	 * @return  void
+	 */
+	protected function wrapException($e, $path, $layout)
+	{
+		$class = get_class($e);
+		$msg = $e->getMessage();
+
+		$msg .= sprintf("\n\n| View layout: %s (%s)", $path, $layout);
+
+		throw new $class($msg, $e->getCode(), $e);
 	}
 
 	/**
@@ -463,7 +499,7 @@ class Edge
 		// with "raw|" for convenience and to let this know that it is a string.
 		else
 		{
-			if (starts_with($empty, 'raw|'))
+			if (strpos($empty, 'raw|') === 0)
 			{
 				$result = substr($empty, 4);
 			}
@@ -705,8 +741,9 @@ class Edge
 	 * addExtension
 	 *
 	 * @param EdgeExtensionInterface $extension
+	 * @param string                 $name
 	 *
-	 * @return  static
+	 * @return static
 	 */
 	public function addExtension(EdgeExtensionInterface $extension, $name = null)
 	{

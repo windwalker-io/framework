@@ -340,13 +340,13 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	/**
 	 * Method to retrieve the results of running the $callback for the specified $key;
 	 *
-	 * @param   string   $key       Name of the dataStore key to get.
-	 * @param   boolean  $forceNew  True to force creation and return of a new instance.
+	 * @param   string  $key      Name of the dataStore key to get.
+	 * @param   boolean $forceNew True to force creation and return of a new instance.
 	 *
 	 * @return  mixed   Results of running the $callback for the specified $key.
+	 * @throws \UnexpectedValueException
 	 *
 	 * @since   2.0
-	 * @throws  \UnexpectedValueException
 	 */
 	public function get($key, $forceNew = false)
 	{

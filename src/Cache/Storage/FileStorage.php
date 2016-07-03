@@ -127,28 +127,7 @@ class FileStorage extends AbstractCacheStorage
 			return new CacheItem($key);
 		}
 
-		$resource = @fopen($this->fetchStreamUri($key), 'rb');
-
-		if (!$resource)
-		{
-			throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot open the resource.', $key));
-		}
-
-		// If locking is enabled get a shared lock for reading on the resource.
-		if ($this->options['file_locking'] && !flock($resource, LOCK_SH))
-		{
-			throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot obtain a lock.', $key));
-		}
-
-		$data = stream_get_contents($resource);
-
-		// If locking is enabled release the lock on the resource.
-		if ($this->options['file_locking'] && !flock($resource, LOCK_UN))
-		{
-			throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot release the lock.', $key));
-		}
-
-		fclose($resource);
+		$data = $this->read($this->fetchStreamUri($key));
 
 		$item = new CacheItem($key);
 
@@ -202,13 +181,66 @@ class FileStorage extends AbstractCacheStorage
 			$value = $this->options['deny_code'] . $value;
 		}
 
-		$success = (bool) file_put_contents(
+		$success = $this->write(
 			$fileName,
 			$value,
 			($this->options['file_locking'] ? LOCK_EX : null)
 		);
 
 		return $success;
+	}
+
+	/**
+	 * write
+	 *
+	 * @param string $filename
+	 * @param string $value
+	 * @param int    $options
+	 *
+	 * @return  boolean
+	 */
+	protected function write($filename, $value, $options)
+	{
+		return (bool) file_put_contents(
+			$filename,
+			$value,
+			$options
+		);
+	}
+
+	/**
+	 * read
+	 *
+	 * @param   string  $filename
+	 *
+	 * @return  string
+	 */
+	protected function read($filename)
+	{
+		$resource = @fopen($filename, 'rb');
+
+		if (!$resource)
+		{
+			throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot open the resource.', $filename));
+		}
+
+		// If locking is enabled get a shared lock for reading on the resource.
+		if ($this->options['file_locking'] && !flock($resource, LOCK_SH))
+		{
+			throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot obtain a lock.', $filename));
+		}
+
+		$data = stream_get_contents($resource);
+
+		// If locking is enabled release the lock on the resource.
+		if ($this->options['file_locking'] && !flock($resource, LOCK_UN))
+		{
+			throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot release the lock.', $filename));
+		}
+
+		fclose($resource);
+
+		return $data;
 	}
 
 	/**

@@ -389,7 +389,7 @@ class Entity extends Data
 	{
 		return $this->hasField($field);
 	}
-
+	
 	/**
 	 * Is this object empty?
 	 *
@@ -397,9 +397,15 @@ class Entity extends Data
 	 */
 	public function isNull()
 	{
-		$data = array_unique($this->data);
+		foreach ($this->data as $value)
+		{
+			if ($value !== null)
+			{
+				return false;
+			}
+		}
 
-		return count($data) == 1 && $data[0] === null;
+		return true;
 	}
 
 	/**

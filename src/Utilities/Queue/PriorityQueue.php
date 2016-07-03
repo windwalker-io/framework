@@ -52,21 +52,33 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	 * @param array $array
 	 * @param int   $priority
 	 *
-	 * @return  void
+	 * @return  static
 	 */
-	public function bind($array = array(), $priority = Priority::NORMAL)
+	public function bind(array $array = array(), $priority = self::NORMAL)
 	{
-		if (is_object($array))
-		{
-			$array = get_object_vars($array);
-		}
-
-		$array = (array) $array;
-
 		foreach ($array as $item)
 		{
 			$this->insert($item, $priority);
 		}
+
+		return $this;
+	}
+
+	/**
+	 * register
+	 *
+	 * @param array $items
+	 *
+	 * @return  static
+	 */
+	public function insertArray(array $items)
+	{
+		foreach ($items as $priority => $item)
+		{
+			$this->insert($item, $priority);
+		}
+
+		return $this;
 	}
 
 	/**

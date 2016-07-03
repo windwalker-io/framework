@@ -66,7 +66,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @var    string
 	 * @since  2.0
 	 */
-	protected $dataClass = 'Windwalker\\Data\\Data';
+	protected $dataClass = 'Windwalker\Data\Data';
 
 	/**
 	 * Data set object class.
@@ -74,7 +74,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @var    string
 	 * @since  2.0
 	 */
-	protected $datasetClass = 'Windwalker\\Data\\DataSet';
+	protected $datasetClass = 'Windwalker\Data\DataSet';
 
 	/**
 	 * Property useTransaction.
@@ -106,11 +106,6 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	{
 		$this->table = $this->table ? : $table;
 		$this->keys  = $this->keys ? : (array) $keys;
-
-		if (!$this->table)
-		{
-			throw new \Exception('Hey, please give me a table name~!');
-		}
 
 		// Set some custom configuration.
 		$this->init();

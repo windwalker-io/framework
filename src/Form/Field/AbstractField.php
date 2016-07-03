@@ -442,10 +442,14 @@ abstract class AbstractField
 	{
 		if (!$this->fieldName || $refresh)
 		{
-			// Prevent '..'
+			// Prevent double '/'
 			$names = array_values(array_filter(explode('/', $this->getName(true)), 'strlen'));
 
-			$control = $this->control ? $this->control : array_shift($names);
+			$control = array_values(array_filter(explode('/', $this->getControl()), 'strlen'));
+
+			$names = array_merge($control, $names);
+
+			$control = array_shift($names);
 
 			$names = array_map(
 				function ($value)
@@ -495,6 +499,8 @@ abstract class AbstractField
 	public function setGroup($group)
 	{
 		$this->fieldName = null;
+
+		$group = str_replace('.', '/', $group);
 
 		$this->group = $group;
 
@@ -681,7 +687,7 @@ abstract class AbstractField
 			$form = $parent;
 		}
 
-		$this->group = implode('.', $group);
+		$this->group = implode('/', $group);
 	}
 
 	/**
@@ -704,6 +710,8 @@ abstract class AbstractField
 	public function setControl($control)
 	{
 		$this->fieldName = null;
+
+		$control = str_replace('.', '/', $control);
 
 		$this->control = $control;
 

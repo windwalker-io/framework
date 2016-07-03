@@ -1799,6 +1799,8 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @return  string  Returns a string produced according to the formatting string.
 	 *
+	 * @note  This method is a modified version from Joomla.
+	 *
 	 * @since   2.0
 	 */
 	public function format($format)
@@ -1838,7 +1840,6 @@ class Query implements QueryInterface, PreparableInterface
 
 			if (!$index || !isset($args[$index]))
 			{
-				// TODO - What to do? sprintf() throws a Warning in these cases.
 				$replacement = '';
 			}
 			else

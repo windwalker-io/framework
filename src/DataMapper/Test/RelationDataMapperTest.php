@@ -9,10 +9,10 @@
 namespace Windwalker\DataMapper\Test;
 
 use Windwalker\Compare\GteCompare;
-use Windwalker\DataMapper\RelationDataMapper;
+use Windwalker\DataMapper\DataMapper;
 
 /**
- * Test class of RelationDataMapper
+ * Test class of DataMapper
  *
  * @since 2.0
  */
@@ -21,7 +21,7 @@ class RelationDataMapperTest extends DatabaseTest
 	/**
 	 * Test instance.
 	 *
-	 * @var RelationDataMapper
+	 * @var DataMapper
 	 */
 	protected $instance;
 
@@ -37,7 +37,7 @@ class RelationDataMapperTest extends DatabaseTest
 
 		$this->db = static::$dbo;
 
-		$this->instance = new RelationDataMapper('flower', 'ww_flower');
+		$this->instance = DataMapper::newRelation('flower', 'ww_flower');
 
 		$this->instance->addTable('category', 'ww_categories', 'flower.catid = category.id');
 	}
@@ -103,7 +103,7 @@ SQL;
 	 */
 	public function testFindGroup()
 	{
-		$mapper = RelationDataMapper::newInstance('category', 'ww_categories')
+		$mapper = (new DataMapper)->addTable('category', 'ww_categories')
 			->addTable('flower', 'ww_flower', 'flower.catid = category.id')
 			->group('category.id');
 
@@ -138,7 +138,7 @@ SQL;
 	 */
 	public function testFindWhere()
 	{
-		$mapper = RelationDataMapper::newInstance('category', 'ww_categories')
+		$mapper = DataMapper::newRelation('category', 'ww_categories')
 			->addTable('flower', 'ww_flower', 'flower.catid = category.id')
 			->where('flower.catid < :catid')->bind('catid', 2)
 			->where('%n > %a', 'flower.id', 10);
