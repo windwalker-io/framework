@@ -120,18 +120,18 @@ class Edge
 	/**
 	 * render
 	 *
-	 * @param string $__path
+	 * @param string $__layout
 	 * @param array  $__data
 	 *
 	 * @return  string
 	 */
-	public function render($__path, $__data = array())
+	public function render($__layout, $__data = array())
 	{
 		// TODO: Aliases
 
 		$this->incrementRender();
 
-		$__path = $this->loader->find($__path);
+		$__path = $this->loader->find($__layout);
 
 		if ($this->cache->isExpired($__path))
 		{
@@ -168,13 +168,13 @@ class Edge
 		}
 		catch (\Exception $e)
 		{
-			$this->wrapException($e, $__path);
+			$this->wrapException($e, $__path, $__layout);
 
 			return null;
 		}
 		catch (\Throwable $e)
 		{
-			$this->wrapException($e, $__path);
+			$this->wrapException($e, $__path, $__layout);
 
 			return null;
 		}
@@ -196,12 +196,12 @@ class Edge
 	 *
 	 * @return  void
 	 */
-	protected function wrapException($e, $path)
+	protected function wrapException($e, $path, $layout)
 	{
 		$class = get_class($e);
 		$msg = $e->getMessage();
 
-		$msg .= sprintf("\n\n| (View layout: '%s')", $path);
+		$msg .= sprintf("\n\n| View layout: %s (%s)", $path, $layout);
 
 		throw new $class($msg, $e->getCode(), $e);
 	}
