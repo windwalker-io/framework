@@ -48,7 +48,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 		/** @var $console Console */
 		$console = new Console($io);
 
-		$console->setName('Test Console')
+		$console->setTitle('Test Console')
 			->setVersion('1.2.3')
 			->setDescription('Test desc.')
 			->setAutoExit(false);
@@ -243,9 +243,9 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 */
-	public function testGetName()
+	public function testGetTitle()
 	{
-		$this->assertEquals('Test Console', $this->instance->getName());
+		$this->assertEquals('Test Console', $this->instance->getTitle());
 	}
 
 	/**
@@ -255,11 +255,11 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 */
-	public function testSetName()
+	public function testSetTitle()
 	{
-		$this->instance->setName('Test Console2');
+		$this->instance->setTitle('Test Console2');
 
-		$this->assertEquals('Test Console2', $this->instance->getName());
+		$this->assertEquals('Test Console2', $this->instance->getTitle());
 	}
 
 	/**

@@ -97,16 +97,16 @@ class MysqlTable extends AbstractTable
 	 */
 	public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
-		if ($this->hasColumn($name))
-		{
-			return $this;
-		}
-		
 		$column = $name;
 
 		if (!($column instanceof Column))
 		{
 			$column = new Column($name, $type, $signed, $allowNull, $default, $comment, $options);
+		}
+
+		if ($this->hasColumn($column->getName()))
+		{
+			return $this;
 		}
 
 		$this->prepareColumn($column);
@@ -142,11 +142,6 @@ class MysqlTable extends AbstractTable
 	 */
 	public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
 	{
-		if (!$this->hasColumn($name))
-		{
-			return $this;
-		}
-
 		if ($name instanceof Column)
 		{
 			$column    = $name;
@@ -162,6 +157,11 @@ class MysqlTable extends AbstractTable
 		else
 		{
 			$position = isset($options['position']) ? $options['position'] : null;
+		}
+
+		if (!$this->hasColumn($name))
+		{
+			return $this;
 		}
 
 		$type   = MysqlType::getType($type);

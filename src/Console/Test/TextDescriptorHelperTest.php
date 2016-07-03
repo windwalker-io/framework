@@ -82,7 +82,7 @@ foo help';
 
 		$console = new Console(new MockIO);
 
-		$console->setName('Test Console')
+		$console->setTitle('Test Console')
 			->setVersion('1.2.3')
 			->setDescription('test desc');
 

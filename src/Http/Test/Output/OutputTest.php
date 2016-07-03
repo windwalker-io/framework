@@ -55,8 +55,13 @@ class OutputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRespond()
 	{
+		$this->instance->headerSent = function ()
+		{
+		    return false;
+		};
+
 		// Test return body
-		$return = (string) $this->instance->respond(new TextResponse('Flower', 256, array('x-foo' => 'bar')), true);
+		$return = (string) $this->instance->respond(new TextResponse('Flower', 256, array('x-foo' => 'bar')), true)->getBody();
 
 		$this->assertEquals('Flower', (string) $return);
 

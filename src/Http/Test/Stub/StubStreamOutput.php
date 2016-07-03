@@ -117,9 +117,12 @@ class StubStreamOutput extends StreamOutput
 	/**
 	 * checkHeaderSent
 	 *
-	 * @return  bool
+	 * @param string $filename
+	 * @param int    $linenum
+	 *
+	 * @return bool
 	 */
-	public function headersSent()
+	public function headersSent(&$filename = null, &$linenum = null)
 	{
 		return false;
 	}

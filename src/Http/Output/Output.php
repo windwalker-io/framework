@@ -20,6 +20,13 @@ use Windwalker\Http\Helper\HeaderHelper;
 class Output implements OutputInterface
 {
 	/**
+	 * Property headerSent.
+	 *
+	 * @var  string
+	 */
+	public $headerSent = 'headers_sent';
+
+	/**
 	 * Method to send the application response to the client.  All headers will be sent prior to the main
 	 * application output data.
 	 *
@@ -125,13 +132,10 @@ class Output implements OutputInterface
 	/**
 	 * checkHeaderSent
 	 *
-	 * @param string $filename
-	 * @param int    $linenum
-	 *
 	 * @return bool
 	 */
-	public function headersSent(&$filename = null, &$linenum = null)
+	public function headersSent()
 	{
-		return headers_sent($filename, $linenum);
+		return call_user_func($this->headerSent);
 	}
 }

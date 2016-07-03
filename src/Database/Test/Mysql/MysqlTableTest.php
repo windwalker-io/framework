@@ -369,7 +369,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$table->changeColumn('foo', new Column\Integer('bar'));
 
-		$tables = $table->getColumnDetails();
+		$tables = $table->getColumnDetails(true);
 
 		$this->assertEquals('int(11) unsigned', $tables['bar']->Type);
 		$this->assertArrayNotHasKey('foo', $tables);

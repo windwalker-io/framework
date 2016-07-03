@@ -422,7 +422,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testAddListenerInvalidListenerException()
 	{
-		$this->instance->addListener('foo');
+		$this->instance->addListener('trim');
 	}
 
 	/**

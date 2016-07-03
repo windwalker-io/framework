@@ -435,9 +435,9 @@ abstract class AbstractCommand implements \ArrayAccess
 			return $value;
 		}
 
-		if ($default instanceof \Closure)
+		if (is_callable($default))
 		{
-			return $default();
+			return call_user_func($default);
 		}
 
 		return $default;

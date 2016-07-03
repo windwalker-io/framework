@@ -20,7 +20,7 @@
         "symfony/yaml": "~3.0",
 
         "twig/twig": "~1.0",
-        "illuminate/view": "4.1.*|~5.0",
+        "illuminate/view": "4.1.*",
         "mustache/mustache": "~2.0",
         "league/plates": "~3.0"
     },
@@ -43,6 +43,7 @@
     "replace": {
         "windwalker/application": "self.version",
         "windwalker/authentication": "self.version",
+        "windwalker/authorisation": "self.version",
         "windwalker/cache": "self.version",
         "windwalker/compare": "self.version",
         "windwalker/console": "self.version",
