@@ -9,7 +9,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/crypt": "~2.0"
+        "windwalker/crypt": "~3.0"
     }
 }
 ```

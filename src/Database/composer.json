@@ -8,12 +8,12 @@
     "require": {
         "php": ">=5.3.10",
         "psr/log": "1.*@stable",
-        "windwalker/query": "~2.0"
+        "windwalker/query": "~3.0"
     },
     "require-dev": {
-        "windwalker/utilities": "~2.0",
-        "windwalker/test": "~2.0",
-        "windwalker/compare": "~2.0"
+        "windwalker/utilities": "~3.0",
+        "windwalker/test": "~3.0",
+        "windwalker/compare": "~3.0"
     },
     "suggest": {
         "windwalker/compare": "Install 2.* if you want to use Compare object."

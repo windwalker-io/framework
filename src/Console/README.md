@@ -9,7 +9,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/console": "~2.0"
+        "windwalker/console": "~3.0"
     }
 }
 ```

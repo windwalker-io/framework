@@ -7,7 +7,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/authentication": "~2.0"
+        "windwalker/authentication": "~3.0"
     }
 }
 ```

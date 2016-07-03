@@ -7,7 +7,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/router": "~2.0"
+        "windwalker/router": "~3.0"
     }
 }
 ```

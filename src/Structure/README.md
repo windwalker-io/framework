@@ -11,7 +11,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/structure": "~2.0"
+        "windwalker/structure": "~3.0"
     }
 }
 ```
@@ -245,7 +245,7 @@ Add Symfony YAML component in `composer.json`
 ``` json
 {
 	"require-dev": {
-		"symfony/yaml": "~2.0"
+		"symfony/yaml": "~3.0"
 	}
 }
 ```

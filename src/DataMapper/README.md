@@ -7,8 +7,8 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/datamapper": "~2.0",
-        "windwalker/database": "~2.0"
+        "windwalker/datamapper": "~3.0",
+        "windwalker/database": "~3.0"
     }
 }
 ```
@@ -382,7 +382,7 @@ See: https://github.com/ventoviro/windwalker-data
 
 ## Hooks
 
-Add `"windwalker/event": "~2.0"` to `composer.json`.
+Add `"windwalker/event": "~3.0"` to `composer.json`.
 
 Then we are able to use hooks after every operations.
 

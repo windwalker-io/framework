@@ -9,7 +9,7 @@ Add this dependency in your `composer.json` file.
 ``` json
 {
     "require": {
-        "windwalker/database" : "~2.0"
+        "windwalker/database" : "~3.0"
     }
 }
 ```

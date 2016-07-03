@@ -9,7 +9,7 @@
         "php": ">=5.3.10"
     },
     "require-dev": {
-        "windwalker/test": "~2.0"
+        "windwalker/test": "~3.0"
     },
     "suggest": {
     },

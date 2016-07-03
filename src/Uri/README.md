@@ -23,7 +23,7 @@ You can use the `Uri` class a number of different ways when dealing with Uris. I
 ```json
 {
 	"require": {
-		"windwalker/uri": "~2.0"
+		"windwalker/uri": "~3.0"
 	}
 }
 ```

@@ -13,7 +13,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/compare": "~2.0"
+        "windwalker/compare": "~3.0"
     }
 }
 ```

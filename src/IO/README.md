@@ -11,7 +11,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/io": "~2.0"
+        "windwalker/io": "~3.0"
     }
 }
 ```
