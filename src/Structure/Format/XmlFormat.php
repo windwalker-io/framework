@@ -6,10 +6,10 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Format;
+namespace Windwalker\Structure\Format;
 
 /**
- * XML format handler for Registry.
+ * XML format handler for Structure.
  *
  * @since  2.0
  */
@@ -29,7 +29,7 @@ class XmlFormat implements FormatInterface
 	 */
 	public static function structToString($struct, array $options = array())
 	{
-		$rootName = (isset($options['name'])) ? $options['name'] : 'registry';
+		$rootName = (isset($options['name'])) ? $options['name'] : 'structure';
 		$nodeName = (isset($options['nodeName'])) ? $options['nodeName'] : 'node';
 
 		// Create the root node.

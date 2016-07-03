@@ -1,9 +1,9 @@
 {
-    "name": "windwalker/registry",
+    "name": "windwalker/structure",
     "type": "windwalker-package",
-    "description": "Windwalker Registry package",
-    "keywords": ["windwalker", "framework", "registry"],
-    "homepage": "https://github.com/ventoviro/windwalker-registry",
+    "description": "Windwalker Structure package",
+    "keywords": ["windwalker", "framework", "structure"],
+    "homepage": "https://github.com/ventoviro/windwalker-structure",
     "license": "LGPL-2.0+",
     "require": {
         "php": ">=5.3.10"
@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Windwalker\\Registry\\": ""
+            "Windwalker\\Structure\\": ""
         }
     },
     "extra": {

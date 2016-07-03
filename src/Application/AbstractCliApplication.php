@@ -10,7 +10,7 @@ namespace Windwalker\Application;
 
 use Windwalker\IO\Cli\IO;
 use Windwalker\IO\Cli\IOInterface;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 /**
  * Simple class for a Windwalker command line application.
@@ -32,15 +32,15 @@ abstract class AbstractCliApplication extends AbstractApplication
 	/**
 	 * Class constructor.
 	 *
-	 * @param   IOInterface  $io      An optional argument to provide dependency injection for the application's
+	 * @param   IOInterface $io       An optional argument to provide dependency injection for the application's
 	 *                                IO object.
-	 * @param   Registry     $config  An optional argument to provide dependency injection for the application's
-	 *                                config object.  If the argument is a Registry object that object will become
+	 * @param   Structure   $config   An optional argument to provide dependency injection for the application's
+	 *                                config object.  If the argument is a Structure object that object will become
 	 *                                the application's config object, otherwise a default config object is created.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(IOInterface $io = null, Registry $config = null)
+	public function __construct(IOInterface $io = null, Structure $config = null)
 	{
 		// Close the application if we are not executed from the command line.
 		if (!defined('STDOUT') || !defined('STDIN') || !isset($_SERVER['argv']))
@@ -49,7 +49,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 		}
 
 		$this->io     = $io instanceof IOInterface  ? $io     : new IO;
-		$this->config = $config instanceof Registry ? $config : new Registry;
+		$this->config = $config instanceof Structure ? $config : new Structure;
 
 		$this->init();
 

@@ -6,12 +6,12 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Format;
+namespace Windwalker\Structure\Format;
 
-use Windwalker\Registry\RegistryHelper;
+use Windwalker\Structure\StructureHelper;
 
 /**
- * PHP class format handler for Registry
+ * PHP class format handler for Structure
  *
  * @since  2.0
  */
@@ -28,7 +28,7 @@ class PhpFormat implements FormatInterface
 	 */
 	public static function structToString($struct, array $options = array())
 	{
-		$header = RegistryHelper::getValue($options, 'header');
+		$header = StructureHelper::getValue($options, 'header');
 
 		// Build the object variables string
 		$vars = "";
@@ -57,7 +57,7 @@ class PhpFormat implements FormatInterface
 		$str .= ");\n";
 
 		// Use the closing tag if set to true in parameters.
-		if (RegistryHelper::getValue($options, 'closingtag', false))
+		if (StructureHelper::getValue($options, 'closingtag', false))
 		{
 			$str .= "\n?>";
 		}

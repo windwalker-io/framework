@@ -14,7 +14,7 @@ use Windwalker\Console\Command\RootCommand;
 use Windwalker\Console\Command\HelpCommand;
 use Windwalker\Console\IO\IO;
 use Windwalker\Console\IO\IOInterface;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 /**
  * Class Console
@@ -78,10 +78,10 @@ class Console extends AbstractConsole
 	/**
 	 * Class init.
 	 *
-	 * @param   IOInterface $io      The Input and output handler.
-	 * @param   Registry    $config  Application's config object.
+	 * @param   IOInterface $io     The Input and output handler.
+	 * @param   Structure   $config Application's config object.
 	 */
-	public function __construct(IOInterface $io = null, Registry $config = null)
+	public function __construct(IOInterface $io = null, Structure $config = null)
 	{
 		$io = $io ? : new IO;
 

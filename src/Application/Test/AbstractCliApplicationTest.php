@@ -50,7 +50,7 @@ class AbstractCliApplicationTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertInstanceOf(
-			'Windwalker\\Registry\\Registry',
+			'Windwalker\\Structure\\Structure',
 			TestHelper::getValue($this->instance, 'config'),
 			'Config property wrong type'
 		);

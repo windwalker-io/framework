@@ -19,7 +19,7 @@ use Windwalker\Http\Response\RedirectResponse;
 use Windwalker\Http\WebHttpServer;
 use Windwalker\Uri\Uri;
 use Windwalker\Application\Helper\ApplicationHelper;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Windwalker\Uri\UriData;
@@ -85,14 +85,14 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * Class constructor.
 	 *
 	 * @param   Request        $request       An optional argument to provide dependency injection for the Http request object.
-	 * @param   Registry       $config        An optional argument to provide dependency injection for the application's
+	 * @param   Structure      $config        An optional argument to provide dependency injection for the application's
 	 *                                        config object.
 	 * @param   WebEnvironment $environment   An optional argument to provide dependency injection for the application's
 	 *                                        environment object.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(ServerRequestInterface $request = null, Registry $config = null, WebEnvironment $environment = null)
+	public function __construct(ServerRequestInterface $request = null, Structure $config = null, WebEnvironment $environment = null)
 	{
 		$request     = $request     ? : ServerRequestFactory::createFromGlobals();
 		$environment = $environment ? : WebEnvironment::create($request->getServerParams());

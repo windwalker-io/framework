@@ -129,7 +129,7 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
 	 * Because a reason phrase is not a required element in a response
 	 * status line, the reason phrase value MAY be null. Implementations MAY
 	 * choose to return the default RFC 7231 recommended reason phrase (or those
-	 * listed in the IANA HTTP Status Code Registry) for the response's
+	 * listed in the IANA HTTP Status Code Structure) for the response's
 	 * status code.
 	 *
 	 * @link http://tools.ietf.org/html/rfc7231#section-6

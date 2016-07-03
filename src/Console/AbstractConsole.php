@@ -15,7 +15,7 @@ use Windwalker\Console\Descriptor\Text\TextDescriptorHelper;
 use Windwalker\Console\Descriptor\Text\TextOptionDescriptor;
 use Windwalker\Console\IO\IO;
 use Windwalker\Console\IO\IOInterface;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 /**
  * The AbstractConsole class.
@@ -34,7 +34,7 @@ abstract class AbstractConsole
 	/**
 	 * Property config.
 	 *
-	 * @var  Registry
+	 * @var  Structure
 	 */
 	protected $config = null;
 
@@ -48,13 +48,13 @@ abstract class AbstractConsole
 	/**
 	 * Class constructor.
 	 *
-	 * @param   IOInterface  $io      An optional argument to provide dependency injection for the application's
+	 * @param   IOInterface $io       An optional argument to provide dependency injection for the application's
 	 *                                IO object.
-	 * @param   Registry     $config  An optional argument to provide dependency injection for the config object.
+	 * @param   Structure   $config   An optional argument to provide dependency injection for the config object.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(IOInterface $io = null, Registry $config = null)
+	public function __construct(IOInterface $io = null, Structure $config = null)
 	{
 		// Close the application if we are not executed from the command line.
 		if (!defined('STDOUT') || !defined('STDIN') || !isset($_SERVER['argv']))
@@ -63,7 +63,7 @@ abstract class AbstractConsole
 		}
 
 		$this->io = $io instanceof IOInterface ? $io : new IO;
-		$this->config = $config instanceof Registry ? $config : new Registry;
+		$this->config = $config instanceof Structure ? $config : new Structure;
 
 		$this->init();
 
@@ -245,13 +245,13 @@ abstract class AbstractConsole
 	/**
 	 * Sets the configuration for the application.
 	 *
-	 * @param   Registry  $config  A registry object holding the configuration.
+	 * @param   Structure $config A structure object holding the configuration.
 	 *
 	 * @return  static  Returns itself to support chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function setConfiguration(Registry $config)
+	public function setConfiguration(Structure $config)
 	{
 		$this->config = $config;
 
@@ -261,7 +261,7 @@ abstract class AbstractConsole
 	/**
 	 * Method to get property Config
 	 *
-	 * @return  Registry
+	 * @return  Structure
 	 */
 	public function getConfig()
 	{
@@ -271,7 +271,7 @@ abstract class AbstractConsole
 	/**
 	 * Method to set property config
 	 *
-	 * @param   Registry $config
+	 * @param   Structure $config
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

@@ -6,12 +6,12 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Format;
+namespace Windwalker\Structure\Format;
 
-use Windwalker\Registry\RegistryHelper;
+use Windwalker\Structure\StructureHelper;
 
 /**
- * JSON format handler for Registry.
+ * JSON format handler for Structure.
  *
  * @since  2.0
  */
@@ -27,8 +27,8 @@ class JsonFormat implements FormatInterface
 	 */
 	public static function structToString($struct, array $options = array())
 	{
-		$depth  = RegistryHelper::getValue($options, 'depth');
-		$option = RegistryHelper::getValue($options, 'options', 0);
+		$depth  = StructureHelper::getValue($options, 'depth');
+		$option = StructureHelper::getValue($options, 'options', 0);
 
 		if (version_compare(PHP_VERSION, '5.5', '>'))
 		{
@@ -57,9 +57,9 @@ class JsonFormat implements FormatInterface
 	 */
 	public static function stringToStruct($data, array $options = array())
 	{
-		$assoc  = RegistryHelper::getValue($options, 'assoc', false);
-		$depth  = RegistryHelper::getValue($options, 'depth', 512);
-		$option = RegistryHelper::getValue($options, 'options', 0);
+		$assoc  = StructureHelper::getValue($options, 'assoc', false);
+		$depth  = StructureHelper::getValue($options, 'depth', 512);
+		$option = StructureHelper::getValue($options, 'options', 0);
 
 		if (PHP_VERSION >= 5.4)
 		{

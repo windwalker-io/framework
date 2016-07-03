@@ -8,12 +8,12 @@
 
 namespace Windwalker\Renderer;
 
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 /**
  * Class AbstractRenderer
  *
- * @property-read  Registry  $config  Config data.
+ * @property-read  Structure $config  Config data.
  *
  * @since 2.0
  */
@@ -29,7 +29,7 @@ abstract class AbstractRenderer implements RendererInterface
 	/**
 	 * Property config.
 	 *
-	 * @var  Registry
+	 * @var  Structure
 	 */
 	protected $config = array();
 
@@ -43,7 +43,7 @@ abstract class AbstractRenderer implements RendererInterface
 	{
 		$this->setPaths($paths);
 
-		$this->config = new Registry($this->config);
+		$this->config = new Structure($this->config);
 
 		$this->config->load($config);
 	}

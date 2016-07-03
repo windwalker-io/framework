@@ -6,21 +6,21 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Test\Format;
+namespace Windwalker\Structure\Test\Format;
 
-use Windwalker\Registry\Format\JsonFormat;
+use Windwalker\Structure\Format\IniFormat;
 
 /**
- * Test class of JsonFormat
+ * Test class of IniFormat
  *
  * @since 2.0
  */
-class JsonFormatTest extends \PHPUnit_Framework_TestCase
+class IniFormatTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var JsonFormat
+	 * @var IniFormat
 	 */
 	protected $instance;
 
@@ -32,7 +32,7 @@ class JsonFormatTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new JsonFormat;
+		$this->instance = new IniFormat;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class JsonFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\JsonFormat::structToString
+	 * @covers Windwalker\Structure\Format\IniFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class JsonFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\JsonFormat::stringToStruct
+	 * @covers Windwalker\Structure\Format\IniFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()

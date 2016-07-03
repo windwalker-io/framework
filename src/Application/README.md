@@ -17,7 +17,7 @@ Add this to the require block in your `composer.json`.
 ``` php
 use Windwalker\Application\AbstractApplication;
 use Windwalker\IO\Input;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 class MyApplication extends AbstractApplication
 {
@@ -43,7 +43,7 @@ class MyApplication extends AbstractApplication
     }
 }
 
-$config = new Registry(array());
+$config = new Structure(array());
 
 $app = new MyApplication(new Input, $config);
 

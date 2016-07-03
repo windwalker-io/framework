@@ -112,11 +112,11 @@ $container->share('system.application', $app)
 $app = $container->get('app');
 ```
 
-So it is a good way that we can build IOC registry:
+So it is a good way that we can build IOC structure:
 
 ``` php
 $config = array(
-    'ioc.registry' => array(
+    'ioc.structure' => array(
         'app'     => 'system.application',
         'input'   => 'system.input',
         'session' => 'system.session'
@@ -124,7 +124,7 @@ $config = array(
 );
 
 // Your own IOC class follows your rule
-IOC::setRegistry($config['ioc.registry']);
+IOC::setStructure($config['ioc.structure']);
 IOC::setContainer($container);
 
 // Will get system.session from Container
@@ -137,14 +137,14 @@ Container can build an object and auto inject the needed dependency objects.
 
 ``` php
 use Windwalker\IO\Input;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 class MyClass
 {
     public $input;
     public $config;
 
-    public function __construct(Input $input, Registry $config)
+    public function __construct(Input $input, Structure $config)
     {
         $this->input = $input;
         $this->config = $config;
@@ -154,7 +154,7 @@ class MyClass
 $myObject = $container->createObject('MyClass');
 
 $myObject->input; // Input
-$myObject->config; // Registry
+$myObject->config; // Structure
 ```
 
 ### Binding Classes
@@ -166,14 +166,14 @@ Here is a class but dependency to an abstract class, we can bind a sub class to 
 
 ``` php
 use Windwalker\Model\AbstractModel;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 class MyClass
 {
     public $model;
     public $config;
 
-    public function __construct(AbstractModel $model, Registry $config)
+    public function __construct(AbstractModel $model, Structure $config)
     {
         $this->model = $model;
         $this->config = $config;

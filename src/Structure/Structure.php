@@ -6,7 +6,7 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry;
+namespace Windwalker\Structure;
 
 if (!interface_exists('JsonSerializable'))
 {
@@ -14,11 +14,11 @@ if (!interface_exists('JsonSerializable'))
 }
 
 /**
- * Registry class
+ * Structure class
  *
  * @since  2.0
  */
-class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \Countable
+class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \Countable
 {
 	/**
 	 * Property separator.
@@ -28,7 +28,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	protected $separator = '.';
 
 	/**
-	 * Registry data store.
+	 * Structure data store.
 	 *
 	 * @var    array
 	 * @since  2.0
@@ -45,7 +45,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Constructor
 	 *
-	 * @param   mixed   $data   The data to bind to the new Registry object.
+	 * @param   mixed   $data   The data to bind to the new Structure object.
 	 * @param   string  $format The format of input, only work when first argument is string.
 	 *
 	 * @since   2.0
@@ -64,9 +64,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Magic function to clone the registry object.
+	 * Magic function to clone the structure object.
 	 *
-	 * @return  Registry
+	 * @return  Structure
 	 *
 	 * @since   2.0
 	 */
@@ -96,7 +96,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
 	/**
 	 * Implementation for the JsonSerializable interface.
-	 * Allows us to pass Registry objects to json_encode.
+	 * Allows us to pass Structure objects to json_encode.
 	 *
 	 * @return  array
 	 *
@@ -127,9 +127,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Check if a registry path exists.
+	 * Check if a structure path exists.
 	 *
-	 * @param   string  $path  Registry path (e.g. foo.content.showauthor)
+	 * @param   string  $path  Structure path (e.g. foo.content.showauthor)
 	 *
 	 * @return  boolean
 	 *
@@ -141,9 +141,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Get a registry value.
+	 * Get a structure value.
 	 *
-	 * @param   string  $path       Registry path (e.g. foo.content.showauthor)
+	 * @param   string  $path       Structure path (e.g. foo.content.showauthor)
 	 * @param   mixed   $default    Optional default value, returned if the internal value is null.
 	 *
 	 * @return  mixed  Value of entry or null
@@ -152,7 +152,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function get($path, $default = null)
 	{
-		$result = RegistryHelper::getByPath($this->data, $path, $this->separator);
+		$result = StructureHelper::getByPath($this->data, $path, $this->separator);
 
 		return !is_null($result) ? $result : $default;
 	}
@@ -172,7 +172,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Load an array or object of values into the default namespace
 	 *
-	 * @param  array|object  $data  The value to load into registry.
+	 * @param  array|object  $data  The value to load into structure.
 	 * @param  boolean       $raw   Set to false that we will convert all object to array.
 	 *
 	 * @return static Return this object to support chaining.
@@ -185,7 +185,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Load the contents of a file into the registry
+	 * Load the contents of a file into the structure
 	 *
 	 * @param   string  $file     Path to file to load
 	 * @param   string  $format   Format of the file [optional: defaults to JSON]
@@ -199,15 +199,15 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	{
 		$raw = isset($options['load_raw']) ? $options['load_raw'] : false;
 		
-		$this->load(RegistryHelper::loadFile($file, $format, $options), $raw);
+		$this->load(StructureHelper::loadFile($file, $format, $options), $raw);
 
 		return $this;
 	}
 
 	/**
-	 * Load a string into the registry
+	 * Load a string into the structure
 	 *
-	 * @param   string  $data     String to load into the registry
+	 * @param   string  $data     String to load into the structure
 	 * @param   string  $format   Format of the string
 	 * @param   array   $options  Options used by the formatter
 	 *
@@ -219,7 +219,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	{
 		$raw = isset($options['load_raw']) ? $options['load_raw'] : false;
 		
-		$this->load(RegistryHelper::loadString($data, $format, $options), $raw);
+		$this->load(StructureHelper::loadString($data, $format, $options), $raw);
 
 		return $this;
 	}
@@ -227,8 +227,8 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Merge a structure data into this object.
 	 *
-	 * @param   Registry|mixed  $source  Source structure data to merge.
-	 * @param   boolean         $raw     Set to false to convert all object to array.
+	 * @param   Structure|mixed $source Source structure data to merge.
+	 * @param   boolean         $raw    Set to false to convert all object to array.
 	 *
 	 * @return  static  Return this object to support chaining.
 	 *
@@ -236,7 +236,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function merge($source, $raw = false)
 	{
-		if ($source instanceof Registry)
+		if ($source instanceof Structure)
 		{
 			$source = $source->getRaw();
 		}
@@ -249,15 +249,15 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Merge a structure data to a node.
 	 *
-	 * @param   string    $path    The path to merge as root.
-	 * @param   Registry  $source  Source structure data to merge.
-	 * @param   boolean   $raw     Set to false to convert all object to array.
+	 * @param   string    $path   The path to merge as root.
+	 * @param   Structure $source Source structure data to merge.
+	 * @param   boolean   $raw    Set to false to convert all object to array.
 	 *
 	 * @return  static
 	 */
 	public function mergeTo($path, $source, $raw = false)
 	{
-		$nodes = RegistryHelper::getPathNodes($path);
+		$nodes = StructureHelper::getPathNodes($path);
 
 		$data = array();
 
@@ -270,7 +270,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 			$tmp =& $tmp[$node];
 		}
 
-		if ($source instanceof Registry)
+		if ($source instanceof Structure)
 		{
 			$source = $source->getRaw();
 		}
@@ -362,9 +362,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Set a registry value and convert object to array.
+	 * Set a structure value and convert object to array.
 	 *
-	 * @param   string  $path   Registry Path (e.g. foo.content.showauthor)
+	 * @param   string  $path   Structure Path (e.g. foo.content.showauthor)
 	 * @param   mixed   $value  Value of entry.
 	 *
 	 * @return  static  Return self to support chaining.
@@ -375,18 +375,18 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	{
 		if (is_array($value) || is_object($value))
 		{
-			$value = RegistryHelper::toArray($value, true);
+			$value = StructureHelper::toArray($value, true);
 		}
 
-		RegistryHelper::setByPath($this->data, $path, $value, $this->separator);
+		StructureHelper::setByPath($this->data, $path, $value, $this->separator);
 
 		return $this;
 	}
 
 	/**
-	 * Set a registry value.
+	 * Set a structure value.
 	 *
-	 * @param   string  $path   Registry Path (e.g. foo.content.showauthor)
+	 * @param   string  $path   Structure Path (e.g. foo.content.showauthor)
 	 * @param   mixed   $value  Value of entry.
 	 *
 	 * @return  static  Return self to support chaining.
@@ -395,7 +395,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function setRaw($path, $value)
 	{
-		RegistryHelper::setByPath($this->data, $path, $value, $this->separator);
+		StructureHelper::setByPath($this->data, $path, $value, $this->separator);
 
 		return $this;
 	}
@@ -423,7 +423,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function toObject($class = 'stdClass')
 	{
-		return RegistryHelper::toObject($this->data, $class);
+		return StructureHelper::toObject($this->data, $class);
 	}
 
 	/**
@@ -438,7 +438,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function toString($format = Format::JSON, $options = array())
 	{
-		return RegistryHelper::toString($this->data, $format, $options);
+		return StructureHelper::toString($this->data, $format, $options);
 	}
 
 	/**
@@ -455,7 +455,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		// Ensure the input data is an array.
 		if (!$raw)
 		{
-			$data = RegistryHelper::toArray($data, true);
+			$data = StructureHelper::toArray($data, true);
 		}
 
 		foreach ($data as $key => $value)
@@ -523,7 +523,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function flatten($separator = '.')
 	{
-		return RegistryHelper::flatten($this->data, $separator);
+		return StructureHelper::flatten($this->data, $separator);
 	}
 
 	/**
@@ -555,9 +555,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Push value to a path in registry
+	 * Push value to a path in structure
 	 *
-	 * @param   string  $path   Parent registry Path (e.g. windwalker.content.showauthor)
+	 * @param   string  $path   Parent structure Path (e.g. windwalker.content.showauthor)
 	 * @param   mixed   $value  Value of entry, one or more elements.
 	 *
 	 * @return  integer  the new number of elements in the array.
@@ -601,9 +601,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Prepend value to a path in registry.
+	 * Prepend value to a path in structure.
 	 *
-	 * @param   string  $path   Parent registry Path (e.g. windwalker.content.showauthor)
+	 * @param   string  $path   Parent structure Path (e.g. windwalker.content.showauthor)
 	 * @param   mixed   $value  Value of entry, one or more elements.
 	 *
 	 * @return  integer  the new number of elements in the array.
@@ -647,9 +647,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * To remove first element from the path of this registry.
+	 * To remove first element from the path of this structure.
 	 *
-	 * @param   string  $path  The registry path.
+	 * @param   string  $path  The structure path.
 	 *
 	 * @return  mixed  The shifted value, or null if array is empty.
 	 */
@@ -675,9 +675,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * To remove last element from the path of this registry.
+	 * To remove last element from the path of this structure.
 	 *
-	 * @param   string  $path  The registry path.
+	 * @param   string  $path  The structure path.
 	 *
 	 * @return  mixed  The shifted value, or &null; if array is empty.
 	 */
@@ -708,7 +708,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * This allows the data properties to be accessed via a foreach statement.
 	 *
 	 * You can wrap this iterator by RecursiveIteratorIterator that will support recursive foreach.
-	 * Example: `foreach (new \RecursiveIteratorIterator($registry) as $value)`
+	 * Example: `foreach (new \RecursiveIteratorIterator($structure) as $value)`
 	 *
 	 * @return  \RecursiveArrayIterator  This object represented as an RecursiveArrayIterator.
 	 *

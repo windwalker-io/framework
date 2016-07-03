@@ -8,7 +8,7 @@
 
 namespace Windwalker\Renderer;
 
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 use Windwalker\Renderer\Twig\GlobalContainer;
 use Windwalker\Renderer\Twig\TwigFilesystemLoader;
 
@@ -43,7 +43,7 @@ class TwigRenderer extends AbstractEngineRenderer
 	/**
 	 * Property config.
 	 *
-	 * @var  Registry|array
+	 * @var  Structure|array
 	 */
 	protected $config = array();
 

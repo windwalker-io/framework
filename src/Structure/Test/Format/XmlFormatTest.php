@@ -6,21 +6,21 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Test\Format;
+namespace Windwalker\Structure\Test\Format;
 
-use Windwalker\Registry\Format\PhpFormat;
+use Windwalker\Structure\Format\XmlFormat;
 
 /**
- * Test class of PhpFormat
+ * Test class of XmlFormat
  *
  * @since 2.0
  */
-class PhpFormatTest extends \PHPUnit_Framework_TestCase
+class XmlFormatTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var PhpFormat
+	 * @var XmlFormat
 	 */
 	protected $instance;
 
@@ -32,7 +32,7 @@ class PhpFormatTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new PhpFormat;
+		$this->instance = new XmlFormat;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class PhpFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\PhpFormat::structToString
+	 * @covers Windwalker\Structure\Format\XmlFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class PhpFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\PhpFormat::stringToStruct
+	 * @covers Windwalker\Structure\Format\XmlFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()

@@ -6,21 +6,21 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Test\Format;
+namespace Windwalker\Structure\Test\Format;
 
-use Windwalker\Registry\Format\IniFormat;
+use Windwalker\Structure\Format\PhpFormat;
 
 /**
- * Test class of IniFormat
+ * Test class of PhpFormat
  *
  * @since 2.0
  */
-class IniFormatTest extends \PHPUnit_Framework_TestCase
+class PhpFormatTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var IniFormat
+	 * @var PhpFormat
 	 */
 	protected $instance;
 
@@ -32,7 +32,7 @@ class IniFormatTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new IniFormat;
+		$this->instance = new PhpFormat;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class IniFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\IniFormat::structToString
+	 * @covers Windwalker\Structure\Format\PhpFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class IniFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\IniFormat::stringToStruct
+	 * @covers Windwalker\Structure\Format\PhpFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()

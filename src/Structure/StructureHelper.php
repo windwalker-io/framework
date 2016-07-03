@@ -6,14 +6,14 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry;
+namespace Windwalker\Structure;
 
 /**
- * Class RegistryHelper
+ * Class StructureHelper
  *
  * @since 2.0
  */
-class RegistryHelper
+class StructureHelper
 {
 	/**
 	 * Property objectStorage.
@@ -23,7 +23,7 @@ class RegistryHelper
 	private static $objectStorage;
 
 	/**
-	 * Load the contents of a file into the registry
+	 * Load the contents of a file into the structure
 	 *
 	 * @param   string  $file     Path to file to load
 	 * @param   string  $format   Format of the file [optional: defaults to JSON]
@@ -53,9 +53,9 @@ class RegistryHelper
 	}
 
 	/**
-	 * Load a string into the registry
+	 * Load a string into the structure
 	 *
-	 * @param   string  $data     String to load into the registry
+	 * @param   string  $data     String to load into the structure
 	 * @param   string  $format   Format of the string
 	 * @param   array   $options  Options used by the formatter
 	 *
@@ -94,7 +94,7 @@ class RegistryHelper
 	 *
 	 * @param string $format
 	 *
-	 * @return  string|\Windwalker\Registry\Format\FormatInterface
+	 * @return  string|\Windwalker\Structure\Format\FormatInterface
 	 *
 	 * @throws  \DomainException
 	 *
@@ -107,7 +107,7 @@ class RegistryHelper
 
 		if (!class_exists($class))
 		{
-			throw new \DomainException(sprintf('Registry format: %s not supported. Class: %s not found.', $format, $class));
+			throw new \DomainException(sprintf('Structure format: %s not supported. Class: %s not found.', $format, $class));
 		}
 
 		return $class;
@@ -182,7 +182,7 @@ class RegistryHelper
 	/**
 	 * Get data from array or object by path.
 	 *
-	 * Example: `RegistryHelper::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
+	 * Example: `StructureHelper::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
 	 *
 	 * @param mixed  $data      An array or object to get value.
 	 * @param mixed  $path      The key path.
@@ -275,7 +275,7 @@ class RegistryHelper
 	}
 
 	/**
-	 * Explode the registry path into an array and remove empty
+	 * Explode the structure path into an array and remove empty
 	 * nodes that occur as a result of a double dot. ex: windwalker..test
 	 * Finally, re-key the array so they are sequential.
 	 *

@@ -9,7 +9,7 @@
 namespace Windwalker\Application;
 
 use Windwalker\IO\Cli\IOInterface;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 use Psr\Log\LoggerAwareInterface;
 
 /**
@@ -103,15 +103,15 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 *
 	 * @param   IOInterface $io      An optional argument to provide dependency injection for the application's
 	 *                               IO object.
-	 * @param   Registry    $config  An optional argument to provide dependency injection for the application's
-	 *                               config object.  If the argument is a Registry object that object will become
+	 * @param   Structure   $config  An optional argument to provide dependency injection for the application's
+	 *                               config object.  If the argument is a Structure object that object will become
 	 *                               the application's config object, otherwise a default config object is created.
 	 *
 	 * @throws \RuntimeException
 	 *
 	 * @since  2.0
 	 */
-	public function __construct(IOInterface $io = null, Registry $config = null)
+	public function __construct(IOInterface $io = null, Structure $config = null)
 	{
 		// Verify that the process control extension for PHP is available.
 		// @codeCoverageIgnoreStart

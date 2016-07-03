@@ -6,21 +6,21 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Test\Format;
+namespace Windwalker\Structure\Test\Format;
 
-use Windwalker\Registry\Format\XmlFormat;
+use Windwalker\Structure\Format\JsonFormat;
 
 /**
- * Test class of XmlFormat
+ * Test class of JsonFormat
  *
  * @since 2.0
  */
-class XmlFormatTest extends \PHPUnit_Framework_TestCase
+class JsonFormatTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var XmlFormat
+	 * @var JsonFormat
 	 */
 	protected $instance;
 
@@ -32,7 +32,7 @@ class XmlFormatTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new XmlFormat;
+		$this->instance = new JsonFormat;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class XmlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\XmlFormat::structToString
+	 * @covers Windwalker\Structure\Format\JsonFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class XmlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\Format\XmlFormat::stringToStruct
+	 * @covers Windwalker\Structure\Format\JsonFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()

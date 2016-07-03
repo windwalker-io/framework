@@ -11,12 +11,12 @@ namespace Windwalker\Application;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 /**
  * The Abstract Application Class.
  *
- * @property-read  Registry  $config
+ * @property-read  Structure $config
  *
  * @since 2.0
  */
@@ -25,7 +25,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * The application configuration object.
 	 *
-	 * @var    Registry
+	 * @var    Structure
 	 * @since  2.0
 	 */
 	protected $config;
@@ -41,13 +41,13 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Class constructor of Application.
 	 *
-	 * @param   Registry  $config  An optional argument to provide a Registry object to be config.
+	 * @param   Structure $config An optional argument to provide a Structure object to be config.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(Registry $config = null)
+	public function __construct(Structure $config = null)
 	{
-		$this->config = $config instanceof Registry ? $config : new Registry($config);
+		$this->config = $config instanceof Structure ? $config : new Structure($config);
 
 		$this->init();
 	}
@@ -184,13 +184,13 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Sets the configuration for the application.
 	 *
-	 * @param   Registry  $config  A registry object holding the configuration.
+	 * @param   Structure $config A structure object holding the configuration.
 	 *
 	 * @return  AbstractApplication  Returns itself to support chaining.
 	 *
 	 * @since   2.0
 	 */
-	public function setConfiguration(Registry $config)
+	public function setConfiguration(Structure $config)
 	{
 		$this->config = $config;
 

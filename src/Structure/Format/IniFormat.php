@@ -6,12 +6,12 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Format;
+namespace Windwalker\Structure\Format;
 
-use Windwalker\Registry\RegistryHelper;
+use Windwalker\Structure\StructureHelper;
 
 /**
- * INI format handler for Registry.
+ * INI format handler for Structure.
  *
  * @since  2.0
  */
@@ -46,7 +46,7 @@ class IniFormat implements FormatInterface
 			// If the value is an object then we need to put it in a local section.
 			if (is_array($value))
 			{
-				if (!RegistryHelper::isAssociativeArray($value))
+				if (!StructureHelper::isAssociativeArray($value))
 				{
 					continue;
 				}

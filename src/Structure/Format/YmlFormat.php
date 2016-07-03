@@ -6,7 +6,7 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Format;
+namespace Windwalker\Structure\Format;
 
 /**
  * YAML format proxy.

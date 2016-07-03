@@ -6,18 +6,18 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Registry\Test;
+namespace Windwalker\Structure\Test;
 
-use Windwalker\Registry\Registry;
-use Windwalker\Registry\RegistryHelper;
-use Windwalker\Registry\Test\Stubs\StubDumpable;
+use Windwalker\Structure\Structure;
+use Windwalker\Structure\StructureHelper;
+use Windwalker\Structure\Test\Stubs\StubDumpable;
 
 /**
- * Test class of RegistryHelper
+ * Test class of StructureHelper
  *
  * @since 2.1
  */
-class RegistryHelperTest extends \PHPUnit_Framework_TestCase
+class StructureHelperTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -44,13 +44,13 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\RegistryHelper::isAssociativeArray
+	 * @covers Windwalker\Structure\StructureHelper::isAssociativeArray
 	 */
 	public function testIsAssociativeArray()
 	{
-		$this->assertFalse(RegistryHelper::isAssociativeArray(array('a', 'b')));
+		$this->assertFalse(StructureHelper::isAssociativeArray(array('a', 'b')));
 
-		$this->assertTrue(RegistryHelper::isAssociativeArray(array(1, 2, 'a' => 'b', 'c', 'd')));
+		$this->assertTrue(StructureHelper::isAssociativeArray(array(1, 2, 'a' => 'b', 'c', 'd')));
 	}
 
 	/**
@@ -58,21 +58,21 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\RegistryHelper::toObject
+	 * @covers Windwalker\Structure\StructureHelper::toObject
 	 */
 	public function testToObject()
 	{
-		$data = RegistryHelper::toObject(array('foo' => 'bar'));
+		$data = StructureHelper::toObject(array('foo' => 'bar'));
 
 		$this->assertInternalType('object', $data);
 
 		$this->assertEquals('bar', $data->foo);
 
-		$data = RegistryHelper::toObject(array('foo' => 'bar'), 'ArrayObject');
+		$data = StructureHelper::toObject(array('foo' => 'bar'), 'ArrayObject');
 
 		$this->assertInstanceOf('ArrayObject', $data);
 
-		$data = RegistryHelper::toObject(array('foo' => array('bar' => 'baz')));
+		$data = StructureHelper::toObject(array('foo' => array('bar' => 'baz')));
 
 		$this->assertEquals('baz', $data->foo->bar);
 	}
@@ -82,7 +82,7 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\RegistryHelper::getByPath
+	 * @covers Windwalker\Structure\StructureHelper::getByPath
 	 */
 	public function testGetByPath()
 	{
@@ -102,11 +102,11 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 			)
 		);
 
-		$this->assertEquals('sakura', RegistryHelper::getByPath($data, 'flower'));
-		$this->assertEquals('love', RegistryHelper::getByPath($data, 'pos1.sunflower'));
-		$this->assertEquals('love', RegistryHelper::getByPath($data, 'pos1/sunflower', '/'));
-		$this->assertEquals($data['array'], RegistryHelper::getByPath($data, 'array'));
-		$this->assertNull(RegistryHelper::getByPath($data, 'not.exists'));
+		$this->assertEquals('sakura', StructureHelper::getByPath($data, 'flower'));
+		$this->assertEquals('love', StructureHelper::getByPath($data, 'pos1.sunflower'));
+		$this->assertEquals('love', StructureHelper::getByPath($data, 'pos1/sunflower', '/'));
+		$this->assertEquals($data['array'], StructureHelper::getByPath($data, 'array'));
+		$this->assertNull(StructureHelper::getByPath($data, 'not.exists'));
 	}
 
 	/**
@@ -114,7 +114,7 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\RegistryHelper::getByPath
+	 * @covers Windwalker\Structure\StructureHelper::getByPath
 	 */
 	public function testGetByPathWithObject()
 	{
@@ -124,7 +124,7 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 			'pos1' => (object) array(
 				'sunflower' => 'love'
 			),
-			'pos2' => new Registry(array(
+			'pos2' => new Structure(array(
 				'cornflower' => 'elegant'
 			)),
 			'array' => array(
@@ -134,10 +134,10 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 			)
 		);
 
-		$this->assertEquals('sakura', RegistryHelper::getByPath($data, 'flower'));
-		$this->assertEquals('love', RegistryHelper::getByPath($data, 'pos1.sunflower'));
-		$this->assertEquals('elegant', RegistryHelper::getByPath($data, 'pos2.cornflower'));
-		$this->assertEquals(null, RegistryHelper::getByPath($data, 'pos2.data'));
+		$this->assertEquals('sakura', StructureHelper::getByPath($data, 'flower'));
+		$this->assertEquals('love', StructureHelper::getByPath($data, 'pos1.sunflower'));
+		$this->assertEquals('elegant', StructureHelper::getByPath($data, 'pos2.cornflower'));
+		$this->assertEquals(null, StructureHelper::getByPath($data, 'pos2.data'));
 	}
 
 	/**
@@ -145,35 +145,35 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\RegistryHelper::setByPath
+	 * @covers Windwalker\Structure\StructureHelper::setByPath
 	 */
 	public function testSetByPath()
 	{
 		$data = array();
 
 		// One level
-		$return = RegistryHelper::setByPath($data, 'flower', 'sakura');
+		$return = StructureHelper::setByPath($data, 'flower', 'sakura');
 
 		$this->assertEquals('sakura', $data['flower']);
 		$this->assertTrue($return);
 
 		// Multi-level
-		RegistryHelper::setByPath($data, 'foo.bar', 'test');
+		StructureHelper::setByPath($data, 'foo.bar', 'test');
 
 		$this->assertEquals('test', $data['foo']['bar']);
 
 		// Separator
-		RegistryHelper::setByPath($data, 'foo/bar', 'play', '/');
+		StructureHelper::setByPath($data, 'foo/bar', 'play', '/');
 
 		$this->assertEquals('play', $data['foo']['bar']);
 
 		// False
-		$return = RegistryHelper::setByPath($data, '', 'goo');
+		$return = StructureHelper::setByPath($data, '', 'goo');
 
 		$this->assertFalse($return);
 
 		// Fix path
-		RegistryHelper::setByPath($data, 'double..separators', 'value');
+		StructureHelper::setByPath($data, 'double..separators', 'value');
 
 		$this->assertEquals('value', $data['double']['separators']);
 	}
@@ -183,12 +183,12 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Registry\RegistryHelper::getPathNodes
+	 * @covers Windwalker\Structure\StructureHelper::getPathNodes
 	 */
 	public function testGetPathNodes()
 	{
-		$this->assertEquals(array('a', 'b', 'c'), RegistryHelper::getPathNodes('a..b.c'));
-		$this->assertEquals(array('a', 'b', 'c'), RegistryHelper::getPathNodes('a//b/c', '/'));
+		$this->assertEquals(array('a', 'b', 'c'), StructureHelper::getPathNodes('a..b.c'));
+		$this->assertEquals(array('a', 'b', 'c'), StructureHelper::getPathNodes('a//b/c', '/'));
 	}
 
 	/**
@@ -196,7 +196,7 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Registry\RegistryHelper::flatten
+	 * @covers  Windwalker\Structure\StructureHelper::flatten
 	 * @since   2.0
 	 */
 	public function testFlatten()
@@ -212,11 +212,11 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 			)
 		);
 
-		$flatted = RegistryHelper::flatten($array);
+		$flatted = StructureHelper::flatten($array);
 
 		$this->assertEquals($flatted['pos1.sunflower'], 'love');
 
-		$flatted = RegistryHelper::flatten($array, '/');
+		$flatted = StructureHelper::flatten($array, '/');
 
 		$this->assertEquals($flatted['pos1/sunflower'], 'love');
 	}
@@ -274,19 +274,19 @@ class RegistryHelperTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testToArray($input, $recursive, $expect)
 	{
-		$this->assertEquals($expect, RegistryHelper::toArray($input, $recursive));
+		$this->assertEquals($expect, StructureHelper::toArray($input, $recursive));
 	}
 
 	public function testDumpObjectValue()
 	{
 		$data = new StubDumpable(new StubDumpable);
 
-		$dumped = RegistryHelper::dumpObjectValues($data);
+		$dumped = StructureHelper::dumpObjectValues($data);
 
 		$this->assertEquals('foo', $dumped['foo']);
 		$this->assertEquals('bar', $dumped['bar']);
 		$this->assertNull($dumped['data']['self']);
-		$this->assertEquals(RegistryHelper::dumpObjectValues(new StubDumpable), $dumped['data']['new']);
+		$this->assertEquals(StructureHelper::dumpObjectValues(new StubDumpable), $dumped['data']['new']);
 		$this->assertEquals(array('sakura', 'rose'), $dumped['data']['flower']);
 		$this->assertEquals(array('wind' => 'walker'), $dumped['iterator']);
 	}

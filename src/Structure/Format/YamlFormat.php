@@ -6,14 +6,14 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Registry\Format;
+namespace Windwalker\Structure\Format;
 
 use Symfony\Component\Yaml\Parser as SymfonyYamlParser;
 use Symfony\Component\Yaml\Dumper as SymfonyYamlDumper;
-use Windwalker\Registry\RegistryHelper;
+use Windwalker\Structure\StructureHelper;
 
 /**
- * YAML format handler for Registry.
+ * YAML format handler for Structure.
  *
  * @since  2.0
  */
@@ -46,8 +46,8 @@ class YamlFormat implements FormatInterface
 	 */
 	static public function structToString($struct, array $options = array())
 	{
-		$inline = RegistryHelper::getValue($options, 'inline', 2);
-		$indent = RegistryHelper::getValue($options, 'indent', 0);
+		$inline = StructureHelper::getValue($options, 'inline', 2);
+		$indent = StructureHelper::getValue($options, 'indent', 0);
 
 		return static::getDumper()->dump($struct, $inline, $indent);
 	}

@@ -11,7 +11,7 @@ namespace Windwalker\Application\Test;
 use Psr\Log\NullLogger;
 use Windwalker\Application\Test\Mock\MockLogger;
 use Windwalker\Application\Test\Stub\StubApplication;
-use Windwalker\Registry\Registry;
+use Windwalker\Structure\Structure;
 
 /**
  * Test class of AbstractApplication
@@ -90,7 +90,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
 			)
 		);
 
-		$this->instance->setConfiguration(new Registry($config));
+		$this->instance->setConfiguration(new Structure($config));
 
 		$this->assertEquals('sakura', $this->instance->get('flower'));
 		$this->assertEquals('seagull', $this->instance->get('sky.bird'));
@@ -132,7 +132,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
 			'wind' => 'sound'
 		);
 
-		$this->instance->setConfiguration(new Registry($config));
+		$this->instance->setConfiguration(new Structure($config));
 
 		$this->assertEquals('sound', $this->instance->get('wind'));
 	}

@@ -67,7 +67,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	public function test__construct()
 	{
 		$this->assertInstanceOf(
-			'Windwalker\Registry\Registry',
+			'Windwalker\Structure\Structure',
 			$this->instance->config,
 			'Config property wrong type'
 		);

@@ -7,7 +7,7 @@
     "license": "LGPL-2.0+",
     "require": {
         "php": ">=5.3.10",
-        "windwalker/registry": "~2.0",
+        "windwalker/structure": "~2.0",
         "windwalker/data": "~2.0"
     },
     "require-dev": {

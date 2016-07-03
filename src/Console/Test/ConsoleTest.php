@@ -188,7 +188,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf('Windwalker\\Console\\IO\\IO', $console->io);
 
-		$this->assertInstanceOf('Windwalker\\Registry\\Registry', TestHelper::getValue($console, 'config'));
+		$this->assertInstanceOf('Windwalker\\Structure\\Structure', TestHelper::getValue($console, 'config'));
 	}
 
 
