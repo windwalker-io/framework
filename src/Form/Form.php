@@ -91,7 +91,7 @@ class Form implements \IteratorAggregate
 	 */
 	public function __construct($control = '')
 	{
-		$this->control = $control;
+		$this->setControl($control);
 	}
 
 	/**
@@ -745,7 +745,7 @@ class Form implements \IteratorAggregate
 	 */
 	public function setControl($control)
 	{
-		$this->control = $control;
+		$this->control = str_replace('.', '/', $control);
 
 		foreach ($this->fields as $field)
 		{
