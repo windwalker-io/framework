@@ -140,12 +140,13 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	/**
 	 * getFindQuery
 	 *
-	 * @param   array    $conditions  Where conditions, you can use array or Compare object.
-	 * @param   array    $orders      Order sort, can ba string, array or object.
-	 * @param   integer  $start       Limit start number.
-	 * @param   integer  $limit       Limit rows.
+	 * @param   array   $conditions Where conditions, you can use array or Compare object.
+	 * @param   array   $orders     Order sort, can ba string, array or object.
+	 * @param   integer $start      Limit start number.
+	 * @param   integer $limit      Limit rows.
 	 *
-	 * @return  \Windwalker\Query\Query
+	 * @return Query
+	 * @throws \Exception
 	 */
 	protected function getFindQuery(array $conditions, array $orders, $start, $limit)
 	{
@@ -166,7 +167,11 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
 			foreach ($conditions as $key => $value)
 			{
-				$key = strpos($key, '.') !== false ? $key : $alias . '.' . $key;
+				if (!is_numeric($key))
+				{
+					$key = strpos($key, '.') !== false ? $key : $alias . '.' . $key;
+				}
+
 				$conds[$key] = $value;
 			}
 

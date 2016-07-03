@@ -8,8 +8,7 @@
 
 use Windwalker\Data\Data;
 
-/** @var Data $data */
 ?>
 <p>
-	<?php echo $data->content; ?>
+	<?php echo $content; ?>
 </p>

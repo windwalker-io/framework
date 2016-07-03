@@ -10,5 +10,5 @@ use Windwalker\Data\Data;
 
 /** @var Data $data */
 ?>
-<h1><?php echo $data->title; ?></h1>
+<h1><?php echo $title; ?></h1>
 <?php echo $this->load('foo/data3', array('content' => 'Morbi suscipit ante massa')); ?>

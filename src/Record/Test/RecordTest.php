@@ -141,7 +141,7 @@ class RecordTest extends AbstractMysqlTestCase
 			'extra_field' => 'BAR' // will not saved
 		);
 
-		$this->instance->reset(true)->save($data);
+		$this->instance->reset(false)->save($data);
 
 		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 1')->loadOne();
 
@@ -190,7 +190,7 @@ class RecordTest extends AbstractMysqlTestCase
 		);
 
 		$this->assertEquals('sakura', $record->title);
-		$this->assertEquals(null, $record->fake);
+		$this->assertEquals('cat', $record->fake);
 	}
 
 	/**

@@ -103,7 +103,8 @@ SQL;
 	 */
 	public function testFindGroup()
 	{
-		$mapper = (new DataMapper)->addTable('category', 'ww_categories')
+		$mapper = new DataMapper;
+		$mapper->addTable('category', 'ww_categories')
 			->addTable('flower', 'ww_flower', 'flower.catid = category.id')
 			->group('category.id');
 

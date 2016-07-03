@@ -11,6 +11,6 @@ use Windwalker\Data\Data;
 /** @var Data $data */
 ?>
 
-<div id="data" class="<?php echo $data->class; ?>">
+<div id="data" class="<?php echo $class; ?>">
 	<?php echo $this->load('foo/data2'); ?>
 </div>
