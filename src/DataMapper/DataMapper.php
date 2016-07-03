@@ -17,6 +17,11 @@ use Windwalker\Query\QueryInterface;
 /**
  * Main Database Mapper class.
  *
+ * @see  QueryHelper
+ *
+ * @method  $this  addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
+ * @method  $this  removeTable($alias)
+ *
  * @see  QueryInterface
  * @see  Query
  *
@@ -45,11 +50,42 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	protected $db = null;
 
 	/**
+	 * Property alias.
+	 *
+	 * @var  string
+	 */
+	protected $alias;
+
+	/**
 	 * Property query.
 	 *
 	 * @var  QueryInterface
 	 */
 	protected $query;
+
+	/**
+	 * Property queryHelper.
+	 *
+	 * @var  QueryHelper
+	 */
+	protected $queryHelper;
+
+	/**
+	 * newRelation
+	 *
+	 * @param string                 $alias
+	 * @param string                 $table
+	 * @param string                 $keys
+	 * @param AbstractDatabaseDriver $db
+	 *
+	 * @return  static
+	 */
+	public static function newRelation($alias = null, $table = null, $keys = 'id', $db = null)
+	{
+		$instance =  new static($table, $keys, $db);
+
+		return $instance->alias($alias);
+	}
 
 	/**
 	 * Constructor.
@@ -63,6 +99,20 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 		$this->db = $db ? : DatabaseContainer::getDb();
 
 		parent::__construct($table, $keys);
+	}
+
+	/**
+	 * Method to set property alias
+	 *
+	 * @param   string $alias
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function alias($alias)
+	{
+		$this->alias = $alias ? : $this->alias;
+
+		return $this;
 	}
 
 	/**
@@ -101,6 +151,34 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	{
 		$query = $this->getQuery();
 
+		// Check is join or not
+		$queryHelper = $this->getQueryHelper();
+
+		$join = count($queryHelper->getTables()) > 1;
+
+		// Build conditions
+		if ($join)
+		{
+			$alias = $this->alias ? : $this->table;
+
+			// Add dot to conditions
+			$conds = array();
+
+			foreach ($conditions as $key => $value)
+			{
+				$key = strpos($key, '.') !== false ? $key : $alias . '.' . $key;
+				$conds[$key] = $value;
+			}
+
+			$conditions = $conds;
+
+			// Add dot to orders
+			$orders = array_map(function ($value) use ($alias)
+			{
+			    return strpos($value, '.') !== false ? $value : $alias . '.' . $value;
+			}, $orders);
+		}
+
 		// Conditions.
 		QueryHelper::buildWheres($query, $conditions);
 
@@ -110,8 +188,18 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 			$query->order($order);
 		}
 
-		if ($this->table !== null)
+		// Add tables to query
+		if ($join)
 		{
+			$query = $queryHelper->registerQueryTables($query);
+		}
+		else
+		{
+			if (!$this->table)
+			{
+				throw new \Exception('Please give me a table name~!');
+			}
+
 			$query->from($this->table);
 		}
 
@@ -123,7 +211,14 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
 		if (!$query->get('select'))
 		{
-			$query->select('*');
+			if ($join)
+			{
+				$query->select($queryHelper->getSelectFields());
+			}
+			else
+			{
+				$query->select('*');
+			}
 		}
 
 		return $query;
@@ -135,7 +230,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	 * @param  mixed $dataset The data set contains data we want to store.
 	 *
 	 * @return mixed
-	 * 
+	 *
 	 * @throws \Exception
 	 * @throws \Throwable
 	 */
@@ -283,7 +378,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	 * @param   mixed $conditions Where conditions, you can use array or Compare object.
 	 *
 	 * @return  mixed
-	 * 
+	 *
 	 * @throws \Exception
 	 * @throws \Throwable
 	 */
@@ -501,6 +596,53 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	}
 
 	/**
+	 * Method to get property QueryHelper
+	 *
+	 * @return  QueryHelper
+	 */
+	public function getQueryHelper()
+	{
+		if (!$this->queryHelper)
+		{
+			$this->queryHelper = new QueryHelper($this->db);
+
+			if ($this->table)
+			{
+				$this->queryHelper->addTable($this->alias ? : $this->table, $this->table);
+			}
+		}
+
+		return $this->queryHelper;
+	}
+
+	/**
+	 * Method to set property queryHelper
+	 *
+	 * @param   QueryHelper $queryHelper
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setQueryHelper(QueryHelper $queryHelper)
+	{
+		$this->queryHelper = $queryHelper;
+
+		return $this;
+	}
+
+	/**
+	 * reset
+	 *
+	 * @return  static
+	 */
+	public function reset()
+	{
+		$this->query = null;
+		$this->queryHelper = null;
+
+		return $this;
+	}
+
+	/**
 	 * __call
 	 *
 	 * @param   string  $name
@@ -525,6 +667,20 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 		if (in_array($name, $allowMethods))
 		{
 			$query = $this->getQuery();
+
+			call_user_func_array(array($query, $name), $args);
+
+			return $this;
+		}
+
+		$allowMethods = array(
+			'addTable',
+			'removeTable'
+		);
+
+		if (in_array($name, $allowMethods))
+		{
+			$query = $this->getQueryHelper();
 
 			call_user_func_array(array($query, $name), $args);
 

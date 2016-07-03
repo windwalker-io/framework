@@ -389,7 +389,7 @@ class Entity extends Data
 	{
 		return $this->hasField($field);
 	}
-
+	
 	/**
 	 * Is this object empty?
 	 *
