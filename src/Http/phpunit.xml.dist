@@ -7,7 +7,7 @@
 	syntaxCheck="true"
 	>
 	<php>
-		<ini name="error_reporting" value="32767" />
+		<ini name="error_reporting" value="-1" />
 
 		<!--<const name="WINDWALKER_TEST_HTTP_URL" value="http://localhost/{windwalker_path}/Test/Stub/http_stub.php" />-->
 	</php>

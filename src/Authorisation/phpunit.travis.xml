@@ -7,7 +7,7 @@
 	syntaxCheck="true"
 	>
 	<php>
-		<ini name="error_reporting" value="32767" />
+		<ini name="error_reporting" value="-1" />
 
 		<const name="WINDWALKER_TEST_DB_DSN_MYSQL"      value="host=localhost;dbname=windwalker_test;user=root;pass=;prefix=ww_" />
 		<!--<const name="WINDWALKER_TEST_DB_DSN_POSTGRESQL" value="host=localhost;dbname=windwalker_test;user=root;pass=ut1234;prefix=ww_" />-->
