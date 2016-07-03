@@ -340,13 +340,13 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	/**
 	 * Method to retrieve the results of running the $callback for the specified $key;
 	 *
-	 * @param   string   $key       Name of the dataStore key to get.
-	 * @param   boolean  $forceNew  True to force creation and return of a new instance.
+	 * @param   string  $key      Name of the dataStore key to get.
+	 * @param   boolean $forceNew True to force creation and return of a new instance.
 	 *
 	 * @return  mixed   Results of running the $callback for the specified $key.
+	 * @throws \OutOfRangeException
 	 *
 	 * @since   2.0
-	 * @throws  \UnexpectedValueException
 	 */
 	public function get($key, $forceNew = false)
 	{
@@ -354,7 +354,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
 		if (is_null($store))
 		{
-			throw new \UnexpectedValueException(sprintf('Key %s has not been registered with the container.', $key));
+			throw new \OutOfRangeException(sprintf('Key %s has not been registered with the container.', $key));
 		}
 
 		return $store->get($this, $forceNew);
