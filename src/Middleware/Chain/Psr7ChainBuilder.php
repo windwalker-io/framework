@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -17,7 +17,7 @@ use Windwalker\Middleware\Psr7InvokableInterface;
 /**
  * The Psr7ChainBuilder class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0-beta
  */
 class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
 {

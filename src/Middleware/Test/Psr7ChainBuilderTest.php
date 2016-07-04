@@ -19,7 +19,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 /**
  * Test class of Psr7ChainBuilder
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0-beta
  */
 class Psr7ChainBuilderTest extends AbstractBaseTestCase
 {

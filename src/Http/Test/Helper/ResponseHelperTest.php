@@ -13,7 +13,7 @@ use Windwalker\Http\Helper\ResponseHelper;
 /**
  * Test class of ResponseHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0-beta
  */
 class ResponseHelperTest extends \PHPUnit_Framework_TestCase
 {

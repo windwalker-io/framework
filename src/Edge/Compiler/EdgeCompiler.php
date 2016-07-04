@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -15,7 +15,7 @@ namespace Windwalker\Edge\Compiler;
  *
  * @see  https://github.com/illuminate/view/blob/master/Compilers/BladeCompiler.php
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0-beta
  */
 class EdgeCompiler implements EdgeCompilerInterface
 {

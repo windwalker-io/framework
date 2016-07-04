@@ -13,7 +13,7 @@ use Windwalker\Database\Iterator\DataIterator;
 /**
  * Test class of DataIterator
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0-beta
  */
 class DataIteratorTest extends \PHPUnit_Framework_TestCase
 {
