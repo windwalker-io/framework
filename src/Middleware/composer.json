@@ -9,7 +9,8 @@
         "php": ">=5.3.10"
     },
     "require-dev": {
-        "windwalker/test": "~3.0"
+        "windwalker/test": "~3.0",
+        "windwalker/http": "~3.0"
     },
     "minimum-stability": "beta",
     "autoload": {
