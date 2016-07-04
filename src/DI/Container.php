@@ -265,9 +265,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 				continue;
 			}
 
-			// Simple workaround for ArrayIterator::__construct() before PHP 5.6
+			// Simple workaround for ArrayIterator::__construct() before PHP 7
 			// @see  https://bugs.php.net/bug.php?id=70303
-			if ($method->getDeclaringClass()->getName() == 'ArrayIterator' && version_compare(PHP_VERSION, '5.6', '<'))
+			if ($method->getDeclaringClass()->getName() == 'ArrayIterator' && version_compare(PHP_VERSION, '7', '<'))
 			{
 				continue;
 			}

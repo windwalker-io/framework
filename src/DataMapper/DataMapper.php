@@ -214,7 +214,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 			$query->limit($limit, $start);
 		}
 
-		if (!$query->get('select'))
+		if (!$query->select)
 		{
 			if ($join)
 			{
