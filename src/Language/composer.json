@@ -14,7 +14,7 @@
     "suggest": {
         "symfony/yaml": "Install 2.* if you require YAML language format."
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Windwalker\\Language\\": ""

@@ -12,7 +12,7 @@
         "windwalker/test": "~3.0",
         "windwalker/dom": "~3.0"
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Windwalker\\Edge\\": ""

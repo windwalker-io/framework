@@ -15,7 +15,7 @@
     "suggest": {
         "psr/http-message": "Install 1.* if you need PsrUri support."
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Windwalker\\Uri\\": ""

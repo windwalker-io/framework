@@ -20,7 +20,7 @@
         "windwalker/event": "Install 2.* if you want to use hooks.",
         "windwalker/compare": "Install 2.* if you want to use Compare object."
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Windwalker\\DataMapper\\": ""

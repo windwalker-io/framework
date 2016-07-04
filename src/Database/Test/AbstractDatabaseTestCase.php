@@ -246,7 +246,10 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 	 */
 	protected function tearDown()
 	{
-		$this->db->resetMiddlewares();
+		if (class_exists('Windwalker\Middleware\Chain\ChainBuilder'))
+		{
+			$this->db->resetMiddlewares();
+		}
 
 		$tables = TestHelper::getValue($this->db, 'tables');
 

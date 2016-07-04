@@ -12,7 +12,7 @@
         "windwalker/test": "~3.0",
         "symfony/yaml": "2.*"
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "suggest": {
         "symfony/yaml": "Install 2.* if you require YAML support."
     },

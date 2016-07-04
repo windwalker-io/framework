@@ -15,7 +15,7 @@
     "suggest": {
         "windwalker/utilities": "Install ~3.0 if you require SimpleTemplate template engine."
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Windwalker\\String\\": ""

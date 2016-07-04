@@ -15,7 +15,7 @@
     "suggest": {
         "windwalker/filter": "Install 2.* if you require filter support."
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Windwalker\\IO\\": ""

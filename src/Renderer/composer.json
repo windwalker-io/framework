@@ -25,7 +25,7 @@
         "twig/twig": "Install 1.* if you require Twig engine.",
         "mustache/mustache": "Install 2.* if you require Mustache engine."
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Windwalker\\Renderer\\": ""

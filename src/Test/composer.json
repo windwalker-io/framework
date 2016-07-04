@@ -11,7 +11,7 @@
     },
     "require-dev": {
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Windwalker\\Test\\": ""
