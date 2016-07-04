@@ -18,7 +18,7 @@ use Windwalker\Http\Test\Stub\StubOutput;
 /**
  * Test class of Server
  *
- * @since 3.0-beta
+ * @since {DEPLOY_VERSION}
  */
 class HttpServerTest extends \PHPUnit_Framework_TestCase
 {

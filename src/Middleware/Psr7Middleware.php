@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -14,7 +14,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 /**
  * The Psr7Middleware class.
  *
- * @since  3.0-beta
+ * @since  {DEPLOY_VERSION}
  */
 class Psr7Middleware extends CallbackMiddleware implements Psr7InvokableInterface
 {

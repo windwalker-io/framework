@@ -16,7 +16,7 @@ use Windwalker\Http\UploadedFile;
 /**
  * Test class of ServerRequestFactory
  *
- * @since 3.0-beta
+ * @since {DEPLOY_VERSION}
  */
 class ServerRequestFactoryTest extends \PHPUnit_Framework_TestCase
 {

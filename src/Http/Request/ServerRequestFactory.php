@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -19,7 +19,7 @@ use Windwalker\Uri\PsrUri;
 /**
  * The ServerRequestFactory class.
  *
- * @since  3.0-beta
+ * @since  {DEPLOY_VERSION}
  */
 class ServerRequestFactory
 {

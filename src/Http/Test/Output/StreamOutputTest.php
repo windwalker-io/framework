@@ -14,7 +14,7 @@ use Windwalker\Http\Test\Stub\StubStreamOutput;
 /**
  * Test class of StreamOutput
  *
- * @since 3.0-beta
+ * @since {DEPLOY_VERSION}
  */
 class StreamOutputTest extends \PHPUnit_Framework_TestCase
 {

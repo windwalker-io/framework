@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -15,7 +15,7 @@ use Windwalker\Form\Renderer\FormRendererInterface;
 /**
  * The MockFormRenderer class.
  *
- * @since  3.0-beta
+ * @since  {DEPLOY_VERSION}
  */
 class MockFormRenderer implements FormRendererInterface
 {

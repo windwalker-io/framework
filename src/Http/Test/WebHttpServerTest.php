@@ -21,7 +21,7 @@ date_default_timezone_set('UTC');
 /**
  * Test class of WebHttpServer
  *
- * @since 3.0-beta
+ * @since {DEPLOY_VERSION}
  */
 class WebHttpServerTest extends \PHPUnit_Framework_TestCase
 {

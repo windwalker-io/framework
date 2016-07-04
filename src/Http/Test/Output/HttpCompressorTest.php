@@ -15,7 +15,7 @@ use Windwalker\Http\Test\Stub\StubHttpCompressor;
 /**
  * Test class of HttpCompressor
  *
- * @since 3.0-beta
+ * @since {DEPLOY_VERSION}
  */
 class HttpCompressorTest extends \PHPUnit_Framework_TestCase
 {
