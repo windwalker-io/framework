@@ -157,10 +157,10 @@ class Cache implements CacheInterface, \ArrayAccess
 	}
 
 	/**
-	 * call
+	 * Fetch data from a callback if item not exists.
 	 *
-	 * @param string   $key
-	 * @param callable $callable
+	 * @param string   $key      The key of the item to fetch.
+	 * @param callable $callable The callback to fetch data.
 	 *
 	 * @throws \InvalidArgumentException
 	 * @return  mixed

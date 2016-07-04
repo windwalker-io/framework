@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -46,7 +46,7 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
 	 *
 	 * @var  boolean
 	 */
-	protected $commiting = true;
+	protected $commiting = false;
 
 	/**
 	 * Constructor.
@@ -176,9 +176,9 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
 	 */
 	public function saveDeferred(CacheItemInterface $item)
 	{
-		if ($this->commiting)
+		while ($this->commiting)
 		{
-			return false;
+			usleep(1);
 		}
 
 		$this->differed[$item->getKey()] = $item;
@@ -206,9 +206,10 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
 			}
 		}
 
+		$result = !count($this->differed);
+
 		$this->commiting = false;
 
-		return !count($this->differed);
+		return $result;
 	}
 }
-

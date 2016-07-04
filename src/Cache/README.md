@@ -31,10 +31,10 @@ $cache->set('flower', $data);
 Then we can get this data by same key.
 
 ``` php
-$data = $cache->get('flower');
+$data = $cache->get('flower'); // return Array('sakura')
 ```
 
-### Auto Fetch Data By Closure
+### Auto Fetch Data By Callback
 
 Using call method to auto detect is cache exists or not. 
 
@@ -48,7 +48,7 @@ $data = $cache->call('flower', function()
 It is same as this code:
 
 ``` php
-if (!$cache->has('flower'))
+if (!$cache->exists('flower'))
 {
     $cache->set('flower', array('sakura'));
 }
@@ -56,11 +56,25 @@ if (!$cache->has('flower'))
 $data = $cache->get('flower');
 ```
 
-### RuntimeStorage
+## Storage
 
-The default cache storage is `RuntimeStorage`, it means our data only keep in runtime but will not save as files.
+Set storage to Cache so we can use different storage engine to save cache data.
 
-## Using FileStorage
+``` php
+use Windwalker\Cache\Cache;
+use Windwalker\Cache\Storage\ArrayStorage;
+
+$cache = new Cache(new ArrayStorage);
+```
+
+### ArrayStorage and RuntimeArrayStorage
+
+This is default storage, which will store data in itself and will not depends on any outside storage engine.
+
+The `RuntimeArrayStorage` use static property to storage data, which means all data will live in current runtime
+no matter how many times you create it.
+
+### FileStorage
 
 Create a cache with `FileStorage` and set a path to store files.
 
@@ -68,38 +82,40 @@ Create a cache with `FileStorage` and set a path to store files.
 use Windwalker\Cache\Cache;
 use Windwalker\Cache\Storage\FileStorage;
 
-$path = 'your/cache/path';
+$path = '/your/cache/path';
 
 $cache = new Cache(new FileStorage($path));
 
 $cache->set('flower', array('sakura'));
 ```
 
-The file will store at `your/cache/path/~5a46b8253d07320a14cace9b4dcbf80f93dcef04.data`, and the data will be serialized string.
+The file will store at `/your/cache/path/~5a46b8253d07320a14cace9b4dcbf80f93dcef04.data`, and the data will be serialized string.
 
 ```
 a:1:{i:0;s:6:"sakura";}
 ```
 
-### Add Group
+#### File Group
+
+Group is a subfolder of your storage path.
 
 ``` php
-$path = 'your/cache/path';
+$path = '/your/cache/path';
 
 $cache = new Cache(new FileStorage($path, 'mygroup'));
 
 $cache->set('flower', array('sakura'));
 ```
 
-The file wil store at `your/cache/path/mygroup/~5a46b8253d07320a14cace9b4dcbf80f93dcef04.data` that for organize your cache folder.
+The file wil store at `/your/cache/path/mygroup/~5a46b8253d07320a14cace9b4dcbf80f93dcef04.data` that for organize your cache folder.
 
-### Deny Access
+#### PHP File Format and Deny Access
 
 If your cache folder are exposure on web environment, we have to make our cache files unable to access. The argument 3 
  of `FileStorage` is use to deny access.
   
 ``` php
-$path = 'your/cache/path';
+$path = '/your/cache/path';
 
 $cache = new Cache(new FileStorage($path, 'mygroup', true));
 
@@ -108,7 +124,7 @@ $cache->set('flower', array('sakura'));
 
 The stored file will be a PHP file with code to deny access:
 
-`your/cache/path/mygroup/~5a46b8253d07320a14cace9b4dcbf80f93dcef04.php`
+`/your/cache/path/mygroup/~5a46b8253d07320a14cace9b4dcbf80f93dcef04.php`
 
 ``` php
 <?php die("Access Deny"); ?>a:1:{i:0;s:6:"sakura";}
@@ -116,26 +132,26 @@ The stored file will be a PHP file with code to deny access:
 
 ## Available Storage
 
-- RuntimeStorage
+- ArrayStorage
+- RuntimeArrayStorage
 - FileStorage
-- RawFileStorage
 - MemcachedStorage
 - RedisStorage
 - WincacheStorage
 - XcacheStorage
 - NullStorage
 
-## Storage Format
+## Serializer
 
-The default data handler will make our data be serialized string, if you want to use other format, just change `DataHandler`
-at second argument of Cache object.
+The default `PhpSerializer` will make our data be php serialized string, if you want to use other format,
+just change serializer at second argument of Cache object.
 
 ``` php
 use Windwalker\Cache\Cache;
+use Windwalker\Cache\Serializer\JsonSerializer;
 use Windwalker\Cache\Storage\FileStorage;
-use Windwalker\Cache\DataHandler\JsonHandler;
 
-$cache = new Cache(new FileStorage(__DIR__ . '/cache'), new JsonHandler);
+$cache = new Cache(new FileStorage(__DIR__ . '/cache'), new JsonSerializer);
 
 $cache->set('flower', array('flower' => 'sakura'));
 ```
@@ -148,38 +164,81 @@ The stored cache file is:
 
 ### Full Page Cache
 
-Sometimes we want to store whole html as static page cache. `StringHandler`  help us save raw string:
+Sometimes we may need to store whole html as static page cache. `StringSerializer` or `RawSerializer` helps us save raw data as string:
  
 ``` php
 use Windwalker\Cache\Cache;
-use Windwalker\Cache\Storage\RawFileStorage;
+use Windwalker\Cache\Serializer\StringSerializer;
+use Windwalker\Cache\Storage\FileStorage;
 
-$cache = new Cache(new FileStorage($path), new StringHandler);
+$cache = new Cache(new FileStorage($path), new StringSerializer);
 
 $url = 'http://mysite.com/foo/bar/baz';
 
-if ($cache->has($url))
+if ($cache->exists($url))
 {
-    $html = $cache->get($url);
+    echo $cache->get($url);
     
     exit();
 }
 
-$view = new View;
-
-$html = $view->render();
+$html = View::render('html.layout');
 
 $cache->set($url, $html);
 
 echo $html;
 ```
 
-### Supported Handlers
+### PhpFileSerializer
 
-- SerializeHandler
-- JsonHandler
-- StringHandler
+This serializer can save array data as a php file, will be useful when we need to cache config data.
 
-## TODO
+``` php
+use Windwalker\Cache\Cache;
+use Windwalker\Cache\Serializer\PhpSerializer;
+use Windwalker\Cache\Storage\FileStorage;
 
-Waiting for [PSR-6](https://github.com/php-fig/fig-standards/blob/master/proposed/cache.md) Compatible and will rewrite for it. 
+$cache = new Cache(new FileStorage($path), new PhpSerializer);
+
+$config = array('foo' => 'bar');
+
+$cache->set('config.name', $config);
+
+$cache->get('config.name'); // Array( [foo] => bar )
+```
+
+The cache file will be:
+
+``` php
+<?php
+
+return array (
+  'foo' => 'bar',
+);
+```
+
+### Supported Serializer
+
+- PhpSerializer
+- PhpFileSerializer
+- JsonSerializer
+- StringSerializer
+- RawSerializer
+
+## PSR6 Cache Interface
+
+Windwalker Cache Storage are all follows [PSR6](http://www.php-fig.org/psr/psr-6/), so you can use other libraries'
+CacheItemPool object as storage, you can also directly use Storage object.
+
+``` php
+use Windwalker\Cache\Item\CacheItem;
+use Windwalker\Cache\Storage\FileStorage;
+
+$cachePool = new FileStorage(__DIR__ . '/cache');
+
+$cachePool->save(new CacheItem('foo', 'Bar', 150));
+
+// OR save differed
+$cachePool->saveDeferred(new CacheItem('baz', 'Yoo', 150));
+$cachePool->commit();
+```

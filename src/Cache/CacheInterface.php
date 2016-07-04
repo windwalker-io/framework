@@ -2,7 +2,7 @@
 
 namespace Windwalker\Cache;
 
-use Windwalker\Cache\Item\CacheItemInterface;
+use Psr\Cache\CacheItemInterface;
 
 /**
  * Interface CacheInterface
@@ -40,6 +40,17 @@ interface CacheInterface
 	 * @return boolean    The result of the delete operation
 	 */
 	public function remove($key);
+
+	/**
+	 * Fetch data from a callback if item not exists.
+	 *
+	 * @param string   $key      The key of the item to fetch.
+	 * @param callable $callable The callback to fetch data.
+	 *
+	 * @throws \InvalidArgumentException
+	 * @return  mixed
+	 */
+	public function call($key, $callable);
 
 	/**
 	 * Obtain multiple CacheItems by their unique keys

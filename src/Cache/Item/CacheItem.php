@@ -60,12 +60,11 @@ class CacheItem implements CacheItemInterface
 	 *
 	 * @param   string             $key   The key for the cache item.
 	 * @param   mixed              $value The value for the cache item.
-	 * @param   \DateTimeInterface $ttl   The expire time.
-	 * @param   bool               $hit   Was this item retrived from cache?
+	 * @param   \DateInterval|int  $ttl   The expire time.
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($key, $value = null, $ttl = null, $hit = false)
+	public function __construct($key, $value = null, $ttl = null)
 	{
 		if (strpbrk($key, '{}()/\@:'))
 		{
@@ -73,9 +72,13 @@ class CacheItem implements CacheItemInterface
 		}
 
 		$this->key = $key;
-		$this->value = $value;
-		$this->hit = $hit;
-		$this->expiresAt($ttl);
+
+		if ($value !== null)
+		{
+			$this->set($value);
+		}
+
+		$this->expiresAfter($ttl);
 	}
 
 	/**
@@ -187,10 +190,15 @@ class CacheItem implements CacheItemInterface
 	 */
 	public function expiresAfter($time)
 	{
-		if ($time instanceof \DateTimeInterface)
+		if ($time instanceof \DateInterval)
 		{
 			$this->expiration = new \DateTime;
 			$this->expiration->add($time);
+		}
+		elseif (is_int($time))
+		{
+			$this->expiration = new \DateTime;
+			$this->expiration->add(new \DateInterval('PT' . $time . 'S'));
 		}
 		elseif ($time === null)
 		{

@@ -6,9 +6,7 @@
  * @license    GNU General Public License version 2 or later.
  */
 
-use Windwalker\Cache\Storage\RawFileStorage;
 use Windwalker\Edge\Cache\EdgeArrayCache;
-use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Compiler\EdgeCompiler;
 
 include_once __DIR__ . '/../../../../vendor/autoload.php';
