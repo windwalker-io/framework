@@ -13,7 +13,7 @@
         "windwalker/utilities": "~3.0"
     },
     "suggest": {
-        "windwalker/utilities": "Install 2.* if you want to use StringHelper::parseVariable() tmpl engine."
+        "windwalker/utilities": "Install ~3.0 if you require SimpleTemplate template engine."
     },
     "minimum-stability": "beta",
     "autoload": {
