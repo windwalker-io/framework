@@ -60,7 +60,7 @@ $auth->authorise('can.edit', $user, 'blog.article.3'); // boolean
 
 ## Pre-defined Policy
 
-We can define a policy by creating classes and implements the ``
+We can define a policy by creating classes which implements `PolicyInterface`.
 
 ``` php
 class CanEditPolicy implements \Windwalker\Authorisation\PolicyInterface
@@ -79,13 +79,13 @@ $auth->addPolicy('can.edit', CanEditPolicy::class);
 
 ## Register Multiple Policies
 
-Use Policy Provider, we can define policies in a class that more easily to add many policies.
+Use Policy Provider, we can define policies in a class that is more easily to add multiple policies.
 
 ``` php
 use Windwalker\Authorisation\AuthorisationInterface;
 use Windwalker\Authorisation\PolicyProviderInterface;
 
-class MyPolicyProvider implements PolicyProviderInterface
+class ArticlePolicyProvider implements PolicyProviderInterface
 {
 	public function register(AuthorisationInterface $auth)
 	{
@@ -97,5 +97,5 @@ class MyPolicyProvider implements PolicyProviderInterface
 }
 
 // Register policies
-$auth->registerPolicyProvider(new MyPolicyProvider);
+$auth->registerPolicyProvider(new ArticlePolicyProvider);
 ```
