@@ -10,7 +10,7 @@ namespace Windwalker\Crypt\Cipher;
 
 use Windwalker\Crypt\CryptHelper;
 
-if (defined('OPENSSL_RAW_DATA'))
+if (!defined('OPENSSL_RAW_DATA'))
 {
 	define('OPENSSL_RAW_DATA', 1);
 }
