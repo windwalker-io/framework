@@ -1,6 +1,7 @@
 # Windwalker Crypt
 
-Windwalker Crypt package is use to encrypt & verify password, and provides an easy interface to do Symmetric-Key Algorithm encryption.
+Windwalker Crypt package is a wrap of PHP openssl to hash and verify password,
+and provides an easy interface to do Symmetric-Key Algorithm encryption.
 
 ## Installation via Composer
 
@@ -14,7 +15,7 @@ Add this to the require block in your `composer.json`.
 }
 ```
 
-## Password Encrypting
+## Password Hashing
 
 `Password` object is a simple object to encrypt user's password, it is impossible to decrypt password hash, `Password` object
 uses a one-way algorithm.
@@ -75,17 +76,17 @@ $bool = $password->verify('pass1234', $pass);
 
 ## Symmetric-Key Algorithm Encryption
 
-The `Crypt` object provides some Ciphers to encrypt our text. You must install PHP Mcrypt extension.
+The `Crypt` object provides different ciphers to encrypt/decrypt your data. Most of these ciphers must use
+PHP openssl functions to work. If your PHP are not available for openssl extension, you can use `PhpAesCipher`
+as default cipher, it is a native PHP implementation of AES by [PHP AES](http://www.phpaes.com/).
 
-But there has a `CipherSimple` are can use if your server is not able to install Mcrypt.
-
-### Mcrypt Cipher
+### Use Cipher
 
 ``` php
-use Windwalker\Crypt\Cipher\CipherBlowfish;
+use Windwalker\Crypt\Cipher\BlowfishCipher;
 use Windwalker\Crypt\Crypt;
 
-$crypt = new Crypt(new CipherBlowfish, 'My private key');
+$crypt = new Crypt(new BlowfishCipher, 'My private key');
 
 $encrypted = $crypt->encrypt('My Text');
 
@@ -95,7 +96,7 @@ $bool = $crypt->verify('My Text', $encrypted, 'My private key'); // True
 Get the plain text back:
 
 ``` php
-$crypt = new Crypt(new CipherBlowfish, 'My private key');
+$crypt = new Crypt(new BlowfishCipher, 'My private key');
 
 $encrypted = $crypt->encrypt('My Text');
 
@@ -104,11 +105,7 @@ $text = $crypt->decrypt($encrypted);
 
 ### Available Ciphers
 
-- [CipherBlowfish](http://en.wikipedia.org/wiki/Blowfish_(cipher))
-- [CipherRijndael256](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
-- [Cipher3DES](http://en.wikipedia.org/wiki/Triple_DES)
-- CipherSimple - Only use this when system not support mcrypt. 
-
-### Installing Mcrypt
-
-Install Mcrypt on OSX: http://goo.gl/s8O1SH
+- [BlowfishCipher](http://en.wikipedia.org/wiki/Blowfish_(cipher))
+- [Aes56Cipher](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
+- [Des3Cipher](http://en.wikipedia.org/wiki/Triple_DES)
+- PhpAesCipher - Only use this when system not support openssl.

@@ -22,7 +22,9 @@
         "twig/twig": "~1.0",
         "illuminate/view": "4.1.*",
         "mustache/mustache": "~2.0",
-        "league/plates": "~3.0"
+        "league/plates": "~3.0",
+
+        "windwalker/phpunit-skeleton-generator": ">=2.0.2"
     },
     "suggest": {
         "symfony/yaml": "Install ~3.0 if you require YAML support."

@@ -6,21 +6,21 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Crypt\Test;
+namespace Windwalker\Crypt\Test\Mcrypt;
 
-use Windwalker\Crypt\Cipher\CipherBlowfish;
+use Windwalker\Crypt\Mcrypt\Cipher3DES;
 
 /**
- * Test class of CipherBlowfish
+ * Test class of Cipher3DES
  *
  * @since 2.0
  */
-class McryptBlowfishTest extends AbstractMcryptTestCase
+class Cipher3DESTest extends AbstractMcryptTestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var CipherBlowfish
+	 * @var Cipher3DES
 	 */
 	protected $instance;
 
@@ -34,7 +34,7 @@ class McryptBlowfishTest extends AbstractMcryptTestCase
 	{
 		parent::setUp();
 
-		$this->instance = new CipherBlowfish;
+		$this->instance = new Cipher3DES;
 	}
 
 	/**

@@ -6,9 +6,9 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Crypt\Test;
+namespace Windwalker\Crypt\Test\Mcrypt;
 
-use Windwalker\Crypt\Cipher\AbstractMcryptCipher;
+use Windwalker\Crypt\Mcrypt\AbstractMcryptCipher;
 
 /**
  * The AbstractCipherTestCase class.

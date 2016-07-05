@@ -6,16 +6,16 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Crypt\Test;
+namespace Windwalker\Crypt\Test\Mcrypt;
 
-use Windwalker\Crypt\Cipher\CipherRijndael256;
+use Windwalker\Crypt\Mcrypt\CipherRijndael256;
 
 /**
  * Test class of CipherRijndael256
  *
  * @since 2.0
  */
-class McryptRijndael256Test extends AbstractMcryptTestCase
+class Rijndael256Test extends AbstractMcryptTestCase
 {
 	/**
 	 * Test instance.

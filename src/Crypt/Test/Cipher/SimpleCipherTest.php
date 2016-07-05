@@ -6,9 +6,9 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Crypt\Test;
+namespace Windwalker\Crypt\Test\Cipher;
 
-use Windwalker\Crypt\Cipher\CipherSimple;
+use Windwalker\Crypt\Cipher\SimpleCipher;
 use Windwalker\Crypt\CryptHelper;
 
 /**
@@ -16,12 +16,12 @@ use Windwalker\Crypt\CryptHelper;
  *
  * @since 2.0
  */
-class CipherSimpleTest extends \PHPUnit_Framework_TestCase
+class SimpleCipherTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var CipherSimple
+	 * @var SimpleCipher
 	 */
 	protected $instance;
 
@@ -40,7 +40,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new CipherSimple;
+		$this->instance = new SimpleCipher;
 	}
 
 	/**

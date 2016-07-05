@@ -18,7 +18,7 @@ namespace Windwalker\Crypt\Cipher;
  * @link  https://github.com/ventoviro/windwalker/issues/260
  * @link  http://www.openwall.com/lists/oss-security/2015/11/08/1
  */
-class CipherSimple implements CipherInterface
+class SimpleCipher implements CipherInterface
 {
 	const DEFAULT_RANDOM_BYTE_LENGTH = 256;
 

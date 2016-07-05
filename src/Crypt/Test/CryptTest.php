@@ -8,7 +8,7 @@
 
 namespace Windwalker\Crypt\Test;
 
-use Windwalker\Crypt\Cipher\CipherSimple;
+use Windwalker\Crypt\Cipher\SimpleCipher;
 use Windwalker\Crypt\Crypt;
 
 /**
@@ -33,7 +33,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Crypt(new CipherSimple);
+		$this->instance = new Crypt(new SimpleCipher);
 	}
 
 	/**
@@ -60,7 +60,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertTrue($this->instance->verify('windwalker', $hash));
 
-		$crypt = new Crypt(new CipherSimple, 'flower');
+		$crypt = new Crypt(new SimpleCipher, 'flower');
 
 		$hash = $crypt->encrypt('windwalker');
 

@@ -11,25 +11,25 @@ namespace Windwalker\Crypt\Cipher;
 use Windwalker\Crypt\CryptHelper;
 
 /**
- * The McryptCipher class.
+ * The Openssl Cipher class.
  * 
  * @since  2.0
  */
-abstract class AbstractMcryptCipher implements CipherInterface
+abstract class AbstractCipher implements CipherInterface
 {
 	/**
 	 * Property type.
 	 *
 	 * @var string
 	 */
-	protected $type;
+	protected $method;
 
 	/**
 	 * Property mode.
 	 *
-	 * @var string
+	 * @var int
 	 */
-	protected $mode;
+	protected $mode = 'cbc';
 
 	/**
 	 * Property iv.
@@ -46,10 +46,34 @@ abstract class AbstractMcryptCipher implements CipherInterface
 	 */
 	public function __construct()
 	{
-		if (!is_callable('mcrypt_encrypt'))
+		if (!is_callable('openssl_encrypt'))
 		{
-			throw new \RuntimeException('The mcrypt extension is not available.');
+			throw new \RuntimeException('The openssl extension is not available.');
 		}
+	}
+
+	/**
+	 * Method to encrypt a data string.
+	 *
+	 * @param   string  $data  The data string to encrypt.
+	 * @param   string  $key   The private key.
+	 * @param   string  $iv    The public key.
+	 *
+	 * @return  string  The encrypted data string.
+	 *
+	 * @since   2.0
+	 * @throws  \InvalidArgumentException
+	 */
+	public function encrypt($data, $key = null, $iv = null)
+	{
+		$iv = $iv ? : $this->getIVKey();
+
+		$key = CryptHelper::repeatToLength($key, 24, true);
+
+		// Encrypt the data.
+		$encrypted = openssl_encrypt($data, $this->getMethod(), $key, OPENSSL_RAW_DATA, $iv);
+
+		return $iv . $encrypted;
 	}
 
 	/**
@@ -86,33 +110,9 @@ abstract class AbstractMcryptCipher implements CipherInterface
 		$key = CryptHelper::repeatToLength($key, 24, true);
 
 		// Decrypt the data.
-		$decrypted = trim(mcrypt_decrypt($this->type, $key, $data, $this->mode, $iv));
+		$decrypted = trim(openssl_decrypt($data, $this->getMethod(), $key, OPENSSL_RAW_DATA, $iv));
 
 		return $decrypted;
-	}
-
-	/**
-	 * Method to encrypt a data string.
-	 *
-	 * @param   string  $data  The data string to encrypt.
-	 * @param   string  $key   The private key.
-	 * @param   string  $iv    The public key.
-	 *
-	 * @return  string  The encrypted data string.
-	 *
-	 * @since   2.0
-	 * @throws  \InvalidArgumentException
-	 */
-	public function encrypt($data, $key = null, $iv = null)
-	{
-		$iv = $iv ? : $this->getIVKey();
-
-		$key = CryptHelper::repeatToLength($key, 24, true);
-
-		// Encrypt the data.
-		$encrypted = mcrypt_encrypt($this->type, $key, $data, $this->mode, $iv);
-
-		return $iv . $encrypted;
 	}
 
 	/**
@@ -126,7 +126,7 @@ abstract class AbstractMcryptCipher implements CipherInterface
 		{
 			$ivSize = $this->getIVSize();
 
-			$this->iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
+			$this->iv = CryptHelper::genRandomBytes($ivSize);
 		}
 
 		return $this->iv;
@@ -139,6 +139,21 @@ abstract class AbstractMcryptCipher implements CipherInterface
 	 */
 	public function getIVSize()
 	{
-		return mcrypt_get_iv_size($this->type, $this->mode);
+		return openssl_cipher_iv_length($this->getMethod());
+	}
+
+	/**
+	 * Method to get property Type
+	 *
+	 * @return  string
+	 */
+	public function getMethod()
+	{
+		if (!$this->mode)
+		{
+			return $this->method;
+		}
+
+		return $this->method . '-' . $this->mode;
 	}
 }

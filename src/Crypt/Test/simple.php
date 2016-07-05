@@ -8,7 +8,7 @@
 
 include_once __DIR__ . '/../../../vendor/autoload.php';
 
-$crypt = new \Windwalker\Crypt\Crypt(new \Windwalker\Crypt\Cipher\SimpleCipher, 'Yong', 'test');
+$crypt = new \Windwalker\Crypt\Crypt(new \Windwalker\Crypt\Mcrypt\SimpleCipher, 'Yong', 'test');
 
 echo $hash = $crypt->encrypt('Windwalker');
 

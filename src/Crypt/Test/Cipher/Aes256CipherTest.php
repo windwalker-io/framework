@@ -2,25 +2,25 @@
 /**
  * Part of Windwalker project Test files.
  *
- * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
- * @license    GNU Lesser General Public License version 3 or later.
+ * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Windwalker\Crypt\Test;
+namespace Windwalker\Crypt\Test\Cipher;
 
-use Windwalker\Crypt\Cipher\Cipher3DES;
+use Windwalker\Crypt\Cipher\Aes256Cipher;
 
 /**
- * Test class of Cipher3DES
+ * Test class of CipherBlowfish
  *
- * @since 2.0
+ * @since {DEPLOY_VERSION}
  */
-class Mcrypt3DESTest extends AbstractMcryptTestCase
+class Aes256CipherTest extends AbstractOpensslTestCase
 {
 	/**
 	 * Test instance.
 	 *
-	 * @var Cipher3DES
+	 * @var Aes256Cipher
 	 */
 	protected $instance;
 
@@ -32,9 +32,7 @@ class Mcrypt3DESTest extends AbstractMcryptTestCase
 	 */
 	protected function setUp()
 	{
-		parent::setUp();
-
-		$this->instance = new Cipher3DES;
+		$this->instance = new Aes256Cipher;
 	}
 
 	/**
@@ -51,11 +49,9 @@ class Mcrypt3DESTest extends AbstractMcryptTestCase
 	 * Method to test getIVSize().
 	 *
 	 * @return void
-	 *
-	 * @covers Windwalker\Crypt\Cipher\McryptCipher::getIVSize
 	 */
 	public function testGetIVSize()
 	{
-		$this->assertEquals(8, $this->instance->getIVSize());
+		$this->assertEquals(16, $this->instance->getIVSize());
 	}
 }

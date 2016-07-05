@@ -6,12 +6,14 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-namespace Windwalker\Crypt\Cipher;
+namespace Windwalker\Crypt\Mcrypt;
 
 /**
  * The Cipher3DES class.
  * 
  * @since  2.0
+ *         
+ * @deprecated
  */
 class Cipher3DES extends AbstractMcryptCipher
 {
