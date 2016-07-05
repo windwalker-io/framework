@@ -13,7 +13,7 @@ namespace Windwalker\Edge\Loader;
  *
  * @since  {DEPLOY_VERSION}
  */
-class EdgeTextLoader implements EdgeLoaderInterface
+class EdgeStringLoader implements EdgeLoaderInterface
 {
 	/**
 	 * Property content.
