@@ -28,6 +28,7 @@ use Windwalker\Query\QueryInterface;
  * @method  $this  call($columns)
  * @method  $this  group($columns)
  * @method  $this  having($conditions, ...$args)
+ * @method  $this  orHaving($conditions)
  * @method  $this  innerJoin($table, $condition = array())
  * @method  $this  join($type, $table, $conditions)
  * @method  $this  leftJoin($table, $condition = array())
@@ -37,6 +38,7 @@ use Windwalker\Query\QueryInterface;
  * @method  $this  rightJoin($table, $condition = array())
  * @method  $this  select($columns)
  * @method  $this  where($conditions, ...$args)
+ * @method  $this  orWhere($conditions)
  * @method  $this  clear($clause = null)
  * @method  $this  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
  */
@@ -80,7 +82,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	 *
 	 * @return  static
 	 */
-	public static function newRelation($alias = null, $table = null, $keys = 'id', $db = null)
+	public static function newRelation($alias = null, $table = null, $keys = null, $db = null)
 	{
 		$instance =  new static($table, $keys, $db);
 
@@ -91,10 +93,10 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	 * Constructor.
 	 *
 	 * @param   string                 $table Table name.
-	 * @param   string|array           $keys  Primary key.
+	 * @param   string|array           $keys  Primary key, default will be `id`.
 	 * @param   AbstractDatabaseDriver $db    Database adapter.
 	 */
-	public function __construct($table = null, $keys = 'id', AbstractDatabaseDriver $db = null)
+	public function __construct($table = null, $keys = null, AbstractDatabaseDriver $db = null)
 	{
 		$this->db = $db ? : DatabaseContainer::getDb();
 

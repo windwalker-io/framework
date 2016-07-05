@@ -97,15 +97,18 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * We don't dependency on database in abstract class, that means you can use other data provider.
 	 *
 	 * @param   string $table Table name.
-	 * @param   string $keys  The primary key.
+	 * @param   string $keys  The primary key, default will be `id`.
 	 *
 	 * @throws  \Exception
 	 * @since   2.0
 	 */
-	public function __construct($table = null, $keys = 'id')
+	public function __construct($table = null, $keys = null)
 	{
 		$this->table = $this->table ? : $table;
-		$this->keys  = $this->keys ? : (array) $keys;
+
+		$this->keys  = $keys ? : $this->keys;
+		$this->keys  = $this->keys ? : 'id';
+		$this->keys  = (array) $this->keys;
 
 		// Set some custom configuration.
 		$this->init();
