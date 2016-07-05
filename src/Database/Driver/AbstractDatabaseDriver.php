@@ -25,7 +25,7 @@ use Windwalker\Query\Query;
  *
  * @since 2.0
  */
-abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, LoggerAwareInterface
+abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 {
 	/**
 	 * The name of the database driver.
@@ -100,19 +100,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	protected $tablePrefix;
 
 	/**
-	 * A logger.
-	 *
-	 * @var    LoggerInterface
-	 * @since  2.0
-	 */
-	protected $logger;
-
-	/**
 	 * Property reader.
 	 *
 	 * @var  AbstractReader
 	 */
-	protected $reader = null;
+	protected $reader;
 
 	/**
 	 * Property writer.
@@ -499,43 +491,6 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface, Logger
 	public function getPrefix()
 	{
 		return $this->tablePrefix;
-	}
-
-	/**
-	 * Logs a message.
-	 *
-	 * @param   string  $level    The level for the log. Use constants belonging to Psr\Log\LogLevel.
-	 * @param   string  $message  The message.
-	 * @param   array   $context  Additional context.
-	 *
-	 * @return  AbstractDatabaseDriver  Returns itself to allow chaining.
-	 *
-	 * @since   2.0
-	 */
-	public function log($level, $message, array $context = array())
-	{
-		if ($this->logger)
-		{
-			$this->logger->log($level, $message, $context);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Sets a logger instance on the object
-	 *
-	 * @param   LoggerInterface  $logger  A PSR-3 compliant logger.
-	 *
-	 * @return  static
-	 *
-	 * @since   2.0
-	 */
-	public function setLogger(LoggerInterface $logger)
-	{
-		$this->logger = $logger;
-
-		return $this;
 	}
 
 	/**

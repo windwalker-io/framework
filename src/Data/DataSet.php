@@ -409,8 +409,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	/**
 	 * Sort Dataset by key.
 	 *
-	 * @param   integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
-	 *                           for details see sort().
+	 * @param   integer  $flags  You may modify the behavior of the sort using the optional parameter flags.
 	 *
 	 * @return  static  Support chaining.
 	 *
@@ -426,8 +425,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	/**
 	 * Sort DataSet by key in reverse order
 	 *
-	 * @param   integer  $flags  You may modify the behavior of the sort using the optional parameter sort_flags,
-	 *                           for details see sort().
+	 * @param   integer  $flags  You may modify the behavior of the sort using the optional parameter flags.
 	 *
 	 * @return  static  Support chaining.
 	 *
@@ -436,6 +434,38 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function krsort($flags = null)
 	{
 		krsort($this->data, $flags);
+
+		return $this;
+	}
+
+	/**
+	 * Sort data.
+	 *
+	 * @param integer $flags  You may modify the behavior of the sort using the optional parameter flags.
+	 *
+	 * @return  static  Support chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function sort($flags = null)
+	{
+		sort($this->data, $flags);
+
+		return $this;
+	}
+
+	/**
+	 * Sort Data in reverse order.
+	 *
+	 * @param integer $flags  You may modify the behavior of the sort using the optional parameter flags.
+	 *
+	 * @return  static  Support chaining.
+	 *
+	 * @since   3.0
+	 */
+	public function rsort($flags = null)
+	{
+		rsort($this->data, $flags);
 
 		return $this;
 	}
@@ -466,6 +496,78 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function shuffle()
 	{
 		shuffle($this->data);
+
+		return $this;
+	}
+
+	/**
+	 * Get first element.
+	 *
+	 * @return  Data
+	 */
+	public function first()
+	{
+		return reset($this->data);
+	}
+
+	/**
+	 * Get last element.
+	 *
+	 * @return  Data
+	 */
+	public function last()
+	{
+		return end($this->data);
+	}
+
+	/**
+	 * Push element to last.
+	 *
+	 * @param   Data|mixed  $data  Data to push.
+	 *
+	 * @return  static
+	 */
+	public function push($data)
+	{
+		$this[] = $data;
+
+		return $this;
+	}
+
+	/**
+	 * Pop the last element.
+	 *
+	 * @return  Data
+	 */
+	public function pop()
+	{
+		return array_pop($this->data);
+	}
+
+	/**
+	 * Shift the first element.
+	 *
+	 * @return  Data
+	 *
+	 *  @since   3.0
+	 */
+	public function shift()
+	{
+		return array_shift($this->data);
+	}
+
+	/**
+	 * Unshift the first element.
+	 *
+	 * @param   Data|mixed  $data  Data to push.
+	 *
+	 * @return  static
+	 *
+	 *  @since   3.0
+	 */
+	public function unshift($data)
+	{
+		array_unshift($this->data, $data);
 
 		return $this;
 	}
@@ -506,29 +608,5 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function getKeys()
 	{
 		return array_keys($this->data);
-	}
-
-	/**
-	 * Push element to last.
-	 *
-	 * @param   Data|mixed  $data  Data to push.
-	 *
-	 * @return  static
-	 */
-	public function push($data)
-	{
-		$this[] = $data;
-
-		return $this;
-	}
-
-	/**
-	 * Pop the last element.
-	 *
-	 * @return  Data
-	 */
-	public function pop()
-	{
-		return array_pop($this->data);
 	}
 }

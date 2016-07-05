@@ -2,18 +2,18 @@
 
 Writer object provide us an interface to write data into database.
 
-## insert()
+## insertOne()
 
 Using an object or array to store data into a table, argument 3 is the name of primary key that will be added
 to data object if insert success:
 
 ``` php
 $data = array(
-    'title' => 'Sakura',
-    'created' => '2014-03-02'
+	'title' => 'Sakura',
+	'created' => '2014-03-02'
 );
 
-$db->getWriter()->insert('#__articles', $data, 'id');
+$db->getWriter()->insertOne('#__articles', $data, 'id');
 
 // $data['id'] will be the last inserted id
 echo $data['id'];
@@ -25,7 +25,7 @@ $data = new stdClass;
 $data->title = 'Sakura';
 $data->created = '2014-03-02';
 
-$db->getWriter()->insert('#__articles', $data, 'id');
+$db->getWriter()->insertOne('#__articles', $data, 'id');
 
 // $data->id will be the last inserted id
 echo $data->id;
@@ -53,7 +53,7 @@ $db->getWriter()->insertMultiple('#__articles', $dataSet, 'id');
 echo $dataSet[0]['id'];
 ```
 
-## update()
+## updateOne()
 
 Using an object or array to update a record into a table, argument 3 is the where key value that we added to query:
 
@@ -110,10 +110,22 @@ $db->getWriter()->updateBatch('#__articles', $data, $conditions);
 // Same as `UPDATE #__articles SET state = 0 WHERE author = 15 AND updated < "2014-03-02" AND catid IN(1, 2, 3);`
 ```
 
+See [Conditions](conditions.md)
+
 ## Save & SaveMultiple
 
 `save()` and `saveMultiple()` will auto check the primary exists or not. If primary key exists, it will use `update`,
 if not exists, it will use `insert` to store data.
+
+## Delete
+
+Use conditions to delete data.
+
+``` php
+$db->getWriter()->delete('table', array('id' => 5));
+```
+
+See [Conditions](conditions.md)
 
 ## insertId()
 

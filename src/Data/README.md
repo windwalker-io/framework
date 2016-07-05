@@ -134,7 +134,6 @@ $data->walk(function(&$value, $key, $userdata)
 }, 'prefix');
 ```
 
-
 ## Using DataSet Object
 
 `DataSet` is a data collection bag for `Data` object. We can insert array with data in constructor.
@@ -206,4 +205,35 @@ $dataset->walk(function(&$data, $key, $userdata)
 {
     $data->foo = $userdata . ':' . $key;
 }, 'prefix');
+```
+
+### Other Array-like Methods
+
+``` php
+$dataSet->sort();
+$dataSet->rsort();
+
+$dataSet->ksort();
+$dataSet->krsort();
+
+$dataSet->shift();
+$dataSet->unshift($data);
+
+$dataSet->pop();
+$dataSet->push($data);
+```
+
+### Get First & Last
+
+``` php
+$first = $dataSet->first();
+$last = $dataSet->last();
+```
+
+### Dump
+
+``` php
+$dataSet->dump(); // Data[]
+
+$dataSet->dump(true); // Recursive to array[]
 ```

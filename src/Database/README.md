@@ -56,6 +56,8 @@ $mysql = DatabaseFactory::getDbo();
 
 // Use driver name to get sqlite driver, $sqlite2 object is same as $sqlite
 $sqlite2 = DatabaseFactory::getDbo('sqlite');
+
+$sqlite === $sqlite2;
 ```
 
 ### Set Default Dbo
@@ -66,6 +68,8 @@ If we want to change default Dbo to Sqlite, just do this:
 $sqlite = DatabaseFactory::getDbo('sqlite');
 
 DatabaseFactory::setDefaultDbo($sqlite);
+
+DatabaseFactory::getDbo(); // sqlite driver
 ```
 
 ### Using My Connection Resource
@@ -141,7 +145,7 @@ $items = $db->loadAll(null, 'MyObject');
 // Record as array with number as indexes
 $items = $db->loadAll(null, 'array');
 
-// Record as array with column name as indexes
+// Record as array with column name as numeric indexes
 $items = $db->loadAll(null, 'assoc');
 
 // Use id column as $items index
@@ -239,6 +243,7 @@ Then we push Monolog into Database instance.
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
+use Windwalker\Database\Middleware\DbLoggingMiddleware;
 
 // Create logger object
 $logger = new Logger('sql');
@@ -250,7 +255,7 @@ $logger->pushHandler(new StreamHandler('path/to/log/sql.log', Logger::DEBUG));
 $logger->pushProcessor(new PsrLogMessageProcessor);
 
 // Push into DB
-$db->setLogger($logger);
+$db->addMiddleware(new DbLoggingMiddleware($logger));
 $db->setDebug(true);
 
 // Do something

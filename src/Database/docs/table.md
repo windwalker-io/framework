@@ -13,50 +13,123 @@ Create a new table.
 > *NOTE:* Table has not support foreign key now.
 
 ``` php
-use Windwalker\Database\Schema\Column;
-use Windwalker\Database\Schema\Key;
-use Windwalker\Database\Schema\DataType;
+use Windwalker\Database\Schema\Schema;
 
 $table = $db->getTable('#__articles');
 
-$table->addColumn('id', DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, '', 'PK', array('primary' => true))
-    ->addColumn('name', DataType::VARCHAR, Column::SIGNED, Column::NOT_NULL, '', 'Name', array('length' => 255))
-    ->addColumn('alias', DataType::VARCHAR, Column::SIGNED, Column::NOT_NULL, '', 'Alias')
-    ->addIndex(Key::TYPE_INDEX, 'idx_name', 'name', 'Test')
-    ->addIndex(Key::TYPE_UNIQUE, 'idx_alias', 'alias', 'Alias Index')
-    ->create(true); // True to add IF NOT EXISTS
+$table->create(function (Schema $schema)
+{
+    $schema->primary('id')->signed(false)->allowNull(false)->comment('Primary Key');
+    $schema->integer('category_id')->signed(false)->allowNull(false)->comment('Cat Key');
+    $schema->varchar('title')->allowNull(false)->comment('Title');
+    $schema->varchar('slug')->length(123)->allowNull(false)->comment('Slug');
+    $schema->text('content')->allowNull(false)->comment('Content');
+
+	$schema->addIndex('category_id');
+	$schema->addIndex(array('category_id', 'title'));
+	$schema->addUniqueKey('slug');
+}, true); // True to add IF NOT EXISTS
 ```
 
-Using Column type objects:
+Available types in `Schema` object:
+
+- primary (An `integer` column with primary key and auto-increment)
+- integer
+- tinyint
+- bit
+- float
+- double
+- decimal
+- char
+- varchar
+- datetime
+- timestamp
+- text
+- longtext
+
+### Using Column type objects:
 
 ``` php
-use Windwalker\Database\Schema\Column;
+use Windwalker\Database\Schema\Schema;
+use Windwalker\Database\Schema\Column\Varchar;
 
-$table->addColumn(new Column\Primary('id'))
-    ->addColumn(new Column\Varchar('name'))
-    ->addColumn(new Column\Char('type'))
-    ->addColumn(new Column\Timestamp('created'))
-    ->addColumn(new Column\Bit('state'))
-    ->addColumn(new Column\Integer('uid'))
-    ->addColumn(new Column\Tinyint('status'))
-    ->create();
+    // ...
+
+    $schema->add('title', new Varchar)->allowNull(false)->comment('Title');
+
+    // ...
 ```
 
-These objects will set default length and attributes for every column, and map the type to different database drivers.
+You can create your own Column type if you want, just extends `Windwalker\Database\Schema\Column` object.
+
+## Type Mapping
+
+Windwalker supports MySQL and Postgresql now, and we'll add more database driver in the future. Every SQL platform has their
+ own data types, so Windwalker has a `DataType` class to help us choose correct these types to current SQL.
+
+For example, Postgresql has no `datatime` type, but MySQL does, so if we create a table with `datetime`, Windwalker will
+ convert this type to `timestamp` if we use postgresql driver.
+
+``` php
+    // ...
+
+    $schema->datetime('created'); // Will be `timestamp` if use pgsql
+
+    // ...
+```
+
+We can get type detail by `DataType` class.
+
+``` php
+use Windwalker\Database\Driver\Mysql\MysqlType;
+use Windwalker\Database\Driver\Postgresql\PostgresqlType;
+use Windwalker\Database\Schema\DataType;
+
+// Mysql has `set` type, but pgsql not.
+// We'll get `text` instead
+$type = PostgresqlType::getType('set'); // text
+
+// Most SQL use `integer` type, but MySQL is `int`
+$type = MysqlType::getPhpType('integer'); // int
+
+// Get default length, varchar default length in MySQL is 255
+// Every type has a constant so we can get it easily if your IDE supports auto-complete
+MysqlType::getLength(MysqlType::VARCHAR); // 255
+
+// Get SQL type map to php type
+gettype($entity->created) == MysqlType::getPhpType(DataType::DATETIME); // Will be `string`
+gettype($entity->state) == MysqlType::getPhpType(DataType::TINYINT); // Will be `int`
+
+// Get valid default value
+MysqlType::getDefaultValue(DataType::DATETIME); // `0000-00-00 00:00:00`
+MysqlType::getDefaultValue(DataType::TINYINT); // `0`
+```
+
+### Add Indexes
+
+We can add a single name or a set of columns name, the index name will auto created.
+
+``` php
+$schema->addIndex('foo'); // idx_tablename_foo
+$schema->addIndex(array('foo', 'bar')); // idx_tablename_foo_bar
+```
+
+You can also set a custom name
+
+``` php
+$schema->addIndex(array('foo', 'bar'), 'idx_custom_name');
+```
 
 ## update()
 
-Update table schema. Only use on add columns and indexes.
-
 ``` php
-use Windwalker\Database\Schema\Column;
-use Windwalker\Database\Schema\Key;
+// Will add category_id column and a index
+$table->create(function (Schema $schema)
+{
+    $schema->integer('category_id')->signed(false)->allowNull(false)->comment('Cat Key');
 
-$table = $db->getTable('#__articles');
-
-$table->addColumn('state', DataType::TINYINT, Column::SIGNED, Column::NOT_NULL, 0, 'State', array('position' => 'AFTER ordering', 'length' => 1))
-    ->addIndex(Key::TYPE_INDEX, 'idx_ordering', array('ordering', 'id'))
-    ->update();
+	$schema->addIndex('category_id');
+});
 ```
 
 ## save()
@@ -64,17 +137,24 @@ $table->addColumn('state', DataType::TINYINT, Column::SIGNED, Column::NOT_NULL, 
 If table exists, using update, otherwise use insert.
 
 ``` php
-use Windwalker\Database\Schema\Column;
-use Windwalker\Database\Schema\Key;
+// Will create table if not exists, and add columns if not in table.
+$table->save(function (Schema $schema)
+{
+    $schema->primary('id')->signed(false)->allowNull(false)->comment('Primary Key');
+    $schema->integer('category_id')->signed(false)->allowNull(false)->comment('Cat Key');
+    $schema->varchar('title')->allowNull(false)->comment('Title');
+    $schema->varchar('slug')->length(123)->allowNull(false)->comment('Slug');
+    $schema->text('content')->allowNull(false)->comment('Content');
 
-$table = $db->getTable('#__articles');
-
-$table->addColumn('state', DataType::TINYINT, Column::SIGNED, Column::NOT_NULL, 0, 'State', array('position' => 'AFTER ordering', 'length' => 1))
-    ->addIndex(Key::TYPE_INDEX, 'idx_ordering', array('ordering', 'id'))
-    ->save();
+	$schema->addIndex('category_id');
+	$schema->addIndex(array('category_id', 'title'));
+	$schema->addUniqueKey('slug');
+}, true); // True to add IF NOT EXISTS
 ```
 
 ## dropColumn()
+
+Instantly drop column.
 
 ``` php
 $table = $db->getTable('#__articles');
@@ -84,6 +164,8 @@ $table->dropColumn('state');
 
 ## dropIndex()
 
+Instantly drop index.
+
 ``` php
 use Windwalker\Database\Schema\Key;
 
@@ -92,7 +174,19 @@ $table = $db->getTable('#__articles');
 $table->dropIndex(Key::TYPE_INDEX, 'idx_state');
 ```
 
-## rename()
+## changeColumn() & modifyColumn()
+
+``` php
+// Modify `foo` column to new type or length
+$table->modifyColumn(
+	(new Varchar('foo'))->length(123)->comment('Foo')
+);
+
+// Modify column `foo` to varchar and rename it to `new_name`
+$table->changeColumn('foo', new Varchar('new_name'));
+```
+
+## Rename Table
 
 ``` php
 $table = $db->getTable('#__foo');
@@ -100,10 +194,23 @@ $table = $db->getTable('#__foo');
 $newTable = $table->rename('#__bar');
 ```
 
-## truncate()
+## Truncate Table
 
 ``` php
 $table = $db->getTable('#__foo');
 
 $table->truncate();
+```
+
+## Get Column
+
+``` php
+// Get full columns data
+$table->getColumnDetails();
+
+// Get single column data
+$table->getColumnDetail('name');
+
+// Get an array with columns name
+$table->getColumns();
 ```

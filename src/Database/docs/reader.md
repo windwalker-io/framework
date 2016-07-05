@@ -12,6 +12,21 @@ $items = $reader->setQuery($sql)->loadObjectList();
 $items = $db->getReader($sql)->loadObjectList();
 ```
 
+## Query Statement
+
+Every reader is a different query statement.
+
+``` php
+$stat1 = $db->getReader($sql1);
+$stat2 = $db->getReader($sql2);
+
+// Thses 2 object will be diferent connection cursors so they can load items parallelly.
+foreach ($stat1 as $item1)
+{
+    $stat2->loadObjectList();
+}
+```
+
 ## loadObjectList()
 
 Return an array, every element is a record and wrap with an object. This method is same as `$db->loadAll()`:
@@ -128,6 +143,17 @@ $sum = $db->getReader('SELECT SUM(hits) FROM article_table')->loadResult();
 
 // Get a value
 $id = $db->getReader('SELECT LAST_INSERT_ID()')->loadResult();
+```
+
+## Run as Iterator
+
+``` php
+$reader = $db->getReader($sql);
+
+foreach ($reader as $item)
+{
+    $item->title;
+}
 ```
 
 ## About PDO Fetch
