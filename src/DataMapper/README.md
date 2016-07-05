@@ -157,20 +157,20 @@ $fooMapper->where('a = "b"') // Simple where
 
 The available query methods.
 
+- `join($type = 'LEFT', $alias, $table, $condition = null, $prefix = null)`
+- `leftJoin($alias, $table, $condition = null, $prefix = null)`
+- `rightJoin($alias, $table, $condition = null, $prefix = null)`
+- `nnerJoin($alias, $table, $condition = null, $prefix = null)`
+- `outerJoin($alias, $table, $condition = null, $prefix = null)`
 - `call($columns)`
 - `group($columns)`
-- `having($conditions, ...$args)`
-- `orHaving($conditions)`
-- `innerJoin($table, $condition = array())`
-- `join($type, $table, $conditions)`
-- `leftJoin($table, $condition = array())`
 - `order($columns)`
 - `limit($limit = null, $offset = null)`
-- `outerJoin($table, $condition = array())`
-- `rightJoin($table, $condition = array())`
 - `select($columns)`
 - `where($conditions, ...$args)`
 - `orWhere($conditions)`
+- `having($conditions, ...$args)`
+- `orHaving($conditions)`
 - `clear($clause = null)`
 - `bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())`
 
@@ -307,8 +307,8 @@ Use `newRelation()` to create a DataMapper and join other tables.
 use Windwalker\DataMapper\DataMapper;
 
 $items = DataMapper::newRelation('flower', '#__flower')
-	->addTable('author', '#__users', 'flower.user_id = author.id', 'LEFT')
-	->addTable('category', '#__categories', array('category.lft >= flower.lft', 'category.rgt <= flower.rgt'), 'INNER')
+	->leftJoin('author', '#__users', 'flower.user_id = author.id')
+	->innerJoin('category', '#__categories', array('category.lft >= flower.lft', 'category.rgt <= flower.rgt'))
 	->where('flower.id = 1')
 	->order('created DESC')
 	->group('category.id')

@@ -17,6 +17,11 @@ use Windwalker\Query\QueryInterface;
 /**
  * Main Database Mapper class.
  *
+ * @method  $this  leftJoin($alias, $table, $condition = null, $prefix = null)
+ * @method  $this  rightJoin($alias, $table, $condition = null, $prefix = null)
+ * @method  $this  innerJoin($alias, $table, $condition = null, $prefix = null)
+ * @method  $this  outerJoin($alias, $table, $condition = null, $prefix = null)
+ *
  * @see  QueryHelper
  *
  * @method  $this  addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
@@ -29,13 +34,8 @@ use Windwalker\Query\QueryInterface;
  * @method  $this  group($columns)
  * @method  $this  having($conditions, ...$args)
  * @method  $this  orHaving($conditions)
- * @method  $this  innerJoin($table, $condition = array())
- * @method  $this  join($type, $table, $conditions)
- * @method  $this  leftJoin($table, $condition = array())
  * @method  $this  order($columns)
  * @method  $this  limit($limit = null, $offset = null)
- * @method  $this  outerJoin($table, $condition = array())
- * @method  $this  rightJoin($table, $condition = array())
  * @method  $this  select($columns)
  * @method  $this  where($conditions, ...$args)
  * @method  $this  orWhere($conditions)
@@ -650,6 +650,24 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	}
 
 	/**
+	 * join
+	 *
+	 * @param string  $joinType
+	 * @param string  $alias
+	 * @param string  $table
+	 * @param mixed   $condition
+	 * @param boolean $prefix
+	 *
+	 * @return  static
+	 */
+	public function join($joinType = 'LEFT', $alias, $table, $condition = null, $prefix = null)
+	{
+		$this->getQueryHelper()->addTable($alias, $table, $condition, $joinType, $prefix);
+
+		return $this;
+	}
+
+	/**
 	 * __call
 	 *
 	 * @param   string  $name
@@ -692,6 +710,22 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 			call_user_func_array(array($query, $name), $args);
 
 			return $this;
+		}
+
+		$allowMethods = array(
+			'leftJoin',
+			'rightJoin',
+			'innerJoin',
+			'outerJoin'
+		);
+
+		if (in_array($name, $allowMethods))
+		{
+			$name = str_replace('JOIN', '', strtoupper($name));
+
+			array_unshift($args, $name);
+
+			return call_user_func_array(array($this, 'join'), $args);
 		}
 
 		throw new \BadMethodCallException(sprintf('Method %s not exists in %s', $name, get_called_class()));

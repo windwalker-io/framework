@@ -39,7 +39,7 @@ class RelationDataMapperTest extends DatabaseTest
 
 		$this->instance = DataMapper::newRelation('flower', 'ww_flower');
 
-		$this->instance->addTable('category', 'ww_categories', 'flower.catid = category.id');
+		$this->instance->leftJoin('category', 'ww_categories', 'flower.catid = category.id');
 	}
 
 	/**
@@ -104,8 +104,8 @@ SQL;
 	public function testFindGroup()
 	{
 		$mapper = new DataMapper;
-		$mapper->addTable('category', 'ww_categories')
-			->addTable('flower', 'ww_flower', 'flower.catid = category.id')
+		$mapper->leftJoin('category', 'ww_categories')
+			->leftJoin('flower', 'ww_flower', 'flower.catid = category.id')
 			->group('category.id');
 
 		$dataset = $mapper->find(array('flower.state' => 1), 'flower.title DESC');
@@ -140,7 +140,7 @@ SQL;
 	public function testFindWhere()
 	{
 		$mapper = DataMapper::newRelation('category', 'ww_categories')
-			->addTable('flower', 'ww_flower', 'flower.catid = category.id')
+			->leftJoin('flower', 'ww_flower', 'flower.catid = category.id')
 			->where('flower.catid < :catid')->bind('catid', 2)
 			->where('%n > %a', 'flower.id', 10);
 
