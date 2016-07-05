@@ -64,7 +64,7 @@ $mapper = new DataMapper('table'); // Keys: array('id')
 $mapper = new DataMapper('table', 'table_id'); // Keys: array('table_id')
 
 // Set multiple keys
-$mapper = new DataMapper('table', array('table_id', 'uuid')); // Keys: array('table_id')
+$mapper = new DataMapper('table', array('table_id', 'uuid')); // Keys: array('table_id', 'uuid')
 ```
 
 ### Extend It
@@ -74,9 +74,9 @@ You can also create a class to operate specific table:
 ``` php
 class FooMapper extends DataMapper
 {
-    protected $table = '#__foo';
+    protected static $table = '#__foo';
 
-    protected $keys = 'id';
+    protected static $keys = 'id';
 }
 
 $data = (new FooMapper)->findAll();
@@ -173,6 +173,8 @@ The available query methods.
 - `orWhere($conditions)`
 - `clear($clause = null)`
 - `bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())`
+
+See [Query Format](https://github.com/ventoviro/windwalker-query#format)
 
 ## Create Records
 
@@ -343,16 +345,16 @@ GROUP BY category.id
 Where condition will auto add alias if not provided.
 
 ``` php
-$mapper->find(array(
+$fooMapper->find(array(
     'foo.id' => 3 // This is correct condition
-    'state' => 1 // This field may conflict between tables, DataMapper will auto covert it to `foo.state` => 1
+    'state' => 1 // This field may cause column conflict, DataMapper will auto covert it to `foo.state` => 1
 ));
 ```
 
 Reset all tables and query:
 
 ``` php
-$mapper->reset();
+$fooMapper->reset();
 ```
 
 ### Using OR Condition
@@ -445,7 +447,12 @@ class FooListener
 }
 
 $mapper = new DataMapper('table');
+
+// Add object as listener
 $mapper->getDispatcher()->addListener(new FooListener);
+
+// Use listen() to add a callback as listener
+$mapper->getDispatcher()->listen('onAfterUpdate', function () { ... });
 
 $mapper->create($dataset);
 ```
