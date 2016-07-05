@@ -64,48 +64,4 @@ class PhpAesCipher implements CipherInterface
 
 		return $aes->encrypt($data);
 	}
-
-//	/**
-//	 * getKeyChars
-//	 *
-//	 * @return  string
-//	 */
-//	public function getKeyChars()
-//	{
-//		switch ($this->keyLength)
-//		{
-//			case static::KEY_128BIT:
-//				return 'abcdefgh01234567';
-//			case static::KEY_192BIT:
-//				return 'abcdefghijkl012345678901';
-//			case static::KEY_256BIT:
-//				return 'abcdefghijuklmno0123456789012345';
-//			default:
-//				throw new \InvalidArgumentException('Please use 256bit, 192bit or 128bit key length.');
-//		}
-//	}
-//
-//	/**
-//	 * Method to get property KeyLength
-//	 *
-//	 * @return  int
-//	 */
-//	public function getKeyLength()
-//	{
-//		return $this->keyLength;
-//	}
-//
-//	/**
-//	 * Method to set property keyLength
-//	 *
-//	 * @param   int $keyLength
-//	 *
-//	 * @return  static  Return self to support chaining.
-//	 */
-//	public function setKeyLength($keyLength)
-//	{
-//		$this->keyLength = $keyLength;
-//
-//		return $this;
-//	}
 }
