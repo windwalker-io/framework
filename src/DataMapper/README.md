@@ -7,8 +7,7 @@ Add this to the require block in your `composer.json`.
 ``` json
 {
     "require": {
-        "windwalker/datamapper": "~3.0",
-        "windwalker/database": "~3.0"
+        "windwalker/datamapper": "~3.0"
     }
 }
 ```
@@ -34,30 +33,11 @@ $db = DatabaseFactory::getDbo(
 );
 ```
 
-The DatabaseDriver will be cache in Factory, now DataMapper will auto load Windwalker DatabaseDriver 
-from `DatabaseFactory` and `DatabaseAdapter` to operate DB.
+The DatabaseDriver will be cached in Factory, now DataMapper will auto load database driver.
 
-#### Current Supported Drivers
+See [Database](https://github.com/ventoviro/windwalker-database#windwalker-database)
 
-- mysql
-- postgresql
-
-Todo:
-
-- oracle
-- mssql
-- sqlite
-
-### Manually Set An Exists DatabaseDriver To Adapter
- 
-``` php
-use Windwalker\DataMapper\Adapter\DatabaseAdapter;
-use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
-
-DatabaseAdapter::setInstance(new WindwalkerAdapter($db));
-```
-
-## Create a DataMapper
+## Create DataMapper
 
 ``` php
 use Windwalker\DataMapper\DataMapper;
@@ -67,6 +47,26 @@ $fooMapper = new DataMapper('#__foo');
 $fooSet = $fooMapper->find(array('id' => 1));
 ```
 
+Inject DB to DataMapper
+
+``` php
+// $db is Windwalker DatabaseDriver
+$mapper = new DataMapper('table', null, $db);
+```
+
+Custom primary keys:
+
+``` php
+// If keep keys NULL, the default `id` will auto set.
+$mapper = new DataMapper('table'); // Keys: array('id')
+
+// Set custom key
+$mapper = new DataMapper('table', 'table_id'); // Keys: array('table_id')
+
+// Set multiple keys
+$mapper = new DataMapper('table', array('table_id', 'uuid')); // Keys: array('table_id', 'uuid')
+```
+
 ### Extend It
 
 You can also create a class to operate specific table:
@@ -74,7 +74,9 @@ You can also create a class to operate specific table:
 ``` php
 class FooMapper extends DataMapper
 {
-    protected $table = '#__foo';
+    protected static $table = '#__foo';
+
+    protected static $keys = 'id';
 }
 
 $data = (new FooMapper)->findAll();
@@ -83,24 +85,13 @@ $data = (new FooMapper)->findAll();
 Or using facade:
 
 ``` php
-abstract class FooMapper
+use Windwalker\DataMapper\AbstractDatabaseMapperProxy;
+
+abstract class FooMapper extends AbstractDatabaseMapperProxy
 {
-    protected static $instance;
-    
-    public static function getInstance()
-    {
-        if (!static::$instance)
-        {
-            static::$instance = new DataMapper('#__foo');
-        }
-        
-        return static::$instance;
-    }
-    
-    public static function __callStatic($name, $args)
-    {
-        return call_user_func_array(array(static::getInstance(), $name), $args);
-    }
+    protected $table = '#__foo';
+
+    protected $keys = 'id'; // Keep NULL will use default `id`
 }
 
 $data = FooMapper::findOne(array('id' => 5, 'alias' => 'bar'));
@@ -147,6 +138,43 @@ $foo = $dooMapper->findOne(array('published' => 1), 'date');
 ### findAll()
 
 Equal to `find(array(), $order, $start, $limit)`.
+
+### Find With Custom Query
+
+``` php
+$fooMapper = new DataMapper('#__foo');
+
+$fooMapper->where('a = "b"') // Simple where
+	->where('%n = $q', 'foo', 'bar') // Where format
+	->where('flower = :sakura')->bind('sakura', 'Sakura') // Bind params
+	->orWhere(array('c = d', 'e = f')) // AND (c=d OR e=f)
+	->having('...')
+	->limit(10, 20) // Limit, offset
+	->order('created DESC') // Can be array or string
+	->select(array('id', 'title', 'alias')) // Can be array or string
+	->find();
+```
+
+The available query methods.
+
+- `join($type = 'LEFT', $alias, $table, $condition = null, $prefix = null)`
+- `leftJoin($alias, $table, $condition = null, $prefix = null)`
+- `rightJoin($alias, $table, $condition = null, $prefix = null)`
+- `nnerJoin($alias, $table, $condition = null, $prefix = null)`
+- `outerJoin($alias, $table, $condition = null, $prefix = null)`
+- `call($columns)`
+- `group($columns)`
+- `order($columns)`
+- `limit($limit = null, $offset = null)`
+- `select($columns)`
+- `where($conditions, ...$args)`
+- `orWhere($conditions)`
+- `having($conditions, ...$args)`
+- `orHaving($conditions)`
+- `clear($clause = null)`
+- `bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())`
+
+See [Query Format](https://github.com/ventoviro/windwalker-query#format)
 
 ## Create Records
 
@@ -273,16 +301,18 @@ $boolean = $fooMapper->delete(array('author' => 'Jean Grey'));
 
 ## Join Tables
 
-Use `RelationDataMapper` to join tables.
+Use `newRelation()` to create a DataMapper and join other tables.
 
 ``` php
-$fooMapper = new RelationDataMapper('flower', '#__flower');
+use Windwalker\DataMapper\DataMapper;
 
-$fooMapper->addTable('author', '#__users', 'flower.user_id = author.id', 'LEFT')
-    ->addTable('category', '#__categories', array('category.lft >= flower.lft', 'category.rgt <= flower.rgt'), 'INNER');
-
-// Don't forget add alias on where conditions.
-$dataset = $fooMapper->find(array('flower.id' => 5));
+$items = DataMapper::newRelation('flower', '#__flower')
+	->leftJoin('author', '#__users', 'flower.user_id = author.id')
+	->innerJoin('category', '#__categories', array('category.lft >= flower.lft', 'category.rgt <= flower.rgt'))
+	->where('flower.id = 1')
+	->order('created DESC')
+	->group('category.id')
+	->find();
 ```
 
 The Join query will be:
@@ -306,6 +336,25 @@ SELECT `flower`.`id`,
 FROM #__foo AS foo
     LEFT JOIN #__users AS author ON foo.user_id = author.id
     INNER JOIN #__categories AS category ON category.lft >= foo.lft AND category.rgt <= foo.rgt
+WHERE
+    flower.id = 1
+ORDER BY flower.created DESC
+GROUP BY category.id
+```
+
+Where condition will auto add alias if not provided.
+
+``` php
+$fooMapper->find(array(
+    'foo.id' => 3 // This is correct condition
+    'state' => 1 // This field may cause column conflict, DataMapper will auto covert it to `foo.state` => 1
+));
+```
+
+Reset all tables and query:
+
+``` php
+$fooMapper->reset();
 ```
 
 ### Using OR Condition
@@ -398,7 +447,12 @@ class FooListener
 }
 
 $mapper = new DataMapper('table');
+
+// Add object as listener
 $mapper->getDispatcher()->addListener(new FooListener);
+
+// Use listen() to add a callback as listener
+$mapper->getDispatcher()->listen('onAfterUpdate', function () { ... });
 
 $mapper->create($dataset);
 ```
@@ -422,34 +476,33 @@ $mapper = new DataMapper('table');
 $mapper->find(array('id' => 5));
 ```
 
+Available events:
+
+- onBeforeFind
+- onAfterFind
+- onBeforeFindAll
+- onAfterFindAll
+- onBeforeFindOne
+- onAfterFindOne
+- onBeforeFindColumn
+- onAfterFindColumn
+- onBeforeCreate
+- onAfterCreate
+- onBeforeCreateOne
+- onAfterCreateOne
+- onBeforeUpdate
+- onAfterUpdate
+- onBeforeUpdateOne
+- onAfterUpdateOne
+- onBeforeUpdateBatch
+- onAfterUpdateBatch
+- onBeforeSave
+- onAfterSave
+- onBeforeSaveOne
+- onAfterSaveOne
+- onBeforeFlush
+- onAfterFlush
+- onBeforeDelete
+- onAfterDelete
+
 More about Event: [Windwalker Event](https://github.com/ventoviro/windwalker-event)
-
-## Integrate Other Framework's DB Object
- 
-Create your own adapter.
- 
-``` php
-class MyDatabaseAdapter extends DatabaseAdapter
-{
-    protected $db;
-
-    public function __construct(MyDBObject $db)
-    {
-        $this->db = $db;
-    }
-
-	public function find($table, $select = '*', array $conditions = array(), array $orders = array(), $start = 0, $limit = null) {}
-	public function create($table, $data, $pk = null) {}
-	public function updateOne($table, $data, array $condFields = array()) {}
-	public function updateAll($table, $data, array $conditions = array()) {}
-	public function delete($table, array $conditions = array()) {}
-	public function getFields($table) {}
-	public function transactionStart($asSavePoint = false) {}
-	public function transactionCommit($asSavePoint = false) {}
-	public function transactionRollback($asSavePoint = false) {}
-}
-
-DatabaseAdapter::setInstance(new MyDatabaseAdapter($db));
-```
-
-DataMapper will call this adapter to operate DB, it prevents that there may be 2 DB connections exists at the same time. 

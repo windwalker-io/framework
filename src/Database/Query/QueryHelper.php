@@ -237,13 +237,13 @@ class QueryHelper
 	/**
 	 * buildCompare
 	 *
-	 * @param string|int  $key
-	 * @param Compare     $value
-	 * @param Query       $query
+	 * @param string|int      $key
+	 * @param Compare         $value
+	 * @param QueryInterface  $query
 	 *
 	 * @return  string
 	 */
-	public static function buildCompare($key, Compare $value, $query = null)
+	public static function buildCompare($key, Compare $value, QueryInterface $query = null)
 	{
 		$query = $query ? : DatabaseFactory::getDbo()->getQuery(true);
 
@@ -308,7 +308,7 @@ class QueryHelper
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setTables($tables)
+	public function setTables(array $tables)
 	{
 		$this->tables = $tables;
 
