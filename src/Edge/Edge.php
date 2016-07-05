@@ -16,6 +16,7 @@ use Windwalker\Edge\Compiler\EdgeCompiler;
 use Windwalker\Edge\Extension\EdgeExtensionInterface;
 use Windwalker\Edge\Loader\EdgeFileLoader;
 use Windwalker\Edge\Loader\EdgeLoaderInterface;
+use Windwalker\Edge\Loader\EdgeStringLoader;
 
 // Simple fix for Blade escape
 include_once __DIR__ . '/compat.php';
@@ -111,10 +112,8 @@ class Edge
 	public function __construct(EdgeLoaderInterface $loader = null, EdgeCompilerInterface $compiler = null, EdgeCacheInterface $cache = null)
 	{
 		$this->compiler = $compiler ? : new EdgeCompiler;
-		$this->loader   = $loader   ? : new EdgeFileLoader;
+		$this->loader   = $loader   ? : new EdgeStringLoader;
 		$this->cache    = $cache    ? : new EdgeArrayCache;
-
-		$this->globals['__env'] = $this;
 	}
 
 	/**

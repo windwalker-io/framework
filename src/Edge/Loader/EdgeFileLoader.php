@@ -158,7 +158,7 @@ class EdgeFileLoader implements EdgeLoaderInterface
 	 *
 	 * @return  static
 	 */
-	public function addExtension($name)
+	public function addFileExtension($name)
 	{
 		$this->extensions[] = $name;
 		
