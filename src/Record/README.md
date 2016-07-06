@@ -33,6 +33,8 @@ use Windwalker\Record\Record;
 class UserRecord extends Record
 {
     protected $table = 'users';
+
+    protected $keys = 'id';
 }
 
 $user = new UserRecord;
@@ -49,9 +51,13 @@ $user->load(array('alias' => $alias)); // Load by field name.
 Check row exists
 
 ``` php
-if (!$user->load(25))
+try
 {
-    throw new RuntuneException('User not found');
+	$record->load(25);
+}
+catch (NoResultException $e)
+{
+	// Handle error
 }
 ```
 
@@ -124,7 +130,7 @@ $user->bind($data);
 $user->store();
 ```
 
-### Check
+### Validate
 
 Check method help you validate data.
 
@@ -133,7 +139,7 @@ class UserRecord extends Record
 {
     // ...
 
-    public function check()
+    public function validate()
     {
         if (!$this['name'])
         {
@@ -145,14 +151,12 @@ class UserRecord extends Record
 }
 ```
 
-Then we call `check()` before `store()`.
+Then we call `validate()` before `store()`.
 
 ``` php
-$user->bind($data);
-
-$user->check();
-
-$user->store();
+$user->bind($data)
+    ->validate()
+    ->store();
 ```
 
 ### Delete
@@ -203,7 +207,7 @@ Set as first child of ROOT
 
 ``` php
 $cat->bind($data)
-    ->setLocation(1, NestedRecord::POSITION_FIRST_CHILD)
+    ->setLocation(1, NestedRecord::LOCATION_FIRST_CHILD)
     ->store();
 ```
 
@@ -211,16 +215,16 @@ Now we will have a new node and it id is `2`. Create a new node as last child of
 
 ``` php
 $cat->bind($data)
-    ->setLocation(2, NestedRecord::POSITION_LAST_CHILD)
+    ->setLocation(2, NestedRecord::LOCATION_LAST_CHILD)
     ->store();
 ```
 
 Available positions:
 
-- POSITION_FIRST_CHILD
-- POSITION_LAST_CHILD
-- POSITION_BEFORE
-- POSITION_AFTER
+- LOCATION_FIRST_CHILD
+- LOCATION_LAST_CHILD
+- LOCATION_BEFORE
+- LOCATION_AFTER
 
 ### Move Node
 
@@ -236,7 +240,7 @@ $cat->move(-1); // Move down
 Move to node `3` as last child.
 
 ``` php
-$cat->moveByReference(3, NestedRecord::POSITION_LAST_CHILD);
+$cat->moveByReference(3, NestedRecord::LOCATION_LAST_CHILD);
 ```
 
 ### Rebuild
@@ -263,3 +267,47 @@ Method to get a node and all its child nodes.
 ``` php
 $records = $cat->getTree();
 ```
+
+## Event
+
+Record has an event system that we can process logic before & after every DB operation.
+
+Add event methods in your Record class.
+
+``` php
+class UserRecord extends Record
+{
+	public function onAfterLoad(Event $event)
+	{
+		$this->foo = array('a', 'b', 'c');
+	}
+}
+```
+
+Or add listeners to Dispatcher (You must install `windwalker/event` first).
+
+``` php
+// Use listener object
+$record->getDispatcher()->addListener(new MyRecordListener);
+
+// Use callback
+$record->getDispatcher()->listen('onAfterStore', function (Event $event)
+{
+    // Process your logic
+});
+```
+
+Available events:
+
+- onBeforeLoad
+- onAfterLoad
+- onBeforeStore
+- onAfterStore
+- onBeforeDelete
+- onAfterDelete
+- onBeforeBind
+- onAfterBind
+- onBeforeCreate
+- onAfterCreate
+- onBeforeUpdate
+- onAfterUpdate
