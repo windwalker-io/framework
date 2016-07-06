@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -53,7 +53,7 @@ use Windwalker\Event\Event;
  * @method  static  DataMapper  where($conditions, ...$args)
  * @method  static  DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0-beta2
  */
 class AbstractDatabaseMapperProxy
 {

@@ -2,7 +2,7 @@
 /**
  * Part of phoenix project.
  *
- * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Serializer;
 /**
  * The PhpFileSerializer class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0-beta2
  */
 class PhpFileSerializer implements SerializerInterface
 {

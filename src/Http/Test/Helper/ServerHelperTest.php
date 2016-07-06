@@ -14,7 +14,7 @@ use Windwalker\Http\UploadedFile;
 /**
  * Test class of ServerHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0-beta2
  */
 class ServerHelperTest extends \PHPUnit_Framework_TestCase
 {

@@ -16,7 +16,7 @@ use Windwalker\Query\Query;
 /**
  * Test class of AbstractDatabaseDriver
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0-beta2
  */
 class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 {
