@@ -266,11 +266,11 @@ $structure->toString('yaml');
 ``` php
 use Windwalker\Structure\StructureHelper;
 
-RehistryHelper::loadFaile($file, $format); // File to array
-RehistryHelper::loadString($string, $format); // String to array
-RehistryHelper::toString($array, $format); // Array to string
+StructureHelper::loadFaile($file, $format); // File to array
+StructureHelper::loadString($string, $format); // String to array
+StructureHelper::toString($array, $format); // Array to string
 
 // Use format class
-$json = RehistryHelper::getFormatClass('json'); // Get JsonFormat
+$json = StructureHelper::getFormatClass('json'); // Get JsonFormat
 $string = $json::structToString($array);
 ```
