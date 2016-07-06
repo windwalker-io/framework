@@ -102,11 +102,11 @@ class WebHttpServer extends HttpServer
 	/**
 	 * listen
 	 *
-	 * @param callable $nextHandler
+	 * @param callable $errorHandler
 	 */
-	public function listen($nextHandler = null)
+	public function listen($errorHandler = null)
 	{
-		$response = $this->execute($nextHandler);
+		$response = $this->execute($errorHandler);
 
 		$this->output->respond($response);
 	}

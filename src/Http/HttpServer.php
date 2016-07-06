@@ -116,11 +116,11 @@ class HttpServer
 	/**
 	 * Execute the server.
 	 *
-	 * @param   callable  $nextHandler  The next handler to support middleware pattern.
+	 * @param   callable $errorHandler The error handler callback.
 	 */
-	public function listen($nextHandler = null)
+	public function listen($errorHandler = null)
 	{
-		$response = call_user_func($this->handler, $this->request, $this->response, $nextHandler);
+		$response = call_user_func($this->handler, $this->request, $this->response, $errorHandler);
 
 		if (!$response instanceof ResponseInterface)
 		{
