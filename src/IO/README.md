@@ -57,23 +57,23 @@ $input->getRaw('flower') // <p>to be, or not to be.</p>
 
 More filter usage please see: [Windwalker Filter](https://github.com/ventoviro/windwalker-filter)
 
-### Get Array
+### Compact and Get Array
 
-Input is able to get data as array. 
+Get data as an array.
 
 ``` php
 // mysite.com/?flower[1]=sakura&flower[2]=olive;
 
-$input->get('flower', InputFilter::ARRAY); // Array( [1] => sakura [2] => olive)
+$input->getArray('flower'); // Array( [1] => sakura [2] => olive)
 ```
 
-Use `getArray()` method
+Use `compact()` method
 
 ``` php
 // mysite.com/?flower=sakura&foo=bar&king=Richard
 
 // Get all request
-$input->getArray();
+$input->compact();
 
 // To retrieve values you want
 $array(
@@ -81,7 +81,7 @@ $array(
     'king' => '',
 );
 
-$input->getArray($array); // Array( [flower] => sakura [king] => Richard)
+$input->compact($array); // Array( [flower] => sakura [king] => Richard)
 
 // Specify different filters for each of the inputs:
 $array(
@@ -91,7 +91,7 @@ $array(
 
 // Use nested array to get more complicated hierarchies of values
 
-$input->getArray(array(
+$input->compact(array(
     'windwalker' => array(
         'title' => InputFilter::STRING,
         'quantity' => InputFilter::INTEGER,
@@ -102,12 +102,16 @@ $input->getArray(array(
 
 ### Get And Set Multi-Level
 
-If we want to get value of `foo[bar][baz]`, just use `setByPath()`:
+If we want to get value of `foo[bar][baz]`, just use `get('foo.bar.baz')`:
 
 ``` php
-$value = $input->getByPath('foo.bar.baz', 'default', InputFilter::STRING);
+$value = $input->get('foo.bar.baz', 'default', InputFilter::STRING);
 
-$input->setByPath('foo.bar.baz', $data);
+$input->set('foo.bar.baz', $data);
+
+// Use custom separator
+$input->get('foo/bar/baz', 'default', [filter], '/');
+$input->set('foo/bar/baz', $data, '/');
 ```
 
 ### Get Value From Other Methods
@@ -173,9 +177,7 @@ Array
                             [0] => youtube_icon.png
                             [1] => Younger_Son_2.jpg
                         )
-
                 )
-
             [type] => Array
                 (
                     [test] => Array
@@ -183,9 +185,7 @@ Array
                             [0] => image/png
                             [1] => image/jpeg
                         )
-
                 )
-
             [tmp_name] => Array
                 (
                     [test] => Array
@@ -193,9 +193,7 @@ Array
                             [0] => /tmp/phpXoIpSD
                             [1] => /tmp/phpWDE7ye
                         )
-
                 )
-
             [error] => Array
                 (
                     [test] => Array
@@ -203,9 +201,7 @@ Array
                             [0] => 0
                             [1] => 0
                         )
-
                 )
-
             [size] => Array
                 (
                     [test] => Array
@@ -213,11 +209,8 @@ Array
                             [0] => 34409
                             [1] => 99529
                         )
-
                 )
-
         )
-
 )
 ```
 

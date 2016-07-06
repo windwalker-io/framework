@@ -198,3 +198,39 @@ The result still:
 <<< BBBB
 <<< AAAA
 ```
+
+## Psr7 Middleware
+
+``` php
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Windwalker\Middleware\Chain\Psr7ChainBuilder;
+use Windwalker\Middleware\Psr7Middleware;
+
+class MyPsr7Middleware implements \Windwalker\Middleware\Psr7InvokableInterface
+{
+	public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next = null)
+	{
+		// Do something
+
+		$result = $next($request, $response);
+
+		// Do something
+
+		return $result;
+	}
+}
+
+$mid = new Psr7Middleware(function (ServerRequestInterface $request, ResponseInterface $response, $next = null)
+{
+	// Do something
+});
+
+$chain = new Psr7ChainBuilder;
+$chain->add(new MyPsr7Middleware)
+	->add($mid);
+
+$chain->execute(new ServerRequest, new Response);
+```
+
+

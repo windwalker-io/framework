@@ -157,17 +157,34 @@ WHERE year <= 1616
     AND published > 0
 ```
 
-Using OR condition:
+There are many ways you can use `where()` method:
 
 ``` php
-$conditions = array("foo = 'bar'", "flower = 'sakura'");
+// Use array
+$query->where(array('a = b', 'c = d')); // a = b AND c = d
 
-$conditions = '(' . implode(' OR ', $conditions) . ')';
+// Use format
+$query->where('%q = %n', 'flower', 'sakura'); // `flower` = 'sakura'
 
+// Use bind
+$query->where('`flower` = :name')->bind('name', $name); // `flower` = 'sakura'
+
+// Or bind an array data
+$query->where('`flower` = :name')->bind($array); // `flower` = 'sakura'
+```
+
+See [Query Format](#format)
+
+`orWhere()`:
+
+``` php
 $query->select('*')
     ->from('shakespeare')
     ->where('year <= 1616')
-    ->where($conditions);
+    ->orWhere(array(
+        "foo = 'bar'",
+        "flower = 'sakura'"
+    ));
     
 echo $query;
 ```
@@ -181,12 +198,20 @@ WHERE year <= 1616
     AND (foo = 'bar' OR flower = 'sakura')
 ```
 
-You can use `QueryElement` to create this:
+Build where by callback:
 
 ``` php
-use Windwalker\Query\QueryElement;
+$query->orWhere(function (Query $query)
+{
+    $query->where("foo = 'bar'")
+		->where("flower = 'sakura'");
+});
+```
 
-echo new QueryElement('()', $conditions, ' OR ');
+You can use `QueryElement` to create an `()` element:
+
+``` php
+echo $query->element('()', $conditions, ' OR ');
 
 // Result also: '(foo = 'bar' OR flower = 'sakura')'
 ```
