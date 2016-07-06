@@ -33,11 +33,6 @@ echo $renderer->render('template', $data);
 This is a simple php engine to help us render template.
 
 ``` php
-<?php
-
-/** @var  $data  \Windwalker\Data\Data  */
-$title = $data['title'];
-?>
 <h1><?php echo $this->escape($title); ?></h1>
 ```
 
@@ -53,11 +48,6 @@ echo $this->load('sub.template', array('bar' => 'baz'));
 Example to load `foo/article.php`:
 
 ``` php
-<?php
-
-/** @var  $data  \Windwalker\Data\Data  */
-$title = $data['title'];
-?>
 <h1><?php echo $this->escape($title); ?></h1>
 
 <?php foreach ($data->articles as $article): ?>
@@ -148,24 +138,6 @@ Result:
 </article>
 ```
 
-### Use Local Variables
-
-We can ignore `$data` variable and directly use every variables.
-
-``` php
-$renderer = new PhpRenderer(__DIR__ . '/file/path', array('local_variables' => true));
-
-echo $renderer->render('template', array('foo' => 'bar'));
-```
-
-In template
-
-``` html
-<p>
-    <?php echo $foo ?>
-</p>
-```
-
 ## Add More Paths to Search
 
 We create 3 paths by `SplPriorityQueue`, that make theme path is priority to others, so we can override view templates
@@ -251,6 +223,28 @@ $renderer->addCustomCompiler('datetime', function($expression)
 ```
 
 More about Blade engine please see [Laravel Document](http://laravel.com/docs/4.2/templates#blade-templating).
+
+## Edge Renderer
+
+Edge is a Blade compatible template engine which created to support Windwalker itself.
+
+``` php
+$renderer = new EdgeRenderer;
+
+// Ad custom extensions
+$renderer->addExtension(new MyEdgeExtension);
+
+echo $renderer->render('layout.main', $data);
+```
+
+Cache files:
+
+``` php
+$renderer = new EdgeRenderer($paths, array('cache_path' => __DIR__ . '/cache'));
+echo $renderer->render('layout.main', $data);
+```
+
+See [Windwalker Edge](https://github.com/ventoviro/windwalker-edge)
 
 ## Mustache Renderer
 

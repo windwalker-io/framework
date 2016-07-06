@@ -242,28 +242,6 @@ HTML;
 		$this->assertDomStringEqualsDomString($expect, $html);
 	}
 
-	public function testRenderLocalVariables()
-	{
-		$data = array(
-			'class' => 'flower',
-			'title' => 'Sakura',
-			'content' => 'Nulla sollicitudin vel augue quis aliquet.'
-		);
-
-		$this->instance->config->set('local_variables', true);
-
-		$html = $this->instance->render('data1_local', $data);
-
-		$expect = <<<HTML
-<div id="data" class="flower">
-	<h1>Sakura</h1>
-	<p>Morbi suscipit ante massa</p>
-</div>
-HTML;
-
-		$this->assertDomStringEqualsDomString($expect, $html);
-	}
-
 	/**
 	 * Method to test escape().
 	 *

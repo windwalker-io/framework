@@ -8,8 +8,6 @@
 
 namespace Windwalker\Renderer;
 
-use Windwalker\Data\Data;
-
 /**
  * Class PhpRenderer
  *
@@ -55,7 +53,7 @@ class PhpRenderer extends AbstractRenderer
 	/**
 	 * Property data.
 	 *
-	 * @var  Data
+	 * @var  array
 	 */
 	protected $data = null;
 
@@ -70,14 +68,14 @@ class PhpRenderer extends AbstractRenderer
 	 * render
 	 *
 	 * @param string  $file
-	 * @param Data    $__data
+	 * @param array   $__data
 	 *
 	 * @throws  \UnexpectedValueException
 	 * @return  string
 	 */
 	public function render($file, $__data = null)
 	{
-		$this->data = $__data = ($__data instanceof Data) ? $__data : new Data($__data);
+		$this->data = $__data = (array) $__data;
 
 		$this->prepareData($__data);
 
@@ -155,7 +153,7 @@ class PhpRenderer extends AbstractRenderer
 	 */
 	public function load($file, $data = null)
 	{
-		$data = $this->data->bind(new Data($data));
+		$data = array_merge($this->data, (array) $data);
 
 		$renderer = $this->createSelf();
 
@@ -165,7 +163,7 @@ class PhpRenderer extends AbstractRenderer
 	/**
 	 * prepareData
 	 *
-	 * @param   Data &$data
+	 * @param   array &$data
 	 *
 	 * @return  void
 	 */

@@ -6,9 +6,6 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-use Windwalker\Data\Data;
-
-/** @var Data $data */
 ?>
 
 <div id="data" class="<?php echo $class; ?>">
