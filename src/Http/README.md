@@ -320,11 +320,71 @@ $data = $dest->getContents();
 See: [Psr7 StreamInterface](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-7-http-message.md#13-streams)
 / [API](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-7-http-message.md#34-psrhttpmessagestreaminterface)
 
-## Other Http Message Objects
+## Http Server
 
 ### `ServerRequest`
 
-A Request object to store server data, like: `$_SERVER`, `$_COOKIE`, `$_REQUEST` etc.
+A Request object to store server information, like: `$_SERVER`, `$_COOKIE`, `$_REQUEST` etc.
+
+``` php
+use Windwalker\Http\Request\ServerRequestFactory;
+
+$request = ServerRequestFactory::createFromGlobals();
+
+// Or create by suprtglobals
+$request = ServerRequestFactory::createFromGlobals(array(
+	$_SERVER,
+	$_GET,
+	$_POST,
+	$_COOKIE,
+	$_FILES
+));
+
+// Get Uri with URL information
+$request->getUri();
+```
+
+### Create A Http Server
+
+``` php
+$handler = function (Request $request, Response $response, $next = null)
+{
+	$response->getBody()->write('Hello World~~~!');
+
+	return $response;
+};
+
+$server = WebHttpServer::create($handler, ServerRequestFactory::createFromGlobals());
+
+$server->listen();
+```
+
+### Error Handler
+
+Add a callable to `listen()` as error handler.
+
+``` php
+$handler = function (Request $request, Response $response, callable $error = null)
+{
+	try
+	{
+		$response->getBody()->write('Hello World~~~!');
+	}
+	catch (\Exception $e)
+	{
+		return $error($e, $request, $response);
+	}
+
+	return $response;
+};
+
+$server = WebHttpServer::create($handler, ServerRequestFactory::createFromGlobals());
+
+$server->listen(function (Exception $e, Request $request, Response $response)
+{
+	// Render error page
+});
+```
 
 ### `UploadedFile`
 
@@ -345,6 +405,29 @@ $request = new ServerRequest(
   $_COOKIE,
   $files
 );
+```
+
+The ServerRequestFactory object will help us organize `$_FILES` data to `UploadedFile`.
+
+``` php
+$request = ServerRequestFactory::createFromGlobals();
+$files = $request->getUploadedFiles();
+
+if (!$files['foo']->getError())
+{
+	$files['foo']->moveTo('/tmp/files/' . $files['foo']->getClientFilename());
+}
+```
+
+## Responses
+
+Windwalker Http provides a set of formatted Responses to return data with different formats.
+
+``` php
+$response = new \Windwalker\Http\Response\HtmlResponse('<html> ... </html>');
+$response = new \Windwalker\Http\Response\JsonResponse(array('foo' => 'bar'), 200, $headers);
+$response = new \Windwalker\Http\Response\XmlResponse(new \SimpleXMLElement('<root />'), 200, $headers);
+$response = new \Windwalker\Http\Response\RedirectResponse($url, 301);
 ```
 
 ## More About Psr 7
