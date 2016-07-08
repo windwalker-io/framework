@@ -158,6 +158,9 @@ class CacheItem implements CacheItemInterface
 	 */
 	public function expiresAt($expiration)
 	{
+		$tzBackup = @date_default_timezone_get();
+		date_default_timezone_set('UTC');
+
 		if ($expiration instanceof \DateTimeInterface)
 		{
 			$this->expiration = $expiration;
@@ -171,6 +174,8 @@ class CacheItem implements CacheItemInterface
 		{
 			throw new \InvalidArgumentException('Invalid DateTime format.');
 		}
+
+		date_default_timezone_set($tzBackup);
 
 		return $this;
 	}
@@ -190,6 +195,9 @@ class CacheItem implements CacheItemInterface
 	 */
 	public function expiresAfter($time)
 	{
+		$tzBackup = @date_default_timezone_get();
+		date_default_timezone_set('UTC');
+
 		if ($time instanceof \DateInterval)
 		{
 			$this->expiration = new \DateTime;
@@ -208,6 +216,8 @@ class CacheItem implements CacheItemInterface
 		{
 			throw new \InvalidArgumentException('Invalid DateTime format.');
 		}
+
+		date_default_timezone_set($tzBackup);
 
 		return $this;
 	}
