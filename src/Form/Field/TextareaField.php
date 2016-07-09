@@ -40,13 +40,14 @@ class TextareaField extends TextField
 	 */
 	public function prepare(&$attrs)
 	{
-		$attrs['name']     = $this->getFieldName();
-		$attrs['id']       = $this->getAttribute('id', $this->getId());
-		$attrs['class']    = $this->getAttribute('class');
-		$attrs['readonly'] = $this->getAttribute('readonly');
-		$attrs['disabled'] = $this->getAttribute('disabled');
-		$attrs['onchange'] = $this->getAttribute('onchange');
-		$attrs['required'] = $this->required;
+		$attrs['name']        = $this->getFieldName();
+		$attrs['id']          = $this->getAttribute('id', $this->getId());
+		$attrs['class']       = $this->getAttribute('class');
+		$attrs['readonly']    = $this->getAttribute('readonly');
+		$attrs['disabled']    = $this->getAttribute('disabled');
+		$attrs['onchange']    = $this->getAttribute('onchange');
+		$attrs['placeholder'] = $this->getAttribute('placeholder');
+		$attrs['required']    = $this->required;
 
 		$attrs['cols'] = $this->getAttribute('cols');
 		$attrs['rows'] = $this->getAttribute('rows');
