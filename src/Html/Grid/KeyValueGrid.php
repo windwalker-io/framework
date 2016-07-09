@@ -22,23 +22,23 @@ class KeyValueGrid extends Grid
 	/**
 	 * create
 	 *
-	 * @param array $options
+	 * @param array $attribs
 	 *
 	 * @return static
 	 */
-	public static function create($options = array())
+	public static function create($attribs = array())
 	{
-		return new static($options);
+		return new static($attribs);
 	}
 
 	/**
 	 * Class init.
 	 *
-	 * @param array  $options
+	 * @param array $attribs
 	 */
-	public function __construct($options = array())
+	public function __construct($attribs = array())
 	{
-		parent::__construct($options);
+		parent::__construct($attribs);
 
 		$this->setColumns(array(static::COL_KEY, static::COL_VALUE));
 	}
@@ -48,15 +48,15 @@ class KeyValueGrid extends Grid
 	 *
 	 * @param string $keyTitle
 	 * @param string $valueTitle
-	 * @param array  $options
+	 * @param array  $attribs
 	 *
 	 * @return  static
 	 */
-	public function addHeader($keyTitle = 'Key', $valueTitle = 'Value', $options = array())
+	public function addHeader($keyTitle = 'Key', $valueTitle = 'Value', $attribs = array())
 	{
-		$this->addRow((array) $this->getValue($options, static::ROW), static::ROW_HEAD)
-			->setRowCell(static::COL_KEY, $keyTitle, (array) $this->getValue($options, static::COL_KEY))
-			->setRowCell(static::COL_VALUE, $valueTitle, (array) $this->getValue($options, static::COL_VALUE));
+		$this->addRow((array) $this->getValue($attribs, static::ROW), static::ROW_HEAD)
+			->setRowCell(static::COL_KEY, $keyTitle, (array) $this->getValue($attribs, static::COL_KEY))
+			->setRowCell(static::COL_VALUE, $valueTitle, (array) $this->getValue($attribs, static::COL_VALUE));
 
 		return $this;
 	}
@@ -66,23 +66,23 @@ class KeyValueGrid extends Grid
 	 *
 	 * @param string $key
 	 * @param string $value
-	 * @param array  $options
+	 * @param array  $attribs
 	 *
 	 * @return static
 	 */
-	public function addItem($key, $value = null, $options = array())
+	public function addItem($key, $value = null, $attribs = array())
 	{
 		if (is_array($value))
 		{
 			$value = print_r($value, 1);
 		}
 
-		$this->addRow((array) $this->getValue($options, static::ROW))
-			->setRowCell(static::COL_KEY, $key, (array) $this->getValue($options, static::COL_KEY));
+		$this->addRow((array) $this->getValue($attribs, static::ROW))
+			->setRowCell(static::COL_KEY, $key, (array) $this->getValue($attribs, static::COL_KEY));
 
 		if ($value !== false)
 		{
-			$this->setRowCell(static::COL_VALUE, $value, (array) $this->getValue($options, static::COL_VALUE));
+			$this->setRowCell(static::COL_VALUE, $value, (array) $this->getValue($attribs, static::COL_VALUE));
 		}
 
 		return $this;
@@ -91,16 +91,16 @@ class KeyValueGrid extends Grid
 	/**
 	 * addItems
 	 *
-	 * @param string  $items
-	 * @param array   $options
+	 * @param string $items
+	 * @param array  $attribs
 	 *
 	 * @return  static
 	 */
-	public function addItems($items = null, $options = array())
+	public function addItems($items = null, $attribs = array())
 	{
-		$this->configure($items, function(KeyValueGrid $grid, $key, $value) use ($options)
+		$this->configure($items, function(KeyValueGrid $grid, $key, $value) use ($attribs)
 		{
-			$grid->addItem($key, $value, $options);
+			$grid->addItem($key, $value, $attribs);
 		});
 
 		return $this;
@@ -110,15 +110,15 @@ class KeyValueGrid extends Grid
 	 * addTitle
 	 *
 	 * @param string $name
-	 * @param array  $options
+	 * @param array  $attribs
 	 *
 	 * @return  static
 	 */
-	public function addTitle($name, $options = array())
+	public function addTitle($name, $attribs = array())
 	{
-		$options[static::COL_KEY]['colspan'] = 2;
+		$attribs[static::COL_KEY]['colspan'] = 2;
 
-		$this->addItem($name, false, $options);
+		$this->addItem($name, false, $attribs);
 
 		return $this;
 	}

@@ -22,10 +22,10 @@ class InputElement extends HtmlElement
 	 *
 	 * @param string  $type
 	 * @param string  $name
-	 * @param array   $value
+	 * @param string  $value
 	 * @param array   $attribs
 	 */
-	public function __construct($type, $name, $value, $attribs = array())
+	public function __construct($type, $name, $value = '', $attribs = array())
 	{
 		$attribs['type']  = $type;
 		$attribs['name']  = $name;

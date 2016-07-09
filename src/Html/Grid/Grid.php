@@ -51,30 +51,30 @@ class Grid
 	 * Associative array of attributes for the table-tag
 	 * @var array
 	 */
-	protected $options;
+	protected $attribs;
 
 	/**
 	 * Constructor for a Grid object
 	 *
-	 * @param   array  $options  Associative array of attributes for the table-tag
+	 * @param   array $attribs Associative array of attributes for the table-tag
 	 *
 	 * @since   2.1
 	 */
-	public function __construct($options = array())
+	public function __construct($attribs = array())
 	{
-		$this->setTableOptions($options, true);
+		$this->setTableAttributes($attribs, true);
 	}
 
 	/**
 	 * create
 	 *
-	 * @param array $options
+	 * @param array $attribs
 	 *
 	 * @return static
 	 */
-	public static function create($options = array())
+	public static function create($attribs = array())
 	{
-		return new static($options);
+		return new static($attribs);
 	}
 
 	/**
@@ -99,22 +99,22 @@ class Grid
 	/**
 	 * Method to set the attributes for a table-tag
 	 *
-	 * @param   array  $options  Associative array of attributes for the table-tag
-	 * @param   bool   $replace  Replace possibly existing attributes
+	 * @param   array $attribs Associative array of attributes for the table-tag
+	 * @param   bool  $replace Replace possibly existing attributes
 	 *
 	 * @return  static This object for chaining
 	 *
 	 * @since 2.1
 	 */
-	public function setTableOptions($options = array(), $replace = false)
+	public function setTableAttributes($attribs = array(), $replace = false)
 	{
 		if ($replace)
 		{
-			$this->options = $options;
+			$this->attribs = $attribs;
 		}
 		else
 		{
-			$this->options = array_merge($this->options, $options);
+			$this->attribs = array_merge($this->attribs, $attribs);
 		}
 
 		return $this;
@@ -127,9 +127,9 @@ class Grid
 	 *
 	 * @since 2.1
 	 */
-	public function getTableOptions()
+	public function getTableAttributes()
 	{
-		return $this->options;
+		return $this->attribs;
 	}
 
 	/**
@@ -203,16 +203,16 @@ class Grid
 	 * Adds a row to the table and sets the currently
 	 * active row to the new row
 	 *
-	 * @param   array     $options  Associative array of attributes for the row
-	 * @param   int|bool  $special  1 for a new row in the header, 2 for a new row in the footer
+	 * @param   array    $attribs Associative array of attributes for the row
+	 * @param   int|bool $special 1 for a new row in the header, 2 for a new row in the footer
 	 *
 	 * @return  static This object for chaining
 	 *
 	 * @since   2.1
 	 */
-	public function addRow($options = array(), $special = self::ROW_NORMAL)
+	public function addRow($attribs = array(), $special = self::ROW_NORMAL)
 	{
-		$this->rows[]['_row'] = $options;
+		$this->rows[]['_row'] = $attribs;
 		$this->activeRow = count($this->rows) - 1;
 
 		if ($special)
@@ -237,7 +237,7 @@ class Grid
 	 *
 	 * @since   2.1
 	 */
-	public function getRowOptions()
+	public function getRowAttributes()
 	{
 		return $this->rows[$this->activeRow]['_row'];
 	}
@@ -245,15 +245,15 @@ class Grid
 	/**
 	 * Method to set the attributes of the currently active row
 	 *
-	 * @param   array  $options  Associative array of attributes
+	 * @param   array $attribs Associative array of attributes
 	 *
 	 * @return  static This object for chaining
 	 *
 	 * @since   2.1
 	 */
-	public function setRowOptions($options)
+	public function setRowAttributes($attribs)
 	{
-		$this->rows[$this->activeRow]['_row'] = $options;
+		$this->rows[$this->activeRow]['_row'] = $attribs;
 
 		return $this;
 	}
@@ -290,28 +290,28 @@ class Grid
 	 * Set cell content for a specific column for the
 	 * currently active row
 	 *
-	 * @param   string  $name     Name of the column
-	 * @param   string  $content  Content for the cell
-	 * @param   array   $option   Associative array of attributes for the td-element
-	 * @param   bool    $replace  If false, the content is appended to the current content of the cell
+	 * @param   string $name    Name of the column
+	 * @param   string $content Content for the cell
+	 * @param   array  $attribs Associative array of attributes for the td-element
+	 * @param   bool   $replace If false, the content is appended to the current content of the cell
 	 *
 	 * @return  static This object for chaining
 	 *
 	 * @since 2.1
 	 */
-	public function setRowCell($name, $content, $option = array(), $replace = true)
+	public function setRowCell($name, $content, $attribs = array(), $replace = true)
 	{
 		if ($replace || !isset($this->rows[$this->activeRow][$name]))
 		{
 			$cell = new \stdClass;
-			$cell->options = $option;
+			$cell->attribs = $attribs;
 			$cell->content = $content;
 			$this->rows[$this->activeRow][$name] = $cell;
 		}
 		else
 		{
 			$this->rows[$this->activeRow][$name]->content .= $content;
-			$this->rows[$this->activeRow][$name]->options = $option;
+			$this->rows[$this->activeRow][$name]->attribs = $attribs;
 		}
 
 		return $this;
@@ -411,16 +411,11 @@ class Grid
 	public function toString()
 	{
 		$output = array();
-		$output[] = '<table' . $this->renderAttributes($this->getTableOptions()) . '>';
+		$output[] = '<table' . $this->renderAttributes($this->getTableAttributes()) . '>';
 
 		if (count($this->specialRows['header']))
 		{
 			$output[] = $this->renderArea($this->specialRows['header'], 'thead', 'th');
-		}
-
-		if (count($this->specialRows['footer']))
-		{
-			$output[] = $this->renderArea($this->specialRows['footer'], 'tfoot');
 		}
 
 		$ids = array_diff(array_keys($this->rows), array_merge($this->specialRows['header'], $this->specialRows['footer']));
@@ -428,6 +423,11 @@ class Grid
 		if (count($ids))
 		{
 			$output[] = $this->renderArea($ids);
+		}
+
+		if (count($this->specialRows['footer']))
+		{
+			$output[] = $this->renderArea($this->specialRows['footer'], 'tfoot');
 		}
 
 		$output[] = '</table>';
@@ -460,7 +460,7 @@ class Grid
 				if (isset($this->rows[$id][$name]))
 				{
 					$column = $this->rows[$id][$name];
-					$output[] = "\t\t<" . $cell . $this->renderAttributes($column->options) . '>' . $column->content . '</' . $cell . ">\n";
+					$output[] = "\t\t<" . $cell . $this->renderAttributes($column->attribs) . '>' . $column->content . '</' . $cell . ">\n";
 				}
 			}
 
@@ -490,9 +490,9 @@ class Grid
 
 		$return = array();
 
-		foreach ($attributes as $key => $option)
+		foreach ($attributes as $key => $value)
 		{
-			$return[] = $key . '="' . $option . '"';
+			$return[] = $key . '="' . $value . '"';
 		}
 
 		return ' ' . implode(' ', $return);
