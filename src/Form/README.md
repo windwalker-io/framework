@@ -261,6 +261,14 @@ Using XML
 </form>
 ```
 
+Control and group supports multi-level by `/` or `.` separator:
+
+``` php
+$form = new Form('foo/bar');
+
+$form->group('egg/bread', ...);
+```
+
 ## Attributes of Fields
 
 ### Name & Label

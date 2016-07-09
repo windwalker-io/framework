@@ -2,8 +2,6 @@
 
 Windwalker Structure is a storage of nested array or object, help us manage multi-level structures data.
 
-This package is a modified fork version of [Joomla Structure](https://github.com/joomla-framework/structure).
-
 ## Installation via Composer
 
 Add this to the require block in your `composer.json`.
