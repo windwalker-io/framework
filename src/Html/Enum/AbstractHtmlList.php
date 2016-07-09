@@ -64,6 +64,33 @@ abstract class AbstractHtmlList extends HtmlElement
 	}
 
 	/**
+	 * Alias of addItem()
+	 *
+	 * @param string $item
+	 * @param array  $attribs
+	 *
+	 * @return  static
+	 */
+	public function item($item, $attribs = array())
+	{
+		return $this->addItem($item, $attribs);
+	}
+
+	/**
+	 * child
+	 *
+	 * @param string|HtmlElement      $title
+	 * @param string|AbstractHtmlList $child
+	 * @param array                   $attribs
+	 *
+	 * @return  static
+	 */
+	public function child($title, $child, $attribs = array())
+	{
+		return $this->addItem($title . $child, $attribs);
+	}
+
+	/**
 	 * setItems
 	 *
 	 * @param   ListItem[] $items

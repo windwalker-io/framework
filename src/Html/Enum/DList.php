@@ -30,7 +30,7 @@ class DList extends AbstractHtmlList
 	 * @param array  $titleAttribs
 	 * @param array  $descAttribs
 	 *
-	 * @return  $this
+	 * @return  static
 	 */
 	public function addDescription($title, $description, $titleAttribs = array(), $descAttribs = array())
 	{
@@ -61,6 +61,19 @@ class DList extends AbstractHtmlList
 	}
 
 	/**
+	 * desc
+	 *
+	 * @param   DListDescription|string  $item
+	 * @param   array                    $attribs
+	 *
+	 * @return  static
+	 */
+	public function desc($item, $attribs = array())
+	{
+		return $this->addDesc($item, $attribs);
+	}
+
+	/**
 	 * addItem
 	 *
 	 * @param   DListTitle|string  $item
@@ -78,6 +91,19 @@ class DList extends AbstractHtmlList
 		$this->content[] = $item;
 
 		return $this;
+	}
+
+	/**
+	 * title
+	 *
+	 * @param   DListTitle|string  $item
+	 * @param   array              $attribs
+	 *
+	 * @return  static
+	 */
+	public function title($item, $attribs = array())
+	{
+		return $this->addTitle($item, $attribs);
 	}
 
 	/**

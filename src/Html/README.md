@@ -157,8 +157,8 @@ echo new UList([
 // OR
 
 echo (new UList)
-    ->addItem('new ListItem('Foo'))
-    ->addItem('Bar', ['class' => 'baz']);
+    ->item('new ListItem('Foo'))
+    ->item('Bar', ['class' => 'baz']);
 ```
 
 Output
@@ -174,8 +174,8 @@ Output
 
 ``` php
 echo (new OList)
-    ->addItem('new ListItem('Foo'))
-    ->addItem('Bar', ['class' => 'baz']);
+    ->item('new ListItem('Foo'))
+    ->item('Bar', ['class' => 'baz']);
 ```
 
 Output
@@ -201,14 +201,14 @@ echo (new DList)
 // OR
 
 echo (new DList)
-    ->addTitle('Foo')->addDesc('foo desc')
-    ->addTitle('Bar')->addDesc('bar desc');
+    ->title('Foo')->desc('foo desc')
+    ->title('Bar')->desc('bar desc');
 
 // OR
 
 echo (new DList)
-    ->addItem(new DListTitle('Foo'))->addItem(new DListDescription('foo desc'))
-    ->addItem(new DListTitle('Bar'))->addItem(new DListDescription('bar desc'));
+    ->item(new DListTitle('Foo'))->item(new DListDescription('foo desc'))
+    ->item(new DListTitle('Bar'))->item(new DListDescription('bar desc'));
 ```
 
 Output

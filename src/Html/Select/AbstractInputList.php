@@ -73,6 +73,47 @@ class AbstractInputList extends HtmlElement
 	}
 
 	/**
+	 * addOption
+	 *
+	 * @param Option $option
+	 * @param string $group
+	 *
+	 * @return  static
+	 */
+	public function addOption(Option $option, $group = null)
+	{
+		if ($group)
+		{
+			$content = $this->content[$group];
+
+			array_push($content, $option);
+
+			$this->content[$group] = $content;
+		}
+		else
+		{
+			$this->content[] = $option;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * option
+	 *
+	 * @param string  $text
+	 * @param string  $value
+	 * @param array   $attribs
+	 * @param string  $group
+	 *
+	 * @return  SelectList
+	 */
+	public function option($text = null, $value = null, $attribs = array(), $group = null)
+	{
+		return $this->addOption(new Option($text, $value, $attribs), $group);
+	}
+
+	/**
 	 * prepareOptions
 	 *
 	 * @return  void
