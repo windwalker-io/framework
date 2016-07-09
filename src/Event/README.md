@@ -115,6 +115,15 @@ $dispatcher->addListener(
 );
 ```
 
+Or use `listen()` method.
+
+``` php
+$dispatcher->listen('onContentSave', function (EventInterface $event)
+{
+    // Do something
+}, ListenerPriority::NORMAL);
+```
+
 ## Dispatcher
 
 ### Trigger An Event Object
