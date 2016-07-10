@@ -140,9 +140,9 @@ PhpHelper::getVersion()
 
 ### Set Debug Mode
 
-`setStrict()` will set `error_reporting()` to 32767.
+`setStrict()` will set `error_reporting()` to `-1`.
  
-`setMuted()` will set `error_reporting()` to 0.
+`setMuted()` will set `error_reporting()` to `0`.
 
 ``` php
 PhpHelper::setStrict();
@@ -160,7 +160,7 @@ PhpHelper::hasMcrypt();
 
 ## WebEnvironment
 
-WebEnvironment maintains two objects, the Server and the WebClient. 
+WebEnvironment maintains two objects, the `Platform` and the `Browser`.
 
 ``` php
 use Windwalker\Environment\Web\WebEnvironment;
@@ -173,7 +173,7 @@ $browser = $env->getBrowser();
 
 ## Browser
 
-WebClient is a client detector help us know information about user's browser.
+Browser is a client detector help us know information about user's browser.
 
 ### Detect Browser
 

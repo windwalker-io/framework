@@ -108,7 +108,7 @@ class PhpHelper
 	 */
 	public static function setStrict()
 	{
-		error_reporting(32767);
+		error_reporting(-1);
 	}
 
 	/**
