@@ -52,6 +52,15 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	protected $parent;
 
 	/**
+	 * Property bounded.
+	 *
+	 * @var    array
+	 * 
+	 * @since  3.0
+	 */
+	protected $bounded = array();
+
+	/**
 	 * Constructor for the DI Container
 	 *
 	 * @param   Container    $parent    Parent for hierarchical containers.
@@ -102,23 +111,152 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	}
 
 	/**
+	 * bind
+	 *
+	 * @param   string $name
+	 * @param   mixed  $value
+	 * @param   bool   $shared
+	 * @param   bool   $protected
+	 *
+	 * @return  static
+	 *
+	 * @since   3.0
+	 */
+	public function bind($name, $value, $shared = false, $protected = false)
+	{
+		if (is_string($value))
+		{
+			$value = function (Container $container) use ($value)
+			{
+			    return $container->newInstance($value);
+			};
+		}
+
+		return $this->set($name, $value, $shared, $protected);
+	}
+
+	/**
+	 * bindShared
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 * @param bool   $protected
+	 *
+	 * @return  Container
+	 *
+	 * @since   3.0
+	 */
+	public function bindShared($name, $value, $protected = false)
+	{
+		return $this->bind($name, $value, true, $protected);
+	}
+
+	/**
+	 * prepareObject
+	 *
+	 * @param string   $class
+	 * @param callable $callback
+	 * @param bool     $shared
+	 * @param bool     $protected
+	 *
+	 * @return static
+	 *
+	 * @since   3.0
+	 */
+	public function prepareObject($class, $callback = null, $shared = false, $protected = false)
+	{
+		$handler = function (Container $container) use ($class)
+		{
+			return $container->newInstance($class);
+		};
+
+		if ($callback !== null)
+		{
+			if (!is_callable($callback))
+			{
+				throw new \InvalidArgumentException('Invalid callback argument of: ' . __METHOD__);
+			}
+
+			$handler = function (Container $container) use ($handler, $callback, $class)
+			{
+				return call_user_func($callback, $container, call_user_func($handler, $container));
+			};
+		}
+
+
+
+		return $this->set($class, $handler, $shared, $protected);
+	}
+
+	/**
+	 * prepareSharedObject
+	 *
+	 * @param string   $class
+	 * @param callable $callback
+	 * @param bool     $protected
+	 *
+	 * @return  static
+	 *
+	 * @since   3.0
+	 */
+	public function prepareSharedObject($class, $callback = null, $protected = false)
+	{
+		return $this->prepareObject($class, $callback, true, $protected);
+	}
+
+	/**
+	 * createObject
+	 *
+	 * @param string  $class
+	 * @param bool    $shared
+	 * @param bool    $protected
+	 *
+	 * @return  object
+	 *
+	 * @since   3.0
+	 */
+	public function createObject($class, $shared = true, $protected = false)
+	{
+		$callback = function (Container $container) use ($class)
+		{
+		    return $container->newInstance($class);
+		};
+
+		return $this->set($class, $callback, $shared, $protected)->get($class);
+	}
+
+	/**
+	 * createSharedObject
+	 *
+	 * @param string $class
+	 * @param bool   $protected
+	 *
+	 * @return  object
+	 *
+	 * @since   3.0
+	 */
+	public function createSharedObject($class, $protected = false)
+	{
+		return $this->createObject($class, true, $protected);
+	}
+
+	/**
 	 * Create an object of class $key;
 	 *
-	 * @param   string  $key    The class name to build.
-	 * @param   boolean $shared True to create a shared resource.
+	 * @param   string $class The class name to build.
+	 * @param   array  $args  The default args if no class hint provided.
 	 *
-	 * @return  mixed  Instance of class specified by $key with all dependencies injected.
+	 * @return mixed  Instance of class specified by $key with all dependencies injected.
 	 *                 Returns an object if the class exists and false otherwise
 	 *
 	 * @throws DependencyResolutionException
-	 *
-	 * @since   2.0
+	 * @since   3.0
 	 */
-	public function createObject($key, $shared = false)
+	public function newInstance($class, array $args = array())
 	{
 		try
 		{
-			$reflection = new \ReflectionClass($key);
+			$reflection = new \ReflectionClass($class);
 		}
 		catch (\ReflectionException $e)
 		{
@@ -130,44 +268,20 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 		// If there are no parameters, just return a new object.
 		if (is_null($constructor))
 		{
-			$callback = function () use ($key)
-			{
-				return new $key;
-			};
+			return new $class;
 		}
-		else
+
+		try
 		{
-			try
-			{
-				$newInstanceArgs = $this->getMethodArgs($constructor);
-			}
-			catch (DependencyResolutionException $e)
-			{
-				throw new DependencyResolutionException($e->getMessage() . ' Key: ' . $key, $e->getCode(), $e);
-			}
-
-			// Create a callable for the dataStore
-			$callback = function () use ($reflection, $newInstanceArgs)
-			{
-				return $reflection->newInstanceArgs($newInstanceArgs);
-			};
+			$newInstanceArgs = $this->getMethodArgs($constructor, $args);
+		}
+		catch (DependencyResolutionException $e)
+		{
+			throw new DependencyResolutionException($e->getMessage() . ' Key: ' . $class, $e->getCode(), $e);
 		}
 
-		return $this->set($key, $callback, $shared)->get($key);
-	}
-
-	/**
-	 * Convenience method for creating a shared object.
-	 *
-	 * @param   string  $key  The class name to build.
-	 *
-	 * @return  object  Instance of class specified by $key with all dependencies injected.
-	 *
-	 * @since   2.0
-	 */
-	public function createSharedObject($key)
-	{
-		return $this->createObject($key, true);
+		// Create a callable for the dataStore
+		return $reflection->newInstanceArgs($newInstanceArgs);
 	}
 
 	/**
@@ -224,14 +338,15 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	/**
 	 * Build an array of constructor parameters.
 	 *
-	 * @param   \ReflectionMethod  $method  Method for which to build the argument array.
+	 * @param   \ReflectionMethod $method Method for which to build the argument array.
+	 * @param   array             $args   The default args if class hint not provided.
 	 *
-	 * @return  array  Array of arguments to pass to the method.
+	 * @return array Array of arguments to pass to the method.
 	 *
+	 * @throws DependencyResolutionException
 	 * @since   2.0
-	 * @throws  DependencyResolutionException
 	 */
-	protected function getMethodArgs(\ReflectionMethod $method)
+	protected function getMethodArgs(\ReflectionMethod $method, array $args = array())
 	{
 		$methodArgs = array();
 
@@ -252,7 +367,17 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 				}
 				else
 				{
-					$depObject = $this->createObject($dependencyClassName);
+					// Find child args if set
+					if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName]))
+					{
+						$childArgs = $args[$dependencyClassName];
+					}
+					else
+					{
+						$childArgs = [];
+					}
+
+					$depObject = $this->newInstance($dependencyClassName, $childArgs);
 				}
 
 				if ($depObject instanceof $dependencyClassName)
@@ -263,8 +388,16 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 				}
 			}
 
+			// If an arg provided, use it.
+			elseif (array_key_exists($dependencyVarName, $args))
+			{
+				$methodArgs[] = $args[$dependencyVarName];
+
+				continue;
+			}
+
 			// Finally, if there is a default parameter, use it.
-			if ($param->isOptional())
+			elseif ($param->isOptional())
 			{
 				if ($param->isDefaultValueAvailable())
 				{
