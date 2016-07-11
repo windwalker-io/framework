@@ -47,7 +47,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 */
 	public function __construct(Structure $config = null)
 	{
-		$this->config = $config instanceof Structure ? $config : new Structure($config);
+		$this->config = $config instanceof Structure ? $config : new Structure;
 
 		$this->init();
 	}

@@ -93,9 +93,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 */
 	protected function resolveAlias($key)
 	{
-		if (isset($this->aliases[$key]))
+		while(isset($this->aliases[$key]))
 		{
-			return $this->aliases[$key];
+			$key = $this->aliases[$key];
 		}
 
 		return $key;
@@ -104,11 +104,13 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	/**
 	 * Create an object of class $key;
 	 *
-	 * @param   string   $key     The class name to build.
-	 * @param   boolean  $shared  True to create a shared resource.
+	 * @param   string  $key    The class name to build.
+	 * @param   boolean $shared True to create a shared resource.
 	 *
 	 * @return  mixed  Instance of class specified by $key with all dependencies injected.
 	 *                 Returns an object if the class exists and false otherwise
+	 *
+	 * @throws DependencyResolutionException
 	 *
 	 * @since   2.0
 	 */
@@ -135,7 +137,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 		}
 		else
 		{
-			$newInstanceArgs = $this->getMethodArgs($constructor);
+			try
+			{
+				$newInstanceArgs = $this->getMethodArgs($constructor);
+			}
+			catch (DependencyResolutionException $e)
+			{
+				throw new DependencyResolutionException($e->getMessage() . ' Key: ' . $key, $e->getCode(), $e);
+			}
 
 			// Create a callable for the dataStore
 			$callback = function () use ($reflection, $newInstanceArgs)
