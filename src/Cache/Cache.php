@@ -75,7 +75,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	 * @param string $key The key of the item to store
 	 * @param mixed  $val The value of the item to store
 	 *
-	 * @return bool
+	 * @return static
 	 */
 	public function set($key, $val)
 	{
@@ -227,7 +227,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * getHandler
 	 *
-	 * @return  null
+	 * @return  SerializerInterface
 	 */
 	public function getSerializer()
 	{
