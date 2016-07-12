@@ -48,190 +48,6 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	}
 
 	/**
-	 * Data provider for from object inputs
-	 *
-	 * @return  array
-	 *
-	 * @since   2.0
-	 */
-	public function seedTestFromObject()
-	{
-		// Define a common array.
-		$common = array('integer' => 12, 'float' => 1.29999, 'string' => 'A Test String');
-
-		return array(
-			'Invalid input' => array(
-				// Array    The array being input
-				null,
-				// Boolean  Recurse through multiple dimensions
-				null,
-				// String   Regex to select only some attributes
-				null,
-				// String   The expected return value
-				null,
-				// Boolean  Use function defaults (true) or full argument list
-				true
-			),
-			'To single dimension array' => array(
-				(object) $common,
-				null,
-				null,
-				$common,
-				true
-			),
-			'Object with nested arrays and object.' => array(
-				(object) array(
-					'foo' => $common,
-					'bar' => (object) array(
-						'goo' => $common,
-					),
-				),
-				null,
-				null,
-				array(
-					'foo' => $common,
-					'bar' => array(
-						'goo' => $common,
-					),
-				),
-				true
-			),
-			'To single dimension array with recursion' => array(
-				(object) $common,
-				true,
-				null,
-				$common,
-				false
-			),
-			'To single dimension array using regex on keys' => array(
-				(object) $common,
-				true,
-				// Only get the 'integer' and 'float' keys.
-				'/^(integer|float)/',
-				array(
-					'integer' => 12, 'float' => 1.29999
-				),
-				false
-			),
-			'Nested objects to single dimension array' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				null,
-				null,
-				array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false
-			),
-			'Nested objects into multiple dimension array' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				null,
-				null,
-				array(
-					'first' => $common,
-					'second' => $common,
-					'third' => $common,
-				),
-				true
-			),
-			'Nested objects into multiple dimension array 2' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				true,
-				null,
-				array(
-					'first' => $common,
-					'second' => $common,
-					'third' => $common,
-				),
-				true
-			),
-			'Nested objects into multiple dimension array 3' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false,
-				null,
-				array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false
-			),
-			'multiple 4' => array(
-				(object) array(
-					'first' => 'Me',
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false,
-				null,
-				array(
-					'first' => 'Me',
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false
-			),
-			'Nested objects into multiple dimension array of int and string' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				true,
-				'/(first|second|integer|string)/',
-				array(
-					'first' => array(
-						'integer' => 12, 'string' => 'A Test String'
-					), 'second' => array(
-					'integer' => 12, 'string' => 'A Test String'
-				),
-				),
-				false
-			),
-			'multiple 6' => array(
-				(object) array(
-					'first' => array(
-						'integer' => 12,
-						'float' => 1.29999,
-						'string' => 'A Test String',
-						'third' => (object) $common,
-					),
-					'second' => $common,
-				),
-				null,
-				null,
-				array(
-					'first' => array(
-						'integer' => 12,
-						'float' => 1.29999,
-						'string' => 'A Test String',
-						'third' => $common,
-					),
-					'second' => $common,
-				),
-				true
-			),
-		);
-	}
-
-	/**
 	 * Data provider for get column
 	 *
 	 * @return  array
@@ -434,13 +250,13 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	}
 
 	/**
-	 * Data provider for testPivot
+	 * Data provider for testGroup
 	 *
 	 * @return  array
 	 *
 	 * @since   2.0
 	 */
-	public function seedTestPivot()
+	public function seedTestGroup()
 	{
 		return array(
 			'A scalar array' => array(
@@ -512,11 +328,11 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	}
 
 	/**
-	 * seedTestPivotByKey
+	 * seedTestTranspose
 	 *
 	 * @return array
 	 */
-	public function seedTestPivotByKey()
+	public function seedTestPivot()
 	{
 		return array(
 			array(
@@ -1130,50 +946,6 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	}
 
 	/**
-	 * Data provider for numeric inputs
-	 *
-	 * @return  array
-	 *
-	 * @since   2.0
-	 */
-	public function seedTestToInteger()
-	{
-		return array(
-			'floating with single argument' => array(
-				array(
-					0.9, 3.2, 4.9999999, 7.5
-				), null, array(
-					0, 3, 4, 7
-				), 'Should truncate numbers in array'
-			),
-			'floating with default array' => array(
-				array(
-					0.9, 3.2, 4.9999999, 7.5
-				), array(
-					1, 2, 3
-				), array(
-					0, 3, 4, 7
-				), 'Supplied default should not be used'
-			),
-			'non-array with single argument' => array(
-				12, null, array(), 'Should replace non-array input with empty array'
-			),
-			'non-array with default array' => array(
-				12, array(
-					1.5, 2.6, 3
-				), array(
-					1, 2, 3
-				), 'Should replace non-array input with array of truncated numbers'
-			),
-			'non-array with default single' => array(
-				12, 3.5, array(
-					3
-				), 'Should replace non-array with single-element array of truncated number'
-			),
-		);
-	}
-
-	/**
 	 * Data provider for object inputs
 	 *
 	 * @return  array
@@ -1259,132 +1031,6 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	}
 
 	/**
-	 * Data provider for string inputs
-	 *
-	 * @return  array
-	 *
-	 * @since   2.0
-	 */
-	public function seedTestToString()
-	{
-		return array(
-			'single dimension 1' => array(
-				array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				null,
-				null,
-				false,
-				'integer="12" float="1.29999" string="A Test String"',
-				'Should turn array into single string with defaults',
-				true
-			),
-			'single dimension 2' => array(
-				array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				" = ",
-				null,
-				true,
-				'integer = "12"float = "1.29999"string = "A Test String"',
-				'Should turn array into single string with " = " and no spaces',
-				false
-			),
-			'single dimension 3' => array(
-				array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				' = ',
-				' then ',
-				true,
-				'integer = "12" then float = "1.29999" then string = "A Test String"',
-				'Should turn array into single string with " = " and then between elements',
-				false
-			),
-			'multiple dimensions 1' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				null,
-				null,
-				false,
-				'integer="12" float="1.29999" string="A Test String" ' . 'integer="12" float="1.29999" string="A Test String" '
-				. 'integer="12" float="1.29999" string="A Test String"',
-				'Should turn multiple dimension array into single string',
-				true
-			),
-			'multiple dimensions 2' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				' = ',
-				null,
-				false,
-				'integer = "12"float = "1.29999"string = "A Test String"' . 'integer = "12"float = "1.29999"string = "A Test String"'
-				. 'integer = "12"float = "1.29999"string = "A Test String"',
-				'Should turn multiple dimension array into single string with " = " and no spaces',
-				false
-			),
-			'multiple dimensions 3' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				' = ',
-				' ',
-				false,
-				'integer = "12" float = "1.29999" string = "A Test String" ' . 'integer = "12" float = "1.29999" string = "A Test String" '
-				. 'integer = "12" float = "1.29999" string = "A Test String"',
-				'Should turn multiple dimension array into single string with " = " and a space',
-				false
-			),
-			'multiple dimensions 4' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				' = ',
-				null,
-				true,
-				'firstinteger = "12"float = "1.29999"string = "A Test String"' . 'secondinteger = "12"float = "1.29999"string = "A Test String"'
-				. 'thirdinteger = "12"float = "1.29999"string = "A Test String"',
-				'Should turn multiple dimension array into single string with " = " and no spaces with outer key',
-				false
-			),
-		);
-	}
-
-	/**
 	 * Data provider for object inputs
 	 *
 	 * @return  array
@@ -1441,36 +1087,6 @@ class ArrayHelperTest extends AbstractBaseTestCase
 			ArrayHelper::arrayUnique($input),
 			$this->equalTo($expected)
 		);
-	}
-
-	/**
-	 * Tests conversion of object to string.
-	 *
-	 * @param   array    $input     The array being input
-	 * @param   boolean  $recurse   Recurse through multiple dimensions?
-	 * @param   string   $regex     Regex to select only some attributes
-	 * @param   string   $expect    The expected return value
-	 * @param   boolean  $defaults  Use function defaults (true) or full argument list
-	 *
-	 * @return  void
-	 *
-	 * @dataProvider  seedTestFromObject
-	 * @covers        Windwalker\Utilities\ArrayHelper::fromObject
-	 * @covers        Windwalker\Utilities\ArrayHelper::arrayFromObject
-	 * @since         2.0
-	 */
-	public function testFromObject($input, $recurse, $regex, $expect, $defaults)
-	{
-		if ($defaults)
-		{
-			$output = ArrayHelper::fromObject($input);
-		}
-		else
-		{
-			$output = ArrayHelper::fromObject($input, $recurse, $regex);
-		}
-
-		$this->assertEquals($expect, $output);
 	}
 
 	/**
@@ -1632,7 +1248,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	}
 
 	/**
-	 * Tests the ArrayHelper::pivot method.
+	 * Tests the ArrayHelper::group method.
 	 *
 	 * @param   array   $source    The source array.
 	 * @param   string  $key       Where the elements of the source array are objects or arrays, the key to pivot on.
@@ -1640,32 +1256,32 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @dataProvider  seedTestPivot
-	 * @covers        Windwalker\Utilities\ArrayHelper::pivot
+	 * @dataProvider  seedTestGroup
+	 * @covers        Windwalker\Utilities\ArrayHelper::group
 	 * @since         2.0
 	 */
-	public function testPivot($source, $key, $expected)
+	public function testGroup($source, $key, $expected)
 	{
 		$this->assertThat(
-			ArrayHelper::pivot($source, $key),
+			ArrayHelper::group($source, $key),
 			$this->equalTo($expected)
 		);
 	}
 
 	/**
-	 * Method to test pivotByKey().
+	 * Method to test pivot().
 	 *
 	 * @param array $data
 	 * @param array $expected
 	 *
 	 * @return void
 	 *
-	 * @dataProvider seedTestPivotByKey
-	 * @covers       \Windwalker\Helper\ArrayHelper::pivotByKey
+	 * @dataProvider seedTestPivot
+	 * @covers       \Windwalker\Helper\ArrayHelper::pivot
 	 */
-	public function testPivotByKey($data, $expected)
+	public function testPivot($data, $expected)
 	{
-		$this->assertEquals($expected, ArrayHelper::pivotByKey($data));
+		$this->assertEquals($expected, ArrayHelper::pivot($data));
 	}
 
 	/**
@@ -1731,30 +1347,6 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	}
 
 	/**
-	 * Test convert an array to all integers.
-	 *
-	 * @param   string  $input    The array being input
-	 * @param   string  $default  The default value
-	 * @param   string  $expect   The expected return value
-	 * @param   string  $message  The failure message
-	 *
-	 * @return  void
-	 *
-	 * @dataProvider  seedTestToInteger
-	 * @covers        Windwalker\Utilities\ArrayHelper::toInteger
-	 * @since         2.0
-	 */
-	public function testToInteger($input, $default, $expect, $message)
-	{
-		$result = ArrayHelper::toInteger($input, $default);
-		$this->assertEquals(
-			$expect,
-			$result,
-			$message
-		);
-	}
-
-	/**
 	 * Test convert array to object.
 	 *
 	 * @param   string  $input      The array being input
@@ -1792,37 +1384,6 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	public function testToArray($input, $recursive, $expect)
 	{
 		$this->assertEquals($expect, ArrayHelper::toArray($input, $recursive));
-	}
-
-	/**
-	 * Tests converting array to string.
-	 *
-	 * @param   array    $input     The array being input
-	 * @param   string   $inner     The inner glue
-	 * @param   string   $outer     The outer glue
-	 * @param   boolean  $keepKey   Keep the outer key
-	 * @param   string   $expect    The expected return value
-	 * @param   string   $message   The failure message
-	 * @param   boolean  $defaults  Use function defaults (true) or full argument list
-	 *
-	 * @return  void
-	 *
-	 * @dataProvider  seedTestToString
-	 * @covers        Windwalker\Utilities\ArrayHelper::toString
-	 * @since         2.0
-	 */
-	public function testToString($input, $inner, $outer, $keepKey, $expect, $message, $defaults)
-	{
-		if ($defaults)
-		{
-			$output = ArrayHelper::toString($input);
-		}
-		else
-		{
-			$output = ArrayHelper::toString($input, $inner, $outer, $keepKey);
-		}
-
-		$this->assertEquals($expect, $output, $message);
 	}
 
 	/**
@@ -1930,9 +1491,12 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
 		// Test id LTE
 		$this->assertEquals(array($data[0], $data[1]), ArrayHelper::query($data, array('id <=' => 2)));
+		
+		// Test in array
+		$this->assertEquals(array($data[0], $data[2]), ArrayHelper::query($data, array('id' => array(1, 3))));
 
 		// Test array equals
-		$this->assertEquals(array($data[1]), ArrayHelper::query($data, array('data' => array())));
+		$this->assertEquals(array($data[0]), ArrayHelper::query($data, array('id' => 1, 'title' => 'Julius Caesar')));
 
 		// Test object equals
 		$object = new \stdClass;
@@ -1944,6 +1508,68 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
 		// Test Keep Key
 		$this->assertEquals(array(1 => $data[1], 2 => $data[2], 3 => $data[3]), ArrayHelper::query($data, array('id >=' => 2), false, true));
+	}
+
+	/**
+	 * Method to test query()
+	 *
+	 * @covers  \Windwalker\Utilities\ArrayHelper::query
+	 *
+	 * @return  void
+	 */
+	public function testQueryWithCallback()
+	{
+		$data = array(
+			array(
+				'id' => 1,
+				'title' => 'Julius Caesar',
+				'data' => (object) array('foo' => 'bar'),
+			),
+			array(
+				'id' => 2,
+				'title' => 'Macbeth',
+				'data' => array(),
+			),
+			array(
+				'id' => 3,
+				'title' => 'Othello',
+				'data' => 123,
+			),
+			array(
+				'id' => 4,
+				'title' => 'Hamlet',
+				'data' => true,
+			),
+		);
+
+		$results = ArrayHelper::query($data, function ($key, $value)
+		{
+		    return $value['title'] == 'Julius Caesar' || $value['id'] == 4;
+		});
+
+		$this->assertEquals(array($data[0], $data[3]), $results);
+	}
+
+	/**
+	 * testMatch
+	 * 
+	 * @covers \Windwalker\Utilities\ArrayHelper::match
+	 *
+	 * @return  void
+	 */
+	public function testMatch()
+	{
+		$data = array(
+			'id' => 1,
+			'title' => 'Julius Caesar',
+			'data' => (object) array('foo' => 'bar'),
+		);
+
+		$this->assertTrue(ArrayHelper::match($data, array('id' => 1)));
+		$this->assertTrue(ArrayHelper::match($data, array('id' => array(1, 2, 3))));
+		$this->assertTrue(ArrayHelper::match($data, array('id' => 1, 'title' => 'Julius Caesar')));
+		$this->assertFalse(ArrayHelper::match($data, array('id' => 5)));
+		$this->assertFalse(ArrayHelper::match($data, array('id' => 1, 'title' => 'Hamlet')));
 	}
 
 	/**

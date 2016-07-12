@@ -11,47 +11,12 @@ namespace Windwalker\Utilities;
 use Windwalker\String\Utf8String;
 
 /**
- * The ArrayHelper class is based on Joomla ArrayHelper.
+ * The ArrayHelper class
  *
  * @since  2.0
  */
-abstract class ArrayHelper
+class ArrayHelper
 {
-	/**
-	 * Function to convert array to integer values
-	 *
-	 * @param   array  $array    The source array to convert
-	 * @param   mixed  $default  A default value (int|array) to assign if $array is not an array
-	 *
-	 * @return  array The converted array
-	 *
-	 * @since   2.0
-	 */
-	public static function toInteger($array, $default = null)
-	{
-		if (is_array($array))
-		{
-			$array = array_map('intval', $array);
-		}
-		else
-		{
-			if ($default === null)
-			{
-				$array = array();
-			}
-			elseif (is_array($default))
-			{
-				$array = self::toInteger($default, null);
-			}
-			else
-			{
-				$array = array((int) $default);
-			}
-		}
-
-		return $array;
-	}
-
 	/**
 	 * Utility function to map an array to a stdClass object.
 	 *
@@ -117,115 +82,6 @@ abstract class ArrayHelper
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Utility function to map an array to a string.
-	 *
-	 * @param   array    $array         The array to map.
-	 * @param   string   $inner_glue    The glue (optional, defaults to '=') between the key and the value.
-	 * @param   string   $outer_glue    The glue (optional, defaults to ' ') between array elements.
-	 * @param   boolean  $keepOuterKey  True if final key should be kept.
-	 *
-	 * @return  string   The string mapped from the given array
-	 *
-	 * @since   2.0
-	 */
-	public static function toString(array $array, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false)
-	{
-		$output = array();
-
-		foreach ($array as $key => $item)
-		{
-			if (is_array($item))
-			{
-				if ($keepOuterKey)
-				{
-					$output[] = $key;
-				}
-
-				// This is value is an array, go and do it again!
-				$output[] = self::toString($item, $inner_glue, $outer_glue, $keepOuterKey);
-			}
-			else
-			{
-				$output[] = $key . $inner_glue . '"' . $item . '"';
-			}
-		}
-
-		return implode($outer_glue, $output);
-	}
-
-	/**
-	 * Utility function to map an object to an array
-	 *
-	 * @param   object   $source   The source object
-	 * @param   boolean  $recurse  True to recurse through multi-level objects
-	 * @param   string   $regex    An optional regular expression to match on field names
-	 *
-	 * @return  array    The array mapped from the given object
-	 *
-	 * @since   2.0
-	 */
-	public static function fromObject($source, $recurse = true, $regex = null)
-	{
-		if (is_object($source))
-		{
-			return static::arrayFromObject($source, $recurse, $regex);
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * Utility function to map an object or array to an array
-	 *
-	 * @param   mixed    $item     The source object or array
-	 * @param   boolean  $recurse  True to recurse through multi-level objects
-	 * @param   string   $regex    An optional regular expression to match on field names
-	 *
-	 * @return  array  The array mapped from the given object
-	 *
-	 * @since   2.0
-	 */
-	private static function arrayFromObject($item, $recurse, $regex)
-	{
-		if (is_object($item))
-		{
-			$result = array();
-
-			foreach (get_object_vars($item) as $k => $v)
-			{
-				if (!$regex || preg_match($regex, $k))
-				{
-					if ($recurse)
-					{
-						$result[$k] = self::arrayFromObject($v, $recurse, $regex);
-					}
-					else
-					{
-						$result[$k] = $v;
-					}
-				}
-			}
-		}
-		elseif (is_array($item))
-		{
-			$result = array();
-
-			foreach ($item as $k => $v)
-			{
-				$result[$k] = self::arrayFromObject($v, $recurse, $regex);
-			}
-		}
-		else
-		{
-			$result = $item;
-		}
-
-		return $result;
 	}
 
 	/**
@@ -439,16 +295,16 @@ abstract class ArrayHelper
 	}
 
 	/**
-	 * Pivots an array to create a reverse lookup of an array of scalars, arrays or objects.
+	 * Re-group an array to create a reverse lookup of an array of scalars, arrays or objects.
 	 *
 	 * @param   array   $source  The source array.
 	 * @param   string  $key     Where the elements of the source array are objects or arrays, the key to pivot on.
 	 *
-	 * @return  array  An array of arrays pivoted either on the value of the keys, or an individual key of an object or array.
+	 * @return  array  An array of arrays grouped either on the value of the keys, or an individual key of an object or array.
 	 *
 	 * @since   2.0
 	 */
-	public static function pivot(array $source, $key = null)
+	public static function group(array $source, $key = null)
 	{
 		$result  = array();
 		$counter = array();
@@ -514,7 +370,7 @@ abstract class ArrayHelper
 	}
 
 	/**
-	 * Pivot Array, separate by key. Same as AKHelperArray::pivot().
+	 * Pivot Array, separate by key.
 	 * From:
 	 *         [value] => Array
 	 *             (
@@ -542,7 +398,7 @@ abstract class ArrayHelper
 	 *
 	 * @return  array An pivoted array.
 	 */
-	public static function pivotByKey($array)
+	public static function pivot($array)
 	{
 		$array = (array) $array;
 		$new   = array();
@@ -584,56 +440,54 @@ abstract class ArrayHelper
 		$key           = (array) $k;
 		$sortLocale    = $locale;
 
-		usort(
-			$a, function($a, $b) use($sortCase, $sortDirection, $key, $sortLocale)
+		usort($a, function($a, $b) use ($sortCase, $sortDirection, $key, $sortLocale, $caseSensitive, $locale, $direction)
+		{
+			for ($i = 0, $count = count($key); $i < $count; $i++)
 			{
-				for ($i = 0, $count = count($key); $i < $count; $i++)
+				if (isset($sortDirection[$i]))
 				{
-					if (isset($sortDirection[$i]))
-					{
-						$direction = $sortDirection[$i];
-					}
-
-					if (isset($sortCase[$i]))
-					{
-						$caseSensitive = $sortCase[$i];
-					}
-
-					if (isset($sortLocale[$i]))
-					{
-						$locale = $sortLocale[$i];
-					}
-
-					$va = $a->{$key[$i]};
-					$vb = $b->{$key[$i]};
-
-					if ((is_bool($va) || is_numeric($va)) && (is_bool($vb) || is_numeric($vb)))
-					{
-						$cmp = $va - $vb;
-					}
-					elseif ($caseSensitive)
-					{
-						$cmp = Utf8String::strcmp($va, $vb, $locale);
-					}
-					else
-					{
-						$cmp = Utf8String::strcasecmp($va, $vb, $locale);
-					}
-
-					if ($cmp > 0)
-					{
-						return $direction;
-					}
-
-					if ($cmp < 0)
-					{
-						return -$direction;
-					}
+					$direction = $sortDirection[$i];
 				}
 
-				return 0;
+				if (isset($sortCase[$i]))
+				{
+					$caseSensitive = $sortCase[$i];
+				}
+
+				if (isset($sortLocale[$i]))
+				{
+					$locale = $sortLocale[$i];
+				}
+
+				$va = $a->{$key[$i]};
+				$vb = $b->{$key[$i]};
+
+				if ((is_bool($va) || is_numeric($va)) && (is_bool($vb) || is_numeric($vb)))
+				{
+					$cmp = $va - $vb;
+				}
+				elseif ($caseSensitive)
+				{
+					$cmp = Utf8String::strcmp($va, $vb, $locale);
+				}
+				else
+				{
+					$cmp = Utf8String::strcasecmp($va, $vb, $locale);
+				}
+
+				if ($cmp > 0)
+				{
+					return $direction;
+				}
+
+				if ($cmp < 0)
+				{
+					return -$direction;
+				}
 			}
-		);
+
+			return 0;
+		});
 
 		return $a;
 	}
@@ -714,7 +568,7 @@ abstract class ArrayHelper
 	 * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
 	 * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
 	 */
-	public static function merge(array $array1, array $array2, $recursive = true)
+	public static function merge(array &$array1, array &$array2, $recursive = true)
 	{
 		$merged = $array1;
 
@@ -1006,15 +860,15 @@ abstract class ArrayHelper
 	/**
 	 * Query a two-dimensional array values to get second level array.
 	 *
-	 * @param   array    $array    An array to query.
-	 * @param   mixed    $queries  Query strings, may contain Comparison Operators: '>', '>=', '<', '<='.
-	 *                             Example:
-	 *                             array(
-	 *                                 'id'         => 6,   // Get all elements where id=6
-	 *                                 'published>' => 0    // Get all elements where published>0
-	 *                             );
-	 * @param   boolean  $strict   Use strict to compare equals.
-	 * @param   boolean  $keepKey  Keep origin array keys.
+	 * @param   array           $array    An array to query.
+	 * @param   array|callable  $queries  Query strings or callback, may contain Comparison Operators: '>', '>=', '<', '<='.
+	 *                                    Example:
+	 *                                    array(
+	 *                                        'id'          => 6,   // Get all elements where id=6
+	 *                                        'published >' => 0    // Get all elements where published>0
+	 *                                    );
+	 * @param   boolean         $strict   Use strict to compare equals.
+	 * @param   boolean         $keepKey  Keep origin array keys.
 	 *
 	 * @return  array  An new two-dimensional array queried.
 	 *
@@ -1022,90 +876,96 @@ abstract class ArrayHelper
 	 */
 	public static function query($array, $queries = array(), $strict = false, $keepKey = false)
 	{
+		$array = static::toArray($array, false);
 		$results = array();
-		$queries = (array) $queries;
+
+		// If queries is callback, we run this logic to compare values.
+		$callback = is_callable($queries) ? $queries : false;
 
 		// Visit Array
-		foreach ((array) $array as $k => $v)
+		foreach ($array as $key => $value)
 		{
-			$data = (array) $v;
-
-			// Visit Query Rules
-			foreach ($queries as $key => $val)
+			if ($callback)
 			{
-				/*
-				 * Key: is query key
-				 * Val: is query value
-				 * Data: is array element
-				 */
-				$value = null;
+				$match = call_user_func($callback, $key, static::toArray($value), $strict);
+			}
+			else
+			{
+				$match = static::match(static::toArray($value), $queries, $strict);
+			}
 
-				if (substr($key, -2) == '>=')
+			// Set Query results
+			if ($match)
+			{
+				if ($keepKey)
 				{
-					if (static::getByPath($data, trim(substr($key, 0, -2))) >= $val)
-					{
-						$value = $v;
-					}
-				}
-				elseif (substr($key, -2) == '<=')
-				{
-					if (static::getByPath($data, trim(substr($key, 0, -2))) <= $val)
-					{
-						$value = $v;
-					}
-				}
-				elseif (substr($key, -1) == '>')
-				{
-					if (static::getByPath($data, trim(substr($key, 0, -1))) > $val)
-					{
-						$value = $v;
-					}
-				}
-				elseif (substr($key, -1) == '<')
-				{
-					if (static::getByPath($data, trim(substr($key, 0, -1))) < $val)
-					{
-						$value = $v;
-					}
+					$results[$key] = $value;
 				}
 				else
 				{
-					if ($strict)
-					{
-						if (static::getByPath($data, $key) === $val)
-						{
-							$value = $v;
-						}
-					}
-					else
-					{
-						// Workaround for PHP 5.4 object compare bug, see: https://bugs.php.net/bug.php?id=62976
-						$compare1 = is_object(static::getByPath($data, $key)) ? get_object_vars(static::getByPath($data, $key)) : static::getByPath($data, $key);
-						$compare2 = is_object($val) ? get_object_vars($val) : $val;
-
-						if ($compare1 == $compare2)
-						{
-							$value = $v;
-						}
-					}
-				}
-
-				// Set Query results
-				if ($value)
-				{
-					if ($keepKey)
-					{
-						$results[$k] = $value;
-					}
-					else
-					{
-						$results[] = $value;
-					}
+					$results[] = $value;
 				}
 			}
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Check an array match our query.
+	 *
+	 * @param   array    $array    An array to query.
+	 * @param   array    $queries  Query strings or callback, may contain Comparison Operators: '>', '>=', '<', '<='.
+	 * @param   boolean  $strict   Use strict to compare equals.
+	 *
+	 * @return  bool
+	 */
+	public static function match($array, array $queries, $strict = false)
+	{
+		$results = array();
+
+		// Visit Query Rules
+		foreach ($queries as $key => $val)
+		{
+			if (substr($key, -2) == '>=')
+			{
+				$results[] = (static::getByPath($array, trim(substr($key, 0, -2))) >= $val);
+			}
+			elseif (substr($key, -2) == '<=')
+			{
+				$results[] = (static::getByPath($array, trim(substr($key, 0, -2))) <= $val);
+			}
+			elseif (substr($key, -1) == '>')
+			{
+				$results[] = (static::getByPath($array, trim(substr($key, 0, -1))) > $val);
+			}
+			elseif (substr($key, -1) == '<')
+			{
+				$results[] = (static::getByPath($array, trim(substr($key, 0, -1))) < $val);
+			}
+			elseif (is_array($val))
+			{
+				$results[] = in_array(static::getByPath($array, $key), $val, $strict);
+			}
+			else
+			{
+				if ($strict)
+				{
+					$results[] = (static::getByPath($array, $key) === $val);
+				}
+				else
+				{
+					// Workaround for PHP 5.4 object compare bug, see: https://bugs.php.net/bug.php?id=62976
+					$compare1 = is_object(static::getByPath($array, $key)) ? get_object_vars(static::getByPath($array, $key)) : static::getByPath($array, $key);
+					$compare2 = is_object($val) ? get_object_vars($val) : $val;
+
+					$results[] = ($compare1 == $compare2);
+				}
+			}
+		}
+
+		// Must all TRUE.
+		return !in_array(false, $results, true);
 	}
 
 	/**
