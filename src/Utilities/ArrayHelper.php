@@ -568,7 +568,7 @@ class ArrayHelper
 	 * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
 	 * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
 	 */
-	public static function merge(array &$array1, array &$array2, $recursive = true)
+	public static function merge(array $array1, array $array2, $recursive = true)
 	{
 		$merged = $array1;
 
