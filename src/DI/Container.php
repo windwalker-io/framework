@@ -310,7 +310,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 				$dependencyClassName = $dependency->getName();
 
 				// If the dependency class name is registered with this container or a parent, use it.
-				if ($this->exists($dependencyClassName) !== null)
+				if ($this->exists($dependencyClassName))
 				{
 					$depObject = $this->get($dependencyClassName);
 				}

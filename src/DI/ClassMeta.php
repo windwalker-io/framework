@@ -14,6 +14,8 @@ namespace Windwalker\DI;
  * @method  object  newInstance($args = array())
  * @method  object  createObject($args = array())
  * @method  object  createSharedObject($args = array())
+ * @method  Container  bind($value, $shared = false, $protected = false)
+ * @method  Container  bindShared($protected = false)
  *
  * @since  {DEPLOY_VERSION}
  */
@@ -101,6 +103,7 @@ class ClassMeta
 		}
 
 		$this->arguments[$name] = $value;
+		unset($this->caches[$name]);
 
 		return $this;
 	}
@@ -115,6 +118,7 @@ class ClassMeta
 	public function removeArgument($name)
 	{
 		unset($this->arguments[$name]);
+		unset($this->caches[$name]);
 
 		return $this;
 	}
@@ -178,7 +182,9 @@ class ClassMeta
 		$allowMethods = array(
 			'newInstance',
 			'createObject',
-			'createSharedObject'
+			'createSharedObject',
+			'bind',
+			'bindShared'
 		);
 
 		if (in_array($name, $allowMethods))
