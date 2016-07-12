@@ -52,13 +52,13 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	protected $parent;
 
 	/**
-	 * Property bounded.
+	 * Property args.
 	 *
 	 * @var    array
 	 * 
 	 * @since  3.0
 	 */
-	protected $bounded = array();
+	protected $args = array();
 
 	/**
 	 * Constructor for the DI Container
@@ -183,8 +183,6 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 			};
 		}
 
-
-
 		return $this->set($class, $handler, $shared, $protected);
 	}
 
@@ -273,15 +271,155 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
 		try
 		{
+			$args = array_merge($this->whenCreating($class)->getArguments(), $args);
+			
 			$newInstanceArgs = $this->getMethodArgs($constructor, $args);
 		}
 		catch (DependencyResolutionException $e)
 		{
-			throw new DependencyResolutionException($e->getMessage() . ' Key: ' . $class, $e->getCode(), $e);
+			throw new DependencyResolutionException($e->getMessage() . ' / Target class: ' . $class, $e->getCode(), $e);
 		}
 
 		// Create a callable for the dataStore
 		return $reflection->newInstanceArgs($newInstanceArgs);
+	}
+
+	/**
+	 * Build an array of constructor parameters.
+	 *
+	 * @param   \ReflectionMethod $method Method for which to build the argument array.
+	 * @param   array             $args   The default args if class hint not provided.
+	 *
+	 * @return array Array of arguments to pass to the method.
+	 *
+	 * @throws DependencyResolutionException
+	 * @since   2.0
+	 */
+	protected function getMethodArgs(\ReflectionMethod $method, array $args = array())
+	{
+		$methodArgs = array();
+
+		foreach ($method->getParameters() as $param)
+		{
+			$dependency = $param->getClass();
+			$dependencyVarName = $param->getName();
+
+			// If we have a dependency, that means it has been type-hinted.
+			if (!is_null($dependency))
+			{
+				$dependencyClassName = $dependency->getName();
+
+				// If the dependency class name is registered with this container or a parent, use it.
+				if ($this->exists($dependencyClassName) !== null)
+				{
+					$depObject = $this->get($dependencyClassName);
+				}
+				else
+				{
+					// Find child args if set
+					if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName]))
+					{
+						$childArgs = $args[$dependencyClassName];
+					}
+					else
+					{
+						$childArgs = [];
+					}
+
+					$depObject = $this->newInstance($dependencyClassName, $childArgs);
+				}
+
+				if ($depObject instanceof $dependencyClassName)
+				{
+					$methodArgs[] = $depObject;
+
+					continue;
+				}
+			}
+
+			// If an arg provided, use it.
+			elseif (array_key_exists($dependencyVarName, $args))
+			{
+				$methodArgs[] = $args[$dependencyVarName];
+
+				continue;
+			}
+
+			// Finally, if there is a default parameter, use it.
+			elseif ($param->isOptional())
+			{
+				if ($param->isDefaultValueAvailable())
+				{
+					$methodArgs[] = $param->getDefaultValue();
+				}
+
+				continue;
+			}
+
+			// Simple workaround for ArrayIterator::__construct() before PHP 7
+			// @see  https://bugs.php.net/bug.php?id=70303
+			if ($method->getDeclaringClass()->getName() == 'ArrayIterator' && version_compare(PHP_VERSION, '7', '<'))
+			{
+				continue;
+			}
+
+			// Couldn't resolve dependency, and no default was provided.
+			throw new DependencyResolutionException(sprintf('Could not resolve dependency: $%s', $dependencyVarName));
+		}
+
+		return $methodArgs;
+	}
+
+	/**
+	 * Execute a callable with dependencies.
+	 *
+	 * @param callable  $callable
+	 * @param array     $args
+	 *
+	 * @return  mixed
+	 *
+	 * @throws DependencyResolutionException
+	 */
+	public function execute($callable, $args = array())
+	{
+		if ($callable instanceof \Closure)
+		{
+			$ref = new \ReflectionObject($callable);
+
+			$args = $this->getMethodArgs($ref->getMethod('__invoke'), $args);
+		}
+		else
+		{
+			if (is_string($callable))
+			{
+				$callable = explode('::', $callable);
+			}
+
+			list($object, $method) = $callable;
+
+			$ref = new \ReflectionClass($object);
+
+			$args = $this->getMethodArgs($ref->getMethod($method), $args);
+		}
+
+		return call_user_func_array($callable, $args);
+	}
+
+	/**
+	 * whenCreating
+	 *
+	 * @param   string  $class
+	 *
+	 * @return  ClassMeta
+	 */
+	public function whenCreating($class)
+	{
+		if (!isset($this->args[$class]))
+		{
+			$this->args[$class] = new ClassMeta($class, $this);
+		}
+
+		return $this->args[$class];
 	}
 
 	/**
@@ -336,96 +474,10 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	}
 
 	/**
-	 * Build an array of constructor parameters.
-	 *
-	 * @param   \ReflectionMethod $method Method for which to build the argument array.
-	 * @param   array             $args   The default args if class hint not provided.
-	 *
-	 * @return array Array of arguments to pass to the method.
-	 *
-	 * @throws DependencyResolutionException
-	 * @since   2.0
-	 */
-	protected function getMethodArgs(\ReflectionMethod $method, array $args = array())
-	{
-		$methodArgs = array();
-
-		foreach ($method->getParameters() as $param)
-		{
-			$dependency = $param->getClass();
-			$dependencyVarName = $param->getName();
-
-			// If we have a dependency, that means it has been type-hinted.
-			if (!is_null($dependency))
-			{
-				$dependencyClassName = $dependency->getName();
-
-				// If the dependency class name is registered with this container or a parent, use it.
-				if ($this->getRaw($dependencyClassName) !== null)
-				{
-					$depObject = $this->get($dependencyClassName);
-				}
-				else
-				{
-					// Find child args if set
-					if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName]))
-					{
-						$childArgs = $args[$dependencyClassName];
-					}
-					else
-					{
-						$childArgs = [];
-					}
-
-					$depObject = $this->newInstance($dependencyClassName, $childArgs);
-				}
-
-				if ($depObject instanceof $dependencyClassName)
-				{
-					$methodArgs[] = $depObject;
-
-					continue;
-				}
-			}
-
-			// If an arg provided, use it.
-			elseif (array_key_exists($dependencyVarName, $args))
-			{
-				$methodArgs[] = $args[$dependencyVarName];
-
-				continue;
-			}
-
-			// Finally, if there is a default parameter, use it.
-			elseif ($param->isOptional())
-			{
-				if ($param->isDefaultValueAvailable())
-				{
-					$methodArgs[] = $param->getDefaultValue();
-				}
-
-				continue;
-			}
-
-			// Simple workaround for ArrayIterator::__construct() before PHP 7
-			// @see  https://bugs.php.net/bug.php?id=70303
-			if ($method->getDeclaringClass()->getName() == 'ArrayIterator' && version_compare(PHP_VERSION, '7', '<'))
-			{
-				continue;
-			}
-
-			// Couldn't resolve dependency, and no default was provided.
-			throw new DependencyResolutionException(sprintf('Could not resolve dependency: %s', $dependencyVarName));
-		}
-
-		return $methodArgs;
-	}
-
-	/**
 	 * Method to set the key and callback to the dataStore array.
 	 *
 	 * @param   string   $key        Name of dataStore key to set.
-	 * @param   mixed    $value      Callable function to run or string to retrive when requesting the specified $key.
+	 * @param   mixed    $value      Callable function to run or string to retrieve when requesting the specified $key.
 	 * @param   boolean  $shared     True to create and store a shared instance.
 	 * @param   boolean  $protected  True to protect this item from being overwritten. Useful for services.
 	 *
