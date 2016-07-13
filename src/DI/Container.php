@@ -314,6 +314,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 				{
 					$depObject = $this->get($dependencyClassName);
 				}
+				// If an arg provided, use it.
+				elseif (array_key_exists($dependencyVarName, $args))
+				{
+					$methodArgs[] = $args[$dependencyVarName];
+
+					continue;
+				}
+				// Otherwise we create this object recursive
 				else
 				{
 					// Find child args if set

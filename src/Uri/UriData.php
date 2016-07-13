@@ -24,6 +24,15 @@ use Traversable;
  * @property string isSsl
  * @property int    port
  *
+ * @method string full()
+ * @method string current()
+ * @method string script($uri = null)
+ * @method string root($uri = null)
+ * @method string route()
+ * @method string host($uri = null)
+ * @method string path($uri = null)
+ * @method string scheme()
+ *
  * @since  3.0-beta2
  */
 class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
@@ -94,6 +103,66 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
 				}
 			}
 		}
+	}
+
+	/**
+	 * __call
+	 *
+	 * @param   string  $name
+	 * @param   array   $args
+	 *
+	 * @return  mixed
+	 */
+	public function __call($name, $args)
+	{
+		if (property_exists($this, $name))
+		{
+			if (isset($args[0]))
+			{
+				return $this->addPrefix($name, $args[0]);
+			}
+
+			return $this->$name;
+		}
+
+		throw new \BadMethodCallException('Method: ' . __CLASS__ . '::' . $name . '() not found.');
+	}
+
+	/**
+	 * createUri
+	 *
+	 * @param   string  $uri
+	 *
+	 * @return  Uri
+	 */
+	public static function createUri($uri)
+	{
+		return new Uri($uri);
+	}
+
+	/**
+	 * createPsrUri
+	 *
+	 * @param   string  $uri
+	 *
+	 * @return  PsrUri
+	 */
+	public static function createPsrUri($uri)
+	{
+		return new PsrUri($uri);
+	}
+
+	/**
+	 * addPrefix
+	 *
+	 * @param   string  $name
+	 * @param   string  $url
+	 *
+	 * @return  string
+	 */
+	public function addPrefix($name, $url)
+	{
+		return $this->$name . '/' . $url;
 	}
 
 	/**
