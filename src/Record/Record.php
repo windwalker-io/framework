@@ -366,16 +366,31 @@ class Record extends Entity
 	 */
 	public function store($updateNulls = false)
 	{
-		// Event
+		$new = !$this->{$this->getKeyName()};
+		
+		$action = $new ? 'Create' : 'Update';
+
+		// @Event: Create / Update
+		$this->triggerEvent('onBefore' . $action, array(
+			'updateNulls' => &$updateNulls
+		));
+		
+		// @Event: Store
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
 			'updateNulls' => &$updateNulls
 		));
 
+		// Do Action
 		// If a primary key exists update the object, otherwise insert it.
 		$this->getDataMapper()->saveOne($this, $this->getKeyName(true), $updateNulls);
 
-		// Event
+		// @Event: Store
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+
+		// @Event: Create / Update
+		$this->triggerEvent('onAfter' . $action, array(
+			'updateNulls' => &$updateNulls
+		));
 
 		return $this;
 	}
@@ -390,9 +405,14 @@ class Record extends Entity
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array());
 
+		$this->triggerEvent('onBeforeStore');
+
+		// Do Action
 		$this->getDataMapper()->createOne($this);
 
 		// Event
+		$this->triggerEvent('onAfterStore');
+		
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
 		return $this;
@@ -412,9 +432,18 @@ class Record extends Entity
 			'updateNulls' => &$updateNulls
 		));
 
+		$this->triggerEvent('onBeforeStore', array(
+			'updateNulls' => &$updateNulls
+		));
+
+		// Do Action
 		$this->getDataMapper()->updateOne($this, $this->getKeyName(true), $updateNulls);
 
 		// Event
+		$this->triggerEvent('onAfterStore', array(
+			'updateNulls' => &$updateNulls
+		));
+		
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
 		return $this;
