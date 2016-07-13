@@ -14,31 +14,6 @@ Add this to the require block in your `composer.json`.
 
 ## Using ArrayHelper
 
-### toInteger
-
-```php
-use Windwalker\Utilities\ArrayHelper;
-
-$input = array(
-    "width" => "100",
-    "height" => "200xxx",
-    "length" => "10.3"
-);
-$result = ArrayHelper::toInteger($input);
-var_dump($result);
-```
-Result:
-```
-array(3) {
-  'width' =>
-  int(100)
-  'height' =>
-  int(200)
-  'length' =>
-  int(10)
-}
-```
-
 ### toObject
 
 ```php
@@ -89,68 +64,6 @@ class Book#1 (4) {
   public $genre =>
   string(21) "comic science fiction"
   public $rating =>
-  int(10)
-}
-```
-
-### toString
-
-```php
-use Windwalker\Utilities\ArrayHelper;
-
-$input = array(
-    "fruit" => "apple",
-    "pi" => 3.14
-);
-echo ArrayHelper::toString($input);
-```
-Result:
-```
-fruit="apple" pi="3.14"
-```
-
-### fromObject
-
-```php
-use Windwalker\Utilities\ArrayHelper;
-
-class Book {
-    public $name;
-    public $author;
-    public $genre;
-    public $rating;
-}
-class Author {
-    public $name;
-    public $born;
-}
-
-$book = new Book();
-$book->name = "Harry Potter and the Philosopher's Stone";
-$book->author = new Author();
-$book->author->name = "J.K. Rowling";
-$book->author->born = 1965;
-$book->genre = "fantasy";
-$book->rating = 10;
-
-$array = ArrayHelper::fromObject($book);
-var_dump($array);
-```
-Result:
-```
-array(4) {
-  'name' =>
-  string(40) "Harry Potter and the Philosopher's Stone"
-  'author' =>
-  array(2) {
-    'name' =>
-    string(12) "J.K. Rowling"
-    'born' =>
-    int(1965)
-  }
-  'genre' =>
-  string(7) "fantasy"
-  'rating' =>
   int(10)
 }
 ```
@@ -241,7 +154,7 @@ $letters = array("a", "b", "c");
 echo ArrayHelper::isAssociative($letters) ? 'true' : 'false'; // false
 ```
 
-### pivot
+### group
 
 ```php
 use Windwalker\Utilities\ArrayHelper;
@@ -395,4 +308,113 @@ echo $flatted1['flower.sakura']; // 'samuari'
 $flatted2 = ArrayHelper::flatten($array, '/');
 
 echo $flatted2['flower/olive']; // 'peace'
+```
+
+### merge
+
+Recursive merge two array.
+
+``` php
+use Windwalker\Utilities\ArrayHelper;
+
+$array2 = array(
+    'flower' => array(
+        'sakura' => 'samurai',
+        'olive' => 'peace'
+    )
+);
+
+$array2 = array(
+    'flower' => array(
+        'sakura' => 'overrided',
+    )
+);
+
+$newArray = ArrayHelper:merge($array1, $array2, true);
+
+Array
+(
+    [flower] => Array
+    (
+        [sakura] => overrided
+        [olive] => peace
+    )
+)
+```
+
+### match
+
+Check an array matched our query condition.
+
+``` php
+$array = array(
+    'id' => 1,
+    'title' => 'Julius Caesar',
+    'data' => (object) array('foo' => 'bar'),
+);
+
+// Check id=1
+$bool = ArrayHelper::match($data, array('id' => 1));
+
+// Check id=1 with strict compare (int)
+$bool = ArrayHelper::match($data, array('id' => 1), true);
+
+// Check id=1 AND title='Julius Caesar'
+$bool = ArrayHelper::match($data, array('id' => 1, 'title' => 'Julius Caesar'));
+
+// Check id IN (2,3,4)
+$bool = ArrayHelper::match($data, array('id' => array(2, 3, 4)));
+
+// Check id >= 2
+$bool = ArrayHelper::match($data, array('id >=' => 2));
+```
+
+### query
+
+Find element matched array in array.
+
+``` php
+$data = array(
+    array(
+        'id' => 1,
+        'title' => 'Julius Caesar',
+        'data' => (object) array('foo' => 'bar'),
+    ),
+    array(
+        'id' => 2,
+        'title' => 'Macbeth',
+        'data' => array(),
+    ),
+    array(
+        'id' => 3,
+        'title' => 'Othello',
+        'data' => 123,
+    ),
+    array(
+        'id' => 4,
+        'title' => 'Hamlet',
+        'data' => true,
+    ),
+);
+
+// Query id=2
+$newArray = ArrayHelper::query($data, array('id' => 2));
+
+// Query id=2, use strict compare to check is int, not string
+$newArray = ArrayHelper::query($data, array('id' => 2), true, [keepKey = false]);
+
+// Query id=2 AND title='Macbeth'
+$newArray = ArrayHelper::query($data, array('id' => 2, 'title' => 'Macbeth'));
+
+// Query id IN (2,3,4)
+$newArray = ArrayHelper::query($data, array('id' => array(2, 3, 4)));
+
+// Query id >= 2
+$newArray = ArrayHelper::query($data, array('id >=' => 2));
+
+// Use callback, similar to array_filter()
+$newArray = ArrayHelper::query($data, function ($key, $value, $strict)
+{
+    return $value['id'] == 3 || $value['title'] == 'Macbeth';
+});
 ```

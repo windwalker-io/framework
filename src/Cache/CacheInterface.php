@@ -22,22 +22,21 @@ interface CacheInterface
 	/**
 	 * Persisting our data in the cache, uniquely referenced by a key with an optional expiration TTL time.
 	 *
-	 * @param string $key The key of the item to store
-	 * @param mixed  $val The value of the item to store
+	 * @param string   $key The key of the item to store
+	 * @param mixed    $val The value of the item to store
+	 * @param int|null $ttl Optional. The TTL value of this item. If no value is sent and the driver supports TTL
+	 *                      then the library may set a default value for it or let the driver take care of that.
 	 *
-	 * @return bool
-	 * @internal param int|null $ttl Optional. The TTL value of this item. If no value is sent and the driver supports TTL
-	 *                          then the library may set a default value for it or let the driver take care of that.
-	 *
+	 * @return  CacheItemInterface  Return CacheItem to chaining.
 	 */
-	public function set($key, $val);
+	public function set($key, $val, $ttl = null);
 
 	/**
 	 * Remove an item from the cache by its unique key
 	 *
 	 * @param string $key The unique cache key of the item to remove
 	 *
-	 * @return boolean    The result of the delete operation
+	 * @return  static
 	 */
 	public function remove($key);
 

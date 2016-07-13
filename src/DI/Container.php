@@ -338,7 +338,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 			}
 
 			// If an arg provided, use it.
-			elseif (array_key_exists($dependencyVarName, $args))
+			if (array_key_exists($dependencyVarName, $args))
 			{
 				$methodArgs[] = $args[$dependencyVarName];
 

@@ -8,6 +8,7 @@
 
 namespace Windwalker\Cache;
 
+use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Windwalker\Cache\Serializer\SerializerInterface;
 use Windwalker\Cache\Serializer\PhpSerializer;
@@ -72,20 +73,22 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * Persisting our data in the cache, uniquely referenced by a key with an optional expiration TTL time.
 	 *
-	 * @param string $key The key of the item to store
-	 * @param mixed  $val The value of the item to store
+	 * @param string   $key The key of the item to store
+	 * @param mixed    $val The value of the item to store
+	 * @param int|null $ttl Optional. The TTL value of this item. If no value is sent and the driver supports TTL
+	 *                      then the library may set a default value for it or let the driver take care of that.
 	 *
-	 * @return static
+	 * @return  CacheItemInterface  Return CacheItem to chaining.
 	 */
-	public function set($key, $val)
+	public function set($key, $val, $ttl = null)
 	{
-		$item = new CacheItem($key);
+		$item = new CacheItem($key, null, $ttl);
 
 		$item->set($this->serializer->serialize($val));
 
 		$this->storage->save($item);
 
-		return $this;
+		return $item;
 	}
 
 	/**
@@ -93,7 +96,7 @@ class Cache implements CacheInterface, \ArrayAccess
 	 *
 	 * @param string $key The unique cache key of the item to remove
 	 *
-	 * @return boolean    The result of the delete operation
+	 * @return static
 	 */
 	public function remove($key)
 	{
@@ -128,15 +131,17 @@ class Cache implements CacheInterface, \ArrayAccess
 	/**
 	 * Persisting a set of key => value pairs in the cache, with an optional TTL.
 	 *
-	 * @param array $items An array of key => value pairs for a multiple-set operation.
+	 * @param array    $items An array of key => value pairs for a multiple-set operation.
+	 * @param int|null $ttl   Optional. The TTL value of this item. If no value is sent and the driver supports TTL
+	 *                        then the library may set a default value for it or let the driver take care of that.
 	 *
 	 * @return static Return self to support chaining.
 	 */
-	public function setMultiple(array $items)
+	public function setMultiple(array $items, $ttl = null)
 	{
-		foreach ($items as $item)
+		foreach ($items as $key => $item)
 		{
-			$this->storage->save($item);
+			$this->set($key, $item, $ttl);
 		}
 
 		return $this;
