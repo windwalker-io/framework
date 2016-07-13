@@ -102,8 +102,6 @@ $container->set('input', $otherInput);
 
 ## Alias
 
-It is convenience to set an alias to key of objects which we often use.
-
 ``` php
 $container->share('system.application', $app)
     ->alias('app', 'system.application');
@@ -112,28 +110,11 @@ $container->share('system.application', $app)
 $app = $container->get('app');
 ```
 
-So it is a good way that we can build IOC structure:
+## Creating Objects
 
-``` php
-$config = array(
-    'ioc.structure' => array(
-        'app'     => 'system.application',
-        'input'   => 'system.input',
-        'session' => 'system.session'
-    )
-);
+### New Instance
 
-// Your own IOC class follows your rule
-IOC::setStructure($config['ioc.structure']);
-IOC::setContainer($container);
-
-// Will get system.session from Container
-$session = IOC::getSession();
-```
-
-## Create Object
-
-Container can build an object and auto inject the needed dependency objects.
+Container can help us create an object and auto inject required arguments to constructor.
 
 ``` php
 use Windwalker\IO\Input;
@@ -151,21 +132,122 @@ class MyClass
     }
 }
 
-$myObject = $container->createObject('MyClass');
+$myObject = $container->newInstance('MyClass');
 
 $myObject->input; // Input
 $myObject->config; // Structure
 ```
 
-### Binding Classes
+### Create Object
+
+Create object will new an instance instantly and set this class into container, we can get new instance everytime 
+when we get it by class name.
+
+``` php
+$myObject = $container->createObject('MyClass');
+
+// Now we can get this class with new instance from container
+$anotherMyObject = $container->get('MyObject');
+```
+
+Use `createSharedObject()` to set object as singleton.
+
+``` php
+// Now this object is singleton 
+$myObject = $container->createSharedObject('MyClass');
+```
+
+### Create with Custom Arguments
+
+If we have some constructor arguments without class hint, container will send the default value to constructor.
+We can override this un-hinted arguments: 
+
+This is a constructor without default value and class hinted.
+ 
+``` php
+class AnotherClass
+{
+    public function _construct(ModelInterface $model, $config)
+    {
+        $bar = $config['foo']
+    }
+}
+
+// Let's create this object with custom arguments:
+$container->newInstance('AnotherClass', ['config' => ['foo' => 'bar']]);
+```
+
+You can set multiple level arguments:
+
+``` php
+use Windwalker\Model\ModelInterface;
+
+// ... AnotherClass
+
+$config = [
+    'config' => ['foo' => 'bar'],
+    'Windwalker\Model\ModelInterface' => [
+        'options' => $options,
+        'db' => DatabaseFactory::getDbo()
+    ]
+];
+
+$container->newInstance('AnotherClass', $config);
+```
+
+
+### Prepare Object
+
+We can set a class as prepared, then it will be created when we really need it:
+
+``` php
+$container->prepareObject('MyClass');
+
+// If we get MyClass, this class will be created.
+$myObject = $container->get('MyClass');
+```
+
+We can also prepare a shared object:
+ 
+``` php
+// This objct will be singleton
+$container->prepareSharedObject('MyClass');
+```
+
+### Prepare Creating Arguments
+
+We can prepare some named arguments which will be injected to constructor when object creating.
+ 
+``` php
+// Set class meta
+$container->whenCreating('MyModel')
+    ->setArgumemt('config', $config)
+    ->setArgument('db', $db);
+
+// ...
+
+$object = $container->newInstance('MyModelInterface');
+```
+
+Or just created it instantly:
+
+``` php
+$container->whenCreating('MyClass')
+    ->setArgumemt('config', $config)
+    ->setArgument('db', $db)
+    ->newInstance();
+```
+
+## Binding Classes
 
 Sometimes we hope to inject particular object we want, we can bind a class as key to let Container know what you want to
 instead the dependency object.
 
-Here is a class but dependency to an abstract class, we can bind a sub class to container for use.
+Here is a class which dependent to an interface, we can bind a sub class to container then container will use `MyModel` 
+to be instance of `ModelInterface` and inject it to `MyClass`.
 
 ``` php
-use Windwalker\Model\AbstractModel;
+use Windwalker\Model\ModelInterface;
 use Windwalker\Structure\Structure;
 
 class MyClass
@@ -173,19 +255,19 @@ class MyClass
     public $model;
     public $config;
 
-    public function __construct(AbstractModel $model, Structure $config)
+    public function __construct(ModelInterface $model, Structure $config)
     {
         $this->model = $model;
         $this->config = $config;
     }
 }
 
-class MyModel extends AbstractModel
+class MyModel implement ModelInterface
 {
 }
 
 // Bind MyModel as AbstractModel
-$container->share('Windwalker\\Model\\AbstractModel', function()
+$container->share('Windwalker\Model\ModelInterface', function()
 {
     return new MyModel;
 });
@@ -193,6 +275,29 @@ $container->share('Windwalker\\Model\\AbstractModel', function()
 $myObject = $container->createObject('MyClass');
 
 $myObject->model; // MyModel
+```
+
+Use `bind()` to quickly bind a class without callback, container will use `newInstance()` to create it when needed.
+
+``` php
+$container->bind('Windwalker\Model\ModelInterface', 'MyModel');
+
+$container->createObject('MyClass');
+```
+
+Use `bindShared()` to bind a class as singleton:
+ 
+``` php
+$container->bindShared('Windwalker\Model\ModelInterface', 'MyModel');
+```
+
+You can add callback as second argument, this way is totally same as `share()` and `set()`:
+
+``` php
+$container->bind('Windwalker\Model\ModelInterface', function (Contaienr $container)
+{
+    return new MyObject;
+});
 ```
 
 ## Extending
