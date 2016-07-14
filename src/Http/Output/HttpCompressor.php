@@ -10,6 +10,7 @@ namespace Windwalker\Http\Output;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
+use Windwalker\Http\Stream\Stream;
 
 /**
  * The HttpCompressor class to support gzip encoding.
@@ -125,9 +126,8 @@ class HttpCompressor
 			$response = $response->withHeader('X-Content-Encoded-By', $this->getEncodedBy());
 
 			// Replace the output with the encoded data.
-			$body = $response->getBody();
-			$body->rewind();
-			$body->write($gzdata);
+			$response = $response->withBody(new Stream('php://memory', Stream::MODE_READ_WRITE_FROM_BEGIN));
+			$response->getBody()->write($gzdata);
 
 			// Compression complete, let's break out of the loop.
 			break;

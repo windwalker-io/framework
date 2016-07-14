@@ -205,19 +205,19 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	/**
 	 * createObject
 	 *
-	 * @param string  $class
-	 * @param bool    $shared
-	 * @param bool    $protected
+	 * @param string $class
+	 * @param array  $args
+	 * @param bool   $shared
+	 * @param bool   $protected
 	 *
-	 * @return  object
-	 *
+	 * @return object
 	 * @since   3.0
 	 */
-	public function createObject($class, $shared = true, $protected = false)
+	public function createObject($class, array $args = [], $shared = true, $protected = false)
 	{
-		$callback = function (Container $container) use ($class)
+		$callback = function (Container $container) use ($class, $args)
 		{
-		    return $container->newInstance($class);
+		    return $container->newInstance($class, $args);
 		};
 
 		return $this->set($class, $callback, $shared, $protected)->get($class);
@@ -227,15 +227,16 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * createSharedObject
 	 *
 	 * @param string $class
+	 * @param array  $args
 	 * @param bool   $protected
 	 *
-	 * @return  object
+	 * @return object
 	 *
 	 * @since   3.0
 	 */
-	public function createSharedObject($class, $protected = false)
+	public function createSharedObject($class, array $args = [], $protected = false)
 	{
-		return $this->createObject($class, true, $protected);
+		return $this->createObject($class, $args, true, $protected);
 	}
 
 	/**

@@ -214,12 +214,13 @@ class WebHttpServer extends HttpServer
 		$this->uriData->full    = $original->__toString();
 		$this->uriData->current = $original->withQuery('')->withFragment('')->__toString();
 		$this->uriData->script  = $scriptName;
-		$this->uriData->root    = $host . $path . '/';
+		$this->uriData->root    = $host . $path;
 		$this->uriData->host    = $host;
 		$this->uriData->path    = $path;
 
 		// Set the extended (non-base) part of the request URI as the route.
 		$route = substr_replace($this->uriData->current, '', 0, strlen($this->uriData->root));
+		$route = ltrim($route, '/');
 
 		// Only variables should be passed by reference so we use two lines.
 		$file = explode('/', $script);
