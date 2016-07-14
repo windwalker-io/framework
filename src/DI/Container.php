@@ -155,7 +155,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * prepareObject
 	 *
 	 * @param string   $class
-	 * @param callable $callback
+	 * @param callable $extend
 	 * @param bool     $shared
 	 * @param bool     $protected
 	 *
@@ -163,43 +163,37 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @since   3.0
 	 */
-	public function prepareObject($class, $callback = null, $shared = false, $protected = false)
+	public function prepareObject($class, $extend = null, $shared = false, $protected = false)
 	{
 		$handler = function (Container $container) use ($class)
 		{
 			return $container->newInstance($class);
 		};
 
-		if ($callback !== null)
-		{
-			if (!is_callable($callback))
-			{
-				throw new \InvalidArgumentException('Invalid callback argument of: ' . __METHOD__);
-			}
+		$this->set($class, $handler, $shared, $protected);
 
-			$handler = function (Container $container) use ($handler, $callback, $class)
-			{
-				return call_user_func($callback, $container, call_user_func($handler, $container));
-			};
+		if (is_callable($extend))
+		{
+			$this->extend($class, $extend);
 		}
 
-		return $this->set($class, $handler, $shared, $protected);
+		return $this;
 	}
 
 	/**
 	 * prepareSharedObject
 	 *
 	 * @param string   $class
-	 * @param callable $callback
+	 * @param callable $extend
 	 * @param bool     $protected
 	 *
 	 * @return  static
 	 *
 	 * @since   3.0
 	 */
-	public function prepareSharedObject($class, $callback = null, $protected = false)
+	public function prepareSharedObject($class, $extend = null, $protected = false)
 	{
-		return $this->prepareObject($class, $callback, true, $protected);
+		return $this->prepareObject($class, $extend, true, $protected);
 	}
 
 	/**
