@@ -250,7 +250,7 @@ class PdoDriver extends AbstractDatabaseDriver
 	 * Execute the SQL statement.
 	 *
 	 * @throws \RuntimeException
-	 * @return  resource|false  A database cursor resource on success, boolean false on failure.
+	 * @return  \PDOStatement|false  A database cursor resource on success, boolean false on failure.
 	 *
 	 * @since   2.0
 	 */
@@ -270,7 +270,7 @@ class PdoDriver extends AbstractDatabaseDriver
 		// Bind the variables:
 		if ($this->query instanceof PreparableInterface)
 		{
-			$bounded =& $this->query->getBounded();
+			$bounded = &$this->query->getBounded();
 
 			foreach ($bounded as $key => $data)
 			{

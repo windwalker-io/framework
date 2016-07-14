@@ -302,6 +302,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 			// If we have a dependency, that means it has been type-hinted.
 			if (!is_null($dependency))
 			{
+				$depObject = null;
 				$dependencyClassName = $dependency->getName();
 
 				// If the dependency class name is registered with this container or a parent, use it.
@@ -317,7 +318,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 					continue;
 				}
 				// Otherwise we create this object recursive
-				else
+				elseif (!$dependency->isAbstract() && !$dependency->isInterface() && !$dependency->isTrait())
 				{
 					// Find child args if set
 					if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName]))
@@ -471,7 +472,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function extend($key, \Closure $callable)
+	public function extend($key, $callable)
 	{
 		$store = $this->getRaw($key);
 
@@ -480,9 +481,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 			throw new \UnexpectedValueException(sprintf('The requested key %s does not exist to extend.', $key));
 		}
 
+		if (!is_callable($callable))
+		{
+			throw new \InvalidArgumentException('Argument 2 should be an callable.');
+		}
+
 		$closure = function ($container) use($callable, $store)
 		{
-			return $callable($store->get($container), $container);
+			return call_user_func($callable, $store->get($container), $container);
 		};
 
 		$this->set($key, $closure, $store->isShared());

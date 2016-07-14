@@ -60,11 +60,11 @@ class DbProfilerMiddleware extends AbstractMiddleware
 		/** @var AbstractDatabaseDriver $db */
 		$db = $data->db;
 
-		call_user_func($this->getBefore(), $db, $data->sql);
+		call_user_func($this->getBefore(), $db, $data);
 
 		$result = $this->next->execute($data);
 
-		call_user_func($this->getAfter(), $db, $db->replacePrefix((string) $data->query));
+		call_user_func($this->getAfter(), $db, $data);
 
 		return $result;
 	}

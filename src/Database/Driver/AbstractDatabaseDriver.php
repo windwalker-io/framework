@@ -19,6 +19,7 @@ use Windwalker\Database\Iterator\DataIterator;
 use Windwalker\Middleware\Chain\ChainBuilder;
 use Windwalker\Middleware\MiddlewareInterface;
 use Windwalker\Query\Query;
+use Windwalker\Query\Query\PreparableInterface;
 
 /**
  * Class DatabaseDriver
@@ -232,6 +233,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 			$data->query = &$this->query;
 			$data->sql   = $this->replacePrefix((string) $this->query);
 			$data->db    = $this;
+
+			if ($this->query instanceof PreparableInterface)
+			{
+				$data->bounded = $this->query->getBounded();
+			}
 
 			return $this->middlewares->execute($data);
 		}
@@ -932,5 +938,15 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 		$this->middlewares->add(array($this, 'doExecute'));
 
 		return $this;
+	}
+
+	/**
+	 * Method to get property LastQuery
+	 *
+	 * @return  string
+	 */
+	public function getLastQuery()
+	{
+		return $this->lastQuery;
 	}
 }

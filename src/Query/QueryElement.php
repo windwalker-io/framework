@@ -159,4 +159,28 @@ class QueryElement
 
 		return $this;
 	}
+
+	/**
+	 * Method to get property Name
+	 *
+	 * @return  string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
+	 * Method to set property name
+	 *
+	 * @param   string $name
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
 }
