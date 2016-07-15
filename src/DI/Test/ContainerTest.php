@@ -313,13 +313,15 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\newInstance::resolveObject
+	 * @covers Windwalker\DI\Container::createObject
+	 * @covers Windwalker\DI\Container::createSharedObject
+	 * @covers Windwalker\DI\Container::newInstance
 	 */
 	public function testCreateObject()
 	{
 		$container = new Container;
 
-		$foo = $container->newInstance('Windwalker\\DI\\Test\\Mock\\Foo');
+		$foo = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
 
 		$this->assertInstanceOf('Windwalker\\DI\\Test\\Mock\\Foo', $foo);
 		$this->assertInstanceOf('Windwalker\\DI\\Test\\Mock\\Bar', $foo->bar);
@@ -331,7 +333,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
 		$container->share('SplStack', new StubStack);
 
-		$foo = $container->newInstance('Windwalker\\DI\\Test\\Mock\\Foo');
+		$foo = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
 
 		$this->assertInstanceOf('Windwalker\\DI\\Test\\Mock\\StubStack', $foo->bar->stack);
 
@@ -348,22 +350,22 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
 		$queue = $container->get('SplPriorityQueue');
 
-		$foo = $container->newInstance('Windwalker\\DI\\Test\\Mock\\Foo');
+		$foo = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
 
 		$this->assertNotSame($queue, $foo->bar->queue, 'Non shared class should be not same.');
 
-		// Auto create classes should be not shared
+		// Auto created classes should be not shared
 		$container = new Container;
 
-		$bar1 = $container->newInstance('Windwalker\\DI\\Test\\Mock\\Bar');
-		$bar2 = $container->newInstance('Windwalker\\DI\\Test\\Mock\\Bar2');
+		$bar1 = $container->createObject('Windwalker\\DI\\Test\\Mock\\Bar');
+		$bar2 = $container->createObject('Windwalker\\DI\\Test\\Mock\\Bar2');
 
 		$this->assertNotSame($bar1->queue, $bar2->queue);
 
 		// Not shared object
 		$container = new Container;
 
-		$foo = $container->newInstance('Windwalker\\DI\\Test\\Mock\\Foo');
+		$foo = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
 		$foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
 
 		$this->assertNotSame($foo, $foo2);
@@ -371,24 +373,44 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 		// Shared object
 		$container = new Container;
 
-		$foo = $container->newInstance('Windwalker\\DI\\Test\\Mock\\Foo', true);
+		$foo = $container->createSharedObject('Windwalker\\DI\\Test\\Mock\\Foo');
 		$foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
 
 		$this->assertSame($foo, $foo2);
 	}
 
 	/**
-	 * Method to test createObject().
+	 * Method to test newInstance().
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\newInstance::resolveObject
+	 * @covers Windwalker\DI\Container::prepareObject
 	 */
-	public function testcreateObject()
+	public function testPrepareObject()
 	{
 		$container = new Container;
 
-		$foo = $container->newInstance('Windwalker\\DI\\Test\\Mock\\Foo');
+		$container->prepareObject('Windwalker\\DI\\Test\\Mock\\Foo');
+
+		$foo = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
+
+		$this->assertInstanceOf('Windwalker\\DI\\Test\\Mock\\Foo', $foo);
+	}
+
+	/**
+	 * Method to test newInstance().
+	 *
+	 * @return void
+	 *
+	 * @covers Windwalker\DI\Container::prepareSharedObject
+	 */
+	public function testPrepareSharedObject()
+	{
+		$container = new Container;
+
+		$container->prepareSharedObject('Windwalker\\DI\\Test\\Mock\\Foo');
+
+		$foo = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
 		$foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
 
 		$this->assertSame($foo, $foo2);
@@ -401,7 +423,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 */
-	public function testCreateObjectWithNoDefaultValueAvailable()
+	public function testNewInstanceWithNoDefaultValueAvailable()
 	{
 		$container = new Container;
 

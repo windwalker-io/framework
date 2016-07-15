@@ -101,23 +101,24 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 	{
 		$profiler = array();
 
-		$this->db->addMiddleware(new DbProfilerMiddleware(function($db, $sql) use (&$profiler)
+		$this->db->addMiddleware(new DbProfilerMiddleware(function($db, $data) use (&$profiler)
 			{
 				$profiler['db'] = $db;
-				$profiler['sql'] = $sql;
 				$profiler['before'] = true;
 			},
-			function($db, $sql) use (&$profiler)
+			function($db, $data) use (&$profiler)
 			{
 				$profiler['db'] = $db;
-				$profiler['sql'] = $sql;
 				$profiler['after'] = true;
+
+				$profiler = array_merge($profiler, (array) $data);
 			}));
 
 		$this->db->setQuery('SELECT * FROM #__flower')->execute();
 
 		$this->assertSame($this->db, $profiler['db']);
-		$this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flower', $profiler['sql']);
+
+		$this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flower', (string) $profiler['sql']);
 
 		$this->assertTrue($profiler['before']);
 		$this->assertTrue($profiler['after']);

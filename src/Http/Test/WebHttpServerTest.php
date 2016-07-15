@@ -251,7 +251,7 @@ class WebHttpServerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('http://example.com:8080/flower/sakura/index.php/foo/bar?a=b&c=d', $uri->full);
 		$this->assertEquals('http://example.com:8080/flower/sakura/index.php/foo/bar', $uri->current);
 		$this->assertEquals('index.php', $uri->script);
-		$this->assertEquals('http://example.com:8080/flower/sakura/', $uri->root);
+		$this->assertEquals('http://example.com:8080/flower/sakura', $uri->root);
 		$this->assertEquals('foo/bar', $uri->route);
 		$this->assertEquals('http://example.com:8080', $uri->host);
 		$this->assertEquals('/flower/sakura', $uri->path);
