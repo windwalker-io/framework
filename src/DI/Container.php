@@ -155,7 +155,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * prepareObject
 	 *
 	 * @param string   $class
-	 * @param callable $callback
+	 * @param callable $extend
 	 * @param bool     $shared
 	 * @param bool     $protected
 	 *
@@ -163,61 +163,55 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @since   3.0
 	 */
-	public function prepareObject($class, $callback = null, $shared = false, $protected = false)
+	public function prepareObject($class, $extend = null, $shared = false, $protected = false)
 	{
 		$handler = function (Container $container) use ($class)
 		{
 			return $container->newInstance($class);
 		};
 
-		if ($callback !== null)
-		{
-			if (!is_callable($callback))
-			{
-				throw new \InvalidArgumentException('Invalid callback argument of: ' . __METHOD__);
-			}
+		$this->set($class, $handler, $shared, $protected);
 
-			$handler = function (Container $container) use ($handler, $callback, $class)
-			{
-				return call_user_func($callback, $container, call_user_func($handler, $container));
-			};
+		if (is_callable($extend))
+		{
+			$this->extend($class, $extend);
 		}
 
-		return $this->set($class, $handler, $shared, $protected);
+		return $this;
 	}
 
 	/**
 	 * prepareSharedObject
 	 *
 	 * @param string   $class
-	 * @param callable $callback
+	 * @param callable $extend
 	 * @param bool     $protected
 	 *
 	 * @return  static
 	 *
 	 * @since   3.0
 	 */
-	public function prepareSharedObject($class, $callback = null, $protected = false)
+	public function prepareSharedObject($class, $extend = null, $protected = false)
 	{
-		return $this->prepareObject($class, $callback, true, $protected);
+		return $this->prepareObject($class, $extend, true, $protected);
 	}
 
 	/**
 	 * createObject
 	 *
-	 * @param string  $class
-	 * @param bool    $shared
-	 * @param bool    $protected
+	 * @param string $class
+	 * @param array  $args
+	 * @param bool   $shared
+	 * @param bool   $protected
 	 *
-	 * @return  object
-	 *
+	 * @return object
 	 * @since   3.0
 	 */
-	public function createObject($class, $shared = true, $protected = false)
+	public function createObject($class, array $args = [], $shared = true, $protected = false)
 	{
-		$callback = function (Container $container) use ($class)
+		$callback = function (Container $container) use ($class, $args)
 		{
-		    return $container->newInstance($class);
+		    return $container->newInstance($class, $args);
 		};
 
 		return $this->set($class, $callback, $shared, $protected)->get($class);
@@ -227,15 +221,16 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * createSharedObject
 	 *
 	 * @param string $class
+	 * @param array  $args
 	 * @param bool   $protected
 	 *
-	 * @return  object
+	 * @return object
 	 *
 	 * @since   3.0
 	 */
-	public function createSharedObject($class, $protected = false)
+	public function createSharedObject($class, array $args = [], $protected = false)
 	{
-		return $this->createObject($class, true, $protected);
+		return $this->createObject($class, $args, true, $protected);
 	}
 
 	/**
@@ -307,6 +302,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 			// If we have a dependency, that means it has been type-hinted.
 			if (!is_null($dependency))
 			{
+				$depObject = null;
 				$dependencyClassName = $dependency->getName();
 
 				// If the dependency class name is registered with this container or a parent, use it.
@@ -322,7 +318,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 					continue;
 				}
 				// Otherwise we create this object recursive
-				else
+				elseif (!$dependency->isAbstract() && !$dependency->isInterface() && !$dependency->isTrait())
 				{
 					// Find child args if set
 					if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName]))
@@ -476,7 +472,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @since   2.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function extend($key, \Closure $callable)
+	public function extend($key, $callable)
 	{
 		$store = $this->getRaw($key);
 
@@ -485,9 +481,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 			throw new \UnexpectedValueException(sprintf('The requested key %s does not exist to extend.', $key));
 		}
 
+		if (!is_callable($callable))
+		{
+			throw new \InvalidArgumentException('Argument 2 should be an callable.');
+		}
+
 		$closure = function ($container) use($callable, $store)
 		{
-			return $callable($store->get($container), $container);
+			return call_user_func($callable, $store->get($container), $container);
 		};
 
 		$this->set($key, $closure, $store->isShared());

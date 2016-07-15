@@ -207,11 +207,23 @@ $container->prepareObject('MyClass');
 $myObject = $container->get('MyClass');
 ```
 
+Add second argument if you want to configure something after object created:
+
+``` php
+$container->prepareObject('MyClass', function (MyClass $myClass, Container $container)
+{
+    $myClass->debug = true;
+    
+    return $myClass;
+});
+```
+
 We can also prepare a shared object:
  
 ``` php
+
 // This objct will be singleton
-$container->prepareSharedObject('MyClass');
+$container->prepareSharedObject('MyClass'[, extending]);
 ```
 
 ### Prepare Creating Arguments
