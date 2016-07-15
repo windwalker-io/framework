@@ -238,7 +238,7 @@ $container->whenCreating('MyModel')
 
 // ...
 
-$object = $container->newInstance('MyModelInterface');
+$object = $container->newInstance('MyModel');
 ```
 
 Or just created it instantly:
@@ -294,6 +294,7 @@ Use `bind()` to quickly bind a class without callback, container will use `newIn
 ``` php
 $container->bind('Windwalker\Model\ModelInterface', 'MyModel');
 
+// `MyModel` will auto created because we bind it to `ModelInterface`
 $container->createObject('MyClass');
 ```
 
@@ -314,17 +315,20 @@ $container->bind('Windwalker\Model\ModelInterface', function (Contaienr $contain
 
 ## Extending
 
-Container allows you to extend an object, the new instance or closure will override the original one, this is a sample:
+Container allows you to extend an object, the new instance or closure will wrap the original one and you can do more 
+extending configuration, this is a sample:
 
 ``` php
 // Create an item first
 $container->share('flower', function()
 {
+    // Create a empty object
     return new Flower;
 });
 
 $container->extend('flower', function($origin, Container $container)
 {
+    // Set a property to this object
     $origin->name = 'sakura';
 
     return $origin;

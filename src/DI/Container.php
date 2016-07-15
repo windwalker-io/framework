@@ -55,7 +55,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * Property args.
 	 *
 	 * @var    array
-	 * 
+	 *
 	 * @since  3.0
 	 */
 	protected $args = array();
@@ -207,7 +207,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @return object
 	 * @since   3.0
 	 */
-	public function createObject($class, array $args = [], $shared = true, $protected = false)
+	public function createObject($class, array $args = array(), $shared = false, $protected = false)
 	{
 		$callback = function (Container $container) use ($class, $args)
 		{
@@ -228,7 +228,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @since   3.0
 	 */
-	public function createSharedObject($class, array $args = [], $protected = false)
+	public function createSharedObject($class, array $args = array(), $protected = false)
 	{
 		return $this->createObject($class, $args, true, $protected);
 	}
@@ -267,7 +267,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 		try
 		{
 			$args = array_merge($this->whenCreating($class)->getArguments(), $args);
-			
+
 			$newInstanceArgs = $this->getMethodArgs($constructor, $args);
 		}
 		catch (DependencyResolutionException $e)
@@ -328,7 +328,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 					}
 					else
 					{
-						$childArgs = [];
+						$childArgs = array();
 					}
 
 					$depObject = $this->newInstance($dependencyClassName, $childArgs);
