@@ -18,7 +18,7 @@ We want to create a lighting, fully decoupled, powerful and easy using PHP frame
 ``` bash
 {
     "require" : {
-        "windwalker/framework" : "~2.0"
+        "windwalker/framework" : "~3.0"
     }
 }
 ```
@@ -28,21 +28,22 @@ We want to create a lighting, fully decoupled, powerful and easy using PHP frame
 We prepare a starter package for you, just type this command to create a new project.
 
 ``` bash
-composer create-project windwalker/starter windwalker ~2.0
+composer create-project windwalker/starter windwalker ~3.0
 ```
 
 See: [Windwalker Starter](https://github.com/ventoviro/windwalker-starter)
 
 ## How to Use
 
-See: [Documentation](http://windwalker.io/documentation/start/getting-started.html)
+See: [Documentation](http://windwalker.io/documentation/)
 
 ## Packages
 
 Every packages has ready to use, please try it:
 
 - [Application](https://github.com/ventoviro/windwalker-application)
-- [Authenticate](https://github.com/ventoviro/windwalker-authenticate)
+- [Authentication](https://github.com/ventoviro/windwalker-authentication)
+- [Authorisation](https://github.com/ventoviro/windwalker-authorisation)
 - [Cache](https://github.com/ventoviro/windwalker-cache)
 - [Compare](https://github.com/ventoviro/windwalker-compare)
 - [Console](https://github.com/ventoviro/windwalker-console)
@@ -53,6 +54,7 @@ Every packages has ready to use, please try it:
 - [DataMapper](https://github.com/ventoviro/windwalker-datamapper)
 - [DI](https://github.com/ventoviro/windwalker-di)
 - [Dom](https://github.com/ventoviro/windwalker-dom)
+- [Edge](https://github.com/ventoviro/windwalker-edge)
 - [Environment](https://github.com/ventoviro/windwalker-environment)
 - [Event](https://github.com/ventoviro/windwalker-event)
 - [Filesystem](https://github.com/ventoviro/windwalker-filesystem)
