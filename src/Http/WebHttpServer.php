@@ -211,8 +211,8 @@ class WebHttpServer extends HttpServer
 		$scriptName = pathinfo($script, PATHINFO_BASENAME);
 
 		// Set the base URI both as just a path and as the full URI.
-		$this->uriData->full    = $original->__toString();
-		$this->uriData->current = $original->withQuery('')->withFragment('')->__toString();
+		$this->uriData->full    = rtrim($original->__toString(), '/');
+		$this->uriData->current = rtrim($original->withQuery('')->withFragment('')->__toString(), '/');
 		$this->uriData->script  = $scriptName;
 		$this->uriData->root    = $host . $path;
 		$this->uriData->host    = $host;
