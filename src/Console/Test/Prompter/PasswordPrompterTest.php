@@ -47,9 +47,10 @@ class PasswordPrompterTest extends AbstractPrompterTest
 			$this->markTestSkipped('This test is not supported on Windows');
 		}
 
-		$this->markTestSkipped('This test is not supported now');
-
-		return;
+		if (!$this->instance->canTestStty())
+		{
+			$this->markTestSkipped('This test need stty installed');
+		}
 
 		$this->setStream("1234qwer\n");
 

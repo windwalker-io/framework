@@ -20,18 +20,6 @@ class FakePasswordPrompter extends PasswordPrompter
 	/**
 	 * We dont't test bash because it break test process in IDE.
 	 *
-	 * @return  boolean
-	 *
-	 * @since   2.0
-	 */
-	protected function findStty()
-	{
-		return true;
-	}
-
-	/**
-	 * We dont't test bash because it break test process in IDE.
-	 *
 	 * @return  string
 	 *
 	 * @since   2.0
@@ -39,6 +27,16 @@ class FakePasswordPrompter extends PasswordPrompter
 	protected function findShell()
 	{
 		return false;
+	}
+
+	/**
+	 * canTestStty
+	 *
+	 * @return  boolean
+	 */
+	public function canTestStty()
+	{
+		return $this->findStty();
 	}
 }
 

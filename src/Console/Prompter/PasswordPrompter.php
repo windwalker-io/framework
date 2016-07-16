@@ -191,9 +191,9 @@ class PasswordPrompter extends CallbackPrompter
 	 */
 	protected function findShell()
 	{
-		if (self::$shell)
+		if (static::$shell)
 		{
-			return self::$shell;
+			return static::$shell;
 		}
 
 		$command = "/usr/bin/env %s -c 'echo Hello'";
@@ -202,7 +202,7 @@ class PasswordPrompter extends CallbackPrompter
 		{
 			if (rtrim(shell_exec(sprintf($command, $shell))) === 'Hello')
 			{
-				self::$shell = $shell;
+				static::$shell = $shell;
 
 				return $shell;
 			}
@@ -220,13 +220,13 @@ class PasswordPrompter extends CallbackPrompter
 	 */
 	protected function findStty()
 	{
-		if (null !== self::$stty)
+		if (static::$stty !== null)
 		{
-			return self::$stty;
+			return static::$stty;
 		}
 
 		exec('stty 2>&1', $output, $exitcode);
 
-		return self::$stty = ($exitcode === 0);
+		return static::$stty = ($exitcode === 0);
 	}
 }
