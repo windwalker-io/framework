@@ -11,7 +11,7 @@ namespace Windwalker\Http\Output;
 /**
  * The NoHeaderOutput class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class NoHeaderOutput extends Output
 {

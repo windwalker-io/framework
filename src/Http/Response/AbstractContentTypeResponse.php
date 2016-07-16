@@ -13,7 +13,7 @@ use Psr\Http\Message\StreamInterface;
 /**
  * An response object contains content-type handler.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 abstract class AbstractContentTypeResponse extends Response
 {
@@ -48,6 +48,19 @@ abstract class AbstractContentTypeResponse extends Response
 	 * @return  StreamInterface  Converted to stream object.
 	 */
 	abstract protected function handleBody($body);
+
+	/**
+	 * withContent
+	 *
+	 * @param   string $content
+	 *
+	 * @return  static
+	 * @throws \InvalidArgumentException
+	 */
+	public function withContent($content)
+	{
+		return $this->withBody($this->handleBody($content));
+	}
 
 	/**
 	 * Add Content-Type to header.

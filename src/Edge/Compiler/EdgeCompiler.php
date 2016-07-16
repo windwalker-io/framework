@@ -15,7 +15,7 @@ namespace Windwalker\Edge\Compiler;
  *
  * @see  https://github.com/illuminate/view/blob/master/Compilers/BladeCompiler.php
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class EdgeCompiler implements EdgeCompilerInterface
 {

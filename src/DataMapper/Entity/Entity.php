@@ -16,6 +16,8 @@ use Windwalker\Data\Data;
  */
 class Entity extends Data
 {
+	const DUMP_ALL_DATA = true;
+
 	/**
 	 * Property data.
 	 *
@@ -153,8 +155,7 @@ class Entity extends Data
 	{
 		$field = $this->resolveAlias($field);
 		
-		unset($this->fields[$field]);
-		unset($this->data[$field]);
+		unset($this->fields[$field], $this->data[$field]);
 
 		return $this;
 	}
@@ -244,6 +245,7 @@ class Entity extends Data
 	 * @param mixed  $value The value to set.
 	 *
 	 * @return  void
+	 * @throws \InvalidArgumentException
 	 */
 	public function __set($field, $value = null)
 	{
@@ -265,9 +267,10 @@ class Entity extends Data
 	/**
 	 * __unset
 	 *
-	 * @param   string  $name
+	 * @param   string $name
 	 *
 	 * @return  void
+	 * @throws \InvalidArgumentException
 	 */
 	public function __unset($name)
 	{

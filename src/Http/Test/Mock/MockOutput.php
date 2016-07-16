@@ -13,7 +13,7 @@ use Windwalker\Http\Test\Stub\StubStreamOutput;
 /**
  * The MockOutput class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class MockOutput extends StubStreamOutput
 {

@@ -18,7 +18,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 /**
  * Test class of EmptyResponse
  *
- * @since 3.0-beta2
+ * @since {DEPLOY_VERSION}
  */
 class ContentTypeResponseTest extends AbstractBaseTestCase
 {

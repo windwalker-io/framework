@@ -27,6 +27,7 @@ use Windwalker\Record\Exception\NoResultException;
 class Record extends Entity
 {
 	const UPDATE_NULLS = true;
+	const LOAD_DEFAULT = true;
 
 	/**
 	 * Name of the database table to model.
@@ -135,7 +136,7 @@ class Record extends Entity
 		$this->db = $this->mapper->getDb();
 
 		// Initialise the table properties.
-		$this->reset();
+		$this->reset(false);
 
 		if (!$this->table)
 		{

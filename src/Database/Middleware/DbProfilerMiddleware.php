@@ -14,7 +14,7 @@ use Windwalker\Middleware\AbstractMiddleware;
 /**
  * The ProfilerMiddleware class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class DbProfilerMiddleware extends AbstractMiddleware
 {

@@ -14,7 +14,7 @@ use Windwalker\Http\Stream\Stream;
 /**
  * The TextResponse class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class TextResponse extends AbstractContentTypeResponse
 {

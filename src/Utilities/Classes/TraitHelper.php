@@ -11,7 +11,7 @@ namespace Windwalker\Utilities\Classes;
 /**
  * The TraitHelper class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class TraitHelper
 {

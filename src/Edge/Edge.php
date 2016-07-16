@@ -28,7 +28,7 @@ include_once __DIR__ . '/compat.php';
  *
  * @see  https://github.com/illuminate/view/blob/master/Factory.php
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class Edge
 {

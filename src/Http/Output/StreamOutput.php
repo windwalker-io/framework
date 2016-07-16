@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * The StreamOutput class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class StreamOutput extends Output
 {

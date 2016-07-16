@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of phoenix project.
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Serializer;
 /**
  * The PhpFileSerializer class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class PhpFileSerializer implements SerializerInterface
 {

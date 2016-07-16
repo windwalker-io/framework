@@ -14,7 +14,7 @@ use Windwalker\Test\TestHelper;
 /**
  * Test class of AbstractContentTypeResponse
  *
- * @since 3.0-beta2
+ * @since {DEPLOY_VERSION}
  */
 class AbstractContentTypeResponseTest extends \PHPUnit_Framework_TestCase
 {

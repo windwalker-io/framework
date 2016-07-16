@@ -13,7 +13,7 @@ use Windwalker\Record\Record;
 /**
  * The StubRecord class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class StubRecord extends Record
 {

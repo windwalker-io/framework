@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Cache;
 /**
  * Interface EdgeCacheInterface
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 interface EdgeCacheInterface
 {

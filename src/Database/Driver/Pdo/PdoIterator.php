@@ -13,7 +13,7 @@ use Windwalker\Database\Iterator\DataIterator;
 /**
  * The PdoIterator class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class PdoIterator extends DataIterator
 {

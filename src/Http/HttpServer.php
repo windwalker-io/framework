@@ -18,7 +18,7 @@ use Windwalker\Http\Response\Response;
 /**
  * The Server class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class HttpServer
 {

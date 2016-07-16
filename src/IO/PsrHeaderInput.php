@@ -13,7 +13,7 @@ use Windwalker\Http\Helper\HeaderHelper;
 /**
  * The HeaderInput class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class PsrHeaderInput extends Input
 {

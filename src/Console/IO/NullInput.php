@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\Input\CliInput;
 /**
  * The YesManInput class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class NullInput extends CliInput
 {

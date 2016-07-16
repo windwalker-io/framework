@@ -15,7 +15,7 @@ use Windwalker\Http\Stream\Stream;
 /**
  * The HttpCompressor class to support gzip encoding.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class HttpCompressor
 {

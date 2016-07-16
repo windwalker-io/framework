@@ -14,7 +14,7 @@ use Windwalker\Http\Response\Response;
 /**
  * The MockOutput class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class StubOutput extends Output
 {

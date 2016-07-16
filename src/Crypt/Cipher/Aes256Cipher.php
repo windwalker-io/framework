@@ -11,7 +11,7 @@ namespace Windwalker\Crypt\Cipher;
 /**
  * The Aes256Cipher class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class Aes256Cipher extends AbstractCipher
 {

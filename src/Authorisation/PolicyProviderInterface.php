@@ -11,7 +11,7 @@ namespace Windwalker\Authorisation;
 /**
  * Interface PolicyInterface
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 interface PolicyProviderInterface
 {

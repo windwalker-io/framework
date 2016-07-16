@@ -15,7 +15,7 @@ use Windwalker\Http\Stream\Stream;
 /**
  * The StubContentTypeResponse class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class StubContentTypeResponse extends AbstractContentTypeResponse
 {

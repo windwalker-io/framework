@@ -14,7 +14,7 @@ use Windwalker\Crypt\CryptHelper;
 /**
  * Test class of PhpAesCipher
  *
- * @since 3.0-beta2
+ * @since {DEPLOY_VERSION}
  */
 class PhpAesCipherTest extends \PHPUnit_Framework_TestCase
 {

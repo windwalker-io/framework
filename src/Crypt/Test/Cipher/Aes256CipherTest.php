@@ -13,7 +13,7 @@ use Windwalker\Crypt\Cipher\Aes256Cipher;
 /**
  * Test class of CipherBlowfish
  *
- * @since 3.0-beta2
+ * @since {DEPLOY_VERSION}
  */
 class Aes256CipherTest extends AbstractOpensslTestCase
 {

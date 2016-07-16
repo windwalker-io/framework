@@ -14,7 +14,7 @@ use Windwalker\Database\Driver\AbstractDatabaseDriver;
 /**
  * The DbContainer class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class DatabaseContainer
 {

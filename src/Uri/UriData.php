@@ -33,7 +33,7 @@ use Traversable;
  * @method string path($uri = null)
  * @method string scheme()
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
 {

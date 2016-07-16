@@ -11,7 +11,7 @@ namespace Windwalker\Console\Prompter;
 /**
  * The Prompter class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class Prompter
 {

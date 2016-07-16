@@ -13,7 +13,7 @@ use Windwalker\Middleware\AbstractMiddleware;
 /**
  * The StubDataMiddleware class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class StubDataMiddleware extends AbstractMiddleware
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Http\Response;
 /**
  * The HtmlResponse class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 class JsonResponse extends TextResponse
 {
@@ -25,9 +25,10 @@ class JsonResponse extends TextResponse
 	/**
 	 * Constructor.
 	 *
-	 * @param  string  $json     The JSON body data.
-	 * @param  int     $status   The status code.
-	 * @param  array   $headers  The custom headers.
+	 * @param  string $json    The JSON body data.
+	 * @param  int    $status  The status code.
+	 * @param  array  $headers The custom headers.
+	 * @param  int    $options Json encode options.
 	 */
 	public function __construct($json = '', $status = 200, array $headers = array(), $options = 0)
 	{
@@ -70,5 +71,18 @@ class JsonResponse extends TextResponse
 		}
 
 		return $json;
+	}
+
+	/**
+	 * withContent
+	 *
+	 * @param   mixed $content
+	 *
+	 * @return  static
+	 * @throws \InvalidArgumentException
+	 */
+	public function withContent($content)
+	{
+		return parent::withContent($this->encode($content));
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of phoenix project.
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\AbstractDatabaseDriver;
 /**
  * The DatabaseMapperInterface class.
  *
- * @since  3.0-beta2
+ * @since  {DEPLOY_VERSION}
  */
 interface DatabaseMapperInterface extends DataMapperInterface
 {
