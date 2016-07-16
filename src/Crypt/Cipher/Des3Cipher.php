@@ -12,8 +12,6 @@ namespace Windwalker\Crypt\Cipher;
  * The Cipher3DES class.
  * 
  * @since  2.0
- *         
- * @deprecated
  */
 class Des3Cipher extends AbstractCipher
 {
@@ -22,12 +20,12 @@ class Des3Cipher extends AbstractCipher
 	 * @see    http://php.net/manual/en/function.openssl-get-cipher-methods.php
 	 * @since  3.0
 	 */
-	protected $method = 'des3';
+	protected $method = 'des-ede3';
 
 	/**
 	 * Property mode.
 	 *
 	 * @var  string
 	 */
-	protected $mode = '';
+	protected $mode = 'cbc';
 }

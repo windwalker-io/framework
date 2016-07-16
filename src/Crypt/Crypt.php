@@ -15,7 +15,7 @@ use Windwalker\Crypt\Cipher\CipherInterface;
  * 
  * @since  2.0
  */
-class Crypt
+class Crypt implements CryptInterface
 {
 	/**
 	 * Property cipher.

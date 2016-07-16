@@ -15,7 +15,7 @@ use Windwalker\Crypt\Cipher\Des3Cipher;
  *
  * @since 2.0
  */
-class Cipher3DESTest extends AbstractOpensslTestCase
+class Des3CipherTest extends AbstractOpensslTestCase
 {
 	/**
 	 * Test instance.
@@ -52,7 +52,7 @@ class Cipher3DESTest extends AbstractOpensslTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Cipher\McryptCipher::getIVSize
+	 * @covers Windwalker\Crypt\Cipher\Des3Cipher::getIVSize
 	 */
 	public function testGetIVSize()
 	{
