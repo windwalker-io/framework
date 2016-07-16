@@ -77,7 +77,7 @@ class HttpClient implements HttpClientInterface
 	 * @param mixed         $data    The request body data, can be an array of POST data.
 	 * @param array         $headers The headers array.
 	 *
-	 * @return  mixed
+	 * @return  ResponseInterface
 	 */
 	public function download($url, $dest, $data = null, $headers = array())
 	{
