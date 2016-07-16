@@ -71,7 +71,7 @@
         "windwalker/profiler": "self.version",
         "windwalker/query": "self.version",
         "windwalker/record": "self.version",
-        "windwalker/registry": "self.version",
+        "windwalker/structure": "self.version",
         "windwalker/renderer": "self.version",
         "windwalker/router": "self.version",
         "windwalker/session": "self.version",
