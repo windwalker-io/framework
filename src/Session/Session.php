@@ -365,6 +365,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	{
 		$this->bridge->save();
 
+		$this->state = static::STATE_INACTIVE;
+
 		return $this;
 	}
 

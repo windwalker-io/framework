@@ -61,13 +61,6 @@ abstract class AbstractWebApplication extends AbstractApplication
 	protected $platform;
 
 	/**
-	 * Property request.
-	 *
-	 * @var  ServerRequestInterface
-	 */
-	protected $request;
-
-	/**
 	 * Property server.
 	 *
 	 * @var  WebHttpServer
