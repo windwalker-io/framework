@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Compiler;
 /**
  * The CompilerInterface class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 interface EdgeCompilerInterface
 {

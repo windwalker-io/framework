@@ -13,7 +13,7 @@ use Windwalker\Http\Output\HttpCompressor;
 /**
  * The StubHttpCompressor class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class StubHttpCompressor extends HttpCompressor
 {

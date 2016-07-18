@@ -11,7 +11,7 @@ namespace Windwalker\Authorisation;
 /**
  * The Authorisation class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class Authorisation implements AuthorisationInterface
 {

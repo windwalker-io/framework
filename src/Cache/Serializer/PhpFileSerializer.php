@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Serializer;
 /**
  * The PhpFileSerializer class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class PhpFileSerializer implements SerializerInterface
 {

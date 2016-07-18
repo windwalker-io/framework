@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -17,7 +17,7 @@ namespace Windwalker\DI;
  * @method  Container  bind($value, $shared = false, $protected = false)
  * @method  Container  bindShared($protected = false)
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class ClassMeta
 {

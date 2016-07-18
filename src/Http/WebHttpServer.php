@@ -23,7 +23,7 @@ use Windwalker\Uri\UriData;
  * @property-read  UriData        uri
  * @property-read  HttpCompressor compressor
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class WebHttpServer extends HttpServer
 {

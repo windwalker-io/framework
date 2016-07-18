@@ -13,7 +13,7 @@ include_once __DIR__ . '/../lib/php-aes.php';
 /**
  * The PhpAesCipher class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class PhpAesCipher implements CipherInterface
 {

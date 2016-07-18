@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Cache;
 /**
  * The EdgeNullCache class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class EdgeArrayCache implements EdgeCacheInterface
 {

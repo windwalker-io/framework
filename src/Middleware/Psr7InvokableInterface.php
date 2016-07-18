@@ -14,7 +14,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 /**
  * Interface Psr7InvokableInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 interface Psr7InvokableInterface
 {

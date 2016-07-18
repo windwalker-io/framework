@@ -16,7 +16,7 @@ use Windwalker\Http\Stream\Stream;
  *
  * Always return empty data and is only readable. THe headers will still send.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class EmptyResponse extends Response
 {

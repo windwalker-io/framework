@@ -13,7 +13,7 @@ use Windwalker\String\SimpleTemplate;
 /**
  * Test class of SimpleTemplate
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0
  */
 class SimpleTemplateTest extends \PHPUnit_Framework_TestCase
 {

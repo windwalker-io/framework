@@ -16,7 +16,7 @@ use Windwalker\Http\Test\Stub\StubStreamOutput;
 /**
  * Test class of StreamHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0
  */
 class StreamHelperTest extends \PHPUnit_Framework_TestCase
 {

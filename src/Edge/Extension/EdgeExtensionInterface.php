@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Extension;
 /**
  * The EdgeExtensionInterface class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 interface EdgeExtensionInterface
 {

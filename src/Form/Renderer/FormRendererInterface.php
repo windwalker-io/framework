@@ -13,7 +13,7 @@ use Windwalker\Form\Field\AbstractField;
 /**
  * The FormRendererInterface class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 interface FormRendererInterface
 {

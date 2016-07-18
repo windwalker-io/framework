@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Loader;
 /**
  * Interface EdgeLoaderInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 interface EdgeLoaderInterface
 {
