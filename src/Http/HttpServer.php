@@ -122,7 +122,7 @@ class HttpServer
 	{
 		if (version_compare(PHP_VERSION, '5.4', '>=') && $this->handler instanceof \Closure)
 		{
-			$this->handler->bindTo($this);
+			$this->handler = $this->handler->bindTo($this);
 		}
 
 		$response = call_user_func($this->handler, $this->request, $this->response, $errorHandler);
