@@ -14,7 +14,7 @@
         "windwalker/test": "~3.0",
         "windwalker/utilities": "~3.0"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "suggest": {
         "windwalker/event": "Install 2.* if you want to use hooks."
     },

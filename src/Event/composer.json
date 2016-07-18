@@ -13,7 +13,7 @@
     },
     "suggest": {
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
             "Windwalker\\Event\\": ""

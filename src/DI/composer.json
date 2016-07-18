@@ -11,7 +11,7 @@
     "require-dev": {
         "windwalker/test": "~3.0"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
             "Windwalker\\DI\\": ""

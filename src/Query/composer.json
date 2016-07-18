@@ -13,7 +13,7 @@
         "windwalker/database": "~3.0",
         "jdorn/sql-formatter": "1.*"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
             "Windwalker\\Query\\": ""
