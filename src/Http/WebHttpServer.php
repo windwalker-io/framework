@@ -36,7 +36,7 @@ class WebHttpServer extends HttpServer
 	 *
 	 * @var  PsrUri
 	 */
-	protected $uri;
+	protected $psrUri;
 
 	/**
 	 * Property uriData.
@@ -69,7 +69,7 @@ class WebHttpServer extends HttpServer
 	/**
 	 * Property modifiedDate.
 	 *
-	 * @var  string
+	 * @var  \DateTime
 	 */
 	protected $modifiedDate;
 
@@ -88,7 +88,7 @@ class WebHttpServer extends HttpServer
 	 * @param ResponseInterface       $response
 	 * @param OutputInterface         $output
 	 */
-	public function __construct($handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
+	public function __construct($handler = null, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		parent::__construct($handler, $request, $response, $output);
 
@@ -120,6 +120,11 @@ class WebHttpServer extends HttpServer
 	 */
 	public function execute($nextHandler = null)
 	{
+		if (version_compare(PHP_VERSION, '5.4', '>=') && $this->handler instanceof \Closure)
+		{
+			$this->handler->bindTo($this);
+		}
+
 		$response = call_user_func($this->handler, $this->request, $this->response, $nextHandler);
 
 		if (!$response instanceof ResponseInterface)
@@ -246,9 +251,9 @@ class WebHttpServer extends HttpServer
 	 */
 	protected function getSystemUri($requestUri = null, $refresh = false)
 	{
-		if ($this->uri && !$refresh)
+		if ($this->psrUri && !$refresh)
 		{
-			return $this->uri;
+			return $this->psrUri;
 		}
 
 		$uri = $requestUri ? new PsrUri($requestUri) : $this->getRequest()->getUri();
@@ -270,7 +275,7 @@ class WebHttpServer extends HttpServer
 		// Clear the unused parts of the requested URI.
 		$uri = $uri->withFragment('');
 
-		return $this->uri = $uri;
+		return $this->psrUri = $uri;
 	}
 
 	/**

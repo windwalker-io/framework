@@ -65,7 +65,7 @@ class HttpServer
 	 * 
 	 * @return  static  The Server instance.
 	 */
-	public static function createFromGlobals($handler, array $server = array(), array $query = array(), array $body = array(), array $cookies = array(), array $files = array())
+	public static function createFromGlobals($handler = null, array $server = array(), array $query = array(), array $body = array(), array $cookies = array(), array $files = array())
 	{
 		$request  = ServerRequestFactory::createFromGlobals($server, $query, $body, $cookies, $files);
 
@@ -87,7 +87,7 @@ class HttpServer
 	 *
 	 * @return  static  The Server instance.
 	 */
-	public static function create($handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
+	public static function create($handler = null, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		return new static($handler, $request, $response, $output);
 	}
@@ -105,7 +105,7 @@ class HttpServer
 	 * @param   ResponseInterface       $response  The Response object.
 	 * @param   OutputInterface         $output    The Output emitter object.
 	 */
-	public function __construct($handler, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
+	public function __construct($handler = null, ServerRequestInterface $request, ResponseInterface $response = null, OutputInterface $output = null)
 	{
 		$this->handler  = $handler;
 		$this->request  = $request;
@@ -120,6 +120,11 @@ class HttpServer
 	 */
 	public function listen($errorHandler = null)
 	{
+		if (version_compare(PHP_VERSION, '5.4', '>=') && $this->handler instanceof \Closure)
+		{
+			$this->handler->bindTo($this);
+		}
+
 		$response = call_user_func($this->handler, $this->request, $this->response, $errorHandler);
 
 		if (!$response instanceof ResponseInterface)
