@@ -16,7 +16,7 @@ use Windwalker\Crypt\CryptHelper;
  * 
  * @since  2.0
  *         
- * @deprecated
+ * @deprecated  PHP7 already deprecated mcrypt extension
  */
 abstract class AbstractMcryptCipher implements CipherInterface
 {

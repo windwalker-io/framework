@@ -13,7 +13,7 @@ namespace Windwalker\Crypt\Mcrypt;
  * 
  * @since  2.0
  *         
- * @deprecated
+ * @deprecated  PHP7 already deprecated mcrypt extension
  */
 class CipherRijndael256 extends AbstractMcryptCipher
 {

@@ -8,10 +8,12 @@
 
 namespace Windwalker\Crypt\Cipher;
 
-include_once __DIR__ . '/../lib/php-aes.php';
+include_once __DIR__ . '/../lib/aes.class.php';
 
 /**
  * The PhpAesCipher class.
+ *
+ * @see  https://gist.github.com/chrisns/3992815
  *
  * @since  3.0
  */
@@ -41,9 +43,7 @@ class PhpAesCipher implements CipherInterface
 	 */
 	public function decrypt($data, $key = null, $iv = null)
 	{
-		$aes = new \AES($key);
-
-		return $aes->decrypt($data);
+		return \AesCtr::decrypt($data, $key, $this->keyLength);
 	}
 
 	/**
@@ -60,8 +60,6 @@ class PhpAesCipher implements CipherInterface
 	 */
 	public function encrypt($data, $key = null, $iv = null)
 	{
-		$aes = new \AES($key);
-
-		return $aes->encrypt($data);
+		return \AesCtr::encrypt($data, $key, $this->keyLength);
 	}
 }

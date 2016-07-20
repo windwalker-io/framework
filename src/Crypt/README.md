@@ -54,7 +54,7 @@ $password = new Password(Password::BLOWFISH, 15, md5('to be or not to be.'));
 $pass = $password->create('pass1234');
 
 // Note the Sha256 and Sha512 should set cost number higher than 1000
-$password = new Password(Password::BLOWFISH, 5000, md5('to be or not to be.'));
+$password = new Password(Password::SHA512, 5000, md5('to be or not to be.'));
 
 $pass = $password->create('pass1234');
 ```
@@ -78,7 +78,7 @@ $bool = $password->verify('pass1234', $pass);
 
 The `Crypt` object provides different ciphers to encrypt/decrypt your data. Most of these ciphers must use
 PHP openssl functions to work. If your PHP are not available for openssl extension, you can use `PhpAesCipher`
-as default cipher, it is a native PHP implementation of AES by [PHP AES](http://www.phpaes.com/).
+as default cipher, it is a native PHP implementation of AES by [aes.class.php](https://gist.github.com/chrisns/3992815).
 
 ### Use Cipher
 
@@ -108,4 +108,4 @@ $text = $crypt->decrypt($encrypted);
 - [BlowfishCipher](http://en.wikipedia.org/wiki/Blowfish_(cipher))
 - [Aes56Cipher](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
 - [Des3Cipher](http://en.wikipedia.org/wiki/Triple_DES)
-- PhpAesCipher - Only use this when system not support openssl.
+- PhpAesCipher - Only use this when system not support openssl extension.
