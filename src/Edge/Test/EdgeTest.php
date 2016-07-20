@@ -15,7 +15,7 @@ use Windwalker\Edge\Loader\EdgeFileLoader;
 /**
  * Test class of Edge
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0
  */
 class EdgeTest extends AbstractDomTestCase
 {

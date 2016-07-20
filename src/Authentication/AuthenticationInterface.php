@@ -13,7 +13,7 @@ use Windwalker\Authentication\Method\MethodInterface;
 /**
  * Interface AuthenticationInterface
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 interface AuthenticationInterface
 {

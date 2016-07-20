@@ -13,7 +13,7 @@ use Windwalker\Database\Driver\AbstractDatabaseDriver;
 /**
  * The DatabaseMapperInterface class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 interface DatabaseMapperInterface extends DataMapperInterface
 {

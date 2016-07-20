@@ -17,7 +17,7 @@ use Windwalker\Middleware\Psr7InvokableInterface;
 /**
  * The Psr7ChainBuilder class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
 {

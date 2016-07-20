@@ -11,7 +11,7 @@ namespace Windwalker\Http\Response;
 /**
  * The HtmlResponse class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class HtmlResponse extends TextResponse
 {

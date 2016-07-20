@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Cache;
 /**
  * The FileCacheHandler class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class EdgeFileCache implements EdgeCacheInterface
 {

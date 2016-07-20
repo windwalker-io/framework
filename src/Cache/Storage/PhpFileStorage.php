@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Storage;
 /**
  * The PhpFileStorage class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class PhpFileStorage extends FileStorage
 {

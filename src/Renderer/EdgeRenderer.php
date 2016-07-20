@@ -22,7 +22,7 @@ use Windwalker\Renderer\Edge\GlobalContainer;
 /**
  * The EdgeRenderer class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class EdgeRenderer extends AbstractEngineRenderer
 {

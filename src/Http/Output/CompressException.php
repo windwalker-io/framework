@@ -11,7 +11,7 @@ namespace Windwalker\Http\Output;
 /**
  * The CompressException class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class CompressException extends \RuntimeException
 {

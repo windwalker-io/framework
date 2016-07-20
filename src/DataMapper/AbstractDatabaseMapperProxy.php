@@ -53,7 +53,7 @@ use Windwalker\Event\Event;
  * @method  static  DataMapper  where($conditions, ...$args)
  * @method  static  DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class AbstractDatabaseMapperProxy
 {

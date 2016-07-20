@@ -13,7 +13,7 @@ use Psr\Http\Message\StreamInterface;
 /**
  * An response object contains content-type handler.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 abstract class AbstractContentTypeResponse extends Response
 {

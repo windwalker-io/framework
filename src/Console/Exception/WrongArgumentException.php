@@ -11,7 +11,7 @@ namespace Windwalker\Console\Exception;
 /**
  * The WrongArgumentException class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class WrongArgumentException extends \RuntimeException
 {

@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Loader;
 /**
  * The EdgeFileLoader class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class EdgeStringLoader implements EdgeLoaderInterface
 {

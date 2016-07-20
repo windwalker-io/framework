@@ -15,7 +15,7 @@ use Windwalker\Http\Response\Response;
 /**
  * The StubStreamOutput class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class StubStreamOutput extends StreamOutput
 {

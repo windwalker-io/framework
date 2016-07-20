@@ -18,7 +18,7 @@ use Windwalker\Middleware\AbstractMiddleware;
 /**
  * The DbLoggingMiddleware class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.0
  */
 class DbLoggingMiddleware extends AbstractMiddleware implements LoggerAwareInterface
 {

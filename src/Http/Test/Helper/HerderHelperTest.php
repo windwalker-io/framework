@@ -14,7 +14,7 @@ use Windwalker\Http\Response\Response;
 /**
  * Test class of HeaderHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.0
  */
 class HerderHelperTest extends \PHPUnit_Framework_TestCase
 {

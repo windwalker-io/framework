@@ -512,22 +512,14 @@ class Record extends Entity
 	 */
 	public function getKeyName($multiple = false)
 	{
-		// Count the number of keys
-		if (count($this->keys))
+		if ($multiple)
 		{
-			if ($multiple)
-			{
-				// If we want multiple keys, return the raw array.
-				return $this->keys;
-			}
-			else
-			{
-				// If we want the standard method, just return the first key.
-				return $this->keys[0];
-			}
+			return (array) $this->keys;
 		}
 
-		return '';
+		$keys = (array) $this->keys;
+
+		return (string) $keys[0];
 	}
 
 	/**
