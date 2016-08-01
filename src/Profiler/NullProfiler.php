@@ -6,10 +6,9 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-namespace Windwalker\Core\Profiler;
+namespace Windwalker\Profiler;
 
-use Windwalker\Profiler\Point\ProfilerPointInterface;
-use Windwalker\Profiler\ProfilerInterface;
+use Windwalker\Profiler\Point\PointInterface;
 
 /**
  * The NullProfiler class.
@@ -49,7 +48,7 @@ class NullProfiler implements ProfilerInterface
 	 *
 	 * @param   string $name The name of the point.
 	 *
-	 * @return  ProfilerPointInterface  The profile point or the default value.
+	 * @return  PointInterface  The profile point or the default value.
 	 */
 	public function getPoint($name)
 	{
@@ -99,7 +98,7 @@ class NullProfiler implements ProfilerInterface
 	/**
 	 * Get the points in this profiler (from the first to the last).
 	 *
-	 * @return  ProfilerPointInterface[]  An array of points in this profiler.
+	 * @return  PointInterface[]  An array of points in this profiler.
 	 */
 	public function getPoints()
 	{
