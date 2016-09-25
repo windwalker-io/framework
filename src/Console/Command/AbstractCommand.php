@@ -52,7 +52,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	protected $name;
 
 	/**
-	 * The children(SubCommends) storage.
+	 * The children(Subcommands) storage.
 	 *
 	 * @var AbstractCommand[]
 	 *

@@ -204,7 +204,7 @@ class AesCtr extends Aes {
     $nonce = floor(microtime(true)*1000);   // timestamp: milliseconds since 1-Jan-1970
     $nonceMs = $nonce%1000;
     $nonceSec = floor($nonce/1000);
-    $nonceRnd = floor(rand(0, 0xffff));
+    $nonceRnd = floor(mt_rand(0, 0xffff));
     
     for ($i=0; $i<2; $i++) $counterBlock[$i]   = self::urs($nonceMs,  $i*8) & 0xff;
     for ($i=0; $i<2; $i++) $counterBlock[$i+2] = self::urs($nonceRnd, $i*8) & 0xff;
