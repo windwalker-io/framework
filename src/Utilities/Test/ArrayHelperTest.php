@@ -1762,4 +1762,52 @@ class ArrayHelperTest extends AbstractBaseTestCase
 			ArrayHelper::setByPath($data, 'a.b', 'c', '.', 'Non\Exists\Class');
 		}, new \InvalidArgumentException, 'Type or class: Non\Exists\Class not exists');
 	}
+
+	/**
+	 * testRemoveByPath
+	 *
+	 * @return  void
+	 */
+	public function testRemoveByPath()
+	{
+		$data = array(
+			'foo' => array(
+				'bar' => '123'
+			)
+		);
+
+		ArrayHelper::removeByPath($data, 'foo.bar');
+
+		$this->assertFalse(array_key_exists('bar', $data['foo']));
+
+		$data = array(
+			'foo' => array(
+				'bar' => '123'
+			)
+		);
+
+		ArrayHelper::removeByPath($data, 'foo');
+
+		$this->assertFalse(array_key_exists('foo', $data));
+
+		$data = array(
+			'foo' => array(
+				'bar' => '123'
+			)
+		);
+
+		ArrayHelper::removeByPath($data, 'foo.yoo');
+
+		$this->assertEquals('123', $data['foo']['bar']);
+
+		$data = (object) array(
+			'foo' => (object) array(
+				'bar' => '123'
+			)
+		);
+
+		ArrayHelper::removeByPath($data, 'foo.bar');
+
+		$this->assertFalse(property_exists($data->foo, 'bar'));
+	}
 }

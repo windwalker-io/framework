@@ -717,6 +717,68 @@ class ArrayHelper
 	}
 
 	/**
+	 * removeByPath
+	 *
+	 * @param array|object  $data
+	 * @param string        $path
+	 * @param string        $separator
+	 *
+	 * @return  bool
+	 */
+	public static function removeByPath(&$data, $path, $separator = '.')
+	{
+		$nodes = array_values(array_filter(explode($separator, $path), 'strlen'));
+
+		if (empty($nodes))
+		{
+			return false;
+		}
+
+		$previous = null;
+		$dataTmp = &$data;
+
+		foreach ($nodes as $node)
+		{
+			if (is_object($dataTmp))
+			{
+				if (empty($dataTmp->$node))
+				{
+					return false;
+				}
+
+				$previous = &$dataTmp;
+				$dataTmp = &$dataTmp->$node;
+			}
+			elseif (is_array($dataTmp))
+			{
+				if (empty($dataTmp[$node]))
+				{
+					return false;
+				}
+
+				$previous = &$dataTmp;
+				$dataTmp = &$dataTmp[$node];
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		// Now, path go to the end, means we get latest node, set value to this node.
+		if (is_object($previous))
+		{
+			unset($previous->$node);
+		}
+		elseif (is_array($previous))
+		{
+			unset($previous[$node]);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Recursive dump variables and limit by level.
 	 *
 	 * @param   mixed  $data   The variable you want to dump.
