@@ -27,25 +27,26 @@ use Windwalker\IO\Filter\NullFilter;
  * @property    Input         $header
  * @property    FilesInput|PsrFilesInput  $files
  * @property    CookieInput   $cookie
+ * @property    JsonInput     $json
  *
- * @method      integer  getInt()       getInt($name, $default = null)    Get a signed integer.
- * @method      integer  getUint()      getUint($name, $default = null)   Get an unsigned integer.
- * @method      float    getFloat()     getFloat($name, $default = null)  Get a floating-point number.
- * @method      boolean  getBool()      getBool($name, $default = null)   Get a boolean.
- * @method      boolean  getBoolean()   getBoolean($name, $default = null)   Get a boolean.
- * @method      string   getWord()      getWord($name, $default = null)
- * @method      string   getAlnum()     getAlnum($name, $default = null)
- * @method      string   getCmd()       getCmd($name, $default = null)
- * @method      string   getBase64()    getBase64($name, $default = null)
- * @method      string   getString()    getString($name, $default = null)
- * @method      string   getArray()     getArray($name, $default = null)
- * @method      string   getHtml()      getHtml($name, $default = null)
- * @method      string   getPath()      getPath($name, $default = null)
- * @method      string   getUsername()  getUsername($name, $default = null)
- * @method      string   getEmail()     getEmail($name, $default = null)
- * @method      string   getUrl()       getUrl($name, $default = null)  Get URL
- * @method      string   getRaw()       getRaw($name, $default = null)  Get raw data
- * @method      mixed    getVar()       getVar($name, $default = null)  Get string or array and filter them.
+ * @method      integer  getInt()       getInt($name, $default = null, $separator = '.')    Get a signed integer.
+ * @method      integer  getUint()      getUint($name, $default = null, $separator = '.')   Get an unsigned integer.
+ * @method      float    getFloat()     getFloat($name, $default = null, $separator = '.')  Get a floating-point number.
+ * @method      boolean  getBool()      getBool($name, $default = null, $separator = '.')   Get a boolean.
+ * @method      boolean  getBoolean()   getBoolean($name, $default = null, $separator = '.')   Get a boolean.
+ * @method      string   getWord()      getWord($name, $default = null, $separator = '.')
+ * @method      string   getAlnum()     getAlnum($name, $default = null, $separator = '.')
+ * @method      string   getCmd()       getCmd($name, $default = null, $separator = '.')
+ * @method      string   getBase64()    getBase64($name, $default = null, $separator = '.')
+ * @method      string   getString()    getString($name, $default = null, $separator = '.')
+ * @method      string   getArray()     getArray($name, $default = null, $separator = '.')
+ * @method      string   getHtml()      getHtml($name, $default = null, $separator = '.')
+ * @method      string   getPath()      getPath($name, $default = null, $separator = '.')
+ * @method      string   getUsername()  getUsername($name, $default = null, $separator = '.')
+ * @method      string   getEmail()     getEmail($name, $default = null, $separator = '.')
+ * @method      string   getUrl()       getUrl($name, $default = null, $separator = '.')  Get URL
+ * @method      string   getRaw()       getRaw($name, $default = null, $separator = '.')  Get raw data
+ * @method      mixed    getVar()       getVar($name, $default = null, $separator = '.')  Get string or array and filter them.
  *
  * @since 2.0
  */
@@ -438,7 +439,9 @@ class Input implements \Serializable, \Countable
 				throw new \BadMethodCallException(get_called_class() . '::' . $name . '() has no argument.');
 			}
 
-			return $this->get($arguments[0], $default, $filter);
+			$separator = isset($arguments[2]) ? $arguments[2] : '.';
+
+			return $this->get($arguments[0], $default, $filter, $separator);
 		}
 	}
 
