@@ -292,7 +292,16 @@ class Entity extends Data
 	{
 		$key = $this->resolveAlias($key);
 
-		$this->data[$key] = $value;
+		$mutator = 'set' . $this->toCamelCase($key) . 'Attribute';
+
+		if (is_callable(array($this, $mutator)))
+		{
+			$this->$mutator($value);
+		}
+		else
+		{
+			$this->data[$key] = $value;
+		}
 
 		return $this;
 	}
@@ -311,8 +320,15 @@ class Entity extends Data
 	{
 		$key = $this->resolveAlias($key);
 
+		$accessor = 'get' . $this->toCamelCase($key) . 'Attribute';
+
 		if (isset($this->data[$key]))
 		{
+			if (is_callable(array($this, $accessor)))
+			{
+				return $this->$accessor($this->data[$key]);
+			}
+
 			return $this->data[$key];
 		}
 
@@ -465,5 +481,20 @@ class Entity extends Data
 		}
 
 		return $this;
+	}
+
+	/**
+	 * toCamelCase
+	 *
+	 * @param  string  $input
+	 *
+	 * @return  string
+	 */
+	protected function toCamelCase($input)
+	{
+		$input = str_replace('_', ' ', $input);
+		$input = ucwords($input);
+
+		return str_ireplace(' ', '', $input);
 	}
 }

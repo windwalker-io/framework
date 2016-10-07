@@ -61,20 +61,6 @@ class Record extends Entity
 	protected $autoIncrement = null;
 
 	/**
-	 * Property aliases.
-	 *
-	 * @var  array
-	 */
-	protected $aliases = array();
-
-	/**
-	 * Property fields.
-	 *
-	 * @var  array
-	 */
-	protected $fields = null;
-
-	/**
 	 * DatabaseDriver object.
 	 *
 	 * @var    AbstractDatabaseDriver
@@ -218,10 +204,7 @@ class Record extends Entity
 				continue;
 			}
 
-			// Only process values in fields
-			$k = $this->resolveAlias($k);
-
-			$this->data[$k] = $v;
+			$this->$k = $v;
 		}
 
 		// Event
