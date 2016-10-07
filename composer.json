@@ -23,11 +23,13 @@
         "illuminate/view": "4.1.*",
         "mustache/mustache": "~2.0",
         "league/plates": "~3.0",
+        "php-http/httplug": "~1.0",
 
         "windwalker/phpunit-skeleton-generator": ">=2.0.2"
     },
     "suggest": {
-        "symfony/yaml": "Install ~3.0 if you require YAML support."
+        "symfony/yaml": "Install ~2.0|~3.0 if you require YAML support.",
+        "php-http/httplug": "Install ~1.0 if you require HttpClient as HttpPlug implementation."
     },
     "autoload": {
         "psr-4": {

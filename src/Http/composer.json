@@ -12,7 +12,8 @@
     },
     "require-dev": {
         "windwalker/environment": "~3.0",
-        "windwalker/test": "~3.0"
+        "windwalker/test": "~3.0",
+        "php-http/httplug": "~1.0"
     },
     "minimum-stability": "beta",
     "autoload": {

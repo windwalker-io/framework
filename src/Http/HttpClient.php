@@ -8,6 +8,12 @@
 
 namespace Windwalker\Http;
 
+if (!interface_exists('Http\Client\HttpClient'))
+{
+	include_once __DIR__ . '/HttpPlugClientInterface.php';
+}
+
+use Http\Client\HttpClient as HttpPlugClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Windwalker\Http\Request\Request;
@@ -22,7 +28,7 @@ use Windwalker\Uri\UriHelper;
  * 
  * @since  2.1
  */
-class HttpClient implements HttpClientInterface
+class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 {
 	/**
 	 * Property options.
@@ -382,5 +388,20 @@ class HttpClient implements HttpClientInterface
 		}
 
 		return $request;
+	}
+
+	/**
+	 * Sends a PSR-7 request.
+	 *
+	 * @param RequestInterface $request
+	 *
+	 * @return ResponseInterface
+	 *
+	 * @throws \Http\Client\Exception If an error happens during processing the request.
+	 * @throws \Exception             If processing the request is impossible (eg. bad configuration).
+	 */
+	public function sendRequest(RequestInterface $request)
+	{
+		return $this->send($request);
 	}
 }
