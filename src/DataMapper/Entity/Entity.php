@@ -412,6 +412,16 @@ class Entity extends Data
 	}
 
 	/**
+	 * Is this object has properties?
+	 *
+	 * @return  boolean
+	 */
+	public function notNull()
+	{
+		return !$this->isNull();
+	}
+
+	/**
 	 * Dump all data as array
 	 *
 	 * @param bool $all
