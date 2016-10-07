@@ -20,10 +20,9 @@
         "symfony/yaml": "~2.0|~3.0",
 
         "twig/twig": "~1.0",
-        "illuminate/view": "4.1.*",
+        "illuminate/view": "4.1.*|~5.0",
         "mustache/mustache": "~2.0",
         "league/plates": "~3.0",
-        "php-http/httplug": "~1.0",
 
         "windwalker/phpunit-skeleton-generator": ">=2.0.2"
     },
