@@ -37,7 +37,7 @@ class FormDataInput extends Input
 		{
 			$raw = static::loadRawFromRequest();
 
-			if (strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') === 0)
+			if (isset($_SERVER['CONTENT_TYPE']) && strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') === 0)
 			{
 				static::parseFormData($raw, $this->data);
 			}
