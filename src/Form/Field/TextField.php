@@ -40,8 +40,19 @@ class TextField extends AbstractField
 		$attrs['maxlength'] = $this->getAttribute('maxlength');
 		$attrs['readonly'] = $this->getAttribute('readonly');
 		$attrs['disabled'] = $this->getAttribute('disabled');
+		$attrs['autofocus'] = $this->getAttribute('autofocus');
+		$attrs['autocomplete'] = $this->getAttribute('autocomplete');
+		$attrs['form'] = $this->getAttribute('form');
+		$attrs['formenctype'] = $this->getAttribute('formenctype');
+		$attrs['formmethod'] = $this->getAttribute('formmethod');
+		$attrs['formnovalidate'] = $this->getAttribute('formnovalidate');
+		$attrs['formtarget'] = $this->getAttribute('formtarget');
+		$attrs['list'] = $this->getAttribute('list');
+		$attrs['onchange'] = $this->getAttribute('onchange');
+		$attrs['onfocus'] = $this->getAttribute('onfocus');
 		$attrs['onchange'] = $this->getAttribute('onchange');
 		$attrs['value']    = $this->escape($this->getValue());
+
 		$attrs['required'] = $this->required;
 
 		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));

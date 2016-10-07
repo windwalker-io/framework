@@ -862,6 +862,30 @@ abstract class AbstractField
 	}
 
 	/**
+	 * attr
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 *
+	 * @return  static
+	 */
+	public function attr($name, $value = null)
+	{
+		$attrs = (array) $this->getAttribute('attribs');
+
+		if ($value === null)
+		{
+			return isset($attrs[$name]) ? $attrs[$name] : null;
+		}
+
+		$attrs[$name] = $value;
+
+		$this->setAttribute('attribs', $attrs);
+
+		return $this;
+	}
+
+	/**
 	 * append
 	 *
 	 * @param string $attr
@@ -956,6 +980,20 @@ abstract class AbstractField
 	public function getType()
 	{
 		return $this->type;
+	}
+
+	/**
+	 * Method to set property type
+	 *
+	 * @param   string $type
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setType($type)
+	{
+		$this->type = $type;
+
+		return $this;
 	}
 
 	/**
