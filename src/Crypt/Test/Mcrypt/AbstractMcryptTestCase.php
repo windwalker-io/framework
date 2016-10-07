@@ -43,6 +43,11 @@ abstract class AbstractMcryptTestCase extends \PHPUnit_Framework_TestCase
 		{
 			$this->markTestSkipped('Mcrypt Extension not available.');
 		}
+
+		if (version_compare(PHP_VERSION, '7.1', '>='))
+		{
+			$this->markTestSkipped('No longer test mcrypt after PHP 7.1 since it has been deprecated.');
+		}
 	}
 
 	/**
