@@ -44,7 +44,7 @@ class StructureHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\StructureHelper::isAssociativeArray
+	 * @covers \Windwalker\Structure\StructureHelper::isAssociativeArray
 	 */
 	public function testIsAssociativeArray()
 	{
@@ -58,7 +58,7 @@ class StructureHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\StructureHelper::toObject
+	 * @covers \Windwalker\Structure\StructureHelper::toObject
 	 */
 	public function testToObject()
 	{
@@ -82,7 +82,7 @@ class StructureHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\StructureHelper::getByPath
+	 * @covers \Windwalker\Structure\StructureHelper::getByPath
 	 */
 	public function testGetByPath()
 	{
@@ -114,7 +114,7 @@ class StructureHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\StructureHelper::getByPath
+	 * @covers \Windwalker\Structure\StructureHelper::getByPath
 	 */
 	public function testGetByPathWithObject()
 	{
@@ -145,7 +145,7 @@ class StructureHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\StructureHelper::setByPath
+	 * @covers \Windwalker\Structure\StructureHelper::setByPath
 	 */
 	public function testSetByPath()
 	{
@@ -179,11 +179,49 @@ class StructureHelperTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * testRemoveByPath
+	 *
+	 * @return  void
+	 */
+	public function testRemoveByPath()
+	{
+		$data = array(
+			'foo' => array(
+				'bar' => '123'
+			)
+		);
+
+		StructureHelper::removeByPath($data, 'foo.bar');
+
+		$this->assertFalse(array_key_exists('bar', $data['foo']));
+
+		$data = array(
+			'foo' => array(
+				'bar' => '123'
+			)
+		);
+
+		StructureHelper::removeByPath($data, 'foo');
+
+		$this->assertFalse(array_key_exists('foo', $data));
+
+		$data = array(
+			'foo' => array(
+				'bar' => '123'
+			)
+		);
+
+		StructureHelper::removeByPath($data, 'foo.yoo');
+
+		$this->assertEquals('123', $data['foo']['bar']);
+	}
+
+	/**
 	 * Method to test getPathNodes().
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\StructureHelper::getPathNodes
+	 * @covers \Windwalker\Structure\StructureHelper::getPathNodes
 	 */
 	public function testGetPathNodes()
 	{
@@ -196,7 +234,7 @@ class StructureHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Structure\StructureHelper::flatten
+	 * @covers  \Windwalker\Structure\StructureHelper::flatten
 	 * @since   2.0
 	 */
 	public function testFlatten()
@@ -270,7 +308,7 @@ class StructureHelperTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider  seedTestToArray
-	 * @covers        Windwalker\Utilities\ArrayHelper::toArray
+	 * @covers        \Windwalker\Utilities\ArrayHelper::toArray
 	 */
 	public function testToArray($input, $recursive, $expect)
 	{

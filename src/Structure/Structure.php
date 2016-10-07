@@ -158,6 +158,20 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	}
 
 	/**
+	 * remove
+	 *
+	 * @param   string  $path
+	 *
+	 * @return  static
+	 */
+	public function remove($path)
+	{
+		StructureHelper::removeByPath($this->data, $path, $this->separator);
+
+		return $this;
+	}
+
+	/**
 	 * Reset all data.
 	 *
 	 * @return  static

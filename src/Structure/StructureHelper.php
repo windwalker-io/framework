@@ -253,7 +253,7 @@ class StructureHelper
 		{
 			if (is_array($dataTmp))
 			{
-				if (empty($dataTmp[$node]))
+				if (!isset($dataTmp[$node]))
 				{
 					$dataTmp[$node] = array();
 				}
@@ -270,6 +270,51 @@ class StructureHelper
 
 		// Now, path go to the end, means we get latest node, set value to this node.
 		$dataTmp = $value;
+
+		return true;
+	}
+
+	/**
+	 * removeByPath
+	 *
+	 * @param array   $data
+	 * @param string  $path
+	 * @param string  $separator
+	 *
+	 * @return  bool
+	 */
+	public static function removeByPath(array &$data, $path, $separator = '.')
+	{
+		$nodes = static::getPathNodes($path, $separator);
+
+		if (empty($nodes))
+		{
+			return false;
+		}
+
+		$previous = null;
+		$dataTmp = &$data;
+
+		foreach ($nodes as $node)
+		{
+			if (is_array($dataTmp))
+			{
+				if (empty($dataTmp[$node]))
+				{
+					return false;
+				}
+
+				$previous = &$dataTmp;
+				$dataTmp = &$dataTmp[$node];
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		// Now, path go to the end, means we get latest node, set value to this node.
+		unset($previous[$node]);
 
 		return true;
 	}
