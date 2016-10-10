@@ -20,7 +20,7 @@
         "symfony/yaml": "~2.0|~3.0",
 
         "twig/twig": "~1.0",
-        "illuminate/view": "4.1.*|~5.0",
+        "illuminate/view": "4.1.*",
         "mustache/mustache": "~2.0",
         "league/plates": "~3.0",
 
