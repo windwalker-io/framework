@@ -231,4 +231,16 @@ class OutputFilter
 	{
 		return preg_replace("'<style[^>]*>.*?</style>'si", '', $string);
 	}
+
+	/**
+	 * stripLinks
+	 *
+	 * @param   string  $string
+	 *
+	 * @return  mixed
+	 */
+	public static function stripLinks($string)
+	{
+		return preg_replace('/<link[^>]*>/', '', $string);
+	}
 }
