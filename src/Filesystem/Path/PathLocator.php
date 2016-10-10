@@ -9,7 +9,6 @@
 namespace Windwalker\Filesystem\Path;
 
 use Windwalker\Filesystem\Filesystem;
-use Windwalker\Filesystem\Path;
 
 if (!class_exists('CallbackFilterIterator'))
 {

@@ -248,6 +248,8 @@ abstract class AbstractField
 		$attrs['for']   = $this->getAttribute('for', $this->getId());
 		$attrs['title'] = $this->getAttribute('description');
 
+		$attrs = array_merge($attrs, (array) $this->getAttribute('labelAttribs'));
+
 		if ($this->form && $this->form->getRenderer())
 		{
 			return $this->form->getRenderer()->renderLabel($this, $attrs);
@@ -282,6 +284,8 @@ abstract class AbstractField
 	{
 		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
 		$attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
+
+		$attrs = array_merge($attrs, (array) $this->getAttribute('controlAttribs'));
 
 		if ($this->form && $this->form->getRenderer())
 		{
@@ -867,7 +871,7 @@ abstract class AbstractField
 	 * @param string $name
 	 * @param mixed  $value
 	 *
-	 * @return  static
+	 * @return  static|mixed
 	 */
 	public function attr($name, $value = null)
 	{
@@ -881,6 +885,54 @@ abstract class AbstractField
 		$attrs[$name] = $value;
 
 		$this->setAttribute('attribs', $attrs);
+
+		return $this;
+	}
+
+	/**
+	 * controlAttr
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 *
+	 * @return  static|mixed
+	 */
+	public function controlAttr($name, $value = null)
+	{
+		$attrs = (array) $this->getAttribute('controlAttribs');
+
+		if ($value === null)
+		{
+			return isset($attrs[$name]) ? $attrs[$name] : null;
+		}
+
+		$attrs[$name] = $value;
+
+		$this->setAttribute('controlAttribs', $attrs);
+
+		return $this;
+	}
+
+	/**
+	 * labelAttr
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 *
+	 * @return  static|mixed
+	 */
+	public function labelAttr($name, $value = null)
+	{
+		$attrs = (array) $this->getAttribute('labelAttribs');
+
+		if ($value === null)
+		{
+			return isset($attrs[$name]) ? $attrs[$name] : null;
+		}
+
+		$attrs[$name] = $value;
+
+		$this->setAttribute('labelAttribs', $attrs);
 
 		return $this;
 	}

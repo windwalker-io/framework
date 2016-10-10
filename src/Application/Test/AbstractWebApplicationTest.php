@@ -8,16 +8,13 @@
 
 namespace Windwalker\Application\Test;
 
-use Windwalker\Application\Test\Mock\MockResponse;
 use Windwalker\Application\Test\Stub\StubWeb;
 use Windwalker\Environment\WebEnvironment;
 use Windwalker\Http\Helper\HeaderHelper;
 use Windwalker\Http\Output\NoHeaderOutput;
-use Windwalker\Http\Output\Output;
 use Windwalker\Http\Request\ServerRequestFactory;
 use Windwalker\Http\Test\Mock\MockOutput;
 use Windwalker\Http\WebHttpServer;
-use Windwalker\Test\TestHelper;
 
 /**
  * Test class of AbstractWebApplication

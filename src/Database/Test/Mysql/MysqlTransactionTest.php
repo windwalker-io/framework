@@ -9,7 +9,6 @@
 namespace Windwalker\Database\Test\Mysql;
 
 use Windwalker\Database\Driver\Mysql\MysqlTransaction;
-use Windwalker\DataMapper\DataMapper;
 
 /**
  * Test class of MysqlTransaction

@@ -8,8 +8,6 @@
 
 namespace Windwalker\Database\Driver;
 
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Windwalker\Database\Command\AbstractDatabase;
 use Windwalker\Database\Command\AbstractReader;
 use Windwalker\Database\Command\AbstractTable;

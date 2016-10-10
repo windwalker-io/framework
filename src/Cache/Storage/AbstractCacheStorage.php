@@ -11,7 +11,6 @@ namespace Windwalker\Cache\Storage;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
-use Windwalker\Cache\Item\CacheItem;
 
 /**
  * Class AbstractCacheStorage

@@ -9,7 +9,6 @@
 namespace Windwalker\Http\Output;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use Windwalker\Http\Helper\HeaderHelper;
 
 /**

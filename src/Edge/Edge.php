@@ -14,7 +14,6 @@ use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Compiler\EdgeCompilerInterface;
 use Windwalker\Edge\Compiler\EdgeCompiler;
 use Windwalker\Edge\Extension\EdgeExtensionInterface;
-use Windwalker\Edge\Loader\EdgeFileLoader;
 use Windwalker\Edge\Loader\EdgeLoaderInterface;
 use Windwalker\Edge\Loader\EdgeStringLoader;
 

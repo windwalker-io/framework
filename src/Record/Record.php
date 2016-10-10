@@ -16,7 +16,6 @@ use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherInterface;
 use Windwalker\Event\Event;
 use Windwalker\Event\ListenerMapper;
-use Windwalker\Query\Query;
 use Windwalker\Record\Exception\NoResultException;
 
 /**

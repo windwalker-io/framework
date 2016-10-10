@@ -9,7 +9,6 @@
 namespace Windwalker\Database\Driver\Pdo;
 
 use Windwalker\Database\Command\AbstractReader;
-use Windwalker\Query\Query;
 
 /**
  * Class PdoReader
