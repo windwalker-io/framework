@@ -51,8 +51,6 @@ class TextareaField extends TextField
 
 		$attrs['cols'] = $this->getAttribute('cols');
 		$attrs['rows'] = $this->getAttribute('rows');
-
-		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 	}
 
 	/**

@@ -35,8 +35,6 @@ class SpacerField extends AbstractField
 	{
 		$attrs['id']    = $this->getAttribute('id', $this->getId());
 		$attrs['class'] = $this->getAttribute('class');
-
-		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 	}
 
 	/**

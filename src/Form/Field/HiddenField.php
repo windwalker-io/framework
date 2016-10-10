@@ -38,8 +38,6 @@ class HiddenField extends AbstractField
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['onchange'] = $this->getAttribute('onchange');
 		$attrs['value']    = $this->getValue();
-
-		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 	}
 }
 

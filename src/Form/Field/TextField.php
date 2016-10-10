@@ -54,7 +54,5 @@ class TextField extends AbstractField
 		$attrs['value']    = $this->escape($this->getValue());
 
 		$attrs['required'] = $this->required;
-
-		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 	}
 }

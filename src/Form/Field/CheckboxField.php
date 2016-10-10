@@ -43,7 +43,5 @@ class CheckboxField extends AbstractField
 		$attrs['value']    = $this->getAttribute('value');
 		$attrs['checked']  = $value ? 'true' : null;
 		$attrs['required'] = $this->required;
-
-		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 	}
 }

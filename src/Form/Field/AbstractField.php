@@ -233,6 +233,8 @@ abstract class AbstractField
 
 		$this->prepare($attrs);
 
+		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
+
 		return $attrs;
 	}
 
@@ -1041,7 +1043,7 @@ abstract class AbstractField
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function setType($type)
+	public function type($type)
 	{
 		$this->type = $type;
 

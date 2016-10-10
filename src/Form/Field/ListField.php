@@ -73,8 +73,6 @@ class ListField extends AbstractField
 		$attrs['onchange'] = $this->getAttribute('onchange');
 		$attrs['multiple'] = $this->getAttribute('multiple');
 		$attrs['required'] = $this->required;
-
-		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 	}
 
 	/**

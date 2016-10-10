@@ -53,8 +53,6 @@ class ButtonField extends AbstractField
 		$attrs['formtarget'] = $this->getAttribute('formtarget');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['required'] = $this->required;
-
-		$attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 	}
 
 	/**
