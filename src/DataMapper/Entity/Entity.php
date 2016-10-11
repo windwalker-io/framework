@@ -292,7 +292,7 @@ class Entity extends Data
 	{
 		$key = $this->resolveAlias($key);
 
-		$mutator = 'set' . $this->toCamelCase($key) . 'Attribute';
+		$mutator = 'set' . $this->toCamelCase($key) . 'Value';
 
 		if (is_callable(array($this, $mutator)))
 		{
@@ -320,7 +320,7 @@ class Entity extends Data
 	{
 		$key = $this->resolveAlias($key);
 
-		$accessor = 'get' . $this->toCamelCase($key) . 'Attribute';
+		$accessor = 'get' . $this->toCamelCase($key) . 'Value';
 
 		if (isset($this->data[$key]))
 		{
