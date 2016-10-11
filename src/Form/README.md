@@ -279,13 +279,35 @@ $form->addField(new TextField('name', 'Label'));
 
 ### Set Attributes
 
+You can set some attributes to field by `set()` or `setAttribute()`, this method will only allow standard
+ HTML attributes inject to latest rendered result.
+
 ``` php
 $form->addField(new TextField('name'))
     ->label('Label')
     ->set('id', 'my-name')
     ->set('class', 'col-md-8 form-input')
-    ->set('onclick', 'return false;');
+    ->set('onclick', 'return false;')
+    ->set('labelClass', 'form-label') // <-- This will add to <label class="...">
+    ->set('data-my-attr', 'foo'); // <-- This custom attribute will not work
 ```
+
+If you want to set custom data attributes to make your inputs work with some JS frameworks (e.g. Vue, Angular, Bootstrap),
+you can use `attr()` to directly set HTML attributes.
+
+``` php
+$form->addField(new TextField('name'))
+    ->label('Label')
+    ->set('class', 'col-md-8 form-input')
+    ->attr('v-on:click', 'foo()')
+    ->attr(':value', 'bar')
+    ->attr('data-toggle', 'tooltip');
+```
+
+These custom directives will directly add to HTML. `attr()` method is like jQuery `attr()`, if you don't pass
+second param, this method will be a getter to return attribute value.
+
+You can also set attribute to input wrapper and label, use `controlAttr()` and `labelAttr()`.
 
 ### Required, Disabled and Readonly
 

@@ -148,6 +148,11 @@ See: [SUPER GLOBALS](http://php.net/manual/en/language.variables.superglobals.ph
 $method = $input->getMethod();
 ```
 
+## Json Input
+
+If you send a request with json body or `content-type: application/json`, you can use `$input->json` to
+get `JsonInput` and parse json values.
+
 ## Files Input
 
 The format that PHP returns file data in for arrays can at times be awkward, especially when dealing with arrays of files. 
