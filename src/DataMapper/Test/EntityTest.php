@@ -9,6 +9,7 @@
 namespace Windwalker\DataMapper\Test;
 
 use Windwalker\DataMapper\Entity\Entity;
+use Windwalker\DataMapper\Test\Stub\StubEntity;
 
 /**
  * Test class of Entity
@@ -115,7 +116,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\Entity\Entity::addField
+	 * @covers \Windwalker\DataMapper\Entity\Entity::addField
 	 */
 	public function testAddField()
 	{
@@ -131,7 +132,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\Entity\Entity::removeField
+	 * @covers \Windwalker\DataMapper\Entity\Entity::removeField
 	 */
 	public function testRemoveField()
 	{
@@ -142,5 +143,31 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 		$data = $this->instance->dump();
 
 		$this->assertFalse(isset($data['content']));
+	}
+
+	/**
+	 * testAccessor
+	 *
+	 * @return  void
+	 */
+	public function testAccessor()
+	{
+		$entity = new StubEntity;
+
+		$this->assertEquals('foo_bar', $entity->foo_bar);
+	}
+
+	/**
+	 * testMutator
+	 *
+	 * @return  void
+	 */
+	public function testMutator()
+	{
+		$entity = new StubEntity;
+
+		$entity->flower_sakura = 'yoo';
+
+		$this->assertEquals('yoo_bar', $entity->flower_sakura);
 	}
 }

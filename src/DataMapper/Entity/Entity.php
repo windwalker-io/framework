@@ -322,17 +322,19 @@ class Entity extends Data
 
 		$accessor = 'get' . $this->toCamelCase($key) . 'Value';
 
-		if (isset($this->data[$key]))
-		{
-			if (is_callable(array($this, $accessor)))
-			{
-				return $this->$accessor($this->data[$key]);
-			}
+		$value = isset($this->data[$key]) ? $this->data[$key] : null;
 
-			return $this->data[$key];
+		if (is_callable(array($this, $accessor)))
+		{
+			return $this->$accessor($value);
 		}
 
-		return $default;
+		if ($value === null)
+		{
+			return $default;
+		}
+
+		return $value;
 	}
 
 	/**
