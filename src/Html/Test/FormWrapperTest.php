@@ -52,7 +52,7 @@ class FormWrapperTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Form\FormWrapper::create
+	 * @covers \Windwalker\Html\Form\FormWrapper::create
 	 */
 	public function testCreate()
 	{
@@ -68,7 +68,7 @@ class FormWrapperTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Form\FormWrapper::start
+	 * @covers \Windwalker\Html\Form\FormWrapper::start
 	 */
 	public function testStart()
 	{
@@ -84,7 +84,7 @@ class FormWrapperTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Form\FormWrapper::end
+	 * @covers \Windwalker\Html\Form\FormWrapper::end
 	 */
 	public function testEnd()
 	{
@@ -103,7 +103,7 @@ class FormWrapperTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Form\FormWrapper::*
+	 * @covers \Windwalker\Html\Form\FormWrapper::*
 	 */
 	public function testRenderStart()
 	{

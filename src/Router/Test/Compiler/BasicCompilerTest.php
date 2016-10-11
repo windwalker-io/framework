@@ -117,7 +117,7 @@ class BasicCompilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Compiler\BasicCompiler::compile
+	 * @covers \Windwalker\Router\Compiler\BasicCompiler::compile
 	 *
 	 * @dataProvider  regexList
 	 */

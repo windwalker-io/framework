@@ -612,7 +612,7 @@ class InputFilterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filter\InputFilter::getHandler
+	 * @covers \Windwalker\Filter\InputFilter::getHandler
 	 * @TODO   Implement testGetHandler().
 	 */
 	public function testGetAndSetHandler()
@@ -650,7 +650,7 @@ class InputFilterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filter\InputFilter::getHtmlCleaner
+	 * @covers \Windwalker\Filter\InputFilter::getHtmlCleaner
 	 * @TODO   Implement testGetHtmlCleaner().
 	 */
 	public function testGetHtmlCleaner()
@@ -666,7 +666,7 @@ class InputFilterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filter\InputFilter::setHtmlCleaner
+	 * @covers \Windwalker\Filter\InputFilter::setHtmlCleaner
 	 * @TODO   Implement testSetHtmlCleaner().
 	 */
 	public function testSetHtmlCleaner()
@@ -682,7 +682,7 @@ class InputFilterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filter\InputFilter::getDefaultHandler
+	 * @covers \Windwalker\Filter\InputFilter::getDefaultHandler
 	 * @TODO   Implement testGetDefaultHandler().
 	 */
 	public function testGetDefaultHandler()
@@ -698,7 +698,7 @@ class InputFilterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filter\InputFilter::setDefaultHandler
+	 * @covers \Windwalker\Filter\InputFilter::setDefaultHandler
 	 * @TODO   Implement testSetDefaultHandler().
 	 */
 	public function testSetDefaultHandler()

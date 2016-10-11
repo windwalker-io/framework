@@ -52,7 +52,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::serialize
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::serialize
 	 * @TODO   Implement testSerialize().
 	 */
 	public function testSerialize()
@@ -68,7 +68,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::get
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::get
 	 */
 	public function testGet()
 	{
@@ -346,7 +346,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::all
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::all
 	 */
 	public function testAll()
 	{
@@ -362,7 +362,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::unserialize
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::unserialize
 	 * @TODO   Implement testUnserialize().
 	 */
 	public function testUnserialize()
@@ -378,7 +378,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::getArgument
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::getArgument
 	 */
 	public function testGetArgument()
 	{
@@ -395,7 +395,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::setArgument
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::setArgument
 	 */
 	public function testSetArgument()
 	{
@@ -413,7 +413,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::in
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::in
 	 */
 	public function testIn()
 	{
@@ -428,7 +428,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::getInputStream
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::getInputStream
 	 */
 	public function testGetInputStream()
 	{
@@ -440,7 +440,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::setInputStream
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::setInputStream
 	 * @TODO   Implement testSetInputStream().
 	 */
 	public function testSetInputStream()
@@ -456,7 +456,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::getCalledScript
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::getCalledScript
 	 */
 	public function testGetCalledScript()
 	{
@@ -472,7 +472,7 @@ class CliInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Input\CliInput::setCalledScript
+	 * @covers \Windwalker\IO\Cli\Input\CliInput::setCalledScript
 	 * @TODO   Implement testSetCalledScript().
 	 */
 	public function testSetCalledScript()

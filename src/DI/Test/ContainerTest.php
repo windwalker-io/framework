@@ -76,7 +76,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::set
+	 * @covers \Windwalker\DI\Container::set
 	 */
 	public function testGetAndSet()
 	{
@@ -184,7 +184,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @expectedException \OutOfBoundsException
 	 *
-	 * @covers Windwalker\DI\Container::protect
+	 * @covers \Windwalker\DI\Container::protect
 	 */
 	public function testProtect()
 	{
@@ -221,7 +221,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::share
+	 * @covers \Windwalker\DI\Container::share
 	 */
 	public function testShare()
 	{
@@ -261,7 +261,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::alias
+	 * @covers \Windwalker\DI\Container::alias
 	 */
 	public function testAlias()
 	{
@@ -275,7 +275,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::exists
+	 * @covers \Windwalker\DI\Container::exists
 	 */
 	public function testExists()
 	{
@@ -288,7 +288,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::getNewInstance
+	 * @covers \Windwalker\DI\Container::getNewInstance
 	 */
 	public function testGetNewInstance()
 	{
@@ -313,9 +313,9 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::createObject
-	 * @covers Windwalker\DI\Container::createSharedObject
-	 * @covers Windwalker\DI\Container::newInstance
+	 * @covers \Windwalker\DI\Container::createObject
+	 * @covers \Windwalker\DI\Container::createSharedObject
+	 * @covers \Windwalker\DI\Container::newInstance
 	 */
 	public function testCreateObject()
 	{
@@ -384,7 +384,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::prepareObject
+	 * @covers \Windwalker\DI\Container::prepareObject
 	 */
 	public function testPrepareObject()
 	{
@@ -402,7 +402,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::prepareSharedObject
+	 * @covers \Windwalker\DI\Container::prepareSharedObject
 	 */
 	public function testPrepareSharedObject()
 	{
@@ -437,7 +437,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::createChild
+	 * @covers \Windwalker\DI\Container::createChild
 	 */
 	public function testCreateChild()
 	{
@@ -450,7 +450,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::extend
+	 * @covers \Windwalker\DI\Container::extend
 	 */
 	public function testExtend()
 	{
@@ -470,7 +470,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\DI\Container::fork
+	 * @covers \Windwalker\DI\Container::fork
 	 */
 	public function testFork()
 	{
@@ -500,7 +500,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DI\Container::registerServiceProvider
+	 * @covers \Windwalker\DI\Container::registerServiceProvider
 	 */
 	public function testRegisterServiceProvider()
 	{

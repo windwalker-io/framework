@@ -55,7 +55,7 @@ class MemcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcacheHandler::isSupported
+	 * @covers \Windwalker\Session\Handler\MemcacheHandler::isSupported
 	 * @TODO   Implement testIsSupported().
 	 */
 	public function testIsSupported()
@@ -71,7 +71,7 @@ class MemcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcacheHandler::open
+	 * @covers \Windwalker\Session\Handler\MemcacheHandler::open
 	 * @TODO   Implement testOpen().
 	 */
 	public function testOpen()
@@ -87,7 +87,7 @@ class MemcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcacheHandler::close
+	 * @covers \Windwalker\Session\Handler\MemcacheHandler::close
 	 * @TODO   Implement testClose().
 	 */
 	public function testClose()
@@ -103,7 +103,7 @@ class MemcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcacheHandler::read
+	 * @covers \Windwalker\Session\Handler\MemcacheHandler::read
 	 * @TODO   Implement testRead().
 	 */
 	public function testRead()
@@ -119,7 +119,7 @@ class MemcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcacheHandler::write
+	 * @covers \Windwalker\Session\Handler\MemcacheHandler::write
 	 * @TODO   Implement testWrite().
 	 */
 	public function testWrite()
@@ -135,7 +135,7 @@ class MemcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcacheHandler::destroy
+	 * @covers \Windwalker\Session\Handler\MemcacheHandler::destroy
 	 * @TODO   Implement testDestroy().
 	 */
 	public function testDestroy()
@@ -151,7 +151,7 @@ class MemcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcacheHandler::gc
+	 * @covers \Windwalker\Session\Handler\MemcacheHandler::gc
 	 * @TODO   Implement testGc().
 	 */
 	public function testGc()

@@ -22,7 +22,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::insertOne
+	 * @covers \Windwalker\Database\Command\AbstractWriter::insertOne
 	 */
 	public function testInsertOne()
 	{
@@ -67,7 +67,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::updateOne
+	 * @covers \Windwalker\Database\Command\AbstractWriter::updateOne
 	 */
 	public function testUpdateOne()
 	{
@@ -118,7 +118,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::saveOne
+	 * @covers \Windwalker\Database\Command\AbstractWriter::saveOne
 	 */
 	public function testSaveOne()
 	{
@@ -158,7 +158,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::insertMultiple
+	 * @covers \Windwalker\Database\Command\AbstractWriter::insertMultiple
 	 */
 	public function testInsertMultiple()
 	{
@@ -183,7 +183,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::updateMultiple
+	 * @covers \Windwalker\Database\Command\AbstractWriter::updateMultiple
 	 */
 	public function testUpdateMultiple()
 	{
@@ -206,7 +206,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::saveMultiple
+	 * @covers \Windwalker\Database\Command\AbstractWriter::saveMultiple
 	 * @TODO   Implement testSaveMultiple().
 	 */
 	public function testSaveMultiple()
@@ -222,7 +222,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::updateBatch
+	 * @covers \Windwalker\Database\Command\AbstractWriter::updateBatch
 	 */
 	public function testUpdateBatch()
 	{
@@ -242,7 +242,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::countAffected
+	 * @covers \Windwalker\Database\Command\AbstractWriter::countAffected
 	 */
 	public function testCountAffected()
 	{
@@ -258,7 +258,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::getDriver
+	 * @covers \Windwalker\Database\Command\AbstractWriter::getDriver
 	 * @TODO   Implement testGetDriver().
 	 */
 	public function testGetDriver()
@@ -274,7 +274,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractWriter::setDriver
+	 * @covers \Windwalker\Database\Command\AbstractWriter::setDriver
 	 * @TODO   Implement testSetDriver().
 	 */
 	public function testSetDriver()
@@ -290,7 +290,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Pdo\PdoWriter::insertId
+	 * @covers \Windwalker\Database\Driver\Pdo\PdoWriter::insertId
 	 */
 	public function testInsertId()
 	{

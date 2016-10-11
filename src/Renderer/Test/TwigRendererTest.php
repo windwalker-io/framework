@@ -68,7 +68,7 @@ class TwigRendererTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\TwigRenderer::render
+	 * @covers \Windwalker\Renderer\TwigRenderer::render
 	 */
 	public function testRender()
 	{
@@ -91,7 +91,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\TwigRenderer::render
+	 * @covers \Windwalker\Renderer\TwigRenderer::render
 	 */
 	public function testRenderWithDotPath()
 	{
@@ -116,7 +116,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\TwigRenderer::getLoader
+	 * @covers \Windwalker\Renderer\TwigRenderer::getLoader
 	 */
 	public function testGetLoader()
 	{
@@ -128,7 +128,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\TwigRenderer::setLoader
+	 * @covers \Windwalker\Renderer\TwigRenderer::setLoader
 	 * @TODO   Implement testSetLoader().
 	 */
 	public function testSetLoader()
@@ -144,7 +144,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\TwigRenderer::addExtension
+	 * @covers \Windwalker\Renderer\TwigRenderer::addExtension
 	 */
 	public function testAddExtension()
 	{
@@ -170,7 +170,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\TwigRenderer::setTwig
+	 * @covers \Windwalker\Renderer\TwigRenderer::setTwig
 	 * @TODO   Implement testSetTwig().
 	 */
 	public function testSetTwig()
@@ -186,7 +186,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\TwigRenderer::getDebugExtension
+	 * @covers \Windwalker\Renderer\TwigRenderer::getDebugExtension
 	 */
 	public function testGetDebugExtension()
 	{
@@ -198,7 +198,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\TwigRenderer::setDebugExtension
+	 * @covers \Windwalker\Renderer\TwigRenderer::setDebugExtension
 	 * @TODO   Implement testSetDebugExtension().
 	 */
 	public function testSetDebugExtension()

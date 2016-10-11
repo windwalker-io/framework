@@ -104,7 +104,7 @@ class DomBuilderTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\Builder\DomBuilder::quote
+	 * @covers \Windwalker\Dom\Builder\DomBuilder::quote
 	 */
 	public function testQuote()
 	{
@@ -116,7 +116,7 @@ class DomBuilderTest extends AbstractDomTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Dom\Builder\DomBuilder::buildAttributes
+	 * @covers \Windwalker\Dom\Builder\DomBuilder::buildAttributes
 	 */
 	public function testBuildAttributes()
 	{

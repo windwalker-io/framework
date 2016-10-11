@@ -127,7 +127,7 @@ class HtmlBuilderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Dom\Builder\HtmlBuilder::buildAttributes
+	 * @covers \Windwalker\Dom\Builder\HtmlBuilder::buildAttributes
 	 */
 	public function testBuildAttributes()
 	{

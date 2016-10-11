@@ -51,7 +51,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::select
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::select
 	 */
 	public function testSelect()
 	{
@@ -66,7 +66,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::create
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::create
 	 */
 	public function testCreate()
 	{
@@ -84,7 +84,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::drop
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::drop
 	 */
 	public function testDrop()
 	{
@@ -102,7 +102,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::exsts
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::exsts
 	 */
 	public function testExists()
 	{
@@ -121,7 +121,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::rename
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::rename
 	 */
 	public function testRename()
 	{
@@ -151,7 +151,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTables
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTables
 	 */
 	public function testGetTables()
 	{
@@ -172,7 +172,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetails
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetails
 	 */
 	public function testGetTableDetails()
 	{
@@ -186,7 +186,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetail
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetail
 	 */
 	public function testGetTableDetail()
 	{

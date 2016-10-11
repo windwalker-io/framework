@@ -83,7 +83,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @expectedException \UnexpectedValueException
 	 *
-	 * @covers Windwalker\Record\NestedRecord::validate
+	 * @covers \Windwalker\Record\NestedRecord::validate
 	 */
 	public function testCheckParentIdZero()
 	{
@@ -99,7 +99,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @expectedException \UnexpectedValueException
 	 *
-	 * @covers Windwalker\Record\NestedRecord::validate
+	 * @covers \Windwalker\Record\NestedRecord::validate
 	 */
 	public function testCheckParentIdNotExists()
 	{
@@ -113,7 +113,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::setLocation
+	 * @covers \Windwalker\Record\NestedRecord::setLocation
 	 */
 	public function testSetLocationAndStore()
 	{
@@ -194,7 +194,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::getPath
+	 * @covers \Windwalker\Record\NestedRecord::getPath
 	 */
 	public function testGetPath()
 	{
@@ -212,7 +212,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::getTree
+	 * @covers \Windwalker\Record\NestedRecord::getTree
 	 */
 	public function testGetTree()
 	{
@@ -238,7 +238,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::isLeaf
+	 * @covers \Windwalker\Record\NestedRecord::isLeaf
 	 */
 	public function testIsLeaf()
 	{
@@ -251,7 +251,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::move
+	 * @covers \Windwalker\Record\NestedRecord::move
 	 */
 	public function testMove()
 	{
@@ -267,7 +267,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::moveByReference
+	 * @covers \Windwalker\Record\NestedRecord::moveByReference
 	 */
 	public function testMoveByReference()
 	{
@@ -285,7 +285,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @expectedException \RuntimeException
 	 *
-	 * @covers Windwalker\Record\NestedRecord::delete
+	 * @covers \Windwalker\Record\NestedRecord::delete
 	 */
 	public function testDelete()
 	{
@@ -310,7 +310,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::getRootId
+	 * @covers \Windwalker\Record\NestedRecord::getRootId
 	 */
 	public function testGetRootId()
 	{
@@ -325,7 +325,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::rebuild
+	 * @covers \Windwalker\Record\NestedRecord::rebuild
 	 * @TODO   Implement testRebuild().
 	 */
 	public function testRebuild()
@@ -341,7 +341,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::rebuildPath
+	 * @covers \Windwalker\Record\NestedRecord::rebuildPath
 	 */
 	public function testRebuildPath()
 	{
@@ -355,7 +355,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\NestedRecord::reset
+	 * @covers \Windwalker\Record\NestedRecord::reset
 	 * @TODO   Implement testReset().
 	 */
 	public function testReset()

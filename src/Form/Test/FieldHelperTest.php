@@ -42,7 +42,7 @@ class FieldHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\FieldHelper::create
+	 * @covers \Windwalker\Form\FieldHelper::create
 	 */
 	public function testCreate()
 	{

@@ -50,7 +50,7 @@ class CliOutputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Output\CliOutput::out
+	 * @covers \Windwalker\IO\Cli\Output\CliOutput::out
 	 * @TODO   Implement testOut().
 	 */
 	public function testOut()
@@ -66,7 +66,7 @@ class CliOutputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Output\CliOutput::err
+	 * @covers \Windwalker\IO\Cli\Output\CliOutput::err
 	 * @TODO   Implement testErr().
 	 */
 	public function testErr()
@@ -82,7 +82,7 @@ class CliOutputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Output\CliOutput::setProcessor
+	 * @covers \Windwalker\IO\Cli\Output\CliOutput::setProcessor
 	 * @TODO   Implement testSetProcessor().
 	 */
 	public function testSetProcessor()
@@ -98,7 +98,7 @@ class CliOutputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Output\CliOutput::getProcessor
+	 * @covers \Windwalker\IO\Cli\Output\CliOutput::getProcessor
 	 * @TODO   Implement testGetProcessor().
 	 */
 	public function testGetProcessor()

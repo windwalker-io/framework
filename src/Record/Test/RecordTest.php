@@ -68,7 +68,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::__set
+	 * @covers \Windwalker\Record\Record::__set
 	 */
 	public function test__set()
 	{
@@ -92,7 +92,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::__get
+	 * @covers \Windwalker\Record\Record::__get
 	 */
 	public function test__get()
 	{
@@ -117,7 +117,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::save
+	 * @covers \Windwalker\Record\Record::save
 	 */
 	public function testSave()
 	{
@@ -176,7 +176,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::bind
+	 * @covers \Windwalker\Record\Record::bind
 	 */
 	public function testBind()
 	{
@@ -198,7 +198,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::load
+	 * @covers \Windwalker\Record\Record::load
 	 */
 	public function testLoad()
 	{
@@ -212,7 +212,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::delete
+	 * @covers \Windwalker\Record\Record::delete
 	 */
 	public function testDelete()
 	{
@@ -232,7 +232,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::reset
+	 * @covers \Windwalker\Record\Record::reset
 	 */
 	public function testReset()
 	{
@@ -247,7 +247,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::validate
+	 * @covers \Windwalker\Record\Record::validate
 	 */
 	public function testCheck()
 	{
@@ -269,7 +269,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::store
+	 * @covers \Windwalker\Record\Record::store
 	 */
 	public function testStore()
 	{
@@ -315,7 +315,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Record\Record::create
+	 * @covers \Windwalker\Record\Record::create
 	 */
 	public function testCreate()
 	{
@@ -373,7 +373,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::hasPrimaryKey
+	 * @covers \Windwalker\Record\Record::hasPrimaryKey
 	 */
 	public function testHasPrimaryKey()
 	{
@@ -391,7 +391,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::getKeyName
+	 * @covers \Windwalker\Record\Record::getKeyName
 	 */
 	public function testGetKeyName()
 	{
@@ -406,7 +406,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::getFields
+	 * @covers \Windwalker\Record\Record::getFields
 	 */
 	public function testGetFields()
 	{
@@ -437,7 +437,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::getTableName
+	 * @covers \Windwalker\Record\Record::getTableName
 	 */
 	public function testGetTableName()
 	{
@@ -449,7 +449,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::setTableName
+	 * @covers \Windwalker\Record\Record::setTableName
 	 * @TODO   Implement testSetTableName().
 	 */
 	public function testSetTableName()
@@ -465,7 +465,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::getIterator
+	 * @covers \Windwalker\Record\Record::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -479,7 +479,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::toObject
+	 * @covers \Windwalker\Record\Record::toObject
 	 * @TODO   Implement testToObject().
 	 */
 	public function testToObject()
@@ -495,7 +495,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::dump
+	 * @covers \Windwalker\Record\Record::dump
 	 */
 	public function testDump()
 	{
@@ -511,7 +511,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::__isset
+	 * @covers \Windwalker\Record\Record::__isset
 	 */
 	public function test__isset()
 	{
@@ -524,7 +524,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::__clone
+	 * @covers \Windwalker\Record\Record::__clone
 	 */
 	public function test__clone()
 	{
@@ -544,7 +544,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::q
+	 * @covers \Windwalker\Record\Record::q
 	 * @TODO   Implement testQ().
 	 */
 	public function testQ()
@@ -560,7 +560,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::qn
+	 * @covers \Windwalker\Record\Record::qn
 	 * @TODO   Implement testQn().
 	 */
 	public function testQn()
@@ -576,7 +576,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::valueExists
+	 * @covers \Windwalker\Record\Record::valueExists
 	 */
 	public function testValueExists()
 	{
@@ -592,8 +592,8 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::setAlias
-	 * @covers Windwalker\Record\Record::resolveAlias
+	 * @covers \Windwalker\Record\Record::setAlias
+	 * @covers \Windwalker\Record\Record::resolveAlias
 	 */
 	public function testAlias()
 	{
@@ -629,7 +629,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::offsetExists
+	 * @covers \Windwalker\Record\Record::offsetExists
 	 */
 	public function testOffsetExists()
 	{
@@ -642,7 +642,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::offsetGet
+	 * @covers \Windwalker\Record\Record::offsetGet
 	 */
 	public function testOffsetGet()
 	{
@@ -657,7 +657,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::offsetSet
+	 * @covers \Windwalker\Record\Record::offsetSet
 	 */
 	public function testOffsetSet()
 	{
@@ -675,7 +675,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::offsetUnset
+	 * @covers \Windwalker\Record\Record::offsetUnset
 	 */
 	public function testOffsetUnset()
 	{
@@ -693,7 +693,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::triggerEvent
+	 * @covers \Windwalker\Record\Record::triggerEvent
 	 * @TODO   Implement testTriggerEvent().
 	 */
 	public function testTriggerEvent()
@@ -709,7 +709,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::getDispatcher
+	 * @covers \Windwalker\Record\Record::getDispatcher
 	 * @TODO   Implement testGetDispatcher().
 	 */
 	public function testGetDispatcher()
@@ -725,7 +725,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::setDispatcher
+	 * @covers \Windwalker\Record\Record::setDispatcher
 	 * @TODO   Implement testSetDispatcher().
 	 */
 	public function testSetDispatcher()
@@ -741,7 +741,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::getDb
+	 * @covers \Windwalker\Record\Record::getDb
 	 * @TODO   Implement testGetDb().
 	 */
 	public function testGetDb()
@@ -757,7 +757,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Record\Record::setDb
+	 * @covers \Windwalker\Record\Record::setDb
 	 * @TODO   Implement testSetDb().
 	 */
 	public function testSetDb()

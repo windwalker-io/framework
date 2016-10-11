@@ -58,7 +58,7 @@ class HtmlElementsTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElements::__toString
+	 * @covers \Windwalker\Dom\DomElements::__toString
 	 */
 	public function test__toString()
 	{

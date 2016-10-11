@@ -52,7 +52,7 @@ class Des3CipherTest extends AbstractOpensslTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Cipher\Des3Cipher::getIVSize
+	 * @covers \Windwalker\Crypt\Cipher\Des3Cipher::getIVSize
 	 */
 	public function testGetIVSize()
 	{

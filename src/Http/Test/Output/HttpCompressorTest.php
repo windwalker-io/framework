@@ -57,7 +57,7 @@ class HttpCompressorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\HttpCompressor::isSupported
+	 * @covers \Windwalker\Http\Output\HttpCompressor::isSupported
 	 */
 	public function testIsSupported()
 	{
@@ -69,7 +69,7 @@ class HttpCompressorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\HttpCompressor::compress
+	 * @covers \Windwalker\Http\Output\HttpCompressor::compress
 	 */
 	public function testCompress()
 	{
@@ -93,7 +93,7 @@ class HttpCompressorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Http\Output\HttpCompressor::encode
+	 * @covers \Windwalker\Http\Output\HttpCompressor::encode
 	 */
 	public function testEncode()
 	{
@@ -105,8 +105,8 @@ class HttpCompressorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\HttpCompressor::getAcceptEncoding
-	 * @covers Windwalker\Http\Output\HttpCompressor::setAcceptEncoding
+	 * @covers \Windwalker\Http\Output\HttpCompressor::getAcceptEncoding
+	 * @covers \Windwalker\Http\Output\HttpCompressor::setAcceptEncoding
 	 */
 	public function testGetAndSetAcceptEncoding()
 	{
@@ -122,7 +122,7 @@ class HttpCompressorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\HttpCompressor::checkHeadersSent
+	 * @covers \Windwalker\Http\Output\HttpCompressor::checkHeadersSent
 	 */
 	public function testCheckHeadersSent()
 	{
@@ -136,7 +136,7 @@ class HttpCompressorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\HttpCompressor::checkConnectionAlive
+	 * @covers \Windwalker\Http\Output\HttpCompressor::checkConnectionAlive
 	 */
 	public function testCheckConnectionAlive()
 	{
@@ -150,7 +150,7 @@ class HttpCompressorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\HttpCompressor::getEncodedBy
+	 * @covers \Windwalker\Http\Output\HttpCompressor::getEncodedBy
 	 */
 	public function testGetAndSetEncodedBy()
 	{

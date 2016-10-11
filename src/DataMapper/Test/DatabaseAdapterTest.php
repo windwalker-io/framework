@@ -20,7 +20,7 @@ class DatabaseAdapterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\Adapter\DatabaseAdapter::getInstance
+	 * @covers \Windwalker\DataMapper\Adapter\DatabaseAdapter::getInstance
 	 * @TODO   Implement testGetInstance().
 	 */
 	public function testGetInstance()
@@ -36,7 +36,7 @@ class DatabaseAdapterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\Adapter\DatabaseAdapter::setInstance
+	 * @covers \Windwalker\DataMapper\Adapter\DatabaseAdapter::setInstance
 	 * @TODO   Implement testSetInstance().
 	 */
 	public function testSetInstance()

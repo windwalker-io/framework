@@ -50,7 +50,7 @@ class AudioTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Media\Audio::addMp3Source
+	 * @covers \Windwalker\Html\Media\Audio::addMp3Source
 	 */
 	public function testToString()
 	{

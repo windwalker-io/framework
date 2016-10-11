@@ -66,7 +66,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::execute
+	 * @covers \Windwalker\Console\Command\AbstractCommand::execute
 	 */
 	public function testExecute()
 	{
@@ -80,7 +80,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getParent
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getParent
 	 */
 	public function testGetParent()
 	{
@@ -98,7 +98,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::setParent
+	 * @covers \Windwalker\Console\Command\AbstractCommand::setParent
 	 */
 	public function testSetParent()
 	{
@@ -114,7 +114,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::addCommand
+	 * @covers \Windwalker\Console\Command\AbstractCommand::addCommand
 	 */
 	public function testaddCommand()
 	{
@@ -164,7 +164,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getChild
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getChild
 	 */
 	public function testgetChild()
 	{
@@ -180,7 +180,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getChildren
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getChildren
 	 */
 	public function testGetChildren()
 	{
@@ -198,7 +198,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::addOption
+	 * @covers \Windwalker\Console\Command\AbstractCommand::addOption
 	 */
 	public function testAddAndGetOption()
 	{
@@ -255,7 +255,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getOptions
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getOptions
 	 */
 	public function testGetOptions()
 	{
@@ -281,7 +281,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getArgument
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getArgument
 	 */
 	public function testGetArgument()
 	{
@@ -306,7 +306,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getAllOptions
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getAllOptions
 	 */
 	public function testSetAndGetAllOptions()
 	{
@@ -336,7 +336,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getDescription
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getDescription
 	 */
 	public function testSetAndGetDescription()
 	{
@@ -352,7 +352,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getName
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getName
 	 */
 	public function testSetAndGetName()
 	{
@@ -368,7 +368,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getHandler
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getHandler
 	 */
 	public function testSetAndgetHandler()
 	{
@@ -388,7 +388,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getHandler
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getHandler
 	 */
 	public function testSetAndgetCallableHandler()
 	{
@@ -412,7 +412,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getOptionAlias
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getOptionAlias
 	 */
 	public function testGetOptionAlias()
 	{
@@ -429,7 +429,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::setOptionAliases
+	 * @covers \Windwalker\Console\Command\AbstractCommand::setOptionAliases
 	 */
 	public function testSetOptionAlias()
 	{
@@ -446,7 +446,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getApplication
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getApplication
 	 */
 	public function testSetAndGetApplication()
 	{
@@ -462,7 +462,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getHelp
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getHelp
 	 */
 	public function testSetAndGetHelp()
 	{
@@ -478,7 +478,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::getUsage
+	 * @covers \Windwalker\Console\Command\AbstractCommand::getUsage
 	 */
 	public function testSetAndGetUsage()
 	{
@@ -495,7 +495,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::renderAlternatives
+	 * @covers \Windwalker\Console\Command\AbstractCommand::renderAlternatives
 	 */
 	public function testRenderAlternatives()
 	{
@@ -523,7 +523,7 @@ Did you mean one of these?
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::renderException
+	 * @covers \Windwalker\Console\Command\AbstractCommand::renderException
 	 */
 	public function testRenderException()
 	{
@@ -540,7 +540,7 @@ Did you mean one of these?
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::out
+	 * @covers \Windwalker\Console\Command\AbstractCommand::out
 	 */
 	public function testOut()
 	{
@@ -558,7 +558,7 @@ Did you mean one of these?
 	 *
 	 * @since  2.0
 	 *
-	 * @covers Windwalker\Console\Command\AbstractCommand::err
+	 * @covers \Windwalker\Console\Command\AbstractCommand::err
 	 */
 	public function testErr()
 	{

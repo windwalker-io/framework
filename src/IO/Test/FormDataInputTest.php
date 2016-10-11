@@ -108,7 +108,7 @@ DATA;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\FormDataInput::getRawData
+	 * @covers \Windwalker\IO\FormDataInput::getRawData
 	 * @TODO   Implement testGetRawData().
 	 */
 	public function testGetRawData()
@@ -124,7 +124,7 @@ DATA;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\FormDataInput::parseFormData
+	 * @covers \Windwalker\IO\FormDataInput::parseFormData
 	 * @TODO   Implement testParseFormData().
 	 */
 	public function testParseFormData()

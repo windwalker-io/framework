@@ -23,7 +23,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\File::stripExtension
+	 * @covers \Windwalker\Filesystem\File::stripExtension
 	 */
 	public function testStripExtension()
 	{
@@ -41,7 +41,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\File::getExtension
+	 * @covers \Windwalker\Filesystem\File::getExtension
 	 */
 	public function testGetExtension()
 	{
@@ -55,7 +55,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\File::getFilename
+	 * @covers \Windwalker\Filesystem\File::getFilename
 	 */
 	public function testGetFilename()
 	{
@@ -137,7 +137,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\File::copy
+	 * @covers \Windwalker\Filesystem\File::copy
 	 */
 	public function testCopy()
 	{
@@ -156,7 +156,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\File::delete
+	 * @covers \Windwalker\Filesystem\File::delete
 	 */
 	public function testDelete()
 	{
@@ -179,7 +179,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\File::move
+	 * @covers \Windwalker\Filesystem\File::move
 	 */
 	public function testMove()
 	{
@@ -198,7 +198,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\File::write
+	 * @covers \Windwalker\Filesystem\File::write
 	 */
 	public function testWrite()
 	{
@@ -212,7 +212,7 @@ class FileTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\File::upload
+	 * @covers \Windwalker\Filesystem\File::upload
 	 */
 	public function testUpload()
 	{

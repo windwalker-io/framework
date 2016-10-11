@@ -25,7 +25,7 @@ class StreamHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\StreamHelper::copy
+	 * @covers \Windwalker\Http\Helper\StreamHelper::copy
 	 */
 	public function testCopy()
 	{
@@ -42,7 +42,7 @@ class StreamHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\StreamHelper::copyTo
+	 * @covers \Windwalker\Http\Helper\StreamHelper::copyTo
 	 */
 	public function testCopyTo()
 	{
@@ -60,7 +60,7 @@ class StreamHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\StreamHelper::copyFrom
+	 * @covers \Windwalker\Http\Helper\StreamHelper::copyFrom
 	 */
 	public function testCopyFrom()
 	{
@@ -74,7 +74,7 @@ class StreamHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\StreamHelper::sendAttachment
+	 * @covers \Windwalker\Http\Helper\StreamHelper::sendAttachment
 	 */
 	public function testSendAttachment()
 	{

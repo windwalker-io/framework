@@ -50,7 +50,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\YamlFormat::structToString
+	 * @covers \Windwalker\Structure\Format\YamlFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\YamlFormat::stringToStruct
+	 * @covers \Windwalker\Structure\Format\YamlFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()
@@ -82,7 +82,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\YamlFormat::getParser
+	 * @covers \Windwalker\Structure\Format\YamlFormat::getParser
 	 * @TODO   Implement testGetParser().
 	 */
 	public function testGetParser()
@@ -98,7 +98,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\YamlFormat::setParser
+	 * @covers \Windwalker\Structure\Format\YamlFormat::setParser
 	 * @TODO   Implement testSetParser().
 	 */
 	public function testSetParser()
@@ -114,7 +114,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\YamlFormat::getDumper
+	 * @covers \Windwalker\Structure\Format\YamlFormat::getDumper
 	 * @TODO   Implement testGetDumper().
 	 */
 	public function testGetDumper()
@@ -130,7 +130,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\YamlFormat::setDumper
+	 * @covers \Windwalker\Structure\Format\YamlFormat::setDumper
 	 * @TODO   Implement testSetDumper().
 	 */
 	public function testSetDumper()

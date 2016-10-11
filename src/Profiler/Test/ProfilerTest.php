@@ -87,7 +87,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::getName
+	 * @covers \Windwalker\Profiler\Profiler::getName
 	 */
 	public function testGetName()
 	{
@@ -99,7 +99,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::mark
+	 * @covers \Windwalker\Profiler\Profiler::mark
 	 */
 	public function testMark()
 	{
@@ -138,7 +138,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::hasPoint
+	 * @covers \Windwalker\Profiler\Profiler::hasPoint
 	 */
 	public function testHasPoint()
 	{
@@ -153,7 +153,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::getPoint
+	 * @covers \Windwalker\Profiler\Profiler::getPoint
 	 */
 	public function testGetPoint()
 	{
@@ -172,7 +172,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::getTimeBetween
+	 * @covers \Windwalker\Profiler\Profiler::getTimeBetween
 	 */
 	public function testGetTimeBetween()
 	{
@@ -190,7 +190,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::getMemoryBetween
+	 * @covers \Windwalker\Profiler\Profiler::getMemoryBetween
 	 */
 	public function testgetMemoryBetween()
 	{
@@ -208,7 +208,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::getMemoryPeakBytes
+	 * @covers \Windwalker\Profiler\Profiler::getMemoryPeakBytes
 	 */
 	public function testGetMemoryPeakBytes()
 	{
@@ -222,7 +222,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::getPoints
+	 * @covers \Windwalker\Profiler\Profiler::getPoints
 	 * @TODO   Implement testGetPoints().
 	 */
 	public function testGetPoints()
@@ -238,7 +238,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::setRenderer
+	 * @covers \Windwalker\Profiler\Profiler::setRenderer
 	 */
 	public function testGetAndSetRenderer()
 	{
@@ -257,7 +257,7 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::render
+	 * @covers \Windwalker\Profiler\Profiler::render
 	 */
 	public function testRender()
 	{
@@ -283,7 +283,7 @@ RESULT;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::__toString
+	 * @covers \Windwalker\Profiler\Profiler::__toString
 	 * @TODO   Implement test__toString().
 	 */
 	public function test__toString()
@@ -299,7 +299,7 @@ RESULT;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::getIterator
+	 * @covers \Windwalker\Profiler\Profiler::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -327,7 +327,7 @@ RESULT;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Profiler::count
+	 * @covers \Windwalker\Profiler\Profiler::count
 	 */
 	public function testCount()
 	{

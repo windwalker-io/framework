@@ -23,7 +23,7 @@ class PostgresqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::listDatabases
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::listDatabases
 	 */
 	public function testShowDatabases()
 	{
@@ -39,7 +39,7 @@ class PostgresqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::createDatabase
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::createDatabase
 	 */
 	public function testCreateDatabase()
 	{
@@ -76,7 +76,7 @@ class PostgresqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::dropDatabase
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropDatabase
 	 */
 	public function testDropDatabase()
 	{
@@ -104,7 +104,7 @@ class PostgresqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::showTableColumns
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::showTableColumns
 	 */
 	public function testShowTableColumns()
 	{
@@ -137,7 +137,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::showDbTables
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::showDbTables
 	 */
 	public function testShowDbTables()
 	{
@@ -163,7 +163,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::createTable
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::createTable
 	 */
 	public function testCreateTable()
 	{
@@ -228,7 +228,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::dropTable
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropTable
 	 */
 	public function testDropTable()
 	{
@@ -256,7 +256,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::alterColumn
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::alterColumn
 	 */
 	public function testAlterColumn()
 	{
@@ -284,7 +284,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::addColumn
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::addColumn
 	 */
 	public function testAddColumn()
 	{
@@ -303,7 +303,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::renameColumn
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::renameColumn
 	 */
 	public function testRenameColumn()
 	{
@@ -322,7 +322,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::dropColumn
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropColumn
 	 */
 	public function testDropColumn()
 	{
@@ -341,7 +341,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::addIndex
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::addIndex
 	 */
 	public function testAddIndex()
 	{
@@ -369,7 +369,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::buildIndexDeclare
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::buildIndexDeclare
 	 */
 	public function testBuildIndexDeclare()
 	{
@@ -397,7 +397,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::dropIndex
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropIndex
 	 */
 	public function testDropIndex()
 	{
@@ -425,7 +425,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::build
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::build
 	 */
 	public function testBuild()
 	{
@@ -444,7 +444,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Postgresql\PostgresqlGrammar::getQuery
+	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::getQuery
 	 */
 	public function testGetQuery()
 	{

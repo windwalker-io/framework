@@ -51,7 +51,7 @@ class StreamOutputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\StreamOutput::respond
+	 * @covers \Windwalker\Http\Output\StreamOutput::respond
 	 */
 	public function testRespond()
 	{
@@ -94,7 +94,7 @@ class StreamOutputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\StreamOutput::sendBody
+	 * @covers \Windwalker\Http\Output\StreamOutput::sendBody
 	 */
 	public function testSendBody()
 	{
@@ -108,8 +108,8 @@ class StreamOutputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\StreamOutput::getMaxBufferLength
-	 * @covers Windwalker\Http\Output\StreamOutput::setMaxBufferLength
+	 * @covers \Windwalker\Http\Output\StreamOutput::getMaxBufferLength
+	 * @covers \Windwalker\Http\Output\StreamOutput::setMaxBufferLength
 	 */
 	public function testGetAndSetMaxBufferLength()
 	{
@@ -125,8 +125,8 @@ class StreamOutputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Output\StreamOutput::getDelay
-	 * @covers Windwalker\Http\Output\StreamOutput::setDelay
+	 * @covers \Windwalker\Http\Output\StreamOutput::getDelay
+	 * @covers \Windwalker\Http\Output\StreamOutput::setDelay
 	 */
 	public function testGetAndSetDelay()
 	{

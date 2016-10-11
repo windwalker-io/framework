@@ -25,7 +25,7 @@ class GlobalContainerTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::addExtension
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::addExtension
 	 */
 	public function testAddExtension()
 	{
@@ -55,7 +55,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::getExtension
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::getExtension
 	 * @TODO   Implement testGetExtension().
 	 */
 	public function testGetExtension()
@@ -71,7 +71,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::removeExtension
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::removeExtension
 	 * @TODO   Implement testRemoveExtension().
 	 */
 	public function testRemoveExtension()
@@ -87,7 +87,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::getExtensions
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::getExtensions
 	 * @TODO   Implement testGetExtensions().
 	 */
 	public function testGetExtensions()
@@ -103,7 +103,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::setExtensions
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::setExtensions
 	 * @TODO   Implement testSetExtensions().
 	 */
 	public function testSetExtensions()
@@ -119,7 +119,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::addGlobal
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::addGlobal
 	 * @TODO   Implement testAddGlobal().
 	 */
 	public function testAddGlobal()
@@ -135,7 +135,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::getGlobal
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::getGlobal
 	 * @TODO   Implement testGetGlobal().
 	 */
 	public function testGetGlobal()
@@ -151,7 +151,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::removeGlobal
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::removeGlobal
 	 * @TODO   Implement testRemoveGlobal().
 	 */
 	public function testRemoveGlobal()
@@ -167,7 +167,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::getGlobals
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::getGlobals
 	 * @TODO   Implement testGetGlobals().
 	 */
 	public function testGetGlobals()
@@ -183,7 +183,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\Twig\GlobalContainer::setGlobals
+	 * @covers \Windwalker\Renderer\Twig\GlobalContainer::setGlobals
 	 * @TODO   Implement testSetGlobals().
 	 */
 	public function testSetGlobals()

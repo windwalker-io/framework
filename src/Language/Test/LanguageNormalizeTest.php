@@ -57,7 +57,7 @@ class LanguageNormalizeTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\LanguageNormalize::toLanguageTag
+	 * @covers \Windwalker\Language\LanguageNormalize::toLanguageTag
 	 */
 	public function testToLanguageTag()
 	{
@@ -72,7 +72,7 @@ class LanguageNormalizeTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\LanguageNormalize::getLocaliseClassPrefix
+	 * @covers \Windwalker\Language\LanguageNormalize::getLocaliseClassPrefix
 	 */
 	public function testGetLocaliseClassPrefix()
 	{
@@ -90,7 +90,7 @@ class LanguageNormalizeTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\LanguageNormalize::toLanguageKey
+	 * @covers \Windwalker\Language\LanguageNormalize::toLanguageKey
 	 *
 	 * @dataProvider getToTagCases
 	 */

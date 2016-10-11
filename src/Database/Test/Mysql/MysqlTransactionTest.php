@@ -33,7 +33,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::getNested
+	 * @covers \Windwalker\Database\Command\AbstractTransaction::getNested
 	 */
 	public function testGetNested()
 	{
@@ -47,7 +47,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::setNested
+	 * @covers \Windwalker\Database\Command\AbstractTransaction::setNested
 	 */
 	public function testSetNested()
 	{
@@ -63,8 +63,8 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTransaction::start
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTransaction::rollback
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTransaction::start
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTransaction::rollback
 	 */
 	public function testTransactionRollback()
 	{
@@ -88,8 +88,8 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTransaction::start
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTransaction::commit
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTransaction::start
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTransaction::commit
 	 */
 	public function testTransactionCommit()
 	{
@@ -113,7 +113,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::getDriver
+	 * @covers \Windwalker\Database\Command\AbstractTransaction::getDriver
 	 */
 	public function testGetDriver()
 	{
@@ -128,7 +128,7 @@ class MysqlTransactionTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::setDriver
+	 * @covers \Windwalker\Database\Command\AbstractTransaction::setDriver
 	 * @TODO   Implement testSetDriver().
 	 */
 	public function testSetDriver()

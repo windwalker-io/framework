@@ -32,7 +32,7 @@ class SimpleTemplateTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\String\SimpleTemplate::render
+	 * @covers \Windwalker\String\SimpleTemplate::render
 	 */
 	public function testRender()
 	{

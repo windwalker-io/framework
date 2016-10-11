@@ -62,7 +62,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::buildExpression
+	 * @covers \Windwalker\Query\QueryExpression::buildExpression
 	 * @TODO   Implement testBuildExpression().
 	 */
 	public function testBuildExpression()
@@ -78,7 +78,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::getQuery
+	 * @covers \Windwalker\Query\QueryExpression::getQuery
 	 * @TODO   Implement testGetQuery().
 	 */
 	public function testGetQuery()
@@ -94,7 +94,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::setQuery
+	 * @covers \Windwalker\Query\QueryExpression::setQuery
 	 * @TODO   Implement testSetQuery().
 	 */
 	public function testSetQuery()
@@ -110,7 +110,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::concatenate
+	 * @covers \Windwalker\Query\QueryExpression::concatenate
 	 * @TODO   Implement testConcatenate().
 	 */
 	public function testConcatenate()
@@ -126,7 +126,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::current_timestamp
+	 * @covers \Windwalker\Query\QueryExpression::current_timestamp
 	 * @TODO   Implement testCurrent_timestamp().
 	 */
 	public function testCurrent_timestamp()
@@ -142,7 +142,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::year
+	 * @covers \Windwalker\Query\QueryExpression::year
 	 * @TODO   Implement testYear().
 	 */
 	public function testYear()
@@ -158,7 +158,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::month
+	 * @covers \Windwalker\Query\QueryExpression::month
 	 * @TODO   Implement testMonth().
 	 */
 	public function testMonth()
@@ -174,7 +174,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::day
+	 * @covers \Windwalker\Query\QueryExpression::day
 	 * @TODO   Implement testDay().
 	 */
 	public function testDay()
@@ -190,7 +190,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::hour
+	 * @covers \Windwalker\Query\QueryExpression::hour
 	 * @TODO   Implement testHour().
 	 */
 	public function testHour()
@@ -206,7 +206,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::minute
+	 * @covers \Windwalker\Query\QueryExpression::minute
 	 * @TODO   Implement testMinute().
 	 */
 	public function testMinute()
@@ -222,7 +222,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::second
+	 * @covers \Windwalker\Query\QueryExpression::second
 	 * @TODO   Implement testSecond().
 	 */
 	public function testSecond()
@@ -238,7 +238,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::length
+	 * @covers \Windwalker\Query\QueryExpression::length
 	 * @TODO   Implement testLength().
 	 */
 	public function testLength()
@@ -254,7 +254,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::char_length
+	 * @covers \Windwalker\Query\QueryExpression::char_length
 	 * @TODO   Implement testChar_length().
 	 */
 	public function testChar_length()
@@ -270,7 +270,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\QueryExpression::cast_as_char
+	 * @covers \Windwalker\Query\QueryExpression::cast_as_char
 	 * @TODO   Implement testCast_as_char().
 	 */
 	public function testCast_as_char()

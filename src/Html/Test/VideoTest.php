@@ -51,7 +51,7 @@ class VideoTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Media\Video::toString
+	 * @covers \Windwalker\Html\Media\Video::toString
 	 */
 	public function testToString()
 	{

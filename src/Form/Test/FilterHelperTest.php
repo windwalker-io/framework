@@ -42,7 +42,7 @@ class FilterHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\FilterHelper::create
+	 * @covers \Windwalker\Form\FilterHelper::create
 	 */
 	public function testCreate()
 	{

@@ -50,7 +50,7 @@ class PhpLoaderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Loader\PhpLoader::load
+	 * @covers \Windwalker\Language\Loader\PhpLoader::load
 	 */
 	public function testLoad()
 	{

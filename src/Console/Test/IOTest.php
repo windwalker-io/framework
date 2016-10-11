@@ -54,7 +54,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::setArguments
+	 * @covers \Windwalker\Console\IO\IO::setArguments
 	 */
 	public function testGetAndSetArguments()
 	{
@@ -68,7 +68,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::shiftArgument
+	 * @covers \Windwalker\Console\IO\IO::shiftArgument
 	 */
 	public function testShiftArgument()
 	{
@@ -82,7 +82,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::unshiftArgument
+	 * @covers \Windwalker\Console\IO\IO::unshiftArgument
 	 */
 	public function testUnshiftArgument()
 	{
@@ -96,7 +96,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::pushArgument
+	 * @covers \Windwalker\Console\IO\IO::pushArgument
 	 */
 	public function testPushArgument()
 	{
@@ -110,7 +110,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::popArgument
+	 * @covers \Windwalker\Console\IO\IO::popArgument
 	 */
 	public function testPopArgument()
 	{
@@ -124,7 +124,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::addColor
+	 * @covers \Windwalker\Console\IO\IO::addColor
 	 * @TODO   Implement testAddColor().
 	 */
 	public function testAddColor()
@@ -140,7 +140,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::useColor
+	 * @covers \Windwalker\Console\IO\IO::useColor
 	 * @TODO   Implement testUseColor().
 	 */
 	public function testUseColor()
@@ -156,7 +156,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::__clone
+	 * @covers \Windwalker\Console\IO\IO::__clone
 	 * @TODO   Implement test__clone().
 	 */
 	public function test__clone()
@@ -172,7 +172,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::getOutputStream
+	 * @covers \Windwalker\Console\IO\IO::getOutputStream
 	 * @TODO   Implement testGetOutputStream().
 	 */
 	public function testGetOutputStream()
@@ -188,7 +188,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::setOutputStream
+	 * @covers \Windwalker\Console\IO\IO::setOutputStream
 	 * @TODO   Implement testSetOutputStream().
 	 */
 	public function testSetOutputStream()
@@ -204,7 +204,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::getErrorStream
+	 * @covers \Windwalker\Console\IO\IO::getErrorStream
 	 * @TODO   Implement testGetErrorStream().
 	 */
 	public function testGetErrorStream()
@@ -220,7 +220,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::setErrorStream
+	 * @covers \Windwalker\Console\IO\IO::setErrorStream
 	 * @TODO   Implement testSetErrorStream().
 	 */
 	public function testSetErrorStream()
@@ -236,7 +236,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::getInputStream
+	 * @covers \Windwalker\Console\IO\IO::getInputStream
 	 * @TODO   Implement testGetInputStream().
 	 */
 	public function testGetInputStream()
@@ -252,7 +252,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Console\IO\IO::setInputStream
+	 * @covers \Windwalker\Console\IO\IO::setInputStream
 	 * @TODO   Implement testSetInputStream().
 	 */
 	public function testSetInputStream()

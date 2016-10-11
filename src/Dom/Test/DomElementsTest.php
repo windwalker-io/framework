@@ -59,7 +59,7 @@ class DomElementsTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElements::__toString
+	 * @covers \Windwalker\Dom\DomElements::__toString
 	 */
 	public function test__toString()
 	{
@@ -84,7 +84,7 @@ DOM;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElements::getIterator
+	 * @covers \Windwalker\Dom\DomElements::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -103,7 +103,7 @@ DOM;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElements::offsetExists
+	 * @covers \Windwalker\Dom\DomElements::offsetExists
 	 */
 	public function testOffsetExists()
 	{
@@ -115,7 +115,7 @@ DOM;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElements::offsetGet
+	 * @covers \Windwalker\Dom\DomElements::offsetGet
 	 */
 	public function testOffsetGet()
 	{
@@ -127,7 +127,7 @@ DOM;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElements::offsetSet
+	 * @covers \Windwalker\Dom\DomElements::offsetSet
 	 */
 	public function testOffsetSet()
 	{
@@ -141,7 +141,7 @@ DOM;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElements::offsetUnset
+	 * @covers \Windwalker\Dom\DomElements::offsetUnset
 	 */
 	public function testOffsetUnset()
 	{
@@ -155,7 +155,7 @@ DOM;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElements::count
+	 * @covers \Windwalker\Dom\DomElements::count
 	 */
 	public function testCount()
 	{

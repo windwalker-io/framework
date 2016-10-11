@@ -92,7 +92,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::loadXml
+	 * @covers \Windwalker\Form\Form::loadXml
 	 */
 	public function testLoadXml()
 	{
@@ -113,7 +113,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::addFields
+	 * @covers \Windwalker\Form\Form::addFields
 	 */
 	public function testAddAndGetFields()
 	{
@@ -166,7 +166,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::addField
+	 * @covers \Windwalker\Form\Form::addField
 	 */
 	public function testAddAndGetField()
 	{
@@ -190,7 +190,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::addFieldNamespace
+	 * @covers \Windwalker\Form\Form::addFieldNamespace
 	 */
 	public function testAddFieldNamespace()
 	{
@@ -212,7 +212,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::addFilterNamespace
+	 * @covers \Windwalker\Form\Form::addFilterNamespace
 	 */
 	public function testAddFilterNamespace()
 	{
@@ -234,7 +234,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::addValidatorNamespace
+	 * @covers \Windwalker\Form\Form::addValidatorNamespace
 	 */
 	public function testAddValidatorNamespace()
 	{
@@ -256,7 +256,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::getIterator
+	 * @covers \Windwalker\Form\Form::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -271,7 +271,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::getCallbackIterator
+	 * @covers \Windwalker\Form\Form::getCallbackIterator
 	 * @TODO   Implement testGetCallbackIterator().
 	 */
 	public function testGetCallbackIterator()
@@ -287,7 +287,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::removeField
+	 * @covers \Windwalker\Form\Form::removeField
 	 */
 	public function testRemoveField()
 	{
@@ -303,7 +303,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::removeFields
+	 * @covers \Windwalker\Form\Form::removeFields
 	 */
 	public function testRemoveFields()
 	{
@@ -318,7 +318,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::getFieldsets
+	 * @covers \Windwalker\Form\Form::getFieldsets
 	 * @TODO   Implement testGetFieldsets().
 	 */
 	public function testGetFieldsets()
@@ -334,7 +334,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::getGroups
+	 * @covers \Windwalker\Form\Form::getGroups
 	 * @TODO   Implement testGetGroups().
 	 */
 	public function testGetGroups()
@@ -350,7 +350,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::setAttribute
+	 * @covers \Windwalker\Form\Form::setAttribute
 	 * @TODO   Implement testSetAttribute().
 	 */
 	public function testSetAttribute()
@@ -366,7 +366,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::getAttribute
+	 * @covers \Windwalker\Form\Form::getAttribute
 	 * @TODO   Implement testGetAttribute().
 	 */
 	public function testGetAttribute()
@@ -382,7 +382,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::bind
+	 * @covers \Windwalker\Form\Form::bind
 	 */
 	public function testBind()
 	{
@@ -406,7 +406,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::validate
+	 * @covers \Windwalker\Form\Form::validate
 	 */
 	public function testValidate()
 	{
@@ -457,7 +457,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::prepareView
+	 * @covers \Windwalker\Form\Form::prepareView
 	 */
 	public function testGetViews()
 	{
@@ -486,7 +486,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::prepareStore
+	 * @covers \Windwalker\Form\Form::prepareStore
 	 */
 	public function testPrepareStore()
 	{
@@ -501,7 +501,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::renderField
+	 * @covers \Windwalker\Form\Form::renderField
 	 *
 	 * @since  2.1.2
 	 */
@@ -525,7 +525,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::renderFields
+	 * @covers \Windwalker\Form\Form::renderFields
 	 * @TODO   Implement testRenderFields().
 	 */
 	public function testRenderFields()
@@ -541,7 +541,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Form::getControl
+	 * @covers \Windwalker\Form\Form::getControl
 	 */
 	public function testGetAndSetControl()
 	{
@@ -558,8 +558,8 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Form\Form::filter
-	 * @covers Windwalker\Form\Form::getValues
+	 * @covers \Windwalker\Form\Form::filter
+	 * @covers \Windwalker\Form\Form::getValues
 	 */
 	public function testFilterAndGetValues()
 	{

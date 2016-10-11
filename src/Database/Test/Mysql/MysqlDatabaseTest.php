@@ -51,7 +51,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::select
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::select
 	 */
 	public function testSelect()
 	{
@@ -66,7 +66,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::create
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::create
 	 */
 	public function testCreate()
 	{
@@ -84,7 +84,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::drop
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::drop
 	 */
 	public function testDrop()
 	{
@@ -102,7 +102,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::exsts
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::exsts
 	 */
 	public function testExists()
 	{
@@ -121,7 +121,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::rename
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::rename
 	 */
 	public function testRename()
 	{
@@ -151,7 +151,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::getTables
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::getTables
 	 */
 	public function testGetTables()
 	{
@@ -172,7 +172,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::getTableDetails
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::getTableDetails
 	 */
 	public function testGetTableDetails()
 	{
@@ -186,7 +186,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDatabase::getTableDetail
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::getTableDetail
 	 */
 	public function testGetTableDetail()
 	{

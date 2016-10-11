@@ -22,7 +22,7 @@ class ApplicationHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\Helper\ApplicationHelper::isAscii
+	 * @covers \Windwalker\Application\Helper\ApplicationHelper::isAscii
 	 */
 	public function testIsAscii()
 	{

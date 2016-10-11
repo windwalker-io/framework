@@ -52,7 +52,7 @@ class BenchmarkTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Benchmark::setTimeFormat
+	 * @covers \Windwalker\Profiler\Benchmark::setTimeFormat
 	 * @TODO   Implement testSetTimeFormat().
 	 */
 	public function testSetTimeFormat()
@@ -68,7 +68,7 @@ class BenchmarkTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Benchmark::addTask
+	 * @covers \Windwalker\Profiler\Benchmark::addTask
 	 * @TODO   Implement testAddTask().
 	 */
 	public function testAddTask()
@@ -84,7 +84,7 @@ class BenchmarkTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Benchmark::execute
+	 * @covers \Windwalker\Profiler\Benchmark::execute
 	 */
 	public function testExecute()
 	{
@@ -135,7 +135,7 @@ class BenchmarkTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Benchmark::getResults
+	 * @covers \Windwalker\Profiler\Benchmark::getResults
 	 * @TODO   Implement testGetResults().
 	 */
 	public function testGetResults()
@@ -151,7 +151,7 @@ class BenchmarkTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Benchmark::getResult
+	 * @covers \Windwalker\Profiler\Benchmark::getResult
 	 * @TODO   Implement testGetResult().
 	 */
 	public function testGetResult()
@@ -167,7 +167,7 @@ class BenchmarkTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Benchmark::renderOne
+	 * @covers \Windwalker\Profiler\Benchmark::renderOne
 	 * @TODO   Implement testRenderOne().
 	 */
 	public function testRenderOne()
@@ -183,7 +183,7 @@ class BenchmarkTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Benchmark::render
+	 * @covers \Windwalker\Profiler\Benchmark::render
 	 * @TODO   Implement testRender().
 	 */
 	public function testRender()

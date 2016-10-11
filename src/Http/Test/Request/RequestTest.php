@@ -51,7 +51,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Request\Request::getHeaders
+	 * @covers \Windwalker\Http\Request\Request::getHeaders
 	 */
 	public function testGetHeaders()
 	{
@@ -67,7 +67,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Request\Request::getHeader
+	 * @covers \Windwalker\Http\Request\Request::getHeader
 	 */
 	public function testGetHeader()
 	{
@@ -83,7 +83,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Http\Request\Request::hasHeader
+	 * @covers \Windwalker\Http\Request\Request::hasHeader
 	 */
 	public function testHasHeader()
 	{

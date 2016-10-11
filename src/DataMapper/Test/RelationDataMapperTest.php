@@ -55,7 +55,7 @@ class RelationDataMapperTest extends DatabaseTest
 	/**
 	 * Test find()
 	 *
-	 * @covers Windwalker\DataMapper\RelationDataMapper::find
+	 * @covers \Windwalker\DataMapper\RelationDataMapper::find
 	 *
 	 * @return void
 	 */
@@ -97,7 +97,7 @@ SQL;
 	/**
 	 * Test find()
 	 *
-	 * @covers Windwalker\DataMapper\RelationDataMapper::find
+	 * @covers \Windwalker\DataMapper\RelationDataMapper::find
 	 *
 	 * @return void
 	 */
@@ -170,7 +170,7 @@ SQL;
 	/**
 	 * Test findAll()
 	 *
-	 * @covers Windwalker\DataMapper\RelationDataMapper::findAll
+	 * @covers \Windwalker\DataMapper\RelationDataMapper::findAll
 	 *
 	 * @return void
 	 */
@@ -206,7 +206,7 @@ SQL;
 	/**
 	 * Test find one.
 	 *
-	 * @covers Windwalker\DataMapper\RelationDataMapper::findOne
+	 * @covers \Windwalker\DataMapper\RelationDataMapper::findOne
 	 *
 	 * @return void
 	 */
@@ -247,7 +247,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\RelationDataMapper::addTable
+	 * @covers \Windwalker\DataMapper\RelationDataMapper::addTable
 	 */
 	public function testAddTable()
 	{
@@ -262,7 +262,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\RelationDataMapper::removeTable
+	 * @covers \Windwalker\DataMapper\RelationDataMapper::removeTable
 	 * @TODO   Implement testRemoveTable().
 	 */
 	public function testRemoveTable()

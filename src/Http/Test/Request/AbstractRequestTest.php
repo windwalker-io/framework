@@ -101,8 +101,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Request\AbstractRequest::getRequestTarget
-	 * @covers Windwalker\Http\Request\AbstractRequest::withRequestTarget
+	 * @covers \Windwalker\Http\Request\AbstractRequest::getRequestTarget
+	 * @covers \Windwalker\Http\Request\AbstractRequest::withRequestTarget
 	 */
 	public function testWithAndGetRequestTarget()
 	{
@@ -127,8 +127,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Request\AbstractRequest::getMethod
-	 * @covers Windwalker\Http\Request\AbstractRequest::withMethod
+	 * @covers \Windwalker\Http\Request\AbstractRequest::getMethod
+	 * @covers \Windwalker\Http\Request\AbstractRequest::withMethod
 	 */
 	public function testWithAndGetMethod()
 	{
@@ -150,8 +150,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Request\AbstractRequest::getUri
-	 * @covers Windwalker\Http\Request\AbstractRequest::withUri
+	 * @covers \Windwalker\Http\Request\AbstractRequest::getUri
+	 * @covers \Windwalker\Http\Request\AbstractRequest::withUri
 	 */
 	public function testWithAndGetUri()
 	{

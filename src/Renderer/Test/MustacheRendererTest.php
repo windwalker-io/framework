@@ -65,7 +65,7 @@ class MustacheRendererTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\MustacheRenderer::render
+	 * @covers \Windwalker\Renderer\MustacheRenderer::render
 	 */
 	public function testRender()
 	{
@@ -85,7 +85,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\MustacheRenderer::getEngine
+	 * @covers \Windwalker\Renderer\MustacheRenderer::getEngine
 	 * @TODO   Implement testGetEngine().
 	 */
 	public function testGetEngine()
@@ -101,7 +101,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\MustacheRenderer::setEngine
+	 * @covers \Windwalker\Renderer\MustacheRenderer::setEngine
 	 * @TODO   Implement testSetEngine().
 	 */
 	public function testSetEngine()
@@ -117,7 +117,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\MustacheRenderer::getLoader
+	 * @covers \Windwalker\Renderer\MustacheRenderer::getLoader
 	 * @TODO   Implement testGetLoader().
 	 */
 	public function testGetLoader()
@@ -133,7 +133,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\MustacheRenderer::setLoader
+	 * @covers \Windwalker\Renderer\MustacheRenderer::setLoader
 	 * @TODO   Implement testSetLoader().
 	 */
 	public function testSetLoader()

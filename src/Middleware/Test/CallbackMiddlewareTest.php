@@ -53,7 +53,7 @@ class CallbackMiddlewareTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Middleware\CallbackMiddleware::execute
+	 * @covers \Windwalker\Middleware\CallbackMiddleware::execute
 	 */
 	public function testExecute()
 	{
@@ -89,7 +89,7 @@ EOF;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Middleware\CallbackMiddleware::getHandler
+	 * @covers \Windwalker\Middleware\CallbackMiddleware::getHandler
 	 * @TODO   Implement testGetHandler().
 	 */
 	public function testGetHandler()
@@ -105,7 +105,7 @@ EOF;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Middleware\CallbackMiddleware::setHandler
+	 * @covers \Windwalker\Middleware\CallbackMiddleware::setHandler
 	 * @TODO   Implement testSetHandler().
 	 */
 	public function testSetHandler()

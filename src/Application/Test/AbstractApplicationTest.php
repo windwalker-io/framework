@@ -53,7 +53,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractApplication::close
+	 * @covers \Windwalker\Application\AbstractApplication::close
 	 */
 	public function testClose()
 	{
@@ -65,7 +65,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractApplication::execute
+	 * @covers \Windwalker\Application\AbstractApplication::execute
 	 */
 	public function testExecute()
 	{
@@ -79,7 +79,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractApplication::get
+	 * @covers \Windwalker\Application\AbstractApplication::get
 	 */
 	public function testGetAndSet()
 	{
@@ -106,7 +106,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractApplication::getLogger
+	 * @covers \Windwalker\Application\AbstractApplication::getLogger
 	 */
 	public function testGetAndSetLogger()
 	{
@@ -124,7 +124,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractApplication::setConfiguration
+	 * @covers \Windwalker\Application\AbstractApplication::setConfiguration
 	 */
 	public function testSetConfiguration()
 	{

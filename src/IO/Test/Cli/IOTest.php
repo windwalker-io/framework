@@ -50,7 +50,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::out
+	 * @covers \Windwalker\IO\Cli\IO::out
 	 * @TODO   Implement testOut().
 	 */
 	public function testOut()
@@ -66,7 +66,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::in
+	 * @covers \Windwalker\IO\Cli\IO::in
 	 * @TODO   Implement testIn().
 	 */
 	public function testIn()
@@ -82,7 +82,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::err
+	 * @covers \Windwalker\IO\Cli\IO::err
 	 * @TODO   Implement testErr().
 	 */
 	public function testErr()
@@ -98,7 +98,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::getOption
+	 * @covers \Windwalker\IO\Cli\IO::getOption
 	 * @TODO   Implement testGetOption().
 	 */
 	public function testGetOption()
@@ -114,7 +114,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::setOption
+	 * @covers \Windwalker\IO\Cli\IO::setOption
 	 * @TODO   Implement testSetOption().
 	 */
 	public function testSetOption()
@@ -130,7 +130,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::getArgument
+	 * @covers \Windwalker\IO\Cli\IO::getArgument
 	 * @TODO   Implement testGetArgument().
 	 */
 	public function testGetArgument()
@@ -146,7 +146,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::setArgument
+	 * @covers \Windwalker\IO\Cli\IO::setArgument
 	 * @TODO   Implement testSetArgument().
 	 */
 	public function testSetArgument()
@@ -162,7 +162,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::getInput
+	 * @covers \Windwalker\IO\Cli\IO::getInput
 	 * @TODO   Implement testGetInput().
 	 */
 	public function testGetInput()
@@ -178,7 +178,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::setInput
+	 * @covers \Windwalker\IO\Cli\IO::setInput
 	 * @TODO   Implement testSetInput().
 	 */
 	public function testSetInput()
@@ -194,7 +194,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::getOutput
+	 * @covers \Windwalker\IO\Cli\IO::getOutput
 	 * @TODO   Implement testGetOutput().
 	 */
 	public function testGetOutput()
@@ -210,7 +210,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::setOutput
+	 * @covers \Windwalker\IO\Cli\IO::setOutput
 	 * @TODO   Implement testSetOutput().
 	 */
 	public function testSetOutput()
@@ -226,7 +226,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::getCalledScript
+	 * @covers \Windwalker\IO\Cli\IO::getCalledScript
 	 * @TODO   Implement testGetCalledScript().
 	 */
 	public function testGetCalledScript()
@@ -242,7 +242,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::getOptions
+	 * @covers \Windwalker\IO\Cli\IO::getOptions
 	 * @TODO   Implement testGetOptions().
 	 */
 	public function testGetOptions()
@@ -258,7 +258,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::getArguments
+	 * @covers \Windwalker\IO\Cli\IO::getArguments
 	 * @TODO   Implement testGetArguments().
 	 */
 	public function testGetArguments()
@@ -274,7 +274,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::offsetSet
+	 * @covers \Windwalker\IO\Cli\IO::offsetSet
 	 * @TODO   Implement testOffsetSet().
 	 */
 	public function testOffsetSet()
@@ -290,7 +290,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::offsetUnset
+	 * @covers \Windwalker\IO\Cli\IO::offsetUnset
 	 * @TODO   Implement testOffsetUnset().
 	 */
 	public function testOffsetUnset()
@@ -306,7 +306,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::offsetExists
+	 * @covers \Windwalker\IO\Cli\IO::offsetExists
 	 * @TODO   Implement testOffsetExists().
 	 */
 	public function testOffsetExists()
@@ -322,7 +322,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::offsetGet
+	 * @covers \Windwalker\IO\Cli\IO::offsetGet
 	 * @TODO   Implement testOffsetGet().
 	 */
 	public function testOffsetGet()
@@ -338,7 +338,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::getIterator
+	 * @covers \Windwalker\IO\Cli\IO::getIterator
 	 * @TODO   Implement testGetIterator().
 	 */
 	public function testGetIterator()
@@ -354,7 +354,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::serialize
+	 * @covers \Windwalker\IO\Cli\IO::serialize
 	 * @TODO   Implement testSerialize().
 	 */
 	public function testSerialize()
@@ -370,7 +370,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::unserialize
+	 * @covers \Windwalker\IO\Cli\IO::unserialize
 	 * @TODO   Implement testUnserialize().
 	 */
 	public function testUnserialize()
@@ -386,7 +386,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::count
+	 * @covers \Windwalker\IO\Cli\IO::count
 	 * @TODO   Implement testCount().
 	 */
 	public function testCount()
@@ -402,7 +402,7 @@ class IOTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\IO::jsonSerialize
+	 * @covers \Windwalker\IO\Cli\IO::jsonSerialize
 	 * @TODO   Implement testJsonSerialize().
 	 */
 	public function testJsonSerialize()

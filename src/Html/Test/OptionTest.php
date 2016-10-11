@@ -51,7 +51,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Html\Option::toString
+	 * @covers \Windwalker\Html\Option::toString
 	 *
 	 */
 	public function testToString()
@@ -67,7 +67,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Option::getValue
+	 * @covers \Windwalker\Html\Option::getValue
 	 */
 	public function testGetAndSetValue()
 	{

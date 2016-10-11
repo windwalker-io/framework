@@ -50,7 +50,7 @@ class PhpFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\PhpFormat::structToString
+	 * @covers \Windwalker\Structure\Format\PhpFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class PhpFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\PhpFormat::stringToStruct
+	 * @covers \Windwalker\Structure\Format\PhpFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()

@@ -52,7 +52,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::addMap
+	 * @covers \Windwalker\Router\Router::addMap
 	 */
 	public function testAddMap()
 	{
@@ -69,7 +69,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::addMaps
+	 * @covers \Windwalker\Router\Router::addMaps
 	 */
 	public function testAddMaps()
 	{
@@ -91,7 +91,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::addRoute
+	 * @covers \Windwalker\Router\Router::addRoute
 	 */
 	public function testAddRoute()
 	{
@@ -128,7 +128,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::addRoutes
+	 * @covers \Windwalker\Router\Router::addRoutes
 	 */
 	public function testAddRoutes()
 	{
@@ -150,8 +150,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Router\Router::hasRoutes
-	 * @covers Windwalker\Router\Router::getRoutes
+	 * @covers \Windwalker\Router\Router::hasRoutes
+	 * @covers \Windwalker\Router\Router::getRoutes
 	 */
 	public function testHasAndGetRoute()
 	{
@@ -169,7 +169,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::match
+	 * @covers \Windwalker\Router\Router::match
 	 */
 	public function testMatch()
 	{
@@ -204,7 +204,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::build
+	 * @covers \Windwalker\Router\Router::build
 	 */
 	public function testBuild()
 	{
@@ -224,7 +224,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::getMethod
+	 * @covers \Windwalker\Router\Router::getMethod
 	 */
 	public function testGetMethod()
 	{
@@ -239,7 +239,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::setMethod
+	 * @covers \Windwalker\Router\Router::setMethod
 	 * @TODO   Implement testSetMethod().
 	 */
 	public function testSetMethod()
@@ -255,7 +255,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Router::getMatcher
+	 * @covers \Windwalker\Router\Router::getMatcher
 	 */
 	public function testGetAndSetMatcher()
 	{
@@ -273,7 +273,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Router\Router::group
+	 * @covers \Windwalker\Router\Router::group
 	 */
 	public function testGroup()
 	{

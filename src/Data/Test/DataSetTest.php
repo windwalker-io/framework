@@ -64,7 +64,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::bind
+	 * @covers \Windwalker\Data\DataSet::bind
 	 */
 	public function testBind()
 	{
@@ -91,7 +91,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::__get
+	 * @covers \Windwalker\Data\DataSet::__get
 	 */
 	public function test__getAnd__set()
 	{
@@ -117,7 +117,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::__isset
+	 * @covers \Windwalker\Data\DataSet::__isset
 	 */
 	public function test__isset()
 	{
@@ -133,7 +133,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::__unset
+	 * @covers \Windwalker\Data\DataSet::__unset
 	 */
 	public function test__unset()
 	{
@@ -154,7 +154,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::offsetExists
+	 * @covers \Windwalker\Data\DataSet::offsetExists
 	 */
 	public function testOffsetExists()
 	{
@@ -167,8 +167,8 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::offsetGet
-	 * @covers Windwalker\Data\DataSet::offsetSet
+	 * @covers \Windwalker\Data\DataSet::offsetGet
+	 * @covers \Windwalker\Data\DataSet::offsetSet
 	 */
 	public function testOffsetGetAndSet()
 	{
@@ -190,7 +190,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::clear
+	 * @covers \Windwalker\Data\DataSet::clear
 	 */
 	public function testClear()
 	{
@@ -206,7 +206,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::offsetUnset
+	 * @covers \Windwalker\Data\DataSet::offsetUnset
 	 */
 	public function testOffsetUnset()
 	{
@@ -221,7 +221,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::getIterator
+	 * @covers \Windwalker\Data\DataSet::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -235,7 +235,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::serialize
+	 * @covers \Windwalker\Data\DataSet::serialize
 	 */
 	public function testSerialize()
 	{
@@ -252,7 +252,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::count
+	 * @covers \Windwalker\Data\DataSet::count
 	 */
 	public function testCount()
 	{
@@ -264,7 +264,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::jsonSerialize
+	 * @covers \Windwalker\Data\DataSet::jsonSerialize
 	 */
 	public function testJsonSerialize()
 	{
@@ -285,7 +285,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\DataSet::isNull
+	 * @covers \Windwalker\Data\DataSet::isNull
 	 */
 	public function testIsNull()
 	{

@@ -32,7 +32,7 @@ class AbstractInputListTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Select\AbstractInputList::toString
+	 * @covers \Windwalker\Html\Select\AbstractInputList::toString
 	 * @TODO   Implement testToString().
 	 */
 	public function testToString()
@@ -48,7 +48,7 @@ class AbstractInputListTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Select\AbstractInputList::getChecked
+	 * @covers \Windwalker\Html\Select\AbstractInputList::getChecked
 	 * @TODO   Implement testGetChecked().
 	 */
 	public function testGetChecked()
@@ -64,7 +64,7 @@ class AbstractInputListTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Select\AbstractInputList::setChecked
+	 * @covers \Windwalker\Html\Select\AbstractInputList::setChecked
 	 * @TODO   Implement testSetChecked().
 	 */
 	public function testSetChecked()

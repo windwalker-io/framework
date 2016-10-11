@@ -65,7 +65,7 @@ class PhpRendererTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PhpRenderer::render
+	 * @covers \Windwalker\Renderer\PhpRenderer::render
 	 */
 	public function testRender()
 	{
@@ -85,7 +85,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PhpRenderer::findFile
+	 * @covers \Windwalker\Renderer\PhpRenderer::findFile
 	 */
 	public function testFindFile()
 	{
@@ -103,7 +103,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PhpRenderer::extend
+	 * @covers \Windwalker\Renderer\PhpRenderer::extend
 	 */
 	public function testRenderTopLevelBlock()
 	{
@@ -125,7 +125,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PhpRenderer::extend
+	 * @covers \Windwalker\Renderer\PhpRenderer::extend
 	 */
 	public function testExtend()
 	{
@@ -247,7 +247,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\AbstractRenderer::escape
+	 * @covers \Windwalker\Renderer\AbstractRenderer::escape
 	 */
 	public function testEscape()
 	{
@@ -264,7 +264,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\AbstractRenderer::getPaths
+	 * @covers \Windwalker\Renderer\AbstractRenderer::getPaths
 	 * @TODO   Implement testGetPaths().
 	 */
 	public function testGetPaths()
@@ -280,7 +280,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\AbstractRenderer::setPaths
+	 * @covers \Windwalker\Renderer\AbstractRenderer::setPaths
 	 * @TODO   Implement testSetPaths().
 	 */
 	public function testSetPaths()
@@ -296,7 +296,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\AbstractRenderer::addPath
+	 * @covers \Windwalker\Renderer\AbstractRenderer::addPath
 	 * @TODO   Implement testAddPath().
 	 */
 	public function testAddPath()
@@ -312,7 +312,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PhpRenderer::getBlock
+	 * @covers \Windwalker\Renderer\PhpRenderer::getBlock
 	 * @TODO   Implement testGetBlock().
 	 */
 	public function testGetBlock()
@@ -328,7 +328,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PhpRenderer::setBlock
+	 * @covers \Windwalker\Renderer\PhpRenderer::setBlock
 	 * @TODO   Implement testSetBlock().
 	 */
 	public function testSetBlock()
@@ -344,7 +344,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PhpRenderer::getBlockQueue
+	 * @covers \Windwalker\Renderer\PhpRenderer::getBlockQueue
 	 * @TODO   Implement testGetBlockQueue().
 	 */
 	public function testGetBlockQueue()

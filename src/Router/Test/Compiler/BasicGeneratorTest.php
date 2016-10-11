@@ -93,7 +93,7 @@ class BasicGeneratorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Compiler\BasicGenerator::generate
+	 * @covers \Windwalker\Router\Compiler\BasicGenerator::generate
 	 *
 	 * @dataProvider  regexList
 	 */

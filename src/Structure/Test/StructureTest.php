@@ -76,7 +76,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::__clone
+	 * @covers \Windwalker\Structure\Structure::__clone
 	 */
 	public function test__clone()
 	{
@@ -92,7 +92,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::__toString
+	 * @covers \Windwalker\Structure\Structure::__toString
 	 */
 	public function test__toString()
 	{
@@ -104,7 +104,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::jsonSerialize
+	 * @covers \Windwalker\Structure\Structure::jsonSerialize
 	 */
 	public function testJsonSerialize()
 	{
@@ -116,7 +116,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::def
+	 * @covers \Windwalker\Structure\Structure::def
 	 */
 	public function testDef()
 	{
@@ -132,7 +132,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::exists
+	 * @covers \Windwalker\Structure\Structure::exists
 	 */
 	public function testExists()
 	{
@@ -145,7 +145,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::get
+	 * @covers \Windwalker\Structure\Structure::get
 	 */
 	public function testGet()
 	{
@@ -163,7 +163,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::load
+	 * @covers \Windwalker\Structure\Structure::load
 	 */
 	public function testLoadArray()
 	{
@@ -181,7 +181,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::load
+	 * @covers \Windwalker\Structure\Structure::load
 	 */
 	public function testLoadObject()
 	{
@@ -199,7 +199,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::loadFile
+	 * @covers \Windwalker\Structure\Structure::loadFile
 	 */
 	public function testLoadFile()
 	{
@@ -217,7 +217,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::loadString
+	 * @covers \Windwalker\Structure\Structure::loadString
 	 */
 	public function testLoadString()
 	{
@@ -234,7 +234,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::merge
+	 * @covers \Windwalker\Structure\Structure::merge
 	 */
 	public function testMerge()
 	{
@@ -277,7 +277,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::merge
+	 * @covers \Windwalker\Structure\Structure::merge
 	 */
 	public function testMergeWithIgnoreValues()
 	{
@@ -321,7 +321,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Structure\Structure::mergeTo
+	 * @covers \Windwalker\Structure\Structure::mergeTo
 	 */
 	public function testMergeTo()
 	{
@@ -343,7 +343,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::offsetExists
+	 * @covers \Windwalker\Structure\Structure::offsetExists
 	 */
 	public function testOffsetExists()
 	{
@@ -356,7 +356,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::offsetGet
+	 * @covers \Windwalker\Structure\Structure::offsetGet
 	 */
 	public function testOffsetGet()
 	{
@@ -368,7 +368,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::offsetSet
+	 * @covers \Windwalker\Structure\Structure::offsetSet
 	 */
 	public function testOffsetSet()
 	{
@@ -382,7 +382,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::offsetUnset
+	 * @covers \Windwalker\Structure\Structure::offsetUnset
 	 */
 	public function testOffsetUnset()
 	{
@@ -396,7 +396,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::set
+	 * @covers \Windwalker\Structure\Structure::set
 	 */
 	public function testSet()
 	{
@@ -410,7 +410,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Structure\Structure::setRaw
+	 * @covers \Windwalker\Structure\Structure::setRaw
 	 */
 	public function testSetRaw()
 	{
@@ -427,7 +427,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::toArray
+	 * @covers \Windwalker\Structure\Structure::toArray
 	 */
 	public function testToArray()
 	{
@@ -441,7 +441,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::toObject
+	 * @covers \Windwalker\Structure\Structure::toObject
 	 */
 	public function testToObject()
 	{
@@ -455,7 +455,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::toString
+	 * @covers \Windwalker\Structure\Structure::toString
 	 */
 	public function testToString()
 	{
@@ -473,7 +473,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Structure::flatten
+	 * @covers \Windwalker\Structure\Structure::flatten
 	 */
 	public function testFlatten()
 	{
@@ -491,7 +491,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Structure\Structure::push
+	 * @covers \Windwalker\Structure\Structure::push
 	 */
 	public function testPush()
 	{
@@ -526,7 +526,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Structure\Structure::shift
+	 * @covers \Windwalker\Structure\Structure::shift
 	 */
 	public function testShift()
 	{
@@ -552,7 +552,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Structure\Structure::pop
+	 * @covers \Windwalker\Structure\Structure::pop
 	 */
 	public function testPop()
 	{
@@ -578,7 +578,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Structure\Structure::unshift
+	 * @covers \Windwalker\Structure\Structure::unshift
 	 */
 	public function testUnshift()
 	{

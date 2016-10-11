@@ -50,7 +50,7 @@ class XmlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\XmlFormat::structToString
+	 * @covers \Windwalker\Structure\Format\XmlFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class XmlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\XmlFormat::stringToStruct
+	 * @covers \Windwalker\Structure\Format\XmlFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()

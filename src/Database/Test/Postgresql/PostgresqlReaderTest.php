@@ -23,7 +23,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Pdo\PdoReader::fetchArray
+	 * @covers \Windwalker\Database\Driver\Pdo\PdoReader::fetchArray
 	 */
 	public function testFetchArray()
 	{
@@ -43,7 +43,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Pdo\PdoReader::fetchAssoc
+	 * @covers \Windwalker\Database\Driver\Pdo\PdoReader::fetchAssoc
 	 */
 	public function testFetchAssoc()
 	{
@@ -63,7 +63,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Pdo\PdoReader::fetchObject
+	 * @covers \Windwalker\Database\Driver\Pdo\PdoReader::fetchObject
 	 */
 	public function testFetchObject()
 	{
@@ -83,7 +83,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Pdo\PdoReader::fetch
+	 * @covers \Windwalker\Database\Driver\Pdo\PdoReader::fetch
 	 */
 	public function testFetch()
 	{
@@ -104,7 +104,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Pdo\PdoReader::fetchAll
+	 * @covers \Windwalker\Database\Driver\Pdo\PdoReader::fetchAll
 	 */
 	public function testFetchAll()
 	{
@@ -123,7 +123,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Pdo\PdoReader::count
+	 * @covers \Windwalker\Database\Driver\Pdo\PdoReader::count
 	 */
 	public function testCount()
 	{
@@ -140,7 +140,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Pdo\PdoReader::countAffected
+	 * @covers \Windwalker\Database\Driver\Pdo\PdoReader::countAffected
 	 */
 	public function testCountAffected()
 	{
@@ -156,7 +156,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::setQuery
+	 * @covers \Windwalker\Database\Command\AbstractReader::setQuery
 	 */
 	public function testSetQuery()
 	{
@@ -171,7 +171,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::getIterator
+	 * @covers \Windwalker\Database\Command\AbstractReader::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -211,7 +211,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::loadResult
+	 * @covers \Windwalker\Database\Command\AbstractReader::loadResult
 	 */
 	public function testLoadResult()
 	{
@@ -227,7 +227,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::loadColumn
+	 * @covers \Windwalker\Database\Command\AbstractReader::loadColumn
 	 */
 	public function testLoadColumn()
 	{
@@ -245,7 +245,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::loadArray
+	 * @covers \Windwalker\Database\Command\AbstractReader::loadArray
 	 */
 	public function testLoadArray()
 	{
@@ -261,7 +261,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::loadArrayList
+	 * @covers \Windwalker\Database\Command\AbstractReader::loadArrayList
 	 */
 	public function testLoadArrayList()
 	{
@@ -279,7 +279,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::loadAssoc
+	 * @covers \Windwalker\Database\Command\AbstractReader::loadAssoc
 	 */
 	public function testLoadAssoc()
 	{
@@ -295,7 +295,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::loadAssocList
+	 * @covers \Windwalker\Database\Command\AbstractReader::loadAssocList
 	 */
 	public function testLoadAssocList()
 	{
@@ -313,7 +313,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::loadObject
+	 * @covers \Windwalker\Database\Command\AbstractReader::loadObject
 	 */
 	public function testLoadObject()
 	{
@@ -329,7 +329,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::loadObjectList
+	 * @covers \Windwalker\Database\Command\AbstractReader::loadObjectList
 	 */
 	public function testLoadObjectList()
 	{
@@ -347,7 +347,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::freeResult
+	 * @covers \Windwalker\Database\Command\AbstractReader::freeResult
 	 * @TODO   Implement testFreeResult().
 	 */
 	public function testFreeResult()
@@ -363,7 +363,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::getDriver
+	 * @covers \Windwalker\Database\Command\AbstractReader::getDriver
 	 */
 	public function testGetDriver()
 	{
@@ -375,7 +375,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractReader::setDriver
+	 * @covers \Windwalker\Database\Command\AbstractReader::setDriver
 	 */
 	public function testSetDriver()
 	{

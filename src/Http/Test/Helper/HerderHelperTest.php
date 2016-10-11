@@ -23,7 +23,7 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\HeaderHelper::getValue
+	 * @covers \Windwalker\Http\Helper\HeaderHelper::getValue
 	 */
 	public function testGetValue()
 	{
@@ -128,7 +128,7 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\HeaderHelper::isValidValue
+	 * @covers \Windwalker\Http\Helper\HeaderHelper::isValidValue
 	 * @dataProvider  isValidValue_Provider
 	 */
 	public function testIsValidValue($string, $expected, $num)
@@ -214,7 +214,7 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\HeaderHelper::arrayOnlyContainsString
+	 * @covers \Windwalker\Http\Helper\HeaderHelper::arrayOnlyContainsString
 	 */
 	public function testArrayOnlyContainsString()
 	{
@@ -236,7 +236,7 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\HeaderHelper::toHeaderLine
+	 * @covers \Windwalker\Http\Helper\HeaderHelper::toHeaderLine
 	 */
 	public function testToHeaderLine()
 	{
@@ -256,7 +256,7 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\HeaderHelper::normalizeHeaderName
+	 * @covers \Windwalker\Http\Helper\HeaderHelper::normalizeHeaderName
 	 */
 	public function testNormalizeHeaderName()
 	{
@@ -274,7 +274,7 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Http\Helper\HeaderHelper::isValidProtocolVersion
+	 * @covers \Windwalker\Http\Helper\HeaderHelper::isValidProtocolVersion
 	 *
 	 * @dataProvider isValidProtocolVersion_Provider
 	 */
@@ -312,7 +312,7 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Http\Helper\HeaderHelper::prepareAttachmentHeaders
+	 * @covers \Windwalker\Http\Helper\HeaderHelper::prepareAttachmentHeaders
 	 */
 	public function testPrepareAttachmentHeaders()
 	{

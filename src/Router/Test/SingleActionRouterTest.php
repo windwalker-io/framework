@@ -50,7 +50,7 @@ class SingleActionRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\SingleActionRouter::addMap
+	 * @covers \Windwalker\Router\SingleActionRouter::addMap
 	 */
 	public function testAddMap()
 	{
@@ -67,7 +67,7 @@ class SingleActionRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\SingleActionRouter::match
+	 * @covers \Windwalker\Router\SingleActionRouter::match
 	 */
 	public function testMatch()
 	{
@@ -96,7 +96,7 @@ class SingleActionRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\SingleActionRouter::getVariables
+	 * @covers \Windwalker\Router\SingleActionRouter::getVariables
 	 * @TODO   Implement testGetVariables().
 	 */
 	public function testGetVariables()
@@ -112,7 +112,7 @@ class SingleActionRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\SingleActionRouter::setVariables
+	 * @covers \Windwalker\Router\SingleActionRouter::setVariables
 	 * @TODO   Implement testSetVariables().
 	 */
 	public function testSetVariables()

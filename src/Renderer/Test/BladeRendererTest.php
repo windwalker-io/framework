@@ -78,7 +78,7 @@ class BladeRendererTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::render
+	 * @covers \Windwalker\Renderer\BladeRenderer::render
 	 */
 	public function testRender()
 	{
@@ -135,7 +135,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::getEngine
+	 * @covers \Windwalker\Renderer\BladeRenderer::getEngine
 	 */
 	public function testGetBlade()
 	{
@@ -147,7 +147,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::setEngine
+	 * @covers \Windwalker\Renderer\BladeRenderer::setEngine
 	 * @TODO   Implement testSetBlade().
 	 */
 	public function testSetBlade()
@@ -163,7 +163,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::getFilesystem
+	 * @covers \Windwalker\Renderer\BladeRenderer::getFilesystem
 	 */
 	public function testGetFilesystem()
 	{
@@ -175,7 +175,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::setFilesystem
+	 * @covers \Windwalker\Renderer\BladeRenderer::setFilesystem
 	 * @TODO   Implement testSetFilesystem().
 	 */
 	public function testSetFilesystem()
@@ -191,7 +191,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::getFinder
+	 * @covers \Windwalker\Renderer\BladeRenderer::getFinder
 	 */
 	public function testGetFinder()
 	{
@@ -203,7 +203,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::setFinder
+	 * @covers \Windwalker\Renderer\BladeRenderer::setFinder
 	 * @TODO   Implement testSetFinder().
 	 */
 	public function testSetFinder()
@@ -219,7 +219,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::getResolver
+	 * @covers \Windwalker\Renderer\BladeRenderer::getResolver
 	 */
 	public function testGetResolver()
 	{
@@ -231,7 +231,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::setResolver
+	 * @covers \Windwalker\Renderer\BladeRenderer::setResolver
 	 */
 	public function testSetResolver()
 	{
@@ -246,7 +246,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::getDispatcher
+	 * @covers \Windwalker\Renderer\BladeRenderer::getDispatcher
 	 */
 	public function testGetDispatcher()
 	{
@@ -258,7 +258,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::setDispatcher
+	 * @covers \Windwalker\Renderer\BladeRenderer::setDispatcher
 	 * @TODO   Implement testSetDispatcher().
 	 */
 	public function testSetDispatcher()
@@ -274,7 +274,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::getCompiler
+	 * @covers \Windwalker\Renderer\BladeRenderer::getCompiler
 	 */
 	public function testGetCompiler()
 	{
@@ -286,7 +286,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\BladeRenderer::setCompiler
+	 * @covers \Windwalker\Renderer\BladeRenderer::setCompiler
 	 * @TODO   Implement testSetCompiler().
 	 */
 	public function testSetCompiler()

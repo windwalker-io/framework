@@ -85,7 +85,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Enum\AbstractHtmlList::addItem
+	 * @covers \Windwalker\Html\Enum\AbstractHtmlList::addItem
 	 */
 	public function testAddItem()
 	{

@@ -93,7 +93,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::request
+	 * @covers \Windwalker\Http\HttpClient::request
 	 */
 	public function testRequest()
 	{
@@ -121,7 +121,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::send
+	 * @covers \Windwalker\Http\HttpClient::send
 	 */
 	public function testSend()
 	{
@@ -137,7 +137,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::options
+	 * @covers \Windwalker\Http\HttpClient::options
 	 */
 	public function testOptions()
 	{
@@ -156,7 +156,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::head
+	 * @covers \Windwalker\Http\HttpClient::head
 	 */
 	public function testHead()
 	{
@@ -175,7 +175,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::get
+	 * @covers \Windwalker\Http\HttpClient::get
 	 */
 	public function testGet()
 	{
@@ -194,7 +194,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::post
+	 * @covers \Windwalker\Http\HttpClient::post
 	 */
 	public function testPost()
 	{
@@ -215,7 +215,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::put
+	 * @covers \Windwalker\Http\HttpClient::put
 	 */
 	public function testPut()
 	{
@@ -236,7 +236,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::delete
+	 * @covers \Windwalker\Http\HttpClient::delete
 	 */
 	public function testDelete()
 	{
@@ -257,7 +257,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::trace
+	 * @covers \Windwalker\Http\HttpClient::trace
 	 */
 	public function testTrace()
 	{
@@ -276,7 +276,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::patch
+	 * @covers \Windwalker\Http\HttpClient::patch
 	 */
 	public function testPatch()
 	{
@@ -297,7 +297,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::getOption
+	 * @covers \Windwalker\Http\HttpClient::getOption
 	 * @TODO   Implement testGetOption().
 	 */
 	public function testGetOption()
@@ -313,7 +313,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::setOption
+	 * @covers \Windwalker\Http\HttpClient::setOption
 	 * @TODO   Implement testSetOption().
 	 */
 	public function testSetOption()
@@ -329,7 +329,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::getOptions
+	 * @covers \Windwalker\Http\HttpClient::getOptions
 	 * @TODO   Implement testGetOptions().
 	 */
 	public function testGetOptions()
@@ -345,7 +345,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::setOptions
+	 * @covers \Windwalker\Http\HttpClient::setOptions
 	 * @TODO   Implement testSetOptions().
 	 */
 	public function testSetOptions()
@@ -361,7 +361,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::getTransport
+	 * @covers \Windwalker\Http\HttpClient::getTransport
 	 * @TODO   Implement testGetTransport().
 	 */
 	public function testGetTransport()
@@ -377,7 +377,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\HttpClient::setTransport
+	 * @covers \Windwalker\Http\HttpClient::setTransport
 	 * @TODO   Implement testSetTransport().
 	 */
 	public function testSetTransport()

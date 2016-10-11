@@ -71,7 +71,7 @@ class ListFieldTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Field\TextField::prepareAttributes
+	 * @covers \Windwalker\Form\Field\TextField::prepareAttributes
 	 */
 	public function testRender()
 	{
@@ -115,7 +115,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Form\Field\TextField::prepareAttributes
+	 * @covers \Windwalker\Form\Field\TextField::prepareAttributes
 	 */
 	public function testRenderGroup()
 	{

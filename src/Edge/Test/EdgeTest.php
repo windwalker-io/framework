@@ -54,7 +54,7 @@ class EdgeTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::render
+	 * @covers \Windwalker\Edge\Edge::render
 	 */
 	public function testRender()
 	{
@@ -82,7 +82,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::escape
+	 * @covers \Windwalker\Edge\Edge::escape
 	 * @TODO   Implement testEscape().
 	 */
 	public function testEscape()
@@ -98,7 +98,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::startSection
+	 * @covers \Windwalker\Edge\Edge::startSection
 	 * @TODO   Implement testStartSection().
 	 */
 	public function testStartSection()
@@ -114,7 +114,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::inject
+	 * @covers \Windwalker\Edge\Edge::inject
 	 * @TODO   Implement testInject().
 	 */
 	public function testInject()
@@ -130,7 +130,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::yieldSection
+	 * @covers \Windwalker\Edge\Edge::yieldSection
 	 * @TODO   Implement testYieldSection().
 	 */
 	public function testYieldSection()
@@ -146,7 +146,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::stopSection
+	 * @covers \Windwalker\Edge\Edge::stopSection
 	 * @TODO   Implement testStopSection().
 	 */
 	public function testStopSection()
@@ -162,7 +162,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::appendSection
+	 * @covers \Windwalker\Edge\Edge::appendSection
 	 * @TODO   Implement testAppendSection().
 	 */
 	public function testAppendSection()
@@ -178,7 +178,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::yieldContent
+	 * @covers \Windwalker\Edge\Edge::yieldContent
 	 * @TODO   Implement testYieldContent().
 	 */
 	public function testYieldContent()
@@ -194,7 +194,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::startPush
+	 * @covers \Windwalker\Edge\Edge::startPush
 	 * @TODO   Implement testStartPush().
 	 */
 	public function testStartPush()
@@ -210,7 +210,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::stopPush
+	 * @covers \Windwalker\Edge\Edge::stopPush
 	 * @TODO   Implement testStopPush().
 	 */
 	public function testStopPush()
@@ -226,7 +226,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::yieldPushContent
+	 * @covers \Windwalker\Edge\Edge::yieldPushContent
 	 * @TODO   Implement testYieldPushContent().
 	 */
 	public function testYieldPushContent()
@@ -242,7 +242,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::renderEach
+	 * @covers \Windwalker\Edge\Edge::renderEach
 	 * @TODO   Implement testRenderEach().
 	 */
 	public function testRenderEach()
@@ -258,7 +258,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::flushSections
+	 * @covers \Windwalker\Edge\Edge::flushSections
 	 * @TODO   Implement testFlushSections().
 	 */
 	public function testFlushSections()
@@ -274,7 +274,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::flushSectionsIfDoneRendering
+	 * @covers \Windwalker\Edge\Edge::flushSectionsIfDoneRendering
 	 * @TODO   Implement testFlushSectionsIfDoneRendering().
 	 */
 	public function testFlushSectionsIfDoneRendering()
@@ -290,7 +290,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::incrementRender
+	 * @covers \Windwalker\Edge\Edge::incrementRender
 	 * @TODO   Implement testIncrementRender().
 	 */
 	public function testIncrementRender()
@@ -306,7 +306,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::decrementRender
+	 * @covers \Windwalker\Edge\Edge::decrementRender
 	 * @TODO   Implement testDecrementRender().
 	 */
 	public function testDecrementRender()
@@ -322,7 +322,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::doneRendering
+	 * @covers \Windwalker\Edge\Edge::doneRendering
 	 * @TODO   Implement testDoneRendering().
 	 */
 	public function testDoneRendering()
@@ -338,7 +338,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::prepareExtensions
+	 * @covers \Windwalker\Edge\Edge::prepareExtensions
 	 * @TODO   Implement testPrepareExtensions().
 	 */
 	public function testPrepareExtensions()
@@ -354,7 +354,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::arrayExcept
+	 * @covers \Windwalker\Edge\Edge::arrayExcept
 	 * @TODO   Implement testArrayExcept().
 	 */
 	public function testArrayExcept()
@@ -370,7 +370,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::getGlobals
+	 * @covers \Windwalker\Edge\Edge::getGlobals
 	 * @TODO   Implement testGetGlobals().
 	 */
 	public function testGetGlobals()
@@ -386,7 +386,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::addGlobal
+	 * @covers \Windwalker\Edge\Edge::addGlobal
 	 * @TODO   Implement testAddGlobal().
 	 */
 	public function testAddGlobal()
@@ -402,7 +402,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::removeGlobal
+	 * @covers \Windwalker\Edge\Edge::removeGlobal
 	 * @TODO   Implement testRemoveGlobal().
 	 */
 	public function testRemoveGlobal()
@@ -418,7 +418,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::getGlobal
+	 * @covers \Windwalker\Edge\Edge::getGlobal
 	 * @TODO   Implement testGetGlobal().
 	 */
 	public function testGetGlobal()
@@ -434,7 +434,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::setGlobals
+	 * @covers \Windwalker\Edge\Edge::setGlobals
 	 * @TODO   Implement testSetGlobals().
 	 */
 	public function testSetGlobals()
@@ -450,7 +450,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::getCompiler
+	 * @covers \Windwalker\Edge\Edge::getCompiler
 	 * @TODO   Implement testGetCompiler().
 	 */
 	public function testGetCompiler()
@@ -466,7 +466,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::setCompiler
+	 * @covers \Windwalker\Edge\Edge::setCompiler
 	 * @TODO   Implement testSetCompiler().
 	 */
 	public function testSetCompiler()
@@ -482,7 +482,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::getLoader
+	 * @covers \Windwalker\Edge\Edge::getLoader
 	 * @TODO   Implement testGetLoader().
 	 */
 	public function testGetLoader()
@@ -498,7 +498,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::setLoader
+	 * @covers \Windwalker\Edge\Edge::setLoader
 	 * @TODO   Implement testSetLoader().
 	 */
 	public function testSetLoader()
@@ -514,7 +514,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::addExtension
+	 * @covers \Windwalker\Edge\Edge::addExtension
 	 * @TODO   Implement testAddExtension().
 	 */
 	public function testAddExtension()
@@ -530,7 +530,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::removeExtension
+	 * @covers \Windwalker\Edge\Edge::removeExtension
 	 * @TODO   Implement testRemoveExtension().
 	 */
 	public function testRemoveExtension()
@@ -546,7 +546,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::hasExtension
+	 * @covers \Windwalker\Edge\Edge::hasExtension
 	 * @TODO   Implement testHasExtension().
 	 */
 	public function testHasExtension()
@@ -562,7 +562,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::getExtension
+	 * @covers \Windwalker\Edge\Edge::getExtension
 	 * @TODO   Implement testGetExtension().
 	 */
 	public function testGetExtension()
@@ -578,7 +578,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::getExtensions
+	 * @covers \Windwalker\Edge\Edge::getExtensions
 	 * @TODO   Implement testGetExtensions().
 	 */
 	public function testGetExtensions()
@@ -594,7 +594,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::setExtensions
+	 * @covers \Windwalker\Edge\Edge::setExtensions
 	 * @TODO   Implement testSetExtensions().
 	 */
 	public function testSetExtensions()
@@ -610,7 +610,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::getCache
+	 * @covers \Windwalker\Edge\Edge::getCache
 	 * @TODO   Implement testGetCache().
 	 */
 	public function testGetCache()
@@ -626,7 +626,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Edge\Edge::setCache
+	 * @covers \Windwalker\Edge\Edge::setCache
 	 * @TODO   Implement testSetCache().
 	 */
 	public function testSetCache()

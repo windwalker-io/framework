@@ -95,7 +95,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\Entity\Entity::addFields
+	 * @covers \Windwalker\DataMapper\Entity\Entity::addFields
 	 */
 	public function testAddFields()
 	{

@@ -45,7 +45,7 @@ class EqualsValidatorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Validator\Rule\EqualsValidator::test
+	 * @covers \Windwalker\Validator\Rule\EqualsValidator::test
 	 */
 	public function testValidate()
 	{

@@ -51,7 +51,7 @@ class JsonFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Format\JsonFormat::parse
+	 * @covers \Windwalker\Language\Format\JsonFormat::parse
 	 */
 	public function testParse()
 	{

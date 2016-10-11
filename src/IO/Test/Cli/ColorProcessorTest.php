@@ -66,7 +66,7 @@ class ColorProcessorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Color\ColorProcessor::addStyle
+	 * @covers \Windwalker\IO\Cli\Color\ColorProcessor::addStyle
 	 */
 	public function testAddStyle()
 	{
@@ -86,7 +86,7 @@ class ColorProcessorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Color\ColorProcessor::stripColors
+	 * @covers \Windwalker\IO\Cli\Color\ColorProcessor::stripColors
 	 */
 	public function testStripColors()
 	{
@@ -101,7 +101,7 @@ class ColorProcessorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Cli\Color\ColorProcessor::process
+	 * @covers \Windwalker\IO\Cli\Color\ColorProcessor::process
 	 */
 	public function testProcess()
 	{

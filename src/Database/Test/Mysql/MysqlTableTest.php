@@ -44,7 +44,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTable::getName
+	 * @covers \Windwalker\Database\Command\AbstractTable::getName
 	 */
 	public function testGetName()
 	{
@@ -66,7 +66,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTable::setName
+	 * @covers \Windwalker\Database\Command\AbstractTable::setName
 	 */
 	public function testSetName()
 	{
@@ -81,7 +81,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTable::getDriver
+	 * @covers \Windwalker\Database\Command\AbstractTable::getDriver
 	 */
 	public function testGetDriver()
 	{
@@ -96,7 +96,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTable::setDriver
+	 * @covers \Windwalker\Database\Command\AbstractTable::setDriver
 	 * @TODO   Implement testSetDriver().
 	 */
 	public function testSetDriver()
@@ -112,7 +112,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::_create
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::_create
 	 */
 	public function testCreate()
 	{
@@ -188,7 +188,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::rename
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::rename
 	 */
 	public function testRename()
 	{
@@ -207,7 +207,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::lock
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::lock
 	 * @TODO   Implement testLock().
 	 */
 	public function testLock()
@@ -223,7 +223,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::unlock
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::unlock
 	 * @TODO   Implement testUnlock().
 	 */
 	public function testUnlock()
@@ -239,7 +239,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::truncate
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::truncate
 	 */
 	public function testTruncate()
 	{
@@ -257,7 +257,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::getColumns
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::getColumns
 	 */
 	public function testGetColumns()
 	{
@@ -271,7 +271,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::getColumnDetails
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::getColumnDetails
 	 */
 	public function testGetColumnDetails()
 	{
@@ -286,7 +286,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::getColumnDetail
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::getColumnDetail
 	 */
 	public function testGetColumnDetail()
 	{
@@ -301,7 +301,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::addColumn
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::addColumn
 	 */
 	public function testAddColumn()
 	{
@@ -319,7 +319,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::dropColumn
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::dropColumn
 	 */
 	public function testDropColumn()
 	{
@@ -380,7 +380,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::getIndexes
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::getIndexes
 	 */
 	public function testGetIndexes()
 	{
@@ -396,7 +396,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::addIndex
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::addIndex
 	 */
 	public function testAddIndex()
 	{
@@ -416,7 +416,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlTable::dropIndex
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::dropIndex
 	 */
 	public function testDropIndex()
 	{

@@ -25,7 +25,7 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\AbstractDatabaseDriver::addMiddleware
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::addMiddleware
 	 * @TODO   Implement testAddMiddleware().
 	 */
 	public function testAddMiddleware()
@@ -41,7 +41,7 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\AbstractDatabaseDriver::getMiddlewares
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::getMiddlewares
 	 * @TODO   Implement testGetMiddlewares().
 	 */
 	public function testGetMiddlewares()
@@ -57,7 +57,7 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\AbstractDatabaseDriver::resetMiddlewares
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::resetMiddlewares
 	 * @TODO   Implement testResetMiddlewares().
 	 */
 	public function testResetMiddlewares()
@@ -95,7 +95,7 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Mysql\MysqlDriver::setProfilerHandler
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDriver::setProfilerHandler
 	 */
 	public function testProfilerMiddleware()
 	{

@@ -66,7 +66,7 @@ class PlatesRendererTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PlatesRenderer::getEngine
+	 * @covers \Windwalker\Renderer\PlatesRenderer::getEngine
 	 */
 	public function testGetEngine()
 	{
@@ -80,7 +80,7 @@ class PlatesRendererTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PlatesRenderer::setEngine
+	 * @covers \Windwalker\Renderer\PlatesRenderer::setEngine
 	 * @TODO   Implement testSetEngine().
 	 */
 	public function testSetEngine()
@@ -96,7 +96,7 @@ class PlatesRendererTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Renderer\PlatesRenderer::render
+	 * @covers \Windwalker\Renderer\PlatesRenderer::render
 	 */
 	public function testRender()
 	{

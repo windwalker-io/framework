@@ -65,7 +65,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::bind
+	 * @covers \Windwalker\Data\Data::bind
 	 */
 	public function testBind()
 	{
@@ -83,7 +83,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::set
+	 * @covers \Windwalker\Data\Data::set
 	 */
 	public function testGetAndSet()
 	{
@@ -109,7 +109,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::__set
+	 * @covers \Windwalker\Data\Data::__set
 	 */
 	public function test__getAnd__set()
 	{
@@ -124,7 +124,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::getIterator
+	 * @covers \Windwalker\Data\Data::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -146,7 +146,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::offsetExists
+	 * @covers \Windwalker\Data\Data::offsetExists
 	 */
 	public function testOffsetExists()
 	{
@@ -159,7 +159,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::offsetGet
+	 * @covers \Windwalker\Data\Data::offsetGet
 	 */
 	public function testOffsetGetAndSet()
 	{
@@ -183,7 +183,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::offsetUnset
+	 * @covers \Windwalker\Data\Data::offsetUnset
 	 */
 	public function testOffsetUnset()
 	{
@@ -197,7 +197,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::count
+	 * @covers \Windwalker\Data\Data::count
 	 */
 	public function testCount()
 	{
@@ -209,7 +209,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Data\Data::isNull
+	 * @covers \Windwalker\Data\Data::isNull
 	 */
 	public function testIsNull()
 	{
@@ -237,7 +237,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Data\Data::map
+	 * @covers \Windwalker\Data\Data::map
 	 */
 	public function testMap()
 	{
@@ -259,7 +259,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Data\Data::walk
+	 * @covers \Windwalker\Data\Data::walk
 	 */
 	public function testWalk()
 	{

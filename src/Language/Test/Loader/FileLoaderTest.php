@@ -50,7 +50,7 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Loader\FileLoader::load
+	 * @covers \Windwalker\Language\Loader\FileLoader::load
 	 */
 	public function testLoad()
 	{

@@ -90,7 +90,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\DatabaseHandler::open
+	 * @covers \Windwalker\Session\Handler\DatabaseHandler::open
 	 * @TODO   Implement testOpen().
 	 */
 	public function testOpen()
@@ -106,7 +106,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\DatabaseHandler::close
+	 * @covers \Windwalker\Session\Handler\DatabaseHandler::close
 	 * @TODO   Implement testClose().
 	 */
 	public function testClose()
@@ -122,7 +122,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\DatabaseHandler::read
+	 * @covers \Windwalker\Session\Handler\DatabaseHandler::read
 	 */
 	public function testReadAndWrite()
 	{
@@ -136,7 +136,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\DatabaseHandler::destroy
+	 * @covers \Windwalker\Session\Handler\DatabaseHandler::destroy
 	 * @TODO   Implement testDestroy().
 	 */
 	public function testDestroy()
@@ -152,7 +152,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\DatabaseHandler::gc
+	 * @covers \Windwalker\Session\Handler\DatabaseHandler::gc
 	 * @TODO   Implement testGc().
 	 */
 	public function testGc()
@@ -168,7 +168,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\DatabaseHandler::isSupported
+	 * @covers \Windwalker\Session\Handler\DatabaseHandler::isSupported
 	 * @TODO   Implement testIsSupported().
 	 */
 	public function testIsSupported()

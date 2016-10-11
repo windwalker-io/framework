@@ -43,7 +43,7 @@ class PathTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Path::canChmod
+	 * @covers \Windwalker\Filesystem\Path::canChmod
 	 * @TODO   Implement testCanChmod().
 	 */
 	public function testCanChmod()
@@ -59,7 +59,7 @@ class PathTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Path::setPermissions
+	 * @covers \Windwalker\Filesystem\Path::setPermissions
 	 * @TODO   Implement testSetPermissions().
 	 */
 	public function testSetPermissions()
@@ -75,7 +75,7 @@ class PathTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Path::getPermissions
+	 * @covers \Windwalker\Filesystem\Path::getPermissions
 	 * @TODO   Implement testGetPermissions().
 	 */
 	public function testGetPermissions()
@@ -91,7 +91,7 @@ class PathTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Path::check
+	 * @covers \Windwalker\Filesystem\Path::check
 	 * @TODO   Implement testCheck().
 	 */
 	public function testCheck()
@@ -111,7 +111,7 @@ class PathTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Path::clean
+	 * @covers \Windwalker\Filesystem\Path::clean
 	 *
 	 * @dataProvider  getCleanData
 	 */
@@ -128,7 +128,7 @@ class PathTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Path::find
+	 * @covers \Windwalker\Filesystem\Path::find
 	 * @TODO   Implement testFind().
 	 */
 	public function testFind()

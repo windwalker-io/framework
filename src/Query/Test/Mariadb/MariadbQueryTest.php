@@ -72,7 +72,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::__get
+	 * @covers \Windwalker\Query\Query::__get
 	 * @TODO   Implement test__get().
 	 */
 	public function test__get()
@@ -88,7 +88,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::call
+	 * @covers \Windwalker\Query\Query::call
 	 */
 	public function testCall()
 	{
@@ -105,7 +105,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::clear
+	 * @covers \Windwalker\Query\Query::clear
 	 */
 	public function testClear()
 	{
@@ -124,7 +124,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::clear
+	 * @covers \Windwalker\Query\Query::clear
 	 */
 	public function testClearClause()
 	{
@@ -179,7 +179,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::clear
+	 * @covers \Windwalker\Query\Query::clear
 	 */
 	public function testClearType()
 	{
@@ -240,7 +240,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::columns
+	 * @covers \Windwalker\Query\Query::columns
 	 */
 	public function testColumns()
 	{
@@ -264,7 +264,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::dateFormat
+	 * @covers \Windwalker\Query\Query::dateFormat
 	 */
 	public function testDateFormat()
 	{
@@ -276,7 +276,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::dump
+	 * @covers \Windwalker\Query\Query::dump
 	 * @TODO   Implement testDump().
 	 */
 	public function testDump()
@@ -292,7 +292,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::delete
+	 * @covers \Windwalker\Query\Query::delete
 	 */
 	public function testDelete()
 	{
@@ -308,8 +308,8 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::escape
-	 * @covers Windwalker\Query\Query::e
+	 * @covers \Windwalker\Query\Query::escape
+	 * @covers \Windwalker\Query\Query::e
 	 */
 	public function testEscape()
 	{
@@ -333,7 +333,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::exec
+	 * @covers \Windwalker\Query\Query::exec
 	 */
 	public function testExec()
 	{
@@ -348,7 +348,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::from
+	 * @covers \Windwalker\Query\Query::from
 	 */
 	public function testFrom()
 	{
@@ -379,7 +379,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::expression
+	 * @covers \Windwalker\Query\Query::expression
 	 */
 	public function testExpression()
 	{
@@ -391,7 +391,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::expression
+	 * @covers \Windwalker\Query\Query::expression
 	 */
 	public function testExpr()
 	{
@@ -403,7 +403,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::group
+	 * @covers \Windwalker\Query\Query::group
 	 */
 	public function testGroup()
 	{
@@ -420,7 +420,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::having
+	 * @covers \Windwalker\Query\Query::having
 	 */
 	public function testHaving()
 	{
@@ -437,7 +437,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::innerJoin
+	 * @covers \Windwalker\Query\Query::innerJoin
 	 */
 	public function testInnerJoin()
 	{
@@ -493,7 +493,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::insert
+	 * @covers \Windwalker\Query\Query::insert
 	 */
 	public function testInsert()
 	{
@@ -512,7 +512,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::join
+	 * @covers \Windwalker\Query\Query::join
 	 */
 	public function testJoin()
 	{
@@ -557,7 +557,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::leftJoin
+	 * @covers \Windwalker\Query\Query::leftJoin
 	 */
 	public function testLeftJoin()
 	{
@@ -613,7 +613,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::nullDate
+	 * @covers \Windwalker\Query\Query::nullDate
 	 */
 	public function testNullDate()
 	{
@@ -627,7 +627,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::order
+	 * @covers \Windwalker\Query\Query::order
 	 */
 	public function testOrder()
 	{
@@ -657,7 +657,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::limit
+	 * @covers \Windwalker\Query\Query::limit
 	 */
 	public function testLimit()
 	{
@@ -689,7 +689,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::processLimit
+	 * @covers \Windwalker\Query\Query::processLimit
 	 */
 	public function testProcessLimit()
 	{
@@ -719,7 +719,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::outerJoin
+	 * @covers \Windwalker\Query\Query::outerJoin
 	 */
 	public function testOuterJoin()
 	{
@@ -775,7 +775,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::quote
+	 * @covers \Windwalker\Query\Query::quote
 	 */
 	public function testQuote()
 	{
@@ -787,7 +787,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::q
+	 * @covers \Windwalker\Query\Query::q
 	 */
 	public function testQ()
 	{
@@ -799,8 +799,8 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::quoteName
-	 * @covers Windwalker\Query\Query::qn
+	 * @covers \Windwalker\Query\Query::quoteName
+	 * @covers \Windwalker\Query\Query::qn
 	 */
 	public function testQuoteName()
 	{
@@ -812,7 +812,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::rightJoin
+	 * @covers \Windwalker\Query\Query::rightJoin
 	 */
 	public function testRightJoin()
 	{
@@ -868,7 +868,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::select
+	 * @covers \Windwalker\Query\Query::select
 	 */
 	public function testSelect()
 	{
@@ -898,7 +898,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::set
+	 * @covers \Windwalker\Query\Query::set
 	 */
 	public function testSet()
 	{
@@ -925,7 +925,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::setQuery
+	 * @covers \Windwalker\Query\Query::setQuery
 	 */
 	public function testSetQuery()
 	{
@@ -941,7 +941,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::update
+	 * @covers \Windwalker\Query\Query::update
 	 */
 	public function testUpdate()
 	{
@@ -972,7 +972,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::values
+	 * @covers \Windwalker\Query\Query::values
 	 */
 	public function testValues()
 	{
@@ -1015,7 +1015,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::where
+	 * @covers \Windwalker\Query\Query::where
 	 */
 	public function testWhere()
 	{
@@ -1051,7 +1051,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::__clone
+	 * @covers \Windwalker\Query\Query::__clone
 	 */
 	public function test__clone()
 	{
@@ -1066,7 +1066,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::union
+	 * @covers \Windwalker\Query\Query::union
 	 */
 	public function testUnion()
 	{
@@ -1096,7 +1096,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::unionDistinct
+	 * @covers \Windwalker\Query\Query::unionDistinct
 	 */
 	public function testUnionDistinct()
 	{
@@ -1126,7 +1126,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::union
+	 * @covers \Windwalker\Query\Query::union
 	 */
 	public function testUnionAll()
 	{
@@ -1156,7 +1156,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::format
+	 * @covers \Windwalker\Query\Query::format
 	 */
 	public function testFormat()
 	{
@@ -1181,7 +1181,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::getName
+	 * @covers \Windwalker\Query\Query::getName
 	 */
 	public function testGetName()
 	{
@@ -1193,7 +1193,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::getExpression
+	 * @covers \Windwalker\Query\Query::getExpression
 	 */
 	public function testGetExpression()
 	{
@@ -1205,7 +1205,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Query::setExpression
+	 * @covers \Windwalker\Query\Query::setExpression
 	 * @TODO   Implement testSetExpression().
 	 */
 	public function testSetExpression()

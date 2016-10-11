@@ -82,7 +82,7 @@ XML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\SimpleXml\XmlHelper::getAttribute
+	 * @covers \Windwalker\Dom\SimpleXml\XmlHelper::getAttribute
 	 */
 	public function testGetAttribute()
 	{
@@ -96,7 +96,7 @@ XML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\SimpleXml\XmlHelper::get
+	 * @covers \Windwalker\Dom\SimpleXml\XmlHelper::get
 	 */
 	public function testGet()
 	{
@@ -225,7 +225,7 @@ XML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\SimpleXml\XmlHelper::getAttributes
+	 * @covers \Windwalker\Dom\SimpleXml\XmlHelper::getAttributes
 	 */
 	public function testGetAttributes()
 	{
@@ -244,7 +244,7 @@ XML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\SimpleXml\XmlHelper::def
+	 * @covers \Windwalker\Dom\SimpleXml\XmlHelper::def
 	 */
 	public function testDef()
 	{

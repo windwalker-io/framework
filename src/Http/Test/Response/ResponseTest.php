@@ -84,8 +84,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Response::getStatusCode
-	 * @covers Windwalker\Http\Response::withStatus
+	 * @covers \Windwalker\Http\Response::getStatusCode
+	 * @covers \Windwalker\Http\Response::withStatus
 	 */
 	public function testWithAndGetStatusCode()
 	{
@@ -107,7 +107,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Response::getReasonPhrase
+	 * @covers \Windwalker\Http\Response::getReasonPhrase
 	 */
 	public function testGetReasonPhrase()
 	{

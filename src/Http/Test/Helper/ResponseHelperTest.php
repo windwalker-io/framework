@@ -22,7 +22,7 @@ class ResponseHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\ResponseHelper::getPhrase
+	 * @covers \Windwalker\Http\Helper\ResponseHelper::getPhrase
 	 */
 	public function testGetPhrase()
 	{
@@ -40,7 +40,7 @@ class ResponseHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\ResponseHelper::validateStatus
+	 * @covers \Windwalker\Http\Helper\ResponseHelper::validateStatus
 	 */
 	public function testValidateStatus()
 	{

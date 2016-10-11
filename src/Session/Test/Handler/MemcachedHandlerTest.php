@@ -55,7 +55,7 @@ class MemcachedHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcachedHandler::isSupported
+	 * @covers \Windwalker\Session\Handler\MemcachedHandler::isSupported
 	 */
 	public function testIsSupported()
 	{
@@ -70,7 +70,7 @@ class MemcachedHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcachedHandler::open
+	 * @covers \Windwalker\Session\Handler\MemcachedHandler::open
 	 * @TODO   Implement testOpen().
 	 */
 	public function testOpen()
@@ -86,7 +86,7 @@ class MemcachedHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcachedHandler::close
+	 * @covers \Windwalker\Session\Handler\MemcachedHandler::close
 	 * @TODO   Implement testClose().
 	 */
 	public function testClose()
@@ -102,7 +102,7 @@ class MemcachedHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcachedHandler::read
+	 * @covers \Windwalker\Session\Handler\MemcachedHandler::read
 	 * @TODO   Implement testRead().
 	 */
 	public function testRead()
@@ -118,7 +118,7 @@ class MemcachedHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcachedHandler::write
+	 * @covers \Windwalker\Session\Handler\MemcachedHandler::write
 	 * @TODO   Implement testWrite().
 	 */
 	public function testWrite()
@@ -134,7 +134,7 @@ class MemcachedHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcachedHandler::destroy
+	 * @covers \Windwalker\Session\Handler\MemcachedHandler::destroy
 	 * @TODO   Implement testDestroy().
 	 */
 	public function testDestroy()
@@ -150,7 +150,7 @@ class MemcachedHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\MemcachedHandler::gc
+	 * @covers \Windwalker\Session\Handler\MemcachedHandler::gc
 	 * @TODO   Implement testGc().
 	 */
 	public function testGc()

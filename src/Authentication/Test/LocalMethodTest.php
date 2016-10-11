@@ -63,7 +63,7 @@ class LocalMethodTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Authentication\Method\LocalMethod::authenticate
+	 * @covers \Windwalker\Authentication\Method\LocalMethod::authenticate
 	 */
 	public function testAuthenticate()
 	{
@@ -99,7 +99,7 @@ class LocalMethodTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Authentication\Method\LocalMethod::getVerifyHandler
+	 * @covers \Windwalker\Authentication\Method\LocalMethod::getVerifyHandler
 	 * @TODO   Implement testGetVerifyHandler().
 	 */
 	public function testGetVerifyHandler()
@@ -115,7 +115,7 @@ class LocalMethodTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Authentication\Method\LocalMethod::setVerifyHandler
+	 * @covers \Windwalker\Authentication\Method\LocalMethod::setVerifyHandler
 	 * @TODO   Implement testSetVerifyHandler().
 	 */
 	public function testSetVerifyHandler()

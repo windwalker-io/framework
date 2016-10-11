@@ -23,7 +23,7 @@ class DatabaseFactoryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\DatabaseFactory::getDbo
+	 * @covers \Windwalker\Database\DatabaseFactory::getDbo
 	 */
 	public function testGetDbo()
 	{
@@ -51,7 +51,7 @@ class DatabaseFactoryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\DatabaseFactory::setDefaultDbo
+	 * @covers \Windwalker\Database\DatabaseFactory::setDefaultDbo
 	 */
 	public function testSetDefaultDbo()
 	{
@@ -76,7 +76,7 @@ class DatabaseFactoryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\DatabaseFactory::createDbo
+	 * @covers \Windwalker\Database\DatabaseFactory::createDbo
 	 */
 	public function testCreateDbo()
 	{

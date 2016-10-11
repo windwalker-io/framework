@@ -40,7 +40,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::toString
+	 * @covers \Windwalker\Compare\Compare::toString
 	 */
 	public function testToString()
 	{
@@ -55,7 +55,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::__toString
+	 * @covers \Windwalker\Compare\Compare::__toString
 	 */
 	public function test__toString()
 	{
@@ -67,7 +67,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::getCompare2
+	 * @covers \Windwalker\Compare\Compare::getCompare2
 	 */
 	public function testGetAndSetCompare2()
 	{
@@ -81,7 +81,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::getCompare1
+	 * @covers \Windwalker\Compare\Compare::getCompare1
 	 */
 	public function testGetAndSetCompare1()
 	{
@@ -95,7 +95,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::swap
+	 * @covers \Windwalker\Compare\Compare::swap
 	 */
 	public function testSwap()
 	{
@@ -107,7 +107,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::compare
+	 * @covers \Windwalker\Compare\Compare::compare
 	 */
 	public function testCompare()
 	{
@@ -127,7 +127,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::getOperator
+	 * @covers \Windwalker\Compare\Compare::getOperator
 	 */
 	public function testGetAndSetOperator()
 	{
@@ -141,7 +141,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::quote
+	 * @covers \Windwalker\Compare\Compare::quote
 	 */
 	public function testQuote()
 	{
@@ -154,7 +154,7 @@ class CompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\Compare::getHandler
+	 * @covers \Windwalker\Compare\Compare::getHandler
 	 */
 	public function testGetAndSetHandler()
 	{

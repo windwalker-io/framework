@@ -66,7 +66,7 @@ class RegexValidatorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Validator\Rule\RegexValidator::getRegex
+	 * @covers \Windwalker\Validator\Rule\RegexValidator::getRegex
 	 * @TODO   Implement testGetRegex().
 	 */
 	public function testGetRegex()
@@ -82,7 +82,7 @@ class RegexValidatorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Validator\Rule\RegexValidator::setRegex
+	 * @covers \Windwalker\Validator\Rule\RegexValidator::setRegex
 	 * @TODO   Implement testSetRegex().
 	 */
 	public function testSetRegex()
@@ -98,7 +98,7 @@ class RegexValidatorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Validator\Rule\RegexValidator::getModifiers
+	 * @covers \Windwalker\Validator\Rule\RegexValidator::getModifiers
 	 * @TODO   Implement testGetModifiers().
 	 */
 	public function testGetModifiers()
@@ -114,7 +114,7 @@ class RegexValidatorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Validator\Rule\RegexValidator::setModifiers
+	 * @covers \Windwalker\Validator\Rule\RegexValidator::setModifiers
 	 * @TODO   Implement testSetModifiers().
 	 */
 	public function testSetModifiers()

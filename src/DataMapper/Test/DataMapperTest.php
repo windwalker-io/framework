@@ -47,7 +47,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::find
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::find
 	 */
 	public function testFind()
 	{
@@ -97,7 +97,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::findAll
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::findAll
 	 */
 	public function testFindAll()
 	{
@@ -112,7 +112,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::findOne
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::findOne
 	 */
 	public function testFindOne()
 	{
@@ -149,7 +149,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::create
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::create
 	 */
 	public function testCreate()
 	{
@@ -197,7 +197,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::createOne
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::createOne
 	 */
 	public function testCreateOne()
 	{
@@ -239,7 +239,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::update
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::update
 	 */
 	public function testUpdate()
 	{
@@ -283,7 +283,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::updateOne
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::updateOne
 	 */
 	public function testUpdateOne()
 	{
@@ -313,7 +313,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\updateBatch::updateWith
+	 * @covers \Windwalker\DataMapper\updateBatch::updateWith
 	 */
 	public function testUpdateAll()
 	{
@@ -331,7 +331,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::flush
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::flush
 	 */
 	public function testFlush()
 	{
@@ -358,7 +358,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::save
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::save
 	 */
 	public function testSave()
 	{
@@ -382,7 +382,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::saveOne
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::saveOne
 	 */
 	public function testSaveOne()
 	{
@@ -406,7 +406,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::delete
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::delete
 	 */
 	public function testDelete()
 	{
@@ -420,7 +420,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getKeyName
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::getKeyName
 	 */
 	public function testGetKeyName()
 	{
@@ -436,7 +436,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getTable
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::getTable
 	 */
 	public function testGetTable()
 	{
@@ -448,7 +448,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::setTable
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::setTable
 	 */
 	public function testSetTable()
 	{
@@ -462,7 +462,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getDataClass
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::getDataClass
 	 */
 	public function testGetAndSetDataClass()
 	{
@@ -483,7 +483,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\AbstractDataMapper::getDatasetClass
+	 * @covers \Windwalker\DataMapper\AbstractDataMapper::getDatasetClass
 	 */
 	public function testGetAndSetDatasetClass()
 	{
@@ -499,7 +499,7 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\DataMapper\DataMapper::getDb
+	 * @covers \Windwalker\DataMapper\DataMapper::getDb
 	 */
 	public function testGetAndSetDb()
 	{

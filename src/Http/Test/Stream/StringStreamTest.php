@@ -85,7 +85,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::__toString
+	 * @covers \Windwalker\Http\Stream\StringStream::__toString
 	 */
 	public function test__toString()
 	{
@@ -101,7 +101,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::close
+	 * @covers \Windwalker\Http\Stream\StringStream::close
 	 */
 	public function testClose()
 	{
@@ -120,7 +120,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::detach
+	 * @covers \Windwalker\Http\Stream\StringStream::detach
 	 */
 	public function testDetach()
 	{
@@ -136,7 +136,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::getSize
+	 * @covers \Windwalker\Http\Stream\StringStream::getSize
 	 */
 	public function testGetSize()
 	{
@@ -150,7 +150,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::tell
+	 * @covers \Windwalker\Http\Stream\StringStream::tell
 	 */
 	public function testTell()
 	{
@@ -173,7 +173,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::eof
+	 * @covers \Windwalker\Http\Stream\StringStream::eof
 	 */
 	public function testEof()
 	{
@@ -202,7 +202,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::isSeekable
+	 * @covers \Windwalker\Http\Stream\StringStream::isSeekable
 	 */
 	public function testIsSeekable()
 	{
@@ -220,7 +220,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::seek
+	 * @covers \Windwalker\Http\Stream\StringStream::seek
 	 */
 	public function testSeek()
 	{
@@ -241,7 +241,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::rewind
+	 * @covers \Windwalker\Http\Stream\StringStream::rewind
 	 */
 	public function testRewind()
 	{
@@ -259,7 +259,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::isWritable
+	 * @covers \Windwalker\Http\Stream\StringStream::isWritable
 	 */
 	public function testIsWritable()
 	{
@@ -273,7 +273,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::write
+	 * @covers \Windwalker\Http\Stream\StringStream::write
 	 */
 	public function testWrite()
 	{
@@ -298,7 +298,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::isReadable
+	 * @covers \Windwalker\Http\Stream\StringStream::isReadable
 	 */
 	public function testIsReadable()
 	{
@@ -311,7 +311,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::read
+	 * @covers \Windwalker\Http\Stream\StringStream::read
 	 */
 	public function testRead()
 	{
@@ -330,7 +330,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::getContents
+	 * @covers \Windwalker\Http\Stream\StringStream::getContents
 	 */
 	public function testGetContents()
 	{
@@ -350,7 +350,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Stream\StringStream::getMetadata
+	 * @covers \Windwalker\Http\Stream\StringStream::getMetadata
 	 */
 	public function testGetMetadata()
 	{

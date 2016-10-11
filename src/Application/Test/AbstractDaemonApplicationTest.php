@@ -56,7 +56,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractDaemonApplication::signal
+	 * @covers \Windwalker\Application\AbstractDaemonApplication::signal
 	 * @TODO   Implement testSignal().
 	 */
 	public function testSignal()
@@ -72,7 +72,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractDaemonApplication::isActive
+	 * @covers \Windwalker\Application\AbstractDaemonApplication::isActive
 	 * @TODO   Implement testIsActive().
 	 */
 	public function testIsActive()
@@ -88,7 +88,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractDaemonApplication::loadConfiguration
+	 * @covers \Windwalker\Application\AbstractDaemonApplication::loadConfiguration
 	 * @TODO   Implement testLoadConfiguration().
 	 */
 	public function testLoadConfiguration()
@@ -104,7 +104,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractDaemonApplication::execute
+	 * @covers \Windwalker\Application\AbstractDaemonApplication::execute
 	 * @TODO   Implement testExecute().
 	 */
 	public function testExecute()
@@ -120,7 +120,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractDaemonApplication::restart
+	 * @covers \Windwalker\Application\AbstractDaemonApplication::restart
 	 * @TODO   Implement testRestart().
 	 */
 	public function testRestart()
@@ -136,7 +136,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractDaemonApplication::stop
+	 * @covers \Windwalker\Application\AbstractDaemonApplication::stop
 	 * @TODO   Implement testStop().
 	 */
 	public function testStop()
@@ -152,7 +152,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractDaemonApplication::getName
+	 * @covers \Windwalker\Application\AbstractDaemonApplication::getName
 	 * @TODO   Implement testGetName().
 	 */
 	public function testGetName()
@@ -168,7 +168,7 @@ class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractDaemonApplication::setName
+	 * @covers \Windwalker\Application\AbstractDaemonApplication::setName
 	 * @TODO   Implement testSetName().
 	 */
 	public function testSetName()

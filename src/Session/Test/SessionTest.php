@@ -61,7 +61,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::start
+	 * @covers \Windwalker\Session\Session::start
 	 */
 	public function testStart()
 	{
@@ -83,7 +83,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::destroy
+	 * @covers \Windwalker\Session\Session::destroy
 	 */
 	public function testDestroy()
 	{
@@ -101,7 +101,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::restart
+	 * @covers \Windwalker\Session\Session::restart
 	 */
 	public function testRestart()
 	{
@@ -117,7 +117,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::fork
+	 * @covers \Windwalker\Session\Session::fork
 	 */
 	public function testFork()
 	{
@@ -131,7 +131,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::close
+	 * @covers \Windwalker\Session\Session::close
 	 */
 	public function testClose()
 	{
@@ -146,7 +146,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::get
+	 * @covers \Windwalker\Session\Session::get
 	 */
 	public function testGet()
 	{
@@ -158,7 +158,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getAll
+	 * @covers \Windwalker\Session\Session::getAll
 	 */
 	public function testGetAll()
 	{
@@ -179,7 +179,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Session\Session::takeAll
+	 * @covers \Windwalker\Session\Session::takeAll
 	 */
 	public function testTakeAll()
 	{
@@ -200,7 +200,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Session\Session::clean
+	 * @covers \Windwalker\Session\Session::clean
 	 */
 	public function testClean()
 	{
@@ -221,7 +221,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::set
+	 * @covers \Windwalker\Session\Session::set
 	 */
 	public function testSet()
 	{
@@ -235,7 +235,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::exists
+	 * @covers \Windwalker\Session\Session::exists
 	 */
 	public function testExists()
 	{
@@ -248,7 +248,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::remove
+	 * @covers \Windwalker\Session\Session::remove
 	 */
 	public function testRemove()
 	{
@@ -262,7 +262,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::addFlash
+	 * @covers \Windwalker\Session\Session::addFlash
 	 */
 	public function testAddAndTakeFlash()
 	{
@@ -278,7 +278,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getIterator
+	 * @covers \Windwalker\Session\Session::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -299,7 +299,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getName
+	 * @covers \Windwalker\Session\Session::getName
 	 */
 	public function testGetName()
 	{
@@ -311,7 +311,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getId
+	 * @covers \Windwalker\Session\Session::getId
 	 */
 	public function testGetId()
 	{
@@ -323,7 +323,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::isActive
+	 * @covers \Windwalker\Session\Session::isActive
 	 */
 	public function testIsActive()
 	{
@@ -339,7 +339,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::isNew
+	 * @covers \Windwalker\Session\Session::isNew
 	 */
 	public function testIsNew()
 	{
@@ -355,7 +355,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getState
+	 * @covers \Windwalker\Session\Session::getState
 	 */
 	public function testGetState()
 	{
@@ -377,7 +377,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::setState
+	 * @covers \Windwalker\Session\Session::setState
 	 * @TODO   Implement testSetState().
 	 */
 	public function testSetState()
@@ -393,7 +393,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getCookie
+	 * @covers \Windwalker\Session\Session::getCookie
 	 */
 	public function testGetCookie()
 	{
@@ -407,7 +407,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::setCookie
+	 * @covers \Windwalker\Session\Session::setCookie
 	 * @TODO   Implement testSetCookie().
 	 */
 	public function testSetCookie()
@@ -423,7 +423,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getOption
+	 * @covers \Windwalker\Session\Session::getOption
 	 */
 	public function testGetOption()
 	{
@@ -437,7 +437,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::setOption
+	 * @covers \Windwalker\Session\Session::setOption
 	 * @TODO   Implement testSetOption().
 	 */
 	public function testSetOption()
@@ -453,7 +453,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getOptions
+	 * @covers \Windwalker\Session\Session::getOptions
 	 * @TODO   Implement testGetOptions().
 	 */
 	public function testGetOptions()
@@ -466,7 +466,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::setOptions
+	 * @covers \Windwalker\Session\Session::setOptions
 	 * @TODO   Implement testSetOptions().
 	 */
 	public function testSetOptions()
@@ -482,7 +482,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getBags
+	 * @covers \Windwalker\Session\Session::getBags
 	 */
 	public function testGetBags()
 	{
@@ -497,7 +497,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::setBags
+	 * @covers \Windwalker\Session\Session::setBags
 	 * @TODO   Implement testSetBags().
 	 */
 	public function testSetBags()
@@ -513,7 +513,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getBag
+	 * @covers \Windwalker\Session\Session::getBag
 	 * @TODO   Implement testGetBag().
 	 */
 	public function testGetBag()
@@ -529,7 +529,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::setBag
+	 * @covers \Windwalker\Session\Session::setBag
 	 * @TODO   Implement testSetBag().
 	 */
 	public function testSetBag()
@@ -545,7 +545,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::getFlashBag
+	 * @covers \Windwalker\Session\Session::getFlashBag
 	 * @TODO   Implement testGetFlashBag().
 	 */
 	public function testGetFlashBag()
@@ -561,7 +561,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::setFlashBag
+	 * @covers \Windwalker\Session\Session::setFlashBag
 	 * @TODO   Implement testSetFlashBag().
 	 */
 	public function testSetFlashBag()
@@ -577,7 +577,7 @@ class SessionTest extends AbstractSessionTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Session::setDebug
+	 * @covers \Windwalker\Session\Session::setDebug
 	 * @TODO   Implement testSetDebug().
 	 */
 	public function testSetDebug()

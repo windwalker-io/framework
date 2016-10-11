@@ -50,7 +50,7 @@ class RestRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\RestRouter::isAllowCustomMethod
+	 * @covers \Windwalker\Router\RestRouter::isAllowCustomMethod
 	 */
 	public function testIsAllowCustomMethod()
 	{
@@ -65,7 +65,7 @@ class RestRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\RestRouter::setHttpMethodSuffix
+	 * @covers \Windwalker\Router\RestRouter::setHttpMethodSuffix
 	 * @TODO   Implement testSetHttpMethodSuffix().
 	 */
 	public function testSetHttpMethodSuffix()
@@ -81,7 +81,7 @@ class RestRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\RestRouter::allowCustomMethod
+	 * @covers \Windwalker\Router\RestRouter::allowCustomMethod
 	 * @TODO   Implement testAllowCustomMethod().
 	 */
 	public function testAllowCustomMethod()
@@ -97,7 +97,7 @@ class RestRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\RestRouter::getCustomMethod
+	 * @covers \Windwalker\Router\RestRouter::getCustomMethod
 	 * @TODO   Implement testGetCustomMethod().
 	 */
 	public function testGetCustomMethod()
@@ -113,7 +113,7 @@ class RestRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\RestRouter::setCustomMethod
+	 * @covers \Windwalker\Router\RestRouter::setCustomMethod
 	 * @TODO   Implement testSetCustomMethod().
 	 */
 	public function testSetCustomMethod()
@@ -129,7 +129,7 @@ class RestRouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\RestRouter::match
+	 * @covers \Windwalker\Router\RestRouter::match
 	 */
 	public function testMatch()
 	{

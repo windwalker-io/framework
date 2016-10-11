@@ -51,8 +51,8 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Crypt::encrypt
-	 * @covers Windwalker\Crypt\Crypt::verify
+	 * @covers \Windwalker\Crypt\Crypt::encrypt
+	 * @covers \Windwalker\Crypt\Crypt::verify
 	 */
 	public function testEncrypt()
 	{
@@ -72,7 +72,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Crypt::decrypt
+	 * @covers \Windwalker\Crypt\Crypt::decrypt
 	 */
 	public function testDecrypt()
 	{
@@ -86,7 +86,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Crypt::getIv
+	 * @covers \Windwalker\Crypt\Crypt::getIv
 	 * @TODO   Implement testGetIv().
 	 */
 	public function testGetIv()
@@ -102,7 +102,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Crypt::setIv
+	 * @covers \Windwalker\Crypt\Crypt::setIv
 	 * @TODO   Implement testSetIv().
 	 */
 	public function testSetIv()
@@ -118,7 +118,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Crypt::getKey
+	 * @covers \Windwalker\Crypt\Crypt::getKey
 	 * @TODO   Implement testGetKey().
 	 */
 	public function testGetKey()
@@ -134,7 +134,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Crypt::setKey
+	 * @covers \Windwalker\Crypt\Crypt::setKey
 	 * @TODO   Implement testSetKey().
 	 */
 	public function testSetKey()

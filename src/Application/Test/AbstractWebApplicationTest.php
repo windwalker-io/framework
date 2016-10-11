@@ -87,7 +87,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractWebApplication::execute
+	 * @covers \Windwalker\Application\AbstractWebApplication::execute
 	 */
 	public function testExecute()
 	{
@@ -110,7 +110,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractWebApplication::__toString
+	 * @covers \Windwalker\Application\AbstractWebApplication::__toString
 	 */
 	public function test__toString()
 	{
@@ -124,7 +124,7 @@ class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Application\AbstractWebApplication::redirect
+	 * @covers \Windwalker\Application\AbstractWebApplication::redirect
 	 */
 	public function testRedirect()
 	{

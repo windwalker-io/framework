@@ -20,7 +20,7 @@ class TestHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Test\TestHelper::assignMockCallbacks
+	 * @covers \Windwalker\Test\TestHelper::assignMockCallbacks
 	 * @TODO   Implement testAssignMockCallbacks().
 	 */
 	public function testAssignMockCallbacks()
@@ -36,7 +36,7 @@ class TestHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Test\TestHelper::assignMockReturns
+	 * @covers \Windwalker\Test\TestHelper::assignMockReturns
 	 * @TODO   Implement testAssignMockReturns().
 	 */
 	public function testAssignMockReturns()
@@ -52,7 +52,7 @@ class TestHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Test\TestHelper::getValue
+	 * @covers \Windwalker\Test\TestHelper::getValue
 	 * @TODO   Implement testGetValue().
 	 */
 	public function testGetValue()
@@ -68,7 +68,7 @@ class TestHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Test\TestHelper::invoke
+	 * @covers \Windwalker\Test\TestHelper::invoke
 	 * @TODO   Implement testInvoke().
 	 */
 	public function testInvoke()
@@ -84,7 +84,7 @@ class TestHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Test\TestHelper::setValue
+	 * @covers \Windwalker\Test\TestHelper::setValue
 	 * @TODO   Implement testSetValue().
 	 */
 	public function testSetValue()

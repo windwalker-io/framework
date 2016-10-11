@@ -22,7 +22,7 @@ class RouteHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\RouteHelper::sanitize
+	 * @covers \Windwalker\Router\RouteHelper::sanitize
 	 */
 	public function testSanitize()
 	{
@@ -35,7 +35,7 @@ class RouteHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Router\RouteHelper::normalise
+	 * @covers \Windwalker\Router\RouteHelper::normalise
 	 */
 	public function testNormalise()
 	{
@@ -47,7 +47,7 @@ class RouteHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Router\RouteHelper::getVariables
+	 * @covers \Windwalker\Router\RouteHelper::getVariables
 	 */
 	public function testGetVariables()
 	{

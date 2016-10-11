@@ -61,7 +61,7 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Loader\ClassLoader::register
+	 * @covers \Windwalker\Loader\ClassLoader::register
 	 */
 	public function testRegister()
 	{
@@ -89,7 +89,7 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Loader\ClassLoader::unregister
+	 * @covers \Windwalker\Loader\ClassLoader::unregister
 	 */
 	public function testUnregister()
 	{
@@ -112,7 +112,7 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Loader\ClassLoader::addPsr0
+	 * @covers \Windwalker\Loader\ClassLoader::addPsr0
 	 */
 	public function testAddPsr0()
 	{
@@ -168,7 +168,7 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Loader\ClassLoader::addPsr4
+	 * @covers \Windwalker\Loader\ClassLoader::addPsr4
 	 */
 	public function testAddPsr4()
 	{
@@ -207,7 +207,7 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Loader\ClassLoader::addMap
+	 * @covers \Windwalker\Loader\ClassLoader::addMap
 	 */
 	public function testAddMap()
 	{

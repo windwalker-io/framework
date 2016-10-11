@@ -30,7 +30,7 @@ class MysqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::listDatabases
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::listDatabases
 	 */
 	public function testShowDatabases()
 	{
@@ -46,7 +46,7 @@ class MysqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::createDatabase
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::createDatabase
 	 */
 	public function testCreateDatabase()
 	{
@@ -83,7 +83,7 @@ class MysqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::dropDatabase
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::dropDatabase
 	 */
 	public function testDropDatabase()
 	{
@@ -111,7 +111,7 @@ class MysqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::showTableColumns
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::showTableColumns
 	 */
 	public function testShowTableColumns()
 	{
@@ -139,7 +139,7 @@ class MysqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::showDbTables
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::showDbTables
 	 */
 	public function testShowDbTables()
 	{
@@ -167,7 +167,7 @@ class MysqlGrammarTest extends AbstractQueryTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::createTable
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::createTable
 	 */
 	public function testCreateTable()
 	{
@@ -231,7 +231,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::dropTable
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::dropTable
 	 */
 	public function testDropTable()
 	{
@@ -259,7 +259,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::alterColumn
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::alterColumn
 	 */
 	public function testAlterColumn()
 	{
@@ -287,7 +287,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::addColumn
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::addColumn
 	 */
 	public function testAddColumn()
 	{
@@ -306,7 +306,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::changeColumn
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::changeColumn
 	 */
 	public function testChangeColumn()
 	{
@@ -325,7 +325,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::modifyColumn
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::modifyColumn
 	 */
 	public function testModifyColumn()
 	{
@@ -344,7 +344,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::dropColumn
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::dropColumn
 	 */
 	public function testDropColumn()
 	{
@@ -363,7 +363,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::addIndex
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::addIndex
 	 */
 	public function testAddIndex()
 	{
@@ -391,7 +391,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::buildIndexDeclare
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::buildIndexDeclare
 	 */
 	public function testBuildIndexDeclare()
 	{
@@ -419,7 +419,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::dropIndex
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::dropIndex
 	 */
 	public function testDropIndex()
 	{
@@ -438,7 +438,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::build
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::build
 	 */
 	public function testBuild()
 	{
@@ -457,7 +457,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::replace
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::replace
 	 */
 	public function testReplace()
 	{
@@ -476,7 +476,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Query\Mysql\MysqlGrammar::getQuery
+	 * @covers \Windwalker\Query\Mysql\MysqlGrammar::getQuery
 	 */
 	public function testGetQuery()
 	{

@@ -50,7 +50,7 @@ class IniFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\IniFormat::structToString
+	 * @covers \Windwalker\Structure\Format\IniFormat::structToString
 	 * @TODO   Implement testObjectToString().
 	 */
 	public function testObjectToString()
@@ -66,7 +66,7 @@ class IniFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Structure\Format\IniFormat::stringToStruct
+	 * @covers \Windwalker\Structure\Format\IniFormat::stringToStruct
 	 * @TODO   Implement testStringToObject().
 	 */
 	public function testStringToObject()

@@ -55,7 +55,7 @@ class UploadedFileTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\UploadedFile::getStream
+	 * @covers \Windwalker\Http\UploadedFile::getStream
 	 * @TODO   Implement testGetStream().
 	 */
 	public function testGetStream()
@@ -71,7 +71,7 @@ class UploadedFileTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\UploadedFile::moveTo
+	 * @covers \Windwalker\Http\UploadedFile::moveTo
 	 */
 	public function testMoveTo()
 	{
@@ -157,7 +157,7 @@ class UploadedFileTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\UploadedFile::getSize
+	 * @covers \Windwalker\Http\UploadedFile::getSize
 	 * @TODO   Implement testGetSize().
 	 */
 	public function testGetSize()
@@ -173,7 +173,7 @@ class UploadedFileTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\UploadedFile::getError
+	 * @covers \Windwalker\Http\UploadedFile::getError
 	 * @TODO   Implement testGetError().
 	 */
 	public function testGetError()
@@ -189,7 +189,7 @@ class UploadedFileTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\UploadedFile::getClientFilename
+	 * @covers \Windwalker\Http\UploadedFile::getClientFilename
 	 * @TODO   Implement testGetClientFilename().
 	 */
 	public function testGetClientFilename()
@@ -205,7 +205,7 @@ class UploadedFileTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\UploadedFile::getClientMediaType
+	 * @covers \Windwalker\Http\UploadedFile::getClientMediaType
 	 * @TODO   Implement testGetClientMediaType().
 	 */
 	public function testGetClientMediaType()

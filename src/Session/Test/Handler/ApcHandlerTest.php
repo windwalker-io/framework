@@ -55,7 +55,7 @@ class ApcHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\ApcHandler::isSupported
+	 * @covers \Windwalker\Session\Handler\ApcHandler::isSupported
 	 * @TODO   Implement testIsSupported().
 	 */
 	public function testIsSupported()
@@ -71,7 +71,7 @@ class ApcHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\ApcHandler::read
+	 * @covers \Windwalker\Session\Handler\ApcHandler::read
 	 * @TODO   Implement testRead().
 	 */
 	public function testRead()
@@ -87,7 +87,7 @@ class ApcHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\ApcHandler::write
+	 * @covers \Windwalker\Session\Handler\ApcHandler::write
 	 * @TODO   Implement testWrite().
 	 */
 	public function testWrite()
@@ -103,7 +103,7 @@ class ApcHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\ApcHandler::destroy
+	 * @covers \Windwalker\Session\Handler\ApcHandler::destroy
 	 * @TODO   Implement testDestroy().
 	 */
 	public function testDestroy()
@@ -119,7 +119,7 @@ class ApcHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\ApcHandler::gc
+	 * @covers \Windwalker\Session\Handler\ApcHandler::gc
 	 * @TODO   Implement testGc().
 	 */
 	public function testGc()
@@ -135,7 +135,7 @@ class ApcHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\ApcHandler::open
+	 * @covers \Windwalker\Session\Handler\ApcHandler::open
 	 * @TODO   Implement testOpen().
 	 */
 	public function testOpen()
@@ -151,7 +151,7 @@ class ApcHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\ApcHandler::close
+	 * @covers \Windwalker\Session\Handler\ApcHandler::close
 	 * @TODO   Implement testClose().
 	 */
 	public function testClose()

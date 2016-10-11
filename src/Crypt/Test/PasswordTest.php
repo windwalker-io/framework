@@ -50,8 +50,8 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Password::create
-	 * @covers Windwalker\Crypt\Password::verify
+	 * @covers \Windwalker\Crypt\Password::create
+	 * @covers \Windwalker\Crypt\Password::verify
 	 */
 	public function testCreateMd5()
 	{
@@ -74,8 +74,8 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Password::create
-	 * @covers Windwalker\Crypt\Password::verify
+	 * @covers \Windwalker\Crypt\Password::create
+	 * @covers \Windwalker\Crypt\Password::verify
 	 */
 	public function testCreateSha256()
 	{
@@ -109,8 +109,8 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Password::create
-	 * @covers Windwalker\Crypt\Password::verify
+	 * @covers \Windwalker\Crypt\Password::create
+	 * @covers \Windwalker\Crypt\Password::verify
 	 */
 	public function testCreateSha512()
 	{
@@ -144,8 +144,8 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Password::create
-	 * @covers Windwalker\Crypt\Password::verify
+	 * @covers \Windwalker\Crypt\Password::create
+	 * @covers \Windwalker\Crypt\Password::verify
 	 */
 	public function testCreateBlowfish()
 	{
@@ -174,7 +174,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Password::getSalt
+	 * @covers \Windwalker\Crypt\Password::getSalt
 	 * @TODO   Implement testGetSalt().
 	 */
 	public function testGetSalt()
@@ -190,7 +190,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Password::setSalt
+	 * @covers \Windwalker\Crypt\Password::setSalt
 	 * @TODO   Implement testSetSalt().
 	 */
 	public function testSetSalt()
@@ -206,7 +206,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Password::getCost
+	 * @covers \Windwalker\Crypt\Password::getCost
 	 * @TODO   Implement testGetCost().
 	 */
 	public function testGetCost()
@@ -222,7 +222,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Password::setCost
+	 * @covers \Windwalker\Crypt\Password::setCost
 	 * @TODO   Implement testSetCost().
 	 */
 	public function testSetCost()

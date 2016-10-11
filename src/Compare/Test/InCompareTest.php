@@ -40,7 +40,7 @@ class InCompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\InCompare::compare
+	 * @covers \Windwalker\Compare\InCompare::compare
 	 */
 	public function testCompare()
 	{
@@ -57,7 +57,7 @@ class InCompareTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Compare\InCompare::toString
+	 * @covers \Windwalker\Compare\InCompare::toString
 	 */
 	public function testToString()
 	{

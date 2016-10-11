@@ -51,7 +51,7 @@ abstract class AbstractOpensslTestCase extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Cipher\McryptCipher::encrypt
+	 * @covers \Windwalker\Crypt\Cipher\McryptCipher::encrypt
 	 */
 	public function testEncrypt()
 	{
@@ -76,7 +76,7 @@ abstract class AbstractOpensslTestCase extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Cipher\McryptCipher::decrypt
+	 * @covers \Windwalker\Crypt\Cipher\McryptCipher::decrypt
 	 */
 	public function testDecrypt()
 	{
@@ -101,7 +101,7 @@ abstract class AbstractOpensslTestCase extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Cipher\AbstractCipher::getIVKey
+	 * @covers \Windwalker\Crypt\Cipher\AbstractCipher::getIVKey
 	 */
 	public function testGetIVKey()
 	{

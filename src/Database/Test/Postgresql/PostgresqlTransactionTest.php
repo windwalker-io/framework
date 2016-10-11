@@ -32,7 +32,7 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::getNested
+	 * @covers \Windwalker\Database\Command\AbstractTransaction::getNested
 	 */
 	public function testGetNested()
 	{
@@ -46,7 +46,7 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::setNested
+	 * @covers \Windwalker\Database\Command\AbstractTransaction::setNested
 	 */
 	public function testSetNested()
 	{
@@ -62,7 +62,7 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::getDriver
+	 * @covers \Windwalker\Database\Command\AbstractTransaction::getDriver
 	 */
 	public function testGetDriver()
 	{
@@ -77,7 +77,7 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Command\AbstractTransaction::setDriver
+	 * @covers \Windwalker\Database\Command\AbstractTransaction::setDriver
 	 * @TODO   Implement testSetDriver().
 	 */
 	public function testSetDriver()
@@ -93,8 +93,8 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::start
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::rollback
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::start
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::rollback
 	 */
 	public function testTransactionRollback()
 	{
@@ -118,8 +118,8 @@ class PostgresqlTransactionTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::start
-	 * @covers Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::commit
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::start
+	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlTransaction::commit
 	 */
 	public function testTransactionCommit()
 	{

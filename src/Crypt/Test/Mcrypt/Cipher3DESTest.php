@@ -52,7 +52,7 @@ class Cipher3DESTest extends AbstractMcryptTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Cipher\McryptCipher::getIVSize
+	 * @covers \Windwalker\Crypt\Cipher\McryptCipher::getIVSize
 	 */
 	public function testGetIVSize()
 	{

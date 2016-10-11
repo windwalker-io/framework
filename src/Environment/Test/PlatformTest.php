@@ -168,7 +168,7 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Environment\Platform::getOS
+	 * @covers \Windwalker\Environment\Platform::getOS
 	 */
 	public function testGetOS()
 	{
@@ -207,7 +207,7 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider getIsUnixTestData
 	 *
-	 * @covers Windwalker\Environment\Platform::isUnix
+	 * @covers \Windwalker\Environment\Platform::isUnix
 	 */
 	public function testIsUnix($os, $value)
 	{
@@ -227,7 +227,7 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider getIsLinuxTestData
 	 *
-	 * @covers Windwalker\Environment\Platform::isLinux
+	 * @covers \Windwalker\Environment\Platform::isLinux
 	 */
 	public function testIsLinux($os, $value)
 	{

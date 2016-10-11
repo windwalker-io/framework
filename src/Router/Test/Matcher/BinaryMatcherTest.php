@@ -51,7 +51,7 @@ class BinaryMatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Router\Matcher\BinaryMatcher::match
+	 * @covers \Windwalker\Router\Matcher\BinaryMatcher::match
 	 */
 	public function testMatch()
 	{

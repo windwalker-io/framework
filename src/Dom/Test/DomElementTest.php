@@ -108,7 +108,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::__toString
+	 * @covers \Windwalker\Dom\DomElement::__toString
 	 */
 	public function test__toString()
 	{
@@ -123,7 +123,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::getContent
+	 * @covers \Windwalker\Dom\DomElement::getContent
 	 */
 	public function testGetContent()
 	{
@@ -137,7 +137,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::setContent
+	 * @covers \Windwalker\Dom\DomElement::setContent
 	 */
 	public function testSetContent()
 	{
@@ -156,7 +156,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::getAttribute
+	 * @covers \Windwalker\Dom\DomElement::getAttribute
 	 */
 	public function testGetAttribute()
 	{
@@ -170,7 +170,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::setAttribute
+	 * @covers \Windwalker\Dom\DomElement::setAttribute
 	 */
 	public function testSetAttribute()
 	{
@@ -190,7 +190,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::getAttributes
+	 * @covers \Windwalker\Dom\DomElement::getAttributes
 	 */
 	public function testGetAttributes()
 	{
@@ -204,7 +204,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::setAttributes
+	 * @covers \Windwalker\Dom\DomElement::setAttributes
 	 */
 	public function testSetAttributes()
 	{
@@ -225,7 +225,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::getName
+	 * @covers \Windwalker\Dom\DomElement::getName
 	 */
 	public function testGetName()
 	{
@@ -239,7 +239,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::setName
+	 * @covers \Windwalker\Dom\DomElement::setName
 	 */
 	public function testSetName()
 	{
@@ -260,7 +260,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::offsetExists
+	 * @covers \Windwalker\Dom\DomElement::offsetExists
 	 */
 	public function testOffsetExists()
 	{
@@ -275,7 +275,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::offsetGet
+	 * @covers \Windwalker\Dom\DomElement::offsetGet
 	 */
 	public function testOffsetGet()
 	{
@@ -289,7 +289,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::offsetSet
+	 * @covers \Windwalker\Dom\DomElement::offsetSet
 	 */
 	public function testOffsetSet()
 	{
@@ -309,7 +309,7 @@ class DomElementTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Dom\DomElement::offsetUnset
+	 * @covers \Windwalker\Dom\DomElement::offsetUnset
 	 */
 	public function testOffsetUnset()
 	{

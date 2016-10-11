@@ -108,7 +108,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Input::__get
+	 * @covers \Windwalker\IO\Input::__get
 	 */
 	public function test__get()
 	{
@@ -138,7 +138,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Input::count
+	 * @covers \Windwalker\IO\Input::count
 	 */
 	public function testCount()
 	{
@@ -435,7 +435,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Input::__call
+	 * @covers \Windwalker\IO\Input::__call
 	 */
 	public function test__call()
 	{
@@ -461,7 +461,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Input::getMethod
+	 * @covers \Windwalker\IO\Input::getMethod
 	 */
 	public function testGetMethod()
 	{
@@ -477,7 +477,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Input::serialize
+	 * @covers \Windwalker\IO\Input::serialize
 	 */
 	public function testSerialize()
 	{
@@ -496,7 +496,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Input::unserialize
+	 * @covers \Windwalker\IO\Input::unserialize
 	 * @TODO   Implement testUnserialize().
 	 */
 	public function testUnserialize()
@@ -512,7 +512,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\IO\Input::loadAllInputs
+	 * @covers \Windwalker\IO\Input::loadAllInputs
 	 */
 	public function testLoadAllInputs()
 	{

@@ -22,7 +22,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\String\StringHelper::isEmptyString
+	 * @covers \Windwalker\String\StringHelper::isEmptyString
 	 */
 	public function testIsEmpty()
 	{
@@ -39,7 +39,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\String\StringHelper::isZero
+	 * @covers \Windwalker\String\StringHelper::isZero
 	 */
 	public function testIsZero()
 	{
@@ -56,7 +56,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\String\StringHelper::quote
+	 * @covers \Windwalker\String\StringHelper::quote
 	 */
 	public function testQuote()
 	{
@@ -71,7 +71,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\String\StringHelper::backquote
+	 * @covers \Windwalker\String\StringHelper::backquote
 	 */
 	public function testBackquote()
 	{

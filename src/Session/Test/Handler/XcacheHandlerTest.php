@@ -55,7 +55,7 @@ class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\XcacheHandler::isSupported
+	 * @covers \Windwalker\Session\Handler\XcacheHandler::isSupported
 	 * @TODO   Implement testIsSupported().
 	 */
 	public function testIsSupported()
@@ -71,7 +71,7 @@ class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\XcacheHandler::read
+	 * @covers \Windwalker\Session\Handler\XcacheHandler::read
 	 * @TODO   Implement testRead().
 	 */
 	public function testRead()
@@ -87,7 +87,7 @@ class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\XcacheHandler::write
+	 * @covers \Windwalker\Session\Handler\XcacheHandler::write
 	 * @TODO   Implement testWrite().
 	 */
 	public function testWrite()
@@ -103,7 +103,7 @@ class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\XcacheHandler::destroy
+	 * @covers \Windwalker\Session\Handler\XcacheHandler::destroy
 	 * @TODO   Implement testDestroy().
 	 */
 	public function testDestroy()
@@ -119,7 +119,7 @@ class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\XcacheHandler::open
+	 * @covers \Windwalker\Session\Handler\XcacheHandler::open
 	 * @TODO   Implement testOpen().
 	 */
 	public function testOpen()
@@ -135,7 +135,7 @@ class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\XcacheHandler::close
+	 * @covers \Windwalker\Session\Handler\XcacheHandler::close
 	 * @TODO   Implement testClose().
 	 */
 	public function testClose()
@@ -151,7 +151,7 @@ class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Session\Handler\XcacheHandler::gc
+	 * @covers \Windwalker\Session\Handler\XcacheHandler::gc
 	 * @TODO   Implement testGc().
 	 */
 	public function testGc()

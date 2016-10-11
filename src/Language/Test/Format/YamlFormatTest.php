@@ -51,7 +51,7 @@ class YamlFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Format\YamlFormat::parse
+	 * @covers \Windwalker\Language\Format\YamlFormat::parse
 	 */
 	public function testParse()
 	{

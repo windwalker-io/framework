@@ -164,7 +164,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Select\SelectList::getSelected
+	 * @covers \Windwalker\Html\Select\SelectList::getSelected
 	 * @TODO   Implement testGetSelected().
 	 */
 	public function testGetSelected()
@@ -180,7 +180,7 @@ HTML;
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Html\Select\SelectList::setSelected
+	 * @covers \Windwalker\Html\Select\SelectList::setSelected
 	 * @TODO   Implement testSetSelected().
 	 */
 	public function testSetSelected()

@@ -50,7 +50,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Point\Point::getName
+	 * @covers \Windwalker\Profiler\Point\Point::getName
 	 */
 	public function testGetName()
 	{
@@ -62,7 +62,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Point\Point::getTime
+	 * @covers \Windwalker\Profiler\Point\Point::getTime
 	 */
 	public function testGetTime()
 	{
@@ -80,7 +80,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Profiler\Point\Point::getMemory
+	 * @covers \Windwalker\Profiler\Point\Point::getMemory
 	 */
 	public function testGetMemory()
 	{

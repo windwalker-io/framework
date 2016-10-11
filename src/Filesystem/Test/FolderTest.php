@@ -25,7 +25,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::copy
+	 * @covers \Windwalker\Filesystem\Folder::copy
 	 */
 	public function testCopy()
 	{
@@ -42,7 +42,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::create
+	 * @covers \Windwalker\Filesystem\Folder::create
 	 */
 	public function testCreate()
 	{
@@ -71,7 +71,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::delete
+	 * @covers \Windwalker\Filesystem\Folder::delete
 	 */
 	public function testDelete()
 	{
@@ -87,7 +87,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::move
+	 * @covers \Windwalker\Filesystem\Folder::move
 	 */
 	public function testMove()
 	{
@@ -111,7 +111,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::files
+	 * @covers \Windwalker\Filesystem\Folder::files
 	 */
 	public function testFiles()
 	{
@@ -153,7 +153,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::items
+	 * @covers \Windwalker\Filesystem\Folder::items
 	 */
 	public function testItems()
 	{
@@ -188,7 +188,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::folders
+	 * @covers \Windwalker\Filesystem\Folder::folders
 	 */
 	public function testFolders()
 	{
@@ -230,7 +230,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::listFolderTree
+	 * @covers \Windwalker\Filesystem\Folder::listFolderTree
 	 */
 	public function testListFolderTree()
 	{
@@ -247,7 +247,7 @@ class FolderTest extends AbstractFilesystemTest
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Filesystem\Folder::makeSafe
+	 * @covers \Windwalker\Filesystem\Folder::makeSafe
 	 */
 	public function testMakeSafe()
 	{

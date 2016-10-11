@@ -23,7 +23,7 @@ class ServerHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\ServerHelper::getValue
+	 * @covers \Windwalker\Http\Helper\ServerHelper::getValue
 	 */
 	public function testGetValue()
 	{
@@ -44,7 +44,7 @@ class ServerHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\ServerHelper::validateUploadedFiles
+	 * @covers \Windwalker\Http\Helper\ServerHelper::validateUploadedFiles
 	 */
 	public function testValidateUploadedFiles()
 	{
@@ -63,7 +63,7 @@ class ServerHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\ServerHelper::getAllHeaders
+	 * @covers \Windwalker\Http\Helper\ServerHelper::getAllHeaders
 	 * @TODO   Implement testGetAllHeaders().
 	 */
 	public function testGetAllHeaders()
@@ -79,7 +79,7 @@ class ServerHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Helper\ServerHelper::apacheRequestHeaders
+	 * @covers \Windwalker\Http\Helper\ServerHelper::apacheRequestHeaders
 	 * @TODO   Implement testApacheRequestHeaders().
 	 */
 	public function testApacheRequestHeaders()
@@ -95,7 +95,7 @@ class ServerHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Http\Helper\ServerHelper::parseFormData
+	 * @covers \Windwalker\Http\Helper\ServerHelper::parseFormData
 	 */
 	public function testParseFormData()
 	{

@@ -50,7 +50,7 @@ class PhpFormatTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Format\PhpFormat::parse
+	 * @covers \Windwalker\Language\Format\PhpFormat::parse
 	 */
 	public function testParse()
 	{

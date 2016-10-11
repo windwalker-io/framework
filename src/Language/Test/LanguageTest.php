@@ -53,7 +53,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::load
+	 * @covers \Windwalker\Language\Language::load
 	 * @TODO   Implement testLoad().
 	 */
 	public function testLoad()
@@ -69,7 +69,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::translate
+	 * @covers \Windwalker\Language\Language::translate
 	 */
 	public function testTranslate()
 	{
@@ -90,7 +90,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::plural
+	 * @covers \Windwalker\Language\Language::plural
 	 */
 	public function testPlural()
 	{
@@ -110,7 +110,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::sprintf
+	 * @covers \Windwalker\Language\Language::sprintf
 	 */
 	public function testSprintf()
 	{
@@ -123,7 +123,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::exists
+	 * @covers \Windwalker\Language\Language::exists
 	 */
 	public function testExists()
 	{
@@ -136,7 +136,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::addString
+	 * @covers \Windwalker\Language\Language::addString
 	 */
 	public function testAddString()
 	{
@@ -152,7 +152,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::addStrings
+	 * @covers \Windwalker\Language\Language::addStrings
 	 * @TODO   Implement testAddStrings().
 	 */
 	public function testAddStrings()
@@ -173,7 +173,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::setDebug
+	 * @covers \Windwalker\Language\Language::setDebug
 	 */
 	public function testSetDebug()
 	{
@@ -188,7 +188,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::getLoader
+	 * @covers \Windwalker\Language\Language::getLoader
 	 */
 	public function testGetLoader()
 	{
@@ -201,7 +201,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::setLoader
+	 * @covers \Windwalker\Language\Language::setLoader
 	 * @TODO   Implement testSetLoader().
 	 */
 	public function testSetLoader()
@@ -217,7 +217,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::setLoaders
+	 * @covers \Windwalker\Language\Language::setLoaders
 	 * @TODO   Implement testSetLoaders().
 	 */
 	public function testSetLoaders()
@@ -233,7 +233,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::getFormat
+	 * @covers \Windwalker\Language\Language::getFormat
 	 */
 	public function testGetFormat()
 	{
@@ -246,7 +246,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::setFormat
+	 * @covers \Windwalker\Language\Language::setFormat
 	 * @TODO   Implement testSetFormat().
 	 */
 	public function testSetFormat()
@@ -262,7 +262,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::setFormats
+	 * @covers \Windwalker\Language\Language::setFormats
 	 * @TODO   Implement testSetFormats().
 	 */
 	public function testSetFormats()
@@ -278,7 +278,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::getOrphans
+	 * @covers \Windwalker\Language\Language::getOrphans
 	 */
 	public function testGetOrphans()
 	{
@@ -325,7 +325,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::getUsed
+	 * @covers \Windwalker\Language\Language::getUsed
 	 */
 	public function testGetUsed()
 	{
@@ -346,7 +346,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::getLocale
+	 * @covers \Windwalker\Language\Language::getLocale
 	 */
 	public function testGetAndSetLocale()
 	{
@@ -362,7 +362,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::setLocalise
+	 * @covers \Windwalker\Language\Language::setLocalise
 	 * @TODO   Implement testSetLocalise().
 	 */
 	public function testSetLocalise()
@@ -378,7 +378,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::normalize
+	 * @covers \Windwalker\Language\Language::normalize
 	 */
 	public function testNormalize()
 	{
@@ -399,7 +399,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::getNormalizeHandler
+	 * @covers \Windwalker\Language\Language::getNormalizeHandler
 	 * @TODO   Implement testGetNormalizeHandler().
 	 */
 	public function testGetNormalizeHandler()
@@ -415,7 +415,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Language\Language::setNormalizeHandler
+	 * @covers \Windwalker\Language\Language::setNormalizeHandler
 	 * @TODO   Implement testSetNormalizeHandler().
 	 */
 	public function testSetNormalizeHandler()

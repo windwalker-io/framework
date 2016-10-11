@@ -50,7 +50,7 @@ class DataIteratorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Iterator\DataIterator::__destruct
+	 * @covers \Windwalker\Database\Iterator\DataIterator::__destruct
 	 * @TODO   Implement test__destruct().
 	 */
 	public function test__destruct()
@@ -66,7 +66,7 @@ class DataIteratorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Iterator\DataIterator::current
+	 * @covers \Windwalker\Database\Iterator\DataIterator::current
 	 * @TODO   Implement testCurrent().
 	 */
 	public function testCurrent()
@@ -82,7 +82,7 @@ class DataIteratorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Iterator\DataIterator::next
+	 * @covers \Windwalker\Database\Iterator\DataIterator::next
 	 * @TODO   Implement testNext().
 	 */
 	public function testNext()
@@ -98,7 +98,7 @@ class DataIteratorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Iterator\DataIterator::key
+	 * @covers \Windwalker\Database\Iterator\DataIterator::key
 	 * @TODO   Implement testKey().
 	 */
 	public function testKey()
@@ -114,7 +114,7 @@ class DataIteratorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Iterator\DataIterator::valid
+	 * @covers \Windwalker\Database\Iterator\DataIterator::valid
 	 * @TODO   Implement testValid().
 	 */
 	public function testValid()
@@ -130,7 +130,7 @@ class DataIteratorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Iterator\DataIterator::rewind
+	 * @covers \Windwalker\Database\Iterator\DataIterator::rewind
 	 * @TODO   Implement testRewind().
 	 */
 	public function testRewind()
@@ -146,7 +146,7 @@ class DataIteratorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Database\Iterator\DataIterator::count
+	 * @covers \Windwalker\Database\Iterator\DataIterator::count
 	 * @TODO   Implement testCount().
 	 */
 	public function testCount()

@@ -51,7 +51,7 @@ class PhpAesCipherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Cipher\PhpAesCipher::decrypt
+	 * @covers \Windwalker\Crypt\Cipher\PhpAesCipher::decrypt
 	 */
 	public function testDecrypt()
 	{
@@ -69,7 +69,7 @@ class PhpAesCipherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Crypt\Cipher\PhpAesCipher::encrypt
+	 * @covers \Windwalker\Crypt\Cipher\PhpAesCipher::encrypt
 	 * @TODO   Implement testEncrypt().
 	 */
 	public function testEncrypt()

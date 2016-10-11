@@ -51,7 +51,7 @@ class AbstractContentTypeResponseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Windwalker\Http\Response\AbstractContentTypeResponse::testConstruct
+	 * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::testConstruct
 	 */
 	public function testConstruct()
 	{
@@ -68,7 +68,7 @@ class AbstractContentTypeResponseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers Windwalker\Http\Response\AbstractContentTypeResponse::withContentType
+	 * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::withContentType
 	 */
 	public function testWithContentType()
 	{
@@ -82,7 +82,7 @@ class AbstractContentTypeResponseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 * 
-	 * @covers Windwalker\Http\Response\AbstractContentTypeResponse::normalizeContentType
+	 * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::normalizeContentType
 	 */
 	public function testNormalizeContentType()
 	{
