@@ -453,6 +453,16 @@ $field = new RadioList(
 | ---- | ---- | ----------- |
 | TextField     | `<input type="text">`     | The text input field. |
 | TextareaField | `<textarea></textarea>`   | Textarea field. |
+| ColorField    | `<input type="color">`    | HTML5 Color picker |
+| DateField     | `<input type="date">`     | Date selector |
+| DatetimeLocalField | `<input type="datetime-local">` | Datetime selector |
+| MonthField    | `<input type="month">`    | Month selector |
+| NumberField   | `<input type="number">`   | Number text field |
+| RangeField    | `<input type="range">`    | A range bar. |
+| TelField      | `<input type="tel">`      | Tel text field. |
+| TimeField     |`<input type="time">`      | Time field. |
+| UrlField      | `<input type="url">`      | URL text field |
+| WeekField     | `<input type="week">`     | Week selector |
 | EmailField    | `<input type="email">`    | The email text field. |
 | HiddenField   | `<input type="hidden">`   | Hidden input. |
 | PasswordField | `<input type="password">` | Password field. |
