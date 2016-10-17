@@ -120,10 +120,11 @@ class Edge
 	 *
 	 * @param string $__layout
 	 * @param array  $__data
+	 * @param array  $__more
 	 *
-	 * @return  string
+	 * @return string
 	 */
-	public function render($__layout, $__data = array())
+	public function render($__layout, $__data = array(), $__more = array())
 	{
 		// TODO: Aliases
 
@@ -140,7 +141,7 @@ class Edge
 			unset($compiler);
 		}
 
-		$__data = array_merge($this->getGlobals(true), $__data);
+		$__data = array_merge($this->getGlobals(true), $__more, $__data);
 
 		foreach ($__data as $__key => $__value)
 		{
