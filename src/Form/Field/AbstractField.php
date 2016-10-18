@@ -548,6 +548,16 @@ abstract class AbstractField
 	}
 
 	/**
+	 * getRawValue
+	 *
+	 * @return  mixed
+	 */
+	public function getRawValue()
+	{
+		return $this->value;
+	}
+
+	/**
 	 * Method to set property value
 	 *
 	 * @param   null $value

@@ -807,7 +807,7 @@ class Form implements \IteratorAggregate
 
 		foreach ($this->getFields($fieldset, $group) as $name => $field)
 		{
-			FormHelper::setByPath($data, $name, $field->getValue());
+			FormHelper::setByPath($data, $name, $field->getRawValue());
 		}
 
 		return $data;
