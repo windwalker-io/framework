@@ -10,6 +10,8 @@ namespace Windwalker\Form\Field;
 
 /**
  * The TextField class.
+ *
+ * @method  mixed|$this  multiple(bool $value = null)
  * 
  * @since  2.0
  */
@@ -34,5 +36,19 @@ class FileField extends TextField
 		parent::prepare($attrs);
 
 		$attrs['multiple'] = $this->getAttribute('multiple');
+	}
+
+	/**
+	 * getAccessors
+	 *
+	 * @return  array
+	 *
+	 * @since   3.1.2
+	 */
+	protected function getAccessors()
+	{
+		return array_merge(parent::getAccessors(), array(
+			'multiple' => 'multiple',
+		));
 	}
 }

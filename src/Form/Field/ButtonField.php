@@ -13,6 +13,8 @@ use Windwalker\Dom\HtmlElement;
 /**
  * The ButtonField class.
  *
+ * @method  mixed|$this  text(string|integer $value = null)
+ *
  * @since  2.1.8
  */
 class ButtonField extends AbstractField
@@ -53,6 +55,20 @@ class ButtonField extends AbstractField
 		$attrs['formtarget'] = $this->getAttribute('formtarget');
 		$attrs['disabled'] = $this->getAttribute('disabled');
 		$attrs['required'] = $this->required;
+	}
+
+	/**
+	 * getAccessors
+	 *
+	 * @return  array
+	 *
+	 * @since   3.1.2
+	 */
+	protected function getAccessors()
+	{
+		return array_merge(parent::getAccessors(), array(
+			'text' => 'text',
+		));
 	}
 
 	/**

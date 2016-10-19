@@ -10,7 +10,16 @@ namespace Windwalker\Form\Field;
 
 /**
  * The TextField class.
- * 
+ *
+ * @method  mixed|$this  placeholder(string $value = null)
+ * @method  mixed|$this  size(integer $value = null)
+ * @method  mixed|$this  maxlength(integer $value = null)
+ * @method  mixed|$this  autofocus(string $value = null)
+ * @method  mixed|$this  autocomplete(string $value = null)
+ * @method  mixed|$this  onchange(string $value = null)
+ * @method  mixed|$this  onfocus(string $value = null)
+ * @method  mixed|$this  onblur(string $value = null)
+ *
  * @since  2.0
  */
 class TextField extends AbstractField
@@ -49,10 +58,31 @@ class TextField extends AbstractField
 		$attrs['formtarget'] = $this->getAttribute('formtarget');
 		$attrs['list'] = $this->getAttribute('list');
 		$attrs['onchange'] = $this->getAttribute('onchange');
-		$attrs['onfocus'] = $this->getAttribute('onfocus');
-		$attrs['onchange'] = $this->getAttribute('onchange');
+		$attrs['onfocus']  = $this->getAttribute('onfocus');
+		$attrs['onblur']   = $this->getAttribute('onblur');
 		$attrs['value']    = $this->escape($this->getValue());
 
 		$attrs['required'] = $this->required;
+	}
+
+	/**
+	 * getAccessors
+	 *
+	 * @return  array
+	 *
+	 * @since   3.1.2
+	 */
+	protected function getAccessors()
+	{
+		return array_merge(parent::getAccessors(), array(
+			'placeholder' => 'placeholder',
+			'size' => 'size',
+			'maxlength' => 'maxlength',
+			'autofocus' => 'autofocus',
+			'autocomplete' => 'autocomplete',
+			'onchange' => 'onchange',
+			'onfocus' => 'onfocus',
+			'onblur' => 'onblur',
+		));
 	}
 }

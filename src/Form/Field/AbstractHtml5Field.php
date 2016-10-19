@@ -11,6 +11,11 @@ namespace Windwalker\Form\Field;
 /**
  * The AbstractHtml5Field class.
  *
+ * @method  mixed|$this  max(integer $value = null)
+ * @method  mixed|$this  min(integer $value = null)
+ * @method  mixed|$this  step(integer $value = null)
+ * @method  mixed|$this  patten(string $value = null)
+ *
  * @since  3.0.1
  */
 class AbstractHtml5Field extends TextField
@@ -33,58 +38,19 @@ class AbstractHtml5Field extends TextField
 	}
 
 	/**
-	 * max
+	 * getAccessors
 	 *
-	 * @param   string|int  $num
+	 * @return  array
 	 *
-	 * @return  static
+	 * @since   3.1.2
 	 */
-	public function max($num)
+	protected function getAccessors()
 	{
-		$this->setAttribute('max', $num);
-
-		return $this;
-	}
-
-	/**
-	 * mina
-	 *
-	 * @param   string|int  $num
-	 *
-	 * @return  static
-	 */
-	public function min($num)
-	{
-		$this->setAttribute('mina', $num);
-
-		return $this;
-	}
-
-	/**
-	 * step
-	 *
-	 * @param   string|int  $num
-	 *
-	 * @return  static
-	 */
-	public function step($num)
-	{
-		$this->setAttribute('step', $num);
-
-		return $this;
-	}
-
-	/**
-	 * pattern
-	 *
-	 * @param   string  $string
-	 *
-	 * @return  static
-	 */
-	public function pattern($string)
-	{
-		$this->setAttribute('pattern', $string);
-
-		return $this;
+		return array_merge(parent::getAccessors(), array(
+			'max' => 'max',
+			'min' => 'min',
+			'step' => 'step',
+			'patten' => 'patten',
+		));
 	}
 }

@@ -1097,4 +1097,49 @@ abstract class AbstractField
 	{
 		return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
 	}
+
+	/**
+	 * getAccessors
+	 *
+	 * @return  array
+	 *
+	 * @since   3.1.2
+	 */
+	protected function getAccessors()
+	{
+		return array();
+	}
+
+	/**
+	 * __call
+	 *
+	 * @param   string $method
+	 * @param   array  $args
+	 *
+	 * @return  mixed
+	 *
+	 * @throws \BadMethodCallException
+	 */
+	public function __call($method, $args)
+	{
+		$accessors = $this->getAccessors();
+
+		if (isset($accessors[$method]))
+		{
+			$attribute = $accessors[$method];
+
+			if (count($args) > 0)
+			{
+				$this->setAttribute($attribute, $args[0]);
+
+				return $this;
+			}
+			else
+			{
+				return $this->getAttribute($attribute);
+			}
+		}
+
+		throw new \BadMethodCallException(sprintf('Method: %s not exists', $method));
+	}
 }
