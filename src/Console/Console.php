@@ -149,6 +149,12 @@ class Console extends AbstractConsole
 
 			$exitCode = $e->getCode();
 		}
+		catch (\Throwable $t)
+		{
+			$command->renderException(new \ErrorException($t->getMessage(), $t->getCode(), E_ERROR, $t->getFile(), $t->getLine(), $t));
+
+			$exitCode = $t->getCode();
+		}
 
 		if ($this->autoExit)
 		{
