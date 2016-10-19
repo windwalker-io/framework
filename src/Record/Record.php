@@ -98,6 +98,8 @@ class Record extends Entity
 	 *                                      compose the primary key.
 	 * @param   AbstractDataMapper $mapper  The DataMapper Adapter to access database.
 	 *
+	 * @throws \InvalidArgumentException
+	 *
 	 * @since   2.0
 	 */
 	public function __construct($table = null, $keys = 'id', AbstractDataMapper $mapper = null)
@@ -137,10 +139,12 @@ class Record extends Entity
 	 * property name.  The rows that will be reordered are those whose value matches
 	 * the AbstractTable instance for the property specified.
 	 *
-	 * @param   mixed    $src          An associative array or object to bind to the AbstractTable instance.
-	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 * @param   mixed   $src         An associative array or object to bind to the AbstractTable instance.
+	 * @param   boolean $updateNulls True to update fields even if they are null.
 	 *
-	 * @return  $this  Method allows chaining
+	 * @return  static  Method allows chaining
+	 *
+	 * @throws \RuntimeException
 	 *
 	 * @since   2.0
 	 */
@@ -160,10 +164,12 @@ class Record extends Entity
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $src           An associative array or object to bind to the AbstractTable instance.
-	 * @param   bool  $replaceNulls  Replace NULL value.
+	 * @param   mixed $src          An associative array or object to bind to the AbstractTable instance.
+	 * @param   bool  $replaceNulls Replace NULL value.
 	 *
 	 * @return static Method allows chaining
+	 *
+	 * @throws \InvalidArgumentException
 	 *
 	 * @since   2.0
 	 */
@@ -216,11 +222,12 @@ class Record extends Entity
 	 * Method to load a row from the database by primary key and bind the fields
 	 * to the AbstractTable instance properties.
 	 *
-	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+	 * @param   mixed   $keys    An optional primary key value to load the row by, or an array of fields to match.  If not
 	 *                           set the instance property value is used.
-	 * @param   boolean  $reset  True to reset the default values before loading the new row.
+	 * @param   boolean $reset   True to reset the default values before loading the new row.
 	 *
 	 * @return  static  Method allows chaining
+	 * @throws \Windwalker\Record\Exception\NoResultException
 	 *
 	 * @since   2.0
 	 * @throws  \RuntimeException
@@ -286,14 +293,33 @@ class Record extends Entity
 	 *
 	 * @return  static  Method allows chaining
 	 *
-	 * @since   2.0
+	 * @throws  \InvalidArgumentException
+	 * @throws  \RuntimeException
 	 * @throws  \UnexpectedValueException
+	 *
+	 * @since   2.0
 	 */
 	public function delete($conditions = null)
 	{
+		if ($conditions !== null)
+		{
+			$dataset = $this->getDataMapper()->find($conditions);
+
+			$record = clone $this;
+
+			foreach ($dataset as $data)
+			{
+				$record->reset(false)
+					->bind($data)
+					->delete();
+			}
+
+			return $this;
+		}
+
 		$key = $this->getKeyName();
 
-		$conditions = (is_null($conditions)) ? $this->$key : $conditions;
+		$conditions = $this->$key;
 
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
@@ -382,6 +408,8 @@ class Record extends Entity
 	 * create
 	 *
 	 * @return  static
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function create()
 	{
@@ -539,10 +567,14 @@ class Record extends Entity
 	 * Check a field value exists in database or not, to keep a field unique.
 	 *
 	 * @param   string $field The field name to check.
-	 *
-	 * @param null     $value
+	 * @param   mixed  $value The value to check.
 	 *
 	 * @return bool
+	 *
+	 * @throws \Windwalker\Record\Exception\NoResultException
+	 * @throws \UnexpectedValueException
+	 * @throws \RuntimeException
+	 * @throws \InvalidArgumentException
 	 */
 	public function valueExists($field, $value = null)
 	{
