@@ -355,6 +355,11 @@ abstract class AbstractField
 	 */
 	public function checkRequired()
 	{
+		if (is_array($this->value))
+		{
+			return (bool) $this->value;
+		}
+
 		$value = (string) $this->value;
 
 		if ($this->value || $value === '0')
