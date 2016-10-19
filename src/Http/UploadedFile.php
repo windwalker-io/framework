@@ -10,6 +10,7 @@ namespace Windwalker\Http;
 
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Windwalker\Http\Helper\UploadedFileHelper;
 use Windwalker\Http\Stream\Stream;
 
 /**
@@ -78,31 +79,36 @@ class UploadedFile implements UploadedFileInterface
 	/**
 	 * Class init.
 	 *
-	 * @param string|resource|StreamInterface  $file             The file source.
-	 * @param integer                          $size             The file size.
-	 * @param integer                          $error            The upload error status.
-	 * @param string                           $clientFilename   The client filename.
-	 * @param string                           $clientMediaType  The file media type.
+	 * @param string|resource|StreamInterface $file            The file source.
+	 * @param integer                         $size            The file size.
+	 * @param integer                         $error           The upload error status.
+	 * @param string                          $clientFilename  The client filename.
+	 * @param string                          $clientMediaType The file media type.
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($file, $size = 0, $error = UPLOAD_ERR_OK, $clientFilename = null, $clientMediaType = null)
 	{
-		if (is_string($file))
+		if ($error === UPLOAD_ERR_OK)
 		{
-			$this->file = $file;
-			$this->stream = new Stream($file, Stream::MODE_READ_WRITE_FROM_BEGIN);
-		}
-		elseif (is_resource($file))
-		{
-			$this->stream = new Stream($file);
-		}
-		elseif ($file instanceof StreamInterface)
-		{
-			$this->stream = $file;
-		}
+			if (is_string($file))
+			{
+				$this->file = $file;
+				$this->stream = new Stream($file, Stream::MODE_READ_WRITE_FROM_BEGIN);
+			}
+			elseif (is_resource($file))
+			{
+				$this->stream = new Stream($file);
+			}
+			elseif ($file instanceof StreamInterface)
+			{
+				$this->stream = $file;
+			}
 
-		if (!$this->file && !$this->stream)
-		{
-			throw new \InvalidArgumentException('Invalid stream or file provided for UploadedFile');
+			if (!$this->file && !$this->stream)
+			{
+				throw new \InvalidArgumentException('Invalid stream or file provided for UploadedFile');
+			}
 		}
 
 		if (!is_int($size))
@@ -110,8 +116,8 @@ class UploadedFile implements UploadedFileInterface
 			throw new \InvalidArgumentException('Size should be integer.');
 		}
 
-		if (!is_int($error) || 0 > $error || 8 < $error
-		) {
+		if (!is_int($error) || 0 > $error || 8 < $error)
+		{
 			throw new \InvalidArgumentException('Error status must be integer or an UPLOAD_ERR_* constant.');
 		}
 
@@ -120,7 +126,8 @@ class UploadedFile implements UploadedFileInterface
 			throw new \InvalidArgumentException('Client filename must be null or string');
 		}
 
-		if ($clientMediaType !== null && !is_string($clientMediaType)) {
+		if ($clientMediaType !== null && !is_string($clientMediaType))
+		{
 			throw new \InvalidArgumentException('Media type must be null or a string');
 		}
 
