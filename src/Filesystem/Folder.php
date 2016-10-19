@@ -204,7 +204,7 @@ abstract class Folder
 		}
 
 		// Remove sub-folders of folder; disable all filtering
-		$folders = static::folders($path);
+		$folders = static::items($path);
 
 		foreach ($folders as $folder)
 		{
@@ -213,7 +213,7 @@ abstract class Folder
 				// Don't descend into linked directories, just delete the link.
 				File::delete($folder);
 			}
-			else
+			elseif (is_dir($folder))
 			{
 				static::delete($folder);
 			}
@@ -227,7 +227,8 @@ abstract class Folder
 		}
 		else
 		{
-			throw new FilesystemException(sprintf('%1$s: Could not delete folder. Path: %2$s', __METHOD__, $path));
+			$error = error_get_last();
+			throw new FilesystemException($error['message'], $error['type']);
 		}
 	}
 
