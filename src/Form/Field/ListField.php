@@ -15,6 +15,10 @@ use Windwalker\Html\Select\SelectList;
 /**
  * The ListField class.
  *
+ * @method  mixed|$this  size(integer $value = null)
+ * @method  mixed|$this  onchange(string $value = null)
+ * @method  mixed|$this  multiple(bool $value = null)
+ *
  * @since  2.0
  */
 class ListField extends AbstractField
@@ -73,6 +77,22 @@ class ListField extends AbstractField
 		$attrs['onchange'] = $this->getAttribute('onchange');
 		$attrs['multiple'] = $this->getAttribute('multiple');
 		$attrs['required'] = $this->required;
+	}
+
+	/**
+	 * getAccessors
+	 *
+	 * @return  array
+	 *
+	 * @since   3.1.2
+	 */
+	protected function getAccessors()
+	{
+		return array_merge(parent::getAccessors(), array(
+			'size' => 'size',
+			'onchange' => 'onchange',
+			'multiple' => 'multiple',
+		));
 	}
 
 	/**

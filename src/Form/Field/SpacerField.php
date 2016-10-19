@@ -12,6 +12,10 @@ use Windwalker\Dom\HtmlElement;
 
 /**
  * The SpacerField class.
+ *
+ * @method  mixed|$this  hr(bool $value = null)
+ * @method  mixed|$this  description(string $value = null)
+ * @method  mixed|$this  tag(string $value = null)
  * 
  * @since  2.0
  */
@@ -38,6 +42,22 @@ class SpacerField extends AbstractField
 	}
 
 	/**
+	 * getAccessors
+	 *
+	 * @return  array
+	 *
+	 * @since   3.1.2
+	 */
+	protected function getAccessors()
+	{
+		return array_merge(parent::getAccessors(), array(
+			'hr' => 'hr',
+			'description' => 'description',
+			'tag' => 'tag',
+		));
+	}
+
+	/**
 	 * buildInput
 	 *
 	 * @param array $attrs
@@ -54,7 +74,7 @@ class SpacerField extends AbstractField
 		}
 		else
 		{
-			$node = 'span';
+			$node = $this->getAttribute('tag', 'span');
 
 			$content = $this->getAttribute('description');
 		}
