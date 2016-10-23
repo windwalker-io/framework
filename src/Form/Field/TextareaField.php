@@ -12,7 +12,10 @@ use Windwalker\Dom\HtmlElement;
 
 /**
  * The TextareaField class.
- * 
+ *
+ * @method  mixed|$this  cols(string $value = null)
+ * @method  mixed|$this  rows(string $value = null)
+ *
  * @since  2.0
  */
 class TextareaField extends TextField
@@ -36,7 +39,7 @@ class TextareaField extends TextField
 	 *
 	 * @param array $attrs
 	 *
-	 * @return  array
+	 * @return  void
 	 */
 	public function prepare(&$attrs)
 	{
@@ -45,7 +48,9 @@ class TextareaField extends TextField
 		$attrs['class']       = $this->getAttribute('class');
 		$attrs['readonly']    = $this->getAttribute('readonly');
 		$attrs['disabled']    = $this->getAttribute('disabled');
-		$attrs['onchange']    = $this->getAttribute('onchange');
+		$attrs['onchange']    = $this->getAttribute('onfocue');
+		$attrs['onfocue']     = $this->getAttribute('onchange');
+		$attrs['onblur']      = $this->getAttribute('onblur');
 		$attrs['placeholder'] = $this->getAttribute('placeholder');
 		$attrs['required']    = $this->required;
 
@@ -63,6 +68,21 @@ class TextareaField extends TextField
 	public function buildInput($attrs)
 	{
 		return new HtmlElement($this->element, $this->getValue(), $attrs);
+	}
+
+	/**
+	 * getAccessors
+	 *
+	 * @return  array
+	 *
+	 * @since   3.1.2
+	 */
+	protected function getAccessors()
+	{
+		return array_merge(parent::getAccessors(), array(
+			'cols',
+			'rows'
+		));
 	}
 }
 

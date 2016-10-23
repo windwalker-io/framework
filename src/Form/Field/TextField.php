@@ -36,7 +36,7 @@ class TextField extends AbstractField
 	 *
 	 * @param array $attrs
 	 *
-	 * @return  array
+	 * @return  void
 	 */
 	public function prepare(&$attrs)
 	{
