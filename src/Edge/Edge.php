@@ -13,6 +13,7 @@ use Windwalker\Edge\Cache\EdgeCacheInterface;
 use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Compiler\EdgeCompilerInterface;
 use Windwalker\Edge\Compiler\EdgeCompiler;
+use Windwalker\Edge\Exception\EdgeException;
 use Windwalker\Edge\Extension\EdgeExtensionInterface;
 use Windwalker\Edge\Loader\EdgeLoaderInterface;
 use Windwalker\Edge\Loader\EdgeStringLoader;
@@ -192,17 +193,17 @@ class Edge
 	 *
 	 * @param \Exception|\Throwable $e
 	 * @param string                $path
+	 * @param                       $layout
 	 *
-	 * @return  void
+	 * @throws EdgeException
 	 */
 	protected function wrapException($e, $path, $layout)
 	{
-		$class = get_class($e);
 		$msg = $e->getMessage();
 
 		$msg .= sprintf("\n\n| View layout: %s (%s)", $path, $layout);
 
-		throw new $class($msg, $e->getCode(), $e);
+		throw new EdgeException($msg, $e->getCode(), $e->getFile(), $e->getLine(), $e);
 	}
 
 	/**
