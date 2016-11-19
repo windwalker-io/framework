@@ -51,7 +51,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\IO\Cookie::__construct
+	 * @covers  \Windwalker\IO\Cookie::__construct
 	 * @since   2.0
 	 */
 	public function test__construct()
@@ -70,7 +70,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\IO\Cookie::set
+	 * @covers  \Windwalker\IO\Cookie::set
 	 * @since   2.0
 	 */
 	public function testSet()

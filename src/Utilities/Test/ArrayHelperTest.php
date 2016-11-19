@@ -1391,7 +1391,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Utilities\ArrayHelper::arraySearch
+	 * @covers  \Windwalker\Utilities\ArrayHelper::arraySearch
 	 * @since   2.0
 	 */
 	public function testArraySearch()
@@ -1416,7 +1416,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Utilities\ArrayHelper::flatten
+	 * @covers  \Windwalker\Utilities\ArrayHelper::flatten
 	 * @since   2.0
 	 */
 	public function testFlatten()

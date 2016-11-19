@@ -44,7 +44,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::__toString
+	 * @covers  \Windwalker\Uri\Uri::__toString
 	 */
 	public function test__toString()
 	{
@@ -60,8 +60,8 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::parse
-	 * @covers  Windwalker\Uri\Uri::__construct
+	 * @covers  \Windwalker\Uri\Uri::parse
+	 * @covers  \Windwalker\Uri\Uri::__construct
 	 */
 	public function testConstruct()
 	{
@@ -89,7 +89,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::toString
+	 * @covers  \Windwalker\Uri\Uri::toString
 	 */
 	public function testToString()
 	{
@@ -120,7 +120,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setVar
+	 * @covers  \Windwalker\Uri\Uri::setVar
 	 */
 	public function testSetVar()
 	{
@@ -138,7 +138,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::hasVar
+	 * @covers  \Windwalker\Uri\Uri::hasVar
 	 */
 	public function testHasVar()
 	{
@@ -159,7 +159,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getVar
+	 * @covers  \Windwalker\Uri\Uri::getVar
 	 */
 	public function testGetVar()
 	{
@@ -185,7 +185,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::delVar
+	 * @covers  \Windwalker\Uri\Uri::delVar
 	 */
 	public function testDelVar()
 	{
@@ -208,7 +208,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setQuery
+	 * @covers  \Windwalker\Uri\Uri::setQuery
 	 */
 	public function testSetQuery()
 	{
@@ -240,7 +240,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getQuery
+	 * @covers  \Windwalker\Uri\Uri::getQuery
 	 */
 	public function testGetQuery()
 	{
@@ -261,7 +261,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getScheme
+	 * @covers  \Windwalker\Uri\Uri::getScheme
 	 */
 	public function testGetScheme()
 	{
@@ -277,7 +277,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setScheme
+	 * @covers  \Windwalker\Uri\Uri::setScheme
 	 */
 	public function testSetScheme()
 	{
@@ -295,7 +295,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getUser
+	 * @covers  \Windwalker\Uri\Uri::getUser
 	 */
 	public function testGetUser()
 	{
@@ -311,7 +311,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setUser
+	 * @covers  \Windwalker\Uri\Uri::setUser
 	 */
 	public function testSetUser()
 	{
@@ -329,7 +329,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getPass
+	 * @covers  \Windwalker\Uri\Uri::getPass
 	 */
 	public function testGetPass()
 	{
@@ -345,7 +345,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setPass
+	 * @covers  \Windwalker\Uri\Uri::setPass
 	 */
 	public function testSetPass()
 	{
@@ -363,7 +363,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getHost
+	 * @covers  \Windwalker\Uri\Uri::getHost
 	 */
 	public function testGetHost()
 	{
@@ -379,7 +379,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setHost
+	 * @covers  \Windwalker\Uri\Uri::setHost
 	 */
 	public function testSetHost()
 	{
@@ -397,7 +397,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getPort
+	 * @covers  \Windwalker\Uri\Uri::getPort
 	 */
 	public function testGetPort()
 	{
@@ -413,7 +413,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setPort
+	 * @covers  \Windwalker\Uri\Uri::setPort
 	 */
 	public function testSetPort()
 	{
@@ -431,7 +431,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getPath
+	 * @covers  \Windwalker\Uri\Uri::getPath
 	 */
 	public function testGetPath()
 	{
@@ -447,7 +447,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setPath
+	 * @covers  \Windwalker\Uri\Uri::setPath
 	 */
 	public function testSetPath()
 	{
@@ -465,7 +465,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::getFragment
+	 * @covers  \Windwalker\Uri\Uri::getFragment
 	 */
 	public function testGetFragment()
 	{
@@ -481,7 +481,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::setFragment
+	 * @covers  \Windwalker\Uri\Uri::setFragment
 	 */
 	public function testSetFragment()
 	{
@@ -499,7 +499,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   2.0
-	 * @covers  Windwalker\Uri\Uri::isSSL
+	 * @covers  \Windwalker\Uri\Uri::isSSL
 	 */
 	public function testIsSSL()
 	{

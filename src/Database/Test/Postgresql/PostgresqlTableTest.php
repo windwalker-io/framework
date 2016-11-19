@@ -284,7 +284,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Database\Driver\Postgresql\PostgresqlTable::modifyColumn
+	 * @covers  \Windwalker\Database\Driver\Postgresql\PostgresqlTable::modifyColumn
 	 */
 	public function testModifyColumn()
 	{

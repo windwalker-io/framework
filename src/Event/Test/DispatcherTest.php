@@ -38,7 +38,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::setEvent
+	 * @covers  \Windwalker\Event\Dispatcher::setEvent
 	 * @since   2.0
 	 */
 	public function testSetEvent()
@@ -65,7 +65,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::addEvent
+	 * @covers  \Windwalker\Event\Dispatcher::addEvent
 	 * @since   2.0
 	 */
 	public function testAddEvent()
@@ -92,7 +92,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::hasEvent
+	 * @covers  \Windwalker\Event\Dispatcher::hasEvent
 	 * @since   2.0
 	 */
 	public function testHasEvent()
@@ -109,7 +109,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::getEvent
+	 * @covers  \Windwalker\Event\Dispatcher::getEvent
 	 * @since   2.0
 	 */
 	public function testGetEventNonExisting()
@@ -123,7 +123,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::removeEvent
+	 * @covers  \Windwalker\Event\Dispatcher::removeEvent
 	 * @since   2.0
 	 */
 	public function testRemoveEvent()
@@ -150,7 +150,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::getEvents
+	 * @covers  \Windwalker\Event\Dispatcher::getEvents
 	 * @since   2.0
 	 */
 	public function testGetEvents()
@@ -179,7 +179,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::clearEvents
+	 * @covers  \Windwalker\Event\Dispatcher::clearEvents
 	 * @since   2.0
 	 */
 	public function testClearEvents()
@@ -205,7 +205,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::countEvents
+	 * @covers  \Windwalker\Event\Dispatcher::countEvents
 	 * @since   2.0
 	 */
 	public function testCountEvents()
@@ -229,7 +229,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::addListener
+	 * @covers  \Windwalker\Event\Dispatcher::addListener
 	 * @since   2.0
 	 */
 	public function testAddListenerEmpty()
@@ -248,7 +248,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::addListener
+	 * @covers  \Windwalker\Event\Dispatcher::addListener
 	 * @since   2.0
 	 */
 	public function testAddListener()
@@ -295,7 +295,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::addListener
+	 * @covers  \Windwalker\Event\Dispatcher::addListener
 	 * @since   2.0
 	 */
 	public function testAddListenerSpecifiedPriorities()
@@ -325,7 +325,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::listen
+	 * @covers  \Windwalker\Event\Dispatcher::listen
 	 * @since   2.0
 	 */
 	public function testAddSingleListener()
@@ -342,7 +342,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::addListener
+	 * @covers  \Windwalker\Event\Dispatcher::addListener
 	 * @since   2.0
 	 */
 	public function testAddListenerLessEvents()
@@ -367,7 +367,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::addListener
+	 * @covers  \Windwalker\Event\Dispatcher::addListener
 	 * @since   2.0
 	 */
 	public function testAddClosureListener()
@@ -417,7 +417,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::addListener
+	 * @covers  \Windwalker\Event\Dispatcher::addListener
 	 * @since   2.0
 	 */
 	public function testAddListenerInvalidListenerException()
@@ -430,7 +430,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::getListenerPriority
+	 * @covers  \Windwalker\Event\Dispatcher::getListenerPriority
 	 * @since   2.0
 	 */
 	public function testGetListenerPriority()
@@ -454,7 +454,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::getListeners
+	 * @covers  \Windwalker\Event\Dispatcher::getListeners
 	 * @since   2.0
 	 */
 	public function testGetListeners()
@@ -493,7 +493,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::hasListener
+	 * @covers  \Windwalker\Event\Dispatcher::hasListener
 	 * @since   2.0
 	 */
 	public function testHasListener()
@@ -510,7 +510,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::removeListener
+	 * @covers  \Windwalker\Event\Dispatcher::removeListener
 	 * @since   2.0
 	 */
 	public function testRemoveListeners()
@@ -546,7 +546,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::clearListeners
+	 * @covers  \Windwalker\Event\Dispatcher::clearListeners
 	 * @since   2.0
 	 */
 	public function testClearListeners()
@@ -598,7 +598,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::clearListeners
+	 * @covers  \Windwalker\Event\Dispatcher::clearListeners
 	 * @since   2.0
 	 */
 	public function testCountListeners()
@@ -622,7 +622,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::triggerEvent
+	 * @covers  \Windwalker\Event\Dispatcher::triggerEvent
 	 * @since   2.0
 	 */
 	public function testTriggerEventNoListeners()
@@ -639,7 +639,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::triggerEvent
+	 * @covers  \Windwalker\Event\Dispatcher::triggerEvent
 	 * @since   2.0
 	 */
 	public function testTriggerEventSamePriority()
@@ -683,7 +683,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::triggerEvent
+	 * @covers  \Windwalker\Event\Dispatcher::triggerEvent
 	 * @since   2.0
 	 */
 	public function testTriggerEventDifferentPriorities()
@@ -727,7 +727,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::triggerEvent
+	 * @covers  \Windwalker\Event\Dispatcher::triggerEvent
 	 * @since   2.0
 	 */
 	public function testTriggerEventStopped()
@@ -762,7 +762,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Event\Dispatcher::triggerEvent
+	 * @covers  \Windwalker\Event\Dispatcher::triggerEvent
 	 * @since   2.0
 	 */
 	public function testTriggerEventRegistered()

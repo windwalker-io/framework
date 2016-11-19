@@ -22,7 +22,7 @@ class UriHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers  Windwalker\Uri\UriHelper::parseUrl
+	 * @covers  \Windwalker\Uri\UriHelper::parseUrl
 	 * @since   2.0
 	 */
 	public function testParseUrl()

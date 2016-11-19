@@ -337,7 +337,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Database\Driver\Mysql\MysqlTable::modifyColumn
+	 * @covers  \Windwalker\Database\Driver\Mysql\MysqlTable::modifyColumn
 	 */
 	public function testModifyColumn()
 	{

@@ -51,7 +51,7 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Input\Files::__construct
+	 * @covers  \Windwalker\Input\Files::__construct
 	 * @since   2.0
 	 */
 	public function test__construct()
@@ -67,7 +67,7 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Input\Files::get
+	 * @covers  \Windwalker\Input\Files::get
 	 * @since   2.0
 	 */
 	public function testGet()
@@ -141,7 +141,7 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Input\Files::decodeData
+	 * @covers  \Windwalker\Input\Files::decodeData
 	 * @since   2.0
 	 */
 	public function testDecodeData()
@@ -191,7 +191,7 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Input\Files::set
+	 * @covers  \Windwalker\Input\Files::set
 	 * @since   2.0
 	 */
 	public function testSet()

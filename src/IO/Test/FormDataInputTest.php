@@ -51,7 +51,7 @@ class FormDataInputTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\IO\Json::__construct
+	 * @covers  \Windwalker\IO\Json::__construct
 	 * @since   2.0
 	 */
 	public function test__construct()

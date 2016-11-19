@@ -337,7 +337,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::transform
+	 * @covers  \Windwalker\Data\DataSet::transform
 	 */
 	public function testTransform()
 	{
@@ -357,7 +357,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::transform
+	 * @covers  \Windwalker\Data\DataSet::transform
 	 */
 	public function testMapping()
 	{
@@ -378,7 +378,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::walk
+	 * @covers  \Windwalker\Data\DataSet::walk
 	 */
 	public function testWalk()
 	{
@@ -395,7 +395,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::__clone
+	 * @covers  \Windwalker\Data\DataSet::__clone
 	 */
 	public function testClone()
 	{
@@ -413,7 +413,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::getKeys
+	 * @covers  \Windwalker\Data\DataSet::getKeys
 	 */
 	public function testGetKeys()
 	{
@@ -431,7 +431,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::ksort
+	 * @covers  \Windwalker\Data\DataSet::ksort
 	 */
 	public function testKsort()
 	{
@@ -459,7 +459,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::krsort
+	 * @covers  \Windwalker\Data\DataSet::krsort
 	 */
 	public function testKrsort()
 	{
@@ -487,7 +487,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::uksort
+	 * @covers  \Windwalker\Data\DataSet::uksort
 	 */
 	public function testUksort()
 	{
@@ -499,7 +499,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::shuffle
+	 * @covers  \Windwalker\Data\DataSet::shuffle
 	 */
 	public function testShuffle()
 	{

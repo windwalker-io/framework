@@ -48,7 +48,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return  Form
 	 *
-	 * @covers  Windwalker\Form\Form::defineFormFields
+	 * @covers  \Windwalker\Form\Form::defineFormFields
 	 */
 	protected function getByDefine($control = null)
 	{
@@ -66,7 +66,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return  Form
 	 *
-	 * @covers  Windwalker\Form\Form::loadFile
+	 * @covers  \Windwalker\Form\Form::loadFile
 	 */
 	protected function getByXml($control = null)
 	{

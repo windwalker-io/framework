@@ -101,7 +101,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::addRule
+	 * @covers  \Windwalker\String\StringInflector::addRule
 	 * @since   2.0
 	 */
 	public function testAddRule()
@@ -151,7 +151,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::addRule
+	 * @covers  \Windwalker\String\StringInflector::addRule
 	 * @expectedException  InvalidArgumentException
 	 * @since   2.0
 	 */
@@ -165,7 +165,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::getCachedPlural
+	 * @covers  \Windwalker\String\StringInflector::getCachedPlural
 	 * @since   2.0
 	 */
 	public function testGetCachedPlural()
@@ -190,7 +190,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::getCachedSingular
+	 * @covers  \Windwalker\String\StringInflector::getCachedSingular
 	 * @since   2.0
 	 */
 	public function testGetCachedSingular()
@@ -215,7 +215,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::matchRegexRule
+	 * @covers  \Windwalker\String\StringInflector::matchRegexRule
 	 * @since   2.0
 	 */
 	public function testMatchRegexRule()
@@ -243,7 +243,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::setCache
+	 * @covers  \Windwalker\String\StringInflector::setCache
 	 * @since   2.0
 	 */
 	public function testSetCache()
@@ -274,7 +274,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::addCountableRule
+	 * @covers  \Windwalker\String\StringInflector::addCountableRule
 	 * @since   2.0
 	 */
 	public function testAddCountableRule()
@@ -307,7 +307,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::addWord
+	 * @covers  \Windwalker\String\StringInflector::addWord
 	 * @since   2.0
 	 */
 	public function testAddWord()
@@ -346,7 +346,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::addPluraliseRule
+	 * @covers  \Windwalker\String\StringInflector::addPluraliseRule
 	 * @since   2.0
 	 */
 	public function testAddPluraliseRule()
@@ -373,7 +373,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::addSingulariseRule
+	 * @covers  \Windwalker\String\StringInflector::addSingulariseRule
 	 * @since   2.0
 	 */
 	public function testAddSingulariseRule()
@@ -400,7 +400,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::getInstance
+	 * @covers  \Windwalker\String\StringInflector::getInstance
 	 * @since   2.0
 	 */
 	public function testGetInstance()
@@ -435,7 +435,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::isCountable
+	 * @covers  \Windwalker\String\StringInflector::isCountable
 	 * @dataProvider  seedIsCountable
 	 * @since   2.0
 	 */
@@ -455,7 +455,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::isPlural
+	 * @covers  \Windwalker\String\StringInflector::isPlural
 	 * @dataProvider  seedSinglePlural
 	 * @since   2.0
 	 */
@@ -483,7 +483,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::isSingular
+	 * @covers  \Windwalker\String\StringInflector::isSingular
 	 * @dataProvider  seedSinglePlural
 	 * @since   2.0
 	 */
@@ -511,7 +511,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::toPlural
+	 * @covers  \Windwalker\String\StringInflector::toPlural
 	 * @dataProvider  seedSinglePlural
 	 * @since   2.0
 	 */
@@ -528,7 +528,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::toPlural
+	 * @covers  \Windwalker\String\StringInflector::toPlural
 	 * @since   2.0
 	 */
 	public function testToPluralAlreadyPlural()
@@ -544,7 +544,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::toSingular
+	 * @covers  \Windwalker\String\StringInflector::toSingular
 	 * @dataProvider  seedSinglePlural
 	 * @since   2.0
 	 */
@@ -561,7 +561,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\String\StringInflector::toSingular
+	 * @covers  \Windwalker\String\StringInflector::toSingular
 	 * @since   2.0
 	 */
 	public function testToSingularRetFalse()

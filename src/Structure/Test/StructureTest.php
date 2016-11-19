@@ -613,7 +613,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Structure\Structure::reset
+	 * @covers  \Windwalker\Structure\Structure::reset
 	 */
 	public function testReset()
 	{
@@ -627,7 +627,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Structure\Structure::getRaw
+	 * @covers  \Windwalker\Structure\Structure::getRaw
 	 */
 	public function testGetRaw()
 	{
@@ -639,7 +639,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Structure\Structure::getIterator
+	 * @covers  \Windwalker\Structure\Structure::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -657,7 +657,7 @@ class StructureTest extends AbstractBaseTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Structure\Structure::count
+	 * @covers  \Windwalker\Structure\Structure::count
 	 */
 	public function testCount()
 	{
