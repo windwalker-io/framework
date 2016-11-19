@@ -333,15 +333,15 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Method to test map()
+	 * Method to test transform()
 	 *
 	 * @return  void
 	 *
-	 * @covers  Windwalker\Data\DataSet::map
+	 * @covers  Windwalker\Data\DataSet::transform
 	 */
-	public function testMap()
+	public function testTransform()
 	{
-		$this->instance->map(function($data)
+		$this->instance->transform(function($data)
 		{
 			$data->foo = 'bar';
 

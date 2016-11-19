@@ -351,7 +351,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 		}
 		elseif ($value instanceof DataInterface)
 		{
-			$value = $value->dump();
+			$value = $value->dump(true);
 		}
 		elseif ($value instanceof \Traversable)
 		{
@@ -381,8 +381,26 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * @return  static  Support chaining.
 	 *
 	 * @since   2.0.9
+	 *
+	 * @deprecated  Use transform() instead, this method will return new instance after 3.2.
 	 */
 	public function map($callback)
+	{
+		trigger_error('Use transform() instead, this method will return new instance after 3.2', E_USER_DEPRECATED);
+
+		return $this->transform($callback);
+	}
+
+	/**
+	 * Mapping all elements.
+	 *
+	 * @param   callable  $callback
+	 *
+	 * @return  static  Support chaining.
+	 *
+	 * @since   3.1.3
+	 */
+	public function transform($callback)
 	{
 		$this->data = array_map($callback, $this->data);
 
