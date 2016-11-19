@@ -341,7 +341,7 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testTransform()
 	{
-		$this->instance->transform(function($data)
+		$self = $this->instance->transform(function($data)
 		{
 			$data->foo = 'bar';
 
@@ -349,6 +349,28 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 		});
 
 		$this->assertEquals(array('bar', 'bar'), $this->instance->foo);
+		$this->assertSame($self, $this->instance);
+	}
+
+	/**
+	 * Method to test transform()
+	 *
+	 * @return  void
+	 *
+	 * @covers  Windwalker\Data\DataSet::transform
+	 */
+	public function testMapping()
+	{
+		$new = $this->instance->mapping(function($data)
+		{
+			$data->foo = 'bar';
+
+			return $data;
+		});
+
+		$this->assertEquals(array(null, null), $this->instance->foo);
+		$this->assertEquals(array('bar', 'bar'), $new->foo);
+		$this->assertNotSame($this->instance, $new);
 	}
 
 	/**

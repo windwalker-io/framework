@@ -374,6 +374,24 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	}
 
 	/**
+	 * Mapping all elements and return new instance.
+	 *
+	 * This method will rename to map() after 3.2.
+	 *
+	 * @param   callable  $callback
+	 *
+	 * @return  static
+	 *
+	 * @since   3.1.3
+	 */
+	public function mapping($callback)
+	{
+		$dataset = clone $this;
+
+		return $dataset->transform($callback);
+	}
+
+	/**
 	 * Mapping all elements.
 	 *
 	 * @param   callable  $callback
