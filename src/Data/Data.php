@@ -301,12 +301,35 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 * @return  static  Support chaining.
 	 *
 	 * @since   2.0.9
+	 *
+	 * @deprecated  Use walk() instead, this method will return new instance after 3.2.
 	 */
 	public function map($callback)
 	{
 		foreach ($this->getIterator() as $key => $value)
 		{
 			$this[$key] = call_user_func($callback, $value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Mapping all elements and return new instance.
+	 *
+	 * @param   callable  $callback  Callback to handle every element.
+	 *
+	 * @return  static  Support chaining.
+	 *
+	 * @since   3.1.3
+	 */
+	public function mapping($callback)
+	{
+		$new = clone $this;
+
+		foreach ($new as $key => $value)
+		{
+			$new[$key] = call_user_func($callback, $value, $key);
 		}
 
 		return $this;
