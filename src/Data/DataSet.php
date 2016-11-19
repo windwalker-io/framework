@@ -436,18 +436,30 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 *
 	 * @since   3.1.3
 	 */
-	public function filter($callback)
+	public function filter($callback = null)
 	{
 		$dataset = clone $this;
 
-		$dataset->data = array_filter($dataset->data, $callback, ARRAY_FILTER_USE_BOTH);
+		if (!$callback)
+		{
+			$dataset->data = array_filter($dataset->data);
+
+			return $dataset;
+		}
+
+		$return = array();
+
+		foreach ($dataset->data as $key => $value)
+		{
+			if (call_user_func($callback, $value, $key))
+			{
+				$return[$key] = $value;
+			}
+		}
+
+		$dataset->data = $return;
 
 		return $dataset;
-	}
-
-	public function reject($callback)
-	{
-
 	}
 
 	/**

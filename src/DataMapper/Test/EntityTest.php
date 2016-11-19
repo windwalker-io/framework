@@ -178,6 +178,13 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testJsonSerialize()
 	{
+		if (version_compare(PHP_VERSION, '5.4', '<'))
+		{
+			$this->markTestSkipped('PHP 5.3 do not support JsonSerialize()');
+
+			return;
+		}
+
 		$this->assertEquals(json_encode($this->instance->dump(true)), json_encode($this->instance));
 	}
 }
