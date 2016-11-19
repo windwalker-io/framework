@@ -79,6 +79,11 @@ class CryptHelper
 	 */
 	public static function genRandomBytes($length = 16)
 	{
+		if (function_exists('random_bytes'))
+		{
+			return random_bytes($length);
+		}
+
 		$sslStr = '';
 
 		/*
