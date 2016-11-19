@@ -43,6 +43,10 @@
             "dev-master": "3.x-dev"
         }
     },
+    "provide":           {
+        "psr/cache-implementation": "~1.0",
+        "psr/http-message-implementation": "~1.0"
+    },
     "replace": {
         "windwalker/application": "self.version",
         "windwalker/authentication": "self.version",

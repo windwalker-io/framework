@@ -17,6 +17,9 @@
             "Windwalker\\Cache\\": ""
         }
     },
+    "provide": {
+        "psr/cache-implementation": "~1.0"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "3.x-dev"
