@@ -387,8 +387,12 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function mapping($callback)
 	{
 		$dataset = clone $this;
+		$keys = array_keys($dataset->data);
 
-		return $dataset->transform($callback);
+		// Keep keys same as origin
+		$dataset->data = array_combine($keys, array_map($callback, $dataset->data, $keys));
+
+		return $dataset;
 	}
 
 	/**
@@ -420,9 +424,30 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function transform($callback)
 	{
-		$this->data = array_map($callback, $this->data);
+		return $this->walk($callback);
+	}
 
-		return $this;
+	/**
+	 * Filter data by a callback and return a new instance.
+	 *
+	 * @param   callable  $callback
+	 *
+	 * @return  static  New instance after filter.
+	 *
+	 * @since   3.1.3
+	 */
+	public function filter($callback)
+	{
+		$dataset = clone $this;
+
+		$dataset->data = array_filter($dataset->data, $callback, ARRAY_FILTER_USE_BOTH);
+
+		return $dataset;
+	}
+
+	public function reject($callback)
+	{
+
 	}
 
 	/**

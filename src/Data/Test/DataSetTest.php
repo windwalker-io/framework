@@ -9,6 +9,7 @@
 namespace Windwalker\Data\Test;
 
 use Windwalker\Data\Data;
+use Windwalker\Data\DataInterface;
 use Windwalker\Data\DataSet;
 
 /**
@@ -361,8 +362,12 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMapping()
 	{
-		$new = $this->instance->mapping(function($data)
+		$keys = array();
+
+		$new = $this->instance->mapping(function($data, $key) use (&$keys)
 		{
+			$keys[] = $key;
+
 			$data->foo = 'bar';
 
 			return $data;
@@ -370,7 +375,32 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(array(null, null), $this->instance->foo);
 		$this->assertEquals(array('bar', 'bar'), $new->foo);
+		$this->assertEquals(array(0, 1), $keys);
 		$this->assertNotSame($this->instance, $new);
+	}
+
+	/**
+	 * testFilter
+	 *
+	 * @return  void
+	 *
+	 * @covers  \Windwalker\Data\DataSet::filter
+	 */
+	public function testFilter()
+	{
+		$keys = array();
+
+		$new = $this->instance->filter(function(DataInterface $data, $key) use (&$keys)
+		{
+			$keys[] = $key;
+
+			return $data->flower == 'sakura';
+		});
+
+		$this->assertEquals(array('sakura'), $new->flower);
+		$this->assertEquals(1, count($new));
+		$this->assertEquals(array(0, 1), $keys);
+		$this->assertNotSame($new, $this->instance);
 	}
 
 	/**
