@@ -14,7 +14,7 @@ use Windwalker\Data\Data;
  * Entity is a Data object sub class, we can set fields of this object
  * then help us filter non necessary values to prevent error when inserting to database.
  */
-class Entity extends Data
+class Entity extends Data implements \JsonSerializable
 {
 	const DUMP_ALL_DATA = true;
 
@@ -498,5 +498,18 @@ class Entity extends Data
 		$input = ucwords($input);
 
 		return str_ireplace(' ', '', $input);
+	}
+
+	/**
+	 * Specify data which should be serialized to JSON
+	 *
+	 * @return  mixed data which can be serialized by json_encode(),
+	 *          which is a value of any type other than a resource.
+	 *
+	 * @since   3.1.3
+	 */
+	public function jsonSerialize()
+	{
+		return $this->data;
 	}
 }

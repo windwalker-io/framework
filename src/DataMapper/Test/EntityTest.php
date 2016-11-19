@@ -170,4 +170,14 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('yoo_bar', $entity->flower_sakura);
 	}
+
+	/**
+	 * testJsonSerialize
+	 *
+	 * @return  void
+	 */
+	public function testJsonSerialize()
+	{
+		$this->assertEquals(json_encode($this->instance->dump(true)), json_encode($this->instance));
+	}
 }
