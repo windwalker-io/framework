@@ -13,7 +13,7 @@ use Windwalker\Crypt\CryptHelper;
 /**
  * Test class of CryptHelper
  *
- * @since {DEPLOY_VERSION}
+ * @since 3.1.3
  */
 class CryptHelperTest extends \PHPUnit_Framework_TestCase
 {
