@@ -1,0 +1,87 @@
+{
+    "name": "windwalker/ww4",
+    "description": "PHP RAD framework.",
+    "homepage": "https://github.com/ventoviro/ww4",
+    "license": "MIT",
+    "minimum-stability": "beta",
+    "authors": [
+        {
+            "name": "Simon Asika",
+            "email": "asika32764@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "psr/log": "~1.0",
+        "psr/http-message": "~1.0",
+        "psr/cache": "~1.0",
+        "psr/link": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.0",
+        "phpunit/php-code-coverage": "~4.0",
+        "squizlabs/php_codesniffer": "~2.0",
+        "mockery/mockery": "0.9.*"
+    },
+    "suggest": {
+        "symfony/yaml": "Install ~3.0 if you require YAML support.",
+        "php-http/httplug": "Install ~1.0 if you require HttpClient as HttpPlug implementation."
+    },
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\": "src/"
+        },
+        "files": [
+            "src/Utilities/functions.php"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    },
+    "provide":           {
+        "psr/cache-implementation": "~1.0",
+        "psr/http-message-implementation": "~1.0"
+    },
+    "replace": {
+        "windwalker/application": "self.version",
+        "windwalker/authentication": "self.version",
+        "windwalker/authorisation": "self.version",
+        "windwalker/cache": "self.version",
+        "windwalker/compare": "self.version",
+        "windwalker/console": "self.version",
+        "windwalker/controller": "self.version",
+        "windwalker/crypt": "self.version",
+        "windwalker/data": "self.version",
+        "windwalker/database": "self.version",
+        "windwalker/datamapper": "self.version",
+        "windwalker/di": "self.version",
+        "windwalker/dom": "self.version",
+        "windwalker/environment": "self.version",
+        "windwalker/event": "self.version",
+        "windwalker/filesystem": "self.version",
+        "windwalker/filter": "self.version",
+        "windwalker/form": "self.version",
+        "windwalker/html": "self.version",
+        "windwalker/http": "self.version",
+        "windwalker/io": "self.version",
+        "windwalker/language": "self.version",
+        "windwalker/loader": "self.version",
+        "windwalker/middleware": "self.version",
+        "windwalker/model": "self.version",
+        "windwalker/profiler": "self.version",
+        "windwalker/query": "self.version",
+        "windwalker/record": "self.version",
+        "windwalker/structure": "self.version",
+        "windwalker/renderer": "self.version",
+        "windwalker/router": "self.version",
+        "windwalker/session": "self.version",
+        "windwalker/string": "self.version",
+        "windwalker/test": "self.version",
+        "windwalker/uri": "self.version",
+        "windwalker/utilities": "self.version",
+        "windwalker/validator": "self.version",
+        "windwalker/view": "self.version"
+    }
+}

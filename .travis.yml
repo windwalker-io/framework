@@ -1,0 +1,31 @@
+language: php
+
+sudo: true
+
+php:
+  - hhvm
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+
+addons:
+  postgresql: "9.3"
+
+services:
+  - memcached # will start memcached
+
+before_install:
+  - composer self-update
+  - sh -e build/travis/scripts/apt-get.sh
+  - sh -e build/travis/scripts/apache2-vhost.sh
+  - sh -e build/travis/scripts/apache2-configure.sh
+
+before_script:
+  - composer update
+  - phpenv rehash
+
+script:
+  - phpunit --configuration phpunit.travis.xml
