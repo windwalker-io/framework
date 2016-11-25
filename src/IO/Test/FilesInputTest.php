@@ -47,11 +47,11 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Windwalker\Input\Files::__construct method.
+	 * Test the Windwalker\IO\FilesInput::__construct method.
 	 *
 	 * @return  void
 	 *
-	 * @covers  \Windwalker\Input\Files::__construct
+	 * @covers  \Windwalker\IO\FilesInput::__construct
 	 * @since   2.0
 	 */
 	public function test__construct()
@@ -63,11 +63,11 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Windwalker\Input\Files::get method.
+	 * Test the Windwalker\IO\FilesInput::get method.
 	 *
 	 * @return  void
 	 *
-	 * @covers  \Windwalker\Input\Files::get
+	 * @covers  \Windwalker\IO\FilesInput::get
 	 * @since   2.0
 	 */
 	public function testGet()
@@ -137,11 +137,11 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Windwalker\Input\Files::decodeData method.
+	 * Test the Windwalker\IO\FilesInput::decodeData method.
 	 *
 	 * @return  void
 	 *
-	 * @covers  \Windwalker\Input\Files::decodeData
+	 * @covers  \Windwalker\IO\FilesInput::decodeData
 	 * @since   2.0
 	 */
 	public function testDecodeData()
@@ -187,11 +187,11 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Windwalker\Input\Files::set method.
+	 * Test the Windwalker\IO\FilesInput::set method.
 	 *
 	 * @return  void
 	 *
-	 * @covers  \Windwalker\Input\Files::set
+	 * @covers  \Windwalker\IO\FilesInput::set
 	 * @since   2.0
 	 */
 	public function testSet()

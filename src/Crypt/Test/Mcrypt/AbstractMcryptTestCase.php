@@ -55,7 +55,7 @@ abstract class AbstractMcryptTestCase extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Crypt\Cipher\McryptCipher::encrypt
+	 * @covers \Windwalker\Crypt\Mcrypt\AbstractMcryptCipher::encrypt
 	 */
 	public function testEncrypt()
 	{
@@ -80,7 +80,7 @@ abstract class AbstractMcryptTestCase extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Crypt\Cipher\McryptCipher::decrypt
+	 * @covers \Windwalker\Crypt\Mcrypt\AbstractMcryptCipher::decrypt
 	 */
 	public function testDecrypt()
 	{
@@ -105,7 +105,7 @@ abstract class AbstractMcryptTestCase extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Crypt\Cipher\McryptCipher::getIVKey
+	 * @covers \Windwalker\Crypt\Mcrypt\AbstractMcryptCipher::getIVKey
 	 */
 	public function testGetIVKey()
 	{

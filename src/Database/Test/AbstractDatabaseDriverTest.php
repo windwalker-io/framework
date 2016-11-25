@@ -94,8 +94,6 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 	 * Method to test disconnect().
 	 *
 	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDriver::setProfilerHandler
 	 */
 	public function testProfilerMiddleware()
 	{

@@ -150,7 +150,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers \Windwalker\Router\Router::hasRoutes
+	 * @covers \Windwalker\Router\Router::hasRoute
 	 * @covers \Windwalker\Router\Router::getRoutes
 	 */
 	public function testHasAndGetRoute()
@@ -223,8 +223,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 * Method to test getMethod().
 	 *
 	 * @return void
-	 *
-	 * @covers \Windwalker\Router\Router::getMethod
 	 */
 	public function testGetMethod()
 	{
@@ -238,9 +236,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 * Method to test setMethod().
 	 *
 	 * @return void
-	 *
-	 * @covers \Windwalker\Router\Router::setMethod
-	 * @TODO   Implement testSetMethod().
 	 */
 	public function testSetMethod()
 	{

@@ -48,7 +48,7 @@ class ColorStyleTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test the GetStyle method.
 	 *
-	 * @covers Windawlker\IO\Cli\Color\ColorStyle::getStyle
+	 * @covers \Windwalker\IO\Cli\Color\ColorStyle::getStyle
 	 *
 	 * @return void
 	 */

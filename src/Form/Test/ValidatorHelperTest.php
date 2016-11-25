@@ -44,7 +44,7 @@ class ValidatorHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\ValidatorHelper::create
+	 * @covers \Windwalker\Form\ValidatorHelper::create
 	 */
 	public function testCreate()
 	{

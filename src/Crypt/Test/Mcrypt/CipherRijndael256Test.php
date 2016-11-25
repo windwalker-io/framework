@@ -51,8 +51,6 @@ class Rijndael256Test extends AbstractMcryptTestCase
 	 * Method to test getIVSize().
 	 *
 	 * @return void
-	 *
-	 * @covers \Windwalker\Crypt\Cipher\McryptCipher::getIVSize
 	 */
 	public function testGetIVSize()
 	{

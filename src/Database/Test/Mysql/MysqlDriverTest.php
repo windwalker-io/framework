@@ -248,7 +248,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::getConnection
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver
 	 */
 	public function testGetConnection()
 	{
@@ -260,7 +260,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::setConnection
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::setConnection
 	 */
 	public function testSetConnection()
 	{
@@ -275,7 +275,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::getCursor
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::getCursor
 	 */
 	public function testGetCursor()
 	{
@@ -287,7 +287,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::getIterator
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::getIterator
 	 */
 	public function testGetIterator()
 	{
@@ -302,7 +302,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::getCurrentDatabase
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::getCurrentDatabase
 	 */
 	public function testGetCurrentDatabase()
 	{
@@ -314,7 +314,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::getPrefix
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::getPrefix
 	 */
 	public function testGetPrefix()
 	{
@@ -322,42 +322,11 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	}
 
 	/**
-	 * Method to test log().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::log
-	 */
-	public function testLog()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * Method to test setLogger().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::setLogger
-	 * @TODO   Implement testSetLogger().
-	 */
-	public function testSetLogger()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
 	 * Method to test replacePrefix().
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::replacePrefix
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::replacePrefix
 	 */
 	public function testReplacePrefix()
 	{
@@ -372,7 +341,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::splitSql
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::splitSql
 	 */
 	public function testSplitSql()
 	{
@@ -395,7 +364,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::setDebug
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::setDebug
 	 * @TODO   Implement testSetDebug().
 	 */
 	public function testSetDebug()
@@ -411,7 +380,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::loadAll
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::loadAll
 	 */
 	public function testLoadAll()
 	{
@@ -437,7 +406,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::loadOne
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::loadOne
 	 */
 	public function testLoadOne()
 	{
@@ -479,7 +448,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::loadResult
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::loadResult
 	 */
 	public function testLoadResult()
 	{
@@ -499,7 +468,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::loadColumn
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::loadColumn
 	 */
 	public function testLoadColumn()
 	{
@@ -519,7 +488,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::quoteName
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::quoteName
 	 */
 	public function testQuoteName()
 	{
@@ -536,7 +505,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::qn
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::qn
 	 */
 	public function testQn()
 	{
@@ -553,7 +522,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::quote
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::quote
 	 */
 	public function testQuote()
 	{
@@ -570,7 +539,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::q
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::q
 	 */
 	public function testQ()
 	{
@@ -587,7 +556,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::escape
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::escape
 	 */
 	public function testEscape()
 	{
@@ -604,7 +573,7 @@ SQL;
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\DatabaseDriver::e
+	 * @covers \Windwalker\Database\Driver\AbstractDatabaseDriver::e
 	 */
 	public function testE()
 	{

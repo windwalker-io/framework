@@ -181,7 +181,7 @@ class SequentialMatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers       Windwalker\Router\Route::match
+	 * @covers       \Windwalker\Router\Matcher\SequentialMatcher::match
 	 *
 	 * @dataProvider matchCases
 	 */

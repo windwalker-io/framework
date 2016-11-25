@@ -47,11 +47,11 @@ class FormDataInputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Windwalker\IO\Json::__construct method.
+	 * Test the Windwalker\IO\FormDataInput::__construct method.
 	 *
 	 * @return  void
 	 *
-	 * @covers  \Windwalker\IO\Json::__construct
+	 * @covers  \Windwalker\IO\FormDataInput::__construct
 	 * @since   2.0
 	 */
 	public function test__construct()

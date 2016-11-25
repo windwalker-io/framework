@@ -53,7 +53,7 @@ class AuthenticationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Authentication\Authenticate::authenticate
+	 * @covers \Windwalker\Authentication\Authentication::authenticate
 	 */
 	public function testAuthenticate()
 	{
@@ -92,7 +92,7 @@ class AuthenticationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Authentication\Authenticate::addMethod
+	 * @covers \Windwalker\Authentication\Authentication::addMethod
 	 */
 	public function testAddAndGetMethod()
 	{
@@ -106,7 +106,7 @@ class AuthenticationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Authentication\Authenticate::removeMethod
+	 * @covers \Windwalker\Authentication\Authentication::removeMethod
 	 * @TODO   Implement testRemoveMethod().
 	 */
 	public function testRemoveMethod()
@@ -122,7 +122,7 @@ class AuthenticationTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Authentication\Authenticate::getResults
+	 * @covers \Windwalker\Authentication\Authentication::getResults
 	 */
 	public function testGetResults()
 	{

@@ -22,7 +22,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\String\StringHelper::isEmptyString
+	 * @covers \Windwalker\String\StringHelper::isEmpty
 	 */
 	public function testIsEmpty()
 	{
@@ -108,7 +108,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringHelper::increment
+	 * @covers        \Windwalker\String\StringHelper::increment
 	 * @dataProvider  seedTestIncrement
 	 * @since         2.0
 	 */

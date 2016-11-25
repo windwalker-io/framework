@@ -313,9 +313,9 @@ class DataMapperTest extends DatabaseTest
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\DataMapper\updateBatch::updateWith
+	 * @covers \Windwalker\DataMapper\DataMapper::updateBatch
 	 */
-	public function testUpdateAll()
+	public function testUpdateBatch()
 	{
 		$data = array('state' => 0);
 

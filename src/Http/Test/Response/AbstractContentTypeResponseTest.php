@@ -51,7 +51,7 @@ class AbstractContentTypeResponseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::testConstruct
+	 * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::__construct
 	 */
 	public function testConstruct()
 	{

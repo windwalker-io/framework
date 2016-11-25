@@ -23,4 +23,15 @@
 			<directory>src/*/Test</directory>
 		</testsuite>
 	</testsuites>
+
+	<!-- Code Coverage -->
+	<!--<filter>-->
+		<!--<whitelist processUncoveredFilesFromWhitelist="true">-->
+			<!--<directory suffix=".php">src/</directory>-->
+			<!--<file>/path/to/file</file>-->
+			<!--<exclude>-->
+				<!--<directory suffix=".php">src/*/Test</directory>-->
+			<!--</exclude>-->
+		<!--</whitelist>-->
+	<!--</filter>-->
 </phpunit>

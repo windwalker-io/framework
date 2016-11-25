@@ -112,7 +112,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::_create
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlTable::create
 	 */
 	public function testCreate()
 	{

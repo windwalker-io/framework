@@ -6,19 +6,22 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-/**
- * Interface JsonSerializable
- *
- * @since  2.0
- */
-interface JsonSerializable
+if (!interface_exists('JsonSerializable'))
 {
 	/**
-	 * Return data which should be serialized by json_encode().
+	 * Interface JsonSerializable
 	 *
-	 * @return  mixed
-	 *
-	 * @since   2.0
+	 * @since  2.0
 	 */
-	public function jsonSerialize();
+	interface JsonSerializable
+	{
+		/**
+		 * Return data which should be serialized by json_encode().
+		 *
+		 * @return  mixed
+		 *
+		 * @since   2.0
+		 */
+		public function jsonSerialize();
+	}
 }

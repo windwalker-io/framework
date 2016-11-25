@@ -87,7 +87,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::createFromGlobals
+	 * @covers \Windwalker\Http\HttpServer::createFromGlobals
 	 */
 	public function testCreateFromGlobals()
 	{
@@ -107,7 +107,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::create
+	 * @covers \Windwalker\Http\HttpServer::create
 	 */
 	public function testCreate()
 	{
@@ -129,7 +129,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::listen
+	 * @covers \Windwalker\Http\HttpServer::listen
 	 */
 	public function testListen()
 	{
@@ -176,7 +176,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::getHandler
+	 * @covers \Windwalker\Http\HttpServer::getHandler
 	 */
 	public function testGetHandler()
 	{
@@ -191,7 +191,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::setHandler
+	 * @covers \Windwalker\Http\HttpServer::setHandler
 	 * @TODO   Implement testSetHandler().
 	 */
 	public function testSetHandler()
@@ -207,7 +207,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::getRequest
+	 * @covers \Windwalker\Http\HttpServer::getRequest
 	 * @TODO   Implement testGetRequest().
 	 */
 	public function testGetRequest()
@@ -223,7 +223,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::setRequest
+	 * @covers \Windwalker\Http\HttpServer::setRequest
 	 * @TODO   Implement testSetRequest().
 	 */
 	public function testSetRequest()
@@ -239,7 +239,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::getOutput
+	 * @covers \Windwalker\Http\HttpServer::getOutput
 	 * @TODO   Implement testGetOutput().
 	 */
 	public function testGetOutput()
@@ -255,7 +255,7 @@ class HttpServerTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Http\Server::setOutput
+	 * @covers \Windwalker\Http\HttpServer::setOutput
 	 * @TODO   Implement testSetOutput().
 	 */
 	public function testSetOutput()

@@ -8,7 +8,7 @@
 
 namespace Windwalker\Utilities\Test;
 
-use Windwalker\String\Utf8String;
+use \Windwalker\String\Utf8String;
 
 /**
  * Test class of String
@@ -509,7 +509,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\Utf8String::is_ascii
+	 * @covers        \Windwalker\String\Utf8String::is_ascii
 	 * @dataProvider  seedTestIs_ascii
 	 * @since         2.0
 	 */
@@ -531,7 +531,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\Utf8String::strpos
+	 * @covers        \Windwalker\String\Utf8String::strpos
 	 * @dataProvider  seedTestStrpos
 	 * @since         2.0
 	 */
@@ -551,7 +551,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strrpos
+	 * @covers        \Windwalker\String\Utf8String::strrpos
 	 * @dataProvider  seedTestGetStrrpos
 	 * @since         2.0
 	 */
@@ -571,7 +571,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::substr
+	 * @covers        \Windwalker\String\Utf8String::substr
 	 * @dataProvider  seedTestSubstr
 	 * @since         2.0
 	 */
@@ -589,7 +589,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strtolower
+	 * @covers        \Windwalker\String\Utf8String::strtolower
 	 * @dataProvider  seedTestStrtolower
 	 * @since         2.0
 	 */
@@ -607,7 +607,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strtoupper
+	 * @covers        \Windwalker\String\Utf8String::strtoupper
 	 * @dataProvider  seedTestStrtoupper
 	 * @since         2.0
 	 */
@@ -625,7 +625,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strlen
+	 * @covers        \Windwalker\String\Utf8String::strlen
 	 * @dataProvider  seedTestStrlen
 	 * @since         2.0
 	 */
@@ -646,7 +646,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::str_ireplace
+	 * @covers        \Windwalker\String\Utf8String::str_ireplace
 	 * @dataProvider  seedTestStr_ireplace
 	 * @since         2.0
 	 */
@@ -665,7 +665,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::str_split
+	 * @covers        \Windwalker\String\Utf8String::str_split
 	 * @dataProvider  seedTestStr_split
 	 * @since         2.0
 	 */
@@ -685,7 +685,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strcasecmp
+	 * @covers        \Windwalker\String\Utf8String::strcasecmp
 	 * @dataProvider  seedTestStrcasecmp
 	 * @since         2.0
 	 */
@@ -728,7 +728,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strcmp
+	 * @covers        \Windwalker\String\Utf8String::strcmp
 	 * @dataProvider  seedTestStrcmp
 	 * @since         2.0
 	 */
@@ -773,7 +773,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strcspn
+	 * @covers        \Windwalker\String\Utf8String::strcspn
 	 * @dataProvider  seedTestStrcspn
 	 * @since         2.0
 	 */
@@ -792,7 +792,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::stristr
+	 * @covers        \Windwalker\String\Utf8String::stristr
 	 * @dataProvider  seedTestStristr
 	 * @since         2.0
 	 */
@@ -810,7 +810,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strrev
+	 * @covers        \Windwalker\String\Utf8String::strrev
 	 * @dataProvider  seedTestStrrev
 	 * @since         2.0
 	 */
@@ -831,7 +831,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::strspn
+	 * @covers        \Windwalker\String\Utf8String::strspn
 	 * @dataProvider  seedTestStrspn
 	 * @since         2.0
 	 */
@@ -852,7 +852,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::substr_replace
+	 * @covers        \Windwalker\String\Utf8String::substr_replace
 	 * @dataProvider  seedTestSubstr_replace
 	 * @since         2.0
 	 */
@@ -871,7 +871,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::ltrim
+	 * @covers        \Windwalker\String\Utf8String::ltrim
 	 * @dataProvider  seedTestLtrim
 	 * @since         2.0
 	 */
@@ -898,7 +898,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::rtrim
+	 * @covers        \Windwalker\String\Utf8String::rtrim
 	 * @dataProvider  seedTestRtrim
 	 * @since         2.0
 	 */
@@ -925,7 +925,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::trim
+	 * @covers        \Windwalker\String\Utf8String::trim
 	 * @dataProvider  seedTestTrim
 	 * @since         2.0
 	 */
@@ -953,7 +953,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::ucfirst
+	 * @covers        \Windwalker\String\Utf8String::ucfirst
 	 * @dataProvider  seedTestUcfirst
 	 * @since         2.0
 	 */
@@ -971,7 +971,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::ucwords
+	 * @covers        \Windwalker\String\Utf8String::ucwords
 	 * @dataProvider  seedTestUcwords
 	 * @since         2.0
 	 */
@@ -991,7 +991,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::transcode
+	 * @covers        \Windwalker\String\Utf8String::transcode
 	 * @dataProvider  seedTestTranscode
 	 * @since         2.0
 	 */
@@ -1009,7 +1009,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::valid
+	 * @covers        \Windwalker\String\Utf8String::valid
 	 * @dataProvider  seedTestValid
 	 * @since         2.0
 	 */
@@ -1027,7 +1027,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::unicode_to_utf8
+	 * @covers        \Windwalker\String\Utf8String::unicode_to_utf8
 	 * @dataProvider  seedTestUnicodeToUtf8
 	 * @since         2.0
 	 */
@@ -1045,7 +1045,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::unicode_to_utf16
+	 * @covers        \Windwalker\String\Utf8String::unicode_to_utf16
 	 * @dataProvider  seedTestUnicodeToUtf16
 	 * @since         2.0
 	 */
@@ -1063,7 +1063,7 @@ class Utf8StringTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @covers        Windwalker\String\Utf8String::compliant
+	 * @covers        \Windwalker\String\Utf8String::compliant
 	 * @dataProvider  seedTestValid
 	 * @since         2.0
 	 */

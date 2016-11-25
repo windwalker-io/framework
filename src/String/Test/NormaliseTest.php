@@ -6,7 +6,7 @@
 
 namespace Windwalker\String\Tests;
 
-use Windwalker\String\StringNormalise;
+use \Windwalker\String\StringNormalise;
 
 /**
  * StringNormaliseTest
@@ -184,7 +184,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringNormalise::fromCamelcase
+	 * @covers        \Windwalker\String\StringNormalise::fromCamelcase
 	 * @dataProvider  seedTestFromCamelCase_nongrouped
 	 * @since         2.0
 	 */
@@ -201,7 +201,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringNormalise::fromCamelcase
+	 * @covers        \Windwalker\String\StringNormalise::fromCamelcase
 	 * @dataProvider  seedTestFromCamelCase
 	 * @since         2.0
 	 */
@@ -218,7 +218,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringNormalise::toCamelcase
+	 * @covers        \Windwalker\String\StringNormalise::toCamelcase
 	 * @dataProvider  seedTestToCamelCase
 	 * @since         2.0
 	 */
@@ -235,7 +235,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringNormalise::toDashSeparated
+	 * @covers        \Windwalker\String\StringNormalise::toDashSeparated
 	 * @dataProvider  seedTestToDashSeparated
 	 * @since         2.0
 	 */
@@ -252,7 +252,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringNormalise::toSpaceSeparated
+	 * @covers        \Windwalker\String\StringNormalise::toSpaceSeparated
 	 * @dataProvider  seedTestToSpaceSeparated
 	 * @since         2.0
 	 */
@@ -269,7 +269,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringNormalise::toUnderscoreSeparated
+	 * @covers        \Windwalker\String\StringNormalise::toUnderscoreSeparated
 	 * @dataProvider  seedTestToUnderscoreSeparated
 	 * @since         2.0
 	 */
@@ -286,7 +286,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringNormalise::toVariable
+	 * @covers        \Windwalker\String\StringNormalise::toVariable
 	 * @dataProvider  seedTestToVariable
 	 * @since         2.0
 	 */
@@ -303,7 +303,7 @@ class StringNormaliseTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers        Windwalker\String\StringNormalise::toKey
+	 * @covers        \Windwalker\String\StringNormalise::toKey
 	 * @dataProvider  seedTestToKey
 	 * @since         2.0
 	 */

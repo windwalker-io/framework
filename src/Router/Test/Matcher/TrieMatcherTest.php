@@ -150,7 +150,7 @@ class TrieMatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers       Windwalker\Router\Route::match
+	 * @covers       \Windwalker\Router\Matcher\AbstractMatcher::match
 	 */
 	public function testMatch()
 	{
@@ -189,7 +189,7 @@ class TrieMatcherTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return void
 	 *
-	 * @covers       Windwalker\Router\Route::match
+	 * @covers       \Windwalker\Router\Matcher\TrieMatcher::match
 	 *
 	 * @dataProvider matchCases
 	 */

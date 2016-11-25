@@ -56,7 +56,7 @@ class MiddlewareTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Middleware\Middleware::getNext
+	 * @covers \Windwalker\Middleware\AbstractMiddleware::getNext
 	 */
 	public function testGetNext()
 	{
@@ -68,7 +68,7 @@ class MiddlewareTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Middleware\Middleware::setNext
+	 * @covers \Windwalker\Middleware\AbstractMiddleware::setNext
 	 */
 	public function testSetNext()
 	{

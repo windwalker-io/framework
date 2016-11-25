@@ -102,7 +102,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::exsts
+	 * @covers \Windwalker\Database\Driver\Mysql\MysqlDatabase::exists
 	 */
 	public function testExists()
 	{

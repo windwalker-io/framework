@@ -103,7 +103,7 @@ class FormWrapperTest extends AbstractDomTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Html\Form\FormWrapper::*
+	 * @covers \Windwalker\Html\Form\FormWrapper::renderStart
 	 */
 	public function testRenderStart()
 	{

@@ -78,7 +78,7 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Middleware\Chain\Psr7ChainBuilder::create
+	 * @covers \Windwalker\Middleware\Chain\Psr7ChainBuilder::execute
 	 */
 	public function testExecute()
 	{

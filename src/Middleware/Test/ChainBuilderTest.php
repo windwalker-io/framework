@@ -78,7 +78,7 @@ class ChainBuilderTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Middleware\Chain\execute::run
+	 * @covers \Windwalker\Middleware\Chain\ChainBuilder::execute
 	 */
 	public function testCall()
 	{

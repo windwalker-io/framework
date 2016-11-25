@@ -457,7 +457,7 @@ class FormTest extends AbstractBaseTestCase
 	 *
 	 * @return void
 	 *
-	 * @covers \Windwalker\Form\Form::prepareView
+	 * @covers \Windwalker\Form\Form::getViews
 	 */
 	public function testGetViews()
 	{
