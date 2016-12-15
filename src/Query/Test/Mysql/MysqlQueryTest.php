@@ -635,9 +635,16 @@ class MysqlQueryTest extends AbstractQueryTestCase
 	 */
 	public function testNullDate()
 	{
-		$this->assertEquals($this->instance->quote('0000-00-00 00:00:00'), $this->instance->nullDate());
+		$nullDate = '0000-00-00 00:00:00';
 
-		$this->assertEquals('0000-00-00 00:00:00', $this->instance->nullDate(false));
+		if (version_compare($this->instance->getConnection()->getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7', '>='))
+		{
+			$nullDate = '1000-01-01 00:00:00';
+		}
+
+		$this->assertEquals($this->instance->quote($nullDate), $this->instance->nullDate());
+
+		$this->assertEquals($nullDate, $this->instance->nullDate(false));
 	}
 
 	/**

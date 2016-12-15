@@ -45,6 +45,24 @@ class MysqlQuery extends Query
 	protected $nullDate = '0000-00-00 00:00:00';
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param   \PDO $connection The PDO connection object to help us escape string.
+	 *
+	 * @since   2.0
+	 */
+	public function __construct(\PDO $connection = null)
+	{
+		parent::__construct($connection);
+
+		if ($this->connection instanceof \PDO &&
+			version_compare($this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7', '>='))
+		{
+			$this->nullDate = '1000-01-01 00:00:00';
+		}
+	}
+
+	/**
 	 * If no connection set, we escape it with default function.
 	 *
 	 * Since mysql_real_escape_string() has been deprecated, we use an alternative one.
@@ -63,4 +81,3 @@ class MysqlQuery extends Query
 		);
 	}
 }
-
