@@ -153,12 +153,7 @@ class AbstractDatabaseMapperProxy
 	{
 		$table = $table ? : static::$table;
 
-		if (!isset(static::$instances[$table]))
-		{
-			static::$instances[$table] = static::createDataMapper($table);
-		}
-
-		return static::$instances[$table];
+		return static::createDataMapper($table);
 	}
 
 	/**
