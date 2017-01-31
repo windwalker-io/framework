@@ -481,7 +481,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 
 			if (is_array($value))
 			{
-				if (!isset($parent[$key]))
+				if (!is_array($parent[$key]) || !isset($parent[$key]))
 				{
 					$parent[$key] = array();
 				}
