@@ -14,6 +14,15 @@ Add this to the require block in your `composer.json`.
 }
 ```
 
+## Support Engines
+
+- [PHP](#getting-started)
+- [Twig](#twig-renderer)
+- [Blade](#blade-renderer)
+- [Edge](#edge-renderer) (A Blade compitable engine without dependencies)
+- [Mustache](#mustache-renderer)
+- [Plates](#plastes-renderer)
+
 ## Getting Started
 
 ``` php
@@ -307,7 +316,7 @@ $renderer->setLoader(new \Mustache_Loader_FilesystemLoader($path, $options));
 
 We can change the file extension name and many other configs, please see [Mustache PHP Document](https://github.com/bobthecow/mustache.php/wiki).
 
-### Use Plastes Renderer
+## Plastes Renderer
 
 ``` php
 use Windwalker\Renderer\PlastesRenderer;
