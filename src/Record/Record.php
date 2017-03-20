@@ -15,6 +15,7 @@ use Windwalker\DataMapper\Entity\Entity;
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherInterface;
 use Windwalker\Event\Event;
+use Windwalker\Event\EventInterface;
 use Windwalker\Event\ListenerMapper;
 use Windwalker\Record\Exception\NoResultException;
 
@@ -585,7 +586,14 @@ class Record extends Entity
 			$value = $this->$field;
 		}
 
-		$record->load(array($field => $value));
+		try
+		{
+			$record->load(array($field => $value));
+		}
+		catch (NoResultException $e)
+		{
+			return false;
+		}
 
 		if ($record->$field != $value)
 		{
@@ -615,7 +623,7 @@ class Record extends Entity
 	 * @param   string|Event  $event
 	 * @param   array         $args
 	 *
-	 * @return  Event
+	 * @return  EventInterface
 	 *
 	 * @since   2.1
 	 */
