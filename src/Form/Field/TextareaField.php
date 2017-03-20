@@ -80,8 +80,8 @@ class TextareaField extends TextField
 	protected function getAccessors()
 	{
 		return array_merge(parent::getAccessors(), array(
-			'cols',
-			'rows'
+			'cols' => 'cols',
+			'rows' => 'rows'
 		));
 	}
 }

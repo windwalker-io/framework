@@ -46,7 +46,7 @@ class TextareaFieldTest extends AbstractDomTestCase
 		$this->instance->setAttribute('disabled',  true);
 		$this->instance->setAttribute('onchange',  'javascript:void(0);');
 		$this->instance->setAttribute('cols',      10);
-		$this->instance->setAttribute('rows',      15);
+		$this->instance->rows(15);
 		$this->instance->setAttribute('attribs',   array('data-test-element' => true));
 
 		$this->instance->setValue('sakura');
