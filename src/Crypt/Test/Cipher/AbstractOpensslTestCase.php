@@ -85,12 +85,6 @@ abstract class AbstractOpensslTestCase extends \PHPUnit_Framework_TestCase
 
 		$data = $this->instance->encrypt('windwalker', $this->key, $iv);
 
-		$ivSize = $this->instance->getIVSize();
-
-		$iv = substr($data, 0, $ivSize);
-
-		$data = substr($data, $ivSize);
-
 		$data = $this->instance->decrypt($data, $this->key, $iv);
 
 		$this->assertEquals('windwalker', $data);

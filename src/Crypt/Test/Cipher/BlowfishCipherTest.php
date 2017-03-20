@@ -54,4 +54,21 @@ class BlowfishCipherTest extends AbstractOpensslTestCase
 	{
 		$this->assertEquals(8, $this->instance->getIVSize());
 	}
+
+	/**
+	 * testDecryptLegacy
+	 *
+	 * @return  void
+	 */
+	public function testDecryptLegacy()
+	{
+		$data = 'windwalker';
+		$key  = 'flower';
+		$iv   = 'VNEc5QYyPCo=';
+		$encrypted = 'VNEc5QYyPCpOUP5UjJnp07eZynRNKoQu';
+
+		$decryped = $this->instance->decrypt(base64_decode($encrypted), $key, base64_decode($iv));
+
+		self::assertEquals($data, $decryped);
+	}
 }

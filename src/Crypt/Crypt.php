@@ -67,15 +67,15 @@ class Crypt implements CryptInterface
 	 * @param string $iv
 	 *
 	 * @return  string
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function encrypt($string, $key = null, $iv = null)
 	{
 		$key = $key ? : $this->getKey();
 		$iv  = $iv  ? : $this->getIv();
 
-		$encrypted = $this->cipher->encrypt($string, $key, $iv);
-
-		return base64_encode($encrypted);
+		return $this->cipher->encrypt($string, $key, $iv);
 	}
 
 	/**
@@ -89,7 +89,11 @@ class Crypt implements CryptInterface
 	 */
 	public function decrypt($string, $key = null, $iv = null)
 	{
-		$string = base64_decode(str_replace(' ', '+', $string));
+		// B/C for 3.1 and older
+		if (strpos($string, ':') !== false)
+		{
+			$string = base64_decode(str_replace(' ', '+', $string));
+		}
 
 		$key = $key ? : $this->getKey();
 		$iv  = $iv  ? : $this->getIv();

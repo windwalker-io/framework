@@ -103,6 +103,24 @@ $encrypted = $crypt->encrypt('My Text');
 $text = $crypt->decrypt($encrypted);
 ```
 
+### Custom Cipher
+
+You can set mode to cipher.
+
+``` php
+$cipher = new BlowfishCipher($key);
+
+$cipher->setMode('ecb');
+
+$cipher->encrypt(...);
+```
+
+Or set the PBKDF2 iteration count.
+
+``` php
+$cipher = new BlowfishCipher($key, array('pbkdf2_iteration' => 64000)); // Default is 12000
+```
+
 ### Available Ciphers
 
 - [BlowfishCipher](http://en.wikipedia.org/wiki/Blowfish_(cipher))
