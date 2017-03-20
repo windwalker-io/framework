@@ -225,11 +225,6 @@ abstract class HeaderHelper
 	{
 		foreach ($array as $value)
 		{
-			if (is_numeric($value))
-			{
-				$value = (string) $value;
-			}
-
 			if (!is_string($value))
 			{
 				return false;

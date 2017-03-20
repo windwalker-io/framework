@@ -62,7 +62,7 @@ class StreamTransport extends AbstractTransport
 			}
 
 			// Add the relevant headers.
-			$request = $request->withHeader('Content-Length', strlen($options['content']));
+			$request = $request->withHeader('Content-Length', (string) strlen($options['content']));
 		}
 
 		// Speed up stream get URL

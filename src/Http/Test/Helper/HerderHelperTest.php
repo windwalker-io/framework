@@ -224,7 +224,7 @@ class HerderHelperTest extends \PHPUnit_Framework_TestCase
 
 		$actual = array('A', 'B', 3);
 
-		$this->assertTrue(HeaderHelper::arrayOnlyContainsString($actual));
+		$this->assertFalse(HeaderHelper::arrayOnlyContainsString($actual));
 
 		$actual = array('A', 'B', new \stdClass);
 

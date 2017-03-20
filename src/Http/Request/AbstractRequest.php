@@ -22,7 +22,7 @@ use Windwalker\Uri\PsrUri;
  * 
  * @since  2.1
  */
-abstract class AbstractRequest extends AbstractMessage implements RequestInterface, MessageInterface
+abstract class AbstractRequest extends AbstractMessage implements RequestInterface
 {
 	/**
 	 * Property method.

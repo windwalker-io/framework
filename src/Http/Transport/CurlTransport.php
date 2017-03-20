@@ -86,7 +86,7 @@ class CurlTransport extends AbstractTransport
 			// Add the relevant headers.
 			if (is_scalar($options[CURLOPT_POSTFIELDS]))
 			{
-				$request = $request->withHeader('Content-Length', strlen($options[CURLOPT_POSTFIELDS]));
+				$request = $request->withHeader('Content-Length', (string) strlen($options[CURLOPT_POSTFIELDS]));
 			}
 		}
 

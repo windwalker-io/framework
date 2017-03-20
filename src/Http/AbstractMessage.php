@@ -250,7 +250,7 @@ abstract class AbstractMessage implements MessageInterface
 
 		if (!HeaderHelper::arrayOnlyContainsString($value))
 		{
-			throw new \InvalidArgumentException('Header values should ony contain string.');
+			throw new \InvalidArgumentException('Header values should only contain string.');
 		}
 
 		if (!HeaderHelper::isValidName($name))
