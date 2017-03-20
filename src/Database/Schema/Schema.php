@@ -129,8 +129,8 @@ class Schema
 	/**
 	 * addIndex
 	 *
-	 * @param array  $columns
-	 * @param string $name
+	 * @param array|string  $columns
+	 * @param string        $name
 	 *
 	 * @return Key
 	 */
