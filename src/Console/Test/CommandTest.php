@@ -406,23 +406,6 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test get option alias.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 *
-	 * @covers \Windwalker\Console\Command\AbstractCommand::getOptionAlias
-	 */
-	public function testGetOptionAlias()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestSkipped(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
 	 * Test set option alias.
 	 *
 	 * @return void

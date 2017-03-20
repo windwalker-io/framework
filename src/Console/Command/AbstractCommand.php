@@ -633,7 +633,7 @@ abstract class AbstractCommand implements \ArrayAccess
 		}
 		else
 		{
-			return $default;
+			return $this->io->getOption($name, $default);
 		}
 	}
 
