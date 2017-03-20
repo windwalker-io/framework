@@ -39,7 +39,7 @@ use Windwalker\IO\Filter\NullFilter;
  * @method      string   getCmd()       getCmd($name, $default = null, $separator = '.')
  * @method      string   getBase64()    getBase64($name, $default = null, $separator = '.')
  * @method      string   getString()    getString($name, $default = null, $separator = '.')
- * @method      string   getArray()     getArray($name, $default = null, $separator = '.')
+ * @method      array    getArray()     getArray($name, $default = null, $separator = '.')
  * @method      string   getHtml()      getHtml($name, $default = null, $separator = '.')
  * @method      string   getPath()      getPath($name, $default = null, $separator = '.')
  * @method      string   getUsername()  getUsername($name, $default = null, $separator = '.')
