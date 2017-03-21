@@ -101,6 +101,8 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 
 		$response = $this->instance->request($request);
 
+		show($response->getBody()->__toString());
+
 		$this->assertEquals(200, $response->getStatusCode());
 		$this->assertJson($response->getBody()->getContents());
 
