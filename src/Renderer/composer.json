@@ -6,7 +6,7 @@
     "homepage": "https://github.com/ventoviro/windwalker-renderer",
     "license": "LGPL-2.0+",
     "require": {
-        "php": ">=5.3.10",
+        "php": ">=5.5.9",
         "windwalker/structure": "~3.0"
     },
     "require-dev": {
@@ -14,7 +14,7 @@
         "windwalker/dom": "~3.0",
         "windwalker/filesystem": "~3.0",
         "twig/twig": "1.*",
-        "illuminate/view": "4.1.*",
+        "illuminate/view": "5.2.*",
         "mustache/mustache": "2.*",
         "league/plates": "3.*"
     },

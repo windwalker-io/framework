@@ -12,6 +12,8 @@ namespace Windwalker\String;
  * The StringHelper class.
  *
  * @since  2.0.8
+ *
+ * @deprecated  Use Str class instead, this class will rewrite after 4.0
  */
 abstract class StringHelper
 {

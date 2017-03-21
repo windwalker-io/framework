@@ -14,6 +14,8 @@ use Windwalker\String\Utf8String;
  * The ArrayHelper class
  *
  * @since  2.0
+ *
+ * @deprecated  This class will be rewrite, use Arr class instead.
  */
 class ArrayHelper
 {

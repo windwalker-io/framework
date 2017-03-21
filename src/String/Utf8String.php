@@ -52,6 +52,8 @@ if (!function_exists('utf8_strcasecmp'))
  * This class is based on Joomla String package
  *
  * @since  2.0
+ *
+ * @deprecated  Use Mbstring instead, this class will be rewrite after 4.0
  */
 abstract class Utf8String
 {

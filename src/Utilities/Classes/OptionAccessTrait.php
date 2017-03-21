@@ -58,7 +58,7 @@ trait OptionAccessTrait
 	/**
 	 * Method to get property Options
 	 *
-	 * @return  int
+	 * @return  array
 	 */
 	public function getOptions()
 	{

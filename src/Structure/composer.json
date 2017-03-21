@@ -6,15 +6,15 @@
     "homepage": "https://github.com/ventoviro/windwalker-structure",
     "license": "LGPL-2.0+",
     "require": {
-        "php": ">=5.3.10"
+        "php": ">=5.5.9"
     },
     "require-dev": {
         "windwalker/test": "~3.0",
-        "symfony/yaml": "2.*"
+        "symfony/yaml": "3.*"
     },
     "minimum-stability": "beta",
     "suggest": {
-        "symfony/yaml": "Install 2.* if you require YAML support."
+        "symfony/yaml": "Install 3.* if you require YAML support."
     },
     "autoload": {
         "psr-4": {

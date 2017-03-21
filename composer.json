@@ -21,7 +21,7 @@
         "symfony/yaml": "~3.0",
 
         "twig/twig": "~1.0",
-        "illuminate/view": "~5.0",
+        "illuminate/view": "5.2.*",
         "mustache/mustache": "~2.0",
         "league/plates": "~3.0"
     },
@@ -35,6 +35,7 @@
         },
         "files": [
             "src/Utilities/functions.php",
+            "src/String/functions.php",
             "src/Test/compat.php"
         ]
     },

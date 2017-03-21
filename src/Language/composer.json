@@ -6,14 +6,14 @@
     "homepage": "https://github.com/ventoviro/windwalker-language",
     "license": "LGPL-2.0+",
     "require": {
-        "php": ">=5.3.10"
+        "php": ">=5.5.9"
     },
     "require-dev": {
-        "symfony/yaml": "2.*@stable",
+        "symfony/yaml": "3.*",
         "windwalker/test": "~3.0"
     },
     "suggest": {
-        "symfony/yaml": "Install 2.* if you require YAML language format."
+        "symfony/yaml": "Install 3.* if you require YAML language format."
     },
     "minimum-stability": "beta",
     "autoload": {
