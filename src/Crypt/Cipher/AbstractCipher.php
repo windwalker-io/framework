@@ -234,7 +234,28 @@ abstract class AbstractCipher implements CipherInterface
 	 */
 	private function equalHashes($knownHash, $userHash)
 	{
-		return hash_equals($knownHash, $userHash);
+		if (function_exists('hash_equals'))
+		{
+			return hash_equals($knownHash, $userHash);
+		}
+
+		$knownLen = strlen($knownHash);
+		$userLen  = strlen($userHash);
+
+		if ($userLen !== $knownLen)
+		{
+			return false;
+		}
+
+		$result = 0;
+
+		for ($i = 0; $i < $knownLen; $i++)
+		{
+			$result |= (ord($knownHash[$i]) ^ ord($userHash[$i]));
+		}
+
+		// They are only identical strings if $result is exactly 0...
+		return 0 === $result;
 	}
 
 	/**
@@ -407,44 +428,7 @@ abstract class AbstractCipher implements CipherInterface
 			trigger_error('PBKDF2 ERROR: Invalid parameters.', E_USER_ERROR);
 		}
 
-		if (function_exists('hash_pbkdf2'))
-		{
-			// The output length is in NIBBLES (4-bits) if $raw_output is false!
-			if (!$raw_output)
-			{
-				$key_length *= 2;
-			}
-
-			return hash_pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output);
-		}
-
-		$hash_length = strlen(hash($algorithm, '', true));
-		$block_count = ceil($key_length / $hash_length);
-
-		$output = '';
-
-		for ($i = 1; $i <= $block_count; $i++)
-		{
-			// $i encoded as 4 bytes, big endian.
-			$last = $salt . pack('N', $i);
-			// first iteration
-			$last = $xorsum = hash_hmac($algorithm, $last, $password, true);
-			// perform the other $count - 1 iterations
-			for ($j = 1; $j < $count; $j++)
-			{
-				$xorsum ^= ($last = hash_hmac($algorithm, $last, $password, true));
-			}
-			$output .= $xorsum;
-		}
-
-		if ($raw_output)
-		{
-			return substr($output, 0, $key_length);
-		}
-		else
-		{
-			return bin2hex(substr($output, 0, $key_length));
-		}
+		return hash_pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output);
 	}
 
 	/**
