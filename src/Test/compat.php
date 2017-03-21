@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 ${ORGANIZATION}.
+ * @copyright  Copyright (C) 2017 $LYRASOFT.
  * @license    __LICENSE__
  */
 
