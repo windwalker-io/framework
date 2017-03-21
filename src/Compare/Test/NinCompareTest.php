@@ -15,7 +15,7 @@ use Windwalker\Compare\NinCompare;
  *
  * @since 2.0
  */
-class NinCompareTest extends \PHPUnit_Framework_TestCase
+class NinCompareTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

@@ -16,7 +16,7 @@ use Windwalker\Uri\Uri;
  *
  * @since 2.0
  */
-class SequentialMatcherTest extends \PHPUnit_Framework_TestCase
+class SequentialMatcherTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

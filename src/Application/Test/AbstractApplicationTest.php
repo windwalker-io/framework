@@ -18,7 +18,7 @@ use Windwalker\Structure\Structure;
  *
  * @since 2.0
  */
-class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
+class AbstractApplicationTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

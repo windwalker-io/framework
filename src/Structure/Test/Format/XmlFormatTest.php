@@ -15,7 +15,7 @@ use Windwalker\Structure\Format\XmlFormat;
  *
  * @since 2.0
  */
-class XmlFormatTest extends \PHPUnit_Framework_TestCase
+class XmlFormatTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

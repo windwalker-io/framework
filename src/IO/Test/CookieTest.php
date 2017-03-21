@@ -16,7 +16,7 @@ use Windwalker\Test\TestHelper;
  *
  * @since 2.0
  */
-class CookieTest extends \PHPUnit_Framework_TestCase
+class CookieTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

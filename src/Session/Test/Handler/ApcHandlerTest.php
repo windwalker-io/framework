@@ -15,7 +15,7 @@ use Windwalker\Session\Handler\ApcHandler;
  *
  * @since 2.0
  */
-class ApcHandlerTest extends \PHPUnit_Framework_TestCase
+class ApcHandlerTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

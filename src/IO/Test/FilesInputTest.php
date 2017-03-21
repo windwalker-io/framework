@@ -16,7 +16,7 @@ use Windwalker\Test\TestHelper;
  *
  * @since 2.0
  */
-class FilesInputTest extends \PHPUnit_Framework_TestCase
+class FilesInputTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.
@@ -196,8 +196,8 @@ class FilesInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSet()
 	{
-		$this->instance->set('foo', 'bar');
+		$this->instance->set('flower', 'bar');
 
-		$this->assertEquals(null, $this->instance->get('foo'));
+		$this->assertNull($this->instance->get('flower'));
 	}
 }

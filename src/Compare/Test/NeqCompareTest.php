@@ -15,7 +15,7 @@ use Windwalker\Compare\NeqCompare;
  *
  * @since 2.0
  */
-class NeqCompareTest extends \PHPUnit_Framework_TestCase
+class NeqCompareTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

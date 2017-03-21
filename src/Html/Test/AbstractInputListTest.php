@@ -13,7 +13,7 @@ namespace Windwalker\Html\Test;
  *
  * @since 2.0
  */
-class AbstractInputListTest extends \PHPUnit_Framework_TestCase
+class AbstractInputListTest extends \PHPUnit\Framework\TestCase
 {
 
 

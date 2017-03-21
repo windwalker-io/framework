@@ -15,7 +15,7 @@ use Windwalker\Validator\Rule\BooleanValidator;
  *
  * @since 2.0
  */
-class BooleanValidatorTest extends \PHPUnit_Framework_TestCase
+class BooleanValidatorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

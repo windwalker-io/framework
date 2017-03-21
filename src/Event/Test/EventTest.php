@@ -13,7 +13,7 @@ use Windwalker\Event\Event;
  *
  * @since  2.0
  */
-class EventTest extends \PHPUnit_Framework_TestCase
+class EventTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Object under tests.

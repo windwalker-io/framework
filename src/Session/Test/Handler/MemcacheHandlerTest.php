@@ -15,7 +15,7 @@ use Windwalker\Session\Handler\MemcacheHandler;
  *
  * @since 2.0
  */
-class MemcacheHandlerTest extends \PHPUnit_Framework_TestCase
+class MemcacheHandlerTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

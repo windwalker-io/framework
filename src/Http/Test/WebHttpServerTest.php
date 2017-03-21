@@ -23,7 +23,7 @@ date_default_timezone_set('UTC');
  *
  * @since 3.0
  */
-class WebHttpServerTest extends \PHPUnit_Framework_TestCase
+class WebHttpServerTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Sets up the fixture, for example, opens a network connection.

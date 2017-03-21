@@ -15,7 +15,7 @@ use Windwalker\Environment\Platform;
  *
  * @since 2.0
  */
-class PlatformTest extends \PHPUnit_Framework_TestCase
+class PlatformTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

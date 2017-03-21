@@ -15,7 +15,7 @@ use Windwalker\Compare\LteCompare;
  *
  * @since 2.0
  */
-class LteCompareTest extends \PHPUnit_Framework_TestCase
+class LteCompareTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

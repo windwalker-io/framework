@@ -17,7 +17,7 @@ use Windwalker\Data\DataSet;
  *
  * @since 2.0
  */
-class DataSetTest extends \PHPUnit_Framework_TestCase
+class DataSetTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

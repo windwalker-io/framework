@@ -17,7 +17,7 @@ use Windwalker\Dom\Helper\DomHelper;
  *
  * @since 2.0
  */
-class DomElementsTest extends \PHPUnit_Framework_TestCase
+class DomElementsTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

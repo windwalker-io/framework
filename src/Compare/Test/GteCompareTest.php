@@ -15,7 +15,7 @@ use Windwalker\Compare\GteCompare;
  *
  * @since 2.0
  */
-class GteCompareTest extends \PHPUnit_Framework_TestCase
+class GteCompareTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

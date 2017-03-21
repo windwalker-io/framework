@@ -15,7 +15,7 @@ use Windwalker\Session\Handler\XcacheHandler;
  *
  * @since 2.0
  */
-class XcacheHandlerTest extends \PHPUnit_Framework_TestCase
+class XcacheHandlerTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

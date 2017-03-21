@@ -18,7 +18,7 @@ use Windwalker\Authentication\Test\Mock\MockMethod;
  *
  * @since 2.0
  */
-class AuthenticationTest extends \PHPUnit_Framework_TestCase
+class AuthenticationTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

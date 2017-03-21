@@ -15,7 +15,7 @@ use Windwalker\Language\Loader\FileLoader;
  *
  * @since 2.0
  */
-class FileLoaderTest extends \PHPUnit_Framework_TestCase
+class FileLoaderTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

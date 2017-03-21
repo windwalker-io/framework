@@ -15,7 +15,7 @@ use Windwalker\Console\IO\IO;
  *
  * @since 2.0
  */
-class IOTest extends \PHPUnit_Framework_TestCase
+class IOTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

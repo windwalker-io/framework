@@ -15,7 +15,7 @@ use Windwalker\Crypt\CryptHelper;
  *
  * @since 3.1.3
  */
-class CryptHelperTest extends \PHPUnit_Framework_TestCase
+class CryptHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * limitIntegerProvider

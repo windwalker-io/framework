@@ -15,7 +15,7 @@ use Windwalker\Language\Language;
  *
  * @since 2.0
  */
-class LanguageTest extends \PHPUnit_Framework_TestCase
+class LanguageTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

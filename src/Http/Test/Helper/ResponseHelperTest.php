@@ -15,7 +15,7 @@ use Windwalker\Http\Helper\ResponseHelper;
  *
  * @since 3.0
  */
-class ResponseHelperTest extends \PHPUnit_Framework_TestCase
+class ResponseHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test getPhrase().

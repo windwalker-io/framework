@@ -15,7 +15,7 @@ use Windwalker\Crypt\Password;
  *
  * @since 2.0
  */
-class PasswordTest extends \PHPUnit_Framework_TestCase
+class PasswordTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

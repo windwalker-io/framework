@@ -15,7 +15,7 @@ use Windwalker\Language\Format\PhpFormat;
  *
  * @since 2.0
  */
-class PhpFormatTest extends \PHPUnit_Framework_TestCase
+class PhpFormatTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

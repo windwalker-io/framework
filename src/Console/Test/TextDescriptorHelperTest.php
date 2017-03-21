@@ -21,7 +21,7 @@ use Windwalker\Console\Test\Stubs\FooCommand;
  *
  * @since  2.0
  */
-class TextDescriptorHelperTest extends \PHPUnit_Framework_TestCase
+class TextDescriptorHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

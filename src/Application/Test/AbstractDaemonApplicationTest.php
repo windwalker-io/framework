@@ -15,7 +15,7 @@ use Windwalker\Application\Test\Stub\StubDeamon;
  *
  * @since 2.0
  */
-class AbstractDaemonApplicationTest extends \PHPUnit_Framework_TestCase
+class AbstractDaemonApplicationTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

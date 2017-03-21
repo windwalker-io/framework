@@ -15,7 +15,7 @@ use Windwalker\Uri\Uri;
  *
  * @since  2.0
  */
-class UriTest extends \PHPUnit_Framework_TestCase
+class UriTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Object under test

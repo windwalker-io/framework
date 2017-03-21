@@ -15,7 +15,7 @@ use Windwalker\Router\RouteHelper;
  *
  * @since 2.0
  */
-class RouteHelperTest extends \PHPUnit_Framework_TestCase
+class RouteHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test sanitize().

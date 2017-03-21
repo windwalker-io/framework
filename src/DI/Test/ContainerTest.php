@@ -17,7 +17,7 @@ use Windwalker\DI\Test\Stub\StubServiceProvider;
  *
  * @since 2.0
  */
-class ContainerTest extends \PHPUnit_Framework_TestCase
+class ContainerTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

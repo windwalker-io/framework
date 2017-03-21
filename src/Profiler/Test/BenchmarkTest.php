@@ -15,7 +15,7 @@ use Windwalker\Profiler\Benchmark;
  *
  * @since 2.0
  */
-class BenchmarkTest extends \PHPUnit_Framework_TestCase
+class BenchmarkTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

@@ -16,7 +16,7 @@ use Windwalker\Http\Response\Response;
  *
  * @since 3.0
  */
-class HerderHelperTest extends \PHPUnit_Framework_TestCase
+class HerderHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test getValue().

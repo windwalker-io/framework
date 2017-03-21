@@ -15,7 +15,7 @@ use Windwalker\Router\Compiler\TrieGenerator;
  *
  * @since 2.0
  */
-class TrieGeneratorTest extends \PHPUnit_Framework_TestCase
+class TrieGeneratorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * regexList

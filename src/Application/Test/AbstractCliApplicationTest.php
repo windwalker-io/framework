@@ -16,7 +16,7 @@ use Windwalker\Test\TestHelper;
  *
  * @since 2.0
  */
-class AbstractCliApplicationTest extends \PHPUnit_Framework_TestCase
+class AbstractCliApplicationTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

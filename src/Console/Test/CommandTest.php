@@ -20,7 +20,7 @@ use Windwalker\Console\Test\Stubs\FooCommand;
  *
  * @since  2.0
  */
-class CommandTest extends \PHPUnit_Framework_TestCase
+class CommandTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

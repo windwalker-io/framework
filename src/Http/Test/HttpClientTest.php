@@ -19,7 +19,7 @@ use Windwalker\Uri\UriHelper;
  *
  * @since 2.1
  */
-class HttpClientTest extends \PHPUnit_Framework_TestCase
+class HttpClientTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

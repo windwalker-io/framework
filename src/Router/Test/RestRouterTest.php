@@ -15,7 +15,7 @@ use Windwalker\Router\RestRouter;
  *
  * @since 2.0
  */
-class RestRouterTest extends \PHPUnit_Framework_TestCase
+class RestRouterTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

@@ -15,7 +15,7 @@ use Windwalker\Form\ValidatorHelper;
  *
  * @since 2.0
  */
-class ValidatorHelperTest extends \PHPUnit_Framework_TestCase
+class ValidatorHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Sets up the fixture, for example, opens a network connection.

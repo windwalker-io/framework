@@ -15,7 +15,7 @@ use Windwalker\Language\LanguageNormalize;
  *
  * @since 2.0
  */
-class LanguageNormalizeTest extends \PHPUnit_Framework_TestCase
+class LanguageNormalizeTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * getToTagCases

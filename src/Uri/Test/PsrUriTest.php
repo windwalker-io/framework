@@ -15,7 +15,7 @@ use Windwalker\Uri\PsrUri;
  *
  * @since 2.1
  */
-class PsrUriTest extends \PHPUnit_Framework_TestCase
+class PsrUriTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * testConstruct
@@ -318,7 +318,7 @@ class PsrUriTest extends \PHPUnit_Framework_TestCase
 	public function testInvalidArguments($method, $value)
 	{
 		$uri = new PsrUri('https://example.com/');
-		$this->setExpectedException('InvalidArgumentException');
+		$this->expectException('InvalidArgumentException');
 		$uri->$method($value);
 	}
 }

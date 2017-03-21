@@ -17,7 +17,7 @@ use Windwalker\Profiler\Renderer\DefaultRenderer;
  *
  * @since 2.0
  */
-class DefaultRendererTest extends \PHPUnit_Framework_TestCase
+class DefaultRendererTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

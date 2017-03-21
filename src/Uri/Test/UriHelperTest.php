@@ -15,7 +15,7 @@ use Windwalker\Uri\UriHelper;
  *
  * @since  2.0
  */
-class UriHelperTest extends \PHPUnit_Framework_TestCase
+class UriHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test the parse_url method.

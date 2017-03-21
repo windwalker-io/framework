@@ -15,7 +15,7 @@ use Windwalker\IO\Cli\Output\CliOutput;
  *
  * @since 2.0
  */
-class CliOutputTest extends \PHPUnit_Framework_TestCase
+class CliOutputTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

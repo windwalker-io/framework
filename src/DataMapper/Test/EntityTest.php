@@ -16,7 +16,7 @@ use Windwalker\DataMapper\Test\Stub\StubEntity;
  *
  * @since 2.0
  */
-class EntityTest extends \PHPUnit_Framework_TestCase
+class EntityTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

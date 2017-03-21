@@ -17,7 +17,7 @@ use Windwalker\Test\TestEnvironment;
  *
  * @since 2.0
  */
-class ColorProcessorTest extends \PHPUnit_Framework_TestCase
+class ColorProcessorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

@@ -16,7 +16,7 @@ use Windwalker\Crypt\Crypt;
  *
  * @since 2.0
  */
-class CryptTest extends \PHPUnit_Framework_TestCase
+class CryptTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

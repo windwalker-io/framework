@@ -15,7 +15,7 @@ use Windwalker\Router\Compiler\BasicGenerator;
  *
  * @since 2.0
  */
-class BasicGeneratorTest extends \PHPUnit_Framework_TestCase
+class BasicGeneratorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * regexList

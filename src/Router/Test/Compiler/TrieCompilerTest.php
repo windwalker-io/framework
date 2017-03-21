@@ -16,7 +16,7 @@ use Windwalker\Router\RouteHelper;
  *
  * @since 2.0
  */
-class TrieCompilerTest extends \PHPUnit_Framework_TestCase
+class TrieCompilerTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * regexList

@@ -21,7 +21,7 @@ use Windwalker\Test\TestHelper;
  *
  * @since  2.0
  */
-class ConsoleTest extends \PHPUnit_Framework_TestCase
+class ConsoleTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

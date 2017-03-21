@@ -16,7 +16,7 @@ use Windwalker\Http\Test\Stub\StubStreamOutput;
  *
  * @since 3.0
  */
-class StreamOutputTest extends \PHPUnit_Framework_TestCase
+class StreamOutputTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

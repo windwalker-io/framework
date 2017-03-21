@@ -17,7 +17,7 @@ use Windwalker\Structure\Test\Stubs\StubDumpable;
  *
  * @since 2.1
  */
-class StructureHelperTest extends \PHPUnit_Framework_TestCase
+class StructureHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Sets up the fixture, for example, opens a network connection.

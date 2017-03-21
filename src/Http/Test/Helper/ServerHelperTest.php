@@ -16,7 +16,7 @@ use Windwalker\Http\UploadedFile;
  *
  * @since 3.0
  */
-class ServerHelperTest extends \PHPUnit_Framework_TestCase
+class ServerHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test getValue().

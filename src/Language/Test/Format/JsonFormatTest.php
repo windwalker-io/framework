@@ -16,7 +16,7 @@ use Windwalker\Language\Language;
  *
  * @since 2.0
  */
-class JsonFormatTest extends \PHPUnit_Framework_TestCase
+class JsonFormatTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

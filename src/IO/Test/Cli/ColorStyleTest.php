@@ -15,7 +15,7 @@ use Windwalker\IO\Cli\Color\ColorStyle;
  *
  * @since 2.0
  */
-class ColorStyleTest extends \PHPUnit_Framework_TestCase
+class ColorStyleTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

@@ -15,7 +15,7 @@ use Windwalker\Structure\Format\IniFormat;
  *
  * @since 2.0
  */
-class IniFormatTest extends \PHPUnit_Framework_TestCase
+class IniFormatTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

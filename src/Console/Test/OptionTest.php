@@ -17,7 +17,7 @@ use Windwalker\Filesystem\Iterator\ArrayObject;
  *
  * @since  2.0
  */
-class OptionTest extends \PHPUnit_Framework_TestCase
+class OptionTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

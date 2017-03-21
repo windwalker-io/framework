@@ -13,7 +13,7 @@ namespace Windwalker\DataMapper\Test;
  *
  * @since 2.0
  */
-class DatabaseAdapterTest extends \PHPUnit_Framework_TestCase
+class DatabaseAdapterTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test getInstance().

@@ -15,7 +15,7 @@ use Windwalker\Test\Helper\TestStringHelper;
  * 
  * @since  2.0
  */
-abstract class AbstractBaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class AbstractBaseTestCase extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * assertStringDataEquals

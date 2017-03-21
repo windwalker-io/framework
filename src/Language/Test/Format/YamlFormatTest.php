@@ -16,7 +16,7 @@ use Windwalker\Language\Language;
  *
  * @since 2.0
  */
-class YamlFormatTest extends \PHPUnit_Framework_TestCase
+class YamlFormatTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

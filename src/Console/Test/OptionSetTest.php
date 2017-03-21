@@ -16,7 +16,7 @@ use Windwalker\Console\Option\OptionSet;
  *
  * @since  2.0
  */
-class OptionSetTest extends \PHPUnit_Framework_TestCase
+class OptionSetTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

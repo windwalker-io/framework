@@ -15,7 +15,7 @@ use Windwalker\String\StringHelper;
  *
  * @since 2.0
  */
-class StringHelperTest extends \PHPUnit_Framework_TestCase
+class StringHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test isEmptyString().

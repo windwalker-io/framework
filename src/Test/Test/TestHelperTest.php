@@ -13,7 +13,7 @@ namespace Windwalker\Test\Test;
  *
  * @since 2.0
  */
-class TestHelperTest extends \PHPUnit_Framework_TestCase
+class TestHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test assignMockCallbacks().

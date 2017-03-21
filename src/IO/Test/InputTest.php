@@ -17,7 +17,7 @@ use Windwalker\Test\TestHelper;
  *
  * @since 2.0
  */
-class InputTest extends \PHPUnit_Framework_TestCase
+class InputTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

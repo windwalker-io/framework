@@ -16,7 +16,7 @@ use Windwalker\Filter\Test\Stub\StubThorCleaner;
  *
  * @since 2.0
  */
-class InputFilterTest extends \PHPUnit_Framework_TestCase
+class InputFilterTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

@@ -15,7 +15,7 @@ use Windwalker\Router\SingleActionRouter;
  *
  * @since 2.0
  */
-class SingleActionRouterTest extends \PHPUnit_Framework_TestCase
+class SingleActionRouterTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

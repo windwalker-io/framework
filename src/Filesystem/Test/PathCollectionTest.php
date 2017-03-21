@@ -17,7 +17,7 @@ use Windwalker\Filesystem\Path\PathCollection;
  *
  * @since  2.0
  */
-class PathCollectionTest extends \PHPUnit_Framework_TestCase
+class PathCollectionTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Property collection.

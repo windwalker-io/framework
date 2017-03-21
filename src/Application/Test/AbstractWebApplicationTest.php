@@ -21,7 +21,7 @@ use Windwalker\Http\WebHttpServer;
  *
  * @since 2.0
  */
-class AbstractWebApplicationTest extends \PHPUnit_Framework_TestCase
+class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

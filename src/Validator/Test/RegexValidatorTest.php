@@ -15,7 +15,7 @@ use Windwalker\Validator\Rule\RegexValidator;
  *
  * @since 2.0
  */
-class RegexValidatorTest extends \PHPUnit_Framework_TestCase
+class RegexValidatorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

@@ -16,7 +16,7 @@ use Windwalker\Filesystem\Folder;
  * 
  * @since  2.0
  */
-abstract class AbstractFilesystemTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Property dest.

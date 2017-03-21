@@ -16,7 +16,7 @@ use Windwalker\Uri\PsrUri;
  *
  * @since 2.1
  */
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

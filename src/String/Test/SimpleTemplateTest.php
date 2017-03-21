@@ -15,7 +15,7 @@ use Windwalker\String\SimpleTemplate;
  *
  * @since 3.0
  */
-class SimpleTemplateTest extends \PHPUnit_Framework_TestCase
+class SimpleTemplateTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Tears down the fixture, for example, closes a network connection.

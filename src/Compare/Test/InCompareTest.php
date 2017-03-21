@@ -15,7 +15,7 @@ use Windwalker\Compare\InCompare;
  *
  * @since 2.0
  */
-class InCompareTest extends \PHPUnit_Framework_TestCase
+class InCompareTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

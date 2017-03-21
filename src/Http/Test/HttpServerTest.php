@@ -20,7 +20,7 @@ use Windwalker\Http\Test\Stub\StubOutput;
  *
  * @since 3.0
  */
-class HttpServerTest extends \PHPUnit_Framework_TestCase
+class HttpServerTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

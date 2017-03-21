@@ -15,7 +15,7 @@ use Windwalker\Profiler\Point\Point;
  *
  * @since 2.0
  */
-class PointTest extends \PHPUnit_Framework_TestCase
+class PointTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

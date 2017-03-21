@@ -16,7 +16,7 @@ use Windwalker\Database\Driver\Mysql\MysqlDriver;
  *
  * @since 2.0
  */
-class DatabaseFactoryTest extends \PHPUnit_Framework_TestCase
+class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test getDbo().

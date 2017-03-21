@@ -15,7 +15,7 @@ use Windwalker\Validator\Rule\EqualsValidator;
  *
  * @since 2.0
  */
-class EqualsValidatorTest extends \PHPUnit_Framework_TestCase
+class EqualsValidatorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * getInstance

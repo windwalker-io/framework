@@ -16,7 +16,7 @@ use Windwalker\Crypt\CryptHelper;
  *
  * @since 2.0
  */
-class SimpleCipherTest extends \PHPUnit_Framework_TestCase
+class SimpleCipherTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

@@ -15,7 +15,7 @@ use \Windwalker\String\Utf8String;
  *
  * @since 2.0
  */
-class Utf8StringTest extends \PHPUnit_Framework_TestCase
+class Utf8StringTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @var    String

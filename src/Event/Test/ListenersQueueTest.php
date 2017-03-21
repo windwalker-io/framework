@@ -14,7 +14,7 @@ use Windwalker\Event\Test\Stub\EmptyListener;
  *
  * @since  2.0
  */
-class ListenersQueueTest extends \PHPUnit_Framework_TestCase
+class ListenersQueueTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Object under tests.

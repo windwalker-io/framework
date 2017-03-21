@@ -17,7 +17,7 @@ use Windwalker\Authentication\Method\LocalMethod;
  *
  * @since 2.0
  */
-class LocalMethodTest extends \PHPUnit_Framework_TestCase
+class LocalMethodTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

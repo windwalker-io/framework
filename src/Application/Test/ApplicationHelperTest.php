@@ -15,7 +15,7 @@ use Windwalker\Application\Helper\ApplicationHelper;
  *
  * @since 2.0
  */
-class ApplicationHelperTest extends \PHPUnit_Framework_TestCase
+class ApplicationHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test isAscii().

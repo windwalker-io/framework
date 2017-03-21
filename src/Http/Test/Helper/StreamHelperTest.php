@@ -18,7 +18,7 @@ use Windwalker\Http\Test\Stub\StubStreamOutput;
  *
  * @since 3.0
  */
-class StreamHelperTest extends \PHPUnit_Framework_TestCase
+class StreamHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test copy().

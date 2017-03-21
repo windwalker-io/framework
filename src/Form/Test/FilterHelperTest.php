@@ -15,7 +15,7 @@ use Windwalker\Form\FilterHelper;
  *
  * @since 2.0
  */
-class FilterHelperTest extends \PHPUnit_Framework_TestCase
+class FilterHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * setUp

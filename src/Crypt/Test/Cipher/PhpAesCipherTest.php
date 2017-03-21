@@ -16,7 +16,7 @@ use Windwalker\Crypt\CryptHelper;
  *
  * @since 3.0
  */
-class PhpAesCipherTest extends \PHPUnit_Framework_TestCase
+class PhpAesCipherTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

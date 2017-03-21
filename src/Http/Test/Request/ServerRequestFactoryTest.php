@@ -18,7 +18,7 @@ use Windwalker\Http\UploadedFile;
  *
  * @since 3.0
  */
-class ServerRequestFactoryTest extends \PHPUnit_Framework_TestCase
+class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to test create().
@@ -47,7 +47,7 @@ class ServerRequestFactoryTest extends \PHPUnit_Framework_TestCase
 
 		ServerRequestFactory::$apacheRequestHeaders = array($this, 'apacheRequestHeaders');
 
-		$server = $_SERVER;
+		$server = array();
 		
 		$server = ServerRequestFactory::prepareServers($server);
 
@@ -56,7 +56,7 @@ class ServerRequestFactoryTest extends \PHPUnit_Framework_TestCase
 		// Test no auth
 		ServerRequestFactory::$apacheRequestHeaders = array($this, 'apacheRequestHeadersEmpty');
 
-		$server = $_SERVER;
+		$server = array();
 
 		$server = ServerRequestFactory::prepareServers($server);
 

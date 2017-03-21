@@ -15,7 +15,7 @@ use Windwalker\Environment\Test\Stub\StubBrowser;
  *
  * @since 2.0
  */
-class BrowserTest extends \PHPUnit_Framework_TestCase
+class BrowserTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Property inspector.

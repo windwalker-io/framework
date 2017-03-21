@@ -15,7 +15,7 @@ use Windwalker\Compare\EqCompare;
  *
  * @since 2.0
  */
-class EqCompareTest extends \PHPUnit_Framework_TestCase
+class EqCompareTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

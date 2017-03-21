@@ -16,7 +16,7 @@ use Windwalker\Http\Stream\Stream;
  *
  * @since 2.1
  */
-class ResponseTest extends \PHPUnit_Framework_TestCase
+class ResponseTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

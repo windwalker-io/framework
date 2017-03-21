@@ -17,7 +17,7 @@ use Windwalker\Router\Router;
  *
  * @since 2.0
  */
-class RouterTest extends \PHPUnit_Framework_TestCase
+class RouterTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

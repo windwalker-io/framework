@@ -15,7 +15,7 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
  *
  * @since 2.0
  */
-class XmlHelperTest extends \PHPUnit_Framework_TestCase
+class XmlHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

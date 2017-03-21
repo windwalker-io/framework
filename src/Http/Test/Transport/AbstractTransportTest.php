@@ -21,7 +21,7 @@ use Windwalker\Uri\UriHelper;
  *
  * @since 2.1
  */
-abstract class AbstractTransportTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Property options.

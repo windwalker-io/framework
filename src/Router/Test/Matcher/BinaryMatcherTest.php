@@ -16,7 +16,7 @@ use Windwalker\Router\Route;
  *
  * @since 2.0
  */
-class BinaryMatcherTest extends \PHPUnit_Framework_TestCase
+class BinaryMatcherTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

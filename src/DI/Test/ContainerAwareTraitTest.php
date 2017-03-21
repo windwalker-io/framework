@@ -16,7 +16,7 @@ use Windwalker\DI\ContainerAwareTrait;
  * 
  * @since  2.0
  */
-class ContainerAwareTraitTest extends \PHPUnit_Framework_TestCase
+class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Property instance.

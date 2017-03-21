@@ -13,7 +13,7 @@ use \Windwalker\String\StringNormalise;
  *
  * @since  2.0
  */
-class StringNormaliseTest extends \PHPUnit_Framework_TestCase
+class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Method to seed data to testFromCamelCase.

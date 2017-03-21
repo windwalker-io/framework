@@ -15,7 +15,7 @@ use Windwalker\Validator\AbstractValidator;
  * 
  * @since  2.0
  */
-abstract class AbstractValidateTestCase extends  \PHPUnit_Framework_TestCase
+abstract class AbstractValidateTestCase extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

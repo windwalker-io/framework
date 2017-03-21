@@ -15,7 +15,7 @@ use Windwalker\Validator\Rule\NoneValidator;
  *
  * @since 2.0
  */
-class NoneValidatorTest extends \PHPUnit_Framework_TestCase
+class NoneValidatorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

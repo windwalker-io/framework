@@ -15,7 +15,7 @@ use Windwalker\Validator\Rule\AlnumValidator;
  *
  * @since 2.0
  */
-class AlnumValidatorTest extends \PHPUnit_Framework_TestCase
+class AlnumValidatorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test instance.

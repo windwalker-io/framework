@@ -16,7 +16,7 @@ use Windwalker\Crypt\CryptHelper;
  * 
  * @since  2.0
  */
-abstract class AbstractOpensslTestCase extends \PHPUnit_Framework_TestCase
+abstract class AbstractOpensslTestCase extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Property key.

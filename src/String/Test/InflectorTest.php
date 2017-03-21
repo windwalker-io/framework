@@ -15,7 +15,7 @@ use Windwalker\Test\TestHelper;
  * @link   http://en.wikipedia.org/wiki/English_plural
  * @since  2.0
  */
-class InflectorTest extends \PHPUnit_Framework_TestCase
+class InflectorTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @var    StringInflector
