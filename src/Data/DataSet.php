@@ -8,6 +8,9 @@
 
 namespace Windwalker\Data;
 
+use Windwalker\Data\Traits\CollectionTrait;
+use Windwalker\Utilities\Arr;
+
 /**
  * The Data set to store multiple data.
  *
@@ -15,6 +18,8 @@ namespace Windwalker\Data;
  */
 class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
 {
+	use CollectionTrait;
+
 	/**
 	 * The data store.
 	 *
@@ -45,6 +50,11 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function bind($dataset)
 	{
+		if ($dataset === null)
+		{
+			return $this;
+		}
+
 		if ($dataset instanceof \Traversable)
 		{
 			$dataset = iterator_to_array($dataset);
@@ -58,9 +68,9 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 			throw new \InvalidArgumentException('Need an array or object');
 		}
 
-		foreach ($dataset as $data)
+		foreach ($dataset as $k => $data)
 		{
-			$this[] = $data;
+			$this[$k] = $data;
 		}
 
 		return $this;
@@ -82,16 +92,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function __get($property)
 	{
-		$return = [];
-
-		// Iterate through the objects.
-		foreach ($this->data as $key => $data)
-		{
-			// Get the property.
-			$return[$key] = $data->$property;
-		}
-
-		return $return;
+		return $this->getColumn($property);
 	}
 
 	/**
@@ -132,12 +133,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function __set($property, $value)
 	{
-		// Iterate through the objects.
-		foreach ($this->data as $data)
-		{
-			// Set the property.
-			$data->$property = $value;
-		}
+		$this->setColumn($property, $value);
 	}
 
 	/**
@@ -181,12 +177,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function offsetGet($offset)
 	{
-		if (empty($this->data[$offset]))
-		{
-			return null;
-		}
-
-		return $this->data[$offset];
+		return $this->get($offset);
 	}
 
 	/**
@@ -211,19 +202,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function offsetSet($offset, $value)
 	{
-		if (!($value instanceof Data))
-		{
-			$value = new Data($value);
-		}
-
-		if ($offset !== null)
-		{
-			$this->data[$offset] = $value;
-		}
-		else
-		{
-			array_push($this->data, $value);
-		}
+		$this->set($offset, $value);
 	}
 
 	/**
@@ -236,6 +215,84 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function offsetUnset($offset)
 	{
 		unset($this->data[$offset]);
+	}
+
+	/**
+	 * get
+	 *
+	 * @param string $name
+	 *
+	 * @return  mixed|null
+	 */
+	public function get($name)
+	{
+		if (empty($this->data[$name]))
+		{
+			return null;
+		}
+
+		return $this->data[$name];
+	}
+
+	/**
+	 * set
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 *
+	 * @return  static
+	 */
+	public function set($name, $value)
+	{
+		if (!$value instanceof Data && !$value instanceof DataSet)
+		{
+			$value = new Data($value);
+		}
+
+		if ($name !== null)
+		{
+			$this->data[$name] = $value;
+		}
+		else
+		{
+			array_push($this->data, $value);
+		}
+
+		return $this;
+	}
+
+	public function getColumn($column)
+	{
+		$return = [];
+
+		// Iterate through the objects.
+		foreach ($this->data as $key => $data)
+		{
+			// Get the property.
+			$return[$key] = $data->$column;
+		}
+
+		return $return;
+	}
+
+	/**
+	 * setColumn
+	 *
+	 * @param string $column
+	 * @param mixed  $value
+	 *
+	 * @return  static
+	 */
+	public function setColumn($column, $value)
+	{
+		// Iterate through the objects.
+		foreach ($this->data as $data)
+		{
+			// Set the property.
+			$data->$column = $value;
+		}
+
+		return $this;
 	}
 
 	/**
@@ -325,47 +382,10 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 
 		if ($recursive)
 		{
-			$dataset = $this->allToArray($dataset);
+			$dataset = static::allToArray($dataset);
 		}
 
 		return $dataset;
-	}
-
-	/**
-	 * allToArray
-	 *
-	 * @param   mixed  $value
-	 *
-	 * @return  array
-	 */
-	public static function allToArray($value)
-	{
-		if ($value instanceof DataSetInterface)
-		{
-			$value = $value->dump(true);
-		}
-		elseif ($value instanceof DataInterface)
-		{
-			$value = $value->dump(true);
-		}
-		elseif ($value instanceof \Traversable)
-		{
-			$value = iterator_to_array($value);
-		}
-		elseif (is_object($value))
-		{
-			$value = get_object_vars($value);
-		}
-
-		if (is_array($value))
-		{
-			foreach ($value as &$v)
-			{
-				$v = static::allToArray($v);
-			}
-		}
-
-		return $value;
 	}
 
 	/**
@@ -378,34 +398,30 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * @return  static
 	 *
 	 * @since   3.1.3
+	 *
+	 * @deprecated  Use map() instead.
 	 */
 	public function mapping($callback)
 	{
-		$dataset = clone $this;
-		$keys = array_keys($dataset->data);
-
-		// Keep keys same as origin
-		$dataset->data = array_combine($keys, array_map($callback, $dataset->data, $keys));
-
-		return $dataset;
+		return $this->map($callback);
 	}
 
 	/**
-	 * Mapping all elements.
+	 * mapColumn
 	 *
-	 * @param   callable  $callback
+	 * @param string   $field
+	 * @param callable $callback
 	 *
-	 * @return  static  Support chaining.
-	 *
-	 * @since   2.0.9
-	 *
-	 * @deprecated  Use transform() instead, this method will return new instance after 3.2.
+	 * @return  static
 	 */
-	public function map($callback)
+	public function mapColumn($field, callable $callback)
 	{
-		trigger_error('Use transform() instead, this method will return new instance after 3.2', E_USER_DEPRECATED);
+		return $this->map(function (Data $data) use ($field, $callback)
+		{
+			$data->$field = $callback($data->$field);
 
-		return $this->transform($callback);
+			return $data;
+		});
 	}
 
 	/**
@@ -420,41 +436,6 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	public function transform($callback)
 	{
 		return $this->walk($callback);
-	}
-
-	/**
-	 * Filter data by a callback and return a new instance.
-	 *
-	 * @param   callable  $callback
-	 *
-	 * @return  static  New instance after filter.
-	 *
-	 * @since   3.1.3
-	 */
-	public function filter($callback = null)
-	{
-		$dataset = clone $this;
-
-		if (!$callback)
-		{
-			$dataset->data = array_filter($dataset->data);
-
-			return $dataset;
-		}
-
-		$return = [];
-
-		foreach ($dataset->data as $key => $value)
-		{
-			if (call_user_func($callback, $value, $key))
-			{
-				$return[$key] = $value;
-			}
-		}
-
-		$dataset->data = $return;
-
-		return $dataset;
 	}
 
 	/**
@@ -569,26 +550,6 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	}
 
 	/**
-	 * Get first element.
-	 *
-	 * @return  Data
-	 */
-	public function first()
-	{
-		return reset($this->data);
-	}
-
-	/**
-	 * Get last element.
-	 *
-	 * @return  Data
-	 */
-	public function last()
-	{
-		return end($this->data);
-	}
-
-	/**
 	 * Push element to last.
 	 *
 	 * @param   Data|mixed  $data  Data to push.
@@ -641,6 +602,117 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	}
 
 	/**
+	 * splice
+	 *
+	 * @param int   $offset
+	 * @param int   $length
+	 * @param mixed $replacement
+	 *
+	 * @return  static
+	 */
+	public function splice($offset, $length = null, $replacement = null)
+	{
+		return $this->bindNewInstance(array_splice($this->data, $offset, $length, $replacement));
+	}
+
+	/**
+	 * sum
+	 *
+	 * @param string|int $field
+	 *
+	 * @return  float|int
+	 */
+	public function sum($field)
+	{
+		return array_sum($this->$field);
+	}
+
+	/**
+	 * avg
+	 *
+	 * @param string|int $field
+	 *
+	 * @return  float|int
+	 */
+	public function avg($field)
+	{
+		return $this->sum($field) / count($this->data);
+	}
+
+	/**
+	 * contains
+	 *
+	 * @param string $field
+	 * @param mixed  $value
+	 * @param bool   $strict
+	 *
+	 * @return  bool
+	 */
+	public function contains($field, $value, $strict = false)
+	{
+		return in_array($value, $this->$field, $strict);
+	}
+
+	/**
+	 * containsAll
+	 *
+	 * @param mixed $value
+	 * @param bool  $strict
+	 *
+	 * @return  bool
+	 */
+	public function containsAll($value, $strict = false)
+	{
+		return in_array($value, Arr::collapse($this->dump(true)), $strict);
+	}
+
+	/**
+	 * keyBy
+	 *
+	 * @param string|int $field
+	 *
+	 * @return  static
+	 */
+	public function keyBy($field)
+	{
+		return $this->bindNewInstance(Arr::group($this->data, $field));
+	}
+
+	/**
+	 * remove
+	 *
+	 * @param array|string $fields
+	 *
+	 * @return  static
+	 */
+	public function except($fields)
+	{
+		$fields = (array) $fields;
+
+		return $this->map(function (Data $data) use ($fields)
+		{
+		    return $data->except($fields);
+		});
+	}
+
+	/**
+	 * only
+	 *
+	 * @param array|string $fields
+	 *
+	 * @return  static
+	 */
+	public function only($fields)
+	{
+		$fields = (array) $fields;
+
+		return $this->map(function (Data $data) use ($fields)
+		{
+			return $data->only($fields);
+		});
+	}
+
+	/**
 	 * Clone this class.
 	 *
 	 * @return  void
@@ -672,8 +744,22 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 * @return  array
 	 *
 	 * @since   2.0.9
+	 *
+	 * @deprecated  Use keys().
 	 */
 	public function getKeys()
+	{
+		return $this->keys();
+	}
+
+	/**
+	 * Return all the keys of this DataSet.
+	 *
+	 * @return  array
+	 *
+	 * @since   3.2
+	 */
+	public function keys()
 	{
 		return array_keys($this->data);
 	}

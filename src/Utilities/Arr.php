@@ -439,7 +439,7 @@ class Arr
 	 * @return  array|object
 	 * @throws \InvalidArgumentException
 	 */
-	public static function keep($data, array $fields)
+	public static function only($data, array $fields)
 	{
 		if (is_array($data))
 		{
@@ -476,7 +476,7 @@ class Arr
 	 */
 	public static function find(
 		array $data,
-		callable $callback,
+		callable $callback = null,
 		$keepKey = false,
 		$offset = null,
 		$limit = null
@@ -485,6 +485,8 @@ class Arr
 		$results = [];
 		$i       = 0;
 		$c       = 0;
+
+		$callback = null === $callback ? 'is_null' : $callback;
 
 		foreach ($data as $key => $value)
 		{
@@ -528,7 +530,7 @@ class Arr
 	 *
 	 * @return  mixed
 	 */
-	public static function findFirst(array $data, callable $callback)
+	public static function findFirst(array $data, callable $callback = null)
 	{
 		$results = static::find($data, $callback, false, 0, 1);
 
@@ -547,15 +549,17 @@ class Arr
 	public static function reject(array $data, callable $callback, $keepKey = false)
 	{
 		return static::find(
-			$data, function (&$value, &$key) use ($callback)
-		{
-			if (is_string($callback))
+			$data,
+			function (&$value, &$key) use ($callback)
 			{
-				return !$callback($value);
-			}
+				if (is_string($callback))
+				{
+					return !$callback($value);
+				}
 
-			return !$callback($value, $key);
-		}, $keepKey
+				return !$callback($value, $key);
+			},
+			$keepKey
 		);
 	}
 

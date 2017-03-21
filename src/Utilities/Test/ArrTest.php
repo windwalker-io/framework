@@ -573,7 +573,7 @@ class ArrTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	public function testKeep()
+	public function testOnly()
 	{
 		$array = [
 			'Lycoris'   => 'energetic',
@@ -584,27 +584,27 @@ class ArrTest extends TestCase
 
 		self::assertEquals(
 			['Lycoris' => 'energetic', 'Zinnia' => 'robust'],
-			Arr::keep($array, ['Lycoris', 'Zinnia'])
+			Arr::only($array, ['Lycoris', 'Zinnia'])
 		);
 
 		self::assertEquals(
 			['Lycoris' => 'energetic'],
-			Arr::keep($array, ['Lycoris'])
+			Arr::only($array, ['Lycoris'])
 		);
 
 		self::assertEquals(
 			(object) ['Lycoris' => 'energetic', 'Zinnia' => 'robust'],
-			Arr::keep((object) $array, ['Lycoris', 'Zinnia'])
+			Arr::only((object) $array, ['Lycoris', 'Zinnia'])
 		);
 
 		self::assertEquals(
 			(object) ['Lycoris' => 'energetic'],
-			Arr::keep((object) $array, ['Lycoris'])
+			Arr::only((object) $array, ['Lycoris'])
 		);
 
 		$this->expectException(\InvalidArgumentException::class);
 
-		Arr::keep('string', ['test']);
+		Arr::only('string', ['test']);
 	}
 
 	/**

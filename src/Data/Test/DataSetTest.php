@@ -357,13 +357,13 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  \Windwalker\Data\DataSet::transform
+	 * @covers  \Windwalker\Data\DataSet::map
 	 */
-	public function testMapping()
+	public function testMap()
 	{
 		$keys = [];
 
-		$new = $this->instance->mapping(function($data, $key) use (&$keys)
+		$new = $this->instance->map(function($data, $key) use (&$keys)
 		{
 			$keys[] = $key;
 

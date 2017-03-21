@@ -8,6 +8,8 @@
 
 namespace Windwalker\Data;
 
+use Windwalker\Data\Traits\CollectionTrait;
+
 /**
  * Data object to store values.
  *
@@ -15,6 +17,8 @@ namespace Windwalker\Data;
  */
 class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countable
 {
+	use CollectionTrait;
+
 	/**
 	 * Constructor.
 	 *
@@ -40,6 +44,11 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function bind($values, $replaceNulls = false)
 	{
+		if ($values === null)
+		{
+			return $this;
+		}
+
 		// Check properties type.
 		if (!is_array($values) && !is_object($values))
 		{
@@ -294,27 +303,6 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	}
 
 	/**
-	 * Mapping all elements.
-	 *
-	 * @param   callable  $callback  Callback to handle every element.
-	 *
-	 * @return  static  Support chaining.
-	 *
-	 * @since   2.0.9
-	 *
-	 * @deprecated  Use walk() instead, this method will return new instance after 3.2.
-	 */
-	public function map($callback)
-	{
-		foreach ($this->getIterator() as $key => $value)
-		{
-			$this[$key] = call_user_func($callback, $value);
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Mapping all elements and return new instance.
 	 *
 	 * @param   callable  $callback  Callback to handle every element.
@@ -325,14 +313,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	 */
 	public function mapping($callback)
 	{
-		$new = clone $this;
-
-		foreach ($new as $key => $value)
-		{
-			$new[$key] = call_user_func($callback, $value, $key);
-		}
-
-		return $this;
+		return $this->map($callback);
 	}
 
 	/**
@@ -355,6 +336,155 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 		}
 
 		return $this;
+	}
+
+	/**
+	 * keys
+	 *
+	 * @return  array
+	 */
+	public function keys()
+	{
+		return array_keys($this->dump());
+	}
+
+	/**
+	 * diff
+	 *
+	 * @param array|DataInterface  $array
+	 *
+	 * @return  array
+	 */
+	public function diff($array)
+	{
+		$self = $this->dump();
+
+		return array_diff($self, $this->convertArray($array));
+	}
+
+	/**
+	 * diffKeys
+	 *
+	 * @param array|DataInterface  $array
+	 *
+	 * @return  array
+	 */
+	public function diffKeys($array)
+	{
+		$self = $this->dump();
+
+		return array_diff_key($self, $this->convertArray($array));
+	}
+
+	/**
+	 * intersect
+	 *
+	 * @param array|DataInterface  $array
+	 *
+	 * @return  array
+	 */
+	public function intersect($array)
+	{
+		$self = $this->dump();
+
+		return array_intersect($self, $this->convertArray($array));
+	}
+
+	/**
+	 * intersectKeys
+	 *
+	 * @param array|DataInterface $array
+	 *
+	 * @return  array
+	 */
+	public function intersectKeys($array)
+	{
+		$self = $this->dump();
+
+		return array_intersect_key($self, $this->convertArray($array));
+	}
+
+	/**
+	 * remove
+	 *
+	 * @param array|string $fields
+	 *
+	 * @return  static
+	 */
+	public function except($fields)
+	{
+		$fields = (array) $fields;
+
+		$new = clone $this;
+
+		foreach ($fields as $field)
+		{
+			unset($new->$field);
+		}
+
+		return $new;
+	}
+
+	/**
+	 * only
+	 *
+	 * @param array|string $fields
+	 *
+	 *
+	 * @return  static
+	 */
+	public function only($fields)
+	{
+		$fields = (array) $fields;
+
+		$new = $this->getNewInstance();
+
+		foreach ($fields as $origin => $field)
+		{
+			if (is_numeric($origin))
+			{
+				$new->$field = $this->$field;
+			}
+			else
+			{
+				$new->$field = $this->$origin;
+			}
+		}
+
+		return $new;
+	}
+
+	/**
+	 * sum
+	 *
+	 * @return  float|int
+	 */
+	public function sum()
+	{
+		return array_sum($this->dump());
+	}
+
+	/**
+	 * avg
+	 *
+	 * @return  float|int
+	 */
+	public function avg()
+	{
+		return $this->sum() / count($this);
+	}
+
+	/**
+	 * contains
+	 *
+	 * @param mixed $value
+	 * @param bool  $strict
+	 *
+	 * @return  bool
+	 */
+	public function contains($value, $strict = false)
+	{
+		return in_array($value, $this->dump(), $strict);
 	}
 
 	/**

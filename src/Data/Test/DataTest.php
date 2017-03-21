@@ -246,12 +246,12 @@ class DataTest extends \PHPUnit\Framework\TestCase
 		$data->foo = 'bar';
 		$data->baz = 'yoo';
 
-		$data->map(function($value)
+		$new = $data->map(function($value)
 		{
 			return strtoupper($value);
 		});
 
-		$this->assertEquals('YOO', $data->baz);
+		$this->assertEquals('YOO', $new->baz);
 	}
 
 	/**
