@@ -9,7 +9,8 @@
         "php": ">=5.3.10"
     },
     "require-dev": {
-        "symfony/yaml": "2.*@stable"
+        "symfony/yaml": "2.*@stable",
+        "windwalker/test": "~3.0"
     },
     "suggest": {
         "symfony/yaml": "Install 2.* if you require YAML language format."
