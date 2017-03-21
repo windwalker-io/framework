@@ -8,6 +8,7 @@
 
 namespace Windwalker\Uri\Test;
 
+use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Uri\PsrUri;
 
 /**
@@ -15,7 +16,7 @@ use Windwalker\Uri\PsrUri;
  *
  * @since 2.1
  */
-class PsrUriTest extends \PHPUnit\Framework\TestCase
+class PsrUriTest extends AbstractBaseTestCase
 {
 	/**
 	 * testConstruct
@@ -317,8 +318,10 @@ class PsrUriTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testInvalidArguments($method, $value)
 	{
-		$uri = new PsrUri('https://example.com/');
-		$this->expectException('InvalidArgumentException');
-		$uri->$method($value);
+		$this->assertExpectedException(function () use ($method, $value)
+		{
+			$uri = new PsrUri('https://example.com/');
+			$uri->$method($value);
+		}, 'InvalidArgumentException');
 	}
 }
