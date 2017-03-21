@@ -8,11 +8,6 @@
 
 namespace Windwalker\Session\Handler;
 
-if (!interface_exists('SessionHandlerInterface'))
-{
-	include_once __DIR__ . '/../Compat/SessionHandlerInterface.php';
-}
-
 /**
  * Interface HandlerInterface
  */

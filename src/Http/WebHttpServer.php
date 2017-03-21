@@ -120,7 +120,7 @@ class WebHttpServer extends HttpServer
 	 */
 	public function execute($nextHandler = null)
 	{
-		if (version_compare(PHP_VERSION, '5.4', '>=') && $this->handler instanceof \Closure)
+		if ($this->handler instanceof \Closure)
 		{
 			$this->handler = $this->handler->bindTo($this);
 		}

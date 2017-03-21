@@ -318,8 +318,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 					continue;
 				}
 				// Otherwise we create this object recursive
-				elseif (!$dependency->isAbstract() && !$dependency->isInterface() &&
-					!(version_compare(PHP_VERSION, '5.4', '>=') && $dependency->isTrait()))
+				elseif (!$dependency->isAbstract() && !$dependency->isInterface() && !$dependency->isTrait())
 				{
 					// Find child args if set
 					if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName]))

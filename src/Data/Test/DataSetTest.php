@@ -269,14 +269,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testJsonSerialize()
 	{
-		if (version_compare(PHP_VERSION, '5.4', '>'))
-		{
-			$json = json_encode($this->instance);
-		}
-		else
-		{
-			$json = json_encode((array) $this->instance->getIterator());
-		}
+		$json = json_encode($this->instance);
 
 		$this->assertJsonStringEqualsJsonString('[{"flower":"sakura"},{"wind":"walker"}]', $json);
 	}

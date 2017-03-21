@@ -32,13 +32,7 @@ class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		// Only run tests on PHP 5.4+
-		if (version_compare(PHP_VERSION, '5.4', '<'))
-		{
-			static::markTestSkipped('Tests are not present in PHP 5.4');
-		}
-
-		$this->instance = $this->getObjectForTrait('Windwalker\\DI\\ContainerAwareTrait');
+		$this->instance = $this->getObjectForTrait(ContainerAwareTrait::class);
 	}
 
 	/**
@@ -62,6 +56,6 @@ class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->instance->setContainer(new Container);
 
-		$this->assertInstanceOf('Windwalker\\DI\\Container', $this->instance->getContainer());
+		$this->assertInstanceOf(Container::class, $this->instance->getContainer());
 	}
 }

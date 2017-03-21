@@ -321,7 +321,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 	{
 		$container = new Container;
 
-		$foo = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
+		$foo = $container->createObject(\Windwalker\DI\Test\Mock\Foo::class);
 
 		$this->assertInstanceOf('Windwalker\\DI\\Test\\Mock\\Foo', $foo);
 		$this->assertInstanceOf('Windwalker\\DI\\Test\\Mock\\Bar', $foo->bar);

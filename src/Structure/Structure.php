@@ -8,11 +8,6 @@
 
 namespace Windwalker\Structure;
 
-if (!interface_exists('JsonSerializable'))
-{
-	include_once __DIR__ . '/Compat/JsonSerializable.php';
-}
-
 /**
  * Structure class
  *
@@ -90,7 +85,9 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 		}
 		catch (\Exception $e)
 		{
-			return trigger_error((string) $e, E_USER_ERROR);
+			trigger_error((string) $e, E_USER_ERROR);
+
+			return '';
 		}
 	}
 
@@ -101,7 +98,6 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	 * @return  array
 	 *
 	 * @since   2.0
-	 * @note    The interface is only present in PHP 5.4 and up.
 	 */
 	public function jsonSerialize()
 	{

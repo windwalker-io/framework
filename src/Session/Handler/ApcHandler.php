@@ -92,20 +92,15 @@ class ApcHandler extends AbstractHandler
 	}
 
 	/**
-	 * PHP >= 5.4.0<br/>
 	 * Cleanup old sessions
 	 *
 	 * @link http://php.net/manual/en/sessionhandlerinterafce.gc.php
 	 *
-	 * @param int $maxlifetime <p>
-	 *                         Sessions that have not updated for
+	 * @param int $maxlifetime Sessions that have not updated for
 	 *                         the last maxlifetime seconds will be removed.
-	 *                         </p>
 	 *
-	 * @return bool <p>
-	 * The return value (usually TRUE on success, FALSE on failure).
-	 * Note this value is returned internally to PHP for processing.
-	 * </p>
+	 * @return bool The return value (usually TRUE on success, FALSE on failure).
+	 *              Note this value is returned internally to PHP for processing.
 	 */
 	public function gc($maxlifetime)
 	{

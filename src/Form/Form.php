@@ -13,11 +13,6 @@ use Windwalker\Form\Field\ListField;
 use Windwalker\Form\Renderer\FormRendererInterface;
 use Windwalker\Form\Validate\ValidateResult;
 
-if (!class_exists('CallbackFilterIterator'))
-{
-	include_once __DIR__ . '/Compat/CallbackFilterIterator.php';
-}
-
 /**
  * The Form class.
  *

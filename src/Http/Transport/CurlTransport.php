@@ -125,9 +125,8 @@ class CurlTransport extends AbstractTransport
 
 		/*
 		 * Follow redirects if server config allows
-		 * @deprecated  safe_mode is removed in PHP 5.4, check will be dropped when PHP 5.3 support is dropped
 		 */
-		if (!ini_get('safe_mode') && !ini_get('open_basedir'))
+		if (!ini_get('open_basedir'))
 		{
 			$options[CURLOPT_FOLLOWLOCATION] = (bool) isset($this->options['follow_location']) ? $this->options['follow_location'] : true;
 		}

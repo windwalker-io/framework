@@ -64,14 +64,7 @@ class NativeBridge implements SessionBridgeInterface
 		 * Thus destructors can use sessions but session handler can't use objects.
 		 * So we are moving session closure before destructing objects.
 		 */
-		if (version_compare(PHP_VERSION, '5.4.0', '>='))
-		{
-			session_register_shutdown();
-		}
-		else
-		{
-			register_shutdown_function('session_write_close');
-		}
+		session_register_shutdown();
 
 		session_cache_limiter('none');
 

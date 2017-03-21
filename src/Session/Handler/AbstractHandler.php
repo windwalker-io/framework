@@ -39,21 +39,7 @@ abstract class AbstractHandler implements HandlerInterface
 	 */
 	public function register()
 	{
-		if (version_compare(phpversion(), '5.4.0', '>='))
-		{
-			session_set_save_handler($this, true);
-		}
-		else
-		{
-			session_set_save_handler(
-				[$this, 'open'],
-				[$this, 'close'],
-				[$this, 'read'],
-				[$this, 'write'],
-				[$this, 'destroy'],
-				[$this, 'gc']
-			);
-		}
+		session_set_save_handler($this, true);
 	}
 }
 

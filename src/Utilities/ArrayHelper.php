@@ -1017,7 +1017,7 @@ class ArrayHelper
 				}
 				else
 				{
-					// Workaround for PHP 5.4 object compare bug, see: https://bugs.php.net/bug.php?id=62976
+					// Workaround for PHP object compare bug, see: https://bugs.php.net/bug.php?id=62976
 					$compare1 = is_object(static::getByPath($array, $key)) ? get_object_vars(static::getByPath($array, $key)) : static::getByPath($array, $key);
 					$compare2 = is_object($val) ? get_object_vars($val) : $val;
 

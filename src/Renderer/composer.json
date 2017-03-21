@@ -20,7 +20,7 @@
     },
     "suggest": {
         "league/plates": "Install 3.* if you require Plates template engine.",
-        "illuminate/view": "Install 4.1.*(PHP 5.3) or 5.*(PHP 5.4) if you require Laravel Blade engine.",
+        "illuminate/view": "Install 5.* if you require Laravel Blade engine.",
         "twig/twig": "Install 1.* if you require Twig engine.",
         "mustache/mustache": "Install 2.* if you require Mustache engine."
     },
