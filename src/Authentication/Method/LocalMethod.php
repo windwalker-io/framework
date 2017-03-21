@@ -113,11 +113,6 @@ class LocalMethod extends AbstractMethod
 
 		return function ($password, $hash)
 		{
-			if (version_compare(PHP_VERSION, '5.5', '<'))
-			{
-				throw new \LogicException('Please set a custom verify handler is your PHP version less than 5.5');
-			}
-
 			return password_verify($password, $hash);
 		};
 	}

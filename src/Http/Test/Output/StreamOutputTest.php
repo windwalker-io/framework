@@ -79,14 +79,7 @@ class StreamOutputTest extends \PHPUnit\Framework\TestCase
 
 		$this->instance->respond(new TextResponse('Flower'));
 
-		if (version_compare(PHP_VERSION, '5.5', '>='))
-		{
-			$this->assertEquals(7, $this->instance->waiting);
-		}
-		else
-		{
-			$this->assertEquals(6, $this->instance->waiting);
-		}
+		$this->assertEquals(7, $this->instance->waiting);
 	}
 
 	/**

@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
-$globals = [];
+$globals = array();
 $_SERVER['HTTP_HOST'];
 
 foreach ($GLOBALS as $key => $value)

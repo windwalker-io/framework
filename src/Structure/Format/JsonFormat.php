@@ -30,21 +30,9 @@ class JsonFormat implements FormatInterface
 		$depth  = StructureHelper::getValue($options, 'depth');
 		$option = StructureHelper::getValue($options, 'options', 0);
 
-		if (version_compare(PHP_VERSION, '5.5', '>'))
-		{
-			$depth = $depth ? : 512;
+		$depth = $depth ? : 512;
 
-			return json_encode($struct, $option, $depth);
-		}
-
-		/*
-		if ($depth)
-		{
-			throw new \InvalidArgumentException('Depth in json_encode() only support higher than PHP 5.5');
-		}
-		*/
-
-		return json_encode($struct, $option);
+		return json_encode($struct, $option, $depth);
 	}
 
 	/**
