@@ -6,11 +6,11 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-return array(
+return [
 	'WINDWALKER_LANGUAGE_TEST_FLOWER' => "Flower",
-	'WINDWALKER_LANGUAGE' => array(
-			'TEST' => array(
+	'WINDWALKER_LANGUAGE' => [
+			'TEST' => [
 				'SAKURA' => "Sakura"
-			)
-		)
-);
+			]
+	]
+];

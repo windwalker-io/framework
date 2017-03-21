@@ -20,7 +20,7 @@ abstract class ConnectionContainer
 	 *
 	 * @var  \PDO[]|resource[]
 	 */
-	protected static $connections = array();
+	protected static $connections = [];
 
 	/**
 	 * getConnection

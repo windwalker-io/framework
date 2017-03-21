@@ -249,7 +249,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$items = $this->db->getReader('SELECT * FROM #__categories')->loadObjectList();
 
-		$this->assertEquals(array(), $items);
+		$this->assertEquals([], $items);
 	}
 
 	/**
@@ -263,7 +263,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$columns = $this->db->getTable('#__categories')->getColumns();
 
-		$this->assertEquals(array('id', 'title', 'ordering', 'params'), $columns);
+		$this->assertEquals(['id', 'title', 'ordering', 'params'], $columns);
 	}
 
 	/**
@@ -307,11 +307,11 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$table = $this->db->getTable('#__categories');
 
-		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State', array('position' => 'AFTER ordering', 'length' => 1));
+		$table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State', ['position' => 'AFTER ordering', 'length' => 1]);
 
 		$columns = $table->getColumns();
 
-		$this->assertEquals(array('id', 'title', 'ordering', 'state', 'params'), $columns);
+		$this->assertEquals(['id', 'title', 'ordering', 'state', 'params'], $columns);
 	}
 
 	/**
@@ -329,7 +329,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$columns = $table->getColumns();
 
-		$this->assertEquals(array('id', 'title', 'ordering', 'params'), $columns);
+		$this->assertEquals(['id', 'title', 'ordering', 'params'], $columns);
 	}
 
 	/**
@@ -402,7 +402,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addIndex('key', array('ordering', 'id'), 'idx_ordering');
+		$table->addIndex('key', ['ordering', 'id'], 'idx_ordering');
 
 		$indexes = $table->getIndexes();
 

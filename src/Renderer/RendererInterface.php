@@ -21,7 +21,7 @@ interface RendererInterface
 	 *
 	 * @return  string
 	 */
-	public function render($file, $data = array());
+	public function render($file, $data = []);
 
 	/**
 	 * Method to escape output.

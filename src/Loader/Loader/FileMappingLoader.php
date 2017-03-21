@@ -20,7 +20,7 @@ class FileMappingLoader extends AbstractLoader
 	 *
 	 * @var  array
 	 */
-	protected $maps = array();
+	protected $maps = [];
 
 	/**
 	 * addMap

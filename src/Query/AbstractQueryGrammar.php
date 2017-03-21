@@ -27,7 +27,7 @@ abstract class AbstractQueryGrammar implements QueryGrammarInterface
 	 *
 	 * @var  QueryGrammarInterface[]
 	 */
-	protected static $instance = array();
+	protected static $instance = [];
 
 	/**
 	 * getInstance
@@ -57,7 +57,7 @@ abstract class AbstractQueryGrammar implements QueryGrammarInterface
 	{
 		$args = func_get_args();
 
-		$sql = array();
+		$sql = [];
 
 		foreach ($args as $arg)
 		{

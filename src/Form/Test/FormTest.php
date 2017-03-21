@@ -120,10 +120,10 @@ class FormTest extends AbstractBaseTestCase
 		$form = new Form;
 
 		$form->addFields(
-			array(
+			[
 				new TextField('foo'),
 				new TextField('bar'),
-			)
+			]
 		);
 
 		$fields = $form->getFields();
@@ -133,10 +133,10 @@ class FormTest extends AbstractBaseTestCase
 
 		// Test fieldset
 		$form->addFields(
-			array(
+			[
 				new TextField('bird'),
 				new TextField('rabbit'),
-			),
+			],
 			'flower'
 		);
 
@@ -147,10 +147,10 @@ class FormTest extends AbstractBaseTestCase
 
 		// Test Group
 		$form->addFields(
-			array(
+			[
 				new TextField('egg'),
 				new TextField('hotdog'),
-			),
+			],
 			'rose',
 			'sakura'
 		);
@@ -386,12 +386,12 @@ class FormTest extends AbstractBaseTestCase
 	 */
 	public function testBind()
 	{
-		$data = array(
+		$data = [
 			'id' => 5,
-			'u' => array(
+			'u' => [
 				'username' => 'foo'
-			)
-		);
+			]
+		];
 
 		$form = $this->getByDefine();
 
@@ -412,16 +412,16 @@ class FormTest extends AbstractBaseTestCase
 	{
 		$form = $this->getByDefine();
 
-		$data = array(
+		$data = [
 			'id' => 5,
-			'u' => array(
+			'u' => [
 				'username' => 'foo'
-			),
-			'b' => array(
+			],
+			'b' => [
 				'email' => 'bar@gmail.com',
 				'password' => '123_ abc4456qwe:$yui'
-			)
-		);
+			]
+		];
 
 		$form->bind($data);
 
@@ -429,16 +429,16 @@ class FormTest extends AbstractBaseTestCase
 
 		$this->assertTrue($result);
 
-		$data = array(
+		$data = [
 			'id' => 5,
-			'u' => array(
+			'u' => [
 				'username' => 'foo'
-			),
-			'b' => array(
+			],
+			'b' => [
 				'email' => 'bar/gmail.com',
 				'password' => '123_ abc4456qwe:$yui'
-			)
-		);
+			]
+		];
 
 		$form->bind($data);
 
@@ -463,16 +463,16 @@ class FormTest extends AbstractBaseTestCase
 	{
 		$form = $this->getByDefine();
 
-		$data = array(
+		$data = [
 			'id' => 5,
-			'u' => array(
+			'u' => [
 				'username' => 'foo'
-			),
-			'b' => array(
+			],
+			'b' => [
 				'email' => 'bar/gmail.com',
 				'password' => '123_ abc4456qwe:$yui'
-			)
-		);
+			]
+		];
 
 		$form->bind($data);
 
@@ -565,16 +565,16 @@ class FormTest extends AbstractBaseTestCase
 	{
 		$form = $this->getByDefine();
 
-		$data = array(
+		$data = [
 			'id' => '123abc',
-			'u' => array(
+			'u' => [
 				'username' => 'foo'
-			),
-			'b' => array(
+			],
+			'b' => [
 				'email' => 'bar@gmail.com',
 				'password' => '123_ abc/\4,456qwe:$yui'
-			)
-		);
+			]
+		];
 
 		$form->bind($data);
 

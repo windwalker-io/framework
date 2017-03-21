@@ -28,7 +28,7 @@ class PathCollection extends ArrayObject
 	 *
 	 * @var PathLocator[]
 	 */
-	protected $storage = array();
+	protected $storage = [];
 
 	/**
 	 * PathCollection constructor.
@@ -37,7 +37,7 @@ class PathCollection extends ArrayObject
 	 *
 	 * @since  2.0
 	 */
-	public function __construct($paths = array())
+	public function __construct($paths = [])
 	{
 		$this->addPaths($paths);
 	}
@@ -53,7 +53,7 @@ class PathCollection extends ArrayObject
 	 */
 	public function addPaths($paths)
 	{
-		$paths = is_array($paths) ? $paths : array($paths);
+		$paths = is_array($paths) ? $paths : [$paths];
 
 		foreach ($paths as $key => $path)
 		{
@@ -380,7 +380,7 @@ class PathCollection extends ArrayObject
 	 */
 	public function toArray($reindex = false)
 	{
-		$array = array();
+		$array = [];
 
 		foreach ($this as $key => $path)
 		{

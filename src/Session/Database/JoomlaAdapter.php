@@ -30,7 +30,7 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
 	 * @param DatabaseDriver $db
 	 * @param array          $options
 	 */
-	public function __construct(DatabaseDriver $db, $options = array())
+	public function __construct(DatabaseDriver $db, $options = [])
 	{
 		parent::__construct($db, $options);
 	}
@@ -65,11 +65,11 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
 	 */
 	public function write($id, $data)
 	{
-		$data = array(
+		$data = [
 			$this->options['data_col'] => $data,
 			$this->options['time_col'] => (int) time(),
 			$this->options['id_col'] => $id,
-		);
+		];
 
 		$data = (object) $data;
 

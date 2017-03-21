@@ -101,7 +101,7 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
 
 		if (!is_array($func))
 		{
-			$func = array($func);
+			$func = [$func];
 		}
 
 		$this->assertNotInstanceOf('Windwalker\Loader\Loader\Psr4Loader', $func[0]);

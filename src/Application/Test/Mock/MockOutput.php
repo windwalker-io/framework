@@ -22,14 +22,14 @@ class MockResponse extends Response
 	 *
 	 * @var  string[]
 	 */
-	public $sentHeaders = array();
+	public $sentHeaders = [];
 
 	/**
 	 * Property headers.
 	 *
 	 * @var  array
 	 */
-	public $headers = array();
+	public $headers = [];
 
 	/**
 	 * Method to send a header to the client.  We are wrapping this to isolate the header() function

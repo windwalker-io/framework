@@ -28,7 +28,7 @@ interface DispatcherInterface extends EventTriggerableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function addListener($listener, $priorities = array());
+	public function addListener($listener, $priorities = []);
 
 	/**
 	 * Add single listener.

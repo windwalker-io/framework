@@ -94,7 +94,7 @@ abstract class StreamHelper
 	 *
 	 * @return  void
 	 */
-	public static function sendAttachment($source, ResponseInterface $response = null, $options = array())
+	public static function sendAttachment($source, ResponseInterface $response = null, $options = [])
 	{
 		$stream = new Stream($source, 'r');
 

@@ -79,10 +79,11 @@ class TextareaField extends TextField
 	 */
 	protected function getAccessors()
 	{
-		return array_merge(parent::getAccessors(), array(
+		return array_merge(parent::getAccessors(), [
 			'cols' => 'cols',
 			'rows' => 'rows'
-		));
+		]
+		);
 	}
 }
 

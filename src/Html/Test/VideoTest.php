@@ -55,7 +55,7 @@ class VideoTest extends AbstractDomTestCase
 	 */
 	public function testToString()
 	{
-		$video = Video::create(array('id' => 'foo'))
+		$video = Video::create(['id' => 'foo'])
 			->addMp4Source('foo.mp4')
 			->addOggSource('foo.ogg')
 			->addWebMSource('foo.webm', 'screen and (min-width:320px)')

@@ -349,7 +349,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
 	{
 		foreach ($this->getIterator() as $key => $value)
 		{
-			call_user_func_array($callback, array(&$value, $key, $userdata));
+			call_user_func_array($callback, [&$value, $key, $userdata]);
 
 			$this[$key] = $value;
 		}

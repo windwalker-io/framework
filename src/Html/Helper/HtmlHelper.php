@@ -29,18 +29,18 @@ abstract class HtmlHelper extends TestDomHelper
 	{
 		if (function_exists('tidy_repair_string') && $use_tidy)
 		{
-			$TidyConfig = array(
+			$TidyConfig = [
 				'indent' => true,
 				'output-xhtml' => true,
 				'show-body-only' => true,
 				'wrap' => false
-			);
+			];
 
 			return tidy_repair_string($html, $TidyConfig, 'utf8');
 		}
 		else
 		{
-			$arr_single_tags = array('meta', 'img', 'br', 'link', 'area');
+			$arr_single_tags = ['meta', 'img', 'br', 'link', 'area'];
 
 			// Put all opened tags into an array
 			preg_match_all("#<([a-z]+)( .*)?(?!/)>#iU", $html, $result);
@@ -90,7 +90,7 @@ abstract class HtmlHelper extends TestDomHelper
 	 *
 	 * @since  2.0
 	 */
-	public static function getJSObject($data = array(), $quoteKey = false)
+	public static function getJSObject($data = [], $quoteKey = false)
 	{
 		if ($data === null)
 		{
@@ -114,7 +114,7 @@ abstract class HtmlHelper extends TestDomHelper
 			case 'array':
 				if (!static::isAssociativeArray($data))
 				{
-					$child = array();
+					$child = [];
 
 					foreach ($data as $value)
 					{
@@ -128,7 +128,7 @@ abstract class HtmlHelper extends TestDomHelper
 			case 'object':
 				$array = is_object($data) ? get_object_vars($data) : $data;
 
-				$row = array();
+				$row = [];
 
 				foreach ($array as $key => $value)
 				{

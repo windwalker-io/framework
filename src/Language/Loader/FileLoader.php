@@ -43,7 +43,7 @@ class FileLoader extends AbstractLoader
 	 * @param \SplPriorityQueue|string[] $paths
 	 * @param int                        $priority
 	 */
-	public function __construct($paths = array(), $priority = self::NORMAL)
+	public function __construct($paths = [], $priority = self::NORMAL)
 	{
 		if (!($paths instanceof \SplPriorityQueue))
 		{

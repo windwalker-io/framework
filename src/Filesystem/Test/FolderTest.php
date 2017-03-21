@@ -118,7 +118,7 @@ class FolderTest extends AbstractFilesystemTest
 		$files = Folder::files(__DIR__ . '/dest/folder1/level2', true);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array(__DIR__ . '/dest/folder1/level2/file3')),
+			FilesystemTestHelper::cleanPaths([__DIR__ . '/dest/folder1/level2/file3']),
 			FilesystemTestHelper::cleanPaths($files)
 		);
 
@@ -126,14 +126,14 @@ class FolderTest extends AbstractFilesystemTest
 		$files = Folder::files(__DIR__ . '/dest/folder1/level2', true, Folder::PATH_BASENAME);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array('file3')),
+			FilesystemTestHelper::cleanPaths(['file3']),
 			FilesystemTestHelper::cleanPaths($files)
 		);
 
 		$files = Folder::files(__DIR__ . '/dest/folder1', true, Folder::PATH_RELATIVE);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array('level2/file3', 'path1')),
+			FilesystemTestHelper::cleanPaths(['level2/file3', 'path1']),
 			FilesystemTestHelper::cleanPaths($files)
 		);
 
@@ -160,7 +160,7 @@ class FolderTest extends AbstractFilesystemTest
 		$items = Folder::items(static::$dest . '/folder1/level2', true);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array(static::$dest . '/folder1/level2/file3')),
+			FilesystemTestHelper::cleanPaths([static::$dest . '/folder1/level2/file3']),
 			FilesystemTestHelper::cleanPaths($items)
 		);
 
@@ -168,7 +168,7 @@ class FolderTest extends AbstractFilesystemTest
 		$items = Folder::items(static::$dest . '/folder1/level2', true, Folder::PATH_BASENAME);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array('file3')),
+			FilesystemTestHelper::cleanPaths(['file3']),
 			FilesystemTestHelper::cleanPaths($items)
 		);
 
@@ -195,7 +195,7 @@ class FolderTest extends AbstractFilesystemTest
 		$folders = Folder::folders(static::$dest . '/folder1', true);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array(static::$dest . '/folder1/level2')),
+			FilesystemTestHelper::cleanPaths([static::$dest . '/folder1/level2']),
 			FilesystemTestHelper::cleanPaths($folders)
 		);
 
@@ -203,14 +203,14 @@ class FolderTest extends AbstractFilesystemTest
 		$folders = Folder::folders(static::$dest . '/folder1', true, Folder::PATH_BASENAME);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array('level2')),
+			FilesystemTestHelper::cleanPaths(['level2']),
 			FilesystemTestHelper::cleanPaths($folders)
 		);
 
 		$folders = Folder::folders(static::$dest, true, Folder::PATH_RELATIVE);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array('folder1', 'folder1/level2', 'folder2')),
+			FilesystemTestHelper::cleanPaths(['folder1', 'folder1/level2', 'folder2']),
 			FilesystemTestHelper::cleanPaths($folders)
 		);
 

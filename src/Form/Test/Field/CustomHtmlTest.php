@@ -40,7 +40,7 @@ class CustomHtmlTest extends AbstractDomTestCase
 			'Flower'
 		);
 
-		$this->instance->setAttribute('content', new HtmlElement('div', 'Sakura', array('data-test-element' => true)));
+		$this->instance->setAttribute('content', new HtmlElement('div', 'Sakura', ['data-test-element' => true]));
 	}
 
 	/**

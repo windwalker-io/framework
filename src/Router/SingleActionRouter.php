@@ -23,7 +23,7 @@ class SingleActionRouter extends Router
 	 *
 	 * @var  array
 	 */
-	protected $variables = array();
+	protected $variables = [];
 
 	/**
 	 * Class init.
@@ -31,7 +31,7 @@ class SingleActionRouter extends Router
 	 * @param array            $routes
 	 * @param MatcherInterface $matcher
 	 */
-	public function __construct(array $routes = array(), MatcherInterface $matcher = null)
+	public function __construct(array $routes = [], MatcherInterface $matcher = null)
 	{
 		$this->addMaps($routes);
 
@@ -60,7 +60,7 @@ class SingleActionRouter extends Router
 			throw new \LogicException('Do not use Route object in ' . get_called_class());
 		}
 
-		return parent::addRoute(null, $pattern, array('_controller' => $controller));
+		return parent::addRoute(null, $pattern, ['_controller' => $controller]);
 	}
 
 	/**
@@ -73,7 +73,7 @@ class SingleActionRouter extends Router
 	 * @throws  \UnexpectedValueException
 	 * @return  array|boolean
 	 */
-	public function match($route, $method = 'GET', $options = array())
+	public function match($route, $method = 'GET', $options = [])
 	{
 		$matched = parent::match($route, $method, $options);
 

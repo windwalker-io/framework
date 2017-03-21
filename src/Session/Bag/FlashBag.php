@@ -27,7 +27,7 @@ class FlashBag extends SessionBag implements FlashBagInterface
 	{
 		if (!isset($this->data[$type]) || !is_array($this->data[$type]))
 		{
-			$this->data[$type] = array();
+			$this->data[$type] = [];
 		}
 
 		foreach ((array) $msg as $msg)
@@ -61,7 +61,7 @@ class FlashBag extends SessionBag implements FlashBagInterface
 	 */
 	public function getType($type)
 	{
-		return isset($this->data[$type]) ? $this->data[$type] : array();
+		return isset($this->data[$type]) ? $this->data[$type] : [];
 	}
 }
 

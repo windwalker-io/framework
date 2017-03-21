@@ -50,7 +50,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 	 *
 	 * @var  array
 	 */
-	protected $allowMethods = array(
+	protected $allowMethods = [
 		'CONNECT',
 		'DELETE',
 		'GET',
@@ -60,7 +60,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 		'POST',
 		'PUT',
 		'TRACE',
-	);
+	];
 
 	/**
 	 * Class init.
@@ -70,7 +70,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 	 * @param  string|StreamInterface  $body     The request body.
 	 * @param  array                   $headers  The request headers.
 	 */
-	public function __construct($uri = null, $method = null, $body = 'php://memory', $headers = array())
+	public function __construct($uri = null, $method = null, $body = 'php://memory', $headers = [])
 	{
 		if (!$body instanceof StreamInterface)
 		{
@@ -288,7 +288,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
 		}
 
 		$new->headerNames['host'] = 'Host';
-		$new->headers['Host'] = array($host);
+		$new->headers['Host'] = [$host];
 
 		return $new;
 	}

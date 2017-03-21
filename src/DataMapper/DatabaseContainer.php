@@ -34,7 +34,7 @@ class DatabaseContainer
 	 *
 	 * @return AbstractDatabaseDriver
 	 */
-	public static function getDb($driver = null, $option = array(), $forceNew = false)
+	public static function getDb($driver = null, $option = [], $forceNew = false)
 	{
 		if (is_callable(static::$db))
 		{

@@ -24,7 +24,7 @@ class Router
 	 *
 	 * @var  Route[]
 	 */
-	protected $routes = array();
+	protected $routes = [];
 
 	/**
 	 * Property matcher.
@@ -46,7 +46,7 @@ class Router
 	 * @param array            $routes
 	 * @param MatcherInterface $matcher
 	 */
-	public function __construct(array $routes = array(), MatcherInterface $matcher = null)
+	public function __construct(array $routes = [], MatcherInterface $matcher = null)
 	{
 		$this->addRoutes($routes);
 
@@ -61,7 +61,7 @@ class Router
 	 *
 	 * @return  Route
 	 */
-	public function addMap($pattern, $variables = array())
+	public function addMap($pattern, $variables = [])
 	{
 		$route = new Route(null, $pattern, $variables);
 
@@ -98,7 +98,7 @@ class Router
 	 *
 	 * @return  Route
 	 */
-	public function addRoute($name, $pattern = null, $variables = array(), $method = array(), $options = array())
+	public function addRoute($name, $pattern = null, $variables = [], $method = [], $options = [])
 	{
 		if ($name instanceof Route)
 		{
@@ -209,7 +209,7 @@ class Router
 	 *
 	 * @return  Route|boolean
 	 */
-	public function match($route, $method = 'GET', $options = array())
+	public function match($route, $method = 'GET', $options = [])
 	{
 		// Trim the query string off.
 		$route = preg_replace('/([^?]*).*/u', '\1', $route);
@@ -238,7 +238,7 @@ class Router
 	 *
 	 * @return string
 	 */
-	public function build($name, $queries = array(), $rootSlash = false)
+	public function build($name, $queries = [], $rootSlash = false)
 	{
 		if (!$this->hasRoute($name))
 		{

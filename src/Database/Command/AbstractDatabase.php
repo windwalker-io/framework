@@ -36,7 +36,7 @@ abstract class AbstractDatabase
 	 *
 	 * @var  array
 	 */
-	protected $tableCache = array();
+	protected $tableCache = [];
 
 	/**
 	 * Constructor.
@@ -241,7 +241,7 @@ abstract class AbstractDatabase
 	 */
 	public function reset()
 	{
-		$this->tableCache = array();
+		$this->tableCache = [];
 		
 		return $this;
 	}

@@ -294,7 +294,7 @@ abstract class Folder
 	 */
 	public static function files($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
-		$files = array();
+		$files = [];
 
 		/** @var $file \SplFileInfo */
 		foreach (Filesystem::files($path, $recursive) as $file)
@@ -334,7 +334,7 @@ abstract class Folder
 	 */
 	public static function items($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
-		$files = array();
+		$files = [];
 		$pathLength = strlen($path);
 
 		/** @var $file \SplFileInfo */
@@ -375,7 +375,7 @@ abstract class Folder
 	 */
 	public static function folders($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
 	{
-		$files = array();
+		$files = [];
 
 		/** @var $file \SplFileInfo */
 		foreach (Filesystem::folders($path, $recursive) as $file)
@@ -418,7 +418,7 @@ abstract class Folder
 	 */
 	public static function listFolderTree($path, $maxLevel = 3, $level = 0, $parent = 0)
 	{
-		$dirs = array();
+		$dirs = [];
 
 		static $index;
 		static $base;
@@ -441,13 +441,13 @@ abstract class Folder
 				$id = ++$index;
 				$fullName = Path::clean($path . '/' . $name);
 
-				$dirs[] = array(
+				$dirs[] = [
 					'id' => $id,
 					'parent' => $parent,
 					'name' => $name,
 					'fullname' => $fullName,
 					'relative' => trim(str_replace($base, '', $fullName), DIRECTORY_SEPARATOR)
-				);
+				];
 
 				$dirs2 = self::listFolderTree($fullName, $maxLevel, $level + 1, $id);
 
@@ -469,7 +469,7 @@ abstract class Folder
 	 */
 	public static function makeSafe($path)
 	{
-		$regex = array('#[^A-Za-z0-9_\\\/\(\)\[\]\{\}\#\$\^\+\.\'~`!@&=;,-]#');
+		$regex = ['#[^A-Za-z0-9_\\\/\(\)\[\]\{\}\#\$\^\+\.\'~`!@&=;,-]#'];
 
 		return preg_replace($regex, '', $path);
 	}

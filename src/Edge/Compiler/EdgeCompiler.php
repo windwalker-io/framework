@@ -24,14 +24,14 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 *
 	 * @var  \callable[]
 	 */
-	protected $directives = array();
+	protected $directives = [];
 
 	/**
 	 * Property parsers.
 	 *
 	 * @var  \callable[]
 	 */
-	protected $parsers = array();
+	protected $parsers = [];
 
 	/**
 	 * The file currently being compiled.
@@ -45,21 +45,21 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 *
 	 * @var array
 	 */
-	protected $rawTags = array('{!!', '!!}');
+	protected $rawTags = ['{!!', '!!}'];
 
 	/**
 	 * Array of opening and closing tags for regular echos.
 	 *
 	 * @var array
 	 */
-	protected $contentTags = array('{{', '}}');
+	protected $contentTags = ['{{', '}}'];
 
 	/**
 	 * Array of opening and closing tags for escaped echos.
 	 *
 	 * @var array
 	 */
-	protected $escapedTags = array('{{{', '}}}');
+	protected $escapedTags = ['{{{', '}}}'];
 
 	/**
 	 * The "regular" / legacy echo string format.
@@ -73,7 +73,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 *
 	 * @var array
 	 */
-	protected $footer = array();
+	protected $footer = [];
 
 	/**
 	 * Placeholder to temporary mark the position of verbatim blocks.
@@ -87,7 +87,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 *
 	 * @var array
 	 */
-	protected $verbatimBlocks = array();
+	protected $verbatimBlocks = [];
 
 	/**
 	 * Counter to keep track of nested forelse statements.
@@ -101,12 +101,12 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 *
 	 * @var array
 	 */
-	protected $compilers = array(
+	protected $compilers = [
 		'Parsers',
 		'Statements',
 		'Comments',
 		'Echos',
-	);
+	];
 
 	/**
 	 * compile
@@ -124,7 +124,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 			$value = $this->storeVerbatimBlocks($value);
 		}
 
-		$this->footer = array();
+		$this->footer = [];
 
 		// Here we will loop through all of the tokens returned by the Zend lexer and
 		// parse each one into the corresponding valid PHP. We will then have this
@@ -182,7 +182,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 			return array_shift($this->verbatimBlocks);
 		}, $result);
 
-		$this->verbatimBlocks = array();
+		$this->verbatimBlocks = [];
 
 		return $result;
 	}
@@ -247,11 +247,11 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function getEchoMethods()
 	{
-		$methods = array(
+		$methods = [
 			'compileRawEchos'     => strlen(stripcslashes($this->rawTags[0])),
 			'compileEscapedEchos' => strlen(stripcslashes($this->escapedTags[0])),
 			'compileRegularEchos' => strlen(stripcslashes($this->contentTags[0])),
-		);
+		];
 
 		uksort($methods, function ($method1, $method2) use ($methods)
 		{
@@ -319,7 +319,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	protected function compileStatements($value)
 	{
-		return preg_replace_callback('/\B@(@?\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x', array($this, 'compileStatement'), $value);
+		return preg_replace_callback('/\B@(@?\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x', [$this, 'compileStatement'], $value);
 	}
 
 	/**
@@ -972,7 +972,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	 */
 	public function setRawTags($openTag, $closeTag)
 	{
-		$this->rawTags = array(preg_quote($openTag), preg_quote($closeTag));
+		$this->rawTags = [preg_quote($openTag), preg_quote($closeTag)];
 	}
 
 	/**
@@ -988,7 +988,7 @@ class EdgeCompiler implements EdgeCompilerInterface
 	{
 		$property = ($escaped === true) ? 'escapedTags' : 'contentTags';
 
-		$this->{$property} = array(preg_quote($openTag), preg_quote($closeTag));
+		$this->{$property} = [preg_quote($openTag), preg_quote($closeTag)];
 	}
 
 	/**

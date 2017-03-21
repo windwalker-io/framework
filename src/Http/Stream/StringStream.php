@@ -43,7 +43,7 @@ class StringStream extends Stream implements StreamInterface
 	 *
 	 * @var  array
 	 */
-	private $metadata = array (
+	private $metadata = [
 		'wrapper_type' => 'string',
 		'stream_type'  => 'STDIO',
 		'mode'         => 'r+b',
@@ -53,7 +53,7 @@ class StringStream extends Stream implements StreamInterface
 		'timed_out'    => false,
 		'blocked'      => true,
 		'eof'          => false,
-	);
+	];
 
 	/**
 	 * Property seekable.
@@ -107,7 +107,7 @@ class StringStream extends Stream implements StreamInterface
 			throw new \InvalidArgumentException('StringStream do not support resource.');
 		}
 
-		if (is_array($stream) || (is_object($stream) && !is_callable(array($stream, '__toString'))))
+		if (is_array($stream) || (is_object($stream) && !is_callable([$stream, '__toString'])))
 		{
 			throw new \InvalidArgumentException('StringStream only support string as resource.');
 		}

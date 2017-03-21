@@ -24,7 +24,7 @@ class Psr4Loader extends AbstractLoader
 	 *
 	 * @var array
 	 */
-	protected $prefixes = array();
+	protected $prefixes = [];
 
 	/**
 	 * Adds a base directory for a namespace prefix.
@@ -50,7 +50,7 @@ class Psr4Loader extends AbstractLoader
 		// Initialize the namespace prefix array
 		if (isset($this->prefixes[$prefix]) === false)
 		{
-			$this->prefixes[$prefix] = array();
+			$this->prefixes[$prefix] = [];
 		}
 
 		// Retain the base directory for the namespace prefix

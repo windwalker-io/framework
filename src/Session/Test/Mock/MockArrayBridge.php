@@ -218,7 +218,7 @@ class MockArrayBridge implements SessionBridgeInterface
 	public function destroy()
 	{
 		// Clear out the session
-		$this->data = array();
+		$this->data = [];
 	}
 
 	/**

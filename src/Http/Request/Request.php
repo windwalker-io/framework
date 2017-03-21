@@ -48,7 +48,7 @@ class Request extends AbstractRequest implements RequestInterface
 
 		if (!$this->hasHeader('host') && ($this->uri && $this->uri->getHost()))
 		{
-			$headers['Host'] = array($this->getHostFromUri());
+			$headers['Host'] = [$this->getHostFromUri()];
 		}
 
 		return $headers;
@@ -75,10 +75,10 @@ class Request extends AbstractRequest implements RequestInterface
 		{
 			if (strtolower($name) === 'host' && ($this->uri && $this->uri->getHost()))
 			{
-				return array($this->getHostFromUri());
+				return [$this->getHostFromUri()];
 			}
 
-			return array();
+			return [];
 		}
 
 		$name = $this->getHeaderName($name);
@@ -100,7 +100,7 @@ class Request extends AbstractRequest implements RequestInterface
 		if (strtolower($name) === 'host' && ($this->uri && $this->uri->getHost()))
 		{
 			$this->headerNames['host'] = $name;
-			$this->headers[$name] = array($this->getHostFromUri());
+			$this->headers[$name] = [$this->getHostFromUri()];
 		}
 
 		return parent::hasHeader($name);

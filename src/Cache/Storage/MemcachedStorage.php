@@ -27,7 +27,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
 	 *
 	 * @throws \RuntimeException
 	 */
-	public function __construct($driver = null, $ttl = null, $options = array())
+	public function __construct($driver = null, $ttl = null, $options = [])
 	{
 		if (!extension_loaded('memcached') || !class_exists('Memcached'))
 		{

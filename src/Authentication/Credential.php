@@ -20,7 +20,7 @@ class Credential implements \ArrayAccess
 	 *
 	 * @param array|object $data
 	 */
-	public function __construct($data = array())
+	public function __construct($data = [])
 	{
 		$this->bind($data);
 	}
@@ -49,7 +49,7 @@ class Credential implements \ArrayAccess
 	 *
 	 * @return  static
 	 */
-	public function bind($values = array())
+	public function bind($values = [])
 	{
 		if (is_object($values))
 		{

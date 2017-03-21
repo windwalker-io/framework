@@ -58,18 +58,18 @@ class DListTest extends AbstractDomTestCase
 
 		$this->assertEquals('<dl></dl>', (string) $list);
 
-		$list = new DList(null, array('id' => 'list', 'class' => 'nav'));
+		$list = new DList(null, ['id' => 'list', 'class' => 'nav']);
 
 		$this->assertEquals('<dl id="list" class="nav"></dl>', (string) $list);
 
-		$items = array(
+		$items = [
 			new DListTitle('Spider Man'),
 			new DListDescription('Remember, with great power, comes great responsibility'),
 			new DListTitle('Forrest Gump'),
 			new DListDescription('Life was like a box of chocolates.'),
 			new DListTitle('Inception'),
-			new DListDescription('You mustn’t be afraid to dream a little bigger,darling.', array('class' => 'nav-item'))
-		);
+			new DListDescription('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item'])
+		];
 
 		$list = new DList($items);
 
@@ -120,14 +120,14 @@ HTML;
 	 */
 	public function testSetItems()
 	{
-		$items = array(
+		$items = [
 			new DListTitle('Spider Man'),
 			new DListDescription('Remember, with great power, comes great responsibility'),
 			new DListTitle('Forrest Gump'),
 			new DListDescription('Life was like a box of chocolates.'),
 			new DListTitle('Inception'),
-			new DListDescription('You mustn’t be afraid to dream a little bigger,darling.', array('class' => 'nav-item'))
-		);
+			new DListDescription('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item'])
+		];
 
 		$list = new DList;
 		$list->setItems($items);
@@ -159,7 +159,7 @@ HTML;
 
 		$list->addDescription('Spider Man', 'Remember, with great power, comes great responsibility')
 			->addDescription('Forrest Gump', 'Life was like a box of chocolates.')
-			->addDescription('Inception', 'You mustn’t be afraid to dream a little bigger,darling.', array(), array('class' => 'nav-item'));
+			->addDescription('Inception', 'You mustn’t be afraid to dream a little bigger,darling.', [], ['class' => 'nav-item']);
 
 		$html = <<<HTML
 <dl>

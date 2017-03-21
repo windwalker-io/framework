@@ -114,7 +114,7 @@ class BenchmarkTest extends \PHPUnit\Framework\TestCase
 
 		$results = $this->instance->getResults(Benchmark::SORT_DESC);
 
-		$this->assertEquals(array('md5', 'sha1'), array_keys($results));
+		$this->assertEquals(['md5', 'sha1'], array_keys($results));
 
 		$this->assertEquals(10, $count);
 

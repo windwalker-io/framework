@@ -54,21 +54,21 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $res->getBody());
 		$this->assertEquals('php://memory', $res->getBody()->getMetadata('uri'));
 		$this->assertEquals(200, $res->getStatusCode());
-		$this->assertEquals(array(), $res->getHeaders());
+		$this->assertEquals([], $res->getHeaders());
 
 		// Test with params
 		$body = fopen($tmpfile = tempnam(sys_get_temp_dir(), 'windwalker'), 'wb+');
-		$headers = array(
-			'X-Foo' => array('Flower', 'Sakura'),
+		$headers = [
+			'X-Foo' => ['Flower', 'Sakura'],
 			'Content-Type' => 'application/json'
-		);
+		];
 
 		$res = new Response($body, 404, $headers);
 
 		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $res->getBody());
 		$this->assertEquals($tmpfile, $res->getBody()->getMetadata('uri'));
-		$this->assertEquals(array('Flower', 'Sakura'), $res->getHeader('x-foo'));
-		$this->assertEquals(array('application/json'), $res->getHeader('content-type'));
+		$this->assertEquals(['Flower', 'Sakura'], $res->getHeader('x-foo'));
+		$this->assertEquals(['application/json'], $res->getHeader('content-type'));
 
 		fclose($body);
 

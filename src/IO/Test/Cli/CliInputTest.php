@@ -72,7 +72,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGet()
 	{
-		$argv = array('/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura');
+		$argv = ['/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura'];
 
 		$this->instance = new CliInput($argv);
 		
@@ -95,7 +95,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 		);
 
 		$this->assertEquals(
-			array('blah'),
+			['blah'],
 			$this->instance->args,
 			'Line: ' . __LINE__ . '.'
 		);
@@ -119,7 +119,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testParseLongArguments()
 	{
-		$_SERVER['argv'] = array('/dev/null', '--ab', 'cd', '--ef', '--gh=bam');
+		$_SERVER['argv'] = ['/dev/null', '--ab', 'cd', '--ef', '--gh=bam'];
 
 		$this->instance = new CliInput;
 
@@ -158,7 +158,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testParseShortArguments()
 	{
-		$_SERVER['argv'] = array('/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk');
+		$_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
 		$this->instance = new CliInput;
 
@@ -188,7 +188,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertThat(
 			$this->instance->args,
-			$this->equalTo(array('foobar', 'ghijk')),
+			$this->equalTo(['foobar', 'ghijk']),
 			'Line: ' . __LINE__ . '.'
 		);
 	}
@@ -230,46 +230,46 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function provider_parseArguments()
 	{
-		return array(
+		return [
 
 			// php test.php --foo --bar=baz
-			array(
-				array('test.php', '--foo', '--bar=baz'),
-				array(
+			[
+				['test.php', '--foo', '--bar=baz'],
+				[
 					'foo' => true,
 					'bar' => 'baz'
-				),
-				array()
-			),
+				],
+				[]
+			],
 
 			// php test.php -abc
-			array(
-				array('test.php', '-abc'),
-				array(
+			[
+				['test.php', '-abc'],
+				[
 					'a' => true,
 					'b' => true,
 					'c' => true
-				),
-				array()
-			),
+				],
+				[]
+			],
 
 			// php test.php arg1 arg2 arg3
-			array(
-				array('test.php', 'arg1', 'arg2', 'arg3'),
-				array(),
-				array(
+			[
+				['test.php', 'arg1', 'arg2', 'arg3'],
+				[],
+				[
 					'arg1',
 					'arg2',
 					'arg3'
-				)
-			),
+				]
+			],
 
 			// php test.php plain-arg --foo --bar=baz --funny="spam=eggs" --also-funny=spam=eggs \
 			//      'plain arg 2' -abc -k=value "plain arg 3" --s="original" --s='overwrite' --s
-			array(
-				array('test.php', 'plain-arg', '--foo', '--bar=baz', '--funny=spam=eggs', '--also-funny=spam=eggs',
-					'plain arg 2', '-abc', '-k=value', 'plain arg 3', '--s=original', '--s=overwrite', '--s'),
-				array(
+			[
+				['test.php', 'plain-arg', '--foo', '--bar=baz', '--funny=spam=eggs', '--also-funny=spam=eggs',
+					'plain arg 2', '-abc', '-k=value', 'plain arg 3', '--s=original', '--s=overwrite', '--s'],
+				[
 					'foo' => true,
 					'bar' => 'baz',
 					'funny' => 'spam=eggs',
@@ -279,41 +279,41 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 					'c' => true,
 					'k' => 'value',
 					's' => 'overwrite'
-				),
-				array(
+				],
+				[
 					'plain-arg',
 					'plain arg 2',
 					'plain arg 3'
-				)
-			),
+				]
+			],
 
 			// php test.php --key value -abc not-c-value
-			array(
-				array('test.php', '--key', 'value', '-abc', 'not-c-value'),
-				array(
+			[
+				['test.php', '--key', 'value', '-abc', 'not-c-value'],
+				[
 					'key' => 'value',
 					'a' => true,
 					'b' => true,
 					'c' => true
-				),
-				array(
+				],
+				[
 					'not-c-value'
-				)
-			),
+				]
+			],
 
 			// php test.php --key1 value1 -a --key2 -b b-value --c
-			array(
-				array('test.php', '--key1', 'value1', '-a', '--key2', '-b', 'b-value', '--c'),
-				array(
+			[
+				['test.php', '--key1', 'value1', '-a', '--key2', '-b', 'b-value', '--c'],
+				[
 					'key1' => 'value1',
 					'a' => true,
 					'key2' => true,
 					'b' => 'b-value',
 					'c' => true
-				),
-				array()
-			)
-		);
+				],
+				[]
+			]
+		];
 	}
 
 	/**
@@ -350,11 +350,11 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testAll()
 	{
-		$_SERVER['argv'] = array('/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk');
+		$_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
 		$this->instance = new CliInput;
 
-		$this->assertEquals(array('a' => 1, 'b' => 1, 'c' => 1, 'e' => 'f'), $this->instance->all());
+		$this->assertEquals(['a' => 1, 'b' => 1, 'c' => 1, 'e' => 'f'], $this->instance->all());
 	}
 
 	/**
@@ -382,7 +382,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetArgument()
 	{
-		$_SERVER['argv'] = array('/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk');
+		$_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
 		$input = new CliInput;
 
@@ -399,7 +399,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSetArgument()
 	{
-		$_SERVER['argv'] = array('/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk');
+		$_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
 		$input = new CliInput;
 
@@ -460,7 +460,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetCalledScript()
 	{
-		$_SERVER['argv'] = array('/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk');
+		$_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
 		$input = new CliInput;
 

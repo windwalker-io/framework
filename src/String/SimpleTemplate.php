@@ -28,9 +28,9 @@ abstract class SimpleTemplate
 	 *
 	 * @return  string Replaced template.
 	 */
-	public static function render($string, $data = array(), $tags = array('{{', '}}'))
+	public static function render($string, $data = [], $tags = ['{{', '}}'])
 	{
-		$defaultTags = array('{{', '}}');
+		$defaultTags = ['{{', '}}'];
 
 		$tags = (array) $tags + $defaultTags;
 

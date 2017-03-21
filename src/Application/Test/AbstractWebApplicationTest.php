@@ -134,10 +134,10 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
 
 		$headers = $this->instance->server->getOutput()->message->getHeaders();
 
-		$array = array(
+		$array = [
 			'Location: http://foo.com/foo',
 			'Content-Length: 0'
-		);
+		];
 
 		$this->assertEquals($array, HeaderHelper::toHeaderLine($headers));
 		$this->assertEquals('HTTP/1.1 303 See Other', $this->instance->server->getOutput()->status);

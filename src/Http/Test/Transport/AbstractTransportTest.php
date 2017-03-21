@@ -28,9 +28,9 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @var  array
 	 */
-	protected $options = array(
-		'options' => array()
-	);
+	protected $options = [
+		'options' => []
+	];
 
 	/**
 	 * Test instance.
@@ -112,7 +112,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 		$response = $this->instance->request($request);
 
 		$data = json_decode($response->getBody()->getContents(), true);
-		$this->assertEquals(array('foo' => 'bar', 'baz' => array(3 => 'yoo')), $data['_GET']);
+		$this->assertEquals(['foo' => 'bar', 'baz' => [3 => 'yoo']], $data['_GET']);
 	}
 
 	/**
@@ -144,7 +144,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 		$request = $request->withUri(new PsrUri(dirname(WINDWALKER_TEST_HTTP_URL) . '/wrong.php'))
 			->withMethod('POST');
 
-		$request->getBody()->write(UriHelper::buildQuery(array('foo' => 'bar')));
+		$request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
 
 		$response = $this->instance->request($request);
 
@@ -164,13 +164,13 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
 			->withMethod('POST');
 
-		$request->getBody()->write(UriHelper::buildQuery(array('foo' => 'bar')));
+		$request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
 
 		$response = $this->instance->request($request);
 
 		$data = json_decode($response->getBody()->getContents(), true);
 
-		$this->assertEquals(array('foo' => 'bar'), $data['_POST']);
+		$this->assertEquals(['foo' => 'bar'], $data['_POST']);
 	}
 
 	/**
@@ -185,13 +185,13 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
 			->withMethod('PUT');
 
-		$request->getBody()->write(UriHelper::buildQuery(array('foo' => 'bar')));
+		$request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
 
 		$response = $this->instance->request($request);
 
 		$data = json_decode($response->getBody()->getContents(), true);
 
-		$this->assertEquals(array('foo' => 'bar'), $data['data']);
+		$this->assertEquals(['foo' => 'bar'], $data['data']);
 		$this->assertEquals('PUT', $data['_SERVER']['REQUEST_METHOD']);
 	}
 
@@ -236,8 +236,8 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 
 		$data = json_decode($response->getBody()->getContents(), true);
 
-		$this->assertEquals(array('foo' => 'bar'), $data['_GET']);
-		$this->assertEquals(array('flower' => 'sakura'), $data['_POST']);
+		$this->assertEquals(['foo' => 'bar'], $data['_GET']);
+		$this->assertEquals(['flower' => 'sakura'], $data['_POST']);
 	}
 
 	/**

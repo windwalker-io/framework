@@ -82,7 +82,7 @@ EOF;
 		$template = str_replace('{WIDTH}', $this->maxLength + $this->offsetAfterCommand, $this->template);
 
 		// Sets the body indent.
-		$body = array();
+		$body = [];
 
 		$description = explode("\n", $description);
 

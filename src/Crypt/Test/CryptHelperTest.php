@@ -24,14 +24,14 @@ class CryptHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function limitIntegerProvider()
 	{
-		return array(
-			array(10, 5, 10, 15),
-			array(15, 20, 10, 15),
-			array(10, 5, 10, null),
-			array(20, 20, 10, null),
-			array(5, 5, null, 15),
-			array(15, 20, null, 15),
-		);
+		return [
+			[10, 5, 10, 15],
+			[15, 20, 10, 15],
+			[10, 5, 10, null],
+			[20, 20, 10, null],
+			[5, 5, null, 15],
+			[15, 20, null, 15],
+		];
 	}
 
 	/**

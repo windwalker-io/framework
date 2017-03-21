@@ -32,7 +32,7 @@ class QueryHelper
 	 *
 	 * @var  array
 	 */
-	protected $tables = array();
+	protected $tables = [];
 
 	/**
 	 * Constructor.
@@ -57,14 +57,14 @@ class QueryHelper
 	 */
 	public function addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
 	{
-		$tableStorage = array();
+		$tableStorage = [];
 
 		$tableStorage['name'] = $table;
 		$tableStorage['join']  = strtoupper($joinType);
 
 		if (is_array($condition))
 		{
-			$condition = array($condition);
+			$condition = [$condition];
 		}
 
 		if ($condition)
@@ -111,7 +111,7 @@ class QueryHelper
 	 */
 	public function getSelectFields()
 	{
-		$fields = array();
+		$fields = [];
 
 		$i = 0;
 
@@ -219,7 +219,7 @@ class QueryHelper
 					$value = get_object_vars($value);
 				}
 
-				$value = array_map(array($query, 'quote'), $value);
+				$value = array_map([$query, 'quote'], $value);
 
 				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
 			}

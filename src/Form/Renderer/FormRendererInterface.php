@@ -25,7 +25,7 @@ interface FormRendererInterface
 	 *
 	 * @return string
 	 */
-	public function renderField(AbstractField $field, array $attribs = array());
+	public function renderField(AbstractField $field, array $attribs = []);
 
 	/**
 	 * renderLabel
@@ -35,7 +35,7 @@ interface FormRendererInterface
 	 *
 	 * @return string
 	 */
-	public function renderLabel(AbstractField $field, array $attribs = array());
+	public function renderLabel(AbstractField $field, array $attribs = []);
 
 	/**
 	 * renderInput
@@ -45,5 +45,5 @@ interface FormRendererInterface
 	 *
 	 * @return string
 	 */
-	public function renderInput(AbstractField $field, array $attribs = array());
+	public function renderInput(AbstractField $field, array $attribs = []);
 }

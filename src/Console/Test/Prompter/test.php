@@ -8,6 +8,6 @@
 
 include_once __DIR__ . '/../../../../vendor/autoload.php';
 
-with(new \Windwalker\Console\Prompter\SelectPrompter(null, array(1,2,3)))->ask('123:');
+with(new \Windwalker\Console\Prompter\SelectPrompter(null, [1,2,3]))->ask('123:');
 
 // \Windwalker\Console\Prompter\Prompter::selector('TEXT: ', ['a' => 'aaa', 'b', 'c']);

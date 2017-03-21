@@ -27,24 +27,24 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestArrayUnique()
 	{
-		return array(
-			'Case 1' => array(
+		return [
+			'Case 1' => [
 				// Input
-				array(
-					array(1, 2, 3, array(4)),
-					array(2, 2, 3, array(4)),
-					array(3, 2, 3, array(4)),
-					array(2, 2, 3, array(4)),
-					array(3, 2, 3, array(4)),
-				),
+				[
+					[1, 2, 3, [4]],
+					[2, 2, 3, [4]],
+					[3, 2, 3, [4]],
+					[2, 2, 3, [4]],
+					[3, 2, 3, [4]],
+				],
 				// Expected
-				array(
-					array(1, 2, 3, array(4)),
-					array(2, 2, 3, array(4)),
-					array(3, 2, 3, array(4)),
-				),
-			)
-		);
+				[
+					[1, 2, 3, [4]],
+					[2, 2, 3, [4]],
+					[3, 2, 3, [4]],
+				],
+			]
+		];
 	}
 
 	/**
@@ -56,68 +56,68 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestGetColumn()
 	{
-		return array(
-			'generic array' => array(
-				array(
-					array(
+		return [
+			'generic array' => [
+				[
+					[
 						1, 2, 3, 4, 5
-					), array(
+					], [
 					6, 7, 8, 9, 10
-				), array(
+				], [
 					11, 12, 13, 14, 15
-				), array(
+				], [
 					16, 17, 18, 19, 20
-				)
-				),
+				]
+				],
 				2,
-				array(
+				[
 					3, 8, 13, 18
-				),
+				],
 				'Should get column #2'
-			),
-			'associative array' => array(
-				array(
-					array(
+			],
+			'associative array' => [
+				[
+					[
 						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					array(
+					],
+					[
 						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					array(
+					],
+					[
 						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					array(
+					],
+					[
 						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
+					]
+				],
 				'four',
-				array(
+				[
 					4, 9, 14, 19
-				),
+				],
 				'Should get column \'four\''
-			),
-			'object array' => array(
-				array(
-					(object) array(
+			],
+			'object array' => [
+				[
+					(object) [
 						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
+					],
+					(object) [
 						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
+					],
+					(object) [
 						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
+					],
+					(object) [
 						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
+					]
+				],
 				'four',
-				array(
+				[
 					4, 9, 14, 19
-				),
+				],
 				'Should get column \'four\''
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -129,7 +129,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestGetValue()
 	{
-		$input = array(
+		$input = [
 			'one' => 1,
 			'two' => 2,
 			'three' => 3,
@@ -150,36 +150,36 @@ class ArrayHelperTest extends AbstractBaseTestCase
 			'eightteen' => 'eighteen ninety-five',
 			'nineteen' => 19,
 			'twenty' => 20
-		);
+		];
 
-		return array(
-			'defaults' => array(
+		return [
+			'defaults' => [
 				$input, 'five', null, null, 5, 'Should get 5', true
-			),
-			'get non-value' => array(
+			],
+			'get non-value' => [
 				$input, 'fiveio', 198, null, 198, 'Should get the default value', false
-			),
-			'get int 5' => array(
+			],
+			'get int 5' => [
 				$input, 'five', 198, 'int', (int) 5, 'Should get an int', false
-			),
-			'get float six' => array(
+			],
+			'get float six' => [
 				$input, 'six', 198, 'float', (float) 6, 'Should get a float', false
-			),
-			'get get boolean seven' => array(
+			],
+			'get get boolean seven' => [
 				$input, 'seven', 198, 'bool', (bool) 7, 'Should get a boolean', false
-			),
-			'get array eight' => array(
-				$input, 'eight', 198, 'array', array(
+			],
+			'get array eight' => [
+				$input, 'eight', 198, 'array', [
 					8
-				), 'Should get an array', false
-			),
-			'get string nine' => array(
+				], 'Should get an array', false
+			],
+			'get string nine' => [
 				$input, 'nine', 198, 'string', 'It\'s nine', 'Should get string', false
-			),
-			'get word' => array(
+			],
+			'get word' => [
 				$input, 'eightteen', 198, 'word', 'eighteenninetyfive', 'Should get it as a single word', false
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -191,15 +191,15 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestInvert()
 	{
-		return array(
-			'Case 1' => array(
+		return [
+			'Case 1' => [
 				// Input
-				array(
-					'New' => array('1000', '1500', '1750'),
-					'Used' => array('3000', '4000', '5000', '6000')
-				),
+				[
+					'New' => ['1000', '1500', '1750'],
+					'Used' => ['3000', '4000', '5000', '6000']
+				],
 				// Expected
-				array(
+				[
 					'1000' => 'New',
 					'1500' => 'New',
 					'1750' => 'New',
@@ -207,18 +207,18 @@ class ArrayHelperTest extends AbstractBaseTestCase
 					'4000' => 'Used',
 					'5000' => 'Used',
 					'6000' => 'Used'
-				)
-			),
-			'Case 2' => array(
+				]
+			],
+			'Case 2' => [
 				// Input
-				array(
-					'New' => array(1000, 1500, 1750),
-					'Used' => array(2750, 3000, 4000, 5000, 6000),
-					'Refurbished' => array(2000, 2500),
-					'Unspecified' => array()
-				),
+				[
+					'New' => [1000, 1500, 1750],
+					'Used' => [2750, 3000, 4000, 5000, 6000],
+					'Refurbished' => [2000, 2500],
+					'Unspecified' => []
+				],
 				// Expected
-				array(
+				[
 					'1000' => 'New',
 					'1500' => 'New',
 					'1750' => 'New',
@@ -229,24 +229,24 @@ class ArrayHelperTest extends AbstractBaseTestCase
 					'6000' => 'Used',
 					'2000' => 'Refurbished',
 					'2500' => 'Refurbished'
-				)
-			),
-			'Case 3' => array(
+				]
+			],
+			'Case 3' => [
 				// Input
-				array(
-					'New' => array(1000, 1500, 1750),
+				[
+					'New' => [1000, 1500, 1750],
 					'valueNotAnArray' => 2750,
-					'withNonScalarValue' => array(2000, array(1000 , 3000))
-				),
+					'withNonScalarValue' => [2000, [1000 , 3000]]
+				],
 				// Expected
-				array(
+				[
 					'1000' => 'New',
 					'1500' => 'New',
 					'1750' => 'New',
 					'2000' => 'withNonScalarValue'
-				)
-			)
-		);
+				]
+			]
+		];
 	}
 
 	/**
@@ -258,73 +258,73 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestGroup()
 	{
-		return array(
-			'A scalar array' => array(
+		return [
+			'A scalar array' => [
 				// Source
-				array(
+				[
 					1 => 'a',
 					2 => 'b',
 					3 => 'b',
 					4 => 'c',
 					5 => 'a',
 					6 => 'a',
-				),
+				],
 				// Key
 				null,
 				// Expected
-				array(
-					'a' => array(
+				[
+					'a' => [
 						1, 5, 6
-					),
-					'b' => array(
+					],
+					'b' => [
 						2, 3
-					),
+					],
 					'c' => 4,
-				)
-			),
-			'An array of associative arrays' => array(
+				]
+			],
+			'An array of associative arrays' => [
 				// Source
-				array(
-					1 => array('id' => 41, 'title' => 'boo'),
-					2 => array('id' => 42, 'title' => 'boo'),
-					3 => array('title' => 'boo'),
-					4 => array('id' => 42, 'title' => 'boo'),
-					5 => array('id' => 43, 'title' => 'boo'),
-				),
+				[
+					1 => ['id' => 41, 'title' => 'boo'],
+					2 => ['id' => 42, 'title' => 'boo'],
+					3 => ['title' => 'boo'],
+					4 => ['id' => 42, 'title' => 'boo'],
+					5 => ['id' => 43, 'title' => 'boo'],
+				],
 				// Key
 				'id',
 				// Expected
-				array(
-					41 => array('id' => 41, 'title' => 'boo'),
-					42 => array(
-						array('id' => 42, 'title' => 'boo'),
-						array('id' => 42, 'title' => 'boo'),
-					),
-					43 => array('id' => 43, 'title' => 'boo'),
-				)
-			),
-			'An array of objects' => array(
+				[
+					41 => ['id' => 41, 'title' => 'boo'],
+					42 => [
+						['id' => 42, 'title' => 'boo'],
+						['id' => 42, 'title' => 'boo'],
+					],
+					43 => ['id' => 43, 'title' => 'boo'],
+				]
+			],
+			'An array of objects' => [
 				// Source
-				array(
-					1 => (object) array('id' => 41, 'title' => 'boo'),
-					2 => (object) array('id' => 42, 'title' => 'boo'),
-					3 => (object) array('title' => 'boo'),
-					4 => (object) array('id' => 42, 'title' => 'boo'),
-					5 => (object) array('id' => 43, 'title' => 'boo'),
-				),
+				[
+					1 => (object) ['id' => 41, 'title' => 'boo'],
+					2 => (object) ['id' => 42, 'title' => 'boo'],
+					3 => (object) ['title' => 'boo'],
+					4 => (object) ['id' => 42, 'title' => 'boo'],
+					5 => (object) ['id' => 43, 'title' => 'boo'],
+				],
 				// Key
 				'id',
 				// Expected
-				array(
-					41 => (object) array('id' => 41, 'title' => 'boo'),
-					42 => array(
-						(object) array('id' => 42, 'title' => 'boo'),
-						(object) array('id' => 42, 'title' => 'boo'),
-					),
-					43 => (object) array('id' => 43, 'title' => 'boo'),
-				)
-			),
-		);
+				[
+					41 => (object) ['id' => 41, 'title' => 'boo'],
+					42 => [
+						(object) ['id' => 42, 'title' => 'boo'],
+						(object) ['id' => 42, 'title' => 'boo'],
+					],
+					43 => (object) ['id' => 43, 'title' => 'boo'],
+				]
+			],
+		];
 	}
 
 	/**
@@ -334,20 +334,20 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestPivot()
 	{
-		return array(
-			array(
+		return [
+			[
 				// data
-				array(
-					'Jones'  => array(123, 223),
-					'Arthur' => array('Lancelot', 'Jessica')
-				),
+				[
+					'Jones'  => [123, 223],
+					'Arthur' => ['Lancelot', 'Jessica']
+				],
 				// expected
-				array(
-					array('Jones' => 123, 'Arthur' => 'Lancelot'),
-					array('Jones' => 223, 'Arthur' => 'Jessica'),
-				),
-			),
-		);
+				[
+					['Jones' => 123, 'Arthur' => 'Lancelot'],
+					['Jones' => 223, 'Arthur' => 'Jessica'],
+				],
+			],
+		];
 	}
 
 	/**
@@ -359,590 +359,590 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestSortObject()
 	{
-		$input1 = array(
-			(object) array(
+		$input1 = [
+			(object) [
 				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-			),
-		);
-		$input2 = array(
-			(object) array(
+			],
+		];
+		$input2 = [
+			(object) [
 				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-			),
-			(object) array(
+			],
+			(object) [
 				'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-			),
-		);
+			],
+		];
 
 		if (substr(php_uname(), 0, 6) != 'Darwin')
 		{
-			$input3 = array(
-				(object) array(
+			$input3 = [
+				(object) [
 					'string' => 'A Test String', 'integer' => 1,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'é Test String', 'integer' => 2,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'è Test String', 'integer' => 3,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'É Test String', 'integer' => 4,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'È Test String', 'integer' => 5,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'Œ Test String', 'integer' => 6,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'œ Test String', 'integer' => 7,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'L Test String', 'integer' => 8,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'P Test String', 'integer' => 9,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'p Test String', 'integer' => 10,
-				),
-			);
+				],
+			];
 		}
 		else
 		{
-			$input3 = array();
+			$input3 = [];
 		}
 
-		return array(
-			'by int defaults' => array(
+		return [
+			'by int defaults' => [
 				$input1,
 				'integer',
 				null,
 				false,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the integer field in ascending order',
 				true
-			),
-			'by int ascending' => array(
+			],
+			'by int ascending' => [
 				$input1,
 				'integer',
 				1,
 				false,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the integer field in ascending order full argument list',
 				false
-			),
-			'by int descending' => array(
+			],
+			'by int descending' => [
 				$input1,
 				'integer',
 				-1,
 				false,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the integer field in descending order',
 				false
-			),
-			'by string ascending' => array(
+			],
+			'by string ascending' => [
 				$input1,
 				'string',
 				1,
 				false,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the string field in ascending order full argument list',
 				false,
-				array(1, 2)
-			),
-			'by string descending' => array(
+				[1, 2]
+			],
+			'by string descending' => [
 				$input1,
 				'string',
 				-1,
 				false,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the string field in descending order',
 				false,
-				array(5, 6)
-			),
-			'by casesensitive string ascending' => array(
+				[5, 6]
+			],
+			'by casesensitive string ascending' => [
 				$input2,
 				'string',
 				1,
 				true,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the string field in ascending order with casesensitive comparisons',
 				false,
-				array(1, 2)
-			),
-			'by casesensitive string descending' => array(
+				[1, 2]
+			],
+			'by casesensitive string descending' => [
 				$input2,
 				'string',
 				-1,
 				true,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the string field in descending order with casesensitive comparisons',
 				false,
-				array(5, 6)
-			),
-			'by casesensitive string,integer ascending' => array(
+				[5, 6]
+			],
+			'by casesensitive string,integer ascending' => [
 				$input2,
-				array(
+				[
 					'string', 'integer'
-				),
+				],
 				1,
 				true,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
 				false
-			),
-			'by casesensitive string,integer descending' => array(
+			],
+			'by casesensitive string,integer descending' => [
 				$input2,
-				array(
+				[
 					'string', 'integer'
-				),
+				],
 				-1,
 				true,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
 				false
-			),
-			'by casesensitive string,integer ascending,descending' => array(
+			],
+			'by casesensitive string,integer ascending,descending' => [
 				$input2,
-				array(
+				[
 					'string', 'integer'
-				),
-				array(
+				],
+				[
 					1, -1
-				),
+				],
 				true,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the string,integer field in ascending,descending order with casesensitive comparisons',
 				false
-			),
-			'by casesensitive string,integer descending,ascending' => array(
+			],
+			'by casesensitive string,integer descending,ascending' => [
 				$input2,
-				array(
+				[
 					'string', 'integer'
-				),
-				array(
+				],
+				[
 					-1, 1
-				),
+				],
 				true,
 				false,
-				array(
-					(object) array(
+				[
+					(object) [
 						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
+					],
+					(object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
+					],
+				],
 				'Should be sorted by the string,integer field in descending,ascending order with casesensitive comparisons',
 				false
-			),
-			'by casesensitive string ascending' => array(
+			],
+			'by casesensitive string ascending' => [
 				$input3,
 				'string',
 				1,
 				true,
-				array(
+				[
 					'fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'
-				),
-				array(
-					(object) array(
+				],
+				[
+					(object) [
 						'string' => 'A Test String', 'integer' => 1,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'é Test String', 'integer' => 2,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'É Test String', 'integer' => 4,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'è Test String', 'integer' => 3,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'È Test String', 'integer' => 5,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'L Test String', 'integer' => 8,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'œ Test String', 'integer' => 7,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'Œ Test String', 'integer' => 6,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'p Test String', 'integer' => 10,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'P Test String', 'integer' => 9,
-					),
-				),
+					],
+				],
 				'Should be sorted by the string field in ascending order with casesensitive comparisons and fr_FR locale',
 				false
-			),
-			'by caseinsensitive string, integer ascending' => array(
+			],
+			'by caseinsensitive string, integer ascending' => [
 				$input3,
-				array(
+				[
 					'string', 'integer'
-				),
+				],
 				1,
 				false,
-				array(
+				[
 					'fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'
-				),
-				array(
-					(object) array(
+				],
+				[
+					(object) [
 						'string' => 'A Test String', 'integer' => 1,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'é Test String', 'integer' => 2,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'É Test String', 'integer' => 4,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'è Test String', 'integer' => 3,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'È Test String', 'integer' => 5,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'L Test String', 'integer' => 8,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'Œ Test String', 'integer' => 6,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'œ Test String', 'integer' => 7,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'P Test String', 'integer' => 9,
-					),
-					(object) array(
+					],
+					(object) [
 						'string' => 'p Test String', 'integer' => 10,
-					),
-				),
+					],
+				],
 				'Should be sorted by the string,integer field in ascending order with caseinsensitive comparisons and fr_FR locale',
 				false
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -954,80 +954,80 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestToObject()
 	{
-		return array(
-			'single object' => array(
-				array(
+		return [
+			'single object' => [
+				[
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
+				],
 				null,
-				(object) array(
+				(object) [
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
+				],
 				'Should turn array into single object'
-			),
-			'multiple objects' => array(
-				array(
-					'first' => array(
+			],
+			'multiple objects' => [
+				[
+					'first' => [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
+					],
+					'second' => [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
+					],
+					'third' => [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
+					],
+				],
 				null,
-				(object) array(
-					'first' => (object) array(
+				(object) [
+					'first' => (object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => (object) array(
+					],
+					'second' => (object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => (object) array(
+					],
+					'third' => (object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
+					],
+				],
 				'Should turn multiple dimension array into nested objects'
-			),
-			'single object with class' => array(
-				array(
+			],
+			'single object with class' => [
+				[
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
+				],
 				'stdClass',
-				(object) array(
+				(object) [
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
+				],
 				'Should turn array into single object'
-			),
-			'multiple objects with class' => array(
-				array(
-					'first' => array(
+			],
+			'multiple objects with class' => [
+				[
+					'first' => [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
+					],
+					'second' => [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
+					],
+					'third' => [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
+					],
+				],
 				'stdClass',
-				(object) array(
-					'first' => (object) array(
+				(object) [
+					'first' => (object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => (object) array(
+					],
+					'second' => (object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => (object) array(
+					],
+					'third' => (object) [
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
+					],
+				],
 				'Should turn multiple dimension array into nested objects'
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -1039,34 +1039,34 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function seedTestToArray()
 	{
-		return array(
-			'string' => array(
+		return [
+			'string' => [
 				'foo',
 				false,
-				array('foo')
-			),
-			'array' => array(
-				array('foo'),
+				['foo']
+			],
+			'array' => [
+				['foo'],
 				false,
-				array('foo')
-			),
-			'array_recursive' => array(
-				array('foo' => array(
-					(object) array('bar' => 'bar'),
-					(object) array('baz' => 'baz')
-				)),
+				['foo']
+			],
+			'array_recursive' => [
+				['foo' => [
+					(object) ['bar' => 'bar'],
+					(object) ['baz' => 'baz']
+				]],
 				true,
-				array('foo' => array(
-					array('bar' => 'bar'),
-					array('baz' => 'baz')
-				))
-			),
-			'iterator' => array(
-				array('foo' => new \ArrayIterator(array('bar' => 'baz'))),
+				['foo' => [
+					['bar' => 'bar'],
+					['baz' => 'baz']
+				]]
+			],
+			'iterator' => [
+				['foo' => new \ArrayIterator(['bar' => 'baz'])],
 				true,
-				array('foo' => array('bar' => 'baz'))
-			)
-		);
+				['foo' => ['bar' => 'baz']]
+			]
+		];
 	}
 
 	/**
@@ -1148,12 +1148,12 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testSetValue()
 	{
-		$data = array(
+		$data = [
 			'Archer' => 'Unlimited Blade World',
 			'Saber'  => 'Excalibur',
 			'Lancer' => 'Gáe Bulg',
 			'Rider'  => 'Breaker Gorgon',
-		);
+		];
 		$data2 = (object) $data;
 
 		$newData = ArrayHelper::setValue($data, 'Saber', 'Avalon');
@@ -1218,9 +1218,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	{
 		$this->assertThat(
 			ArrayHelper::isAssociative(
-				array(
+				[
 					1, 2, 3
-				)
+				]
 			),
 			$this->isFalse(),
 			'Line: ' . __LINE__ . ' This array should not be associative.'
@@ -1228,9 +1228,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
 		$this->assertThat(
 			ArrayHelper::isAssociative(
-				array(
+				[
 					'a' => 1, 'b' => 2, 'c' => 3
-				)
+				]
 			),
 			$this->isTrue(),
 			'Line: ' . __LINE__ . ' This array should be associative.'
@@ -1238,9 +1238,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
 		$this->assertThat(
 			ArrayHelper::isAssociative(
-				array(
+				[
 					'a' => 1, 2, 'c' => 3
-				)
+				]
 			),
 			$this->isTrue(),
 			'Line: ' . __LINE__ . ' This array should be associative.'
@@ -1302,7 +1302,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 * @covers        \Windwalker\Utilities\ArrayHelper::sortObjects
 	 * @since         2.0
 	 */
-	public function testSortObjects($input, $key, $direction, $casesensitive, $locale, $expect, $message, $defaults, $swappable_keys = array())
+	public function testSortObjects($input, $key, $direction, $casesensitive, $locale, $expect, $message, $defaults, $swappable_keys = [])
 	{
 		// Convert the $locale param to a string if it is an array
 		if (is_array($locale))
@@ -1396,10 +1396,10 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testArraySearch()
 	{
-		$array = array(
+		$array = [
 			'name' => 'Foo',
 			'email' => 'foobar@example.com'
-		);
+		];
 
 		// Search case sensitive.
 		$this->assertEquals('name', ArrayHelper::arraySearch('Foo', $array));
@@ -1421,16 +1421,16 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testFlatten()
 	{
-		$array = array(
+		$array = [
 			'flower' => 'sakura',
 			'olive' => 'peace',
-			'pos1' => array(
+			'pos1' => [
 				'sunflower' => 'love'
-			),
-			'pos2' => array(
+			],
+			'pos2' => [
 				'cornflower' => 'elegant'
-			)
-		);
+			]
+		];
 
 		$flatted = ArrayHelper::flatten($array);
 
@@ -1450,64 +1450,64 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testQuery()
 	{
-		$data = array(
-			array(
+		$data = [
+			[
 				'id' => 1,
 				'title' => 'Julius Caesar',
-				'data' => (object) array('foo' => 'bar'),
-			),
-			array(
+				'data' => (object) ['foo' => 'bar'],
+			],
+			[
 				'id' => 2,
 				'title' => 'Macbeth',
-				'data' => array(),
-			),
-			array(
+				'data' => [],
+			],
+			[
 				'id' => 3,
 				'title' => 'Othello',
 				'data' => 123,
-			),
-			array(
+			],
+			[
 				'id' => 4,
 				'title' => 'Hamlet',
 				'data' => true,
-			),
-		);
+			],
+		];
 
 		// Test id equals
-		$this->assertEquals(array($data[1]), ArrayHelper::query($data, array('id' => 2)));
+		$this->assertEquals([$data[1]], ArrayHelper::query($data, ['id' => 2]));
 
 		// Test strict equals
-		$this->assertEquals(array($data[0], $data[2], $data[3]), ArrayHelper::query($data, array('data' => true), false));
-		$this->assertEquals(array($data[3]), ArrayHelper::query($data, array('data' => true), true));
+		$this->assertEquals([$data[0], $data[2], $data[3]], ArrayHelper::query($data, ['data' => true], false));
+		$this->assertEquals([$data[3]], ArrayHelper::query($data, ['data' => true], true));
 
 		// Test id GT
-		$this->assertEquals(array($data[1], $data[2], $data[3]), ArrayHelper::query($data, array('id >' => 1)));
+		$this->assertEquals([$data[1], $data[2], $data[3]], ArrayHelper::query($data, ['id >' => 1]));
 
 		// Test id GTE
-		$this->assertEquals(array($data[1], $data[2], $data[3]), ArrayHelper::query($data, array('id >=' => 2)));
+		$this->assertEquals([$data[1], $data[2], $data[3]], ArrayHelper::query($data, ['id >=' => 2]));
 
 		// Test id LT
-		$this->assertEquals(array($data[0], $data[1]), ArrayHelper::query($data, array('id <' => 3)));
+		$this->assertEquals([$data[0], $data[1]], ArrayHelper::query($data, ['id <' => 3]));
 
 		// Test id LTE
-		$this->assertEquals(array($data[0], $data[1]), ArrayHelper::query($data, array('id <=' => 2)));
+		$this->assertEquals([$data[0], $data[1]], ArrayHelper::query($data, ['id <=' => 2]));
 		
 		// Test in array
-		$this->assertEquals(array($data[0], $data[2]), ArrayHelper::query($data, array('id' => array(1, 3))));
+		$this->assertEquals([$data[0], $data[2]], ArrayHelper::query($data, ['id' => [1, 3]]));
 
 		// Test array equals
-		$this->assertEquals(array($data[0]), ArrayHelper::query($data, array('id' => 1, 'title' => 'Julius Caesar')));
+		$this->assertEquals([$data[0]], ArrayHelper::query($data, ['id' => 1, 'title' => 'Julius Caesar']));
 
 		// Test object equals
 		$object = new \stdClass;
 		$object->foo = 'bar';
-		$this->assertEquals(array($data[0], $data[3]), ArrayHelper::query($data, array('data' => $object)));
+		$this->assertEquals([$data[0], $data[3]], ArrayHelper::query($data, ['data' => $object]));
 
 		// Test object strict equals
-		$this->assertEquals(array($data[0]), ArrayHelper::query($data, array('data' => $data[0]['data']), true));
+		$this->assertEquals([$data[0]], ArrayHelper::query($data, ['data' => $data[0]['data']], true));
 
 		// Test Keep Key
-		$this->assertEquals(array(1 => $data[1], 2 => $data[2], 3 => $data[3]), ArrayHelper::query($data, array('id >=' => 2), false, true));
+		$this->assertEquals([1 => $data[1], 2 => $data[2], 3 => $data[3]], ArrayHelper::query($data, ['id >=' => 2], false, true));
 	}
 
 	/**
@@ -1519,35 +1519,35 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testQueryWithCallback()
 	{
-		$data = array(
-			array(
+		$data = [
+			[
 				'id' => 1,
 				'title' => 'Julius Caesar',
-				'data' => (object) array('foo' => 'bar'),
-			),
-			array(
+				'data' => (object) ['foo' => 'bar'],
+			],
+			[
 				'id' => 2,
 				'title' => 'Macbeth',
-				'data' => array(),
-			),
-			array(
+				'data' => [],
+			],
+			[
 				'id' => 3,
 				'title' => 'Othello',
 				'data' => 123,
-			),
-			array(
+			],
+			[
 				'id' => 4,
 				'title' => 'Hamlet',
 				'data' => true,
-			),
-		);
+			],
+		];
 
 		$results = ArrayHelper::query($data, function ($key, $value)
 		{
 		    return $value['title'] == 'Julius Caesar' || $value['id'] == 4;
 		});
 
-		$this->assertEquals(array($data[0], $data[3]), $results);
+		$this->assertEquals([$data[0], $data[3]], $results);
 	}
 
 	/**
@@ -1559,17 +1559,17 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testMatch()
 	{
-		$data = array(
+		$data = [
 			'id' => 1,
 			'title' => 'Julius Caesar',
-			'data' => (object) array('foo' => 'bar'),
-		);
+			'data' => (object) ['foo' => 'bar'],
+		];
 
-		$this->assertTrue(ArrayHelper::match($data, array('id' => 1)));
-		$this->assertTrue(ArrayHelper::match($data, array('id' => array(1, 2, 3))));
-		$this->assertTrue(ArrayHelper::match($data, array('id' => 1, 'title' => 'Julius Caesar')));
-		$this->assertFalse(ArrayHelper::match($data, array('id' => 5)));
-		$this->assertFalse(ArrayHelper::match($data, array('id' => 1, 'title' => 'Hamlet')));
+		$this->assertTrue(ArrayHelper::match($data, ['id' => 1]));
+		$this->assertTrue(ArrayHelper::match($data, ['id' => [1, 2, 3]]));
+		$this->assertTrue(ArrayHelper::match($data, ['id' => 1, 'title' => 'Julius Caesar']));
+		$this->assertFalse(ArrayHelper::match($data, ['id' => 5]));
+		$this->assertFalse(ArrayHelper::match($data, ['id' => 1, 'title' => 'Hamlet']));
 	}
 
 	/**
@@ -1581,23 +1581,23 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testMapKey()
 	{
-		$data = array(
+		$data = [
 			'top' => 'Captain America',
 			'middle' => 'Iron Man',
 			'bottom' => 'Thor',
-		);
+		];
 		$data2 = (object) $data;
 
-		$map = array(
+		$map = [
 			'middle' => 'bottom',
 			'bottom' => 'middle',
-		);
+		];
 
-		$expected = array(
+		$expected = [
 			'top' => 'Captain America',
 			'middle' => 'Thor',
 			'bottom' => 'Iron Man',
-		);
+		];
 		$expected2 = (object) $expected;
 
 		$result = ArrayHelper::mapKey($data, $map);
@@ -1616,68 +1616,68 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testMerge()
 	{
-		$data1 = array(
+		$data1 = [
 			'green'     => 'Hulk',
 			'red'       => 'empty',
-			'human'     => array(
+			'human'     => [
 				'dark'  => 'empty',
-				'black' => array(
+				'black' => [
 					'male'      => 'empty',
 					'female'    => 'empty',
 					'no-gender' => 'empty',
-				),
-			)
-		);
-		$data2 = array(
+				],
+			]
+		];
+		$data2 = [
 			'ai'        => 'Jarvis',
 			'agent'     => 'Phil Coulson',
-			'red'       => array(
+			'red'       => [
 				'left'  => 'Pepper',
 				'right' => 'Iron Man',
-			),
-			'human'     => array(
+			],
+			'human'     => [
 				'dark'  => 'Nick Fury',
-				'black' => array(
+				'black' => [
 					'female' => 'Black Widow',
 					'male'   => 'Loki',
-				),
-			)
-		);
+				],
+			]
+		];
 
-		$expected = array(
+		$expected = [
 			'ai'        => 'Jarvis',
 			'agent'     => 'Phil Coulson',
 			'green' => 'Hulk',
-			'red'       => array(
+			'red'       => [
 				'left'  => 'Pepper',
 				'right' => 'Iron Man',
-			),
-			'human'     => array(
+			],
+			'human'     => [
 				'dark'  => 'Nick Fury',
-				'black' => array(
+				'black' => [
 					'male'      => 'Loki',
 					'female'    => 'Black Widow',
 					'no-gender' => 'empty',
-				),
-			),
-		);
+				],
+			],
+		];
 
-		$expected2 = array(
+		$expected2 = [
 			'ai'        => 'Jarvis',
 			'agent'     => 'Phil Coulson',
 			'green' => 'Hulk',
-			'red'       => array(
+			'red'       => [
 				'left'  => 'Pepper',
 				'right' => 'Iron Man',
-			),
-			'human'     => array(
+			],
+			'human'     => [
 				'dark'  => 'Nick Fury',
-				'black' => array(
+				'black' => [
 					'male'   => 'Loki',
 					'female' => 'Black Widow',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		$this->assertEquals($expected, ArrayHelper::merge($data1, $data2));
 		$this->assertEquals($expected2, ArrayHelper::merge($data1, $data2, false));
@@ -1692,21 +1692,21 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testGetByPath()
 	{
-		$data = array(
+		$data = [
 			'flower' => 'sakura',
 			'olive' => 'peace',
-			'pos1' => array(
+			'pos1' => [
 				'sunflower' => 'love'
-			),
-			'pos2' => array(
+			],
+			'pos2' => [
 				'cornflower' => 'elegant'
-			),
-			'array' => array(
+			],
+			'array' => [
 				'A',
 				'B',
 				'C'
-			)
-		);
+			]
+		];
 
 		$this->assertEquals('sakura', ArrayHelper::getByPath($data, 'flower'));
 		$this->assertEquals('love', ArrayHelper::getByPath($data, 'pos1.sunflower'));
@@ -1724,7 +1724,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testSetByPath()
 	{
-		$data = array();
+		$data = [];
 
 		// One level
 		$return = ArrayHelper::setByPath($data, 'flower', 'sakura');
@@ -1770,41 +1770,41 @@ class ArrayHelperTest extends AbstractBaseTestCase
 	 */
 	public function testRemoveByPath()
 	{
-		$data = array(
-			'foo' => array(
+		$data = [
+			'foo' => [
 				'bar' => '123'
-			)
-		);
+			]
+		];
 
 		ArrayHelper::removeByPath($data, 'foo.bar');
 
 		$this->assertFalse(array_key_exists('bar', $data['foo']));
 
-		$data = array(
-			'foo' => array(
+		$data = [
+			'foo' => [
 				'bar' => '123'
-			)
-		);
+			]
+		];
 
 		ArrayHelper::removeByPath($data, 'foo');
 
 		$this->assertFalse(array_key_exists('foo', $data));
 
-		$data = array(
-			'foo' => array(
+		$data = [
+			'foo' => [
 				'bar' => '123'
-			)
-		);
+			]
+		];
 
 		ArrayHelper::removeByPath($data, 'foo.yoo');
 
 		$this->assertEquals('123', $data['foo']['bar']);
 
-		$data = (object) array(
-			'foo' => (object) array(
+		$data = (object) [
+			'foo' => (object) [
 				'bar' => '123'
-			)
-		);
+			]
+		];
 
 		ArrayHelper::removeByPath($data, 'foo.bar');
 

@@ -62,8 +62,8 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertEquals('"foo"', StringHelper::quote('foo'));
 		$this->assertEquals('"foo"', StringHelper::quote('foo', '"'));
-		$this->assertEquals('"foo"', StringHelper::quote('foo', array('"', '"')));
-		$this->assertEquals('[foo]', StringHelper::quote('foo', array('[', ']')));
+		$this->assertEquals('"foo"', StringHelper::quote('foo', ['"', '"']));
+		$this->assertEquals('[foo]', StringHelper::quote('foo', ['[', ']']));
 	}
 
 	/**
@@ -87,15 +87,15 @@ class StringHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestIncrement()
 	{
-		return array(
+		return [
 			// Note: string, style, number, expected
-			'First default increment' => array('title', null, 0, 'title (2)'),
-			'Second default increment' => array('title(2)', null, 0, 'title(3)'),
-			'First dash increment' => array('title', 'dash', 0, 'title-2'),
-			'Second dash increment' => array('title-2', 'dash', 0, 'title-3'),
-			'Set default increment' => array('title', null, 4, 'title (4)'),
-			'Unknown style fallback to default' => array('title', 'foo', 0, 'title (2)'),
-		);
+			'First default increment' => ['title', null, 0, 'title (2)'],
+			'Second default increment' => ['title(2)', null, 0, 'title(3)'],
+			'First dash increment' => ['title', 'dash', 0, 'title-2'],
+			'Second dash increment' => ['title-2', 'dash', 0, 'title-3'],
+			'Set default increment' => ['title', null, 4, 'title (4)'],
+			'Unknown style fallback to default' => ['title', 'foo', 0, 'title (2)'],
+		];
 	}
 
 	/**

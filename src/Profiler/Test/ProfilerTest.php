@@ -69,10 +69,10 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
 		$renderer = new DefaultRenderer;
 		$pointOne = new Point('start');
 		$pointTwo = new Point('two', 1, 1);
-		$points = array(
+		$points = [
 			'start' => $pointOne,
 			'two' => $pointTwo
-		);
+		];
 
 		$profiler = new Profiler('bar', $renderer, $points, false);
 
@@ -179,7 +179,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
 		$first = new Point('start');
 		$second = new Point('stop', 1.5);
 
-		$profiler = new Profiler('test', null, array($first, $second));
+		$profiler = new Profiler('test', null, [$first, $second]);
 
 		$this->assertSame(1.5, $profiler->getTimeBetween('start', 'stop'));
 		$this->assertSame(1.5, $profiler->getTimeBetween('stop', 'start'));
@@ -197,7 +197,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
 		$first = new Point('start');
 		$second = new Point('stop', 0, 1000);
 
-		$profiler = new Profiler('test', null, array($first, $second));
+		$profiler = new Profiler('test', null, [$first, $second]);
 
 		$this->assertSame(1000, $profiler->getMemoryBetween('start', 'stop'));
 		$this->assertSame(1000, $profiler->getMemoryBetween('stop', 'start'));
@@ -264,7 +264,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
 		$first = new Point('start');
 		$second = new Point('stop', 5, 1000);
 
-		$profiler = new Profiler('test', null, array($first, $second));
+		$profiler = new Profiler('test', null, [$first, $second]);
 
 		$expected = <<<RESULT
 test 0.000 seconds (+0.000); 0.00 MB (0.000) - start
@@ -273,8 +273,8 @@ RESULT;
 
 
 		$this->assertEquals(
-			str_replace(array("\r", "\n"), '', trim($expected)),
-			str_replace(array("\r", "\n"), '', trim($profiler->render()))
+			str_replace(["\r", "\n"], '', trim($expected)),
+			str_replace(["\r", "\n"], '', trim($profiler->render()))
 		);
 	}
 
@@ -308,11 +308,11 @@ RESULT;
 		$second = new Point('second', 1.5, 1000);
 		$third = new Point('third', 2.5, 2000);
 
-		$points = array(
+		$points = [
 			'test' => $first,
 			'second' => $second,
 			'third' => $third
-		);
+		];
 
 		// Create a profiler and inject the points.
 		$profiler = new Profiler('test', null, $points);

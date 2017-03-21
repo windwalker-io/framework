@@ -32,7 +32,7 @@ class ColorStyleTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new ColorStyle('red', 'white', array('blink'));
+		$this->instance = new ColorStyle('red', 'white', ['blink']);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class ColorStyleTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function fromString()
 	{
-		$style = new ColorStyle('white', 'red', array('blink', 'bold'));
+		$style = new ColorStyle('white', 'red', ['blink', 'bold']);
 
 		$this->assertThat(
 			$this->instance->fromString('fg=white;bg=red;options=blink,bold'),
@@ -133,6 +133,6 @@ class ColorStyleTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testConstructInvalid3()
 	{
-		new ColorStyle('', '', array('INVALID'));
+		new ColorStyle('', '', ['INVALID']);
 	}
 }

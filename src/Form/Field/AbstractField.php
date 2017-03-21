@@ -92,7 +92,7 @@ abstract class AbstractField
 	 *
 	 * @var  string[]
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	 * Property required.
@@ -120,32 +120,32 @@ abstract class AbstractField
 	 *
 	 * @var  array
 	 */
-	protected $attrs = array();
+	protected $attrs = [];
 
 	/**
 	 * The value of false.
 	 *
 	 * @var  array
 	 */
-	protected $falseValue = array(
+	protected $falseValue = [
 		'disabled',
 		'false',
 		'null',
 		'0',
 		'no',
 		'none'
-	);
+	];
 
 	/**
 	 * The value of true.
 	 *
 	 * @var  array
 	 */
-	protected $trueValue = array(
+	protected $trueValue = [
 		'true',
 		'yes',
 		'1'
-	);
+	];
 
 	/**
 	 * Property form.
@@ -163,7 +163,7 @@ abstract class AbstractField
 	 * @param string $filter
 	 * @param string $validator
 	 */
-	public function __construct($name = null, $label = null, $attributes = array(), $filter = null, $validator = null)
+	public function __construct($name = null, $label = null, $attributes = [], $filter = null, $validator = null)
 	{
 		if ($name instanceof \SimpleXMLElement)
 		{
@@ -229,7 +229,7 @@ abstract class AbstractField
 	 */
 	public function prepareAttributes()
 	{
-		$attrs = array();
+		$attrs = [];
 
 		$this->prepare($attrs);
 
@@ -688,7 +688,7 @@ abstract class AbstractField
 
 		$form = $xml;
 
-		$group = array();
+		$group = [];
 
 		while ($parent = $form->xpath('..'))
 		{
@@ -1112,7 +1112,7 @@ abstract class AbstractField
 	 */
 	protected function getAccessors()
 	{
-		return array();
+		return [];
 	}
 
 	/**

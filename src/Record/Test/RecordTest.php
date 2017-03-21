@@ -100,11 +100,13 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$record->setAlias('foo', 'catid');
 
-		$record->bind(array(
+		$record->bind(
+			[
 			'id' => 1,
 			'foo' => 6,
 			'title' => 'Sakura'
-		));
+			]
+		);
 
 		$this->assertEquals(1, $record->id);
 		$this->assertEquals(6, $record->foo);
@@ -124,9 +126,9 @@ class RecordTest extends AbstractMysqlTestCase
 		// Test create
 		$key = $this->instance->getKeyName();
 
-		$data = array(
+		$data = [
 			'title' => 'Test'
-		);
+		];
 
 		$this->instance->save($data);
 
@@ -135,11 +137,11 @@ class RecordTest extends AbstractMysqlTestCase
 		$this->assertEquals('Test', $flower->title);
 
 		// Test update
-		$data = array(
+		$data = [
 			$key => 1,
 			'title' => 'YOO',
 			'extra_field' => 'BAR' // will not saved
-		);
+		];
 
 		$this->instance->reset(false)->save($data);
 
@@ -156,12 +158,12 @@ class RecordTest extends AbstractMysqlTestCase
 		$this->assertEquals('0000-00-00 00:00:00', $flower->created);
 
 		// Test save null data
-		$data = array(
+		$data = [
 			$key => 2,
 			'title' => null,
 			'alias' => null,
 			'extra_field' => 'BAR' // will not saved
-		);
+		];
 
 		$this->instance->reset(true)->save($data, true);
 
@@ -183,10 +185,10 @@ class RecordTest extends AbstractMysqlTestCase
 		$record = $this->instance;
 
 		$record->bind(
-			array(
+			[
 				'title' => 'sakura',
 				'fake' => 'cat'
-			)
+			]
 		);
 
 		$this->assertEquals('sakura', $record->title);
@@ -260,7 +262,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$this->assertExpectedException(function () use ($record)
 		{
-			$record->save(array());
+			$record->save([]);
 		}, new \RuntimeException, 'Record save error');
 	}
 
@@ -274,12 +276,12 @@ class RecordTest extends AbstractMysqlTestCase
 	public function testStore()
 	{
 		// Test create
-		$data = array(
+		$data = [
 			'title'   => 'Lancelot',
 			'meaning' => 'First Knight',
 			'ordering' => 123456,
 			'params' => ''
-		);
+		];
 
 		$record = $this->instance;
 
@@ -291,17 +293,17 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$record = new Record('articles');
 
-		$record->load(array('title' => 'Lancelot'));
+		$record->load(['title' => 'Lancelot']);
 
 		$this->assertEquals(123456, $record->ordering);
 
 		// Test update
 		$key = $this->instance->getKeyName();
 
-		$data = array(
+		$data = [
 			$key => 1,
 			'title' => 'YOO'
-		);
+		];
 
 		$this->instance->reset()->bind($data)->store();
 
@@ -320,12 +322,12 @@ class RecordTest extends AbstractMysqlTestCase
 	public function testCreate()
 	{
 		// Test create with id
-		$data = array(
+		$data = [
 			'title'    => 'Lodovico',
 			'meaning'  => 'Kinsman to Brabantio',
 			'ordering' => 123456,
 			'params'   => ''
-		);
+		];
 
 		$record = $this->instance;
 
@@ -339,13 +341,13 @@ class RecordTest extends AbstractMysqlTestCase
 		$this->assertEquals($record->id, $flower->id);
 
 		// Test create with no id
-		$data = array(
+		$data = [
 			'id'       => 3000,
 			'title'    => 'Brabantio',
 			'meaning'  => 'senator',
 			'ordering' => 123456,
 			'params'   => ''
-		);
+		];
 
 		$record = $this->instance;
 
@@ -395,10 +397,10 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testGetKeyName()
 	{
-		$record = new Record('articles', array('id', 'alias'));
+		$record = new Record('articles', ['id', 'alias']);
 
 		$this->assertEquals('id', $record->getKeyName());
-		$this->assertEquals(array('id', 'alias'), $record->getKeyName(true));
+		$this->assertEquals(['id', 'alias'], $record->getKeyName(true));
 	}
 
 	/**
@@ -582,7 +584,7 @@ class RecordTest extends AbstractMysqlTestCase
 	{
 		$this->assertTrue($this->instance->valueExists('alias', 'ut-qui-sed'));
 
-		$this->instance->load(array('alias' => 'ut-qui-sed'));
+		$this->instance->load(['alias' => 'ut-qui-sed']);
 
 		$this->assertFalse($this->instance->valueExists('id'));
 	}
@@ -602,11 +604,13 @@ class RecordTest extends AbstractMysqlTestCase
 		// Get by alias
 		$record->setAlias('foo', 'catid');
 
-		$record->bind(array(
+		$record->bind(
+			[
 			'id' => 1,
 			'foo' => 6,
 			'title' => 'Sakura'
-		));
+			]
+		);
 
 		$this->assertEquals(6, $record->catid);
 		$this->assertEquals('Sakura', $record->title);

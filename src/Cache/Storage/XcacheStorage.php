@@ -26,7 +26,7 @@ class XcacheStorage extends AbstractCacheStorage
 	 * @throws \RuntimeException
 	 * @since   2.0
 	 */
-	public function __construct($ttl = null, $options = array())
+	public function __construct($ttl = null, $options = [])
 	{
 		if (!extension_loaded('xcache') || !is_callable('xcache_get'))
 		{

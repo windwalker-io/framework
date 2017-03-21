@@ -116,7 +116,7 @@ EOF;
 		);
 
 		return str_replace(
-			array('{OPTIONS}', '{COMMANDS}'),
+			['{OPTIONS}', '{COMMANDS}'],
 			$render,
 			$template
 		);

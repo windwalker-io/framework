@@ -30,13 +30,13 @@ class CheckboxListTest extends AbstractDomTestCase
 	{
 		$select = new CheckboxList(
 			'form[timezone]',
-			array(
-				new Option('Asia - Tokyo', 'Asia/Tokyo', array('class' => 'opt')),
+			[
+				new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
 				new Option('Asia - Taipei', 'Asia/Taipei'),
 				new Option('Europe - Paris', 'Asia/Paris'),
 				new Option('UTC', 'UTC'),
-			),
-			array('class' => 'input-select'),
+			],
+			['class' => 'input-select'],
 			'UTC',
 			false
 		);
@@ -71,13 +71,13 @@ HTML;
 	{
 		$select = new CheckboxList(
 			'form[timezone]',
-			array(
-				new Option('Asia - Tokyo', 'Asia/Tokyo', array('class' => 'opt')),
+			[
+				new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
 				new Option('Asia - Taipei', 'Asia/Taipei'),
 				new Option('Europe - Paris', 'Asia/Paris'),
 				new Option('UTC', 'UTC'),
-			),
-			array('class' => 'input-select', 'disabled' => true, 'readonly' => true),
+			],
+			['class' => 'input-select', 'disabled' => true, 'readonly' => true],
 			'UTC',
 			false
 		);

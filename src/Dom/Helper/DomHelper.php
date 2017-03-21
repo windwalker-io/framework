@@ -26,7 +26,7 @@ class DomHelper
 	 */
 	public static function minify($buffer)
 	{
-		$search = array(
+		$search = [
 			// Strip whitespaces after tags, except space
 			'/\>[^\S ]+/s',
 
@@ -35,13 +35,13 @@ class DomHelper
 
 			// Shorten multiple whitespace sequences
 			'/(\s)+/s'
-		);
+		];
 
-		$replace = array(
+		$replace = [
 			'>',
 			'<',
 			'\\1'
-		);
+		];
 
 		$buffer = preg_replace($search, $replace, $buffer);
 

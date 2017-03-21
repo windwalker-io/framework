@@ -55,10 +55,10 @@ class AbstractContentTypeResponseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testConstruct()
 	{
-		$response = new StubContentTypeResponse('Flower', 123, array('x-foo' => 'bar'));
+		$response = new StubContentTypeResponse('Flower', 123, ['x-foo' => 'bar']);
 
-		$this->assertEquals(array('text/plain; charset=utf-8'), $response->getHeader('content-type'));
-		$this->assertEquals(array('bar'), $response->getHeader('x-foo'));
+		$this->assertEquals(['text/plain; charset=utf-8'], $response->getHeader('content-type'));
+		$this->assertEquals(['bar'], $response->getHeader('x-foo'));
 		$this->assertEquals('Flower', $response->getBody()->__toString());
 		$this->assertEquals(123, $response->getStatusCode());
 	}
@@ -74,7 +74,7 @@ class AbstractContentTypeResponseTest extends \PHPUnit\Framework\TestCase
 	{
 		$response = $this->instance->withContentType('application/flower');
 
-		$this->assertEquals(array('application/flower; charset=utf-8'), $response->getHeader('content-type'));
+		$this->assertEquals(['application/flower; charset=utf-8'], $response->getHeader('content-type'));
 	}
 
 	/**

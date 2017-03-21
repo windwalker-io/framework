@@ -86,7 +86,7 @@ class QueryTest extends AbstractQueryTestCase
 	public function testCall()
 	{
 		$query = $this->getQuery()
-			->call(array('foo', 'bar'));
+			->call(['foo', 'bar']);
 
 		$sql = 'CALL foo,bar';
 
@@ -123,7 +123,7 @@ class QueryTest extends AbstractQueryTestCase
 	{
 		$q = $this->getQuery();
 
-		$clauses = array(
+		$clauses = [
 			'from',
 			'join',
 			'set',
@@ -137,7 +137,7 @@ class QueryTest extends AbstractQueryTestCase
 			'values',
 			'exec',
 			'call',
-		);
+		];
 
 		// Set the clauses
 		foreach ($clauses as $clause)
@@ -178,14 +178,14 @@ class QueryTest extends AbstractQueryTestCase
 	{
 		$q = $this->getQuery();
 
-		$types = array(
+		$types = [
 			'select',
 			'delete',
 			'update',
 			'insert'
-		);
+		];
 
-		$clauses = array(
+		$clauses = [
 			'from',
 			'join',
 			'set',
@@ -196,7 +196,7 @@ class QueryTest extends AbstractQueryTestCase
 			'order',
 			'columns',
 			'values',
-		);
+		];
 
 		// Set the clauses
 		foreach ($clauses as $clause)
@@ -246,7 +246,7 @@ class QueryTest extends AbstractQueryTestCase
 
 		$query = $this->getQuery()
 			->insert('foo')
-			->columns(array('a', 'b', 'c'))
+			->columns(['a', 'b', 'c'])
 			->values('1, 2, 3');
 
 		$this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a,b,c) VALUES ' . PHP_EOL . '(1, 2, 3)', trim((string) $query));
@@ -350,7 +350,7 @@ class QueryTest extends AbstractQueryTestCase
 		// Array
 		$query = $this->getQuery()
 			->select('*')
-			->from(array('foo', 'bar'));
+			->from(['foo', 'bar']);
 
 		$this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo,bar', trim((string) $query));
 	}
@@ -424,7 +424,7 @@ class QueryTest extends AbstractQueryTestCase
 			->select('*')
 			->from('foo')
 			->having('a = b')
-			->orHaving(array('c = d', 'e = f', 'g = h'))
+			->orHaving(['c = d', 'e = f', 'g = h'])
 			->order('id');
 
 		$sql = 'SELECT * FROM foo HAVING a = b AND (c = d OR e = f OR g = h) ORDER BY id';
@@ -482,7 +482,7 @@ class QueryTest extends AbstractQueryTestCase
 		$query = $this->getQuery()
 			->select('a.*, b.*')
 			->from('foo AS a')
-			->innerJoin('bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+			->innerJoin('bar AS b', ['a.id = b.aid', 'a.user = b.user']);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
@@ -493,10 +493,10 @@ class QueryTest extends AbstractQueryTestCase
 			->select('a.*, b.*')
 			->from('foo AS a')
 			->innerJoin(
-				array(
+				[
 					'bar AS b ON a.id = b.aid',
 					'yoo AS y ON a.id = y.aid'
-				)
+				]
 			);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
@@ -557,7 +557,7 @@ class QueryTest extends AbstractQueryTestCase
 		$query = $this->getQuery()
 			->select('a.*, b.*')
 			->from('foo AS a')
-			->join('RIGHT', 'bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+			->join('RIGHT', 'bar AS b', ['a.id = b.aid', 'a.user = b.user']);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
@@ -568,10 +568,10 @@ class QueryTest extends AbstractQueryTestCase
 			->select('a.*, b.*')
 			->from('foo AS a')
 			->join('INNER',
-				array(
+				[
 					'bar AS b ON a.id = b.aid',
 					'yoo AS y ON a.id = y.aid'
-				)
+				]
 			);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a INNER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
@@ -602,7 +602,7 @@ class QueryTest extends AbstractQueryTestCase
 		$query = $this->getQuery()
 			->select('a.*, b.*')
 			->from('foo AS a')
-			->leftJoin('bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+			->leftJoin('bar AS b', ['a.id = b.aid', 'a.user = b.user']);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
@@ -613,10 +613,10 @@ class QueryTest extends AbstractQueryTestCase
 			->select('a.*, b.*')
 			->from('foo AS a')
 			->leftJoin(
-				array(
+				[
 					'bar AS b ON a.id = b.aid',
 					'yoo AS y ON a.id = y.aid'
-				)
+				]
 			);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a LEFT JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
@@ -672,7 +672,7 @@ class QueryTest extends AbstractQueryTestCase
 			->select('*')
 			->from('foo')
 			->where('a = b')
-			->order(array('id DESC', 'catid'));
+			->order(['id DESC', 'catid']);
 
 		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id DESC,catid';
 
@@ -764,7 +764,7 @@ class QueryTest extends AbstractQueryTestCase
 		$query = $this->getQuery()
 			->select('a.*, b.*')
 			->from('foo AS a')
-			->outerJoin('bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+			->outerJoin('bar AS b', ['a.id = b.aid', 'a.user = b.user']);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
@@ -775,10 +775,10 @@ class QueryTest extends AbstractQueryTestCase
 			->select('a.*, b.*')
 			->from('foo AS a')
 			->outerJoin(
-				array(
+				[
 					'bar AS b ON a.id = b.aid',
 					'yoo AS y ON a.id = y.aid'
-				)
+				]
 			);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a OUTER JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
@@ -856,7 +856,7 @@ class QueryTest extends AbstractQueryTestCase
 		$query = $this->getQuery()
 			->select('a.*, b.*')
 			->from('foo AS a')
-			->rightJoin('bar AS b', array('a.id = b.aid', 'a.user = b.user'));
+			->rightJoin('bar AS b', ['a.id = b.aid', 'a.user = b.user']);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid AND a.user = b.user';
 
@@ -867,10 +867,10 @@ class QueryTest extends AbstractQueryTestCase
 			->select('a.*, b.*')
 			->from('foo AS a')
 			->rightJoin(
-				array(
+				[
 					'bar AS b ON a.id = b.aid',
 					'yoo AS y ON a.id = y.aid'
-				)
+				]
 			);
 
 		$sql = 'SELECT a.*, b.* FROM foo AS a RIGHT JOIN bar AS b ON a.id = b.aid,yoo AS y ON a.id = y.aid';
@@ -909,7 +909,7 @@ class QueryTest extends AbstractQueryTestCase
 		$this->assertEquals($this->format($sql), $this->format($query));
 
 		$query = $this->getQuery()
-			->select(array('a.*', 'a.id'))
+			->select(['a.*', 'a.id'])
 			->from('foo AS a')
 			->where('a = b')
 			->order('id');
@@ -939,7 +939,7 @@ class QueryTest extends AbstractQueryTestCase
 
 		$query = $this->getQuery()
 			->update('foo')
-			->set(array('a = b', 'c = d'));
+			->set(['a = b', 'c = d']);
 
 		$sql = 'UPDATE foo SET a = b , c = d';
 
@@ -1012,7 +1012,7 @@ class QueryTest extends AbstractQueryTestCase
 		$query = $this->getQuery()
 			->insert('foo')
 			->columns('a, b, c')
-			->values(array('1, 2, 3', '1, 2, 3', '1, 2, 3'));
+			->values(['1, 2, 3', '1, 2, 3', '1, 2, 3']);
 
 		$this->assertEquals(
 			'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3),' . PHP_EOL . '(1, 2, 3),' . PHP_EOL . '(1, 2, 3)',
@@ -1023,11 +1023,11 @@ class QueryTest extends AbstractQueryTestCase
 			->insert('foo')
 			->columns('a, b, c')
 			->values(
-				array(
-					array(1, 2, 3),
-					array(1, 2, 3),
-					array(1, 2, 3),
-				)
+				[
+					[1, 2, 3],
+					[1, 2, 3],
+					[1, 2, 3],
+				]
 			);
 
 		$this->assertEquals(
@@ -1083,7 +1083,7 @@ class QueryTest extends AbstractQueryTestCase
 			->select('*')
 			->from('foo')
 			->where('a = b')
-			->orWhere(array('c = d', 'e = f', 'g = h'))
+			->orWhere(['c = d', 'e = f', 'g = h'])
 			->order('id');
 
 		$sql = 'SELECT * FROM foo WHERE a = b AND (c = d OR e = f OR g = h) ORDER BY id';
@@ -1316,7 +1316,7 @@ class QueryTest extends AbstractQueryTestCase
 		$this->assertSame($query->getConnection(), $pdo);
 
 		// Test expression
-		$query->expression('CONCAT', array('a', 'b'));
+		$query->expression('CONCAT', ['a', 'b']);
 
 		$string = serialize($query);
 

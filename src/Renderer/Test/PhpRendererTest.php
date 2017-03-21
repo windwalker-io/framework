@@ -224,11 +224,11 @@ HTML;
 	 */
 	public function testLoadWithData()
 	{
-		$data = array(
+		$data = [
 			'class' => 'flower',
 			'title' => 'Sakura',
 			'content' => 'Nulla sollicitudin vel augue quis aliquet.'
-		);
+		];
 
 		$html = $this->instance->render('data1', $data);
 

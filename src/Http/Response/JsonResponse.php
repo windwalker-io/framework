@@ -30,7 +30,7 @@ class JsonResponse extends TextResponse
 	 * @param  array  $headers The custom headers.
 	 * @param  int    $options Json encode options.
 	 */
-	public function __construct($json = '', $status = 200, array $headers = array(), $options = 0)
+	public function __construct($json = '', $status = 200, array $headers = [], $options = 0)
 	{
 		parent::__construct(
 			$this->encode($json, $options),
@@ -54,7 +54,7 @@ class JsonResponse extends TextResponse
 		{
 			$firstChar = $data[0];
 
-			if (in_array($firstChar, array('[', '{', '"')))
+			if (in_array($firstChar, ['[', '{', '"']))
 			{
 				return $data;
 			}

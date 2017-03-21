@@ -196,7 +196,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 
 		$items = $this->db->getReader('SELECT * FROM #__categories')->loadObjectList();
 
-		$this->assertEquals(array(), $items);
+		$this->assertEquals([], $items);
 	}
 
 	/**
@@ -210,7 +210,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$columns = $this->db->getTable('#__categories')->getColumns();
 
-		$this->assertEquals(array('id', 'title', 'ordering', 'params'), $columns);
+		$this->assertEquals(['id', 'title', 'ordering', 'params'], $columns);
 	}
 
 	/**
@@ -258,7 +258,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 
 		$columns = $table->getColumns();
 
-		$this->assertEquals(array('id', 'title', 'ordering', 'params', 'state'), $columns);
+		$this->assertEquals(['id', 'title', 'ordering', 'params', 'state'], $columns);
 	}
 
 	/**
@@ -276,7 +276,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 
 		$columns = $table->getColumns();
 
-		$this->assertEquals(array('id', 'title', 'ordering', 'params'), $columns);
+		$this->assertEquals(['id', 'title', 'ordering', 'params'], $columns);
 	}
 
 	/**
@@ -349,7 +349,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
 	{
 		$table = $this->db->getTable('#__categories', true);
 
-		$table->addIndex('INDEX', array('ordering', 'id'), 'idx_ordering');
+		$table->addIndex('INDEX', ['ordering', 'id'], 'idx_ordering');
 
 		$indexes = $table->getIndexes();
 

@@ -43,7 +43,7 @@ class Point implements PointInterface
 	 *
 	 * @var  CollectorInterface
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Constructor.
@@ -53,7 +53,7 @@ class Point implements PointInterface
 	 * @param   integer $memory The allocated amount of memory in bytes
 	 * @param   mixed   $data   The collector data.
 	 */
-	public function __construct($name, $timing = 0.0, $memory = 0, $data = array())
+	public function __construct($name, $timing = 0.0, $memory = 0, $data = [])
 	{
 		$this->name = $name;
 		$this->time = (float) $timing;
@@ -70,7 +70,7 @@ class Point implements PointInterface
 	 *
 	 * @return  static
 	 */
-	public static function current($name, $data = array())
+	public static function current($name, $data = [])
 	{
 		return new static($name, microtime(true), memory_get_usage(false), $data);
 	}

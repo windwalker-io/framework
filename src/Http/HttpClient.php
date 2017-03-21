@@ -35,7 +35,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @var  array
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Property transport.
@@ -50,7 +50,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 * @param  array               $options    The options of this client object.
 	 * @param  TransportInterface  $transport  The Transport handler, default is CurlTransport.
 	 */
-	public function __construct($options = array(), TransportInterface $transport = null)
+	public function __construct($options = [], TransportInterface $transport = null)
 	{
 		$this->options   = (array) $options;
 		$this->transport = $transport ? : new CurlTransport;
@@ -68,7 +68,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @return  ResponseInterface
 	 */
-	public function request($method, $url, $data = null, $headers = array())
+	public function request($method, $url, $data = null, $headers = [])
 	{
 		$request = $this->prepareRequest(new Request, $method, $url, $data, $headers);
 
@@ -85,7 +85,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @return  ResponseInterface
 	 */
-	public function download($url, $dest, $data = null, $headers = array())
+	public function download($url, $dest, $data = null, $headers = [])
 	{
 		$request = $this->prepareRequest(new Request, 'GET', $url, $data, $headers);
 
@@ -128,7 +128,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @since   2.1
 	 */
-	public function options($url, $headers = array())
+	public function options($url, $headers = [])
 	{
 		return $this->request('OPTIONS', $url, null, $headers);
 	}
@@ -143,7 +143,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @since   2.1
 	 */
-	public function head($url, $headers = array())
+	public function head($url, $headers = [])
 	{
 		return $this->request('HEAD', $url, null, $headers);
 	}
@@ -159,7 +159,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @since   2.1
 	 */
-	public function get($url, $data = null, $headers = array())
+	public function get($url, $data = null, $headers = [])
 	{
 		return $this->request('GET', $url, $data, $headers);
 	}
@@ -175,7 +175,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @since   2.1
 	 */
-	public function post($url, $data, $headers = array())
+	public function post($url, $data, $headers = [])
 	{
 		return $this->request('POST', $url, $data, $headers);
 	}
@@ -191,7 +191,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @since   2.1
 	 */
-	public function put($url, $data, $headers = array())
+	public function put($url, $data, $headers = [])
 	{
 		return $this->request('PUT', $url, $data, $headers);
 	}
@@ -207,7 +207,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @since   2.1
 	 */
-	public function delete($url, $data = null, $headers = array())
+	public function delete($url, $data = null, $headers = [])
 	{
 		return $this->request('DELETE', $url, $data, $headers);
 	}
@@ -222,7 +222,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @since   2.1
 	 */
-	public function trace($url, $headers = array())
+	public function trace($url, $headers = [])
 	{
 		return $this->request('TRACE', $url, null, $headers);
 	}
@@ -238,7 +238,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
 	 *
 	 * @since   2.1
 	 */
-	public function patch($url, $data, $headers = array())
+	public function patch($url, $data, $headers = [])
 	{
 		return $this->request('PATCH', $url, $data, $headers);
 	}

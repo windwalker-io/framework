@@ -32,7 +32,7 @@ class InCompareTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new InCompare('sakura', array('rose', 'sunflower', 'sakura'));
+		$this->instance = new InCompare('sakura', ['rose', 'sunflower', 'sakura']);
 	}
 
 	/**
@@ -46,7 +46,7 @@ class InCompareTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertTrue($this->instance->compare());
 
-		$compare = new InCompare('1', array(1, 2, 3, 4, 5));
+		$compare = new InCompare('1', [1, 2, 3, 4, 5]);
 
 		$this->assertTrue($compare->compare());
 		$this->assertFalse($compare->compare(true));

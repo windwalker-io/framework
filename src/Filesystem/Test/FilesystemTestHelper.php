@@ -60,12 +60,12 @@ class FilesystemTestHelper
 	 */
 	public static function getFilesRecursive($folder = 'dest')
 	{
-		return array(
+		return [
 			__DIR__ . '/' . $folder . '/file2.txt',
 			__DIR__ . '/' . $folder . '/folder1/level2/file3',
 			__DIR__ . '/' . $folder . '/folder1/path1',
 			__DIR__ . '/' . $folder . '/folder2/file2.html'
-		);
+		];
 	}
 
 	/**
@@ -77,11 +77,11 @@ class FilesystemTestHelper
 	 */
 	public static function getFoldersRecursive($folder = 'dest')
 	{
-		return array (
+		return [
 			__DIR__ . '/' . $folder . '/folder1',
 			__DIR__ . '/' . $folder . '/folder1/level2',
 			__DIR__ . '/' . $folder . '/folder2',
-		);
+		];
 	}
 
 	/**
@@ -93,7 +93,7 @@ class FilesystemTestHelper
 	 */
 	public static function getItemsRecursive($folder = 'dest')
 	{
-		return array (
+		return [
 			__DIR__ . '/' . $folder . '/file2.txt',
 			__DIR__ . '/' . $folder . '/folder1',
 			__DIR__ . '/' . $folder . '/folder1/level2',
@@ -101,6 +101,6 @@ class FilesystemTestHelper
 			__DIR__ . '/' . $folder . '/folder1/path1',
 			__DIR__ . '/' . $folder . '/folder2',
 			__DIR__ . '/' . $folder . '/folder2/file2.html',
-		);
+		];
 	}
 }

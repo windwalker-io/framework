@@ -133,10 +133,10 @@ class RestRouterTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testMatch()
 	{
-		$routes = array(
+		$routes = [
 			'flower/(id)/(alias)' => 'Flower\\Controller\\',
 			'foo/bar(/id,sakura)' => 'Sakura\\Controller\\'
-		);
+		];
 
 		$this->instance->addMaps($routes);
 

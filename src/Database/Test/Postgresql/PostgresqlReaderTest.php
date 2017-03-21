@@ -188,7 +188,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 		$this->assertEquals('Amaryllis', $items[1]->title);
 
 		// Test nested
-		$array = array();
+		$array = [];
 
 		foreach ($r1 = $this->db->getReader('SELECT * FROM #__categories LIMIT 3') as $cat)
 		{
@@ -198,10 +198,10 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
 			}
 		}
 
-		$expected = array(
-			'Foo' => array('Anemone', 'Apple Blossom'),
-			'Bar' => array('Alstroemeria', 'Amaryllis'),
-		);
+		$expected = [
+			'Foo' => ['Anemone', 'Apple Blossom'],
+			'Bar' => ['Alstroemeria', 'Amaryllis'],
+		];
 
 		$this->assertEquals($expected, $array);
 	}

@@ -34,7 +34,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	 * @param array|\SplPriorityQueue $array
 	 * @param int                     $priority
 	 */
-	public function __construct($array = array(), $priority = self::NORMAL)
+	public function __construct($array = [], $priority = self::NORMAL)
 	{
 		if ($array instanceof \SplPriorityQueue)
 		{
@@ -54,7 +54,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	 *
 	 * @return  static
 	 */
-	public function bind(array $array = array(), $priority = self::NORMAL)
+	public function bind(array $array = [], $priority = self::NORMAL)
 	{
 		foreach ($array as $item)
 		{
@@ -96,7 +96,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	{
 		if (!is_array($priority))
 		{
-			$priority = array($priority, $this->serial--);
+			$priority = [$priority, $this->serial--];
 		}
 		else
 		{
@@ -115,7 +115,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 	 */
 	public function toArray()
 	{
-		$array = array();
+		$array = [];
 
 		foreach (clone $this as $item)
 		{
@@ -136,7 +136,7 @@ class PriorityQueue extends \SplPriorityQueue implements \Serializable
 
 		$clone->setExtractFlags(self::EXTR_BOTH);
 
-		$data = array();
+		$data = [];
 
 		foreach ($clone as $item)
 		{

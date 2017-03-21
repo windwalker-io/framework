@@ -22,7 +22,7 @@ class PdoHelper
 	 *
 	 * @var  array
 	 */
-	private static $options = array();
+	private static $options = [];
 
 	/**
 	 * extractDsn
@@ -49,11 +49,11 @@ class PdoHelper
 	 * @throws  \DomainException
 	 * @return  string
 	 */
-	public static function getDsn($driver, $options = array())
+	public static function getDsn($driver, $options = [])
 	{
 		self::$options = $options;
 
-		if (!is_callable(array(get_called_class(), $driver)))
+		if (!is_callable([get_called_class(), $driver]))
 		{
 			throw new \DomainException('The ' . $driver . ' driver is not supported.');
 		}
@@ -62,7 +62,7 @@ class PdoHelper
 
 		$dsn = strtr($dsn, $replace);
 
-		self::$options = array();
+		self::$options = [];
 
 		return $dsn;
 	}
@@ -74,14 +74,14 @@ class PdoHelper
 	 */
 	protected static function cubrid()
 	{
-		return array(
+		return [
 			'cubrid:host={HOST};port={PORT};dbname={DBNAME}',
-			array(
+			[
 				'{HOST}'   => static::getOption('host', 'localhost'),
 				'{PORT}'   => static::getOption('port', 33000),
 				'{DBNAME}' => static::getOption('database')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -91,14 +91,14 @@ class PdoHelper
 	 */
 	protected static function dblib()
 	{
-		return array(
+		return [
 			'dblib:host={HOST};port={PORT};dbname={DBNAME}',
-			array(
+			[
 				'{HOST}'   => static::getOption('host', 'localhost'),
 				'{PORT}'   => static::getOption('port', 1433),
 				'{DBNAME}' => static::getOption('database')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -108,12 +108,12 @@ class PdoHelper
 	 */
 	protected static function firebird()
 	{
-		return array(
+		return [
 			'firebird:dbname={DBNAME}',
-			array(
+			[
 				'{DBNAME}' => static::getOption('database')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -125,22 +125,22 @@ class PdoHelper
 	{
 		if ($dsn = static::getOption('dsn'))
 		{
-			return array(
+			return [
 				'ibm:DSN={DSN}',
-				array(
+				[
 					'{DSN}' => $dsn
-				)
-			);
+				]
+			];
 		}
 
-		return array(
+		return [
 			'ibm:hostname={HOST};port={PORT};database={DBNAME}',
-			array(
+			[
 				'{HOST}'   => static::getOption('host', 'localhost'),
 				'{PORT}'   => static::getOption('port', 56789),
 				'{DBNAME}' => static::getOption('database')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -152,24 +152,24 @@ class PdoHelper
 	{
 		if ($dsn = static::getOption('dsn'))
 		{
-			return array(
+			return [
 				'informix:DSN={DSN}',
-				array(
+				[
 					'{DSN}' => $dsn
-				)
-			);
+				]
+			];
 		}
 
-		return array(
+		return [
 			'informix:host={HOST};service={PORT};database={DBNAME};server={SERVER};protocol={PROTOCOL}',
-			array(
+			[
 				'{HOST}'     => static::getOption('host', 'localhost'),
 				'{PORT}'     => static::getOption('port', 1526),
 				'{DBNAME}'   => static::getOption('database'),
 				'{SERVER}'   => static::getOption('server'),
 				'{PROTOCOL}' => static::getOption('protocol')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -179,14 +179,14 @@ class PdoHelper
 	 */
 	protected static function mssql()
 	{
-		return array(
+		return [
 			'mssql:host={HOST};port={PORT};dbname={DBNAME}',
-			array(
+			[
 				'{HOST}'   => static::getOption('host', 'localhost'),
 				'{PORT}'   => static::getOption('port', 1433),
 				'{DBNAME}' => static::getOption('database')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -196,15 +196,15 @@ class PdoHelper
 	 */
 	protected static function mysql()
 	{
-		return array(
+		return [
 			'mysql:host={HOST};port={PORT};dbname={DBNAME};charset={CHARSET}',
-			array(
+			[
 				'{HOST}'    => static::getOption('host', 'localhost'),
 				'{PORT}'    => static::getOption('port', 3306),
 				'{DBNAME}'  => static::getOption('database'),
 				'{CHARSET}' => static::getOption('charset', 'utf8')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -216,24 +216,24 @@ class PdoHelper
 	{
 		if ($dsn = static::getOption('dsn'))
 		{
-			return array(
+			return [
 				'oci:dbname={DSN};charset={CHARSET}',
-				array(
+				[
 					'{DSN}'     => $dsn,
 					'{CHARSET}' => static::getOption('charset', 'AL32UTF8')
-				)
-			);
+				]
+			];
 		}
 
-		return array(
+		return [
 			'oci:dbname=//#HOST#:#PORT#/#DBNAME};charset={CHARSET}',
-			array(
+			[
 				'{HOST}'    => static::getOption('host', 'localhost'),
 				'{PORT}'    => static::getOption('port', 56789),
 				'{DBNAME}'  => static::getOption('database'),
 				'{CHARSET}' => static::getOption('charset', 'AL32UTF8')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -243,14 +243,14 @@ class PdoHelper
 	 */
 	protected static function odbc()
 	{
-		return array(
+		return [
 			'odbc:DSN={DSN};UID:#USER};PWD={PASSWORD}',
-			array(
+			[
 				'{HOST}'     => static::getOption('host', 'localhost'),
 				'{USER}'     => static::getOption('user', 1433),
 				'{PASSWORD}' => static::getOption('password')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -260,14 +260,14 @@ class PdoHelper
 	 */
 	protected static function pgsql()
 	{
-		return array(
+		return [
 			'pgsql:host={HOST};port={PORT};dbname={DBNAME}',
-			array(
+			[
 				'{HOST}'   => static::getOption('host', 'localhost'),
 				'{PORT}'   => static::getOption('port', 5432),
 				'{DBNAME}' => static::getOption('database', 'postgres')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -298,12 +298,12 @@ class PdoHelper
 			$format = 'sqlite:#DBNAME}';
 		}
 
-		return array(
+		return [
 			$format,
-			array(
+			[
 				'{DBNAME}' => static::getOption('database')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -313,14 +313,14 @@ class PdoHelper
 	 */
 	protected static function sybase()
 	{
-		return array(
+		return [
 			'pgsql:host={HOST};port={PORT};dbname={DBNAME}',
-			array(
+			[
 				'{HOST}'   => static::getOption('host', 'localhost'),
 				'{PORT}'   => static::getOption('port', 1433),
 				'{DBNAME}' => static::getOption('database')
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -330,13 +330,13 @@ class PdoHelper
 	 */
 	protected static function fourd()
 	{
-		return array(
+		return [
 			'4D:host={HOST};charset=UTF-8',
-			array(
+			[
 				'{HOST}'    => static::getOption('host', 'localhost'),
 				'{CHARSET}' => static::getOption('charset', 'UTF-8')
-			)
-		);
+			]
+		];
 	}
 
 	/**

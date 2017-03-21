@@ -125,7 +125,7 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadColumn($offset = 0)
 	{
-		$array = array();
+		$array = [];
 
 		// Get all of the rows from the result set as arrays.
 		while ($row = $this->fetchArray())
@@ -175,7 +175,7 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadArrayList($key = null)
 	{
-		$array = array();
+		$array = [];
 
 		// Get all of the rows from the result set as arrays.
 		while ($row = $this->fetchArray())
@@ -230,7 +230,7 @@ abstract class AbstractReader implements \IteratorAggregate
 	 */
 	public function loadAssocList($key = null)
 	{
-		$array = array();
+		$array = [];
 
 		// Get all of the rows from the result set.
 		while ($row = $this->fetchAssoc())
@@ -293,7 +293,7 @@ abstract class AbstractReader implements \IteratorAggregate
 	{
 		$this->execute();
 
-		$array = array();
+		$array = [];
 
 		// Get all of the rows from the result set as objects of type $class.
 		while ($row = $this->fetchObject($class))

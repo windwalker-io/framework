@@ -26,7 +26,7 @@ class PhpFormat implements FormatInterface
 	 *
 	 * @return  string
 	 */
-	public static function structToString($struct, array $options = array())
+	public static function structToString($struct, array $options = [])
 	{
 		$header = StructureHelper::getValue($options, 'header');
 
@@ -73,7 +73,7 @@ class PhpFormat implements FormatInterface
 	 *
 	 * @return  object   Data object.
 	 */
-	public static function stringToStruct($data, array $options = array())
+	public static function stringToStruct($data, array $options = [])
 	{
 		return $data;
 	}

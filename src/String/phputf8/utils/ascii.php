@@ -157,7 +157,7 @@ function utf8_accents_to_ascii( $str, $case=0 ){
     if($case <= 0){
 
         if ( is_null($UTF8_LOWER_ACCENTS) ) {
-            $UTF8_LOWER_ACCENTS = array(
+            $UTF8_LOWER_ACCENTS = [
   'à' => 'a', 'ô' => 'o', 'ď' => 'd', 'ḟ' => 'f', 'ë' => 'e', 'š' => 's', 'ơ' => 'o',
   'ß' => 'ss', 'ă' => 'a', 'ř' => 'r', 'ț' => 't', 'ň' => 'n', 'ā' => 'a', 'ķ' => 'k',
   'ŝ' => 's', 'ỳ' => 'y', 'ņ' => 'n', 'ĺ' => 'l', 'ħ' => 'h', 'ṗ' => 'p', 'ó' => 'o',
@@ -173,7 +173,7 @@ function utf8_accents_to_ascii( $str, $case=0 ){
   'â' => 'a', 'ľ' => 'l', 'ẅ' => 'w', 'ż' => 'z', 'ī' => 'i', 'ã' => 'a', 'ġ' => 'g',
   'ṁ' => 'm', 'ō' => 'o', 'ĩ' => 'i', 'ù' => 'u', 'į' => 'i', 'ź' => 'z', 'á' => 'a',
   'û' => 'u', 'þ' => 'th', 'ð' => 'dh', 'æ' => 'ae', 'µ' => 'u', 'ĕ' => 'e',
-            );
+			];
         }
 
         $str = str_replace(
@@ -185,7 +185,7 @@ function utf8_accents_to_ascii( $str, $case=0 ){
 
     if($case >= 0){
         if ( is_null($UTF8_UPPER_ACCENTS) ) {
-            $UTF8_UPPER_ACCENTS = array(
+            $UTF8_UPPER_ACCENTS = [
   'À' => 'A', 'Ô' => 'O', 'Ď' => 'D', 'Ḟ' => 'F', 'Ë' => 'E', 'Š' => 'S', 'Ơ' => 'O',
   'Ă' => 'A', 'Ř' => 'R', 'Ț' => 'T', 'Ň' => 'N', 'Ā' => 'A', 'Ķ' => 'K',
   'Ŝ' => 'S', 'Ỳ' => 'Y', 'Ņ' => 'N', 'Ĺ' => 'L', 'Ħ' => 'H', 'Ṗ' => 'P', 'Ó' => 'O',
@@ -201,7 +201,7 @@ function utf8_accents_to_ascii( $str, $case=0 ){
   'Â' => 'A', 'Ľ' => 'L', 'Ẅ' => 'W', 'Ż' => 'Z', 'Ī' => 'I', 'Ã' => 'A', 'Ġ' => 'G',
   'Ṁ' => 'M', 'Ō' => 'O', 'Ĩ' => 'I', 'Ù' => 'U', 'Į' => 'I', 'Ź' => 'Z', 'Á' => 'A',
   'Û' => 'U', 'Þ' => 'Th', 'Ð' => 'Dh', 'Æ' => 'Ae', 'Ĕ' => 'E',
-            );
+			];
         }
         $str = str_replace(
                 array_keys($UTF8_UPPER_ACCENTS),

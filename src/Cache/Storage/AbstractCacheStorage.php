@@ -31,14 +31,14 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
 	 *
 	 * @var  array
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Property differed.
 	 *
 	 * @var  CacheItemInterface[]
 	 */
-	protected $differed = array();
+	protected $differed = [];
 
 	/**
 	 * Property commiting.
@@ -55,7 +55,7 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($ttl = null, $options = array())
+	public function __construct($ttl = null, $options = [])
 	{
 		$this->options = $options;
 		$this->ttl = $ttl ? : 900;
@@ -70,9 +70,9 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
 	 *                       parameter, keyed by the cache keys of each item. If no items are found
 	 *                       an empty Traversable collection will be returned.
 	 */
-	public function getItems(array $keys = array())
+	public function getItems(array $keys = [])
 	{
-		$items = array();
+		$items = [];
 
 		foreach ($keys as $key)
 		{

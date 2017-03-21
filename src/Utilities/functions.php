@@ -66,7 +66,7 @@ if (!function_exists('show'))
 		// Dump Multiple values
 		if (count($args) > 1)
 		{
-			$prints = array();
+			$prints = [];
 
 			$i = 1;
 

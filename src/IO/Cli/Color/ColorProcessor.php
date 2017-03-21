@@ -45,7 +45,7 @@ class ColorProcessor implements ColorProcessorInterface
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $styles = array();
+	protected $styles = [];
 
 	/**
 	 * Class constructor
@@ -154,12 +154,12 @@ class ColorProcessor implements ColorProcessorInterface
 	{
 		$this->addStyle(
 			'info',
-			new ColorStyle('green', '', array('bold'))
+			new ColorStyle('green', '', ['bold'])
 		);
 
 		$this->addStyle(
 			'comment',
-			new ColorStyle('yellow', '', array('bold'))
+			new ColorStyle('yellow', '', ['bold'])
 		);
 
 		$this->addStyle(

@@ -31,7 +31,7 @@ $d->addListener(
 	{
 		echo 'Ccc' . "\n";
 	},
-	array('Ccc' => 5)
+	['Ccc' => 5]
 );
 
 $d->triggerEvent($event);

@@ -47,8 +47,9 @@ class FileField extends TextField
 	 */
 	protected function getAccessors()
 	{
-		return array_merge(parent::getAccessors(), array(
+		return array_merge(parent::getAccessors(), [
 			'multiple' => 'multiple',
-		));
+		]
+		);
 	}
 }

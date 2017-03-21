@@ -22,7 +22,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 *
 	 * @since  2.0
 	 */
-	public $items = array();
+	public $items = [];
 
 	/**
 	 * Add a item to describe.
@@ -60,7 +60,7 @@ abstract class AbstractDescriptor implements DescriptorInterface
 	 */
 	public function render()
 	{
-		$description = array();
+		$description = [];
 
 		foreach ($this->items as $item)
 		{

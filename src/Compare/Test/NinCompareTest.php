@@ -32,7 +32,7 @@ class NinCompareTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new NinCompare('sakura', array('rose', 'sunflower', 'sakura'));
+		$this->instance = new NinCompare('sakura', ['rose', 'sunflower', 'sakura']);
 	}
 
 	/**
@@ -46,7 +46,7 @@ class NinCompareTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertFalse($this->instance->compare());
 
-		$compare = new NinCompare('1', array(1, 2, 3, 4, 5));
+		$compare = new NinCompare('1', [1, 2, 3, 4, 5]);
 
 		$this->assertFalse($compare->compare());
 		$this->assertTrue($compare->compare(true));

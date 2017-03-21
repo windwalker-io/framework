@@ -52,13 +52,13 @@ class PsrInput extends Input
 
 		// Sort by importance
 		$input->get     = new Input($query, $filter);
-		$input->post    = new Input($method == 'post'   ? $post : array(), $filter);
+		$input->post    = new Input($method == 'post'   ? $post : [], $filter);
 		$input->files   = new PsrFilesInput($request->getUploadedFiles(),  $filter);
-		$input->put     = new Input($method == 'put'    ? $post : array(), $filter);
-		$input->patch   = new Input($method == 'patch'  ? $post : array(), $filter);
-		$input->delete  = new Input($method == 'delete' ? $post : array(), $filter);
-		$input->link    = new Input($method == 'link'   ? $post : array(), $filter);
-		$input->unlink  = new Input($method == 'unlink' ? $post : array(), $filter);
+		$input->put     = new Input($method == 'put'    ? $post : [], $filter);
+		$input->patch   = new Input($method == 'patch'  ? $post : [], $filter);
+		$input->delete  = new Input($method == 'delete' ? $post : [], $filter);
+		$input->link    = new Input($method == 'link'   ? $post : [], $filter);
+		$input->unlink  = new Input($method == 'unlink' ? $post : [], $filter);
 		$input->request = new Input(array_merge($query, $post));
 
 		// Super Globals

@@ -86,7 +86,7 @@ class FilesystemTest extends AbstractFilesystemTest
 		$files = Filesystem::files(__DIR__ . '/dest/folder1/level2', true, true);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array(__DIR__ . '/dest/folder1/level2/file3')),
+			FilesystemTestHelper::cleanPaths([__DIR__ . '/dest/folder1/level2/file3']),
 			FilesystemTestHelper::cleanPaths($files)
 		);
 
@@ -129,7 +129,7 @@ class FilesystemTest extends AbstractFilesystemTest
 		$folders = Filesystem::folders(static::$dest . '/folder1', true, true);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array(static::$dest . '/folder1/level2')),
+			FilesystemTestHelper::cleanPaths([static::$dest . '/folder1/level2']),
 			FilesystemTestHelper::cleanPaths($folders)
 		);
 
@@ -172,7 +172,7 @@ class FilesystemTest extends AbstractFilesystemTest
 		$items = Filesystem::items(static::$dest . '/folder1/level2', true, true);
 
 		$this->assertEquals(
-			FilesystemTestHelper::cleanPaths(array(static::$dest . '/folder1/level2/file3')),
+			FilesystemTestHelper::cleanPaths([static::$dest . '/folder1/level2/file3']),
 			FilesystemTestHelper::cleanPaths($items)
 		);
 
@@ -234,11 +234,11 @@ class FilesystemTest extends AbstractFilesystemTest
 		// String condition
 		$files = Filesystem::find(static::$dest, 'file', true, true);
 
-		$expect1 = array(
+		$expect1 = [
 			__DIR__ . '/dest/file2.txt',
 			__DIR__ . '/dest/folder1/level2/file3',
 			__DIR__ . '/dest/folder2/file2.html',
-		);
+		];
 
 		$this->assertEquals(
 			FilesystemTestHelper::cleanPaths($expect1),
@@ -246,14 +246,14 @@ class FilesystemTest extends AbstractFilesystemTest
 		);
 
 		// Array condition
-		$files = Filesystem::find(static::$dest, array('file', 'path'), true, true);
+		$files = Filesystem::find(static::$dest, ['file', 'path'], true, true);
 
-		$expect2 = array(
+		$expect2 = [
 			__DIR__ . '/dest/file2.txt',
 			__DIR__ . '/dest/folder1/level2/file3',
 			__DIR__ . '/dest/folder1/path1',
 			__DIR__ . '/dest/folder2/file2.html',
-		);
+		];
 
 		$this->assertEquals(
 			FilesystemTestHelper::cleanPaths($expect2),
@@ -268,9 +268,9 @@ class FilesystemTest extends AbstractFilesystemTest
 
 		$files = Filesystem::find(static::$dest, $condition, true, true);
 
-		$expect3 = array(
+		$expect3 = [
 			__DIR__ . '/dest/folder2/file2.html',
-		);
+		];
 
 		$this->assertEquals(
 			FilesystemTestHelper::cleanPaths($expect3),
@@ -294,9 +294,9 @@ class FilesystemTest extends AbstractFilesystemTest
 
 		$files = Filesystem::find(static::$dest, $condition, true, true);
 
-		$expect3 = array(
+		$expect3 = [
 			__DIR__ . '/dest/folder2/file2.html',
-		);
+		];
 
 		$this->assertEquals(
 			FilesystemTestHelper::cleanPaths($expect3),

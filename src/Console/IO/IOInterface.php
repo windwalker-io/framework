@@ -68,7 +68,7 @@ interface IOInterface extends WindwalkerIOInterface
 	 *
 	 * @return  static
 	 */
-	public function addColor($name, $fg, $bg, $options = array());
+	public function addColor($name, $fg, $bg, $options = []);
 
 	/**
 	 * useColor

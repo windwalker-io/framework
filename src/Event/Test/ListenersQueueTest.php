@@ -243,7 +243,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
 		$this->instance->add($listener8, 0);
 		$this->instance->add($listener9, -10);
 
-		$listeners = array();
+		$listeners = [];
 
 		foreach ($this->instance as $listener)
 		{
@@ -279,14 +279,14 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
 		$this->instance->add($listener1, 1);
 		$this->instance->add($listener2, 2);
 
-		$firstListeners = array();
+		$firstListeners = [];
 
 		foreach ($this->instance as $listener)
 		{
 			$firstListeners[] = $listener;
 		}
 
-		$secondListeners = array();
+		$secondListeners = [];
 
 		foreach ($this->instance as $listener)
 		{

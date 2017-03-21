@@ -65,7 +65,7 @@ class HttpServer
 	 * 
 	 * @return  static  The Server instance.
 	 */
-	public static function createFromGlobals($handler = null, array $server = array(), array $query = array(), array $body = array(), array $cookies = array(), array $files = array())
+	public static function createFromGlobals($handler = null, array $server = [], array $query = [], array $body = [], array $cookies = [], array $files = [])
 	{
 		$request  = ServerRequestFactory::createFromGlobals($server, $query, $body, $cookies, $files);
 

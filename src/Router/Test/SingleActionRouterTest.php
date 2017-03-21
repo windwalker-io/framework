@@ -71,10 +71,10 @@ class SingleActionRouterTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testMatch()
 	{
-		$routes = array(
+		$routes = [
 			'flower/(id)/(alias)' => 'FlowerController',
 			'foo/bar(/id,sakura)' => 'SakuraController'
-		);
+		];
 
 		$this->instance->addMaps($routes);
 

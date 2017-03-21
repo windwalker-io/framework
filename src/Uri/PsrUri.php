@@ -36,10 +36,10 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 	 *
 	 * @var  integer[]
 	 */
-	protected $standardSchemes = array(
+	protected $standardSchemes = [
 		'http'  => 80,
 		'https' => 443
-	);
+	];
 
 	/**
 	 * Constructor.

@@ -85,13 +85,13 @@ class AbstractMessageTest extends AbstractBaseTestCase
 		$message = $this->message->withHeader('Content-Type', 'text/json');
 
 		$this->assertNotSame($this->message, $message);
-		$this->assertEquals(array('text/json'), $message->getHeader('Content-Type'));
-		$this->assertEquals(array('text/json'), $message->getHeader('content-type'));
+		$this->assertEquals(['text/json'], $message->getHeader('Content-Type'));
+		$this->assertEquals(['text/json'], $message->getHeader('content-type'));
 
-		$message = $this->message->withHeader('X-Foo', array('Foo', 'Bar'));
+		$message = $this->message->withHeader('X-Foo', ['Foo', 'Bar']);
 
 		$this->assertNotSame($this->message, $message);
-		$this->assertEquals(array('Foo', 'Bar'), $message->getHeader('X-Foo'));
+		$this->assertEquals(['Foo', 'Bar'], $message->getHeader('X-Foo'));
 	}
 
 	/**
@@ -120,15 +120,15 @@ class AbstractMessageTest extends AbstractBaseTestCase
 	 */
 	public function testGetHeaders()
 	{
-		$this->assertEquals(array(), $this->message->getHeaders());
+		$this->assertEquals([], $this->message->getHeaders());
 
-		$message = $this->message->withHeader('X-Foo', array('Foo', 'Bar'));
-		$message = $message->withHeader('X-Bar', array('Flower', 'Sakura'));
+		$message = $this->message->withHeader('X-Foo', ['Foo', 'Bar']);
+		$message = $message->withHeader('X-Bar', ['Flower', 'Sakura']);
 
-		$expected = array(
-			'X-Foo' => array('Foo', 'Bar'),
-			'X-Bar' => array('Flower', 'Sakura'),
-		);
+		$expected = [
+			'X-Foo' => ['Foo', 'Bar'],
+			'X-Bar' => ['Flower', 'Sakura'],
+		];
 
 		$this->assertEquals($expected, $message->getHeaders());
 	}
@@ -144,7 +144,7 @@ class AbstractMessageTest extends AbstractBaseTestCase
 	{
 		$this->assertEquals('', $this->message->getHeaderLine('X-Foo'));
 
-		$message = $this->message->withHeader('X-Foo', array('Foo', 'Bar'));
+		$message = $this->message->withHeader('X-Foo', ['Foo', 'Bar']);
 
 		$this->assertEquals('Foo,Bar', $message->getHeaderLine('X-Foo'));
 		$this->assertEquals('Foo,Bar', $message->getHeaderLine('x-foo'));
@@ -163,15 +163,15 @@ class AbstractMessageTest extends AbstractBaseTestCase
 		$message = $this->message->withAddedHeader('X-Foo', 'One');
 
 		$this->assertNotSame($this->message, $message);
-		$this->assertEquals(array('One'), $message->getHeader('X-Foo'));
+		$this->assertEquals(['One'], $message->getHeader('X-Foo'));
 
 		$message = $message->withAddedHeader('X-Foo', 'Two');
 
-		$this->assertEquals(array('One', 'Two'), $message->getHeader('X-Foo'));
+		$this->assertEquals(['One', 'Two'], $message->getHeader('X-Foo'));
 
-		$message = $message->withAddedHeader('X-Foo', array('Three', 'Four'));
+		$message = $message->withAddedHeader('X-Foo', ['Three', 'Four']);
 
-		$this->assertEquals(array('One', 'Two', 'Three', 'Four'), $message->getHeader('X-Foo'));
+		$this->assertEquals(['One', 'Two', 'Three', 'Four'], $message->getHeader('X-Foo'));
 	}
 
 	/**
@@ -186,17 +186,17 @@ class AbstractMessageTest extends AbstractBaseTestCase
 		$message = $this->message->withAddedHeader('X-Foo', 'One');
 
 		$this->assertNotSame($this->message, $message);
-		$this->assertEquals(array('One'), $message->getHeader('X-Foo'));
+		$this->assertEquals(['One'], $message->getHeader('X-Foo'));
 
 		$message2 = $message->withoutHeader('X-Foo');
 
 		$this->assertNotSame($this->message, $message2);
-		$this->assertEquals(array(), $message2->getHeader('X-Foo'));
+		$this->assertEquals([], $message2->getHeader('X-Foo'));
 
 		$message3 = $message->withoutHeader('x-foo');
 
 		$this->assertNotSame($this->message, $message3);
-		$this->assertEquals(array(), $message3->getHeader('X-Foo'));
+		$this->assertEquals([], $message3->getHeader('X-Foo'));
 	}
 
 	/**

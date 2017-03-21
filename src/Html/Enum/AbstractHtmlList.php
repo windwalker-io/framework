@@ -24,7 +24,7 @@ abstract class AbstractHtmlList extends HtmlElement
 	 * @param ListItem[] $items
 	 * @param array      $attribs
 	 */
-	public function __construct($items = array(), $attribs = array())
+	public function __construct($items = [], $attribs = [])
 	{
 		parent::__construct($this->name, null, $attribs);
 
@@ -38,7 +38,7 @@ abstract class AbstractHtmlList extends HtmlElement
 	 *
 	 * @return  static
 	 */
-	public static function create($attribs = array())
+	public static function create($attribs = [])
 	{
 		return new static($attribs);
 	}
@@ -51,7 +51,7 @@ abstract class AbstractHtmlList extends HtmlElement
 	 *
 	 * @return  static
 	 */
-	public function addItem($item, $attribs = array())
+	public function addItem($item, $attribs = [])
 	{
 		if (!$item instanceof ListItem)
 		{
@@ -71,7 +71,7 @@ abstract class AbstractHtmlList extends HtmlElement
 	 *
 	 * @return  static
 	 */
-	public function item($item, $attribs = array())
+	public function item($item, $attribs = [])
 	{
 		return $this->addItem($item, $attribs);
 	}
@@ -85,7 +85,7 @@ abstract class AbstractHtmlList extends HtmlElement
 	 *
 	 * @return  static
 	 */
-	public function child($title, $child, $attribs = array())
+	public function child($title, $child, $attribs = [])
 	{
 		return $this->addItem($title . $child, $attribs);
 	}

@@ -20,7 +20,7 @@ class ArrayBag extends SessionBag implements SessionBagInterface
 	 *
 	 * @var  array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * setData
@@ -31,7 +31,7 @@ class ArrayBag extends SessionBag implements SessionBagInterface
 	 */
 	public function setData(array &$data)
 	{
-		$this->data = array();
+		$this->data = [];
 
 		return;
 	}

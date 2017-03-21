@@ -30,7 +30,7 @@ abstract class AbstractPostgresqlTestCase extends AbstractDatabaseTestCase
 	 *
 	 * @var  array
 	 */
-	protected static $quote = array('"', '"');
+	protected static $quote = ['"', '"'];
 
 	/**
 	 * Property db.

@@ -26,16 +26,16 @@ class PathTest extends AbstractFilesystemTest
 	 */
 	public function getCleanData()
 	{
-		return array(
+		return [
 			// Input Path, Directory Separator, Expected Output
-			'Nothing to do.' => array('/var/www/foo/bar/baz', '/', '/var/www/foo/bar/baz'),
-			'One backslash.' => array('/var/www/foo\\bar/baz', '/', '/var/www/foo/bar/baz'),
-			'Two and one backslashes.' => array('/var/www\\\\foo\\bar/baz', '/', '/var/www/foo/bar/baz'),
-			'Mixed backslashes and double forward slashes.' => array('/var\\/www//foo\\bar/baz', '/', '/var/www/foo/bar/baz'),
-			'UNC path.' => array('\\\\www\\docroot', '\\', '\\\\www\\docroot'),
-			'UNC path with forward slash.' => array('\\\\www/docroot', '\\', '\\\\www\\docroot'),
-			'UNC path with UNIX directory separator.' => array('\\\\www/docroot', '/', '/www/docroot'),
-		);
+			'Nothing to do.' => ['/var/www/foo/bar/baz', '/', '/var/www/foo/bar/baz'],
+			'One backslash.' => ['/var/www/foo\\bar/baz', '/', '/var/www/foo/bar/baz'],
+			'Two and one backslashes.' => ['/var/www\\\\foo\\bar/baz', '/', '/var/www/foo/bar/baz'],
+			'Mixed backslashes and double forward slashes.' => ['/var\\/www//foo\\bar/baz', '/', '/var/www/foo/bar/baz'],
+			'UNC path.' => ['\\\\www\\docroot', '\\', '\\\\www\\docroot'],
+			'UNC path with forward slash.' => ['\\\\www/docroot', '\\', '\\\\www\\docroot'],
+			'UNC path with UNIX directory separator.' => ['\\\\www/docroot', '/', '/www/docroot'],
+		];
 	}
 
 	/**

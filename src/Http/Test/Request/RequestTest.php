@@ -55,11 +55,11 @@ class RequestTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetHeaders()
 	{
-		$this->assertEquals(array(), $this->instance->getHeaders());
+		$this->assertEquals([], $this->instance->getHeaders());
 
 		$request = $this->instance->withUri(new PsrUri('http://windwalker.io/flower/sakura'));
 
-		$this->assertEquals(array('Host' => array('windwalker.io')), $request->getHeaders());
+		$this->assertEquals(['Host' => ['windwalker.io']], $request->getHeaders());
 	}
 
 	/**
@@ -71,11 +71,11 @@ class RequestTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetHeader()
 	{
-		$this->assertEquals(array(), $this->instance->getHeader('host'));
+		$this->assertEquals([], $this->instance->getHeader('host'));
 
 		$request = $this->instance->withUri(new PsrUri('http://windwalker.io/flower/sakura'));
 
-		$this->assertEquals(array('windwalker.io'), $request->getHeader('host'));
+		$this->assertEquals(['windwalker.io'], $request->getHeader('host'));
 	}
 
 	/**

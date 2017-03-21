@@ -27,7 +27,7 @@ class Longtext extends Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $allowNull = false, $default = '', $comment = '', $options = array())
+	public function __construct($name = null, $allowNull = false, $default = '', $comment = '', $options = [])
 	{
 		parent::__construct($name, DataType::LONGTEXT, Column::SIGNED, $allowNull, $default, $comment, $options);
 	}

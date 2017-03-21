@@ -97,10 +97,11 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
 		$this->assertStringSafeEquals($data, $res->getBody()->__toString());
 
 		// Test add by array, will be DESC sorting
-		$chain = new Psr7ChainBuilder(array(
+		$chain = new Psr7ChainBuilder(
+			[
 			$this->getHandler('Othello'),
 			$this->getHandler('Caesar')
-		), Psr7ChainBuilder::SORT_DESC);
+			], Psr7ChainBuilder::SORT_DESC);
 
 		$res = $chain->execute(new ServerRequest, new Response);
 

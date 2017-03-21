@@ -123,7 +123,7 @@ abstract class AbstractCliApplication extends AbstractApplication
 	 */
 	public function __get($name)
 	{
-		$allowNames = array('io');
+		$allowNames = ['io'];
 
 		if (in_array($name, $allowNames))
 		{

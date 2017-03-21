@@ -34,7 +34,7 @@ interface DataMapperInterface
 	 *
 	 * @return mixed Found rows data set.
 	 */
-	public function find($conditions = array(), $order = null, $start = null, $limit = null);
+	public function find($conditions = [], $order = null, $start = null, $limit = null);
 
 	/**
 	 * Find records without where conditions and return data set.
@@ -69,7 +69,7 @@ interface DataMapperInterface
 	 *
 	 * @return mixed Found row data.
 	 */
-	public function findOne($conditions = array(), $order = null);
+	public function findOne($conditions = [], $order = null);
 
 	/**
 	 * Find column as an array.
@@ -91,7 +91,7 @@ interface DataMapperInterface
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function findColumn($column, $conditions = array(), $order = null, $start = null, $limit = null);
+	public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null);
 
 	/**
 	 * Create records by data set.
@@ -138,7 +138,7 @@ interface DataMapperInterface
 	 *
 	 * @return  mixed Updated data set.
 	 */
-	public function updateBatch($data, $conditions = array());
+	public function updateBatch($data, $conditions = []);
 
 	/**
 	 * Same as update(), just update one row.
@@ -163,7 +163,7 @@ interface DataMapperInterface
 	 *
 	 * @return  mixed Updated data set.
 	 */
-	public function flush($dataset, $conditions = array());
+	public function flush($dataset, $conditions = []);
 
 	/**
 	 * Save will auto detect is conditions matched in data or not.

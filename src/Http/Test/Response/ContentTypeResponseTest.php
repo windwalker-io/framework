@@ -42,7 +42,7 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
 		$response = new HtmlResponse('Flower');
 
 		$this->assertEquals('Flower', $response->getBody()->__toString());
-		$this->assertEquals(array('text/html; charset=utf-8'), $response->getHeader('Content-Type'));
+		$this->assertEquals(['text/html; charset=utf-8'], $response->getHeader('Content-Type'));
 	}
 
 	/**
@@ -52,7 +52,7 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
 	 */
 	public function testEmptyOutput()
 	{
-		$response = new EmptyResponse(204, array('x-foo' => 'bar'));
+		$response = new EmptyResponse(204, ['x-foo' => 'bar']);
 
 		$this->assertEquals('', $response->getBody()->__toString());
 
@@ -61,7 +61,7 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
 
 		$this->assertEquals('', $response->getBody()->__toString());
 
-		$this->assertEquals(array('bar'), $response->getHeader('x-foo'));
+		$this->assertEquals(['bar'], $response->getHeader('x-foo'));
 	}
 
 	/**
@@ -71,14 +71,14 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
 	 */
 	public function testJsonOutput()
 	{
-		$data = array(
+		$data = [
 			'foo' => 'bar'
-		);
+		];
 
 		$response = new JsonResponse($data);
 
 		$this->assertEquals(json_encode($data), $response->getBody()->__toString());
-		$this->assertEquals(array('application/json; charset=utf-8'), $response->getHeader('Content-Type'));
+		$this->assertEquals(['application/json; charset=utf-8'], $response->getHeader('Content-Type'));
 
 		$response = new JsonResponse('{"foo": 123}');
 
@@ -102,7 +102,7 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
 <root><foo flower="sakura">bar</foo></root>';
 
 		$this->assertXmlStringEqualsXmlString($expected, $response->getBody()->__toString());
-		$this->assertEquals(array('application/xml; charset=utf-8'), $response->getHeader('Content-Type'));
+		$this->assertEquals(['application/xml; charset=utf-8'], $response->getHeader('Content-Type'));
 
 		$xml = new \DOMDocument;
 		$xml->loadXML("<root />");
@@ -129,7 +129,7 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
 	{
 		$response = new RedirectResponse('http://example.com', 307);
 
-		$this->assertEquals(array('http://example.com'), $response->getHeader('Location'));
+		$this->assertEquals(['http://example.com'], $response->getHeader('Location'));
 		$this->assertEquals(307, $response->getStatusCode());
 	}
 }

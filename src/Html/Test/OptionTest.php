@@ -33,7 +33,7 @@ class OptionTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Option('flower', 'sakura', array('class' => 'item'));
+		$this->instance = new Option('flower', 'sakura', ['class' => 'item']);
 	}
 
 	/**

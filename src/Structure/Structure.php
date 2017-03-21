@@ -33,14 +33,14 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Property ignoreValues.
 	 *
 	 * @var  array
 	 */
-	protected $ignoreValues = array(null);
+	protected $ignoreValues = [null];
 
 	/**
 	 * Constructor
@@ -178,7 +178,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	 */
 	public function reset()
 	{
-		$this->data = array();
+		$this->data = [];
 
 		return $this;
 	}
@@ -209,7 +209,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	 *
 	 * @since   2.0
 	 */
-	public function loadFile($file, $format = Format::JSON, $options = array())
+	public function loadFile($file, $format = Format::JSON, $options = [])
 	{
 		$raw = isset($options['load_raw']) ? $options['load_raw'] : false;
 		
@@ -229,7 +229,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	 *
 	 * @since   2.0
 	 */
-	public function loadString($data, $format = Format::JSON, $options = array())
+	public function loadString($data, $format = Format::JSON, $options = [])
 	{
 		$raw = isset($options['load_raw']) ? $options['load_raw'] : false;
 		
@@ -273,13 +273,13 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	{
 		$nodes = StructureHelper::getPathNodes($path);
 
-		$data = array();
+		$data = [];
 
 		$tmp =& $data;
 
 		foreach ($nodes as $node)
 		{
-			$tmp[$node] = array();
+			$tmp[$node] = [];
 
 			$tmp =& $tmp[$node];
 		}
@@ -450,7 +450,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	 *
 	 * @since   2.0
 	 */
-	public function toString($format = Format::JSON, $options = array())
+	public function toString($format = Format::JSON, $options = [])
 	{
 		return StructureHelper::toString($this->data, $format, $options);
 	}
@@ -483,7 +483,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 			{
 				if (!isset($parent[$key]) || !is_array($parent[$key]))
 				{
-					$parent[$key] = array();
+					$parent[$key] = [];
 				}
 
 				$this->bindData($parent[$key], $value, $raw);
@@ -506,7 +506,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 	 */
 	protected function asArray($data)
 	{
-		$array = array();
+		$array = [];
 
 		if (is_object($data))
 		{
@@ -584,7 +584,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 
 		if (!$node)
 		{
-			$node = array();
+			$node = [];
 		}
 		elseif (is_object($node))
 		{
@@ -630,7 +630,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 
 		if (!$node)
 		{
-			$node = array();
+			$node = [];
 		}
 		elseif (is_object($node))
 		{

@@ -11,23 +11,22 @@
         }
     ],
     "require": {
+        "php": ">=5.5.9",
         "psr/log": "~1.0",
         "psr/http-message": "~1.0",
         "psr/cache": "~1.0"
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",
-        "symfony/yaml": "~2.0|~3.0",
+        "symfony/yaml": "~3.0",
 
         "twig/twig": "~1.0",
-        "illuminate/view": "4.1.*",
+        "illuminate/view": "~5.0",
         "mustache/mustache": "~2.0",
-        "league/plates": "~3.0",
-
-        "windwalker/phpunit-skeleton-generator": ">=2.0.2"
+        "league/plates": "~3.0"
     },
     "suggest": {
-        "symfony/yaml": "Install ~2.0|~3.0 if you require YAML support.",
+        "symfony/yaml": "Install ~3.0 if you require YAML support.",
         "php-http/httplug": "Install ~1.0 if you require HttpClient as HttpPlug implementation."
     },
     "autoload": {

@@ -27,11 +27,11 @@ class ServerHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetValue()
 	{
-		$servers = array(
+		$servers = [
 			'HTTP_FOO' => 'foo',
 			'X_BAR' => 'bar',
-			'CONTENT_BAZ' => array('baz'),
-		);
+			'CONTENT_BAZ' => ['baz'],
+		];
 
 		$this->assertEquals(ServerHelper::getValue($servers, 'HTTP_FOO'), 'foo');
 		$this->assertEquals(ServerHelper::getValue($servers, 'HTTP_BAR'), null);
@@ -48,7 +48,7 @@ class ServerHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testValidateUploadedFiles()
 	{
-		$files = array(new UploadedFile('php://memory'));
+		$files = [new UploadedFile('php://memory')];
 
 		$this->assertTrue(ServerHelper::validateUploadedFiles($files));
 
@@ -121,10 +121,10 @@ DATA;
 		$input = str_replace("\n", "\r\n", $input);
 
 		$this->assertEquals(
-			array(
-				'data' => array('flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'),
-				'files' => array()
-			),
+			[
+				'data' => ['flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'],
+				'files' => []
+			],
 			ServerHelper::parseFormData($input)
 		);
 	}

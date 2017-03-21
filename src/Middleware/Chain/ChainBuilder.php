@@ -42,7 +42,7 @@ class ChainBuilder
 	 * @param MiddlewareInterface[] $middlewares
 	 * @param string                $sort
 	 */
-	public function __construct(array $middlewares = array(), $sort = self::SORT_DESC)
+	public function __construct(array $middlewares = [], $sort = self::SORT_DESC)
 	{
 		$this->stack = $this->createStack();
 

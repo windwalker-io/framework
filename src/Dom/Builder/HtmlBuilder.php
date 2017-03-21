@@ -20,22 +20,22 @@ class HtmlBuilder extends DomBuilder
 	 *
 	 * @var  array
 	 */
-	protected static $unpairedElements = array(
+	protected static $unpairedElements = [
 		'img', 'br', 'hr', 'area', 'param', 'wbr', 'base', 'link', 'meta', 'input', 'option', 'a', 'source'
-	);
+	];
 
 	/**
 	 * Property trueValueMapping.
 	 *
 	 * @var  array
 	 */
-	protected static $trueValueMapping = array(
+	protected static $trueValueMapping = [
 		'readonly' => 'readonly',
 		'disabled' => 'disabled',
 		'multiple' => 'true',
 		'checked'  => 'checked',
 		'selected' => 'selected'
-	);
+	];
 
 	/**
 	 * Create a html element.
@@ -47,7 +47,7 @@ class HtmlBuilder extends DomBuilder
 	 *
 	 * @return  string Created element string.
 	 */
-	public static function create($name, $content = '', $attribs = array(), $forcePair = false)
+	public static function create($name, $content = '', $attribs = [], $forcePair = false)
 	{
 		$paired = $forcePair ? : !in_array(strtolower($name), static::$unpairedElements);
 

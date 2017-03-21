@@ -23,7 +23,7 @@ abstract class BasicGenerator
 	 *
 	 * @return  mixed|string
 	 */
-	public static function generate($pattern, array $data = array())
+	public static function generate($pattern, array $data = [])
 	{
 		$route = static::replaceOptionalSegments($pattern, $data);
 		$route = static::replaceWildCards($route, $data);

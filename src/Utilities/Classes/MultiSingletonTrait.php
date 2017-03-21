@@ -20,7 +20,7 @@ trait MultiSingletonTrait
 	 *
 	 * @var  array
 	 */
-	protected static $instances = array();
+	protected static $instances = [];
 
 	/**
 	 * getInstance

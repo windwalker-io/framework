@@ -48,14 +48,14 @@ class Benchmark
 	 *
 	 * @var  array
 	 */
-	protected $tasks = array();
+	protected $tasks = [];
 
 	/**
 	 * Property results.
 	 *
 	 * @var  array
 	 */
-	protected $results = array();
+	protected $results = [];
 
 	/**
 	 * Property timeFormat.
@@ -260,7 +260,7 @@ class Benchmark
 	 */
 	public function render($round = false, $sort = null, $html = false)
 	{
-		$output = array();
+		$output = [];
 
 		foreach ($this->getResults($sort) as $name => $result)
 		{

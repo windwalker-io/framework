@@ -96,7 +96,7 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
 	 *
 	 * @return  static
 	 */
-	public function addColor($name, $fg, $bg, $options = array())
+	public function addColor($name, $fg, $bg, $options = [])
 	{
 		if ($this->output instanceof ColorfulOutputInterface)
 		{

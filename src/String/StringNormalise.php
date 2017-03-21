@@ -199,7 +199,7 @@ abstract class StringNormalise
 	{
 		$class = trim($class, '\\');
 
-		$class = str_replace(array('\\', '/'), ' ', $class);
+		$class = str_replace(['\\', '/'], ' ', $class);
 
 		$class = ucwords($class);
 

@@ -198,7 +198,7 @@ class PasswordPrompter extends CallbackPrompter
 
 		$command = "/usr/bin/env %s -c 'echo Hello'";
 
-		foreach (array('bash', 'zsh', 'ksh', 'csh') as $shell)
+		foreach (['bash', 'zsh', 'ksh', 'csh'] as $shell)
 		{
 			if (rtrim(shell_exec(sprintf($command, $shell))) === 'Hello')
 			{

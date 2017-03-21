@@ -20,14 +20,14 @@ abstract class GlobalContainer
 	 *
 	 * @var  \Twig_ExtensionInterface[]
 	 */
-	protected static $extensions = array();
+	protected static $extensions = [];
 
 	/**
 	 * Property data.
 	 *
 	 * @var  array
 	 */
-	protected static $globals = array();
+	protected static $globals = [];
 
 	/**
 	 * addExtension

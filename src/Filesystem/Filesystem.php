@@ -370,7 +370,7 @@ abstract class Filesystem
 	 */
 	public static function iteratorToArray(\Traversable $iterator)
 	{
-		$array = array();
+		$array = [];
 
 		foreach ($iterator as $key => $file)
 		{

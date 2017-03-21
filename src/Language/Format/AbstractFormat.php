@@ -51,7 +51,7 @@ abstract class AbstractFormat implements FormatInterface
 	 */
 	protected function toOneDimension($data, $separator = '_')
 	{
-		$array = array();
+		$array = [];
 
 		$this->asOneDimension($separator, $data, $array);
 
@@ -68,7 +68,7 @@ abstract class AbstractFormat implements FormatInterface
 	 *
 	 * @return  void
 	 */
-	protected function asOneDimension($separator = '_', $data = null, &$array = array(), $prefix = '')
+	protected function asOneDimension($separator = '_', $data = null, &$array = [], $prefix = '')
 	{
 		$data = (array) $data;
 

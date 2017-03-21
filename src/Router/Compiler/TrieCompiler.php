@@ -22,7 +22,7 @@ abstract class TrieCompiler
 	 *
 	 * @var  array
 	 */
-	public static $vars = array();
+	public static $vars = [];
 
 	/**
 	 * compile
@@ -32,13 +32,13 @@ abstract class TrieCompiler
 	 *
 	 * @return  string
 	 */
-	public static function compile($pattern, $requirements = array())
+	public static function compile($pattern, $requirements = [])
 	{
 		// Sanitize and explode the pattern.
 		$pattern = RouteHelper::sanitize($pattern);
 
-		$vars  = array();
-		$regex = array();
+		$vars  = [];
+		$regex = [];
 
 		// Loop on each segment
 		foreach (explode('/', $pattern) as $segment)
@@ -100,7 +100,7 @@ abstract class TrieCompiler
 	 *
 	 * @return  string
 	 */
-	protected static function requirementPattern($name, $requirements = array())
+	protected static function requirementPattern($name, $requirements = [])
 	{
 		if (isset($requirements[$name]))
 		{

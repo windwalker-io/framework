@@ -47,7 +47,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 		$this->assertEquals((string) $compare, $item->params);
 
 		// Use array
-		$data = array();
+		$data = [];
 		$data['catid'] = 4;
 		$data['title'] = 'Sunflower';
 
@@ -88,7 +88,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 		$this->assertEquals((string) $compare, $item->params);
 
 		// Use array
-		$data = array();
+		$data = [];
 		$data['id'] = 87;
 		$data['catid'] = 5;
 		$data['title'] = 'Sunflower2';
@@ -106,7 +106,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 		$data->ordering = 8;
 		$data->title = 'Rose';
 
-		$writer->updateOne('#__flower', $data, array('catid', 'ordering'));
+		$writer->updateOne('#__flower', $data, ['catid', 'ordering']);
 
 		$item = $this->db->getReader('SELECT * FROM #__flower WHERE catid = 2 AND ordering = 8')->loadObject();
 
@@ -140,7 +140,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 		$this->assertEquals('Sakura', $item->title);
 
 		// Update
-		$data = array();
+		$data = [];
 		$data['id'] = 88;
 		$data['catid'] = 3;
 		$data['title'] = 'Sakura2';
@@ -164,10 +164,10 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	{
 		$writer = $this->db->getWriter();
 
-		$dataSet = array(
-			array('title' => 'Foo', 'catid' => 6),
-			array('title' => 'Bar', 'catid' => 6),
-		);
+		$dataSet = [
+			['title' => 'Foo', 'catid' => 6],
+			['title' => 'Bar', 'catid' => 6],
+		];
 
 		$writer->insertMultiple('#__flower', $dataSet, 'id');
 
@@ -189,10 +189,10 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	{
 		$writer = $this->db->getWriter();
 
-		$dataSet = array(
-			array('id' => 89, 'title' => 'Foo2', 'catid' => 6),
-			array('id' => 90, 'title' => 'Bar2', 'catid' => 6),
-		);
+		$dataSet = [
+			['id' => 89, 'title' => 'Foo2', 'catid' => 6],
+			['id' => 90, 'title' => 'Bar2', 'catid' => 6],
+		];
 
 		$writer->updateMultiple('#__flower', $dataSet, 'id');
 
@@ -228,9 +228,9 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 	{
 		$writer = $this->db->getWriter();
 
-		$data = array('state' => 1);
+		$data = ['state' => 1];
 
-		$writer->updateBatch('#__flower', $data, array('state' => 0, 'catid' => 2));
+		$writer->updateBatch('#__flower', $data, ['state' => 0, 'catid' => 2]);
 
 		$items = $this->db->getReader('SELECT * FROM #__flower WHERE catid = 2')->loadObjectList();
 

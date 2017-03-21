@@ -80,7 +80,7 @@ abstract class AbstractUri implements UriInterface
 	 * @var    array  Query variable hash
 	 * @since  2.0
 	 */
-	protected $vars = array();
+	protected $vars = [];
 
 	/**
 	 * Constructor.
@@ -119,7 +119,7 @@ abstract class AbstractUri implements UriInterface
 	 *
 	 * @since   2.0
 	 */
-	public function toString(array $parts = array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment'))
+	public function toString(array $parts = ['scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment'])
 	{
 		// Make sure the query is created
 		$query = $this->getQuery();

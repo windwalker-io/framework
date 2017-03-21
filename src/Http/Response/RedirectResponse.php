@@ -25,7 +25,7 @@ class RedirectResponse extends Response
 	 * @param  int                  $status   The status code.
 	 * @param  array                $headers  The custom headers.
 	 */
-	public function __construct($uri, $status = 303, array $headers = array())
+	public function __construct($uri, $status = 303, array $headers = [])
 	{
 		if ($uri instanceof UriInterface || $uri instanceof \Windwalker\Uri\UriInterface)
 		{
@@ -40,7 +40,7 @@ class RedirectResponse extends Response
 			));
 		}
 
-		$headers['location'] = array($uri);
+		$headers['location'] = [$uri];
 
 		parent::__construct(new Stream('php://temp', 'r'), $status, $headers);
 	}

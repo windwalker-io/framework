@@ -43,21 +43,21 @@ class DataTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function getTestData()
 	{
-		return array(
+		return [
 			'flower' => 'sakura',
 			'olive' => 'peace',
-			'pos1' => array(
+			'pos1' => [
 				'sunflower' => 'love'
-			),
-			'pos2' => array(
+			],
+			'pos2' => [
 				'cornflower' => 'elegant'
-			),
-			'array' => array(
+			],
+			'array' => [
 				'A',
 				'B',
 				'C'
-			)
-		);
+			]
+		];
 	}
 
 	/**

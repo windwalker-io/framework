@@ -26,7 +26,7 @@ interface MatcherInterface
 	 *
 	 * @return  Route|false
 	 */
-	public function match($route, $method = 'GET', $options = array());
+	public function match($route, $method = 'GET', $options = []);
 
 	/**
 	 * build
@@ -36,7 +36,7 @@ interface MatcherInterface
 	 *
 	 * @return  string
 	 */
-	public function build(Route $route, $data = array());
+	public function build(Route $route, $data = []);
 
 	/**
 	 * Set Routes

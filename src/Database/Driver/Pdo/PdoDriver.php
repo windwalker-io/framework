@@ -75,17 +75,17 @@ class PdoDriver extends AbstractDatabaseDriver
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(\PDO $connection = null, $options = array())
+	public function __construct(\PDO $connection = null, $options = [])
 	{
-		$defaultOptions = array(
+		$defaultOptions = [
 			'driver'   => 'odbc',
 			'dsn'      => '',
 			'host'     => 'localhost',
 			'database' => '',
 			'user'     => '',
 			'password' => '',
-			'driverOptions' => array()
-		);
+			'driverOptions' => []
+		];
 
 		$options = array_merge($defaultOptions, $options);
 
@@ -236,7 +236,7 @@ class PdoDriver extends AbstractDatabaseDriver
 	 *
 	 * @since   2.0
 	 */
-	public function setQuery($query, $driverOptions = array())
+	public function setQuery($query, $driverOptions = [])
 	{
 		$this->driverOptions = $driverOptions;
 

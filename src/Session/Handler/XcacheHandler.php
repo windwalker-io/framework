@@ -23,7 +23,7 @@ class XcacheHandler extends AbstractHandler
 	 * @since   2.0
 	 * @throws  \RuntimeException
 	 */
-	public function __construct($options = array())
+	public function __construct($options = [])
 	{
 		if (!static::isSupported())
 		{

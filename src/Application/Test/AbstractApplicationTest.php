@@ -83,12 +83,12 @@ class AbstractApplicationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetAndSet()
 	{
-		$config = array(
+		$config = [
 			'flower' => 'sakura',
-			'sky' => array(
+			'sky' => [
 				'bird' => 'seagull'
-			)
-		);
+			]
+		];
 
 		$this->instance->setConfiguration(new Structure($config));
 
@@ -128,9 +128,9 @@ class AbstractApplicationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSetConfiguration()
 	{
-		$config = array(
+		$config = [
 			'wind' => 'sound'
-		);
+		];
 
 		$this->instance->setConfiguration(new Structure($config));
 

@@ -97,9 +97,9 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
 	 * @param   string                          $parsedBody    Parsed body, typically is $_POST.
 	 * @param   string                          $protocol      The protocol version, default is 1.1.
 	 */
-	public function __construct(array $serverParams = array(), array $uploadedFiles = array(), $uri = null,
-		$method = null, $body = 'php://input', array $headers = array(), array $cookies = array(),
-		array $queryParams = array(), $parsedBody = null, $protocol = '1.1')
+	public function __construct(array $serverParams = [], array $uploadedFiles = [], $uri = null,
+		$method = null, $body = 'php://input', array $headers = [], array $cookies = [],
+		array $queryParams = [], $parsedBody = null, $protocol = '1.1')
 	{
 		if (!ServerHelper::validateUploadedFiles($uploadedFiles))
 		{

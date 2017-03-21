@@ -27,77 +27,77 @@ class CompareHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function getCompareData()
 	{
-		return array(
+		return [
 			// Equals
-			array('foo', '=',   'foo', self::NOT_STRICT, true),
-			array('foo', '=',   'foo', self::STRICT,     true),
-			array('foo', '=',   'bar', self::NOT_STRICT, false),
-			array(1,     '=',   '1',   self::NOT_STRICT, true),
-			array(1,     '=',   '1',   self::STRICT,     false),
-			array(1,     '=',   1,     self::STRICT,     true),
-			array('foo', '==',  'foo', self::NOT_STRICT, true),
-			array('foo', '==',  'foo', self::STRICT,     true),
-			array(1,     '==',  '1',   self::NOT_STRICT, true),
-			array(1,     '==',  '1',   self::STRICT,     false),
-			array(1,     '==',  1,     self::STRICT,     true),
-			array(1,     '===', '1',   self::STRICT,     false),
-			array(1,     '===', '1',   self::NOT_STRICT, false),
+			['foo', '=',   'foo', self::NOT_STRICT, true],
+			['foo', '=',   'foo', self::STRICT,     true],
+			['foo', '=',   'bar', self::NOT_STRICT, false],
+			[1,     '=',   '1',   self::NOT_STRICT, true],
+			[1,     '=',   '1',   self::STRICT,     false],
+			[1,     '=',   1,     self::STRICT,     true],
+			['foo', '==',  'foo', self::NOT_STRICT, true],
+			['foo', '==',  'foo', self::STRICT,     true],
+			[1,     '==',  '1',   self::NOT_STRICT, true],
+			[1,     '==',  '1',   self::STRICT,     false],
+			[1,     '==',  1,     self::STRICT,     true],
+			[1,     '===', '1',   self::STRICT,     false],
+			[1,     '===', '1',   self::NOT_STRICT, false],
 
 			// Not equals
-			array('foo', '!=',   'foo', self::NOT_STRICT, false),
-			array('foo', '!=',   'foo', self::STRICT,     false),
-			array('foo', '!=',   'bar', self::NOT_STRICT, true),
-			array(1,     '!=',   '1',   self::NOT_STRICT, false),
-			array(1,     '!=',   '1',   self::STRICT,     true),
-			array(1,     '!=',   1,     self::STRICT,     false),
-			array(1,     '!==',  '1',   self::NOT_STRICT, true),
-			array(1,     '!==',  '1',   self::STRICT,     true),
-			array(1,     '!==',  1,     self::STRICT,     false),
+			['foo', '!=',   'foo', self::NOT_STRICT, false],
+			['foo', '!=',   'foo', self::STRICT,     false],
+			['foo', '!=',   'bar', self::NOT_STRICT, true],
+			[1,     '!=',   '1',   self::NOT_STRICT, false],
+			[1,     '!=',   '1',   self::STRICT,     true],
+			[1,     '!=',   1,     self::STRICT,     false],
+			[1,     '!==',  '1',   self::NOT_STRICT, true],
+			[1,     '!==',  '1',   self::STRICT,     true],
+			[1,     '!==',  1,     self::STRICT,     false],
 
 			// Gt
-			array(1, '>', 1,   self::NOT_STRICT, false),
-			array(1, '>', 2,   self::NOT_STRICT, false),
-			array(2, '>', 1,   self::NOT_STRICT, true),
-			array(1, 'gt', 1,   self::NOT_STRICT, false),
-			array(1, 'gt', 2,   self::NOT_STRICT, false),
-			array(2, 'gt', 1,   self::NOT_STRICT, true),
+			[1, '>', 1,   self::NOT_STRICT, false],
+			[1, '>', 2,   self::NOT_STRICT, false],
+			[2, '>', 1,   self::NOT_STRICT, true],
+			[1, 'gt', 1,   self::NOT_STRICT, false],
+			[1, 'gt', 2,   self::NOT_STRICT, false],
+			[2, 'gt', 1,   self::NOT_STRICT, true],
 
 			// Gte
-			array(1, '>=', 1,   self::NOT_STRICT, true),
-			array(1, '>=', 2,   self::NOT_STRICT, false),
-			array(2, '>=', 1,   self::NOT_STRICT, true),
-			array(1, 'gte', 1,   self::NOT_STRICT, true),
-			array(1, 'gte', 2,   self::NOT_STRICT, false),
-			array(2, 'gte', 1,   self::NOT_STRICT, true),
+			[1, '>=', 1,   self::NOT_STRICT, true],
+			[1, '>=', 2,   self::NOT_STRICT, false],
+			[2, '>=', 1,   self::NOT_STRICT, true],
+			[1, 'gte', 1,   self::NOT_STRICT, true],
+			[1, 'gte', 2,   self::NOT_STRICT, false],
+			[2, 'gte', 1,   self::NOT_STRICT, true],
 
 			// Lt
-			array(1, '<', 1,   self::NOT_STRICT, false),
-			array(1, '<', 2,   self::NOT_STRICT, true),
-			array(2, '<', 1,   self::NOT_STRICT, false),
-			array(1, 'lt', 1,   self::NOT_STRICT, false),
-			array(1, 'lt', 2,   self::NOT_STRICT, true),
-			array(2, 'lt', 1,   self::NOT_STRICT, false),
+			[1, '<', 1,   self::NOT_STRICT, false],
+			[1, '<', 2,   self::NOT_STRICT, true],
+			[2, '<', 1,   self::NOT_STRICT, false],
+			[1, 'lt', 1,   self::NOT_STRICT, false],
+			[1, 'lt', 2,   self::NOT_STRICT, true],
+			[2, 'lt', 1,   self::NOT_STRICT, false],
 
 			// Gte
-			array(1, '<=', 1,   self::NOT_STRICT, true),
-			array(1, '<=', 2,   self::NOT_STRICT, true),
-			array(2, '<=', 1,   self::NOT_STRICT, false),
-			array(1, 'lte', 1,   self::NOT_STRICT, true),
-			array(1, 'lte', 2,   self::NOT_STRICT, true),
-			array(2, 'lte', 1,   self::NOT_STRICT, false),
+			[1, '<=', 1,   self::NOT_STRICT, true],
+			[1, '<=', 2,   self::NOT_STRICT, true],
+			[2, '<=', 1,   self::NOT_STRICT, false],
+			[1, 'lte', 1,   self::NOT_STRICT, true],
+			[1, 'lte', 2,   self::NOT_STRICT, true],
+			[2, 'lte', 1,   self::NOT_STRICT, false],
 
 			// In
-			array(1, 'in', array(1, 2, 3), self::NOT_STRICT, true),
-			array('1', 'in', array(1, 2, 3), self::NOT_STRICT, true),
-			array('1', 'in', array(1, 2, 3), self::STRICT, false),
-			array(9, 'in', array(1, 2, 3), self::NOT_STRICT, false),
+			[1, 'in', [1, 2, 3], self::NOT_STRICT, true],
+			['1', 'in', [1, 2, 3], self::NOT_STRICT, true],
+			['1', 'in', [1, 2, 3], self::STRICT, false],
+			[9, 'in', [1, 2, 3], self::NOT_STRICT, false],
 
 			// Not in
-			array(1, 'nin', array(1, 2, 3), self::NOT_STRICT, false),
-			array('1', 'nin', array(1, 2, 3), self::NOT_STRICT, false),
-			array('1', 'nin', array(1, 2, 3), self::STRICT, true),
-			array(9, 'nin', array(1, 2, 3), self::NOT_STRICT, true),
-		);
+			[1, 'nin', [1, 2, 3], self::NOT_STRICT, false],
+			['1', 'nin', [1, 2, 3], self::NOT_STRICT, false],
+			['1', 'nin', [1, 2, 3], self::STRICT, true],
+			[9, 'nin', [1, 2, 3], self::NOT_STRICT, true],
+		];
 	}
 
 	/**

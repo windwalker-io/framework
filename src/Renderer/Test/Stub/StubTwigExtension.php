@@ -32,9 +32,9 @@ class StubTwigExtension extends \Twig_Extension
 	 */
 	public function getFilters()
 	{
-		return array(
-			new \Twig_SimpleFilter('armor', array($this, 'armor'))
-		);
+		return [
+			new \Twig_SimpleFilter('armor', [$this, 'armor'])
+		];
 	}
 
 	/**
@@ -44,9 +44,9 @@ class StubTwigExtension extends \Twig_Extension
 	 */
 	public function getFunctions()
 	{
-		return array(
-			new \Twig_SimpleFunction('flower', array($this, 'flower'))
-		);
+		return [
+			new \Twig_SimpleFunction('flower', [$this, 'flower'])
+		];
 	}
 
 	/**
@@ -56,9 +56,9 @@ class StubTwigExtension extends \Twig_Extension
 	 */
 	public function getGlobals()
 	{
-		return array(
+		return [
 			'olive' => 'peace'
-		);
+		];
 	}
 
 	/**

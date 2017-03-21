@@ -27,12 +27,12 @@ abstract class AbstractDatabaseAdapter
 	 *
 	 * @var  array
 	 */
-	protected $options = array(
+	protected $options = [
 		'table'    => 'windwalker_sessions',
 		'id_col'   => 'id',
 		'data_col' => 'data',
 		'time_col' => 'time'
-	);
+	];
 
 	/**
 	 * Class init.
@@ -40,7 +40,7 @@ abstract class AbstractDatabaseAdapter
 	 * @param object $db
 	 * @param array  $options
 	 */
-	public function __construct($db, $options = array())
+	public function __construct($db, $options = [])
 	{
 		$this->db = $db;
 

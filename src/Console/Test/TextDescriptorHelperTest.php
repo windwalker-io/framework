@@ -95,9 +95,9 @@ foo help';
 
 		$command->addCommand('bar', 'Bar command desc');
 		$command->addCommand('yoo');
-		$command->addOption(array('q', 'quiet'), 'default', 'q desc');
-		$command->addOption(array('s', 'sakura'), 'default', 'sakura desc');
-		$command->addOption(array('r'), 'default', 'rose desc');
+		$command->addOption(['q', 'quiet'], 'default', 'q desc');
+		$command->addOption(['s', 'sakura'], 'default', 'sakura desc');
+		$command->addOption(['r'], 'default', 'rose desc');
 
 		$result = $this->instance->describe($command);
 

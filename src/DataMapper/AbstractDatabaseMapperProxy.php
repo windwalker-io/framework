@@ -20,21 +20,21 @@ use Windwalker\Event\Event;
  * @see  DataMapper
  * @see  AbstractDataMapper
  *
- * @method  static  DataSet|Data[]  find($conditions = array(), $order = null, $start = null, $limit = null)
+ * @method  static  DataSet|Data[]  find($conditions = [], $order = null, $start = null, $limit = null)
  * @method  static  DataSet|Data[]  findAll($order = null, $start = null, $limit = null)
- * @method  static  Data            findOne($conditions = array(), $order = null)
- * @method  static  array           findColumn($column, $conditions = array(), $order = null, $start = null, $limit = null)
+ * @method  static  Data            findOne($conditions = [], $order = null)
+ * @method  static  array           findColumn($column, $conditions = [], $order = null, $start = null, $limit = null)
  * @method  static  DataSet|Data[]  create($dataset)
  * @method  static  Data            createOne($data)
  * @method  static  DataSet|Data[]  update($dataset, $condFields = null, $updateNulls = false)
  * @method  static  Data            updateOne($data, $condFields = null, $updateNulls = false)
- * @method  static  boolean         updateBatch($data, $conditions = array())
- * @method  static  DataSet|Data[]  flush($dataset, $conditions = array())
+ * @method  static  boolean         updateBatch($data, $conditions = [])
+ * @method  static  DataSet|Data[]  flush($dataset, $conditions = [])
  * @method  static  DataSet|Data[]  save($dataset, $condFields = null, $updateNulls = false)
  * @method  static  Data            saveOne($data, $condFields = null, $updateNulls = false)
  * @method  static  boolean         delete($conditions)
  * @method  static  boolean         useTransaction($yn = null)
- * @method  static  Event                triggerEvent($event, $args = array())
+ * @method  static  Event                triggerEvent($event, $args = [])
  * @method  static  DispatcherInterface  getDispatcher()
  * @method  static  AbstractDataMapper   setDispatcher(DispatcherInterface $dispatcher)
  * @method  static  AbstractDataMapper   addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
@@ -42,7 +42,7 @@ use Windwalker\Event\Event;
  * @method  static  DataMapper  call($columns)
  * @method  static  DataMapper  group($columns)
  * @method  static  DataMapper  having($conditions, ...$args)
- * @method  static  DataMapper  innerJoin($table, $condition = array())
+ * @method  static  DataMapper  innerJoin($table, $condition = [])
  * @method  static  DataMapper  join($type, $alias, $table, $condition = null, $prefix = null)
  * @method  static  DataMapper  leftJoin($alias, $table, $condition = null, $prefix = null)
  * @method  static  DataMapper  order($columns)
@@ -52,7 +52,7 @@ use Windwalker\Event\Event;
  * @method  static  DataMapper  select($columns)
  * @method  static  DataMapper  where($conditions, ...$args)
  * @method  static  DataMapper  orWhere($conditions)
- * @method  static  DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
+ * @method  static  DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
  *
  * @since  3.0
  */
@@ -98,7 +98,7 @@ class AbstractDatabaseMapperProxy
 	 *
 	 * @var  DataMapper[]
 	 */
-	protected static $instances = array();
+	protected static $instances = [];
 
 	/**
 	 * is triggered when invoking inaccessible methods in an object context.
@@ -113,7 +113,7 @@ class AbstractDatabaseMapperProxy
 	{
 		$instance = static::getInstance();
 
-		return call_user_func_array(array($instance, $name), $arguments);
+		return call_user_func_array([$instance, $name], $arguments);
 	}
 
 	/**
@@ -129,7 +129,7 @@ class AbstractDatabaseMapperProxy
 	{
 		$instance = static::getInstance();
 
-		return call_user_func_array(array($instance, $name), $arguments);
+		return call_user_func_array([$instance, $name], $arguments);
 	}
 
 	/**
@@ -215,6 +215,6 @@ class AbstractDatabaseMapperProxy
 	 */
 	public static function reset()
 	{
-		static::$instances = array();
+		static::$instances = [];
 	}
 }

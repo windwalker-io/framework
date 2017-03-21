@@ -42,32 +42,32 @@ class IpValidatorTest extends AbstractValidateTestCase
 	 */
 	public function validateCase()
 	{
-		return array(
-			array(
+		return [
+			[
 				'case1',
 				'123.45.67.89',
 				true
-			),
-			array(
+			],
+			[
 				'case2',
 				'127.0.0.1',
 				true
-			),
-			array(
+			],
+			[
 				'case3',
 				'192.168.140.155',
 				true
-			),
-			array(
+			],
+			[
 				'case4',
 				'654.321.123.456',
 				false
-			),
-			array(
+			],
+			[
 				'case5',
 				'http://abc.com',
 				false
-			),
-		);
+			],
+		];
 	}
 }

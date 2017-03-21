@@ -20,7 +20,7 @@ trait OptionAccessTrait
 	 *
 	 * @var  array
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Method to get property Options

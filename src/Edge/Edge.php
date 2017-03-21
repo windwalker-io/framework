@@ -37,14 +37,14 @@ class Edge
 	 *
 	 * @var  array
 	 */
-	protected $globals = array();
+	protected $globals = [];
 
 	/**
 	 * Property extensions.
 	 *
 	 * @var  EdgeExtensionInterface[]
 	 */
-	protected $extensions = array();
+	protected $extensions = [];
 
 	/**
 	 * Property sections.
@@ -58,14 +58,14 @@ class Edge
 	 *
 	 * @var array
 	 */
-	protected $sectionStack = array();
+	protected $sectionStack = [];
 
 	/**
 	 * The stack of in-progress push sections.
 	 *
 	 * @var array
 	 */
-	protected $pushStack = array();
+	protected $pushStack = [];
 
 	/**
 	 * The number of active rendering operations.
@@ -79,7 +79,7 @@ class Edge
 	 *
 	 * @var array
 	 */
-	protected $pushes = array();
+	protected $pushes = [];
 
 	/**
 	 * Property loader.
@@ -125,7 +125,7 @@ class Edge
 	 *
 	 * @return string
 	 */
-	public function render($__layout, $__data = array(), $__more = array())
+	public function render($__layout, $__data = [], $__more = [])
 	{
 		// TODO: Aliases
 
@@ -436,7 +436,7 @@ class Edge
 	{
 		if (!isset($this->pushes[$section]))
 		{
-			$this->pushes[$section] = array();
+			$this->pushes[$section] = [];
 		}
 
 		if (!isset($this->pushes[$section][$this->renderCount]))
@@ -488,7 +488,7 @@ class Edge
 		{
 			foreach ($data as $key => $value)
 			{
-				$data = array('key' => $key, $iterator => $value);
+				$data = ['key' => $key, $iterator => $value];
 
 				$result .= $this->render($view, $data);
 			}
@@ -521,11 +521,11 @@ class Edge
 	{
 		$this->renderCount = 0;
 
-		$this->sections     = array();
-		$this->sectionStack = array();
+		$this->sections     = [];
+		$this->sectionStack = [];
 
-		$this->pushes    = array();
-		$this->pushStack = array();
+		$this->pushes    = [];
+		$this->pushStack = [];
 	}
 
 	/**
@@ -630,7 +630,7 @@ class Edge
 
 		if ($withExtensions)
 		{
-			$temp = array();
+			$temp = [];
 
 			foreach ((array) $this->getExtensions() as $extension)
 			{

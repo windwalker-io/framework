@@ -53,11 +53,11 @@ if (!class_exists('CallbackFilterIterator'))
 
 			return call_user_func_array(
 				$this->callback,
-				array(
+				[
 					$inner->current(),
 					$inner->key(),
 					$inner
-				)
+				]
 			);
 		}
 	}

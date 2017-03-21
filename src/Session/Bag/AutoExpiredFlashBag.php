@@ -20,10 +20,10 @@ class AutoExpiredFlashBag extends FlashBag
 	 *
 	 * @var  array
 	 */
-	protected $data = array(
-		'last' => array(),
-		'current' => array()
-	);
+	protected $data = [
+		'last' => [],
+		'current' => []
+	];
 
 	/**
 	 * setData
@@ -38,12 +38,12 @@ class AutoExpiredFlashBag extends FlashBag
 
 		if (!isset($this->data['current']))
 		{
-			$data['current'] = array();
+			$data['current'] = [];
 		}
 
-		$this->data['last'] = isset($this->data['current']) ? $this->data['current'] : array();
+		$this->data['last'] = isset($this->data['current']) ? $this->data['current'] : [];
 
-		$this->data['current'] = array();
+		$this->data['current'] = [];
 	}
 
 	/**
@@ -58,7 +58,7 @@ class AutoExpiredFlashBag extends FlashBag
 	{
 		if (!isset($this->data['current'][$type]) || !is_array($this->data['current'][$type]))
 		{
-			$this->data['current'][$type] = array();
+			$this->data['current'][$type] = [];
 		}
 
 		foreach ((array) $msg as $msg)
@@ -100,7 +100,7 @@ class AutoExpiredFlashBag extends FlashBag
 	 */
 	public function clear()
 	{
-		$this->data['last'] = array();
+		$this->data['last'] = [];
 
 		return $this;
 	}
@@ -114,7 +114,7 @@ class AutoExpiredFlashBag extends FlashBag
 	 */
 	public function getType($type)
 	{
-		return isset($this->data['last'][$type]) ? $this->data['last'][$type] : array();
+		return isset($this->data['last'][$type]) ? $this->data['last'][$type] : [];
 	}
 }
 

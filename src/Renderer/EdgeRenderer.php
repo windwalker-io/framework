@@ -52,7 +52,7 @@ class EdgeRenderer extends AbstractEngineRenderer
 	 *
 	 * @var  callable[]
 	 */
-	protected $extensions = array();
+	protected $extensions = [];
 
 	/**
 	 * Method to get property Engine
@@ -115,7 +115,7 @@ class EdgeRenderer extends AbstractEngineRenderer
 	 *
 	 * @return  string
 	 */
-	public function render($file, $data = array())
+	public function render($file, $data = [])
 	{
 		if ($data instanceof \Traversable)
 		{

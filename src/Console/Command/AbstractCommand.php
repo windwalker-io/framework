@@ -58,7 +58,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since  2.0
 	 */
-	protected $children = array();
+	protected $children = [];
 
 	/**
 	 * The Options storage.
@@ -370,7 +370,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since   2.0
 	 */
-	public function addCommand($command, $description = null, $options = array(), \Closure $handler = null)
+	public function addCommand($command, $description = null, $options = [], \Closure $handler = null)
 	{
 		if (is_string($command) && class_exists($command) && is_subclass_of($command, __CLASS__))
 		{
@@ -456,7 +456,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 *
 	 * @since   2.0
 	 */
-	public function addChild($argument, $description = null, $options = array(), \Closure $handler = null)
+	public function addChild($argument, $description = null, $options = [], \Closure $handler = null)
 	{
 		return $this->addCommand($argument, $description, $options, $handler);
 	}
@@ -472,7 +472,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function getChild($path)
 	{
-		$path    = str_replace(array('/', '\\'), '\\', $path);
+		$path    = str_replace(['/', '\\'], '\\', $path);
 		$names   = explode('\\', $path);
 		$command = $this;
 
@@ -688,7 +688,7 @@ abstract class AbstractCommand implements \ArrayAccess
 	 */
 	public function setOptions($options)
 	{
-		$options = is_array($options) ? $options : array($options);
+		$options = is_array($options) ? $options : [$options];
 
 		foreach ($options as $option)
 		{
@@ -906,7 +906,7 @@ abstract class AbstractCommand implements \ArrayAccess
 		/** @var $exception \InvalidArgumentException */
 		$message      = $exception->getMessage();
 		$autoComplete = '';
-		$alternatives = array();
+		$alternatives = [];
 
 		// Auto complete
 		foreach ($this->children as $command)

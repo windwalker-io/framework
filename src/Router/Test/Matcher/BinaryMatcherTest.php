@@ -62,7 +62,7 @@ class BinaryMatcherTest extends \PHPUnit\Framework\TestCase
 		$routes = array_map(
 			function ($route)
 			{
-				return new Route($route, $route, array('_return' => $route));
+				return new Route($route, $route, ['_return' => $route]);
 			},
 			$routes
 		);

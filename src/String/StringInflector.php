@@ -31,8 +31,8 @@ class StringInflector
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $rules = array(
-		'singular' => array(
+	protected $rules = [
+		'singular' => [
 			'/(matr)ices$/i' => '\1ix',
 			'/(vert|ind)ices$/i' => '\1ex',
 			'/(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|viri?)i$/i' => '\1us',
@@ -46,8 +46,8 @@ class StringInflector
 			'/eaus$/' => 'eau',
 			'/^(.*us)$/' => '\\1',
 			'/s$/i' => '',
-		),
-		'plural' => array(
+		],
+		'plural' => [
 			'/([m|l])ouse$/i' => '\1ice',
 			'/(matr|vert|ind)(ix|ex)$/i'  => '\1ices',
 			'/(x|ch|ss|sh)$/i' => '\1es',
@@ -62,13 +62,13 @@ class StringInflector
 			'/(ax|cris|test)is$/i' => '\1es',
 			'/s$/i' => 's',
 			'/$/' => 's',
-		),
-		'countable' => array(
+		],
+		'countable' => [
 			'id',
 			'hits',
 			'clicks',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Cached inflections.
@@ -78,7 +78,7 @@ class StringInflector
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $cache = array();
+	protected $cache = [];
 
 	/**
 	 * Protected constructor.
@@ -128,7 +128,7 @@ class StringInflector
 	{
 		if (is_string($data))
 		{
-			$data = array($data);
+			$data = [$data];
 		}
 		elseif (!is_array($data))
 		{

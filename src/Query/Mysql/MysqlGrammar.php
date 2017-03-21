@@ -146,11 +146,11 @@ class MysqlGrammar extends AbstractQueryGrammar
 	 * @throws \InvalidArgumentException
 	 * @return  string
 	 */
-	public static function createTable($name, $columns, $pks = array(), $keys = array(), $autoIncrement = null,
+	public static function createTable($name, $columns, $pks = [], $keys = [], $autoIncrement = null,
 		$ifNotExists = true, $engine = 'InnoDB', $defaultCharset = 'utf8')
 	{
 		$query = static::getQuery();
-		$cols = array();
+		$cols = [];
 		$engine = $engine ? : 'InnoDB';
 
 		foreach ($columns as $cName => $details)
@@ -159,7 +159,7 @@ class MysqlGrammar extends AbstractQueryGrammar
 
 			array_unshift($details, $query->quoteName($cName));
 
-			$cols[] = call_user_func_array(array(get_called_class(), 'build'), $details);
+			$cols[] = call_user_func_array([get_called_class(), 'build'], $details);
 		}
 
 		if (!is_array($keys))
@@ -169,22 +169,22 @@ class MysqlGrammar extends AbstractQueryGrammar
 
 		if ($pks)
 		{
-			$pks = array(
+			$pks = [
 				'type' => 'PRIMARY KEY',
 				'columns' => (array) $pks
-			);
+			];
 
 			array_unshift($keys, $pks);
 		}
 
 		foreach ($keys as $key)
 		{
-			$define = array(
+			$define = [
 				'type' => 'KEY',
 				'name' => null,
-				'columns' => array(),
+				'columns' => [],
 				'comment' => ''
-			);
+			];
 
 			if (!is_array($key))
 			{
@@ -304,7 +304,7 @@ class MysqlGrammar extends AbstractQueryGrammar
 	public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text', $signed = true, $allowNull = true, $default = null,
 		$position = null, $comment = '')
 	{
-		$column = array($oldColumn, $newColumn);
+		$column = [$oldColumn, $newColumn];
 
 		return static::alterColumn('CHANGE', $table, $column, $type, $signed, $allowNull, $default, $position, $comment);
 	}
@@ -389,7 +389,7 @@ class MysqlGrammar extends AbstractQueryGrammar
 	public static function buildIndexDeclare($name, $columns, $table = null)
 	{
 		$query = static::getQuery();
-		$cols  = array();
+		$cols  = [];
 
 		foreach ((array) $columns as $key => $val)
 		{
@@ -448,7 +448,7 @@ class MysqlGrammar extends AbstractQueryGrammar
 	{
 		$args = func_get_args();
 
-		$sql = array();
+		$sql = [];
 
 		foreach ($args as $arg)
 		{
@@ -502,7 +502,7 @@ class MysqlGrammar extends AbstractQueryGrammar
 	 *
 	 * @return  string
 	 */
-	public static function replace($name, $columns = array(), $values = array())
+	public static function replace($name, $columns = [], $values = [])
 	{
 		$query = new MysqlQuery;
 

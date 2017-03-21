@@ -37,14 +37,14 @@ class Schema
 	 *
 	 * @var  Column[]
 	 */
-	protected $columns = array();
+	protected $columns = [];
 
 	/**
 	 * Property indexes.
 	 *
 	 * @var  Key[]
 	 */
-	protected $indexes = array();
+	protected $indexes = [];
 
 	/**
 	 * Property table.

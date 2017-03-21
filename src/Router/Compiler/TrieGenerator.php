@@ -22,7 +22,7 @@ abstract class TrieGenerator
 	 *
 	 * @var array
 	 */
-	protected static $vars = array();
+	protected static $vars = [];
 
 	/**
 	 * generate
@@ -32,9 +32,9 @@ abstract class TrieGenerator
 	 *
 	 * @return  mixed|string
 	 */
-	public static function generate($pattern, array $queries = array())
+	public static function generate($pattern, array $queries = [])
 	{
-		$replace = array();
+		$replace = [];
 
 		$pattern = RouteHelper::sanitize($pattern);
 

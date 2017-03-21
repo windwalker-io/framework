@@ -25,7 +25,7 @@ class DomBuilder
 	 *
 	 * @return  string Created element string.
 	 */
-	public static function create($name, $content = '', $attribs = array(), $forcePair = false)
+	public static function create($name, $content = '', $attribs = [], $forcePair = false)
 	{
 		$name = trim($name);
 

@@ -39,7 +39,7 @@ class InputFilter implements \Serializable
 	 *
 	 * @var  CleanerInterface[]|callable[]
 	 */
-	protected $handlers = array();
+	protected $handlers = [];
 
 	/**
 	 * Property unknownHandler.

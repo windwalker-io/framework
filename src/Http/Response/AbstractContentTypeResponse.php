@@ -31,7 +31,7 @@ abstract class AbstractContentTypeResponse extends Response
 	 * @param  int     $status   The status code.
 	 * @param  array   $headers  The custom headers.
 	 */
-	public function __construct($body  = '', $status = 200, array $headers = array())
+	public function __construct($body  = '', $status = 200, array $headers = [])
 	{
 		parent::__construct(
 			$this->handleBody($body),
@@ -96,7 +96,7 @@ abstract class AbstractContentTypeResponse extends Response
 
 		if (!isset($keys['content-type']))
 		{
-			$headers['content-type'] = array($contentType);
+			$headers['content-type'] = [$contentType];
 		}
 
 		return $headers;

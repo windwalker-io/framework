@@ -24,12 +24,12 @@ class PhpHelper
 	{
 		return in_array(
 			PHP_SAPI,
-			array(
+			[
 				'apache',
 				'cgi',
 				'fast-cgi',
 				'srv'
-			)
+			]
 		);
 	}
 
@@ -42,10 +42,10 @@ class PhpHelper
 	{
 		return in_array(
 			PHP_SAPI,
-			array(
+			[
 				'cli',
 				'cli-server'
-			)
+			]
 		);
 	}
 
@@ -78,9 +78,9 @@ class PhpHelper
 	{
 		return in_array(
 			PHP_SAPI,
-			array(
+			[
 				'embed',
-			)
+			]
 		);
 	}
 

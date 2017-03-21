@@ -32,7 +32,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
 	public function testConstruct()
 	{
 		$foo = 'foo';
-		$args = array('foo' => &$foo);
+		$args = ['foo' => &$foo];
 
 		$event = new Event('onTest', $args);
 
@@ -65,19 +65,19 @@ class EventTest extends \PHPUnit\Framework\TestCase
 		$this->assertFalse($this->instance->getArgument('non-existing', false));
 
 		$object = new \stdClass;
-		$array = array(
+		$array = [
 			'foo' => 'bar',
-			'test' => array(
+			'test' => [
 				'foo' => 'bar',
 				'test' => 'test'
-			)
-		);
+			]
+		];
 
-		$arguments = array(
+		$arguments = [
 			'string' => 'bar',
 			'object' => $object,
 			'array' => $array
-		);
+		];
 
 		$event = new Event('onTest', $arguments);
 
@@ -98,7 +98,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
 		$this->assertFalse($this->instance->hasArgument('non-existing'));
 
 		/** @var $event \Windwalker\Event\Event */
-		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', array('test', array('foo' => 'bar')));
+		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', ['test', ['foo' => 'bar']]);
 
 		$this->assertTrue($event->hasArgument('foo'));
 	}
@@ -115,21 +115,21 @@ class EventTest extends \PHPUnit\Framework\TestCase
 		$this->assertEmpty($this->instance->getArguments());
 
 		$object = new \stdClass;
-		$array = array(
+		$array = [
 			'foo' => 'bar',
-			'test' => array(
+			'test' => [
 				'foo' => 'bar',
 				'test' => 'test'
-			)
-		);
+			]
+		];
 
-		$arguments = array(
+		$arguments = [
 			'string' => 'bar',
 			'object' => $object,
 			'array' => $array
-		);
+		];
 
-		$args = array('test', $arguments);
+		$args = ['test', $arguments];
 
 		/** @var $event \Windwalker\Event\Event */
 		$event = new Event('onTest', $arguments);
@@ -161,12 +161,12 @@ class EventTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertCount(0, $this->instance);
 
-		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', array('test',
-				array(
+		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', ['test',
+				[
 					'foo' => 'bar',
-					'test' => array('test')
-				)
-			)
+					'test' => ['test']
+				]
+			]
 		);
 
 		$this->assertCount(2, $event);
@@ -182,19 +182,19 @@ class EventTest extends \PHPUnit\Framework\TestCase
 	public function testSerializeUnserialize()
 	{
 		$object = new \stdClass;
-		$array = array(
+		$array = [
 			'foo' => 'bar',
-			'test' => array(
+			'test' => [
 				'foo' => 'bar',
 				'test' => 'test'
-			)
-		);
+			]
+		];
 
-		$arguments = array(
+		$arguments = [
 			'string' => 'bar',
 			'object' => $object,
 			'array' => $array
-		);
+		];
 
 		$event = new Event('onTest', $arguments);
 
@@ -216,7 +216,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertFalse(isset($this->instance['foo']));
 
-		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', array('test', array('foo' => 'bar')));
+		$event = $this->getMockForAbstractClass('Windwalker\Event\Event', ['test', ['foo' => 'bar']]);
 
 		$this->assertTrue(isset($event['foo']));
 	}
@@ -233,19 +233,19 @@ class EventTest extends \PHPUnit\Framework\TestCase
 		$this->assertNull($this->instance['foo']);
 
 		$object = new \stdClass;
-		$array = array(
+		$array = [
 			'foo' => 'bar',
-			'test' => array(
+			'test' => [
 				'foo' => 'bar',
 				'test' => 'test'
-			)
-		);
+			]
+		];
 
-		$arguments = array(
+		$arguments = [
 			'string' => 'bar',
 			'object' => $object,
 			'array' => $array
-		);
+		];
 
 		$event = new Event('onTest', $arguments);
 
@@ -265,12 +265,12 @@ class EventTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = new \stdClass;
 
-		$array = array(
-			'test' => array(
+		$array = [
+			'test' => [
 				'foo' => 'bar',
 				'test' => 'test'
-			)
-		);
+			]
+		];
 
 		$this->instance->addArgument('object', $object);
 		$this->assertTrue($this->instance->hasArgument('object'));
@@ -308,12 +308,12 @@ class EventTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = new \stdClass;
 
-		$array = array(
-			'test' => array(
+		$array = [
+			'test' => [
 				'foo' => 'bar',
 				'test' => 'test'
-			)
-		);
+			]
+		];
 
 		$this->instance->setArgument('object', $object);
 		$this->assertTrue($this->instance->hasArgument('object'));
@@ -370,13 +370,13 @@ class EventTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertEmpty($this->instance->clearArguments());
 
-		$arguments = array(
-			'test' => array(
+		$arguments = [
+			'test' => [
 				'foo' => 'bar',
 				'test' => 'test'
-			),
+			],
 			'foo' => new \stdClass
-		);
+		];
 
 		$event = new Event('test', $arguments);
 
@@ -417,13 +417,13 @@ class EventTest extends \PHPUnit\Framework\TestCase
 		$this->assertTrue($this->instance->hasArgument('foo'));
 		$this->assertEquals('bar', $this->instance->getArgument('foo'));
 
-		$argument = array(
-			'test' => array(
+		$argument = [
+			'test' => [
 				'foo' => 'bar',
 				'test' => 'test'
-			),
+			],
 			'foo' => new \stdClass
-		);
+		];
 
 		$this->instance['foo'] = $argument;
 		$this->assertTrue($this->instance->hasArgument('foo'));

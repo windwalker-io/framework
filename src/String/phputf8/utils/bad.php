@@ -30,7 +30,7 @@ function utf8_bad_find($str) {
     '|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        # plane 16
     '|(.{1}))';                              # invalid byte
     $pos = 0;
-    $badList = array();
+    $badList = [];
     while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches)) {
         $bytes = strlen($matches[0]);
         if ( isset($matches[2])) {
@@ -66,7 +66,7 @@ function utf8_bad_findall($str) {
     '|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        # plane 16
     '|(.{1}))';                              # invalid byte
     $pos = 0;
-    $badList = array();
+    $badList = [];
     while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches)) {
         $bytes = strlen($matches[0]);
         if ( isset($matches[2])) {

@@ -60,7 +60,7 @@ class NestedRecord extends Record
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $cache = array();
+	protected $cache = [];
 
 	/**
 	 * Cache for the root ID
@@ -208,12 +208,12 @@ class NestedRecord extends Record
 	 */
 	public function setLocation($referenceId, $position = self::LOCATION_AFTER)
 	{
-		$allow = array(
+		$allow = [
 			static::LOCATION_AFTER,
 			static::LOCATION_BEFORE,
 			static::LOCATION_FIRST_CHILD,
 			static::LOCATION_LAST_CHILD
-		);
+		];
 
 		// Make sure the location is valid.
 		if (!in_array($position, $allow))
@@ -557,10 +557,11 @@ class NestedRecord extends Record
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'conditions'  => &$pk,
 			'children' => &$children
-		));
+		]
+		);
 
 		// Get the node by id.
 		$node = $this->getNode($pk);

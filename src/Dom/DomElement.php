@@ -45,7 +45,7 @@ class DomElement implements \ArrayAccess
 	 * @param mixed  $content Element content.
 	 * @param array  $attribs Element attributes.
 	 */
-	public function __construct($name, $content = null, $attribs = array())
+	public function __construct($name, $content = null, $attribs = [])
 	{
 		if (is_array($content))
 		{

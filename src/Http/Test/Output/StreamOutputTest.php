@@ -56,15 +56,15 @@ class StreamOutputTest extends \PHPUnit\Framework\TestCase
 	public function testRespond()
 	{
 		// Test respond instantly
-		$this->instance->respond(new TextResponse('Flower', 256, array('x-foo' => 'bar')));
+		$this->instance->respond(new TextResponse('Flower', 256, ['x-foo' => 'bar']));
 
 		$this->assertEquals('Flower', $this->instance->output);
-		$this->assertEquals(array('bar'), $this->instance->message->getHeader('X-Foo'));
-		$this->assertEquals(array('text/plain; charset=utf-8'), $this->instance->message->getHeader('content-type'));
-		$this->assertEquals(array(6), $this->instance->message->getHeader('content-length'));
+		$this->assertEquals(['bar'], $this->instance->message->getHeader('X-Foo'));
+		$this->assertEquals(['text/plain; charset=utf-8'], $this->instance->message->getHeader('content-type'));
+		$this->assertEquals([6], $this->instance->message->getHeader('content-length'));
 		
 		// Test respond range
-		$this->instance->respond(new TextResponse('Flower', 256, array('Content-Range' => 'bytes 1-4/3')));
+		$this->instance->respond(new TextResponse('Flower', 256, ['Content-Range' => 'bytes 1-4/3']));
 
 		$this->assertEquals('lowe', $this->instance->output);
 
@@ -98,7 +98,7 @@ class StreamOutputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSendBody()
 	{
-		$this->instance->sendBody(new TextResponse('Flower', 256, array('x-foo' => 'bar')));
+		$this->instance->sendBody(new TextResponse('Flower', 256, ['x-foo' => 'bar']));
 
 		$this->assertEquals('Flower', $this->instance->output);
 	}

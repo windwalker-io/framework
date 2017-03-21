@@ -29,7 +29,7 @@ class XmlResponse extends TextResponse
 	 * @param  int     $status   The status code.
 	 * @param  array   $headers  The custom headers.
 	 */
-	public function __construct($xml = '', $status = 200, array $headers = array())
+	public function __construct($xml = '', $status = 200, array $headers = [])
 	{
 		parent::__construct(
 			$this->toString($xml),

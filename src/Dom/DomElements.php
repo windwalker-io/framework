@@ -20,7 +20,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
 	 *
 	 * @var  HtmlElement[]|mixed[]
 	 */
-	protected $elements = array();
+	protected $elements = [];
 
 	/**
 	 * Property strict.
@@ -35,7 +35,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
 	 * @param array|mixed $elements
 	 * @param boolean     $strict
 	 */
-	public function __construct($elements = array(), $strict = false)
+	public function __construct($elements = [], $strict = false)
 	{
 		if (is_object($elements))
 		{

@@ -20,7 +20,7 @@ abstract class ResponseHelper
 	 *
 	 * @var  array
 	 */
-	protected static $phrases = array(
+	protected static $phrases = [
 		// INFORMATIONAL CODES
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -83,7 +83,7 @@ abstract class ResponseHelper
 		507 => 'Insufficient Storage',
 		508 => 'Loop Detected',
 		511 => 'Network Authentication Required',
-	);
+	];
 
 	/**
 	 * Get status phrase by code.

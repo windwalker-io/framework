@@ -32,11 +32,11 @@ class SessionTest extends AbstractSessionTestCase
 
 		$this->bag = new ArrayBag;
 
-		$this->options = array(
+		$this->options = [
 			'expire_time' => 20,
 			'force_ssl' => true,
 			'security' => 'security'
-		);
+		];
 
 		parent::setUp();
 
@@ -65,17 +65,17 @@ class SessionTest extends AbstractSessionTestCase
 	 */
 	public function testStart()
 	{
-		$keys = array(
+		$keys = [
 			'session.counter',
 			'session.timer.start',
 			'session.timer.last',
 			'session.timer.now',
 			'sakura',
 			'olive'
-		);
+		];
 
 		$this->assertEquals($keys, array_keys($this->instance->getAll()));
-		$this->assertEquals(array(), $this->instance->getAll('flash'));
+		$this->assertEquals([], $this->instance->getAll('flash'));
 	}
 
 	/**
@@ -162,14 +162,14 @@ class SessionTest extends AbstractSessionTestCase
 	 */
 	public function testGetAll()
 	{
-		$keys = array(
+		$keys = [
 			'session.counter',
 			'session.timer.start',
 			'session.timer.last',
 			'session.timer.now',
 			'sakura',
 			'olive'
-		);
+		];
 
 		$this->assertEquals($keys, array_keys($this->instance->getAll()));
 	}
@@ -188,11 +188,11 @@ class SessionTest extends AbstractSessionTestCase
 		$this->instance->set('a', 'b', 'foo');
 		$this->instance->set('c', 'd', 'foo');
 
-		$this->assertEquals(array('a'=> 'b', 'c' => 'd'), $this->instance->getAll('foo'));
+		$this->assertEquals(['a' => 'b', 'c' => 'd'], $this->instance->getAll('foo'));
 
-		$this->assertEquals(array('a'=> 'b', 'c' => 'd'), $this->instance->takeAll('foo'));
+		$this->assertEquals(['a' => 'b', 'c' => 'd'], $this->instance->takeAll('foo'));
 
-		$this->assertEquals(array(), $this->instance->getAll('foo'));
+		$this->assertEquals([], $this->instance->getAll('foo'));
 	}
 
 	/**
@@ -209,11 +209,11 @@ class SessionTest extends AbstractSessionTestCase
 		$this->instance->set('a', 'b', 'foo');
 		$this->instance->set('c', 'd', 'foo');
 
-		$this->assertEquals(array('a'=> 'b', 'c' => 'd'), $this->instance->getAll('foo'));
+		$this->assertEquals(['a' => 'b', 'c' => 'd'], $this->instance->getAll('foo'));
 
 		$this->instance->clean('foo');
 
-		$this->assertEquals(array(), $this->instance->getAll('foo'));
+		$this->assertEquals([], $this->instance->getAll('foo'));
 	}
 
 	/**
@@ -270,7 +270,7 @@ class SessionTest extends AbstractSessionTestCase
 
 		$flashes = $this->instance->getFlashes();
 
-		$this->assertEquals(array('warning' => array('Yoo')), $flashes);
+		$this->assertEquals(['warning' => ['Yoo']], $flashes);
 	}
 
 	/**
@@ -282,14 +282,14 @@ class SessionTest extends AbstractSessionTestCase
 	 */
 	public function testGetIterator()
 	{
-		$keys = array(
+		$keys = [
 			'session.counter',
 			'session.timer.start',
 			'session.timer.last',
 			'session.timer.now',
 			'sakura',
 			'olive'
-		);
+		];
 
 		$this->assertEquals($keys, array_keys(iterator_to_array($this->instance->getIterator())));
 	}

@@ -11,9 +11,9 @@ namespace Windwalker\DI;
 /**
  * The ClassMeta class.
  * 
- * @method  object  newInstance($args = array())
- * @method  object  createObject($args = array())
- * @method  object  createSharedObject($args = array())
+ * @method  object  newInstance($args = [])
+ * @method  object  createObject($args = [])
+ * @method  object  createSharedObject($args = [])
  * @method  Container  bind($value, $shared = false, $protected = false)
  * @method  Container  bindShared($protected = false)
  *
@@ -33,14 +33,14 @@ class ClassMeta
 	 *
 	 * @var  array
 	 */
-	protected $arguments = array();
+	protected $arguments = [];
 
 	/**
 	 * Property caches.
 	 *
 	 * @var  array
 	 */
-	protected $caches = array();
+	protected $caches = [];
 
 	/**
 	 * Property container.
@@ -130,7 +130,7 @@ class ClassMeta
 	 */
 	public function getArguments()
 	{
-		$args = array();
+		$args = [];
 
 		foreach ($this->arguments as $name => $callable)
 		{
@@ -164,7 +164,7 @@ class ClassMeta
 	 */
 	public function reset()
 	{
-		$this->arguments = array();
+		$this->arguments = [];
 
 		return $this;
 	}
@@ -179,19 +179,19 @@ class ClassMeta
 	 */
 	public function __call($name, $args)
 	{
-		$allowMethods = array(
+		$allowMethods = [
 			'newInstance',
 			'createObject',
 			'createSharedObject',
 			'bind',
 			'bindShared'
-		);
+		];
 
 		if (in_array($name, $allowMethods))
 		{
 			array_unshift($args, $this->class);
 
-			return call_user_func_array(array($this->container, $name), $args);
+			return call_user_func_array([$this->container, $name], $args);
 		}
 
 		throw new \BadMethodCallException(__METHOD__ . '::' . $name . '() not found.');

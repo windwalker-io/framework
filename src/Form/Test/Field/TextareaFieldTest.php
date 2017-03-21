@@ -36,9 +36,9 @@ class TextareaFieldTest extends AbstractDomTestCase
 		$this->instance = new TextareaField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'class' => 'stub-flower'
-			)
+			]
 		);
 
 		$this->instance->setAttribute('id',        'test-field');
@@ -47,7 +47,7 @@ class TextareaFieldTest extends AbstractDomTestCase
 		$this->instance->setAttribute('onchange',  'javascript:void(0);');
 		$this->instance->setAttribute('cols',      10);
 		$this->instance->rows(15);
-		$this->instance->setAttribute('attribs',   array('data-test-element' => true));
+		$this->instance->setAttribute('attribs',   ['data-test-element' => true]);
 
 		$this->instance->setValue('sakura');
 	}

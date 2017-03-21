@@ -32,7 +32,7 @@ class DList extends AbstractHtmlList
 	 *
 	 * @return  static
 	 */
-	public function addDescription($title, $description, $titleAttribs = array(), $descAttribs = array())
+	public function addDescription($title, $description, $titleAttribs = [], $descAttribs = [])
 	{
 		$this->addTitle($title, $titleAttribs)
 			->addDesc($description, $descAttribs);
@@ -48,7 +48,7 @@ class DList extends AbstractHtmlList
 	 *
 	 * @return  static
 	 */
-	public function addDesc($item, $attribs = array())
+	public function addDesc($item, $attribs = [])
 	{
 		if (!$item instanceof DListDescription)
 		{
@@ -68,7 +68,7 @@ class DList extends AbstractHtmlList
 	 *
 	 * @return  static
 	 */
-	public function desc($item, $attribs = array())
+	public function desc($item, $attribs = [])
 	{
 		return $this->addDesc($item, $attribs);
 	}
@@ -81,7 +81,7 @@ class DList extends AbstractHtmlList
 	 *
 	 * @return  static
 	 */
-	public function addTitle($item, $attribs = array())
+	public function addTitle($item, $attribs = [])
 	{
 		if (!$item instanceof DListTitle)
 		{
@@ -101,7 +101,7 @@ class DList extends AbstractHtmlList
 	 *
 	 * @return  static
 	 */
-	public function title($item, $attribs = array())
+	public function title($item, $attribs = [])
 	{
 		return $this->addTitle($item, $attribs);
 	}
@@ -114,7 +114,7 @@ class DList extends AbstractHtmlList
 	 *
 	 * @return  static
 	 */
-	public function addItem($item, $attribs = array())
+	public function addItem($item, $attribs = [])
 	{
 		if ($item instanceof DListTitle)
 		{

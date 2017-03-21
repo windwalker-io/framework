@@ -24,16 +24,16 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestFromCamelCase()
 	{
-		return array(
+		return [
 			// Note: string, expected
-			array('FooBarABCDef', array('Foo', 'Bar', 'ABC', 'Def')),
-			array('JFooBar', array('J', 'Foo', 'Bar')),
-			array('J001FooBar002', array('J001', 'Foo', 'Bar002')),
-			array('abcDef', array('abc', 'Def')),
-			array('abc_defGhi_Jkl', array('abc_def', 'Ghi_Jkl')),
-			array('ThisIsA_NASAAstronaut', array('This', 'Is', 'A_NASA', 'Astronaut')),
-			array('JohnFitzgerald_Kennedy', array('John', 'Fitzgerald_Kennedy')),
-		);
+			['FooBarABCDef', ['Foo', 'Bar', 'ABC', 'Def']],
+			['JFooBar', ['J', 'Foo', 'Bar']],
+			['J001FooBar002', ['J001', 'Foo', 'Bar002']],
+			['abcDef', ['abc', 'Def']],
+			['abc_defGhi_Jkl', ['abc_def', 'Ghi_Jkl']],
+			['ThisIsA_NASAAstronaut', ['This', 'Is', 'A_NASA', 'Astronaut']],
+			['JohnFitzgerald_Kennedy', ['John', 'Fitzgerald_Kennedy']],
+		];
 	}
 
 	/**
@@ -45,12 +45,12 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestFromCamelCase_nongrouped()
 	{
-		return array(
-			array('Foo Bar', 'FooBar'),
-			array('foo Bar', 'fooBar'),
-			array('Foobar', 'Foobar'),
-			array('foobar', 'foobar')
-		);
+		return [
+			['Foo Bar', 'FooBar'],
+			['foo Bar', 'fooBar'],
+			['Foobar', 'Foobar'],
+			['foobar', 'foobar']
+		];
 	}
 
 	/**
@@ -62,14 +62,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestToCamelCase()
 	{
-		return array(
-			array('FooBar', 'Foo Bar'),
-			array('FooBar', 'Foo-Bar'),
-			array('FooBar', 'Foo_Bar'),
-			array('FooBar', 'foo bar'),
-			array('FooBar', 'foo-bar'),
-			array('FooBar', 'foo_bar'),
-		);
+		return [
+			['FooBar', 'Foo Bar'],
+			['FooBar', 'Foo-Bar'],
+			['FooBar', 'Foo_Bar'],
+			['FooBar', 'foo bar'],
+			['FooBar', 'foo-bar'],
+			['FooBar', 'foo_bar'],
+		];
 	}
 
 	/**
@@ -81,17 +81,17 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestToDashSeparated()
 	{
-		return array(
-			array('Foo-Bar', 'Foo Bar'),
-			array('Foo-Bar', 'Foo-Bar'),
-			array('Foo-Bar', 'Foo_Bar'),
-			array('foo-bar', 'foo bar'),
-			array('foo-bar', 'foo-bar'),
-			array('foo-bar', 'foo_bar'),
-			array('foo-bar', 'foo   bar'),
-			array('foo-bar', 'foo---bar'),
-			array('foo-bar', 'foo___bar'),
-		);
+		return [
+			['Foo-Bar', 'Foo Bar'],
+			['Foo-Bar', 'Foo-Bar'],
+			['Foo-Bar', 'Foo_Bar'],
+			['foo-bar', 'foo bar'],
+			['foo-bar', 'foo-bar'],
+			['foo-bar', 'foo_bar'],
+			['foo-bar', 'foo   bar'],
+			['foo-bar', 'foo---bar'],
+			['foo-bar', 'foo___bar'],
+		];
 	}
 
 	/**
@@ -103,17 +103,17 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestToSpaceSeparated()
 	{
-		return array(
-			array('Foo Bar', 'Foo Bar'),
-			array('Foo Bar', 'Foo-Bar'),
-			array('Foo Bar', 'Foo_Bar'),
-			array('foo bar', 'foo bar'),
-			array('foo bar', 'foo-bar'),
-			array('foo bar', 'foo_bar'),
-			array('foo bar', 'foo   bar'),
-			array('foo bar', 'foo---bar'),
-			array('foo bar', 'foo___bar'),
-		);
+		return [
+			['Foo Bar', 'Foo Bar'],
+			['Foo Bar', 'Foo-Bar'],
+			['Foo Bar', 'Foo_Bar'],
+			['foo bar', 'foo bar'],
+			['foo bar', 'foo-bar'],
+			['foo bar', 'foo_bar'],
+			['foo bar', 'foo   bar'],
+			['foo bar', 'foo---bar'],
+			['foo bar', 'foo___bar'],
+		];
 	}
 
 	/**
@@ -125,17 +125,17 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestToUnderscoreSeparated()
 	{
-		return array(
-			array('Foo_Bar', 'Foo Bar'),
-			array('Foo_Bar', 'Foo-Bar'),
-			array('Foo_Bar', 'Foo_Bar'),
-			array('foo_bar', 'foo bar'),
-			array('foo_bar', 'foo-bar'),
-			array('foo_bar', 'foo_bar'),
-			array('foo_bar', 'foo   bar'),
-			array('foo_bar', 'foo---bar'),
-			array('foo_bar', 'foo___bar'),
-		);
+		return [
+			['Foo_Bar', 'Foo Bar'],
+			['Foo_Bar', 'Foo-Bar'],
+			['Foo_Bar', 'Foo_Bar'],
+			['foo_bar', 'foo bar'],
+			['foo_bar', 'foo-bar'],
+			['foo_bar', 'foo_bar'],
+			['foo_bar', 'foo   bar'],
+			['foo_bar', 'foo---bar'],
+			['foo_bar', 'foo___bar'],
+		];
 	}
 
 	/**
@@ -147,14 +147,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestToVariable()
 	{
-		return array(
-			array('myFooBar', 'My Foo Bar'),
-			array('myFooBar', 'My Foo-Bar'),
-			array('myFooBar', 'My Foo_Bar'),
-			array('myFooBar', 'my foo bar'),
-			array('myFooBar', 'my foo-bar'),
-			array('myFooBar', 'my foo_bar'),
-		);
+		return [
+			['myFooBar', 'My Foo Bar'],
+			['myFooBar', 'My Foo-Bar'],
+			['myFooBar', 'My Foo_Bar'],
+			['myFooBar', 'my foo bar'],
+			['myFooBar', 'my foo-bar'],
+			['myFooBar', 'my foo_bar'],
+		];
 	}
 
 	/**
@@ -166,14 +166,14 @@ class StringNormaliseTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestToKey()
 	{
-		return array(
-			array('foo_bar', 'Foo Bar'),
-			array('foo_bar', 'Foo-Bar'),
-			array('foo_bar', 'Foo_Bar'),
-			array('foo_bar', 'foo bar'),
-			array('foo_bar', 'foo-bar'),
-			array('foo_bar', 'foo_bar'),
-		);
+		return [
+			['foo_bar', 'Foo Bar'],
+			['foo_bar', 'Foo-Bar'],
+			['foo_bar', 'Foo_Bar'],
+			['foo_bar', 'foo bar'],
+			['foo_bar', 'foo-bar'],
+			['foo_bar', 'foo_bar'],
+		];
 	}
 
 	/**

@@ -27,7 +27,7 @@ class Datetime extends Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $allowNull = false, $default = null, $comment = '', $options = array())
+	public function __construct($name = null, $allowNull = false, $default = null, $comment = '', $options = [])
 	{
 		parent::__construct($name, DataType::DATETIME, true, $allowNull, $default, $comment, $options);
 	}

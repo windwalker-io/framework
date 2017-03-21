@@ -27,7 +27,7 @@ class XmlFormat implements FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	public static function structToString($struct, array $options = array())
+	public static function structToString($struct, array $options = [])
 	{
 		$rootName = (isset($options['name'])) ? $options['name'] : 'structure';
 		$nodeName = (isset($options['nodeName'])) ? $options['nodeName'] : 'node';
@@ -51,7 +51,7 @@ class XmlFormat implements FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	public static function stringToStruct($data, array $options = array())
+	public static function stringToStruct($data, array $options = [])
 	{
 		$obj = new \stdClass;
 
@@ -100,7 +100,7 @@ class XmlFormat implements FormatInterface
 				break;
 
 			case 'array':
-				$value = array();
+				$value = [];
 
 				foreach ($node->children() as $child)
 				{

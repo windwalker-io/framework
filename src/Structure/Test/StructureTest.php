@@ -44,21 +44,21 @@ class StructureTest extends AbstractBaseTestCase
 	 */
 	protected function getTestData()
 	{
-		return array(
+		return [
 			'flower' => 'sakura',
 			'olive' => 'peace',
-			'pos1' => array(
+			'pos1' => [
 				'sunflower' => 'love'
-			),
-			'pos2' => array(
+			],
+			'pos2' => [
 				'cornflower' => 'elegant'
-			),
-			'array' => array(
+			],
+			'array' => [
 				'A',
 				'B',
 				'C'
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -264,7 +264,7 @@ class StructureTest extends AbstractBaseTestCase
 		$this->assertEquals('bar value 1', $structure1->get('bar.bar1'), 'Line: ' . __LINE__ . '. bar.bar1 should not be override.');
 		$this->assertSame('bar value 3', $structure1->get('bar.bar3'), 'Line: ' . __LINE__ . '. bar.bar3 should not be override.');
 
-		$structure = new Structure(array('flower' => 'rose', 'honor' => 'Osmanthus month'));
+		$structure = new Structure(['flower' => 'rose', 'honor' => 'Osmanthus month']);
 
 		$structure->merge($this->instance);
 
@@ -301,14 +301,14 @@ class StructureTest extends AbstractBaseTestCase
 		$structure1 = new Structure(json_decode($object1));
 		$structure2 = new Structure(json_decode($object2));
 
-		$structure1->setIgnoreValues(array(null, ''));
+		$structure1->setIgnoreValues([null, '']);
 		$structure1->merge($structure2);
 
 		$this->assertEquals('new bar value 2', $structure1->get('bar.bar2'), 'Line: ' . __LINE__ . '. bar.bar2 should be override.');
 		$this->assertEquals('bar value 1', $structure1->get('bar.bar1'), 'Line: ' . __LINE__ . '. bar.bar1 should not be override.');
 		$this->assertSame('bar value 3', $structure1->get('bar.bar3'), 'Line: ' . __LINE__ . '. bar.bar3 should not be override.');
 
-		$structure = new Structure(array('flower' => 'rose', 'honor' => 'Osmanthus month'));
+		$structure = new Structure(['flower' => 'rose', 'honor' => 'Osmanthus month']);
 
 		$structure->merge($this->instance);
 
@@ -325,7 +325,7 @@ class StructureTest extends AbstractBaseTestCase
 	 */
 	public function testMergeTo()
 	{
-		$structure = new Structure(array('sunflower' => 'shine', 'honor' => 'Osmanthus month'));
+		$structure = new Structure(['sunflower' => 'shine', 'honor' => 'Osmanthus month']);
 
 		$this->instance->mergeTo('pos1', $structure);
 
@@ -414,7 +414,7 @@ class StructureTest extends AbstractBaseTestCase
 	 */
 	public function testSetRaw()
 	{
-		$object = (object) array('foo' => 'bar');
+		$object = (object) ['foo' => 'bar'];
 
 		$this->instance->setRaw('tree.bird', $object);
 
@@ -497,7 +497,7 @@ class StructureTest extends AbstractBaseTestCase
 	{
 		$structure = new Structure;
 
-		$structure->set('foo', array('var1', 'var2', 'var3'));
+		$structure->set('foo', ['var1', 'var2', 'var3']);
 
 		$structure->push('foo', 'var4');
 
@@ -508,7 +508,7 @@ class StructureTest extends AbstractBaseTestCase
 		$this->assertEquals('var5', $structure->get('foo.4'));
 		$this->assertEquals('var6', $structure->get('foo.5'));
 
-		$structure->setRaw('foo2', (object) array('var1', 'var2', 'var3'));
+		$structure->setRaw('foo2', (object) ['var1', 'var2', 'var3']);
 
 		$b = $structure->get('foo2');
 
@@ -532,13 +532,13 @@ class StructureTest extends AbstractBaseTestCase
 	{
 		$structure = new Structure;
 
-		$structure->set('foo.bar', array('var1', 'var2', 'var3'));
+		$structure->set('foo.bar', ['var1', 'var2', 'var3']);
 
 		$this->assertEquals('var1', $structure->shift('foo.bar'));
 
 		$this->assertEquals('var2', $structure->get('foo.bar.0'));
 
-		$structure->setRaw('foo.bar2', (object) array('v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3'));
+		$structure->setRaw('foo.bar2', (object) ['v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3']);
 
 		$this->assertEquals('var1', $structure->shift('foo.bar2'));
 
@@ -558,13 +558,13 @@ class StructureTest extends AbstractBaseTestCase
 	{
 		$structure = new Structure;
 
-		$structure->set('foo.bar', array('var1', 'var2', 'var3'));
+		$structure->set('foo.bar', ['var1', 'var2', 'var3']);
 
 		$this->assertEquals('var3', $structure->pop('foo.bar'));
 
 		$this->assertNull($structure->get('foo.bar.2'));
 
-		$structure->setRaw('foo.bar2', (object) array('v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3'));
+		$structure->setRaw('foo.bar2', (object) ['v1' => 'var1', 'v2' => 'var2', 'v3' => 'var3']);
 
 		$this->assertEquals('var3', $structure->pop('foo.bar2'));
 
@@ -584,7 +584,7 @@ class StructureTest extends AbstractBaseTestCase
 	{
 		$structure = new Structure;
 
-		$structure->set('foo', array('var1', 'var2', 'var3'));
+		$structure->set('foo', ['var1', 'var2', 'var3']);
 
 		$structure->unshift('foo', 'var4');
 
@@ -595,7 +595,7 @@ class StructureTest extends AbstractBaseTestCase
 		$this->assertEquals('var5', $structure->get('foo.0'));
 		$this->assertEquals('var6', $structure->get('foo.1'));
 
-		$structure->setRaw('foo2', (object) array('var1', 'var2', 'var3'));
+		$structure->setRaw('foo2', (object) ['var1', 'var2', 'var3']);
 
 		$b = $structure->get('foo2');
 
@@ -619,7 +619,7 @@ class StructureTest extends AbstractBaseTestCase
 	{
 		$this->instance->reset();
 
-		$this->assertEquals(array(), $this->instance->getRaw());
+		$this->assertEquals([], $this->instance->getRaw());
 	}
 
 	/**

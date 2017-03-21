@@ -78,9 +78,9 @@ class File
 	 *
 	 * @since   2.0
 	 */
-	public static function makeSafe($file, array $stripChars = array('#^\.#'))
+	public static function makeSafe($file, array $stripChars = ['#^\.#'])
 	{
-		$regex = array_merge(array('#(\.){2,}#', '#[^A-Za-z0-9\.\_\- ]#'), $stripChars);
+		$regex = array_merge(['#(\.){2,}#', '#[^A-Za-z0-9\.\_\- ]#'], $stripChars);
 
 		$file = preg_replace($regex, '', $file);
 

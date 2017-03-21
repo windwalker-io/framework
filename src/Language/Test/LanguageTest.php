@@ -157,10 +157,10 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testAddStrings()
 	{
-		$strings = array(
+		$strings = [
 			'foo' => 'bar',
 			'wind' => 'walker'
-		);
+		];
 
 		$this->instance->addStrings($strings);
 
@@ -293,7 +293,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
 		$orphans = $this->instance->getOrphans();
 
-		$this->assertEquals(array('windwalker.language.test.no.exists.flower', 'a.key.not.exists'), array_keys($orphans));
+		$this->assertEquals(['windwalker.language.test.no.exists.flower', 'a.key.not.exists'], array_keys($orphans));
 
 		$position = $orphans['a.key.not.exists']['position'];
 		$ref = new \ReflectionMethod($this, __FUNCTION__);
@@ -338,7 +338,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
 		$used = $this->instance->getUsed();
 
-		$this->assertEquals(array('windwalker.language.test.sakura'), $used);
+		$this->assertEquals(['windwalker.language.test.sakura'], $used);
 	}
 
 	/**

@@ -25,7 +25,7 @@ class Primary extends Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $comment = '', $options = array())
+	public function __construct($name = null, $comment = '', $options = [])
 	{
 		$options['primary'] = true;
 

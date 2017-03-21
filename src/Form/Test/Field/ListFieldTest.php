@@ -37,12 +37,12 @@ class ListFieldTest extends AbstractDomTestCase
 		$this->instance = new ListField(
 			'flower',
 			'Flower',
-			array(
+			[
 				new \Windwalker\Html\Option('', '')
-			),
-			array(
+			],
+			[
 				'class' => 'stub-flower'
-			)
+			]
 		);
 
 		$this->instance->option(1, 'Yes')
@@ -53,7 +53,7 @@ class ListFieldTest extends AbstractDomTestCase
 		$this->instance->setAttribute('disabled', true);
 		$this->instance->setAttribute('onchange', 'return false;');
 		$this->instance->setAttribute('multiple', false);
-		$this->instance->setAttribute('attribs',  array('data-test-element' => true));
+		$this->instance->setAttribute('attribs',  ['data-test-element' => true]);
 	}
 
 	/**
@@ -122,12 +122,12 @@ HTML;
 		$field = new ListField(
 			'timezone',
 			'Time Zone',
-			array(
-				'Asia' => array(
-					new Option('Tokyo', 'Asia/Tokyo', array('class' => 'opt')),
+			[
+				'Asia' => [
+					new Option('Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
 					new Option('Taipei', 'Asia/Taipei')
-				)
-			)
+				]
+			]
 		);
 
 		$field->group('Europe', function (ListField $field)

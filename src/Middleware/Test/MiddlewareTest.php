@@ -107,6 +107,6 @@ EOF;
 <<< Caesar
 EOF;
 
-		$this->assertStringSafeEquals($expected, $this->instance->execute((object) array('title' => 'Hamlet')));
+		$this->assertStringSafeEquals($expected, $this->instance->execute((object) ['title' => 'Hamlet']));
 	}
 }

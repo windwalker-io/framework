@@ -20,21 +20,21 @@ class EdgeFileLoader implements EdgeLoaderInterface
 	 *
 	 * @var  array
 	 */
-	protected $extensions = array('.edge.php', '.blade.php');
+	protected $extensions = ['.edge.php', '.blade.php'];
 
 	/**
 	 * Property paths.
 	 *
 	 * @var  array
 	 */
-	protected $paths = array();
+	protected $paths = [];
 
 	/**
 	 * EdgeFileLoader constructor.
 	 *
 	 * @param array $paths
 	 */
-	public function __construct(array $paths = array())
+	public function __construct(array $paths = [])
 	{
 		$this->paths = $paths;
 	}

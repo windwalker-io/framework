@@ -31,14 +31,14 @@ abstract class AbstractMessage implements MessageInterface
 	 *
 	 * @var  array
 	 */
-	protected $headers = array();
+	protected $headers = [];
 
 	/**
 	 * A header names store to support case-insensitive match.
 	 *
 	 * @var  array
 	 */
-	protected $headerNames = array();
+	protected $headerNames = [];
 
 	/**
 	 * Property stream.
@@ -162,7 +162,7 @@ abstract class AbstractMessage implements MessageInterface
 	{
 		if (!$this->hasHeader($name))
 		{
-			return array();
+			return [];
 		}
 
 		$name = $this->getHeaderName($name);
@@ -351,7 +351,7 @@ abstract class AbstractMessage implements MessageInterface
 		$name = HeaderHelper::normalizeHeaderName($name);
 
 		$new->headerNames[$normalized] = $name;
-		$new->headers[$name] = array();
+		$new->headers[$name] = [];
 
 		return $new;
 	}

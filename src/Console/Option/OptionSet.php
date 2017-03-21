@@ -20,7 +20,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
 	 *
 	 * @var  Option[]
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Add a new option.

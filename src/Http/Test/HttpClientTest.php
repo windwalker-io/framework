@@ -54,7 +54,7 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @return  HttpClient
 	 */
-	protected function createClient($options = array(), $transport = null)
+	protected function createClient($options = [], $transport = null)
 	{
 		$this->transport = $transport = $transport ? : new MockTransport;
 
@@ -99,21 +99,21 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	{
 		$url = new Uri('http://example.com/?foo=bar');
 
-		$this->instance->request('GET', $url, array('flower' => 'sakura'), array('X-Foo' => 'Bar'));
+		$this->instance->request('GET', $url, ['flower' => 'sakura'], ['X-Foo' => 'Bar']);
 
 		$this->assertEquals('GET', $this->transport->request->getMethod());
 		$this->assertEquals('http://example.com/?foo=bar&flower=sakura', $this->transport->request->getRequestTarget());
 		$this->assertEquals('', $this->transport->request->getBody()->__toString());
-		$this->assertEquals(array('X-Foo' => array('Bar')), $this->transport->request->getHeaders());
+		$this->assertEquals(['X-Foo' => ['Bar']], $this->transport->request->getHeaders());
 
 		$url = new Uri('http://example.com/?foo=bar');
 
-		$this->instance->request('POST', $url, array('flower' => 'sakura'), array('X-Foo' => 'Bar'));
+		$this->instance->request('POST', $url, ['flower' => 'sakura'], ['X-Foo' => 'Bar']);
 
 		$this->assertEquals('POST', $this->transport->request->getMethod());
 		$this->assertEquals('http://example.com/?foo=bar', $this->transport->request->getRequestTarget());
 		$this->assertEquals('flower=sakura', $this->transport->request->getBody()->__toString());
-		$this->assertEquals(array('X-Foo' => array('Bar')), $this->transport->request->getHeaders());
+		$this->assertEquals(['X-Foo' => ['Bar']], $this->transport->request->getHeaders());
 	}
 
 	/**
@@ -142,7 +142,7 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	public function testOptions()
 	{
 		$url = 'http://example.com/?foo=bar';
-		$headers = array('X-Foo' => 'Bar');
+		$headers = ['X-Foo' => 'Bar'];
 
 		$this->instance->options($url, $headers);
 
@@ -161,7 +161,7 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	public function testHead()
 	{
 		$url = 'http://example.com/?foo=bar';
-		$headers = array('X-Foo' => 'Bar');
+		$headers = ['X-Foo' => 'Bar'];
 
 		$this->instance->head($url, $headers);
 
@@ -181,12 +181,12 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	{
 		$url = new Uri('http://example.com/?foo=bar');
 
-		$this->instance->get($url, array('flower' => 'sakura'), array('X-Foo' => 'Bar'));
+		$this->instance->get($url, ['flower' => 'sakura'], ['X-Foo' => 'Bar']);
 
 		$this->assertEquals('GET', $this->transport->request->getMethod());
 		$this->assertEquals('http://example.com/?foo=bar&flower=sakura', $this->transport->request->getRequestTarget());
 		$this->assertEquals('', $this->transport->request->getBody()->__toString());
-		$this->assertEquals(array('X-Foo' => array('Bar')), $this->transport->request->getHeaders());
+		$this->assertEquals(['X-Foo' => ['Bar']], $this->transport->request->getHeaders());
 	}
 
 	/**
@@ -199,8 +199,8 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	public function testPost()
 	{
 		$url = 'http://example.com/?foo=bar';
-		$data = array('flower' => 'sakura');
-		$headers = array('X-Foo' => 'Bar');
+		$data = ['flower' => 'sakura'];
+		$headers = ['X-Foo' => 'Bar'];
 
 		$this->instance->post($url, $data, $headers);
 
@@ -220,8 +220,8 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	public function testPut()
 	{
 		$url = 'http://example.com/?foo=bar';
-		$data = array('flower' => 'sakura');
-		$headers = array('X-Foo' => 'Bar');
+		$data = ['flower' => 'sakura'];
+		$headers = ['X-Foo' => 'Bar'];
 
 		$this->instance->put($url, $data, $headers);
 
@@ -241,8 +241,8 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	public function testDelete()
 	{
 		$url = 'http://example.com/?foo=bar';
-		$data = array('flower' => 'sakura');
-		$headers = array('X-Foo' => 'Bar');
+		$data = ['flower' => 'sakura'];
+		$headers = ['X-Foo' => 'Bar'];
 
 		$this->instance->delete($url, $data, $headers);
 
@@ -262,7 +262,7 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	public function testTrace()
 	{
 		$url = 'http://example.com/?foo=bar';
-		$headers = array('X-Foo' => 'Bar');
+		$headers = ['X-Foo' => 'Bar'];
 
 		$this->instance->trace($url, $headers);
 
@@ -281,8 +281,8 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
 	public function testPatch()
 	{
 		$url = 'http://example.com/?foo=bar';
-		$data = array('flower' => 'sakura');
-		$headers = array('X-Foo' => 'Bar');
+		$data = ['flower' => 'sakura'];
+		$headers = ['X-Foo' => 'Bar'];
 
 		$this->instance->patch($url, $data, $headers);
 

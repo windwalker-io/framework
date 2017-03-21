@@ -34,16 +34,16 @@ class LocalMethodTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$users = array(
-			array(
+		$users = [
+			[
 				'username' => 'sakura',
 				'password' => 'qwer'
-			),
-			array(
+			],
+			[
 				'username' => 'flower',
 				'password' => '1234'
-			)
-		);
+			]
+		];
 
 		$this->instance = new LocalMethod($users);
 	}
@@ -72,7 +72,7 @@ class LocalMethodTest extends \PHPUnit\Framework\TestCase
 			return $pass == $hash;
 		});
 
-		$credential = new Credential(array('username' => 'flower', 'password' => '1234'));
+		$credential = new Credential(['username' => 'flower', 'password' => '1234']);
 
 		// Test success
 		$this->assertTrue($this->instance->authenticate($credential));

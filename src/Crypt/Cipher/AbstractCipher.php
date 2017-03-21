@@ -97,7 +97,7 @@ abstract class AbstractCipher implements CipherInterface
 	 * @since  2.0
 	 *
 	 */
-	public function __construct($key = null, array $options = array())
+	public function __construct($key = null, array $options = [])
 	{
 		if (!is_callable('openssl_encrypt'))
 		{
@@ -105,9 +105,10 @@ abstract class AbstractCipher implements CipherInterface
 		}
 
 		$this->privateKey = $key;
-		$this->options = array_merge(array(
+		$this->options = array_merge(
+			[
 			'pbkdf2_iteration' => 12000
-		), $options);
+			], $options);
 	}
 
 	/**
@@ -139,12 +140,13 @@ abstract class AbstractCipher implements CipherInterface
 
 		$hmac = $this->hmac($this->pbkdf2Salt . $iv . $encrypted);
 
-		return implode(':', array(
+		return implode(':', [
 			base64_encode($hmac),
 			base64_encode($this->pbkdf2Salt),
 			base64_encode($iv),
 			base64_encode($encrypted)
-		));
+		]
+		);
 	}
 
 	/**

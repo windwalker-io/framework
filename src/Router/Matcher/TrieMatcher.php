@@ -24,14 +24,14 @@ class TrieMatcher extends AbstractMatcher
 	 *
 	 * @var  array
 	 */
-	protected $tree = array();
+	protected $tree = [];
 
 	/**
 	 * Property vars.
 	 *
 	 * @var  array
 	 */
-	protected $vars = array();
+	protected $vars = [];
 
 	/**
 	 * Property method.
@@ -45,7 +45,7 @@ class TrieMatcher extends AbstractMatcher
 	 *
 	 * @var  array
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Match routes.
@@ -56,7 +56,7 @@ class TrieMatcher extends AbstractMatcher
 	 *
 	 * @return  Route|false
 	 */
-	public function match($route, $method = 'GET', $options = array())
+	public function match($route, $method = 'GET', $options = [])
 	{
 		$this->method = $method;
 		$this->options = $options;
@@ -202,7 +202,7 @@ class TrieMatcher extends AbstractMatcher
 
 				if (!isset($node[$segment]))
 				{
-					$node[$segment] = array();
+					$node[$segment] = [];
 				}
 
 				// If is last segment, set it as Route name,
@@ -226,7 +226,7 @@ class TrieMatcher extends AbstractMatcher
 	 */
 	public function clear()
 	{
-		$this->tree = array();
+		$this->tree = [];
 	}
 
 	/**

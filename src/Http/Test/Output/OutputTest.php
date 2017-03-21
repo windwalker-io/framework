@@ -61,17 +61,17 @@ class OutputTest extends \PHPUnit\Framework\TestCase
 		};
 
 		// Test return body
-		$return = (string) $this->instance->respond(new TextResponse('Flower', 256, array('x-foo' => 'bar')), true)->getBody();
+		$return = (string) $this->instance->respond(new TextResponse('Flower', 256, ['x-foo' => 'bar']), true)->getBody();
 
 		$this->assertEquals('Flower', (string) $return);
 
-		$this->assertEquals(array('bar'), $this->instance->message->getHeader('x-foo'));
+		$this->assertEquals(['bar'], $this->instance->message->getHeader('x-foo'));
 		$this->assertEquals('HTTP/1.1 256', $this->instance->status);
 
 		// Test respond instantly
 		ob_start();
 
-		$this->instance->respond(new TextResponse('Flower', 256, array('x-foo' => 'bar')));
+		$this->instance->respond(new TextResponse('Flower', 256, ['x-foo' => 'bar']));
 
 		$content = ob_get_clean();
 
@@ -109,14 +109,14 @@ class OutputTest extends \PHPUnit\Framework\TestCase
 		$this->instance->header('location: http://windwalker.io');
 		
 		// Should auto convert string case
-		$this->assertEquals(array('http://windwalker.io'), $this->instance->message->getHeader('Location'));
+		$this->assertEquals(['http://windwalker.io'], $this->instance->message->getHeader('Location'));
 		
 		// Test replace
 		$this->instance->header('x-foo: bar');
 		$this->instance->header('x-foo: baz');
 		$this->instance->header('x-foo: yoo', true);
 
-		$this->assertEquals(array('yoo'), $this->instance->message->getHeader('x-foo'));
+		$this->assertEquals(['yoo'], $this->instance->message->getHeader('x-foo'));
 	}
 
 	/**
@@ -128,24 +128,25 @@ class OutputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSendHeaders()
 	{
-		$this->instance->sendHeaders(new TextResponse('Flower', 256, array(
+		$this->instance->sendHeaders(new TextResponse('Flower', 256, [
 			'x-foo' => 'bar',
-			'x-flower' => array(
+			'x-flower' => [
 				'sakura',
 				'rose',
 				'olive'
-			)
-		)));
+			]
+		]
+		));
 
-		$expected = array(
-			'X-Foo' => array('bar'),
-			'X-Flower' => array(
+		$expected = [
+			'X-Foo' => ['bar'],
+			'X-Flower' => [
 				'sakura',
 				'rose',
 				'olive'
-			),
-			'Content-Type' => array('text/plain; charset=utf-8')
-		);
+			],
+			'Content-Type' => ['text/plain; charset=utf-8']
+		];
 
 		$this->assertEquals($expected, $this->instance->message->getHeaders());
 	}

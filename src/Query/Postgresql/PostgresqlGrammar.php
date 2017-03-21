@@ -168,11 +168,11 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 	 *
 	 * @return string
 	 */
-	public static function createTable($name, $columns, $pks = array(), $keys = array(), $inherits = null,
+	public static function createTable($name, $columns, $pks = [], $keys = [], $inherits = null,
 		$ifNotExists = true, $tablespace = null)
 	{
 		$query = static::getQuery();
-		$cols = array();
+		$cols = [];
 
 		foreach ($columns as $cName => $details)
 		{
@@ -180,7 +180,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 
 			array_unshift($details, $query->quoteName($cName));
 
-			$cols[] = call_user_func_array(array(get_called_class(), 'build'), $details);
+			$cols[] = call_user_func_array([get_called_class(), 'build'], $details);
 		}
 
 		if (!is_array($keys))
@@ -193,16 +193,16 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 			$cols[] = 'PRIMARY KEY ' . static::buildIndexDeclare(null, (array) $pks, null);
 		}
 
-		$indexes = array();
+		$indexes = [];
 
 		foreach ($keys as $key)
 		{
-			$define = array(
+			$define = [
 				'type' => 'INDEX',
 				'name' => null,
-				'columns' => array(),
+				'columns' => [],
 				'comment' => ''
-			);
+			];
 
 			if (!is_array($key))
 			{
@@ -339,7 +339,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 	 */
 	public static function renameColumn($table, $oldColumn, $newColumn)
 	{
-		$column = array($oldColumn, $newColumn);
+		$column = [$oldColumn, $newColumn];
 
 		return static::alterColumn('RENAME', $table, $column);
 	}
@@ -398,7 +398,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 	public static function buildIndexDeclare($name, $columns, $table = null)
 	{
 		$query = static::getQuery();
-		$cols  = array();
+		$cols  = [];
 
 		foreach ((array) $columns as $key => $val)
 		{
@@ -482,7 +482,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 	{
 		$args = func_get_args();
 
-		$sql = array();
+		$sql = [];
 
 		foreach ($args as $arg)
 		{

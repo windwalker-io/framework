@@ -27,85 +27,85 @@ class BasicCompilerTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function regexList()
 	{
-		return array(
-			array(
+		return [
+			[
 				'/flower/(id)',
 				'/flower/(?P<id>\d+)',
 				'/flower/25',
-				array('id' => 25),
+				['id' => 25],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/flower/caesar/(id)/(alias)',
 				'/flower/caesar/(?P<id>\d+)/(?P<alias>[^/]+)',
 				'/flower/caesar/25/othello',
-				array('id' => 25, 'alias' => 'othello'),
+				['id' => 25, 'alias' => 'othello'],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/flower/caesar/(id)-(alias)',
 				'/flower/caesar/(?P<id>\d+)-(?P<alias>[^/]+)',
 				'/flower/caesar/25-othello',
-				array('id' => 25, 'alias' => 'othello'),
+				['id' => 25, 'alias' => 'othello'],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/flower(/id)',
 				'/flower(/(?P<id>\d+))?',
 				'/flower/33',
-				array('id' => 33),
+				['id' => 33],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/flower(/id)',
 				'/flower(/(?P<id>\d+))?',
 				'/flower',
-				array(),
+				[],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/flower/caesar(/id,alias)',
 				'/flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
 				'/flower/caesar/25/othello',
-				array('id' => 25, 'alias' => 'othello'),
+				['id' => 25, 'alias' => 'othello'],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/flower/caesar(/id,alias)',
 				'/flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
 				'/flower/caesar/25',
-				array('id' => 25),
+				['id' => 25],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/flower/caesar(/id,alias)',
 				'/flower/caesar(/(?P<id>\d+)(/(?P<alias>[^/]+))?)?',
 				'/flower/caesar',
-				array(),
+				[],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/king(/foo,bar,baz,yoo)',
 				'/king(/(?P<foo>[^/]+)(/(?P<bar>[^/]+)(/(?P<baz>[^/]+)(/(?P<yoo>[^/]+))?)?)?)?',
 				'/king/john/troilus/and/cressida',
-				array('foo' => 'john', 'bar' => 'troilus', 'baz' => 'and', 'yoo' => 'cressida'),
+				['foo' => 'john', 'bar' => 'troilus', 'baz' => 'and', 'yoo' => 'cressida'],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/king/(*tags)',
 				'/king/(?P<tags>.*)',
 				'/king/john/troilus/and/cressida',
-				array('tags' => array('john', 'troilus', 'and', 'cressida')),
+				['tags' => ['john', 'troilus', 'and', 'cressida']],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/king/(*tags)/and/(alias)',
 				'/king/(?P<tags>.*)/and/(?P<alias>[^/]+)',
 				'/king/john/troilus/and/cressida',
-				array('tags' => array('john', 'troilus'), 'alias' => 'cressida'),
+				['tags' => ['john', 'troilus'], 'alias' => 'cressida'],
 				__LINE__
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -123,7 +123,7 @@ class BasicCompilerTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testCompile($pattern, $expected, $route, $expectedMatches, $line)
 	{
-		$regex = BasicCompiler::compile($pattern, array('id' => '\d+'));
+		$regex = BasicCompiler::compile($pattern, ['id' => '\d+']);
 
 		$this->assertEquals(chr(1) . '^' . $expected . '$' . chr(1), $regex, 'Fail at: ' . $line);
 

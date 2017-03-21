@@ -27,7 +27,7 @@ class Timestamp extends Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $allowNull = false, $default = '0', $comment = '', $options = array())
+	public function __construct($name = null, $allowNull = false, $default = '0', $comment = '', $options = [])
 	{
 		parent::__construct($name, DataType::TIMESTAMP, true, $allowNull, $default, $comment, $options);
 	}

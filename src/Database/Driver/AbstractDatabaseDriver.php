@@ -117,14 +117,14 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 	 *
 	 * @var AbstractTable[]
 	 */
-	protected $tables = array();
+	protected $tables = [];
 
 	/**
 	 * Property databases.
 	 *
 	 * @var  AbstractDatabase[]
 	 */
-	protected $databases = array();
+	protected $databases = [];
 
 	/**
 	 * Property transaction.
@@ -162,7 +162,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($connection = null, $options = array())
+	public function __construct($connection = null, $options = [])
 	{
 		// Initialise object variables.
 		$this->connection = $connection;
@@ -614,7 +614,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 		$open = false;
 		$char = '';
 		$end = strlen($sql);
-		$queries = array();
+		$queries = [];
 
 		for ($i = 0; $i < $end; $i++)
 		{
@@ -933,7 +933,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 	public function resetMiddlewares()
 	{
 		$this->middlewares = new ChainBuilder;
-		$this->middlewares->add(array($this, 'doExecute'));
+		$this->middlewares->add([$this, 'doExecute']);
 
 		return $this;
 	}

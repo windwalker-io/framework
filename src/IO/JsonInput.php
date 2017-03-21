@@ -36,7 +36,7 @@ class JsonInput extends FormDataInput
 
 			if (!is_array($this->data))
 			{
-				$this->data = array();
+				$this->data = [];
 			}
 		}
 		else

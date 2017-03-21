@@ -51,36 +51,36 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testFind()
 	{
-		$dataset = $this->instance->find(array(), null, 0, 3);
+		$dataset = $this->instance->find([], null, 0, 3);
 
-		$this->assertEquals(array(1, 2, 3), $dataset->id);
-		$this->assertEquals(array('Alstroemeria', 'Amaryllis', 'Anemone'), $dataset->title);
+		$this->assertEquals([1, 2, 3], $dataset->id);
+		$this->assertEquals(['Alstroemeria', 'Amaryllis', 'Anemone'], $dataset->title);
 
 		$dataset = $this->instance->find(null, null, 0, 3);
 
-		$this->assertEquals(array(), $dataset->id);
+		$this->assertEquals([], $dataset->id);
 
 		$dataset = $this->instance->find(0, null, 0, 3);
 
-		$this->assertEquals(array(), $dataset->id);
+		$this->assertEquals([], $dataset->id);
 
 		$dataset = $this->instance->find(false, null, 0, 3);
 
-		$this->assertEquals(array(), $dataset->id);
+		$this->assertEquals([], $dataset->id);
 
-		$dataset = $this->instance->find(array('state' => 1), 'ordering DESC', 2, 3);
+		$dataset = $this->instance->find(['state' => 1], 'ordering DESC', 2, 3);
 
-		$this->assertEquals(array(1, 1, 1), $dataset->state);
-		$this->assertEquals(array(82, 79, 77), $dataset->ordering);
-		$this->assertEquals(array('Violet', 'red', 'pink'), $dataset->title);
+		$this->assertEquals([1, 1, 1], $dataset->state);
+		$this->assertEquals([82, 79, 77], $dataset->ordering);
+		$this->assertEquals(['Violet', 'red', 'pink'], $dataset->title);
 
 		$datamapper = new DataMapper('ww_flower');
 
-		$datamapper->select(array('id', 'state'));
+		$datamapper->select(['id', 'state']);
 
-		$dataset = $datamapper->find(array('state' => 1), 'ordering DESC', 2, 3);
+		$dataset = $datamapper->find(['state' => 1], 'ordering DESC', 2, 3);
 
-		$this->assertEquals(array(null, null, null), $dataset->catid);
+		$this->assertEquals([null, null, null], $dataset->catid);
 
 		// Test find with no conditions
 		$dataset = $datamapper->find();
@@ -103,8 +103,8 @@ class DataMapperTest extends DatabaseTest
 	{
 		$dataset = $this->instance->findAll('catid, ordering', 0, 3);
 
-		$this->assertEquals(array(3, 4, 7), $dataset->id);
-		$this->assertEquals(array('Anemone', 'Apple Blossom', 'Baby\'s Breath'), $dataset->title);
+		$this->assertEquals([3, 4, 7], $dataset->id);
+		$this->assertEquals(['Anemone', 'Apple Blossom', 'Baby\'s Breath'], $dataset->title);
 	}
 
 	/**
@@ -123,11 +123,11 @@ class DataMapperTest extends DatabaseTest
 		$this->assertEquals('Baby\'s Breath', $data->title);
 
 		// Find by conditions
-		$data = $this->instance->findOne(array('title' => 'Cosmos'));
+		$data = $this->instance->findOne(['title' => 'Cosmos']);
 
 		$this->assertEquals('peaceful', $data->meaning);
 
-		$data = $this->instance->findOne(array('title' => 'Freesia', 'state' => 1));
+		$data = $this->instance->findOne(['title' => 'Freesia', 'state' => 1]);
 
 		$this->assertTrue($data->isNull());
 	}
@@ -139,9 +139,9 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testFindColumn()
 	{
-		$columns = $this->instance->findColumn('id', array(), 'catid, ordering', 0, 3);
+		$columns = $this->instance->findColumn('id', [], 'catid, ordering', 0, 3);
 
-		$this->assertEquals(array(3, 4, 7), $columns);
+		$this->assertEquals([3, 4, 7], $columns);
 	}
 
 	/**
@@ -154,19 +154,19 @@ class DataMapperTest extends DatabaseTest
 	public function testCreate()
 	{
 		// Create from array
-		$dataset = array(
-			array('title' => 'Sakura', 'meaning' => '', 'params' => ''),
-			array('title' => 'Peony', 'meaning' => '', 'params' => ''),
+		$dataset = [
+			['title' => 'Sakura', 'meaning' => '', 'params' => ''],
+			['title' => 'Peony', 'meaning' => '', 'params' => ''],
 
 			// DataMapper should remove non-necessary field
-			array('title' => 'Sunflower', 'anim' => 'bird', 'meaning' => '', 'params' => '')
-		);
+			['title' => 'Sunflower', 'anim' => 'bird', 'meaning' => '', 'params' => '']
+		];
 
 		$returns = $this->instance->create($dataset);
 
 		$newDataset = $this->loadToDataset('SELECT * FROM ww_flower ORDER BY id DESC LIMIT 3');
 
-		$this->assertEquals(array('Sunflower', 'Peony', 'Sakura'), $newDataset->title);
+		$this->assertEquals(['Sunflower', 'Peony', 'Sakura'], $newDataset->title);
 
 		$this->assertEquals(86, $returns[0]->id, 'Inserted id not matched.');
 
@@ -174,18 +174,18 @@ class DataMapperTest extends DatabaseTest
 
 		// Create from DataSet
 		$dataset = new DataSet(
-			array(
-				new Data(array('title' => 'Sakura2', 'meaning' => '', 'params' => '')),
-				new Data(array('title' => 'Peony2', 'meaning' => '', 'params' => '')),
-				new Data(array('title' => 'Sunflower2', 'meaning' => '', 'params' => ''))
-			)
+			[
+				new Data(['title' => 'Sakura2', 'meaning' => '', 'params' => '']),
+				new Data(['title' => 'Peony2', 'meaning' => '', 'params' => '']),
+				new Data(['title' => 'Sunflower2', 'meaning' => '', 'params' => ''])
+			]
 		);
 
 		$returns = $this->instance->create($dataset);
 
 		$newDataset = $this->loadToDataset('SELECT * FROM ww_flower ORDER BY id DESC LIMIT 3');
 
-		$this->assertEquals(array('Sunflower2', 'Peony2', 'Sakura2'), $newDataset->title);
+		$this->assertEquals(['Sunflower2', 'Peony2', 'Sakura2'], $newDataset->title);
 
 		$this->assertEquals(89, $returns[0]->id, 'Inserted id not matched.');
 
@@ -202,12 +202,12 @@ class DataMapperTest extends DatabaseTest
 	public function testCreateOne()
 	{
 		// Create from array
-		$data = array(
+		$data = [
 			'title' => 'Foo flower',
 			'state' => 1,
 			'meaning' => '',
 			'params' => ''
-		);
+		];
 
 		$newData = $this->instance->createOne($data);
 
@@ -218,12 +218,12 @@ class DataMapperTest extends DatabaseTest
 
 		// Create from Data
 		$data = new Data(
-			array(
+			[
 				'title' => 'Foo flower',
 				'state' => 1,
 				'meaning' => '',
 				'params' => ''
-			)
+			]
 		);
 
 		$newData = $this->instance->createOne($data);
@@ -244,34 +244,34 @@ class DataMapperTest extends DatabaseTest
 	public function testUpdate()
 	{
 		// Update from array
-		$dataset = array(
-			array('id' => 1, 'state' => 1),
-			array('id' => 2, 'state' => 1),
-			array('id' => 3, 'state' => 1)
-		);
+		$dataset = [
+			['id' => 1, 'state' => 1],
+			['id' => 2, 'state' => 1],
+			['id' => 3, 'state' => 1]
+		];
 
 		$returns = $this->instance->update($dataset, 'id');
 
 		$updateDataset = $this->loadToDataset('SELECT * FROM ww_flower LIMIT 3');
 
-		$this->assertEquals(array(1, 1, 1), $updateDataset->state);
+		$this->assertEquals([1, 1, 1], $updateDataset->state);
 
 		$this->assertInstanceOf('Windwalker\\Data\\Data', $returns[0], 'Return not Data object.');
 
 		// Use from DataSet
 		$dataset = new DataSet(
-			array(
-				new Data(array('id' => 1, 'state' => 0)),
-				new Data(array('id' => 2, 'state' => 0)),
-				new Data(array('id' => 3, 'state' => 0))
-			)
+			[
+				new Data(['id' => 1, 'state' => 0]),
+				new Data(['id' => 2, 'state' => 0]),
+				new Data(['id' => 3, 'state' => 0])
+			]
 		);
 
 		$returns = $this->instance->update($dataset, 'id');
 
 		$updateDataset = $this->loadToDataset('SELECT * FROM ww_flower LIMIT 3');
 
-		$this->assertEquals(array(0, 0, 0), $updateDataset->state);
+		$this->assertEquals([0, 0, 0], $updateDataset->state);
 
 		$this->assertInstanceOf('Windwalker\\Data\\Data', $returns[0], 'Return not Data object.');
 
@@ -288,7 +288,7 @@ class DataMapperTest extends DatabaseTest
 	public function testUpdateOne()
 	{
 		// Update from array
-		$data = array('id' => 10, 'params' => '{}');
+		$data = ['id' => 10, 'params' => '{}'];
 
 		$updateData = $this->instance->updateOne($data);
 
@@ -297,7 +297,7 @@ class DataMapperTest extends DatabaseTest
 		$this->assertInstanceOf('Windwalker\\Data\\Data', $updateData, 'Return not Data object.');
 
 		// Update from Data
-		$data = new Data(array('id' => 11, 'params' => '{}'));
+		$data = new Data(['id' => 11, 'params' => '{}']);
 
 		$updateData = $this->instance->updateOne($data);
 
@@ -317,13 +317,13 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testUpdateBatch()
 	{
-		$data = array('state' => 0);
+		$data = ['state' => 0];
 
-		$this->instance->updateBatch($data, array('id' => array(4, 5, 6)));
+		$this->instance->updateBatch($data, ['id' => [4, 5, 6]]);
 
 		$dataset = $this->loadToDataset('SELECT * FROM ww_flower WHERE id IN(4, 5, 6)');
 
-		$this->assertEquals(array(0, 0, 0), $dataset->state);
+		$this->assertEquals([0, 0, 0], $dataset->state);
 	}
 
 	/**
@@ -338,19 +338,19 @@ class DataMapperTest extends DatabaseTest
 		// Prepare test data
 		$this->db->setQuery('UPDATE ww_flower SET catid = 3 WHERE id IN (6, 7, 8)')->execute();
 
-		$dataset = array(
-			array('title' => 'Baby\'s Breath2', 'catid' => 3, 'meaning' => '', 'params' => ''),
-			array('title' => 'Bachelor Button2', 'catid' => 3, 'meaning' => '', 'params' => ''),
-			array('title' => 'Begonia2', 'catid' => 3, 'meaning' => '', 'params' => ''),
-		);
+		$dataset = [
+			['title' => 'Baby\'s Breath2', 'catid' => 3, 'meaning' => '', 'params' => ''],
+			['title' => 'Bachelor Button2', 'catid' => 3, 'meaning' => '', 'params' => ''],
+			['title' => 'Begonia2', 'catid' => 3, 'meaning' => '', 'params' => ''],
+		];
 
 		// Delete all catid = 3 and re insert them.
-		$returns = $this->instance->flush($dataset, array('catid' => 3));
+		$returns = $this->instance->flush($dataset, ['catid' => 3]);
 
 		$newDataset = $this->loadToDataset('SELECT * FROM ww_flower WHERE catid = 3');
 
-		$this->assertEquals(array('Baby\'s Breath2', 'Bachelor Button2', 'Begonia2'), $newDataset->title);
-		$this->assertEquals(array(94, 95, 96), $newDataset->id);
+		$this->assertEquals(['Baby\'s Breath2', 'Bachelor Button2', 'Begonia2'], $newDataset->title);
+		$this->assertEquals([94, 95, 96], $newDataset->id);
 	}
 
 	/**
@@ -362,10 +362,10 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testSave()
 	{
-		$dataset = array(
-			array('title' => 'Sunflower', 'catid' => 5, 'meaning' => '', 'params' => ''),
-			array('id' => 15, 'title' => 'striped2', 'catid' => 5, 'meaning' => '', 'params' => ''),
-		);
+		$dataset = [
+			['title' => 'Sunflower', 'catid' => 5, 'meaning' => '', 'params' => ''],
+			['id' => 15, 'title' => 'striped2', 'catid' => 5, 'meaning' => '', 'params' => ''],
+		];
 
 		$returns = $this->instance->save($dataset, 'id');
 
@@ -373,8 +373,8 @@ class DataMapperTest extends DatabaseTest
 
 		$newDataset = $this->loadToDataset('SELECT * FROM ww_flower WHERE catid = 5');
 
-		$this->assertEquals(array(97, 15), $returns->id, 'Inserted ID not matched');
-		$this->assertEquals(array(5, 5), $newDataset->catid, 'New catid should be 5');
+		$this->assertEquals([97, 15], $returns->id, 'Inserted ID not matched');
+		$this->assertEquals([5, 5], $newDataset->catid, 'New catid should be 5');
 	}
 
 	/**
@@ -386,14 +386,14 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testSaveOne()
 	{
-		$data = array('title' => 'Sakura', 'catid' => 6, 'meaning' => '', 'params' => '');
+		$data = ['title' => 'Sakura', 'catid' => 6, 'meaning' => '', 'params' => ''];
 
 		$return = $this->instance->saveOne($data, 'id');
 
 		$this->assertEquals('Sakura', $this->db->setQuery('SELECT title FROM ww_flower WHERE catid = 6')->loadResult());
 		$this->assertEquals(98, $return->id);
 
-		$data = array('id' => 15, 'title' => 'striped3', 'catid' => 6, 'meaning' => '', 'params' => '');
+		$data = ['id' => 15, 'title' => 'striped3', 'catid' => 6, 'meaning' => '', 'params' => ''];
 
 		$return = $this->instance->saveOne($data, 'id');
 
@@ -410,7 +410,7 @@ class DataMapperTest extends DatabaseTest
 	 */
 	public function testDelete()
 	{
-		$this->instance->delete(array('id' => 16));
+		$this->instance->delete(['id' => 16]);
 
 		$this->assertFalse($this->loadToData('SELECT * FROM ww_flower WHERE id = 16'));
 	}
@@ -426,9 +426,9 @@ class DataMapperTest extends DatabaseTest
 	{
 		$this->assertEquals('id', $this->instance->getKeyName());
 
-		$mapper = new DataMapper('ww_flower', array('a', 'b'));
+		$mapper = new DataMapper('ww_flower', ['a', 'b']);
 
-		$this->assertEquals(array('a', 'b'), $mapper->getKeyName(true));
+		$this->assertEquals(['a', 'b'], $mapper->getKeyName(true));
 	}
 
 	/**
@@ -454,7 +454,7 @@ class DataMapperTest extends DatabaseTest
 	{
 		$this->instance->setTable('ww_categories');
 
-		$this->assertEquals(array('Foo', 'Bar'), $this->instance->findAll()->title);
+		$this->assertEquals(['Foo', 'Bar'], $this->instance->findAll()->title);
 	}
 
 	/**

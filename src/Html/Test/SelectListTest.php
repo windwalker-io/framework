@@ -58,13 +58,13 @@ class SelectListTest extends AbstractDomTestCase
 	{
 		$select = new SelectList(
 			'form[timezone]',
-			array(
-				new Option('Asia - Tokyo', 'Asia/Tokyo', array('class' => 'opt')),
+			[
+				new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
 				new Option('Asia - Taipei', 'Asia/Taipei'),
 				new Option('Europe - Paris', 'Asia/Paris'),
 				new Option('UTC', 'UTC'),
-			),
-			array('class' => 'input-select'),
+			],
+			['class' => 'input-select'],
 			'UTC',
 			false
 		);
@@ -106,18 +106,18 @@ HTML;
 	{
 		$select = new SelectList(
 			'form[timezone]',
-			array(
-				'Asia' => array(
-					new Option('Tokyo', 'Asia/Tokyo', array('class' => 'opt')),
+			[
+				'Asia' => [
+					new Option('Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
 					new Option('Taipei', 'Asia/Taipei')
-				),
-				'Europe' => array(
+				],
+				'Europe' => [
 					new Option('Europe - Paris', 'Asia/Paris')
-				)
+				]
 				,
 				new Option('UTC', 'UTC'),
-			),
-			array('class' => 'input-select'),
+			],
+			['class' => 'input-select'],
 			'UTC',
 			false
 		);

@@ -24,68 +24,68 @@ class BasicGeneratorTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function regexList()
 	{
-		return array(
-			array(
+		return [
+			[
 				'flower/(id)',
-				array('id' => 25),
+				['id' => 25],
 				'flower/25',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower/(id)/(alias)',
-				array('id' => 25, 'alias' => 'sakura'),
+				['id' => 25, 'alias' => 'sakura'],
 				'flower/25/sakura',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower/(id)/(alias)',
-				array('alias' => 'sakura'),
+				['alias' => 'sakura'],
 				'flower/(id)/sakura',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower/(id)-(alias)',
-				array('id' => 25, 'alias' => 'sakura'),
+				['id' => 25, 'alias' => 'sakura'],
 				'flower/25-sakura',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower(/id)',
-				array('id' => 25, 'alias' => 'sakura'),
+				['id' => 25, 'alias' => 'sakura'],
 				'flower/25?alias=sakura',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower(/id)',
-				array('alias' => 'sakura'),
+				['alias' => 'sakura'],
 				'flower?alias=sakura',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower(/id,alias)',
-				array('id' => 25, 'alias' => 'sakura'),
+				['id' => 25, 'alias' => 'sakura'],
 				'flower/25/sakura',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower(/foo,bar,baz)',
-				array('foo' => 2014, 'bar' => 9, 'baz' => 27),
+				['foo' => 2014, 'bar' => 9, 'baz' => 27],
 				'flower/2014/9/27',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower/(*tags)',
-				array('id' => 25, 'tags' => array('sakura', 'rose', 'olive')),
+				['id' => 25, 'tags' => ['sakura', 'rose', 'olive']],
 				'flower/sakura/rose/olive?id=25',
 				__LINE__
-			),
-			array(
+			],
+			[
 				'flower/(*tags)/(alias)',
-				array('id' => 25, 'alias' => 'wind', 'tags' => array('sakura', 'rose', 'olive')),
+				['id' => 25, 'alias' => 'wind', 'tags' => ['sakura', 'rose', 'olive']],
 				'flower/sakura/rose/olive/wind?id=25',
 				__LINE__
-			),
-		);
+			],
+		];
 	}
 
 	/**

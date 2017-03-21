@@ -34,7 +34,7 @@ abstract class UnicodeHelper
 		{
 			if (is_null($UTF8_LOWER_ACCENTS))
 			{
-				$UTF8_LOWER_ACCENTS = array(
+				$UTF8_LOWER_ACCENTS = [
 					'à' => 'a',
 					'ô' => 'o',
 					'ď' => 'd',
@@ -139,7 +139,7 @@ abstract class UnicodeHelper
 					'æ' => 'ae',
 					'µ' => 'u',
 					'ĕ' => 'e',
-					'œ' => 'oe');
+					'œ' => 'oe'];
 			}
 
 			$string = str_replace(array_keys($UTF8_LOWER_ACCENTS), array_values($UTF8_LOWER_ACCENTS), $string);
@@ -149,7 +149,7 @@ abstract class UnicodeHelper
 		{
 			if (is_null($UTF8_UPPER_ACCENTS))
 			{
-				$UTF8_UPPER_ACCENTS = array(
+				$UTF8_UPPER_ACCENTS = [
 					'À' => 'A',
 					'Ô' => 'O',
 					'Ď' => 'D',
@@ -252,7 +252,7 @@ abstract class UnicodeHelper
 					'Ð' => 'Dh',
 					'Æ' => 'Ae',
 					'Ĕ' => 'E',
-					'Œ' => 'Oe');
+					'Œ' => 'Oe'];
 			}
 
 			$string = str_replace(array_keys($UTF8_UPPER_ACCENTS), array_values($UTF8_UPPER_ACCENTS), $string);
@@ -293,7 +293,7 @@ abstract class UnicodeHelper
 
 		if (is_null($UTF8_UPPER_TO_LOWER))
 		{
-			$UTF8_UPPER_TO_LOWER = array(
+			$UTF8_UPPER_TO_LOWER = [
 				0x0041 => 0x0061, 0x03A6 => 0x03C6, 0x0162 => 0x0163, 0x00C5 => 0x00E5, 0x0042 => 0x0062,
 				0x0139 => 0x013A, 0x00C1 => 0x00E1, 0x0141 => 0x0142, 0x038E => 0x03CD, 0x0100 => 0x0101,
 				0x0490 => 0x0491, 0x0394 => 0x03B4, 0x015A => 0x015B, 0x0044 => 0x0064, 0x0393 => 0x03B3,
@@ -337,7 +337,7 @@ abstract class UnicodeHelper
 				0x0054 => 0x0074, 0x004A => 0x006A, 0x040B => 0x045B, 0x0406 => 0x0456, 0x0102 => 0x0103,
 				0x039B => 0x03BB, 0x00D1 => 0x00F1, 0x041D => 0x043D, 0x038C => 0x03CC, 0x00C9 => 0x00E9,
 				0x00D0 => 0x00F0, 0x0407 => 0x0457, 0x0122 => 0x0123,
-			);
+			];
 		}
 
 		$uni = utf8_to_unicode($string);
@@ -470,7 +470,7 @@ abstract class UnicodeHelper
 		$mUcs4  = 0; // cached Unicode character
 		$mBytes = 1; // cached expected number of octets in the current sequence
 
-		$out = array();
+		$out = [];
 
 		$len = strlen($str);
 

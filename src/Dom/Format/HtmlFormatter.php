@@ -20,33 +20,33 @@ class HtmlFormatter extends DomFormatter
 	 *
 	 * @var  array
 	 */
-	protected $inlineElements = array(
+	protected $inlineElements = [
 		'b', 'big', 'i', 'small', 'tt', 'abbr', 'acronym', 'cite', 'code', 'dfn', 'em', 'kbd', 'strong', 'samp',
 		'var', 'a', 'bdo', 'br', 'img', 'span', 'sub', 'sup'
-	);
+	];
 
 	/**
 	 * Property unpairedElements.
 	 *
 	 * @var  array
 	 */
-	protected $unpairedElements = array(
+	protected $unpairedElements = [
 		'img', 'br', 'hr', 'area', 'param', 'wbr', 'base', 'link', 'meta', 'input', 'option', 'a', 'source'
-	);
+	];
 
 	/**
 	 * Property temporaryReplacementsScript.
 	 *
 	 * @var  array
 	 */
-	protected $temporaryReplacementsScript = array();
+	protected $temporaryReplacementsScript = [];
 
 	/**
 	 * Property temporaryReplacementsInline.
 	 *
 	 * @var  array
 	 */
-	protected $temporaryReplacementsInline = array();
+	protected $temporaryReplacementsInline = [];
 
 	/**
 	 * indent
@@ -57,7 +57,7 @@ class HtmlFormatter extends DomFormatter
 	 */
 	public function indent($input)
 	{
-		$this->log = array();
+		$this->log = [];
 
 		$input = $this->tempScripts($input);
 
@@ -175,7 +175,7 @@ class HtmlFormatter extends DomFormatter
 	 */
 	protected function getTagPatterns()
 	{
-		return array(
+		return [
 			// block tag
 			'/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\/(?:\2)>)/'  => static::MATCH_INDENT_NO,
 			// DOCTYPE
@@ -192,7 +192,7 @@ class HtmlFormatter extends DomFormatter
 			'/^(\s+)/'                                     => static::MATCH_DISCARD,
 			// text node
 			'/([^<]+)/'                                    => static::MATCH_INDENT_NO
-		);
+		];
 	}
 
 	/**
@@ -205,7 +205,7 @@ class HtmlFormatter extends DomFormatter
 	{
 		if ($type === static::ELEMENT_TYPE_BLOCK)
 		{
-			$this->inlineElements = array_diff($this->inlineElements, array($elementName));
+			$this->inlineElements = array_diff($this->inlineElements, [$elementName]);
 		}
 		else
 		{

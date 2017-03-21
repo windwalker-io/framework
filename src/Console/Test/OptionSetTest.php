@@ -34,7 +34,7 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @since  2.0
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -48,9 +48,9 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->instance = $optionset = new OptionSet;
 
-		$optionset[] = $this->options['a'] = new Option(array('a', 'A', 'ace'), 1, 'Ace');
+		$optionset[] = $this->options['a'] = new Option(['a', 'A', 'ace'], 1, 'Ace');
 
-		$optionset[] = $this->options['b'] = new Option(array('b', 'B', 'bar'), 1, 'Barcode');
+		$optionset[] = $this->options['b'] = new Option(['b', 'B', 'bar'], 1, 'Barcode');
 	}
 
 	/**
@@ -88,7 +88,7 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testOffsetSet()
 	{
-		$this->instance[] = $this->options['c'] = new Option(array('c', 'C', 'Car'), 1, 'Carbon');
+		$this->instance[] = $this->options['c'] = new Option(['c', 'C', 'Car'], 1, 'Carbon');
 
 		$this->assertSame($this->instance['c'], $this->options['c']);
 	}

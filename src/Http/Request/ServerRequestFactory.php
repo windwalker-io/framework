@@ -51,8 +51,8 @@ class ServerRequestFactory
 	 *
 	 * @throws \InvalidArgumentException for invalid file values
 	 */
-	public static function createFromGlobals(array $server = array(), array $query = array(), array $parsedBody = null,
-		array $cookies = array(), array $files = array())
+	public static function createFromGlobals(array $server = [], array $query = [], array $parsedBody = null,
+		array $cookies = [], array $files = [])
 	{
 		$server  = static::prepareServers($server ? : $_SERVER);
 		$headers = static::prepareHeaders($server);
@@ -64,7 +64,7 @@ class ServerRequestFactory
 		$decodedBody  = $_POST;
 		$decodedFiles = $_FILES;
 
-		if (in_array(strtoupper($method), array('PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK')))
+		if (in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE', 'LINK', 'UNLINK']))
 		{
 			$type = HeaderHelper::getValue($headers, 'Content-Type');
 
@@ -107,8 +107,8 @@ class ServerRequestFactory
 	 *
 	 * @return  ServerRequestInterface
 	 */
-	public static function createFromUri($uri, $script = null, array $server = array(), array $query = array(), array $parsedBody = null,
-		array $cookies = array(), array $files = array())
+	public static function createFromUri($uri, $script = null, array $server = [], array $query = [], array $parsedBody = null,
+		array $cookies = [], array $files = [])
 	{
 		$server = $server ? : $_SERVER;
 
@@ -167,7 +167,7 @@ class ServerRequestFactory
 	 */
 	public static function prepareFiles(array $files)
 	{
-		$return = array();
+		$return = [];
 
 		foreach ($files as $key => $value)
 		{
@@ -209,7 +209,7 @@ class ServerRequestFactory
 	 */
 	public static function prepareHeaders(array $server)
 	{
-		$headers = array();
+		$headers = [];
 		
 		foreach ($server as $key => $value)
 		{
@@ -480,19 +480,19 @@ class ServerRequestFactory
 	 *
 	 * @return  UploadedFileInterface[]
 	 */
-	protected static function getFlattenFileData(array $files = array())
+	protected static function getFlattenFileData(array $files = [])
 	{
-		$return = array();
+		$return = [];
 
 		foreach (array_keys($files['tmp_name']) as $key)
 		{
-			$file = array(
+			$file = [
 				'tmp_name' => $files['tmp_name'][$key],
 				'size'     => $files['size'][$key],
 				'error'    => $files['error'][$key],
 				'name'     => $files['name'][$key],
 				'type'     => $files['type'][$key],
-			);
+			];
 
 			$return[$key] = self::createUploadedFile($file);
 		}

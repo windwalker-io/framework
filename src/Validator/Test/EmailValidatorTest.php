@@ -42,37 +42,37 @@ class EmailValidatorTest extends AbstractValidateTestCase
 	 */
 	public function validateCase()
 	{
-		return array(
-			array(
+		return [
+			[
 				'case1',
 				'foo@gmail.com',
 				true
-			),
-			array(
+			],
+			[
 				'case2',
 				'foo bar@gmail.com',
 				false
-			),
-			array(
+			],
+			[
 				'case3',
 				'foo+bar@gmail.com',
 				true
-			),
-			array(
+			],
+			[
 				'case4',
 				'foo.bar-yoo@gmail.com',
 				true
-			),
-			array(
+			],
+			[
 				'case5',
 				'foo@gmail@com',
 				false
-			),
-			array(
+			],
+			[
 				'case6',
 				'foo',
 				false
-			),
-		);
+			],
+		];
 	}
 }

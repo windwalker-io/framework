@@ -28,7 +28,7 @@ abstract class DatabaseFactory
 	 *
 	 * @var  array
 	 */
-	protected static $instances = array();
+	protected static $instances = [];
 
 	/**
 	 * getDbo
@@ -40,7 +40,7 @@ abstract class DatabaseFactory
 	 * @throws \InvalidArgumentException
 	 * @return  AbstractDatabaseDriver
 	 */
-	public static function getDbo($driver = null, $option = array(), $forceNew = false)
+	public static function getDbo($driver = null, $option = [], $forceNew = false)
 	{
 		// No driver name given, we return default DB object.
 		if (!$driver)

@@ -23,9 +23,9 @@ class StreamTransportTest extends AbstractTransportTest
 	 *
 	 * @var  array
 	 */
-	protected $options = array(
-		'options' => array(CURLOPT_SSL_VERIFYPEER => false)
-	);
+	protected $options = [
+		'options' => [CURLOPT_SSL_VERIFYPEER => false]
+	];
 
 	/**
 	 * Test instance.

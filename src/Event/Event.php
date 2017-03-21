@@ -50,7 +50,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($name, array $arguments = array())
+	public function __construct($name, array $arguments = [])
 	{
 		$this->name = $name;
 
@@ -237,7 +237,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 		// Break the reference
 		unset($this->arguments);
 
-		$this->arguments = array();
+		$this->arguments = [];
 
 		return $this;
 	}
@@ -287,7 +287,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 */
 	public function serialize()
 	{
-		return serialize(array($this->name, $this->arguments, $this->stopped));
+		return serialize([$this->name, $this->arguments, $this->stopped]);
 	}
 
 	/**

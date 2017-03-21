@@ -24,16 +24,16 @@ abstract class StringHelper
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected static $incrementStyles = array(
-		self::INCREMENT_STYLE_DASH => array(
+	protected static $incrementStyles = [
+		self::INCREMENT_STYLE_DASH => [
 			'#-(\d+)$#',
 			'-%d'
-		),
-		self::INCREMENT_STYLE_DEFAULT => array(
-			array('#\((\d+)\)$#', '#\(\d+\)$#'),
-			array(' (%d)', '(%d)'),
-		),
-	);
+		],
+		self::INCREMENT_STYLE_DEFAULT => [
+			['#\((\d+)\)$#', '#\(\d+\)$#'],
+			[' (%d)', '(%d)'],
+		],
+	];
 
 	/**
 	 * isEmptyString
@@ -74,7 +74,7 @@ abstract class StringHelper
 	 *
 	 * @return  string Quoted string.
 	 */
-	public static function quote($string, $quote = array('"', '"'))
+	public static function quote($string, $quote = ['"', '"'])
 	{
 		$quote = (array) $quote;
 

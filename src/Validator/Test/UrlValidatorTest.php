@@ -52,37 +52,37 @@ class UrlValidatorTest extends AbstractValidateTestCase
 	 */
 	public function validateCase()
 	{
-		return array(
-			array(
+		return [
+			[
 				'case1',
 				'http://foo.com',
 				true
-			),
-			array(
+			],
+			[
 				'case2',
 				'https://windwalker.com/flower/sakura',
 				true
-			),
-			array(
+			],
+			[
 				'case3',
 				'ftp://windwalker.com/flower/sakura/?a=b&c=d',
 				true
-			),
-			array(
+			],
+			[
 				'case4',
 				'foo.com',
 				false
-			),
-			array(
+			],
+			[
 				'case5',
 				'sakura.com/wind/walker',
 				false
-			),
-			array(
+			],
+			[
 				'case6',
 				'25ihj9380t534895',
 				false
-			),
-		);
+			],
+		];
 	}
 }

@@ -48,9 +48,9 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testIsAssociativeArray()
 	{
-		$this->assertFalse(StructureHelper::isAssociativeArray(array('a', 'b')));
+		$this->assertFalse(StructureHelper::isAssociativeArray(['a', 'b']));
 
-		$this->assertTrue(StructureHelper::isAssociativeArray(array(1, 2, 'a' => 'b', 'c', 'd')));
+		$this->assertTrue(StructureHelper::isAssociativeArray([1, 2, 'a' => 'b', 'c', 'd']));
 	}
 
 	/**
@@ -62,17 +62,17 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testToObject()
 	{
-		$data = StructureHelper::toObject(array('foo' => 'bar'));
+		$data = StructureHelper::toObject(['foo' => 'bar']);
 
 		$this->assertInternalType('object', $data);
 
 		$this->assertEquals('bar', $data->foo);
 
-		$data = StructureHelper::toObject(array('foo' => 'bar'), 'ArrayObject');
+		$data = StructureHelper::toObject(['foo' => 'bar'], 'ArrayObject');
 
 		$this->assertInstanceOf('ArrayObject', $data);
 
-		$data = StructureHelper::toObject(array('foo' => array('bar' => 'baz')));
+		$data = StructureHelper::toObject(['foo' => ['bar' => 'baz']]);
 
 		$this->assertEquals('baz', $data->foo->bar);
 	}
@@ -86,21 +86,21 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetByPath()
 	{
-		$data = array(
+		$data = [
 			'flower' => 'sakura',
 			'olive' => 'peace',
-			'pos1' => array(
+			'pos1' => [
 				'sunflower' => 'love'
-			),
-			'pos2' => array(
+			],
+			'pos2' => [
 				'cornflower' => 'elegant'
-			),
-			'array' => array(
+			],
+			'array' => [
 				'A',
 				'B',
 				'C'
-			)
-		);
+			]
+		];
 
 		$this->assertEquals('sakura', StructureHelper::getByPath($data, 'flower'));
 		$this->assertEquals('love', StructureHelper::getByPath($data, 'pos1.sunflower'));
@@ -118,21 +118,23 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetByPathWithObject()
 	{
-		$data = array(
+		$data = [
 			'flower' => 'sakura',
 			'olive' => 'peace',
-			'pos1' => (object) array(
+			'pos1' => (object) [
 				'sunflower' => 'love'
-			),
-			'pos2' => new Structure(array(
+			],
+			'pos2' => new Structure(
+				[
 				'cornflower' => 'elegant'
-			)),
-			'array' => array(
+				]
+			),
+			'array' => [
 				'A',
 				'B',
 				'C'
-			)
-		);
+			]
+		];
 
 		$this->assertEquals('sakura', StructureHelper::getByPath($data, 'flower'));
 		$this->assertEquals('love', StructureHelper::getByPath($data, 'pos1.sunflower'));
@@ -149,7 +151,7 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSetByPath()
 	{
-		$data = array();
+		$data = [];
 
 		// One level
 		$return = StructureHelper::setByPath($data, 'flower', 'sakura');
@@ -185,31 +187,31 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testRemoveByPath()
 	{
-		$data = array(
-			'foo' => array(
+		$data = [
+			'foo' => [
 				'bar' => '123'
-			)
-		);
+			]
+		];
 
 		StructureHelper::removeByPath($data, 'foo.bar');
 
 		$this->assertFalse(array_key_exists('bar', $data['foo']));
 
-		$data = array(
-			'foo' => array(
+		$data = [
+			'foo' => [
 				'bar' => '123'
-			)
-		);
+			]
+		];
 
 		StructureHelper::removeByPath($data, 'foo');
 
 		$this->assertFalse(array_key_exists('foo', $data));
 
-		$data = array(
-			'foo' => array(
+		$data = [
+			'foo' => [
 				'bar' => '123'
-			)
-		);
+			]
+		];
 
 		StructureHelper::removeByPath($data, 'foo.yoo');
 
@@ -225,8 +227,8 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetPathNodes()
 	{
-		$this->assertEquals(array('a', 'b', 'c'), StructureHelper::getPathNodes('a..b.c'));
-		$this->assertEquals(array('a', 'b', 'c'), StructureHelper::getPathNodes('a//b/c', '/'));
+		$this->assertEquals(['a', 'b', 'c'], StructureHelper::getPathNodes('a..b.c'));
+		$this->assertEquals(['a', 'b', 'c'], StructureHelper::getPathNodes('a//b/c', '/'));
 	}
 
 	/**
@@ -239,16 +241,16 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testFlatten()
 	{
-		$array = array(
+		$array = [
 			'flower' => 'sakura',
 			'olive' => 'peace',
-			'pos1' => array(
+			'pos1' => [
 				'sunflower' => 'love'
-			),
-			'pos2' => array(
+			],
+			'pos2' => [
 				'cornflower' => 'elegant'
-			)
-		);
+			]
+		];
 
 		$flatted = StructureHelper::flatten($array);
 
@@ -268,34 +270,34 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestToArray()
 	{
-		return array(
-			'string' => array(
+		return [
+			'string' => [
 				'foo',
 				false,
-				array('foo')
-			),
-			'array' => array(
-				array('foo'),
+				['foo']
+			],
+			'array' => [
+				['foo'],
 				false,
-				array('foo')
-			),
-			'array_recursive' => array(
-				array('foo' => array(
-					(object) array('bar' => 'bar'),
-					(object) array('baz' => 'baz')
-				)),
+				['foo']
+			],
+			'array_recursive' => [
+				['foo' => [
+					(object) ['bar' => 'bar'],
+					(object) ['baz' => 'baz']
+				]],
 				true,
-				array('foo' => array(
-					array('bar' => 'bar'),
-					array('baz' => 'baz')
-				))
-			),
-			'iterator' => array(
-				array('foo' => new \ArrayIterator(array('bar' => 'baz'))),
+				['foo' => [
+					['bar' => 'bar'],
+					['baz' => 'baz']
+				]]
+			],
+			'iterator' => [
+				['foo' => new \ArrayIterator(['bar' => 'baz'])],
 				true,
-				array('foo' => array('bar' => 'baz'))
-			)
-		);
+				['foo' => ['bar' => 'baz']]
+			]
+		];
 	}
 
 	/**
@@ -325,7 +327,7 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals('bar', $dumped['bar']);
 		$this->assertNull($dumped['data']['self']);
 		$this->assertEquals(StructureHelper::dumpObjectValues(new StubDumpable), $dumped['data']['new']);
-		$this->assertEquals(array('sakura', 'rose'), $dumped['data']['flower']);
-		$this->assertEquals(array('wind' => 'walker'), $dumped['iterator']);
+		$this->assertEquals(['sakura', 'rose'], $dumped['data']['flower']);
+		$this->assertEquals(['wind' => 'walker'], $dumped['iterator']);
 	}
 }

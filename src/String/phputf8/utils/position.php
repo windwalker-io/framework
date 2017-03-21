@@ -32,10 +32,10 @@ function utf8_byte_position() {
     $str =& array_shift($args);
     if (!is_string($str)) return false;
 
-    $result = array();
+    $result = [];
 
     // trivial byte index, character offset pair
-    $prev = array(0,0);
+    $prev = [0,0];
 
     // use a short piece of str to estimate bytes per character
     // $i (& $j) -> byte indexes into $str
@@ -71,7 +71,7 @@ function utf8_byte_position() {
             $j = utf8_locate_next_chr($str, $j);
 
             // save the index, offset for use next iteration
-            $prev = array($i,$c);
+            $prev = [$i,$c];
 
             if ($j > $i) {
                 // determine new character offset

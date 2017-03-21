@@ -65,46 +65,46 @@ class DataType
 	 *
 	 * @var  array
 	 */
-	protected static $typeMapping = array();
+	protected static $typeMapping = [];
 
 	/**
 	 * "Default Length", "Default Value", "PHP Type"
 	 *
 	 * @var  array
 	 */
-	public static $typeDefinitions = array(
-		self::BOOLEAN => array(1, 0, 'boolean'),
+	public static $typeDefinitions = [
+		self::BOOLEAN => [1, 0, 'boolean'],
 
-		self::CHAR     => array(255, '', 'string'),
-		self::VARCHAR  => array(255, '', 'string'),
-		self::TEXT     => array(null, '', 'string'),
-		self::LONGTEXT => array(null, '', 'string'),
+		self::CHAR     => [255, '', 'string'],
+		self::VARCHAR  => [255, '', 'string'],
+		self::TEXT     => [null, '', 'string'],
+		self::LONGTEXT => [null, '', 'string'],
 
-		self::BIT         => array(1, 0, 'integer'),
-		self::BIT_VARYING => array(1, 0, 'integer'),
+		self::BIT         => [1, 0, 'integer'],
+		self::BIT_VARYING => [1, 0, 'integer'],
 
-		self::INTEGER  => array(11, 0, 'integer'),
-		self::SMALLINT => array(6,  0, 'integer'),
-		self::TINYINT  => array(4,  0, 'integer'),
-		self::NUMERIC  => array(10, 0, 'integer'),
+		self::INTEGER  => [11, 0, 'integer'],
+		self::SMALLINT => [6,  0, 'integer'],
+		self::TINYINT  => [4,  0, 'integer'],
+		self::NUMERIC  => [10, 0, 'integer'],
 
-		self::DECIMAL => array('10,2', 0, 'float'),
-		self::FLOAT   => array('10,2', 0, 'float'),
-		self::REAL    => array('10,2', 0, 'float'),
-		self::DOUBLE  => array('10,2', 0, 'float'),
+		self::DECIMAL => ['10,2', 0, 'float'],
+		self::FLOAT   => ['10,2', 0, 'float'],
+		self::REAL    => ['10,2', 0, 'float'],
+		self::DOUBLE  => ['10,2', 0, 'float'],
 
-		self::DATE => array(null, '0000-00-00', 'string'),
-		self::TIME => array(null, '00:00:00', 'string'),
-		self::TIMESTAMP => array(null, '0', 'string'),
-		self::DATETIME  => array(null, '0000-00-00 00:00:00', 'string'),
-	);
+		self::DATE => [null, '0000-00-00', 'string'],
+		self::TIME => [null, '00:00:00', 'string'],
+		self::TIMESTAMP => [null, '0', 'string'],
+		self::DATETIME  => [null, '0000-00-00 00:00:00', 'string'],
+	];
 
 	/**
 	 * Property instances.
 	 *
 	 * @var  static[]
 	 */
-	protected static $instances = array();
+	protected static $instances = [];
 
 	/**
 	 * getInstance

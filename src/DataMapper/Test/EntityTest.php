@@ -43,11 +43,11 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function getTestFields()
 	{
-		return array(
+		return [
 			'id',
 			'title',
 			'content'
-		);
+		];
 	}
 
 	/**
@@ -57,14 +57,14 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function getTestData()
 	{
-		return array(
+		return [
 			'id' => 5,
 			'title' => 'Sakura',
 			'content' => 'foo',
 			'created' => '2014-08-17',
 			'user' => 255,
 			'params' => '{}'
-		);
+		];
 	}
 
 	/**

@@ -245,7 +245,7 @@ class SimpleCipher implements CipherInterface
 	 */
 	private function hexToIntArray($hex)
 	{
-		$array = array();
+		$array = [];
 
 		$j = (int) strlen($hex) / 2;
 

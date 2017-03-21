@@ -48,7 +48,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$this->assertEquals((string) $compare, $item->params);
 
 		// Use array
-		$data = array();
+		$data = [];
 		$data['catid'] = 4;
 		$data['title'] = 'Sunflower';
 		$data['meaning'] = '';
@@ -92,7 +92,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$this->assertEquals((string) $compare, $item->params);
 
 		// Use array
-		$data = array();
+		$data = [];
 		$data['id'] = 87;
 		$data['catid'] = 5;
 		$data['title'] = 'Sunflower2';
@@ -112,7 +112,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$data->ordering = 8;
 		$data->title = 'Rose';
 
-		$writer->updateOne('#__flower', $data, array('catid', 'ordering'));
+		$writer->updateOne('#__flower', $data, ['catid', 'ordering']);
 
 		$item = $this->db->getReader('SELECT * FROM #__flower WHERE catid = 2 AND ordering = 8')->loadObject();
 
@@ -148,7 +148,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 		$this->assertEquals('Sakura', $item->title);
 
 		// Update
-		$data = array();
+		$data = [];
 		$data['id'] = 88;
 		$data['catid'] = 3;
 		$data['title'] = 'Sakura2';
@@ -174,10 +174,10 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 	{
 		$writer = $this->db->getWriter();
 
-		$dataSet = array(
-			array('title' => 'Foo', 'catid' => 6, 'meaning' => '', 'params' => ''),
-			array('title' => 'Bar', 'catid' => 6, 'meaning' => '', 'params' => ''),
-		);
+		$dataSet = [
+			['title' => 'Foo', 'catid' => 6, 'meaning' => '', 'params' => ''],
+			['title' => 'Bar', 'catid' => 6, 'meaning' => '', 'params' => ''],
+		];
 
 		$writer->insertMultiple('#__flower', $dataSet, 'id');
 
@@ -199,10 +199,10 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 	{
 		$writer = $this->db->getWriter();
 
-		$dataSet = array(
-			array('id' => 89, 'title' => 'Foo2', 'catid' => 6, 'meaning' => '', 'params' => ''),
-			array('id' => 90, 'title' => 'Bar2', 'catid' => 6, 'meaning' => '', 'params' => ''),
-		);
+		$dataSet = [
+			['id' => 89, 'title' => 'Foo2', 'catid' => 6, 'meaning' => '', 'params' => ''],
+			['id' => 90, 'title' => 'Bar2', 'catid' => 6, 'meaning' => '', 'params' => ''],
+		];
 
 		$writer->updateMultiple('#__flower', $dataSet, 'id');
 
@@ -238,9 +238,9 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 	{
 		$writer = $this->db->getWriter();
 
-		$data = array('state' => 1);
+		$data = ['state' => 1];
 
-		$writer->updateBatch('#__flower', $data, array('state' => 0, 'catid' => 2));
+		$writer->updateBatch('#__flower', $data, ['state' => 0, 'catid' => 2]);
 
 		$items = $this->db->getReader('SELECT * FROM #__flower WHERE catid = 2')->loadObjectList();
 

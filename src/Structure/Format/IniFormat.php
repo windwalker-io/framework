@@ -22,7 +22,7 @@ class IniFormat implements FormatInterface
 	 *
 	 * @var  array
 	 */
-	protected static $cache = array();
+	protected static $cache = [];
 
 	/**
 	 * Converts an object into an INI formatted string
@@ -35,10 +35,10 @@ class IniFormat implements FormatInterface
 	 *
 	 * @return  string  INI formatted string.
 	 */
-	public static function structToString($struct, array $options = array())
+	public static function structToString($struct, array $options = [])
 	{
-		$local = array();
-		$global = array();
+		$local = [];
+		$global = [];
 
 		// Iterate over the object to set the properties.
 		foreach ($struct as $key => $value)
@@ -84,7 +84,7 @@ class IniFormat implements FormatInterface
 	 *
 	 * @return  object   Data object.
 	 */
-	public static function stringToStruct($data, array $options = array())
+	public static function stringToStruct($data, array $options = [])
 	{
 		$sections = (isset($options['processSections'])) ? $options['processSections'] : false;
 
@@ -224,7 +224,7 @@ class IniFormat implements FormatInterface
 
 			case 'string':
 				// Sanitize any CRLF characters..
-				$string = '"' . str_replace(array("\r\n", "\n"), '\\n', $value) . '"';
+				$string = '"' . str_replace(["\r\n", "\n"], '\\n', $value) . '"';
 				break;
 		}
 

@@ -26,21 +26,21 @@ class Language implements LanguageInterface
 	 *
 	 * @var  string[]
 	 */
-	protected $strings = array();
+	protected $strings = [];
 
 	/**
 	 * Property used.
 	 *
 	 * @var  string[]
 	 */
-	protected $used = array();
+	protected $used = [];
 
 	/**
 	 * Property orphans.
 	 *
 	 * @var  string[]
 	 */
-	protected $orphans = array();
+	protected $orphans = [];
 
 	/**
 	 * Property debug.
@@ -54,14 +54,14 @@ class Language implements LanguageInterface
 	 *
 	 * @var  LoaderInterface[]
 	 */
-	protected $loaders = array();
+	protected $loaders = [];
 
 	/**
 	 * Property format.
 	 *
 	 * @var  FormatInterface[]
 	 */
-	protected $formats = array();
+	protected $formats = [];
 
 	/**
 	 * Property locale.
@@ -82,14 +82,14 @@ class Language implements LanguageInterface
 	 *
 	 * @var  LocaliseInterface[]
 	 */
-	protected $localises = array();
+	protected $localises = [];
 
 	/**
 	 * Property traces.
 	 *
 	 * @var  array
 	 */
-	protected $trace = array();
+	protected $trace = [];
 
 	/**
 	 * Property defaultBacktraceLevel.
@@ -103,7 +103,7 @@ class Language implements LanguageInterface
 	 *
 	 * @var  callable
 	 */
-	protected $normalizeHandler = array('Windwalker\\Language\\LanguageNormalize', 'toLanguageKey');
+	protected $normalizeHandler = ['Windwalker\\Language\\LanguageNormalize', 'toLanguageKey'];
 
 	/**
 	 * Constructor.
@@ -247,7 +247,7 @@ class Language implements LanguageInterface
 
 			$offset = $this->traceLevelOffset = $this->traceLevelOffset + 2;
 
-			$result =  call_user_func_array(array($this, 'sprintf'), $args);
+			$result =  call_user_func_array([$this, 'sprintf'], $args);
 
 			$this->traceLevelOffset = $offset;
 
@@ -404,7 +404,7 @@ class Language implements LanguageInterface
 	{
 		if ($loaders instanceof LoaderInterface)
 		{
-			$loaders = array($loaders);
+			$loaders = [$loaders];
 		}
 
 		foreach ($loaders as $name => $loader)
@@ -469,7 +469,7 @@ class Language implements LanguageInterface
 	{
 		if ($formats instanceof FormatInterface)
 		{
-			$formats = array($formats);
+			$formats = [$formats];
 		}
 
 		foreach ($formats as $name => $format)
@@ -652,23 +652,23 @@ class Language implements LanguageInterface
 			return $this;
 		}
 
-		$info = array(
+		$info = [
 			'position' => null,
 			'called' => null,
-			'args' => array()
-		);
+			'args' => []
+		];
 
 		if (function_exists('debug_backtrace'))
 		{
-			$defaultTrace = array(
+			$defaultTrace = [
 				'file'     => null,
 				'line'     => null,
 				'function' => null,
 				'class'    => null,
 				'object'   => null,
 				'type'     => null,
-				'args'     => array()
-			);
+				'args'     => []
+			];
 
 			$trace = debug_backtrace();
 
@@ -688,25 +688,25 @@ class Language implements LanguageInterface
 					$ref = new \ReflectionFunction($traceData['function']);
 				}
 
-				$info['position'] = array(
+				$info['position'] = [
 					'file'   => $ref ? $ref->getFileName() : $traceData['file'],
 					'class'  => $traceData['class'],
 					'function' => $traceData['function'],
 					'line'   => $ref ? $ref->getStartLine() : $traceData['line']
-				);
+				];
 			}
 
 			if (isset($trace[$level - 1]))
 			{
 				$traceData = array_merge($defaultTrace, $trace[$level - 1]);
 
-				$info['called'] = array(
+				$info['called'] = [
 					'file'   => $traceData['file'],
 					'class'  => $traceData['class'],
 					'function' => $traceData['function'],
 					'line'   => $traceData['line'],
 					'args'   => $traceData['args']
-				);
+				];
 
 				$info['args'] = $traceData['args'];
 			}

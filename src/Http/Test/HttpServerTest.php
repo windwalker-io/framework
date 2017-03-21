@@ -62,23 +62,23 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
 		return HttpServer::createFromGlobals(
 			$handler,
 			// server
-			array(
+			[
 				'foo' => 'bar'
-			),
+			],
 			// query
-			array(
+			[
 				'flower' => 'sakura'
-			),
+			],
 			// post
-			array(
+			[
 				'name' => 'value'
-			),
+			],
 			// cookies
-			array(
+			[
 				'hello' => 'world'
-			),
+			],
 			// files
-			array()
+			[]
 		);
 	}
 
@@ -96,10 +96,10 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
 
 		});
 
-		$this->assertEquals(array('foo'    => 'bar'), $server->getRequest()->getServerParams());
-		$this->assertEquals(array('flower' => 'sakura'), $server->getRequest()->getQueryParams());
-		$this->assertEquals(array('name'   => 'value'), $server->getRequest()->getParsedBody());
-		$this->assertEquals(array('hello'  => 'world'), $server->getRequest()->getCookieParams());
+		$this->assertEquals(['foo' => 'bar'], $server->getRequest()->getServerParams());
+		$this->assertEquals(['flower' => 'sakura'], $server->getRequest()->getQueryParams());
+		$this->assertEquals(['name' => 'value'], $server->getRequest()->getParsedBody());
+		$this->assertEquals(['hello' => 'world'], $server->getRequest()->getCookieParams());
 	}
 
 	/**

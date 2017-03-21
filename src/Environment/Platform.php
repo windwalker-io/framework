@@ -34,14 +34,14 @@ class Platform
 	 *
 	 * @var  array
 	 */
-	protected $server = array();
+	protected $server = [];
 
 	/**
 	 * Platform constructor.
 	 *
 	 * @param array $server
 	 */
-	public function __construct(array $server = array())
+	public function __construct(array $server = [])
 	{
 		$this->server = $server ? : $_SERVER;
 	}
@@ -103,7 +103,7 @@ class Platform
 	 */
 	public function isUnix()
 	{
-		$unames = array(
+		$unames = [
 			'CYG',
 			'DAR',
 			'FRE',
@@ -114,7 +114,7 @@ class Platform
 			'OPE',
 			'SUN',
 			'UNI'
-		);
+		];
 
 		return in_array($this->getOS(), $unames);
 	}

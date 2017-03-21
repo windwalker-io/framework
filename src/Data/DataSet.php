@@ -25,7 +25,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 *
 	 * @var  array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Constructor.
@@ -56,7 +56,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 		}
 		elseif (is_object($dataset))
 		{
-			$dataset = array($dataset);
+			$dataset = [$dataset];
 		}
 		elseif (!is_array($dataset))
 		{
@@ -87,7 +87,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function __get($property)
 	{
-		$return = array();
+		$return = [];
 
 		// Iterate through the objects.
 		foreach ($this->data as $key => $data)
@@ -110,7 +110,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function __isset($property)
 	{
-		$return = array();
+		$return = [];
 
 		// Iterate through the objects.
 		foreach ($this->data as $data)
@@ -201,7 +201,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function clear()
 	{
-		$this->data = array();
+		$this->data = [];
 
 		return $this;
 	}
@@ -447,7 +447,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 			return $dataset;
 		}
 
-		$return = array();
+		$return = [];
 
 		foreach ($dataset->data as $key => $value)
 		{
@@ -654,7 +654,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
 	 */
 	public function __clone()
 	{
-		$data = array();
+		$data = [];
 
 		foreach ($this->data as $item)
 		{

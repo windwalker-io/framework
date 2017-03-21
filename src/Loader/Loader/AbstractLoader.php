@@ -20,7 +20,7 @@ abstract class AbstractLoader
 	 */
 	public function register()
 	{
-		spl_autoload_register(array($this, 'loadClass'));
+		spl_autoload_register([$this, 'loadClass']);
 
 		return $this;
 	}
@@ -32,7 +32,7 @@ abstract class AbstractLoader
 	 */
 	public function unregister()
 	{
-		spl_autoload_unregister(array($this, 'loadClass'));
+		spl_autoload_unregister([$this, 'loadClass']);
 
 		return $this;
 	}

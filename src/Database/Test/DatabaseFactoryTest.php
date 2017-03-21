@@ -107,11 +107,11 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
 			return false;
 		}
 
-		$options = array(
+		$options = [
 			'host' => $dsn['host'],
 			'user' => $dsn['user'],
 			'password' => $dsn['pass']
-		);
+		];
 
 		return $options;
 	}

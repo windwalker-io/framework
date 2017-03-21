@@ -46,7 +46,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 	 *
 	 * @var  array
 	 */
-	protected static $quote = array('"', '"');
+	protected static $quote = ['"', '"'];
 
 	/**
 	 * Property dbname.
@@ -60,7 +60,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 	 *
 	 * @var array
 	 */
-	protected static $dsn = array();
+	protected static $dsn = [];
 
 	/**
 	 * Property debug.
@@ -109,13 +109,13 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 			// Use factory create dbo, only create once and will be singleton.
 			$db = self::$dbo = DatabaseFactory::getDbo(
 				static::$driver,
-				array(
+				[
 					'host'     => isset($dsn['host']) ? $dsn['host'] : null,
 					'user'     => isset($dsn['user']) ? $dsn['user'] : null,
 					'password' => isset($dsn['pass']) ? $dsn['pass'] : null,
 					'port'     => isset($dsn['port']) ? $dsn['port'] : null,
 					'prefix'   => isset($dsn['prefix']) ? $dsn['prefix'] : null,
-				)
+				]
 			);
 		}
 		catch (\RangeException $e)

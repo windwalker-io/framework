@@ -74,59 +74,59 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertEquals('foobar', $this->instance->get('myfile', 'foobar'));
 
-		$data = array(
-			'myfile' => array(
+		$data = [
+			'myfile' => [
 				'name' => 'n',
 				'type' => 'ty',
 				'tmp_name' => 'tm',
 				'error' => 'e',
 				'size' => 's'
-			),
-			'myfile2' => array(
+			],
+			'myfile2' => [
 				'name' => 'nn',
 				'type' => 'ttyy',
 				'tmp_name' => 'ttmm',
 				'error' => 'ee',
 				'size' => 'ss'
-			)
-		);
+			]
+		];
 
 		TestHelper::setValue($this->instance, 'data', $data);
 
-		$expected = array(
+		$expected = [
 			'name' => 'n',
 			'type' => 'ty',
 			'tmp_name' => 'tm',
 			'error' => 'e',
 			'size' => 's'
-		);
+		];
 
 		$this->assertEquals($expected, $this->instance->get('myfile'));
 
-		$data2 = array(
-			'foo' => array(
-				'name' => array(
+		$data2 = [
+			'foo' => [
+				'name' => [
 					'myfile' => 'n',
 					'myfile2' => 'nn'
-				),
-				'type' => array(
+				],
+				'type' => [
 					'myfile' => 'ty',
 					'myfile2' => 'ttyy'
-				),
-				'tmp_name' => array(
+				],
+				'tmp_name' => [
 					'myfile' => 'tm',
 					'myfile2' => 'ttmm'
-				),
-				'error' => array(
+				],
+				'error' => [
 					'myfile' => 'e',
 					'myfile2' => 'ee'
-				),
-				'size' => array(
+				],
+				'size' => [
 					'myfile' => 's',
 					'myfile2' => 'ss'
-				)
-			)
-		);
+				]
+			]
+		];
 
 		TestHelper::setValue($this->instance, 'data', $data2);
 
@@ -146,42 +146,42 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testDecodeData()
 	{
-		$data = array('n', 'ty', 'tm', 'e', 's');
+		$data = ['n', 'ty', 'tm', 'e', 's'];
 
 		$decoded = TestHelper::invoke($this->instance, 'decodeData', $data);
 
-		$expected = array(
+		$expected = [
 			'name' => 'n',
 			'type' => 'ty',
 			'tmp_name' => 'tm',
 			'error' => 'e',
 			'size' => 's'
-		);
+		];
 
 		$this->assertEquals($expected, $decoded);
 
-		$dataArr = array('first', 'second');
-		$data = array($dataArr , $dataArr, $dataArr, $dataArr, $dataArr);
+		$dataArr = ['first', 'second'];
+		$data = [$dataArr , $dataArr, $dataArr, $dataArr, $dataArr];
 
 		$decoded = TestHelper::invoke($this->instance, 'decodeData', $data);
 
-		$expectedFirst = array(
+		$expectedFirst = [
 			'name' => 'first',
 			'type' => 'first',
 			'tmp_name' => 'first',
 			'error' => 'first',
 			'size' => 'first'
-		);
+		];
 
-		$expectedSecond = array(
+		$expectedSecond = [
 			'name' => 'second',
 			'type' => 'second',
 			'tmp_name' => 'second',
 			'error' => 'second',
 			'size' => 'second'
-		);
+		];
 
-		$expected = array($expectedFirst, $expectedSecond);
+		$expected = [$expectedFirst, $expectedSecond];
 
 		$this->assertEquals($expected, $decoded);
 	}

@@ -37,7 +37,7 @@ class MustacheRenderer extends AbstractEngineRenderer
 	 *
 	 * @return  string
 	 */
-	public function render($file, $data = array())
+	public function render($file, $data = [])
 	{
 		$engine = $this->getEngine();
 
@@ -74,7 +74,7 @@ class MustacheRenderer extends AbstractEngineRenderer
 	{
 		if (!$this->engine || $new)
 		{
-			$this->engine = new \Mustache_Engine($this->config->get('options', array()));
+			$this->engine = new \Mustache_Engine($this->config->get('options', []));
 		}
 
 		return $this->engine;
@@ -110,11 +110,11 @@ class MustacheRenderer extends AbstractEngineRenderer
 	{
 		if (!$this->loader)
 		{
-			$options = array(
+			$options = [
 				// 'extension' => '.html'
-			);
+			];
 
-			$options = array_merge($options, (array) $this->config->get('loader_options', array()));
+			$options = array_merge($options, (array) $this->config->get('loader_options', []));
 
 			$this->loader = new \Mustache_Loader_FilesystemLoader($path, $options);
 		}

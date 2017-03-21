@@ -23,7 +23,7 @@ class DListDescription extends HtmlElement
 	 * @param mixed  $content Element content.
 	 * @param array  $attribs Element attributes.
 	 */
-	public function __construct($content = null, $attribs = array())
+	public function __construct($content = null, $attribs = [])
 	{
 		parent::__construct('dd', $content, $attribs);
 	}

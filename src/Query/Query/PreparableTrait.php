@@ -21,7 +21,7 @@ trait PreparableTrait
 	 * @var    mixed
 	 * @since  2.0
 	 */
-	protected $bounded = array();
+	protected $bounded = [];
 
 	/**
 	 * Method to add a variable to an internal array that will be bound to a prepared SQL statement before query execution. Also
@@ -39,12 +39,12 @@ trait PreparableTrait
 	 *
 	 * @since   2.0
 	 */
-	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
+	public function bind($key = null, &$value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
 	{
 		// Case 1: Empty Key (reset $bounded array)
 		if (empty($key))
 		{
-			$this->bounded = array();
+			$this->bounded = [];
 
 			return $this;
 		}

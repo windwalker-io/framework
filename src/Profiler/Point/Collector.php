@@ -20,14 +20,14 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
 	 *
 	 * @var  array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Class init.
 	 *
 	 * @param  array  $data
 	 */
-	public function __construct($data = array())
+	public function __construct($data = [])
 	{
 		$this->data = (array) $data;
 	}

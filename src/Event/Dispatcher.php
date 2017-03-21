@@ -23,7 +23,7 @@ class Dispatcher implements DispatcherInterface
 	 *
 	 * @since  2.0
 	 */
-	protected $events = array();
+	protected $events = [];
 
 	/**
 	 * An array of ListenersPriorityQueue indexed
@@ -33,7 +33,7 @@ class Dispatcher implements DispatcherInterface
 	 *
 	 * @since  2.0
 	 */
-	protected $listeners = array();
+	protected $listeners = [];
 
 	/**
 	 * Set an event to the dispatcher.
@@ -157,7 +157,7 @@ class Dispatcher implements DispatcherInterface
 	public function clearEvents()
 	{
 		$events = $this->events;
-		$this->events = array();
+		$this->events = [];
 
 		return $events;
 	}
@@ -189,7 +189,7 @@ class Dispatcher implements DispatcherInterface
 	 *
 	 * @since   2.0
 	 */
-	public function addListener($listener, $priorities = array())
+	public function addListener($listener, $priorities = [])
 	{
 		// We deal with a callable.
 		if (is_callable($listener))
@@ -201,7 +201,7 @@ class Dispatcher implements DispatcherInterface
 
 			if (is_string($priorities))
 			{
-				$priorities = array($priorities => ListenerPriority::NORMAL);
+				$priorities = [$priorities => ListenerPriority::NORMAL];
 			}
 
 			foreach ($priorities as $name => $priority)
@@ -261,7 +261,7 @@ class Dispatcher implements DispatcherInterface
 	 */
 	public function listen($event, $callable, $priority = ListenerPriority::NORMAL)
 	{
-		return $this->addListener($callable, array($event => $priority));
+		return $this->addListener($callable, [$event => $priority]);
 	}
 
 	/**
@@ -315,7 +315,7 @@ class Dispatcher implements DispatcherInterface
 			return $this->listeners[$event]->getAll();
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -421,7 +421,7 @@ class Dispatcher implements DispatcherInterface
 
 		else
 		{
-			$this->listeners = array();
+			$this->listeners = [];
 		}
 
 		return $this;
@@ -456,7 +456,7 @@ class Dispatcher implements DispatcherInterface
 	 *
 	 * @since   2.0
 	 */
-	public function triggerEvent($event, $args = array())
+	public function triggerEvent($event, $args = [])
 	{
 		if (!($event instanceof EventInterface))
 		{
@@ -488,7 +488,7 @@ class Dispatcher implements DispatcherInterface
 
 				else
 				{
-					call_user_func(array($listener, $event->getName()), $event);
+					call_user_func([$listener, $event->getName()], $event);
 				}
 			}
 		}

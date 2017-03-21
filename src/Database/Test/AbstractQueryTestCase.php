@@ -23,7 +23,7 @@ class AbstractQueryTestCase extends AbstractBaseTestCase
 	 *
 	 * @var  array
 	 */
-	protected static $quote = array('"', '"');
+	protected static $quote = ['"', '"'];
 
 	/**
 	 * quote

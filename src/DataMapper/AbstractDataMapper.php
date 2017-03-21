@@ -147,7 +147,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @return  mixed|DataSet Found rows data set.
 	 * @since   2.0
 	 */
-	public function find($conditions = array(), $order = null, $start = null, $limit = null)
+	public function find($conditions = [], $order = null, $start = null, $limit = null)
 	{
 		if ($conditions instanceof \Traversable)
 		{
@@ -170,7 +170,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 					throw new \InvalidArgumentException('Table has multiple primary keys specified, only one primary key value provided.');
 				}
 
-				$conditions = array($this->getKeyName() => $conditions);
+				$conditions = [$this->getKeyName() => $conditions];
 			}
 			else
 			{
@@ -181,15 +181,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$order = (array) $order;
 
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'conditions' => &$conditions,
 			'order'      => &$order,
 			'start'      => &$start,
 			'limit'      => &$limit
-		));
+		]
+		);
 
 		// Find data
-		$result = $this->doFind($conditions, $order, $start, $limit) ? : array();
+		$result = $this->doFind($conditions, $order, $start, $limit) ? : [];
 
 		foreach ($result as $key => $data)
 		{
@@ -202,9 +203,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$result = $this->bindDataset($result);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -226,18 +228,20 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function findAll($order = null, $start = null, $limit = null)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'order'      => &$order,
 			'start'      => &$start,
 			'limit'      => &$limit
-		));
+		]
+		);
 
-		$result = $this->find(array(), $order, $start, $limit);
+		$result = $this->find([], $order, $start, $limit);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -259,13 +263,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return mixed|Data Found row data.
 	 */
-	public function findOne($conditions = array(), $order = null)
+	public function findOne($conditions = [], $order = null)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'conditions' => &$conditions,
 			'order'      => &$order
-		));
+		]
+		);
 
 		$dataset = $this->find($conditions, $order, 0, 1);
 
@@ -277,9 +282,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -304,16 +310,17 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function findColumn($column, $conditions = array(), $order = null, $start = null, $limit = null)
+	public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'column'     => &$column,
 			'conditions' => &$conditions,
 			'order'      => &$order,
 			'start'      => &$start,
 			'limit'      => &$limit
-		));
+		]
+		);
 
 		if (!is_string($column))
 		{
@@ -322,7 +329,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		$dataset = $this->find($conditions, $order, $start, $limit);
 
-		$result = array();
+		$result = [];
 
 		foreach ($dataset as $data)
 		{
@@ -330,9 +337,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -349,9 +357,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function create($dataset)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'dataset' => &$dataset
-		));
+		]
+		);
 
 		if (!($dataset instanceof \Traversable) && !is_array($dataset))
 		{
@@ -361,9 +370,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$result = $this->doCreate($dataset);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -379,18 +389,20 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function createOne($data)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'data' => &$data
-		));
+		]
+		);
 
-		$dataset = $this->create($this->bindDataset(array($data)));
+		$dataset = $this->create($this->bindDataset([$data]));
 
 		$result = $dataset[0];
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -408,11 +420,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function update($dataset, $condFields = null, $updateNulls = false)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'dataset'     => &$dataset,
 			'condFields'  => &$condFields,
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 
 		if (!($dataset instanceof \Traversable) && !is_array($dataset))
 		{
@@ -425,9 +438,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$result = $this->doUpdate($dataset, (array) $condFields, $updateNulls);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -445,20 +459,22 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function updateOne($data, $condFields = null, $updateNulls = false)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'data'        => &$data,
 			'condFields'  => &$condFields,
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 
-		$dataset = $this->update($this->bindDataset(array($data)), $condFields, $updateNulls);
+		$dataset = $this->update($this->bindDataset([$data]), $condFields, $updateNulls);
 
 		$result = $dataset[0];
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -479,20 +495,22 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 * @throws \InvalidArgumentException
 	 * @return  boolean
 	 */
-	public function updateBatch($data, $conditions = array())
+	public function updateBatch($data, $conditions = [])
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'data'        => &$data,
 			'conditions'  => &$conditions
-		));
+		]
+		);
 
 		$result = $this->doUpdateBatch($data, $conditions);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -509,12 +527,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  mixed|DataSet Updated data set.
 	 */
-	public function flush($dataset, $conditions = array())
+	public function flush($dataset, $conditions = [])
 	{
 		// Handling conditions
 		if (!is_array($conditions) && !is_object($conditions))
 		{
-			$cond = array();
+			$cond = [];
 
 			foreach ((array) $this->getKeyName(true) as $field)
 			{
@@ -525,17 +543,19 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'dataset'     => &$dataset,
 			'conditions'  => &$conditions
-		));
+		]
+		);
 
 		$result = $this->doFlush($dataset, (array) $conditions);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -559,11 +579,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$condFields = (array) $condFields;
 
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'dataset'     => &$dataset,
 			'condFields'  => &$condFields,
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 
 		$createDataset = new $this->datasetClass;
 		$updateDataset = new $this->datasetClass;
@@ -606,9 +627,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		$this->update($updateDataset, $condFields, $updateNulls);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$dataset,
-		));
+		]
+		);
 
 		return $dataset;
 	}
@@ -626,20 +648,22 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	public function saveOne($data, $condFields = null, $updateNulls = false)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'data'        => &$data,
 			'condFields'  => &$condFields,
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 
-		$dataset = $this->save($this->bindDataset(array($data)), $condFields, $updateNulls);
+		$dataset = $this->save($this->bindDataset([$data]), $condFields, $updateNulls);
 
 		$result = $dataset[0];
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -678,7 +702,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 					throw new \InvalidArgumentException('Table has multiple primary keys specified, only one primary key value provided.');
 				}
 
-				$conditions = array($this->getKeyName() => $conditions);
+				$conditions = [$this->getKeyName() => $conditions];
 			}
 			else
 			{
@@ -687,16 +711,18 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'conditions'  => &$conditions
-		));
+		]
+		);
 
 		$result = $this->doDelete($conditions);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		));
+		]
+		);
 
 		return $result;
 	}
@@ -847,7 +873,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		}
 		elseif (is_object($dataset))
 		{
-			$dataset = array($dataset);
+			$dataset = [$dataset];
 		}
 		elseif (!is_array($dataset))
 		{
@@ -935,7 +961,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 	 *
 	 * @return  Event
 	 */
-	public function triggerEvent($event, $args = array())
+	public function triggerEvent($event, $args = [])
 	{
 		$dispatcher = $this->getDispatcher();
 
@@ -948,7 +974,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
 		$event = $this->dispatcher->triggerEvent($event, $args);
 
-		$innerListener = array($this, $event->getName());
+		$innerListener = [$this, $event->getName()];
 
 		if (!$event->isStopped() && method_exists($this, $event->getName()))
 		{

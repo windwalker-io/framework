@@ -38,7 +38,7 @@ class Option
 	 *
 	 * @since  2.0
 	 */
-	protected $aliases = array();
+	protected $aliases = [];
 
 	/**
 	 * Option description.

@@ -37,7 +37,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 *
 	 * @var  PointInterface[]
 	 */
-	protected $points = array();
+	protected $points = [];
 
 	/**
 	 * A flag to see if we must get
@@ -88,14 +88,14 @@ class Profiler implements ProfilerInterface, \Countable
 	 *
 	 * @throws  \InvalidArgumentException
 	 */
-	public function __construct($name, ProfilerRendererInterface $renderer = null, array $points = array(), $memoryRealUsage = null)
+	public function __construct($name, ProfilerRendererInterface $renderer = null, array $points = [], $memoryRealUsage = null)
 	{
 		$this->name = $name;
 		$this->renderer = $renderer ? : new DefaultRenderer;
 
 		if (empty($points))
 		{
-			$this->points = array();
+			$this->points = [];
 		}
 
 		else
@@ -174,7 +174,7 @@ class Profiler implements ProfilerInterface, \Countable
 	 *
 	 * @throws  \InvalidArgumentException  If the point already exists.
 	 */
-	public function mark($name, $data = array())
+	public function mark($name, $data = [])
 	{
 		// If a point already exists with this name.
 		if (isset($this->points[$name]))

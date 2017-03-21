@@ -121,10 +121,10 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 		$this->instance->addCommand(
 			'bar',
 			'bar desc',
-			array(
+			[
 				new Option('a', 0, 'a desc'),
 				new Option('b', 0, 'b desc')
-			),
+			],
 			function($command)
 			{
 				if ($command->getOption('a'))
@@ -205,7 +205,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 		$cmd = $this->instance;
 
 		$cmd->addGlobalOption(
-			array('y', 'yell', 'Y'),
+			['y', 'yell', 'Y'],
 			false,
 			'Make return uppercase'
 		);
@@ -262,7 +262,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 		$cmd = $this->instance;
 
 		$cmd->addOption(
-			array('y', 'yell', 'Y'),
+			['y', 'yell', 'Y'],
 			false,
 			'Make return uppercase'
 		);
@@ -285,7 +285,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetArgument()
 	{
-		$this->instance->getIO()->setArguments(array('flower', 'sakura'));
+		$this->instance->getIO()->setArguments(['flower', 'sakura']);
 
 		$this->assertEquals('flower', $this->instance->getArgument(0), 'First arg not matched.');
 
@@ -314,7 +314,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 
 		$cmd->setOptions(
 			new Option(
-				array('y', 'yell', 'Y'),
+				['y', 'yell', 'Y'],
 				false,
 				'Make return uppercase',
 				Option::IS_GLOBAL
@@ -392,7 +392,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSetAndgetCallableHandler()
 	{
-		$this->instance->handler(array($this, 'fakeHandler'));
+		$this->instance->handler([$this, 'fakeHandler']);
 
 		$code = $this->instance->getHandler();
 
@@ -487,15 +487,15 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 Did you mean one of these?
     yoo';
 
-		$this->instance->getIO()->setArguments(array('yo'));
+		$this->instance->getIO()->setArguments(['yo']);
 
 		$this->instance->getIO()->setOption('ansi', false);
 
 		$this->instance->execute();
 
 		$this->assertEquals(
-			str_replace(array("\n", "\r"), '', trim($compare)),
-			str_replace(array("\n", "\r"), '', trim($this->instance->getIO()->getTestOutput()))
+			str_replace(["\n", "\r"], '', trim($compare)),
+			str_replace(["\n", "\r"], '', trim($this->instance->getIO()->getTestOutput()))
 		);
 	}
 

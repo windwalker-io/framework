@@ -31,7 +31,7 @@ class TimezoneField extends ListField
 	 */
 	protected function prepareOptions()
 	{
-		$zones = array();
+		$zones = [];
 
 		foreach (\DateTimeZone::listIdentifiers() as $zone)
 		{
@@ -50,7 +50,7 @@ class TimezoneField extends ListField
 
 			if (!isset($zones[$state]))
 			{
-				$zones[$state] = array();
+				$zones[$state] = [];
 			}
 
 			$zones[$state][] = new Option($city, $zone);

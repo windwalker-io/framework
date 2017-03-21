@@ -51,19 +51,19 @@ class RouteHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetVariables()
 	{
-		$array = array(
+		$array = [
 			0 => 5,
 			'id' => 5,
 			1 => 'foo',
 			'bar' => 'foo'
-		);
+		];
 
-		$this->assertEquals(array('id' => 5, 'bar' => 'foo'), RouteHelper::getVariables($array));
+		$this->assertEquals(['id' => 5, 'bar' => 'foo'], RouteHelper::getVariables($array));
 
-		$vars = array(
+		$vars = [
 			'flower' => 'sakura'
-		);
+		];
 
-		$this->assertEquals(array('flower' => 'sakura', 'id' => 5, 'bar' => 'foo'), RouteHelper::getVariables($array, $vars));
+		$this->assertEquals(['flower' => 'sakura', 'id' => 5, 'bar' => 'foo'], RouteHelper::getVariables($array, $vars));
 	}
 }

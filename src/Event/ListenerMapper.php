@@ -20,7 +20,7 @@ class ListenerMapper
 	 *
 	 * @var  array
 	 */
-	protected static $maps = array();
+	protected static $maps = [];
 
 	/**
 	 * mapListener
@@ -51,7 +51,7 @@ class ListenerMapper
 
 		if (!isset(static::$maps[$targetClass]))
 		{
-			static::$maps[$targetClass] = array();
+			static::$maps[$targetClass] = [];
 		}
 
 		static::$maps[$targetClass][] = $listener;

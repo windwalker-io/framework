@@ -178,15 +178,15 @@ CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
 CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')})
 SQL;
 
-		$columns = array(
+		$columns = [
 			'id' => 'serial NOT NULL',
-			'name' => array('varchar(255)', 'NOT NULL'),
+			'name' => ['varchar(255)', 'NOT NULL'],
 			'email' => "varchar(255) NOT NULL"
-		);
+		];
 
-		$keys = array(
-			array('type' => 'INDEX', 'name' => 'idx_alias', 'columns' => 'email')
-		);
+		$keys = [
+			['type' => 'INDEX', 'name' => 'idx_alias', 'columns' => 'email']
+		];
 
 		$actual = PostgresqlGrammar::createTable('foo', $columns, 'id', $keys, 'bar', true, 'tablespace');
 
@@ -205,17 +205,17 @@ CREATE TABLE {$this->qn('foo')} (
 CREATE UNIQUE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')}, {$this->qn('id')})
 SQL;
 
-		$columns = array(
+		$columns = [
 			'id' => 'int(11) NOT NULL',
-			'name' => array('varchar(255)', 'NOT NULL'),
+			'name' => ['varchar(255)', 'NOT NULL'],
 			'email' => "varchar(255) NOT NULL"
-		);
+		];
 
-		$keys = array(
-			array('type' => 'UNIQUE INDEX', 'name' => 'idx_alias', 'columns' => array('email', 'id'))
-		);
+		$keys = [
+			['type' => 'UNIQUE INDEX', 'name' => 'idx_alias', 'columns' => ['email', 'id']]
+		];
 
-		$actual = PostgresqlGrammar::createTable('foo', $columns, array('id', 'email'), $keys, null, false, null);
+		$actual = PostgresqlGrammar::createTable('foo', $columns, ['id', 'email'], $keys, null, false, null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -271,7 +271,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
 
-		$actual = PostgresqlGrammar::alterColumn('RENAME', 'foo', array('bar', 'yoo'), null, false, null);
+		$actual = PostgresqlGrammar::alterColumn('RENAME', 'foo', ['bar', 'yoo'], null, false, null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -347,7 +347,7 @@ SQL;
 	{
 		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlGrammar::addIndex('foo', 'INDEX', array('alias', 'name'), 'idx_alias');
+		$actual = PostgresqlGrammar::addIndex('foo', 'INDEX', ['alias', 'name'], 'idx_alias');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -384,7 +384,7 @@ SQL;
 
 		$expected = "{$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlGrammar::buildIndexDeclare('idx_alias', array('alias', 'name'), 'foo');
+		$actual = PostgresqlGrammar::buildIndexDeclare('idx_alias', ['alias', 'name'], 'foo');
 
 		$this->assertEquals(
 			$this->format($expected),

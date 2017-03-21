@@ -13,7 +13,7 @@ use Windwalker\Cache\Storage\FileStorage;
 
 $cache = new Cache(new FileStorage(__DIR__ . '/cache'));
 
-$cache->set('flower', array('flower' => 'sakura'));
+$cache->set('flower', ['flower' => 'sakura']);
 
 $data = $cache->get('flower');
 

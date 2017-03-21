@@ -252,7 +252,7 @@ class Query implements QueryInterface, PreparableInterface
 	 * @var    mixed
 	 * @since  2.0
 	 */
-	protected $bounded = array();
+	protected $bounded = [];
 
 	/**
 	 * Class constructor.
@@ -603,7 +603,7 @@ class Query implements QueryInterface, PreparableInterface
 				$this->union = null;
 				$this->offset = 0;
 				$this->limit = 0;
-				$this->bounded = array();
+				$this->bounded = [];
 				break;
 		}
 
@@ -853,7 +853,7 @@ class Query implements QueryInterface, PreparableInterface
 
 		$expression = $this->getExpression();
 
-		return call_user_func_array(array($expression, 'buildExpression'), $args);
+		return call_user_func_array([$expression, 'buildExpression'], $args);
 	}
 
 	/**
@@ -863,7 +863,7 @@ class Query implements QueryInterface, PreparableInterface
 	 */
 	public function expr()
 	{
-		return call_user_func_array(array($this, 'expression'), func_get_args());
+		return call_user_func_array([$this, 'expression'], func_get_args());
 	}
 
 	/**
@@ -937,14 +937,14 @@ class Query implements QueryInterface, PreparableInterface
 	{
 		if (is_null($this->having))
 		{
-			$this->having = $this->element('HAVING', array(), " AND ");
+			$this->having = $this->element('HAVING', [], " AND ");
 		}
 
 		$args = func_get_args();
 
 		if (!is_array($conditions) && count($args) > 1)
 		{
-			$conditions = call_user_func_array(array($this, 'format'), $args);
+			$conditions = call_user_func_array([$this, 'format'], $args);
 		}
 
 		$this->having->append($conditions);
@@ -992,7 +992,7 @@ class Query implements QueryInterface, PreparableInterface
 		{
 			$query = new static($this->connection);
 
-			$query->having = new QueryElement('()', array(), ' OR ');
+			$query->having = new QueryElement('()', [], ' OR ');
 
 			call_user_func($conditions, $query);
 
@@ -1015,7 +1015,7 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function innerJoin($table, $condition = array())
+	public function innerJoin($table, $condition = [])
 	{
 		$this->join('INNER', $table, $condition);
 
@@ -1062,11 +1062,11 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function join($type, $table, $conditions = array())
+	public function join($type, $table, $conditions = [])
 	{
 		if (is_null($this->join))
 		{
-			$this->join = array();
+			$this->join = [];
 		}
 
 		if (is_string($table))
@@ -1092,7 +1092,7 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function leftJoin($table, $condition = array())
+	public function leftJoin($table, $condition = [])
 	{
 		$this->join('LEFT', $table, $condition);
 
@@ -1209,7 +1209,7 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function outerJoin($table, $condition = array())
+	public function outerJoin($table, $condition = [])
 	{
 		$this->join('OUTER', $table, $condition);
 
@@ -1307,7 +1307,7 @@ class Query implements QueryInterface, PreparableInterface
 				$alias = substr($name, $pos + 4);
 				$name  = substr($name, 0, $pos);
 
-				$quotedAlias = $this->quoteNameStr(array($alias));
+				$quotedAlias = $this->quoteNameStr([$alias]);
 			}
 
 			$quotedName = $this->quoteNameStr(explode('.', $name));
@@ -1316,7 +1316,7 @@ class Query implements QueryInterface, PreparableInterface
 		}
 		elseif (is_array($name) || is_object($name))
 		{
-			$fin = array();
+			$fin = [];
 
 			foreach ((array) $name as $n)
 			{
@@ -1353,7 +1353,7 @@ class Query implements QueryInterface, PreparableInterface
 	 */
 	protected function quoteNameStr($strArr)
 	{
-		$parts = array();
+		$parts = [];
 		$q = $this->nameQuote;
 
 		foreach ($strArr as $part)
@@ -1389,7 +1389,7 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function rightJoin($table, $condition = array())
+	public function rightJoin($table, $condition = [])
 	{
 		$this->join('RIGHT', $table, $condition);
 
@@ -1556,14 +1556,14 @@ class Query implements QueryInterface, PreparableInterface
 	{
 		if (is_null($this->where))
 		{
-			$this->where = $this->element('WHERE', array(), ' AND ');
+			$this->where = $this->element('WHERE', [], ' AND ');
 		}
 
 		$args = func_get_args();
 
 		if (!is_array($conditions) && count($args) > 1)
 		{
-			$conditions = call_user_func_array(array($this, 'format'), $args);
+			$conditions = call_user_func_array([$this, 'format'], $args);
 		}
 
 		$this->where->append($conditions);
@@ -1611,7 +1611,7 @@ class Query implements QueryInterface, PreparableInterface
 		{
 			$query = new static($this->connection);
 
-			$query->where = new QueryElement('()', array(), ' OR ');
+			$query->where = new QueryElement('()', [], ' OR ');
 
 			call_user_func($conditions, $query);
 
@@ -2030,7 +2030,7 @@ class Query implements QueryInterface, PreparableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
+	public function bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
 	{
 		// If is array, loop for all elements.
 		if (is_array($key))
@@ -2046,7 +2046,7 @@ class Query implements QueryInterface, PreparableInterface
 		// Case 1: Empty Key (reset $bounded array)
 		if (empty($key))
 		{
-			$this->bounded = array();
+			$this->bounded = [];
 
 			return $this;
 		}
@@ -2210,7 +2210,7 @@ class Query implements QueryInterface, PreparableInterface
 	 */
 	public function __sleep()
 	{
-		return array_diff(array_keys(get_object_vars($this)), array('connection'));
+		return array_diff(array_keys(get_object_vars($this)), ['connection']);
 	}
 
 	/**

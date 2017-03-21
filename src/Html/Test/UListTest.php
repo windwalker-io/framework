@@ -57,15 +57,15 @@ class UListTest extends AbstractDomTestCase
 
 		$this->assertEquals('<ul></ul>', (string) $list);
 
-		$list = new UList(null, array('id' => 'list', 'class' => 'nav'));
+		$list = new UList(null, ['id' => 'list', 'class' => 'nav']);
 
 		$this->assertEquals('<ul id="list" class="nav"></ul>', (string) $list);
 
-		$items = array(
+		$items = [
 			new ListItem('Remember, with great power, comes great responsibility'),
 			new ListItem('Life was like a box of chocolates.'),
-			new ListItem('You mustn’t be afraid to dream a little bigger,darling.', array('class' => 'nav-item'))
-		);
+			new ListItem('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item'])
+		];
 
 		$list = new UList($items);
 
@@ -111,11 +111,11 @@ HTML;
 	 */
 	public function testSetItems()
 	{
-		$items = array(
+		$items = [
 			new ListItem('Remember, with great power, comes great responsibility'),
 			new ListItem('Life was like a box of chocolates.'),
-			new ListItem('You mustn’t be afraid to dream a little bigger,darling.', array('class' => 'nav-item'))
-		);
+			new ListItem('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item'])
+		];
 
 		$list = new UList;
 		$list->setItems($items);

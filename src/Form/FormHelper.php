@@ -37,7 +37,7 @@ class FormHelper
 	 */
 	public static function flatten($data, $separator = '.')
 	{
-		$array = array();
+		$array = [];
 
 		static::toFlatten($separator, $data, $array);
 
@@ -54,7 +54,7 @@ class FormHelper
 	 *
 	 * @return  void
 	 */
-	protected static function toFlatten($separator = '_', $data = null, &$array = array(), $prefix = '')
+	protected static function toFlatten($separator = '_', $data = null, &$array = [], $prefix = '')
 	{
 		$data = (array) $data;
 
@@ -149,7 +149,7 @@ class FormHelper
 		{
 			if (strtolower($type) == 'array')
 			{
-				return array();
+				return [];
 			}
 
 			if (class_exists($type))

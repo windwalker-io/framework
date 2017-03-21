@@ -20,7 +20,7 @@ class SessionBag implements SessionBagInterface
 	 *
 	 * @var  array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * setData
@@ -101,7 +101,7 @@ class SessionBag implements SessionBagInterface
 	 */
 	public function clear()
 	{
-		$this->data = array();
+		$this->data = [];
 
 		return $this;
 	}

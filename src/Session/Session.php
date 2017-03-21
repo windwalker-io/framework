@@ -67,7 +67,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var  SessionBagInterface[]
 	 */
-	protected $bags = array();
+	protected $bags = [];
 
 	/**
 	 * The session bridge, default is PHP NativeBridge.
@@ -90,7 +90,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var  array
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Debug mode.
@@ -112,17 +112,17 @@ class Session implements \ArrayAccess, \IteratorAggregate
 	 * @since   2.0
 	 */
 	public function __construct(HandlerInterface $handler = null, SessionBagInterface $bag = null,
-		FlashBagInterface $flashBag = null, SessionBridgeInterface $bridge = null, array $options = array())
+		FlashBagInterface $flashBag = null, SessionBridgeInterface $bridge = null, array $options = [])
 	{
 		$this->bridge = $bridge ? : new NativeBridge;
 
 		// Create handler
 		$this->handler = $handler ? : new NativeHandler;
 
-		$bags = array(
+		$bags = [
 			'default' => $bag ? : new SessionBag,
 			'flash'   => $flashBag ? : new FlashBag
-		);
+		];
 
 		$this->setBags($bags);
 
@@ -544,7 +544,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 				throw new \RuntimeException('Session is not active.');
 			}
 
-			return array();
+			return [];
 		}
 
 		return $this->getBag($namespace)->all();
@@ -1065,7 +1065,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 
 		if ($this->isActive())
 		{
-			$this->prepareBagsData(array($name => $bag));
+			$this->prepareBagsData([$name => $bag]);
 		}
 
 		return $this;
@@ -1123,7 +1123,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 
 			if (!isset($session[$ns]) || !is_array($session[$ns]))
 			{
-				$session[$ns] = array();
+				$session[$ns] = [];
 			}
 
 			$bag->setData($session[$ns]);

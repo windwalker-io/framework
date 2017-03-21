@@ -30,7 +30,7 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	 * @param AbstractDatabaseDriver $db
 	 * @param array          $options
 	 */
-	public function __construct(AbstractDatabaseDriver $db, $options = array())
+	public function __construct(AbstractDatabaseDriver $db, $options = [])
 	{
 		parent::__construct($db, $options);
 	}
@@ -67,11 +67,11 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
 	{
 		$writer = $this->db->getWriter();
 
-		$data = array(
+		$data = [
 			$this->options['data_col'] => $data,
 			$this->options['time_col'] => (int) time(),
 			$this->options['id_col'] => $id,
-		);
+		];
 
 		$writer->updateOne($this->options['table'], $data, $this->options['id_col']);
 

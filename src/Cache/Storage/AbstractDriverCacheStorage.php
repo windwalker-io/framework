@@ -31,7 +31,7 @@ abstract class AbstractDriverCacheStorage extends AbstractCacheStorage
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($driver = null, $ttl = null, $options = array())
+	public function __construct($driver = null, $ttl = null, $options = [])
 	{
 		$this->driver = $driver;
 

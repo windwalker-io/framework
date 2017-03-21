@@ -26,7 +26,7 @@ interface TransportInterface
 	 *
 	 * @since   2.1
 	 */
-	public function __construct($options = array());
+	public function __construct($options = []);
 
 	/**
 	 * Send a request to the server and return a Response object with the response.

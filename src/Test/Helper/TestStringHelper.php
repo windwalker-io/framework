@@ -52,7 +52,7 @@ class TestStringHelper
 	 *
 	 * @return  string
 	 */
-	public static function quote($string, $quote = array('"', '"'))
+	public static function quote($string, $quote = ['"', '"'])
 	{
 		$quote = (array) $quote;
 

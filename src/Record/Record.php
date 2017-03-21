@@ -42,7 +42,7 @@ class Record extends Entity
 	 *
 	 * @var  array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Name of the primary key fields in the table.
@@ -50,7 +50,7 @@ class Record extends Entity
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $keys = array();
+	protected $keys = [];
 
 	/**
 	 * Indicates that the primary keys autoincrement.
@@ -80,7 +80,7 @@ class Record extends Entity
 	 *
 	 * @var  array
 	 */
-	protected static $fieldsCache = array();
+	protected static $fieldsCache = [];
 
 	/**
 	 * Property mapper.
@@ -196,11 +196,12 @@ class Record extends Entity
 		$fields = $this->getFields();
 
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'src'    => &$src,
 			'fields' => $fields,
 			'replaceNulls' => &$replaceNulls
-		));
+		]
+		);
 
 		// Bind the source value, excluding the ignored fields.
 		foreach ($src as $k => $v)
@@ -238,10 +239,11 @@ class Record extends Entity
 	public function load($keys = null, $reset = true)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'conditions'  => &$keys,
 			'reset' => &$reset
-		));
+		]
+		);
 
 		if ($reset)
 		{
@@ -252,7 +254,7 @@ class Record extends Entity
 		if (empty($keys))
 		{
 			$empty = true;
-			$keys  = array();
+			$keys  = [];
 
 			// If empty, use the value of the current key
 			foreach ($this->keys as $key)
@@ -280,9 +282,10 @@ class Record extends Entity
 		$row = $this->bind($result);
 
 		// Event
-		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$row,
-		));
+		]
+		);
 
 		return $row;
 	}
@@ -323,9 +326,10 @@ class Record extends Entity
 		$conditions = $this->$key;
 
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'conditions'  => &$conditions
-		));
+		]
+		);
 
 		// If no primary key is given, return false.
 		if ($conditions === null)
@@ -381,14 +385,16 @@ class Record extends Entity
 		$action = $new ? 'Create' : 'Update';
 
 		// @Event: Create / Update
-		$this->triggerEvent('onBefore' . $action, array(
+		$this->triggerEvent('onBefore' . $action, [
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 		
 		// @Event: Store
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 
 		// Do Action
 		// If a primary key exists update the object, otherwise insert it.
@@ -398,9 +404,10 @@ class Record extends Entity
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
 		// @Event: Create / Update
-		$this->triggerEvent('onAfter' . $action, array(
+		$this->triggerEvent('onAfter' . $action, [
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 
 		return $this;
 	}
@@ -415,7 +422,7 @@ class Record extends Entity
 	public function create()
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array());
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), []);
 
 		$this->triggerEvent('onBeforeStore');
 
@@ -440,21 +447,24 @@ class Record extends Entity
 	public function update($updateNulls = false)
 	{
 		// Event
-		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), array(
+		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 
-		$this->triggerEvent('onBeforeStore', array(
+		$this->triggerEvent('onBeforeStore', [
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 
 		// Do Action
 		$this->getDataMapper()->updateOne($this, $this->getKeyName(true), $updateNulls);
 
 		// Event
-		$this->triggerEvent('onAfterStore', array(
+		$this->triggerEvent('onAfterStore', [
 			'updateNulls' => &$updateNulls
-		));
+		]
+		);
 		
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
@@ -554,7 +564,7 @@ class Record extends Entity
 			return !$empty;
 		}
 
-		$conditions = array();
+		$conditions = [];
 
 		foreach ($this->getKeyName(true) as $key)
 		{
@@ -588,7 +598,7 @@ class Record extends Entity
 
 		try
 		{
-			$record->load(array($field => $value));
+			$record->load([$field => $value]);
 		}
 		catch (NoResultException $e)
 		{
@@ -601,7 +611,7 @@ class Record extends Entity
 		}
 
 		// check record keys same as self
-		$same = array();
+		$same = [];
 
 		foreach ($this->keys as $key)
 		{
@@ -627,7 +637,7 @@ class Record extends Entity
 	 *
 	 * @since   2.1
 	 */
-	public function triggerEvent($event, $args = array())
+	public function triggerEvent($event, $args = [])
 	{
 		$dispatcher = $this->getDispatcher();
 
@@ -640,7 +650,7 @@ class Record extends Entity
 
 		$event = $this->dispatcher->triggerEvent($event, $args);
 
-		$innerListener = array($this, $event->getName());
+		$innerListener = [$this, $event->getName()];
 
 		if (!$event->isStopped() && is_callable($innerListener))
 		{
@@ -701,7 +711,7 @@ class Record extends Entity
 	 */
 	public function reset($loadDefault = true)
 	{
-		$this->data = array();
+		$this->data = [];
 
 		// Get the default values for the class from the table.
 		foreach ((array) $this->getFields() as $k => $v)

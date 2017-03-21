@@ -27,7 +27,7 @@ class Grid
 	 * Array of columns
 	 * @var array
 	 */
-	protected $columns = array();
+	protected $columns = [];
 
 	/**
 	 * Current active row
@@ -39,13 +39,13 @@ class Grid
 	 * Rows of the table (including header and footer rows)
 	 * @var array
 	 */
-	protected $rows = array();
+	protected $rows = [];
 
 	/**
 	 * Header and Footer row-IDs
 	 * @var array
 	 */
-	protected $specialRows = array('header' => array(), 'footer' => array());
+	protected $specialRows = ['header' => [], 'footer' => []];
 
 	/**
 	 * Associative array of attributes for the table-tag
@@ -60,7 +60,7 @@ class Grid
 	 *
 	 * @since   2.1
 	 */
-	public function __construct($attribs = array())
+	public function __construct($attribs = [])
 	{
 		$this->setTableAttributes($attribs, true);
 	}
@@ -72,7 +72,7 @@ class Grid
 	 *
 	 * @return static
 	 */
-	public static function create($attribs = array())
+	public static function create($attribs = [])
 	{
 		return new static($attribs);
 	}
@@ -106,7 +106,7 @@ class Grid
 	 *
 	 * @since 2.1
 	 */
-	public function setTableAttributes($attribs = array(), $replace = false)
+	public function setTableAttributes($attribs = [], $replace = false)
 	{
 		if ($replace)
 		{
@@ -210,7 +210,7 @@ class Grid
 	 *
 	 * @since   2.1
 	 */
-	public function addRow($attribs = array(), $special = self::ROW_NORMAL)
+	public function addRow($attribs = [], $special = self::ROW_NORMAL)
 	{
 		$this->rows[]['_row'] = $attribs;
 		$this->activeRow = count($this->rows) - 1;
@@ -299,7 +299,7 @@ class Grid
 	 *
 	 * @since 2.1
 	 */
-	public function setRowCell($name, $content, $attribs = array(), $replace = true)
+	public function setRowCell($name, $content, $attribs = [], $replace = true)
 	{
 		if ($replace || !isset($this->rows[$this->activeRow][$name]))
 		{
@@ -410,7 +410,7 @@ class Grid
 	 */
 	public function toString()
 	{
-		$output = array();
+		$output = [];
 		$output[] = '<table' . $this->renderAttributes($this->getTableAttributes()) . '>';
 
 		if (count($this->specialRows['header']))
@@ -448,7 +448,7 @@ class Grid
 	 */
 	protected function renderArea($ids, $area = 'tbody', $cell = 'td')
 	{
-		$output = array();
+		$output = [];
 		$output[] = '<' . $area . ">\n";
 
 		foreach ($ids as $id)
@@ -488,7 +488,7 @@ class Grid
 			return '';
 		}
 
-		$return = array();
+		$return = [];
 
 		foreach ($attributes as $key => $value)
 		{

@@ -41,7 +41,7 @@ class RedisStorage extends AbstractDriverCacheStorage
 	 *
 	 * @throws \RuntimeException
 	 */
-	public function __construct($driver = null, $ttl = null, $options = array())
+	public function __construct($driver = null, $ttl = null, $options = [])
 	{
 		if (!extension_loaded('redis') || !class_exists('\Redis'))
 		{

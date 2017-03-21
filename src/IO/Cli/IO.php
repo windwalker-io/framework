@@ -331,9 +331,9 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
 	 */
 	public function jsonSerialize()
 	{
-		return array(
+		return [
 			'arguments' => $this->input->args,
 			'options' => $this->input->all()
-		);
+		];
 	}
 }

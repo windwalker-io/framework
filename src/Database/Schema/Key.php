@@ -49,7 +49,7 @@ class Key
 	 *
 	 * @var  array
 	 */
-	protected $columns = array();
+	protected $columns = [];
 
 	/**
 	 * Property comment.
@@ -66,7 +66,7 @@ class Key
 	 * @param string $name
 	 * @param string $comment
 	 */
-	public function __construct($type = null, $columns = array(), $name = null, $comment = null)
+	public function __construct($type = null, $columns = [], $name = null, $comment = null)
 	{
 		$this->name    = $name;
 		$this->type    = $type;

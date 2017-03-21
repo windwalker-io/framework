@@ -46,11 +46,12 @@ class AbstractHtml5Field extends TextField
 	 */
 	protected function getAccessors()
 	{
-		return array_merge(parent::getAccessors(), array(
+		return array_merge(parent::getAccessors(), [
 			'max' => 'max',
 			'min' => 'min',
 			'step' => 'step',
 			'patten' => 'patten',
-		));
+		]
+		);
 	}
 }

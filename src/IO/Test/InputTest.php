@@ -112,7 +112,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function test__get()
 	{
-		$instance = $this->newInstance(array());
+		$instance = $this->newInstance([]);
 
 		$this->assertAttributeEquals($_GET, 'data', $instance->get);
 
@@ -142,7 +142,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testCount()
 	{
-		$input = $this->newInstance(array('foo' => 2, 'bar' => 3, 'gamma' => 4));
+		$input = $this->newInstance(['foo' => 2, 'bar' => 3, 'gamma' => 4]);
 
 		$this->assertEquals(3, $input->count());
 
@@ -162,7 +162,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetWithStandardValue()
 	{
-		$instance = $this->newInstance(array('foo' => 'bar'));
+		$instance = $this->newInstance(['foo' => 'bar']);
 
 		$this->assertEquals('bar', $instance->get('foo'));
 	}
@@ -177,7 +177,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetWithEmptyString()
 	{
-		$instance = $this->newInstance(array('foo' => ''));
+		$instance = $this->newInstance(['foo' => '']);
 
 		$this->assertEquals('', $instance->get('foo'));
 
@@ -194,7 +194,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetWith0()
 	{
-		$instance = $this->newInstance(array('foo' => 0));
+		$instance = $this->newInstance(['foo' => 0]);
 
 		$this->assertEquals(0, $instance->getInt('foo'));
 
@@ -211,7 +211,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetWith0Point0()
 	{
-		$instance = $this->newInstance(array('foo' => 0.0));
+		$instance = $this->newInstance(['foo' => 0.0]);
 
 		$this->assertEquals(0.0, $instance->getFloat('foo'));
 
@@ -228,7 +228,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetWithString0()
 	{
-		$instance = $this->newInstance(array('foo' => "0"));
+		$instance = $this->newInstance(['foo' => "0"]);
 
 		$this->assertEquals("0", $instance->get('foo'));
 
@@ -245,7 +245,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetWithFalse()
 	{
-		$instance = $this->newInstance(array('foo' => false));
+		$instance = $this->newInstance(['foo' => false]);
 
 		$this->assertFalse($instance->getBoolean('foo'));
 
@@ -262,7 +262,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetDefault()
 	{
-		$instance = $this->newInstance(array('foo' => 'bar'));
+		$instance = $this->newInstance(['foo' => 'bar']);
 
 		// Test the get method.
 		$this->assertEquals('default', $instance->get('default_value', 'default'));
@@ -278,7 +278,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testDefNotReadWhenValueExists()
 	{
-		$instance = $this->newInstance(array('foo' => 'bar'));
+		$instance = $this->newInstance(['foo' => 'bar']);
 
 		$instance->def('foo', 'nope');
 
@@ -295,7 +295,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testDefRead()
 	{
-		$instance = $this->newInstance(array('foo' => 'bar'));
+		$instance = $this->newInstance(['foo' => 'bar']);
 
 		$instance->def('bar', 'nope');
 
@@ -312,7 +312,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSet()
 	{
-		$instance = $this->newInstance(array('foo' => 'bar'));
+		$instance = $this->newInstance(['foo' => 'bar']);
 
 		$instance->set('foo', 'gamma');
 
@@ -329,7 +329,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testExists()
 	{
-		$instance = $this->newInstance(array('foo' => 'bar'));
+		$instance = $this->newInstance(['foo' => 'bar']);
 
 		$this->assertTrue($instance->exists('foo'));
 
@@ -345,11 +345,11 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetByPath()
 	{
-		$array = array(
+		$array = [
 			'var2' => 34,
-			'var3' => array('var2' => 'test123'),
-			'var4' => array('var1' => array('var2' => 'test'))
-		);
+			'var3' => ['var2' => 'test123'],
+			'var4' => ['var1' => ['var2' => 'test']]
+		];
 
 		$input = $this->newInstance($array);
 
@@ -367,11 +367,11 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSetByPath()
 	{
-		$array = array(
+		$array = [
 			'var2' => 34,
-			'var3' => array('var2' => 'test123'),
-			'var4' => array('var1' => array('var2' => 'test'))
-		);
+			'var3' => ['var2' => 'test123'],
+			'var4' => ['var1' => ['var2' => 'test']]
+		];
 
 		$input = $this->newInstance($array);
 
@@ -390,14 +390,14 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetArrayWithoutSpecifiedVariables()
 	{
-		$array = array(
+		$array = [
 			'var2' => 34,
-			'var3' => array('var2' => 'test'),
-			'var4' => array('var1' => array('var2' => 'test')),
-			'var5' => array('foo' => array()),
-			'var6' => array('bar' => null),
+			'var3' => ['var2' => 'test'],
+			'var4' => ['var1' => ['var2' => 'test']],
+			'var5' => ['foo' => []],
+			'var6' => ['bar' => null],
 			'var7' => null
-		);
+		];
 
 		$input = $this->newInstance($array);
 
@@ -414,18 +414,18 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testCompact()
 	{
-		$array = array(
+		$array = [
 			'var1' => 'value1',
 			'var2' => 34,
-			'var3' => array('test')
-		);
+			'var3' => ['test']
+		];
 
 		$input = $this->newInstance($array);
 
 		$this->assertEquals(
 			$array,
 			$input->compact(
-				array('var1' => 'raw', 'var2' => 'raw', 'var3' => 'raw')
+				['var1' => 'raw', 'var2' => 'raw', 'var3' => 'raw']
 			)
 		);
 	}
@@ -439,7 +439,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function test__call()
 	{
-		$instance = $this->newInstance(array('foo' => 'bar'));
+		$instance = $this->newInstance(['foo' => 'bar']);
 
 		$this->assertEquals(
 			'bar',
@@ -467,7 +467,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	{
 		$_SERVER['REQUEST_METHOD'] = 'custom';
 
-		$instance = $this->newInstance(array());
+		$instance = $this->newInstance([]);
 
 		$this->assertEquals('CUSTOM', $instance->getMethod());
 	}
@@ -483,7 +483,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	{
 		$_SERVER['REQUEST_METHOD'] = 'custom';
 
-		$instance = $this->newInstance(array('foo' => 'bar123'));
+		$instance = $this->newInstance(['foo' => 'bar123']);
 
 		$input = unserialize(serialize($instance));
 
@@ -521,7 +521,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 			'A bug that the static $loaded variable has been set to true.....'
 		);
 
-		$instance = $this->newInstance(array());
+		$instance = $this->newInstance([]);
 		TestHelper::setValue($instance, 'loaded', false);
 
 		$inputs = TestHelper::getValue($instance, 'inputs');
@@ -540,7 +540,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @return  Input
 	 */
-	protected function newInstance($data = array())
+	protected function newInstance($data = [])
 	{
 		return new Input($data);
 	}

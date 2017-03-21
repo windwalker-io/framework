@@ -91,7 +91,7 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @param array $data
 	 */
-	public function __construct(array $data = array())
+	public function __construct(array $data = [])
 	{
 		if ($data)
 		{

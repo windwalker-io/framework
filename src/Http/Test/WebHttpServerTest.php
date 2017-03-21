@@ -80,7 +80,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals('Hello', $server->getOutput()->output);
 
-		$this->assertEquals(array('text/html; charset=utf-8'), $server->getOutput()->message->getHeader('Content-Type'));
+		$this->assertEquals(['text/html; charset=utf-8'], $server->getOutput()->message->getHeader('Content-Type'));
 	}
 
 	/**
@@ -161,7 +161,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
 		$server->setCharSet('latin1');
 		$server->listen();
 
-		$this->assertEquals(array('text/html; charset=latin1'), $server->getOutput()->message->getHeader('Content-Type'));
+		$this->assertEquals(['text/html; charset=latin1'], $server->getOutput()->message->getHeader('Content-Type'));
 	}
 
 	/**
@@ -237,14 +237,16 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetUriData()
 	{
-		$server = new WebHttpServer(function () {}, ServerRequestFactory::createFromGlobals(array(
+		$server = new WebHttpServer(function () {}, ServerRequestFactory::createFromGlobals(
+			[
 			'HTTPS' => 'off',
 			'SERVER_NAME' => 'example.com',
 			'SERVER_PORT' => '8080',
 			'QUERY_STRING' => '?a=b&c=d',
 			'REQUEST_URI' => '/flower/sakura/index.php/foo/bar?a=wrong',
 			'SCRIPT_NAME' => '/flower/sakura/index.php'
-		)));
+			]
+		));
 		
 		$uri = $server->getUriData();
 		
@@ -256,7 +258,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals('http://example.com:8080', $uri->host);
 		$this->assertEquals('/flower/sakura', $uri->path);
 
-		$server = new WebHttpServer(function () {}, new ServerRequest(array('SCRIPT_NAME' => '/flower/sakura/index.php'), array(), 'http://example.com:8080/flower/sakura/index.php/foo/bar?a=b&c=d', 'GET'));
+		$server = new WebHttpServer(function () {}, new ServerRequest(['SCRIPT_NAME' => '/flower/sakura/index.php'], [], 'http://example.com:8080/flower/sakura/index.php/foo/bar?a=b&c=d', 'GET'));
 
 		$this->assertEquals($uri, $server->getUriData());
 	}

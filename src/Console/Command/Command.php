@@ -24,7 +24,7 @@ class Command extends AbstractCommand
 	 */
 	protected function doExecute()
 	{
-		$this->io->setArguments(array($this->name));
+		$this->io->setArguments([$this->name]);
 
 		$output = $this->console->describeCommand($this);
 
@@ -47,7 +47,7 @@ class Command extends AbstractCommand
 	 *
 	 * @since   2.0
 	 */
-	public function addCommand($command, $description = null, $options = array(), \Closure $code = null)
+	public function addCommand($command, $description = null, $options = [], \Closure $code = null)
 	{
 		if (is_string($command) && class_exists($command) && is_subclass_of($command, __CLASS__))
 		{

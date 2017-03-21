@@ -27,7 +27,7 @@ class TraitHelper
 	 */
 	public static function classUsesRecursive($class, $autoload = true)
 	{
-		$traits = array();
+		$traits = [];
 
 		do
 		{

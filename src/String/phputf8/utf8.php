@@ -30,7 +30,7 @@ if ( extension_loaded('mbstring')) {
 /**
 * Check whether PCRE has been compiled with UTF-8 support
 */
-$UTF8_ar = array();
+$UTF8_ar = [];
 if ( preg_match('/^.{1}$/u',"ñ",$UTF8_ar) != 1 ) {
     trigger_error('PCRE is not compiled with UTF-8 support',E_USER_ERROR);
 }

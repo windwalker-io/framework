@@ -96,7 +96,7 @@ class ArrayHelper
 	 */
 	public static function getColumn(array $array, $index)
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($array as $item)
 		{
@@ -174,7 +174,7 @@ class ArrayHelper
 			case 'ARRAY':
 				if (!is_array($result))
 				{
-					$result = array($result);
+					$result = [$result];
 				}
 				break;
 
@@ -247,7 +247,7 @@ class ArrayHelper
 	 */
 	public static function invert(array $array)
 	{
-		$return = array();
+		$return = [];
 
 		foreach ($array as $base => $values)
 		{
@@ -306,8 +306,8 @@ class ArrayHelper
 	 */
 	public static function group(array $source, $key = null)
 	{
-		$result  = array();
-		$counter = array();
+		$result  = [];
+		$counter = [];
 
 		foreach ($source as $index => $value)
 		{
@@ -351,10 +351,10 @@ class ArrayHelper
 			elseif ($counter[$resultKey] == 1)
 			{
 				// If there is a second time, we convert the value into an array.
-				$result[$resultKey] = array(
+				$result[$resultKey] = [
 					$result[$resultKey],
 					$resultValue,
-				);
+				];
 				$counter[$resultKey]++;
 			}
 			else
@@ -401,7 +401,7 @@ class ArrayHelper
 	public static function pivot($array)
 	{
 		$array = (array) $array;
-		$new   = array();
+		$new   = [];
 		$keys  = array_keys($array);
 
 		foreach ($keys as $k => $val)
@@ -432,7 +432,7 @@ class ArrayHelper
 	{
 		if (!is_array($locale) || !is_array($locale[0]))
 		{
-			$locale = array($locale);
+			$locale = [$locale];
 		}
 
 		$sortCase      = (array) $caseSensitive;
@@ -669,7 +669,7 @@ class ArrayHelper
 		{
 			if (strtolower($type) == 'array')
 			{
-				return array();
+				return [];
 			}
 
 			if (class_exists($type))
@@ -800,9 +800,9 @@ class ArrayHelper
 		$tabs       = str_repeat('    ', $tabLevel);
 		$quoteTabes = str_repeat('    ', $tabLevel - 1);
 		$output     = '';
-		$elements   = array();
+		$elements   = [];
 
-		$recursiveType = array('object', 'array');
+		$recursiveType = ['object', 'array'];
 
 		// Recursive
 		if (in_array($type, $recursiveType))
@@ -891,7 +891,7 @@ class ArrayHelper
 	 */
 	public static function flatten($array, $separator = '.', $prefix = '')
 	{
-		$return = array();
+		$return = [];
 
 		if ($array instanceof \Traversable)
 		{
@@ -936,10 +936,10 @@ class ArrayHelper
 	 *
 	 * @since   2.0
 	 */
-	public static function query($array, $queries = array(), $strict = false, $keepKey = false)
+	public static function query($array, $queries = [], $strict = false, $keepKey = false)
 	{
 		$array = static::toArray($array, false);
-		$results = array();
+		$results = [];
 
 		// If queries is callback, we run this logic to compare values.
 		$callback = is_callable($queries) ? $queries : false;
@@ -984,7 +984,7 @@ class ArrayHelper
 	 */
 	public static function match($array, array $queries, $strict = false)
 	{
-		$results = array();
+		$results = [];
 
 		// Visit Query Rules
 		foreach ($queries as $key => $val)
@@ -1038,9 +1038,9 @@ class ArrayHelper
 	 *
 	 * @return  mixed Mapped array or object.
 	 */
-	public static function mapKey($origin, $map = array())
+	public static function mapKey($origin, $map = [])
 	{
-		$result = is_array($origin) ? array() : new \stdClass;
+		$result = is_array($origin) ? [] : new \stdClass;
 
 		foreach ((array) $origin as $key => $val)
 		{

@@ -76,7 +76,7 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
 
 		$this->isMac = $this->os == 'MAC';
 
-		$this->isUnix = in_array($this->os, array('CYG', 'DAR', 'FRE', 'LIN', 'NET', 'OPE', 'MAC'));
+		$this->isUnix = in_array($this->os, ['CYG', 'DAR', 'FRE', 'LIN', 'NET', 'OPE', 'MAC']);
 
 		$this->isLinux = $this->os == 'LIN';
 	}
@@ -98,21 +98,21 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function getIsWinTestData()
 	{
-		return array(
-			array('CYGWIN_NT-5.1', false),
-			array('Darwin',  false),
-			array('FreeBSD', false),
-			array('HP-UX',   false),
-			array('IRIX64',  false),
-			array('Linux',   false),
-			array('NetBSD',  false),
-			array('OpenBSD', false),
-			array('SunOS',   false),
-			array('Unix',    false),
-			array('WIN32',   true),
-			array('WINNT',   true),
-			array('Windows', true)
-		);
+		return [
+			['CYGWIN_NT-5.1', false],
+			['Darwin',  false],
+			['FreeBSD', false],
+			['HP-UX',   false],
+			['IRIX64',  false],
+			['Linux',   false],
+			['NetBSD',  false],
+			['OpenBSD', false],
+			['SunOS',   false],
+			['Unix',    false],
+			['WIN32',   true],
+			['WINNT',   true],
+			['Windows', true]
+		];
 	}
 
 	/**
@@ -122,21 +122,21 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function getIsUnixTestData()
 	{
-		return array(
-			array('CYGWIN_NT-5.1', true),
-			array('Darwin',  true),
-			array('FreeBSD', true),
-			array('HP-UX',   true),
-			array('IRIX64',  true),
-			array('Linux',   true),
-			array('NetBSD',  true),
-			array('OpenBSD', true),
-			array('SunOS',   true),
-			array('Unix',    true),
-			array('WIN32',   false),
-			array('WINNT',   false),
-			array('Windows', false)
-		);
+		return [
+			['CYGWIN_NT-5.1', true],
+			['Darwin',  true],
+			['FreeBSD', true],
+			['HP-UX',   true],
+			['IRIX64',  true],
+			['Linux',   true],
+			['NetBSD',  true],
+			['OpenBSD', true],
+			['SunOS',   true],
+			['Unix',    true],
+			['WIN32',   false],
+			['WINNT',   false],
+			['Windows', false]
+		];
 	}
 
 	/**
@@ -146,21 +146,21 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function getIsLinuxTestData()
 	{
-		return array(
-			array('CYGWIN_NT-5.1', false),
-			array('Darwin',  false),
-			array('FreeBSD', false),
-			array('HP-UX',   false),
-			array('IRIX64',  false),
-			array('Linux',   true),
-			array('NetBSD',  false),
-			array('OpenBSD', false),
-			array('SunOS',   false),
-			array('Unix',    false),
-			array('WIN32',   false),
-			array('WINNT',   false),
-			array('Windows', false)
-		);
+		return [
+			['CYGWIN_NT-5.1', false],
+			['Darwin',  false],
+			['FreeBSD', false],
+			['HP-UX',   false],
+			['IRIX64',  false],
+			['Linux',   true],
+			['NetBSD',  false],
+			['OpenBSD', false],
+			['SunOS',   false],
+			['Unix',    false],
+			['WIN32',   false],
+			['WINNT',   false],
+			['Windows', false]
+		];
 	}
 
 	/**

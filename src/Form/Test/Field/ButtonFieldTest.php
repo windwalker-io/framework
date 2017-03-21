@@ -37,15 +37,15 @@ class ButtonFieldTest extends AbstractDomTestCase
 		$this->instance = new ButtonField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'class' => 'stub-flower'
-			)
+			]
 		);
 
 		$this->instance->setAttribute('id',          'test-field');
 		$this->instance->setAttribute('readonly',    true);
 		$this->instance->setAttribute('disabled',    true);
-		$this->instance->setAttribute('attribs',     array('data-test-element' => true));
+		$this->instance->setAttribute('attribs',     ['data-test-element' => true]);
 		$this->instance->setValue('Sakura');
 	}
 

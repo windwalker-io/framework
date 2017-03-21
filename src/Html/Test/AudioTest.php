@@ -54,7 +54,7 @@ class AudioTest extends AbstractDomTestCase
 	 */
 	public function testToString()
 	{
-		$audio = Audio::create(array('class' => 'foo'))
+		$audio = Audio::create(['class' => 'foo'])
 			->addWavSource('foo.wav')
 			->addOggSource('foo.ogg')
 			->addMp3Source('foo.mp3', 'screen and (min-width:320px)')

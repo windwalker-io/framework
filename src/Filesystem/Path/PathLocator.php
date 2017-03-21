@@ -38,7 +38,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	 *
 	 * @since  2.0
 	 */
-	protected $paths = array();
+	protected $paths = [];
 
 	/**
 	 * Constructor to handle path.
@@ -208,7 +208,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 	{
 		$path = rtrim($path, ' /\\');
 
-		$path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+		$path = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
 
 		return $path;
 	}

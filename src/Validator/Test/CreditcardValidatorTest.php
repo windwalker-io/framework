@@ -44,37 +44,37 @@ class CreditcardValidatorTest extends AbstractValidateTestCase
 	 */
 	public function validateCase()
 	{
-		return array(
-			array(
+		return [
+			[
 				'American Express',
 				'378515770182856',
 				true
-			),
-			array(
+			],
+			[
 				'Visa',
 				'4509782003875110',
 				true
-			),
-			array(
+			],
+			[
 				'Discover',
 				'6011483235207596',
 				true
-			),
-			array(
+			],
+			[
 				'MasterCard',
 				'5110555858557787',
 				true
-			),
-			array(
+			],
+			[
 				'Diners Club',
 				'30333189575193',
 				true
-			),
-			array(
+			],
+			[
 				'Not valid',
 				'1234567887654321',
 				false
-			),
-		);
+			],
+		];
 	}
 }

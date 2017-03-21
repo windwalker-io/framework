@@ -27,12 +27,12 @@ class MockFormRenderer implements FormRendererInterface
 	 *
 	 * @return string
 	 */
-	public function renderField(AbstractField $field, array $attribs = array())
+	public function renderField(AbstractField $field, array $attribs = [])
 	{
-		return (string) new HtmlElement('mock', array(
+		return (string) new HtmlElement('mock', [
 			$field->renderLabel(),
 			$field->renderInput(),
-		), $attribs);
+		], $attribs);
 	}
 
 	/**
@@ -43,7 +43,7 @@ class MockFormRenderer implements FormRendererInterface
 	 *
 	 * @return string
 	 */
-	public function renderLabel(AbstractField $field, array $attribs = array())
+	public function renderLabel(AbstractField $field, array $attribs = [])
 	{
 		return 'Hello ';
 	}
@@ -56,7 +56,7 @@ class MockFormRenderer implements FormRendererInterface
 	 *
 	 * @return string
 	 */
-	public function renderInput(AbstractField $field, array $attribs = array())
+	public function renderInput(AbstractField $field, array $attribs = [])
 	{
 		return 'World: ' . $field->getFieldName();
 	}

@@ -20,25 +20,25 @@ class XmlHelper
 	 *
 	 * @var  array
 	 */
-	static protected $falseValue = array(
+	static protected $falseValue = [
 		'disabled',
 		'false',
 		'null',
 		'0',
 		'no',
 		'none'
-	);
+	];
 
 	/**
 	 * The value of true.
 	 *
 	 * @var  array
 	 */
-	static protected $trueValue = array(
+	static protected $trueValue = [
 		'true',
 		'yes',
 		'1'
-	);
+	];
 
 	/**
 	 * Get attribute from SimpleXMLElement.
@@ -118,7 +118,7 @@ class XmlHelper
 	 */
 	public static function getAttributes(\SimpleXMLElement $xml)
 	{
-		$attributes = array();
+		$attributes = [];
 
 		foreach ($xml->attributes() as $name => $value)
 		{

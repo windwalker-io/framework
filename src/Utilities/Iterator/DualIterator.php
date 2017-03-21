@@ -138,7 +138,7 @@ class DualIterator implements \Iterator
 		{
 			default:
 			case self::CURRENT_ARRAY:
-				return array($this->lhs->current(), $this->rhs->current());
+				return [$this->lhs->current(), $this->rhs->current()];
 			case self::CURRENT_LHS:
 				return $this->lhs->current();
 			case self::CURRENT_RHS:
@@ -159,7 +159,7 @@ class DualIterator implements \Iterator
 		{
 			default:
 			case self::CURRENT_ARRAY:
-				return array($this->lhs->key(), $this->rhs->key());
+				return [$this->lhs->key(), $this->rhs->key()];
 			case self::CURRENT_LHS:
 				return $this->lhs->key();
 			case self::CURRENT_RHS:

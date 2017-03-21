@@ -27,7 +27,7 @@ class BinaryMatcher extends AbstractMatcher
 	 *
 	 * @return  Route|false
 	 */
-	public function match($route, $method = 'GET', $options = array())
+	public function match($route, $method = 'GET', $options = [])
 	{
 		$route = RouteHelper::normalise($route);
 

@@ -25,7 +25,7 @@ class JsonFormat implements FormatInterface
 	 *
 	 * @return  string
 	 */
-	public static function structToString($struct, array $options = array())
+	public static function structToString($struct, array $options = [])
 	{
 		$depth  = StructureHelper::getValue($options, 'depth');
 		$option = StructureHelper::getValue($options, 'options', 0);
@@ -55,7 +55,7 @@ class JsonFormat implements FormatInterface
 	 *
 	 * @return  object   Data object.
 	 */
-	public static function stringToStruct($data, array $options = array())
+	public static function stringToStruct($data, array $options = [])
 	{
 		$assoc  = StructureHelper::getValue($options, 'assoc', false);
 		$depth  = StructureHelper::getValue($options, 'depth', 512);

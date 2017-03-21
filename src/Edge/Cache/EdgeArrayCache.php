@@ -20,7 +20,7 @@ class EdgeArrayCache implements EdgeCacheInterface
 	 *
 	 * @var  array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * isExpired

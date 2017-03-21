@@ -26,52 +26,52 @@ class DomBuilderTest extends AbstractDomTestCase
 	 */
 	public function domTestCase()
 	{
-		return array(
-			array(
+		return [
+			[
 				'case1',
 				'<field />',
 				'field',
 				null,
-				array(),
+				[],
 				false
-			),
-			array(
+			],
+			[
 				'case2',
 				'<field>Some Data</field>',
 				'field',
 				'Some Data',
-				array(),
+				[],
 				false
-			),
-			array(
+			],
+			[
 				'case3',
 				'<field id="foo" class="bar" />',
 				'field',
 				null,
-				array('id' => 'foo', 'class' => 'bar'),
+				['id' => 'foo', 'class' => 'bar'],
 				false
-			),
-			array(
+			],
+			[
 				'case4',
 				'<field id="foo" class="bar">
 					<option value="1">Yes</option>
 					<option value="0">No</option>
 				</field>',
 				'field',
-				DomBuilder::create('option', 'Yes', array('value' => 1))
-				. DomBuilder::create('option', 'No', array('value' => 0)),
-				array('id' => 'foo', 'class' => 'bar'),
+				DomBuilder::create('option', 'Yes', ['value' => 1])
+				. DomBuilder::create('option', 'No', ['value' => 0]),
+				['id' => 'foo', 'class' => 'bar'],
 				false
-			),
-			array(
+			],
+			[
 				'case5_force_paired',
 				'<field></field>',
 				'field',
 				null,
-				array(),
+				[],
 				true
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -120,14 +120,14 @@ class DomBuilderTest extends AbstractDomTestCase
 	 */
 	public function testBuildAttributes()
 	{
-		$attrs = array(
+		$attrs = [
 			'foo' => 'bar',
 			'data' => true,
 			'bar' => false,
 			'empty' => '',
 			'selected' => true,
 			'checked' => false
-		);
+		];
 
 		$this->assertEquals(' foo="bar" data empty="" selected', DomBuilder::buildAttributes($attrs));
 	}

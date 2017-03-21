@@ -22,7 +22,7 @@ class ArrayStorage extends AbstractCacheStorage
 	 *
 	 * @var  array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Method to determine whether a storage entry has been set for a key.
@@ -103,7 +103,7 @@ class ArrayStorage extends AbstractCacheStorage
 	 */
 	public function clear()
 	{
-		$this->data = array();
+		$this->data = [];
 
 		return $this;
 	}

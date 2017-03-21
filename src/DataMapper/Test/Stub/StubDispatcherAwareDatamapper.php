@@ -24,14 +24,14 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	 *
 	 * @var  array
 	 */
-	public $args = array();
+	public $args = [];
 
 	/**
 	 * Property select.
 	 *
 	 * @var  array
 	 */
-	public $select = array();
+	public $select = [];
 
 	/**
 	 * Do find action, this method should be override by sub class.
@@ -47,7 +47,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	{
 		$this->args = func_get_args();
 
-		return new DataSet(array(array('method' => __FUNCTION__)));
+		return new DataSet([['method' => __FUNCTION__]]);
 	}
 
 	/**
@@ -59,7 +59,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	 */
 	protected function doCreate($dataset)
 	{
-		return new DataSet(array(array('method' => __FUNCTION__)));
+		return new DataSet([['method' => __FUNCTION__]]);
 	}
 
 	/**
@@ -74,7 +74,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	 */
 	protected function doUpdate($dataset, array $condFields, $updateNulls = false)
 	{
-		return new DataSet(array(array('method' => __FUNCTION__)));
+		return new DataSet([['method' => __FUNCTION__]]);
 	}
 
 	/**
@@ -100,7 +100,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	 */
 	protected function doFlush($dataset, array $conditions)
 	{
-		return new DataSet(array(array('method' => __FUNCTION__)));
+		return new DataSet([['method' => __FUNCTION__]]);
 	}
 
 	/**
@@ -124,7 +124,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
 	 */
 	public function getFields($table = null)
 	{
-		return array();
+		return [];
 	}
 
 	/**

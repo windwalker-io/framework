@@ -38,7 +38,7 @@ class StubStreamOutput extends StreamOutput
 	 *
 	 * @var  array
 	 */
-	public $others = array();
+	public $others = [];
 
 	/**
 	 * Property output.

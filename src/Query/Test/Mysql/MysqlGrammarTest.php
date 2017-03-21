@@ -181,15 +181,15 @@ CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
 ) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
 SQL;
 
-		$columns = array(
+		$columns = [
 			'id' => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
-			'name' => array('varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''),
+			'name' => ['varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''],
 			'email' => "varchar(255) NOT NULL COMMENT 'Member email'"
-		);
+		];
 
-		$keys = array(
-			array('type' => 'KEY', 'name' => 'idx_alias', 'columns' => 'email')
-		);
+		$keys = [
+			['type' => 'KEY', 'name' => 'idx_alias', 'columns' => 'email']
+		];
 
 		$actual = MysqlGrammar::createTable('foo', $columns, 'id', $keys, 415, true, 'InnoDB');
 
@@ -208,17 +208,17 @@ CREATE TABLE {$this->qn('foo')} (
 ) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
 SQL;
 
-		$columns = array(
+		$columns = [
 			'id' => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
-			'name' => array('varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''),
+			'name' => ['varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''],
 			'email' => "varchar(255) NOT NULL COMMENT 'Member email'"
-		);
+		];
 
-		$keys = array(
-			array('type' => 'UNIQUE KEY', 'name' => 'idx_alias', 'columns' => array('email', 'id'))
-		);
+		$keys = [
+			['type' => 'UNIQUE KEY', 'name' => 'idx_alias', 'columns' => ['email', 'id']]
+		];
 
-		$actual = MysqlGrammar::createTable('foo', $columns, array('id', 'email'), $keys, 415, false, 'InnoDB');
+		$actual = MysqlGrammar::createTable('foo', $columns, ['id', 'email'], $keys, 415, false, 'InnoDB');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -274,7 +274,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} text AFTER {$this->qn('id')}";
 
-		$actual = MysqlGrammar::alterColumn('CHANGE', 'foo', array('bar', 'yoo'), 'text', true, true, null, 'AFTER id', null);
+		$actual = MysqlGrammar::alterColumn('CHANGE', 'foo', ['bar', 'yoo'], 'text', true, true, null, 'AFTER id', null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -369,7 +369,7 @@ SQL;
 	{
 		$expected = "ALTER TABLE {$this->qn('foo')} ADD KEY {$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')}) COMMENT 'Test Index'";
 
-		$actual = MysqlGrammar::addIndex('foo', 'KEY', array('alias', 'name'), 'idx_alias', 'Test Index');
+		$actual = MysqlGrammar::addIndex('foo', 'KEY', ['alias', 'name'], 'idx_alias', 'Test Index');
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -406,7 +406,7 @@ SQL;
 
 		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = MysqlGrammar::buildIndexDeclare('idx_alias', array('alias', 'name'));
+		$actual = MysqlGrammar::buildIndexDeclare('idx_alias', ['alias', 'name']);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -463,7 +463,7 @@ SQL;
 	{
 		$expected = "REPLACE INTO {$this->qn('foo')} (a,b) VALUES (c, d, e), (f, g, h)";
 
-		$actual = MysqlGrammar::replace('foo', array('a', 'b'), array('c, d, e', 'f, g, h'));
+		$actual = MysqlGrammar::replace('foo', ['a', 'b'], ['c, d, e', 'f, g, h']);
 
 		$this->assertEquals(
 			$this->format($expected),

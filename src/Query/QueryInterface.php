@@ -217,7 +217,7 @@ interface QueryInterface
 	 *
 	 * @since   2.0
 	 */
-	public function innerJoin($table, $condition = array());
+	public function innerJoin($table, $condition = []);
 
 	/**
 	 * Add a table name to the INSERT clause of the query.
@@ -252,7 +252,7 @@ interface QueryInterface
 	 *
 	 * @since   2.0
 	 */
-	public function join($type, $table, $conditions = array());
+	public function join($type, $table, $conditions = []);
 
 	/**
 	 * Add a LEFT JOIN clause to the query.
@@ -267,7 +267,7 @@ interface QueryInterface
 	 *
 	 * @since   2.0
 	 */
-	public function leftJoin($table, $condition = array());
+	public function leftJoin($table, $condition = []);
 
 	/**
 	 * Get the null or zero representation of a timestamp for the database driver.
@@ -331,7 +331,7 @@ interface QueryInterface
 	 *
 	 * @since   2.0
 	 */
-	public function outerJoin($table, $condition = array());
+	public function outerJoin($table, $condition = []);
 
 	/**
 	 * Method to quote and optionally escape a string to database requirements for insertion into the database.
@@ -392,7 +392,7 @@ interface QueryInterface
 	 *
 	 * @since   2.0
 	 */
-	public function rightJoin($table, $condition = array());
+	public function rightJoin($table, $condition = []);
 
 	/**
 	 * Add a single column, or array of columns to the SELECT clause of the query.

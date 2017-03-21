@@ -29,7 +29,7 @@ function utf8_to_unicode($str) {
     $mUcs4  = 0;     // cached Unicode character
     $mBytes = 1;     // cached expected number of octets in the current sequence
 
-    $out = array();
+    $out = [];
 
     $len = strlen($str);
 

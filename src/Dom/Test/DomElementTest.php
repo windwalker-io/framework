@@ -26,54 +26,54 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function domTestCase()
 	{
-		return array(
-			array(
+		return [
+			[
 				'case1',
 				'<field />',
 				'field',
 				null,
-				array(),
+				[],
 				false
-			),
-			array(
+			],
+			[
 				'case2',
 				'<field>Some Data</field>',
 				'field',
 				'Some Data',
-				array(),
+				[],
 				false
-			),
-			array(
+			],
+			[
 				'case3',
 				'<field id="foo" class="bar" />',
 				'field',
 				null,
-				array('id' => 'foo', 'class' => 'bar'),
+				['id' => 'foo', 'class' => 'bar'],
 				false
-			),
-			array(
+			],
+			[
 				'case4',
 				'<field id="foo" class="bar">
 					<option value="1">Yes</option>
 					<option value="0">No</option>
 				</field>',
 				'field',
-				array(
-					new DomElement('option', 'Yes', array('value' => 1)),
-					new DomElement('option', 'No', array('value' => 0))
-				),
-				array('id' => 'foo', 'class' => 'bar'),
+				[
+					new DomElement('option', 'Yes', ['value' => 1]),
+					new DomElement('option', 'No', ['value' => 0])
+				],
+				['id' => 'foo', 'class' => 'bar'],
 				false
-			),
-			array(
+			],
+			[
 				'case5_force_paired',
 				'<field></field>',
 				'field',
 				null,
-				array(),
+				[],
 				true
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -114,7 +114,7 @@ class DomElementTest extends AbstractDomTestCase
 	{
 		$this->assertDomFormatEquals(
 			'<field id="foo">data</field>',
-			new DomElement('field', 'data', array('id' => 'foo'))
+			new DomElement('field', 'data', ['id' => 'foo'])
 		);
 	}
 
@@ -127,7 +127,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testGetContent()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$this->assertEquals('data', $element->getContent());
 	}
@@ -141,7 +141,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testSetContent()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$element->setContent('bar');
 
@@ -160,7 +160,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testGetAttribute()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$this->assertEquals('foo', $element->getAttribute('id'));
 	}
@@ -174,7 +174,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testSetAttribute()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$element->setAttribute('id', 'bar');
 		$element->setAttribute('class', 'yoo');
@@ -194,9 +194,9 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testGetAttributes()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
-		$this->assertEquals(array('id' => 'foo'), $element->getAttributes());
+		$this->assertEquals(['id' => 'foo'], $element->getAttributes());
 	}
 
 	/**
@@ -208,11 +208,11 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testSetAttributes()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
-		$element->setAttributes(array('a' => 'b'));
+		$element->setAttributes(['a' => 'b']);
 
-		$this->assertEquals(array('a' => 'b'), $element->getAttributes());
+		$this->assertEquals(['a' => 'b'], $element->getAttributes());
 
 		$this->assertEquals(
 			DomHelper::minify('<field a="b">data</field>'),
@@ -229,7 +229,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testGetName()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$this->assertEquals('field', $element->getName());
 	}
@@ -243,7 +243,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testSetName()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$element->setName('div');
 
@@ -264,7 +264,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testOffsetExists()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$this->assertTrue(isset($element['id']));
 		$this->assertFalse(isset($element['class']));
@@ -279,7 +279,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testOffsetGet()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$this->assertEquals('foo', $element['id']);
 	}
@@ -293,7 +293,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testOffsetSet()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		$element['id'] = 'bar';
 		$element['class'] = 'yoo';
@@ -313,7 +313,7 @@ class DomElementTest extends AbstractDomTestCase
 	 */
 	public function testOffsetUnset()
 	{
-		$element = new DomElement('field', 'data', array('id' => 'foo'));
+		$element = new DomElement('field', 'data', ['id' => 'foo']);
 
 		unset($element['id']);
 

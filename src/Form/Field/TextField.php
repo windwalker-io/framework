@@ -74,7 +74,7 @@ class TextField extends AbstractField
 	 */
 	protected function getAccessors()
 	{
-		return array_merge(parent::getAccessors(), array(
+		return array_merge(parent::getAccessors(), [
 			'placeholder' => 'placeholder',
 			'size' => 'size',
 			'maxlength' => 'maxlength',
@@ -83,6 +83,7 @@ class TextField extends AbstractField
 			'onchange' => 'onchange',
 			'onfocus' => 'onfocus',
 			'onblur' => 'onblur',
-		));
+		]
+		);
 	}
 }

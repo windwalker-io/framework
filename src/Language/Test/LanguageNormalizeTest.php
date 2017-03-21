@@ -24,32 +24,32 @@ class LanguageNormalizeTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function getToTagCases()
 	{
-		return array(
-			array(
+		return [
+			[
 				'foo_bar',
 				'foo.bar'
-			),
-			array(
+			],
+			[
 				'flower-sakura-flower',
 				'flower.sakura.flower'
-			),
-			array(
+			],
+			[
 				'FLOWER_SAKURA_FLOWER',
 				'flower.sakura.flower'
-			),
-			array(
+			],
+			[
 				'Lorem ipsum dolor sit amet, consectetur.',
 				'lorem.ipsum.dolor.sit.amet.consectetur'
-			),
-			array(
+			],
+			[
 				'--test-foo.bar/yoo\\go{play}test[fly]--',
 				'test.foo.bar.yoo.go.play.test.fly'
-			),
-			array(
+			],
+			[
 				'雲彩裡，許是懺悔 THe B612 只有用心靈，一個人才能看得很清楚',
 				'the.b612'
-			)
-		);
+			]
+		];
 	}
 
 	/**

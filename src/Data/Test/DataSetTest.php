@@ -44,10 +44,10 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function getTestData()
 	{
-		return array(
-			new Data(array('flower' => 'sakura')),
-			new Data(array('wind' => 'walker'))
-		);
+		return [
+			new Data(['flower' => 'sakura']),
+			new Data(['wind' => 'walker'])
+		];
 	}
 
 	/**
@@ -107,10 +107,10 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 		$this->instance[0]->foo = 'zero';
 		$this->instance[1]->foo = 'one';
 
-		$this->assertEquals(array('zero', 'one'), $this->instance->foo);
+		$this->assertEquals(['zero', 'one'], $this->instance->foo);
 
 		// Get empty
-		$this->assertEquals(array('sakura', null), $this->instance->flower);
+		$this->assertEquals(['sakura', null], $this->instance->flower);
 	}
 
 	/**
@@ -143,11 +143,11 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 		// Batch set to every data.
 		$dataset->ninja = 'darts';
 
-		$this->assertEquals(array('darts', 'darts'), $dataset->ninja);
+		$this->assertEquals(['darts', 'darts'], $dataset->ninja);
 
 		unset($dataset->ninja);
 
-		$this->assertEquals(array(null, null), $dataset->ninja);
+		$this->assertEquals([null, null], $dataset->ninja);
 	}
 
 	/**
@@ -177,7 +177,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals($data[0], $this->instance[0]);
 
-		$this->instance[3] = new Data(array('foo' => 'bar'));
+		$this->instance[3] = new Data(['foo' => 'bar']);
 
 		$this->assertEquals('bar', $this->instance[3]->foo);
 
@@ -245,7 +245,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 
 		$dataset = unserialize(serialize($this->instance));
 
-		$this->assertEquals(array('darts', 'darts'), $dataset->ninja);
+		$this->assertEquals(['darts', 'darts'], $dataset->ninja);
 	}
 
 	/**
@@ -306,29 +306,35 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertEquals($this->getTestData(), $this->instance->dump());
 		
-		$dataset = new DataSet(array(
-			new Data(array(
-				'iterator' => new \ArrayObject(array(
+		$dataset = new DataSet(
+			[
+			new Data(
+				[
+				'iterator' => new \ArrayObject(
+					[
 					'foo' => 'bar'
-				)),
-				'object' => (object) array(
+					]
+				),
+				'object' => (object) [
 					'baz' => 'yoo'
-				),
+				],
 				'scalar' => 123
-			))
-		));
-
-		$expected = array (
-			array (
-				'iterator' => array (
-					'foo' => 'bar',
-				),
-				'object' => array (
-					'baz' => 'yoo',
-				),
-				'scalar' => 123,
+				]
 			)
+			]
 		);
+
+		$expected = [
+			[
+				'iterator' => [
+					'foo' => 'bar',
+				],
+				'object' => [
+					'baz' => 'yoo',
+				],
+				'scalar' => 123,
+			]
+		];
 		
 		$this->assertEquals($expected, $dataset->dump(true));
 	}
@@ -349,7 +355,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 			return $data;
 		});
 
-		$this->assertEquals(array('bar', 'bar'), $this->instance->foo);
+		$this->assertEquals(['bar', 'bar'], $this->instance->foo);
 		$this->assertSame($self, $this->instance);
 	}
 
@@ -362,7 +368,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testMapping()
 	{
-		$keys = array();
+		$keys = [];
 
 		$new = $this->instance->mapping(function($data, $key) use (&$keys)
 		{
@@ -373,9 +379,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 			return $data;
 		});
 
-		$this->assertEquals(array(null, null), $this->instance->foo);
-		$this->assertEquals(array('bar', 'bar'), $new->foo);
-		$this->assertEquals(array(0, 1), $keys);
+		$this->assertEquals([null, null], $this->instance->foo);
+		$this->assertEquals(['bar', 'bar'], $new->foo);
+		$this->assertEquals([0, 1], $keys);
 		$this->assertNotSame($this->instance, $new);
 	}
 
@@ -388,7 +394,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testFilter()
 	{
-		$keys = array();
+		$keys = [];
 
 		$new = $this->instance->filter(function(DataInterface $data, $key) use (&$keys)
 		{
@@ -397,9 +403,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 			return $data->flower == 'sakura';
 		});
 
-		$this->assertEquals(array('sakura'), $new->flower);
+		$this->assertEquals(['sakura'], $new->flower);
 		$this->assertEquals(1, count($new));
-		$this->assertEquals(array(0, 1), $keys);
+		$this->assertEquals([0, 1], $keys);
 		$this->assertNotSame($new, $this->instance);
 	}
 
@@ -417,7 +423,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 			$data->foo = $userdata . ':' . $key;
 		}, 'prefix');
 
-		$this->assertEquals(array('prefix:0', 'prefix:1'), $this->instance->foo);
+		$this->assertEquals(['prefix:0', 'prefix:1'], $this->instance->foo);
 	}
 
 	/**
@@ -449,11 +455,11 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	{
 		$dataset = new DataSet($this->getTestData());
 
-		$this->assertEquals(array(0, 1), $dataset->getKeys());
+		$this->assertEquals([0, 1], $dataset->getKeys());
 
 		$dataset['flower'] = new Data;
 
-		$this->assertEquals(array(0, 1, 'flower'), $dataset->getKeys());
+		$this->assertEquals([0, 1, 'flower'], $dataset->getKeys());
 	}
 
 	/**
@@ -466,22 +472,22 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	public function testKsort()
 	{
 		$dataset = new DataSet;
-		$dataset[1] = array('flower' => 'sakura');
-		$dataset[2] = array('flower' => 'rose');
-		$dataset[0] = array('flower' => 'sunflower');
+		$dataset[1] = ['flower' => 'sakura'];
+		$dataset[2] = ['flower' => 'rose'];
+		$dataset[0] = ['flower' => 'sunflower'];
 
 		$dataset->ksort();
 
-		$this->assertEquals(array('sunflower', 'sakura', 'rose'), array_values($dataset->flower));
+		$this->assertEquals(['sunflower', 'sakura', 'rose'], array_values($dataset->flower));
 
 		$dataset = new DataSet;
-		$dataset['001'] = array('flower' => 'sakura');
-		$dataset['2'] = array('flower' => 'rose');
-		$dataset['00030'] = array('flower' => 'sunflower');
+		$dataset['001'] = ['flower' => 'sakura'];
+		$dataset['2'] = ['flower' => 'rose'];
+		$dataset['00030'] = ['flower' => 'sunflower'];
 
 		$dataset->ksort(SORT_STRING);
 
-		$this->assertEquals(array('sunflower', 'sakura', 'rose'), array_values($dataset->flower));
+		$this->assertEquals(['sunflower', 'sakura', 'rose'], array_values($dataset->flower));
 	}
 
 	/**
@@ -494,22 +500,22 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 	public function testKrsort()
 	{
 		$dataset = new DataSet;
-		$dataset[1] = array('flower' => 'sakura');
-		$dataset[2] = array('flower' => 'rose');
-		$dataset[0] = array('flower' => 'sunflower');
+		$dataset[1] = ['flower' => 'sakura'];
+		$dataset[2] = ['flower' => 'rose'];
+		$dataset[0] = ['flower' => 'sunflower'];
 
 		$dataset->krsort();
 
-		$this->assertEquals(array('rose', 'sakura', 'sunflower'), array_values($dataset->flower));
+		$this->assertEquals(['rose', 'sakura', 'sunflower'], array_values($dataset->flower));
 
 		$dataset = new DataSet;
-		$dataset['001'] = array('flower' => 'sakura');
-		$dataset['2'] = array('flower' => 'rose');
-		$dataset['00030'] = array('flower' => 'sunflower');
+		$dataset['001'] = ['flower' => 'sakura'];
+		$dataset['2'] = ['flower' => 'rose'];
+		$dataset['00030'] = ['flower' => 'sunflower'];
 
 		$dataset->krsort(SORT_STRING);
 
-		$this->assertEquals(array('rose', 'sakura', 'sunflower'), array_values($dataset->flower));
+		$this->assertEquals(['rose', 'sakura', 'sunflower'], array_values($dataset->flower));
 	}
 
 	/**

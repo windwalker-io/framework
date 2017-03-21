@@ -100,7 +100,7 @@ class PlatesRendererTest extends AbstractDomTestCase
 	 */
 	public function testRender()
 	{
-		$html = $this->instance->render('profile', array('name' => 'Tony Stark'));
+		$html = $this->instance->render('profile', ['name' => 'Tony Stark']);
 
 		$expect = <<<HTML
 <html>

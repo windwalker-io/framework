@@ -31,11 +31,11 @@ class AbstractSessionHandlerTestCase extends AbstractSessionTestCase
 
 		$this->bag = new ArrayBag;
 
-		$this->options = array(
+		$this->options = [
 			'expire_time' => 20,
 			'force_ssl' => true,
 			'security' => 'security'
-		);
+		];
 
 		parent::setUp();
 

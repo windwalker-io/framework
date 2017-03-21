@@ -117,19 +117,19 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	 */
 	public function testSetLocationAndStore()
 	{
-		$data = array(
+		$data = [
 			'title' => 'Flower',
 			'alias' => 'flower',
-		);
+		];
 
 		$this->instance->bind($data)
 			->setLocation(1, NestedRecord::LOCATION_FIRST_CHILD)
 			->store();
 
-		$data = array(
+		$data = [
 			'title' => 'Sakura',
 			'alias' => 'sakura',
-		);
+		];
 
 		$this->instance->reset(true)
 			->bind($data)
@@ -137,56 +137,56 @@ class NestedRecordTest extends AbstractMysqlTestCase
 			->store();
 
 		// First child
-		$data = array(
+		$data = [
 			'title' => 'Olive',
 			'alias' => 'olive',
-		);
+		];
 
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_FIRST_CHILD)
 			->store();
 
-		$this->assertEquals(array(2, 3), array($this->instance->lft, $this->instance->rgt));
+		$this->assertEquals([2, 3], [$this->instance->lft, $this->instance->rgt]);
 
 		// Last child
-		$data = array(
+		$data = [
 			'title' => 'Sunflower',
 			'alias' => 'sunflower',
-		);
+		];
 
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_LAST_CHILD)
 			->store();
 
-		$this->assertEquals(array(6, 7), array($this->instance->lft, $this->instance->rgt));
+		$this->assertEquals([6, 7], [$this->instance->lft, $this->instance->rgt]);
 
 		// Before
-		$data = array(
+		$data = [
 			'title' => 'Rose',
 			'alias' => 'rose',
-		);
+		];
 
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_BEFORE)
 			->store();
 
-		$this->assertEquals(array(1, 2), array($this->instance->lft, $this->instance->rgt));
+		$this->assertEquals([1, 2], [$this->instance->lft, $this->instance->rgt]);
 
 		// After
-		$data = array(
+		$data = [
 			'title' => 'Rose',
 			'alias' => 'rose',
-		);
+		];
 
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_AFTER)
 			->store();
 
-		$this->assertEquals(array(11, 12), array($this->instance->lft, $this->instance->rgt));
+		$this->assertEquals([11, 12], [$this->instance->lft, $this->instance->rgt]);
 	}
 
 	/**
@@ -203,8 +203,8 @@ class NestedRecordTest extends AbstractMysqlTestCase
 		$ids = ArrayHelper::getColumn($path, 'id');
 		$paths = ArrayHelper::getColumn($path, 'path');
 
-		$this->assertEquals(array(1, 2, 5), $ids);
-		$this->assertEquals(array('', 'flower', 'flower/sunflower'), $paths);
+		$this->assertEquals([1, 2, 5], $ids);
+		$this->assertEquals(['', 'flower', 'flower/sunflower'], $paths);
 	}
 
 	/**
@@ -218,8 +218,8 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	{
 		$tree = $this->instance->getTree(1, true);
 
-		$ids = array(1, 6, 2, 4, 3, 5, 7);
-		$paths = array(
+		$ids = [1, 6, 2, 4, 3, 5, 7];
+		$paths = [
 			'',
 			'rose',
 			'flower',
@@ -227,7 +227,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 			'flower/sakura',
 			'flower/sunflower',
 			'rose'
-		);
+		];
 
 		$this->assertEquals($ids, ArrayHelper::getColumn($tree, 'id'));
 		$this->assertEquals($paths, ArrayHelper::getColumn($tree, 'path'));
@@ -259,7 +259,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
 		$this->instance->move(-1);
 
-		$this->assertEquals(array(6, 7), array($this->instance->lft, $this->instance->rgt));
+		$this->assertEquals([6, 7], [$this->instance->lft, $this->instance->rgt]);
 	}
 
 	/**
@@ -275,7 +275,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
 
 		$this->instance->moveByReference(1, NestedRecord::LOCATION_LAST_CHILD);
 
-		$this->assertEquals(array(11, 12), array($this->instance->lft, $this->instance->rgt));
+		$this->assertEquals([11, 12], [$this->instance->lft, $this->instance->rgt]);
 	}
 
 	/**
@@ -290,10 +290,10 @@ class NestedRecordTest extends AbstractMysqlTestCase
 	public function testDelete()
 	{
 		// Before
-		$data = array(
+		$data = [
 			'title' => 'Rose',
 			'alias' => 'rose',
-		);
+		];
 
 		$this->instance->reset(true)
 			->bind($data)

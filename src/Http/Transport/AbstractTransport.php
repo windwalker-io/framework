@@ -23,7 +23,7 @@ abstract class AbstractTransport implements TransportInterface
 	 *
 	 * @var  array
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Constructor.
@@ -32,7 +32,7 @@ abstract class AbstractTransport implements TransportInterface
 	 *
 	 * @since   2.1
 	 */
-	public function __construct($options = array())
+	public function __construct($options = [])
 	{
 		$this->setOptions($options);
 	}

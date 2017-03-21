@@ -25,5 +25,5 @@ interface EventTriggerableInterface
 	 *
 	 * @since   2.0
 	 */
-	public function triggerEvent($event, $args = array());
+	public function triggerEvent($event, $args = []);
 }

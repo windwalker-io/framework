@@ -37,15 +37,15 @@ class RadioFieldTest extends AbstractDomTestCase
 		$this->instance = new RadioField(
 			'flower',
 			'Flower',
-			array(
-				new Option('Asia - Tokyo', 'Asia/Tokyo', array('class' => 'opt')),
+			[
+				new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
 				new Option('Asia - Taipei', 'Asia/Taipei'),
 				new Option('Europe - Paris', 'Asia/Paris'),
 				new Option('UTC', 'UTC'),
-			),
-			array(
+			],
+			[
 				'class' => 'stub-flower'
-			)
+			]
 		);
 
 		$this->instance->setAttribute('size',     10);
@@ -53,7 +53,7 @@ class RadioFieldTest extends AbstractDomTestCase
 		$this->instance->setAttribute('disabled', true);
 		$this->instance->setAttribute('onchange', 'return false;');
 		$this->instance->setAttribute('multiple', false);
-		$this->instance->setAttribute('attribs',  array('data-test-element' => true));
+		$this->instance->setAttribute('attribs',  ['data-test-element' => true]);
 	}
 
 	/**

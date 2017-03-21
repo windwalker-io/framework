@@ -23,14 +23,14 @@ class PlatesRenderer extends AbstractEngineRenderer
 	 *
 	 * @var  ExtensionInterface[]
 	 */
-	protected $extensions = array();
+	protected $extensions = [];
 
 	/**
 	 * Property folders.
 	 *
 	 * @var  array
 	 */
-	protected $folders = array();
+	protected $folders = [];
 
 	/**
 	 * Method to get property Engine
@@ -86,7 +86,7 @@ class PlatesRenderer extends AbstractEngineRenderer
 	 *
 	 * @return  string
 	 */
-	public function render($file, $data = array())
+	public function render($file, $data = [])
 	{
 		$path = $this->findFile($file);
 
@@ -135,10 +135,10 @@ class PlatesRenderer extends AbstractEngineRenderer
 	 */
 	public function addFolder($namespace, $folder, $fallback = false)
 	{
-		$this->folders[$namespace] = array(
+		$this->folders[$namespace] = [
 			'folder' => $folder,
 			'fallback' => $fallback
-		);
+		];
 
 		return $this;
 	}

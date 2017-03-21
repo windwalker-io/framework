@@ -226,7 +226,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
 			$this->equalTo('somevar=somevalue&test=true')
 		);
 
-		$this->object->setQuery(array('somevar' => 'somevalue', 'test' => 'true'));
+		$this->object->setQuery(['somevar' => 'somevalue', 'test' => 'true']);
 
 		$this->assertThat(
 			$this->object->getQuery(),
@@ -251,7 +251,7 @@ class UriTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertThat(
 			$this->object->getQuery(true),
-			$this->equalTo(array('var' => 'value'))
+			$this->equalTo(['var' => 'value'])
 		);
 	}
 

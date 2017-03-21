@@ -48,7 +48,7 @@ class FormDataInput extends Input
 
 			if (!is_array($this->data))
 			{
-				$this->data = array();
+				$this->data = [];
 			}
 		}
 		else

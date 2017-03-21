@@ -8,6 +8,7 @@
 
 namespace Windwalker\Renderer\Test;
 
+use Illuminate\Contracts\View\Factory;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Folder;
 use Windwalker\Renderer\BladeRenderer;
@@ -51,7 +52,7 @@ class BladeRendererTest extends AbstractDomTestCase
 
 		Folder::create(__DIR__ . '/cache');
 
-		$this->instance = new BladeRenderer(static::$path, array('cache_path' => __DIR__ . '/cache'));
+		$this->instance = new BladeRenderer(static::$path, ['cache_path' => __DIR__ . '/cache']);
 	}
 
 	/**
@@ -109,7 +110,7 @@ HTML;
 	{
 		$this->instance->addCustomCompiler('upper', function($expression)
 		{
-			return "<?php echo strtoupper{$expression} ?>";
+			return "<?php echo strtoupper({$expression}); ?>";
 		});
 
 		$expect = <<<HTML
@@ -139,7 +140,7 @@ HTML;
 	 */
 	public function testGetBlade()
 	{
-		$this->assertInstanceOf('Illuminate\View\Environment', $this->instance->getEngine());
+		$this->assertInstanceOf(Factory::class, $this->instance->getEngine());
 	}
 
 	/**
@@ -167,7 +168,7 @@ HTML;
 	 */
 	public function testGetFilesystem()
 	{
-		$this->assertInstanceOf('Illuminate\Filesystem\Filesystem', $this->instance->getFilesystem());
+		$this->assertInstanceOf(\Illuminate\Filesystem\Filesystem::class, $this->instance->getFilesystem());
 	}
 
 	/**

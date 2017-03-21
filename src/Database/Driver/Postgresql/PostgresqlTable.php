@@ -29,18 +29,18 @@ class PostgresqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function create($schema, $ifNotExists = true, $options = array())
+	public function create($schema, $ifNotExists = true, $options = [])
 	{
-		$defaultOptions = array(
+		$defaultOptions = [
 			'auto_increment' => 1,
-			'sequences' => array()
-		);
+			'sequences' => []
+		];
 
 		$options  = array_merge($defaultOptions, $options);
 		$schema   = $this->callSchema($schema);
-		$columns  = array();
-		$comments = array();
-		$primary  = array();
+		$columns  = [];
+		$comments = [];
+		$primary  = [];
 
 		foreach ($schema->getColumns() as $column)
 		{
@@ -65,16 +65,16 @@ class PostgresqlTable extends AbstractTable
 			}
 		}
 
-		$keys = array();
-		$keyComments = array();
+		$keys = [];
+		$keyComments = [];
 
 		foreach ($schema->getIndexes() as $index)
 		{
-			$keys[$index->getName()] = array(
+			$keys[$index->getName()] = [
 				'type' => strtoupper($index->getType()),
 				'name' => $index->getName(),
 				'columns' => $index->getColumns()
-			);
+			];
 
 			if ($index->getComment())
 			{
@@ -90,8 +90,8 @@ class PostgresqlTable extends AbstractTable
 
 		$query = PostgresqlGrammar::createTable($this->getName(), $columns, $primary, $keys, $inherits, $ifNotExists, $tablespace);
 
-		$comments = isset($options['comments']) ? $options['comments'] : array();
-		$keyComments = isset($options['key_comments']) ? $options['key_comments'] : array();
+		$comments = isset($options['comments']) ? $options['comments'] : [];
+		$keyComments = isset($options['key_comments']) ? $options['key_comments'] : [];
 
 		// Comments
 		foreach ($comments as $name => $comment)
@@ -122,7 +122,7 @@ class PostgresqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
+	public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = [])
 	{
 		$column = $name;
 
@@ -197,7 +197,7 @@ class PostgresqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
+	public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = [])
 	{
 		$column = $name;
 
@@ -277,7 +277,7 @@ class PostgresqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
+	public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = [])
 	{
 		if (!$this->hasColumn($oldName))
 		{
@@ -369,20 +369,20 @@ class PostgresqlTable extends AbstractTable
 
 		list($originType) = explode('(', $details->Type);
 
-		$textTypes = array(
+		$textTypes = [
 			PostgresqlType::TEXT,
 			PostgresqlType::CHAR,
 			PostgresqlType::CHARACTER,
 			PostgresqlType::VARCHAR
-		);
+		];
 
-		$numericTypes = array(
+		$numericTypes = [
 			PostgresqlType::INTEGER,
 			PostgresqlType::SMALLINT,
 			PostgresqlType::FLOAT,
 			PostgresqlType::DOUBLE,
 			PostgresqlType::DECIMAL
-		);
+		];
 
 		if (in_array($originType, $textTypes) && in_array($type, $numericTypes))
 		{
@@ -403,7 +403,7 @@ class PostgresqlTable extends AbstractTable
 	 *
 	 * @return mixed
 	 */
-	public function addIndex($type, $columns = array(), $name = null, $comment = null, $options = array())
+	public function addIndex($type, $columns = [], $name = null, $comment = null, $options = [])
 	{
 		if ($this->hasIndex($name))
 		{
@@ -521,12 +521,12 @@ class PostgresqlTable extends AbstractTable
 
 			$fields = $this->db->setQuery($query)->loadAll();
 
-			$result = array();
+			$result = [];
 
 			foreach ($fields as $field)
 			{
 				// Do some dirty translation to MySQL output.
-				$result[$field->column_name] = (object) array(
+				$result[$field->column_name] = (object) [
 					'column_name' => $field->column_name,
 					'type'        => $field->column_type,
 					'null'        => $field->Null,
@@ -537,7 +537,7 @@ class PostgresqlTable extends AbstractTable
 					'Extra'       => null,
 					'Privileges'  => null,
 					'Comment'     => $field->Comment
-				);
+				];
 			}
 
 			$keys = $this->getIndexes();
@@ -659,7 +659,7 @@ ORDER BY t.relname, i.relname;');
 
 		if ( in_array($table, $tableList) )
 		{
-			$name = array(
+			$name = [
 				's.relname AS sequence', 
 				'n.nspname AS schema', 
 				't.relname AS table', 
@@ -669,7 +669,7 @@ ORDER BY t.relname, i.relname;');
 				'info.maximum_value AS maximum_value', 
 				'info.increment AS increment', 
 				'info.cycle_option AS cycle_option'
-			);
+			];
 
 			if (version_compare($this->db->getVersion(), '9.1.0') >= 0)
 			{

@@ -195,12 +195,12 @@ class PsrUriTest extends AbstractBaseTestCase
 	 */
 	public function authorityProvider()
 	{
-		return array(
-			'host-only'      => array('http://foo.com/bar',         'foo.com'),
-			'host-port'      => array('http://foo.com:3000/bar',    'foo.com:3000'),
-			'user-host'      => array('http://me@foo.com/bar',      'me@foo.com'),
-			'user-host-port' => array('http://me@foo.com:3000/bar', 'me@foo.com:3000'),
-		);
+		return [
+			'host-only'      => ['http://foo.com/bar',         'foo.com'],
+			'host-port'      => ['http://foo.com:3000/bar',    'foo.com:3000'],
+			'user-host'      => ['http://me@foo.com/bar',      'me@foo.com'],
+			'user-host-port' => ['http://me@foo.com:3000/bar', 'me@foo.com:3000'],
+		];
 	}
 
 	/**
@@ -219,13 +219,13 @@ class PsrUriTest extends AbstractBaseTestCase
 
 	public function queryStringsForEncoding()
 	{
-		return array(
-			'key-only' => array('k^ey', 'k%5Eey'),
-			'key-value' => array('k^ey=valu`', 'k%5Eey=valu%60'),
-			'array-key-only' => array('key[]', 'key%5B%5D'),
-			'array-key-value' => array('key[]=valu`', 'key%5B%5D=valu%60'),
-			'complex' => array('k^ey&key[]=valu`&f<>=`bar', 'k%5Eey&key%5B%5D=valu%60&f%3C%3E=%60bar'),
-		);
+		return [
+			'key-only' => ['k^ey', 'k%5Eey'],
+			'key-value' => ['k^ey=valu`', 'k%5Eey=valu%60'],
+			'array-key-only' => ['key[]', 'key%5B%5D'],
+			'array-key-value' => ['key[]=valu`', 'key%5B%5D=valu%60'],
+			'complex' => ['k^ey&key[]=valu`&f<>=`bar', 'k%5Eey&key%5B%5D=valu%60&f%3C%3E=%60bar'],
+		];
 	}
 
 	/**
@@ -270,16 +270,16 @@ class PsrUriTest extends AbstractBaseTestCase
 	 */
 	public function seedInvalidArguments()
 	{
-		$methods = array(
+		$methods = [
 			'withScheme',
 			'withUserInfo',
 			'withHost',
 			'withPath',
 			'withQuery',
 			'withFragment',
-		);
+		];
 
-		$values = array(
+		$values = [
 			'null'       => null,
 			'true'       => true,
 			'false'      => false,
@@ -287,11 +287,11 @@ class PsrUriTest extends AbstractBaseTestCase
 			'int'        => 1,
 			'zero-float' => 0.0,
 			'float'      => 1.1,
-			'array'      => array('value'),
-			'object'     => (object) array('value' => 'value'),
-		);
+			'array'      => ['value'],
+			'object'     => (object) ['value' => 'value'],
+		];
 
-		$combinations = array();
+		$combinations = [];
 
 		foreach ($methods as $method)
 		{
@@ -299,7 +299,7 @@ class PsrUriTest extends AbstractBaseTestCase
 			{
 				$key = sprintf('%s-%s', $method, $type);
 
-				$combinations[$key] = array($method, $value);
+				$combinations[$key] = [$method, $value];
 			}
 		}
 

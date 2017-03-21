@@ -34,14 +34,14 @@ class Authentication implements AuthenticationInterface
 	 *
 	 * @var  integer[]
 	 */
-	protected $results = array();
+	protected $results = [];
 
 	/**
 	 * Property methods.
 	 *
 	 * @var  MethodInterface[]
 	 */
-	protected $methods = array();
+	protected $methods = [];
 
 	/**
 	 * Property credential.
@@ -55,7 +55,7 @@ class Authentication implements AuthenticationInterface
 	 *
 	 * @param Method\MethodInterface[] $methods
 	 */
-	public function __construct(array $methods = array())
+	public function __construct(array $methods = [])
 	{
 		$this->methods = $methods;
 	}
@@ -69,7 +69,7 @@ class Authentication implements AuthenticationInterface
 	 */
 	public function authenticate(Credential $credential)
 	{
-		$this->results = array();
+		$this->results = [];
 
 		foreach ($this->methods AS $name => $method)
 		{

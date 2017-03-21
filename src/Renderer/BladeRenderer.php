@@ -18,12 +18,6 @@ use Illuminate\View\Factory as BladeEnvironment;
 use Windwalker\Renderer\Blade\BladeExtending;
 use Windwalker\Renderer\Blade\GlobalContainer;
 
-// Fix for Illuminate 4.1 B/C
-if (!class_exists('Illuminate\View\Factory'))
-{
-	class_alias('Illuminate\View\Environment', 'Illuminate\View\Factory');
-}
-
 /**
  * The BladeRenderer class.
  *
@@ -78,7 +72,7 @@ class BladeRenderer extends AbstractEngineRenderer
 	 *
 	 * @var  callable[]
 	 */
-	protected $customCompilers = array();
+	protected $customCompilers = [];
 
 	/**
 	 * render
@@ -88,7 +82,7 @@ class BladeRenderer extends AbstractEngineRenderer
 	 *
 	 * @return  string
 	 */
-	public function render($file, $data = array())
+	public function render($file, $data = [])
 	{
 		if ($data instanceof \Traversable)
 		{
@@ -135,7 +129,7 @@ class BladeRenderer extends AbstractEngineRenderer
 			}
 
 			// B/C for 4.* and 5.*
-			if ($rawTags = GlobalContainer::getRawTags() && is_callable(array($bladeCompiler, 'setRawTags')))
+			if ($rawTags = GlobalContainer::getRawTags() && is_callable([$bladeCompiler, 'setRawTags']))
 			{
 				$bladeCompiler->setRawTags($rawTags[0], $rawTags[1]);
 			}

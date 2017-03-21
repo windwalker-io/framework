@@ -34,11 +34,11 @@ class DomElementsTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$elements = array(
+		$elements = [
 			new DomElement('option', 'foo'),
 			new DomElement('option', 'bar'),
 			new DomElement('rdf:metaData', new DomElement('rdf:name', 'Simon')),
-		);
+		];
 
 		$this->instance = new DomElements($elements);
 	}

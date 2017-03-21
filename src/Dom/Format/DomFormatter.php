@@ -22,16 +22,16 @@ class DomFormatter
 	 *
 	 * @var  array
 	 */
-	protected $log = array();
+	protected $log = [];
 
 	/**
 	 * Property options.
 	 *
 	 * @var  array
 	 */
-	protected $options = array(
+	protected $options = [
 		'indentation_character' => '    '
-	);
+	];
 
 	const ELEMENT_TYPE_BLOCK = 0;
 	const ELEMENT_TYPE_INLINE = 1;
@@ -92,7 +92,7 @@ class DomFormatter
 	 *
 	 * @param array $options
 	 */
-	public function __construct(array $options = array())
+	public function __construct(array $options = [])
 	{
 		foreach ($options as $name => $value)
 		{
@@ -114,7 +114,7 @@ class DomFormatter
 	 */
 	public function indent($input)
 	{
-		$this->log = array();
+		$this->log = [];
 
 		$input = $this->removeDoubleWhiteSpace($input);
 
@@ -144,20 +144,20 @@ class DomFormatter
 
 			$patterns = $this->getTagPatterns();
 
-			$rules = array('NO', 'DECREASE', 'INCREASE', 'DISCARD');
+			$rules = ['NO', 'DECREASE', 'INCREASE', 'DISCARD'];
 
-			$match = array();
+			$match = [];
 
 			foreach ($patterns as $pattern => $rule)
 			{
 				if ($match = preg_match($pattern, $subject, $matches))
 				{
-					$this->log[] = array(
+					$this->log[] = [
 						'rule'    => $rules[$rule],
 						'pattern' => $pattern,
 						'subject' => $subject,
 						'match'   => $matches[0]
-					);
+					];
 
 					$subject = mb_substr($subject, mb_strlen($matches[0]));
 
@@ -242,7 +242,7 @@ class DomFormatter
 	 */
 	protected function getTagPatterns()
 	{
-		return array(
+		return [
 			// block tag
 			'/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\/(?:\2)>)/'  => static::MATCH_INDENT_NO,
 			// DOCTYPE
@@ -257,7 +257,7 @@ class DomFormatter
 			'/^(\s+)/'                                     => static::MATCH_DISCARD,
 			// text node
 			'/([^<]+)/'                                    => static::MATCH_INDENT_NO
-		);
+		];
 	}
 
 	/**

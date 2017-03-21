@@ -30,7 +30,7 @@ class HtmlCleaner
 	 * @var    array
 	 * @since  2.0
 	 */
-	public $tagsArray = array();
+	public $tagsArray = [];
 
 	/**
 	 * The array of permitted tag attributes (white list).
@@ -38,7 +38,7 @@ class HtmlCleaner
 	 * @var    array
 	 * @since  2.0
 	 */
-	public $attrArray = array();
+	public $attrArray = [];
 
 	/**
 	 * The method for sanitising tags: WhiteList method = 0 (default), BlackList method = 1
@@ -70,7 +70,7 @@ class HtmlCleaner
 	 * @var    array
 	 * @since  2.0
 	 */
-	public $tagBlacklist = array(
+	public $tagBlacklist = [
 		'applet',
 		'body',
 		'bgsound',
@@ -93,7 +93,7 @@ class HtmlCleaner
 		'style',
 		'title',
 		'xml'
-	);
+	];
 
 	/**
 	 * The list of the default blacklisted tag attributes. All event handlers implicit.
@@ -101,13 +101,13 @@ class HtmlCleaner
 	 * @var    array
 	 * @since   2.0
 	 */
-	public $attrBlacklist = array(
+	public $attrBlacklist = [
 		'action',
 		'background',
 		'codebase',
 		'dynsrc',
 		'lowsrc'
-	);
+	];
 
 	/**
 	 * Constructor for inputFilter class. Only first parameter is required.
@@ -120,7 +120,7 @@ class HtmlCleaner
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($tagsArray = array(), $attrArray = array(), $tagsMethod = self::USE_BLACK_LIST, $attrMethod = self::USE_BLACK_LIST, $xssAuto = 1)
+	public function __construct($tagsArray = [], $attrArray = [], $tagsMethod = self::USE_BLACK_LIST, $attrMethod = self::USE_BLACK_LIST, $xssAuto = 1)
 	{
 		// Make sure user defined arrays are in lowercase
 		$tagsArray = array_map('strtolower', (array) $tagsArray);
@@ -249,7 +249,7 @@ class HtmlCleaner
 			$currentTag = substr($fromTagOpen, 0, $tagOpen_end);
 			$tagLength = strlen($currentTag);
 			$tagLeft = $currentTag;
-			$attrSet = array();
+			$attrSet = [];
 			$currentSpace = strpos($tagLeft, ' ');
 
 			// Are we an open tag or a close tag?
@@ -423,7 +423,7 @@ class HtmlCleaner
 	 */
 	protected function cleanAttributes($attrSet)
 	{
-		$newSet = array();
+		$newSet = [];
 
 		$count = count($attrSet);
 
@@ -544,8 +544,8 @@ class HtmlCleaner
 	{
 		$alreadyFiltered = '';
 		$remainder = $source;
-		$badChars = array('<', '"', '>');
-		$escapedChars = array('&lt;', '&quot;', '&gt;');
+		$badChars = ['<', '"', '>'];
+		$escapedChars = ['&lt;', '&quot;', '&gt;'];
 
 		// Process each portion based on presence of =" and "<space>, "/>, or ">
 		// See if there are any more attributes to process

@@ -112,74 +112,74 @@ XML;
 	 */
 	public function boolCases()
 	{
-		return array(
-			array(
+		return [
+			[
 				1,
 				'required',
 				true,
 				null
-			),
-			array(
+			],
+			[
 				2,
 				'disabled',
 				false,
 				null
-			),
-			array(
+			],
+			[
 				3,
 				'boolTrue1',
 				true,
 				null
-			),
-			array(
+			],
+			[
 				4,
 				'boolTrue2',
 				true,
 				null
-			),
-			array(
+			],
+			[
 				5,
 				'boolTrue3',
 				true,
 				null
-			),
-			array(
+			],
+			[
 				6,
 				'boolFalse1',
 				false,
 				null
-			),
-			array(
+			],
+			[
 				7,
 				'boolFalse2',
 				false,
 				null
-			),
-			array(
+			],
+			[
 				8,
 				'boolFalse3',
 				false,
 				null
-			),
-			array(
+			],
+			[
 				10,
 				'boolFalse4',
 				false,
 				null
-			),
-			array(
+			],
+			[
 				11,
 				'boolFalse5',
 				false,
 				null
-			),
-			array(
+			],
+			[
 				'12_default',
 				'flower',
 				false,
 				false
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -229,7 +229,7 @@ XML;
 	 */
 	public function testGetAttributes()
 	{
-		$attributes = array();
+		$attributes = [];
 
 		foreach ($this->xml->attributes() as $name => $value)
 		{

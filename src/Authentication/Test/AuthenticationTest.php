@@ -57,7 +57,7 @@ class AuthenticationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testAuthenticate()
 	{
-		$credential = new Credential(array('username' => 'flower', 'password' => '1234'));
+		$credential = new Credential(['username' => 'flower', 'password' => '1234']);
 
 		// Test if no method
 		$this->assertFalse($this->instance->authenticate($credential));
@@ -70,21 +70,21 @@ class AuthenticationTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals('mock', $credential->_authenticated_method);
 
-		$this->assertEquals(array('mock' => Authentication::SUCCESS), $this->instance->getResults());
+		$this->assertEquals(['mock' => Authentication::SUCCESS], $this->instance->getResults());
 
 		// Test invalid
 		$credential->password = '4321';
 
 		$this->assertFalse($this->instance->authenticate($credential));
 
-		$this->assertEquals(array('mock' => Authentication::INVALID_CREDENTIAL), $this->instance->getResults());
+		$this->assertEquals(['mock' => Authentication::INVALID_CREDENTIAL], $this->instance->getResults());
 
 		// Test No user
 		$credential->username = 'sakura';
 
 		$this->assertFalse($this->instance->authenticate($credential));
 
-		$this->assertEquals(array('mock' => Authentication::USER_NOT_FOUND), $this->instance->getResults());
+		$this->assertEquals(['mock' => Authentication::USER_NOT_FOUND], $this->instance->getResults());
 	}
 
 	/**
@@ -129,15 +129,15 @@ class AuthenticationTest extends \PHPUnit\Framework\TestCase
 		$this->instance->addMethod('a', new LocalMethod);
 		$this->instance->addMethod('b', new MockMethod);
 
-		$credential = new Credential(array('username' => 'flower', 'password' => '1234'));
+		$credential = new Credential(['username' => 'flower', 'password' => '1234']);
 
 		$this->instance->authenticate($credential);
 
 		$this->assertEquals(
-			array(
+			[
 				'a' => Authentication::USER_NOT_FOUND,
 				'b' => Authentication::SUCCESS
-			),
+			],
 			$this->instance->getResults()
 		);
 	}

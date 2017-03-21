@@ -25,43 +25,43 @@ class TrieCompilerTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function regexList()
 	{
-		return array(
-			array(
+		return [
+			[
 				'/flower/:id',
 				'/flower/(?P<id>\d+)',
 				'/flower/5',
-				array('id' => 5),
+				['id' => 5],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/flower/caesar/:id/:alias',
 				'/flower/caesar/(?P<id>\d+)/(?P<alias>[^/]+)',
 				'/flower/caesar/25/othello',
-				array('id' => 25, 'alias' => 'othello'),
+				['id' => 25, 'alias' => 'othello'],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/king/john/*tags',
 				'/king/john/(?P<tags>.*)',
 				'/king/john/troilus/and/cressida',
-				array('tags' => array('troilus', 'and', 'cressida')),
+				['tags' => ['troilus', 'and', 'cressida']],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/king/*tags/:alias',
 				'/king/(?P<tags>.*)/(?P<alias>[^/]+)',
 				'/king/john/troilus/and/cressida',
-				array('tags' => array('john', 'troilus', 'and'), 'alias' => 'cressida'),
+				['tags' => ['john', 'troilus', 'and'], 'alias' => 'cressida'],
 				__LINE__
-			),
-			array(
+			],
+			[
 				'/king/*tags/and/:alias',
 				'/king/(?P<tags>.*)/and/(?P<alias>[^/]+)',
 				'/king/john/troilus/and/cressida',
-				array('tags' => array('john', 'troilus'), 'alias' => 'cressida'),
+				['tags' => ['john', 'troilus'], 'alias' => 'cressida'],
 				__LINE__
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -79,7 +79,7 @@ class TrieCompilerTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testCompile($pattern, $expected, $route, $expectedMatches, $line)
 	{
-		$regex = TrieCompiler::compile($pattern, array('id' => '\d+'));
+		$regex = TrieCompiler::compile($pattern, ['id' => '\d+']);
 
 		$this->assertEquals(chr(1) . '^' . $expected . '$' . chr(1), $regex, 'Fail at: ' . $line);
 

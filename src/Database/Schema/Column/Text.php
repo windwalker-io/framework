@@ -27,7 +27,7 @@ class Text extends Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $allowNull = false, $default = false, $comment = '', $options = array())
+	public function __construct($name = null, $allowNull = false, $default = false, $comment = '', $options = [])
 	{
 		parent::__construct($name, DataType::TEXT, Column::SIGNED, $allowNull, $default, $comment, $options);
 	}

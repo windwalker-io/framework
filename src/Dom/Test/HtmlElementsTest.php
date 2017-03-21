@@ -34,11 +34,11 @@ class HtmlElementsTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$elements = array(
+		$elements = [
 			new HtmlElement('p', 'foo'),
 			new HtmlElement('table', new HtmlElement('tr', new HtmlElement('td', 'bar'))),
-			new HtmlElement('div', 'yoo', array('id' => 'fly')),
-		);
+			new HtmlElement('div', 'yoo', ['id' => 'fly']),
+		];
 
 		$this->instance = new HtmlElements($elements);
 	}

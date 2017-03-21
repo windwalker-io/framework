@@ -52,7 +52,7 @@ class PostgresqlReader extends PdoReader
 				return false;
 			}
 
-			$table = array($matches[1]);
+			$table = [$matches[1]];
 		}
 
 		/* find sequence column name */

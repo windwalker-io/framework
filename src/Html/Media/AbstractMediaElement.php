@@ -35,7 +35,7 @@ abstract class AbstractMediaElement extends HtmlElement
 	 *
 	 * @param array   $attribs
 	 */
-	public function __construct($attribs = array())
+	public function __construct($attribs = [])
 	{
 		parent::__construct($this->name, null, $attribs);
 
@@ -49,7 +49,7 @@ abstract class AbstractMediaElement extends HtmlElement
 	 *
 	 * @return  static
 	 */
-	public static function create($attribs = array())
+	public static function create($attribs = [])
 	{
 		return new static($attribs);
 	}
@@ -95,11 +95,12 @@ abstract class AbstractMediaElement extends HtmlElement
 	 */
 	public function addSource($type, $src, $media = null)
 	{
-		$this->content[] = new HtmlElement('source', null, array(
+		$this->content[] = new HtmlElement('source', null, [
 			'src'   => $src,
 			'type'  => $this->name . '/' . strtolower($type),
 			'media' => $media
-		));
+		]
+		);
 
 		return $this;
 	}

@@ -55,22 +55,22 @@ class ServerRequestTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testConstruct()
 	{
-		$server = array(
+		$server = [
 			'foo' => 'bar',
 			'baz' => 'bat',
-		);
+		];
 
 		$server['server'] = true;
 
-		$files = array(
+		$files = [
 			'files' => new UploadedFile('php://temp', 0),
-		);
+		];
 
 		$uri = new PsrUri('http://example.com');
 		$method = 'POST';
-		$headers = array(
-			'Host' => array('example.com'),
-		);
+		$headers = [
+			'Host' => ['example.com'],
+		];
 
 		$request = new ServerRequest(
 			$server,

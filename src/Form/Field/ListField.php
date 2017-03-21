@@ -35,7 +35,7 @@ class ListField extends AbstractField
 	 *
 	 * @var  Option[]
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Property currentGroup.
@@ -52,7 +52,7 @@ class ListField extends AbstractField
 	 * @param null   $filter
 	 * @param null   $rule
 	 */
-	public function __construct($name = null, $label = null, $options = array(), $attributes = array(), $filter = null, $rule = null)
+	public function __construct($name = null, $label = null, $options = [], $attributes = [], $filter = null, $rule = null)
 	{
 		parent::__construct($name, $label, $attributes, $filter, $rule);
 
@@ -88,11 +88,12 @@ class ListField extends AbstractField
 	 */
 	protected function getAccessors()
 	{
-		return array_merge(parent::getAccessors(), array(
+		return array_merge(parent::getAccessors(), [
 			'size' => 'size',
 			'onchange' => 'onchange',
 			'multiple' => 'multiple',
-		));
+		]
+		);
 	}
 
 	/**
@@ -130,7 +131,7 @@ class ListField extends AbstractField
 	{
 		if ($group)
 		{
-			$options = array($group => $options);
+			$options = [$group => $options];
 		}
 
 		$this->handleOptions(null, $options);
@@ -148,7 +149,7 @@ class ListField extends AbstractField
 	 */
 	public function addOption(Option $option, $group = null)
 	{
-		$options = array($option);
+		$options = [$option];
 
 		if ($group === null)
 		{
@@ -170,7 +171,7 @@ class ListField extends AbstractField
 	 *
 	 * @return static
 	 */
-	public function option($text = null, $value = null, $attribs = array(), $group = null)
+	public function option($text = null, $value = null, $attribs = [], $group = null)
 	{
 		$this->addOption(new Option($text, $value, $attribs), $group);
 
@@ -203,7 +204,7 @@ class ListField extends AbstractField
 	 */
 	protected function prepareOptions()
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -215,7 +216,7 @@ class ListField extends AbstractField
 	 * @throws \InvalidArgumentException
 	 * @return  void
 	 */
-	protected function handleOptions($xml, $options = array())
+	protected function handleOptions($xml, $options = [])
 	{
 		if ($xml instanceof \SimpleXMLElement)
 		{

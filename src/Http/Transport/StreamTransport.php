@@ -35,7 +35,7 @@ class StreamTransport extends AbstractTransport
 	protected function doRequest(RequestInterface $request)
 	{
 		// Create the stream context options array with the required method offset.
-		$options = array('method' => $request->getMethod());
+		$options = ['method' => $request->getMethod()];
 
 		// Set HTTP Version
 		$options['protocol_version'] = $request->getProtocolVersion();
@@ -101,7 +101,7 @@ class StreamTransport extends AbstractTransport
 		}
 
 		// Create the stream context for the request.
-		$context = stream_context_create(array('http' => $options));
+		$context = stream_context_create(['http' => $options]);
 
 		// Capture PHP errors
 		$php_errormsg = '';
@@ -150,7 +150,7 @@ class StreamTransport extends AbstractTransport
 		}
 		else
 		{
-			$headers = array();
+			$headers = [];
 		}
 
 		return $this->getResponse($headers, $content);

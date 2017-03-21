@@ -29,7 +29,7 @@ class BladeExtending
 	public static function extend(BladeCompiler $blade, $name, $closure)
 	{
 		// For 5.0 after
-		if (is_callable(array($blade, 'directive')))
+		if (is_callable([$blade, 'directive']))
 		{
 			$blade->directive($name, $closure);
 

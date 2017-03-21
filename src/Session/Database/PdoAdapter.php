@@ -30,7 +30,7 @@ class PdoAdapter extends AbstractDatabaseAdapter
 	 * @param \PDO  $db
 	 * @param array $options
 	 */
-	public function __construct(\PDO $db, $options = array())
+	public function __construct(\PDO $db, $options = [])
 	{
 		parent::__construct($db, $options);
 	}

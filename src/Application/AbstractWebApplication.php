@@ -89,7 +89,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	{
 		$request     = $request     ? : ServerRequestFactory::createFromGlobals();
 		$environment = $environment ? : WebEnvironment::create($request->getServerParams());
-		$server      = WebHttpServer::create(array($this, 'dispatch'), $request);
+		$server      = WebHttpServer::create([$this, 'dispatch'], $request);
 
 		$this->setEnvironment($environment);
 		$this->setServer($server);
@@ -202,7 +202,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$uri = new Uri($this->server->uri->current);
 
 			// Get a base URL to prepend from the requested URI.
-			$prefix = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
+			$prefix = $uri->toString(['scheme', 'user', 'pass', 'host', 'port']);
 
 			// We just need the prefix since we have a path relative to the root.
 			if ($url[0] == '/')
@@ -212,7 +212,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			// It's relative to where we are now, so lets add that.
 			else
 			{
-				$parts = explode('/', $uri->toString(array('path')));
+				$parts = explode('/', $uri->toString(['path']));
 				array_pop($parts);
 				$path = implode('/', $parts) . '/';
 				$url = $prefix . $path . $url;
@@ -402,22 +402,22 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 */
 	public function __get($name)
 	{
-		$allowNames = array(
+		$allowNames = [
 			'environment',
 			'server'
-		);
+		];
 
 		if (in_array($name, $allowNames))
 		{
 			return $this->$name;
 		}
 
-		$getters = array(
+		$getters = [
 			'uri',
 			'request',
 			'browser',
 			'platform'
-		);
+		];
 
 		if (in_array(strtolower($name), $getters))
 		{

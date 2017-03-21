@@ -66,7 +66,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
 		);
 
 		// Given Source & filter
-		$src = array('foo' => 'bar');
+		$src = ['foo' => 'bar'];
 		$json = new JsonInput($src);
 
 		$this->assertEquals(
@@ -81,7 +81,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
 		$json = new JsonInput;
 
 		$this->assertEquals(
-			array('a' => 1, 'b' => 2),
+			['a' => 1, 'b' => 2],
 			TestHelper::getValue($json, 'data')
 		);
 	}

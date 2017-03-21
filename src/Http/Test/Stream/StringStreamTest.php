@@ -67,7 +67,7 @@ class StringStreamTest extends AbstractBaseTestCase
 	public function testConstruct()
 	{
 		$stringObject = $this->getMockBuilder('stdClass')
-			->setMethods(array('__toString'))
+			->setMethods(['__toString'])
 			->getMock();
 
 		$stringObject->expects($this->once())

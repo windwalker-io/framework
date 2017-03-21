@@ -26,7 +26,7 @@ function utf8_str_split($str, $split_len = 1) {
 
     $len = utf8_strlen($str);
     if ( $len <= $split_len ) {
-        return array($str);
+        return [$str];
     }
 
     preg_match_all('/.{'.$split_len.'}|[^\x00]{1,'.$split_len.'}$/us', $str, $ar);

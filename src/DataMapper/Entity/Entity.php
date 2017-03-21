@@ -23,14 +23,14 @@ class Entity extends Data implements \JsonSerializable
 	 *
 	 * @var  array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Property aliases.
 	 *
 	 * @var  array
 	 */
-	protected $aliases = array();
+	protected $aliases = [];
 
 	/**
 	 * Property fields.
@@ -94,7 +94,7 @@ class Entity extends Data implements \JsonSerializable
 			throw new \InvalidArgumentException(sprintf('Default value should be scalar, %s given.', gettype($default)));
 		}
 
-		$defaultProfile = array(
+		$defaultProfile = [
 			'Field'      => '',
 			'Type'      => '',
 			'Collation' => 'utf8_unicode_ci',
@@ -104,15 +104,16 @@ class Entity extends Data implements \JsonSerializable
 			'Extra'     => '',
 			'Privileges' => 'select,insert,update,references',
 			'Comment'    => ''
-		);
+		];
 
 		if (is_string($field))
 		{
-			$field = array_merge($defaultProfile, array(
+			$field = array_merge($defaultProfile, [
 				'Field'    => $field,
 				'Type'    => gettype($default),
 				'Default' => $default
-			));
+			]
+			);
 		}
 
 		if (is_array($field) || is_object($field))
@@ -294,7 +295,7 @@ class Entity extends Data implements \JsonSerializable
 
 		$mutator = 'set' . $this->toCamelCase($key) . 'Value';
 
-		if (is_callable(array($this, $mutator)))
+		if (is_callable([$this, $mutator]))
 		{
 			$this->$mutator($value);
 		}
@@ -324,7 +325,7 @@ class Entity extends Data implements \JsonSerializable
 
 		$value = isset($this->data[$key]) ? $this->data[$key] : null;
 
-		if (is_callable(array($this, $accessor)))
+		if (is_callable([$this, $accessor]))
 		{
 			return $this->$accessor($value);
 		}
@@ -453,7 +454,7 @@ class Entity extends Data implements \JsonSerializable
 			return $this->data;
 		}
 
-		$data = array();
+		$data = [];
 
 		foreach (array_keys($this->getFields()) as $field)
 		{
@@ -474,7 +475,7 @@ class Entity extends Data implements \JsonSerializable
 	 */
 	public function reset()
 	{
-		$this->data = array();
+		$this->data = [];
 
 		// Get the default values for the class from the table.
 		foreach ((array) $this->getFields() as $k => $v)

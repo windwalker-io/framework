@@ -81,7 +81,7 @@ abstract class ServerHelper
 			return getallheaders();
 		}
 
-		$headers = array();
+		$headers = [];
 
 		foreach ($_SERVER as $name => $value)
 		{
@@ -110,7 +110,7 @@ abstract class ServerHelper
 			return apache_request_headers();
 		}
 		
-		$out = array();
+		$out = [];
 
 		foreach ($_SERVER as $key => $value)
 		{
@@ -144,8 +144,8 @@ abstract class ServerHelper
 
 		// Fetch each part
 		$parts = array_slice(explode($boundary, $input), 1);
-		$data  = array();
-		$files = array();
+		$data  = [];
+		$files = [];
 
 		foreach ($parts as $part)
 		{
@@ -164,7 +164,7 @@ abstract class ServerHelper
 
 			// Parse the headers list
 			$rawHeaders = explode("\r\n", $rawHeaders);
-			$headers    = array();
+			$headers    = [];
 
 			foreach ($rawHeaders as $header)
 			{
@@ -187,7 +187,7 @@ abstract class ServerHelper
 				$field = $matches[1];
 				$fileName  = (isset($matches[2]) ? $matches[2] : null);
 
-				$fieldName = str_replace(array('[', '][', ']'), array('.', '.', ''), $field);
+				$fieldName = str_replace(['[', '][', ']'], ['.', '.', ''], $field);
 
 				// If we have no filename, save the data. Otherwise, save the file.
 				if ($fileName === null)
@@ -200,13 +200,13 @@ abstract class ServerHelper
 
 					file_put_contents($tempFile, $content);
 					
-					$content = array(
+					$content = [
 						'name'     => $fileName,
 						'type'     => $headers['content-type'],
 						'tmp_name' => $tempFile,
 						'error'    => 0,
 						'size'     => filesize($tempFile)
-					);
+					];
 
 					static::setByPath($files, $fieldName, $content);
 
@@ -220,10 +220,10 @@ abstract class ServerHelper
 			}
 		}
 
-		return array(
+		return [
 			'data'  => $data,
 			'files' => $files
-		);
+		];
 	}
 
 	/**
@@ -255,7 +255,7 @@ abstract class ServerHelper
 			{
 				if ((string) $node === '')
 				{
-					$tmp = array();
+					$tmp = [];
 					$dataTmp[] = &$tmp;
 					$dataTmp = &$tmp;
 				}
@@ -263,7 +263,7 @@ abstract class ServerHelper
 				{
 					if (empty($dataTmp[$node]))
 					{
-						$dataTmp[$node] = array();
+						$dataTmp[$node] = [];
 					}
 
 					$dataTmp = &$dataTmp[$node];

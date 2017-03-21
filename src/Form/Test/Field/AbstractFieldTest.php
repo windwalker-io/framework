@@ -42,10 +42,10 @@ class AbstractFieldTest extends AbstractDomTestCase
 		$this->instance = new StubField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'placeholder' => 'The Flower',
 				'class' => 'stub-flower'
-			)
+			]
 		);
 	}
 
@@ -197,7 +197,7 @@ HTML;
 		$this->instance->setValue('sakura');
 
 		$this->instance->setAttribute('controlClass', 'control-group');
-		$this->instance->setAttribute('attribs', array('data-test-element' => true));
+		$this->instance->setAttribute('attribs', ['data-test-element' => true]);
 
 		$expect = <<<HTML
 <div id="input-windwalker-flower-control" class="stub-field control-group">
@@ -253,10 +253,10 @@ HTML;
 		$field = new StubField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'placeholder' => 'The Flower',
 				'class' => 'stub-flower'
-			),
+			],
 			null,
 			new IpValidator
 		);
@@ -283,11 +283,11 @@ HTML;
 		$field = new StubField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'placeholder' => 'The Flower',
 				'class' => 'stub-flower',
 				'required' => true
-			)
+			]
 		);
 
 		$this->assertFalse($field->validate()->isSuccess());
@@ -325,10 +325,10 @@ HTML;
 		$field = new StubField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'placeholder' => 'The Flower',
 				'class' => 'stub-flower'
-			),
+			],
 			InputFilter::CMD
 		);
 
@@ -571,11 +571,11 @@ HTML;
 		$field = new StubField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'placeholder' => 'The Flower',
 				'class' => 'stub-flower',
 				'required' => true
-			)
+			]
 		);
 
 		$this->assertEquals('stub-flower', $field->getAttribute('class'));
@@ -624,7 +624,7 @@ HTML;
 		$field = new StubField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'placeholder' => 'The Flower',
 				'class' => 'stub-flower',
 				'required' => 'true',
@@ -632,7 +632,7 @@ HTML;
 				'case1' => 'yes',
 				'case2' => '1',
 				'false' => 'false'
-			)
+			]
 		);
 
 		$this->assertTrue($field->getBool('required'));
@@ -654,7 +654,7 @@ HTML;
 		$field = new StubField(
 			'flower',
 			'Flower',
-			array(
+			[
 				'placeholder' => 'The Flower',
 				'class' => 'stub-flower',
 				'required' => 'false',
@@ -663,7 +663,7 @@ HTML;
 				'case2' => 'none',
 				'case3' => '0',
 				'true' => 'yes',
-			)
+			]
 		);
 
 		$this->assertFalse($field->getBool('required'));
@@ -683,7 +683,7 @@ HTML;
 	 */
 	public function testGetAttributes()
 	{
-		$this->assertEquals(array('placeholder' => 'The Flower', 'class' => 'stub-flower'), $this->instance->getAttributes());
+		$this->assertEquals(['placeholder' => 'The Flower', 'class' => 'stub-flower'], $this->instance->getAttributes());
 	}
 
 	/**

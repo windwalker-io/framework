@@ -25,7 +25,7 @@ interface FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	static public function structToString($struct, array $options = array());
+	static public function structToString($struct, array $options = []);
 
 	/**
 	 * Converts a formatted string into an object.
@@ -37,5 +37,5 @@ interface FormatInterface
 	 *
 	 * @since   2.0
 	 */
-	static public function stringToStruct($data, array $options = array());
+	static public function stringToStruct($data, array $options = []);
 }

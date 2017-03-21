@@ -19,7 +19,7 @@ $routeItems = array_map(
 	{
 		$route = trim($route, '/');
 
-		return new Route($route, $route, array('_return' => $route));
+		return new Route($route, $route, ['_return' => $route]);
 	},
 	$routes
 );
@@ -40,7 +40,7 @@ $bin->setRoutes($routeItems)->setDebug(false);
 
 $bench = new \Windwalker\Profiler\Benchmark;
 
-$avg = array();
+$avg = [];
 
 $bench->addTask(
 	'Sequential',

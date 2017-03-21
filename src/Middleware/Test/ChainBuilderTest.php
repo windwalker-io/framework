@@ -93,10 +93,10 @@ class ChainBuilderTest extends AbstractBaseTestCase
 
 	public function testExecuteByArray()
 	{
-		$middlewares = array(
+		$middlewares = [
 			new StubOthelloMiddleware,
 			new StubCaesarMiddleware
-		);
+		];
 
 		$builder = new ChainBuilder($middlewares);
 
@@ -108,10 +108,10 @@ class ChainBuilderTest extends AbstractBaseTestCase
 
 		$this->assertStringSafeEquals($data, $builder->execute());
 
-		$middlewares = array(
+		$middlewares = [
 			new StubOthelloMiddleware,
 			new StubCaesarMiddleware
-		);
+		];
 
 		$builder = new ChainBuilder($middlewares, ChainBuilder::SORT_ASC);
 

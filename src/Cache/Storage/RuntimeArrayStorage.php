@@ -23,7 +23,7 @@ class RuntimeArrayStorage extends AbstractCacheStorage
 	 *
 	 * @var  array
 	 */
-	protected static $store = array();
+	protected static $store = [];
 
 	/**
 	 * Method to determine whether a storage entry has been set for a key.
@@ -104,7 +104,7 @@ class RuntimeArrayStorage extends AbstractCacheStorage
 	 */
 	public function clear()
 	{
-		static::$store = array();
+		static::$store = [];
 
 		return $this;
 	}

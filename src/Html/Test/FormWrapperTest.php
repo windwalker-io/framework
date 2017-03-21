@@ -58,7 +58,7 @@ class FormWrapperTest extends AbstractDomTestCase
 	{
 		$this->assertInstanceOf(get_class($this->instance), FormWrapper::create());
 
-		$form = FormWrapper::create('Foo', array('class' => 'foo'));
+		$form = FormWrapper::create('Foo', ['class' => 'foo']);
 
 		$this->assertDomFormatEquals('<form class="foo">Foo</form>', $form);
 	}

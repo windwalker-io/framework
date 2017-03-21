@@ -37,7 +37,7 @@ class StubOutput extends Output
 	 *
 	 * @var  array
 	 */
-	public $others = array();
+	public $others = [];
 
 	/**
 	 * MockOutput constructor.

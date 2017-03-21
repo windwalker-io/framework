@@ -62,10 +62,10 @@ class InCompare extends Compare
 	{
 		if (is_callable($this->handler))
 		{
-			return call_user_func_array($this->handler, array($this->compare1, $this->compare2, $this->operator, $quote1, $quote2));
+			return call_user_func_array($this->handler, [$this->compare1, $this->compare2, $this->operator, $quote1, $quote2]);
 		}
 
-		$return = array();
+		$return = [];
 
 		if ($this->compare1)
 		{

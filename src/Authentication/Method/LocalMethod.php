@@ -23,7 +23,7 @@ class LocalMethod extends AbstractMethod
 	 *
 	 * @var  array
 	 */
-	protected $users = array();
+	protected $users = [];
 
 	/**
 	 * Property verifyHandler.
@@ -37,7 +37,7 @@ class LocalMethod extends AbstractMethod
 	 *
 	 * @param array $users
 	 */
-	public function __construct(array $users = array())
+	public function __construct(array $users = [])
 	{
 		$this->users = $users;
 	}
@@ -82,7 +82,7 @@ class LocalMethod extends AbstractMethod
 
 			$handler = $this->getVerifyHandler();
 
-			if (call_user_func_array($handler, array($password, $user['password'])))
+			if (call_user_func_array($handler, [$password, $user['password']]))
 			{
 				$this->status = Authentication::SUCCESS;
 

@@ -73,44 +73,44 @@ class FileTest extends AbstractFilesystemTest
 	 */
 	public function dataTestMakeSafe()
 	{
-		return array(
-			array(
+		return [
+			[
 				'windwalker.',
-				array('#^\.#'),
+				['#^\.#'],
 				'windwalker',
 				'There should be no fullstop on the end of a filename',
-			),
-			array(
+			],
+			[
 				'Test w1ndwa1ker_5-1.html',
-				array('#^\.#'),
+				['#^\.#'],
 				'Test w1ndwa1ker_5-1.html',
 				'Alphanumeric symbols, dots, dashes, spaces and underscores should not be filtered',
-			),
-			array(
+			],
+			[
 				'Test w1ndwa1ker_5-1.html',
-				array('#^\.#', '/\s+/'),
+				['#^\.#', '/\s+/'],
 				'Testw1ndwa1ker_5-1.html',
 				'Using strip chars parameter here to strip all spaces',
-			),
-			array(
+			],
+			[
 				'windwalker.php!.',
-				array('#^\.#'),
+				['#^\.#'],
 				'windwalker.php',
 				'Non-alphanumeric symbols should be filtered to avoid disguising file extensions',
-			),
-			array(
+			],
+			[
 				'windwalker.php.!',
-				array('#^\.#'),
+				['#^\.#'],
 				'windwalker.php',
 				'Non-alphanumeric symbols should be filtered to avoid disguising file extensions',
-			),
-			array(
+			],
+			[
 				'.gitignore',
-				array(),
+				[],
 				'.gitignore',
 				'Files starting with a fullstop should be allowed when strip chars parameter is empty',
-			),
-		);
+			],
+		];
 	}
 
 	/**

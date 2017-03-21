@@ -116,7 +116,7 @@ class Column
 	 * @param string $comment
 	 * @param array  $options
 	 */
-	public function __construct($name = null, $type = 'text', $signed = false, $allowNull = false, $default = null, $comment = '', $options = array())
+	public function __construct($name = null, $type = 'text', $signed = false, $allowNull = false, $default = null, $comment = '', $options = [])
 	{
 		$this->name = $name;
 		$this->type = $type;
@@ -353,12 +353,12 @@ class Column
 	 */
 	public function setOptions(array $options)
 	{
-		$defaultOptions = array(
+		$defaultOptions = [
 			'primary' => false,
 			'auto_increment' => false,
 			'position' => null,
 			'length' => null
-		);
+		];
 
 		$options = array_merge($defaultOptions, $options);
 

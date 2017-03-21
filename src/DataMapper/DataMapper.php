@@ -40,7 +40,7 @@ use Windwalker\Query\QueryInterface;
  * @method  $this  where($conditions, ...$args)
  * @method  $this  orWhere($conditions)
  * @method  $this  clear($clause = null)
- * @method  $this  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = array())
+ * @method  $this  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
  */
 class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 {
@@ -165,7 +165,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 			$alias = $this->alias ? : $this->table;
 
 			// Add dot to conditions
-			$conds = array();
+			$conds = [];
 
 			foreach ($conditions as $key => $value)
 			{
@@ -479,7 +479,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function findColumn($column, $conditions = array(), $order = null, $start = null, $limit = null)
+	public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null)
 	{
 		$this->select($column);
 
@@ -677,7 +677,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	 */
 	public function __call($name, $args)
 	{
-		$allowMethods = array(
+		$allowMethods = [
 			'call',
 			'group',
 			'having',
@@ -687,37 +687,37 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 			'where',
 			'bind',
 			'clear'
-		);
+		];
 
 		if (in_array($name, $allowMethods))
 		{
 			$query = $this->getQuery();
 
-			call_user_func_array(array($query, $name), $args);
+			call_user_func_array([$query, $name], $args);
 
 			return $this;
 		}
 
-		$allowMethods = array(
+		$allowMethods = [
 			'addTable',
 			'removeTable'
-		);
+		];
 
 		if (in_array($name, $allowMethods))
 		{
 			$query = $this->getQueryHelper();
 
-			call_user_func_array(array($query, $name), $args);
+			call_user_func_array([$query, $name], $args);
 
 			return $this;
 		}
 
-		$allowMethods = array(
+		$allowMethods = [
 			'leftJoin',
 			'rightJoin',
 			'innerJoin',
 			'outerJoin'
-		);
+		];
 
 		if (in_array($name, $allowMethods))
 		{
@@ -725,7 +725,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
 			array_unshift($args, $name);
 
-			return call_user_func_array(array($this, 'join'), $args);
+			return call_user_func_array([$this, 'join'], $args);
 		}
 
 		throw new \BadMethodCallException(sprintf('Method %s not exists in %s', $name, get_called_class()));

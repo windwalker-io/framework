@@ -24,7 +24,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @var  Container[]
 	 */
-	protected $children = array();
+	protected $children = [];
 
 	/**
 	 * Holds the key aliases.
@@ -32,7 +32,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @var    array  $aliases
 	 * @since  2.0
 	 */
-	protected $aliases = array();
+	protected $aliases = [];
 
 	/**
 	 * Holds the keys, their callbacks, and whether or not
@@ -41,7 +41,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @var    DataStore[]
 	 * @since  2.0
 	 */
-	protected $dataStore = array();
+	protected $dataStore = [];
 
 	/**
 	 * Parent for hierarchical containers.
@@ -58,7 +58,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @since  3.0
 	 */
-	protected $args = array();
+	protected $args = [];
 
 	/**
 	 * Constructor for the DI Container
@@ -68,7 +68,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @since   2.0
 	 */
-	public function __construct(Container $parent = null, array $children = array())
+	public function __construct(Container $parent = null, array $children = [])
 	{
 		$this->parent = $parent;
 		$this->children = $children;
@@ -207,7 +207,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @return object
 	 * @since   3.0
 	 */
-	public function createObject($class, array $args = array(), $shared = false, $protected = false)
+	public function createObject($class, array $args = [], $shared = false, $protected = false)
 	{
 		$callback = function (Container $container) use ($class, $args)
 		{
@@ -228,7 +228,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @since   3.0
 	 */
-	public function createSharedObject($class, array $args = array(), $protected = false)
+	public function createSharedObject($class, array $args = [], $protected = false)
 	{
 		return $this->createObject($class, $args, true, $protected);
 	}
@@ -245,7 +245,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @throws DependencyResolutionException
 	 * @since   3.0
 	 */
-	public function newInstance($class, array $args = array())
+	public function newInstance($class, array $args = [])
 	{
 		try
 		{
@@ -290,9 +290,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @throws DependencyResolutionException
 	 * @since   2.0
 	 */
-	protected function getMethodArgs(\ReflectionMethod $method, array $args = array())
+	protected function getMethodArgs(\ReflectionMethod $method, array $args = [])
 	{
-		$methodArgs = array();
+		$methodArgs = [];
 
 		foreach ($method->getParameters() as $param)
 		{
@@ -328,7 +328,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 					}
 					else
 					{
-						$childArgs = array();
+						$childArgs = [];
 					}
 
 					$depObject = $this->newInstance($dependencyClassName, $childArgs);
@@ -385,7 +385,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @throws DependencyResolutionException
 	 */
-	public function execute($callable, $args = array())
+	public function execute($callable, $args = [])
 	{
 		if ($callable instanceof \Closure)
 		{

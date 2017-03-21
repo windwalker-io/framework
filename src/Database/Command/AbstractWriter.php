@@ -57,9 +57,9 @@ abstract class AbstractWriter
 	 */
 	public function insertOne($table, &$data, $key = null)
 	{
-		$fields = array();
-		$values = array();
-		$item = array();
+		$fields = [];
+		$values = [];
+		$item = [];
 
 		if (!is_array($data) && !is_object($data))
 		{
@@ -85,7 +85,7 @@ abstract class AbstractWriter
 		foreach ($item as $k => $v)
 		{
 			// Convert stringable object
-			if (is_object($v) && is_callable(array($v, '__toString')))
+			if (is_object($v) && is_callable([$v, '__toString']))
 			{
 				$v = (string) $v;
 			}
@@ -110,7 +110,7 @@ abstract class AbstractWriter
 		// Create the base insert statement.
 		$query->insert($query->quoteName($table))
 			->columns($fields)
-			->values(array($values));
+			->values([$values]);
 
 		// Set the query and execute the insert.
 		$this->execute($query);
@@ -178,7 +178,7 @@ abstract class AbstractWriter
 		foreach ($item as $k => $v)
 		{
 			// Convert stringable object
-			if (is_object($v) && is_callable(array($v, '__toString')))
+			if (is_object($v) && is_callable([$v, '__toString']))
 			{
 				$v = (string) $v;
 			}
@@ -353,7 +353,7 @@ abstract class AbstractWriter
 	 *
 	 * @return  boolean True if update success.
 	 */
-	public function updateBatch($table, $data, $conditions = array())
+	public function updateBatch($table, $data, $conditions = [])
 	{
 		$query = $this->db->getQuery(true);
 
@@ -397,7 +397,7 @@ abstract class AbstractWriter
 	 *
 	 * @return  boolean
 	 */
-	public function delete($table, array $conditions = array())
+	public function delete($table, array $conditions = [])
 	{
 		$query = $this->db->getQuery(true);
 

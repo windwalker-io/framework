@@ -26,7 +26,7 @@ class SelectPrompterTest extends AbstractPrompterTest
 	 *
 	 * @var  array
 	 */
-	protected $options = array('red', 'yellow', 'blue');
+	protected $options = ['red', 'yellow', 'blue'];
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.

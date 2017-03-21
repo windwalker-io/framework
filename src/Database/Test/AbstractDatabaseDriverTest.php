@@ -97,7 +97,7 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 	 */
 	public function testProfilerMiddleware()
 	{
-		$profiler = array();
+		$profiler = [];
 
 		$this->db->addMiddleware(new DbProfilerMiddleware(function($db, $data) use (&$profiler)
 			{

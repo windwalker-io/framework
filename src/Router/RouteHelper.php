@@ -51,12 +51,12 @@ abstract class RouteHelper
 	{
 		if (!$matches)
 		{
-			return array();
+			return [];
 		}
 
 		if ($vars === null)
 		{
-			$vars = array();
+			$vars = [];
 		}
 
 		foreach ($matches as $i => $var)
@@ -84,10 +84,10 @@ abstract class RouteHelper
 	 */
 	public static function getEnvironment()
 	{
-		return array(
+		return [
 			'host'   => $_SERVER['HTTP_HOST'],
 			'scheme' => $_SERVER['REQUEST_SCHEME'],
 			'port'   => $_SERVER['SERVER_PORT']
-		);
+		];
 	}
 }

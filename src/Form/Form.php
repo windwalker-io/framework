@@ -30,7 +30,7 @@ class Form implements \IteratorAggregate
 	 *
 	 * @var  AbstractField[]
 	 */
-	protected $fields = array();
+	protected $fields = [];
 
 	/**
 	 * Property control.
@@ -51,14 +51,14 @@ class Form implements \IteratorAggregate
 	 *
 	 * @var  string[]
 	 */
-	protected $fieldsets = array();
+	protected $fieldsets = [];
 
 	/**
 	 * Property groups.
 	 *
 	 * @var  string[]
 	 */
-	protected $groups = array();
+	protected $groups = [];
 
 	/**
 	 * Property fieldRenderHandler.
@@ -72,17 +72,17 @@ class Form implements \IteratorAggregate
 	 *
 	 * @var  ValidateResult[]
 	 */
-	protected $errors = array();
+	protected $errors = [];
 
 	/**
 	 * Property wraps.
 	 *
 	 * @var  array
 	 */
-	protected $wrap = array(
+	protected $wrap = [
 		'fieldset' => null,
 		'group' => null
-	);
+	];
 
 	/**
 	 * Class init.
@@ -630,7 +630,7 @@ class Form implements \IteratorAggregate
 	 */
 	public function validate()
 	{
-		$errors = array();
+		$errors = [];
 
 		foreach ($this->fields as $field)
 		{
@@ -662,14 +662,14 @@ class Form implements \IteratorAggregate
 	 */
 	public function getViews($fieldset = null, $group = null)
 	{
-		$views = array();
+		$views = [];
 
 		foreach ($this->getFields($fieldset, $group) as $field)
 		{
-			$views[$field->getName(true)] = array(
+			$views[$field->getName(true)] = [
 				'label' => $field->getLabel(),
 				'value' => $field->renderView()
-			);
+			];
 		}
 
 		return $views;
@@ -803,7 +803,7 @@ class Form implements \IteratorAggregate
 	 */
 	public function getValues($fieldset = null, $group = null)
 	{
-		$data = array();
+		$data = [];
 
 		foreach ($this->getFields($fieldset, $group) as $name => $field)
 		{

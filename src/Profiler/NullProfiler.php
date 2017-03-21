@@ -102,7 +102,7 @@ class NullProfiler implements ProfilerInterface
 	 */
 	public function getPoints()
 	{
-		return array();
+		return [];
 	}
 
 	/**

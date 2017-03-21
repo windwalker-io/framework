@@ -54,14 +54,14 @@ class EventDispatcherTest extends AbstractBaseTestCase
 	 */
 	public function testFind()
 	{
-		$this->instance->find(array('id' => 5), 'created', 5, 10);
+		$this->instance->find(['id' => 5], 'created', 5, 10);
 
 		$event = $this->listener->events['onBeforeFind'];
 
 		// Before
 		$this->assertEquals('onBeforeFind', $event->getName());
-		$this->assertEquals(array('id' => 5), $event['conditions']);
-		$this->assertEquals(array('created'), $event['order']);
+		$this->assertEquals(['id' => 5], $event['conditions']);
+		$this->assertEquals(['created'], $event['order']);
 		$this->assertEquals(5, $event['start']);
 		$this->assertSame($event['mapper'], $this->instance);
 
@@ -73,7 +73,7 @@ class EventDispatcherTest extends AbstractBaseTestCase
 
 		// After
 		$this->assertEquals('onAfterFind', $event->getName());
-		$this->assertEquals(array('doFind', 'After'), $event['result']->method);
+		$this->assertEquals(['doFind', 'After'], $event['result']->method);
 		$this->assertSame($event['mapper'], $this->instance);
 	}
 
@@ -102,7 +102,7 @@ class EventDispatcherTest extends AbstractBaseTestCase
 
 		// After
 		$this->assertEquals('onAfterFindAll', $event->getName());
-		$this->assertEquals(array('doFind', 'After', 'After'), $event['result']->method);
+		$this->assertEquals(['doFind', 'After', 'After'], $event['result']->method);
 		$this->assertSame($event['mapper'], $this->instance);
 	}
 
@@ -113,14 +113,14 @@ class EventDispatcherTest extends AbstractBaseTestCase
 	 */
 	public function testFindOne()
 	{
-		$result = $this->instance->findOne(array('id' => 5), 'created');
+		$result = $this->instance->findOne(['id' => 5], 'created');
 
 		$event = $this->listener->events['onBeforeFindOne'];
 
 		$this->assertEquals('onBeforeFindOne', $event->getName());
-		$this->assertEquals(array('id' => 5), $event['conditions']);
+		$this->assertEquals(['id' => 5], $event['conditions']);
 		$this->assertEquals('id', $event['order']);
-		$this->assertEquals(array('id'), $this->instance->args[1]);
+		$this->assertEquals(['id'], $this->instance->args[1]);
 		$this->assertSame($event['mapper'], $this->instance);
 
 		$event = $this->listener->events['onAfterFindOne'];
@@ -138,13 +138,13 @@ class EventDispatcherTest extends AbstractBaseTestCase
 	 */
 	public function testFindColumn()
 	{
-		$result = $this->instance->findColumn('foo', array('id' => 5), 'created', 5, 10);
+		$result = $this->instance->findColumn('foo', ['id' => 5], 'created', 5, 10);
 
 		$event = $this->listener->events['onBeforeFindColumn'];
 
 		// Before
 		$this->assertEquals('onBeforeFindColumn', $event->getName());
-		$this->assertEquals(array('id' => 5), $event['conditions']);
+		$this->assertEquals(['id' => 5], $event['conditions']);
 		$this->assertEquals('created', $event['order']);
 		$this->assertEquals(5, $event['start']);
 		$this->assertSame($event['mapper'], $this->instance);

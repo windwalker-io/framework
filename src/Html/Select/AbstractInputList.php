@@ -46,7 +46,7 @@ class AbstractInputList extends HtmlElement
 	 *
 	 * @var  Option[]
 	 */
-	protected $content = array();
+	protected $content = [];
 
 	/**
 	 * Property type.
@@ -63,7 +63,7 @@ class AbstractInputList extends HtmlElement
 	 * @param array      $attribs
 	 * @param mixed      $checked
 	 */
-	public function __construct($name, $options = array(), $attribs = array(), $checked = null)
+	public function __construct($name, $options = [], $attribs = [], $checked = null)
 	{
 		$attribs['name'] = $name;
 
@@ -108,7 +108,7 @@ class AbstractInputList extends HtmlElement
 	 *
 	 * @return  SelectList
 	 */
-	public function option($text = null, $value = null, $attribs = array(), $group = null)
+	public function option($text = null, $value = null, $attribs = [], $group = null)
 	{
 		return $this->addOption(new Option($text, $value, $attribs), $group);
 	}
@@ -156,7 +156,7 @@ class AbstractInputList extends HtmlElement
 
 			$label = $this->createLabel($option);
 
-			$this->content[$key] = new HtmlElements(array($input, $label));
+			$this->content[$key] = new HtmlElements([$input, $label]);
 		}
 	}
 

@@ -22,7 +22,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @since  2.0
 	 */
-	protected $trueAlias = array('y', 'yes', 1);
+	protected $trueAlias = ['y', 'yes', 1];
 
 	/**
 	 * Aliases of false.
@@ -31,7 +31,7 @@ class BooleanPrompter extends TextPrompter
 	 *
 	 * @since  2.0
 	 */
-	protected $falseAlias = array('n', 'no', 0, 'null');
+	protected $falseAlias = ['n', 'no', 0, 'null'];
 
 	/**
 	 * Retry times.

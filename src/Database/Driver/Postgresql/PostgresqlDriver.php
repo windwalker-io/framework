@@ -42,7 +42,7 @@ class PostgresqlDriver extends PdoDriver
 	 *
 	 * @since   2.1
 	 */
-	public function __construct(\PDO $connection = null, $options = array())
+	public function __construct(\PDO $connection = null, $options = [])
 	{
 		$options['driver'] = 'pgsql';
 		$options['charset'] = (isset($options['charset'])) ? $options['charset'] : 'utf8';

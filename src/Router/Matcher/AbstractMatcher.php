@@ -46,7 +46,7 @@ abstract class AbstractMatcher implements MatcherInterface
 	 *
 	 * @var  array
 	 */
-	protected $routeMaps = array();
+	protected $routeMaps = [];
 
 	/**
 	 * build
@@ -56,7 +56,7 @@ abstract class AbstractMatcher implements MatcherInterface
 	 *
 	 * @return  string
 	 */
-	public function build(Route $route, $data = array())
+	public function build(Route $route, $data = [])
 	{
 		return BasicGenerator::generate($route->getPattern(), $data);
 	}
@@ -70,7 +70,7 @@ abstract class AbstractMatcher implements MatcherInterface
 	 *
 	 * @return  Route|false
 	 */
-	abstract public function match($route, $method = 'GET', $options = array());
+	abstract public function match($route, $method = 'GET', $options = []);
 
 	/**
 	 * Match routes.

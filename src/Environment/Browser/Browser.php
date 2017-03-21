@@ -91,7 +91,7 @@ class Browser
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $languages = array();
+	protected $languages = [];
 
 	/**
 	 * The priority order detected accepted encodings for the client.
@@ -99,7 +99,7 @@ class Browser
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $encodings = array();
+	protected $encodings = [];
 
 	/**
 	 * The web client's user agent string.
@@ -139,7 +139,7 @@ class Browser
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $detection = array();
+	protected $detection = [];
 
 	/**
 	 * Property server.
@@ -157,7 +157,7 @@ class Browser
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($userAgent = null, $server = array())
+	public function __construct($userAgent = null, $server = [])
 	{
 		$this->server = $server = $server ? : $_SERVER;
 
@@ -242,7 +242,7 @@ class Browser
 			$pattern = '#(?<browser>Version|' . $patternBrowser . ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
 
 			// Attempt to find version strings in the user agent string.
-			$matches = array();
+			$matches = [];
 
 			if (preg_match_all($pattern, $userAgent, $matches))
 			{

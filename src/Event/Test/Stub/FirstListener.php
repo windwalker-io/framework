@@ -40,6 +40,6 @@ class FirstListener
 	 */
 	public function onSomething(Event $event)
 	{
-		$event->setArgument('listeners', array('first'));
+		$event->setArgument('listeners', ['first']);
 	}
 }

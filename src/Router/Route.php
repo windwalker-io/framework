@@ -41,21 +41,21 @@ class Route implements \IteratorAggregate
 	 *
 	 * @var  array
 	 */
-	protected $allowMethods = array();
+	protected $allowMethods = [];
 
 	/**
 	 * Property variables.
 	 *
 	 * @var  array
 	 */
-	protected $variables = array();
+	protected $variables = [];
 
 	/**
 	 * Property requirements.
 	 *
 	 * @var  array
 	 */
-	public $requirements = array();
+	public $requirements = [];
 
 	/**
 	 * Property host.
@@ -90,7 +90,7 @@ class Route implements \IteratorAggregate
 	 *
 	 * @var  array
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Property ssl.
@@ -104,7 +104,7 @@ class Route implements \IteratorAggregate
 	 *
 	 * @var  array
 	 */
-	protected $extra = array();
+	protected $extra = [];
 
 	/**
 	 * Class init.
@@ -115,7 +115,7 @@ class Route implements \IteratorAggregate
 	 * @param array|string $allowMethods
 	 * @param array        $options
 	 */
-	public function __construct($name, $pattern, $variables = array(), $allowMethods = array(), $options = array())
+	public function __construct($name, $pattern, $variables = [], $allowMethods = [], $options = [])
 	{
 		$this->name = $name;
 		$this->variables = $variables;
@@ -289,15 +289,15 @@ class Route implements \IteratorAggregate
 	 */
 	public function prepareOptions($options)
 	{
-		$defaultOptions = array(
-			'requirements' => array(),
-			'options' => array(),
+		$defaultOptions = [
+			'requirements' => [],
+			'options' => [],
 			'host' => null,
 			'scheme' => null,
 			'port' => null,
 			'sslPort' => null,
-			'extra' => array()
-		);
+			'extra' => []
+		];
 
 		return array_merge($defaultOptions, (array) $options);
 	}

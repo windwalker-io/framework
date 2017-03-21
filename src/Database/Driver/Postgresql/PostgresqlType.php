@@ -30,7 +30,7 @@ class PostgresqlType extends DataType
 	 *
 	 * @var  array
 	 */
-	protected static $typeMapping = array(
+	protected static $typeMapping = [
 		DataType::TINYINT  => self::SMALLINT,
 		DataType::DATETIME => self::TIMESTAMP,
 		'tinytext'         => self::TEXT,
@@ -39,34 +39,34 @@ class PostgresqlType extends DataType
 		// MysqlType::ENUM => self::VARCHAR, // Postgres support ENUM after 8.3
 		MysqlType::SET     => self::TEXT,
 		MysqlType::FLOAT   => self::REAL,
-	);
+	];
 
 	/**
 	 * "Default Length", "Default Value", "PHP Type"
 	 *
 	 * @var  array
 	 */
-	public static $typeDefinitions = array(
-		self::BOOLEAN   => array(1,    0, 'boolean'),
-		self::SERIAL    => array(null, 0, 'integer'),
-		self::INTEGER   => array(null, 0, 'integer'),
-		self::SMALLINT  => array(null, 0, 'integer'),
-		self::REAL      => array(null, 0, 'float'),
-		self::TIMESTAMP => array(null, '1970-01-01 00:00:00', 'string'),
-		self::INTERVAL  => array(16,   0, 'string'),
-	);
+	public static $typeDefinitions = [
+		self::BOOLEAN   => [1,    0, 'boolean'],
+		self::SERIAL    => [null, 0, 'integer'],
+		self::INTEGER   => [null, 0, 'integer'],
+		self::SMALLINT  => [null, 0, 'integer'],
+		self::REAL      => [null, 0, 'float'],
+		self::TIMESTAMP => [null, '1970-01-01 00:00:00', 'string'],
+		self::INTERVAL  => [16,   0, 'string'],
+	];
 
 	/**
 	 * Property noLength.
 	 *
 	 * @var  array
 	 */
-	protected static $noLength = array(
+	protected static $noLength = [
 		self::INTEGER,
 		self::SMALLINT,
 		self::SERIAL,
 		self::REAL
-	);
+	];
 
 	/**
 	 * noLength

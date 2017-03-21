@@ -58,7 +58,7 @@ class Input implements \Serializable, \Countable
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Input objects
@@ -66,7 +66,7 @@ class Input implements \Serializable, \Countable
 	 * @var    array
 	 * @since  2.0
 	 */
-	protected $inputs = array();
+	protected $inputs = [];
 
 	/**
 	 * Filter object to use.
@@ -173,9 +173,9 @@ class Input implements \Serializable, \Countable
 			return $this->inputs[$name];
 		}
 
-		if (in_array(strtolower($name), array('put', 'patch', 'delete', 'link', 'unlink')))
+		if (in_array(strtolower($name), ['put', 'patch', 'delete', 'link', 'unlink']))
 		{
-			$data = (strtolower($this->getMethod()) == strtolower($name)) ? null : array();
+			$data = (strtolower($this->getMethod()) == strtolower($name)) ? null : [];
 
 			$this->inputs[$name] = new FormDataInput($data, $filter);
 
@@ -303,9 +303,9 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @since   2.0
 	 */
-	public function compact(array $vars = array(), $datasource = null)
+	public function compact(array $vars = [], $datasource = null)
 	{
-		$results = array();
+		$results = [];
 
 		foreach ($vars as $k => $v)
 		{
@@ -359,7 +359,7 @@ class Input implements \Serializable, \Countable
 	{
 		$filter = $this->filter instanceof NullFilter ? null : $this->filter;
 
-		return new static($this->get($name, array(), 'raw', $separator), $filter);
+		return new static($this->get($name, [], 'raw', $separator), $filter);
 	}
 
 	/**
@@ -499,7 +499,7 @@ class Input implements \Serializable, \Countable
 		unset($inputs['server']);
 
 		// Serialize the options, data, and inputs.
-		return serialize(array($this->data, $inputs));
+		return serialize([$this->data, $inputs]);
 	}
 
 	/**
@@ -576,7 +576,7 @@ class Input implements \Serializable, \Countable
 	{
 		$inputs = $this->getAllInputs();
 
-		$return = array();
+		$return = [];
 
 		foreach ($inputs as $key => $input)
 		{
@@ -656,7 +656,7 @@ class Input implements \Serializable, \Countable
 	 */
 	protected function convertToArray($data, $filter = 'raw')
 	{
-		$array = array();
+		$array = [];
 		
 		foreach ($data as $key => $value)
 		{
@@ -751,7 +751,7 @@ class Input implements \Serializable, \Countable
 		{
 			if (strtolower($type) == 'array')
 			{
-				return array();
+				return [];
 			}
 
 			if (class_exists($type))

@@ -48,7 +48,7 @@ class QueryElement
 	 */
 	public function __construct($name, $elements, $glue = ',')
 	{
-		$this->elements = array();
+		$this->elements = [];
 		$this->name = $name;
 		$this->glue = $glue;
 
@@ -101,7 +101,7 @@ class QueryElement
 		}
 		else
 		{
-			$this->elements = array_merge($this->elements, array($elements));
+			$this->elements = array_merge($this->elements, [$elements]);
 		}
 	}
 

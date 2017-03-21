@@ -32,7 +32,7 @@ abstract class AbstractTable
 	 *
 	 * @var \stdClass[]
 	 */
-	protected $columnCache = array();
+	protected $columnCache = [];
 
 	/**
 	 * Property indexesCache.
@@ -77,7 +77,7 @@ abstract class AbstractTable
 	 *
 	 * @return  static
 	 */
-	abstract public function create($callback, $ifNotExists = true, $options = array());
+	abstract public function create($callback, $ifNotExists = true, $options = []);
 
 	/**
 	 * update
@@ -112,7 +112,7 @@ abstract class AbstractTable
 	 *
 	 * @return  $this
 	 */
-	public function save($schema, $ifNotExists = true, $options = array())
+	public function save($schema, $ifNotExists = true, $options = [])
 	{
 		$schema = $this->callSchema($schema);
 
@@ -286,7 +286,7 @@ abstract class AbstractTable
 	 *
 	 * @return  static
 	 */
-	abstract public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array());
+	abstract public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = []);
 
 	/**
 	 * dropColumn
@@ -324,7 +324,7 @@ abstract class AbstractTable
 	 *
 	 * @return  static
 	 */
-	abstract public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array());
+	abstract public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = []);
 
 	/**
 	 * changeColumn
@@ -340,7 +340,7 @@ abstract class AbstractTable
 	 *
 	 * @return  static
 	 */
-	abstract public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array());
+	abstract public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = []);
 
 	/**
 	 * addIndex
@@ -353,7 +353,7 @@ abstract class AbstractTable
 	 *
 	 * @return static
 	 */
-	abstract public function addIndex($type, $columns = array(), $name = null, $comment = null, $options = array());
+	abstract public function addIndex($type, $columns = [], $name = null, $comment = null, $options = []);
 
 	/**
 	 * dropIndex
@@ -578,8 +578,8 @@ abstract class AbstractTable
 	 */
 	public function reset()
 	{
-		$this->columnCache = array();
-		$this->indexCache = array();
+		$this->columnCache = [];
+		$this->indexCache = [];
 		$this->database = null;
 
 		return $this;

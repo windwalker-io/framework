@@ -26,7 +26,7 @@ class DefaultRenderer implements ProfilerRendererInterface
 	 */
 	public function render(ProfilerInterface $profiler)
 	{
-		$render = array();
+		$render = [];
 
 		/** @var \Windwalker\Profiler\Point\ProfilerPointInterface $lastPoint **/
 		$lastPoint = null;

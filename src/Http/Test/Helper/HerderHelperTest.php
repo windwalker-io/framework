@@ -27,13 +27,13 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetValue()
 	{
-		$headers = array(
+		$headers = [
 			'x-foo' => 'baz',
-			'X-Flower' => array(
+			'X-Flower' => [
 				'sakura',
 				'olive'
-			)
-		);
+			]
+		];
 
 		$this->assertEquals('baz', HeaderHelper::getValue($headers, 'x-foo'));
 		$this->assertEquals('sakura, olive', HeaderHelper::getValue($headers, 'x-flower'));
@@ -61,22 +61,22 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function isValidName_Provider()
 	{
-		return array(
-			array('Sakura', true),
-			array('X-Flower-Sakura', true),
-			array('x-flower-sakura', true),
-			array('x-flower - sakura', false),
-			array("X-Flower\xFF-Sakura", false),
-			array("X-Flower\x7F-Sakura", false),
-			array("X-Flower\n -Sakura", false),
-			array("X-Flower\n\r -Sakura", false),
-			array("X-Flower\r\n -Sakura", false),
-			array("X-Flower \r\n -Sakura", false),
-			array("X-Flower \r\n-Sakura", false),
-			array("X-Flower \r\r\n -Sakura", false),
-			array("X-Flower ; -Sakura", false),
-			array("X-Flower {O:\"Class\"} -Sakura", false),
-		);
+		return [
+			['Sakura', true],
+			['X-Flower-Sakura', true],
+			['x-flower-sakura', true],
+			['x-flower - sakura', false],
+			["X-Flower\xFF-Sakura", false],
+			["X-Flower\x7F-Sakura", false],
+			["X-Flower\n -Sakura", false],
+			["X-Flower\n\r -Sakura", false],
+			["X-Flower\r\n -Sakura", false],
+			["X-Flower \r\n -Sakura", false],
+			["X-Flower \r\n-Sakura", false],
+			["X-Flower \r\r\n -Sakura", false],
+			["X-Flower ; -Sakura", false],
+			["X-Flower {O:\"Class\"} -Sakura", false],
+		];
 	}
 
 	/**
@@ -91,7 +91,7 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testFilter($string, $expected, $num)
 	{
-		$this->assertEquals($expected, HeaderHelper::filter($string), 'Result should be: ' . str_replace(array("\t", "\n", "\r"), array("\\t", "\\n", "\\r"), HeaderHelper::filter($string)) . ' - #' . $num);
+		$this->assertEquals($expected, HeaderHelper::filter($string), 'Result should be: ' . str_replace(["\t", "\n", "\r"], ["\\t", "\\n", "\\r"], HeaderHelper::filter($string)) . ' - #' . $num);
 	}
 
 	/**
@@ -101,22 +101,22 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function filter_Provider()
 	{
-		return array(
-			array("I can do this all day", "I can do this all day", 1),
-			array("I can do this\n all day", "I can do this all day", 2),
-			array("I can do this\r all day", "I can do this all day", 3),
-			array("I can do this\r\n all day", "I can do this\r\n all day", 4),
-			array("I can do this\n\r all day", "I can do this all day", 5),
-			array("I can do this \n\r all day", "I can do this  all day", 6),
-			array("I can do this \n\rall day", "I can do this all day", 7),
-			array("I can do this \n\n all day", "I can do this  all day", 8),
-			array("I can do this \r\r all day", "I can do this  all day", 9),
-			array("I can do this \r\r\n all day", "I can do this \r\n all day", 10),
-			array("I can do this \r\n\n all day", "I can do this  all day", 11),
-			array("I can do this \n\n\r all day", "I can do this  all day", 12),
-			array("I can do this \n\r\r all day", "I can do this  all day", 13),
-			array("I can do this \r\n\n\r\n all day", "I can do this \r\n all day", 14),
-		);
+		return [
+			["I can do this all day", "I can do this all day", 1],
+			["I can do this\n all day", "I can do this all day", 2],
+			["I can do this\r all day", "I can do this all day", 3],
+			["I can do this\r\n all day", "I can do this\r\n all day", 4],
+			["I can do this\n\r all day", "I can do this all day", 5],
+			["I can do this \n\r all day", "I can do this  all day", 6],
+			["I can do this \n\rall day", "I can do this all day", 7],
+			["I can do this \n\n all day", "I can do this  all day", 8],
+			["I can do this \r\r all day", "I can do this  all day", 9],
+			["I can do this \r\r\n all day", "I can do this \r\n all day", 10],
+			["I can do this \r\n\n all day", "I can do this  all day", 11],
+			["I can do this \n\n\r all day", "I can do this  all day", 12],
+			["I can do this \n\r\r all day", "I can do this  all day", 13],
+			["I can do this \r\n\n\r\n all day", "I can do this \r\n all day", 14],
+		];
 	}
 
 	/**
@@ -133,7 +133,7 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testIsValidValue($string, $expected, $num)
 	{
-		$this->assertEquals($expected, HeaderHelper::isValidValue($string), str_replace(array("\t", "\n", "\r"), array("\\t", "\\n", "\\r"), $string) . ' assert fail - #' . $num);
+		$this->assertEquals($expected, HeaderHelper::isValidValue($string), str_replace(["\t", "\n", "\r"], ["\\t", "\\n", "\\r"], $string) . ' assert fail - #' . $num);
 	}
 
 
@@ -145,22 +145,22 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function isValidValue_Provider()
 	{
-		return array(
-			array("I can do this all day", true, 1),
-			array("I can do this\n all day", false, 2),
-			array("I can do this\r all day", false, 3),
-			array("I can do this\r\n all day", true, 4),
-			array("I can do this\n\r all day", false, 5),
-			array("I can do this \n\r all day", false, 6),
-			array("I can do this \n\rall day", false, 7),
-			array("I can do this \n\n all day", false, 8),
-			array("I can do this \r\r all day", false, 9),
-			array("I can do this \r\r\n all day", false, 10),
-			array("I can do this \r\n\n all day", false, 11),
-			array("I can do this \n\n\r all day", false, 12),
-			array("I can do this \n\r\r all day", false, 13),
-			array("I can do this \r\n\n\r\n all day", false, 14),
-		);
+		return [
+			["I can do this all day", true, 1],
+			["I can do this\n all day", false, 2],
+			["I can do this\r all day", false, 3],
+			["I can do this\r\n all day", true, 4],
+			["I can do this\n\r all day", false, 5],
+			["I can do this \n\r all day", false, 6],
+			["I can do this \n\rall day", false, 7],
+			["I can do this \n\n all day", false, 8],
+			["I can do this \r\r all day", false, 9],
+			["I can do this \r\r\n all day", false, 10],
+			["I can do this \r\n\n all day", false, 11],
+			["I can do this \n\n\r all day", false, 12],
+			["I can do this \n\r\r all day", false, 13],
+			["I can do this \r\n\n\r\n all day", false, 14],
+		];
 	}
 
 	/**
@@ -185,28 +185,28 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function allToArray_Provider()
 	{
-		return array(
-			array(
-				array('A', 'B', 'C'),
-				array('A', 'B', 'C'),
+		return [
+			[
+				['A', 'B', 'C'],
+				['A', 'B', 'C'],
 				'#1'
-			),
-			array(
-				(object) array('a' => 'A', 'b' => 'B'),
-				array('a' => 'A', 'b' => 'B'),
+			],
+			[
+				(object) ['a' => 'A', 'b' => 'B'],
+				['a' => 'A', 'b' => 'B'],
 				'#2'
-			),
-			array(
-				new \ArrayIterator(array('A', 'B', 'C')),
-				array('A', 'B', 'C'),
+			],
+			[
+				new \ArrayIterator(['A', 'B', 'C']),
+				['A', 'B', 'C'],
 				'#3'
-			),
-			array(
+			],
+			[
 				'A',
-				array('A'),
+				['A'],
 				'#4'
-			)
-		);
+			]
+		];
 	}
 
 	/**
@@ -218,15 +218,15 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testArrayOnlyContainsString()
 	{
-		$actual = array('A', 'B', 'C');
+		$actual = ['A', 'B', 'C'];
 
 		$this->assertTrue(HeaderHelper::arrayOnlyContainsString($actual));
 
-		$actual = array('A', 'B', 3);
+		$actual = ['A', 'B', 3];
 
 		$this->assertFalse(HeaderHelper::arrayOnlyContainsString($actual));
 
-		$actual = array('A', 'B', new \stdClass);
+		$actual = ['A', 'B', new \stdClass];
 
 		$this->assertFalse(HeaderHelper::arrayOnlyContainsString($actual));
 	}
@@ -240,15 +240,15 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testToHeaderLine()
 	{
-		$headers = array(
+		$headers = [
 			'x-foo' => 'baz',
-			'X-Flower' => array(
+			'X-Flower' => [
 				'sakura',
 				'olive'
-			)
-		);
+			]
+		];
 
-		$this->assertEquals(array('X-Foo: baz', 'X-Flower: sakura,olive'), HeaderHelper::toHeaderLine($headers));
+		$this->assertEquals(['X-Foo: baz', 'X-Flower: sakura,olive'], HeaderHelper::toHeaderLine($headers));
 	}
 
 	/**
@@ -290,21 +290,21 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function isValidProtocolVersion_Provider()
 	{
-		return array(
-			array('1.0', true),
-			array('1.1', true),
-			array('2',   true),
-			array('2.0', false),
-			array('0.5', false),
-			array('1.5', false),
-			array('2.1', false),
-			array('123', false),
-			array(123,   false),
-			array(1.0,   false),
-			array(new \stdClass, false),
-			array(array(), false),
-			array(null,  false),
-		);
+		return [
+			['1.0', true],
+			['1.1', true],
+			['2',   true],
+			['2.0', false],
+			['0.5', false],
+			['1.5', false],
+			['2.1', false],
+			['123', false],
+			[123,   false],
+			[1.0,   false],
+			[new \stdClass, false],
+			[[], false],
+			[null,  false],
+		];
 	}
 
 	/**
@@ -318,13 +318,13 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 	{
 		$response = HeaderHelper::prepareAttachmentHeaders(new Response);
 		
-		$this->assertEquals(array('application/octet-stream'), $response->getHeader('Content-Type'));
-		$this->assertEquals(array('binary'), $response->getHeader('Content-Transfer-Encoding'));
-		$this->assertEquals(array('no-store, no-cache, must-revalidate'), $response->getHeader('Cache-Control'));
-		$this->assertEquals(array(), $response->getHeader('Content-Disposition'));
+		$this->assertEquals(['application/octet-stream'], $response->getHeader('Content-Type'));
+		$this->assertEquals(['binary'], $response->getHeader('Content-Transfer-Encoding'));
+		$this->assertEquals(['no-store, no-cache, must-revalidate'], $response->getHeader('Cache-Control'));
+		$this->assertEquals([], $response->getHeader('Content-Disposition'));
 
 		$response = HeaderHelper::prepareAttachmentHeaders(new Response, 'foo.zip');
 
-		$this->assertEquals(array('attachment; filename="foo.zip"'), $response->getHeader('Content-Disposition'));
+		$this->assertEquals(['attachment; filename="foo.zip"'], $response->getHeader('Content-Disposition'));
 	}
 }

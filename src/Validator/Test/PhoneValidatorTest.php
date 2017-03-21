@@ -52,27 +52,27 @@ class PhoneValidatorTest extends AbstractValidateTestCase
 	 */
 	public function validateCase()
 	{
-		return array(
-			array(
+		return [
+			[
 				'case1',
 				'0225647186',
 				true
-			),
-			array(
+			],
+			[
 				'case2',
 				'0-800-456-7890',
 				true
-			),
-			array(
+			],
+			[
 				'555-365-4785',
 				'',
 				true
-			),
-			array(
+			],
+			[
 				'case4',
 				'4684521546874',
 				true
-			),
-		);
+			],
+		];
 	}
 }

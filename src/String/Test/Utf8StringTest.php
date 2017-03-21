@@ -52,15 +52,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestIs_ascii()
 	{
-		return array(
-			array('ascii', true),
-			array('1024', true),
-			array('#$#@$%', true),
-			array('áÑ', false),
-			array('ÿ©', false),
-			array('¡¾', false),
-			array('÷™', false),
-		);
+		return [
+			['ascii', true],
+			['1024', true],
+			['#$#@$%', true],
+			['áÑ', false],
+			['ÿ©', false],
+			['¡¾', false],
+			['÷™', false],
+		];
 	}
 
 	/**
@@ -72,16 +72,16 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrpos()
 	{
-		return array(
-			array(3, 'missing', 'sing', 0),
-			array(false, 'missing', 'sting', 0),
-			array(4, 'missing', 'ing', 0),
-			array(10, ' объектов на карте с', 'на карте', 0),
-			array(0, 'на карте с', 'на карте', 0, 0),
-			array(false, 'на карте с', 'на каррте', 0),
-			array(false, 'на карте с', 'на карте', 2),
-			array(3, 'missing', 'sing', false)
-		);
+		return [
+			[3, 'missing', 'sing', 0],
+			[false, 'missing', 'sting', 0],
+			[4, 'missing', 'ing', 0],
+			[10, ' объектов на карте с', 'на карте', 0],
+			[0, 'на карте с', 'на карте', 0, 0],
+			[false, 'на карте с', 'на каррте', 0],
+			[false, 'на карте с', 'на карте', 2],
+			[3, 'missing', 'sing', false]
+		];
 	}
 
 	/**
@@ -93,15 +93,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestGetStrrpos()
 	{
-		return array(
-			array(3, 'missing', 'sing', 0),
-			array(false, 'missing', 'sting', 0),
-			array(4, 'missing', 'ing', 0),
-			array(10, ' объектов на карте с', 'на карте', 0),
-			array(0, 'на карте с', 'на карте', 0),
-			array(false, 'на карте с', 'на каррте', 0),
-			array(3, 'на карте с', 'карт', 2)
-		);
+		return [
+			[3, 'missing', 'sing', 0],
+			[false, 'missing', 'sting', 0],
+			[4, 'missing', 'ing', 0],
+			[10, ' объектов на карте с', 'на карте', 0],
+			[0, 'на карте с', 'на карте', 0],
+			[false, 'на карте с', 'на каррте', 0],
+			[3, 'на карте с', 'карт', 2]
+		];
 	}
 
 	/**
@@ -113,13 +113,13 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestSubstr()
 	{
-		return array(
-			array('issauga', 'Mississauga', 4, false),
-			array('на карте с', ' объектов на карте с', 10, false),
-			array('на ка', ' объектов на карте с', 10, 5),
-			array('те с', ' объектов на карте с', -4, false),
-			array(false, ' объектов на карте с', 99, false)
-		);
+		return [
+			['issauga', 'Mississauga', 4, false],
+			['на карте с', ' объектов на карте с', 10, false],
+			['на ка', ' объектов на карте с', 10, 5],
+			['те с', ' объектов на карте с', -4, false],
+			[false, ' объектов на карте с', 99, false]
+		];
 	}
 
 	/**
@@ -131,9 +131,9 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrtolower()
 	{
-		return array(
-			array('Windwalker! Rocks', 'windwalker! rocks')
-		);
+		return [
+			['Windwalker! Rocks', 'windwalker! rocks']
+		];
 	}
 
 	/**
@@ -145,9 +145,9 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrtoupper()
 	{
-		return array(
-			array('Windwalker! Rocks', 'WINDWALKER! ROCKS')
-		);
+		return [
+			['Windwalker! Rocks', 'WINDWALKER! ROCKS']
+		];
 	}
 
 	/**
@@ -159,9 +159,9 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrlen()
 	{
-		return array(
-			array('Windwalker! Rocks', 17)
-		);
+		return [
+			['Windwalker! Rocks', 17]
+		];
 	}
 
 	/**
@@ -173,14 +173,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStr_ireplace()
 	{
-		return array(
-			array('Pig', 'cow', 'the pig jumped', false, 'the cow jumped'),
-			array('Pig', 'cow', 'the pig jumped', true, 'the cow jumped'),
-			array('Pig', 'cow', 'the pig jumped over the cow', true, 'the cow jumped over the cow'),
-			array(array('PIG', 'JUMPED'), array('cow', 'hopped'), 'the pig jumped over the pig', true, 'the cow hopped over the cow'),
-			array('шил', 'биш', 'Би шил идэй чадна', true, 'Би биш идэй чадна'),
-			array('/', ':', '/test/slashes/', true, ':test:slashes:'),
-		);
+		return [
+			['Pig', 'cow', 'the pig jumped', false, 'the cow jumped'],
+			['Pig', 'cow', 'the pig jumped', true, 'the cow jumped'],
+			['Pig', 'cow', 'the pig jumped over the cow', true, 'the cow jumped over the cow'],
+			[['PIG', 'JUMPED'], ['cow', 'hopped'], 'the pig jumped over the pig', true, 'the cow hopped over the cow'],
+			['шил', 'биш', 'Би шил идэй чадна', true, 'Би биш идэй чадна'],
+			['/', ':', '/test/slashes/', true, ':test:slashes:'],
+		];
 	}
 
 	/**
@@ -192,12 +192,12 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStr_split()
 	{
-		return array(
-			array('string', 1, array('s', 't', 'r', 'i', 'n', 'g')),
-			array('string', 2, array('st', 'ri', 'ng')),
-			array('волн', 3, array('вол', 'н')),
-			array('волн', 1, array('в', 'о', 'л', 'н'))
-		);
+		return [
+			['string', 1, ['s', 't', 'r', 'i', 'n', 'g']],
+			['string', 2, ['st', 'ri', 'ng']],
+			['волн', 3, ['вол', 'н']],
+			['волн', 1, ['в', 'о', 'л', 'н']]
+		];
 	}
 
 	/**
@@ -209,18 +209,18 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrcasecmp()
 	{
-		return array(
-			array('THIS IS STRING1', 'this is string1', false, 0),
-			array('this is string1', 'this is string2', false, -1),
-			array('this is string2', 'this is string1', false, 1),
-			array('бгдпт', 'бгдпт', false, 0),
-			array('àbc', 'abc', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), 1),
-			array('àbc', 'bcd', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), -1),
-			array('é', 'è', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), -1),
-			array('É', 'é', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), 0),
-			array('œ', 'p', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), -1),
-			array('œ', 'n', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), 1),
-		);
+		return [
+			['THIS IS STRING1', 'this is string1', false, 0],
+			['this is string1', 'this is string2', false, -1],
+			['this is string2', 'this is string1', false, 1],
+			['бгдпт', 'бгдпт', false, 0],
+			['àbc', 'abc', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], 1],
+			['àbc', 'bcd', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], -1],
+			['é', 'è', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], -1],
+			['É', 'é', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], 0],
+			['œ', 'p', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], -1],
+			['œ', 'n', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], 1],
+		];
 	}
 
 	/**
@@ -232,21 +232,21 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrcmp()
 	{
-		return array(
-			array('THIS IS STRING1', 'this is string1', false, -1),
-			array('this is string1', 'this is string2', false, -1),
-			array('this is string2', 'this is string1', false, 1),
-			array('a', 'B', false, 1),
-			array('A', 'b', false, -1),
-			array('Àbc', 'abc', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), 1),
-			array('Àbc', 'bcd', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), -1),
-			array('É', 'è', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), -1),
-			array('é', 'È', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), -1),
-			array('Œ', 'p', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), -1),
-			array('Œ', 'n', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), 1),
-			array('œ', 'N', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), 1),
-			array('œ', 'P', array('fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'), -1),
-		);
+		return [
+			['THIS IS STRING1', 'this is string1', false, -1],
+			['this is string1', 'this is string2', false, -1],
+			['this is string2', 'this is string1', false, 1],
+			['a', 'B', false, 1],
+			['A', 'b', false, -1],
+			['Àbc', 'abc', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], 1],
+			['Àbc', 'bcd', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], -1],
+			['É', 'è', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], -1],
+			['é', 'È', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], -1],
+			['Œ', 'p', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], -1],
+			['Œ', 'n', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], 1],
+			['œ', 'N', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], 1],
+			['œ', 'P', ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'], -1],
+		];
 	}
 
 	/**
@@ -258,11 +258,11 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrcspn()
 	{
-		return array(
-			array('subject <a> string <a>', '<>', false, false, 8),
-			array('Би шил {123} идэй {456} чадна', '}{', null, false, 7),
-			array('Би шил {123} идэй {456} чадна', '}{', 13, 10, 5)
-		);
+		return [
+			['subject <a> string <a>', '<>', false, false, 8],
+			['Би шил {123} идэй {456} чадна', '}{', null, false, 7],
+			['Би шил {123} идэй {456} чадна', '}{', 13, 10, 5]
+		];
 	}
 
 	/**
@@ -274,11 +274,11 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStristr()
 	{
-		return array(
-			array('haystack', 'needle', false),
-			array('before match, after match', 'match', 'match, after match'),
-			array('Би шил идэй чадна', 'шил', 'шил идэй чадна')
-		);
+		return [
+			['haystack', 'needle', false],
+			['before match, after match', 'match', 'match, after match'],
+			['Би шил идэй чадна', 'шил', 'шил идэй чадна']
+		];
 	}
 
 	/**
@@ -290,10 +290,10 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrrev()
 	{
-		return array(
-			array('abc def', 'fed cba'),
-			array('Би шил', 'лиш иБ')
-		);
+		return [
+			['abc def', 'fed cba'],
+			['Би шил', 'лиш иБ']
+		];
 	}
 
 	/**
@@ -305,20 +305,20 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestStrspn()
 	{
-		return array(
-			array('A321 Main Street', '0123456789', 1, 2, 2),
-			array('321 Main Street', '0123456789', null, 2, 2),
-			array('A321 Main Street', '0123456789', null, 10, 0),
-			array('321 Main Street', '0123456789', null, null, 3),
-			array('Main Street 321', '0123456789', null, -3, 0),
-			array('321 Main Street', '0123456789', null, -13, 2),
-			array('321 Main Street', '0123456789', null, -12, 3),
-			array('A321 Main Street', '0123456789', 0, null, 0),
-			array('A321 Main Street', '0123456789', 1, 10, 3),
-			array('A321 Main Street', '0123456789', 1, null, 3),
-			array('Би шил идэй чадна', 'Би', null, null, 2),
-			array('чадна Би шил идэй чадна', 'Би', null, null, 0)
-		);
+		return [
+			['A321 Main Street', '0123456789', 1, 2, 2],
+			['321 Main Street', '0123456789', null, 2, 2],
+			['A321 Main Street', '0123456789', null, 10, 0],
+			['321 Main Street', '0123456789', null, null, 3],
+			['Main Street 321', '0123456789', null, -3, 0],
+			['321 Main Street', '0123456789', null, -13, 2],
+			['321 Main Street', '0123456789', null, -12, 3],
+			['A321 Main Street', '0123456789', 0, null, 0],
+			['A321 Main Street', '0123456789', 1, 10, 3],
+			['A321 Main Street', '0123456789', 1, null, 3],
+			['Би шил идэй чадна', 'Би', null, null, 2],
+			['чадна Би шил идэй чадна', 'Би', null, null, 0]
+		];
 	}
 
 	/**
@@ -330,12 +330,12 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestSubstr_replace()
 	{
-		return array(
-			array('321 Broadway Avenue', '321 Main Street', 'Broadway Avenue', 4, null),
-			array('321 Broadway Street', '321 Main Street', 'Broadway', 4, 4),
-			array('чадна 我能吞', 'чадна Би шил идэй чадна', '我能吞', 6, null),
-			array('чадна 我能吞 шил идэй чадна', 'чадна Би шил идэй чадна', '我能吞', 6, 2)
-		);
+		return [
+			['321 Broadway Avenue', '321 Main Street', 'Broadway Avenue', 4, null],
+			['321 Broadway Street', '321 Main Street', 'Broadway', 4, 4],
+			['чадна 我能吞', 'чадна Би шил идэй чадна', '我能吞', 6, null],
+			['чадна 我能吞 шил идэй чадна', 'чадна Би шил идэй чадна', '我能吞', 6, 2]
+		];
 	}
 
 	/**
@@ -347,15 +347,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestLtrim()
 	{
-		return array(
-			array('   abc def', null, 'abc def'),
-			array('   abc def', '', '   abc def'),
-			array(' Би шил', null, 'Би шил'),
-			array("\t\n\r\x0BБи шил", null, 'Би шил'),
-			array("\x0B\t\n\rБи шил", "\t\n\x0B", "\rБи шил"),
-			array("\x09Би шил\x0A", "\x09\x0A", "Би шил\x0A"),
-			array('1234abc', '0123456789', 'abc')
-		);
+		return [
+			['   abc def', null, 'abc def'],
+			['   abc def', '', '   abc def'],
+			[' Би шил', null, 'Би шил'],
+			["\t\n\r\x0BБи шил", null, 'Би шил'],
+			["\x0B\t\n\rБи шил", "\t\n\x0B", "\rБи шил"],
+			["\x09Би шил\x0A", "\x09\x0A", "Би шил\x0A"],
+			['1234abc', '0123456789', 'abc']
+		];
 	}
 
 	/**
@@ -367,15 +367,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestRtrim()
 	{
-		return array(
-			array('abc def   ', null, 'abc def'),
-			array('abc def   ', '', 'abc def   '),
-			array('Би шил ', null, 'Би шил'),
-			array("Би шил\t\n\r\x0B", null, 'Би шил'),
-			array("Би шил\r\x0B\t\n", "\t\n\x0B", "Би шил\r"),
-			array("\x09Би шил\x0A", "\x09\x0A", "\x09Би шил"),
-			array('1234abc', 'abc', '01234')
-		);
+		return [
+			['abc def   ', null, 'abc def'],
+			['abc def   ', '', 'abc def   '],
+			['Би шил ', null, 'Би шил'],
+			["Би шил\t\n\r\x0B", null, 'Би шил'],
+			["Би шил\r\x0B\t\n", "\t\n\x0B", "Би шил\r"],
+			["\x09Би шил\x0A", "\x09\x0A", "\x09Би шил"],
+			['1234abc', 'abc', '01234']
+		];
 	}
 
 	/**
@@ -387,15 +387,15 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestTrim()
 	{
-		return array(
-			array('  abc def   ', null, 'abc def'),
-			array('  abc def   ', '', '  abc def   '),
-			array('   Би шил ', null, 'Би шил'),
-			array("\t\n\r\x0BБи шил\t\n\r\x0B", null, 'Би шил'),
-			array("\x0B\t\n\rБи шил\r\x0B\t\n", "\t\n\x0B", "\rБи шил\r"),
-			array("\x09Би шил\x0A", "\x09\x0A", "Би шил"),
-			array('1234abc56789', '0123456789', 'abc')
-		);
+		return [
+			['  abc def   ', null, 'abc def'],
+			['  abc def   ', '', '  abc def   '],
+			['   Би шил ', null, 'Би шил'],
+			["\t\n\r\x0BБи шил\t\n\r\x0B", null, 'Би шил'],
+			["\x0B\t\n\rБи шил\r\x0B\t\n", "\t\n\x0B", "\rБи шил\r"],
+			["\x09Би шил\x0A", "\x09\x0A", "Би шил"],
+			['1234abc56789', '0123456789', 'abc']
+		];
 	}
 
 	/**
@@ -407,14 +407,14 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestUcfirst()
 	{
-		return array(
-			array('george', null, null, 'George'),
-			array('мога', null, null, 'Мога'),
-			array('ψυχοφθόρα', null, null, 'Ψυχοφθόρα'),
-			array('dr jekill and mister hyde', ' ', null, 'Dr Jekill And Mister Hyde'),
-			array('dr jekill and mister hyde', ' ', '_', 'Dr_Jekill_And_Mister_Hyde'),
-			array('dr jekill and mister hyde', ' ', '', 'DrJekillAndMisterHyde'),
-		);
+		return [
+			['george', null, null, 'George'],
+			['мога', null, null, 'Мога'],
+			['ψυχοφθόρα', null, null, 'Ψυχοφθόρα'],
+			['dr jekill and mister hyde', ' ', null, 'Dr Jekill And Mister Hyde'],
+			['dr jekill and mister hyde', ' ', '_', 'Dr_Jekill_And_Mister_Hyde'],
+			['dr jekill and mister hyde', ' ', '', 'DrJekillAndMisterHyde'],
+		];
 	}
 
 	/**
@@ -426,13 +426,13 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestUcwords()
 	{
-		return array(
-			array('george washington', 'George Washington'),
-			array("george\r\nwashington", "George\r\nWashington"),
-			array('мога', 'Мога'),
-			array('αβγ δεζ', 'Αβγ Δεζ'),
-			array('åbc öde', 'Åbc Öde')
-		);
+		return [
+			['george washington', 'George Washington'],
+			["george\r\nwashington", "George\r\nWashington"],
+			['мога', 'Мога'],
+			['αβγ δεζ', 'Αβγ Δεζ'],
+			['åbc öde', 'Åbc Öde']
+		];
 	}
 
 	/**
@@ -444,10 +444,10 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestTranscode()
 	{
-		return array(
-			array('Åbc Öde €2.0', 'UTF-8', 'ISO-8859-1', "\xc5bc \xd6de EUR2.0"),
-			array(array('Åbc Öde €2.0'), 'UTF-8', 'ISO-8859-1', null),
-		);
+		return [
+			['Åbc Öde €2.0', 'UTF-8', 'ISO-8859-1', "\xc5bc \xd6de EUR2.0"],
+			[['Åbc Öde €2.0'], 'UTF-8', 'ISO-8859-1', null],
+		];
 	}
 
 	/**
@@ -459,16 +459,16 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestValid()
 	{
-		return array(
-			array("\xCF\xB0", true),
-			array("\xFBa", false),
-			array("\xFDa", false),
-			array("foo\xF7bar", false),
-			array('george Мога Ž Ψυχοφθόρα ฉันกินกระจกได้ 我能吞下玻璃而不伤身体 ', true),
-			array("\xFF ABC", false),
-			array("0xfffd ABC", true),
-			array('', true)
-		);
+		return [
+			["\xCF\xB0", true],
+			["\xFBa", false],
+			["\xFDa", false],
+			["foo\xF7bar", false],
+			['george Мога Ž Ψυχοφθόρα ฉันกินกระจกได้ 我能吞下玻璃而不伤身体 ', true],
+			["\xFF ABC", false],
+			["0xfffd ABC", true],
+			['', true]
+		];
 	}
 
 	/**
@@ -480,10 +480,10 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestUnicodeToUtf8()
 	{
-		return array(
-			array("\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"),
-			array("\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung")
-		);
+		return [
+			["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
+			["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"]
+		];
 	}
 
 	/**
@@ -495,10 +495,10 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedTestUnicodeToUtf16()
 	{
-		return array(
-			array("\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"),
-			array("\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung")
-		);
+		return [
+			["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
+			["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"]
+		];
 	}
 
 	/**

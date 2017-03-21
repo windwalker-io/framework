@@ -33,7 +33,7 @@ class FormDataInputTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new FormDataInput(array());
+		$this->instance = new FormDataInput([]);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class FormDataInputTest extends \PHPUnit\Framework\TestCase
 		);
 
 		// Given Source & filter
-		$src = array('foo' => 'bar');
+		$src = ['foo' => 'bar'];
 		$input = new FormDataInput($src);
 
 		$this->assertEquals(
@@ -98,7 +98,7 @@ DATA;
 		$input = new FormDataInput;
 
 		$this->assertEquals(
-			array('flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'),
+			['flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'],
 			TestHelper::getValue($input, 'data')
 		);
 	}

@@ -158,11 +158,11 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
 		$tables = $this->db->getDatabase(static::$dbname)->getTables();
 
 		$this->assertEquals(
-			array(
+			[
 				static::$dsn['prefix'] . 'categories',
 				static::$dsn['prefix'] . 'flower',
 				static::$dsn['prefix'] . 'nestedsets',
-			),
+			],
 			$tables
 		);
 	}

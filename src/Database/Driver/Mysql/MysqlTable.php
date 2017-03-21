@@ -30,18 +30,18 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @return  $this
 	 */
-	public function create($schema, $ifNotExists = true, $options = array())
+	public function create($schema, $ifNotExists = true, $options = [])
 	{
-		$defaultOptions = array(
+		$defaultOptions = [
 			'auto_increment' => 1,
 			'engine' => 'InnoDB',
 			'charset' => 'utf8'
-		);
+		];
 
 		$options = array_merge($defaultOptions, $options);
 		$schema  = $this->callSchema($schema);
-		$columns = array();
-		$primary = array();
+		$columns = [];
+		$primary = [];
 
 		foreach ($schema->getColumns() as $column)
 		{
@@ -63,16 +63,16 @@ class MysqlTable extends AbstractTable
 			}
 		}
 
-		$keys = array();
+		$keys = [];
 
 		foreach ($schema->getIndexes() as $index)
 		{
-			$keys[$index->getName()] = array(
+			$keys[$index->getName()] = [
 				'type' => $index->getType(),
 				'name' => $index->getName(),
 				'columns' => $index->getColumns(),
 				'comment' => $index->getComment() ? 'COMMENT ' . $this->db->quote($index->getComment()) : ''
-			);
+			];
 		}
 
 		$query = MysqlGrammar::createTable($this->getName(), $columns, $primary, $keys, $options['auto_increment'], $ifNotExists, $options['engine'], $options['charset']);
@@ -95,7 +95,7 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
+	public function addColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = [])
 	{
 		$column = $name;
 
@@ -140,7 +140,7 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
+	public function modifyColumn($name, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = [])
 	{
 		if ($name instanceof Column)
 		{
@@ -198,7 +198,7 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @return  static
 	 */
-	public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = array())
+	public function changeColumn($oldName, $newName, $type = 'text', $signed = true, $allowNull = true, $default = '', $comment = '', $options = [])
 	{
 		if (!$this->hasColumn($oldName))
 		{
@@ -254,7 +254,7 @@ class MysqlTable extends AbstractTable
 	 *
 	 * @return mixed
 	 */
-	public function addIndex($type, $columns = array(), $name = null, $comment = null, $options = array())
+	public function addIndex($type, $columns = [], $name = null, $comment = null, $options = [])
 	{
 		if ($this->hasIndex($name))
 		{

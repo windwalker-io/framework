@@ -35,7 +35,7 @@ interface UriInterface
 	 *
 	 * @since   2.0
 	 */
-	public function toString(array $parts = array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment'));
+	public function toString(array $parts = ['scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment']);
 
 	/**
 	 * Checks if variable exists.

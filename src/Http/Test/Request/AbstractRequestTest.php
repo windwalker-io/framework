@@ -64,16 +64,16 @@ class AbstractRequestTest extends AbstractBaseTestCase
 		$this->assertNull($request->getMethod());
 		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $request->getBody());
 		$this->assertEquals('php://memory', $request->getBody()->getMetadata('uri'));
-		$this->assertEquals(array(), $request->getHeaders());
+		$this->assertEquals([], $request->getHeaders());
 
 		// Test with params
 		$uri = 'http://example.com/?foo=bar#baz';
 		$method = 'post';
 		$body = fopen($tmpfile = tempnam(sys_get_temp_dir(), 'windwalker'), 'wb+');
-		$headers = array(
-			'X-Foo' => array('Flower', 'Sakura'),
+		$headers = [
+			'X-Foo' => ['Flower', 'Sakura'],
 			'Content-Type' => 'application/json'
-		);
+		];
 
 		$request = new StubRequest($uri, $method, $body, $headers);
 
@@ -82,8 +82,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
 		$this->assertEquals('POST', $request->getMethod());
 		$this->assertInstanceOf('Windwalker\Http\Stream\Stream', $request->getBody());
 		$this->assertEquals($tmpfile, $request->getBody()->getMetadata('uri'));
-		$this->assertEquals(array('Flower', 'Sakura'), $request->getHeader('x-foo'));
-		$this->assertEquals(array('application/json'), $request->getHeader('content-type'));
+		$this->assertEquals(['Flower', 'Sakura'], $request->getHeader('x-foo'));
+		$this->assertEquals(['application/json'], $request->getHeader('content-type'));
 
 		fclose($body);
 
@@ -162,11 +162,11 @@ class AbstractRequestTest extends AbstractBaseTestCase
 
 		$this->assertNotSame($request, $this->instance);
 		$this->assertEquals('http://example.com/flower/sakura?foo=bar#baz', (string) $request->getUri());
-		$this->assertEquals(array(), $request->getHeader('host'));
+		$this->assertEquals([], $request->getHeader('host'));
 
 		$request = $this->instance->withUri(new PsrUri('http://windwalker.io/flower/sakura?foo=bar#baz'));
 
 		$this->assertEquals('http://windwalker.io/flower/sakura?foo=bar#baz', (string) $request->getUri());
-		$this->assertEquals(array('windwalker.io'), $request->getHeader('host'));
+		$this->assertEquals(['windwalker.io'], $request->getHeader('host'));
 	}
 }

@@ -26,7 +26,7 @@ class EmptyResponse extends Response
 	 * @param  int     $status   The status code.
 	 * @param  array   $headers  The custom headers.
 	 */
-	public function __construct($status = 204, array $headers = array())
+	public function __construct($status = 204, array $headers = [])
 	{
 		$body = new Stream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
 

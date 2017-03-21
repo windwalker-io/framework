@@ -38,14 +38,14 @@ class TwigRenderer extends AbstractEngineRenderer
 	 *
 	 * @var  \Twig_ExtensionInterface[]
 	 */
-	protected $extensions = array();
+	protected $extensions = [];
 
 	/**
 	 * Property config.
 	 *
 	 * @var  Structure|array
 	 */
-	protected $config = array();
+	protected $config = [];
 
 	/**
 	 * Property debugExtension.
@@ -63,11 +63,11 @@ class TwigRenderer extends AbstractEngineRenderer
 	 * @throws  \UnexpectedValueException
 	 * @return  string
 	 */
-	public function render($file, $data = array())
+	public function render($file, $data = [])
 	{
 		$file = pathinfo($file, PATHINFO_EXTENSION) == 'twig' ? $file : $file . '.twig';
 
-		$this->extensions = array_merge($this->extensions, (array) $this->config->get('extensions', array()));
+		$this->extensions = array_merge($this->extensions, (array) $this->config->get('extensions', []));
 
 		return $this->getEngine()->render($file, $data);
 	}

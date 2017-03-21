@@ -47,15 +47,15 @@ class BrowserTest extends \PHPUnit\Framework\TestCase
 	public static function getEncodingData()
 	{
 		// HTTP_ACCEPT_ENCODING, Supported Encodings
-		return array(
-			array('gzip, deflate', array('gzip', 'deflate')),
-			array('x-gzip, deflate', array('x-gzip', 'deflate')),
-			array('gzip, x-gzip, deflate', array('gzip', 'x-gzip', 'deflate')),
-			array(' gzip, deflate ', array('gzip', 'deflate')),
-			array('deflate, x-gzip', array('deflate', 'x-gzip')),
-			array('goober , flasm', array('goober', 'flasm')),
-			array('b2z, base64', array('b2z', 'base64'))
-		);
+		return [
+			['gzip, deflate', ['gzip', 'deflate']],
+			['x-gzip, deflate', ['x-gzip', 'deflate']],
+			['gzip, x-gzip, deflate', ['gzip', 'x-gzip', 'deflate']],
+			[' gzip, deflate ', ['gzip', 'deflate']],
+			['deflate, x-gzip', ['deflate', 'x-gzip']],
+			['goober , flasm', ['goober', 'flasm']],
+			['b2z, base64', ['b2z', 'base64']]
+		];
 	}
 
 	/**
@@ -68,15 +68,15 @@ class BrowserTest extends \PHPUnit\Framework\TestCase
 	public static function getLanguageData()
 	{
 		// HTTP_ACCEPT_LANGUAGE, Supported Language
-		return array(
-			array('en-US, en-GB', array('en-US', 'en-GB')),
-			array('fr-FR, de-DE', array('fr-FR', 'de-DE')),
-			array('en-AU, en-CA, en-GB', array('en-AU', 'en-CA', 'en-GB')),
-			array(' nl-NL, de-DE ', array('nl-NL', 'de-DE')),
-			array('en, nl-NL', array('en', 'nl-NL')),
-			array('nerd , geek', array('nerd', 'geek')),
-			array('xx-XX, xx', array('xx-XX', 'xx'))
-		);
+		return [
+			['en-US, en-GB', ['en-US', 'en-GB']],
+			['fr-FR, de-DE', ['fr-FR', 'de-DE']],
+			['en-AU, en-CA, en-GB', ['en-AU', 'en-CA', 'en-GB']],
+			[' nl-NL, de-DE ', ['nl-NL', 'de-DE']],
+			['en, nl-NL', ['en', 'nl-NL']],
+			['nerd , geek', ['nerd', 'geek']],
+			['xx-XX, xx', ['xx-XX', 'xx']]
+		];
 	}
 
 	/**
@@ -88,17 +88,17 @@ class BrowserTest extends \PHPUnit\Framework\TestCase
 	 */
 	public static function detectRobotData()
 	{
-		return array(
-			array('Googlebot/2.1 (+http://www.google.com/bot.html)', true),
-			array('msnbot/1.0 (+http://search.msn.com/msnbot.htm)', true),
-			array('Mozilla/4.0 compatible ZyBorg/1.0 (wn-14.zyborg@looksmart.net; http://www.WISEnutbot.com)', true),
-			array('Mozilla/2.0 (compatible; Ask Jeeves/Teoma; +http://sp.ask.com/docs/about/tech_crawling.html)', true),
-			array('Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405', false),
-			array('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.168 Safari/535.19', false),
-			array('BlackBerry8300/4.2.2 Profile/MIDP-2.0 Configuration/CLDC-1.1 VendorID/107 UP.Link/6.2.3.15.02011-10-16 20:20:17', false),
-			array('IE 7 ? Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)2011-10-16 ' .
-				'20:20:09', false)
-		);
+		return [
+			['Googlebot/2.1 (+http://www.google.com/bot.html)', true],
+			['msnbot/1.0 (+http://search.msn.com/msnbot.htm)', true],
+			['Mozilla/4.0 compatible ZyBorg/1.0 (wn-14.zyborg@looksmart.net; http://www.WISEnutbot.com)', true],
+			['Mozilla/2.0 (compatible; Ask Jeeves/Teoma; +http://sp.ask.com/docs/about/tech_crawling.html)', true],
+			['Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405', false],
+			['Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.168 Safari/535.19', false],
+			['BlackBerry8300/4.2.2 Profile/MIDP-2.0 Configuration/CLDC-1.1 VendorID/107 UP.Link/6.2.3.15.02011-10-16 20:20:17', false],
+			['IE 7 ? Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)2011-10-16 ' .
+				'20:20:09', false]
+		];
 	}
 
 	/**

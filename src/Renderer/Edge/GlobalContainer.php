@@ -22,35 +22,35 @@ abstract class GlobalContainer
 	 *
 	 * @var  EdgeExtensionInterface[]
 	 */
-	protected static $extensions = array();
+	protected static $extensions = [];
 
 	/**
 	 * Property compilers.
 	 *
 	 * @var  array
 	 */
-	protected static $globals = array();
+	protected static $globals = [];
 
 	/**
 	 * Array of opening and closing tags for raw echos.
 	 *
 	 * @var array
 	 */
-	protected static $rawTags = array();
+	protected static $rawTags = [];
 
 	/**
 	 * Array of opening and closing tags for regular echos.
 	 *
 	 * @var array
 	 */
-	protected static $contentTags = array();
+	protected static $contentTags = [];
 
 	/**
 	 * Array of opening and closing tags for escaped echos.
 	 *
 	 * @var array
 	 */
-	protected static $escapedTags = array();
+	protected static $escapedTags = [];
 
 	/**
 	 * addExtension
@@ -204,7 +204,7 @@ abstract class GlobalContainer
 	 */
 	public static function setRawTags($start, $end)
 	{
-		static::$rawTags = array($start, $end);
+		static::$rawTags = [$start, $end];
 	}
 
 	/**
@@ -225,7 +225,7 @@ abstract class GlobalContainer
 	 */
 	public static function setContentTags($start, $end)
 	{
-		static::$contentTags = array($start, $end);
+		static::$contentTags = [$start, $end];
 	}
 
 	/**
@@ -246,6 +246,6 @@ abstract class GlobalContainer
 	 */
 	public static function setEscapedTags($start, $end)
 	{
-		static::$escapedTags = array($start, $end);
+		static::$escapedTags = [$start, $end];
 	}
 }

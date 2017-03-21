@@ -20,7 +20,7 @@ class Aes {
     $Nb = 4;                 // block size (in words): no of columns in state (fixed at 4 for AES)
     $Nr = count($w)/$Nb - 1; // no of rounds: 10/12/14 for 128/192/256-bit keys
   
-    $state = array();  // initialise 4xNb byte-array 'state' with input [§3.4]
+    $state = [];  // initialise 4xNb byte-array 'state' with input [§3.4]
     for ($i=0; $i<4*$Nb; $i++) $state[$i%4][floor($i/4)] = $input[$i];
   
     $state = self::addRoundKey($state, $w, 0, $Nb);
@@ -36,7 +36,7 @@ class Aes {
     $state = self::shiftRows($state, $Nb);
     $state = self::addRoundKey($state, $w, $Nr, $Nb);
   
-    $output = array(4*$Nb);  // convert state to 1-d array before returning [§3.4]
+    $output = [4*$Nb];  // convert state to 1-d array before returning [§3.4]
     for ($i=0; $i<4*$Nb; $i++) $output[$i] = $state[$i%4][floor($i/4)];
     return $output;
   }
@@ -57,7 +57,7 @@ class Aes {
   }
   
   private static function shiftRows($s, $Nb) {    // shift row r of state S left by r bytes [§5.1.2]
-    $t = array(4);
+    $t = [4];
     for ($r=1; $r<4; $r++) {
       for ($c=0; $c<4; $c++) $t[$c] = $s[$r][($c+$r)%$Nb];  // shift into temp copy
       for ($c=0; $c<4; $c++) $s[$r][$c] = $t[$c];           // and copy back
@@ -67,8 +67,8 @@ class Aes {
   
   private static function mixColumns($s, $Nb) {   // combine bytes of each col of state S [§5.1.3]
     for ($c=0; $c<4; $c++) {
-      $a = array(4);  // 'a' is a copy of the current column from 's'
-      $b = array(4);  // 'b' is a•{02} in GF(2^8)
+      $a = [4];  // 'a' is a copy of the current column from 's'
+      $b = [4];  // 'b' is a•{02} in GF(2^8)
       for ($i=0; $i<4; $i++) {
         $a[$i] = $s[$i][$c];
         $b[$i] = $s[$i][$c]&0x80 ? $s[$i][$c]<<1 ^ 0x011b : $s[$i][$c]<<1;
@@ -94,16 +94,16 @@ class Aes {
     $Nk = count($key)/4;  // key length (in words): 4/6/8 for 128/192/256-bit keys
     $Nr = $Nk + 6;        // no of rounds: 10/12/14 for 128/192/256-bit keys
   
-    $w = array();
-    $temp = array();
+    $w = [];
+    $temp = [];
   
     for ($i=0; $i<$Nk; $i++) {
-      $r = array($key[4*$i], $key[4*$i+1], $key[4*$i+2], $key[4*$i+3]);
+      $r = [$key[4*$i], $key[4*$i+1], $key[4*$i+2], $key[4*$i+3]];
       $w[$i] = $r;
     }
   
     for ($i=$Nk; $i<($Nb*($Nr+1)); $i++) {
-      $w[$i] = array();
+      $w[$i] = [];
       for ($t=0; $t<4; $t++) $temp[$t] = $w[$i-1][$t];
       if ($i % $Nk == 0) {
         $temp = self::subWord(self::rotWord($temp));
@@ -129,7 +129,7 @@ class Aes {
   }
   
   // sBox is pre-computed multiplicative inverse in GF(2^8) used in subBytes and keyExpansion [§5.1.1]
-  private static $sBox = array(
+  private static $sBox = [
     0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,
     0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,
     0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15,
@@ -145,21 +145,21 @@ class Aes {
     0xba,0x78,0x25,0x2e,0x1c,0xa6,0xb4,0xc6,0xe8,0xdd,0x74,0x1f,0x4b,0xbd,0x8b,0x8a,
     0x70,0x3e,0xb5,0x66,0x48,0x03,0xf6,0x0e,0x61,0x35,0x57,0xb9,0x86,0xc1,0x1d,0x9e,
     0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf,
-    0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16);
+    0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16];
   
   // rCon is Round Constant used for the Key Expansion [1st col is 2^(r-1) in GF(2^8)] [§5.2]
-  private static $rCon = array( 
-    array(0x00, 0x00, 0x00, 0x00),
-    array(0x01, 0x00, 0x00, 0x00),
-    array(0x02, 0x00, 0x00, 0x00),
-    array(0x04, 0x00, 0x00, 0x00),
-    array(0x08, 0x00, 0x00, 0x00),
-    array(0x10, 0x00, 0x00, 0x00),
-    array(0x20, 0x00, 0x00, 0x00),
-    array(0x40, 0x00, 0x00, 0x00),
-    array(0x80, 0x00, 0x00, 0x00),
-    array(0x1b, 0x00, 0x00, 0x00),
-    array(0x36, 0x00, 0x00, 0x00) ); 
+  private static $rCon = [
+    [0x00, 0x00, 0x00, 0x00],
+    [0x01, 0x00, 0x00, 0x00],
+    [0x02, 0x00, 0x00, 0x00],
+    [0x04, 0x00, 0x00, 0x00],
+    [0x08, 0x00, 0x00, 0x00],
+    [0x10, 0x00, 0x00, 0x00],
+    [0x20, 0x00, 0x00, 0x00],
+    [0x40, 0x00, 0x00, 0x00],
+    [0x80, 0x00, 0x00, 0x00],
+    [0x1b, 0x00, 0x00, 0x00],
+    [0x36, 0x00, 0x00, 0x00]];
 
 } 
  
@@ -193,14 +193,14 @@ class AesCtr extends Aes {
     // use AES itself to encrypt password to get cipher key (using plain password as source for  
     // key expansion) - gives us well encrypted key
     $nBytes = $nBits/8;  // no bytes in key
-    $pwBytes = array();
+    $pwBytes = [];
     for ($i=0; $i<$nBytes; $i++) $pwBytes[$i] = ord(substr($password,$i,1)) & 0xff;
     $key = Aes::cipher($pwBytes, Aes::keyExpansion($pwBytes));
     $key = array_merge($key, array_slice($key, 0, $nBytes-16));  // expand key to 16/24/32 bytes long 
   
     // initialise 1st 8 bytes of counter block with nonce (NIST SP800-38A §B.2): [0-1] = millisec, 
     // [2-3] = random, [4-7] = seconds, giving guaranteed sub-ms uniqueness up to Feb 2106
-    $counterBlock = array();
+    $counterBlock = [];
     $nonce = floor(microtime(true)*1000);   // timestamp: milliseconds since 1-Jan-1970
     $nonceMs = $nonce%1000;
     $nonceSec = floor($nonce/1000);
@@ -219,7 +219,7 @@ class AesCtr extends Aes {
     //print_r($keySchedule);
     
     $blockCount = ceil(strlen($plaintext)/$blockSize);
-    $ciphertxt = array();  // ciphertext as array of strings
+    $ciphertxt = [];  // ciphertext as array of strings
     
     for ($b=0; $b<$blockCount; $b++) {
       // set counter (block #) in last 8 bytes of counter block (leaving nonce in 1st 8 bytes)
@@ -231,7 +231,7 @@ class AesCtr extends Aes {
   
       // block size is reduced on final block
       $blockLength = $b<$blockCount-1 ? $blockSize : (strlen($plaintext)-1)%$blockSize+1;
-      $cipherByte = array();
+      $cipherByte = [];
       
       for ($i=0; $i<$blockLength; $i++) {  // -- xor plaintext with ciphered counter byte-by-byte --
         $cipherByte[$i] = $cipherCntr[$i] ^ ord(substr($plaintext, $b*$blockSize+$i, 1));
@@ -262,13 +262,13 @@ class AesCtr extends Aes {
   
     // use AES to encrypt password (mirroring encrypt routine)
     $nBytes = $nBits/8;  // no bytes in key
-    $pwBytes = array();
+    $pwBytes = [];
     for ($i=0; $i<$nBytes; $i++) $pwBytes[$i] = ord(substr($password,$i,1)) & 0xff;
     $key = Aes::cipher($pwBytes, Aes::keyExpansion($pwBytes));
     $key = array_merge($key, array_slice($key, 0, $nBytes-16));  // expand key to 16/24/32 bytes long
     
     // recover nonce from 1st element of ciphertext
-    $counterBlock = array();
+    $counterBlock = [];
     $ctrTxt = substr($ciphertext, 0, 8);
     for ($i=0; $i<8; $i++) $counterBlock[$i] = ord(substr($ctrTxt,$i,1));
     
@@ -277,12 +277,12 @@ class AesCtr extends Aes {
   
     // separate ciphertext into blocks (skipping past initial 8 bytes)
     $nBlocks = ceil((strlen($ciphertext)-8) / $blockSize);
-    $ct = array();
+    $ct = [];
     for ($b=0; $b<$nBlocks; $b++) $ct[$b] = substr($ciphertext, 8+$b*$blockSize, 16);
     $ciphertext = $ct;  // ciphertext is now array of block-length strings
   
     // plaintext will get generated block-by-block into array of block-length strings
-    $plaintxt = array();
+    $plaintxt = [];
     
     for ($b=0; $b<$nBlocks; $b++) {
       // set counter (block #) in last 8 bytes of counter block (leaving nonce in 1st 8 bytes)
@@ -291,7 +291,7 @@ class AesCtr extends Aes {
   
       $cipherCntr = Aes::cipher($counterBlock, $keySchedule);  // encrypt counter block
   
-      $plaintxtByte = array();
+      $plaintxtByte = [];
       for ($i=0; $i<strlen($ciphertext[$b]); $i++) {
         // -- xor plaintext with ciphered counter byte-by-byte --
         $plaintxtByte[$i] = $cipherCntr[$i] ^ ord(substr($ciphertext[$b],$i,1));

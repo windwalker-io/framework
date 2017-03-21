@@ -145,6 +145,6 @@ class ReflectionHelper
 
 		$ref = static::getReflection($class);
 
-		return call_user_func_array(array($ref, $name), $args);
+		return call_user_func_array([$ref, $name], $args);
 	}
 }

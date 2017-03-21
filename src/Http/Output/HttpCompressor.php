@@ -92,11 +92,11 @@ class HttpCompressor
 		$this->parseEncodings();
 
 		// Supported compression encodings.
-		$supported = array(
+		$supported = [
 			'x-gzip'  => FORCE_GZIP,
 			'gzip'    => FORCE_GZIP,
 			'deflate' => FORCE_DEFLATE
-		);
+		];
 
 		// Get the supported encoding.
 		$encodings = array_intersect($this->encodings, array_keys($supported));

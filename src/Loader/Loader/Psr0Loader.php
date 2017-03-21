@@ -30,7 +30,7 @@ class Psr0Loader extends AbstractLoader
 	 *
 	 * @var  string
 	 */
-	private $namespaces = array();
+	private $namespaces = [];
 
 	/**
 	 * Property namespaceSeparator.
@@ -45,7 +45,7 @@ class Psr0Loader extends AbstractLoader
 	 *
 	 * @param array $namespaces The namespaces and path mapping.
 	 */
-	public function __construct(array $namespaces = array())
+	public function __construct(array $namespaces = [])
 	{
 		$this->namespaces = $namespaces;
 	}

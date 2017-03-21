@@ -25,7 +25,7 @@ abstract class BasicCompiler
 	 *
 	 * @return  string
 	 */
-	public static function compile($pattern, $requirements = array())
+	public static function compile($pattern, $requirements = [])
 	{
 		$pattern = RouteHelper::sanitize($pattern);
 
@@ -81,7 +81,7 @@ abstract class BasicCompiler
 	 *
 	 * @return  string
 	 */
-	protected static function replaceAllRegex($regex, $requirements = array())
+	protected static function replaceAllRegex($regex, $requirements = [])
 	{
 		$find = chr(1) . '\(([a-z][a-zA-Z0-9_]*)\)' . chr(1);
 
@@ -105,7 +105,7 @@ abstract class BasicCompiler
 	 *
 	 * @return  string
 	 */
-	protected static function requirementPattern($name, $requirements = array())
+	protected static function requirementPattern($name, $requirements = [])
 	{
 		if (isset($requirements[$name]))
 		{

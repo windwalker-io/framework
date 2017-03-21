@@ -37,7 +37,7 @@ class FormWrapper extends HtmlElement
 	 * @param mixed  $content Element content.
 	 * @param array  $attribs Element attributes.
 	 */
-	public function __construct($content = null, $attribs = array())
+	public function __construct($content = null, $attribs = [])
 	{
 		parent::__construct('form', $content, $attribs);
 	}
@@ -50,7 +50,7 @@ class FormWrapper extends HtmlElement
 	 *
 	 * @return  static
 	 */
-	public static function create($content = null, $attribs = array())
+	public static function create($content = null, $attribs = [])
 	{
 		return new static($content, $attribs);
 	}
@@ -66,7 +66,7 @@ class FormWrapper extends HtmlElement
 	 *
 	 * @return  string
 	 */
-	public static function start($name = null, $method = null, $action = null, $enctype = null, $attribs = array())
+	public static function start($name = null, $method = null, $action = null, $enctype = null, $attribs = [])
 	{
 		$form = static::create()
 			->name($name)

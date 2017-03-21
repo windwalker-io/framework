@@ -81,7 +81,7 @@ class Prompter
 	 *
 	 * @return  string
 	 */
-	public static function validText($msg = '', $options = array(), $default = null, $noValidMessage = null, $attemptTimes = 3,
+	public static function validText($msg = '', $options = [], $default = null, $noValidMessage = null, $attemptTimes = 3,
 		$failCloseMessage = false)
 	{
 		$prompter = new ValidatePrompter;
@@ -126,7 +126,7 @@ class Prompter
 	 *
 	 * @return  string
 	 */
-	public static function selector($msg = '', $options = array(), $default = null, $noValidMessage = null, $attemptTimes = 3,
+	public static function selector($msg = '', $options = [], $default = null, $noValidMessage = null, $attemptTimes = 3,
 		$failCloseMessage = false)
 	{
 		$prompter = new SelectPrompter;

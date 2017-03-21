@@ -49,11 +49,11 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @var  array
 	 */
-	protected $options = array(
+	protected $options = [
 		'format' => '.data',
 		'file_locking' => true,
 		'deny_code' => '<?php die("Access Deny"); ?>'
-	);
+	];
 
 	/**
 	 * Constructor.
@@ -66,7 +66,7 @@ class FileStorage extends AbstractCacheStorage
 	 *
 	 * @since   2.0
 	 */
-	public function __construct($path, $group = '', $denyAccess = false, $ttl = null, $options = array())
+	public function __construct($path, $group = '', $denyAccess = false, $ttl = null, $options = [])
 	{
 		$this->path = $path;
 		$this->group = $group;

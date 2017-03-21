@@ -9,4 +9,4 @@
 /** @var string $title */
 ?>
 <h1><?php echo $title; ?></h1>
-<?php echo $this->load('foo/data3_local', array('content' => 'Morbi suscipit ante massa')); ?>
+<?php echo $this->load('foo/data3_local', ['content' => 'Morbi suscipit ante massa']); ?>

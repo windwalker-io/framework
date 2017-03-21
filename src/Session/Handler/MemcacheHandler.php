@@ -38,7 +38,7 @@ class MemcacheHandler extends AbstractHandler
 	 * @throws \RuntimeException
 	 * @since   2.0
 	 */
-	public function __construct(\Memcache $memcache = null, $options = array())
+	public function __construct(\Memcache $memcache = null, $options = [])
 	{
 		if (!self::isSupported())
 		{

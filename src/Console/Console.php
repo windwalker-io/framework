@@ -179,7 +179,7 @@ class Console extends AbstractConsole
 	 * @return int
 	 * @throws \Exception
 	 */
-	public function executeByPath($arguments, array $options = array(), IOInterface $io = null)
+	public function executeByPath($arguments, array $options = [], IOInterface $io = null)
 	{
 		$io = $io ? : clone $this->io;
 

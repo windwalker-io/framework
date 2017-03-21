@@ -33,7 +33,7 @@ class CliInput extends Input implements CliInputInterface
 	 * @var    array
 	 * @since  2.0
 	 */
-	public $args = array();
+	public $args = [];
 
 	/**
 	 * Property inputStream.
@@ -74,7 +74,7 @@ class CliInput extends Input implements CliInputInterface
 		unset($inputs['server']);
 
 		// Serialize the executable, args, options, data, and inputs.
-		return serialize(array($this->calledScript, $this->args, $this->filter, $this->data, $inputs));
+		return serialize([$this->calledScript, $this->args, $this->filter, $this->data, $inputs]);
 	}
 
 	/**
@@ -164,7 +164,7 @@ class CliInput extends Input implements CliInputInterface
 
 		$this->calledScript = array_shift($argv);
 
-		$out = array();
+		$out = [];
 
 		for ($i = 0, $j = count($argv); $i < $j; $i++)
 		{

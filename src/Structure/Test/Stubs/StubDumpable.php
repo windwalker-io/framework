@@ -21,7 +21,7 @@ class StubDumpable
 
 	private $yoo = 'yoo';
 
-	protected $data = array();
+	protected $data = [];
 
 	protected $iterator;
 
@@ -32,12 +32,12 @@ class StubDumpable
 	 */
 	public function __construct($child = null)
 	{
-		$this->iterator = new \ArrayIterator(array('wind' => 'walker'));
+		$this->iterator = new \ArrayIterator(['wind' => 'walker']);
 
-		$this->data = array(
+		$this->data = [
 			'self' => $this,
 			'new' => $child,
-			'flower' => array('sakura', 'rose')
-		);
+			'flower' => ['sakura', 'rose']
+		];
 	}
 }

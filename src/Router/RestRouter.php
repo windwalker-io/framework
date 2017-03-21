@@ -18,7 +18,7 @@ class RestRouter extends SingleActionRouter
 	 *
 	 * @var  array
 	 */
-	protected $suffixMap = array(
+	protected $suffixMap = [
 		'GET' => 'Get',
 		'POST' => 'Create',
 		'PUT' => 'Update',
@@ -28,7 +28,7 @@ class RestRouter extends SingleActionRouter
 		'LINK' => 'Link',
 		'UNLINK' => 'Unlink',
 		'OPTIONS' => 'Options'
-	);
+	];
 
 	/**
 	 * Property customMethod.
@@ -153,7 +153,7 @@ class RestRouter extends SingleActionRouter
 	 *
 	 * @since   2.0
 	 */
-	public function match($route, $method = 'GET', $options = array())
+	public function match($route, $method = 'GET', $options = [])
 	{
 		$name = parent::match($route, $method, $options);
 

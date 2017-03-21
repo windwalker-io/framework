@@ -8,4 +8,4 @@
 
 ?>
 <h1><?php echo $title; ?></h1>
-<?php echo $this->load('foo/data3', array('content' => 'Morbi suscipit ante massa')); ?>
+<?php echo $this->load('foo/data3', ['content' => 'Morbi suscipit ante massa']); ?>

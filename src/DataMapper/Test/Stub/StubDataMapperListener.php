@@ -49,7 +49,7 @@ class StubDataMapperListener
 	{
 		$this->events[__FUNCTION__] = clone $event;
 
-		$event['result'][] = array('method' => 'After');
+		$event['result'][] = ['method' => 'After'];
 	}
 
 	/**
@@ -77,7 +77,7 @@ class StubDataMapperListener
 	{
 		$this->events[__FUNCTION__] = clone $event;
 
-		$event['result'][] = array('method' => 'After');
+		$event['result'][] = ['method' => 'After'];
 	}
 
 	/**
@@ -147,7 +147,7 @@ class StubDataMapperListener
 	{
 		$this->events[__FUNCTION__] = clone $event;
 
-		$event['dataset'] = array();
+		$event['dataset'] = [];
 	}
 
 	/**
@@ -175,7 +175,7 @@ class StubDataMapperListener
 	{
 		$this->events[__FUNCTION__] = clone $event;
 
-		$event['data'] = array();
+		$event['data'] = [];
 	}
 
 	/**
@@ -315,7 +315,7 @@ class StubDataMapperListener
 	{
 		$this->events[__FUNCTION__] = clone $event;
 
-		$event['conditions'] = array('state' => 1);
+		$event['conditions'] = ['state' => 1];
 	}
 
 	/**
@@ -343,7 +343,7 @@ class StubDataMapperListener
 	{
 		$this->events[__FUNCTION__] = clone $event;
 
-		$event['conditions'] = array('state' => 1);
+		$event['conditions'] = ['state' => 1];
 	}
 
 	/**

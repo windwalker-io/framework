@@ -44,7 +44,7 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
 	 * @param  int     $status   The status code.
 	 * @param  array   $headers  The custom headers.
 	 */
-	public function __construct($body = 'php://memory', $status = 200, array $headers = array())
+	public function __construct($body = 'php://memory', $status = 200, array $headers = [])
 	{
 		if (!$body instanceof StreamInterface)
 		{

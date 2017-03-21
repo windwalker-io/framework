@@ -48,7 +48,7 @@ class SelectList extends HtmlElement
 	 * @param mixed      $selected
 	 * @param bool       $multiple
 	 */
-	public function __construct($name, $options = array(), $attribs = array(), $selected = null, $multiple = false)
+	public function __construct($name, $options = [], $attribs = [], $selected = null, $multiple = false)
 	{
 		$attribs['name'] = $name;
 
@@ -65,9 +65,9 @@ class SelectList extends HtmlElement
 	 *
 	 * @return  static
 	 */
-	public static function create($name, $attribs = array())
+	public static function create($name, $attribs = [])
 	{
-		return new static($name, array(), $attribs);
+		return new static($name, [], $attribs);
 	}
 
 	/**
@@ -106,7 +106,7 @@ class SelectList extends HtmlElement
 	 *
 	 * @return  SelectList
 	 */
-	public function option($text = null, $value = null, $attribs = array(), $group = null)
+	public function option($text = null, $value = null, $attribs = [], $group = null)
 	{
 		return $this->addOption(new Option($text, $value, $attribs), $group);
 	}
@@ -158,7 +158,7 @@ class SelectList extends HtmlElement
 					}
 				}
 
-				$this->content[$name] = new HtmlElement('optgroup', $option, array('label' => $name));
+				$this->content[$name] = new HtmlElement('optgroup', $option, ['label' => $name]);
 			}
 			// Not array means it is an option
 			else

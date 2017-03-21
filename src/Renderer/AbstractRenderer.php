@@ -31,7 +31,7 @@ abstract class AbstractRenderer implements RendererInterface
 	 *
 	 * @var  Structure
 	 */
-	protected $config = array();
+	protected $config = [];
 
 	/**
 	 * Class init.
@@ -39,7 +39,7 @@ abstract class AbstractRenderer implements RendererInterface
 	 * @param \SplPriorityQueue $paths
 	 * @param array             $config
 	 */
-	public function __construct($paths = null, $config = array())
+	public function __construct($paths = null, $config = [])
 	{
 		$this->setPaths($paths);
 
@@ -153,7 +153,7 @@ abstract class AbstractRenderer implements RendererInterface
 	{
 		$paths = clone $this->paths;
 
-		$return = array();
+		$return = [];
 
 		foreach ($paths as $path)
 		{

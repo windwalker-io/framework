@@ -28,7 +28,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 * @see    http://php.net/manual/pcntl.constants.php
 	 * @since  2.0
 	 */
-	protected static $signals = array(
+	protected static $signals = [
 		'SIGHUP',
 		'SIGINT',
 		'SIGQUIT',
@@ -65,7 +65,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		'SIG_BLOCK',
 		'SIG_UNBLOCK',
 		'SIG_SETMASK'
-	);
+	];
 
 	/**
 	 * Property name.
@@ -328,12 +328,12 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
 		// The user id under which to run the daemon.
 		$tmp = (int) $this->config->get('application_uid', 0);
-		$options = array('options' => array('min_range' => 0, 'max_range' => 65000));
+		$options = ['options' => ['min_range' => 0, 'max_range' => 65000]];
 		$this->config->set('application_uid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
 		// The group id under which to run the daemon.
 		$tmp = (int) $this->config->get('application_gid', 0);
-		$options = array('options' => array('min_range' => 0, 'max_range' => 65000));
+		$options = ['options' => ['min_range' => 0, 'max_range' => 65000]];
 		$this->config->set('application_gid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
 		// Option to kill the daemon if it cannot switch to the chosen identity.
@@ -724,7 +724,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 			}
 
 			// Attach the signal handler for the signal.
-			if (!$this->pcntlSignal(constant($signal), array($this, 'signal')))
+			if (!$this->pcntlSignal(constant($signal), [$this, 'signal']))
 			{
 				$this->getLogger()->emergency(sprintf('Unable to reroute signal handler: %s', $signal));
 

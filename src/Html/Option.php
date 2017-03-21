@@ -29,14 +29,14 @@ class Option extends HtmlElement
 	 *
 	 * @var  string
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	 * @param string $text
 	 * @param string $value
 	 * @param array  $attribs
 	 */
-	public function __construct($text = null, $value = null, $attribs = array())
+	public function __construct($text = null, $value = null, $attribs = [])
 	{
 		$this->value = $value;
 

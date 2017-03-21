@@ -51,37 +51,37 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function getPathData()
 	{
-		return array(
+		return [
 			// Input Path, Directory Separator, Expected Output
-			'one path' => array(
+			'one path' => [
 				'/var/www/foo/bar',
-				array(new PathLocator('/var/www/foo/bar'))
-			),
+				[new PathLocator('/var/www/foo/bar')]
+			],
 			
-			'paths with on key' => array(
-				array(
+			'paths with on key' => [
+				[
 					'/',
 					'/var/www/foo/bar',
 					'/var/www/windwalker/bar/foo'
-				),
-				array(
+				],
+				[
 					new PathLocator('/'),
 					new PathLocator('/var/www/foo/bar'),
 					new PathLocator('/var/www/windwalker/bar/foo')
-				)
-			),
+				]
+			],
 			
-			'paths with key' => array(
-				array(
+			'paths with key' => [
+				[
 					'root' => '/',
 					'foo' => '/var/www/foo'
-				),
-				array(
+				],
+				[
 					'root' => new PathLocator('/'),
 					'foo' => new PathLocator('/var/www/foo')
-				)
-			)
-		);
+				]
+			]
+		];
 	}
 	
 	/**
@@ -93,20 +93,20 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function getIteratorData()
 	{
-		return array(
-			'no rescurive' => array(
-				array(
+		return [
+			'no rescurive' => [
+				[
 					__DIR__ . '/files/folder1',
 					__DIR__ . '/files/folder2'
-				),
+				],
 				
-				array(
+				[
 					Path::clean(__DIR__ . '/files/folder1'),
 					Path::clean(__DIR__ . '/files/folder2')
-				),
+				],
 				
 				false
-			),
+			],
 			/*
 			'rescurive' => array(
 				array(
@@ -123,7 +123,7 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
 				true
 			)
 			*/
-		);
+		];
 	}
 	
 	/**
@@ -139,37 +139,37 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function getIteratorRecursiveData()
 	{
-		return array(
-			'no rescurive' => array(
-				array(
+		return [
+			'no rescurive' => [
+				[
 					__DIR__ . '/files/folder1',
 					__DIR__ . '/files/folder2',
 					__DIR__ . '/files/file2.txt',
-				),
+				],
 				
-				array(
+				[
 					Path::clean(__DIR__ . '/files/folder1'),
 					Path::clean(__DIR__ . '/files/folder2')
-				),
+				],
 				
 				false
-			),
+			],
 			
-			'rescurive' => array(
-				array(
+			'rescurive' => [
+				[
 					__DIR__ . '/files'
-				),
+				],
 				
-				array(
+				[
 					Path::clean(__DIR__ . '/files/folder1'),
 					Path::clean(__DIR__ . '/files/folder1/path1'),
 					Path::clean(__DIR__ . '/files/folder2/file2.html'),
 					Path::clean(__DIR__ . '/files/file2.txt')
-				),
+				],
 				
 				true
-			)
-		);
+			]
+		];
 	}
 	
 	/**
@@ -189,7 +189,7 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
 		
 		$paths = $collections->getPaths();
 		
-		$this->assertEquals(array(new PathLocator('/var/www/foo/bar')), $paths);
+		$this->assertEquals([new PathLocator('/var/www/foo/bar')], $paths);
 	}
 	
 	/**
@@ -325,7 +325,7 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
 		
 		$iterator = $this->collection;
 		
-		$compare = array();
+		$compare = [];
 		
 		foreach($iterator as $file)
 		{
@@ -371,15 +371,15 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
 
 		$this->collection->setPrefix('/var/www');
 
-		$expects = array(
+		$expects = [
 			Path::clean('/var/www/windwalker/dir/foo/bar'),
 			Path::clean('/var/www/windwalker/dir/yoo/hoo'),
-		);
+		];
 
-		$paths = array(
+		$paths = [
 			(string) $this->collection->getPath('foo'),
 			(string) $this->collection->getPath('yoo')
-		);
+		];
 		
 		$this->assertEquals($paths, $expects);
 	}

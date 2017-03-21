@@ -222,9 +222,9 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 */
 	public function __get($name)
 	{
-		$allowNames = array(
+		$allowNames = [
 			'config',
-		);
+		];
 
 		if (in_array($name, $allowNames))
 		{

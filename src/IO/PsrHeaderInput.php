@@ -27,7 +27,7 @@ class PsrHeaderInput extends Input
 	 */
 	public function prepareSource(&$source = null, $reference = false)
 	{
-		$headers = array();
+		$headers = [];
 
 		foreach ((array) $source as $key => $value)
 		{

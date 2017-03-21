@@ -32,10 +32,10 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedIsCountable()
 	{
-		return array(
-			array('id', true),
-			array('title', false),
-		);
+		return [
+			['id', true],
+			['title', false],
+		];
 	}
 
 	/**
@@ -47,37 +47,37 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function seedSinglePlural()
 	{
-		return array(
+		return [
 			// Regular plurals
-			array('bus', 'buses'),
-			array('notify', 'notifies'),
-			array('click', 'clicks'),
+			['bus', 'buses'],
+			['notify', 'notifies'],
+			['click', 'clicks'],
 
 			// Almost regular plurals.
-			array('photo', 'photos'),
-			array('zero', 'zeros'),
+			['photo', 'photos'],
+			['zero', 'zeros'],
 
 			// Irregular identicals
-			array('salmon', 'salmon'),
+			['salmon', 'salmon'],
 
 			// Irregular plurals
-			array('ox', 'oxen'),
-			array('quiz', 'quizes'),
-			array('status', 'statuses'),
-			array('matrix', 'matrices'),
-			array('index', 'indices'),
-			array('vertex', 'vertices'),
-			array('hive', 'hives'),
+			['ox', 'oxen'],
+			['quiz', 'quizes'],
+			['status', 'statuses'],
+			['matrix', 'matrices'],
+			['index', 'indices'],
+			['vertex', 'vertices'],
+			['hive', 'hives'],
 
 			// Ablaut plurals
-			array('foot', 'feet'),
-			array('goose', 'geese'),
-			array('louse', 'lice'),
-			array('man', 'men'),
-			array('mouse', 'mice'),
-			array('tooth', 'teeth'),
-			array('woman', 'women'),
-		);
+			['foot', 'feet'],
+			['goose', 'geese'],
+			['louse', 'lice'],
+			['man', 'men'],
+			['mouse', 'mice'],
+			['tooth', 'teeth'],
+			['woman', 'women'],
+		];
 	}
 
 	/**
@@ -129,7 +129,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
 		);
 
 		// Case 3
-		TestHelper::invoke($this->StringInflector, 'addRule', array('/goo/', '/car/'), 'singular');
+		TestHelper::invoke($this->StringInflector, 'addRule', ['/goo/', '/car/'], 'singular');
 
 		$rules = TestHelper::getValue($this->StringInflector, 'rules');
 
@@ -171,7 +171,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
 	public function testGetCachedPlural()
 	{
 		// Reset the cache.
-		TestHelper::setValue($this->StringInflector, 'cache', array('foo' => 'bar'));
+		TestHelper::setValue($this->StringInflector, 'cache', ['foo' => 'bar']);
 
 		$this->assertFalse(
 			TestHelper::invoke($this->StringInflector, 'getCachedPlural', 'bar'),
@@ -196,7 +196,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
 	public function testGetCachedSingular()
 	{
 		// Reset the cache.
-		TestHelper::setValue($this->StringInflector, 'cache', array('foo' => 'bar'));
+		TestHelper::setValue($this->StringInflector, 'cache', ['foo' => 'bar']);
 
 		$this->assertFalse(
 			TestHelper::invoke($this->StringInflector, 'getCachedSingular', 'foo'),
@@ -291,7 +291,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
 		);
 
 		// Add array.
-		$this->StringInflector->addCountableRule(array('goo', 'car'));
+		$this->StringInflector->addCountableRule(['goo', 'car']);
 
 		$rules = TestHelper::getValue($this->StringInflector, 'rules');
 
@@ -351,7 +351,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testAddPluraliseRule()
 	{
-		$chain = $this->StringInflector->addPluraliseRule(array('/foo/', '/bar/'));
+		$chain = $this->StringInflector->addPluraliseRule(['/foo/', '/bar/']);
 
 		$this->assertThat(
 			$chain,
@@ -378,7 +378,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testAddSingulariseRule()
 	{
-		$chain = $this->StringInflector->addSingulariseRule(array('/foo/', '/bar/'));
+		$chain = $this->StringInflector->addSingulariseRule(['/foo/', '/bar/']);
 
 		$this->assertThat(
 			$chain,

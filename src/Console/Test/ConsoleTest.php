@@ -43,7 +43,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
 	{
 		$io = new MockIO;
 
-		$io->setArguments(array('foo'));
+		$io->setArguments(['foo']);
 
 		/** @var $console Console */
 		$console = new Console($io);
@@ -98,7 +98,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->instance->addCommand(new FooCommand);
 
-		$this->instance->io->setArguments(array('foo', 'aaa', 'bbb'));
+		$this->instance->io->setArguments(['foo', 'aaa', 'bbb']);
 
 		$code = $this->instance->execute();
 
@@ -118,7 +118,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->instance->addCommand(new FooCommand);
 
-		$code = $this->instance->executeByPath('foo aaa bbb', array(), $this->instance->io);
+		$code = $this->instance->executeByPath('foo aaa bbb', [], $this->instance->io);
 
 		$output = $this->instance->io->getTestOutput();
 

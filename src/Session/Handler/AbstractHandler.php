@@ -27,7 +27,7 @@ abstract class AbstractHandler implements HandlerInterface
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options = array())
+	public function __construct($options = [])
 	{
 		$this->prefix = isset($options['prefix']) ? $options['prefix'] : 'wws_';
 	}
@@ -46,12 +46,12 @@ abstract class AbstractHandler implements HandlerInterface
 		else
 		{
 			session_set_save_handler(
-				array($this, 'open'),
-				array($this, 'close'),
-				array($this, 'read'),
-				array($this, 'write'),
-				array($this, 'destroy'),
-				array($this, 'gc')
+				[$this, 'open'],
+				[$this, 'close'],
+				[$this, 'read'],
+				[$this, 'write'],
+				[$this, 'destroy'],
+				[$this, 'gc']
 			);
 		}
 	}

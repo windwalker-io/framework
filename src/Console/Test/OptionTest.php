@@ -45,7 +45,7 @@ class OptionTest extends \PHPUnit\Framework\TestCase
 	{
 		$command = new RootCommand('default');
 
-		$this->instance = $option = new Option(array('y', 'yell'), 0, 'desc', Option::IS_GLOBAL);
+		$this->instance = $option = new Option(['y', 'yell'], 0, 'desc', Option::IS_GLOBAL);
 
 		$command->addOption($option);
 
@@ -61,21 +61,21 @@ class OptionTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function optionProvider()
 	{
-		return array(
-			array(
-				array(
-					'y' => array('y', 'yell', 'Y')
-				),
+		return [
+			[
+				[
+					'y' => ['y', 'yell', 'Y']
+				],
 
-				array(
-					'yell' => array('y', 'yell', 'Y')
-				),
+				[
+					'yell' => ['y', 'yell', 'Y']
+				],
 
-				array(
-					'Y' => array('y', 'yell', 'Y')
-				)
-			)
-		);
+				[
+					'Y' => ['y', 'yell', 'Y']
+				]
+			]
+		];
 	}
 
 	/**
@@ -87,11 +87,11 @@ class OptionTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testSetAndGetAlias()
 	{
-		$this->instance->setAliases(array('yell', 'Y'));
+		$this->instance->setAliases(['yell', 'Y']);
 
 		$alias = $this->instance->getAliases();
 
-		$this->assertEquals(array('yell', 'Y'), $alias);
+		$this->assertEquals(['yell', 'Y'], $alias);
 	}
 
 	/**

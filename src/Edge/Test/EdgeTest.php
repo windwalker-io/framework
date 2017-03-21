@@ -34,9 +34,11 @@ class EdgeTest extends AbstractDomTestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Edge(new EdgeFileLoader(array(
+		$this->instance = new Edge(new EdgeFileLoader(
+			[
 			__DIR__ . '/tmpl'
-		)));
+			]
+		));
 	}
 
 	/**

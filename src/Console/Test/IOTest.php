@@ -58,9 +58,9 @@ class IOTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetAndSetArguments()
 	{
-		$this->instance->setArguments(array('foo'));
+		$this->instance->setArguments(['foo']);
 
-		$this->assertEquals(array('foo'), $this->instance->getArguments());
+		$this->assertEquals(['foo'], $this->instance->getArguments());
 	}
 
 	/**
@@ -74,7 +74,7 @@ class IOTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->instance->shiftArgument();
 
-		$this->assertEquals(array('bar', 'baz'), $this->instance->getArguments());
+		$this->assertEquals(['bar', 'baz'], $this->instance->getArguments());
 	}
 
 	/**
@@ -88,7 +88,7 @@ class IOTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->instance->unshiftArgument('wind');
 
-		$this->assertEquals(array('wind', 'foo', 'bar', 'baz'), $this->instance->getArguments());
+		$this->assertEquals(['wind', 'foo', 'bar', 'baz'], $this->instance->getArguments());
 	}
 
 	/**
@@ -102,7 +102,7 @@ class IOTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->instance->pushArgument('wind');
 
-		$this->assertEquals(array('foo', 'bar', 'baz', 'wind'), $this->instance->getArguments());
+		$this->assertEquals(['foo', 'bar', 'baz', 'wind'], $this->instance->getArguments());
 	}
 
 	/**
@@ -116,7 +116,7 @@ class IOTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->instance->popArgument();
 
-		$this->assertEquals(array('foo', 'bar'), $this->instance->getArguments());
+		$this->assertEquals(['foo', 'bar'], $this->instance->getArguments());
 	}
 
 	/**

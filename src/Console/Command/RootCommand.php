@@ -30,7 +30,7 @@ class RootCommand extends Command
 		if (!$this->name)
 		{
 			$file = $_SERVER['argv'][0];
-			$file = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $file);
+			$file = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $file);
 			$file = explode(DIRECTORY_SEPARATOR, $file);
 			$file = array_pop($file);
 		}
@@ -48,15 +48,15 @@ Welcome to Windwalker Console.
 HELP
 			);
 
-		$this->addGlobalOption(array('h', 'help'))
+		$this->addGlobalOption(['h', 'help'])
 			->defaultValue(0)
 			->description('Display this help message.');
 
-		$this->addGlobalOption(array('q', 'quiet'))
+		$this->addGlobalOption(['q', 'quiet'])
 			->defaultValue(0)
 			->description('Do not output any message.');
 
-		$this->addGlobalOption(array('v', 'verbose'))
+		$this->addGlobalOption(['v', 'verbose'])
 			->defaultValue(0)
 			->description('Increase the verbosity of messages.');
 
@@ -65,8 +65,8 @@ HELP
 			->description("Set 'off' to suppress ANSI colors on unsupported terminals.");
 
 		// Add a style <option> & <cmd>
-		$this->io->addColor('option', 'cyan', '', array('bold'))
-			->addColor('cmd', 'magenta', '', array('bold'));
+		$this->io->addColor('option', 'cyan', '', ['bold'])
+			->addColor('cmd', 'magenta', '', ['bold']);
 
 		Console\IO\IOFactory::$io = $this->io;
 	}

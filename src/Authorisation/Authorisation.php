@@ -20,7 +20,7 @@ class Authorisation implements AuthorisationInterface
 	 *
 	 * @var  PolicyInterface[]
 	 */
-	protected $policies = array();
+	protected $policies = [];
 
 	/**
 	 * authorise
@@ -41,7 +41,7 @@ class Authorisation implements AuthorisationInterface
 		$args = func_get_args();
 		array_shift($args);
 
-		return call_user_func_array(array($this->getPolicy($policy), 'authorise'), $args);
+		return call_user_func_array([$this->getPolicy($policy), 'authorise'], $args);
 	}
 
 	/**

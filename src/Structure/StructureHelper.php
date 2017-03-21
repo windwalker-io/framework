@@ -33,7 +33,7 @@ class StructureHelper
 	 *
 	 * @since   2.1
 	 */
-	public static function loadFile($file, $format = Format::JSON, $options = array())
+	public static function loadFile($file, $format = Format::JSON, $options = [])
 	{
 		if (!is_file($file))
 		{
@@ -63,7 +63,7 @@ class StructureHelper
 	 *
 	 * @since   2.1
 	 */
-	public static function loadString($data, $format = Format::JSON, $options = array())
+	public static function loadString($data, $format = Format::JSON, $options = [])
 	{
 		// Load a string into the given namespace [or default namespace if not given]
 		$class = static::getFormatClass($format);
@@ -82,7 +82,7 @@ class StructureHelper
 	 *
 	 * @since   2.1
 	 */
-	public static function toString($data, $format = Format::JSON, $options = array())
+	public static function toString($data, $format = Format::JSON, $options = [])
 	{
 		$class = static::getFormatClass($format);
 
@@ -255,7 +255,7 @@ class StructureHelper
 			{
 				if (!isset($dataTmp[$node]))
 				{
-					$dataTmp[$node] = array();
+					$dataTmp[$node] = [];
 				}
 
 				$dataTmp = &$dataTmp[$node];
@@ -264,7 +264,7 @@ class StructureHelper
 			{
 				// If a node is value but path is not go to the end, we replace this value as a new store.
 				// Then next node can insert new value to this store.
-				$dataTmp = array();
+				$dataTmp = [];
 			}
 		}
 
@@ -345,7 +345,7 @@ class StructureHelper
 	 */
 	public static function flatten($array, $separator = '.', $prefix = '')
 	{
-		$return = array();
+		$return = [];
 
 		if ($array instanceof \Traversable)
 		{
@@ -420,7 +420,7 @@ class StructureHelper
 	 */
 	public static function dumpObjectValues($object)
 	{
-		$data = array();
+		$data = [];
 
 		static::$objectStorage = new \SplObjectStorage;
 

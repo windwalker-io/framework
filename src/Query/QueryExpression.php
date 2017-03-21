@@ -55,9 +55,9 @@ class QueryExpression
 
 		array_shift($args);
 
-		if (is_callable(array($this, $name)))
+		if (is_callable([$this, $name]))
 		{
-			return call_user_func_array(array($this, $name), $args);
+			return call_user_func_array([$this, $name], $args);
 		}
 
 		return (string) strtoupper($name) . '(' . implode(', ', $args) . ')';
