@@ -126,9 +126,10 @@ abstract class AbstractCipher implements CipherInterface
 	 */
 	public function encrypt($data, $key = null, $iv = null)
 	{
-		$this->derivateSecureKeys();
-
 		$key = $key === null ? $this->privateKey : $key;
+
+		$this->derivateSecureKeys($key);
+
 		$iv = $iv ? : $this->getIVKey();
 
 		$key = CryptHelper::repeatToLength($key, 24, true);
@@ -161,6 +162,8 @@ abstract class AbstractCipher implements CipherInterface
 	 */
 	public function decrypt($data, $key = null, $iv = null)
 	{
+		$key = $key === null ? $this->privateKey : $key;
+
 		if (strpos($data, ':') !== false)
 		{
 			list($hmac, $pbkdf2Salt, $ivFromData, $encrypted) = explode(':', $data);
@@ -172,7 +175,7 @@ abstract class AbstractCipher implements CipherInterface
 
 			$iv = $iv ? : $ivFromData;
 
-			$this->derivateSecureKeys($pbkdf2Salt);
+			$this->derivateSecureKeys($key, $pbkdf2Salt);
 
 			$calculatedHmac = $this->hmac($pbkdf2Salt . $iv . $encrypted);
 
@@ -206,8 +209,6 @@ abstract class AbstractCipher implements CipherInterface
 				}
 			}
 		}
-
-		$key = $key === null ? $this->privateKey : $key;
 
 		$key = CryptHelper::repeatToLength($key, 24, true);
 
@@ -350,19 +351,21 @@ abstract class AbstractCipher implements CipherInterface
 	/**
 	 * Creates secure PBKDF2 derivatives out of the password.
 	 *
+	 * @param string $key
 	 * @param string $pbkdf2Salt
 	 *
 	 * @throws \RuntimeException
 	 */
-	protected function derivateSecureKeys($pbkdf2Salt = null)
+	protected function derivateSecureKeys($key, $pbkdf2Salt = null)
 	{
-		if ($pbkdf2Salt)
+		if (!$pbkdf2Salt)
 		{
-			$this->pbkdf2Salt = $pbkdf2Salt;
-		}
-		else
-		{
-			$this->pbkdf2Salt = $this->randomPseudoBytes(static::PBKDF2_SALT_BYTE_SIZE);
+			if (!$this->pbkdf2Salt)
+			{
+				$this->pbkdf2Salt = $this->randomPseudoBytes(static::PBKDF2_SALT_BYTE_SIZE);
+			}
+
+			$pbkdf2Salt = $this->pbkdf2Salt;
 		}
 
 		$iteration = $this->options['pbkdf2_iteration'] ? : 12000;
@@ -370,8 +373,8 @@ abstract class AbstractCipher implements CipherInterface
 		list($this->secureEncryptionKey, $this->secureHMACKey) = str_split(
 			$this->pbkdf2(
 				static::PBKDF2_HASH_ALGORITHM,
-				$this->privateKey,
-				$this->pbkdf2Salt,
+				$key,
+				$pbkdf2Salt,
 				$iteration,
 				static::PBKDF2_HASH_BYTE_SIZE * 2,
 				true
