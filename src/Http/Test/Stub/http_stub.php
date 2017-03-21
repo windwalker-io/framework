@@ -6,6 +6,7 @@
  * @license    GNU General Public License version 2 or later;
  */
 
+// Travis-CI apache uses php5.3 so we can not use short array syntax
 $globals = array();
 $_SERVER['HTTP_HOST'];
 
