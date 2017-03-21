@@ -14,6 +14,8 @@ use Windwalker\Test\Traits\BaseAssertionTrait;
  * The AbstractBaseTestCase class.
  * 
  * @since  2.0
+ *
+ * @deprecated  Directly use BaseAssertionTrait.
  */
 abstract class AbstractBaseTestCase extends \PHPUnit\Framework\TestCase
 {
