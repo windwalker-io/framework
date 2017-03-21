@@ -35,7 +35,8 @@
             "Windwalker\\": "src/"
         },
         "files": [
-            "src/Utilities/functions.php"
+            "src/Utilities/functions.php",
+            "src/Test/compat.php"
         ]
     },
     "extra": {

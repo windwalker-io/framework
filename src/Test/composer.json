@@ -15,7 +15,10 @@
     "autoload": {
         "psr-4": {
             "Windwalker\\Test\\": ""
-        }
+        },
+        "files": [
+            "compat.php"
+        ]
     },
     "extra": {
         "branch-alias": {
