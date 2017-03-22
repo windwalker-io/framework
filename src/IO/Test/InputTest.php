@@ -388,7 +388,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 * @covers  \Windwalker\IO\Input::compact
 	 * @since   2.0
 	 */
-	public function testGetArrayWithoutSpecifiedVariables()
+	public function testToArray()
 	{
 		$array = [
 			'var2' => 34,
@@ -401,7 +401,24 @@ class InputTest extends \PHPUnit\Framework\TestCase
 
 		$input = $this->newInstance($array);
 
-		$this->assertEquals($input->toArray(), $array);
+		$this->assertEquals($array, $input->toArray());
+	}
+
+	public function testGetArray()
+	{
+		$array = [
+			'var2' => 34,
+			'var3' => ['var2' => 'test foo/bar'],
+			'var4' => ['var1' => ['var2' => 'test']],
+			'var5' => ['foo' => []],
+			'var6' => ['bar' => null],
+			'var7' => null
+		];
+
+		$input = $this->newInstance($array);
+
+		$this->assertEquals(['var2' => 'test foo/bar'], $input->getArray('var3'));
+		$this->assertEquals(['var2' => 'testfoobar'], $input->getArray('var3', null, '.', 'cmd'));
 	}
 
 	/**

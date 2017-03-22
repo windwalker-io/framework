@@ -39,7 +39,6 @@ use Windwalker\IO\Filter\NullFilter;
  * @method      string   getCmd()       getCmd($name, $default = null, $separator = '.')
  * @method      string   getBase64()    getBase64($name, $default = null, $separator = '.')
  * @method      string   getString()    getString($name, $default = null, $separator = '.')
- * @method      array    getArray()     getArray($name, $default = null, $separator = '.')
  * @method      string   getHtml()      getHtml($name, $default = null, $separator = '.')
  * @method      string   getPath()      getPath($name, $default = null, $separator = '.')
  * @method      string   getUsername()  getUsername($name, $default = null, $separator = '.')
@@ -244,6 +243,35 @@ class Input implements \Serializable, \Countable
 	}
 
 	/**
+	 * Gets a value from the input data.
+	 *
+	 * @param   string $name      Name of the value to get.
+	 * @param   mixed  $default   Default value to return if variable does not exist.
+	 * @param   string $separator Separator for path.
+	 * @param   string $filter    Filter to apply to the value.
+	 *
+	 * @return mixed The filtered input value.
+	 *
+	 * @since   3.2
+	 */
+	public function getArray($name, $default = [], $separator = '.', $filter = 'raw')
+	{
+		$value = static::getByPath($this->data, $name, $separator);
+
+		if ($value === null)
+		{
+			return $default;
+		}
+
+		$value = $this->filter->clean($value, 'array');
+
+		return array_map(function ($v) use ($filter)
+		{
+		    return $this->filter->clean($v, $filter);
+		}, $value);
+	}
+
+	/**
 	 * Sets a value
 	 *
 	 * @param   string $name       Name of the value to set.
@@ -400,7 +428,7 @@ class Input implements \Serializable, \Countable
 		{
 			if (is_array($value) && isset($merged[$key]) && is_array($merged[$key]))
 			{
-				$merged[$key] = static::merge($merged [$key], $value);
+				$merged[$key] = static::mergeRecursive($merged [$key], $value);
 			}
 			else
 			{
