@@ -10,11 +10,13 @@ namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\SimpleXml\XmlHelper;
+use Windwalker\Form\Filter\FilterComposite;
 use Windwalker\Form\Filter\FilterInterface;
 use Windwalker\Form\FilterHelper;
 use Windwalker\Form\Form;
 use Windwalker\Form\Validate\ValidateResult;
 use Windwalker\Form\ValidatorHelper;
+use Windwalker\Validator\ValidatorComposite;
 use Windwalker\Validator\ValidatorInterface;
 
 /**
@@ -104,14 +106,14 @@ abstract class AbstractField
 	/**
 	 * Property $validator.
 	 *
-	 * @var  string|ValidatorInterface
+	 * @var  ValidatorComposite
 	 */
 	protected $validator = null;
 
 	/**
 	 * Property filter.
 	 *
-	 * @var  string|FilterInterface|callable
+	 * @var  FilterComposite
 	 */
 	protected $filter = null;
 
@@ -162,6 +164,8 @@ abstract class AbstractField
 	 * @param array  $attributes
 	 * @param string $filter
 	 * @param string $validator
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($name = null, $label = null, $attributes = [], $filter = null, $validator = null)
 	{
@@ -177,11 +181,27 @@ abstract class AbstractField
 			$this->attributes = $attributes;
 		}
 
-		$this->filter = $filter ? : $this->getAttribute('filter');
+		$this->filter = $filter ? : explode(',', $this->getAttribute('filter'));
 
-		$this->validator = $validator ? : $this->getAttribute('validator');
+		$this->validator = $validator ? : explode(',', $this->getAttribute('validator'));
 
 		$this->required = $this->getBool('required', false);
+
+		// B/C for older version
+		if ((is_array($filter) && is_callable($filter)) || !is_array($filter))
+		{
+			$filter = [$filter];
+		}
+
+		$this->resetFilters()->addFilters($filter);
+
+		// B/C for older version
+		if ((is_array($validator) && is_callable($validator)) || !is_array($validator))
+		{
+			$validator = [$validator];
+		}
+
+		$this->resetValidators()->addValidators($validator);
 	}
 
 	/**
@@ -615,15 +635,61 @@ abstract class AbstractField
 	}
 
 	/**
+	 * addValidator
+	 *
+	 * @param ValidatorInterface|callable $validator
+	 *
+	 * @return  static
+	 * @throws \InvalidArgumentException
+	 */
+	public function addValidator($validator)
+	{
+		if (!($validator instanceof ValidatorInterface) && !is_callable($validator))
+		{
+			$validator = ValidatorHelper::create($validator);
+		}
+
+		$this->validator->addValidator($validator);
+
+		return $this;
+	}
+
+	/**
+	 * addValidators
+	 *
+	 * @param ValidatorInterface[]|callable[] $validators
+	 *
+	 * @return  static
+	 * @throws \InvalidArgumentException
+	 */
+	public function addValidators(array $validators)
+	{
+		foreach ($validators as $validator)
+		{
+			if ($validator === null)
+			{
+				continue;
+			}
+
+			$this->addValidator($validator);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Method to set property rule
 	 *
 	 * @param   string|ValidatorInterface $validator
 	 *
 	 * @return  static  Return self to support chaining.
+	 * @throws \InvalidArgumentException
+	 *
+	 * @deprecated  Use addValidator() instead.
 	 */
 	public function setValidator($validator)
 	{
-		$this->validator = $validator;
+		$this->addValidator($validator);
 
 		return $this;
 	}
@@ -644,15 +710,71 @@ abstract class AbstractField
 	}
 
 	/**
+	 * resetValidators
+	 *
+	 * @return  static
+	 */
+	public function resetValidators()
+	{
+		$this->validator = new ValidatorComposite;
+
+		return $this;
+	}
+
+	/**
+	 * addFilter
+	 *
+	 * @param  FilterInterface|callable $filter
+	 *
+	 * @return  static
+	 * @throws \InvalidArgumentException
+	 */
+	public function addFilter($filter)
+	{
+		if (!($filter instanceof FilterInterface) && !is_callable($filter))
+		{
+			$filter = FilterHelper::create($filter);
+		}
+
+		$this->filter->addFilter($filter);
+
+		return $this;
+	}
+
+	/**
+	 * addFilters
+	 *
+	 * @param FilterInterface[]|callable[] $filters
+	 *
+	 * @return  static
+	 */
+	public function addFilters(array $filters)
+	{
+		foreach ($filters as $filter)
+		{
+			if ($filter === null)
+			{
+				continue;
+			}
+
+			$this->addFilter($filter);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Method to set property filter
 	 *
 	 * @param   string|FilterInterface|callable $filter
 	 *
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @deprecated  Use addFilter() instead.
 	 */
 	public function setFilter($filter)
 	{
-		$this->filter = $filter;
+		$this->addFilter($filter);
 
 		return $this;
 	}
@@ -664,12 +786,24 @@ abstract class AbstractField
 	 */
 	public function getFilter()
 	{
-		if (!($this->filter instanceof FilterInterface) && !is_callable($this->filter))
+		if (!($this->filter instanceof FilterComposite) && !is_callable($this->filter))
 		{
-			$this->filter = FilterHelper::create($this->filter);
+			$this->filter = new FilterComposite([FilterHelper::create($this->filter)]);
 		}
 
 		return $this->filter;
+	}
+
+	/**
+	 * resetFilters
+	 *
+	 * @return  static
+	 */
+	public function resetFilters()
+	{
+		$this->filter = new FilterComposite;
+
+		return $this;
 	}
 
 	/**

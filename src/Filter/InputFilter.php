@@ -126,8 +126,24 @@ class InputFilter implements \Serializable
 	 *
 	 * @throws  \InvalidArgumentException
 	 * @return  static  Return self to support chaining.
+	 *
+	 * @deprecated Use addHandler() instead.
 	 */
 	public function setHandler($name, $handler)
+	{
+		return $this->addHandler($name, $handler);
+	}
+
+	/**
+	 * setHandlers
+	 *
+	 * @param   string                         $name
+	 * @param   CleanerInterface[]|\callable[] $handler
+	 *
+	 * @throws  \InvalidArgumentException
+	 * @return  static  Return self to support chaining.
+	 */
+	public function addHandler($name, $handler)
 	{
 		if (is_object($handler) && !($handler instanceof CleanerInterface) && !($handler instanceof \Closure))
 		{

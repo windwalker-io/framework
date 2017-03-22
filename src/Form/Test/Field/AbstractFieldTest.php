@@ -494,7 +494,10 @@ HTML;
 	{
 		$this->instance->setValidator(new EmailValidator);
 
-		$this->assertInstanceOf('Windwalker\\Validator\\Rule\\EmailValidator', $this->instance->getValidator());
+		$this->assertInstanceOf('Windwalker\\Validator\\Rule\\EmailValidator', $this->instance->getValidator()->getValidators()[0]);
+
+		self::assertFalse($this->instance->getValidator()->validate('hello'));
+		self::assertTrue($this->instance->getValidator()->validate('hello@example.com'));
 	}
 
 	/**
@@ -507,7 +510,7 @@ HTML;
 	public function testGetAndSetFilter()
 	{
 		// Set filter type
-		$this->instance->setFilter(InputFilter::INTEGER);
+		$this->instance->resetFilters()->setFilter(InputFilter::INTEGER);
 
 		$this->assertEquals('123', $this->instance->setValue('abc123cba')->filter()->getValue());
 
@@ -517,12 +520,12 @@ HTML;
 			return filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 		};
 
-		$this->instance->setFilter($closure);
+		$this->instance->resetFilters()->setFilter($closure);
 
 		$this->assertEquals('123123', $this->instance->setValue('abc123cba123fgh')->filter()->getValue());
 
 		// Set filter object
-		$this->instance->setFilter(new StubFilter);
+		$this->instance->resetFilters()->setFilter(new StubFilter);
 
 		$this->assertEquals('123123', $this->instance->setValue('abc123cba123fgh')->filter()->getValue());
 	}
