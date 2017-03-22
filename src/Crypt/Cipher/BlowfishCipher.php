@@ -13,7 +13,7 @@ namespace Windwalker\Crypt\Cipher;
  * 
  * @since  2.0
  */
-class BlowfishCipher extends AbstractCipher
+class BlowfishCipher extends AbstractOpensslCipher
 {
 	/**
 	 * @var    integer  The openssl cipher method.

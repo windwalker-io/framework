@@ -13,7 +13,7 @@ namespace Windwalker\Crypt\Cipher;
  * 
  * @since  2.0
  */
-class Des3Cipher extends AbstractCipher
+class Des3Cipher extends AbstractOpensslCipher
 {
 	/**
 	 * @var    integer  The openssl cipher method.

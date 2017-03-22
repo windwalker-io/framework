@@ -1,7 +1,7 @@
 # Windwalker Crypt
 
-Windwalker Crypt package is a wrap of PHP openssl to hash and verify password,
-and provides an easy interface to do Symmetric-Key Algorithm encryption.
+Windwalker Crypt package is a wrap of PHP Openssl and Libsodium library to hash and verify password,
+and provides an easy interface to do Symmetric Algorithm encryption.
 
 ## Installation via Composer
 
@@ -126,4 +126,5 @@ $cipher = new BlowfishCipher($key, array('pbkdf2_iteration' => 64000)); // Defau
 - [BlowfishCipher](http://en.wikipedia.org/wiki/Blowfish_(cipher))
 - [Aes56Cipher](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
 - [Des3Cipher](http://en.wikipedia.org/wiki/Triple_DES)
+- [SodiumCipher](https://paragonie.com/book/pecl-libsodium/read/00-intro.md) - PHP Libsodium cipher, must install `ext-libsodium` first.
 - PhpAesCipher - Only use this when system not support openssl extension.

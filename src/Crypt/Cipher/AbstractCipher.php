@@ -32,20 +32,6 @@ abstract class AbstractCipher implements CipherInterface
 	const PBKDF2_HASH_BYTE_SIZE = 32;
 
 	/**
-	 * Property type.
-	 *
-	 * @var string
-	 */
-	protected $method;
-
-	/**
-	 * Property mode.
-	 *
-	 * @var int
-	 */
-	protected $mode = 'cbc';
-
-	/**
 	 * Property iv.
 	 *
 	 * @var string
@@ -99,11 +85,6 @@ abstract class AbstractCipher implements CipherInterface
 	 */
 	public function __construct($key = null, array $options = [])
 	{
-		if (!is_callable('openssl_encrypt'))
-		{
-			throw new \RuntimeException('The openssl extension is not available.');
-		}
-
 		$this->privateKey = $key;
 		$this->options = array_merge(
 			[
@@ -136,7 +117,7 @@ abstract class AbstractCipher implements CipherInterface
 		$key = CryptHelper::repeatToLength($key, 24, true);
 
 		// Encrypt the data.
-		$encrypted = openssl_encrypt($data, $this->getMethod(), $key, OPENSSL_RAW_DATA, $iv);
+		$encrypted = $this->doEncrypt($data, $key, $iv);
 
 		$hmac = $this->hmac($this->pbkdf2Salt . $iv . $encrypted);
 
@@ -147,6 +128,17 @@ abstract class AbstractCipher implements CipherInterface
 			base64_encode($encrypted)
 		]);
 	}
+
+	/**
+	 * doEncrypt
+	 *
+	 * @param   string $data The data string to encrypt.
+	 * @param   string $key  The private key.
+	 * @param   string $iv   The public key.
+	 *
+	 * @return  string
+	 */
+	abstract protected function doEncrypt($data, $key, $iv);
 
 	/**
 	 * Method to decrypt a data string.
@@ -214,10 +206,19 @@ abstract class AbstractCipher implements CipherInterface
 		$key = CryptHelper::repeatToLength($key, 24, true);
 
 		// Decrypt the data.
-		$decrypted = trim(openssl_decrypt($encrypted, $this->getMethod(), $key, OPENSSL_RAW_DATA, $iv));
-
-		return $decrypted;
+		return trim($this->doDecrypt($encrypted, $key, $iv));
 	}
+
+	/**
+	 * doDecrypt
+	 *
+	 * @param   string $data The encrypted string to decrypt.
+	 * @param   string $key  The private key.
+	 * @param   string $iv   The public key.
+	 *
+	 * @return  string
+	 */
+	abstract protected function doDecrypt($data, $key, $iv);
 
 	/**
 	 * Compares two strings.
@@ -232,7 +233,7 @@ abstract class AbstractCipher implements CipherInterface
 	 *
 	 * @see https://github.com/symfony/security-core/blob/master/Util/StringUtils.php
 	 */
-	private function equalHashes($knownHash, $userHash)
+	protected function equalHashes($knownHash, $userHash)
 	{
 		if (function_exists('hash_equals'))
 		{
@@ -286,44 +287,14 @@ abstract class AbstractCipher implements CipherInterface
 	 *
 	 * @throws \RuntimeException
 	 */
-	protected function randomPseudoBytes($size = null)
-	{
-		$size = $size ? : static::PBKDF2_SALT_BYTE_SIZE;
-
-		$bytes = openssl_random_pseudo_bytes($size, $isSourceStrong);
-
-		if (false === $isSourceStrong || false === $bytes)
-		{
-			throw new \RuntimeException('IV generation failed');
-		}
-
-		return $bytes;
-	}
+	abstract protected function randomPseudoBytes($size = null);
 
 	/**
 	 * getIVSize
 	 *
 	 * @return  integer
 	 */
-	public function getIVSize()
-	{
-		return openssl_cipher_iv_length($this->getMethod());
-	}
-
-	/**
-	 * Method to get property Type
-	 *
-	 * @return  string
-	 */
-	public function getMethod()
-	{
-		if (!$this->mode)
-		{
-			return $this->method;
-		}
-
-		return $this->method . '-' . $this->mode;
-	}
+	abstract public function getIVSize();
 
 	/**
 	 * Method to get property PrivateKey
@@ -390,7 +361,7 @@ abstract class AbstractCipher implements CipherInterface
 	 * @param string $message
 	 * @return string
 	 */
-	private function hmac($message)
+	protected function hmac($message)
 	{
 		return hash_hmac(self::PBKDF2_HASH_ALGORITHM, $message, $this->secureHMACKey, true);
 	}
@@ -414,7 +385,7 @@ abstract class AbstractCipher implements CipherInterface
 	 *
 	 * @see https://defuse.ca/php-pbkdf2.htm
 	 */
-	private function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output = false)
+	protected function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output = false)
 	{
 		$algorithm = strtolower($algorithm);
 
@@ -429,29 +400,5 @@ abstract class AbstractCipher implements CipherInterface
 		}
 
 		return hash_pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output);
-	}
-
-	/**
-	 * Method to get property Mode
-	 *
-	 * @return  int
-	 */
-	public function getMode()
-	{
-		return $this->mode;
-	}
-
-	/**
-	 * Method to set property mode
-	 *
-	 * @param   int $mode
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setMode($mode)
-	{
-		$this->mode = $mode;
-
-		return $this;
 	}
 }

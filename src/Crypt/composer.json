@@ -18,7 +18,7 @@
         }
     },
     "suggest": {
-        "ext-mcrypt": "Install php5-mcrypt if you want to use advanced cipher."
+        "ext-libsodium": "Install php-libsodium if you want to SodiumCipher."
     },
     "extra": {
         "branch-alias": {

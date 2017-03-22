@@ -20,8 +20,12 @@ before_install:
   - sh -e build/travis/scripts/apt-get.sh
   - sh -e build/travis/scripts/apache2-vhost.sh
   - sh -e build/travis/scripts/apache2-configure.sh
+  - sudo add-apt-repository ppa:ondrej/php -y
+  - sudo apt-get update -q
+  - sudo apt-get install libsodium-dev -y
 
 before_script:
+  - pecl install libsodium
   - composer update
   - phpenv rehash
 

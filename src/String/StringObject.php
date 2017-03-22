@@ -22,6 +22,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 
 	/**
 	 * We only provides 3 default encoding constants of PHP.
+	 *
 	 * @see http://php.net/manual/en/xml.encoding.php
 	 */
 	const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
@@ -50,7 +51,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 *
 	 * @return  static
 	 */
-	public static function create($string = '', ?string $encoding = self::ENCODING_UTF8)
+	public static function create($string = '', $encoding = self::ENCODING_UTF8)
 	{
 		return new static($string, $encoding);
 	}
@@ -65,7 +66,8 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public static function fromArray(array $strings, $encoding = self::ENCODING_UTF8)
 	{
-		foreach ($strings as $k => $string) {
+		foreach ($strings as $k => $string)
+		{
 			$strings[$k] = static::create($string, $encoding);
 		}
 
@@ -97,9 +99,10 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function __call($name, array $args)
 	{
-		$class = StringHelper::class;
+		$class = Str::class;
 
-		if (is_callable([$class, $name])) {
+		if (is_callable([$class, $name]))
+		{
 			return $this->callProxy($class, $name, $args);
 		}
 
@@ -119,14 +122,17 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	{
 		$new = $this->cloneInstance();
 
-		$ref = new \ReflectionMethod($class, $method);
+		$ref    = new \ReflectionMethod($class, $method);
 		$params = $ref->getParameters();
 		array_shift($params);
 
 		/** @var \ReflectionParameter $param */
-		foreach (array_values($params) as $k => $param) {
-			if (!array_key_exists($k, $args)) {
-				if ($param->getName() === 'encoding' && !isset($args[$k])) {
+		foreach (array_values($params) as $k => $param)
+		{
+			if (!array_key_exists($k, $args))
+			{
+				if ($param->getName() === 'encoding' && !isset($args[$k]))
+				{
 					$args[$k] = $this->encoding;
 					continue;
 				}
@@ -139,7 +145,8 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 
 		$result = call_user_func_array([$class, $method], $args);
 
-		if (is_string($result)) {
+		if (is_string($result))
+		{
 			$new->string = $result;
 
 			return $new;
@@ -212,7 +219,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function offsetSet($offset, $string)
 	{
-		$this->string = Utf8String::substrReplace($this->string, $string, $offset, 1, $this->encoding);
+		$this->string = Mbstring::substrReplace($this->string, $string, $offset, 1, $this->encoding);
 	}
 
 	/**
@@ -229,11 +236,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function offsetUnset($offset)
 	{
-		if ($this->length() < abs($offset)) {
+		if ($this->length() < abs($offset))
+		{
 			return;
 		}
 
-		$this->string = StringHelper::removeChar($this->string, $offset, 1, $this->encoding);
+		$this->string = Str::removeChar($this->string, $offset, 1, $this->encoding);
 	}
 
 	/**
@@ -280,9 +288,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function withEncoding($encoding)
 	{
-		return $this->cloneInstance(function (StringObject $new) use ($encoding) {
-			$new->encoding = $encoding;
-		});
+		return $this->cloneInstance(
+			function (StringObject $new) use ($encoding)
+			{
+				$new->encoding = $encoding;
+			}
+		);
 	}
 
 	/**
@@ -304,9 +315,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function withString($string)
 	{
-		return $this->cloneInstance(function (StringObject $new) use ($string) {
-			$new->string = $string;
-		});
+		return $this->cloneInstance(
+			function (StringObject $new) use ($string)
+			{
+				$new->string = $string;
+			}
+		);
 	}
 
 	/**
@@ -318,7 +332,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	{
 		$new = $this->cloneInstance();
 
-		$new->string = Utf8String::strtolower($new->string, $new->encoding);
+		$new->string = Mbstring::strtolower($new->string, $new->encoding);
 
 		return $new;
 	}
@@ -330,9 +344,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function toUpperCase()
 	{
-		return $this->cloneInstance(function (StringObject $new) {
-			$new->string = Utf8String::strtoupper($new->string, $new->encoding);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new)
+			{
+				$new->string = Mbstring::strtoupper($new->string, $new->encoding);
+			}
+		);
 	}
 
 	/**
@@ -342,7 +359,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function length()
 	{
-		return Utf8String::strlen($this->string, $this->encoding);
+		return Mbstring::strlen($this->string, $this->encoding);
 	}
 
 	/**
@@ -354,7 +371,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function chop($length = 1)
 	{
-		return Utf8String::strSplit($this->string, $length, $this->encoding);
+		return Mbstring::strSplit($this->string, $length, $this->encoding);
 	}
 
 	/**
@@ -368,9 +385,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function replace($search, $replacement, &$count = null)
 	{
-		return $this->cloneInstance(function (StringObject $new) use ($search, $replacement, &$count) {
-			$new->string = str_replace($search, $replacement, $new->string, $count);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new) use ($search, $replacement, &$count)
+			{
+				$new->string = str_replace($search, $replacement, $new->string, $count);
+			}
+		);
 	}
 
 	/**
@@ -383,11 +403,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function compare($compare, $caseSensitive = true)
 	{
-		if ($caseSensitive) {
-			return Utf8String::strcmp($this->string, $compare);
+		if ($caseSensitive)
+		{
+			return Mbstring::strcmp($this->string, $compare);
 		}
 
-		return Utf8String::strcasecmp($this->string, $compare, $this->encoding);
+		return Mbstring::strcasecmp($this->string, $compare, $this->encoding);
 	}
 
 	/**
@@ -397,9 +418,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function reverse()
 	{
-		return $this->cloneInstance(function (StringObject $new) {
-			$new->string = Utf8String::strrev($new->string);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new)
+			{
+				$new->string = Mbstring::strrev($new->string);
+			}
+		);
 	}
 
 	/**
@@ -413,9 +437,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function substrReplace($replace, $start, $offset = null)
 	{
-		return $this->cloneInstance(function (StringObject $new) use ($replace, $start, $offset) {
-			$new->string = Utf8String::substrReplace($new->string, $replace, $start, $offset, $this->encoding);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new) use ($replace, $start, $offset)
+			{
+				$new->string = Mbstring::substrReplace($new->string, $replace, $start, $offset, $this->encoding);
+			}
+		);
 	}
 
 	/**
@@ -427,9 +454,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function trimLeft($charlist = null)
 	{
-		return $this->cloneInstance(function (StringObject $new) use ($charlist) {
-			$new->string = Utf8String::ltrim($new->string, $charlist);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new) use ($charlist)
+			{
+				$new->string = Mbstring::ltrim($new->string, $charlist);
+			}
+		);
 	}
 
 	/**
@@ -441,9 +471,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function trimRight($charlist = null)
 	{
-		return $this->cloneInstance(function (StringObject $new) use ($charlist) {
-			$new->string = Utf8String::rtrim($new->string, $charlist);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new) use ($charlist)
+			{
+				$new->string = Mbstring::rtrim($new->string, $charlist);
+			}
+		);
 	}
 
 	/**
@@ -455,9 +488,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function trim($charlist = null)
 	{
-		return $this->cloneInstance(function (StringObject $new) use ($charlist) {
-			$new->string = Utf8String::trim($new->string, $charlist);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new) use ($charlist)
+			{
+				$new->string = Mbstring::trim($new->string, $charlist);
+			}
+		);
 	}
 
 	/**
@@ -467,9 +503,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function upperCaseFirst()
 	{
-		return $this->cloneInstance(function (StringObject $new) {
-			$new->string = Utf8String::ucfirst($new->string, $this->encoding);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new)
+			{
+				$new->string = Mbstring::ucfirst($new->string, $this->encoding);
+			}
+		);
 	}
 
 	/**
@@ -479,9 +518,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function lowerCaseFirst()
 	{
-		return $this->cloneInstance(function (StringObject $new) {
-			$new->string = Utf8String::lcfirst($new->string, $this->encoding);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new)
+			{
+				$new->string = Mbstring::lcfirst($new->string, $this->encoding);
+			}
+		);
 	}
 
 	/**
@@ -491,9 +533,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function upperCaseWords()
 	{
-		return $this->cloneInstance(function (StringObject $new) {
-			$new->string = Utf8String::ucwords($new->string, $this->encoding);
-		});
+		return $this->cloneInstance(
+			function (StringObject $new)
+			{
+				$new->string = Mbstring::ucwords($new->string, $this->encoding);
+			}
+		);
 	}
 
 	/**
@@ -506,7 +551,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function substrCount($search, $caseSensitive = true)
 	{
-		return Utf8String::substrCount($this->string, $search, $caseSensitive, $this->encoding);
+		return Mbstring::substrCount($this->string, $search, $caseSensitive, $this->encoding);
 	}
 
 	/**
@@ -518,7 +563,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function indexOf($search)
 	{
-		return Utf8String::strpos($this->string, $search, 0, $this->encoding);
+		return Mbstring::strpos($this->string, $search, 0, $this->encoding);
 	}
 
 	/**
@@ -530,7 +575,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function indexOfLast($search)
 	{
-		return Utf8String::strrpos($this->string, $search, 0, $this->encoding);
+		return Mbstring::strrpos($this->string, $search, 0, $this->encoding);
 	}
 
 	/**
@@ -557,8 +602,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function apply(callable $callback)
 	{
-		return $this->cloneInstance(function ($new) use ($callback) {
-			$new->string = $callback($new->string);
-		});
+		return $this->cloneInstance(
+			function ($new) use ($callback)
+			{
+				$new->string = $callback($new->string);
+			}
+		);
 	}
 }

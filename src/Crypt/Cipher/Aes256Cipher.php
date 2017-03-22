@@ -13,7 +13,7 @@ namespace Windwalker\Crypt\Cipher;
  *
  * @since  3.0
  */
-class Aes256Cipher extends AbstractCipher
+class Aes256Cipher extends AbstractOpensslCipher
 {
 	/**
 	 * @var    integer  The openssl cipher method.
