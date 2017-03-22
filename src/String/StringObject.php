@@ -588,7 +588,10 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function explode($delimiter, $limit = null)
 	{
-		$limit = $limit === null ? PHP_INT_MAX : $limit;
+		if ($limit === null)
+		{
+			$limit = defined('HHVM_VERSION') ? 0x7FFFFFFF : PHP_INT_MAX;
+		}
 
 		return explode($delimiter, $this->string, $limit);
 	}
