@@ -8,6 +8,8 @@
 
 namespace Windwalker\Validator;
 
+use Windwalker\Validator\Rule\CallbackValidator;
+
 /**
  * The ValidatorComposite class.
  *
@@ -108,12 +110,23 @@ class ValidatorComposite extends AbstractValidator
 	/**
 	 * addValidator
 	 *
-	 * @param ValidatorInterface $validator
+	 * @param ValidatorInterface|callable $validator
 	 *
 	 * @return  static
+	 * @throws \InvalidArgumentException
 	 */
-	public function addValidator(ValidatorInterface $validator)
+	public function addValidator($validator)
 	{
+		if (!$validator instanceof ValidatorInterface)
+		{
+			if (!is_callable($validator))
+			{
+				throw new \InvalidArgumentException('Validator should be callable or ValidatorInterface.');
+			}
+
+			$validator = new CallbackValidator($validator);
+		}
+
 		$this->validators[] = $validator;
 
 		return $this;

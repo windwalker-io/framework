@@ -83,6 +83,10 @@ class ValidatorCompositeTest extends TestCase
 		$this->instance->addValidator($v);
 
 		self::assertSame($v, $this->instance->getValidators()[0]);
+
+		$v = (new ValidatorComposite)->addValidator('is_numeric');
+
+		self::assertTrue($v->validate('123.12'));
 	}
 
 	/**
