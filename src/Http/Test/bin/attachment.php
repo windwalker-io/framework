@@ -17,9 +17,14 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 $server = \Windwalker\Http\WebHttpServer::create(function ($request, ResponseInterface $response, $finalHandler)
 {
-}, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(), new \Windwalker\Http\Response\HtmlResponse);
+	$res = new \Windwalker\Http\Response\AttachmentResponse;
+	$res = $res->withFile(__DIR__ . '/.htaccess');
+	$res = $res->withFilename('Hello.txt');
+
+	return $res;
+}, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals());
 
 $server->listen(function ($request, $response) use ($server)
 {
-
+	return $response;
 });
