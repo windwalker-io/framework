@@ -312,12 +312,14 @@ HELP;
 			$content = file_get_contents($file->getPathname());
 
 			$content = str_replace(
-				array('{DEPLOY_VERSION}', '{ORGANIZATION}'),
-				array($this->tag, 'LYRASOFT'),
+				array('{DEPLOY_VERSION}', '__DEPLOY_VERSION__', '{ORGANIZATION}'),
+				array($this->tag, $this->tag, 'Asikart'),
 				$content
 			);
 
 			file_put_contents($file->getPathname(), $content);
+
+			$this->out('[Replace Docblock] ' . $file->getPathname());
 		}
 
 		$this->exec('git checkout master');

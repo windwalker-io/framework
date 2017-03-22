@@ -47,7 +47,8 @@ abstract class AbstractValidator implements ValidatorInterface
 	{
 		if (!$this->test($value))
 		{
-			$this->setError($this->getMessage());
+			// TODO: Use exception after 4.0
+			$this->setError($this->formatMessage($this->getMessage(), $value));
 
 			return false;
 		}
@@ -110,5 +111,18 @@ abstract class AbstractValidator implements ValidatorInterface
 	protected function getMessage()
 	{
 		return $this->message;
+	}
+
+	/**
+	 * formatMessage
+	 *
+	 * @param string $message
+	 * @param mixed $value
+	 *
+	 * @return string
+	 */
+	protected function formatMessage($message, $value)
+	{
+		return $message;
 	}
 }

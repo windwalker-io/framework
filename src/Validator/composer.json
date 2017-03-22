@@ -9,7 +9,11 @@
         "php": ">=5.5.9"
     },
     "require-dev": {
-        "windwalker/test": "~3.0"
+        "windwalker/test": "~3.0",
+        "windwalker/compare": "~3.0"
+    },
+    "suggest": {
+        "windwalker/compare": "Install ~3.0 if you want to use CompareValidator."
     },
     "minimum-stability": "beta",
     "autoload": {

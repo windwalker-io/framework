@@ -7,7 +7,11 @@
  */
 
 use Windwalker\Application\AbstractCliApplication;
+use Windwalker\Console\Prompter\ValidatePrompter;
+use Windwalker\Filesystem\Folder;
 use Windwalker\Filesystem\Path;
+use Windwalker\String\SimpleTemplate;
+use Windwalker\Structure\Structure;
 use Windwalker\Utilities\Reflection\ReflectionHelper;
 use Windwalker\String\StringNormalise;
 
@@ -23,139 +27,130 @@ define('WINDWALKER_ROOT', realpath(__DIR__ . '/..'));
 class GenTest extends AbstractCliApplication
 {
 	/**
-	 * Property lastOutput.
+	 * Execute the controller.
 	 *
-	 * @var  mixed
+	 * @return  boolean  True if controller finished execution, false if the controller did not
+	 *                   finish execution. A controller might return false if some precondition for
+	 *                   the controller to run has not been satisfied.
+	 *
+	 * @throws  \LogicException
+	 * @throws  \RuntimeException
 	 */
-	protected $lastOutput = null;
-
-	/**
-	 * Property lastReturn.
-	 *
-	 * @var  mixed
-	 */
-	protected $lastReturn = null;
-
-	/**
-	 * Method to run the application routines.  Most likely you will want to instantiate a controller
-	 * and execute it, or perform some sort of task directly.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function doExecute()
+	public function doExecute()
 	{
-		$package = $this->io->getArgument(0);
-		$class = $this->io->getArgument(1);
-
-		$class = StringNormalise::toClassNamespace($class);
-
-		if (!class_exists($class))
-		{
-			$class = 'Windwalker\\' . ucfirst($package) . '\\' . $class;
-		}
+		$package = $this->io->getArgument(0, new ValidatePrompter('Enter package name: '));
+		$class   = $this->io->getArgument(1, new ValidatePrompter('Enter class name: '));
+		$class   = StringNormalise::toClassNamespace($class);
+		$target  = $this->io->getArgument(2, $class . 'Test');
+		$target  = StringNormalise::toClassNamespace($target);
+		$package = ucfirst($package);
 
 		if (!class_exists($class))
 		{
-			$this->stop('Class not exists: ' . $class);
+			$class = 'Windwalker\\' . $package . '\\' . $class;
 		}
 
-		$packagePath = WINDWALKER_ROOT . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $package;
-		$classPath = ReflectionHelper::getPath($class);
-		$testPath = $packagePath . DIRECTORY_SEPARATOR . 'Test';
-
-		$testClass = $this->io->getArgument(2, ReflectionHelper::getShortName($class) . 'Test');
-		$testClass = StringNormalise::toClassNamespace($testClass);
-		$testFile = $testPath . DIRECTORY_SEPARATOR . $testClass . '.php';
-		$realTestClass = 'Windwalker\\' . ucfirst($package) . '\\Test\\' . $testClass;
-
-		$autoload = WINDWALKER_ROOT . '/vendor/autoload.php';
-
-		$command = sprintf(
-			'vendor/windwalker/phpunit-skeleton-generator/phpunit-skelgen generate-test --bootstrap="%s" %s %s %s %s',
-			$autoload,
-			$class,
-			$classPath,
-			$realTestClass,
-			$testFile
-		);
-
-		$command = 'php ' . WINDWALKER_ROOT . '/' . $command;
-
-		if (!defined('PHP_WINDOWS_VERSION_MAJOR'))
+		if (!class_exists($class))
 		{
-			// Replace '\' to '\\' in MAC
-			$command = str_replace('\\', '\\\\', $command);
+			$this->out('Class not exists: ' . $class);
+
+			exit();
 		}
 
-		\Windwalker\Filesystem\Folder::create(dirname($testFile));
+		$replace = new Structure;
 
-		$this->exec($command);
+		$ref = new \ReflectionClass($class);
+
+		$replace['origin.class.dir']  = dirname($ref->getFileName());
+		$replace['origin.class.file'] = $ref->getFileName();
+		$replace['origin.class.name'] = $ref->getName();
+		$replace['origin.class.shortname'] = $ref->getShortName();
+		$replace['origin.class.namespace'] = $ref->getNamespaceName();
+
+		$replace['test.dir'] = WINDWALKER_ROOT . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $package . DIRECTORY_SEPARATOR . 'Test';
+
+		$replace['test.class.name'] = $replace['origin.class.namespace'] . '\\Test\\' . $target;
+		$replace['test.class.file'] = Path::clean($replace['test.dir'] . DIRECTORY_SEPARATOR . $target . '.php');
+		$replace['test.class.dir']  = dirname($replace['test.class.file']);
+		$replace['test.class.shortname'] = $this->getShortname(StringNormalise::toClassNamespace($replace['test.class.name']));
+		$replace['test.class.namespace'] = $this->getNamespace($replace['test.class.name']);
+
+		$methods = $ref->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_STATIC);
+		$methodTmpl = file_get_contents(WINDWALKER_ROOT . '/bin/templates/test/testMethod.tpl');
+		$methodCodes = [];
+
+		foreach ($methods as $method)
+		{
+			if ($method->getDeclaringClass()->getName() != $replace['origin.class.name'])
+			{
+				continue;
+			}
+
+			$replace['origin.method'] = $method->getName();
+			$replace['test.method'] = ucfirst($method->getName());
+
+			$methodCodes[] = SimpleTemplate::render($methodTmpl, $replace->toArray());
+		}
+
+		$replace['test.methods'] = implode("", $methodCodes);
+
+		$this->genClass($replace);
+
+		$this->out(sprintf(
+			'Generate test class: <info>%s</info> to file: <info>%s</info>',
+			$replace['test.class.name'],
+			$replace['test.class.file']
+		));
+
+		return true;
 	}
 
 	/**
-	 * getPackagePath
+	 * genClass
+	 *
+	 * @param Structure $replace
+	 *
+	 * @return  void
+	 */
+	protected function genClass(Structure $replace)
+	{
+		$tmpl = file_get_contents(WINDWALKER_ROOT . '/bin/templates/test/testClass.tpl');
+
+		$file = SimpleTemplate::render($tmpl, $replace->toArray());
+
+		Folder::create(dirname($replace['test.class.file']));
+
+		file_put_contents($replace['test.class.file'], $file);
+	}
+
+	/**
+	 * getShortname
 	 *
 	 * @param string $class
-	 * @param string $classPath
 	 *
-	 * @return  void
+	 * @return  mixed
 	 */
-	protected function getPackagePath($class, $classPath)
+	protected function getShortname($class)
 	{
-		$classFile = Path::clean($class) . '.php';
+		$class = explode('\\', $class);
 
-		$classFile = substr($classFile, 11);
-
-		$this->out($classFile);
-		$this->out($classPath);
-
-		$packagePath = str_replace($classFile, '', $classPath);
-
-		$this->out($packagePath);
-
-		print_r($classFile);
+		return array_pop($class);
 	}
 
 	/**
-	 * Exec a command.
+	 * getNamespace
 	 *
-	 * @param string $command
-	 * @param array  $arguments
-	 * @param array  $options
+	 * @param string $class
 	 *
 	 * @return  string
 	 */
-	protected function exec($command, $arguments = array(), $options = array())
+	protected function getNamespace($class)
 	{
-		$arguments = implode(' ', (array) $arguments);
-		$options = implode(' ', (array) $options);
+		$class = explode('\\', $class);
 
-		$command = sprintf('%s %s %s', $command, $arguments, $options);
+		array_pop($class);
 
-		$this->out('>> ' . $command);
-
-		$return = exec(trim($command), $this->lastOutput, $this->lastReturn);
-
-		$this->out($return);
-	}
-
-	/**
-	 * stop
-	 *
-	 * @param string $msg
-	 *
-	 * @return  void
-	 */
-	protected function stop($msg = null)
-	{
-		if ($msg)
-		{
-			$this->out($msg);
-		}
-
-		$this->close();
+		return implode('\\', $class);
 	}
 }
 

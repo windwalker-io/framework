@@ -14,6 +14,40 @@ use Windwalker\Utilities\Classes\StringableInterface;
 /**
  * The StringObject class.
  *
+ * @method StringObject getChar(int $pos)
+ * @method StringObject between(string $start, string $end, int $offset = 0)
+ * @method StringObject collapseWhitespaces(string $string)
+ * @method bool         contains(string $search, bool $caseSensitive = true)
+ * @method bool         endsWith(string $search, bool $caseSensitive = true)
+ * @method bool         startsWith(string $target, bool $caseSensitive = true)
+ * @method StringObject ensureLeft(string $search)
+ * @method StringObject ensureRight(string $search)
+ * @method bool         hasLowerCase()
+ * @method bool         hasUpperCase()
+ * @method StringObject match(string $pattern, string $option = 'msr')
+ * @method StringObject insert(string $insert, int $position)
+ * @method bool         isLowerCase()
+ * @method bool         isUpperCase()
+ * @method StringObject first(int $length = 1)
+ * @method StringObject last(int $length = 1)
+ * @method StringObject intersectLeft(string $string2)
+ * @method StringObject intersectRight(string $string2)
+ * @method StringObject intersect(string $string2)
+ * @method StringObject pad(int $length = 0, string $substring = ' ')
+ * @method StringObject padLeft(int $length = 0, string $substring = ' ')
+ * @method StringObject padRight(int $length = 0, string $substring = ' ')
+ * @method StringObject removeChar(int $offset, int $length = null)
+ * @method StringObject removeLeft(string $search)
+ * @method StringObject removeRight(string $search)
+ * @method StringObject slice(int $start, int $end = null)
+ * @method StringObject substring(int $start, int $end = null)
+ * @method StringObject surround($substring = ['"', '"'])
+ * @method StringObject toggleCase()
+ * @method StringObject truncate(int $length, string $suffix = '', bool $wordBreak = true)
+ * @method StringObject map(callable $callback)
+ * @method StringObject filter(callable $callback)
+ * @method StringObject reject(callable $callback)
+ *
  * @since  __DEPLOY_VERSION__
  */
 class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, StringableInterface
@@ -588,6 +622,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
 	 */
 	public function explode($delimiter, $limit = null)
 	{
+		// Fix HHVM default explode limit issue
+		// @see  https://github.com/facebook/hhvm/issues/7696
+		// @see  https://3v4l.org/fllad
 		if ($limit === null)
 		{
 			$limit = defined('HHVM_VERSION') ? 0x7FFFFFFF : PHP_INT_MAX;
