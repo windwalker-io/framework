@@ -1,9 +1,9 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2015 LYRASOFT. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @copyright  Copyright (C) 2017 ${ORGANIZATION}.
+ * @license    __LICENSE__
  */
 
 namespace Windwalker\Http;
@@ -24,26 +24,12 @@ use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
 
 /**
- * The HttpClient class.
- * 
- * @since  2.1
+ * The AbstractHttpClient class.
+ *
+ * @since  __DEPLOY_VERSION__
  */
-class HttpClient implements HttpClientInterface, HttpPlugClientInterface
+class AbstractHttpClient implements HttpClientInterface, HttpPlugClientInterface
 {
-	/**
-	 * Property options.
-	 *
-	 * @var  array
-	 */
-	protected $options = [];
-
-	/**
-	 * Property transport.
-	 *
-	 * @var  TransportInterface
-	 */
-	protected $transport;
-
 	/**
 	 * Class init.
 	 *

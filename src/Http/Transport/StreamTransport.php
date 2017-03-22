@@ -186,7 +186,7 @@ class StreamTransport extends AbstractTransport
 			$return = $return->withStatus($code);
 		}
 		// No valid response code was detected.
-		else
+		elseif (!$this->getOption('allow_empty_status_code', false))
 		{
 			throw new \UnexpectedValueException('No HTTP response code found.');
 		}

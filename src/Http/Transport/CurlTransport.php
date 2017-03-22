@@ -32,6 +32,103 @@ class CurlTransport extends AbstractTransport
 	 */
 	protected function doRequest(RequestInterface $request)
 	{
+		$ch = $this->createHandle($request);
+
+		// Execute the request and close the connection.
+		$content = curl_exec($ch);
+
+		if (!$this->getOption('allow_empty_result', false) && !trim($content))
+		{
+			$message = curl_error($ch);
+
+			// Error but nothing from cURL? Create our own
+			$message = $message ? : 'No HTTP response received';
+
+			throw new \RuntimeException($message);
+		}
+
+		// Get the request information.
+		$info = curl_getinfo($ch);
+
+		// Close the connection.
+		curl_close($ch);
+
+		return $this->getResponse($content, $info);
+	}
+
+	/**
+	 * Method to get a response object from a server response.
+	 *
+	 * @param   string  $content  The complete server response, including headers
+	 *                            as a string if the response has no errors.
+	 * @param   array   $info     The cURL request information.
+	 *
+	 * @return  Response
+	 *
+	 * @since   2.0
+	 * @throws  \UnexpectedValueException
+	 */
+	public function getResponse($content, $info)
+	{
+		// Create the response object.
+		$return = new Response;
+
+		// Get the number of redirects that occurred.
+		$redirects = isset($info['redirect_count']) ? $info['redirect_count'] : 0;
+
+		/*
+		 * Split the response into headers and body. If cURL encountered redirects, the headers for the redirected requests will
+		 * also be included. So we split the response into header + body + the number of redirects and only use the last two
+		 * sections which should be the last set of headers and the actual body.
+		 */
+		$response = explode("\r\n\r\n", $content, 2 + $redirects);
+
+		// Set the body for the response.
+		$return->getBody()->write(array_pop($response));
+
+		$return->getBody()->rewind();
+
+		// Get the last set of response headers as an array.
+		$headers = explode("\r\n", array_pop($response));
+
+		// Get the response code from the first offset of the response headers.
+		preg_match('/[0-9]{3}/', array_shift($headers), $matches);
+
+		$code = count($matches) ? $matches[0] : null;
+
+		if (is_numeric($code))
+		{
+			$return = $return->withStatus($code);
+		}
+
+		// No valid response code was detected.
+		elseif (!$this->getOption('allow_empty_status_code', false))
+		{
+			throw new \UnexpectedValueException('No HTTP response code found.');
+		}
+
+		// Add the response headers to the response object.
+		foreach ($headers as $header)
+		{
+			$pos = strpos($header, ':');
+
+			$return = $return->withHeader(trim(substr($header, 0, $pos)), trim(substr($header, ($pos + 1))));
+		}
+
+		return $return;
+	}
+
+	/**
+	 * createHandle
+	 *
+	 * @param RequestInterface $request
+	 *
+	 * @return  resource
+	 *
+	 * @since  3.2
+	 */
+	public function createHandle(RequestInterface $request)
+	{
 		// Setup the cURL handle.
 		$ch = curl_init();
 
@@ -73,7 +170,7 @@ class CurlTransport extends AbstractTransport
 				$options[CURLOPT_POSTFIELDS] = $data;
 			}
 			else
-			// Otherwise we need to encode the value first.
+				// Otherwise we need to encode the value first.
 			{
 				$options[CURLOPT_POSTFIELDS] = http_build_query($data);
 			}
@@ -143,88 +240,7 @@ class CurlTransport extends AbstractTransport
 		// Set the cURL options.
 		curl_setopt_array($ch, $options);
 
-		// Execute the request and close the connection.
-		$content = curl_exec($ch);
-
-		if (!$this->getOption('allow_empty_result', false) && !trim($content))
-		{
-			$message = curl_error($ch);
-
-			// Error but nothing from cURL? Create our own
-			$message = $message ? : 'No HTTP response received';
-
-			throw new \RuntimeException($message);
-		}
-
-		// Get the request information.
-		$info = curl_getinfo($ch);
-
-		// Close the connection.
-		curl_close($ch);
-
-		return $this->getResponse($content, $info);
-	}
-
-	/**
-	 * Method to get a response object from a server response.
-	 *
-	 * @param   string  $content  The complete server response, including headers
-	 *                            as a string if the response has no errors.
-	 * @param   array   $info     The cURL request information.
-	 *
-	 * @return  Response
-	 *
-	 * @since   2.0
-	 * @throws  \UnexpectedValueException
-	 */
-	protected function getResponse($content, $info)
-	{
-		// Create the response object.
-		$return = new Response;
-
-		// Get the number of redirects that occurred.
-		$redirects = isset($info['redirect_count']) ? $info['redirect_count'] : 0;
-
-		/*
-		 * Split the response into headers and body. If cURL encountered redirects, the headers for the redirected requests will
-		 * also be included. So we split the response into header + body + the number of redirects and only use the last two
-		 * sections which should be the last set of headers and the actual body.
-		 */
-		$response = explode("\r\n\r\n", $content, 2 + $redirects);
-
-		// Set the body for the response.
-		$return->getBody()->write(array_pop($response));
-
-		$return->getBody()->rewind();
-
-		// Get the last set of response headers as an array.
-		$headers = explode("\r\n", array_pop($response));
-
-		// Get the response code from the first offset of the response headers.
-		preg_match('/[0-9]{3}/', array_shift($headers), $matches);
-
-		$code = count($matches) ? $matches[0] : null;
-
-		if (is_numeric($code))
-		{
-			$return = $return->withStatus($code);
-		}
-
-		// No valid response code was detected.
-		else
-		{
-			throw new \UnexpectedValueException('No HTTP response code found.');
-		}
-
-		// Add the response headers to the response object.
-		foreach ($headers as $header)
-		{
-			$pos = strpos($header, ':');
-
-			$return = $return->withHeader(trim(substr($header, 0, $pos)), trim(substr($header, ($pos + 1))));
-		}
-
-		return $return;
+		return $ch;
 	}
 
 	/**

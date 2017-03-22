@@ -189,6 +189,44 @@ $body->read(5); // FOO B
 $body->getSize(); // 7
 ```
 
+## Async Request
+
+Use `AsyncHttpClient` to send multiple async requests.
+
+``` php
+use Windwalker\Http\AsyncHttpClient;
+
+$http = new \Windwalker\Http\AsyncHttpClient;
+
+// Add request commands to pool.
+$http->get('http://google.com');
+$http->get('http://facebook.com');
+$http->get('http://apple.com');
+
+// Do request and get responses array
+$responses = $http->resolve();
+
+foreach ($responses as $response)
+{
+    echo $response->getBody()->__toString();
+}
+
+// Get errors, will be an array contains RuntimeExceptions
+$errors = $http->getErrors();
+```
+
+Use callback:
+
+``` php
+$http->resolve(function ($responses, $errors, $http)
+{
+	foreach ($responses as $response)
+	{
+		echo $response->getBody()->__toString();
+    }
+});
+```
+
 ## Uri
 
 `Uri` is a simple Uri object to modify URL but not Psr UriInterface.
