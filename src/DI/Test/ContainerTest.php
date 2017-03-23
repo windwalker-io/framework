@@ -165,6 +165,17 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf('SplStack', $container->get('olive'));
 	}
 
+	public function testSetAndRemoveAlias()
+	{
+		$container = new Container;
+
+		$container->share('Flower', 'Sakura')->alias('FlowerAlias', 'Flower');
+
+		$container->share('FlowerAlias', 'Olive');
+
+		self::assertEquals('Olive', $container->get('FlowerAlias'));
+	}
+
 	/**
 	 * testGetFromParent
 	 *

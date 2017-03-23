@@ -80,13 +80,32 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @param   string  $alias  The alias name
 	 * @param   string  $key    The key to alias
 	 *
-	 * @return  Container  This object for chaining.
+	 * @return  static  This object for chaining.
 	 *
 	 * @since   2.0
 	 */
 	public function alias($alias, $key)
 	{
 		$this->aliases[$alias] = $key;
+
+		return $this;
+	}
+
+	/**
+	 * Remove an alias.
+	 *
+	 * @param string $alias The alias name to remove.
+	 *
+	 * @return  static Support chaining.
+	 *                 
+	 * @since  3.2
+	 */
+	public function removeAlias($alias)
+	{
+		if (array_key_exists($alias, $this->aliases))
+		{
+			unset($this->aliases[$alias]);
+		}
 
 		return $this;
 	}
@@ -142,7 +161,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @param mixed  $value
 	 * @param bool   $protected
 	 *
-	 * @return  Container
+	 * @return  static
 	 *
 	 * @since   3.0
 	 */
@@ -362,7 +381,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
 			// Simple workaround for ArrayIterator::__construct() before PHP 7
 			// @see  https://bugs.php.net/bug.php?id=70303
-			if ($method->getDeclaringClass()->getName() == 'ArrayIterator' && version_compare(PHP_VERSION, '7', '<'))
+			if ($method->getDeclaringClass()->getName() === 'ArrayIterator' && version_compare(PHP_VERSION, '7', '<'))
 			{
 				continue;
 			}
@@ -409,15 +428,15 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 		switch (count($args))
 		{
 			case 0:
-				return call_user_func($callable);
+				return $callable();
 			case 1:
-				return call_user_func($callable, $args[0]);
+				return $callable($args[0]);
 			case 2:
-				return call_user_func($callable, $args[0], $args[1]);
+				return $callable($args[0], $args[1]);
 			case 3:
-				return call_user_func($callable, $args[0], $args[1], $args[2]);
+				return $callable($args[0], $args[1], $args[2]);
 			case 4:
-				return call_user_func($callable, $args[0], $args[1], $args[2], $args[3]);
+				return $callable($args[0], $args[1], $args[2], $args[3]);
 			default:
 				return call_user_func_array($callable, $args);
 		}
@@ -452,7 +471,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 */
 	public function createChild($name = null)
 	{
-		$name = $name ? : md5(uniqid());
+		$name = $name ? : md5(uniqid('windwalker-di', true));
 
 		$this->children[$name] = new static($this);
 
@@ -467,7 +486,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @param   string    $key       The unique identifier for the Closure or property.
 	 * @param   \Closure  $callable  A Closure to wrap the original service Closure.
 	 *
-	 * @return  Container
+	 * @return  static
 	 *
 	 * @since   2.0
 	 * @throws  \InvalidArgumentException
@@ -504,7 +523,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @param   boolean  $shared     True to create and store a shared instance.
 	 * @param   boolean  $protected  True to protect this item from being overwritten. Useful for services.
 	 *
-	 * @return  Container  This object for chaining.
+	 * @return  static  This object for chaining.
 	 *
 	 * @throws  \OutOfBoundsException  Thrown if the provided key is already set and is protected.
 	 *
@@ -519,6 +538,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
 		$this->dataStore[$key] = new DataStore($value, $shared, $protected);
 
+		// 3.2 Remove alias
+		$this->removeAlias($key);
+
 		return $this;
 	}
 
@@ -529,7 +551,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @param   callable  $callback  Callable function to run when requesting the specified $key.
 	 * @param   bool      $shared    True to create and store a shared instance.
 	 *
-	 * @return  Container  This object for chaining.
+	 * @return  static  This object for chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -545,7 +567,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @param   callable|mixed  $callback   Callable function to run when requesting the specified $key.
 	 * @param   bool            $protected  True to create and store a shared instance.
 	 *
-	 * @return  Container  This object for chaining.
+	 * @return  static  This object for chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -569,7 +591,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	{
 		$store = $this->getRaw($key);
 
-		if (is_null($store))
+		if ($store === null)
 		{
 			throw new \UnexpectedValueException(sprintf('Key %s has not been registered with the container.', $key));
 		}
@@ -677,7 +699,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 *
 	 * @param   ServiceProviderInterface  $provider  The service provider to register.w
 	 *
-	 * @return  Container  This object for chaining.
+	 * @return  static  This object for chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -691,7 +713,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	/**
 	 * Method to get property Parent
 	 *
-	 * @return  Container  Parent container.
+	 * @return  static  Parent container.
 	 *
 	 * @since  2.0.4
 	 */
@@ -741,7 +763,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @param   string   $name
 	 * @param   boolean  $forceNew
 	 *
-	 * @return  Container
+	 * @return  static
 	 *
 	 * @since   2.1
 	 */
@@ -789,7 +811,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	/**
 	 * Method to get property Children
 	 *
-	 * @return  Container[]
+	 * @return  static[]
 	 *
 	 * @since   2.1
 	 */

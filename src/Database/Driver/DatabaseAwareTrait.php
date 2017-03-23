@@ -21,16 +21,6 @@ trait DatabaseAwareTrait
 	protected $db = null;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param AbstractDatabaseDriver $db
-	 */
-	public function __construct(AbstractDatabaseDriver $db)
-	{
-		$this->setDb($db);
-	}
-
-	/**
 	 * getDb
 	 *
 	 * @return  AbstractDatabaseDriver
