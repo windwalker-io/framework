@@ -456,7 +456,7 @@ class NestedRecord extends Record
 			->set('rgt = rgt - ' . (int) $node->width)
 			->where('rgt > ' . (int) $node->rgt);
 
-		$this->db->setQuery($query)->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
 
 		// We are moving the tree relative to a reference node.
 		if ($referenceId)
@@ -481,7 +481,7 @@ class NestedRecord extends Record
 			$reference = $this->db->getReader($query)->loadObject();
 
 			// Get the reposition data for re-inserting the node after the found root.
-			$repositionData = $this->getTreeRepositionData($reference, $node->width, 'last-child');
+			$repositionData = $this->getTreeRepositionData($reference, $node->width, static::LOCATION_LAST_CHILD);
 		}
 
 		/*
@@ -494,7 +494,7 @@ class NestedRecord extends Record
 			->set('lft = lft + ' . (int) $node->width)
 			->where($repositionData->left_where);
 
-		$this->db->setQuery($query)->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
 
 		// Shift right values.
 		$query->clear()
@@ -502,7 +502,7 @@ class NestedRecord extends Record
 			->set('rgt = rgt + ' . (int) $node->width)
 			->where($repositionData->right_where);
 
-		$this->db->setQuery($query)->setQuery($query)->execute();
+		$this->db->setQuery($query)->execute();
 
 		/*
 		 * Calculate the offset between where the node used to be in the tree and
@@ -706,6 +706,15 @@ class NestedRecord extends Record
 	 */
 	public function rebuild($parentId = null, $leftId = 0, $level = 0, $path = '')
 	{
+		$fields = $this->getFields();
+		$buildPath = true;
+
+		// If there is no alias or path field, just return true.
+		if (!array_key_exists('alias', $fields) || !array_key_exists('path', $fields))
+		{
+			$buildPath = false;
+		}
+
 		// If no parent is provided, try to find it.
 		if ($parentId === null)
 		{
@@ -724,10 +733,15 @@ class NestedRecord extends Record
 		if (!isset($this->cache['rebuild.sql']))
 		{
 			$query->clear()
-				->select($this->getKeyName() . ', alias')
+				->select($this->getKeyName())
 				->from($this->table)
 				->where('parent_id = "%s"')
 				->order('parent_id, lft');
+
+			if ($buildPath)
+			{
+				$query->select('alias');
+			}
 
 			$this->cache['rebuild.sql'] = (string) $query;
 		}
@@ -764,8 +778,12 @@ class NestedRecord extends Record
 			->set('lft = ' . (int) $leftId)
 			->set('rgt = ' . (int) $rightId)
 			->set('level = ' . (int) $level)
-			->set('path = ' . $this->db->quote($path))
 			->where($this->getKeyName() . ' = ' . (int) $parentId);
+
+		if ($buildPath)
+		{
+			$query->set('path = ' . $this->db->quote($path));
+		}
 
 		$this->db->setQuery($query)->execute();
 
