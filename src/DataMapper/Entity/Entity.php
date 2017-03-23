@@ -40,6 +40,13 @@ class Entity extends Data implements \JsonSerializable
 	protected $fields = null;
 
 	/**
+	 * Property casts.
+	 *
+	 * @var  array
+	 */
+	protected $casts = [];
+
+	/**
 	 * Constructor.
 	 *
 	 * @param array $fields
@@ -330,6 +337,11 @@ class Entity extends Data implements \JsonSerializable
 			return $this->$accessor($value);
 		}
 
+		if ($cast = $this->getCast($key))
+		{
+			$value = $this->castValue($key, $value);
+		}
+
 		if ($value === null)
 		{
 			return $default;
@@ -512,5 +524,107 @@ class Entity extends Data implements \JsonSerializable
 	public function jsonSerialize()
 	{
 		return $this->data;
+	}
+
+	/**
+	 * setCast
+	 *
+	 * @param string $field
+	 * @param string $cast
+	 *
+	 * @return  static
+	 */
+	public function setCast($field, $cast)
+	{
+		$this->casts[$field] = $cast;
+
+		return $this;
+	}
+
+	/**
+	 * getCast
+	 *
+	 * @param string $field
+	 *
+	 * @return  string
+	 */
+	public function getCast($field)
+	{
+		if (isset($this->casts[$field]))
+		{
+			return $this->casts[$field];
+		}
+
+		return null;
+	}
+
+	/**
+	 * castValue
+	 *
+	 * @param string $field
+	 * @param mixed  $value
+	 *
+	 * @return  mixed
+	 */
+	public function castValue($field, $value)
+	{
+		if (null === $value)
+		{
+			return $value;
+		}
+
+		$cast = $this->getCast($field);
+
+		switch ($cast)
+		{
+			case 'int':
+			case 'integer':
+				return (int) $value;
+			case 'real':
+			case 'float':
+			case 'double':
+				return (float) $value;
+			case 'string':
+				return (string) $value;
+			case 'bool':
+			case 'boolean':
+				return (bool) $value;
+			case 'object':
+				return json_decode($value);
+			case 'array':
+			case 'json':
+				return json_decode($value, true);
+			case 'date':
+			case 'datetime':
+				return $this->toDateTime($value);
+			case 'timestamp':
+				return $this->toDateTime($value)->getTimestamp();
+			case class_exists($cast):
+				return new $cast($value);
+			default:
+				return $value;
+		}
+	}
+
+	/**
+	 * toDateTime
+	 *
+	 * @param string $date
+	 *
+	 * @return  bool|\DateTime
+	 */
+	public function toDateTime($date)
+	{
+		if ($date instanceof \DateTimeInterface)
+		{
+			return $date;
+		}
+
+		if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $date))
+		{
+			return \DateTime::createFromFormat('Y-m-d', $date);
+		}
+
+		return \DateTime::createFromFormat($this->db->getQuery(true)->getDateFormat(), $date);
 	}
 }

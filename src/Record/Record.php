@@ -18,6 +18,7 @@ use Windwalker\Event\Event;
 use Windwalker\Event\EventInterface;
 use Windwalker\Event\ListenerMapper;
 use Windwalker\Record\Exception\NoResultException;
+use Windwalker\Event\DispatcherAwareInterface;
 
 /**
  * Class Record
@@ -130,6 +131,21 @@ class Record extends Entity
 		{
 			throw new \InvalidArgumentException('Table name should not empty.');
 		}
+	}
+
+	/**
+	 * Magic getter to get a table field.
+	 *
+	 * @param   string $key     The key name.
+	 * @param   null   $default The default value.
+	 *
+	 * @return  mixed
+	 *
+	 * @since   2.0
+	 */
+	public function get($key, $default = null)
+	{
+		return parent::get($key, $default);
 	}
 
 	/**
@@ -669,11 +685,11 @@ class Record extends Entity
 	 */
 	public function getDispatcher()
 	{
-		if (!$this->dispatcher && class_exists('Windwalker\Event\Dispatcher'))
+		if (!$this->dispatcher && class_exists(Dispatcher::class))
 		{
 			$this->dispatcher = new Dispatcher;
 
-			if (is_subclass_of($this, 'Windwalker\Evebt\DispatcherAwareInterface'))
+			if (is_subclass_of($this, DispatcherAwareInterface::class))
 			{
 				ListenerMapper::add($this);
 			}
