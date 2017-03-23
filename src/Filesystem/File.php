@@ -143,16 +143,16 @@ class File
 	/**
 	 * Delete a file or array of files
 	 *
-	 * @param   mixed  $file  The file name or an array of file names
+	 * @param   mixed  $files  The file name or an array of file names
 	 *
 	 * @return  boolean  True on success
 	 *
 	 * @since   2.0
 	 * @throws  FilesystemException
 	 */
-	public static function delete($file)
+	public static function delete($files)
 	{
-		$files = (array) $file;
+		$files = (array) $files;
 
 		foreach ($files as $file)
 		{
@@ -244,16 +244,15 @@ class File
 		}
 
 		$file = Path::clean($file);
-		$ret = is_int(file_put_contents($file, $buffer)) ? true : false;
 
-		return $ret;
+		return is_int(file_put_contents($file, $buffer)) ? true : false;
 	}
 
 	/**
 	 * Moves an uploaded file to a destination folder
 	 *
-	 * @param   string   $src          The name of the php (temporary) uploaded file
-	 * @param   string   $dest         The path (including filename) to move the uploaded file to
+	 * @param   string   $src  The name of the php (temporary) uploaded file
+	 * @param   string   $dest The path (including filename) to move the uploaded file to
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -273,7 +272,7 @@ class File
 			Folder::create($baseDir);
 		}
 
-		if (is_writeable($baseDir) && move_uploaded_file($src, $dest))
+		if (is_writable($baseDir) && move_uploaded_file($src, $dest))
 		{
 			// Short circuit to prevent file permission errors
 			if (Path::setPermissions($dest))
@@ -287,5 +286,48 @@ class File
 		}
 
 		throw new FilesystemException(__METHOD__ . ': Failed to move file.');
+	}
+
+	/**
+	 * Check file exists.
+	 *
+	 * @param string $path         The file path to check.
+	 * @param bool   $inSensitive  Insensitive file name case.
+	 *
+	 * @return  bool
+	 */
+	public static function exists($path, $inSensitive = false)
+	{
+		$exists = is_file($path);
+
+		if (!$inSensitive)
+		{
+			return $exists;
+		}
+
+		if (!$exists)
+		{
+			$lowerfile = strtolower($path);
+
+			foreach (glob(dirname($path) . '/*') as $file)
+			{
+				if (strtolower($file) === $lowerfile)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public static function fixCase($path, $filename = null)
+	{
+		if ($filename !== null)
+		{
+			$path .= DIRECTORY_SEPARATOR . $filename;
+		}
+
+
 	}
 }

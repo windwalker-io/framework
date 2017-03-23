@@ -138,4 +138,63 @@ class PathTest extends AbstractFilesystemTest
 			'This test has not been implemented yet.'
 		);
 	}
+
+	/**
+	 * testExistsInsensitive
+	 *
+	 * @param string $path
+	 * @param bool   $sExists
+	 * @param bool   $isExists
+	 *
+	 * @return void
+	 * @dataProvider existsProvider
+	 */
+	public function testExists($path, $sExists, $isExists)
+	{
+		self::assertSame($sExists, Path::exists($path, true));
+		self::assertSame($isExists, Path::exists($path, false));
+	}
+
+	/**
+	 * existsProvider
+	 *
+	 * @return  array
+	 */
+	public function existsProvider()
+	{
+		return [
+			[
+				__DIR__ . '/case/Flower/saKura/test.txt',
+				false,
+				true
+			],
+			[
+				__DIR__ . '/case/Flower/saKura/TEST.txt',
+				true,
+				true
+			],
+			[
+				__DIR__ . '/case/Flower/sakura',
+				false,
+				true
+			],
+			[
+				__DIR__ . '/case/Flower/Olive',
+				false,
+				false
+			]
+		];
+	}
+
+	/**
+	 * testFixCase
+	 *
+	 * @return  void
+	 */
+	public function testFixCase()
+	{
+		$path = __DIR__ . '/case/Flower/saKura/test.txt';
+
+		self::assertEquals(Path::clean(__DIR__ . '/case/Flower/saKura/TEST.txt'), Path::fixCase($path));
+	}
 }
