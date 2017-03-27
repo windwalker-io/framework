@@ -8,6 +8,7 @@
 
 namespace Windwalker\Crypt\Test;
 
+use Windwalker\Crypt\Cipher\PhpAesCipher;
 use Windwalker\Crypt\Cipher\SimpleCipher;
 use Windwalker\Crypt\Crypt;
 
@@ -33,7 +34,7 @@ class CryptTest extends \PHPUnit\Framework\TestCase
 	 */
 	protected function setUp()
 	{
-		$this->instance = new Crypt(new SimpleCipher);
+		$this->instance = new Crypt(new PhpAesCipher);
 	}
 
 	/**
@@ -56,15 +57,15 @@ class CryptTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testEncrypt()
 	{
-		$hash = $this->instance->encrypt('windwalker');
+		$encrypted = $this->instance->encrypt('windwalker');
 
-		$this->assertTrue($this->instance->verify('windwalker', $hash));
+		$this->assertTrue($this->instance->verify('windwalker', $encrypted));
 
-		$crypt = new Crypt(new SimpleCipher, 'flower');
+		$crypt = new Crypt(new PhpAesCipher, 'flower');
 
-		$hash = $crypt->encrypt('windwalker');
+		$encrypted = $crypt->encrypt('windwalker');
 
-		$this->assertTrue($crypt->verify('windwalker', $hash, 'flower'));
+		$this->assertTrue($crypt->verify('windwalker', $encrypted, 'flower'));
 	}
 
 	/**

@@ -43,7 +43,7 @@ class PhpAesCipher implements CipherInterface
 	 */
 	public function decrypt($data, $key = null, $iv = null)
 	{
-		return \AesCtr::decrypt($data, $key, $this->keyLength);
+		return \AesCtr::decrypt(base64_decode($data), $key, $this->keyLength);
 	}
 
 	/**
@@ -60,6 +60,6 @@ class PhpAesCipher implements CipherInterface
 	 */
 	public function encrypt($data, $key = null, $iv = null)
 	{
-		return \AesCtr::encrypt($data, $key, $this->keyLength);
+		return base64_encode(\AesCtr::encrypt($data, $key, $this->keyLength));
 	}
 }

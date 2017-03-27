@@ -9,6 +9,7 @@
 namespace Windwalker\Crypt\Test\Cipher;
 
 use Windwalker\Crypt\Cipher\BlowfishCipher;
+use Windwalker\Crypt\Crypt;
 
 /**
  * Test class of CipherBlowfish

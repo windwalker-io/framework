@@ -89,12 +89,6 @@ class Crypt implements CryptInterface
 	 */
 	public function decrypt($string, $key = null, $iv = null)
 	{
-		// B/C for 3.1 and older
-		if (strpos($string, ':') !== false)
-		{
-			$string = base64_decode(str_replace(' ', '+', $string));
-		}
-
 		$key = $key ? : $this->getKey();
 		$iv  = $iv  ? : $this->getIv();
 
