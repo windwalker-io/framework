@@ -8,6 +8,7 @@
 
 namespace Windwalker\Crypt\Test;
 
+use Windwalker\Crypt\Cipher\BlowfishCipher;
 use Windwalker\Crypt\Cipher\PhpAesCipher;
 use Windwalker\Crypt\Cipher\SimpleCipher;
 use Windwalker\Crypt\Crypt;
@@ -80,6 +81,24 @@ class CryptTest extends \PHPUnit\Framework\TestCase
 		$hash = $this->instance->encrypt('windwalker');
 
 		$this->assertEquals('windwalker', $this->instance->decrypt($hash));
+	}
+
+	/**
+	 * testDecryptLegacy
+	 *
+	 * @return  void
+	 */
+	public function testDecryptLegacy()
+	{
+		$data = 'windwalker';
+		$key  = 'flower';
+		$encrypted = 'VNEc5QYyPCpOUP5UjJnp07eZynRNKoQu';
+
+		$crypt = new Crypt(new BlowfishCipher, $key);
+
+		$decryped = $crypt->decrypt($encrypted);
+
+		self::assertEquals($data, $decryped);
 	}
 
 	/**
