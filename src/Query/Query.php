@@ -1239,9 +1239,9 @@ class Query implements QueryInterface, PreparableInterface
 	 */
 	public function quote($text, $escape = true)
 	{
-		if (is_null($text))
+		if (null === $text)
 		{
-			return $text;
+			return 'NULL';
 		}
 
 		if (is_array($text) || is_object($text))
@@ -1255,10 +1255,8 @@ class Query implements QueryInterface, PreparableInterface
 
 			return $text;
 		}
-		else
-		{
-			return '\'' . ($escape ? $this->escape($text) : $text) . '\'';
-		}
+
+		return '\'' . ($escape ? $this->escape($text) : $text) . '\'';
 	}
 
 	/**
