@@ -35,6 +35,8 @@ class SimpleCipher implements CipherInterface
 	 */
 	public function decrypt($data, $key = null, $iv = null)
 	{
+		$data = base64_decode($data);
+
 		if (!$iv)
 		{
 			$iv = substr($data, 0, static::DEFAULT_RANDOM_BYTE_LENGTH);
@@ -99,7 +101,7 @@ class SimpleCipher implements CipherInterface
 
 		$key = sha1($iv . $key);
 
-		return $iv . $this->doEncrypt($data, $key);
+		return base64_encode($iv . $this->doEncrypt($data, $key));
 	}
 
 	/**

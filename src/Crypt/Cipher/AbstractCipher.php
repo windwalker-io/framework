@@ -180,6 +180,8 @@ abstract class AbstractCipher implements CipherInterface
 		// For 3.1 and older legacy
 		else
 		{
+			$data = base64_decode($data);
+
 			if (!$iv)
 			{
 				$ivSize = $this->getIVSize();

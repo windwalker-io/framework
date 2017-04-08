@@ -68,6 +68,8 @@ abstract class AbstractMcryptCipher implements CipherInterface
 	 */
 	public function decrypt($data, $key = null, $iv = null)
 	{
+		$data = base64_decode($data);
+
 		if (!$iv)
 		{
 			$ivSize = $this->getIVSize();
@@ -120,7 +122,7 @@ abstract class AbstractMcryptCipher implements CipherInterface
 		// Encrypt the data.
 		$encrypted = mcrypt_encrypt($this->type, $key, $data, $this->mode, $iv);
 
-		return $iv . $encrypted;
+		return base64_encode($iv . $encrypted);
 	}
 
 	/**

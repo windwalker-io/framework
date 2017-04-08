@@ -87,18 +87,9 @@ class SimpleCipherTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testDecrypt()
 	{
-		// Use IV
-		$iv = CryptHelper::genRandomBytes(16);
+		$data = $this->instance->encrypt('windwalker', $this->key);
 
-		$data = $this->instance->encrypt('windwalker', $this->key, $iv);
-
-		$ivSize = strlen($iv);
-
-		$iv = substr($data, 0, $ivSize);
-
-		$data = substr($data, $ivSize);
-
-		$data = $this->instance->decrypt($data, $this->key, $iv);
+		$data = $this->instance->decrypt($data, $this->key);
 
 		$this->assertEquals('windwalker', $data);
 	}
