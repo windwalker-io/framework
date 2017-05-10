@@ -1,17 +1,17 @@
 <?php
 
-return array(
+return [
 	'flower' => 'sakura',
 	'olive' => 'peace',
-	'pos1' => array(
+	'pos1' => [
 		"sunflower" => "love"
-	),
-	'pos2' => array(
+	],
+	'pos2' => [
 		"cornflower" => "elegant"
-	),
-	'array' => array(
+	],
+	'array' => [
 		"0" => "A",
 		"1" => "B",
 		"2" => "C"
-	),
-);
+	],
+];

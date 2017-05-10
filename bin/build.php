@@ -59,7 +59,7 @@ class Build extends AbstractCliApplication
 	 *
 	 * @var  array
 	 */
-	protected $subtrees = array(
+	protected $subtrees = [
 		'application'    => 'Application',
 		'authentication' => 'Authentication',
 		'authorisation'  => 'Authorisation',
@@ -96,7 +96,7 @@ class Build extends AbstractCliApplication
 		'uri'        => 'Uri',
 		'utilities'  => 'Utilities',
 		'validator'  => 'Validator',
-	);
+	];
 
 	/**
 	 * Method to run this application.
@@ -227,7 +227,7 @@ class Build extends AbstractCliApplication
 	 *
 	 * @return  string
 	 */
-	protected function exec($command, $arguments = array(), $options = array())
+	protected function exec($command, $arguments = [], $options = [])
 	{
 		$arguments = implode(' ', (array) $arguments);
 		$options = implode(' ', (array) $options);
@@ -312,8 +312,8 @@ HELP;
 			$content = file_get_contents($file->getPathname());
 
 			$content = str_replace(
-				array('{DEPLOY_VERSION}', '__DEPLOY_VERSION__', '{ORGANIZATION}'),
-				array($this->tag, $this->tag, 'Asikart'),
+				['{DEPLOY_VERSION}', '__DEPLOY_VERSION__', '{ORGANIZATION}'],
+				[$this->tag, $this->tag, 'Asikart'],
 				$content
 			);
 

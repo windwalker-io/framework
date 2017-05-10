@@ -7,7 +7,7 @@
  */
 
 // Travis-CI apache uses php5.3 so we can not use short array syntax
-$globals = array();
+$globals = [];
 $_SERVER['HTTP_HOST'];
 
 foreach ($GLOBALS as $key => $value)

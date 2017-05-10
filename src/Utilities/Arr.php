@@ -268,7 +268,7 @@ class Arr
 		{
 			if (strtolower($type) === 'array')
 			{
-				return array();
+				return [];
 			}
 
 			if (class_exists($type))
@@ -1039,7 +1039,7 @@ class Arr
 
 		// Dump Multiple values
 		if (count($args) > 1) {
-			$prints = array();
+			$prints = [];
 
 			$i = 1;
 

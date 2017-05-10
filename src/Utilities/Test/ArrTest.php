@@ -440,7 +440,7 @@ class ArrTest extends TestCase
 	 */
 	public function testSet()
 	{
-		$data = array();
+		$data = [];
 
 		// One level
 		$return = Arr::set($data, 'flower', 'sakura');
