@@ -133,6 +133,8 @@ class Console extends AbstractConsole
 			$this->set('show_help', true);
 		}
 
+		$error = false;
+
 		try
 		{
 			/*
@@ -148,21 +150,31 @@ class Console extends AbstractConsole
 			$command->renderException($e);
 
 			$exitCode = $e->getCode();
+			$error = true;
 		}
 		catch (\Throwable $t)
 		{
 			$command->renderException(new \ErrorException($t->getMessage(), $t->getCode(), E_ERROR, $t->getFile(), $t->getLine(), $t));
 
 			$exitCode = $t->getCode();
+			$error = true;
+		}
+
+		if ($exitCode === true)
+		{
+			$exitCode = 0;
+		}
+		elseif (($error && $exitCode === 0) || $exitCode === false)
+		{
+			$exitCode = 1;
+		}
+		elseif ($exitCode > 255 || $exitCode == -1)
+		{
+			$exitCode = 255;
 		}
 
 		if ($this->autoExit)
 		{
-			if ($exitCode > 255 || $exitCode == -1)
-			{
-				$exitCode = 255;
-			}
-
 			exit($exitCode);
 		}
 
