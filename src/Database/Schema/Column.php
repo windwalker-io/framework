@@ -249,6 +249,18 @@ class Column
 	}
 
 	/**
+	 * unsigned
+	 *
+	 * @return  static
+	 */
+	public function unsigned()
+	{
+		$this->signed(false);
+
+		return $this;
+	}
+
+	/**
 	 * Method to get property AllowNull
 	 *
 	 * @return  boolean
@@ -268,6 +280,18 @@ class Column
 	public function allowNull($allowNull = true)
 	{
 		$this->allowNull = $allowNull;
+
+		return $this;
+	}
+
+	/**
+	 * notNull
+	 *
+	 * @return  static
+	 */
+	public function notNull()
+	{
+		$this->allowNull(false);
 
 		return $this;
 	}
