@@ -98,12 +98,6 @@ class ArrayHelper
 	 */
 	public static function getColumn(array $array, $index)
 	{
-		// PHP 7.0 support objects in array
-		if (version_compare(PHP_VERSION, '7.0', '>='))
-		{
-			return array_column($array, $index);
-		}
-
 		$result = [];
 
 		foreach ($array as $item)
