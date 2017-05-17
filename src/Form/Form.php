@@ -794,7 +794,7 @@ class Form implements \IteratorAggregate
 	 * @param string $fieldset
 	 * @param string $group
 	 *
-	 * @return  $this
+	 * @return  array
 	 */
 	public function getValues($fieldset = null, $group = null)
 	{
