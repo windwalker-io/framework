@@ -68,7 +68,7 @@ trait OptionAccessTrait
 	/**
 	 * Method to set property options
 	 *
-	 * @param   int $options
+	 * @param   array $options
 	 *
 	 * @return  static  Return self to support chaining.
 	 */

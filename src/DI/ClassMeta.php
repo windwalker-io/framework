@@ -11,11 +11,13 @@ namespace Windwalker\DI;
 /**
  * The ClassMeta class.
  * 
- * @method  object  newInstance($args = [])
- * @method  object  createObject($args = [])
- * @method  object  createSharedObject($args = [])
+ * @method  object  newInstance(array $args = [])
+ * @method  object  createObject(array $args = [], $shared = false, $protected = false)
+ * @method  object  createSharedObject(array $args = [], $protected = false)
  * @method  Container  bind($value, $shared = false, $protected = false)
- * @method  Container  bindShared($protected = false)
+ * @method  Container  bindShared($value, $protected = false)
+ * @method  Container  prepareObject($extend = null, $shared = false, $protected = false)
+ * @method  Container  prepareSharedObject($extend = null, $protected = false)
  *
  * @since  3.0
  */

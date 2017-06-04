@@ -29,6 +29,7 @@ class MysqlType extends DataType
 	 */
 	public static $defaultLengths = [
 		self::INTEGER => 11,
+		self::BIGINT => 20,
 	];
 
 	/**

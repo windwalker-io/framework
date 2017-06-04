@@ -14,6 +14,7 @@ use Windwalker\Database\Schema\Column;
 /**
  * The Schema class.
  *
+ * @method  Column\Bigint     bigint($name)
  * @method  Column\Bit        bit($name)
  * @method  Column\Char       char($name)
  * @method  Column\Datetime   datetime($name)

@@ -30,6 +30,7 @@ class DataType
 	const BIT_VARYING = 'bit varying';
 
 	// EXACT NUMERIC
+	const BIGINT = 'bigint';
 	const INTEGER = 'integer';
 	const SMALLINT = 'smallint';
 	const DECIMAL = 'decimal';
@@ -83,6 +84,7 @@ class DataType
 		self::BIT         => [1, 0, 'integer'],
 		self::BIT_VARYING => [1, 0, 'integer'],
 
+		self::BIGINT   => [20, 0, 'integer'],
 		self::INTEGER  => [11, 0, 'integer'],
 		self::SMALLINT => [6,  0, 'integer'],
 		self::TINYINT  => [4,  0, 'integer'],

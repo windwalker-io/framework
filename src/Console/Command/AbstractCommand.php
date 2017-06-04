@@ -197,7 +197,7 @@ abstract class AbstractCommand implements \ArrayAccess
 			{
 				$command = $this->getChild($name);
 
-				throw new \RuntimeException($e->getMessage() . "\n\n" . $command->getUsage(), $e->getCode(), $e);
+				throw new \RuntimeException($e->getMessage() . "\n\n[Usage] " . $command->getUsage(), $e->getCode(), $e);
 			}
 			catch (\Exception $e)
 			{

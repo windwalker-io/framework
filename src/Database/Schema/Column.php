@@ -419,7 +419,7 @@ class Column
 	 *
 	 * @return  static  Return self to support chaining.
 	 */
-	public function primary($primary)
+	public function primary($primary = true)
 	{
 		$primary = (bool) $primary;
 
@@ -430,6 +430,7 @@ class Column
 			$this->signed = false;
 			$this->allowNull = false;
 			$this->autoIncrement = true;
+			$this->default = false;
 		}
 
 		return $this;
