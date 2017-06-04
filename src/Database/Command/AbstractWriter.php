@@ -97,7 +97,7 @@ abstract class AbstractWriter
 			}
 
 			// Ignore any internal fields.
-			if ($k[0] == '_')
+			if ($k[0] === '_')
 			{
 				continue;
 			}
@@ -372,7 +372,7 @@ abstract class AbstractWriter
 				continue;
 			}
 
-			$query->set($query->format('%n = %q', $field, $value));
+			$query->set(QueryHelper::buildValueAssign($field, $value, $query));
 
 			$hasField = true;
 		}

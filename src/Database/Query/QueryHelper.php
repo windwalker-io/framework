@@ -192,7 +192,7 @@ class QueryHelper
 			// NULL
 			if ($value === null && $allowNulls)
 			{
-				$query->where($query->format('%n = NULL', $key));
+				$query->where($query->format('%n IS NULL', $key));
 			}
 
 			// If using Compare class, we convert it to string.
@@ -260,6 +260,32 @@ class QueryHelper
 		);
 
 		return (string) $value;
+	}
+
+	/**
+	 * buildValueAssign
+	 *
+	 * @param string              $key
+	 * @param mixed               $value
+	 * @param QueryInterface|null $query
+	 *
+	 * @return  string
+	 */
+	public static function buildValueAssign($key, $value, QueryInterface $query = null)
+	{
+		$query = $query ? : DatabaseFactory::getDbo()->getQuery(true);
+
+		if ($value === null)
+		{
+			return $query->format('%n = NULL', $key);
+		}
+
+		if ($value instanceof \DateTimeInterface)
+		{
+			return $query->format('%n = %q', $key, $value->format($query->getDateFormat()));
+		}
+
+		return $query->format('%n = %q', $key, $value);
 	}
 
 	/**
