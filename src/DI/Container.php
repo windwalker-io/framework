@@ -130,7 +130,8 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 	}
 
 	/**
-	 * bind
+	 * Bind a class or key to another instance, container will return instance if it has been set
+	 * or created, otherwise it will create new one.
 	 *
 	 * @param   string $name
 	 * @param   mixed  $value
@@ -147,6 +148,12 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 		{
 			$value = function (Container $container) use ($value)
 			{
+				// We must check the keys exists or not, if exists, just get it instead new one.
+				if ($container->exists($value))
+				{
+					return $container->get($value);
+				}
+
 			    return $container->newInstance($value);
 			};
 		}
