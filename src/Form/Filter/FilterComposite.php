@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 ${ORGANIZATION}.
+ * @copyright  Copyright (C) 2017 $Asikart.
  * @license    __LICENSE__
  */
 
@@ -11,7 +11,7 @@ namespace Windwalker\Form\Filter;
 /**
  * The FilterComposite class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.2
  */
 class FilterComposite implements FilterInterface
 {

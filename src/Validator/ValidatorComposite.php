@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 ${ORGANIZATION}.
+ * @copyright  Copyright (C) 2017 $Asikart.
  * @license    __LICENSE__
  */
 
@@ -13,7 +13,7 @@ use Windwalker\Validator\Rule\CallbackValidator;
 /**
  * The ValidatorComposite class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.2
  */
 class ValidatorComposite extends AbstractValidator
 {

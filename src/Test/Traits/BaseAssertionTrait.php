@@ -2,7 +2,7 @@
 /**
  * Part of ww4 project.
  *
- * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @copyright  Copyright (C) 2016 Asikart. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -14,7 +14,7 @@ use Windwalker\Test\Helper\TestStringHelper;
 /**
  * StringTestTrait
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.2
  */
 trait BaseAssertionTrait
 {

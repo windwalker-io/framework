@@ -16,7 +16,7 @@ use Windwalker\Utilities\Arr;
 /**
  * The ArrTest class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.2
  */
 class ArrTest extends TestCase
 {

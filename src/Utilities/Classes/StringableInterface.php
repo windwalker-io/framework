@@ -11,7 +11,7 @@ namespace Windwalker\Utilities\Classes;
 /**
  * Interface StringableInterface
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.2
  */
 interface StringableInterface
 {

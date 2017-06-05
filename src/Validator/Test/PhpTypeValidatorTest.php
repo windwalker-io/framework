@@ -14,7 +14,7 @@ use Windwalker\Validator\Rule\PhpTypeValidator;
 /**
  * Test class of \Windwalker\Validator\Rule\PhpTypeValidator
  *
- * @since __DEPLOY_VERSION__
+ * @since 3.2
  */
 class PhpTypeValidatorTest extends TestCase
 {

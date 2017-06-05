@@ -11,7 +11,7 @@ namespace Windwalker\String;
 /**
  * The StringHelper class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.2
  */
 class Str
 {

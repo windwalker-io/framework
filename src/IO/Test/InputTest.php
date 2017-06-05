@@ -325,7 +325,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
 	 * @return  void
 	 *
 	 * @covers  \Windwalker\IO\Input::exists
-	 * @since   __DEPLOY_VERSION__
+	 * @since   3.2
 	 */
 	public function testExists()
 	{

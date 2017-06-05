@@ -19,7 +19,7 @@ use Windwalker\Validator\ValidatorInterface;
 /**
  * Test class of \Windwalker\Validator\ValidatorComposite
  *
- * @since __DEPLOY_VERSION__
+ * @since 3.2
  */
 class ValidatorCompositeTest extends TestCase
 {

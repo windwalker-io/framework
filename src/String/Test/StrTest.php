@@ -14,7 +14,7 @@ use Windwalker\String\Str;
 /**
  * The StrTest class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.2
  */
 class StrTest extends TestCase
 {

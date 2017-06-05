@@ -14,7 +14,7 @@ use Windwalker\Form\Filter\FilterComposite;
 /**
  * Test class of \Windwalker\Form\Filter\FilterComposite
  *
- * @since __DEPLOY_VERSION__
+ * @since 3.2
  */
 class FilterCompositeTest extends TestCase
 {

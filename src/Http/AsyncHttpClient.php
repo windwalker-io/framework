@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @copyright  Copyright (C) 2016 Asikart. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
 
@@ -17,7 +17,7 @@ use Windwalker\Http\Transport\TransportInterface;
 /**
  * The AsyncRequest class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.2
  */
 class AsyncHttpClient extends HttpClient
 {

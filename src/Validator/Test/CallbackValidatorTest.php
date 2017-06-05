@@ -14,7 +14,7 @@ use Windwalker\Validator\Rule\CallbackValidator;
 /**
  * Test class of \Windwalker\Validator\Rule\CallbackValidator
  *
- * @since __DEPLOY_VERSION__
+ * @since 3.2
  */
 class CallbackValidatorTest extends TestCase
 {

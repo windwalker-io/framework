@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 ${ORGANIZATION}.
+ * @copyright  Copyright (C) 2017 $Asikart.
  * @license    __LICENSE__
  */
 
@@ -15,7 +15,7 @@ use Windwalker\Http\Stream\Stream;
 /**
  * The AttachmentResponse class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.2
  */
 class AttachmentResponse extends Response
 {

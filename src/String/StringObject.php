@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 ${ORGANIZATION}.
+ * @copyright  Copyright (C) 2017 $Asikart.
  * @license    __LICENSE__
  */
 
@@ -48,7 +48,7 @@ use Windwalker\Utilities\Classes\StringableInterface;
  * @method StringObject filter(callable $callback)
  * @method StringObject reject(callable $callback)
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.2
  */
 class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, StringableInterface
 {

@@ -17,7 +17,7 @@ use Windwalker\Test\Traits\BaseAssertionTrait;
 /**
  * The StringObjectTest class.
  *
- * @since  {DEPLOY_VERSION}
+ * @since  3.2
  */
 class StringObjectTest extends TestCase
 {
