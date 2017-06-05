@@ -54,7 +54,14 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 		}
 		elseif (!empty($data) && is_string($data))
 		{
-			$this->loadString($data, $format);
+			if (strlen($data) < PHP_MAXPATHLEN && is_file($data))
+			{
+				$this->loadFile($data, $format);
+			}
+			else
+			{
+				$this->loadString($data, $format);
+			}
 		}
 	}
 
