@@ -1,7 +1,6 @@
 language: php
 
 sudo: true
-dist: trusty
 
 php:
   - hhvm
