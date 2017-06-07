@@ -563,6 +563,48 @@ HTML;
 	}
 
 	/**
+	 * testAddClass
+	 *
+	 * @return  void
+	 */
+	public function testAddClass()
+	{
+		$this->instance->addClass('foo');
+
+		self::assertEquals('stub-flower foo', $this->instance->get('class'));
+
+		$this->instance->addClass(['stub-flower', 'bar']);
+
+		self::assertEquals('stub-flower foo bar', $this->instance->get('class'));
+
+		$this->instance->addClass(['yoo goo']);
+
+		self::assertEquals('stub-flower foo bar yoo goo', $this->instance->get('class'));
+	}
+
+	/**
+	 * testRemoveClass
+	 *
+	 * @return  void
+	 */
+	public function testRemoveClass()
+	{
+		$this->instance->addClass('foo bar yoo goo');
+
+		$this->instance->removeClass('bar');
+
+		self::assertEquals('stub-flower foo yoo goo', $this->instance->get('class'));
+
+		$this->instance->removeClass('yoo goo');
+
+		self::assertEquals('stub-flower foo', $this->instance->get('class'));
+
+		$this->instance->removeClass(['foo', 'yoo']);
+
+		self::assertEquals('stub-flower', $this->instance->get('class'));
+	}
+
+	/**
 	 * Method to test getAttribute().
 	 *
 	 * @return void

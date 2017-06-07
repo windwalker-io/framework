@@ -51,7 +51,6 @@ class AbstractHtml5Field extends TextField
 			'min' => 'min',
 			'step' => 'step',
 			'patten' => 'patten',
-		]
-		);
+		]);
 	}
 }

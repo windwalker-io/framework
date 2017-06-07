@@ -21,7 +21,17 @@ use Windwalker\Validator\ValidatorInterface;
 
 /**
  * The AbstractField class.
- * 
+ *
+ * @method $this class($value)
+ * @method $this labelClass($value)
+ * @method $this controlClass($value)
+ * @method $this addClass($value)
+ * @method $this removeClass($value)
+ * @method $this addLabelClass($value)
+ * @method $this removeLabelClass($value)
+ * @method $this addControlClass($value)
+ * @method $this removeControlClass($value)
+ *
  * @since  2.0
  */
 abstract class AbstractField
@@ -937,6 +947,8 @@ abstract class AbstractField
 	 * @param   string  $value
 	 *
 	 * @return  static
+	 *
+	 * @deprecated  Use class() instead.
 	 */
 	public function setClass($value)
 	{
@@ -946,17 +958,41 @@ abstract class AbstractField
 	}
 
 	/**
-	 * labelClass
+	 * addClassName
 	 *
-	 * @param   string  $value
+	 * @param string $to
+	 * @param mixed  $value
 	 *
 	 * @return  static
+	 *
+	 * @TODO  Use Accessors and magic call to handle all attributes.
 	 */
-	public function labelClass($value)
+	protected function addClassName($to = 'class', $value)
 	{
-		$this->setAttribute('labelClass', $value);
+		$classes = explode(' ', (string) $this->getAttribute($to));
 
-		return $this;
+		$value = array_merge($classes, is_string($value) ? explode(' ', $value) : $value);
+
+		return $this->set($to, implode(' ', array_unique($value)));
+	}
+
+	/**
+	 * removeClass
+	 *
+	 * @param string       $from
+	 * @param string|array $value
+	 *
+	 * @return static
+	 *
+	 * @TODO  Use Accessors and magic call to handle all attributes.
+	 */
+	public function removeClassName($from = 'class', $value)
+	{
+		$classes = explode(' ', (string) $this->getAttribute($from));
+
+		$value = array_diff($classes, is_string($value) ? explode(' ', $value) : $value);
+
+		return $this->set($from, implode(' ', array_unique($value)));
 	}
 
 	/**
@@ -986,7 +1022,6 @@ abstract class AbstractField
 
 		return $this;
 	}
-
 
 	/**
 	 * Get attribute. Alias of `getAttribute()`.
@@ -1246,7 +1281,11 @@ abstract class AbstractField
 	 */
 	protected function getAccessors()
 	{
-		return [];
+		return [
+			'class',
+			'labelClass',
+			'controlClass'
+		];
 	}
 
 	/**
@@ -1277,6 +1316,22 @@ abstract class AbstractField
 			{
 				return $this->getAttribute($attribute);
 			}
+		}
+
+		switch($method)
+		{
+			case 'addClass':
+				return $this->addClassName('class', $args[0]);
+			case 'removeClass':
+				return $this->removeClassName('class', $args[0]);
+			case 'addLabelClass':
+				return $this->addClassName('labelClass', $args[0]);
+			case 'removeLabelClass':
+				return $this->removeClassName('labelClass', $args[0]);
+			case 'addControlClass':
+				return $this->addClassName('controlClass', $args[0]);
+			case 'removeControlClass':
+				return $this->removeClassName('controlClass', $args[0]);
 		}
 
 		throw new \BadMethodCallException(sprintf('Method: %s not exists', $method));
