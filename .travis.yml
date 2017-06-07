@@ -22,7 +22,7 @@ before_install:
   - sh -e build/travis/scripts/apache2-configure.sh
   - sudo add-apt-repository ppa:ondrej/php -y
   - sudo apt-get update -q
-  - sudo apt-get install libsodium-dev -y
+  - sh -e build/travis/scripts/libsodium.sh
 
 before_script:
   - if [[ $TRAVIS_PHP_VERSION != hhvm ]]; then pecl install libsodium; fi
