@@ -237,7 +237,7 @@ trait CollectionTrait
 	 * @param mixed  $default
 	 * @param string $delimiter
 	 *
-	 * @return  static
+	 * @return  mixed
 	 */
 	public function takeout($key, $default = null, $delimiter = '.')
 	{

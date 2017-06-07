@@ -571,7 +571,7 @@ class Arr
 	 * @param mixed        $default
 	 * @param string       $delimiter
 	 *
-	 * @return  array|object
+	 * @return  mixed
 	 */
 	public static function takeout(&$data, $key, $default = null, $delimiter = '.')
 	{
