@@ -10,6 +10,10 @@ php:
   - 7.0
   - 7.1
 
+matrix:
+  allow_failures:
+    - php: hhvm
+
 addons:
   postgresql: "9.3"
 
@@ -22,11 +26,10 @@ before_install:
   - sh -e build/travis/scripts/apache2-vhost.sh
   - sh -e build/travis/scripts/apache2-configure.sh
   - sudo add-apt-repository ppa:ondrej/php -y
-  - sudo apt-get update -q
   - sh -e build/travis/scripts/libsodium.sh
 
 before_script:
-  - if [[ $TRAVIS_PHP_VERSION != hhvm ]]; then pecl install libsodium; fi
+  - sh -e build/travis/scripts/pecl-libsodium.sh || true
   - composer update
   - phpenv rehash
 

@@ -179,6 +179,7 @@ class Build extends AbstractCliApplication
 			->out('---------------------------------------');
 
 		// Do split
+		$this->exec(sprintf('git branch -D sub-%s', $subtree));
 		$this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
 
 		// Create a new branch

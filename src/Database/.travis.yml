@@ -1,6 +1,7 @@
 language: php
 
 sudo: true
+dist: trusty
 
 php:
   - 5.5
@@ -12,8 +13,6 @@ addons:
   postgresql: "9.3"
 
 before_script:
-  - sudo apt-get update
-  - sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-mysql
   - composer update --dev
 
 script:

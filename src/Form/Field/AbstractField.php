@@ -1305,17 +1305,23 @@ abstract class AbstractField
 		if (isset($accessors[$method]))
 		{
 			$attribute = $accessors[$method];
+		}
 
+		if (in_array($method, $accessors, true))
+		{
+			$attribute = $method;
+		}
+
+		if (isset($attribute))
+		{
 			if (count($args) > 0)
 			{
 				$this->setAttribute($attribute, $args[0]);
 
 				return $this;
 			}
-			else
-			{
-				return $this->getAttribute($attribute);
-			}
+
+			return $this->getAttribute($attribute);
 		}
 
 		switch($method)

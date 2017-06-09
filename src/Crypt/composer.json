@@ -2,7 +2,7 @@
     "name": "windwalker/crypt",
     "type": "windwalker-package",
     "description": "Windwalker Crypt package",
-    "keywords": ["windwalker", "framework", "crypt"],
+    "keywords": ["windwalker", "framework", "crypt", "libsodium", "bcrypt"],
     "homepage": "https://github.com/ventoviro/windwalker-crypt",
     "license": "LGPL-2.0+",
     "require": {
