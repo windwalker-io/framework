@@ -1,6 +1,7 @@
 language: php
 
 sudo: true
+dist: trusty
 
 php:
   - hhvm
@@ -8,6 +9,10 @@ php:
   - 5.6
   - 7.0
   - 7.1
+
+matrix:
+  allow_failures:
+    - php: hhvm
 
 addons:
   postgresql: "9.3"
@@ -21,7 +26,6 @@ before_install:
   - sh -e build/travis/scripts/apache2-vhost.sh
   - sh -e build/travis/scripts/apache2-configure.sh
   - sudo add-apt-repository ppa:ondrej/php -y
-  - sudo apt-get update -q
   - sh -e build/travis/scripts/libsodium.sh
 
 before_script:

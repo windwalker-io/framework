@@ -30,5 +30,8 @@ echo "---> Configuration file : $(tput bold ; tput setaf 3)$CONFIGFILE$(tput sgr
 sed s?%basedir%?$DOCROOT? "$CONFIGFILE" | sed s/%hostname%/$VHOSTNAME/ > $VHOSTNAME
 sudo mv $VHOSTNAME /etc/apache2/sites-available/$VHOSTNAME.conf
 
+# Must open permission of /home/travis
+sudo chmod 755 /home/travis
+
 echo "---> $(tput bold ; tput setaf 2)Adding host to /etc/hosts$(tput sgr0) :"
 echo "127.0.0.1    $VHOSTNAME" | sudo tee -a /etc/hosts

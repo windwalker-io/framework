@@ -4,10 +4,12 @@
 
     DocumentRoot %basedir%
 
-    <Directory %basedir%/web>
+    <Directory %basedir%>
         DirectoryIndex app.php
-        Options -Indexes FollowSymLinks SymLinksifOwnerMatch
-        AllowOverride All
-        Allow from All
+        Options -Indexes +FollowSymLinks +SymLinksifOwnerMatch
+        AllowOverride all
+        Allow from all
+
+        Require all granted
     </Directory>
 </VirtualHost>
