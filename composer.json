@@ -14,8 +14,7 @@
         "php": ">=5.5.9",
         "psr/log": "~1.0",
         "psr/http-message": "~1.0",
-        "psr/cache": "~1.0",
-        "webmozart/assert": "~1.0"
+        "psr/cache": "~1.0"
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",
