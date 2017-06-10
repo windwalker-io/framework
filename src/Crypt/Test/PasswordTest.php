@@ -170,6 +170,54 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
+	 * testCreateArgon2
+	 *
+	 * @return  void
+	 */
+	public function testCreateArgon2()
+	{
+		if (!extension_loaded('libsodium'))
+		{
+			self::markTestSkipped('Libsodium-php not installed.');
+		}
+
+		$this->instance->setType(Password::SODIUM_ARGON2)->setSalt(null);
+
+		$pass = $this->instance->create('windwalker');
+
+		$this->assertTrue($this->instance->verify('windwalker', $pass));
+
+		// Use default
+		$password = new Password;
+
+		$this->assertTrue($password->verify('windwalker', $password->create('windwalker')));
+	}
+
+	/**
+	 * testCreateArgon2
+	 *
+	 * @return  void
+	 */
+	public function testCreateScrypt()
+	{
+		if (!extension_loaded('libsodium'))
+		{
+			self::markTestSkipped('Libsodium-php not installed.');
+		}
+
+		$this->instance->setType(Password::SODIUM_SCRYPT)->setSalt(null);
+
+		$pass = $this->instance->create('windwalker');
+
+		$this->assertTrue($this->instance->verify('windwalker', $pass));
+
+		// Use default
+		$password = new Password;
+
+		$this->assertTrue($password->verify('windwalker', $password->create('windwalker')));
+	}
+
+	/**
 	 * Method to test getSalt().
 	 *
 	 * @return void

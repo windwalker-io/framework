@@ -62,9 +62,14 @@ $pass = $password->create('pass1234');
 ### Available algorithms
  
 - Password::MD5
-- Password::BLOWFISH
+- Password::BLOWFISH (default)
 - Password::SHA256
 - Password::SHA512
+- Password::ARGON2 (libsodium)
+- Password::SCRYPT (libsodium)
+
+> NOTE: `ARGON2` and `SCRYPT` must install php `ext-libsodium` and libsodium library first. Native PHP cannot implement them.
+> These 2 algos will ignore cost and salt and use Sodium way to hash password.
 
 ### Verify Password
 
@@ -119,6 +124,34 @@ Or set the PBKDF2 iteration count.
 
 ``` php
 $cipher = new BlowfishCipher($key, array('pbkdf2_iteration' => 64000)); // Default is 12000
+```
+
+### Libsodium
+
+Use [Libsodium](https://github.com/jedisct1/libsodium) to encrypt data, you must 
+install [paragonie/sodium_compat](https://github.com/paragonie/sodium_compat) first.
+
+`paragonie/sodium_compat` helps us use libsodium without extension, but you should install `ext-libsodium` to get higher performance.
+
+```php
+use Windwalker\Crypt\Cipher\SodiumCipher;
+
+$crypt = new Crypt(new SodiumCipher);
+
+$encrypted = $cipher->encrypt($text);
+
+$text = $cipher->decrypt($encrypted);
+```
+
+Pure php cannot implement memory wipe, if you get `sodium_memzero() only supports after php 7.2 or ext-libsodium installed.` message, 
+it means you must install `ext-libsodium` or use php 7.2 or higher,
+you can also disable memory wipe by `ignoreMemzero()` (But we don't recommend to do this):
+
+```php
+$cipher = new SodiumCipher;
+$cipher->ignoreMemzero(true);
+
+$crypt = new Crypt($cipher);
 ```
 
 ### Available Ciphers
