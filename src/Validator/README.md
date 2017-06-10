@@ -39,6 +39,9 @@ $validator->validate('sakura'); // bool(false)
 - PhoneValidator
 - RegexValidator
 - UrlValidator
+- CallbackValidator
+- CompareValidator
+- PhpTypeValidator
 
 ## Regex Validator
 
@@ -107,4 +110,41 @@ class MyRegexValidator extends RegexValidator
 	protected $modified = 'i';
 	protected $regex = '[a-zA-Z]';
 }
+```
+
+## Composite
+
+Match all.
+
+```php
+use Windwalker\Validator\ValidatorComposite;
+
+$validator = new ValidatorComposite([
+    AlnumValidator::class,
+    new PhoneValidator
+]);
+
+$validator->validate('1a2b'); // false
+$validator->getResults(); // [true, false]
+```
+
+Match one.
+
+```php
+use Windwalker\Validator\ValidatorComposite;
+
+$validator = new ValidatorComposite([
+    AlnumValidator::class,
+    new PhoneValidator
+])->setMode(ValidatorComposite::MODE_MATCH_ONE);
+
+$validator->validate('1a2b'); // true
+$validator->getResults(); // [true, false]
+```
+
+Use methods:
+
+```php
+$validator->validateOne($value);
+$validator->validateAll($value);
 ```

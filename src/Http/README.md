@@ -466,6 +466,7 @@ $response = new \Windwalker\Http\Response\HtmlResponse('<html> ... </html>');
 $response = new \Windwalker\Http\Response\JsonResponse(array('foo' => 'bar'), 200, $headers);
 $response = new \Windwalker\Http\Response\XmlResponse(new \SimpleXMLElement('<root />'), 200, $headers);
 $response = new \Windwalker\Http\Response\RedirectResponse($url, 301);
+$response = new \Windwalker\Http\Response\AttachmentResponse('file');
 ```
 
 ## More About Psr 7

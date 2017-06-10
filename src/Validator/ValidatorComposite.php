@@ -108,6 +108,51 @@ class ValidatorComposite extends AbstractValidator
 	}
 
 	/**
+	 * validateOne
+	 *
+	 * @param mixed $value
+	 *
+	 * @return  bool
+	 */
+	public function validateOne($value)
+	{
+		return $this->match($value, static::MODE_MATCH_ONE);
+	}
+
+	/**
+	 * validateAll
+	 *
+	 * @param mixed $value
+	 *
+	 * @return  bool
+	 */
+	public function validateAll($value)
+	{
+		return $this->match($value, static::MODE_MATCH_ALL);
+	}
+
+	/**
+	 * match
+	 *
+	 * @param mixed $value
+	 * @param int   $mode
+	 *
+	 * @return  bool
+	 */
+	protected function match($value, $mode)
+	{
+		$backup = $this->getMode();
+
+		$this->setMode($mode);
+
+		$result = $this->validate($value);
+
+		$this->setMode($backup);
+
+		return $result;
+	}
+
+	/**
 	 * addValidator
 	 *
 	 * @param ValidatorInterface|callable $validator
