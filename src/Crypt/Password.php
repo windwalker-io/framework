@@ -13,7 +13,7 @@ namespace Windwalker\Crypt;
  * 
  * @since  2.0
  */
-class Password
+class Password implements HasherInterface
 {
 	const MD5 = 3;
 	const BLOWFISH = 4;
