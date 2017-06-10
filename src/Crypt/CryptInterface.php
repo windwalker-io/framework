@@ -41,11 +41,11 @@ interface CryptInterface
 	 * match
 	 *
 	 * @param string $string
-	 * @param string $hash
+	 * @param string $encrypted
 	 * @param string $key
 	 * @param string $iv
 	 *
 	 * @return  boolean
 	 */
-	public function verify($string, $hash, $key = null, $iv = null);
+	public function verify($string, $encrypted, $key = null, $iv = null);
 }

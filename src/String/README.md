@@ -14,6 +14,143 @@ Add this to the require block in your `composer.json`.
 }
 ```
 
+## New Str Class
+
+After 3.2, Windwalker has a new `Str` class and we will continue replace all old `StringHelper` will it in the future:
+
+```php
+use Windwalker\String\Str;
+
+string : Str::getChar($string, $pos, $encoding = null);
+string : Str::between($string, $start, $end, $offset = 0, $encoding = null);
+string : Str::collapseWhitespaces($string);
+bool :   Str::contains($string, $search, $caseSensitive = true, $encoding = null);
+bool :   Str::endsWith($string, $search, $caseSensitive = true, $encoding = null);
+bool :   Str::startsWith($string, $target, $caseSensitive = true, $encoding = null);
+string : Str::ensureLeft($string, $search, $encoding = null);
+string : Str::ensureRight($string, $search, $encoding = null);
+bool :   Str::hasLowerCase($string, $encoding = null);
+bool :   Str::hasUpperCase($string, $encoding = null);
+bool :   Str::match($pattern, $string, $option = 'msr', $encoding = null);
+string : Str::insert($string, $insert, $position, $encoding = null);
+bool :   Str::isLowerCase($string);
+bool :   Str::isUpperCase($string);
+string : Str::first($string, $length = 1, $encoding = null);
+string : Str::last($string, $length = 1, $encoding = null);
+string : Str::intersectLeft($string1, $string2, $encoding = null);
+string : Str::intersectRight($string1, $string2, $encoding = null);
+string : Str::intersect($string1, $string2, $encoding = null);
+string : Str::pad($string, $length = 0, $substring = ' ', $encoding = null);;
+string : Str::padLeft($string, $length = 0, $substring = ' ', $encoding = null);;
+string : Str::padRight($string, $length = 0, $substring = ' ', $encoding = null);;
+string : Str::removeChar($string, $offset, $length = null, $encoding = null);
+string : Str::removeLeft($string, $search, $encoding = null);
+string : Str::removeRight($string, $search, $encoding = null);
+string : Str::slice($string, $start, $end = null, $encoding = null);
+string : Str::substring($string, $start, $end = null, $encoding = null);
+string : Str::surround($string, $substring = ['"', '"']);
+string : Str::toggleCase($string, $encoding = null);
+string : Str::truncate();;
+string : Str::map($string, callable $callback, $encoding = null);
+string : Str::filter($string, callable $callback, $encoding = null);
+string : Str::reject($string, callable $callback, $encoding = null);
+```
+
+## New StringObject
+
+`StringObject` is a class to help us manipulation string by OO way.
+
+Create string object:
+
+```php
+$str = str('Hello');
+
+// OR
+
+$str = new StringObject('Hello');
+$str = StringObject::create('Hello');
+```
+
+### Usage
+
+```php
+$str[3]; // Get letter
+
+// Iterator
+foreach ($str as $letter)
+{
+    echo $letter
+}
+
+// Chaining modify, it is a immutable object, must reuturn self.
+$str = $str->toUpperCase()
+    ->trimLeft()
+    ->truncate();
+    
+// to string
+echo $str;
+```
+
+### Methods
+
+```php
+$str->count();
+$str->getString();
+$str->withString($string);
+$str->toLowerCase();
+$str->toUpperCase();
+$str->length();
+$str->chop($length = 1);
+$str->replace($search, $replacement, &$count = null);
+$str->compare($compare, $caseSensitive = true);
+$str->reverse();
+$str->substrReplace($replace, $start, $offset = null);
+$str->trimLeft($charlist = null);
+$str->trimRight($charlist = null);
+$str->trim($charlist = null);
+$str->upperCaseFirst();
+$str->lowerCaseFirst();
+$str->upperCaseWords();
+$str->substrCount($search, $caseSensitive = true);
+$str->indexOf($search);
+$str->indexOfLast($search);
+$str->explode($delimiter, $limit = null);
+$str->apply(callable $callback);
+$str->getChar(int $pos);
+$str->between(string $start, string $end, int $offset = 0);
+$str->collapseWhitespaces(string $string);
+$str->contains(string $search, bool $caseSensitive = true);
+$str->endsWith(string $search, bool $caseSensitive = true);
+$str->startsWith(string $target, bool $caseSensitive = true);
+$str->ensureLeft(string $search);
+$str->ensureRight(string $search);
+$str->hasLowerCase();
+$str->hasUpperCase();
+$str->match(string $pattern, string $option = 'msr');
+$str->insert(string $insert, int $position);
+$str->isLowerCase();
+$str->isUpperCase();
+$str->first(int $length = 1);
+$str->last(int $length = 1);
+$str->intersectLeft(string $string2);
+$str->intersectRight(string $string2);
+$str->intersect(string $string2);
+$str->pad(int $length = 0, string $substring = ' ');
+$str->padLeft(int $length = 0, string $substring = ' ');
+$str->padRight(int $length = 0, string $substring = ' ');
+$str->removeChar(int $offset, int $length = null);
+$str->removeLeft(string $search);
+$str->removeRight(string $search);
+$str->slice(int $start, int $end = null);
+$str->substring(int $start, int $end = null);
+$str->surround($substring = ['"', '"']);
+$str->toggleCase();
+$str->truncate(int $length, string $suffix = '', bool $wordBreak = true);
+$str->map(callable $callback);
+$str->filter(callable $callback);
+$str->reject(callable $callback);
+```
+
 ## Simple Template Engine
 
 Simple variable replace.
