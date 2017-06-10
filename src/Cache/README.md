@@ -18,7 +18,7 @@ Add this to the require block in your `composer.json`.
 
 Create a cache object and store data.
 
-``` php
+```php
 use Windwalker\Cache\Cache;
 
 $data = array('sakura');
@@ -30,7 +30,7 @@ $cache->set('flower', $data);
 
 Then we can get this data by same key.
 
-``` php
+```php
 $data = $cache->get('flower'); // return Array('sakura')
 ```
 
@@ -38,7 +38,7 @@ $data = $cache->get('flower'); // return Array('sakura')
 
 Using call method to auto detect is cache exists or not. 
 
-``` php
+```php
 $data = $cache->call('flower', function()
 {
     return array('sakura');
@@ -47,7 +47,7 @@ $data = $cache->call('flower', function()
 
 It is same as this code:
 
-``` php
+```php
 if (!$cache->exists('flower'))
 {
     $cache->set('flower', array('sakura'));
@@ -60,7 +60,7 @@ $data = $cache->get('flower');
 
 Set storage to Cache so we can use different storage engine to save cache data.
 
-``` php
+```php
 use Windwalker\Cache\Cache;
 use Windwalker\Cache\Storage\ArrayStorage;
 
@@ -78,7 +78,7 @@ no matter how many times you create it.
 
 Create a cache with `FileStorage` and set a path to store files.
 
-``` php
+```php
 use Windwalker\Cache\Cache;
 use Windwalker\Cache\Storage\FileStorage;
 
@@ -99,7 +99,7 @@ a:1:{i:0;s:6:"sakura";}
 
 Group is a subfolder of your storage path.
 
-``` php
+```php
 $path = '/your/cache/path';
 
 $cache = new Cache(new FileStorage($path, 'mygroup'));
@@ -114,7 +114,7 @@ The file wil store at `/your/cache/path/mygroup/~5a46b8253d07320a14cace9b4dcbf80
 If your cache folder are exposure on web environment, we have to make our cache files unable to access. The argument 3 
  of `FileStorage` is use to deny access.
   
-``` php
+```php
 $path = '/your/cache/path';
 
 $cache = new Cache(new FileStorage($path, 'mygroup', true));
@@ -126,7 +126,7 @@ The stored file will be a PHP file with code to deny access:
 
 `/your/cache/path/mygroup/~5a46b8253d07320a14cace9b4dcbf80f93dcef04.php`
 
-``` php
+```php
 <?php die("Access Deny"); ?>a:1:{i:0;s:6:"sakura";}
 ```
 
@@ -135,6 +135,8 @@ The stored file will be a PHP file with code to deny access:
 - ArrayStorage
 - RuntimeArrayStorage
 - FileStorage
+- PhpFileStorage (Use include instead read text)
+- ForeverFileStorage (Never expired file storage)
 - MemcachedStorage
 - RedisStorage
 - WincacheStorage
@@ -146,7 +148,7 @@ The stored file will be a PHP file with code to deny access:
 The default `PhpSerializer` will make our data be php serialized string, if you want to use other format,
 just change serializer at second argument of Cache object.
 
-``` php
+```php
 use Windwalker\Cache\Cache;
 use Windwalker\Cache\Serializer\JsonSerializer;
 use Windwalker\Cache\Storage\FileStorage;
@@ -166,7 +168,7 @@ The stored cache file is:
 
 Sometimes we may need to store whole html as static page cache. `StringSerializer` or `RawSerializer` helps us save raw data as string:
  
-``` php
+```php
 use Windwalker\Cache\Cache;
 use Windwalker\Cache\Serializer\StringSerializer;
 use Windwalker\Cache\Storage\FileStorage;
@@ -193,7 +195,7 @@ echo $html;
 
 This serializer can save array data as a php file, will be useful when we need to cache config data.
 
-``` php
+```php
 use Windwalker\Cache\Cache;
 use Windwalker\Cache\Serializer\PhpSerializer;
 use Windwalker\Cache\Storage\FileStorage;
@@ -209,7 +211,7 @@ $cache->get('config.name'); // Array( [foo] => bar )
 
 The cache file will be:
 
-``` php
+```php
 <?php
 
 return array (
@@ -230,7 +232,7 @@ return array (
 Windwalker Cache Storage are all follows [PSR6](http://www.php-fig.org/psr/psr-6/), so you can use other libraries'
 CacheItemPool object as storage, you can also directly use Storage object.
 
-``` php
+```php
 use Windwalker\Cache\Item\CacheItem;
 use Windwalker\Cache\Storage\FileStorage;
 

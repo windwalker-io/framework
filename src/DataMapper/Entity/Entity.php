@@ -601,6 +601,8 @@ class Entity extends Data implements \JsonSerializable
 				return $this->toDateTime($value)->getTimestamp();
 			case class_exists($cast):
 				return new $cast($value);
+			case is_callable($cast):
+				return $cast($value);
 			default:
 				return $value;
 		}
