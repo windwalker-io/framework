@@ -11,7 +11,7 @@ namespace Windwalker\Crypt;
 /**
  * Interface HashInterface
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.2.2
  */
 interface HasherInterface
 {
