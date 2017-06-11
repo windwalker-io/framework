@@ -474,13 +474,7 @@ class Arr
 	 *
 	 * @return array
 	 */
-	public static function find(
-		array $data,
-		callable $callback = null,
-		$keepKey = false,
-		$offset = null,
-		$limit = null
-	)
+	public static function find(array $data, callable $callback = null, $keepKey = false, $offset = null, $limit = null)
 	{
 		$results = [];
 		$i       = 0;
