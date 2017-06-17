@@ -121,7 +121,7 @@ class Record extends Entity
 			$this->autoIncrement = (count($keys) == 1) ? true : false;
 		}
 
-		$this->mapper = $mapper ? : new DataMapper($this->table, $keys);
+		$this->mapper = $mapper ? : new DataMapper($this->table, $this->keys);
 		$this->db = $this->mapper->getDb();
 
 		// Initialise the table properties.
