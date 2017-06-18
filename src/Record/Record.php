@@ -403,14 +403,12 @@ class Record extends Entity
 		// @Event: Create / Update
 		$this->triggerEvent('onBefore' . $action, [
 			'updateNulls' => &$updateNulls
-		]
-		);
+		]);
 		
 		// @Event: Store
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'updateNulls' => &$updateNulls
-		]
-		);
+		]);
 
 		// Do Action
 		// If a primary key exists update the object, otherwise insert it.
@@ -422,8 +420,7 @@ class Record extends Entity
 		// @Event: Create / Update
 		$this->triggerEvent('onAfter' . $action, [
 			'updateNulls' => &$updateNulls
-		]
-		);
+		]);
 
 		return $this;
 	}

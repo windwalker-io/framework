@@ -119,8 +119,7 @@ class Entity extends Data implements \JsonSerializable
 				'Field'    => $field,
 				'Type'    => gettype($default),
 				'Default' => $default
-			]
-			);
+			]);
 		}
 
 		if (is_array($field) || is_object($field))
@@ -471,6 +470,27 @@ class Entity extends Data implements \JsonSerializable
 		foreach (array_keys($this->getFields()) as $field)
 		{
 			$data[$field] = $this->data[$field];
+		}
+
+		return $data;
+	}
+
+	/**
+	 * toArray
+	 *
+	 * @param bool $all
+	 *
+	 * @return  array
+	 */
+	public function toArray($all)
+	{
+		$keys = $all ? array_keys($this->data) : array_keys($this->getFields());
+
+		$data = [];
+
+		foreach ($keys as $field)
+		{
+			$data[$field] = $this->get($field);
 		}
 
 		return $data;
