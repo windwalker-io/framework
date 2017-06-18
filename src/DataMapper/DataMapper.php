@@ -254,6 +254,13 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 					$data = $this->bindData($data);
 				}
 
+				// If data is entity object, try cast values first.
+				if ($data instanceof Entity)
+				{
+					$data = $this->castForStore($data);
+				}
+
+				// Then recreate a new Entity to force fields limit.
 				$entity = new Entity($this->getFields($this->table), $data);
 
 				$entity = $this->prepareDefaultValue($entity);
@@ -568,8 +575,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 			}
 		}
 
-		$entity = $this->castForStore($entity);
-
 		return $entity;
 	}
 
@@ -634,9 +639,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 					break;
 				case 'timestamp':
 					$entity->$field = $entity->toDateTime($value)->getTimestamp();
-					break;
-				default:
-					$entity->$field = (string) $value;
 					break;
 			}
 		}
