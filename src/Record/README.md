@@ -219,6 +219,48 @@ And now you can get `DateTime` object back:
 echo $articleRecord->created_date->format('Y-m-d H:i:s'); // 2016-03-02 12:30:29
 ```
 
+### Casts
+
+Add casts to auto convert value type after read from DB:
+
+```php
+<?
+class SakuraRecord extends Record
+{
+    protected $casts = [
+        'id' => 'int',
+        'price' => 'string',
+        'created' => 'datetime',
+        'modified' => 'timestamp',
+        'images' => 'object', // or array will be json decoded
+        'params' => \Windwalker\Structure\Structure::class,
+        'other' => ['SomeClass', 'handle'] // Use callback
+    ];
+}
+
+$sakuraRecord->load(3);
+
+$sakuraRecord->id; // 3
+$sakuraRecord->price; // '1200.00'
+$sakuraRecord->created->format('Y/d/m'); // Auto convert to DateTime object
+$sakuraRecord->modified; // 1497067876
+$sakuraRecord->images[0]->url; // Store json in DB, can will auto decode to object.
+$sakuraRecord->params->get('foo.bar'); // Use class name to store value to object
+```
+
+Supports casts:
+
+- int | integer
+- real | float | double
+- string
+- bool | boolean
+- object
+- array | json
+- date | datetime
+- timestamp
+- (Class name)
+- (Callback array)
+
 ## NestedRecord
 
 NestedRecord is a tool help us handle [Nested Set Model](http://en.wikipedia.org/wiki/Nested_set_model).

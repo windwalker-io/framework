@@ -83,7 +83,6 @@ class TextField extends AbstractField
 			'onchange' => 'onchange',
 			'onfocus' => 'onfocus',
 			'onblur' => 'onblur',
-		]
-		);
+		]);
 	}
 }

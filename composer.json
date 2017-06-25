@@ -14,8 +14,7 @@
         "php": ">=5.5.9",
         "psr/log": "~1.0",
         "psr/http-message": "~1.0",
-        "psr/cache": "~1.0",
-        "webmozart/assert": "~1.0"
+        "psr/cache": "~1.0"
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",
@@ -24,11 +23,14 @@
         "twig/twig": "~1.0",
         "illuminate/view": "5.2.*",
         "mustache/mustache": "~2.0",
-        "league/plates": "~3.0"
+        "league/plates": "~3.0",
+        "paragonie/sodium_compat": "~1.0"
     },
     "suggest": {
         "symfony/yaml": "Install ~3.0 if you require YAML support.",
-        "php-http/httplug": "Install ~1.0 if you require HttpClient as HttpPlug implementation."
+        "php-http/httplug": "Install ~1.0 if you require HttpClient as HttpPlug implementation.",
+        "paragonie/sodium_compat": "Install paragonie/sodium_compat if you want to SodiumCipher.",
+        "ext-libsodium": "Install php-libsodium if you want to use SodiumCipher with higher performance and use Argon2 or Scrypt password hash."
     },
     "autoload": {
         "psr-4": {

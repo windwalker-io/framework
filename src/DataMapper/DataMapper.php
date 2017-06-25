@@ -254,6 +254,13 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 					$data = $this->bindData($data);
 				}
 
+				// If data is entity object, try cast values first.
+				if ($data instanceof Entity)
+				{
+					$data = $this->castForStore($data);
+				}
+
+				// Then recreate a new Entity to force fields limit.
 				$entity = new Entity($this->getFields($this->table), $data);
 
 				$entity = $this->prepareDefaultValue($entity);
@@ -306,7 +313,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 		{
 			foreach ($dataset as $k => $data)
 			{
-				if (!($data instanceof $this->dataClass))
+				if (!$data instanceof $this->dataClass)
 				{
 					$data = $this->bindData($data);
 				}
@@ -530,8 +537,8 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
 		foreach ($fields as $field)
 		{
-			if (strtolower($field->Null) == 'no' && $field->Default === null
-				&& $field->Key != 'PRI' && $this->getKeyName() != $field->Field)
+			if (strtolower($field->Null) === 'no' && $field->Default === null
+				&& $field->Key !== 'PRI' && $this->getKeyName() !== $field->Field)
 			{
 				$type = $field->Type;
 
@@ -562,9 +569,77 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 		foreach ($entity->getFields() as $field => $detail)
 		{
 			// This field is null and the db column is not nullable, use db default value.
-			if ($entity[$field] === null && strtolower($detail->Null) == 'no')
+			if ($entity[$field] === null && strtolower($detail->Null) === 'no')
 			{
 				$entity[$field] = $detail->Default;
+			}
+		}
+
+		return $entity;
+	}
+
+	/**
+	 * castForStore
+	 *
+	 * @param Entity $entity
+	 *
+	 * @return  Entity
+	 */
+	public function castForStore(Entity $entity)
+	{
+		foreach ($entity->dump() as $field => $value)
+		{
+			if (null === $value)
+			{
+				continue;
+			}
+
+			$cast = $entity->getCast($field);
+
+			switch ($cast)
+			{
+				case 'int':
+				case 'integer':
+					$entity->$field = (int) $value;
+					break;
+				case 'real':
+				case 'float':
+				case 'double':
+				case 'string':
+					$entity->$field = (string) $value;
+					break;
+				case 'bool':
+				case 'boolean':
+					$entity->$field = (int) $value;
+					break;
+				case 'object':
+					$entity->$field = is_object($value) ? json_encode($value) : $value;
+					break;
+				case 'array':
+					$entity->$field = is_array($value) ? json_encode($value) : $value;
+					break;
+				case 'json':
+					if (is_string($value))
+					{
+						if (strlen($value) > 0 && !in_array($value[0], ['"', '{', '['], true))
+						{
+							$entity->$field = json_encode($value);
+							break;
+						}
+
+						$entity->$field = $value;
+						break;
+					}
+
+					$entity->$field = json_encode($value);
+					break;
+				case 'date':
+				case 'datetime':
+					$entity->$field = $entity->toDateTime($value)->format($this->db->getQuery(true)->getDateFormat());
+					break;
+				case 'timestamp':
+					$entity->$field = $entity->toDateTime($value)->getTimestamp();
+					break;
 			}
 		}
 

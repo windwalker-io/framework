@@ -30,6 +30,13 @@ class SodiumCipher extends AbstractCipher
 	protected $nonce;
 
 	/**
+	 * Property ignoreMemzero.
+	 *
+	 * @var  bool
+	 */
+	protected $ignoreMemzero = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $key
@@ -41,9 +48,9 @@ class SodiumCipher extends AbstractCipher
 	 */
 	public function __construct($key = null, array $options = [])
 	{
-		if (!function_exists('Sodium\crypto_secretbox_open'))
+		if (!function_exists('sodium_crypto_secretbox_open'))
 		{
-			throw new \DomainException('Please install ext-libsodium first.');
+			throw new \DomainException('Please install ext-libsodium or paragonie/sodium_compat first.');
 		}
 
 		parent::__construct($key ? : static::genRandomBytes(static::getKeySize()), $options);
@@ -68,9 +75,9 @@ class SodiumCipher extends AbstractCipher
 		$key = (string) $key;
 		$nonce = (string) $nonce;
 
-		\Sodium\memzero($data);
-		\Sodium\memzero($key);
-		\Sodium\memzero($nonce);
+		$this->memzero($data);
+		$this->memzero($key);
+		$this->memzero($nonce);
 
 		return $plain;
 	}
@@ -94,9 +101,9 @@ class SodiumCipher extends AbstractCipher
 		$key = (string) $key;
 		$nonce = (string) $nonce;
 
-		\Sodium\memzero($data);
-		\Sodium\memzero($key);
-		\Sodium\memzero($nonce);
+		$this->memzero($data);
+		$this->memzero($key);
+		$this->memzero($nonce);
 
 		return $encrypted;
 	}
@@ -112,7 +119,7 @@ class SodiumCipher extends AbstractCipher
 	{
 		if (!$this->nonce)
 		{
-			$this->nonce = \Sodium\randombytes_buf(static::getNonceSize());
+			$this->nonce = static::genRandomBytes(static::getNonceSize());
 		}
 
 		return $this->nonce;
@@ -125,7 +132,7 @@ class SodiumCipher extends AbstractCipher
 	 */
 	public static function getNonceSize()
 	{
-		return \Sodium\CRYPTO_SECRETBOX_NONCEBYTES;
+		return SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
 	}
 
 	/**
@@ -135,7 +142,7 @@ class SodiumCipher extends AbstractCipher
 	 */
 	public static function getKeySize()
 	{
-		return \Sodium\CRYPTO_SECRETBOX_KEYBYTES;
+		return SODIUM_CRYPTO_SECRETBOX_KEYBYTES;
 	}
 
 	/**
@@ -145,9 +152,28 @@ class SodiumCipher extends AbstractCipher
 	 *
 	 * @return  string
 	 */
-	public static function genRandomBytes($size = \Sodium\CRYPTO_SECRETBOX_KEYBYTES)
+	public static function genRandomBytes($size = SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
 	{
-		return \Sodium\randombytes_buf($size);
+		return sodium_randombytes_buf($size);
+	}
+
+	/**
+	 * Method to set property ignoreMemzero
+	 *
+	 * @param   bool $bool
+	 *
+	 * @return  $this|bool
+	 */
+	public function ignoreMemzero($bool = null)
+	{
+		if ($bool === null)
+		{
+			return $this->ignoreMemzero;
+		}
+
+		$this->ignoreMemzero = (bool) $bool;
+
+		return $this;
 	}
 
 	/**
@@ -161,11 +187,11 @@ class SodiumCipher extends AbstractCipher
 	 */
 	protected function doEncrypt($data, $key, $iv)
 	{
-		$encrypted = \Sodium\crypto_secretbox($data, $iv, $key);
+		$encrypted = sodium_crypto_secretbox($data, $iv, $key);
 
-		\Sodium\memzero($data);
-		\Sodium\memzero($key);
-		\Sodium\memzero($iv);
+		$this->memzero($data);
+		$this->memzero($key);
+		$this->memzero($iv);
 
 		return $encrypted;
 	}
@@ -181,11 +207,11 @@ class SodiumCipher extends AbstractCipher
 	 */
 	protected function doDecrypt($data, $key, $iv)
 	{
-		$plain = \Sodium\crypto_secretbox_open($data, $iv, $key);
+		$plain = sodium_crypto_secretbox_open($data, $iv, $key);
 
-		\Sodium\memzero($data);
-		\Sodium\memzero($key);
-		\Sodium\memzero($iv);
+		$this->memzero($data);
+		$this->memzero($key);
+		$this->memzero($iv);
 
 		return $plain;
 	}
@@ -199,7 +225,7 @@ class SodiumCipher extends AbstractCipher
 	 *
 	 * @throws \RuntimeException
 	 */
-	protected function randomPseudoBytes($size = \Sodium\CRYPTO_SECRETBOX_KEYBYTES)
+	protected function randomPseudoBytes($size = SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
 	{
 		return static::genRandomBytes($size);
 	}
@@ -212,5 +238,39 @@ class SodiumCipher extends AbstractCipher
 	public function getIVSize()
 	{
 		return static::getNonceSize();
+	}
+
+	/**
+	 * canMemzero
+	 *
+	 * @return  bool
+	 */
+	public function canMemzero()
+	{
+		return version_compare(PHP_VERSION, '7.2', '>=') || extension_loaded('libsodium');
+	}
+
+	/**
+	 * memzero
+	 *
+	 * @param mixed $data
+	 *
+	 * @return  void
+	 * @throws \LogicException
+	 */
+	public function memzero(&$data)
+	{
+		if (!$this->canMemzero() && !$this->ignoreMemzero)
+		{
+			throw new \LogicException(
+				'sodium_memzero() only supports after php 7.2 or ext-libsodium installed. ' .
+				'You can disable memory wiping by SodiumCipher::ignoreMemzero(true) but it is not recommended.'
+			);
+		}
+
+		if (!$this->ignoreMemzero)
+		{
+			sodium_memzero($data);
+		}
 	}
 }

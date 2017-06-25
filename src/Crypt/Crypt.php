@@ -99,15 +99,15 @@ class Crypt implements CryptInterface
 	 * match
 	 *
 	 * @param string $string
-	 * @param string $hash
+	 * @param string $encrypted
 	 * @param string $key
 	 * @param string $iv
 	 *
 	 * @return  boolean
 	 */
-	public function verify($string, $hash, $key = null, $iv = null)
+	public function verify($string, $encrypted, $key = null, $iv = null)
 	{
-		return ($string === $this->decrypt($hash, $key, $iv));
+		return ($string === $this->decrypt($encrypted, $key, $iv));
 	}
 
 	/**
@@ -165,6 +165,30 @@ class Crypt implements CryptInterface
 		{
 			throw new \InvalidArgumentException('Key should be string');
 		}
+
+		return $this;
+	}
+
+	/**
+	 * Method to get property Cipher
+	 *
+	 * @return  CipherInterface
+	 */
+	public function getCipher()
+	{
+		return $this->cipher;
+	}
+
+	/**
+	 * Method to set property cipher
+	 *
+	 * @param   CipherInterface $cipher
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setCipher($cipher)
+	{
+		$this->cipher = $cipher;
 
 		return $this;
 	}

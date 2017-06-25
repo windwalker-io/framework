@@ -119,8 +119,7 @@ class Entity extends Data implements \JsonSerializable
 				'Field'    => $field,
 				'Type'    => gettype($default),
 				'Default' => $default
-			]
-			);
+			]);
 		}
 
 		if (is_array($field) || is_object($field))
@@ -477,6 +476,27 @@ class Entity extends Data implements \JsonSerializable
 	}
 
 	/**
+	 * toArray
+	 *
+	 * @param bool $all
+	 *
+	 * @return  array
+	 */
+	public function toArray($all)
+	{
+		$keys = $all ? array_keys($this->data) : array_keys($this->getFields());
+
+		$data = [];
+
+		foreach ($keys as $field)
+		{
+			$data[$field] = $this->get($field);
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Method to reset class properties to the defaults set in the class
 	 * definition. It will ignore the primary key as well as any private class
 	 * properties.
@@ -601,6 +621,8 @@ class Entity extends Data implements \JsonSerializable
 				return $this->toDateTime($value)->getTimestamp();
 			case class_exists($cast):
 				return new $cast($value);
+			case is_callable($cast):
+				return $cast($value);
 			default:
 				return $value;
 		}

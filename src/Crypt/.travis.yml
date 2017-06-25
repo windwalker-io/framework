@@ -14,7 +14,7 @@ before_install:
   - sh -e build/travis/scripts/libsodium.sh
 
 before_script:
-  - if [[ $TRAVIS_PHP_VERSION != hhvm ]]; then pecl install libsodium; fi
+  - sh -e build/travis/scripts/pecl-libsodium.sh || true
   - composer update --dev
 
 script:

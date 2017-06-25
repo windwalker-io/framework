@@ -13,12 +13,14 @@ namespace Windwalker\Crypt;
  * 
  * @since  2.0
  */
-class Password
+class Password implements HasherInterface
 {
 	const MD5 = 3;
 	const BLOWFISH = 4;
 	const SHA256 = 5;
 	const SHA512 = 6;
+	const SODIUM_ARGON2 = 7;
+	const SODIUM_SCRYPT = 8;
 
 	/**
 	 * Property salt.
@@ -47,12 +49,14 @@ class Password
 	 * @param int    $type
 	 * @param int    $cost
 	 * @param string $salt
+	 *
+	 * @throws \DomainException
 	 */
 	public function __construct($type = self::BLOWFISH, $cost = 10, $salt = null)
 	{
 		$this->setSalt($salt);
 		$this->setCost($cost);
-		$this->type = $type;
+		$this->setType($type);
 	}
 
 	/**
@@ -64,7 +68,14 @@ class Password
 	 */
 	public function create($password)
 	{
-		$salt = $this->salt ? : str_replace('+', '.', base64_encode(CryptHelper::genRandomBytes(64)));
+		if (!$this->salt)
+		{
+			$salt = str_replace('+', '.', base64_encode(CryptHelper::genRandomBytes(64)));
+		}
+		else
+		{
+			$salt = $this->salt;
+		}
 
 		switch ($this->type)
 		{
@@ -83,6 +94,20 @@ class Password
 
 				$salt = '$6$rounds=' . $cost . '$' . $salt . '$';
 				break;
+
+			case static::SODIUM_ARGON2:
+				return \Sodium\crypto_pwhash_str(
+					$password,
+					\Sodium\CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+					\Sodium\CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
+				);
+
+			case static::SODIUM_SCRYPT:
+				return \Sodium\crypto_pwhash_scryptsalsa208sha256_str(
+					$password,
+					\Sodium\CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_INTERACTIVE,
+					\Sodium\CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_INTERACTIVE
+				);
 
 			default:
 			case static::BLOWFISH:
@@ -120,7 +145,42 @@ class Password
 	 */
 	public function verify($password, $hash)
 	{
+		if (static::isSodiumAlgo($this->type))
+		{
+			return $this->verifySodium($password, $hash);
+		}
+
 		return password_verify($password, $hash);
+	}
+
+	/**
+	 * verifySodium
+	 *
+	 * @param string $password
+	 * @param string $hash
+	 *
+	 * @return  bool
+	 */
+	protected function verifySodium($password, $hash)
+	{
+		if (strpos($hash, '$argon2i') === 0)
+		{
+			$result = \Sodium\crypto_pwhash_str_verify($hash, $password);
+
+			\Sodium\memzero($password);
+
+			return $result;
+		}
+		elseif (strpos($hash, '$7$C6') === 0)
+		{
+			$result = \Sodium\crypto_pwhash_scryptsalsa208sha256_str_verify($hash, $password);
+
+			\Sodium\memzero($password);
+
+			return $result;
+		}
+
+		return false;
 	}
 
 	/**
@@ -226,11 +286,49 @@ class Password
 	 * @param   int $type
 	 *
 	 * @return  static  Return self to support chaining.
+	 * @throws \DomainException
 	 */
 	public function setType($type)
 	{
 		$this->type = $type;
 
+		if (static::isSodiumAlgo($this->type))
+		{
+			if (!extension_loaded('libsodium'))
+			{
+				throw new \DomainException('Please install php ext-libsodium >= 1.0.9 to use sodium pwhash().');
+			}
+
+			if (!defined('\Sodium\CRYPTO_PWHASH_SALTBYTES'))
+			{
+				throw new \DomainException('Libsodium must higher than 1.0.9 to use Argon2 and Scrypt algo.');
+			}
+		}
+
 		return $this;
+	}
+
+	/**
+	 * isSodiumAlgo
+	 *
+	 * @param int $type
+	 *
+	 * @return  bool
+	 */
+	public static function isSodiumAlgo($type)
+	{
+		return $type === static::SODIUM_ARGON2 || $type === static::SODIUM_SCRYPT;
+	}
+
+	/**
+	 * isSodiumHash
+	 *
+	 * @param string $hash
+	 *
+	 * @return  bool
+	 */
+	public static function isSodiumHash($hash)
+	{
+		return (strpos($hash, '$argon2i') === 0 || strpos($hash, '$7$C6') === 0);
 	}
 }

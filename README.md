@@ -1,15 +1,15 @@
-![windwalker-logo-500](https://cloud.githubusercontent.com/assets/1639206/2870854/176b987a-d2e4-11e3-8be6-9f70304a8499.png)
+![windwalker-logo-500](https://i.imgur.com/XMdvGqD.png)
 
 # Windwalker Framework   [![Analytics](https://ga-beacon.appspot.com/UA-48372917-1/windwalker/readme)](https://github.com/igrigorik/ga-beacon)
 
 [![Build Status](https://travis-ci.org/ventoviro/windwalker.svg?branch=staging)](https://travis-ci.org/ventoviro/windwalker) 
-[![HHVM Status](http://hhvm.h4cc.de/badge/windwalker/framework.svg)](http://hhvm.h4cc.de/package/windwalker/framework) 
 [![Latest Stable Version](https://poser.pugx.org/windwalker/framework/version.svg)](https://packagist.org/packages/windwalker/framework) 
 [![Latest Unstable Version](https://poser.pugx.org/windwalker/framework/v/unstable.svg)](//packagist.org/packages/windwalker/framework) 
 [![Total Downloads](https://poser.pugx.org/windwalker/framework/downloads.svg)](https://packagist.org/packages/windwalker/framework) 
 [![License](https://poser.pugx.org/windwalker/framework/license.svg)](https://packagist.org/packages/windwalker/framework)
 
-**Windwalker** is a New PHP framework. It is based on Joomla and is core of [Windwalker RAD framework](https://github.com/ventoviro/windwalker-joomla-rad).
+**Windwalker** is a modern PHP framework to simplify web application developing and provides a RAD environment 
+to speed up the process of creating system prototype. ([More](http://windwalker.io/about/))
 
 We want to create a lighting, fully decoupled, powerful and easy using PHP framework.
 
@@ -47,7 +47,6 @@ Every packages has ready to use, please try it:
 - [Cache](https://github.com/ventoviro/windwalker-cache)
 - [Compare](https://github.com/ventoviro/windwalker-compare)
 - [Console](https://github.com/ventoviro/windwalker-console)
-- [Controller](https://github.com/ventoviro/windwalker-controller)
 - [Crypt](https://github.com/ventoviro/windwalker-crypt)
 - [Data](https://github.com/ventoviro/windwalker-data)
 - [Database](https://github.com/ventoviro/windwalker-database)
@@ -69,7 +68,7 @@ Every packages has ready to use, please try it:
 - [Profiler](https://github.com/ventoviro/windwalker-profiler)
 - [Query](https://github.com/ventoviro/windwalker-query)
 - [Record](https://github.com/ventoviro/windwalker-record)
-- [Registry](https://github.com/ventoviro/windwalker-registry)
+- [Structure](https://github.com/ventoviro/windwalker-structure)
 - [Renderer](https://github.com/ventoviro/windwalker-renderer)
 - [Router](https://github.com/ventoviro/windwalker-router)
 - [Session](https://github.com/ventoviro/windwalker-session)

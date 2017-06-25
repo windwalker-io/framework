@@ -12,6 +12,53 @@ Add this to the require block in your `composer.json`.
 }
 ```
 
+## New `Arr` Class
+
+We are trying to use `\Windwalker\Utilities\Arr` replace old `ArrayHelper`.
+
+### Simple Usage
+
+Get and set:
+
+```php
+$bar = Arr::get($arrayOrObject, 'foo.bar', 'default');
+
+Arr::set($arrayOrObject, 'foo.baz', 'value');
+
+Arr::has($arrayOrObject, 'foo.baz');
+Arr::remove($arrayOrObject, 'foo.baz');
+```
+
+### Method list of `Arr`
+
+```php
+Arr::toArray($data, $recursive = false)
+Arr::toObject(array $array, $class = 'stdClass')
+Arr::has($array, $key, $delimiter = '.')
+Arr::def($array, $key, $value, $delimiter = '.')
+Arr::get($data, $key, $default = null, $delimiter = '.')
+Arr::set($data, $key, $value, $delimiter = '.', $storeType = 'array')
+Arr::remove($data, $key, $delimiter = '.')
+Arr::collapse($data)
+Arr::flatten($array, $delimiter = '.', $depth = 0, $prefix = null)
+Arr::only($data, array $fields)
+Arr::find(array $data, callable $callback = null, $keepKey = false, $offset = null, $limit = null)
+Arr::findFirst(array $data, callable $callback = null)
+Arr::reject(array $data, callable $callback, $keepKey = false)
+Arr::takeout(&$data, $key, $default = null, $delimiter = '.')
+Arr::sort(array $data, $condition, $descending = false, $options = SORT_REGULAR)
+Arr::invert(array $array)
+Arr::pivot(array $array)
+Arr::isAssociative(array $array)
+Arr::accessible($array)
+Arr::group(array $array, $key = null, $forceArray = false)
+Arr::unique(array $array)
+Arr::mergeRecursive($array1)
+Arr::dump($data, $depth = 5)
+Arr::show($arg)
+Arr::map(array $array, callable $callback, $recursive = false)
+```
+
 ## Using ArrayHelper
 
 ### toObject

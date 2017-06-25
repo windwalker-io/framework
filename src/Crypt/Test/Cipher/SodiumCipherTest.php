@@ -33,12 +33,17 @@ class SodiumCipherTest extends TestCase
 	 */
 	protected function setUp()
 	{
-		if (!function_exists('Sodium\crypto_secretbox_open'))
+		if (!function_exists('sodium_crypto_secretbox_open'))
 		{
-			$this->markTestSkipped('libsodium extension not available.');
+			$this->markTestSkipped('libsodium extension or compat not available.');
 		}
 
 		$this->instance = new SodiumCipher;
+
+		if (!$this->instance->canMemzero())
+		{
+			$this->instance->ignoreMemzero(true);
+		}
 	}
 
 	/**

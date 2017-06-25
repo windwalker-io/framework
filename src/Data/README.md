@@ -91,6 +91,11 @@ foreach ($data as $key => $value)
 {
     echo $key . ' => ' . $value;
 }
+
+$data = $data->map(function ($value, $key) 
+{
+    return trim($value);
+});
 ```
 
 ### Null Data
@@ -191,25 +196,59 @@ Set value to `bar` field of all object.
 $dataset->bar = 'Fly';
 ```
 
-### Map and Walk
+### Iterating
 
-``` php
-$dataset->map(function($data)
+```php
+$dataset = $dataset->map(function($data)
 {
     $data->foo = 'bar';
 
     return $data;
 });
 
-$dataset->walk(function(&$data, $key, $userdata)
+$dataset = $dataset->walk(function(&$data, $key, $userdata)
 {
     $data->foo = $userdata . ':' . $key;
 }, 'prefix');
+
+// Transform will not return new instance
+$dataset->transform(function($data, $key)
+{
+    $data->foo = $userdata . ':' . $key;
+});
+
+// We can map the columns
+$dataSet = $dataSet->mapColumn('id', function($value)
+{
+    return $value++;
+});
+```
+
+### First and Last
+
+```php
+$data = $dataSet->first();
+
+// Find by condition
+$data = $dataSet->first(function ($data, $key)
+{
+    return $data->id > 3;
+});
+
+$data = $dataSet->last();
+
+// Find by condition
+$data = $dataSet->last(function ($data, $key)
+{
+    return $data->id > 3;
+});
 ```
 
 ### Other Array-like Methods
 
-``` php
+> Data Object also has similar methods
+
+```php
 $dataSet->sort();
 $dataSet->rsort();
 
@@ -221,13 +260,57 @@ $dataSet->unshift($data);
 
 $dataSet->pop();
 $dataSet->push($data);
-```
 
-### Get First & Last
+$values = $dataSet->values();
+$keys = $dataSet->keys();
 
-``` php
-$first = $dataSet->first();
-$last = $dataSet->last();
+$ids = $dataSet->getColumn('id');
+$dataSet->setColumn('state', 1);
+
+$dataSet = $dataSet->spice(0, 1);
+$data = $dataSet->takeout(3); // Will remove from original dataSet
+
+$dataSet = $dataSet->chunk(3); // Similar to php array_chunk();
+
+$result = $dataSet->sum('price');
+$result = $dataSet->avg('price');
+
+$bool = $dataSet->contains('id', 3, [bool:strict]);
+$bool = $dataSet->containsAll(3, [bool:strict]); // Comparer all data's fields
+
+$dataSet = $dataSet->keyBy('id'); // Change array keys as data id field
+
+$dataSet = $dataSet->except(['id', 'price']);
+$dataSet = $dataSet->only(['id', 'price']);
+
+$dataSet->each(function ($data, $key) { ... }); // Won't change self data, will stop if reutn false
+
+$dataSet = $dataSet->find(function ($data) 
+{
+    return $data->id > 3;
+});
+
+$dataSet = $dataSet->findFirst([callback]);
+
+$dataSet = $dataSet->filter([callback]);
+$dataSet = $dataSet->reject([callback]);
+
+list($set1, $set2) = $dataSet->partition(function ($data) 
+{
+    return $data->id > 3;
+});
+
+// Result ill be a new instance
+$dataSet = $dataSet->apply(function ($dataSet)
+{
+    // Do something
+    return $dataSet;
+});
+
+$sum = $dataSet->pipe(function ($dataSet)
+{
+    return $dataSet->sum();
+});
 ```
 
 ### Dump

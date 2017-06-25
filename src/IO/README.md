@@ -65,6 +65,9 @@ Get data as an array.
 // mysite.com/?flower[1]=sakura&flower[2]=olive;
 
 $input->getArray('flower'); // Array( [1] => sakura [2] => olive)
+
+// Get array and filter every values
+$input->getArray('flower', null, '.', 'int');
 ```
 
 Use `compact()` method

@@ -424,8 +424,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			'dataset'     => &$dataset,
 			'condFields'  => &$condFields,
 			'updateNulls' => &$updateNulls
-		]
-		);
+		]);
 
 		if (!($dataset instanceof \Traversable) && !is_array($dataset))
 		{
@@ -440,8 +439,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		]
-		);
+		]);
 
 		return $result;
 	}
@@ -463,8 +461,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 			'data'        => &$data,
 			'condFields'  => &$condFields,
 			'updateNulls' => &$updateNulls
-		]
-		);
+		]);
 
 		$dataset = $this->update($this->bindDataset([$data]), $condFields, $updateNulls);
 
@@ -473,8 +470,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		]
-		);
+		]);
 
 		return $result;
 	}
