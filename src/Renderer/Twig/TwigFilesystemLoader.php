@@ -72,7 +72,7 @@ class TwigFilesystemLoader extends \Twig_Loader_Filesystem
 	{
 		$ext = pathinfo($name, PATHINFO_EXTENSION);
 
-		if ($ext == 'twig')
+		if ($ext === 'twig')
 		{
 			$name = substr($name, 0, -5);
 		}

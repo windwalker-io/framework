@@ -84,7 +84,7 @@ HELP
 			throw new \Exception('RootCommand::$app should have Console Application');
 		}
 
-		if (!$this->getOption('ansi') || strtolower($this->getOption('ansi')) == 'off')
+		if (!$this->getOption('ansi') || strtolower($this->getOption('ansi')) === 'off')
 		{
 			$this->console->set('ansi', false);
 

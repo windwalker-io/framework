@@ -72,13 +72,13 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
 		// Detect the native operating system type.
 		$this->os = strtoupper(substr(PHP_OS, 0, 3));
 
-		$this->isWin = $this->os == 'WIN';
+		$this->isWin = $this->os === 'WIN';
 
-		$this->isMac = $this->os == 'MAC';
+		$this->isMac = $this->os === 'MAC';
 
 		$this->isUnix = in_array($this->os, ['CYG', 'DAR', 'FRE', 'LIN', 'NET', 'OPE', 'MAC']);
 
-		$this->isLinux = $this->os == 'LIN';
+		$this->isLinux = $this->os === 'LIN';
 	}
 
 	/**

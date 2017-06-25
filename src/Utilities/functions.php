@@ -58,7 +58,7 @@ if (!function_exists('show'))
 
 		echo "\n\n";
 
-		if (PHP_SAPI != 'cli')
+		if (PHP_SAPI !== 'cli')
 		{
 			echo '<pre>';
 		}
@@ -84,7 +84,7 @@ if (!function_exists('show'))
 			echo \Windwalker\Utilities\ArrayHelper::dump($data, $level);
 		}
 
-		if (PHP_SAPI != 'cli')
+		if (PHP_SAPI !== 'cli')
 		{
 			echo '</pre>';
 		}

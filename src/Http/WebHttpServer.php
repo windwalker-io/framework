@@ -388,12 +388,12 @@ class WebHttpServer extends HttpServer
 	 */
 	public function __get($name)
 	{
-		if ($name == 'uri')
+		if ($name === 'uri')
 		{
 			return $this->uriData;
 		}
 
-		if ($name == 'compressor')
+		if ($name === 'compressor')
 		{
 			return $this->compressor;
 		}

@@ -263,7 +263,7 @@ class FilesystemTest extends AbstractFilesystemTest
 		// Callable condition
 		$condition = function ($current, $key, $iterator)
 		{
-			return pathinfo($current->getBasename(), PATHINFO_EXTENSION) == 'html';
+			return pathinfo($current->getBasename(), PATHINFO_EXTENSION) === 'html';
 		};
 
 		$files = Filesystem::find(static::$dest, $condition, true, true);
@@ -289,7 +289,7 @@ class FilesystemTest extends AbstractFilesystemTest
 	{
 		$condition = function ($current, $key, $iterator)
 		{
-			return pathinfo($current->getBasename(), PATHINFO_EXTENSION) == 'html';
+			return pathinfo($current->getBasename(), PATHINFO_EXTENSION) === 'html';
 		};
 
 		$files = Filesystem::find(static::$dest, $condition, true, true);

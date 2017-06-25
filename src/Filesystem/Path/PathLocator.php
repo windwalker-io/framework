@@ -235,20 +235,20 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
 		foreach ($path as $key => $row)
 		{
 			// Remove dot files
-			if ($row == '.')
+			if ($row === '.')
 			{
 				unset($path[$key]);
 			}
 
 			// Remove dots and go parent dir
-			if ($row == '..' && !$isBeginning)
+			if ($row === '..' && !$isBeginning)
 			{
 				unset($path[$key]);
 				unset($path[$key - 1]);
 			}
 
 			// Do not get parent if dots in the beginning
-			if ($row != '..' && $isBeginning)
+			if ($row !== '..' && $isBeginning)
 			{
 				$isBeginning = false;
 			}

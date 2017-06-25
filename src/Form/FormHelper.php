@@ -147,7 +147,7 @@ class FormHelper
 		 */
 		$createStore = function($type)
 		{
-			if (strtolower($type) == 'array')
+			if (strtolower($type) === 'array')
 			{
 				return [];
 			}

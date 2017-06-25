@@ -324,7 +324,7 @@ abstract class AbstractUri implements UriInterface
 	 */
 	public function isSSL()
 	{
-		return $this->getScheme() == 'https' ? true : false;
+		return $this->getScheme() === 'https' ? true : false;
 	}
 
 

@@ -405,7 +405,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 			],
 		];
 
-		if (substr(php_uname(), 0, 6) != 'Darwin')
+		if (substr(php_uname(), 0, 6) !== 'Darwin')
 		{
 			$input3 = [
 				(object) [
@@ -1537,7 +1537,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
 		$results = ArrayHelper::query($data, function ($key, $value)
 		{
-		    return $value['title'] == 'Julius Caesar' || $value['id'] == 4;
+		    return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
 		});
 
 		$this->assertEquals([$data[0], $data[3]], $results);

@@ -205,7 +205,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$prefix = $uri->toString(['scheme', 'user', 'pass', 'host', 'port']);
 
 			// We just need the prefix since we have a path relative to the root.
-			if ($url[0] == '/')
+			if ($url[0] === '/')
 			{
 				$url = $prefix . $url;
 			}

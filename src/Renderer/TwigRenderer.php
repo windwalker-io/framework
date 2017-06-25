@@ -65,7 +65,7 @@ class TwigRenderer extends AbstractEngineRenderer
 	 */
 	public function render($file, $data = [])
 	{
-		$file = pathinfo($file, PATHINFO_EXTENSION) == 'twig' ? $file : $file . '.twig';
+		$file = pathinfo($file, PATHINFO_EXTENSION) === 'twig' ? $file : $file . '.twig';
 
 		$this->extensions = array_merge($this->extensions, (array) $this->config->get('extensions', []));
 

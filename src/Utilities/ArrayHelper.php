@@ -669,7 +669,7 @@ class ArrayHelper
 		 */
 		$createStore = function($type)
 		{
-			if (strtolower($type) == 'array')
+			if (strtolower($type) === 'array')
 			{
 				return [];
 			}
@@ -810,7 +810,7 @@ class ArrayHelper
 		if (in_array($type, $recursiveType))
 		{
 			// If type is object, try to get properties by Reflection.
-			if ($type == 'object')
+			if ($type === 'object')
 			{
 				$output     = get_class($data) . ' ' . ucfirst($type);
 				$ref        = new \ReflectionObject($data);
@@ -840,7 +840,7 @@ class ArrayHelper
 				}
 			}
 			// If type is array, just retun it's value.
-			elseif ($type == 'array')
+			elseif ($type === 'array')
 			{
 				$output   = ucfirst($type);
 				$elements = $data;
@@ -991,19 +991,19 @@ class ArrayHelper
 		// Visit Query Rules
 		foreach ($queries as $key => $val)
 		{
-			if (substr($key, -2) == '>=')
+			if (substr($key, -2) === '>=')
 			{
 				$results[] = (static::getByPath($array, trim(substr($key, 0, -2))) >= $val);
 			}
-			elseif (substr($key, -2) == '<=')
+			elseif (substr($key, -2) === '<=')
 			{
 				$results[] = (static::getByPath($array, trim(substr($key, 0, -2))) <= $val);
 			}
-			elseif (substr($key, -1) == '>')
+			elseif (substr($key, -1) === '>')
 			{
 				$results[] = (static::getByPath($array, trim(substr($key, 0, -1))) > $val);
 			}
-			elseif (substr($key, -1) == '<')
+			elseif (substr($key, -1) === '<')
 			{
 				$results[] = (static::getByPath($array, trim(substr($key, 0, -1))) < $val);
 			}

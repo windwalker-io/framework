@@ -697,7 +697,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 			$locale = "'" . implode("', '", $locale) . "'";
 		}
 
-		if (substr(php_uname(), 0, 6) == 'Darwin' && $locale != false)
+		if (substr(php_uname(), 0, 6) === 'Darwin' && $locale != false)
 		{
 			$this->markTestSkipped('Darwin bug prevents foreign conversion from working properly');
 		}
@@ -740,7 +740,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
 			$locale = "'" . implode("', '", $locale) . "'";
 		}
 
-		if (substr(php_uname(), 0, 6) == 'Darwin' && $locale != false)
+		if (substr(php_uname(), 0, 6) === 'Darwin' && $locale != false)
 		{
 			$this->markTestSkipped('Darwin bug prevents foreign conversion from working properly');
 		}

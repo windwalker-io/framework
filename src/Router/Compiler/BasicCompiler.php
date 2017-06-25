@@ -54,7 +54,7 @@ abstract class BasicCompiler
 		$list = explode(',', $matches[1]);
 		$head = '';
 
-		if (substr($regex, 0, 2) == '(/')
+		if (substr($regex, 0, 2) === '(/')
 		{
 			$name = array_shift($list);
 			$head = "/(\{{$name}\})?";

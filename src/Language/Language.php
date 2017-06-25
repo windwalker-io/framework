@@ -135,7 +135,7 @@ class Language implements LanguageInterface
 	 */
 	public function load($file, $format = 'ini', $loader = 'file')
 	{
-		if ($format == 'php')
+		if ($format === 'php')
 		{
 			$loader = 'php';
 		}

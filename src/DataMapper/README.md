@@ -393,7 +393,7 @@ This will generate where conditions like below:
 
 ``` sql
 WHERE `id` >= '5'
-    AND `name` != 'bar'
+    AND `name` !== 'bar'
     AND `published` < '1'
     AND `catid` NOT IN (1,2,3,4,5)
 ```

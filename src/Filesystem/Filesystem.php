@@ -150,7 +150,7 @@ abstract class Filesystem
 
 				// If set to recursive, every returned folder name will include a dot (.),
 				// so we can't using isDot() to detect folder.
-				return $iterator->isDir() && ($iterator->getBasename() != '..');
+				return $iterator->isDir() && ($iterator->getBasename() !== '..');
 			}
 			else
 			{
@@ -193,7 +193,7 @@ abstract class Filesystem
 
 				// If set to recursive, every returned folder name will include a dot (.),
 				// so we can't using isDot() to detect folder.
-				return ($iterator->getBasename() != '..');
+				return ($iterator->getBasename() !== '..');
 			}
 			else
 			{

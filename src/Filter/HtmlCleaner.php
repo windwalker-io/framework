@@ -149,7 +149,7 @@ class HtmlCleaner
 		$attrSubSet[1] = strtolower($attrSubSet[1]);
 
 		return (
-			((strpos($attrSubSet[1], 'expression') !== false) && ($attrSubSet[0]) == 'style')
+			((strpos($attrSubSet[1], 'expression') !== false) && ($attrSubSet[0]) === 'style')
 			|| (strpos($attrSubSet[1], 'javascript:') !== false)
 			|| (strpos($attrSubSet[1], 'behaviour:') !== false)
 			|| (strpos($attrSubSet[1], 'vbscript:') !== false)
@@ -253,7 +253,7 @@ class HtmlCleaner
 			$currentSpace = strpos($tagLeft, ' ');
 
 			// Are we an open tag or a close tag?
-			if (substr($currentTag, 0, 1) == '/')
+			if (substr($currentTag, 0, 1) === '/')
 			{
 				// Close Tag
 				$isCloseTag = true;
@@ -309,7 +309,7 @@ class HtmlCleaner
 				}
 
 				// Do we have an attribute to process? [check for equal sign]
-				if ($fromSpace != '/' && (($nextEqual && $nextSpace && $nextSpace < $nextEqual) || !$nextEqual))
+				if ($fromSpace !== '/' && (($nextEqual && $nextSpace && $nextSpace < $nextEqual) || !$nextEqual))
 				{
 					if (!$nextEqual)
 					{
@@ -343,14 +343,14 @@ class HtmlCleaner
 				else
 				// No more equal signs so add any extra text in the tag into the attribute array [eg. checked]
 				{
-					if ($fromSpace != '/')
+					if ($fromSpace !== '/')
 					{
 						$attr = substr($fromSpace, 0, $nextSpace);
 					}
 				}
 
 				// Last Attribute Pair
-				if (!$attr && $fromSpace != '/')
+				if (!$attr && $fromSpace !== '/')
 				{
 					$attr = $fromSpace;
 				}
@@ -404,7 +404,7 @@ class HtmlCleaner
 		}
 
 		// Append any code after the end of tags and return
-		if ($postTag != '<')
+		if ($postTag !== '<')
 		{
 			$preTag .= $postTag;
 		}
@@ -447,7 +447,7 @@ class HtmlCleaner
 			// AND blacklisted attributes
 			if ((!preg_match('/[a-z]*$/i', $attrSubSet[0]))
 				|| (($this->xssAuto) && ((in_array(strtolower($attrSubSet[0]), $this->attrBlacklist))
-				|| (substr($attrSubSet[0], 0, 2) == 'on'))))
+				|| (substr($attrSubSet[0], 0, 2) === 'on'))))
 			{
 				continue;
 			}
@@ -558,7 +558,7 @@ class HtmlCleaner
 			// Figure out if we have a single or double quote and look for the matching closing quote
 			// Closing quote should be "/>, ">, "<space>, or " at the end of the string
 			$quote = substr($matches[0][0], -1);
-			$pregMatch = ($quote == '"') ? '#(\"\s*/\s*>|\"\s*>|\"\s+|\"$)#' : "#(\'\s*/\s*>|\'\s*>|\'\s+|\'$)#";
+			$pregMatch = ($quote === '"') ? '#(\"\s*/\s*>|\"\s*>|\"\s+|\"$)#' : "#(\'\s*/\s*>|\'\s*>|\'\s+|\'$)#";
 
 			// Get the portion after attribute value
 			if (preg_match($pregMatch, substr($remainder, $nextBefore), $matches, PREG_OFFSET_CAPTURE))

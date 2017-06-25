@@ -1812,7 +1812,7 @@ class Query implements QueryInterface, PreparableInterface
 		$i = 1;
 		$func = function ($match) use ($query, $args, &$i, $expression)
 		{
-			if (isset($match[6]) && $match[6] == '%')
+			if (isset($match[6]) && $match[6] === '%')
 			{
 				return '%';
 			}

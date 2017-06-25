@@ -39,7 +39,7 @@ class QueryExpression
 	 */
 	public static function isExpression($value)
 	{
-		return substr($value, -1) == ')';
+		return substr($value, -1) === ')';
 	}
 
 	/**

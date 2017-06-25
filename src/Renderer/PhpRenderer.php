@@ -92,7 +92,7 @@ class PhpRenderer extends AbstractRenderer
 
 		foreach ($__data as $key => $value)
 		{
-			if ($key == 'data')
+			if ($key === 'data')
 			{
 				$key = '_data';
 			}

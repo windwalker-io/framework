@@ -451,7 +451,7 @@ class Input implements \Serializable, \Countable
 	 */
 	public function __call($name, $arguments)
 	{
-		if (substr($name, 0, 3) == 'get')
+		if (substr($name, 0, 3) === 'get')
 		{
 			$filter = substr($name, 3);
 
@@ -777,7 +777,7 @@ class Input implements \Serializable, \Countable
 		 */
 		$createStore = function($type)
 		{
-			if (strtolower($type) == 'array')
+			if (strtolower($type) === 'array')
 			{
 				return [];
 			}

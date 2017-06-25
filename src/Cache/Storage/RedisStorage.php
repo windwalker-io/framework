@@ -160,7 +160,7 @@ class RedisStorage extends AbstractDriverCacheStorage
 			return $this;
 		}
 
-		if (($this->defaultHost == 'localhost' || filter_var($this->defaultHost, FILTER_VALIDATE_IP)))
+		if (($this->defaultHost === 'localhost' || filter_var($this->defaultHost, FILTER_VALIDATE_IP)))
 		{
 			$this->driver->connect('tcp://' . $this->defaultHost . ':' . $this->defaultPort, $this->defaultPort);
 		}

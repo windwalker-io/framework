@@ -222,7 +222,7 @@ class ListField extends AbstractField
 		{
 			foreach ($xml->children() as $name => $option)
 			{
-				if ($option->getName() == 'optgroup')
+				if ($option->getName() === 'optgroup')
 				{
 					foreach ($option->children() as $opt)
 					{

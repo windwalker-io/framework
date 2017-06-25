@@ -91,7 +91,7 @@ class Platform
 	 */
 	public function isWin()
 	{
-		return $this->getOS() == 'WIN';
+		return $this->getOS() === 'WIN';
 	}
 
 	/**
@@ -126,7 +126,7 @@ class Platform
 	 */
 	public function isLinux()
 	{
-		return $this->getOS() == 'LIN';
+		return $this->getOS() === 'LIN';
 	}
 
 	/**

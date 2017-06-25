@@ -33,7 +33,7 @@ class ColorValidator extends AbstractValidator
 			return false;
 		}
 
-		if ($value[0] != '#')
+		if ($value[0] !== '#')
 		{
 			return false;
 		}

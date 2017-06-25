@@ -227,7 +227,7 @@ abstract class AbstractMatcher implements MatcherInterface
 
 		$false = false;
 
-		if ($type == 'object')
+		if ($type === 'object')
 		{
 			if ($class && !is_subclass_of($value, $class))
 			{

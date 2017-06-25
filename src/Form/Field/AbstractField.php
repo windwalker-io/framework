@@ -840,11 +840,11 @@ abstract class AbstractField
 
 			$name = $parent->getName();
 
-			if ($name == 'fieldset')
+			if ($name === 'fieldset')
 			{
 				$this->fieldset = $this->fieldset ? : (string) $parent['name'];
 			}
-			elseif ($name == 'group')
+			elseif ($name === 'group')
 			{
 				array_unshift($group, (string) $parent['name']);
 			}

@@ -65,7 +65,7 @@ Then we trigger the event we created:
 $dispatcher->triggerEvent($event);
 
 // ContentListener::onBeforeContentSave will set title into $content object.
-$content->title == 'My content';
+$content->title === 'My content';
 ```
 
 If a method name in listener equals to event name, Dispatcher will run this method and inject Event into this method.

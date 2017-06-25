@@ -172,7 +172,7 @@ abstract class AbstractRenderer implements RendererInterface
 	 */
 	public function __get($name)
 	{
-		if ($name == 'config')
+		if ($name === 'config')
 		{
 			return $this->$name;
 		}

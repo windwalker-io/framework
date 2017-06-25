@@ -566,7 +566,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
 				$l = $k - 1;
 
-				while ($l >= 0 && $sql{$l} == '\\')
+				while ($l >= 0 && $sql{$l} === '\\')
 				{
 					$l--;
 					$escaped = !$escaped;
@@ -620,11 +620,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 		{
 			$current = substr($sql, $i, 1);
 
-			if (($current == '"' || $current == '\''))
+			if (($current === '"' || $current === '\''))
 			{
 				$n = 2;
 
-				while (substr($sql, $i - $n + 1, 1) == '\\' && $n < $i)
+				while (substr($sql, $i - $n + 1, 1) === '\\' && $n < $i)
 				{
 					$n++;
 				}
@@ -647,7 +647,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 				}
 			}
 
-			if (($current == ';' && !$open) || $i == $end - 1)
+			if (($current === ';' && !$open) || $i == $end - 1)
 			{
 				$queries[] = substr($sql, $start, ($i - $start + 1));
 				$start = $i + 1;
@@ -699,12 +699,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 	 */
 	public function loadAll($key = null, $class = '\\stdClass')
 	{
-		if (strtolower($class) == 'array')
+		if (strtolower($class) === 'array')
 		{
 			return $this->getReader()->loadArrayList($key);
 		}
 
-		if (strtolower($class) == 'assoc')
+		if (strtolower($class) === 'assoc')
 		{
 			return $this->getReader()->loadAssocList($key);
 		}
@@ -721,12 +721,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 	 */
 	public function loadOne($class = '\\stdClass')
 	{
-		if (strtolower($class) == 'array')
+		if (strtolower($class) === 'array')
 		{
 			return $this->getReader()->loadArray();
 		}
 
-		if (strtolower($class) == 'assoc')
+		if (strtolower($class) === 'assoc')
 		{
 			return $this->getReader()->loadAssoc();
 		}

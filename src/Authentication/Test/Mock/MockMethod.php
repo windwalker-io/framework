@@ -28,9 +28,9 @@ class MockMethod extends AbstractMethod
 	 */
 	public function authenticate(Credential $credential)
 	{
-		if ($credential->username == 'flower')
+		if ($credential->username === 'flower')
 		{
-			if ($credential->password == '1234')
+			if ($credential->password === '1234')
 			{
 				$this->status = Authentication::SUCCESS;
 

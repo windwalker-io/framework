@@ -184,7 +184,7 @@ abstract class AbstractWriter
 			}
 
 			// Only process scalars that are not internal fields.
-			if (is_array($v) || is_object($v) || $k[0] == '_')
+			if (is_array($v) || is_object($v) || $k[0] === '_')
 			{
 				continue;
 			}

@@ -106,7 +106,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
 			throw new \InvalidArgumentException('Invalid uploaded files, every file should be an UploadedInterface');
 		}
 
-		if ($body == 'php://input')
+		if ($body === 'php://input')
 		{
 			$body = new PhpInputStream;
 		}

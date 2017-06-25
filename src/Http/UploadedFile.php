@@ -224,7 +224,7 @@ class UploadedFile implements UploadedFileInterface
 		$sapi = $this->getSapi();
 
 		// If we sent a stream or is CLI, use stream to write file.
-		if (!$sapi || $sapi == 'cli' || !$this->file)
+		if (!$sapi || $sapi === 'cli' || !$this->file)
 		{
 			$this->writeFile($targetPath);
 		}

@@ -90,7 +90,7 @@ class PdoDriver extends AbstractDatabaseDriver
 		$options = array_merge($defaultOptions, $options);
 
 		// We shouldn't use pdo directly.
-		if ($this->name == 'pdo')
+		if ($this->name === 'pdo')
 		{
 			$this->name = $options['driver'];
 		}

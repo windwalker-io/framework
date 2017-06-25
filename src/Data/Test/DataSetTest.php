@@ -393,7 +393,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 		{
 			$keys[] = $key;
 
-			return $data->flower == 'sakura';
+			return $data->flower === 'sakura';
 		});
 
 		$this->assertEquals(['sakura'], $new->flower);

@@ -40,7 +40,7 @@ class DefaultRenderer implements ProfilerRendererInterface
 
 			$tmpl = '%s %.3f seconds (+%.3f); %0.2f MB (%s%0.3f) - %s';
 
-			if (PHP_SAPI != 'cli')
+			if (PHP_SAPI !== 'cli')
 			{
 				$tmpl = '<code>' . $tmpl . '</code>';
 			}
@@ -59,7 +59,7 @@ class DefaultRenderer implements ProfilerRendererInterface
 			$lastPoint = $point;
 		}
 
-		$glue = (PHP_SAPI == 'cli') ? "\n" : '<br />';
+		$glue = (PHP_SAPI === 'cli') ? "\n" : '<br />';
 
 		$render = implode($glue, $render);
 

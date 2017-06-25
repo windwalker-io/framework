@@ -462,6 +462,6 @@ $newArray = ArrayHelper::query($data, array('id >=' => 2));
 // Use callback, similar to array_filter()
 $newArray = ArrayHelper::query($data, function ($key, $value, $strict)
 {
-    return $value['id'] == 3 || $value['title'] == 'Macbeth';
+    return $value['id'] == 3 || $value['title'] === 'Macbeth';
 });
 ```

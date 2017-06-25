@@ -670,6 +670,6 @@ class Browser
 	 */
 	public function isSSLConnection()
 	{
-		return (!empty($this->server['HTTPS']) && strtolower($this->server['HTTPS']) != 'off');
+		return (!empty($this->server['HTTPS']) && strtolower($this->server['HTTPS']) !== 'off');
 	}
 }

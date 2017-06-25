@@ -106,7 +106,7 @@ class TrieMatcher extends AbstractMatcher
 			$this->count++;
 
 			// Start with a '(' is a regex
-			if ($regex[0] == '(')
+			if ($regex[0] === '(')
 			{
 				preg_match(chr(1) . $regex . chr(1), $segment, $match);
 
