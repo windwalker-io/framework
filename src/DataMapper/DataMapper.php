@@ -318,6 +318,12 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 					$data = $this->bindData($data);
 				}
 
+				// If data is entity object, try cast values first.
+				if ($data instanceof Entity)
+				{
+					$data = $this->castForStore($data);
+				}
+
 				$entity = new Entity($this->getFields($this->table), $data);
 
 				if ($updateNulls)
