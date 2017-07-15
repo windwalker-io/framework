@@ -51,7 +51,7 @@ class PsrHeaderInput extends Input
 	 */
 	public function get($name, $default = null, $filter = 'cmd', $separator = '.')
 	{
-		$name = HeaderHelper::normalizeHeaderName($name);
+		$name = HeaderHelper::normalizeHeaderName(strtolower($name));
 
 		return parent::get($name, $default, $filter, $separator);
 	}
