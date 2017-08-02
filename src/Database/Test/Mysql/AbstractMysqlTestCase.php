@@ -58,5 +58,16 @@ abstract class AbstractMysqlTestCase extends AbstractDatabaseTestCase
 
 		$this->db = static::$dbo;
 		$this->connection = $this->db->getConnection();
+
+		// Set Mysql to strict mode
+		$modes = [
+			'ONLY_FULL_GROUP_BY',
+			'STRICT_TRANS_TABLES',
+			'ERROR_FOR_DIVISION_BY_ZERO',
+			'NO_AUTO_CREATE_USER',
+			'NO_ENGINE_SUBSTITUTION',
+		];
+
+		$this->connection->exec("SET @@SESSION.sql_mode = '" . implode(',', $modes) . "';");
 	}
 }
