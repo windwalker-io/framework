@@ -42,7 +42,7 @@ class MysqlQuery extends Query
 	 * @var    string
 	 * @since  2.0
 	 */
-	protected $nullDate = '0000-00-00 00:00:00';
+	protected $nullDate = '1000-01-01 00:00:00';
 
 	/**
 	 * Class constructor.
@@ -54,12 +54,6 @@ class MysqlQuery extends Query
 	public function __construct(\PDO $connection = null)
 	{
 		parent::__construct($connection);
-
-		if ($this->connection instanceof \PDO &&
-			version_compare($this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7', '>='))
-		{
-			$this->nullDate = '1000-01-01 00:00:00';
-		}
 	}
 
 	/**

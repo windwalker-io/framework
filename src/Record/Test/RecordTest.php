@@ -155,7 +155,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 1')->loadOne();
 
-		$this->assertEquals('0000-00-00 00:00:00', $flower->created);
+		$this->assertEquals($this->db->getQuery(true)->getNullDate(), $flower->created);
 
 		// Test save null data
 		$data = [

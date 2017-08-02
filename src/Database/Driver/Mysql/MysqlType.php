@@ -42,6 +42,7 @@ class MysqlType extends DataType
 		self::INTEGER  => [11, 0, 'integer'],
 		self::ENUM     => [null,  '', 'string'],
 		self::SET      => [null,  '', 'string'],
+		self::DATETIME => [null, '1000-01-01 00:00:00', 'string'],
 	];
 
 	/**

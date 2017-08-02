@@ -137,7 +137,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 		$this->assertEquals('varchar(255)', $columns['name']->Type);
 		$this->assertEquals('UNI', $columns['alias']->Key);
 		$this->assertEquals('float(10,2) unsigned', $columns['float']->Type);
-		$this->assertEquals('0000-00-00 00:00:00', $columns['created']->Default);
+		$this->assertEquals($this->db->getQuery(true)->getNullDate(), $columns['created']->Default);
 
 		$this->assertTrue($table->hasIndex('idx_cloud_float'));
 	}
@@ -160,7 +160,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$columns = $table->getColumnDetails();
 
-		$this->assertEquals('0000-00-00 00:00:00', $columns['date']->Default);
+		$this->assertEquals($this->db->getQuery(true)->getNullDate(), $columns['date']->Default);
 
 		try
 		{
