@@ -10,6 +10,7 @@ namespace Windwalker\DataMapper;
 
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
+use Windwalker\Database\Schema\DataType;
 use Windwalker\DataMapper\Entity\Entity;
 use Windwalker\Query\Query;
 use Windwalker\Query\QueryInterface;
@@ -260,16 +261,23 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 					$data = $this->castForStore($data);
 				}
 
+				$pkName = $this->getKeyName();
+
 				// Then recreate a new Entity to force fields limit.
 				$entity = new Entity($this->getFields($this->table), $data);
 
+				// Remove pk field, otherwise MySQL will error in strict mode.
+				if ($pkName)
+				{
+					$entity->removeField($pkName);
+					unset($entity->$pkName);
+				}
+
 				$entity = $this->prepareDefaultValue($entity);
 
-				$pk = $this->getKeyName();
+				$this->db->getWriter()->insertOne($this->table, $entity, $pkName);
 
-				$this->db->getWriter()->insertOne($this->table, $entity, $pk);
-
-				$data->$pk = $entity->$pk;
+				$data->$pkName = $entity->$pkName;
 
 				$dataset[$k] = $data;
 			}
@@ -578,6 +586,20 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 			if ($entity[$field] === null && strtolower($detail->Null) === 'no')
 			{
 				$entity[$field] = $detail->Default;
+			}
+			// Convert to correct type.
+			else
+			{
+				$dataType = DataType::getInstance($this->db->getName());
+
+				$type = explode(' ', $detail->Type)[0];
+				$type = explode('(', $type)[0];
+
+				$value = $entity[$field];
+
+				settype($value , $dataType::getPhpType($type));
+
+				$entity[$field] = $value;
 			}
 		}
 
