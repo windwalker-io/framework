@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS "#__nestedsets" (
 "lft" integer DEFAULT '0',
 "rgt" integer  DEFAULT '0',
 "level" integer  DEFAULT '0',
-"title" varchar(255) ,
+"title" varchar(255) DEFAULT '',
 "alias" varchar(255)  DEFAULT '',
 "access" smallint  DEFAULT '0',
 "path" varchar(255)  DEFAULT '',

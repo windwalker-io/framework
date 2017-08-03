@@ -136,12 +136,6 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 
 		$db->select($dbname);
 
-		// MySQL Strict Mode
-		if (static::$driver === 'mysql' && !empty(static::$dsn['strict_mode']))
-		{
-			$db->setQuery("SET sql_mode = 'NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES'")->execute();
-		}
-
 		static::setupFixtures();
 	}
 

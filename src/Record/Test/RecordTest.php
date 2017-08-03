@@ -170,7 +170,7 @@ class RecordTest extends AbstractMysqlTestCase
 		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 2')->loadOne();
 
 		$this->assertSame('', $flower->title);
-		$this->assertSame(null, $flower->alias);
+		$this->assertSame('', $flower->alias);
 	}
 
 	/**
@@ -321,7 +321,7 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testCreate()
 	{
-		// Test create with id
+		// Test create with no id
 		$data = [
 			'title'    => 'Lodovico',
 			'meaning'  => 'Kinsman to Brabantio',
@@ -340,9 +340,30 @@ class RecordTest extends AbstractMysqlTestCase
 		$this->assertEquals('Lodovico', $flower->title);
 		$this->assertEquals($record->id, $flower->id);
 
-		// Test create with no id
+		// Test create with id
 		$data = [
 			'id'       => 3000,
+			'title'    => 'Brabantio',
+			'meaning'  => 'senator',
+			'ordering' => 123456,
+			'params'   => ''
+		];
+
+		$record = $this->instance;
+
+		$record->bind($data);
+
+		$record->create();
+
+		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 3000')->loadOne();
+
+		$this->assertEquals('Brabantio', $flower->title);
+	}
+
+	public function testCreateWithEmptyId()
+	{
+		$data = [
+			'id'       => 'A',
 			'title'    => 'Brabantio',
 			'meaning'  => 'senator',
 			'ordering' => 123456,

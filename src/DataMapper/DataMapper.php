@@ -266,13 +266,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 				// Then recreate a new Entity to force fields limit.
 				$entity = new Entity($this->getFields($this->table), $data);
 
-				// Remove pk field, otherwise MySQL will error in strict mode.
-				if ($pkName)
-				{
-					$entity->removeField($pkName);
-					unset($entity->$pkName);
-				}
-
 				$entity = $this->prepareDefaultValue($entity);
 
 				$this->db->getWriter()->insertOne($this->table, $entity, $pkName);
