@@ -617,9 +617,9 @@ class MariadbQueryTest extends AbstractQueryTestCase
 	 */
 	public function testNullDate()
 	{
-		$this->assertEquals($this->instance->quote('0000-00-00 00:00:00'), $this->instance->nullDate());
+		$this->assertEquals($this->instance->quote('1000-01-01 00:00:00'), $this->instance->nullDate());
 
-		$this->assertEquals('0000-00-00 00:00:00', $this->instance->nullDate(false));
+		$this->assertEquals('1000-01-01 00:00:00', $this->instance->nullDate(false));
 	}
 
 	/**
