@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -382,10 +382,10 @@ abstract class AbstractWriter
 			return false;
 		}
 
-		$query->update($table);
+		$query->update($query->quoteName($table));
 
 		$this->execute($query);
-		
+
 		return true;
 	}
 
@@ -404,7 +404,7 @@ abstract class AbstractWriter
 		// Conditions.
 		QueryHelper::buildWheres($query, $conditions);
 
-		$query->delete($table);
+		$query->delete($query->quoteName($table));
 
 		$this->db->setQuery($query)->execute();
 
