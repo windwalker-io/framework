@@ -183,19 +183,25 @@ class Path
 	/**
 	 * Function to strip additional / or \ in a path name.
 	 *
-	 * @param   string  $path  The path to clean.
-	 * @param   string  $ds    Directory separator (optional).
+	 * @param   string $path The path to clean.
+	 * @param   string $ds   Directory separator (optional).
 	 *
 	 * @return  string  The cleaned path.
 	 *
 	 * @since   2.0
 	 * @throws  \UnexpectedValueException If $path is not a string.
+	 * @throws  \InvalidArgumentException
 	 */
 	public static function clean($path, $ds = DIRECTORY_SEPARATOR)
 	{
 		if (!is_string($path))
 		{
 			throw new \UnexpectedValueException(__CLASS__ . '::clean $path is not a string.');
+		}
+
+		if ($path === '')
+		{
+			throw new \InvalidArgumentException('Path length is 0.');
 		}
 
 		$path = trim($path);

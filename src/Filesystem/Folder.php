@@ -93,8 +93,36 @@ abstract class Folder
 	 */
 	public static function create($path = '', $mode = 0755)
 	{
+		static $nested = 0;
+
 		// Check to make sure the path valid and clean
 		$path = Path::clean($path);
+
+		// Check if parent dir exists
+		$parent = dirname($path);
+
+		if (!is_dir($parent))
+		{
+			// Prevent infinite loops!
+			$nested++;
+
+			if ($nested > 20 || $parent === $path)
+			{
+				throw new FilesystemException(__METHOD__ . ': Infinite loop detected');
+			}
+
+			// Create the parent directory
+			if (static::create($parent, $mode) !== true)
+			{
+				// Folder::create throws an error
+				$nested--;
+
+				return false;
+			}
+
+			// OK, parent directory has been created
+			$nested--;
+		}
 
 		// Check if dir already exists
 		if (is_dir($path))
@@ -106,9 +134,9 @@ abstract class Folder
 		$obd = ini_get('open_basedir');
 
 		// If open_basedir is set we need to get the open_basedir that the path is in
-		if ($obd != null)
+		if ($obd)
 		{
-			$obdSeparator = defined('PHP_WINDOWS_VERSION_MAJOR') ? ";" : ":";
+			$obdSeparator = defined('PHP_WINDOWS_VERSION_MAJOR') ? ';' : ':';
 
 			// Create the array of open_basedir paths
 			$obdArray = explode($obdSeparator, $obd);
@@ -126,40 +154,26 @@ abstract class Folder
 				}
 			}
 
-			if ($inBaseDir == false)
+			if ($inBaseDir === false)
 			{
 				// Throw a FilesystemException because the path to be created is not in open_basedir
 				throw new FilesystemException(__METHOD__ . ': Path not in open_basedir paths');
 			}
 		}
 
-		$path = explode(DIRECTORY_SEPARATOR, $path);
+		// First set umask
+		$origmask = @umask(0);
 
-		$dir = array_shift($path);
-
-		foreach ($path as $folder)
+		// Create the path
+		if (!@mkdir($path, $mode) && !is_dir($path))
 		{
-			$dir .= DIRECTORY_SEPARATOR . $folder;
-
-			if (is_dir($dir))
-			{
-				continue;
-			}
-
-			// First set umask
-			$origmask = @umask(0);
-
-			// Create the path
-			if (!@mkdir($dir, $mode))
-			{
-				@umask($origmask);
-
-				throw new FilesystemException(__METHOD__ . ': Could not create directory.  Path: ' . $dir);
-			}
-
-			// Reset umask
 			@umask($origmask);
+
+			throw new FilesystemException(__METHOD__ . ': Could not create directory.  Path: ' . $path);
 		}
+
+		// Reset umask
+		@umask($origmask);
 
 		return true;
 	}
