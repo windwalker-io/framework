@@ -334,9 +334,12 @@ class Record extends Entity
 			return $this;
 		}
 
-		$key = $this->getKeyName();
+		$conditions = [];
 
-		$conditions = $this->$key;
+		foreach ((array) $this->getKeyName(true) as $key)
+		{
+			$conditions[$key] = $this->$key;
+		}
 
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
@@ -344,7 +347,7 @@ class Record extends Entity
 		]);
 
 		// If no primary key is given, return false.
-		if ($conditions === null)
+		if ($conditions === [])
 		{
 			throw new \UnexpectedValueException('Null primary key not allowed.');
 		}

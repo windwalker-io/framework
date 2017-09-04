@@ -709,16 +709,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'conditions'  => &$conditions
-		]
-		);
+		]);
 
 		$result = $this->doDelete($conditions);
 
 		// Event
 		$this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
 			'result' => &$result,
-		]
-		);
+		]);
 
 		return $result;
 	}
