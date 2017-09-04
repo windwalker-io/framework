@@ -250,7 +250,10 @@ class MockArrayBridge implements SessionBridgeInterface
 	 */
 	public function setCookieParams($lifetime, $path = null, $domain = null, $secure = false, $httponly = true)
 	{
-		session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
+		if (!headers_sent())
+		{
+			session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
+		}
 
 		return $this;
 	}

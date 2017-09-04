@@ -14,6 +14,7 @@ php:
 matrix:
   allow_failures:
     - php: hhvm
+    - php: 7.2
 
 addons:
   postgresql: "9.3"

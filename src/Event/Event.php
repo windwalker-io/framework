@@ -31,7 +31,7 @@ class Event implements EventInterface, \ArrayAccess, \Serializable, \Countable
 	 *
 	 * @since  2.0
 	 */
-	protected $arguments;
+	protected $arguments = [];
 
 	/**
 	 * A flag to see if the event propagation is stopped.
