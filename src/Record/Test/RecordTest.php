@@ -132,7 +132,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$this->instance->save($data);
 
-		$flower = $this->db->setQuery('SELECT * FROM articles ORDER BY id DESC')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` ORDER BY id DESC')->loadOne();
 
 		$this->assertEquals('Test', $flower->title);
 
@@ -145,7 +145,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset(false)->save($data);
 
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 1')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 1')->loadOne();
 
 		$this->assertEquals('YOO', $flower->title);
 		$this->assertEquals('2000-12-14 01:53:02', $flower->created);
@@ -153,7 +153,7 @@ class RecordTest extends AbstractMysqlTestCase
 		// Test Update nulls
 		$this->instance->reset(true)->save($data, true);
 
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 1')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 1')->loadOne();
 
 		$this->assertEquals($this->db->getQuery(true)->getNullDate(), $flower->created);
 
@@ -167,7 +167,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset(true)->save($data, true);
 
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 2')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 2')->loadOne();
 
 		$this->assertSame('', $flower->title);
 		$this->assertSame('', $flower->alias);
@@ -218,13 +218,13 @@ class RecordTest extends AbstractMysqlTestCase
 	 */
 	public function testDelete()
 	{
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 5')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 5')->loadOne();
 
 		$this->assertEquals('Ipsam reprehenderit', $flower->title);
 
 		$this->instance->delete(5);
 
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 5')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 5')->loadOne();
 
 		$this->assertFalse($flower);
 	}
@@ -307,7 +307,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$this->instance->reset()->bind($data)->store();
 
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 1')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 1')->loadOne();
 
 		$this->assertEquals('YOO', $flower->title);
 	}
@@ -335,7 +335,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$record->create();
 
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE title = "Lodovico"')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE title = "Lodovico"')->loadOne();
 
 		$this->assertEquals('Lodovico', $flower->title);
 		$this->assertEquals($record->id, $flower->id);
@@ -355,7 +355,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$record->create();
 
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 3000')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 3000')->loadOne();
 
 		$this->assertEquals('Brabantio', $flower->title);
 	}
@@ -376,7 +376,7 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$record->create();
 
-		$flower = $this->db->setQuery('SELECT * FROM articles WHERE id = 3000')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 3000')->loadOne();
 
 		$this->assertEquals('Brabantio', $flower->title);
 	}
