@@ -409,12 +409,12 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
 		try
 		{
-			if (!$this->delete($conditions))
+			if ($this->delete($conditions) === false)
 			{
 				throw new \RuntimeException(sprintf('Delete row fail when updating relations table: %s', $this->table));
 			}
 
-			if (!$this->create($dataset))
+			if ($this->create($dataset) === false)
 			{
 				throw new \RuntimeException(sprintf('Insert row fail when updating relations table: %s', $this->table));
 			}
