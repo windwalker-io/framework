@@ -182,7 +182,7 @@ class NestedRecord extends Record
 
 		$query = $this->db->getQuery(true)
 			->select('COUNT(' . $this->db->quoteName($this->getKeyName()) . ')')
-			->from($this->table)
+			->from($this->db->quoteName($this->table))
 			->where($this->getKeyName() . ' = ' . $this->parent_id);
 
 		if (!$this->db->setQuery($query)->loadResult())
@@ -264,7 +264,7 @@ class NestedRecord extends Record
 				// Get the last root node as the reference node.
 				$query = $this->db->getQuery(true)
 					->select($this->getKeyName() . ', parent_id, level, lft, rgt')
-					->from($this->table)
+					->from($this->db->quoteName($this->table))
 					->where('parent_id = 0')
 					->order('lft DESC')
 					->limit(1);
@@ -352,7 +352,7 @@ class NestedRecord extends Record
 
 		$query = $this->db->getQuery(true)
 			->select($k)
-			->from($this->table)
+			->from($this->db->quoteName($this->table))
 			->where('parent_id = ' . $this->db->quote($this->parent_id));
 
 		if ($where)
@@ -413,7 +413,7 @@ class NestedRecord extends Record
 		// Get the ids of child nodes.
 		$query = $this->db->getQuery(true)
 			->select($k)
-			->from($this->table)
+			->from($this->db->quoteName($this->table))
 			->where('lft BETWEEN ' . (int) $node->lft . ' AND ' . (int) $node->rgt);
 
 		$children = $this->db->setQuery($query)->loadColumn();
@@ -473,7 +473,7 @@ class NestedRecord extends Record
 			// Get the last root node as the reference node.
 			$query->clear()
 				->select($this->getKeyName() . ', parent_id, level, lft, rgt')
-				->from($this->table)
+				->from($this->db->quoteName($this->table))
 				->where('parent_id = 0')
 				->order('lft DESC')
 				->limit(1);
@@ -665,7 +665,7 @@ class NestedRecord extends Record
 		// Test for a unique record with parent_id = 0
 		$query = $this->db->getQuery(true)
 			->select($k)
-			->from($this->table)
+			->from($this->db->quoteName($this->table))
 			->where('parent_id = 0');
 
 		$result = $this->db->setQuery($query)->loadColumn();
@@ -678,7 +678,7 @@ class NestedRecord extends Record
 		// Test for a unique record with lft = 0
 		$query->clear()
 			->select($k)
-			->from($this->table)
+			->from($this->db->quoteName($this->table))
 			->where('lft = 0');
 
 		$result = $this->db->setQuery($query)->loadColumn();
@@ -734,7 +734,7 @@ class NestedRecord extends Record
 		{
 			$query->clear()
 				->select($this->getKeyName())
-				->from($this->table)
+				->from($this->db->quoteName($this->table))
 				->where('parent_id = "%s"')
 				->order('parent_id, lft');
 
@@ -817,9 +817,9 @@ class NestedRecord extends Record
 		// Get the aliases for the path from the node to the root node.
 		$query = $this->db->getQuery(true)
 			->select('p.alias')
-			->from($this->table . ' AS n, ' . $this->table . ' AS p')
+			->from($this->db->quoteName($this->table) . ' AS n, ' . $this->db->quoteName($this->table) . ' AS p')
 			->where('n.lft BETWEEN p.lft AND p.rgt')
-			->where('n.' . $this->getKeyName() . ' = ' . (int) $pk)
+			->where('n.' . $this->db->quoteName($this->getKeyName()) . ' = ' . (int) $pk)
 			->order('p.lft');
 
 		$this->db->setQuery($query);
@@ -934,7 +934,7 @@ class NestedRecord extends Record
 		// Get the node data.
 		$query = $this->db->getQuery(true)
 			->select($this->getKeyName() . ', parent_id, level, lft, rgt')
-			->from($this->table)
+			->from($this->db->quoteName($this->table))
 			->where($k . ' = ' . $id)
 			->limit(1);
 
