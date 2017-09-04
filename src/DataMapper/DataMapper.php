@@ -208,7 +208,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 				throw new \Exception('Please give me a table name~!');
 			}
 
-			$query->from($this->table);
+			$query->from($query->quoteName($this->table));
 		}
 
 		// Build query
