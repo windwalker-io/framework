@@ -260,7 +260,7 @@ class MysqlGrammar extends AbstractQueryGrammar
 			$type ? : 'text',
 			$signed ? null : 'UNSIGNED',
 			$allowNull ? null : 'NOT NULL',
-			!is_null($default) ? 'DEFAULT ' . $query->quote($default) : null,
+			$default !== false ? 'DEFAULT ' . static::getQuery()->validValue($default) : null,
 			$comment ? 'COMMENT ' . $query->quote($comment) : null,
 			static::handleColumnPosition($position)
 		);
