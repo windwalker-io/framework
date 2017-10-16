@@ -947,4 +947,28 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 	{
 		return $this->lastQuery;
 	}
+
+	/**
+	 * getDateFormat
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2.7
+	 */
+	public function getDateFormat()
+	{
+		return $this->getIndependentQuery()->getDateFormat();
+	}
+
+	/**
+	 * getNullDate
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2.7
+	 */
+	public function getNullDate()
+	{
+		return $this->getIndependentQuery()->getNullDate();
+	}
 }
