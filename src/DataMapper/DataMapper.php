@@ -575,10 +575,13 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	{
 		foreach ($entity->getFields() as $field => $detail)
 		{
-			// This field is null and the db column is not nullable, use db default value.
-			if ($entity[$field] === null && strtolower($detail->Null) === 'no')
+			if ($entity[$field] === null)
 			{
-				$entity[$field] = $detail->Default;
+				// This field is null and the db column is not nullable, use db default value.
+				if (strtolower($detail->Null) === 'no')
+				{
+					$entity[$field] = $detail->Default;
+				}
 			}
 			// Convert to correct type.
 			else
