@@ -310,9 +310,11 @@ abstract class AbstractField
 	/**
 	 * render
 	 *
-	 * @return  string
+	 * @param array $options
+	 *
+	 * @return string
 	 */
-	public function render()
+	public function render(array $options = [])
 	{
 		$attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
 		$attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
@@ -324,7 +326,7 @@ abstract class AbstractField
 			return $this->form->getRenderer()->renderField($this, $attrs);
 		}
 
-		$label = $this->renderLabel();
+		$label = !empty($options['no_label']) ? '' : $this->renderLabel();
 		$input = $this->renderInput();
 
 		return (string) new HtmlElement('div', $label . $input, $attrs);

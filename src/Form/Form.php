@@ -708,14 +708,15 @@ class Form implements \IteratorAggregate
 	 *
 	 * @param string $name
 	 * @param string $group
+	 * @param array  $options
 	 *
-	 * @return  string
+	 * @return string
 	 */
-	public function renderField($name, $group = '')
+	public function renderField($name, $group = '', array $options = [])
 	{
 		$field = $this->getField($name, $group);
 		
-		return $field->render();
+		return $field->render($options);
 	}
 
 	/**
@@ -723,16 +724,17 @@ class Form implements \IteratorAggregate
 	 *
 	 * @param string $fieldset
 	 * @param string $group
+	 * @param array  $options
 	 *
-	 * @return  string
+	 * @return string
 	 */
-	public function renderFields($fieldset = null, $group = null)
+	public function renderFields($fieldset = null, $group = null, array $options = [])
 	{
 		$output = '';
 
 		foreach ($this->getFields($fieldset, $group) as $field)
 		{
-			$output .= "\n" . $field->render();
+			$output .= "\n" . $field->render($options);
 		}
 
 		return $output;

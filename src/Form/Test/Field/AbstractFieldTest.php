@@ -207,6 +207,14 @@ HTML;
 HTML;
 
 		$this->assertHtmlFormatEquals($expect, $this->instance->render());
+
+		$expect = <<<HTML
+<div id="input-windwalker-flower-control" class="stub-field control-group">
+	<input type="text" name="windwalker[flower]" id="input-windwalker-flower" class="stub-flower" value="sakura" data-test-element />
+</div>
+HTML;
+
+		$this->assertHtmlFormatEquals($expect, $this->instance->render(['no_label' => true]));
 	}
 
 	/**
