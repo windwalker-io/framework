@@ -428,7 +428,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
 		$this->assertEquals(1, count($indexes));
 
-		$table->modifyColumn('id', DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, null);
+		$table->modifyColumn('id', DataType::INTEGER, Column::UNSIGNED, Column::NOT_NULL, 0);
 		$table->dropIndex('PRIMARY');
 
 		$indexes = $table->getIndexes();

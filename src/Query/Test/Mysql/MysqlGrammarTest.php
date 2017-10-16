@@ -263,7 +263,7 @@ SQL;
 	 */
 	public function testAlterColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
 
 		$actual = MysqlGrammar::alterColumn('MODIFY', 'foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
@@ -274,7 +274,7 @@ SQL;
 
 		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} text AFTER {$this->qn('id')}";
 
-		$actual = MysqlGrammar::alterColumn('CHANGE', 'foo', ['bar', 'yoo'], 'text', true, true, null, 'AFTER id', null);
+		$actual = MysqlGrammar::alterColumn('CHANGE', 'foo', ['bar', 'yoo'], 'text', true, true, false, 'AFTER id', null);
 
 		$this->assertEquals(
 			$this->format($expected),
@@ -291,7 +291,7 @@ SQL;
 	 */
 	public function testAddColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
 
 		$actual = MysqlGrammar::addColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
@@ -310,7 +310,7 @@ SQL;
 	 */
 	public function testChangeColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
 
 		$actual = MysqlGrammar::changeColumn('foo', 'bar', 'yoo', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
@@ -329,7 +329,7 @@ SQL;
 	 */
 	public function testModifyColumn()
 	{
-		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Test' FIRST";
+		$expected = "ALTER TABLE {$this->qn('foo')} MODIFY {$this->qn('bar')} int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Test' FIRST";
 
 		$actual = MysqlGrammar::modifyColumn('foo', 'bar', 'int(11)', false, false, '1', 'FIRST', 'Test');
 
