@@ -11,6 +11,7 @@ namespace Windwalker\Query\Test\Cubrid;
 use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Cubrid\CubridQuery;
 use Windwalker\Query\Query;
+use Windwalker\Query\Test\QueryTestTrait;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -20,6 +21,8 @@ use Windwalker\Test\TestHelper;
  */
 class CubridQueryTest extends AbstractQueryTestCase
 {
+	use QueryTestTrait;
+
 	/**
 	 * Property quote.
 	 *

@@ -9,15 +9,17 @@
 namespace Windwalker\Database\Test;
 
 use Windwalker\Test\Helper\TestStringHelper;
-use Windwalker\Test\TestCase\AbstractBaseTestCase;
+use Windwalker\Test\Traits\BaseAssertionTrait;
 
 /**
  * The AbstractQueryTestCase class.
  *
  * @since  2.1
  */
-class AbstractQueryTestCase extends AbstractBaseTestCase
+class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
 {
+	use BaseAssertionTrait;
+
 	/**
 	 * Property quote.
 	 *

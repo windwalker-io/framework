@@ -157,6 +157,11 @@ class PostgresqlQuery extends Query
 					$query .= (string) $this->noWait;
 				}
 
+				if ($this->suffix)
+				{
+					$query .= ' ' . (string) $this->suffix;
+				}
+
 				break;
 
 			case 'update':
@@ -186,6 +191,11 @@ class PostgresqlQuery extends Query
 					$query .= (string) $this->where;
 				}
 
+				if ($this->suffix)
+				{
+					$query .= ' ' . (string) $this->suffix;
+				}
+
 				break;
 
 			case 'insert':
@@ -211,6 +221,11 @@ class PostgresqlQuery extends Query
 					{
 						$query .= (string) $this->returning;
 					}
+				}
+
+				if ($this->suffix)
+				{
+					$query .= ' ' . (string) $this->suffix;
 				}
 
 				break;
@@ -275,6 +290,7 @@ class PostgresqlQuery extends Query
 			case 'order':
 			case 'columns':
 			case 'values':
+			case 'suffix':
 				parent::clear($clause);
 				break;
 
@@ -303,14 +319,12 @@ class PostgresqlQuery extends Query
 	 *
 	 * @since   2.0
 	 */
-	public function forUpdate($table_name, $glue = ',')
+	public function forUpdate($table_name = null, $glue = ',')
 	{
-		$this->type = 'forUpdate';
-
 		if (is_null($this->forUpdate))
 		{
 			$glue = strtoupper($glue);
-			$this->forUpdate = new QueryElement('FOR UPDATE', 'OF ' . $table_name, "$glue ");
+			$this->forUpdate = new QueryElement('FOR UPDATE', $table_name ? 'OF ' . $table_name : null, "$glue ");
 		}
 		else
 		{
@@ -330,14 +344,12 @@ class PostgresqlQuery extends Query
 	 *
 	 * @since   2.0
 	 */
-	public function forShare($table_name, $glue = ',')
+	public function forShare($table_name = null, $glue = ',')
 	{
-		$this->type = 'forShare';
-
 		if (is_null($this->forShare))
 		{
 			$glue = strtoupper($glue);
-			$this->forShare = new QueryElement('FOR SHARE', 'OF ' . $table_name, "$glue ");
+			$this->forShare = new QueryElement('FOR SHARE', $table_name ? 'OF ' . $table_name : null, "$glue ");
 		}
 		else
 		{

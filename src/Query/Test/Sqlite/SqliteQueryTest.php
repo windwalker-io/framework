@@ -11,6 +11,7 @@ namespace Windwalker\Query\Test\Sqlite;
 use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Sqlite\SqliteQuery;
 use Windwalker\Query\Query;
+use Windwalker\Query\Test\QueryTestTrait;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -20,6 +21,8 @@ use Windwalker\Test\TestHelper;
  */
 class SqliteQueryTest extends AbstractQueryTestCase
 {
+	use QueryTestTrait;
+
 	/**
 	 * Test instance.
 	 *

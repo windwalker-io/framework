@@ -177,6 +177,14 @@ class Query implements QueryInterface, PreparableInterface
 	protected $limit;
 
 	/**
+	 * The query suffix string.
+	 *
+	 * @var    QueryElement
+	 * @since  3.2.7
+	 */
+	protected $suffix;
+
+	/**
 	 * The auto increment insert field element.
 	 *
 	 * @var    object
@@ -417,6 +425,11 @@ class Query implements QueryInterface, PreparableInterface
 				break;
 		}
 
+		if ($this->suffix)
+		{
+			$query .= ' ' . (string) $this->suffix;
+		}
+
 		// Process Limit
 		$query = $this->processLimit($query, $this->limit, $this->offset);
 
@@ -578,6 +591,10 @@ class Query implements QueryInterface, PreparableInterface
 				$this->limit = 0;
 				break;
 
+			case 'suffix':
+				$this->suffix = null;
+				break;
+
 			case 'union':
 				$this->union = null;
 				break;
@@ -603,6 +620,7 @@ class Query implements QueryInterface, PreparableInterface
 				$this->union = null;
 				$this->offset = 0;
 				$this->limit = 0;
+				$this->suffix = null;
 				$this->bounded = [];
 				break;
 		}
@@ -1750,6 +1768,46 @@ class Query implements QueryInterface, PreparableInterface
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Suffix string to query.
+	 *
+	 * @param string $string
+	 *
+	 * @return  static
+	 *
+	 * @since   3.2.7
+	 */
+	public function suffix($string)
+	{
+		if (is_null($this->suffix))
+		{
+			$this->suffix = $this->element('', [], ' ');
+		}
+
+		$args = func_get_args();
+
+		if (!is_array($string) && count($args) > 1)
+		{
+			$string = call_user_func_array([$this, 'format'], $args);
+		}
+
+		$this->suffix->append($string);
+
+		return $this;
+	}
+
+	/**
+	 * Add FOR UPDATE after query string.
+	 *
+	 * @return  static
+	 *
+	 * @since   3.2.7
+	 */
+	public function forUpdate()
+	{
+		return $this->suffix('FOR UPDATE');
 	}
 
 	/**

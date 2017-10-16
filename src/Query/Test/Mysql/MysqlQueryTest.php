@@ -12,6 +12,7 @@ use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Database\Test\TestDsnResolver;
 use Windwalker\Query\Mysql\MysqlQuery;
 use Windwalker\Query\Query;
+use Windwalker\Query\Test\QueryTestTrait;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -21,6 +22,8 @@ use Windwalker\Test\TestHelper;
  */
 class MysqlQueryTest extends AbstractQueryTestCase
 {
+	use QueryTestTrait;
+
 	/**
 	 * Property quote.
 	 *

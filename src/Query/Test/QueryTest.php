@@ -22,6 +22,8 @@ use Windwalker\Test\TestHelper;
  */
 class QueryTest extends AbstractQueryTestCase
 {
+	use QueryTestTrait;
+
 	/**
 	 * Test instance.
 	 *
