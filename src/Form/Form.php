@@ -242,13 +242,30 @@ class Form implements \IteratorAggregate
 	 */
 	public function wrap($fieldset, $group, \Closure $handler)
 	{
-		$this->wrap['fieldset'] = $fieldset;
-		$this->wrap['group'] = $group;
+		$bakFieldset = $this->wrap['fieldset'];
+		$bakGroup = $this->wrap['group'];
+
+		if ($fieldset !== null)
+		{
+			$this->wrap['fieldset'] = $fieldset;
+		}
+
+		if ($group !== null)
+		{
+			$this->wrap['group'] = $group;
+		}
 
 		$handler($this);
 
-		$this->wrap['fieldset'] = null;
-		$this->wrap['group'] = null;
+		if ($fieldset !== null)
+		{
+			$this->wrap['fieldset'] = $bakFieldset;
+		}
+
+		if ($group !== null)
+		{
+			$this->wrap['group'] = $bakGroup;
+		}
 
 		return $this;
 	}
