@@ -575,7 +575,14 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	{
 		foreach ($entity->getFields() as $field => $detail)
 		{
-			if ($entity[$field] === null)
+			$value = $entity[$field];
+
+			if (is_array($value) || is_object($value))
+			{
+				$value = null;
+			}
+
+			if ($value === null)
 			{
 				// This field is null and the db column is not nullable, use db default value.
 				if (strtolower($detail->Null) === 'no')
@@ -590,8 +597,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
 				$type = explode(' ', $detail->Type)[0];
 				$type = explode('(', $type)[0];
-
-				$value = $entity[$field];
 
 				settype($value , $dataType::getPhpType($type));
 
