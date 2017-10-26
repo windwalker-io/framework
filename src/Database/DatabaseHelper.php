@@ -34,7 +34,7 @@ abstract class DatabaseHelper
 
 		foreach ((array) $queries as $query)
 		{
-			if (!trim($query))
+			if (!trim($query, " \n\r\t;"))
 			{
 				continue;
 			}

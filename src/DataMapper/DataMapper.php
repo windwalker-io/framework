@@ -264,7 +264,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 				$pkName = $this->getKeyName();
 
 				// Then recreate a new Entity to force fields limit.
-				$entity = new Entity($this->getFields($this->table), $data);
+				$entity = new Entity($this->getFields($this->table, true), $data);
 
 				$entity = $this->prepareDefaultValue($entity);
 
@@ -527,23 +527,29 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 	/**
 	 * Get table fields.
 	 *
-	 * @param string $table Table name.
+	 * @param string $table    Table name.
+	 * @param bool   $ignoreAI Ignore auto increment fields.
 	 *
-	 * @return  array
+	 * @return array
 	 */
-	public function getFields($table = null)
+	public function getFields($table = null, $ignoreAI = false)
 	{
-		if ($this->fields !== null)
+		if ($this->fields === null)
 		{
-			return $this->fields;
+			$table = $table ? : $this->table;
+
+			$this->fields = $this->db->getTable($table)->getColumnDetails();
 		}
 
-		$table = $table ? : $this->table;
+		$fields = [];
 
-		$fields = $this->db->getTable($table)->getColumnDetails();
-
-		foreach ($fields as $field)
+		foreach ($this->fields as $field)
 		{
+			if ($ignoreAI && $field->Extra === 'auto_increment')
+			{
+				continue;
+			}
+
 			if (strtolower($field->Null) === 'no' && $field->Default === null
 				&& $field->Key !== 'PRI' && $this->getKeyName() !== $field->Field)
 			{
@@ -556,10 +562,10 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 			}
 
 			$field = (object) $field;
-			$this->fields[$field->Field] = $field;
+			$fields[$field->Field] = $field;
 		}
 
-		return $this->fields;
+		return $fields;
 	}
 
 	/**

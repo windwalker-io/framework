@@ -42,6 +42,11 @@ class PostgresqlDatabase extends AbstractDatabase
 	 */
 	public function create($ifNotExists = false, $charset = 'utf8')
 	{
+		if ($ifNotExists && $this->exists())
+		{
+			return $this;
+		}
+
 		$query = PostgresqlGrammar::createDatabase($this->name, $charset);
 
 		$this->db->setQuery($query)->execute();

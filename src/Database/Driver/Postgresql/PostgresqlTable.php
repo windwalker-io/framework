@@ -536,7 +536,8 @@ class PostgresqlTable extends AbstractTable
 					'Null'        => $field->Null,
 					'Extra'       => null,
 					'Privileges'  => null,
-					'Comment'     => $field->Comment
+					'Comment'     => $field->Comment,
+					'Key'         => ''
 				];
 			}
 

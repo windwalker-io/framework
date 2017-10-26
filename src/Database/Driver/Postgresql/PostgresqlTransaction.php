@@ -43,23 +43,6 @@ class PostgresqlTransaction extends PdoTransaction
 	}
 
 	/**
-	 * commit
-	 *
-	 * @return  static
-	 */
-	public function commit()
-	{
-		$this->depth--;
-
-		if (!$this->nested)
-		{
-			parent::commit();
-		}
-
-		return $this;
-	}
-
-	/**
 	 * rollback
 	 *
 	 * @return  static

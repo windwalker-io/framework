@@ -54,6 +54,7 @@ class PostgresqlType extends DataType
 		self::REAL      => [null, 0, 'float'],
 		self::TIMESTAMP => [null, '1970-01-01 00:00:00', 'string'],
 		self::INTERVAL  => [16,   0, 'string'],
+		self::DATETIME  => [null, '1970-01-01 00:00:00', 'string'],
 	];
 
 	/**

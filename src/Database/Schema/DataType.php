@@ -162,7 +162,7 @@ class DataType
 	 */
 	public static function getPhpType($type)
 	{
-		return static::getProfile($type, 2);
+		return static::getProfile($type, 2) ? : 'string';
 	}
 
 	/**
