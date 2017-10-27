@@ -18,6 +18,7 @@ use Windwalker\Database\Schema\Column;
  * @method  Column\Bit        bit($name)
  * @method  Column\Char       char($name)
  * @method  Column\Datetime   datetime($name)
+ * @method  Column\Date       date($name)
  * @method  Column\Decimal    decimal($name)
  * @method  Column\Double     double($name)
  * @method  Column\FloatType  float($name)
