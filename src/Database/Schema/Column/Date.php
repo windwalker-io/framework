@@ -14,7 +14,7 @@ use Windwalker\Database\Schema\DataType;
 /**
  * The DATE class.
  * 
- * @since  2.0
+ * @since  3.2.8
  */
 class Date extends Column
 {
