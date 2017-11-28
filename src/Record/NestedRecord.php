@@ -8,6 +8,8 @@
 
 namespace Windwalker\Record;
 
+use Windwalker\Database\Query\QueryHelper;
+
 /**
  * The NestedRecord class.
  * 
@@ -233,7 +235,7 @@ class NestedRecord extends Record
 	 *
 	 * @param   boolean  $updateNulls  True to update null values as well.
 	 *
-	 * @return  boolean  True on success.
+	 * @return  static  Return self to support chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -326,26 +328,22 @@ class NestedRecord extends Record
 			}
 		}
 
-		$result = parent::store($updateNulls);
-
-		$this->rebuildPath();
-
-		return $result;
+		return parent::store($updateNulls);
 	}
 
 	/**
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
-	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the
-	 *                           ordering values.
+	 * @param integer      $delta      The direction and magnitude to move the row in the ordering sequence.
+	 * @param string|array $conditions WHERE clause to use for limiting the selection of rows to compact the
+	 *                                 ordering values.
 	 *
-	 * @return  mixed    Boolean true on success.
+	 * @return mixed Boolean true on success.
 	 *
 	 * @since   2.0
 	 */
-	public function move($delta, $where = '')
+	public function move($delta, $conditions = [])
 	{
 		$k = $this->getKeyName();
 		$pk = $this->$k;
@@ -355,9 +353,9 @@ class NestedRecord extends Record
 			->from($this->db->quoteName($this->table))
 			->where('parent_id = ' . $this->db->quote($this->parent_id));
 
-		if ($where)
+		if ($conditions)
 		{
-			$query->where($where);
+			QueryHelper::buildWheres($query, (array) $conditions);
 		}
 
 		if ($delta > 0)
