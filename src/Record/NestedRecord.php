@@ -9,6 +9,9 @@
 namespace Windwalker\Record;
 
 use Windwalker\Database\Query\QueryHelper;
+use Windwalker\Record\Exception\NestedHandleException;
+use Windwalker\Record\Exception\ParentIsChildException;
+use Windwalker\Record\Exception\ParentIsSelfException;
 
 /**
  * The NestedRecord class.
@@ -85,7 +88,7 @@ class NestedRecord extends Record
 	public function getPath($pk = null, $allFields = false)
 	{
 		$k = $this->getKeyName();
-		$pk = (is_null($pk)) ? $this->$k : $pk;
+		$pk = $pk === null ? $this->$k : $pk;
 
 		// Get the path from the node to the root.
 		$query = $this->db->getQuery(true)
@@ -167,7 +170,7 @@ class NestedRecord extends Record
 	 * This method checks that the parent_id is non-zero and exists in the database.
 	 * Note that the root node (parent_id = 0) cannot be manipulated with this class.
 	 *
-	 * @return  boolean  True if all checks pass.
+	 * @return  static  Method allows chaining.
 	 *
 	 * @since   2.0
 	 * @throws  \Exception
@@ -179,7 +182,7 @@ class NestedRecord extends Record
 		// Check that the parent_id field is valid.
 		if ($this->parent_id == 0)
 		{
-			throw new \UnexpectedValueException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id, get_class($this)));
+			throw new NestedHandleException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id, get_class($this)));
 		}
 
 		$query = $this->db->getQuery(true)
@@ -189,7 +192,36 @@ class NestedRecord extends Record
 
 		if (!$this->db->setQuery($query)->loadResult())
 		{
-			throw new \UnexpectedValueException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id, get_class($this)));
+			throw new NestedHandleException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id, get_class($this)));
+		}
+
+		$this->checkParent();
+
+		return $this;
+	}
+
+	/**
+	 * checkParent
+	 *
+	 * @return  static
+	 * @throws \Windwalker\Record\Exception\WrongParentException
+	 */
+	public function checkParent()
+	{
+		if ($this->id)
+		{
+			if ($this->id == $this->parent_id)
+			{
+				throw new ParentIsSelfException('Parent should not be self.');
+			}
+
+			$tree = $this->getTree($this->id);
+			$childrenIds = array_column($tree, 'id');
+
+			if (in_array($this->parent_id, $childrenIds))
+			{
+				throw new ParentIsChildException('Parent should not be child.');
+			}
 		}
 
 		return $this;
@@ -257,7 +289,7 @@ class NestedRecord extends Record
 			if ($this->locationId < 0)
 			{
 				// Negative parent ids are invalid
-				throw new \UnexpectedValueException(sprintf('%s::store() used a negative _location_id', get_class($this)));
+				throw new NestedHandleException(sprintf('%s::store() used a negative _location_id', get_class($this)));
 			}
 
 			// We are inserting a node relative to the last root node.
@@ -281,14 +313,14 @@ class NestedRecord extends Record
 				// Get the reference node by primary key.
 				if (!$reference = $this->getNode($this->locationId))
 				{
-					throw new \UnexpectedValueException('Cannot get node by location id: ' . $this->locationId);
+					throw new NestedHandleException('Cannot get node by location id: ' . $this->locationId);
 				}
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
 			if (!($repositionData = $this->getTreeRepositionData($reference, 2, $this->location)))
 			{
-				throw new \UnexpectedValueException('Cannot get reposition data.');
+				throw new NestedHandleException('Cannot get reposition data.');
 			}
 
 			// Create space in the tree at the new location for the new node in left ids.
@@ -399,7 +431,7 @@ class NestedRecord extends Record
 	public function moveByReference($referenceId, $position = self::LOCATION_AFTER, $pk = null)
 	{
 		$k = $this->getKeyName();
-		$pk = (is_null($pk)) ? $this->$k : $pk;
+		$pk = $pk === null ? $this->$k : $pk;
 
 		// Get the node by id.
 		if (!$node = $this->getNode($pk))
@@ -419,7 +451,7 @@ class NestedRecord extends Record
 		// Cannot move the node to be a child of itself.
 		if (in_array($referenceId, $children))
 		{
-			throw new \UnexpectedValueException(
+			throw new NestedHandleException(
 				sprintf('%s::moveByReference(%d, %s, %d) parenting to child.', get_class($this), $referenceId, $position, $pk)
 			);
 		}
@@ -552,14 +584,13 @@ class NestedRecord extends Record
 	public function delete($pk = null, $children = true)
 	{
 		$k = $this->getKeyName();
-		$pk = (is_null($pk)) ? $this->$k : $pk;
+		$pk = $pk === null ? $this->$k : $pk;
 
 		// Event
 		$this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
 			'conditions'  => &$pk,
 			'children' => &$children
-		]
-		);
+		]);
 
 		// Get the node by id.
 		$node = $this->getNode($pk);
@@ -686,7 +717,7 @@ class NestedRecord extends Record
 			return self::$rootId = $result[0];
 		}
 
-		throw new \UnexpectedValueException(sprintf('%s::getRootId', get_class($this)));
+		throw new NestedHandleException(sprintf('%s::getRootId', get_class($this)));
 	}
 
 	/**
@@ -795,7 +826,7 @@ class NestedRecord extends Record
 	 *
 	 * @param   integer  $pk  Primary key of the node for which to get the path.
 	 *
-	 * @return  boolean  True on success.
+	 * @return  static  Method support chaining.
 	 *
 	 * @since   2.0
 	 */
@@ -806,11 +837,11 @@ class NestedRecord extends Record
 		// If there is no alias or path field, just return true.
 		if (!array_key_exists('alias', $fields) || !array_key_exists('path', $fields))
 		{
-			return true;
+			return $this;
 		}
 
 		$k = $this->getKeyName();
-		$pk = (is_null($pk)) ? $this->$k : $pk;
+		$pk = $pk === null ? $this->$k : $pk;
 
 		// Get the aliases for the path from the node to the root node.
 		$query = $this->db->getQuery(true)
@@ -844,7 +875,7 @@ class NestedRecord extends Record
 		// Update the current record's path to the new one:
 		$this->path = $path;
 
-		return true;
+		return $this;
 	}
 
 	/**
@@ -941,7 +972,7 @@ class NestedRecord extends Record
 		// Check for no $row returned
 		if (empty($row))
 		{
-			throw new \UnexpectedValueException(sprintf('%s::getNode(%d, %s) failed.', get_class($this), $id, $key));
+			throw new NestedHandleException(sprintf('%s::getNode(%d, %s) failed.', get_class($this), $id, $key));
 		}
 
 		// Do some simple calculations.

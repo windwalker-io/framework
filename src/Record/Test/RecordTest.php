@@ -360,11 +360,16 @@ class RecordTest extends AbstractMysqlTestCase
 		$this->assertEquals('Brabantio', $flower->title);
 	}
 
+	/**
+	 * testCreateWithEmptyId
+	 *
+	 * @return  void
+	 */
 	public function testCreateWithEmptyId()
 	{
 		$data = [
 			'id'       => 'A',
-			'title'    => 'Brabantio',
+			'title'    => 'Brabantio 2',
 			'meaning'  => 'senator',
 			'ordering' => 123456,
 			'params'   => ''
@@ -376,9 +381,9 @@ class RecordTest extends AbstractMysqlTestCase
 
 		$record->create();
 
-		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 3000')->loadOne();
+		$flower = $this->db->setQuery('SELECT * FROM `articles` WHERE id = 3001')->loadOne();
 
-		$this->assertEquals('Brabantio', $flower->title);
+		$this->assertEquals('Brabantio 2', $flower->title);
 	}
 
 	/**

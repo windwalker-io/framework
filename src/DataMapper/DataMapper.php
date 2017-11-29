@@ -248,6 +248,8 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 
 		try
 		{
+			$pkName = $this->getKeyName();
+
 			foreach ($dataset as $k => $data)
 			{
 				if (!($data instanceof $this->dataClass))
@@ -261,10 +263,15 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 					$data = $this->castForStore($data);
 				}
 
-				$pkName = $this->getKeyName();
+				$fields = $this->getFields($this->table, false);
+
+				if (!$data->$pkName)
+				{
+					unset($fields[$pkName]);
+				}
 
 				// Then recreate a new Entity to force fields limit.
-				$entity = new Entity($this->getFields($this->table, true), $data);
+				$entity = new Entity($fields, $data);
 
 				$entity = $this->prepareDefaultValue($entity);
 

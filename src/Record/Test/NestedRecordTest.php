@@ -134,7 +134,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_FIRST_CHILD)
-			->store();
+			->store()
+			->rebuildPath()
+			->rebuild();
 
 		// First child
 		$data = [
@@ -145,7 +147,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_FIRST_CHILD)
-			->store();
+			->store()
+			->rebuildPath()
+			->rebuild();
 
 		$this->assertEquals([2, 3], [$this->instance->lft, $this->instance->rgt]);
 
@@ -158,7 +162,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_LAST_CHILD)
-			->store();
+			->store()
+			->rebuildPath()
+			->rebuild();
 
 		$this->assertEquals([6, 7], [$this->instance->lft, $this->instance->rgt]);
 
@@ -171,7 +177,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_BEFORE)
-			->store();
+			->store()
+			->rebuildPath()
+			->rebuild();
 
 		$this->assertEquals([1, 2], [$this->instance->lft, $this->instance->rgt]);
 
@@ -184,7 +192,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_AFTER)
-			->store();
+			->store()
+			->rebuildPath()
+			->rebuild();
 
 		$this->assertEquals([11, 12], [$this->instance->lft, $this->instance->rgt]);
 	}
@@ -298,7 +308,9 @@ class NestedRecordTest extends AbstractMysqlTestCase
 		$this->instance->reset(true)
 			->bind($data)
 			->setLocation(2, NestedRecord::LOCATION_BEFORE)
-			->store();
+			->store()
+			->rebuildPath()
+			->rebuild();
 
 		$this->instance->delete(8);
 

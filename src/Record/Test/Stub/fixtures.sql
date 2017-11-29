@@ -2,11 +2,11 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `id` int(11) unsigned NOT NULL COMMENT 'Primary Key',
   `catid` int(11) unsigned NOT NULL COMMENT 'Category ID',
   `title` varchar(255) NOT NULL COMMENT 'Title',
-  `alias` varchar(255) COMMENT 'Alias',
+  `alias` varchar(255) NOT NULL COMMENT 'Alias',
   `state` tinyint(4) NOT NULL COMMENT '0: unpublished, 1:published',
   `ordering` int(11) unsigned NOT NULL COMMENT 'Ordering',
   `created` datetime NOT NULL COMMENT 'Created Date',
-  `language` char(7) COMMENT 'Language'
+  `language` char(7) NOT NULL COMMENT 'Language'
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 INSERT INTO `articles` (`id`, `catid`, `title`, `alias`, `state`, `ordering`, `created`, `language`) VALUES
