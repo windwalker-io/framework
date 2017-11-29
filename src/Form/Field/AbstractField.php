@@ -323,7 +323,7 @@ abstract class AbstractField
 
 		if ($this->form && $this->form->getRenderer())
 		{
-			return $this->form->getRenderer()->renderField($this, $attrs);
+			return $this->form->getRenderer()->renderField($this, $attrs, $options);
 		}
 
 		$label = !empty($options['no_label']) ? '' : $this->renderLabel();

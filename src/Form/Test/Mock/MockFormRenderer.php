@@ -24,10 +24,11 @@ class MockFormRenderer implements FormRendererInterface
 	 *
 	 * @param AbstractField $field
 	 * @param array         $attribs
+	 * @param array         $options
 	 *
 	 * @return string
 	 */
-	public function renderField(AbstractField $field, array $attribs = [])
+	public function renderField(AbstractField $field, array $attribs = [], array $options = [])
 	{
 		return (string) new HtmlElement('mock', [
 			$field->renderLabel(),
