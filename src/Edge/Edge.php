@@ -203,7 +203,7 @@ class Edge
 
 		$msg .= sprintf("\n\n| View layout: %s (%s)", $path, $layout);
 
-		throw new EdgeException($msg, $e->getCode(), $e->getFile(), $e->getLine(), $e);
+		throw new EdgeException($msg, $e->getCode(), $path, $e->getLine(), $e);
 	}
 
 	/**
