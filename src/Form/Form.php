@@ -584,7 +584,10 @@ class Form implements \IteratorAggregate
 		{
 			$value = FormHelper::getByPath($data, $name);
 
-			$field->setValue($value);
+			if ($value !== null)
+			{
+				$field->setValue($value);
+			}
 		}
 
 		return $this;
