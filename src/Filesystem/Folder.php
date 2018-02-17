@@ -73,7 +73,7 @@ abstract class Folder
 			}
 			elseif (is_file($srcFile))
 			{
-				File::copy($srcFile, $destFile);
+				File::copy($srcFile, $destFile, $force);
 			}
 		}
 
