@@ -2,7 +2,7 @@
     "name": "windwalker/framework",
     "description": "A Modern PHP framework.",
     "homepage": "https://github.com/ventoviro/windwalker",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "minimum-stability": "beta",
     "authors": [
         {
