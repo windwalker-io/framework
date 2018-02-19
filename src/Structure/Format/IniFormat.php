@@ -82,7 +82,7 @@ class IniFormat implements FormatInterface
         $sections = (isset($options['processSections'])) ? $options['processSections'] : false;
 
         // Check the memory cache for already processed strings.
-        $hash = md5($data . ':' . (int)$sections);
+        $hash = md5($data . ':' . (int) $sections);
 
         if (isset(self::$cache[$hash])) {
             return self::$cache[$hash];
@@ -149,9 +149,9 @@ class IniFormat implements FormatInterface
                 {
                     // If there is a period then we assume a float.
                     if (strpos($value, '.') !== false) {
-                        $value = (float)$value;
+                        $value = (float) $value;
                     } else {
-                        $value = (int)$value;
+                        $value = (int) $value;
                     }
                 }
             }

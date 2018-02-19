@@ -1002,11 +1002,11 @@ class StrTest extends TestCase
         }
         );
 
-        self::assertEquals('Foo_Bar_Yoo', (string)$actual);
+        self::assertEquals('Foo_Bar_Yoo', (string) $actual);
 
         $actual = Str::map('Foo/Bar/Yoo', 'strtoupper');
 
-        self::assertEquals('FOO/BAR/YOO', (string)$actual);
+        self::assertEquals('FOO/BAR/YOO', (string) $actual);
     }
 
     /**
@@ -1022,11 +1022,11 @@ class StrTest extends TestCase
         }
         );
 
-        self::assertEquals('FooBarYoo', (string)$actual);
+        self::assertEquals('FooBarYoo', (string) $actual);
 
         $actual = Str::filter('Foo1Bar2Yoo', 'is_numeric');
 
-        self::assertEquals('12', (string)$actual);
+        self::assertEquals('12', (string) $actual);
     }
 
     /**
@@ -1042,10 +1042,10 @@ class StrTest extends TestCase
         }
         );
 
-        self::assertEquals('FooBarYoo', (string)$actual);
+        self::assertEquals('FooBarYoo', (string) $actual);
 
         $actual = Str::reject('Foo1Bar2Yoo', 'is_numeric');
 
-        self::assertEquals('FooBarYoo', (string)$actual);
+        self::assertEquals('FooBarYoo', (string) $actual);
     }
 }

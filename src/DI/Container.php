@@ -594,7 +594,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function exists($key)
     {
-        return (bool)$this->getRaw($key);
+        return (bool) $this->getRaw($key);
     }
 
     /**

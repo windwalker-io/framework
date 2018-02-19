@@ -60,10 +60,10 @@ class OutputTest extends \PHPUnit\Framework\TestCase
         };
 
         // Test return body
-        $return = (string)$this->instance->respond(new TextResponse('Flower', 256, ['x-foo' => 'bar']),
+        $return = (string) $this->instance->respond(new TextResponse('Flower', 256, ['x-foo' => 'bar']),
             true)->getBody();
 
-        $this->assertEquals('Flower', (string)$return);
+        $this->assertEquals('Flower', (string) $return);
 
         $this->assertEquals(['bar'], $this->instance->message->getHeader('x-foo'));
         $this->assertEquals('HTTP/1.1 256', $this->instance->status);

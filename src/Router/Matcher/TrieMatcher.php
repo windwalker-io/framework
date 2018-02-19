@@ -179,7 +179,7 @@ class TrieMatcher extends AbstractMatcher
 
             $length = count($regex);
 
-            foreach ((array)$regex as $k => $segment) {
+            foreach ((array) $regex as $k => $segment) {
                 // Fallback the placeholder to /
                 $segment = str_replace('{:PLACEHOLDER:}', '[^/]', $segment);
 

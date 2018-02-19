@@ -50,9 +50,9 @@ abstract class StringHelper
             return empty($string);
         }
 
-        $string = (string)$string;
+        $string = (string) $string;
 
-        return !(boolean)strlen($string);
+        return !(boolean) strlen($string);
     }
 
     /**
@@ -77,7 +77,7 @@ abstract class StringHelper
      */
     public static function quote($string, $quote = ['"', '"'])
     {
-        $quote = (array)$quote;
+        $quote = (array) $quote;
 
         if (empty($quote[1])) {
             $quote[1] = $quote[0];
@@ -156,7 +156,7 @@ abstract class StringHelper
      */
     public static function at($string, $num)
     {
-        $num = (int)$num;
+        $num = (int) $num;
 
         if (Utf8String::strlen($string) < $num) {
             return null;

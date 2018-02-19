@@ -303,87 +303,87 @@ class Query implements QueryInterface, PreparableInterface
 
         switch ($this->type) {
             case 'element':
-                $query .= (string)$this->element;
+                $query .= (string) $this->element;
                 break;
 
             case 'select':
-                $query .= (string)$this->select;
-                $query .= (string)$this->from;
+                $query .= (string) $this->select;
+                $query .= (string) $this->from;
 
                 if ($this->join) {
                     // Special case for joins
                     foreach ($this->join as $join) {
-                        $query .= (string)$join;
+                        $query .= (string) $join;
                     }
                 }
 
                 if ($this->where) {
-                    $query .= (string)$this->where;
+                    $query .= (string) $this->where;
                 }
 
                 if ($this->group) {
-                    $query .= (string)$this->group;
+                    $query .= (string) $this->group;
                 }
 
                 if ($this->having) {
-                    $query .= (string)$this->having;
+                    $query .= (string) $this->having;
                 }
 
                 if ($this->order) {
-                    $query .= (string)$this->order;
+                    $query .= (string) $this->order;
                 }
 
                 break;
 
             case 'union':
-                $query .= (string)$this->union;
+                $query .= (string) $this->union;
                 break;
 
             case 'delete':
-                $query .= (string)$this->delete;
-                $query .= (string)$this->from;
+                $query .= (string) $this->delete;
+                $query .= (string) $this->from;
 
                 if ($this->join) {
                     // Special case for joins
                     foreach ($this->join as $join) {
-                        $query .= (string)$join;
+                        $query .= (string) $join;
                     }
                 }
 
                 if ($this->where) {
-                    $query .= (string)$this->where;
+                    $query .= (string) $this->where;
                 }
 
                 break;
 
             case 'update':
-                $query .= (string)$this->update;
+                $query .= (string) $this->update;
 
                 if ($this->join) {
                     // Special case for joins
                     foreach ($this->join as $join) {
-                        $query .= (string)$join;
+                        $query .= (string) $join;
                     }
                 }
 
-                $query .= (string)$this->set;
+                $query .= (string) $this->set;
 
                 if ($this->where) {
-                    $query .= (string)$this->where;
+                    $query .= (string) $this->where;
                 }
 
                 break;
 
             case 'insert':
-                $query .= (string)$this->insert;
+                $query .= (string) $this->insert;
 
                 // Set method
                 if ($this->set) {
-                    $query .= (string)$this->set;
+                    $query .= (string) $this->set;
                 } // Columns-Values method
                 elseif ($this->values) {
                     if ($this->columns) {
-                        $query .= (string)$this->columns;
+                        $query .= (string) $this->columns;
                     }
 
                     $elements = $this->values->getElements();
@@ -392,22 +392,22 @@ class Query implements QueryInterface, PreparableInterface
                         $query .= ' VALUES ';
                     }
 
-                    $query .= (string)$this->values;
+                    $query .= (string) $this->values;
                 }
 
                 break;
 
             case 'call':
-                $query .= (string)$this->call;
+                $query .= (string) $this->call;
                 break;
 
             case 'exec':
-                $query .= (string)$this->exec;
+                $query .= (string) $this->exec;
                 break;
         }
 
         if ($this->suffix) {
-            $query .= ' ' . (string)$this->suffix;
+            $query .= ' ' . (string) $this->suffix;
         }
 
         // Process Limit
@@ -802,7 +802,7 @@ class Query implements QueryInterface, PreparableInterface
                 throw new \InvalidArgumentException('Invalid subquery.');
             }
 
-            $tables = PHP_EOL . '(' . trim((string)$tables) . ') AS ' . $subQueryAlias;
+            $tables = PHP_EOL . '(' . trim((string) $tables) . ') AS ' . $subQueryAlias;
         }
 
         if (is_null($this->from)) {
@@ -944,7 +944,7 @@ class Query implements QueryInterface, PreparableInterface
     public function orHaving($conditions)
     {
         if (is_string($conditions)) {
-            $conditions = (array)$conditions;
+            $conditions = (array) $conditions;
         }
 
         if (is_array($conditions)) {
@@ -953,7 +953,7 @@ class Query implements QueryInterface, PreparableInterface
 
             $conditions = array_merge($conditions, $args);
 
-            $this->having((string)new QueryElement('()', $conditions, ' OR '));
+            $this->having((string) new QueryElement('()', $conditions, ' OR '));
         } elseif (is_callable($conditions)) {
             $query = new static($this->connection);
 
@@ -961,7 +961,7 @@ class Query implements QueryInterface, PreparableInterface
 
             call_user_func($conditions, $query);
 
-            $this->having((string)$query->having);
+            $this->having((string) $query->having);
         }
 
         return $this;
@@ -1034,10 +1034,10 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         if (is_string($table)) {
-            $table = $table . ($conditions ? ' ON ' . implode(' AND ', (array)$conditions) : '');
+            $table = $table . ($conditions ? ' ON ' . implode(' AND ', (array) $conditions) : '');
         }
 
-        $this->join[] = $this->element(strtoupper($type) . ' JOIN', (array)$table);
+        $this->join[] = $this->element(strtoupper($type) . ' JOIN', (array) $table);
 
         return $this;
     }
@@ -1144,9 +1144,9 @@ class Query implements QueryInterface, PreparableInterface
     public function processLimit($query, $limit, $offset = null)
     {
         if ($limit && $offset === null) {
-            $query .= ' LIMIT ' . (int)$limit;
+            $query .= ' LIMIT ' . (int) $limit;
         } elseif ($limit) {
-            $query .= ' LIMIT ' . (int)$offset . ', ' . (int)$limit;
+            $query .= ' LIMIT ' . (int) $offset . ', ' . (int) $limit;
         }
 
         return $query;
@@ -1200,7 +1200,7 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         if (is_array($text) || is_object($text)) {
-            $text = (array)$text;
+            $text = (array) $text;
 
             foreach ($text as $k => $v) {
                 $text[$k] = $this->quote($v, $escape);
@@ -1265,7 +1265,7 @@ class Query implements QueryInterface, PreparableInterface
         } elseif (is_array($name) || is_object($name)) {
             $fin = [];
 
-            foreach ((array)$name as $n) {
+            foreach ((array) $name as $n) {
                 $fin[] = $this->quoteName($n);
             }
 
@@ -1450,11 +1450,11 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function values($values)
     {
-        $values = (array)$values;
+        $values = (array) $values;
 
         foreach ($values as &$value) {
             if (is_array($value) || is_object($value)) {
-                $value = implode(',', (array)$value);
+                $value = implode(',', (array) $value);
             }
         }
 
@@ -1522,7 +1522,7 @@ class Query implements QueryInterface, PreparableInterface
     public function orWhere($conditions)
     {
         if (is_string($conditions)) {
-            $conditions = (array)$conditions;
+            $conditions = (array) $conditions;
         }
 
         if (is_array($conditions)) {
@@ -1539,7 +1539,7 @@ class Query implements QueryInterface, PreparableInterface
 
             call_user_func($conditions, $query);
 
-            $this->where((string)$query->where);
+            $this->where((string) $query->where);
         }
 
         return $this;
@@ -1781,7 +1781,7 @@ class Query implements QueryInterface, PreparableInterface
             }
 
             // Increment the argument index only if argument specifier not provided.
-            $index = is_numeric($match[4]) ? (int)$match[4] : $i++;
+            $index = is_numeric($match[4]) ? (int) $match[4] : $i++;
 
             if (!$index || !isset($args[$index])) {
                 $replacement = '';
@@ -2096,9 +2096,9 @@ class Query implements QueryInterface, PreparableInterface
         if ($value === null) {
             return 'NULL';
         } elseif (is_float($value) || is_double($value)) {
-            return (double)$value;
+            return (double) $value;
         } elseif (is_numeric($value)) {
-            return (int)$value;
+            return (int) $value;
         }
 
         if ($allowExpression && $this->getExpression()->isExpression($value)) {

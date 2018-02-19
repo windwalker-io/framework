@@ -253,7 +253,7 @@ class PdoDriver extends AbstractDatabaseDriver
     public function doExecute()
     {
         // Replace prefix
-        $query = $this->replacePrefix((string)$this->query);
+        $query = $this->replacePrefix((string) $this->query);
 
         // Set query string into PDO, but keep query object in $this->query that we can bind params when execute().
         $this->cursor = $this->connection->prepare($query, $this->driverOptions);
@@ -274,7 +274,7 @@ class PdoDriver extends AbstractDatabaseDriver
         try {
             $this->cursor->execute();
         } catch (\PDOException $e) {
-            throw new \PDOException($e->getMessage() . "\nSQL: " . $this->cursor->queryString, (int)$e->getCode(), $e);
+            throw new \PDOException($e->getMessage() . "\nSQL: " . $this->cursor->queryString, (int) $e->getCode(), $e);
         }
 
         $this->lastQuery = $this->cursor->queryString;

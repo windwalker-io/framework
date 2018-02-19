@@ -75,7 +75,7 @@ class PhpRenderer extends AbstractRenderer
      */
     public function render($file, $__data = null)
     {
-        $this->data = $__data = (array)$__data;
+        $this->data = $__data = (array) $__data;
 
         $this->prepareData($__data);
 
@@ -148,7 +148,7 @@ class PhpRenderer extends AbstractRenderer
      */
     public function load($file, $data = null)
     {
-        $data = array_merge($this->data, (array)$data);
+        $data = array_merge($this->data, (array) $data);
 
         $renderer = $this->createSelf();
 

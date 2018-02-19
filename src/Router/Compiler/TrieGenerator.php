@@ -41,14 +41,14 @@ abstract class TrieGenerator
         if (!isset(static::$vars[$pattern])) {
             TrieCompiler::compile($pattern);
 
-            static::$vars[$pattern] = (array)TrieCompiler::$vars;
+            static::$vars[$pattern] = (array) TrieCompiler::$vars;
         }
 
         foreach (static::$vars[$pattern] as $key) {
             $var = isset($queries[$key]) ? $queries[$key] : 'null';
 
             if (is_array($var) || is_object($var)) {
-                $var = implode('/', (array)$var);
+                $var = implode('/', (array) $var);
 
                 $key2 = '*' . $key;
 

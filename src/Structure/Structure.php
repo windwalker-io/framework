@@ -83,7 +83,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
         try {
             return $this->toString();
         } catch (\Exception $e) {
-            trigger_error((string)$e, E_USER_ERROR);
+            trigger_error((string) $e, E_USER_ERROR);
 
             return '';
         }
@@ -320,7 +320,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function offsetExists($offset)
     {
-        return (boolean)($this->get($offset) !== null);
+        return (boolean) ($this->get($offset) !== null);
     }
 
     /**
@@ -413,7 +413,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function toArray()
     {
-        return (array)$this->asArray($this->data);
+        return (array) $this->asArray($this->data);
     }
 
     /**
@@ -730,7 +730,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function setIgnoreValues($ignoreValues)
     {
-        $this->ignoreValues = (array)$ignoreValues;
+        $this->ignoreValues = (array) $ignoreValues;
 
         return $this;
     }

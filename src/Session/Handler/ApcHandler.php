@@ -58,7 +58,7 @@ class ApcHandler extends AbstractHandler
      */
     public function read($id)
     {
-        return (string)apc_fetch($this->prefix . $id);
+        return (string) apc_fetch($this->prefix . $id);
     }
 
     /**

@@ -80,7 +80,7 @@ class Request extends AbstractRequest implements RequestInterface
 
         $name = $this->getHeaderName($name);
 
-        return (array)$this->headers[$name];
+        return (array) $this->headers[$name];
     }
 
     /**

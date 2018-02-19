@@ -232,7 +232,7 @@ XML;
         $attributes = [];
 
         foreach ($this->xml->attributes() as $name => $value) {
-            $attributes[$name] = (string)$value;
+            $attributes[$name] = (string) $value;
         }
 
         $this->assertEquals($attributes, XmlHelper::getAttributes($this->xml));

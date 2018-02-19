@@ -226,7 +226,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
             $data        = new \stdClass;
             $data->debug = &$this->debug;
             $data->query = &$this->query;
-            $data->sql   = $this->replacePrefix((string)$this->query);
+            $data->sql   = $this->replacePrefix((string) $this->query);
             $data->db    = $this;
 
             if ($this->query instanceof PreparableInterface) {
@@ -633,7 +633,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      */
     public function setDebug($level)
     {
-        $this->debug = (bool)$level;
+        $this->debug = (bool) $level;
 
         return $this;
     }

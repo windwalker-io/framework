@@ -95,7 +95,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
 
         $this->driver->set($item->getKey(), $item->get(), $ttl);
 
-        return (bool)($this->driver->getResultCode() == \Memcached::RES_SUCCESS);
+        return (bool) ($this->driver->getResultCode() == \Memcached::RES_SUCCESS);
     }
 
     /**

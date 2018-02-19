@@ -233,7 +233,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
         // Read the contents of the process id file as an integer.
         $fp  = fopen($pidFile, 'r');
         $pid = fread($fp, filesize($pidFile));
-        $pid = (int)$pid;
+        $pid = (int) $pid;
         fclose($fp);
 
         // Check to make sure that the process id exists as a positive integer.
@@ -272,19 +272,19 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
         // The application author name.  This string is used in generating startup scripts and has
         // a maximum of 50 characters.
-        $tmp = (string)$this->config->get('author_name', 'Windwalker Framework');
+        $tmp = (string) $this->config->get('author_name', 'Windwalker Framework');
         $this->config->set('author_name', (strlen($tmp) > 50) ? substr($tmp, 0, 50) : $tmp);
 
         // The application author email.  This string is used in generating startup scripts.
-        $tmp = (string)$this->config->get('author_email', 'admin@windwalker.org');
+        $tmp = (string) $this->config->get('author_email', 'admin@windwalker.org');
         $this->config->set('author_email', filter_var($tmp, FILTER_VALIDATE_EMAIL));
 
         // The application name.  This string is used in generating startup scripts.
-        $tmp = (string)$this->config->get('application_name', 'WindwalkerDaemon');
-        $this->config->set('application_name', (string)preg_replace('/[^A-Z0-9_-]/i', '', $tmp));
+        $tmp = (string) $this->config->get('application_name', 'WindwalkerDaemon');
+        $this->config->set('application_name', (string) preg_replace('/[^A-Z0-9_-]/i', '', $tmp));
 
         // The application description.  This string is used in generating startup scripts.
-        $tmp = (string)$this->config->get('application_description', 'A generic Windwalker Framework application.');
+        $tmp = (string) $this->config->get('application_description', 'A generic Windwalker Framework application.');
         $this->config->set('application_description', filter_var($tmp, FILTER_SANITIZE_STRING));
 
         /*
@@ -293,16 +293,16 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
          */
 
         // The application executable daemon.  This string is used in generating startup scripts.
-        $tmp = (string)$this->config->get('application_executable', basename($this->io->getCalledScript()));
+        $tmp = (string) $this->config->get('application_executable', basename($this->io->getCalledScript()));
         $this->config->set('application_executable', $tmp);
 
         // The home directory of the daemon.
-        $tmp = (string)$this->config->get('application_directory', dirname($this->io->getCalledScript()));
+        $tmp = (string) $this->config->get('application_directory', dirname($this->io->getCalledScript()));
         $this->config->set('application_directory', $tmp);
 
         // The pid file location.  This defaults to a path inside the /tmp directory.
         $name = $this->config->get('application_name');
-        $tmp  = (string)$this->config->get('application_pid_file', strtolower('/tmp/' . $name . '/' . $name . '.pid'));
+        $tmp  = (string) $this->config->get('application_pid_file', strtolower('/tmp/' . $name . '/' . $name . '.pid'));
         $this->config->set('application_pid_file', $tmp);
 
         /*
@@ -312,17 +312,17 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
          */
 
         // The user id under which to run the daemon.
-        $tmp     = (int)$this->config->get('application_uid', 0);
+        $tmp     = (int) $this->config->get('application_uid', 0);
         $options = ['options' => ['min_range' => 0, 'max_range' => 65000]];
         $this->config->set('application_uid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
         // The group id under which to run the daemon.
-        $tmp     = (int)$this->config->get('application_gid', 0);
+        $tmp     = (int) $this->config->get('application_gid', 0);
         $options = ['options' => ['min_range' => 0, 'max_range' => 65000]];
         $this->config->set('application_gid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
         // Option to kill the daemon if it cannot switch to the chosen identity.
-        $tmp = (bool)$this->config->get('application_require_identity', 1);
+        $tmp = (bool) $this->config->get('application_require_identity', 1);
         $this->config->set('application_require_identity', $tmp);
 
         /*
@@ -336,14 +336,14 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
         $tmp = $this->config->get('max_execution_time');
 
         if ($tmp !== null) {
-            $this->config->set('max_execution_time', (int)$tmp);
+            $this->config->set('max_execution_time', (int) $tmp);
         }
 
         // The maximum amount of memory the application can use.
         $tmp = $this->config->get('max_memory_limit', '256M');
 
         if ($tmp !== null) {
-            $this->config->set('max_memory_limit', (string)$tmp);
+            $this->config->set('max_memory_limit', (string) $tmp);
         }
 
         return $this;
@@ -435,8 +435,8 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
     protected function changeIdentity()
     {
         // Get the group and user ids to set for the daemon.
-        $uid = (int)$this->config->get('application_uid', 0);
-        $gid = (int)$this->config->get('application_gid', 0);
+        $uid = (int) $this->config->get('application_uid', 0);
+        $gid = (int) $this->config->get('application_gid', 0);
 
         // Get the application process id file path.
         $file = $this->config->get('application_pid_file');
@@ -517,7 +517,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
                 $this->running = true;
 
                 // Set the process id.
-                $this->processId = (int)posix_getpid();
+                $this->processId = (int) posix_getpid();
                 $this->parentId  = $this->processId;
             }
         } catch (\RuntimeException $e) {
@@ -617,7 +617,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
             throw new \RuntimeException('The process could not be forked.');
         } elseif ($pid === 0) // Update the process id for the child.
         {
-            $this->processId = (int)posix_getpid();
+            $this->processId = (int) posix_getpid();
         } else // Log the fork in the parent.
         {
             // Log the fork.
@@ -715,7 +715,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
             // Read the contents of the process id file as an integer.
             $fp  = fopen($this->config->get('application_pid_file'), 'r');
             $pid = fread($fp, filesize($this->config->get('application_pid_file')));
-            $pid = (int)$pid;
+            $pid = (int) $pid;
             fclose($fp);
 
             // Remove the process id file.

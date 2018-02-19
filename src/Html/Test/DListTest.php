@@ -56,11 +56,11 @@ class DListTest extends AbstractDomTestCase
     {
         $list = new DList;
 
-        $this->assertEquals('<dl></dl>', (string)$list);
+        $this->assertEquals('<dl></dl>', (string) $list);
 
         $list = new DList(null, ['id' => 'list', 'class' => 'nav']);
 
-        $this->assertEquals('<dl id="list" class="nav"></dl>', (string)$list);
+        $this->assertEquals('<dl id="list" class="nav"></dl>', (string) $list);
 
         $items = [
             new DListTitle('Spider Man'),
@@ -86,7 +86,7 @@ class DListTest extends AbstractDomTestCase
 </dl>
 HTML;
 
-        $this->assertHtmlFormatEquals($html, (string)$list);
+        $this->assertHtmlFormatEquals($html, (string) $list);
     }
 
     /**
@@ -145,7 +145,7 @@ HTML;
 </dl>
 HTML;
 
-        $this->assertHtmlFormatEquals($html, (string)$list);
+        $this->assertHtmlFormatEquals($html, (string) $list);
     }
 
     /**
@@ -175,6 +175,6 @@ HTML;
 </dl>
 HTML;
 
-        $this->assertHtmlFormatEquals($html, (string)$list);
+        $this->assertHtmlFormatEquals($html, (string) $list);
     }
 }

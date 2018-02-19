@@ -110,7 +110,7 @@ abstract class ResponseHelper
      */
     public static function validateStatus($code)
     {
-        $code = (int)$code;
+        $code = (int) $code;
 
         return ($code >= 100 && $code < 600);
     }

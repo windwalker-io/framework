@@ -419,7 +419,7 @@ class PostgresqlTable extends AbstractTable
                 throw new \InvalidArgumentException('No columns given.');
             }
 
-            $columns = (array)$columns;
+            $columns = (array) $columns;
 
             $index = new Key($type, $columns, $name, $comment);
         } else {
@@ -517,7 +517,7 @@ class PostgresqlTable extends AbstractTable
 
             foreach ($fields as $field) {
                 // Do some dirty translation to MySQL output.
-                $result[$field->column_name] = (object)[
+                $result[$field->column_name] = (object) [
                     'column_name' => $field->column_name,
                     'type' => $field->column_type,
                     'null' => $field->Null,

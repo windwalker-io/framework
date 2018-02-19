@@ -144,7 +144,7 @@ class File
      */
     public static function delete($files)
     {
-        $files = (array)$files;
+        $files = (array) $files;
 
         foreach ($files as $file) {
             $file = Path::clean($file);

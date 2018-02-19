@@ -41,7 +41,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
             $elements = get_object_vars($elements);
         }
 
-        $this->elements = (array)$elements;
+        $this->elements = (array) $elements;
         $this->strict   = $strict;
     }
 
@@ -55,7 +55,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
         $return = '';
 
         foreach ($this as $element) {
-            $return .= (string)$element;
+            $return .= (string) $element;
         }
 
         return $return;

@@ -41,8 +41,8 @@ class AbstractDomTestCase extends AbstractBaseTestCase
         $ignoreCase = false
     ) {
         $this->assertEquals(
-            TestDomHelper::minify((string)$expected),
-            TestDomHelper::minify((string)$actual),
+            TestDomHelper::minify((string) $expected),
+            TestDomHelper::minify((string) $actual),
             $message,
             $delta,
             $maxDepth,
@@ -72,8 +72,8 @@ class AbstractDomTestCase extends AbstractBaseTestCase
         $ignoreCase = false
     ) {
         $this->assertEquals(
-            DomFormatter::format((string)$expected),
-            DomFormatter::format((string)$actual),
+            DomFormatter::format((string) $expected),
+            DomFormatter::format((string) $actual),
             $message,
             $delta,
             $maxDepth,
@@ -103,8 +103,8 @@ class AbstractDomTestCase extends AbstractBaseTestCase
         $ignoreCase = false
     ) {
         $this->assertEquals(
-            HtmlFormatter::format((string)$expected),
-            HtmlFormatter::format((string)$actual),
+            HtmlFormatter::format((string) $expected),
+            HtmlFormatter::format((string) $actual),
             $message,
             $delta,
             $maxDepth,

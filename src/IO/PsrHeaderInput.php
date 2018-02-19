@@ -29,7 +29,7 @@ class PsrHeaderInput extends Input
     {
         $headers = [];
 
-        foreach ((array)$source as $key => $value) {
+        foreach ((array) $source as $key => $value) {
             $headers[HeaderHelper::normalizeHeaderName($key)] = implode(', ', $value);
         }
 

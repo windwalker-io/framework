@@ -214,16 +214,16 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 
         $cmd->getIO()->setOption('y', 1);
 
-        $this->assertSame(1, (int)$cmd->getOption('y'), 'Option value not matched.');
+        $this->assertSame(1, (int) $cmd->getOption('y'), 'Option value not matched.');
 
-        $this->assertSame(1, (int)$cmd->getOption('yell'), 'Long option value not matched.');
+        $this->assertSame(1, (int) $cmd->getOption('yell'), 'Long option value not matched.');
 
-        $this->assertSame(1, (int)$cmd->getOption('Y'), 'uppercase option value not matched.');
+        $this->assertSame(1, (int) $cmd->getOption('Y'), 'uppercase option value not matched.');
 
         // Test for global option
         $cmd->addCommand(new FooCommand);
 
-        $this->assertSame(1, (int)$cmd->getChild('foo')->getOption('y'), 'Sub command should have global option');
+        $this->assertSame(1, (int) $cmd->getChild('foo')->getOption('y'), 'Sub command should have global option');
 
         // Test for children
         $bbb = $cmd->getChild('foo/aaa/bbb');

@@ -45,7 +45,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 
         // Re query item back
         $this->assertEquals('Sakura', $item->title);
-        $this->assertEquals((string)$compare, $item->params);
+        $this->assertEquals((string) $compare, $item->params);
 
         // Use array
         $data            = [];
@@ -89,7 +89,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
         $item = $this->db->getReader('SELECT * FROM #__flower WHERE id = 86')->loadObject();
 
         $this->assertEquals('Sakura2', $item->title);
-        $this->assertEquals((string)$compare, $item->params);
+        $this->assertEquals((string) $compare, $item->params);
 
         // Use array
         $data            = [];

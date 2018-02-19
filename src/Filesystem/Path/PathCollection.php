@@ -168,7 +168,7 @@ class PathCollection extends ArrayObject
     {
         $iterator = new \AppendIterator;
 
-        $paths = (array)parent::getArrayCopy();
+        $paths = (array) parent::getArrayCopy();
 
         $clousre = function ($path) use ($callback, $iterator) {
             $iterator->append($callback($path));
@@ -224,7 +224,7 @@ class PathCollection extends ArrayObject
     {
         $iterator = $this->appendIterator(
             function ($path) use ($condition, $recursive) {
-                return Filesystem::find((string)$path, $condition, $recursive);
+                return Filesystem::find((string) $path, $condition, $recursive);
             }
         );
 
@@ -254,7 +254,7 @@ class PathCollection extends ArrayObject
     {
         return $this->appendIterator(
             function ($path) use ($condition, $recursive) {
-                return Filesystem::find((string)$path, $condition, $recursive);
+                return Filesystem::find((string) $path, $condition, $recursive);
             }
         );
     }
@@ -270,7 +270,7 @@ class PathCollection extends ArrayObject
     {
         return $this->appendIterator(
             function ($path) use ($recursive) {
-                return Filesystem::files((string)$path, $recursive);
+                return Filesystem::files((string) $path, $recursive);
             }
         );
     }
@@ -286,7 +286,7 @@ class PathCollection extends ArrayObject
     {
         return $this->appendIterator(
             function ($path) use ($recursive) {
-                return Filesystem::folders((string)$path, $recursive);
+                return Filesystem::folders((string) $path, $recursive);
             }
         );
     }
@@ -303,7 +303,7 @@ class PathCollection extends ArrayObject
     public function setPrefix($prefix)
     {
         foreach ($this->storage as &$path) {
-            $path->setPrefix((string)$prefix);
+            $path->setPrefix((string) $prefix);
         }
 
         return $this;
@@ -360,9 +360,9 @@ class PathCollection extends ArrayObject
 
         foreach ($this as $key => $path) {
             if ($reindex) {
-                $array[] = (string)clone $path;
+                $array[] = (string) clone $path;
             } else {
-                $array[$key] = (string)clone $path;
+                $array[$key] = (string) clone $path;
             }
         }
 

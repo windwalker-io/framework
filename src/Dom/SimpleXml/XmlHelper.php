@@ -55,7 +55,7 @@ class XmlHelper
             return $default;
         }
 
-        return (string)$xml[$attr];
+        return (string) $xml[$attr];
     }
 
     /**
@@ -86,7 +86,7 @@ class XmlHelper
     {
         $value = self::getAttribute($xml, $attr, $default);
 
-        if (in_array((string)$value, self::$falseValue) || !$value) {
+        if (in_array((string) $value, self::$falseValue) || !$value) {
             return false;
         }
 
@@ -119,7 +119,7 @@ class XmlHelper
         $attributes = [];
 
         foreach ($xml->attributes() as $name => $value) {
-            $attributes[$name] = (string)$value;
+            $attributes[$name] = (string) $value;
         }
 
         return $attributes;
@@ -136,9 +136,9 @@ class XmlHelper
      */
     public static function def(\SimpleXMLElement $xml, $attr, $value)
     {
-        $value = (string)$value;
-        $attr  = (string)$attr;
+        $value = (string) $value;
+        $attr  = (string) $attr;
 
-        $xml[$attr] = isset($xml[$attr]) ? (string)$xml[$attr] : (string)$value;
+        $xml[$attr] = isset($xml[$attr]) ? (string) $xml[$attr] : (string) $value;
     }
 }

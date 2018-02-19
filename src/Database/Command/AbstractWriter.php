@@ -79,7 +79,7 @@ abstract class AbstractWriter
         foreach ($item as $k => $v) {
             // Convert stringable object
             if (is_object($v) && is_callable([$v, '__toString'])) {
-                $v = (string)$v;
+                $v = (string) $v;
             }
 
             // Only process non-null scalars.
@@ -149,7 +149,7 @@ abstract class AbstractWriter
 
         $query = $this->db->getQuery(true);
 
-        $key = (array)$key;
+        $key = (array) $key;
 
         // Create the base update statement.
         $query->update($query->quoteName($table));
@@ -158,7 +158,7 @@ abstract class AbstractWriter
         foreach ($item as $k => $v) {
             // Convert stringable object
             if (is_object($v) && is_callable([$v, '__toString'])) {
-                $v = (string)$v;
+                $v = (string) $v;
             }
 
             // Only process scalars that are not internal fields.
@@ -324,7 +324,7 @@ abstract class AbstractWriter
 
         $hasField = false;
 
-        foreach ((array)$data as $field => $value) {
+        foreach ((array) $data as $field => $value) {
             if (!in_array($field, $fields)) {
                 continue;
             }

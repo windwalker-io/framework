@@ -543,7 +543,7 @@ function utf8_specials_pattern()
  */
 function utf8_is_word_chars($str)
 {
-    return !(bool)preg_match(utf8_specials_pattern(), $str);
+    return !(bool) preg_match(utf8_specials_pattern(), $str);
 }
 
 //--------------------------------------------------------------------

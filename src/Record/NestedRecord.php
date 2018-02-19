@@ -95,7 +95,7 @@ class NestedRecord extends Record
             ->select('p.' . $k . ', p.parent_id, p.level, p.lft, p.rgt')
             ->from($this->db->quoteName($this->table) . ' AS n, ' . $this->db->quoteName($this->table) . ' AS p')
             ->where('n.lft BETWEEN p.lft AND p.rgt')
-            ->where('n.' . $k . ' = ' . (int)$pk)
+            ->where('n.' . $k . ' = ' . (int) $pk)
             ->order('p.lft');
 
         if ($allFields) {
@@ -370,16 +370,16 @@ class NestedRecord extends Record
             ->where('parent_id = ' . $this->db->quote($this->parent_id));
 
         if ($conditions) {
-            QueryHelper::buildWheres($query, (array)$conditions);
+            QueryHelper::buildWheres($query, (array) $conditions);
         }
 
         if ($delta > 0) {
-            $query->where('rgt > ' . (int)$this->rgt)
+            $query->where('rgt > ' . (int) $this->rgt)
                 ->order('rgt ASC');
 
             $position = static::LOCATION_AFTER;
         } else {
-            $query->where('lft < ' . (int)$this->lft)
+            $query->where('lft < ' . (int) $this->lft)
                 ->order('lft DESC');
 
             $position = static::LOCATION_BEFORE;
@@ -422,7 +422,7 @@ class NestedRecord extends Record
         $query = $this->db->getQuery(true)
             ->select($k)
             ->from($this->db->quoteName($this->table))
-            ->where('lft BETWEEN ' . (int)$node->lft . ' AND ' . (int)$node->rgt);
+            ->where('lft BETWEEN ' . (int) $node->lft . ' AND ' . (int) $node->rgt);
 
         $children = $this->db->setQuery($query)->loadColumn();
 
@@ -440,7 +440,7 @@ class NestedRecord extends Record
         $query->clear()
             ->update($this->db->quoteName($this->table))
             ->set('lft = lft * (-1), rgt = rgt * (-1)')
-            ->where('lft BETWEEN ' . (int)$node->lft . ' AND ' . (int)$node->rgt);
+            ->where('lft BETWEEN ' . (int) $node->lft . ' AND ' . (int) $node->rgt);
 
         $this->db->setQuery($query);
 
@@ -453,16 +453,16 @@ class NestedRecord extends Record
         // Compress the left values.
         $query->clear()
             ->update($this->db->quoteName($this->table))
-            ->set('lft = lft - ' . (int)$node->width)
-            ->where('lft > ' . (int)$node->rgt);
+            ->set('lft = lft - ' . (int) $node->width)
+            ->where('lft > ' . (int) $node->rgt);
 
         $this->db->setQuery($query)->setQuery($query)->execute();
 
         // Compress the right values.
         $query->clear()
             ->update($this->db->quoteName($this->table))
-            ->set('rgt = rgt - ' . (int)$node->width)
-            ->where('rgt > ' . (int)$node->rgt);
+            ->set('rgt = rgt - ' . (int) $node->width)
+            ->where('rgt > ' . (int) $node->rgt);
 
         $this->db->setQuery($query)->execute();
 
@@ -496,7 +496,7 @@ class NestedRecord extends Record
         // Shift left values.
         $query->clear()
             ->update($this->db->quoteName($this->table))
-            ->set('lft = lft + ' . (int)$node->width)
+            ->set('lft = lft + ' . (int) $node->width)
             ->where($repositionData->left_where);
 
         $this->db->setQuery($query)->execute();
@@ -504,7 +504,7 @@ class NestedRecord extends Record
         // Shift right values.
         $query->clear()
             ->update($this->db->quoteName($this->table))
-            ->set('rgt = rgt + ' . (int)$node->width)
+            ->set('rgt = rgt + ' . (int) $node->width)
             ->where($repositionData->right_where);
 
         $this->db->setQuery($query)->execute();
@@ -519,9 +519,9 @@ class NestedRecord extends Record
         // Move the nodes back into position in the tree using the calculated offsets.
         $query->clear()
             ->update($this->db->quoteName($this->table))
-            ->set('rgt = ' . (int)$offset . ' - rgt')
-            ->set('lft = ' . (int)$offset . ' - lft')
-            ->set('level = level + ' . (int)$levelOffset)
+            ->set('rgt = ' . (int) $offset . ' - rgt')
+            ->set('lft = ' . (int) $offset . ' - lft')
+            ->set('level = level + ' . (int) $levelOffset)
             ->where('lft < 0');
 
         $this->db->setQuery($query)->setQuery($query)->execute();
@@ -530,7 +530,7 @@ class NestedRecord extends Record
         if ($node->parent_id != $repositionData->new_parent_id) {
             $query = $this->db->getQuery(true)
                 ->update($this->db->quoteName($this->table))
-                ->set('parent_id = ' . (int)$repositionData->new_parent_id)
+                ->set('parent_id = ' . (int) $repositionData->new_parent_id)
                 ->where($this->getKeyName() . ' = ' . $node->$k);
 
             $this->db->setQuery($query)->setQuery($query)->execute();
@@ -576,23 +576,23 @@ class NestedRecord extends Record
             // Delete the node and all of its children.
             $query->clear()
                 ->delete($query->quoteName($this->table))
-                ->where('lft BETWEEN ' . (int)$node->lft . ' AND ' . (int)$node->rgt);
+                ->where('lft BETWEEN ' . (int) $node->lft . ' AND ' . (int) $node->rgt);
 
             $this->db->setQuery($query)->execute();
 
             // Compress the left values.
             $query->clear()
                 ->update($this->db->quoteName($this->table))
-                ->set('lft = lft - ' . (int)$node->width)
-                ->where('lft > ' . (int)$node->rgt);
+                ->set('lft = lft - ' . (int) $node->width)
+                ->where('lft > ' . (int) $node->rgt);
 
             $this->db->setQuery($query)->execute();
 
             // Compress the right values.
             $query->clear()
                 ->update($this->db->quoteName($this->table))
-                ->set('rgt = rgt - ' . (int)$node->width)
-                ->where('rgt > ' . (int)$node->rgt);
+                ->set('rgt = rgt - ' . (int) $node->width)
+                ->where('rgt > ' . (int) $node->rgt);
 
             $this->db->setQuery($query)->execute();
         } // Leave the children and move them up a level.
@@ -600,7 +600,7 @@ class NestedRecord extends Record
             // Delete the node.
             $query->clear()
                 ->delete($query->quoteName($this->table))
-                ->where('lft = ' . (int)$node->lft);
+                ->where('lft = ' . (int) $node->lft);
 
             $this->db->setQuery($query)->execute();
 
@@ -610,15 +610,15 @@ class NestedRecord extends Record
                 ->set('lft = lft - 1')
                 ->set('rgt = rgt - 1')
                 ->set('level = level - 1')
-                ->where('lft BETWEEN ' . (int)$node->lft . ' AND ' . (int)$node->rgt);
+                ->where('lft BETWEEN ' . (int) $node->lft . ' AND ' . (int) $node->rgt);
 
             $this->db->setQuery($query)->execute();
 
             // Adjust all the parent values for direct children of the deleted node.
             $query->clear()
                 ->update($this->db->quoteName($this->table))
-                ->set('parent_id = ' . (int)$node->parent_id)
-                ->where('parent_id = ' . (int)$node->$k);
+                ->set('parent_id = ' . (int) $node->parent_id)
+                ->where('parent_id = ' . (int) $node->$k);
 
             $this->db->setQuery($query)->execute();
 
@@ -626,7 +626,7 @@ class NestedRecord extends Record
             $query->clear()
                 ->update($this->db->quoteName($this->table))
                 ->set('lft = lft - 2')
-                ->where('lft > ' . (int)$node->rgt);
+                ->where('lft > ' . (int) $node->rgt);
 
             $this->db->setQuery($query)->execute();
 
@@ -634,7 +634,7 @@ class NestedRecord extends Record
             $query->clear()
                 ->update($this->db->quoteName($this->table))
                 ->set('rgt = rgt - 2')
-                ->where('rgt > ' . (int)$node->rgt);
+                ->where('rgt > ' . (int) $node->rgt);
 
             $this->db->setQuery($query)->execute();
         }
@@ -735,7 +735,7 @@ class NestedRecord extends Record
                 $query->select('alias');
             }
 
-            $this->cache['rebuild.sql'] = (string)$query;
+            $this->cache['rebuild.sql'] = (string) $query;
         }
 
         // Make a shortcut to database object.
@@ -766,10 +766,10 @@ class NestedRecord extends Record
         // the children of this node we also know the right value.
         $query->clear()
             ->update($this->db->quoteName($this->table))
-            ->set('lft = ' . (int)$leftId)
-            ->set('rgt = ' . (int)$rightId)
-            ->set('level = ' . (int)$level)
-            ->where($this->getKeyName() . ' = ' . (int)$parentId);
+            ->set('lft = ' . (int) $leftId)
+            ->set('rgt = ' . (int) $rightId)
+            ->set('level = ' . (int) $level)
+            ->where($this->getKeyName() . ' = ' . (int) $parentId);
 
         if ($buildPath) {
             $query->set('path = ' . $this->db->quote($path));
@@ -808,7 +808,7 @@ class NestedRecord extends Record
             ->select('p.alias')
             ->from($this->db->quoteName($this->table) . ' AS n, ' . $this->db->quoteName($this->table) . ' AS p')
             ->where('n.lft BETWEEN p.lft AND p.rgt')
-            ->where('n.' . $this->db->quoteName($this->getKeyName()) . ' = ' . (int)$pk)
+            ->where('n.' . $this->db->quoteName($this->getKeyName()) . ' = ' . (int) $pk)
             ->order('p.lft');
 
         $this->db->setQuery($query);
@@ -827,7 +827,7 @@ class NestedRecord extends Record
         $query->clear()
             ->update($this->db->quoteName($this->table))
             ->set('path = ' . $this->db->quote($path))
-            ->where($this->getKeyName() . ' = ' . (int)$pk);
+            ->where($this->getKeyName() . ' = ' . (int) $pk);
 
         $this->db->setQuery($query)->execute();
 
@@ -933,8 +933,8 @@ class NestedRecord extends Record
         }
 
         // Do some simple calculations.
-        $row->numChildren = (int)($row->rgt - $row->lft - 1) / 2;
-        $row->width       = (int)$row->rgt - $row->lft + 1;
+        $row->numChildren = (int) ($row->rgt - $row->lft - 1) / 2;
+        $row->width       = (int) $row->rgt - $row->lft + 1;
 
         return $row;
     }

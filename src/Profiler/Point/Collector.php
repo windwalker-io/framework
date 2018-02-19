@@ -29,7 +29,7 @@ class Collector implements CollectorInterface, \ArrayAccess, \Countable, \Iterat
      */
     public function __construct($data = [])
     {
-        $this->data = (array)$data;
+        $this->data = (array) $data;
     }
 
     /**

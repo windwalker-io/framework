@@ -92,7 +92,7 @@ class BladeRenderer extends AbstractEngineRenderer
             $data = get_object_vars($data);
         }
 
-        return $this->getEngine()->make($file, (array)$data)->render();
+        return $this->getEngine()->make($file, (array) $data)->render();
     }
 
     /**

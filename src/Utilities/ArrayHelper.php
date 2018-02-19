@@ -60,7 +60,7 @@ class ArrayHelper
         } elseif (is_object($data)) {
             $data = get_object_vars($data);
         } else {
-            $data = (array)$data;
+            $data = (array) $data;
         }
 
         if ($recursive) {
@@ -136,19 +136,19 @@ class ArrayHelper
             case 'INTEGER':
                 // Only use the first integer value
                 @preg_match('/-?[0-9]+/', $result, $matches);
-                $result = @(int)$matches[0];
+                $result = @(int) $matches[0];
                 break;
 
             case 'FLOAT':
             case 'DOUBLE':
                 // Only use the first floating point value
                 @preg_match('/-?[0-9]+(\.[0-9]+)?/', $result, $matches);
-                $result = @(float)$matches[0];
+                $result = @(float) $matches[0];
                 break;
 
             case 'BOOL':
             case 'BOOLEAN':
-                $result = (bool)$result;
+                $result = (bool) $result;
                 break;
 
             case 'ARRAY':
@@ -158,11 +158,11 @@ class ArrayHelper
                 break;
 
             case 'STRING':
-                $result = (string)$result;
+                $result = (string) $result;
                 break;
 
             case 'WORD':
-                $result = (string)preg_replace('#\W#', '', $result);
+                $result = (string) preg_replace('#\W#', '', $result);
                 break;
 
             case 'NONE':
@@ -357,12 +357,12 @@ class ArrayHelper
      */
     public static function pivot($array)
     {
-        $array = (array)$array;
+        $array = (array) $array;
         $new   = [];
         $keys  = array_keys($array);
 
         foreach ($keys as $k => $val) {
-            foreach ((array)$array[$val] as $k2 => $v2) {
+            foreach ((array) $array[$val] as $k2 => $v2) {
                 $new[$k2][$val] = $v2;
             }
         }
@@ -390,9 +390,9 @@ class ArrayHelper
             $locale = [$locale];
         }
 
-        $sortCase      = (array)$caseSensitive;
-        $sortDirection = (array)$direction;
-        $key           = (array)$k;
+        $sortCase      = (array) $caseSensitive;
+        $sortDirection = (array) $direction;
+        $key           = (array) $k;
         $sortLocale    = $locale;
 
         usort($a,
@@ -902,7 +902,7 @@ class ArrayHelper
     {
         $result = is_array($origin) ? [] : new \stdClass;
 
-        foreach ((array)$origin as $key => $val) {
+        foreach ((array) $origin as $key => $val) {
             $newKey = self::getValue($map, $key);
 
             if ($newKey) {

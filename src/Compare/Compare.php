@@ -212,7 +212,7 @@ class Compare
      */
     public function quote($string, $quote = "''")
     {
-        if (!$quote && (string)$quote !== '0') {
+        if (!$quote && (string) $quote !== '0') {
             return $string;
         }
 

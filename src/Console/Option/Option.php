@@ -98,7 +98,7 @@ class Option
      */
     public function __construct($aliases, $default = null, $description = null, $global = false)
     {
-        $aliases = (array)$aliases;
+        $aliases = (array) $aliases;
         $name    = array_shift($aliases);
 
         $this->name        = $name;

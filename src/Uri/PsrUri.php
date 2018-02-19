@@ -212,7 +212,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
         }
 
         if ($port !== null) {
-            $port = (int)$port;
+            $port = (int) $port;
 
             if ($port < 1 || $port > 65535) {
                 throw new \InvalidArgumentException(sprintf('Number of "%d" is not a valid TCP/UDP port', $port));
@@ -254,7 +254,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
             throw new \InvalidArgumentException('URI Path should be a string.');
         }
 
-        $path = (string)$path;
+        $path = (string) $path;
 
         if (strpos($path, '?') !== false || strpos($path, '#') !== false) {
             throw new \InvalidArgumentException('Path should not contain `?` and `#` symbols.');

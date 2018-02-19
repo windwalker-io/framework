@@ -59,7 +59,7 @@ class AutoExpiredFlashBag extends FlashBag
             $this->data['current'][$type] = [];
         }
 
-        foreach ((array)$msg as $msg) {
+        foreach ((array) $msg as $msg) {
             $this->data['current'][$type][] = $msg;
         }
 

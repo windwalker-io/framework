@@ -31,7 +31,7 @@ abstract class DatabaseHelper
             $queries = $db->splitSql($queries);
         }
 
-        foreach ((array)$queries as $query) {
+        foreach ((array) $queries as $query) {
             if (!trim($query, " \n\r\t;")) {
                 continue;
             }

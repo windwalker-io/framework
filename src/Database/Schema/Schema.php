@@ -113,7 +113,7 @@ class Schema
         $name = $key->getName();
 
         if (!$name) {
-            $columns = (array)$key->getColumns();
+            $columns = (array) $key->getColumns();
             $name    = 'idx_' . trim($this->table->getName(), '#_') . '_' . implode('_', $columns);
 
             $key->name($name);
@@ -134,7 +134,7 @@ class Schema
      */
     public function addIndex($columns, $name = null)
     {
-        return $this->addKey(new Key(Key::TYPE_INDEX, (array)$columns, $name));
+        return $this->addKey(new Key(Key::TYPE_INDEX, (array) $columns, $name));
     }
 
     /**
@@ -147,7 +147,7 @@ class Schema
      */
     public function addUniqueKey($columns, $name = null)
     {
-        return $this->addKey(new Key(Key::TYPE_UNIQUE, (array)$columns, $name));
+        return $this->addKey(new Key(Key::TYPE_UNIQUE, (array) $columns, $name));
     }
 
     /**
@@ -159,7 +159,7 @@ class Schema
      */
     public function addPrimaryKey($columns)
     {
-        return $this->addKey(new Key(Key::TYPE_PRIMARY, (array)$columns, null));
+        return $this->addKey(new Key(Key::TYPE_PRIMARY, (array) $columns, null));
     }
 
     /**

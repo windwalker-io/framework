@@ -77,7 +77,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     public function getIterator($recursive = false)
     {
         // If we put this object into a foreach, return all files and folders to iterator.
-        return Filesystem::items((string)$this, $recursive);
+        return Filesystem::items((string) $this, $recursive);
     }
 
     /**
@@ -89,7 +89,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function getFolders($recursive = false)
     {
-        return Filesystem::folders((string)$this, $recursive);
+        return Filesystem::folders((string) $this, $recursive);
     }
 
     /**
@@ -101,7 +101,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function getFiles($recursive = false)
     {
-        return Filesystem::files((string)$this, $recursive);
+        return Filesystem::files((string) $this, $recursive);
     }
 
     /**
@@ -123,7 +123,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function findOne($condition, $recursive = false)
     {
-        return Filesystem::findOne((string)$this, $condition, $recursive);
+        return Filesystem::findOne((string) $this, $condition, $recursive);
     }
 
     /**
@@ -145,7 +145,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function find($condition, $recursive = false)
     {
-        return Filesystem::find((string)$this, $condition, $recursive);
+        return Filesystem::find((string) $this, $condition, $recursive);
     }
 
     /**
@@ -161,7 +161,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function findByCallback(\Closure $callback, $recursive = false)
     {
-        return Filesystem::findByCallback((string)$this, $callback, $recursive);
+        return Filesystem::findByCallback((string) $this, $callback, $recursive);
     }
 
     /**
@@ -263,7 +263,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function isDir()
     {
-        return is_dir((string)$this);
+        return is_dir((string) $this);
     }
 
     /**
@@ -275,7 +275,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function isFile()
     {
-        return is_file((string)$this);
+        return is_file((string) $this);
     }
 
     /**
@@ -287,7 +287,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function exists()
     {
-        return file_exists((string)$this);
+        return file_exists((string) $this);
     }
 
     /**
@@ -425,7 +425,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
      */
     public function isSubdirOf($parent)
     {
-        $self = (string)$this;
+        $self = (string) $this;
 
         $parent = $this->normalize($parent, true);
 

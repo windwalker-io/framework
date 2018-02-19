@@ -427,7 +427,7 @@ class Column
      */
     public function primary($primary = true)
     {
-        $primary = (bool)$primary;
+        $primary = (bool) $primary;
 
         $this->primary = $primary;
 

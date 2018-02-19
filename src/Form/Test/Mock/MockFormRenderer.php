@@ -30,7 +30,7 @@ class MockFormRenderer implements FormRendererInterface
      */
     public function renderField(AbstractField $field, array $attribs = [], array $options = [])
     {
-        return (string)new HtmlElement('mock', [
+        return (string) new HtmlElement('mock', [
             $field->renderLabel(),
             $field->renderInput(),
         ], $attribs);

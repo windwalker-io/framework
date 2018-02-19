@@ -75,13 +75,13 @@ class RecordTest extends AbstractMysqlTestCase
 
         $record->set('catid', 1);
 
-        $data = (object)TestHelper::getValue($record, 'data');
+        $data = (object) TestHelper::getValue($record, 'data');
 
         $this->assertEquals(1, $data->catid);
 
         $record->catid = 3;
 
-        $data = (object)TestHelper::getValue($record, 'data');
+        $data = (object) TestHelper::getValue($record, 'data');
 
         $this->assertEquals(3, $data->catid);
     }
@@ -646,7 +646,7 @@ class RecordTest extends AbstractMysqlTestCase
 
         $record->bar = 8;
 
-        $data = (object)TestHelper::getValue($record, 'data');
+        $data = (object) TestHelper::getValue($record, 'data');
 
         $this->assertEquals(8, $data->air);
     }

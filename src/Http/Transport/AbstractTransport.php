@@ -130,7 +130,7 @@ abstract class AbstractTransport implements TransportInterface
             $options = get_object_vars($options);
         }
 
-        $this->options = (array)$options;
+        $this->options = (array) $options;
 
         return $this;
     }

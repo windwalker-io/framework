@@ -160,9 +160,9 @@ class SimpleCipher implements CipherInterface
      */
     private function hexToInt($s, $i)
     {
-        $j  = (int)$i * 2;
+        $j  = (int) $i * 2;
         $k  = 0;
-        $s1 = (string)$s;
+        $s1 = (string) $s;
 
         // Get the character at position $j.
         $c = substr($s1, $j, 1);
@@ -193,7 +193,7 @@ class SimpleCipher implements CipherInterface
                 $k += 0;
                 break;
             default:
-                $k = $k + (16 * (int)$c);
+                $k = $k + (16 * (int) $c);
                 break;
         }
 
@@ -220,7 +220,7 @@ class SimpleCipher implements CipherInterface
                 $k += 0;
                 break;
             default:
-                $k += (int)$c1;
+                $k += (int) $c1;
                 break;
         }
 
@@ -240,10 +240,10 @@ class SimpleCipher implements CipherInterface
     {
         $array = [];
 
-        $j = (int)strlen($hex) / 2;
+        $j = (int) strlen($hex) / 2;
 
         for ($i = 0; $i < $j; $i++) {
-            $array[$i] = (int)$this->hexToInt($hex, $i);
+            $array[$i] = (int) $this->hexToInt($hex, $i);
         }
 
         return $array;
@@ -261,10 +261,10 @@ class SimpleCipher implements CipherInterface
     private function intToHex($i)
     {
         // Sanitize the input.
-        $i = (int)$i;
+        $i = (int) $i;
 
         // Get the first character of the hexadecimal string if there is one.
-        $j = (int)($i / 16);
+        $j = (int) ($i / 16);
 
         if ($j === 0) {
             $s = ' ';

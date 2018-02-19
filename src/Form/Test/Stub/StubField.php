@@ -44,6 +44,6 @@ class StubField extends AbstractField
         $attrs['onchange']  = $this->getAttribute('onchange');
         $attrs['value']     = $this->getValue();
 
-        $attrs = array_merge($attrs, (array)$this->getAttribute('attribs'));
+        $attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
     }
 }

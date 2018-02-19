@@ -152,7 +152,7 @@ class CurlTransport extends AbstractTransport
         }
 
         // If data exists let's encode it and make sure our Content-type header is set.
-        $data = (string)$request->getBody();
+        $data = (string) $request->getBody();
 
         if (isset($data)) {
             // If the data is a scalar value simply add it to the cURL post fields.
@@ -169,7 +169,7 @@ class CurlTransport extends AbstractTransport
 
             // Add the relevant headers.
             if (is_scalar($options[CURLOPT_POSTFIELDS])) {
-                $request = $request->withHeader('Content-Length', (string)strlen($options[CURLOPT_POSTFIELDS]));
+                $request = $request->withHeader('Content-Length', (string) strlen($options[CURLOPT_POSTFIELDS]));
             }
         }
 
@@ -181,8 +181,8 @@ class CurlTransport extends AbstractTransport
 
         // If an explicit timeout is given user it.
         if ($timeout = $this->getOption('timeout')) {
-            $options[CURLOPT_TIMEOUT]        = (int)$timeout;
-            $options[CURLOPT_CONNECTTIMEOUT] = (int)$timeout;
+            $options[CURLOPT_TIMEOUT]        = (int) $timeout;
+            $options[CURLOPT_CONNECTTIMEOUT] = (int) $timeout;
         }
 
         // If an explicit user agent is given use it.
@@ -191,7 +191,7 @@ class CurlTransport extends AbstractTransport
         }
 
         // Set the request URL.
-        $options[CURLOPT_URL] = (string)$request->getRequestTarget();
+        $options[CURLOPT_URL] = (string) $request->getRequestTarget();
 
         // We want our headers. :-)
         $options[CURLOPT_HEADER] = true;
@@ -207,12 +207,12 @@ class CurlTransport extends AbstractTransport
          * Follow redirects if server config allows
          */
         if (!ini_get('open_basedir')) {
-            $options[CURLOPT_FOLLOWLOCATION] = (bool)isset($this->options['follow_location']) ? $this->options['follow_location'] : true;
+            $options[CURLOPT_FOLLOWLOCATION] = (bool) isset($this->options['follow_location']) ? $this->options['follow_location'] : true;
         }
 
         // Set any custom transport options
         if ($this->getOption('options')) {
-            foreach ((array)$this->getOption('options') as $key => $value) {
+            foreach ((array) $this->getOption('options') as $key => $value) {
                 $options[$key] = $value;
             }
         }

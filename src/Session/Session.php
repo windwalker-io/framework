@@ -696,7 +696,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      */
     public function getIterator($namespace = 'default')
     {
-        $array = (array)$this->getAll($namespace);
+        $array = (array) $this->getAll($namespace);
 
         return new \ArrayIterator($array);
     }
@@ -790,7 +790,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      */
     public function isActive()
     {
-        return (bool)($this->state === static::STATE_ACTIVE);
+        return (bool) ($this->state === static::STATE_ACTIVE);
     }
 
     /**
@@ -804,7 +804,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     {
         $counter = $this->get('session.counter');
 
-        return (bool)($counter === 1);
+        return (bool) ($counter === 1);
     }
 
     /**

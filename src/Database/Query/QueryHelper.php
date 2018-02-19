@@ -67,7 +67,7 @@ class QueryHelper
         }
 
         if ($condition) {
-            $condition = (string)new QueryElement('', $condition, ' AND ');
+            $condition = (string) new QueryElement('', $condition, ' AND ');
         } else {
             $tableStorage['join'] = 'FROM';
         }
@@ -176,7 +176,7 @@ class QueryHelper
                 $query->where($query->format('%n IS NULL', $key));
             } // If using Compare class, we convert it to string.
             elseif ($value instanceof Compare) {
-                $query->where((string)static::buildCompare($key, $value, $query));
+                $query->where((string) static::buildCompare($key, $value, $query));
             } // If key is numeric, just send value to query where.
             elseif (is_numeric($key)) {
                 $query->where($value);
@@ -223,7 +223,7 @@ class QueryHelper
             }
         );
 
-        return (string)$value;
+        return (string) $value;
     }
 
     /**

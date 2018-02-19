@@ -161,7 +161,7 @@ class MysqlGrammar extends AbstractQueryGrammar
         $engine = $engine ?: 'InnoDB';
 
         foreach ($columns as $cName => $details) {
-            $details = (array)$details;
+            $details = (array) $details;
 
             array_unshift($details, $query->quoteName($cName));
 
@@ -175,7 +175,7 @@ class MysqlGrammar extends AbstractQueryGrammar
         if ($pks) {
             $pks = [
                 'type' => 'PRIMARY KEY',
-                'columns' => (array)$pks,
+                'columns' => (array) $pks,
             ];
 
             array_unshift($keys, $pks);
@@ -261,7 +261,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     ) {
         $query = static::getQuery();
 
-        $column = $query->quoteName((array)$column);
+        $column = $query->quoteName((array) $column);
 
         return static::build(
             'ALTER TABLE',
@@ -426,7 +426,7 @@ class MysqlGrammar extends AbstractQueryGrammar
         $query = static::getQuery();
         $cols  = [];
 
-        foreach ((array)$columns as $key => $val) {
+        foreach ((array) $columns as $key => $val) {
             if (is_numeric($key)) {
                 $cols[] = $query->quoteName($val);
             } else {
@@ -533,7 +533,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     {
         $query = new MysqlQuery;
 
-        $query = (string)$query->insert($query->quoteName($name))
+        $query = (string) $query->insert($query->quoteName($name))
             ->columns($columns)
             ->values($values);
 

@@ -86,29 +86,29 @@ class SqlservQuery extends Query
 
         switch ($this->type) {
             case 'insert':
-                $query .= (string)$this->insert;
+                $query .= (string) $this->insert;
 
                 // Set method
                 if ($this->set) {
-                    $query .= (string)$this->set;
+                    $query .= (string) $this->set;
                 } elseif ($this->values) // Columns-Values method
                 {
                     if ($this->columns) {
-                        $query .= (string)$this->columns;
+                        $query .= (string) $this->columns;
                     }
 
                     $elements  = $this->insert->getElements();
                     $tableName = array_shift($elements);
 
                     $query .= ' VALUES ';
-                    $query .= (string)$this->values;
+                    $query .= (string) $this->values;
 
                     if ($this->autoIncrementField) {
                         $query = 'SET IDENTITY_INSERT ' . $tableName . ' ON;' . $query . 'SET IDENTITY_INSERT ' . $tableName . ' OFF;';
                     }
 
                     if ($this->where) {
-                        $query .= (string)$this->where;
+                        $query .= (string) $this->where;
                     }
                 }
 

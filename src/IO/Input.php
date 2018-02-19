@@ -460,7 +460,7 @@ class Input implements \Serializable, \Countable
      */
     public function setMethod($method)
     {
-        $this->method = (string)strtoupper($method);
+        $this->method = (string) strtoupper($method);
 
         return $this;
     }

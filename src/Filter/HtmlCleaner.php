@@ -128,8 +128,8 @@ class HtmlCleaner
         $xssAuto = 1
     ) {
         // Make sure user defined arrays are in lowercase
-        $tagsArray = array_map('strtolower', (array)$tagsArray);
-        $attrArray = array_map('strtolower', (array)$attrArray);
+        $tagsArray = array_map('strtolower', (array) $tagsArray);
+        $attrArray = array_map('strtolower', (array) $attrArray);
 
         // Assign member variables
         $this->tagsArray  = $tagsArray;

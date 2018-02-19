@@ -104,7 +104,7 @@ class Profiler implements ProfilerInterface, \Countable
         }
 
         // HHVM has different behavior on memory_get_usage()
-        $this->memoryRealUsage = ($memoryRealUsage === null) ? defined('HHVM_VERSION') : (bool)$memoryRealUsage;
+        $this->memoryRealUsage = ($memoryRealUsage === null) ? defined('HHVM_VERSION') : (bool) $memoryRealUsage;
     }
 
     /**

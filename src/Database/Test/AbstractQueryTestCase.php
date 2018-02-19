@@ -48,6 +48,6 @@ class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
      */
     protected function format($sql)
     {
-        return \SqlFormatter::format((string)$sql, false);
+        return \SqlFormatter::format((string) $sql, false);
     }
 }

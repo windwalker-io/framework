@@ -60,7 +60,7 @@ class XcacheHandler extends AbstractHandler
             return false;
         }
 
-        return (string)xcache_get($this->prefix . $id);
+        return (string) xcache_get($this->prefix . $id);
     }
 
     /**

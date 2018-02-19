@@ -136,7 +136,7 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
      */
     public function select($column)
     {
-        array_merge($this->select, (array)$column);
+        array_merge($this->select, (array) $column);
 
         return $this;
     }

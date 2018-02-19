@@ -106,7 +106,7 @@ class CallbackPrompter extends AbstractPrompter
                 throw new \LogicException('Please set a callable handler first.');
             }
 
-            if ((boolean)call_user_func($this->getHandler(), $value)) {
+            if ((boolean) call_user_func($this->getHandler(), $value)) {
                 return $value;
             }
 

@@ -213,7 +213,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      */
     public function offsetExists($offset)
     {
-        $offset = $offset >= 0 ? $offset : (int)abs($offset) - 1;
+        $offset = $offset >= 0 ? $offset : (int) abs($offset) - 1;
 
         return $this->length() > $offset;
     }
@@ -293,7 +293,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      */
     public function __toString()
     {
-        return (string)$this->string;
+        return (string) $this->string;
     }
 
     /**

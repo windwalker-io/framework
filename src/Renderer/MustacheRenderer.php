@@ -111,7 +111,7 @@ class MustacheRenderer extends AbstractEngineRenderer
                 // 'extension' => '.html'
             ];
 
-            $options = array_merge($options, (array)$this->config->get('loader_options', []));
+            $options = array_merge($options, (array) $this->config->get('loader_options', []));
 
             $this->loader = new \Mustache_Loader_FilesystemLoader($path, $options);
         }

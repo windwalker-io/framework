@@ -275,7 +275,7 @@ class MysqlTable extends AbstractTable
                 throw new \InvalidArgumentException('No columns given.');
             }
 
-            $columns = (array)$columns;
+            $columns = (array) $columns;
 
             $index = new Key($type, $columns, $name, $comment);
         } else {

@@ -515,7 +515,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                 $field->Default = $this->db->getTable($table)->getDataType()->getDefaultValue($type);
             }
 
-            $field                 = (object)$field;
+            $field                 = (object) $field;
             $fields[$field->Field] = $field;
         }
 
@@ -580,17 +580,17 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             switch ($cast) {
                 case 'int':
                 case 'integer':
-                    $entity->$field = (int)$value;
+                    $entity->$field = (int) $value;
                     break;
                 case 'real':
                 case 'float':
                 case 'double':
                 case 'string':
-                    $entity->$field = (string)$value;
+                    $entity->$field = (string) $value;
                     break;
                 case 'bool':
                 case 'boolean':
-                    $entity->$field = (int)$value;
+                    $entity->$field = (int) $value;
                     break;
                 case 'object':
                     $entity->$field = is_object($value) ? json_encode($value) : $value;

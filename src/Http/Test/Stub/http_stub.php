@@ -8,7 +8,7 @@
 
 // Travis-CI use Ubuntu 12.04 so the default php version is 5.3, we can not use short array syntax
 // Use this line to generate empty array.
-$globals = (array)null;
+$globals = (array) null;
 $_SERVER['HTTP_HOST'];
 
 foreach ($GLOBALS as $key => $value) {

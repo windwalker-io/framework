@@ -29,7 +29,7 @@ class FlashBag extends SessionBag implements FlashBagInterface
             $this->data[$type] = [];
         }
 
-        foreach ((array)$msg as $msg) {
+        foreach ((array) $msg as $msg) {
             $this->data[$type][] = $msg;
         }
 

@@ -113,7 +113,7 @@ class Record extends Entity
             $this->keys = $keys;
         }
 
-        $this->keys = (array)$this->keys;
+        $this->keys = (array) $this->keys;
 
         if ($this->autoIncrement === null) {
             $this->autoIncrement = count($this->keys) === 1;
@@ -322,7 +322,7 @@ class Record extends Entity
 
         $conditions = [];
 
-        foreach ((array)$this->getKeyName(true) as $key) {
+        foreach ((array) $this->getKeyName(true) as $key) {
             $conditions[$key] = $this->$key;
         }
 
@@ -524,12 +524,12 @@ class Record extends Entity
     public function getKeyName($multiple = false)
     {
         if ($multiple) {
-            return (array)$this->keys;
+            return (array) $this->keys;
         }
 
-        $keys = (array)$this->keys;
+        $keys = (array) $this->keys;
 
-        return (string)$keys[0];
+        return (string) $keys[0];
     }
 
     /**
@@ -689,7 +689,7 @@ class Record extends Entity
         $this->data = [];
 
         // Get the default values for the class from the table.
-        foreach ((array)$this->getFields() as $k => $v) {
+        foreach ((array) $this->getFields() as $k => $v) {
             $this->data[$k] = $loadDefault ? $v->Default : null;
         }
 
@@ -705,7 +705,7 @@ class Record extends Entity
      */
     public function loadDefault($replace = false)
     {
-        foreach ((array)$this->getFields() as $k => $v) {
+        foreach ((array) $this->getFields() as $k => $v) {
             if ($replace || $this->data[$k] === null) {
                 $this->data[$k] = $v->Default;
             }

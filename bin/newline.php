@@ -19,68 +19,61 @@ define('WINDWALKER_ROOT', realpath(__DIR__ . '/..'));
  */
 class Newline extends AbstractCliApplication
 {
-	/**
-	 * Method to run the application routines.  Most likely you will want to instantiate a controller
-	 * and execute it, or perform some sort of task directly.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function doExecute()
-	{
-		$root = $this->io->getArgument(0, WINDWALKER_ROOT . '/src');
+    /**
+     * Method to run the application routines.  Most likely you will want to instantiate a controller
+     * and execute it, or perform some sort of task directly.
+     *
+     * @return  void
+     *
+     * @since   1.0
+     */
+    protected function doExecute()
+    {
+        $root = $this->io->getArgument(0, WINDWALKER_ROOT . '/src');
 
-		$dirs = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root));
+        $dirs = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root));
 
-		$count = 0;
+        $count = 0;
 
-		foreach ($dirs as $file)
-		{
-			/** @var $file \SplFileInfo */
-			if (!$file->isFile() || $file->getExtension() != 'php')
-			{
-				continue;
-			}
+        foreach ($dirs as $file) {
+            /** @var $file \SplFileInfo */
+            if (!$file->isFile() || $file->getExtension() != 'php') {
+                continue;
+            }
 
-			$content = file_get_contents($file);
+            $content = file_get_contents($file);
 
-			$length = strlen($content);
+            $length = strlen($content);
 
-			$lastChar = $content[$length - 1];
+            $lastChar = $content[$length - 1];
 
-			if ($lastChar == "\n")
-			{
-				continue;
-			}
+            if ($lastChar == "\n") {
+                continue;
+            }
 
-			$count++;
+            $count++;
 
-			$this->out('Add new line to: ' . $file);
+            $this->out('Add new line to: ' . $file);
 
-			switch ($lastChar)
-			{
-				case ' ' :
-					$content = substr($content, 0, -1);
-					break;
+            switch ($lastChar) {
+                case ' ' :
+                    $content = substr($content, 0, -1);
+                    break;
 
-				case '}' :
-					$content .= "\n";
-					break;
-			}
+                case '}' :
+                    $content .= "\n";
+                    break;
+            }
 
-			file_put_contents($file, $content);
-		}
+            file_put_contents($file, $content);
+        }
 
-		if ($count)
-		{
-			$this->out($count . ' files add new line.');
-		}
-		else
-		{
-			$this->out('No file found.');
-		}
-	}
+        if ($count) {
+            $this->out($count . ' files add new line.');
+        } else {
+            $this->out('No file found.');
+        }
+    }
 }
 
 $app = new Newline;

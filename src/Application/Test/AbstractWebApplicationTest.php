@@ -116,7 +116,7 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
     {
         $this->instance->server->setOutput(new NoHeaderOutput);
 
-        $this->assertEquals('Hello World', (string)$this->instance);
+        $this->assertEquals('Hello World', (string) $this->instance);
     }
 
     /**

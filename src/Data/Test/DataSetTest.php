@@ -307,7 +307,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
                                 'foo' => 'bar',
                             ]
                         ),
-                        'object' => (object)[
+                        'object' => (object) [
                             'baz' => 'yoo',
                         ],
                         'scalar' => 123,

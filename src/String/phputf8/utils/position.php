@@ -73,7 +73,7 @@ function utf8_byte_position()
                 break;
             }
 
-            $j = $i + (int)(($offset - $c) * ($i - $prev[0]) / ($c - $prev[1]));
+            $j = $i + (int) (($offset - $c) * ($i - $prev[0]) / ($c - $prev[1]));
 
             // correct to utf8 character boundary
             $j = utf8_locate_next_chr($str, $j);

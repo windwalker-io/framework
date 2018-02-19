@@ -328,7 +328,7 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
         $compare = [];
 
         foreach ($iterator as $file) {
-            $compare[] = (string)$file;
+            $compare[] = (string) $file;
         }
 
         $this->assertEquals($compare, $expects);
@@ -376,8 +376,8 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
         ];
 
         $paths = [
-            (string)$this->collection->getPath('foo'),
-            (string)$this->collection->getPath('yoo'),
+            (string) $this->collection->getPath('foo'),
+            (string) $this->collection->getPath('yoo'),
         ];
 
         $this->assertEquals($paths, $expects);

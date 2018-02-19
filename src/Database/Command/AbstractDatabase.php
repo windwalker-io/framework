@@ -181,7 +181,7 @@ abstract class AbstractDatabase
      */
     public function tableExists($table)
     {
-        return (bool)$this->getTableDetail($table);
+        return (bool) $this->getTableDetail($table);
     }
 
     /**

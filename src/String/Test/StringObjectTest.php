@@ -150,7 +150,7 @@ class StringObjectTest extends TestCase
     {
         $s = new StringObject('白日依山盡');
 
-        self::assertEquals($expected, (string)$s[$offset]);
+        self::assertEquals($expected, (string) $s[$offset]);
     }
 
     /**
@@ -188,7 +188,7 @@ class StringObjectTest extends TestCase
 
         $s[$offset] = $replace;
 
-        self::assertEquals($expected, (string)$s);
+        self::assertEquals($expected, (string) $s);
     }
 
     /**
@@ -222,7 +222,7 @@ class StringObjectTest extends TestCase
 
         unset($s[$offset]);
 
-        self::assertEquals($expected, (string)$s);
+        self::assertEquals($expected, (string) $s);
     }
 
     /**
@@ -286,7 +286,7 @@ class StringObjectTest extends TestCase
     {
         $s = new StringObject('白日依山盡');
 
-        self::assertEquals(Mbstring::strSplit((string)$s), iterator_to_array($s));
+        self::assertEquals(Mbstring::strSplit((string) $s), iterator_to_array($s));
     }
 
     /**
@@ -306,7 +306,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals((string)$s2, $expected);
+        self::assertEquals((string) $s2, $expected);
     }
 
     /**
@@ -340,7 +340,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -416,7 +416,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
         self::assertEquals($count, $c);
     }
 
@@ -524,7 +524,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -556,7 +556,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -575,7 +575,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -596,7 +596,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -617,7 +617,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -635,7 +635,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -653,7 +653,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -673,7 +673,7 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals($expected, (string)$s2);
+        self::assertEquals($expected, (string) $s2);
     }
 
     /**
@@ -811,6 +811,6 @@ class StringObjectTest extends TestCase
 
         self::assertInstanceOf(StringObject::class, $s2);
         self::assertNotSame($s, $s2);
-        self::assertEquals('FOOBAR', (string)$s2);
+        self::assertEquals('FOOBAR', (string) $s2);
     }
 }

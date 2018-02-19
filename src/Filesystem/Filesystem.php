@@ -236,7 +236,7 @@ abstract class Filesystem
             if (is_array($condition)) {
                 $condition = '/(' . implode('|', $condition) . ')/';
             } else {
-                $condition = '/' . (string)$condition . '/';
+                $condition = '/' . (string) $condition . '/';
             }
 
             /**
@@ -318,7 +318,7 @@ abstract class Filesystem
         try {
             $iterator = new RecursiveDirectoryIterator($path, $options);
         } catch (\UnexpectedValueException $exception) {
-            throw new \InvalidArgumentException(sprintf('Dir: %s not found.', (string)$path), null, $exception);
+            throw new \InvalidArgumentException(sprintf('Dir: %s not found.', (string) $path), null, $exception);
         }
 
         // If rescurive set to true, use RecursiveIteratorIterator
@@ -337,7 +337,7 @@ abstract class Filesystem
         $array = [];
 
         foreach ($iterator as $key => $file) {
-            $array[] = (string)$file;
+            $array[] = (string) $file;
         }
 
         return $array;

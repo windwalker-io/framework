@@ -52,7 +52,7 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
 
         $this->db->setQuery($query);
 
-        return (string)$this->db->loadResult();
+        return (string) $this->db->loadResult();
     }
 
     /**
@@ -67,11 +67,11 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
     {
         $data = [
             $this->options['data_col'] => $data,
-            $this->options['time_col'] => (int)time(),
+            $this->options['time_col'] => (int) time(),
             $this->options['id_col'] => $id,
         ];
 
-        $data = (object)$data;
+        $data = (object) $data;
 
         $this->db->updateObject($this->options['table'], $data, $this->options['id_col']);
 
@@ -100,7 +100,7 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
         // Remove a session from the database.
         $this->db->setQuery($query);
 
-        return (boolean)$this->db->execute();
+        return (boolean) $this->db->execute();
     }
 
     /**
@@ -114,11 +114,11 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
     {
         $query = $this->db->getQuery(true);
         $query->delete($this->db->quoteName($this->options['table']))
-            ->where($this->db->quoteName($this->options['time_col']) . ' < ' . $this->db->quote((int)$past));
+            ->where($this->db->quoteName($this->options['time_col']) . ' < ' . $this->db->quote((int) $past));
 
         // Remove expired sessions from the database.
         $this->db->setQuery($query);
 
-        return (boolean)$this->db->execute();
+        return (boolean) $this->db->execute();
     }
 }

@@ -245,7 +245,7 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->values('1, 2, 3');
 
         $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string)$query));
+            trim((string) $query));
 
         $query = $this->getQuery()
             ->insert('foo')
@@ -253,7 +253,7 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->values('1, 2, 3');
 
         $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a,b,c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string)$query));
+            trim((string) $query));
     }
 
     /**
@@ -298,7 +298,7 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->where('flower = "sakura"');
 
         $this->assertEquals('DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
-            trim((string)$query));
+            trim((string) $query));
     }
 
     /**
@@ -343,7 +343,7 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->select('*')
             ->from('foo');
 
-        $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo', trim((string)$query));
+        $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo', trim((string) $query));
 
         // Subquery
         $query = $this->getQuery()
@@ -352,14 +352,14 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->from($query, 'b');
 
         $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo AS a,' . PHP_EOL . '(SELECT *' . PHP_EOL . 'FROM foo) AS b',
-            trim((string)$query));
+            trim((string) $query));
 
         // Array
         $query = $this->getQuery()
             ->select('*')
             ->from(['foo', 'bar']);
 
-        $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo,bar', trim((string)$query));
+        $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo,bar', trim((string) $query));
     }
 
     /**
@@ -400,7 +400,8 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->from('foo AS a')
             ->group('a.id');
 
-        $this->assertEquals('SELECT a.*' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'GROUP BY a.id', trim((string)$query));
+        $this->assertEquals('SELECT a.*' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'GROUP BY a.id',
+            trim((string) $query));
     }
 
     /**
@@ -418,7 +419,7 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->having('aid = "sun"');
 
         $this->assertEquals('SELECT a.id AS aid' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'HAVING aid = "sun"',
-            trim((string)$query));
+            trim((string) $query));
     }
 
     /**
@@ -922,7 +923,7 @@ class CubridQueryTest extends AbstractQueryTestCase
 
         $query->setQuery('SELECT foo');
 
-        $this->assertEquals('SELECT foo', (string)$query);
+        $this->assertEquals('SELECT foo', (string) $query);
     }
 
     /**
@@ -971,7 +972,7 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->values('1, 2, 3');
 
         $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string)$query));
+            trim((string) $query));
 
         $query = $this->getQuery()
             ->insert('foo')
@@ -980,7 +981,7 @@ class CubridQueryTest extends AbstractQueryTestCase
 
         $this->assertEquals(
             'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3),' . PHP_EOL . '(1, 2, 3),' . PHP_EOL . '(1, 2, 3)',
-            trim((string)$query)
+            trim((string) $query)
         );
 
         $query = $this->getQuery()
@@ -996,7 +997,7 @@ class CubridQueryTest extends AbstractQueryTestCase
 
         $this->assertEquals(
             'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1,2,3),' . PHP_EOL . '(1,2,3),' . PHP_EOL . '(1,2,3)',
-            trim((string)$query)
+            trim((string) $query)
         );
     }
 
@@ -1034,7 +1035,7 @@ class CubridQueryTest extends AbstractQueryTestCase
             ->where('flower = "sakura"');
 
         $this->assertEquals('DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
-            trim((string)$query));
+            trim((string) $query));
     }
 
     /**

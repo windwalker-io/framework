@@ -222,7 +222,7 @@ class Edge
      */
     public function escape($string)
     {
-        return htmlspecialchars((string)$string, ENT_COMPAT, 'UTF-8');
+        return htmlspecialchars((string) $string, ENT_COMPAT, 'UTF-8');
     }
 
     /**
@@ -542,11 +542,11 @@ class Edge
     public function prepareExtensions(EdgeCompilerInterface $compiler)
     {
         foreach ($this->getExtensions() as $extension) {
-            foreach ((array)$extension->getDirectives() as $name => $directive) {
+            foreach ((array) $extension->getDirectives() as $name => $directive) {
                 $compiler->directive($name, $directive);
             }
 
-            foreach ((array)$extension->getParsers() as $parser) {
+            foreach ((array) $extension->getParsers() as $parser) {
                 $compiler->parser($parser);
             }
         }
@@ -587,8 +587,8 @@ class Edge
         if ($withExtensions) {
             $temp = [];
 
-            foreach ((array)$this->getExtensions() as $extension) {
-                $temp = array_merge($temp, (array)$extension->getGlobals());
+            foreach ((array) $this->getExtensions() as $extension) {
+                $temp = array_merge($temp, (array) $extension->getGlobals());
             }
 
             $globals = array_merge($temp, $globals);

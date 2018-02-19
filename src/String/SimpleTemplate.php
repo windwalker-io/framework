@@ -32,7 +32,7 @@ abstract class SimpleTemplate
     {
         $defaultTags = ['{{', '}}'];
 
-        $tags = (array)$tags + $defaultTags;
+        $tags = (array) $tags + $defaultTags;
 
         list($begin, $end) = $tags;
 

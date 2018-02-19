@@ -189,7 +189,7 @@ class HtmlFormatter extends DomFormatter
      */
     public function setInlineElements($inlineElements)
     {
-        $this->inlineElements = (array)$inlineElements;
+        $this->inlineElements = (array) $inlineElements;
 
         return $this;
     }
@@ -279,7 +279,7 @@ class HtmlFormatter extends DomFormatter
      */
     public function setUnpairedElements($unpairedElements)
     {
-        $this->unpairedElements = (array)$unpairedElements;
+        $this->unpairedElements = (array) $unpairedElements;
 
         return $this;
     }

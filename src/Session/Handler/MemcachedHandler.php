@@ -46,7 +46,7 @@ class MemcachedHandler extends AbstractHandler
 
         $this->memcached = $memcached ?: new \Memcached;
 
-        $this->ttl = isset($options['expiretime']) ? (int)$options['expiretime'] : 86400;
+        $this->ttl = isset($options['expiretime']) ? (int) $options['expiretime'] : 86400;
 
         parent::__construct($options);
     }

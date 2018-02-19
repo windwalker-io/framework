@@ -106,14 +106,14 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
                 $profiler['db']    = $db;
                 $profiler['after'] = true;
 
-                $profiler = array_merge($profiler, (array)$data);
+                $profiler = array_merge($profiler, (array) $data);
             }));
 
         $this->db->setQuery('SELECT * FROM #__flower')->execute();
 
         $this->assertSame($this->db, $profiler['db']);
 
-        $this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flower', (string)$profiler['sql']);
+        $this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flower', (string) $profiler['sql']);
 
         $this->assertTrue($profiler['before']);
         $this->assertTrue($profiler['after']);

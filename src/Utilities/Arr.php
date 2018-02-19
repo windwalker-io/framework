@@ -41,7 +41,7 @@ class Arr
         } elseif (is_object($data)) {
             $data = get_object_vars($data);
         } else {
-            $data = (array)$data;
+            $data = (array) $data;
         }
 
         if ($recursive) {
@@ -155,11 +155,11 @@ class Arr
             return $path;
         }
 
-        if ($path && strpos((string)$path, $delimiter) === false) {
+        if ($path && strpos((string) $path, $delimiter) === false) {
             return [$path];
         }
 
-        return array_values(array_filter(explode($delimiter, (string)$path), 'strlen'));
+        return array_values(array_filter(explode($delimiter, (string) $path), 'strlen'));
     }
 
     /**
@@ -355,7 +355,7 @@ class Arr
             $key = $prefix !== null ? $prefix . $delimiter . $k : $k;
 
             if (($depth === 0 || $depth > 1) && (is_object($v) || is_array($v))) {
-                $temp[] = static::flatten($v, $delimiter, $depth === 0 ? $depth : $depth - 1, (string)$key);
+                $temp[] = static::flatten($v, $delimiter, $depth === 0 ? $depth : $depth - 1, (string) $key);
             } else {
                 $temp[] = [$key => $v];
             }
@@ -625,7 +625,7 @@ class Arr
         $result = [];
 
         foreach (array_keys($array) as $i => $key) {
-            foreach ((array)$array[$key] as $key2 => $value) {
+            foreach ((array) $array[$key] as $key2 => $value) {
                 $result[$key2][$key] = $value;
             }
         }
@@ -879,7 +879,7 @@ class Arr
             $output = $data;
         }
 
-        return (string)$output;
+        return (string) $output;
     }
 
     /**

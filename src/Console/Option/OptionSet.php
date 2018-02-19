@@ -81,7 +81,7 @@ class OptionSet implements \IteratorAggregate, \ArrayAccess, \Countable, \Serial
      */
     public function offsetExists($name)
     {
-        return (bool)$this->findOption($name);
+        return (bool) $this->findOption($name);
     }
 
     /**

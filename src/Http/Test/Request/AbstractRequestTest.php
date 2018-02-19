@@ -60,7 +60,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
         $request = new StubRequest;
 
         $this->assertInstanceOf('Windwalker\Uri\PsrUri', $request->getUri());
-        $this->assertEquals('', (string)$request->getUri());
+        $this->assertEquals('', (string) $request->getUri());
         $this->assertNull($request->getMethod());
         $this->assertInstanceOf('Windwalker\Http\Stream\Stream', $request->getBody());
         $this->assertEquals('php://memory', $request->getBody()->getMetadata('uri'));
@@ -78,7 +78,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
         $request = new StubRequest($uri, $method, $body, $headers);
 
         $this->assertInstanceOf('Windwalker\Uri\PsrUri', $request->getUri());
-        $this->assertEquals('http://example.com/?foo=bar#baz', (string)$request->getUri());
+        $this->assertEquals('http://example.com/?foo=bar#baz', (string) $request->getUri());
         $this->assertEquals('POST', $request->getMethod());
         $this->assertInstanceOf('Windwalker\Http\Stream\Stream', $request->getBody());
         $this->assertEquals($tmpfile, $request->getBody()->getMetadata('uri'));
@@ -111,11 +111,11 @@ class AbstractRequestTest extends AbstractBaseTestCase
         $request = $this->instance->withUri(new PsrUri('http://example.com/flower/sakura?foo=bar#baz'));
 
         $this->assertNotSame($request, $this->instance);
-        $this->assertEquals('/flower/sakura?foo=bar', (string)$request->getRequestTarget());
+        $this->assertEquals('/flower/sakura?foo=bar', (string) $request->getRequestTarget());
 
         $request = $request->withUri(new PsrUri('http://example.com'));
 
-        $this->assertEquals('/', (string)$request->getRequestTarget());
+        $this->assertEquals('/', (string) $request->getRequestTarget());
 
         $request = $request->withRequestTarget('*');
 
@@ -155,17 +155,17 @@ class AbstractRequestTest extends AbstractBaseTestCase
     public function testWithAndGetUri()
     {
         $this->assertInstanceOf('Windwalker\Uri\PsrUri', $this->instance->getUri());
-        $this->assertEquals('', (string)$this->instance->getUri());
+        $this->assertEquals('', (string) $this->instance->getUri());
 
         $request = $this->instance->withUri(new PsrUri('http://example.com/flower/sakura?foo=bar#baz'), true);
 
         $this->assertNotSame($request, $this->instance);
-        $this->assertEquals('http://example.com/flower/sakura?foo=bar#baz', (string)$request->getUri());
+        $this->assertEquals('http://example.com/flower/sakura?foo=bar#baz', (string) $request->getUri());
         $this->assertEquals([], $request->getHeader('host'));
 
         $request = $this->instance->withUri(new PsrUri('http://windwalker.io/flower/sakura?foo=bar#baz'));
 
-        $this->assertEquals('http://windwalker.io/flower/sakura?foo=bar#baz', (string)$request->getUri());
+        $this->assertEquals('http://windwalker.io/flower/sakura?foo=bar#baz', (string) $request->getUri());
         $this->assertEquals(['windwalker.io'], $request->getHeader('host'));
     }
 }

@@ -192,7 +192,7 @@ class Route implements \IteratorAggregate
      */
     public function setAllowMethods($methods)
     {
-        $methods = (array)$methods;
+        $methods = (array) $methods;
 
         $methods = array_map('strtoupper', $methods);
 
@@ -299,7 +299,7 @@ class Route implements \IteratorAggregate
             'extra' => [],
         ];
 
-        return array_merge($defaultOptions, (array)$options);
+        return array_merge($defaultOptions, (array) $options);
     }
 
     /**
@@ -353,7 +353,7 @@ class Route implements \IteratorAggregate
      */
     public function setSslPort($sslPort)
     {
-        $this->sslPort = (int)$sslPort;
+        $this->sslPort = (int) $sslPort;
 
         return $this;
     }
@@ -377,7 +377,7 @@ class Route implements \IteratorAggregate
      */
     public function setPort($port)
     {
-        $this->port = (int)$port;
+        $this->port = (int) $port;
 
         return $this;
     }
@@ -451,7 +451,7 @@ class Route implements \IteratorAggregate
      */
     public function setRequirements($requirements)
     {
-        $this->requirements = (array)$requirements;
+        $this->requirements = (array) $requirements;
 
         return $this;
     }

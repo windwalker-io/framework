@@ -488,7 +488,7 @@ abstract class AbstractCommand implements \ArrayAccess
      */
     public function setChildren($children)
     {
-        $children = (array)$children;
+        $children = (array) $children;
 
         foreach ($children as $argument) {
             $this->addCommand($argument);

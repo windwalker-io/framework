@@ -94,9 +94,9 @@ class UriData implements \ArrayAccess, \Countable, \IteratorAggregate
     public function __construct(array $data = [])
     {
         if ($data) {
-            foreach ((array)$data as $key => $value) {
+            foreach ((array) $data as $key => $value) {
                 if (property_exists($this, $key)) {
-                    $this->$key = (string)$value;
+                    $this->$key = (string) $value;
                 }
             }
         }

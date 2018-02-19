@@ -194,7 +194,7 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
                 '#1',
             ],
             [
-                (object)['a' => 'A', 'b' => 'B'],
+                (object) ['a' => 'A', 'b' => 'B'],
                 ['a' => 'A', 'b' => 'B'],
                 '#2',
             ],

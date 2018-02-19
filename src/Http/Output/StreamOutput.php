@@ -112,7 +112,7 @@ class StreamOutput extends Output
     {
         if (!$response->hasHeader('content-length')) {
             if ($response->getBody()->getSize() !== null) {
-                return $response->withHeader('content-length', (string)$response->getBody()->getSize());
+                return $response->withHeader('content-length', (string) $response->getBody()->getSize());
             }
         }
 
@@ -134,9 +134,9 @@ class StreamOutput extends Output
             $return = [];
 
             $return['unit']   = $matches['unit'];
-            $return['first']  = (int)$matches['first'];
-            $return['last']   = (int)$matches['last'];
-            $return['length'] = is_numeric($matches['length']) ? (int)$matches['length'] : '*';
+            $return['first']  = (int) $matches['first'];
+            $return['last']   = (int) $matches['last'];
+            $return['length'] = is_numeric($matches['length']) ? (int) $matches['length'] : '*';
 
             return $return;
         }

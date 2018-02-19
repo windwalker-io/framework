@@ -235,7 +235,7 @@ abstract class AbstractDatabaseTestCase extends AbstractQueryTestCase
 
         $tables = TestHelper::getValue($this->db, 'tables');
 
-        foreach ((array)$tables as $table) {
+        foreach ((array) $tables as $table) {
             $table->reset();
         }
 

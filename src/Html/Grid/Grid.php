@@ -89,7 +89,7 @@ class Grid
         try {
             return $this->toString();
         } catch (\Exception $e) {
-            return (string)$e;
+            return (string) $e;
         }
     }
 
@@ -270,7 +270,7 @@ class Grid
      */
     public function setActiveRow($id)
     {
-        $this->activeRow = (int)$id;
+        $this->activeRow = (int) $id;
 
         return $this;
     }
@@ -318,8 +318,8 @@ class Grid
             $id = $this->activeRow;
         }
 
-        if (isset($this->rows[(int)$id])) {
-            return $this->rows[(int)$id];
+        if (isset($this->rows[(int) $id])) {
+            return $this->rows[(int) $id];
         } else {
             return false;
         }
@@ -454,7 +454,7 @@ class Grid
      */
     protected function renderAttributes($attributes)
     {
-        if (count((array)$attributes) == 0) {
+        if (count((array) $attributes) == 0) {
             return '';
         }
 

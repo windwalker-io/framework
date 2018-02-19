@@ -151,7 +151,7 @@ abstract class AbstractMediaElement extends HtmlElement
      */
     public function autoplay($bool)
     {
-        $this->attribs['autoplay'] = (bool)$bool;
+        $this->attribs['autoplay'] = (bool) $bool;
 
         return $this;
     }
@@ -165,7 +165,7 @@ abstract class AbstractMediaElement extends HtmlElement
      */
     public function controls($bool)
     {
-        $this->attribs['controls'] = (bool)$bool;
+        $this->attribs['controls'] = (bool) $bool;
 
         return $this;
     }
@@ -179,7 +179,7 @@ abstract class AbstractMediaElement extends HtmlElement
      */
     public function loop($bool)
     {
-        $this->attribs['loop'] = (bool)$bool;
+        $this->attribs['loop'] = (bool) $bool;
 
         return $this;
     }
@@ -193,7 +193,7 @@ abstract class AbstractMediaElement extends HtmlElement
      */
     public function muted($bool)
     {
-        $this->attribs['muted'] = (bool)$bool;
+        $this->attribs['muted'] = (bool) $bool;
 
         return $this;
     }

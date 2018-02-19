@@ -105,6 +105,6 @@ class RegexValidator extends AbstractValidator
         }
 
         // Test the value against the regular expression.
-        return (bool)preg_match(chr(1) . $this->regex . chr(1) . $this->modifiers, (string)$value);
+        return (bool) preg_match(chr(1) . $this->regex . chr(1) . $this->modifiers, (string) $value);
     }
 }

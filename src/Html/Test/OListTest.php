@@ -55,11 +55,11 @@ class OListTest extends AbstractDomTestCase
     {
         $list = new OList;
 
-        $this->assertEquals('<ol></ol>', (string)$list);
+        $this->assertEquals('<ol></ol>', (string) $list);
 
         $list = new OList(null, ['id' => 'list', 'class' => 'nav']);
 
-        $this->assertEquals('<ol id="list" class="nav"></ol>', (string)$list);
+        $this->assertEquals('<ol id="list" class="nav"></ol>', (string) $list);
 
         $items = [
             new ListItem('Remember, with great power, comes great responsibility'),
@@ -77,7 +77,7 @@ class OListTest extends AbstractDomTestCase
 </ol>
 HTML;
 
-        $this->assertHtmlFormatEquals($html, (string)$list);
+        $this->assertHtmlFormatEquals($html, (string) $list);
     }
 
     /**
@@ -128,6 +128,6 @@ HTML;
 </ol>
 HTML;
 
-        $this->assertHtmlFormatEquals($html, (string)$list);
+        $this->assertHtmlFormatEquals($html, (string) $list);
     }
 }

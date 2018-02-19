@@ -134,7 +134,7 @@ class StringInflector
 
         foreach ($data as $rule) {
             // Ensure a string is pushed.
-            array_push($this->rules[$ruleType], (string)$rule);
+            array_push($this->rules[$ruleType], (string) $rule);
         }
     }
 
@@ -325,7 +325,7 @@ class StringInflector
      */
     public function isCountable($word)
     {
-        return (boolean)in_array($word, $this->rules['countable']);
+        return (boolean) in_array($word, $this->rules['countable']);
     }
 
     /**

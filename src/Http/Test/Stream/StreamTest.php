@@ -83,7 +83,7 @@ class StreamTest extends AbstractBaseTestCase
 
         $this->instance->write($message);
 
-        $this->assertEquals($message, (string)$this->instance);
+        $this->assertEquals($message, (string) $this->instance);
 
         // Not readable should return empty string
         $this->createTempFile();
@@ -115,7 +115,7 @@ class StreamTest extends AbstractBaseTestCase
 
         $this->assertFalse(is_resource($resource));
         $this->assertAttributeEmpty('resource', $stream);
-        $this->assertEquals('', (string)$stream);
+        $this->assertEquals('', (string) $stream);
     }
 
     /**

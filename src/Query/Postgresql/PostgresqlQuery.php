@@ -107,53 +107,53 @@ class PostgresqlQuery extends Query
 
         switch ($this->type) {
             case 'select':
-                $query .= (string)$this->select;
-                $query .= (string)$this->from;
+                $query .= (string) $this->select;
+                $query .= (string) $this->from;
 
                 if ($this->join) {
                     // Special case for joins
                     foreach ($this->join as $join) {
-                        $query .= (string)$join;
+                        $query .= (string) $join;
                     }
                 }
 
                 if ($this->where) {
-                    $query .= (string)$this->where;
+                    $query .= (string) $this->where;
                 }
 
                 if ($this->group) {
-                    $query .= (string)$this->group;
+                    $query .= (string) $this->group;
                 }
 
                 if ($this->having) {
-                    $query .= (string)$this->having;
+                    $query .= (string) $this->having;
                 }
 
                 if ($this->order) {
-                    $query .= (string)$this->order;
+                    $query .= (string) $this->order;
                 }
 
                 if ($this->forUpdate) {
-                    $query .= (string)$this->forUpdate;
+                    $query .= (string) $this->forUpdate;
                 } else {
                     if ($this->forShare) {
-                        $query .= (string)$this->forShare;
+                        $query .= (string) $this->forShare;
                     }
                 }
 
                 if ($this->noWait) {
-                    $query .= (string)$this->noWait;
+                    $query .= (string) $this->noWait;
                 }
 
                 if ($this->suffix) {
-                    $query .= ' ' . (string)$this->suffix;
+                    $query .= ' ' . (string) $this->suffix;
                 }
 
                 break;
 
             case 'update':
-                $query .= (string)$this->update;
-                $query .= (string)$this->set;
+                $query .= (string) $this->update;
+                $query .= (string) $this->set;
 
                 if ($this->join) {
                     $onWord = ' ON ';
@@ -168,25 +168,25 @@ class PostgresqlQuery extends Query
                         $this->where($joinArray[1]);
                     }
 
-                    $query .= (string)$this->from;
+                    $query .= (string) $this->from;
                 }
 
                 if ($this->where) {
-                    $query .= (string)$this->where;
+                    $query .= (string) $this->where;
                 }
 
                 if ($this->suffix) {
-                    $query .= ' ' . (string)$this->suffix;
+                    $query .= ' ' . (string) $this->suffix;
                 }
 
                 break;
 
             case 'insert':
-                $query .= (string)$this->insert;
+                $query .= (string) $this->insert;
 
                 if ($this->values) {
                     if ($this->columns) {
-                        $query .= (string)$this->columns;
+                        $query .= (string) $this->columns;
                     }
 
                     $elements = $this->values->getElements();
@@ -195,15 +195,15 @@ class PostgresqlQuery extends Query
                         $query .= ' VALUES ';
                     }
 
-                    $query .= (string)$this->values;
+                    $query .= (string) $this->values;
 
                     if ($this->returning) {
-                        $query .= (string)$this->returning;
+                        $query .= (string) $this->returning;
                     }
                 }
 
                 if ($this->suffix) {
-                    $query .= ' ' . (string)$this->suffix;
+                    $query .= ' ' . (string) $this->suffix;
                 }
 
                 break;

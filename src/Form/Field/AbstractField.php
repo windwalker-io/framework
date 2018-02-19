@@ -257,7 +257,7 @@ abstract class AbstractField
 
         $this->prepare($attrs);
 
-        $attrs = array_merge($attrs, (array)$this->getAttribute('attribs'));
+        $attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
 
         return $attrs;
     }
@@ -274,7 +274,7 @@ abstract class AbstractField
         $attrs['for']   = $this->getAttribute('for', $this->getId());
         $attrs['title'] = $this->getAttribute('description');
 
-        $attrs = array_merge($attrs, (array)$this->getAttribute('labelAttribs'));
+        $attrs = array_merge($attrs, (array) $this->getAttribute('labelAttribs'));
 
         if ($this->form && $this->form->getRenderer()) {
             return $this->form->getRenderer()->renderLabel($this, $attrs);
@@ -286,7 +286,7 @@ abstract class AbstractField
             $label = '<span class="windwalker-input-required-hint">*</span> ' . $label;
         }
 
-        return (string)new HtmlElement('label', $label, $attrs);
+        return (string) new HtmlElement('label', $label, $attrs);
     }
 
     /**
@@ -311,7 +311,7 @@ abstract class AbstractField
         $attrs['id']    = $this->getAttribute('controlId', $this->getId() . '-control');
         $attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
 
-        $attrs = array_merge($attrs, (array)$this->getAttribute('controlAttribs'));
+        $attrs = array_merge($attrs, (array) $this->getAttribute('controlAttribs'));
 
         if ($this->form && $this->form->getRenderer()) {
             return $this->form->getRenderer()->renderField($this, $attrs, $options);
@@ -320,7 +320,7 @@ abstract class AbstractField
         $label = !empty($options['no_label']) ? '' : $this->renderLabel();
         $input = $this->renderInput();
 
-        return (string)new HtmlElement('div', $label . $input, $attrs);
+        return (string) new HtmlElement('div', $label . $input, $attrs);
     }
 
     /**
@@ -377,10 +377,10 @@ abstract class AbstractField
     public function checkRequired()
     {
         if (is_array($this->value)) {
-            return (bool)$this->value;
+            return (bool) $this->value;
         }
 
-        $value = (string)$this->value;
+        $value = (string) $this->value;
 
         if ($this->value || $value === '0') {
             return true;
@@ -816,9 +816,9 @@ abstract class AbstractField
             $name = $parent->getName();
 
             if ($name === 'fieldset') {
-                $this->fieldset = $this->fieldset ?: (string)$parent['name'];
+                $this->fieldset = $this->fieldset ?: (string) $parent['name'];
             } elseif ($name === 'group') {
-                array_unshift($group, (string)$parent['name']);
+                array_unshift($group, (string) $parent['name']);
             }
 
             $form = $parent;
@@ -941,7 +941,7 @@ abstract class AbstractField
      */
     protected function addClassName($to = 'class', $value)
     {
-        $classes = explode(' ', (string)$this->getAttribute($to));
+        $classes = explode(' ', (string) $this->getAttribute($to));
 
         $value = array_merge($classes, is_string($value) ? explode(' ', $value) : $value);
 
@@ -960,7 +960,7 @@ abstract class AbstractField
      */
     public function removeClassName($from = 'class', $value)
     {
-        $classes = explode(' ', (string)$this->getAttribute($from));
+        $classes = explode(' ', (string) $this->getAttribute($from));
 
         $value = array_diff($classes, is_string($value) ? explode(' ', $value) : $value);
 
@@ -1033,7 +1033,7 @@ abstract class AbstractField
      */
     public function attr($name, $value = null)
     {
-        $attrs = (array)$this->getAttribute('attribs');
+        $attrs = (array) $this->getAttribute('attribs');
 
         if ($value === null) {
             return isset($attrs[$name]) ? $attrs[$name] : null;
@@ -1056,7 +1056,7 @@ abstract class AbstractField
      */
     public function controlAttr($name, $value = null)
     {
-        $attrs = (array)$this->getAttribute('controlAttribs');
+        $attrs = (array) $this->getAttribute('controlAttribs');
 
         if ($value === null) {
             return isset($attrs[$name]) ? $attrs[$name] : null;
@@ -1079,7 +1079,7 @@ abstract class AbstractField
      */
     public function labelAttr($name, $value = null)
     {
-        $attrs = (array)$this->getAttribute('labelAttribs');
+        $attrs = (array) $this->getAttribute('labelAttribs');
 
         if ($value === null) {
             return isset($attrs[$name]) ? $attrs[$name] : null;
@@ -1135,7 +1135,7 @@ abstract class AbstractField
     {
         $value = $this->getAttribute($attr, $default);
 
-        if (in_array((string)$value, $this->falseValue) || !$value) {
+        if (in_array((string) $value, $this->falseValue) || !$value) {
             return false;
         }
 
@@ -1175,7 +1175,7 @@ abstract class AbstractField
      */
     public function def($attr, $value)
     {
-        $this->attributes[$attr] = isset($this->attributes[$attr]) ? $this->attributes[$attr] : (string)$value;
+        $this->attributes[$attr] = isset($this->attributes[$attr]) ? $this->attributes[$attr] : (string) $value;
     }
 
     /**

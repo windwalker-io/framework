@@ -164,7 +164,7 @@ abstract class AbstractMessage implements MessageInterface
 
         $name = $this->getHeaderName($name);
 
-        return (array)$this->headers[$name];
+        return (array) $this->headers[$name];
     }
 
     /**

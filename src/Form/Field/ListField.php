@@ -228,14 +228,14 @@ class ListField extends AbstractField
                     foreach ($option->children() as $opt) {
                         $attributes = XmlHelper::getAttributes($opt);
 
-                        $opt = new Option((string)$opt, XmlHelper::getAttribute($opt, 'value'), $attributes);
+                        $opt = new Option((string) $opt, XmlHelper::getAttribute($opt, 'value'), $attributes);
 
                         $this->options[XmlHelper::getAttribute($option, 'label')][] = $opt;
                     }
                 } else {
                     $attributes = XmlHelper::getAttributes($option);
 
-                    $option = new Option((string)$option, XmlHelper::getAttribute($option, 'value'), $attributes);
+                    $option = new Option((string) $option, XmlHelper::getAttribute($option, 'value'), $attributes);
 
                     $this->options[] = $option;
                 }

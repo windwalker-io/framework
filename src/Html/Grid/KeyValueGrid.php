@@ -54,9 +54,9 @@ class KeyValueGrid extends Grid
      */
     public function addHeader($keyTitle = 'Key', $valueTitle = 'Value', $attribs = [])
     {
-        $this->addRow((array)$this->getValue($attribs, static::ROW), static::ROW_HEAD)
-            ->setRowCell(static::COL_KEY, $keyTitle, (array)$this->getValue($attribs, static::COL_KEY))
-            ->setRowCell(static::COL_VALUE, $valueTitle, (array)$this->getValue($attribs, static::COL_VALUE));
+        $this->addRow((array) $this->getValue($attribs, static::ROW), static::ROW_HEAD)
+            ->setRowCell(static::COL_KEY, $keyTitle, (array) $this->getValue($attribs, static::COL_KEY))
+            ->setRowCell(static::COL_VALUE, $valueTitle, (array) $this->getValue($attribs, static::COL_VALUE));
 
         return $this;
     }
@@ -76,11 +76,11 @@ class KeyValueGrid extends Grid
             $value = print_r($value, 1);
         }
 
-        $this->addRow((array)$this->getValue($attribs, static::ROW))
-            ->setRowCell(static::COL_KEY, $key, (array)$this->getValue($attribs, static::COL_KEY));
+        $this->addRow((array) $this->getValue($attribs, static::ROW))
+            ->setRowCell(static::COL_KEY, $key, (array) $this->getValue($attribs, static::COL_KEY));
 
         if ($value !== false) {
-            $this->setRowCell(static::COL_VALUE, $value, (array)$this->getValue($attribs, static::COL_VALUE));
+            $this->setRowCell(static::COL_VALUE, $value, (array) $this->getValue($attribs, static::COL_VALUE));
         }
 
         return $this;

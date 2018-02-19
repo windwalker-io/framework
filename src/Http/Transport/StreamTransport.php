@@ -41,7 +41,7 @@ class StreamTransport extends AbstractTransport
         $options['protocol_version'] = $request->getProtocolVersion();
 
         // If data exists let's encode it and make sure our Content-Type header is set.
-        $data = (string)$request->getBody();
+        $data = (string) $request->getBody();
 
         if (isset($data)) {
             // If the data is a scalar value simply add it to the stream context options.
@@ -57,7 +57,7 @@ class StreamTransport extends AbstractTransport
             }
 
             // Add the relevant headers.
-            $request = $request->withHeader('Content-Length', (string)strlen($options['content']));
+            $request = $request->withHeader('Content-Length', (string) strlen($options['content']));
         }
 
         // Speed up stream get URL
@@ -73,7 +73,7 @@ class StreamTransport extends AbstractTransport
 
         // If an explicit timeout is given user it.
         if ($this->getOption('timeout')) {
-            $options['timeout'] = (int)$this->getOption('timeout');
+            $options['timeout'] = (int) $this->getOption('timeout');
         }
 
         // If an explicit user agent is given use it.
@@ -85,9 +85,9 @@ class StreamTransport extends AbstractTransport
         $options['ignore_errors'] = 1;
 
         // Follow redirects.
-        $options['follow_location'] = (int)$this->getOption('follow_location', 1);
+        $options['follow_location'] = (int) $this->getOption('follow_location', 1);
 
-        foreach ((array)$this->getOption('options') as $key => $value) {
+        foreach ((array) $this->getOption('options') as $key => $value) {
             $options[$key] = $value;
         }
 

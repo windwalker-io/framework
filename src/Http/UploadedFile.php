@@ -200,7 +200,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function moveTo($targetPath)
     {
-        $targetPath = (string)$targetPath;
+        $targetPath = (string) $targetPath;
 
         if (empty($targetPath)) {
             throw new \InvalidArgumentException('Target path must be a non-empty string');

@@ -55,11 +55,11 @@ class UListTest extends AbstractDomTestCase
     {
         $list = new UList;
 
-        $this->assertEquals('<ul></ul>', (string)$list);
+        $this->assertEquals('<ul></ul>', (string) $list);
 
         $list = new UList(null, ['id' => 'list', 'class' => 'nav']);
 
-        $this->assertEquals('<ul id="list" class="nav"></ul>', (string)$list);
+        $this->assertEquals('<ul id="list" class="nav"></ul>', (string) $list);
 
         $items = [
             new ListItem('Remember, with great power, comes great responsibility'),
@@ -77,7 +77,7 @@ class UListTest extends AbstractDomTestCase
 </ul>
 HTML;
 
-        $this->assertHtmlFormatEquals($html, (string)$list);
+        $this->assertHtmlFormatEquals($html, (string) $list);
     }
 
     /**
@@ -128,6 +128,6 @@ HTML;
 </ul>
 HTML;
 
-        $this->assertHtmlFormatEquals($html, (string)$list);
+        $this->assertHtmlFormatEquals($html, (string) $list);
     }
 }

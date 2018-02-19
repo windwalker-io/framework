@@ -85,7 +85,7 @@ class AttachmentResponse extends Response
      */
     protected function withFileStream(StreamInterface $stream)
     {
-        return $this->withBody($stream)->withHeader('Content-Length', (string)$stream->getSize());
+        return $this->withBody($stream)->withHeader('Content-Length', (string) $stream->getSize());
     }
 
     /**

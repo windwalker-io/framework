@@ -48,7 +48,7 @@ class FileLoader extends AbstractLoader
         if (!($paths instanceof \SplPriorityQueue)) {
             $queue = new \SplPriorityQueue;
 
-            foreach ((array)$paths as $path) {
+            foreach ((array) $paths as $path) {
                 $queue->insert($path, $priority);
             }
 

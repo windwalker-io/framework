@@ -112,7 +112,7 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
         }
 
         $new               = clone $this;
-        $new->statusCode   = (int)$code;
+        $new->statusCode   = (int) $code;
         $new->reasonPhrase = $reasonPhrase;
 
         return $new;

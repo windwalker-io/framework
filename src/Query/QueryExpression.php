@@ -59,7 +59,7 @@ class QueryExpression
             return call_user_func_array([$this, $name], $args);
         }
 
-        return (string)strtoupper($name) . '(' . implode(', ', $args) . ')';
+        return (string) strtoupper($name) . '(' . implode(', ', $args) . ')';
     }
 
     /**

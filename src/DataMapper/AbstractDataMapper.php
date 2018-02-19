@@ -108,7 +108,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         $this->keys = $keys ?: $this->keys;
         $this->keys = $this->keys ?: 'id';
-        $this->keys = (array)$this->keys;
+        $this->keys = (array) $this->keys;
 
         // Set some custom configuration.
         $this->init();
@@ -170,7 +170,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
             }
         }
 
-        $order = (array)$order;
+        $order = (array) $order;
 
         // Event
         $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
@@ -407,7 +407,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
         // Handling conditions
         $condFields = $condFields ?: $this->getKeyName(true);
 
-        $result = $this->doUpdate($dataset, (array)$condFields, $updateNulls);
+        $result = $this->doUpdate($dataset, (array) $condFields, $updateNulls);
 
         // Event
         $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
@@ -500,7 +500,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
         if (!is_array($conditions) && !is_object($conditions)) {
             $cond = [];
 
-            foreach ((array)$this->getKeyName(true) as $field) {
+            foreach ((array) $this->getKeyName(true) as $field) {
                 $cond[$field] = $conditions;
             }
 
@@ -513,7 +513,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
             'conditions' => &$conditions,
         ]);
 
-        $result = $this->doFlush($dataset, (array)$conditions);
+        $result = $this->doFlush($dataset, (array) $conditions);
 
         // Event
         $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
@@ -539,7 +539,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
         // Handling conditions
         $condFields = $condFields ?: $this->getKeyName(true);
 
-        $condFields = (array)$condFields;
+        $condFields = (array) $condFields;
 
         // Event
         $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
@@ -781,7 +781,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
             return $object->bind($data);
         }
 
-        foreach ((array)$data as $field => $value) {
+        foreach ((array) $data as $field => $value) {
             $object->$field = $value;
         }
 
@@ -879,7 +879,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     public function useTransaction($yn = null)
     {
         if ($yn !== null) {
-            $this->useTransaction = (boolean)$yn;
+            $this->useTransaction = (boolean) $yn;
         }
 
         return $this->useTransaction;

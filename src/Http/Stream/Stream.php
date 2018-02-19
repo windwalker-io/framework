@@ -74,7 +74,7 @@ class Stream implements StreamInterface
 
             return $this->getContents();
         } catch (\Exception $e) {
-            return (string)$e;
+            return (string) $e;
         }
     }
 

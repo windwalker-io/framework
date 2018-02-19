@@ -48,6 +48,6 @@ class CheckboxList extends AbstractInputList
      */
     protected function isChecked(Option $option)
     {
-        return in_array($option->getValue(), (array)$this->getChecked());
+        return in_array($option->getValue(), (array) $this->getChecked());
     }
 }

@@ -37,7 +37,7 @@ class PhpFormat implements FormatInterface
             if (is_scalar($v)) {
                 $vars .= sprintf("\t'%s' => '%s',\n", $k, addcslashes($v, '\\\''));
             } elseif (is_array($v) || is_object($v)) {
-                $vars .= sprintf("\t'%s' => %s,\n", $k, static::getArrayString((array)$v));
+                $vars .= sprintf("\t'%s' => %s,\n", $k, static::getArrayString((array) $v));
             }
         }
 
@@ -89,7 +89,7 @@ class PhpFormat implements FormatInterface
             $s .= str_repeat("\t", $level) . '"' . $k . '" => ';
 
             if (is_array($v) || is_object($v)) {
-                $s .= static::getArrayString((array)$v, $level + 1);
+                $s .= static::getArrayString((array) $v, $level + 1);
             } else {
                 $s .= '"' . addslashes($v) . '"';
             }

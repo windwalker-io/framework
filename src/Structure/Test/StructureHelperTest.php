@@ -121,7 +121,7 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
         $data = [
             'flower' => 'sakura',
             'olive' => 'peace',
-            'pos1' => (object)[
+            'pos1' => (object) [
                 'sunflower' => 'love',
             ],
             'pos2' => new Structure(
@@ -284,8 +284,8 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
             'array_recursive' => [
                 [
                     'foo' => [
-                        (object)['bar' => 'bar'],
-                        (object)['baz' => 'baz'],
+                        (object) ['bar' => 'bar'],
+                        (object) ['baz' => 'baz'],
                     ],
                 ],
                 true,

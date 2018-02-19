@@ -205,7 +205,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
         }
 
         if (!is_array($data)) {
-            $data = (array)$data;
+            $data = (array) $data;
         }
 
         $storage = $this->storage;

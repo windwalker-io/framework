@@ -480,7 +480,7 @@ class Str
         $strLength = Mbstring::strlen($string, $encoding);
         $padding   = $length - $strLength;
 
-        return static::doPad($string, (int)floor($padding / 2), (int)ceil($padding / 2), $substring, $encoding);
+        return static::doPad($string, (int) floor($padding / 2), (int) ceil($padding / 2), $substring, $encoding);
     }
 
     /**
@@ -551,8 +551,8 @@ class Str
             return $string;
         }
 
-        $leftStr  = Mbstring::substr(str_repeat($substring, (int)ceil($left / $padLength)), 0, $left, $encoding);
-        $rightStr = Mbstring::substr(str_repeat($substring, (int)ceil($right / $padLength)), 0, $right, $encoding);
+        $leftStr  = Mbstring::substr(str_repeat($substring, (int) ceil($left / $padLength)), 0, $left, $encoding);
+        $rightStr = Mbstring::substr(str_repeat($substring, (int) ceil($right / $padLength)), 0, $right, $encoding);
 
         return $leftStr . $string . $rightStr;
     }
@@ -701,7 +701,7 @@ class Str
      */
     public static function surround($string, $substring = ['"', '"'])
     {
-        $substring = (array)$substring;
+        $substring = (array) $substring;
 
         if (empty($substring[1])) {
             $substring[1] = $substring[0];

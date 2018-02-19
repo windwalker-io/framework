@@ -69,7 +69,7 @@ class AbstractInputList extends HtmlElement
 
         $this->checked = $checked;
 
-        parent::__construct('span', (array)$options, $attribs);
+        parent::__construct('span', (array) $options, $attribs);
     }
 
     /**

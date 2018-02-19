@@ -46,7 +46,7 @@ class PsrUriTest extends AbstractBaseTestCase
     {
         $url = 'https://user:pass@local.example.com:3001/foo?bar=baz#quz';
         $uri = new PsrUri($url);
-        $this->assertEquals($url, (string)$uri);
+        $this->assertEquals($url, (string) $uri);
     }
 
     /**
@@ -60,7 +60,7 @@ class PsrUriTest extends AbstractBaseTestCase
         $new = $uri->withScheme('http');
         $this->assertNotSame($uri, $new);
         $this->assertEquals('http', $new->getScheme());
-        $this->assertEquals('http://user:pass@local.example.com:3001/foo?bar=baz#quz', (string)$new);
+        $this->assertEquals('http://user:pass@local.example.com:3001/foo?bar=baz#quz', (string) $new);
 
         $new = $uri->withScheme('https://');
         $this->assertEquals('https', $new->getScheme());
@@ -78,14 +78,14 @@ class PsrUriTest extends AbstractBaseTestCase
         $new = $uri->withUserInfo('flower');
         $this->assertNotSame($uri, $new);
         $this->assertEquals('flower', $new->getUserInfo());
-        $this->assertEquals('https://flower@local.example.com:3001/foo?bar=baz#quz', (string)$new);
+        $this->assertEquals('https://flower@local.example.com:3001/foo?bar=baz#quz', (string) $new);
 
         // User & Password
         $uri = new PsrUri('https://user:pass@local.example.com:3001/foo?bar=baz#quz');
         $new = $uri->withUserInfo('flower', 'sakura');
         $this->assertNotSame($uri, $new);
         $this->assertEquals('flower:sakura', $new->getUserInfo());
-        $this->assertEquals('https://flower:sakura@local.example.com:3001/foo?bar=baz#quz', (string)$new);
+        $this->assertEquals('https://flower:sakura@local.example.com:3001/foo?bar=baz#quz', (string) $new);
     }
 
     /**
@@ -99,7 +99,7 @@ class PsrUriTest extends AbstractBaseTestCase
         $new = $uri->withHost('windwalker.io');
         $this->assertNotSame($uri, $new);
         $this->assertEquals('windwalker.io', $new->getHost());
-        $this->assertEquals('https://user:pass@windwalker.io:3001/foo?bar=baz#quz', (string)$new);
+        $this->assertEquals('https://user:pass@windwalker.io:3001/foo?bar=baz#quz', (string) $new);
     }
 
     /**
@@ -115,7 +115,7 @@ class PsrUriTest extends AbstractBaseTestCase
         $this->assertEquals(3000, $new->getPort());
         $this->assertEquals(
             sprintf('https://user:pass@local.example.com:%d/foo?bar=baz#quz', 3000),
-            (string)$new
+            (string) $new
         );
     }
 
@@ -130,7 +130,7 @@ class PsrUriTest extends AbstractBaseTestCase
         $new = $uri->withPath('/bar/baz');
         $this->assertNotSame($uri, $new);
         $this->assertEquals('/bar/baz', $new->getPath());
-        $this->assertEquals('https://user:pass@local.example.com:3001/bar/baz?bar=baz#quz', (string)$new);
+        $this->assertEquals('https://user:pass@local.example.com:3001/bar/baz?bar=baz#quz', (string) $new);
 
         $uri = new PsrUri('http://example.com');
         $new = $uri->withPath('foo/bar');
@@ -162,7 +162,7 @@ class PsrUriTest extends AbstractBaseTestCase
         $new = $uri->withQuery('baz=bat');
         $this->assertNotSame($uri, $new);
         $this->assertEquals('baz=bat', $new->getQuery());
-        $this->assertEquals('https://user:pass@local.example.com:3001/foo?baz=bat#quz', (string)$new);
+        $this->assertEquals('https://user:pass@local.example.com:3001/foo?baz=bat#quz', (string) $new);
 
         // Strip query symbol
         $uri = new PsrUri('http://example.com');
@@ -181,7 +181,7 @@ class PsrUriTest extends AbstractBaseTestCase
         $new = $uri->withFragment('qat');
         $this->assertNotSame($uri, $new);
         $this->assertEquals('qat', $new->getFragment());
-        $this->assertEquals('https://user:pass@local.example.com:3001/foo?bar=baz#qat', (string)$new);
+        $this->assertEquals('https://user:pass@local.example.com:3001/foo?bar=baz#qat', (string) $new);
 
         $uri = new PsrUri('http://example.com');
         $new = $uri->withFragment('#/foo/bar');
@@ -288,7 +288,7 @@ class PsrUriTest extends AbstractBaseTestCase
             'zero-float' => 0.0,
             'float' => 1.1,
             'array' => ['value'],
-            'object' => (object)['value' => 'value'],
+            'object' => (object) ['value' => 'value'],
         ];
 
         $combinations = [];

@@ -72,7 +72,7 @@ class HttpCompressor
      */
     protected function parseEncodings()
     {
-        $this->encodings = array_map('trim', (array)explode(',', $this->getAcceptEncoding()));
+        $this->encodings = array_map('trim', (array) explode(',', $this->getAcceptEncoding()));
     }
 
     /**
@@ -243,7 +243,7 @@ class HttpCompressor
      */
     public function setEncodedBy($encodedBy)
     {
-        $this->encodedBy = (string)$encodedBy;
+        $this->encodedBy = (string) $encodedBy;
 
         return $this;
     }

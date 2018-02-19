@@ -198,7 +198,7 @@ class Language implements LanguageInterface
         $localise = $this->getLocalise($this->locale);
 
         // Get language plural handles
-        $suffix = $localise->getPluralSuffix((int)$count);
+        $suffix = $localise->getPluralSuffix((int) $count);
 
         if ($suffix || $suffix == 0) {
             $key = $string . '_' . $suffix;
@@ -215,7 +215,7 @@ class Language implements LanguageInterface
             $localise = $this->getLocalise($this->defaultLocale);
 
             // Get language plural handles
-            $suffix = $localise->getPluralSuffix((int)$count);
+            $suffix = $localise->getPluralSuffix((int) $count);
 
             if ($suffix || $suffix == 0) {
                 $key = $string . '_' . $suffix;

@@ -26,7 +26,7 @@ class CryptHelper
      */
     public static function limitInteger($int, $min = null, $max = null)
     {
-        $int = (int)$int;
+        $int = (int) $int;
 
         if ($min !== null && $int < $min) {
             $int = $min;
@@ -36,7 +36,7 @@ class CryptHelper
             $int = $max;
         }
 
-        return (int)$int;
+        return (int) $int;
     }
 
     /**
@@ -164,13 +164,13 @@ class CryptHelper
                  * Based on the average time, determine the total rounds so that
                  * the total running time is bounded to a reasonable number.
                  */
-                $rounds = (int)(($maxTimeMicro / $duration) * 50);
+                $rounds = (int) (($maxTimeMicro / $duration) * 50);
 
                 /*
                  * Take additional measurements. On average we can expect
                  * at least $bitsPerRound bits of entropy from each measurement.
                  */
-                $iter = $bytes * (int)ceil(8 / $bitsPerRound);
+                $iter = $bytes * (int) ceil(8 / $bitsPerRound);
 
                 for ($pass = 0; $pass < $iter; ++$pass) {
                     $microStart = microtime(true);

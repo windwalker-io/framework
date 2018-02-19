@@ -265,7 +265,7 @@ abstract class AbstractTable
      */
     public function hasColumn($column)
     {
-        return (bool)$this->getColumnDetail($column);
+        return (bool) $this->getColumnDetail($column);
     }
 
     /**

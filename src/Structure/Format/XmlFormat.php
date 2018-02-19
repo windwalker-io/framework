@@ -76,32 +76,32 @@ class XmlFormat implements FormatInterface
     {
         switch ($node['type']) {
             case 'integer':
-                $value = (string)$node;
+                $value = (string) $node;
 
-                return (int)$value;
+                return (int) $value;
                 break;
 
             case 'string':
-                return (string)$node;
+                return (string) $node;
                 break;
 
             case 'boolean':
-                $value = (string)$node;
+                $value = (string) $node;
 
-                return (bool)$value;
+                return (bool) $value;
                 break;
 
             case 'double':
-                $value = (string)$node;
+                $value = (string) $node;
 
-                return (float)$value;
+                return (float) $value;
                 break;
 
             case 'array':
                 $value = [];
 
                 foreach ($node->children() as $child) {
-                    $value[(string)$child['name']] = static::getValueFromNode($child);
+                    $value[(string) $child['name']] = static::getValueFromNode($child);
                 }
 
                 break;
@@ -131,7 +131,7 @@ class XmlFormat implements FormatInterface
     protected static function getXmlChildren(\SimpleXMLElement $node, $var, $nodeName)
     {
         // Iterate over the object members.
-        foreach ((array)$var as $k => $v) {
+        foreach ((array) $var as $k => $v) {
             if (is_scalar($v)) {
                 $n = $node->addChild($nodeName, $v);
                 $n->addAttribute('name', $k);

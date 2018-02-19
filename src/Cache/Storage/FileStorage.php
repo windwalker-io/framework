@@ -148,7 +148,7 @@ class FileStorage extends AbstractCacheStorage
      */
     public function deleteItem($key)
     {
-        return (bool)@unlink($this->fetchStreamUri($key));
+        return (bool) @unlink($this->fetchStreamUri($key));
     }
 
     /**
@@ -195,7 +195,7 @@ class FileStorage extends AbstractCacheStorage
      */
     protected function write($filename, $value, $options)
     {
-        return (bool)file_put_contents(
+        return (bool) file_put_contents(
             $filename,
             $value,
             $options

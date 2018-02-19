@@ -230,7 +230,7 @@ abstract class ServerHelper
 
         foreach ($nodes as $node) {
             if (is_array($dataTmp)) {
-                if ((string)$node === '') {
+                if ((string) $node === '') {
                     $tmp       = [];
                     $dataTmp[] = &$tmp;
                     $dataTmp   = &$tmp;

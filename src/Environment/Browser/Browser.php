@@ -263,7 +263,7 @@ class Browser
     protected function detectEncoding($acceptEncoding)
     {
         // Parse the accepted encodings.
-        $this->encodings = array_map('trim', (array)explode(',', $acceptEncoding));
+        $this->encodings = array_map('trim', (array) explode(',', $acceptEncoding));
 
         // Mark this detection routine as run.
         $this->detection['acceptEncoding'] = true;
@@ -319,7 +319,7 @@ class Browser
     protected function detectLanguage($acceptLanguage)
     {
         // Parse the accepted encodings.
-        $this->languages = array_map('trim', (array)explode(',', $acceptLanguage));
+        $this->languages = array_map('trim', (array) explode(',', $acceptLanguage));
 
         // Mark this detection routine as run.
         $this->detection['acceptLanguage'] = true;

@@ -310,7 +310,7 @@ class ServerRequestFactory
         $host = $server['SERVER_NAME'];
 
         if (isset($server['SERVER_PORT'])) {
-            $port = (int)$server['SERVER_PORT'];
+            $port = (int) $server['SERVER_PORT'];
         }
 
         if (!isset($server['SERVER_ADDR']) || !preg_match('/^\[[0-9a-fA-F\:]+\]$/', $host)) {
@@ -419,7 +419,7 @@ class ServerRequestFactory
 
         if (preg_match('|\:(\d+)$|', $host, $matches)) {
             $host = substr($host, 0, -1 * (strlen($matches[1]) + 1));
-            $port = (int)$matches[1];
+            $port = (int) $matches[1];
         }
     }
 

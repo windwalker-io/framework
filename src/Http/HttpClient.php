@@ -51,7 +51,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      */
     public function __construct($options = [], TransportInterface $transport = null)
     {
-        $this->options   = (array)$options;
+        $this->options   = (array) $options;
         $this->transport = $transport ?: new CurlTransport;
     }
 
@@ -299,7 +299,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
             $options = get_object_vars($options);
         }
 
-        $this->options = (array)$options;
+        $this->options = (array) $options;
 
         return $this;
     }
@@ -343,7 +343,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      */
     protected function prepareRequest(RequestInterface $request, $method, $url, $data, $headers)
     {
-        $url = (string)$url;
+        $url = (string) $url;
 
         // If is GET, we merge data into URL.
         if (strtoupper($method) === 'GET' && is_array($data)) {
@@ -353,7 +353,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
                 $url->setVar($k, $v);
             }
 
-            $url  = (string)$url;
+            $url  = (string) $url;
             $data = null;
         }
 
@@ -363,13 +363,13 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
         }
 
         /** @var RequestInterface $request */
-        $request->getBody()->write((string)$data);
+        $request->getBody()->write((string) $data);
 
-        $request = $request->withRequestTarget((string)new PsrUri($url))
+        $request = $request->withRequestTarget((string) new PsrUri($url))
             ->withMethod($method);
 
         // Set global headers
-        foreach ((array)$this->getOption('headers') as $key => $value) {
+        foreach ((array) $this->getOption('headers') as $key => $value) {
             $request = $request->withHeader($key, $value);
         }
 

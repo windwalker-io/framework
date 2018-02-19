@@ -209,90 +209,90 @@ class InputFilter implements \Serializable
         // INT / INTEGER
         $this->handlers[static::INTEGER] = $this->handlers['INT'] = function ($source) {
             // Only use the first integer value
-            preg_match('/-?[0-9]+/', (string)$source, $matches);
+            preg_match('/-?[0-9]+/', (string) $source, $matches);
 
-            return isset($matches[0]) ? (int)$matches[0] : null;
+            return isset($matches[0]) ? (int) $matches[0] : null;
         };
 
         // UINT
         $this->handlers[static::UINT] = function ($source) {
             // Only use the first integer value
-            preg_match('/-?[0-9]+/', (string)$source, $matches);
+            preg_match('/-?[0-9]+/', (string) $source, $matches);
 
-            return isset($matches[0]) ? abs((int)$matches[0]) : null;
+            return isset($matches[0]) ? abs((int) $matches[0]) : null;
         };
 
         // FLOAT / DOUBLE
         $this->handlers[static::FLOAT] = $this->handlers['DOUBLE'] = function ($source) {
             // Only use the first floating point value
-            preg_match('/-?[0-9]+(\.[0-9]+)?/', (string)$source, $matches);
+            preg_match('/-?[0-9]+(\.[0-9]+)?/', (string) $source, $matches);
 
-            return isset($matches[0]) ? (float)$matches[0] : null;
+            return isset($matches[0]) ? (float) $matches[0] : null;
         };
 
         // BOOLEAN / BOOL
         $this->handlers[static::BOOLEAN] = $this->handlers['BOOL'] = function ($source) {
-            return (bool)$source;
+            return (bool) $source;
         };
 
         // WORD
         $this->handlers[static::WORD] = function ($source) {
-            return (string)preg_replace('/[^A-Z_]/i', '', $source);
+            return (string) preg_replace('/[^A-Z_]/i', '', $source);
         };
 
         // ALNUM
         $this->handlers[static::ALNUM] = function ($source) {
-            return (string)preg_replace('/[^A-Z0-9]/i', '', $source);
+            return (string) preg_replace('/[^A-Z0-9]/i', '', $source);
         };
 
         // CMD
         $this->handlers[static::CMD] = function ($source) {
-            $result = (string)preg_replace('/[^A-Z0-9_\.-]/i', '', $source);
+            $result = (string) preg_replace('/[^A-Z0-9_\.-]/i', '', $source);
 
             return ltrim($result, '.');
         };
 
         // BASE64
         $this->handlers[static::BASE64] = function ($source) {
-            return (string)preg_replace('/[^A-Z0-9\/+=]/i', '', $source);
+            return (string) preg_replace('/[^A-Z0-9\/+=]/i', '', $source);
         };
 
         // STRING
         $this->handlers[static::STRING] = function ($source) use ($filter) {
-            return (string)$filter->remove($filter->decode((string)$source));
+            return (string) $filter->remove($filter->decode((string) $source));
         };
 
         // HTML
         $this->handlers[static::HTML] = function ($source) use ($filter) {
-            return (string)$filter->remove((string)$source);
+            return (string) $filter->remove((string) $source);
         };
 
         // ARRAY
         $this->handlers[static::ARRAY_TYPE] = function ($source) {
-            return (array)$source;
+            return (array) $source;
         };
 
         // PATH
         $this->handlers[static::PATH] = function ($source) {
             $pattern = '/^[A-Za-z0-9_-]+[A-Za-z0-9_\.-]*([\\\\\/][A-Za-z0-9_-]+[A-Za-z0-9_\.-]*)*$/';
-            preg_match($pattern, (string)$source, $matches);
+            preg_match($pattern, (string) $source, $matches);
 
-            return isset($matches[0]) ? (string)$matches[0] : null;
+            return isset($matches[0]) ? (string) $matches[0] : null;
         };
 
         // USERNAME
         $this->handlers[static::USERNAME] = function ($source) {
-            return (string)preg_replace('/[\x00-\x1F\x7F<>"\'%&]/', '', $source);
+            return (string) preg_replace('/[\x00-\x1F\x7F<>"\'%&]/', '', $source);
         };
 
         // EMAIL
         $this->handlers[static::EMAIL] = function ($source) {
-            return (string)filter_var($source, FILTER_SANITIZE_EMAIL);
+            return (string) filter_var($source, FILTER_SANITIZE_EMAIL);
         };
 
         // HTML
         $this->handlers[static::URL] = function ($source) {
-            return (string)filter_var($source, FILTER_SANITIZE_URL,
+            return (string) filter_var($source, FILTER_SANITIZE_URL,
                 FILTER_FLAG_QUERY_REQUIRED | FILTER_FLAG_PATH_REQUIRED);
         };
 

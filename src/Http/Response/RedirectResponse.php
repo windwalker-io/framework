@@ -28,7 +28,7 @@ class RedirectResponse extends Response
     public function __construct($uri, $status = 303, array $headers = [])
     {
         if ($uri instanceof UriInterface || $uri instanceof \Windwalker\Uri\UriInterface) {
-            $uri = (string)$uri;
+            $uri = (string) $uri;
         }
 
         if (!is_string($uri)) {

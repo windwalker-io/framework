@@ -110,28 +110,28 @@ class ArrayHelperTest extends AbstractBaseTestCase
             ],
             'object array' => [
                 [
-                    (object)[
+                    (object) [
                         'one' => 1,
                         'two' => 2,
                         'three' => 3,
                         'four' => 4,
                         'five' => 5,
                     ],
-                    (object)[
+                    (object) [
                         'one' => 6,
                         'two' => 7,
                         'three' => 8,
                         'four' => 9,
                         'five' => 10,
                     ],
-                    (object)[
+                    (object) [
                         'one' => 11,
                         'two' => 12,
                         'three' => 13,
                         'four' => 14,
                         'five' => 15,
                     ],
-                    (object)[
+                    (object) [
                         'one' => 16,
                         'two' => 17,
                         'three' => 18,
@@ -207,7 +207,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 'five',
                 198,
                 'int',
-                (int)5,
+                (int) 5,
                 'Should get an int',
                 false,
             ],
@@ -216,7 +216,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 'six',
                 198,
                 'float',
-                (float)6,
+                (float) 6,
                 'Should get a float',
                 false,
             ],
@@ -225,7 +225,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 'seven',
                 198,
                 'bool',
-                (bool)7,
+                (bool) 7,
                 'Should get a boolean',
                 false,
             ],
@@ -388,22 +388,22 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'An array of objects' => [
                 // Source
                 [
-                    1 => (object)['id' => 41, 'title' => 'boo'],
-                    2 => (object)['id' => 42, 'title' => 'boo'],
-                    3 => (object)['title' => 'boo'],
-                    4 => (object)['id' => 42, 'title' => 'boo'],
-                    5 => (object)['id' => 43, 'title' => 'boo'],
+                    1 => (object) ['id' => 41, 'title' => 'boo'],
+                    2 => (object) ['id' => 42, 'title' => 'boo'],
+                    3 => (object) ['title' => 'boo'],
+                    4 => (object) ['id' => 42, 'title' => 'boo'],
+                    5 => (object) ['id' => 43, 'title' => 'boo'],
                 ],
                 // Key
                 'id',
                 // Expected
                 [
-                    41 => (object)['id' => 41, 'title' => 'boo'],
+                    41 => (object) ['id' => 41, 'title' => 'boo'],
                     42 => [
-                        (object)['id' => 42, 'title' => 'boo'],
-                        (object)['id' => 42, 'title' => 'boo'],
+                        (object) ['id' => 42, 'title' => 'boo'],
+                        (object) ['id' => 42, 'title' => 'boo'],
                     ],
-                    43 => (object)['id' => 43, 'title' => 'boo'],
+                    43 => (object) ['id' => 43, 'title' => 'boo'],
                 ],
             ],
         ];
@@ -442,84 +442,84 @@ class ArrayHelperTest extends AbstractBaseTestCase
     public function seedTestSortObject()
     {
         $input1 = [
-            (object)[
+            (object) [
                 'integer' => 12,
                 'float' => 1.29999,
                 'string' => 'A Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 15,
                 'float' => 1.29999,
                 'string' => 'C Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 35,
                 'float' => 1.29999,
                 'string' => 'C Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 1,
                 'float' => 1.29999,
                 'string' => 'N Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 5,
                 'float' => 1.29999,
                 'string' => 'T Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 22,
                 'float' => 1.29999,
                 'string' => 'E Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 6,
                 'float' => 1.29999,
                 'string' => 'G Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 6,
                 'float' => 1.29999,
                 'string' => 'L Test String',
             ],
         ];
         $input2 = [
-            (object)[
+            (object) [
                 'integer' => 12,
                 'float' => 1.29999,
                 'string' => 'A Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 15,
                 'float' => 1.29999,
                 'string' => 'C Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 35,
                 'float' => 1.29999,
                 'string' => 'C Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 1,
                 'float' => 1.29999,
                 'string' => 'N Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 5,
                 'float' => 1.29999,
                 'string' => 't Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 22,
                 'float' => 1.29999,
                 'string' => 'E Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 6,
                 'float' => 1.29999,
                 'string' => 'g Test String',
             ],
-            (object)[
+            (object) [
                 'integer' => 6,
                 'float' => 1.29999,
                 'string' => 'L Test String',
@@ -528,43 +528,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
         if (substr(php_uname(), 0, 6) !== 'Darwin') {
             $input3 = [
-                (object)[
+                (object) [
                     'string' => 'A Test String',
                     'integer' => 1,
                 ],
-                (object)[
+                (object) [
                     'string' => 'é Test String',
                     'integer' => 2,
                 ],
-                (object)[
+                (object) [
                     'string' => 'è Test String',
                     'integer' => 3,
                 ],
-                (object)[
+                (object) [
                     'string' => 'É Test String',
                     'integer' => 4,
                 ],
-                (object)[
+                (object) [
                     'string' => 'È Test String',
                     'integer' => 5,
                 ],
-                (object)[
+                (object) [
                     'string' => 'Œ Test String',
                     'integer' => 6,
                 ],
-                (object)[
+                (object) [
                     'string' => 'œ Test String',
                     'integer' => 7,
                 ],
-                (object)[
+                (object) [
                     'string' => 'L Test String',
                     'integer' => 8,
                 ],
-                (object)[
+                (object) [
                     'string' => 'P Test String',
                     'integer' => 9,
                 ],
-                (object)[
+                (object) [
                     'string' => 'p Test String',
                     'integer' => 10,
                 ],
@@ -581,42 +581,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 false,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 'T Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'G Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
@@ -632,42 +632,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 false,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 'T Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'G Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
@@ -683,42 +683,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 false,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'G Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 'T Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
@@ -734,42 +734,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 false,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'G Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 'T Test String',
@@ -786,42 +786,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 false,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 'T Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'G Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
@@ -838,42 +838,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 true,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'g Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 't Test String',
@@ -890,42 +890,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 true,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 't Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'g Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
@@ -945,42 +945,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 true,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'g Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 't Test String',
@@ -999,42 +999,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 true,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 't Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'g Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
@@ -1056,42 +1056,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 true,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'g Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 't Test String',
@@ -1113,42 +1113,42 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 true,
                 false,
                 [
-                    (object)[
+                    (object) [
                         'integer' => 5,
                         'float' => 1.29999,
                         'string' => 't Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'g Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 1,
                         'float' => 1.29999,
                         'string' => 'N Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 6,
                         'float' => 1.29999,
                         'string' => 'L Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 22,
                         'float' => 1.29999,
                         'string' => 'E Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 15,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 35,
                         'float' => 1.29999,
                         'string' => 'C Test String',
                     ],
-                    (object)[
+                    (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
@@ -1172,43 +1172,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                     'fre_FR',
                 ],
                 [
-                    (object)[
+                    (object) [
                         'string' => 'A Test String',
                         'integer' => 1,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'é Test String',
                         'integer' => 2,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'É Test String',
                         'integer' => 4,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'è Test String',
                         'integer' => 3,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'È Test String',
                         'integer' => 5,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'L Test String',
                         'integer' => 8,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'œ Test String',
                         'integer' => 7,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'Œ Test String',
                         'integer' => 6,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'p Test String',
                         'integer' => 10,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'P Test String',
                         'integer' => 9,
                     ],
@@ -1234,43 +1234,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                     'fre_FR',
                 ],
                 [
-                    (object)[
+                    (object) [
                         'string' => 'A Test String',
                         'integer' => 1,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'é Test String',
                         'integer' => 2,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'É Test String',
                         'integer' => 4,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'è Test String',
                         'integer' => 3,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'È Test String',
                         'integer' => 5,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'L Test String',
                         'integer' => 8,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'Œ Test String',
                         'integer' => 6,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'œ Test String',
                         'integer' => 7,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'P Test String',
                         'integer' => 9,
                     ],
-                    (object)[
+                    (object) [
                         'string' => 'p Test String',
                         'integer' => 10,
                     ],
@@ -1298,7 +1298,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
                     'string' => 'A Test String',
                 ],
                 null,
-                (object)[
+                (object) [
                     'integer' => 12,
                     'float' => 1.29999,
                     'string' => 'A Test String',
@@ -1324,18 +1324,18 @@ class ArrayHelperTest extends AbstractBaseTestCase
                     ],
                 ],
                 null,
-                (object)[
-                    'first' => (object)[
+                (object) [
+                    'first' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    'second' => (object)[
+                    'second' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    'third' => (object)[
+                    'third' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
@@ -1350,7 +1350,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
                     'string' => 'A Test String',
                 ],
                 'stdClass',
-                (object)[
+                (object) [
                     'integer' => 12,
                     'float' => 1.29999,
                     'string' => 'A Test String',
@@ -1376,18 +1376,18 @@ class ArrayHelperTest extends AbstractBaseTestCase
                     ],
                 ],
                 'stdClass',
-                (object)[
-                    'first' => (object)[
+                (object) [
+                    'first' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    'second' => (object)[
+                    'second' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    'third' => (object)[
+                    'third' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
@@ -1421,8 +1421,8 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'array_recursive' => [
                 [
                     'foo' => [
-                        (object)['bar' => 'bar'],
-                        (object)['baz' => 'baz'],
+                        (object) ['bar' => 'bar'],
+                        (object) ['baz' => 'baz'],
                     ],
                 ],
                 true,
@@ -1523,7 +1523,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'Lancer' => 'Gáe Bulg',
             'Rider' => 'Breaker Gorgon',
         ];
-        $data2 = (object)$data;
+        $data2 = (object) $data;
 
         $newData = ArrayHelper::setValue($data, 'Saber', 'Avalon');
 
@@ -1831,7 +1831,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
             [
                 'id' => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object)['foo' => 'bar'],
+                'data' => (object) ['foo' => 'bar'],
             ],
             [
                 'id' => 2,
@@ -1901,7 +1901,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
             [
                 'id' => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object)['foo' => 'bar'],
+                'data' => (object) ['foo' => 'bar'],
             ],
             [
                 'id' => 2,
@@ -1939,7 +1939,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
         $data = [
             'id' => 1,
             'title' => 'Julius Caesar',
-            'data' => (object)['foo' => 'bar'],
+            'data' => (object) ['foo' => 'bar'],
         ];
 
         $this->assertTrue(ArrayHelper::match($data, ['id' => 1]));
@@ -1963,7 +1963,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'middle' => 'Iron Man',
             'bottom' => 'Thor',
         ];
-        $data2 = (object)$data;
+        $data2 = (object) $data;
 
         $map = [
             'middle' => 'bottom',
@@ -1975,7 +1975,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'middle' => 'Thor',
             'bottom' => 'Iron Man',
         ];
-        $expected2 = (object)$expected;
+        $expected2 = (object) $expected;
 
         $result = ArrayHelper::mapKey($data, $map);
         $this->assertEquals($expected, $result);
@@ -2176,8 +2176,8 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
         $this->assertEquals('123', $data['foo']['bar']);
 
-        $data = (object)[
-            'foo' => (object)[
+        $data = (object) [
+            'foo' => (object) [
                 'bar' => '123',
             ],
         ];

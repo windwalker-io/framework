@@ -114,7 +114,7 @@ class StringStream extends Stream implements StreamInterface
             $this->writable = false;
         }
 
-        $this->resource = (string)$stream;
+        $this->resource = (string) $stream;
 
         return $this;
     }
@@ -387,7 +387,7 @@ class StringStream extends Stream implements StreamInterface
      */
     public function seekable($seekable)
     {
-        $this->seekable = (boolean)$seekable;
+        $this->seekable = (boolean) $seekable;
 
         return $this;
     }
@@ -401,7 +401,7 @@ class StringStream extends Stream implements StreamInterface
      */
     public function writable($writable)
     {
-        $this->writable = (boolean)$writable;
+        $this->writable = (boolean) $writable;
 
         return $this;
     }

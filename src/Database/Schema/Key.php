@@ -70,7 +70,7 @@ class Key
     {
         $this->name    = $name;
         $this->type    = $type;
-        $this->columns = (array)$columns;
+        $this->columns = (array) $columns;
         $this->comment = $comment;
     }
 

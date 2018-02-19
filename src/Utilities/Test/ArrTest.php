@@ -61,8 +61,8 @@ class ArrTest extends TestCase
             'array_recursive' => [
                 [
                     'foo' => [
-                        (object)['bar' => 'bar'],
-                        (object)['baz' => 'baz'],
+                        (object) ['bar' => 'bar'],
+                        (object) ['baz' => 'baz'],
                     ],
                 ],
                 true,
@@ -107,7 +107,7 @@ class ArrTest extends TestCase
                     'float' => 1.29999,
                     'string' => 'A Test String',
                 ],
-                (object)[
+                (object) [
                     'integer' => 12,
                     'float' => 1.29999,
                     'string' => 'A Test String',
@@ -132,18 +132,18 @@ class ArrTest extends TestCase
                         'string' => 'A Test String',
                     ],
                 ],
-                (object)[
-                    'first' => (object)[
+                (object) [
+                    'first' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    'second' => (object)[
+                    'second' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    'third' => (object)[
+                    'third' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
@@ -157,7 +157,7 @@ class ArrTest extends TestCase
                     'float' => 1.29999,
                     'string' => 'A Test String',
                 ],
-                (object)[
+                (object) [
                     'integer' => 12,
                     'float' => 1.29999,
                     'string' => 'A Test String',
@@ -182,18 +182,18 @@ class ArrTest extends TestCase
                         'string' => 'A Test String',
                     ],
                 ],
-                (object)[
-                    'first' => (object)[
+                (object) [
+                    'first' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    'second' => (object)[
+                    'second' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
                     ],
-                    'third' => (object)[
+                    'third' => (object) [
                         'integer' => 12,
                         'float' => 1.29999,
                         'string' => 'A Test String',
@@ -247,16 +247,16 @@ class ArrTest extends TestCase
                 ['foo' => 'bar', 'baz' => 'goo'],
             ],
             [
-                (object)['foo' => 'bar'],
+                (object) ['foo' => 'bar'],
                 'foo',
                 'yoo',
-                (object)['foo' => 'bar'],
+                (object) ['foo' => 'bar'],
             ],
             [
-                (object)['foo' => 'bar'],
+                (object) ['foo' => 'bar'],
                 'baz',
                 'goo',
-                (object)['foo' => 'bar', 'baz' => 'goo'],
+                (object) ['foo' => 'bar', 'baz' => 'goo'],
             ],
         ];
     }
@@ -292,7 +292,7 @@ class ArrTest extends TestCase
         self::assertEquals([1, 2, 3, 4, 5, 6, 7, 8, 9], Arr::collapse($array));
 
         $array = [
-            (object)[1, 2, 3],
+            (object) [1, 2, 3],
             4,
             5,
             6,
@@ -402,10 +402,10 @@ class ArrTest extends TestCase
         $this->assertEquals($data['array'], Arr::get($data, 'array'));
         $this->assertNull(Arr::get($data, ['not', 'exists']));
 
-        $data = (object)[
+        $data = (object) [
             'flower' => 'sakura',
             'olive' => 'peace',
-            'pos1' => (object)[
+            'pos1' => (object) [
                 'sunflower' => 'love',
             ],
             'pos2' => new \ArrayObject(
@@ -413,7 +413,7 @@ class ArrTest extends TestCase
                     'cornflower' => 'elegant',
                 ]
             ),
-            'array' => (object)[
+            'array' => (object) [
                 'A',
                 'B',
                 'C',
@@ -542,20 +542,20 @@ class ArrTest extends TestCase
                 '.',
             ],
             [
-                (object)['foo' => 'bar', 'baz' => 'yoo'],
-                (object)['baz' => 'yoo'],
+                (object) ['foo' => 'bar', 'baz' => 'yoo'],
+                (object) ['baz' => 'yoo'],
                 'foo',
                 '.',
             ],
             [
-                (object)['foo' => 'bar', 'baz' => 'yoo'],
-                (object)['foo' => 'bar', 'baz' => 'yoo'],
+                (object) ['foo' => 'bar', 'baz' => 'yoo'],
+                (object) ['foo' => 'bar', 'baz' => 'yoo'],
                 'haa',
                 '.',
             ],
             [
-                (object)['foo' => 'bar', 'baz' => ['joo' => 'hoo']],
-                (object)['foo' => 'bar', 'baz' => []],
+                (object) ['foo' => 'bar', 'baz' => ['joo' => 'hoo']],
+                (object) ['foo' => 'bar', 'baz' => []],
                 'baz/joo',
                 '/',
             ],
@@ -587,13 +587,13 @@ class ArrTest extends TestCase
         );
 
         self::assertEquals(
-            (object)['Lycoris' => 'energetic', 'Zinnia' => 'robust'],
-            Arr::only((object)$array, ['Lycoris', 'Zinnia'])
+            (object) ['Lycoris' => 'energetic', 'Zinnia' => 'robust'],
+            Arr::only((object) $array, ['Lycoris', 'Zinnia'])
         );
 
         self::assertEquals(
-            (object)['Lycoris' => 'energetic'],
-            Arr::only((object)$array, ['Lycoris'])
+            (object) ['Lycoris' => 'energetic'],
+            Arr::only((object) $array, ['Lycoris'])
         );
 
         $this->expectException(\InvalidArgumentException::class);
@@ -612,7 +612,7 @@ class ArrTest extends TestCase
             [
                 'id' => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object)['foo' => 'bar'],
+                'data' => (object) ['foo' => 'bar'],
             ],
             [
                 'id' => 2,
@@ -687,7 +687,7 @@ class ArrTest extends TestCase
             [
                 'id' => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object)['foo' => 'bar'],
+                'data' => (object) ['foo' => 'bar'],
             ],
             [
                 'id' => 2,
@@ -734,7 +734,7 @@ class ArrTest extends TestCase
             [
                 'id' => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object)['foo' => 'bar'],
+                'data' => (object) ['foo' => 'bar'],
             ],
             [
                 'id' => 2,
@@ -795,7 +795,7 @@ class ArrTest extends TestCase
         self::assertEquals('default', Arr::takeout($array, 'foo', 'default'));
         self::assertEquals(['one' => 1, 'two' => 2, 'three' => 3], $array);
 
-        $array = (object)[
+        $array = (object) [
             'one' => 1,
             'two' => 2,
             'three' => 3,
@@ -863,28 +863,28 @@ class ArrTest extends TestCase
             ],
             'simple objects' => [
                 [
-                    (object)['name' => 'Car', 'price' => 200],
-                    (object)['name' => 'Bike', 'price' => 100],
-                    (object)['name' => 'Motor', 'price' => 150],
+                    (object) ['name' => 'Car', 'price' => 200],
+                    (object) ['name' => 'Bike', 'price' => 100],
+                    (object) ['name' => 'Motor', 'price' => 150],
                 ],
                 [
-                    1 => (object)['name' => 'Bike', 'price' => 100],
-                    2 => (object)['name' => 'Motor', 'price' => 150],
-                    0 => (object)['name' => 'Car', 'price' => 200],
+                    1 => (object) ['name' => 'Bike', 'price' => 100],
+                    2 => (object) ['name' => 'Motor', 'price' => 150],
+                    0 => (object) ['name' => 'Car', 'price' => 200],
                 ],
                 'price',
                 false,
             ],
             'simple objects use callback' => [
                 [
-                    (object)['name' => 'Bike', 'price' => 100],
-                    (object)['name' => 'Car', 'price' => 200],
-                    (object)['name' => 'Motor', 'price' => 150],
+                    (object) ['name' => 'Bike', 'price' => 100],
+                    (object) ['name' => 'Car', 'price' => 200],
+                    (object) ['name' => 'Motor', 'price' => 150],
                 ],
                 [
-                    1 => (object)['name' => 'Car', 'price' => 200],
-                    0 => (object)['name' => 'Bike', 'price' => 100],
-                    2 => (object)['name' => 'Motor', 'price' => 150],
+                    1 => (object) ['name' => 'Car', 'price' => 200],
+                    0 => (object) ['name' => 'Bike', 'price' => 100],
+                    2 => (object) ['name' => 'Motor', 'price' => 150],
                 ],
                 function ($item, $key) {
                     return strlen($item->name);
@@ -1162,22 +1162,22 @@ class ArrTest extends TestCase
             'An array of objects' => [
                 // Source
                 [
-                    1 => (object)['id' => 41, 'title' => 'boo'],
-                    2 => (object)['id' => 42, 'title' => 'boo'],
-                    3 => (object)['title' => 'boo'],
-                    4 => (object)['id' => 42, 'title' => 'boo'],
-                    5 => (object)['id' => 43, 'title' => 'boo'],
+                    1 => (object) ['id' => 41, 'title' => 'boo'],
+                    2 => (object) ['id' => 42, 'title' => 'boo'],
+                    3 => (object) ['title' => 'boo'],
+                    4 => (object) ['id' => 42, 'title' => 'boo'],
+                    5 => (object) ['id' => 43, 'title' => 'boo'],
                 ],
                 // Key
                 'id',
                 // Expected
                 [
-                    41 => (object)['id' => 41, 'title' => 'boo'],
+                    41 => (object) ['id' => 41, 'title' => 'boo'],
                     42 => [
-                        (object)['id' => 42, 'title' => 'boo'],
-                        (object)['id' => 42, 'title' => 'boo'],
+                        (object) ['id' => 42, 'title' => 'boo'],
+                        (object) ['id' => 42, 'title' => 'boo'],
                     ],
-                    43 => (object)['id' => 43, 'title' => 'boo'],
+                    43 => (object) ['id' => 43, 'title' => 'boo'],
                 ],
                 false,
             ],
@@ -1292,7 +1292,7 @@ class ArrTest extends TestCase
             1,
             2,
             'foo' => 'bar',
-            (object)['baz' => 'yoo'],
+            (object) ['baz' => 'yoo'],
             new \ArrayObject(['flower' => 'sakura', 'fruit' => 'apple']),
             ['max' => ['level' => ['test' => ['no' => 'show']]]],
         ];

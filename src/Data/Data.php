@@ -277,7 +277,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      */
     public function notNull()
     {
-        return (boolean)count($this);
+        return (boolean) count($this);
     }
 
     /**
@@ -400,7 +400,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      */
     public function except($fields)
     {
-        $fields = (array)$fields;
+        $fields = (array) $fields;
 
         $new = clone $this;
 
@@ -421,7 +421,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      */
     public function only($fields)
     {
-        $fields = (array)$fields;
+        $fields = (array) $fields;
 
         $new = $this->getNewInstance();
 

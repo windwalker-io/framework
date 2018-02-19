@@ -55,7 +55,7 @@ class SelectList extends HtmlElement
         $this->setSelected($selected);
         $this->setMultiple($multiple);
 
-        parent::__construct('select', (array)$options, $attribs);
+        parent::__construct('select', (array) $options, $attribs);
     }
 
     /**
@@ -169,12 +169,12 @@ class SelectList extends HtmlElement
      */
     protected function checkSelected($value)
     {
-        $value = (string)$value;
+        $value = (string) $value;
 
         if ($this->multiple) {
-            return in_array($value, (array)$this->getSelected());
+            return in_array($value, (array) $this->getSelected());
         } else {
-            return $value == (string)$this->getSelected();
+            return $value == (string) $this->getSelected();
         }
     }
 

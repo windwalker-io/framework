@@ -282,7 +282,7 @@ class Console extends AbstractConsole
      */
     public function setAutoExit($boolean)
     {
-        $this->autoExit = (boolean)$boolean;
+        $this->autoExit = (boolean) $boolean;
 
         return $this;
     }

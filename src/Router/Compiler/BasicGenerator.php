@@ -109,7 +109,7 @@ abstract class BasicGenerator
 
         foreach ($matches as $match) {
             if (isset($data[$match[1]])) {
-                $route = str_replace($match[0], implode('/', (array)$data[$match[1]]), $route);
+                $route = str_replace($match[0], implode('/', (array) $data[$match[1]]), $route);
 
                 unset($data[$match[1]]);
             }

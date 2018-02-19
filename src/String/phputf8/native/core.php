@@ -170,10 +170,10 @@ function utf8_substr($str, $offset, $length = null)
 
     // generates E_NOTICE
     // for PHP4 objects, but not PHP5 objects
-    $str    = (string)$str;
-    $offset = (int)$offset;
+    $str    = (string) $str;
+    $offset = (int) $offset;
     if (!is_null($length)) {
-        $length = (int)$length;
+        $length = (int) $length;
     }
 
     // handle trivial cases
@@ -204,7 +204,7 @@ function utf8_substr($str, $offset, $length = null)
     // non-captured group equal in length to offset
     if ($offset > 0) {
 
-        $Ox = (int)($offset / 65535);
+        $Ox = (int) ($offset / 65535);
         $Oy = $offset % 65535;
 
         if ($Ox) {
@@ -244,7 +244,7 @@ function utf8_substr($str, $offset, $length = null)
             // go passed the end of the string
             $length = min($strlen - $offset, $length);
 
-            $Lx = (int)($length / 65535);
+            $Lx = (int) ($length / 65535);
             $Ly = $length % 65535;
 
             // negative length requires a captured group
@@ -261,7 +261,7 @@ function utf8_substr($str, $offset, $length = null)
                     return '';
                 }
 
-                $Lx = (int)((-$length) / 65535);
+                $Lx = (int) ((-$length) / 65535);
                 $Ly = (-$length) % 65535;
 
                 // negative length requires ... capture everything

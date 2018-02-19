@@ -42,7 +42,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
      */
     public static function listDatabases($where = null)
     {
-        $where   = (array)$where;
+        $where   = (array) $where;
         $where[] = 'datistemplate = false';
         $where   = new QueryElement('WHERE', $where, ' AND ');
 
@@ -127,7 +127,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
             ->where('attr.attnum > 0 AND NOT attr.attisdropped')
             ->order('attr.attnum');
 
-        return (string)$query;
+        return (string) $query;
     }
 
     /**
@@ -152,7 +152,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
             $query->where($where);
         }
 
-        return (string)$query;
+        return (string) $query;
     }
 
     /**
@@ -181,7 +181,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         $cols  = [];
 
         foreach ($columns as $cName => $details) {
-            $details = (array)$details;
+            $details = (array) $details;
 
             array_unshift($details, $query->quoteName($cName));
 
@@ -193,7 +193,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         }
 
         if ($pks) {
-            $cols[] = 'PRIMARY KEY ' . static::buildIndexDeclare(null, (array)$pks, null);
+            $cols[] = 'PRIMARY KEY ' . static::buildIndexDeclare(null, (array) $pks, null);
         }
 
         $indexes = [];
@@ -225,7 +225,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
             $ifNotExists ? 'IF NOT EXISTS' : null,
             $query->quoteName($name),
             $cols,
-            $inherits ? 'INHERITS (' . implode(',', $query->quoteName((array)$inherits)) . ')' : null,
+            $inherits ? 'INHERITS (' . implode(',', $query->quoteName((array) $inherits)) . ')' : null,
             $tablespace ? 'TABLESPACE ' . $query->quoteName($tablespace) : null,
             ";\n",
             $indexes ? $indexes : null
@@ -291,7 +291,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     {
         $query = static::getQuery();
 
-        $column = $query->quoteName((array)$column);
+        $column = $query->quoteName((array) $column);
 
         return static::build(
             'ALTER TABLE',
@@ -402,7 +402,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         $query = static::getQuery();
         $cols  = [];
 
-        foreach ((array)$columns as $key => $val) {
+        foreach ((array) $columns as $key => $val) {
             if (is_numeric($key)) {
                 $cols[] = $query->quoteName($val);
             } else {

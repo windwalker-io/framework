@@ -221,7 +221,7 @@ class FormWrapper extends HtmlElement
      */
     public function novalidate($value)
     {
-        $value = (bool)$value;
+        $value = (bool) $value;
 
         $this->attribs['novalidate'] = $value ? 'novalidate' : null;
 

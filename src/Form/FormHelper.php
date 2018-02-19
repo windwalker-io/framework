@@ -56,7 +56,7 @@ class FormHelper
      */
     protected static function toFlatten($separator = '_', $data = null, &$array = [], $prefix = '')
     {
-        $data = (array)$data;
+        $data = (array) $data;
 
         foreach ($data as $k => $v) {
             $key = $prefix ? $prefix . $separator . $k : $k;

@@ -53,7 +53,7 @@ class DomBuilder
     {
         $string = '';
 
-        foreach ((array)$attribs as $key => $value) {
+        foreach ((array) $attribs as $key => $value) {
             if ($value === true) {
                 $string .= ' ' . $key;
 

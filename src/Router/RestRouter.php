@@ -64,7 +64,7 @@ class RestRouter extends SingleActionRouter
      */
     public function setHttpMethodSuffix($method, $suffix)
     {
-        $this->suffixMap[strtoupper((string)$method)] = (string)$suffix;
+        $this->suffixMap[strtoupper((string) $method)] = (string) $suffix;
 
         return $this;
     }

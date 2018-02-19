@@ -350,7 +350,7 @@ class StructureHelper
         } elseif (is_object($data)) {
             $data = get_object_vars($data);
         } else {
-            $data = (array)$data;
+            $data = (array) $data;
         }
 
         if ($recursive) {

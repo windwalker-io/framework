@@ -92,7 +92,7 @@ class StringStreamTest extends AbstractBaseTestCase
 
         $this->instance->write($message);
 
-        $this->assertEquals($message, (string)$this->instance);
+        $this->assertEquals($message, (string) $this->instance);
     }
 
     /**
@@ -111,7 +111,7 @@ class StringStreamTest extends AbstractBaseTestCase
 
         $this->assertEmpty($stream->getResource());
         $this->assertAttributeEmpty('resource', $stream);
-        $this->assertEquals('', (string)$stream);
+        $this->assertEquals('', (string) $stream);
     }
 
     /**

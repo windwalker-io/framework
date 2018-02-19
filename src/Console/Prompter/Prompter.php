@@ -48,12 +48,12 @@ class Prompter
     /**
      * callback
      *
-     * @param string $msg
+     * @param string   $msg
      * @param callable $handler
-     * @param mixed $default
-     * @param string $noValidMessage
-     * @param int $attemptTimes
-     * @param bool $failCloseMessage
+     * @param mixed    $default
+     * @param string   $noValidMessage
+     * @param int      $attemptTimes
+     * @param bool     $failCloseMessage
      *
      * @return  string
      */

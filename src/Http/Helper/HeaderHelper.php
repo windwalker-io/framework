@@ -76,7 +76,7 @@ abstract class HeaderHelper
      */
     public static function filter($value)
     {
-        $value  = (string)$value;
+        $value  = (string) $value;
         $length = strlen($value);
         $string = '';
 
@@ -125,7 +125,7 @@ abstract class HeaderHelper
      */
     public static function isValidValue($value)
     {
-        $value = (string)$value;
+        $value = (string) $value;
 
         // Look for:
         // \n not preceded by \r, OR
@@ -170,7 +170,7 @@ abstract class HeaderHelper
             return false;
         }
 
-        return (bool)preg_match('#^(1\.[01]|2)$#', $version);
+        return (bool) preg_match('#^(1\.[01]|2)$#', $version);
     }
 
     /**
@@ -190,7 +190,7 @@ abstract class HeaderHelper
             $value = get_object_vars($value);
         }
 
-        $value = (array)$value;
+        $value = (array) $value;
 
         foreach ($value as $k => $v) {
             if (!static::isValidValue($v)) {

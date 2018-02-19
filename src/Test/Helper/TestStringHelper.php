@@ -54,7 +54,7 @@ class TestStringHelper
      */
     public static function quote($string, $quote = ['"', '"'])
     {
-        $quote = (array)$quote;
+        $quote = (array) $quote;
 
         if (empty($quote[1])) {
             $quote[1] = $quote[0];

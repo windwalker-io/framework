@@ -90,7 +90,7 @@ class DomElement implements \ArrayAccess
         try {
             return $this->toString();
         } catch (\Exception $e) {
-            return (string)$e;
+            return (string) $e;
         }
     }
 

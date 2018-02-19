@@ -232,7 +232,7 @@ class Router
             throw new \OutOfRangeException('Route: ' . $name . ' not found.');
         }
 
-        $route = $this->matcher->build($this->routes[$name], (array)$queries);
+        $route = $this->matcher->build($this->routes[$name], (array) $queries);
 
         if ($rootSlash) {
             return RouteHelper::normalise($route);

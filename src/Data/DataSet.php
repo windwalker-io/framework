@@ -668,7 +668,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
      */
     public function except($fields)
     {
-        $fields = (array)$fields;
+        $fields = (array) $fields;
 
         return $this->map(function (Data $data) use ($fields) {
             return $data->except($fields);
@@ -684,7 +684,7 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
      */
     public function only($fields)
     {
-        $fields = (array)$fields;
+        $fields = (array) $fields;
 
         return $this->map(function (Data $data) use ($fields) {
             return $data->only($fields);

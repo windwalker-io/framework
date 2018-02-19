@@ -247,7 +247,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
     {
         $this->unlinkDownloaded();
 
-        $this->assertFileNotExists((string)$this->destFile);
+        $this->assertFileNotExists((string) $this->destFile);
 
         $request = $this->createRequest(new Stream);
 

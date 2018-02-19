@@ -57,7 +57,7 @@ class BooleanPrompter extends TextPrompter
         $value = parent::ask($msg, $default);
 
         if (is_null($value)) {
-            return (bool)$value;
+            return (bool) $value;
         }
 
         $value = strtolower($value);
@@ -68,7 +68,7 @@ class BooleanPrompter extends TextPrompter
             return false;
         }
 
-        return (bool)$default;
+        return (bool) $default;
     }
 
     /**

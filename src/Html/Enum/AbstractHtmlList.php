@@ -28,7 +28,7 @@ abstract class AbstractHtmlList extends HtmlElement
     {
         parent::__construct($this->name, null, $attribs);
 
-        $this->setItems((array)$items);
+        $this->setItems((array) $items);
     }
 
     /**

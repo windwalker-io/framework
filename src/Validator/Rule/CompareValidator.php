@@ -133,7 +133,7 @@ class CompareValidator extends AbstractValidator
      */
     public function setStrict($strict)
     {
-        $this->strict = (bool)$strict;
+        $this->strict = (bool) $strict;
 
         return $this;
     }

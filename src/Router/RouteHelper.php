@@ -24,7 +24,7 @@ abstract class RouteHelper
      */
     public static function sanitize($pattern)
     {
-        return '/' . trim(parse_url((string)$pattern, PHP_URL_PATH), ' /');
+        return '/' . trim(parse_url((string) $pattern, PHP_URL_PATH), ' /');
     }
 
     /**

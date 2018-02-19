@@ -121,10 +121,10 @@ class Entity extends Data implements \JsonSerializable
         }
 
         if (is_array($field) || is_object($field)) {
-            $field = array_merge($defaultProfile, (array)$field);
+            $field = array_merge($defaultProfile, (array) $field);
         }
 
-        $field = (object)$field;
+        $field = (object) $field;
 
         $this->fields[$field->Field] = $field;
 
@@ -174,7 +174,7 @@ class Entity extends Data implements \JsonSerializable
     {
         $name = $this->resolveAlias($name);
 
-        return array_key_exists($name, (array)$this->fields);
+        return array_key_exists($name, (array) $this->fields);
     }
 
     /**
@@ -491,7 +491,7 @@ class Entity extends Data implements \JsonSerializable
         $this->data = [];
 
         // Get the default values for the class from the table.
-        foreach ((array)$this->getFields() as $k => $v) {
+        foreach ((array) $this->getFields() as $k => $v) {
             $this->data[$k] = null;
         }
 
@@ -576,16 +576,16 @@ class Entity extends Data implements \JsonSerializable
         switch ($cast) {
             case 'int':
             case 'integer':
-                return (int)$value;
+                return (int) $value;
             case 'real':
             case 'float':
             case 'double':
-                return (float)$value;
+                return (float) $value;
             case 'string':
-                return (string)$value;
+                return (string) $value;
             case 'bool':
             case 'boolean':
-                return (bool)$value;
+                return (bool) $value;
             case 'object':
                 return json_decode($value);
             case 'array':

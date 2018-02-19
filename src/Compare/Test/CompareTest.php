@@ -59,7 +59,7 @@ class CompareTest extends \PHPUnit\Framework\TestCase
      */
     public function test__toString()
     {
-        $this->assertEquals('flower = sakura', (string)$this->instance);
+        $this->assertEquals('flower = sakura', (string) $this->instance);
     }
 
     /**
