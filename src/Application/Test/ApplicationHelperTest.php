@@ -17,16 +17,16 @@ use Windwalker\Application\Helper\ApplicationHelper;
  */
 class ApplicationHelperTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Method to test isAscii().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Application\Helper\ApplicationHelper::isAscii
-	 */
-	public function testIsAscii()
-	{
-		$this->assertTrue(ApplicationHelper::isAscii('Shakespeare'));
-		$this->assertFalse(ApplicationHelper::isAscii('莎士比亞 Shakespeare'));
-	}
+    /**
+     * Method to test isAscii().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Application\Helper\ApplicationHelper::isAscii
+     */
+    public function testIsAscii()
+    {
+        $this->assertTrue(ApplicationHelper::isAscii('Shakespeare'));
+        $this->assertFalse(ApplicationHelper::isAscii('莎士比亞 Shakespeare'));
+    }
 }

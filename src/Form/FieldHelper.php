@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,111 +13,98 @@ use Windwalker\Form\Field\AbstractField;
 
 /**
  * The FieldHelper class.
- * 
+ *
  * @since  2.0
  */
 class FieldHelper extends AbstractFormElementHelper
 {
-	/**
-	 * Property fieldNamespaces.
-	 *
-	 * @var  \SplPriorityQueue
-	 */
-	protected static $namespaces = null;
+    /**
+     * Property fieldNamespaces.
+     *
+     * @var  \SplPriorityQueue
+     */
+    protected static $namespaces = null;
 
-	/**
-	 * Property defaultNamespace.
-	 *
-	 * @var string
-	 */
-	protected static $defaultNamespace = 'Windwalker\\Form\\Field';
+    /**
+     * Property defaultNamespace.
+     *
+     * @var string
+     */
+    protected static $defaultNamespace = 'Windwalker\\Form\\Field';
 
-	/**
-	 * createField
-	 *
-	 * @param string|AbstractField|\SimpleXMLElement $field
-	 * @param \SplPriorityQueue                      $namespaces
-	 *
-	 * @throws \InvalidArgumentException
-	 *
-	 * @return  AbstractField
-	 */
-	public static function create($field, \SplPriorityQueue $namespaces = null)
-	{
-		if ($field instanceof \SimpleXMLElement)
-		{
-			$field = static::createByXml($field, $namespaces);
-		}
-		elseif (is_string($field) && class_exists($field))
-		{
-			$field = new $field;
-		}
-		elseif (is_string($field))
-		{
-			$xml = new \SimpleXMLElement($field);
+    /**
+     * createField
+     *
+     * @param string|AbstractField|\SimpleXMLElement $field
+     * @param \SplPriorityQueue                      $namespaces
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return  AbstractField
+     */
+    public static function create($field, \SplPriorityQueue $namespaces = null)
+    {
+        if ($field instanceof \SimpleXMLElement) {
+            $field = static::createByXml($field, $namespaces);
+        } elseif (is_string($field) && class_exists($field)) {
+            $field = new $field;
+        } elseif (is_string($field)) {
+            $xml = new \SimpleXMLElement($field);
 
-			$field = static::createByXml($xml, $namespaces);
-		}
-		elseif (!($field instanceof AbstractField))
-		{
-			throw new \InvalidArgumentException('Windwalker\\Form\\Form::addField() need AbstractField or SimpleXMLElement.');
-		}
+            $field = static::createByXml($xml, $namespaces);
+        } elseif (!($field instanceof AbstractField)) {
+            throw new \InvalidArgumentException('Windwalker\\Form\\Form::addField() need AbstractField or SimpleXMLElement.');
+        }
 
-		return $field;
-	}
+        return $field;
+    }
 
-	/**
-	 * createByXml
-	 *
-	 * @param \SimpleXmlElement $xml
-	 * @param \SplPriorityQueue $namespaces
-	 *
-	 * @return  AbstractField
-	 */
-	public static function createByXml(\SimpleXMLElement $xml, \SplPriorityQueue $namespaces = null)
-	{
-		$type = XmlHelper::get($xml, 'type', 'text');
+    /**
+     * createByXml
+     *
+     * @param \SimpleXmlElement $xml
+     * @param \SplPriorityQueue $namespaces
+     *
+     * @return  AbstractField
+     */
+    public static function createByXml(\SimpleXMLElement $xml, \SplPriorityQueue $namespaces = null)
+    {
+        $type = XmlHelper::get($xml, 'type', 'text');
 
-		if (class_exists($type))
-		{
-			$class = $type;
-		}
-		else
-		{
-			$class = static::findFieldClass($type, $namespaces);
-		}
+        if (class_exists($type)) {
+            $class = $type;
+        } else {
+            $class = static::findFieldClass($type, $namespaces);
+        }
 
-		if (!class_exists($class))
-		{
-			// Fallback to TextField
-			$class = static::$defaultNamespace . '\\TextField';
-		}
+        if (!class_exists($class)) {
+            // Fallback to TextField
+            $class = static::$defaultNamespace . '\\TextField';
+        }
 
-		return new $class($xml);
-	}
+        return new $class($xml);
+    }
 
-	/**
-	 * findFieldClass
-	 *
-	 * @param string            $name
-	 * @param \SplPriorityQueue $namespaces
-	 *
-	 * @return  string|bool
-	 */
-	public static function findFieldClass($name, \SplPriorityQueue $namespaces = null)
-	{
-		$namespaces = $namespaces ? : static::getNamespaces();
+    /**
+     * findFieldClass
+     *
+     * @param string            $name
+     * @param \SplPriorityQueue $namespaces
+     *
+     * @return  string|bool
+     */
+    public static function findFieldClass($name, \SplPriorityQueue $namespaces = null)
+    {
+        $namespaces = $namespaces ?: static::getNamespaces();
 
-		foreach ($namespaces as $namespace)
-		{
-			$class = trim($namespace, '\\') . '\\' . ucfirst($name) . 'Field';
+        foreach ($namespaces as $namespace) {
+            $class = trim($namespace, '\\') . '\\' . ucfirst($name) . 'Field';
 
-			if (class_exists($class))
-			{
-				return $class;
-			}
-		}
+            if (class_exists($class)) {
+                return $class;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

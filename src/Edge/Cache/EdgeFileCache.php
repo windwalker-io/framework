@@ -15,111 +15,109 @@ namespace Windwalker\Edge\Cache;
  */
 class EdgeFileCache implements EdgeCacheInterface
 {
-	/**
-	 * Property path.
-	 *
-	 * @var  string
-	 */
-	protected $path;
+    /**
+     * Property path.
+     *
+     * @var  string
+     */
+    protected $path;
 
-	/**
-	 * FileCacheHandler constructor.
-	 *
-	 * @param string $path
-	 */
-	public function __construct($path)
-	{
-		$this->path = $path;
-	}
+    /**
+     * FileCacheHandler constructor.
+     *
+     * @param string $path
+     */
+    public function __construct($path)
+    {
+        $this->path = $path;
+    }
 
-	/**
-	 * isExpired
-	 *
-	 * @param   string  $path
-	 *
-	 * @return  boolean
-	 */
-	public function isExpired($path)
-	{
-		$cachePath = $this->getCacheFile($this->getCacheKey($path));
+    /**
+     * isExpired
+     *
+     * @param   string $path
+     *
+     * @return  boolean
+     */
+    public function isExpired($path)
+    {
+        $cachePath = $this->getCacheFile($this->getCacheKey($path));
 
-		if (!is_file($cachePath))
-		{
-			return true;
-		}
+        if (!is_file($cachePath)) {
+            return true;
+        }
 
-		return filemtime($path) >= filemtime($cachePath);
-	}
+        return filemtime($path) >= filemtime($cachePath);
+    }
 
-	/**
-	 * getCacheKey
-	 *
-	 * @param   string $path
-	 *
-	 * @return  string
-	 */
-	public function getCacheKey($path)
-	{
-		return md5($path);
-	}
+    /**
+     * getCacheKey
+     *
+     * @param   string $path
+     *
+     * @return  string
+     */
+    public function getCacheKey($path)
+    {
+        return md5($path);
+    }
 
-	/**
-	 * getCacheFile
-	 *
-	 * @param   string  $key
-	 *
-	 * @return  string
-	 */
-	public function getCacheFile($key)
-	{
-		return $this->path . '/~' . $key;
-	}
+    /**
+     * getCacheFile
+     *
+     * @param   string $key
+     *
+     * @return  string
+     */
+    public function getCacheFile($key)
+    {
+        return $this->path . '/~' . $key;
+    }
 
-	/**
-	 * load
-	 *
-	 * @param string $path
-	 *
-	 * @return  string
-	 */
-	public function load($path)
-	{
-		return file_get_contents($this->getCacheFile($this->getCacheKey($path)));
-	}
+    /**
+     * load
+     *
+     * @param string $path
+     *
+     * @return  string
+     */
+    public function load($path)
+    {
+        return file_get_contents($this->getCacheFile($this->getCacheKey($path)));
+    }
 
-	/**
-	 * store
-	 *
-	 * @param string $path
-	 * @param string $value
-	 *
-	 * @return  static
-	 */
-	public function store($path, $value)
-	{
-		$file = $this->getCacheFile($this->getCacheKey($path));
-		
-		if (!is_dir(dirname($file)))
-		{
-			mkdir(dirname($file), 0755, true);
-		}
+    /**
+     * store
+     *
+     * @param string $path
+     * @param string $value
+     *
+     * @return  static
+     */
+    public function store($path, $value)
+    {
+        $file = $this->getCacheFile($this->getCacheKey($path));
 
-		file_put_contents($file, $value);
+        if (!is_dir(dirname($file))) {
+            mkdir(dirname($file), 0755, true);
+        }
 
-		return $this;
-	}
+        file_put_contents($file, $value);
 
-	/**
-	 * Remove an item from the cache by its unique key
-	 *
-	 * @param string $path The path to remove.
-	 *
-	 * @return  static
-	 */
-	public function remove($path)
-	{
-		@unlink($this->getCacheFile($this->getCacheKey($path)));
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Remove an item from the cache by its unique key
+     *
+     * @param string $path The path to remove.
+     *
+     * @return  static
+     */
+    public function remove($path)
+    {
+        @unlink($this->getCacheFile($this->getCacheKey($path)));
+
+        return $this;
+    }
 }

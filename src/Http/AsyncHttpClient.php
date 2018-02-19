@@ -21,208 +21,194 @@ use Windwalker\Http\Transport\TransportInterface;
  */
 class AsyncHttpClient extends HttpClient
 {
-	/**
-	 * Property mh.
-	 *
-	 * @var  resource
-	 */
-	protected $mh;
+    /**
+     * Property mh.
+     *
+     * @var  resource
+     */
+    protected $mh;
 
-	/**
-	 * Property handles.
-	 *
-	 * @var  resource[]
-	 */
-	protected $handles = [];
+    /**
+     * Property handles.
+     *
+     * @var  resource[]
+     */
+    protected $handles = [];
 
-	/**
-	 * Property errors.
-	 *
-	 * @var  \RuntimeException[]
-	 */
-	protected $errors = [];
+    /**
+     * Property errors.
+     *
+     * @var  \RuntimeException[]
+     */
+    protected $errors = [];
 
-	/**
-	 * Property stop.
-	 *
-	 * @var  bool
-	 */
-	protected $stop = false;
+    /**
+     * Property stop.
+     *
+     * @var  bool
+     */
+    protected $stop = false;
 
-	/**
-	 * Class init.
-	 *
-	 * @param  array          $options    The options of this client object.
-	 * @param  CurlTransport  $transport  The Transport handler, default is CurlTransport.
-	 */
-	public function __construct($options = [], CurlTransport $transport = null)
-	{
-		parent::__construct($options, $transport);
-	}
+    /**
+     * Class init.
+     *
+     * @param  array         $options   The options of this client object.
+     * @param  CurlTransport $transport The Transport handler, default is CurlTransport.
+     */
+    public function __construct($options = [], CurlTransport $transport = null)
+    {
+        parent::__construct($options, $transport);
+    }
 
-	/**
-	 * getHandle
-	 *
-	 * @return  resource
-	 */
-	public function getMainHandle()
-	{
-		if (!$this->mh)
-		{
-			$this->mh = curl_multi_init();
+    /**
+     * getHandle
+     *
+     * @return  resource
+     */
+    public function getMainHandle()
+    {
+        if (!$this->mh) {
+            $this->mh = curl_multi_init();
 
-			$this->errors = [];
-		}
+            $this->errors = [];
+        }
 
-		return $this->mh;
-	}
+        return $this->mh;
+    }
 
-	/**
-	 * reset
-	 *
-	 * @return  static
-	 */
-	public function reset()
-	{
-		foreach ($this->handles as $handle)
-		{
-			curl_multi_remove_handle($this->mh, $handle);
-		}
+    /**
+     * reset
+     *
+     * @return  static
+     */
+    public function reset()
+    {
+        foreach ($this->handles as $handle) {
+            curl_multi_remove_handle($this->mh, $handle);
+        }
 
-		curl_multi_close($this->mh);
+        curl_multi_close($this->mh);
 
-		$this->mh = null;
-		$this->handles = [];
+        $this->mh      = null;
+        $this->handles = [];
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Send a request to remote.
-	 *
-	 * @param   RequestInterface $request The Psr Request object.
-	 *
-	 * @return  ResponseInterface
-	 * @throws \RangeException
-	 */
-	public function send(RequestInterface $request)
-	{
-		/** @var CurlTransport $transport */
-		$transport = $this->getTransport();
+    /**
+     * Send a request to remote.
+     *
+     * @param   RequestInterface $request The Psr Request object.
+     *
+     * @return  ResponseInterface
+     * @throws \RangeException
+     */
+    public function send(RequestInterface $request)
+    {
+        /** @var CurlTransport $transport */
+        $transport = $this->getTransport();
 
-		$handle = $this->handles[] = $transport->createHandle($request);
+        $handle = $this->handles[] = $transport->createHandle($request);
 
-		curl_multi_add_handle($this->getMainHandle(), $handle);
+        curl_multi_add_handle($this->getMainHandle(), $handle);
 
-		return new Response;
-	}
+        return new Response;
+    }
 
-	/**
-	 * resolve
-	 *
-	 * @param callable $callback
-	 *
-	 * @return  Response[]
-	 * @throws \RuntimeException
-	 */
-	public function resolve(callable $callback = null)
-	{
-		$active = null;
-		$mh = $this->getMainHandle();
+    /**
+     * resolve
+     *
+     * @param callable $callback
+     *
+     * @return  Response[]
+     * @throws \RuntimeException
+     */
+    public function resolve(callable $callback = null)
+    {
+        $active = null;
+        $mh     = $this->getMainHandle();
 
-		do
-		{
-			$mrc = curl_multi_exec($mh, $active);
-		}
-		while ($mrc === CURLM_CALL_MULTI_PERFORM);
+        do {
+            $mrc = curl_multi_exec($mh, $active);
+        } while ($mrc === CURLM_CALL_MULTI_PERFORM);
 
-		while ($active && $mrc === CURLM_OK)
-		{
-			if (curl_multi_select($mh) === -1)
-			{
-				usleep(100);
-			}
+        while ($active && $mrc === CURLM_OK) {
+            if (curl_multi_select($mh) === -1) {
+                usleep(100);
+            }
 
-			do
-			{
-				$mrc = curl_multi_exec($mh, $active);
-			}
-			while ($mrc === CURLM_CALL_MULTI_PERFORM);
-		}
+            do {
+                $mrc = curl_multi_exec($mh, $active);
+            } while ($mrc === CURLM_CALL_MULTI_PERFORM);
+        }
 
-		if ($mrc !== CURLM_OK)
-		{
-			throw new \RuntimeException("Curl multi read error $mrc\n", E_USER_WARNING);
-		}
+        if ($mrc !== CURLM_OK) {
+            throw new \RuntimeException("Curl multi read error $mrc\n", E_USER_WARNING);
+        }
 
-		/** @var CurlTransport $transport */
-		$responses = [];
-		$errors = [];
-		$transport = $this->getTransport();
+        /** @var CurlTransport $transport */
+        $responses = [];
+        $errors    = [];
+        $transport = $this->getTransport();
 
-		foreach ($this->handles as $handle)
-		{
-			$error = curl_error($handle);
+        foreach ($this->handles as $handle) {
+            $error = curl_error($handle);
 
-			if (!$error)
-			{
-				$responses[] = $transport->getResponse(curl_multi_getcontent($handle), curl_getinfo($handle));
-			}
-			else
-			{
-				$errors[] = new \RuntimeException($error, curl_errno($handle));
-			}
-		}
+            if (!$error) {
+                $responses[] = $transport->getResponse(curl_multi_getcontent($handle), curl_getinfo($handle));
+            } else {
+                $errors[] = new \RuntimeException($error, curl_errno($handle));
+            }
+        }
 
-		$this->errors = $errors;
+        $this->errors = $errors;
 
-		if ($callback)
-		{
-			$callback($responses, $errors, $this);
-		}
+        if ($callback) {
+            $callback($responses, $errors, $this);
+        }
 
-		$this->reset();
+        $this->reset();
 
-		return $responses;
-	}
+        return $responses;
+    }
 
-	/**
-	 * Method to set property transport
-	 *
-	 * @param   TransportInterface $transport
-	 *
-	 * @return  static  Return self to support chaining.
-	 * @throws \InvalidArgumentException
-	 */
-	public function setTransport(TransportInterface $transport)
-	{
-		if (!$transport instanceof CurlTransport)
-		{
-			throw new \InvalidArgumentException(sprintf('%s only supports %s', get_called_class(), CurlTransport::class));
-		}
+    /**
+     * Method to set property transport
+     *
+     * @param   TransportInterface $transport
+     *
+     * @return  static  Return self to support chaining.
+     * @throws \InvalidArgumentException
+     */
+    public function setTransport(TransportInterface $transport)
+    {
+        if (!$transport instanceof CurlTransport) {
+            throw new \InvalidArgumentException(sprintf('%s only supports %s', get_called_class(),
+                CurlTransport::class));
+        }
 
-		$this->transport = $transport;
+        $this->transport = $transport;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Errors
-	 *
-	 * @return  \RuntimeException[]
-	 */
-	public function getErrors()
-	{
-		return $this->errors;
-	}
+    /**
+     * Method to get property Errors
+     *
+     * @return  \RuntimeException[]
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 
-	/**
-	 * Method to get property Handles
-	 *
-	 * @return  \resource[]
-	 */
-	public function getHandles()
-	{
-		return $this->handles;
-	}
+    /**
+     * Method to get property Handles
+     *
+     * @return  \resource[]
+     */
+    public function getHandles()
+    {
+        return $this->handles;
+    }
 }

@@ -19,242 +19,236 @@ define('WINDWALKER_ROOT', realpath(__DIR__ . '/..'));
  */
 class Build extends AbstractCliApplication
 {
-	/**
-	 * Property organization.
-	 *
-	 * @var  string
-	 */
-	protected $organization = 'ventoviro';
+    /**
+     * Property organization.
+     *
+     * @var  string
+     */
+    protected $organization = 'ventoviro';
 
-	/**
-	 * Property lastOutput.
-	 *
-	 * @var  mixed
-	 */
-	protected $lastOutput = null;
+    /**
+     * Property lastOutput.
+     *
+     * @var  mixed
+     */
+    protected $lastOutput = null;
 
-	/**
-	 * Property lastReturn.
-	 *
-	 * @var  mixed
-	 */
-	protected $lastReturn = null;
+    /**
+     * Property lastReturn.
+     *
+     * @var  mixed
+     */
+    protected $lastReturn = null;
 
-	/**
-	 * Property master.
-	 *
-	 * @var  string
-	 */
-	protected $branch = null;
+    /**
+     * Property master.
+     *
+     * @var  string
+     */
+    protected $branch = null;
 
-	/**
-	 * Property tag.
-	 *
-	 * @var  string
-	 */
-	protected $tag = null;
+    /**
+     * Property tag.
+     *
+     * @var  string
+     */
+    protected $tag = null;
 
-	/**
-	 * Property subtrees.
-	 *
-	 * @var  array
-	 */
-	protected $subtrees = [
-		'application'    => 'Application',
-		'authentication' => 'Authentication',
-		'authorisation'  => 'Authorisation',
-		'cache'      => 'Cache',
-		'compare'    => 'Compare',
-		'console'    => 'Console',
-		'crypt'      => 'Crypt',
-		'data'       => 'Data',
-		'database'   => 'Database',
-		'datamapper' => 'DataMapper',
-		'di'         => 'DI',
-		'dom'        => 'Dom',
-		'edge'       => 'Edge',
-		'environment' => 'Environment',
-		'event'      => 'Event',
-		'filesystem' => 'Filesystem',
-		'filter'     => 'Filter',
-		'form'       => 'Form',
-		'html'       => 'Html',
-		'http'       => 'Http',
-		'io'         => 'IO',
-		'language'   => 'Language',
-		'loader'     => 'Loader',
-		'middleware' => 'Middleware',
-		'profiler'   => 'Profiler',
-		'query'      => 'Query',
-		'record'     => 'Record',
-		'renderer'   => 'Renderer',
-		'router'     => 'Router',
-		'session'    => 'Session',
-		'string'     => 'String',
-		'structure'  => 'Structure',
-		'test'       => 'Test',
-		'uri'        => 'Uri',
-		'utilities'  => 'Utilities',
-		'validator'  => 'Validator',
-	];
+    /**
+     * Property subtrees.
+     *
+     * @var  array
+     */
+    protected $subtrees = [
+        'application' => 'Application',
+        'authentication' => 'Authentication',
+        'authorisation' => 'Authorisation',
+        'cache' => 'Cache',
+        'compare' => 'Compare',
+        'console' => 'Console',
+        'crypt' => 'Crypt',
+        'data' => 'Data',
+        'database' => 'Database',
+        'datamapper' => 'DataMapper',
+        'di' => 'DI',
+        'dom' => 'Dom',
+        'edge' => 'Edge',
+        'environment' => 'Environment',
+        'event' => 'Event',
+        'filesystem' => 'Filesystem',
+        'filter' => 'Filter',
+        'form' => 'Form',
+        'html' => 'Html',
+        'http' => 'Http',
+        'io' => 'IO',
+        'language' => 'Language',
+        'loader' => 'Loader',
+        'middleware' => 'Middleware',
+        'profiler' => 'Profiler',
+        'query' => 'Query',
+        'record' => 'Record',
+        'renderer' => 'Renderer',
+        'router' => 'Router',
+        'session' => 'Session',
+        'string' => 'String',
+        'structure' => 'Structure',
+        'test' => 'Test',
+        'uri' => 'Uri',
+        'utilities' => 'Utilities',
+        'validator' => 'Validator',
+    ];
 
-	/**
-	 * Method to run this application.
-	 *
-	 * @return  boolean
-	 */
-	protected function doExecute()
-	{
-		if ($this->io->getOption('h'))
-		{
-			return $this->help();
-		}
+    /**
+     * Method to run this application.
+     *
+     * @return  boolean
+     */
+    protected function doExecute()
+    {
+        if ($this->io->getOption('h')) {
+            return $this->help();
+        }
 
-		$this->tag = $tag = $this->io->getOption('t') ? : $this->io->getOption('tag');
+        $this->tag = $tag = $this->io->getOption('t') ?: $this->io->getOption('tag');
 
-		$branch = $this->io->getOption('b') ?: $this->io->getOption('branch', 'test');
+        $branch = $this->io->getOption('b') ?: $this->io->getOption('branch', 'test');
 
-		$force = $this->io->getOption('f') ? : $this->io->getOption('force', false);
+        $force = $this->io->getOption('f') ?: $this->io->getOption('force', false);
 
-		$force = $force ? ' -f' : false;
+        $force = $force ? ' -f' : false;
 
-		if ($this->tag && !$this->io->getOption('no-replace'))
-		{
-			$this->replaceDocblockTags();
-		}
+        if ($this->tag && !$this->io->getOption('no-replace')) {
+            $this->replaceDocblockTags();
+        }
 
-		$this->branch = $branch;
+        $this->branch = $branch;
 
-		$this->exec('git fetch origin');
+        $this->exec('git fetch origin');
 
-		$this->exec('git branch -D ' . $branch);
+        $this->exec('git branch -D ' . $branch);
 
-		$this->exec('git checkout -b ' . $branch);
+        $this->exec('git checkout -b ' . $branch);
 
-		$this->exec('git merge master');
+        $this->exec('git merge master');
 
-		if ($this->tag)
-		{
-			$this->exec('git tag -d ' . $tag);
+        if ($this->tag) {
+            $this->exec('git tag -d ' . $tag);
 
-			$this->exec('git push origin :refs/tags/' . $tag);
+            $this->exec('git push origin :refs/tags/' . $tag);
 
-			$this->exec('git tag ' . $tag);
+            $this->exec('git tag ' . $tag);
 
-			$this->exec(sprintf('git push origin %s' . $force, $this->tag));
-		}
+            $this->exec(sprintf('git push origin %s' . $force, $this->tag));
+        }
 
-		$this->exec(sprintf('git push origin %s %s:%s master:master' . $force, $tag, $branch, $branch));
+        $this->exec(sprintf('git push origin %s %s:%s master:master' . $force, $tag, $branch, $branch));
 
-		$allows = $this->io->getArguments();
+        $allows = $this->io->getArguments();
 
-		foreach ($this->subtrees as $subtree => $namespace)
-		{
-			if ($allows && !in_array($subtree, $allows))
-			{
-				continue;
-			}
+        foreach ($this->subtrees as $subtree => $namespace) {
+            if ($allows && !in_array($subtree, $allows)) {
+                continue;
+            }
 
-			$this->splitTree($subtree, $namespace);
-		}
+            $this->splitTree($subtree, $namespace);
+        }
 
-		$this->exec('git checkout master');
+        $this->exec('git checkout master');
 
-		$this->out()->out('Split finish.');
+        $this->out()->out('Split finish.');
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Split Git subTree.
-	 *
-	 * @param string $subtree
-	 * @param string $namespace
-	 *
-	 * @return  void
-	 */
-	protected function splitTree($subtree, $namespace)
-	{
-		$this->out()->out(sprintf('@ Start subtree split (%s)', $subtree))
-			->out('---------------------------------------');
+    /**
+     * Split Git subTree.
+     *
+     * @param string $subtree
+     * @param string $namespace
+     *
+     * @return  void
+     */
+    protected function splitTree($subtree, $namespace)
+    {
+        $this->out()->out(sprintf('@ Start subtree split (%s)', $subtree))
+            ->out('---------------------------------------');
 
-		// Do split
-		$this->exec(sprintf('git branch -D sub-%s', $subtree));
-		$this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
+        // Do split
+        $this->exec(sprintf('git branch -D sub-%s', $subtree));
+        $this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
 
-		// Create a new branch
-		$this->exec(sprintf('git branch -D %s-%s', $this->branch, $subtree));
+        // Create a new branch
+        $this->exec(sprintf('git branch -D %s-%s', $this->branch, $subtree));
 
-		// Add remote repo
-		$this->exec(sprintf('git remote add %s git@github.com:%s/windwalker-%s.git', $subtree, $this->organization, $subtree));
+        // Add remote repo
+        $this->exec(sprintf('git remote add %s git@github.com:%s/windwalker-%s.git', $subtree, $this->organization,
+            $subtree));
 
-		$force = $this->io->getOption('f') ? : $this->io->getOption('force', false);
+        $force = $this->io->getOption('f') ?: $this->io->getOption('force', false);
 
-		$force = $force ? ' -f' : false;
+        $force = $force ? ' -f' : false;
 
-		if (!$force)
-		{
-			$this->exec(sprintf('git fetch %s', $subtree));
+        if (!$force) {
+            $this->exec(sprintf('git fetch %s', $subtree));
 
-			$this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->branch, $subtree, $subtree, $this->branch));
+            $this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->branch, $subtree, $subtree,
+                $this->branch));
 
-			$this->exec(sprintf('git merge sub-%s', $subtree));
-		}
+            $this->exec(sprintf('git merge sub-%s', $subtree));
+        }
 
-		$this->exec(sprintf('git push %s sub-%s:%s ' . $force, $subtree, $subtree, $this->branch));
+        $this->exec(sprintf('git push %s sub-%s:%s ' . $force, $subtree, $subtree, $this->branch));
 
-		if ($this->tag)
-		{
-			$this->exec('git checkout sub-' . $subtree);
+        if ($this->tag) {
+            $this->exec('git checkout sub-' . $subtree);
 
-			$this->exec(sprintf('git tag -d %s', $this->tag));
+            $this->exec(sprintf('git tag -d %s', $this->tag));
 
-			$this->exec(sprintf('git push %s :refs/tags/%s', $subtree, $this->tag));
+            $this->exec(sprintf('git push %s :refs/tags/%s', $subtree, $this->tag));
 
-			$this->exec(sprintf('git tag %s', $this->tag));
+            $this->exec(sprintf('git tag %s', $this->tag));
 
-			$this->exec(sprintf('git push %s %s', $subtree, $this->tag));
-		}
+            $this->exec(sprintf('git push %s %s', $subtree, $this->tag));
+        }
 
-		$this->exec('git checkout ' . $this->branch);
-	}
+        $this->exec('git checkout ' . $this->branch);
+    }
 
-	/**
-	 * Exec a command.
-	 *
-	 * @param string $command
-	 * @param array  $arguments
-	 * @param array  $options
-	 *
-	 * @return  string
-	 */
-	protected function exec($command, $arguments = [], $options = [])
-	{
-		$arguments = implode(' ', (array) $arguments);
-		$options = implode(' ', (array) $options);
+    /**
+     * Exec a command.
+     *
+     * @param string $command
+     * @param array  $arguments
+     * @param array  $options
+     *
+     * @return  string
+     */
+    protected function exec($command, $arguments = [], $options = [])
+    {
+        $arguments = implode(' ', (array) $arguments);
+        $options   = implode(' ', (array) $options);
 
-		$command = sprintf('%s %s %s', $command, $arguments, $options);
+        $command = sprintf('%s %s %s', $command, $arguments, $options);
 
-		$this->out('>> ' . $command);
+        $this->out('>> ' . $command);
 
-		if ($this->io->getOption('dry-run'))
-		{
-			return '';
-		}
+        if ($this->io->getOption('dry-run')) {
+            return '';
+        }
 
-		$return = exec(trim($command), $this->lastOutput, $this->lastReturn);
+        $return = exec(trim($command), $this->lastOutput, $this->lastReturn);
 
-		$this->out($return);
-	}
+        $this->out($return);
+    }
 
-	/**
-	 * help
-	 *
-	 * @return  boolean
-	 */
-	protected function help()
-	{
-		$help = <<<HELP
+    /**
+     * help
+     *
+     * @return  boolean
+     */
+    protected function help()
+    {
+        $help = <<<HELP
 Windwalker Build Command.
 
 Will run subtree split and push every packages to it's repos.
@@ -269,64 +263,62 @@ Usage: php build.php [packages] [-t] [-b=test] [-f] [--dry-run] [--no-replace]
 
 HELP;
 
-		$this->out($help);
+        $this->out($help);
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * stop
-	 *
-	 * @param string $msg
-	 *
-	 * @return  void
-	 */
-	protected function stop($msg = null)
-	{
-		if ($msg)
-		{
-			$this->out($msg);
-		}
+    /**
+     * stop
+     *
+     * @param string $msg
+     *
+     * @return  void
+     */
+    protected function stop($msg = null)
+    {
+        if ($msg) {
+            $this->out($msg);
+        }
 
-		$this->close();
-	}
+        $this->close();
+    }
 
-	/**
-	 * replaceDocblockTags
-	 *
-	 * @return  void
-	 */
-	protected function replaceDocblockTags()
-	{
-		$this->out('Replacing Docblock');
+    /**
+     * replaceDocblockTags
+     *
+     * @return  void
+     */
+    protected function replaceDocblockTags()
+    {
+        $this->out('Replacing Docblock');
 
-		$files = new RecursiveIteratorIterator(new \RecursiveDirectoryIterator(WINDWALKER_ROOT . '/src', \FilesystemIterator::SKIP_DOTS));
+        $files = new RecursiveIteratorIterator(new \RecursiveDirectoryIterator(WINDWALKER_ROOT . '/src',
+            \FilesystemIterator::SKIP_DOTS));
 
-		/** @var \SplFileInfo $file */
-		foreach ($files as $file)
-		{
-			if ($file->isDir() || $file->getExtension() != 'php')
-			{
-				continue;
-			}
+        /** @var \SplFileInfo $file */
+        foreach ($files as $file) {
+            if ($file->isDir() || $file->getExtension() != 'php') {
+                continue;
+            }
 
-			$content = file_get_contents($file->getPathname());
+            $content = file_get_contents($file->getPathname());
 
-			$content = str_replace(
-				['{DEPLOY_VERSION}', '__DEPLOY_VERSION__', '{ORGANIZATION}'],
-				[$this->tag, $this->tag, 'Asikart'],
-				$content
-			);
+            $content = str_replace(
+                ['{DEPLOY_VERSION}', '__DEPLOY_VERSION__', '{ORGANIZATION}'],
+                [$this->tag, $this->tag, 'Asikart'],
+                $content
+            );
 
-			file_put_contents($file->getPathname(), $content);
+            file_put_contents($file->getPathname(), $content);
 
-			$this->out('[Replace Docblock] ' . $file->getPathname());
-		}
+            $this->out('[Replace Docblock] ' . $file->getPathname());
+        }
 
-		$this->exec('git checkout master');
-		$this->exec(sprintf('git commit -am "Prepare for %s release."', $this->tag));
-		$this->exec('git push origin master');
-	}
+        $this->exec('git checkout master');
+        $this->exec(sprintf('git commit -am "Prepare for %s release."', $this->tag));
+        $this->exec('git push origin master');
+    }
 }
 
 $app = new Build;

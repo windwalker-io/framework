@@ -15,12 +15,12 @@ namespace Windwalker\Edge\Loader;
  */
 interface EdgeLoaderInterface
 {
-	/**
-	 * load
-	 *
-	 * @param   string  $key
-	 *
-	 * @return  string
-	 */
-	public function find($key);
+    /**
+     * load
+     *
+     * @param   string $key
+     *
+     * @return  string
+     */
+    public function find($key);
 }

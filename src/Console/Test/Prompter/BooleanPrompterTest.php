@@ -17,55 +17,55 @@ use Windwalker\Console\Prompter\BooleanPrompter;
  */
 class BooleanPrompterTest extends AbstractPrompterTest
 {
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    protected function setUp()
+    {
+        parent::setUp();
 
-		$this->instance = $prompter = new BooleanPrompter('True or False [Y/n]: ', null, $this->io);
-	}
+        $this->instance = $prompter = new BooleanPrompter('True or False [Y/n]: ', null, $this->io);
+    }
 
-	/**
-	 * Test prompter ask.
-	 *
-	 * @return  void
-	 *
-	 * @since  2.0
-	 */
-	public function testAsk()
-	{
-		$this->setStream("y");
+    /**
+     * Test prompter ask.
+     *
+     * @return  void
+     *
+     * @since  2.0
+     */
+    public function testAsk()
+    {
+        $this->setStream("y");
 
-		$in = $this->instance->ask();
+        $in = $this->instance->ask();
 
-		$this->assertTrue($in, 'Input result should be TRUE.');
-
-
-		$this->setStream("yes");
-
-		$in = $this->instance->ask();
-
-		$this->assertTrue($in, 'Input result should be TRUE.');
+        $this->assertTrue($in, 'Input result should be TRUE.');
 
 
-		$this->setStream("Y");
+        $this->setStream("yes");
 
-		$in = $this->instance->ask();
+        $in = $this->instance->ask();
 
-		$this->assertTrue($in, 'Input result should be TRUE.');
+        $this->assertTrue($in, 'Input result should be TRUE.');
 
 
-		$this->setStream("n");
+        $this->setStream("Y");
 
-		$in = $this->instance->ask();
+        $in = $this->instance->ask();
 
-		$this->assertFalse($in, 'Input result should be FALSE.');
-	}
+        $this->assertTrue($in, 'Input result should be TRUE.');
+
+
+        $this->setStream("n");
+
+        $in = $this->instance->ask();
+
+        $this->assertFalse($in, 'Input result should be FALSE.');
+    }
 }

@@ -15,67 +15,66 @@ namespace Windwalker\Utilities\Classes;
  */
 trait OptionAccessTrait
 {
-	/**
-	 * Property options.
-	 *
-	 * @var  array
-	 */
-	protected $options = [];
+    /**
+     * Property options.
+     *
+     * @var  array
+     */
+    protected $options = [];
 
-	/**
-	 * Method to get property Options
-	 *
-	 * @param   string $name
-	 * @param   mixed  $default
-	 *
-	 * @return  mixed
-	 */
-	public function getOption($name, $default = null)
-	{
-		if (array_key_exists($name, $this->options))
-		{
-			return $this->options[$name];
-		}
+    /**
+     * Method to get property Options
+     *
+     * @param   string $name
+     * @param   mixed  $default
+     *
+     * @return  mixed
+     */
+    public function getOption($name, $default = null)
+    {
+        if (array_key_exists($name, $this->options)) {
+            return $this->options[$name];
+        }
 
-		return $default;
-	}
+        return $default;
+    }
 
-	/**
-	 * Method to set property options
-	 *
-	 * @param   string  $name
-	 * @param   mixed   $value
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setOption($name, $value)
-	{
-		$this->options[$name] = $value;
+    /**
+     * Method to set property options
+     *
+     * @param   string $name
+     * @param   mixed  $value
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setOption($name, $value)
+    {
+        $this->options[$name] = $value;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Options
-	 *
-	 * @return  array
-	 */
-	public function getOptions()
-	{
-		return $this->options;
-	}
+    /**
+     * Method to get property Options
+     *
+     * @return  array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
 
-	/**
-	 * Method to set property options
-	 *
-	 * @param   array $options
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setOptions($options)
-	{
-		$this->options = $options;
+    /**
+     * Method to set property options
+     *
+     * @param   array $options
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
 
-		return $this;
-	}
+        return $this;
+    }
 }

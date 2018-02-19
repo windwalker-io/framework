@@ -18,51 +18,48 @@ use Windwalker\Database\Driver\AbstractDatabaseDriver;
  */
 class DatabaseContainer
 {
-	/**
-	 * Property db.
-	 *
-	 * @var  AbstractDatabaseDriver|callable
-	 */
-	protected static $db;
+    /**
+     * Property db.
+     *
+     * @var  AbstractDatabaseDriver|callable
+     */
+    protected static $db;
 
-	/**
-	 * Method to get property Db
-	 *
-	 * @param string   $driver
-	 * @param array    $option
-	 * @param boolean  $forceNew
-	 *
-	 * @return AbstractDatabaseDriver
-	 */
-	public static function getDb($driver = null, $option = [], $forceNew = false)
-	{
-		if (is_callable(static::$db))
-		{
-			static::$db = call_user_func(static::$db);
-		}
+    /**
+     * Method to get property Db
+     *
+     * @param string  $driver
+     * @param array   $option
+     * @param boolean $forceNew
+     *
+     * @return AbstractDatabaseDriver
+     */
+    public static function getDb($driver = null, $option = [], $forceNew = false)
+    {
+        if (is_callable(static::$db)) {
+            static::$db = call_user_func(static::$db);
+        }
 
-		if (!static::$db || $forceNew)
-		{
-			static::$db = DatabaseFactory::getDbo($driver, $option, $forceNew);
-		}
+        if (!static::$db || $forceNew) {
+            static::$db = DatabaseFactory::getDbo($driver, $option, $forceNew);
+        }
 
-		return static::$db;
-	}
+        return static::$db;
+    }
 
-	/**
-	 * Method to set property db
-	 *
-	 * @param   AbstractDatabaseDriver|callable $db
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public static function setDb($db)
-	{
-		if (!is_callable($db) && !$db instanceof AbstractDatabaseDriver)
-		{
-			throw new \InvalidArgumentException('Please use AbstractDatabaseDriver or callable as global database driver.');
-		}
+    /**
+     * Method to set property db
+     *
+     * @param   AbstractDatabaseDriver|callable $db
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public static function setDb($db)
+    {
+        if (!is_callable($db) && !$db instanceof AbstractDatabaseDriver) {
+            throw new \InvalidArgumentException('Please use AbstractDatabaseDriver or callable as global database driver.');
+        }
 
-		static::$db = $db;
-	}
+        static::$db = $db;
+    }
 }

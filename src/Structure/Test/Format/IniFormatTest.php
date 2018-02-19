@@ -17,63 +17,63 @@ use Windwalker\Structure\Format\IniFormat;
  */
 class IniFormatTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var IniFormat
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var IniFormat
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new IniFormat;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new IniFormat;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test objectToString().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Structure\Format\IniFormat::structToString
-	 * @TODO   Implement testObjectToString().
-	 */
-	public function testObjectToString()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test objectToString().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Structure\Format\IniFormat::structToString
+     * @TODO   Implement testObjectToString().
+     */
+    public function testObjectToString()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
-	/**
-	 * Method to test stringToObject().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Structure\Format\IniFormat::stringToStruct
-	 * @TODO   Implement testStringToObject().
-	 */
-	public function testStringToObject()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test stringToObject().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Structure\Format\IniFormat::stringToStruct
+     * @TODO   Implement testStringToObject().
+     */
+    public function testStringToObject()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 }

@@ -17,204 +17,202 @@ use Windwalker\Event\Event;
 /**
  * The AbstractDataMapperProxy class.
  *
- * @see  DataMapper
- * @see  AbstractDataMapper
+ * @see    DataMapper
+ * @see    AbstractDataMapper
  *
- * @method  static  DataSet|Data[]  find($conditions = [], $order = null, $start = null, $limit = null)
- * @method  static  DataSet|Data[]  findAll($order = null, $start = null, $limit = null)
- * @method  static  Data            findOne($conditions = [], $order = null)
- * @method  static  array           findColumn($column, $conditions = [], $order = null, $start = null, $limit = null)
- * @method  static  DataSet|Data[]  create($dataset)
- * @method  static  Data            createOne($data)
- * @method  static  DataSet|Data[]  update($dataset, $condFields = null, $updateNulls = false)
- * @method  static  Data            updateOne($data, $condFields = null, $updateNulls = false)
- * @method  static  boolean         updateBatch($data, $conditions = [])
- * @method  static  DataSet|Data[]  flush($dataset, $conditions = [])
- * @method  static  DataSet|Data[]  save($dataset, $condFields = null, $updateNulls = false)
- * @method  static  Data            saveOne($data, $condFields = null, $updateNulls = false)
- * @method  static  boolean         delete($conditions)
- * @method  static  boolean         useTransaction($yn = null)
- * @method  static  Event                triggerEvent($event, $args = [])
- * @method  static  DispatcherInterface  getDispatcher()
- * @method  static  AbstractDataMapper   setDispatcher(DispatcherInterface $dispatcher)
- * @method  static  AbstractDataMapper   addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
- * @method  static  AbstractDataMapper   removeTable($alias)
- * @method  static  DataMapper  call($columns)
- * @method  static  DataMapper  group($columns)
- * @method  static  DataMapper  having($conditions, ...$args)
- * @method  static  DataMapper  innerJoin($table, $condition = [])
- * @method  static  DataMapper  join($type, $alias, $table, $condition = null, $prefix = null)
- * @method  static  DataMapper  leftJoin($alias, $table, $condition = null, $prefix = null)
- * @method  static  DataMapper  order($columns)
- * @method  static  DataMapper  limit($limit = null, $offset = null)
- * @method  static  DataMapper  outerJoin($alias, $table, $condition = null, $prefix = null)
- * @method  static  DataMapper  rightJoin($alias, $table, $condition = null, $prefix = null)
- * @method  static  DataMapper  select($columns)
- * @method  static  DataMapper  where($conditions, ...$args)
- * @method  static  DataMapper  orWhere($conditions)
- * @method  static  DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
+ * @method  static DataSet|Data[]  find($conditions = [], $order = null, $start = null, $limit = null)
+ * @method  static DataSet|Data[]  findAll($order = null, $start = null, $limit = null)
+ * @method  static Data            findOne($conditions = [], $order = null)
+ * @method  static array           findColumn($column, $conditions = [], $order = null, $start = null, $limit = null)
+ * @method  static DataSet|Data[]  create($dataset)
+ * @method  static Data            createOne($data)
+ * @method  static DataSet|Data[]  update($dataset, $condFields = null, $updateNulls = false)
+ * @method  static Data            updateOne($data, $condFields = null, $updateNulls = false)
+ * @method  static boolean         updateBatch($data, $conditions = [])
+ * @method  static DataSet|Data[]  flush($dataset, $conditions = [])
+ * @method  static DataSet|Data[]  save($dataset, $condFields = null, $updateNulls = false)
+ * @method  static Data            saveOne($data, $condFields = null, $updateNulls = false)
+ * @method  static boolean         delete($conditions)
+ * @method  static boolean         useTransaction($yn = null)
+ * @method  static Event                triggerEvent($event, $args = [])
+ * @method  static DispatcherInterface  getDispatcher()
+ * @method  static AbstractDataMapper   setDispatcher(DispatcherInterface $dispatcher)
+ * @method  static AbstractDataMapper   addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
+ * @method  static AbstractDataMapper   removeTable($alias)
+ * @method  static DataMapper  call($columns)
+ * @method  static DataMapper  group($columns)
+ * @method  static DataMapper  having($conditions, ...$args)
+ * @method  static DataMapper  innerJoin($table, $condition = [])
+ * @method  static DataMapper  join($type, $alias, $table, $condition = null, $prefix = null)
+ * @method  static DataMapper  leftJoin($alias, $table, $condition = null, $prefix = null)
+ * @method  static DataMapper  order($columns)
+ * @method  static DataMapper  limit($limit = null, $offset = null)
+ * @method  static DataMapper  outerJoin($alias, $table, $condition = null, $prefix = null)
+ * @method  static DataMapper  rightJoin($alias, $table, $condition = null, $prefix = null)
+ * @method  static DataMapper  select($columns)
+ * @method  static DataMapper  where($conditions, ...$args)
+ * @method  static DataMapper  orWhere($conditions)
+ * @method  static DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0,
+ *          $driverOptions = [])
  *
  * @since  3.0
  */
 class AbstractDatabaseMapperProxy
 {
-	/**
-	 * Property table.
-	 *
-	 * @var  string
-	 */
-	protected static $table;
+    /**
+     * Property table.
+     *
+     * @var  string
+     */
+    protected static $table;
 
-	/**
-	 * Property alias.
-	 *
-	 * @var  string
-	 */
-	protected static $alias;
+    /**
+     * Property alias.
+     *
+     * @var  string
+     */
+    protected static $alias;
 
-	/**
-	 * Property keys.
-	 *
-	 * @var  array|string
-	 */
-	protected static $keys;
+    /**
+     * Property keys.
+     *
+     * @var  array|string
+     */
+    protected static $keys;
 
-	/**
-	 * Property dataClass.
-	 *
-	 * @var  string
-	 */
-	protected static $dataClass;
+    /**
+     * Property dataClass.
+     *
+     * @var  string
+     */
+    protected static $dataClass;
 
-	/**
-	 * Property dataSetClass.
-	 *
-	 * @var  string
-	 */
-	protected static $dataSetClass;
+    /**
+     * Property dataSetClass.
+     *
+     * @var  string
+     */
+    protected static $dataSetClass;
 
-	/**
-	 * Property instances.
-	 *
-	 * @var  DataMapper[]
-	 */
-	protected static $instances = [];
+    /**
+     * Property instances.
+     *
+     * @var  DataMapper[]
+     */
+    protected static $instances = [];
 
-	/**
-	 * is triggered when invoking inaccessible methods in an object context.
-	 *
-	 * @param $name      string
-	 * @param $arguments array
-	 *
-	 * @return mixed
-	 * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
-	 */
-	public function __call($name, $arguments)
-	{
-		$instance = static::getInstance();
+    /**
+     * is triggered when invoking inaccessible methods in an object context.
+     *
+     * @param $name      string
+     * @param $arguments array
+     *
+     * @return mixed
+     * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
+     */
+    public function __call($name, $arguments)
+    {
+        $instance = static::getInstance();
 
-		return call_user_func_array([$instance, $name], $arguments);
-	}
+        return call_user_func_array([$instance, $name], $arguments);
+    }
 
-	/**
-	 * is triggered when invoking inaccessible methods in a static context.
-	 *
-	 * @param $name      string
-	 * @param $arguments array
-	 *
-	 * @return mixed
-	 * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
-	 */
-	public static function __callStatic($name, $arguments)
-	{
-		$instance = static::getInstance();
+    /**
+     * is triggered when invoking inaccessible methods in a static context.
+     *
+     * @param $name      string
+     * @param $arguments array
+     *
+     * @return mixed
+     * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        $instance = static::getInstance();
 
-		return call_user_func_array([$instance, $name], $arguments);
-	}
+        return call_user_func_array([$instance, $name], $arguments);
+    }
 
-	/**
-	 * initialise
-	 *
-	 * @param DatabaseMapperInterface $mapper
-	 *
-	 * @return  void
-	 */
-	protected static function init(DatabaseMapperInterface $mapper)
-	{
-	}
+    /**
+     * initialise
+     *
+     * @param DatabaseMapperInterface $mapper
+     *
+     * @return  void
+     */
+    protected static function init(DatabaseMapperInterface $mapper)
+    {
+    }
 
-	/**
-	 * getInstance
-	 *
-	 * @param   string  $table
-	 *
-	 * @return  DatabaseMapperInterface
-	 */
-	public static function getInstance($table = null)
-	{
-		$table = $table ? : static::$table;
+    /**
+     * getInstance
+     *
+     * @param   string $table
+     *
+     * @return  DatabaseMapperInterface
+     */
+    public static function getInstance($table = null)
+    {
+        $table = $table ?: static::$table;
 
-		return static::createDataMapper($table);
-	}
+        return static::createDataMapper($table);
+    }
 
-	/**
-	 * createDataMapper
-	 *
-	 * @param   string                 $table Table name.
-	 * @param   string|array           $keys  Primary key, default will be `id`.
-	 * @param   AbstractDatabaseDriver $db    Database adapter.
-	 *
-	 * @return DataMapper
-	 */
-	public static function createDataMapper($table = null, $keys = null, $db = null)
-	{
-		$table = $table ? : static::$table;
-		$keys = $keys ? : static::$keys;
+    /**
+     * createDataMapper
+     *
+     * @param   string                 $table Table name.
+     * @param   string|array           $keys  Primary key, default will be `id`.
+     * @param   AbstractDatabaseDriver $db    Database adapter.
+     *
+     * @return DataMapper
+     */
+    public static function createDataMapper($table = null, $keys = null, $db = null)
+    {
+        $table = $table ?: static::$table;
+        $keys  = $keys ?: static::$keys;
 
-		$mapper = new DataMapper($table, $keys, $db);
+        $mapper = new DataMapper($table, $keys, $db);
 
-		if (static::$alias)
-		{
-			$mapper->alias(static::$alias);
-		}
+        if (static::$alias) {
+            $mapper->alias(static::$alias);
+        }
 
-		if (static::$dataClass)
-		{
-			$mapper->setDataClass(static::$dataClass);
-		}
+        if (static::$dataClass) {
+            $mapper->setDataClass(static::$dataClass);
+        }
 
-		if (static::$dataSetClass)
-		{
-			$mapper->setDatasetClass(static::$dataSetClass);
-		}
+        if (static::$dataSetClass) {
+            $mapper->setDatasetClass(static::$dataSetClass);
+        }
 
-		$mapper->getDispatcher()->addListener(new static);
+        $mapper->getDispatcher()->addListener(new static);
 
-		static::init($mapper);
+        static::init($mapper);
 
-		return $mapper;
-	}
+        return $mapper;
+    }
 
-	/**
-	 * setDataMapper
-	 *
-	 * @param string                  $table
-	 * @param DatabaseMapperInterface $mapper
-	 *
-	 * @return  void
-	 */
-	public static function setDataMapper($table, DatabaseMapperInterface $mapper)
-	{
-		static::$instances[$table] = $mapper;
-	}
+    /**
+     * setDataMapper
+     *
+     * @param string                  $table
+     * @param DatabaseMapperInterface $mapper
+     *
+     * @return  void
+     */
+    public static function setDataMapper($table, DatabaseMapperInterface $mapper)
+    {
+        static::$instances[$table] = $mapper;
+    }
 
-	/**
-	 * reset
-	 *
-	 * @return  void
-	 */
-	public static function reset()
-	{
-		static::$instances = [];
-	}
+    /**
+     * reset
+     *
+     * @return  void
+     */
+    public static function reset()
+    {
+        static::$instances = [];
+    }
 }

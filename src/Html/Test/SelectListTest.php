@@ -8,9 +8,9 @@
 
 namespace Windwalker\Html\Test;
 
+use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Html\Option;
 use Windwalker\Html\Select\SelectList;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of SelectList
@@ -19,57 +19,57 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
  */
 class SelectListTest extends AbstractDomTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var SelectList
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var SelectList
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		// $this->instance = new SelectList;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        // $this->instance = new SelectList;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * testCreateList
-	 *
-	 * @return  void
-	 *
-	 * Windwalker\Html\Select\SelectList::toString
-	 */
-	public function testCreateList()
-	{
-		$select = new SelectList(
-			'form[timezone]',
-			[
-				new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
-				new Option('Asia - Taipei', 'Asia/Taipei'),
-				new Option('Europe - Paris', 'Asia/Paris'),
-				new Option('UTC', 'UTC'),
-			],
-			['class' => 'input-select'],
-			'UTC',
-			false
-		);
+    /**
+     * testCreateList
+     *
+     * @return  void
+     *
+     * Windwalker\Html\Select\SelectList::toString
+     */
+    public function testCreateList()
+    {
+        $select = new SelectList(
+            'form[timezone]',
+            [
+                new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
+                new Option('Asia - Taipei', 'Asia/Taipei'),
+                new Option('Europe - Paris', 'Asia/Paris'),
+                new Option('UTC', 'UTC'),
+            ],
+            ['class' => 'input-select'],
+            'UTC',
+            false
+        );
 
-		$expect = <<<HTML
+        $expect = <<<HTML
 <select class="input-select" name="form[timezone]">
 	<option class="opt" value="Asia/Tokyo">Asia - Tokyo</option>
 	<option value="Asia/Taipei">Asia - Taipei</option>
@@ -78,9 +78,9 @@ class SelectListTest extends AbstractDomTestCase
 </select>
 HTML;
 
-		$this->assertHtmlFormatEquals($expect, $select);
+        $this->assertHtmlFormatEquals($expect, $select);
 
-		$expect = <<<HTML
+        $expect = <<<HTML
 <select class="input-select" name="form[timezone]">
 	<option class="opt" value="Asia/Tokyo">Asia - Tokyo</option>
 	<option value="Asia/Taipei">Asia - Taipei</option>
@@ -90,39 +90,39 @@ HTML;
 </select>
 HTML;
 
-		$select->addOption(new Option('Europe - London', 'Europe/London'));
+        $select->addOption(new Option('Europe - London', 'Europe/London'));
 
-		$this->assertHtmlFormatEquals($expect, $select);
-	}
+        $this->assertHtmlFormatEquals($expect, $select);
+    }
 
-	/**
-	 * testCreateList
-	 *
-	 * @return  void
-	 *
-	 * Windwalker\Html\Select\SelectList::toString
-	 */
-	public function testCreateGroupList()
-	{
-		$select = new SelectList(
-			'form[timezone]',
-			[
-				'Asia' => [
-					new Option('Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
-					new Option('Taipei', 'Asia/Taipei')
-				],
-				'Europe' => [
-					new Option('Europe - Paris', 'Asia/Paris')
-				]
-				,
-				new Option('UTC', 'UTC'),
-			],
-			['class' => 'input-select'],
-			'UTC',
-			false
-		);
+    /**
+     * testCreateList
+     *
+     * @return  void
+     *
+     * Windwalker\Html\Select\SelectList::toString
+     */
+    public function testCreateGroupList()
+    {
+        $select = new SelectList(
+            'form[timezone]',
+            [
+                'Asia' => [
+                    new Option('Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
+                    new Option('Taipei', 'Asia/Taipei'),
+                ],
+                'Europe' => [
+                    new Option('Europe - Paris', 'Asia/Paris'),
+                ]
+                ,
+                new Option('UTC', 'UTC'),
+            ],
+            ['class' => 'input-select'],
+            'UTC',
+            false
+        );
 
-		$expect = <<<HTML
+        $expect = <<<HTML
 <select class="input-select" name="form[timezone]">
 	<optgroup label="Asia">
 		<option class="opt" value="Asia/Tokyo">Tokyo</option>
@@ -137,9 +137,9 @@ HTML;
 </select>
 HTML;
 
-		$this->assertHtmlFormatEquals($expect, $select);
+        $this->assertHtmlFormatEquals($expect, $select);
 
-		$expect = <<<HTML
+        $expect = <<<HTML
 <select class="input-select" name="form[timezone]">
 	<optgroup label="Asia">
 		<option class="opt" value="Asia/Tokyo">Tokyo</option>
@@ -154,40 +154,40 @@ HTML;
 	<option value="UTC" selected="selected">UTC</option>
 </select>
 HTML;
-		$select->addOption(new Option('Europe - London', 'Europe/London'), 'Europe');
+        $select->addOption(new Option('Europe - London', 'Europe/London'), 'Europe');
 
-		$this->assertHtmlFormatEquals($expect, $select);
-	}
+        $this->assertHtmlFormatEquals($expect, $select);
+    }
 
-	/**
-	 * Method to test getSelected().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Html\Select\SelectList::getSelected
-	 * @TODO   Implement testGetSelected().
-	 */
-	public function testGetSelected()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test getSelected().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Html\Select\SelectList::getSelected
+     * @TODO   Implement testGetSelected().
+     */
+    public function testGetSelected()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
-	/**
-	 * Method to test setSelected().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Html\Select\SelectList::setSelected
-	 * @TODO   Implement testSetSelected().
-	 */
-	public function testSetSelected()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test setSelected().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Html\Select\SelectList::setSelected
+     * @TODO   Implement testSetSelected().
+     */
+    public function testSetSelected()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 }

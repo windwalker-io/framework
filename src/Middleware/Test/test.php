@@ -6,7 +6,6 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
-use Windwalker\Middleware\CallbackMiddleware;
 use Windwalker\Middleware\Chain\ChainBuilder;
 use Windwalker\Middleware\Middleware;
 
@@ -14,36 +13,36 @@ include dirname(__DIR__) . '/vendor/autoload.php';
 
 class TestA extends Middleware
 {
-	/**
-	 * call
-	 *
-	 * @return  mixed
-	 */
-	public function call()
-	{
-		echo "AAAA\n";
+    /**
+     * call
+     *
+     * @return  mixed
+     */
+    public function call()
+    {
+        echo "AAAA\n";
 
-		$this->next->call();
+        $this->next->call();
 
-		echo "AAAA\n";
-	}
+        echo "AAAA\n";
+    }
 }
 
 class TestB extends Middleware
 {
-	/**
-	 * call
-	 *
-	 * @return  mixed
-	 */
-	public function call()
-	{
-		echo "BBBB\n";
+    /**
+     * call
+     *
+     * @return  mixed
+     */
+    public function call()
+    {
+        echo "BBBB\n";
 
-		$this->next->call();
+        $this->next->call();
 
-		echo "BBBB\n";
-	}
+        echo "BBBB\n";
+    }
 }
 
 //$a = new TestA;
@@ -63,6 +62,6 @@ class TestB extends Middleware
 $c = new ChainBuilder;
 
 $c->add('TestA')
-	->add(new TestB);
+    ->add(new TestB);
 
 $c->execute();

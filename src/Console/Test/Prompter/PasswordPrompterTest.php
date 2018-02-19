@@ -18,43 +18,42 @@ use Windwalker\Test\TestEnvironment;
  */
 class PasswordPrompterTest extends AbstractPrompterTest
 {
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    protected function setUp()
+    {
+        parent::setUp();
 
-		$this->instance = $prompter = new FakePasswordPrompter(null, null, $this->io);
-	}
+        $this->instance = $prompter = new FakePasswordPrompter(null, null, $this->io);
+    }
 
-	/**
-	 * Test prompter ask.
-	 *
-	 * @return  void
-	 *
-	 * @since  2.0
-	 */
-	public function testAsk()
-	{
-		if (TestEnvironment::isWindows())
-		{
-			$this->markTestSkipped('This test is not supported on Windows');
-		}
+    /**
+     * Test prompter ask.
+     *
+     * @return  void
+     *
+     * @since  2.0
+     */
+    public function testAsk()
+    {
+        if (TestEnvironment::isWindows()) {
+            $this->markTestSkipped('This test is not supported on Windows');
+        }
 
-		$this->markTestSkipped('This test no available now.');
+        $this->markTestSkipped('This test no available now.');
 
-		return;
+        return;
 
-		$this->setStream("1234qwer\n");
+        $this->setStream("1234qwer\n");
 
-		$in = $this->instance->ask('Enter password: ');
+        $in = $this->instance->ask('Enter password: ');
 
-		$this->assertEquals('1234qwer', $in);
-	}
+        $this->assertEquals('1234qwer', $in);
+    }
 }

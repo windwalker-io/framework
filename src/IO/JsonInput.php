@@ -18,37 +18,30 @@ namespace Windwalker\IO;
  */
 class JsonInput extends FormDataInput
 {
-	/**
-	 * Prepare source.
-	 *
-	 * @param   array    $source     Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   boolean  $reference  If set to true, he source in first argument will be reference.
-	 *
-	 * @return  void
-	 */
-	public function prepareSource(&$source = null, $reference = false)
-	{
-		if (is_null($source))
-		{
-			$raw = static::loadRawFromRequest();
+    /**
+     * Prepare source.
+     *
+     * @param   array   $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+     * @param   boolean $reference If set to true, he source in first argument will be reference.
+     *
+     * @return  void
+     */
+    public function prepareSource(&$source = null, $reference = false)
+    {
+        if (is_null($source)) {
+            $raw = static::loadRawFromRequest();
 
-			$this->data = json_decode($raw, true);
+            $this->data = json_decode($raw, true);
 
-			if (!is_array($this->data))
-			{
-				$this->data = [];
-			}
-		}
-		else
-		{
-			if ($reference)
-			{
-				$this->data = &$source;
-			}
-			else
-			{
-				$this->data = $source;
-			}
-		}
-	}
+            if (!is_array($this->data)) {
+                $this->data = [];
+            }
+        } else {
+            if ($reference) {
+                $this->data = &$source;
+            } else {
+                $this->data = $source;
+            }
+        }
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,56 +13,56 @@ namespace Windwalker\Session\Bag;
  */
 interface SessionBagInterface
 {
-	/**
-	 * setData
-	 *
-	 * @param array $data
-	 *
-	 * @return  void
-	 */
-	public function setData(array &$data);
+    /**
+     * setData
+     *
+     * @param array $data
+     *
+     * @return  void
+     */
+    public function setData(array &$data);
 
-	/**
-	 * get
-	 *
-	 * @param string $key
-	 * @param mixed  $default
-	 *
-	 * @return  mixed
-	 */
-	public function get($key, $default);
+    /**
+     * get
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return  mixed
+     */
+    public function get($key, $default);
 
-	/**
-	 * set
-	 *
-	 * @param string $key
-	 * @param mixed  $value
-	 *
-	 * @return  static
-	 */
-	public function set($key, $value);
+    /**
+     * set
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return  static
+     */
+    public function set($key, $value);
 
-	/**
-	 * has
-	 *
-	 * @param string $name
-	 *
-	 * @return  bool
-	 */
-	public function has($name);
+    /**
+     * has
+     *
+     * @param string $name
+     *
+     * @return  bool
+     */
+    public function has($name);
 
-	/**
-	 * all
-	 *
-	 * @return  array
-	 */
-	public function all();
+    /**
+     * all
+     *
+     * @return  array
+     */
+    public function all();
 
-	/**
-	 * clean
-	 *
-	 * @return  static
-	 */
-	public function clear();
+    /**
+     * clean
+     *
+     * @return  static
+     */
+    public function clear();
 }
 

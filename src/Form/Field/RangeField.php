@@ -15,10 +15,10 @@ namespace Windwalker\Form\Field;
  */
 class RangeField extends AbstractHtml5Field
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'range';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'range';
 }

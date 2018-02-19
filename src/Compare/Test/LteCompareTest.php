@@ -17,51 +17,51 @@ use Windwalker\Compare\LteCompare;
  */
 class LteCompareTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var LteCompare
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var LteCompare
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new LteCompare('flower', 'sakura');
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new LteCompare('flower', 'sakura');
+    }
 
-	/**
-	 * testToString
-	 *
-	 * @return  void
-	 */
-	public function testToString()
-	{
-		$this->assertEquals('flower <= sakura', $this->instance->toString());
-	}
+    /**
+     * testToString
+     *
+     * @return  void
+     */
+    public function testToString()
+    {
+        $this->assertEquals('flower <= sakura', $this->instance->toString());
+    }
 
-	/**
-	 * testToString
-	 *
-	 * @return  void
-	 */
-	public function testCompare()
-	{
-		$compare = new LteCompare(5, 5);
+    /**
+     * testToString
+     *
+     * @return  void
+     */
+    public function testCompare()
+    {
+        $compare = new LteCompare(5, 5);
 
-		$this->assertTrue($compare->compare());
+        $this->assertTrue($compare->compare());
 
-		$compare = new LteCompare(4, 5);
+        $compare = new LteCompare(4, 5);
 
-		$this->assertTrue($compare->compare());
+        $this->assertTrue($compare->compare());
 
-		$compare = new LteCompare(6, 5);
+        $compare = new LteCompare(6, 5);
 
-		$this->assertFalse($compare->compare());
-	}
+        $this->assertFalse($compare->compare());
+    }
 }

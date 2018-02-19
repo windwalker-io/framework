@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,145 +13,137 @@ use Windwalker\Authentication\Credential;
 
 /**
  * The LocalMethod class.
- * 
+ *
  * @since  2.0
  */
 class LocalMethod extends AbstractMethod
 {
-	/**
-	 * Property users.
-	 *
-	 * @var  array
-	 */
-	protected $users = [];
+    /**
+     * Property users.
+     *
+     * @var  array
+     */
+    protected $users = [];
 
-	/**
-	 * Property verifyHandler.
-	 *
-	 * @var callable
-	 */
-	protected $verifyHandler;
+    /**
+     * Property verifyHandler.
+     *
+     * @var callable
+     */
+    protected $verifyHandler;
 
-	/**
-	 * Class init.
-	 *
-	 * @param array $users
-	 */
-	public function __construct(array $users = [])
-	{
-		$this->users = $users;
-	}
+    /**
+     * Class init.
+     *
+     * @param array $users
+     */
+    public function __construct(array $users = [])
+    {
+        $this->users = $users;
+    }
 
-	/**
-	 * authenticate
-	 *
-	 * @param Credential $credential
-	 *
-	 * @return  integer
-	 */
-	public function authenticate(Credential $credential)
-	{
-		$username = $credential->username;
-		$password = $credential->password;
+    /**
+     * authenticate
+     *
+     * @param Credential $credential
+     *
+     * @return  integer
+     */
+    public function authenticate(Credential $credential)
+    {
+        $username = $credential->username;
+        $password = $credential->password;
 
-		if (!$username || !$password)
-		{
-			$this->status = Authentication::EMPTY_CREDENTIAL;
+        if (!$username || !$password) {
+            $this->status = Authentication::EMPTY_CREDENTIAL;
 
-			return false;
-		}
+            return false;
+        }
 
-		foreach ($this->users as $user)
-		{
-			if (!isset($user['username']))
-			{
-				continue;
-			}
+        foreach ($this->users as $user) {
+            if (!isset($user['username'])) {
+                continue;
+            }
 
-			if ($user['username'] !== $username)
-			{
-				continue;
-			}
+            if ($user['username'] !== $username) {
+                continue;
+            }
 
-			if (!isset($user['password']))
-			{
-				$this->status = Authentication::INVALID_CREDENTIAL;
+            if (!isset($user['password'])) {
+                $this->status = Authentication::INVALID_CREDENTIAL;
 
-				return false;
-			}
+                return false;
+            }
 
-			$handler = $this->getVerifyHandler();
+            $handler = $this->getVerifyHandler();
 
-			if (call_user_func_array($handler, [$password, $user['password']]))
-			{
-				$this->status = Authentication::SUCCESS;
+            if (call_user_func_array($handler, [$password, $user['password']])) {
+                $this->status = Authentication::SUCCESS;
 
-				return true;
-			}
+                return true;
+            }
 
-			$this->status = Authentication::INVALID_CREDENTIAL;
+            $this->status = Authentication::INVALID_CREDENTIAL;
 
-			return false;
-		}
+            return false;
+        }
 
-		$this->status = Authentication::USER_NOT_FOUND;
+        $this->status = Authentication::USER_NOT_FOUND;
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Method to get property VerifyHandler
-	 *
-	 * @return  callable
-	 */
-	public function getVerifyHandler()
-	{
-		if (is_callable($this->verifyHandler))
-		{
-			return $this->verifyHandler;
-		}
+    /**
+     * Method to get property VerifyHandler
+     *
+     * @return  callable
+     */
+    public function getVerifyHandler()
+    {
+        if (is_callable($this->verifyHandler)) {
+            return $this->verifyHandler;
+        }
 
-		return function ($password, $hash)
-		{
-			return password_verify($password, $hash);
-		};
-	}
+        return function ($password, $hash) {
+            return password_verify($password, $hash);
+        };
+    }
 
-	/**
-	 * Method to set property verifyHandler
-	 *
-	 * @param   callable $verifyHandler
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setVerifyHandler($verifyHandler)
-	{
-		$this->verifyHandler = $verifyHandler;
+    /**
+     * Method to set property verifyHandler
+     *
+     * @param   callable $verifyHandler
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setVerifyHandler($verifyHandler)
+    {
+        $this->verifyHandler = $verifyHandler;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Users
-	 *
-	 * @return  array
-	 */
-	public function getUsers()
-	{
-		return $this->users;
-	}
+    /**
+     * Method to get property Users
+     *
+     * @return  array
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
 
-	/**
-	 * Method to set property users
-	 *
-	 * @param   array $users
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setUsers($users)
-	{
-		$this->users = $users;
+    /**
+     * Method to set property users
+     *
+     * @param   array $users
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
 
-		return $this;
-	}
+        return $this;
+    }
 }

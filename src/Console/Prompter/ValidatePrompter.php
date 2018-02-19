@@ -17,116 +17,109 @@ use Windwalker\Console\IO\IOInterface;
  */
 class ValidatePrompter extends CallbackPrompter
 {
-	/**
-	 * The option list to validate input.
-	 *
-	 * @var array
-	 *
-	 * @since  2.0
-	 */
-	protected $options = [];
+    /**
+     * The option list to validate input.
+     *
+     * @var array
+     *
+     * @since  2.0
+     */
+    protected $options = [];
 
-	/**
-	 * Constructor.
-	 *
-	 * @param   string       $question  The question you want to ask.
-	 * @param   array        $options   The option list to validate input.
-	 * @param   $default     $default   The default value.
-	 * @param   IOInterface  $io        The input object.
-	 *
-	 * @since   2.0
-	 */
-	function __construct($question = null, $options = [], $default = null, IOInterface $io = null)
-	{
-		$this->options = $options;
+    /**
+     * Constructor.
+     *
+     * @param   string      $question The question you want to ask.
+     * @param   array       $options  The option list to validate input.
+     * @param               $default  $default   The default value.
+     * @param   IOInterface $io       The input object.
+     *
+     * @since   2.0
+     */
+    function __construct($question = null, $options = [], $default = null, IOInterface $io = null)
+    {
+        $this->options = $options;
 
-		parent::__construct($question, null, $default, $io);
-	}
+        parent::__construct($question, null, $default, $io);
+    }
 
-	/**
-	 * Get callable handler.
-	 *
-	 * @return  callable  The validate callback.
-	 *
-	 * @since   2.0
-	 */
-	public function getHandler()
-	{
-		if (is_callable($this->handler))
-		{
-			return $this->handler;
-		}
+    /**
+     * Get callable handler.
+     *
+     * @return  callable  The validate callback.
+     *
+     * @since   2.0
+     */
+    public function getHandler()
+    {
+        if (is_callable($this->handler)) {
+            return $this->handler;
+        }
 
-		$options = $this->options;
+        $options = $this->options;
 
-		return function($value) use ($options)
-		{
-			if (in_array($value, $options))
-			{
-				return true;
-			}
+        return function ($value) use ($options) {
+            if (in_array($value, $options)) {
+                return true;
+            }
 
-			return false;
-		};
-	}
+            return false;
+        };
+    }
 
-	/**
-	 * Add an option.
-	 *
-	 * @param   string  $description  Option description.
-	 * @param   string  $option       Option key, if this param is NULL, will use int as option key.
-	 *
-	 * @return  ValidatePrompter  Return self to support chaining.
-	 *
-	 * @since   2.0
-	 */
-	public function addOption($description, $option = null)
-	{
-		if ($option)
-		{
-			$this->options[$option] = $description;
-		}
-		else
-		{
-			$this->options[] = $description;
-		}
+    /**
+     * Add an option.
+     *
+     * @param   string $description Option description.
+     * @param   string $option      Option key, if this param is NULL, will use int as option key.
+     *
+     * @return  ValidatePrompter  Return self to support chaining.
+     *
+     * @since   2.0
+     */
+    public function addOption($description, $option = null)
+    {
+        if ($option) {
+            $this->options[$option] = $description;
+        } else {
+            $this->options[] = $description;
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Remove an option by key.
-	 *
-	 * @param   mixed  $key  The option key you want to remove.
-	 *
-	 * @return  ValidatePrompter  Return self to support chaining.
-	 *
-	 * @since   2.0
-	 */
-	public function removeOption($key)
-	{
-		if (!empty($this->options[$key]))
-		{
-			unset($this->options[$key]);
-		}
+    /**
+     * Remove an option by key.
+     *
+     * @param   mixed $key The option key you want to remove.
+     *
+     * @return  ValidatePrompter  Return self to support chaining.
+     *
+     * @since   2.0
+     */
+    public function removeOption($key)
+    {
+        if (!empty($this->options[$key])) {
+            unset($this->options[$key]);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Set option list.
-	 *
-	 * @param   array  $options  The option list.
-	 *
-	 * @return  ValidatePrompter  Return self to support chaining.
-	 *
-	 * @since   2.0
-	 */
-	public function setOptions($options)
-	{
-		$this->options = $options;
+    /**
+     * Set option list.
+     *
+     * @param   array $options The option list.
+     *
+     * @return  ValidatePrompter  Return self to support chaining.
+     *
+     * @since   2.0
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
 
-		return $this;
-	}
+        return $this;
+    }
 }
 

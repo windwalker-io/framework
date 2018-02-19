@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @section('sidebar')
-    @parent
+@parent
 
-    <p>This is appended to the master sidebar.</p>
+<p>This is appended to the master sidebar.</p>
 @stop
 
 @section('content')
-    <p>This is my body content.</p>
-    
+<p>This is my body content.</p>
+
 @stop

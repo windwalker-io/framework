@@ -18,60 +18,59 @@ use Windwalker\Router\Route;
  */
 class BinaryMatcherTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var BinaryMatcher
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var BinaryMatcher
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new BinaryMatcher;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new BinaryMatcher;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test match().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Router\Matcher\BinaryMatcher::match
-	 */
-	public function testMatch()
-	{
-		$routes = file_get_contents(__DIR__ . '/../fixtures/routes.txt');
+    /**
+     * Method to test match().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Router\Matcher\BinaryMatcher::match
+     */
+    public function testMatch()
+    {
+        $routes = file_get_contents(__DIR__ . '/../fixtures/routes.txt');
 
-		$routes = explode("\n", trim($routes));
+        $routes = explode("\n", trim($routes));
 
-		$routes = array_map(
-			function ($route)
-			{
-				return new Route($route, $route, ['_return' => $route]);
-			},
-			$routes
-		);
+        $routes = array_map(
+            function ($route) {
+                return new Route($route, $route, ['_return' => $route]);
+            },
+            $routes
+        );
 
-		$matched = $this->instance->setRoutes($routes)
-			->match('/corge/quux/qux');
+        $matched = $this->instance->setRoutes($routes)
+            ->match('/corge/quux/qux');
 
-		$this->assertEquals('/corge/quux/qux', $matched->getName());
+        $this->assertEquals('/corge/quux/qux', $matched->getName());
 
-		$this->instance->getCount();
-	}
+        $this->instance->getCount();
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,12 +15,12 @@ namespace Windwalker\Filter\Cleaner;
  */
 interface CleanerInterface
 {
-	/**
-	 * Method to clean text by rule.
-	 *
-	 * @param   string  $source  The source to be clean.
-	 *
-	 * @return  mixed  The cleaned value.
-	 */
-	public function clean($source);
+    /**
+     * Method to clean text by rule.
+     *
+     * @param   string $source The source to be clean.
+     *
+     * @return  mixed  The cleaned value.
+     */
+    public function clean($source);
 }

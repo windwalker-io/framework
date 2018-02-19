@@ -22,68 +22,64 @@ use Windwalker\Middleware\AbstractMiddleware;
  */
 class DbLoggingMiddleware extends AbstractMiddleware implements LoggerAwareInterface
 {
-	/**
-	 * Property logger.
-	 *
-	 * @var  LoggerAwareInterface
-	 */
-	protected $logger;
+    /**
+     * Property logger.
+     *
+     * @var  LoggerAwareInterface
+     */
+    protected $logger;
 
-	/**
-	 * DbLoggingMiddleware constructor.
-	 *
-	 * @param LoggerAwareInterface $logger
-	 */
-	public function __construct(LoggerAwareInterface $logger = null)
-	{
-		$this->logger = $logger ? : new NullLogger;
-	}
+    /**
+     * DbLoggingMiddleware constructor.
+     *
+     * @param LoggerAwareInterface $logger
+     */
+    public function __construct(LoggerAwareInterface $logger = null)
+    {
+        $this->logger = $logger ?: new NullLogger;
+    }
 
-	/**
-	 * Call next middleware.
-	 *
-	 * @param  \stdClass $data
-	 *
-	 * @return mixed
-	 */
-	public function execute($data = null)
-	{
-		if (!isset($data->db) || !$data->db instanceof AbstractDatabaseDriver)
-		{
-			return $this->next->execute($data);
-		}
+    /**
+     * Call next middleware.
+     *
+     * @param  \stdClass $data
+     *
+     * @return mixed
+     */
+    public function execute($data = null)
+    {
+        if (!isset($data->db) || !$data->db instanceof AbstractDatabaseDriver) {
+            return $this->next->execute($data);
+        }
 
-		if ($data->debug)
-		{
-			$this->logger->log(LogLevel::DEBUG, 'Executed: {sql}', ['sql' => $data->sql]);
-		}
+        if ($data->debug) {
+            $this->logger->log(LogLevel::DEBUG, 'Executed: {sql}', ['sql' => $data->sql]);
+        }
 
-		try
-		{
-			$result = $this->next->execute($data);
-		}
-		catch (\RuntimeException $e)
-		{
-			// Throw the normal query exception.
-			$this->logger->log(LogLevel::ERROR, 'Database query failed (error #{code}): {message}', ['code' => $e->getCode(), 'message' => $e->getMessage()]);
+        try {
+            $result = $this->next->execute($data);
+        } catch (\RuntimeException $e) {
+            // Throw the normal query exception.
+            $this->logger->log(LogLevel::ERROR, 'Database query failed (error #{code}): {message}',
+                ['code' => $e->getCode(), 'message' => $e->getMessage()]);
 
-			throw new $e;
-		}
+            throw new $e;
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
-	/**
-	 * Sets a logger instance on the object
-	 *
-	 * @param LoggerInterface $logger
-	 *
-	 * @return static
-	 */
-	public function setLogger(LoggerInterface $logger)
-	{
-		$this->logger = $logger;
+    /**
+     * Sets a logger instance on the object
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return static
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
 
-		return $this;
-	}
+        return $this;
+    }
 }

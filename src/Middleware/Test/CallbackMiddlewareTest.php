@@ -20,99 +20,98 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
  */
 class CallbackMiddlewareTest extends AbstractBaseTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var CallbackMiddleware
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var CallbackMiddleware
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new CallbackMiddleware;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new CallbackMiddleware;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test call().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Middleware\CallbackMiddleware::execute
-	 */
-	public function testExecute()
-	{
-		$this->instance->setHandler(
-			function($data, $next)
-			{
-				$r = "Coriolanus\n";
+    /**
+     * Method to test call().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Middleware\CallbackMiddleware::execute
+     */
+    public function testExecute()
+    {
+        $this->instance->setHandler(
+            function ($data, $next) {
+                $r = "Coriolanus\n";
 
-				$r .= $next->execute($data);
+                $r .= $next->execute($data);
 
-				return $r .= "Coriolanus\n";
-			}
-		);
+                return $r .= "Coriolanus\n";
+            }
+        );
 
-		$othello = new StubOthelloMiddleware;
+        $othello = new StubOthelloMiddleware;
 
-		$othello->setNext(new EndMiddleware);
+        $othello->setNext(new EndMiddleware);
 
-		$this->instance->setNext($othello);
+        $this->instance->setNext($othello);
 
-		$data = <<<EOF
+        $data = <<<EOF
 Coriolanus
 >>> Othello
 <<< Othello
 Coriolanus
 EOF;
 
-		$this->assertStringSafeEquals($data, $this->instance->execute());
-	}
+        $this->assertStringSafeEquals($data, $this->instance->execute());
+    }
 
-	/**
-	 * Method to test getHandler().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Middleware\CallbackMiddleware::getHandler
-	 * @TODO   Implement testGetHandler().
-	 */
-	public function testGetHandler()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test getHandler().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Middleware\CallbackMiddleware::getHandler
+     * @TODO   Implement testGetHandler().
+     */
+    public function testGetHandler()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
-	/**
-	 * Method to test setHandler().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Middleware\CallbackMiddleware::setHandler
-	 * @TODO   Implement testSetHandler().
-	 */
-	public function testSetHandler()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test setHandler().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Middleware\CallbackMiddleware::setHandler
+     * @TODO   Implement testSetHandler().
+     */
+    public function testSetHandler()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 }

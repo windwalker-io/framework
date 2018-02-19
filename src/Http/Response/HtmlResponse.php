@@ -15,10 +15,10 @@ namespace Windwalker\Http\Response;
  */
 class HtmlResponse extends TextResponse
 {
-	/**
-	 * Content type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'text/html';
+    /**
+     * Content type.
+     *
+     * @var  string
+     */
+    protected $type = 'text/html';
 }

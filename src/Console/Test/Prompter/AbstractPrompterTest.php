@@ -19,56 +19,56 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
  */
 abstract class AbstractPrompterTest extends AbstractBaseTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var AbstractPrompter
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var AbstractPrompter
+     */
+    protected $instance;
 
-	/**
-	 * Property memory.
-	 *
-	 * @var  resource
-	 */
-	protected $memory = STDIN;
+    /**
+     * Property memory.
+     *
+     * @var  resource
+     */
+    protected $memory = STDIN;
 
-	/**
-	 * Property output.
-	 *
-	 * @var MockIO
-	 */
-	protected $io;
+    /**
+     * Property output.
+     *
+     * @var MockIO
+     */
+    protected $io;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	protected function setUp()
-	{
-		$this->io = new MockIO;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    protected function setUp()
+    {
+        $this->io = new MockIO;
+    }
 
-	/**
-	 * Write in Memory for test.
-	 *
-	 * @param string $text
-	 *
-	 * @return  $this
-	 */
-	protected function setStream($text)
-	{
-		$this->memory = fopen('php://memory', 'r+', false);
-		fputs($this->memory, $text);
-		rewind($this->memory);
+    /**
+     * Write in Memory for test.
+     *
+     * @param string $text
+     *
+     * @return  $this
+     */
+    protected function setStream($text)
+    {
+        $this->memory = fopen('php://memory', 'r+', false);
+        fputs($this->memory, $text);
+        rewind($this->memory);
 
-		$this->instance->getIO()->setInputStream($this->memory);
+        $this->instance->getIO()->setInputStream($this->memory);
 
-		return $this->memory;
-	}
+        return $this->memory;
+    }
 }
 

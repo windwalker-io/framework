@@ -17,51 +17,51 @@ use Windwalker\Validator\Rule\BooleanValidator;
  */
 class BooleanValidatorTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var BooleanValidator
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var BooleanValidator
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new BooleanValidator;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new BooleanValidator;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * testValidate
-	 *
-	 * @return  void
-	 *
-	 * @cover  \Windwalker\Validator\Rule\BooleanValidator
-	 */
-	public function testValidate()
-	{
-		$this->assertTrue($this->instance->validate(true));
-		$this->assertTrue($this->instance->validate(false));
-		$this->assertTrue($this->instance->validate('1'));
-		$this->assertTrue($this->instance->validate('0'));
-		$this->assertTrue($this->instance->validate('true'));
-		$this->assertTrue($this->instance->validate('false'));
+    /**
+     * testValidate
+     *
+     * @return  void
+     *
+     * @cover  \Windwalker\Validator\Rule\BooleanValidator
+     */
+    public function testValidate()
+    {
+        $this->assertTrue($this->instance->validate(true));
+        $this->assertTrue($this->instance->validate(false));
+        $this->assertTrue($this->instance->validate('1'));
+        $this->assertTrue($this->instance->validate('0'));
+        $this->assertTrue($this->instance->validate('true'));
+        $this->assertTrue($this->instance->validate('false'));
 
-		$this->assertFalse($this->instance->validate('abc123 cba456'));
-		$this->assertFalse($this->instance->validate(''));
-	}
+        $this->assertFalse($this->instance->validate('abc123 cba456'));
+        $this->assertFalse($this->instance->validate(''));
+    }
 }

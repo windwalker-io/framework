@@ -17,14 +17,14 @@ use Windwalker\Console\Command\AbstractCommand;
  */
 interface DescriptorHelperInterface
 {
-	/**
-	 * Describe a command detail.
-	 *
-	 * @param   AbstractCommand  $command  The command to described.
-	 *
-	 * @return  string  Return the described text.
-	 *
-	 * @since   2.0
-	 */
-	public function describe(AbstractCommand $command);
+    /**
+     * Describe a command detail.
+     *
+     * @param   AbstractCommand $command The command to described.
+     *
+     * @return  string  Return the described text.
+     *
+     * @since   2.0
+     */
+    public function describe(AbstractCommand $command);
 }

@@ -17,45 +17,45 @@ use Windwalker\Language\Format\PhpFormat;
  */
 class PhpFormatTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var PhpFormat
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var PhpFormat
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new PhpFormat;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new PhpFormat;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test parse().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Language\Format\PhpFormat::parse
-	 */
-	public function testParse()
-	{
-		$data = include __DIR__ . '/../fixtures/php/en-GB.php';
+    /**
+     * Method to test parse().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Language\Format\PhpFormat::parse
+     */
+    public function testParse()
+    {
+        $data = include __DIR__ . '/../fixtures/php/en-GB.php';
 
-		$this->assertArrayHasKey('WINDWALKER_LANGUAGE_TEST_SAKURA', $this->instance->parse($data));
-	}
+        $this->assertArrayHasKey('WINDWALKER_LANGUAGE_TEST_SAKURA', $this->instance->parse($data));
+    }
 }

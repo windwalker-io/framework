@@ -17,100 +17,99 @@ use Psr\Http\Message\StreamInterface;
  */
 abstract class AbstractContentTypeResponse extends Response
 {
-	/**
-	 * Content type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'text/plain';
+    /**
+     * Content type.
+     *
+     * @var  string
+     */
+    protected $type = 'text/plain';
 
-	/**
-	 * Constructor.
-	 *
-	 * @param  string  $body     The body data.
-	 * @param  int     $status   The status code.
-	 * @param  array   $headers  The custom headers.
-	 */
-	public function __construct($body  = '', $status = 200, array $headers = [])
-	{
-		parent::__construct(
-			$this->handleBody($body),
-			$status,
-			$this->addContentTypeToHeader($headers, $this->type . '; charset=utf-8')
-		);
-	}
+    /**
+     * Constructor.
+     *
+     * @param  string $body    The body data.
+     * @param  int    $status  The status code.
+     * @param  array  $headers The custom headers.
+     */
+    public function __construct($body = '', $status = 200, array $headers = [])
+    {
+        parent::__construct(
+            $this->handleBody($body),
+            $status,
+            $this->addContentTypeToHeader($headers, $this->type . '; charset=utf-8')
+        );
+    }
 
-	/**
-	 * Handle body to stream object.
-	 *
-	 * @param   string  $body  The body data.
-	 *
-	 * @return  StreamInterface  Converted to stream object.
-	 */
-	abstract protected function handleBody($body);
+    /**
+     * Handle body to stream object.
+     *
+     * @param   string $body The body data.
+     *
+     * @return  StreamInterface  Converted to stream object.
+     */
+    abstract protected function handleBody($body);
 
-	/**
-	 * withContent
-	 *
-	 * @param   string $content
-	 *
-	 * @return  static
-	 * @throws \InvalidArgumentException
-	 */
-	public function withContent($content)
-	{
-		return $this->withBody($this->handleBody($content));
-	}
+    /**
+     * withContent
+     *
+     * @param   string $content
+     *
+     * @return  static
+     * @throws \InvalidArgumentException
+     */
+    public function withContent($content)
+    {
+        return $this->withBody($this->handleBody($content));
+    }
 
-	/**
-	 * Add Content-Type to header.
-	 *
-	 * @param   string  $contentType  The content type.
-	 *
-	 * @return  static
-	 */
-	public function withContentType($contentType)
-	{
-		$contentType = $this->normalizeContentType($contentType);
+    /**
+     * Add Content-Type to header.
+     *
+     * @param   string $contentType The content type.
+     *
+     * @return  static
+     */
+    public function withContentType($contentType)
+    {
+        $contentType = $this->normalizeContentType($contentType);
 
-		$contentType = explode(';', $contentType, 2);
+        $contentType = explode(';', $contentType, 2);
 
-		$this->type = $contentType[0];
+        $this->type = $contentType[0];
 
-		$contentType[0] .= ';' . (isset($contentType[1]) ? $contentType[1] : ' charset=utf-8');
+        $contentType[0] .= ';' . (isset($contentType[1]) ? $contentType[1] : ' charset=utf-8');
 
-		return $this->withHeader('Content-Type', $contentType[0]);
-	}
+        return $this->withHeader('Content-Type', $contentType[0]);
+    }
 
-	/**
-	 * Add content-type to headers variable if not exists.
-	 *
-	 * @param   array   $headers      The headers variable.
-	 * @param   string  $contentType  The content-type.
-	 *
-	 * @return array
-	 */
-	protected function addContentTypeToHeader($headers, $contentType)
-	{
-		$keys = array_change_key_case(array_keys($headers), CASE_LOWER);
+    /**
+     * Add content-type to headers variable if not exists.
+     *
+     * @param   array  $headers     The headers variable.
+     * @param   string $contentType The content-type.
+     *
+     * @return array
+     */
+    protected function addContentTypeToHeader($headers, $contentType)
+    {
+        $keys = array_change_key_case(array_keys($headers), CASE_LOWER);
 
-		if (!isset($keys['content-type']))
-		{
-			$headers['content-type'] = [$contentType];
-		}
+        if (!isset($keys['content-type'])) {
+            $headers['content-type'] = [$contentType];
+        }
 
-		return $headers;
-	}
+        return $headers;
+    }
 
-	/**
-	 * Normalize content-type.
-	 *
-	 * @param   string  $contentType  Content-type string.
-	 *
-	 * @return  string
-	 */
-	protected function normalizeContentType($contentType)
-	{
-		return strtolower($contentType);
-	}
+    /**
+     * Normalize content-type.
+     *
+     * @param   string $contentType Content-type string.
+     *
+     * @return  string
+     */
+    protected function normalizeContentType($contentType)
+    {
+        return strtolower($contentType);
+    }
 }

@@ -17,53 +17,54 @@ use Windwalker\Router\RouteHelper;
  */
 class RouteHelperTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Method to test sanitize().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Router\RouteHelper::sanitize
-	 */
-	public function testSanitize()
-	{
-		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('/foo/bar/baz'));
-		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('http://flower.com/foo/bar/baz/?olive=peace'));
-	}
+    /**
+     * Method to test sanitize().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Router\RouteHelper::sanitize
+     */
+    public function testSanitize()
+    {
+        $this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('/foo/bar/baz'));
+        $this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('http://flower.com/foo/bar/baz/?olive=peace'));
+    }
 
-	/**
-	 * Method to test normalise()
-	 *
-	 * @return  void
-	 *
-	 * @covers \Windwalker\Router\RouteHelper::normalise
-	 */
-	public function testNormalise()
-	{
-		$this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('foo/bar/baz/'));
-	}
+    /**
+     * Method to test normalise()
+     *
+     * @return  void
+     *
+     * @covers \Windwalker\Router\RouteHelper::normalise
+     */
+    public function testNormalise()
+    {
+        $this->assertEquals('/foo/bar/baz', RouteHelper::sanitize('foo/bar/baz/'));
+    }
 
-	/**
-	 * testGetVariables
-	 *
-	 * @return  void
-	 *
-	 * @covers \Windwalker\Router\RouteHelper::getVariables
-	 */
-	public function testGetVariables()
-	{
-		$array = [
-			0 => 5,
-			'id' => 5,
-			1 => 'foo',
-			'bar' => 'foo'
-		];
+    /**
+     * testGetVariables
+     *
+     * @return  void
+     *
+     * @covers \Windwalker\Router\RouteHelper::getVariables
+     */
+    public function testGetVariables()
+    {
+        $array = [
+            0 => 5,
+            'id' => 5,
+            1 => 'foo',
+            'bar' => 'foo',
+        ];
 
-		$this->assertEquals(['id' => 5, 'bar' => 'foo'], RouteHelper::getVariables($array));
+        $this->assertEquals(['id' => 5, 'bar' => 'foo'], RouteHelper::getVariables($array));
 
-		$vars = [
-			'flower' => 'sakura'
-		];
+        $vars = [
+            'flower' => 'sakura',
+        ];
 
-		$this->assertEquals(['flower' => 'sakura', 'id' => 5, 'bar' => 'foo'], RouteHelper::getVariables($array, $vars));
-	}
+        $this->assertEquals(['flower' => 'sakura', 'id' => 5, 'bar' => 'foo'],
+            RouteHelper::getVariables($array, $vars));
+    }
 }

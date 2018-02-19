@@ -17,27 +17,27 @@ namespace Windwalker\Console\Prompter;
  */
 interface PrompterInterface
 {
-	/**
-	 * Show prompt to ask user.
-	 *
-	 * @param   string  $msg      Question.
-	 * @param   string  $default  Default value.
-	 *
-	 * @return  string  The value that use input.
-	 *
-	 * @since   2.0
-	 */
-	public function ask($msg = '', $default = '');
+    /**
+     * Show prompt to ask user.
+     *
+     * @param   string $msg     Question.
+     * @param   string $default Default value.
+     *
+     * @return  string  The value that use input.
+     *
+     * @since   2.0
+     */
+    public function ask($msg = '', $default = '');
 
-	/**
-	 * Proxy to ask method.
-	 *
-	 * @param   string  $default  Default value.
-	 *
-	 * @return  string  The value that use input.
-	 *
-	 * @since   2.0
-	 */
-	public function __invoke($default = '');
+    /**
+     * Proxy to ask method.
+     *
+     * @param   string $default Default value.
+     *
+     * @return  string  The value that use input.
+     *
+     * @since   2.0
+     */
+    public function __invoke($default = '');
 }
 

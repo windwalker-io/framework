@@ -15,5 +15,5 @@ namespace Windwalker\Record\Exception;
  */
 class WrongParentException extends NestedHandleException
 {
-	//
+    //
 }

@@ -15,13 +15,13 @@ namespace Windwalker\Authorisation;
  */
 interface PolicyInterface
 {
-	/**
-	 * authorise
-	 *
-	 * @param   mixed  $user
-	 * @param   mixed  $data
-	 *
-	 * @return  boolean
-	 */
-	public function authorise($user, $data = null);
+    /**
+     * authorise
+     *
+     * @param   mixed $user
+     * @param   mixed $data
+     *
+     * @return  boolean
+     */
+    public function authorise($user, $data = null);
 }

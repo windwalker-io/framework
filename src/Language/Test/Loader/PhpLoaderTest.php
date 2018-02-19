@@ -17,45 +17,45 @@ use Windwalker\Language\Loader\PhpLoader;
  */
 class PhpLoaderTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var PhpLoader
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var PhpLoader
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new PhpLoader;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new PhpLoader;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test load().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Language\Loader\PhpLoader::load
-	 */
-	public function testLoad()
-	{
-		$data = $this->instance->load(__DIR__ . '/../fixtures/php/en-GB.php');
+    /**
+     * Method to test load().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Language\Loader\PhpLoader::load
+     */
+    public function testLoad()
+    {
+        $data = $this->instance->load(__DIR__ . '/../fixtures/php/en-GB.php');
 
-		$this->assertArrayHasKey('WINDWALKER_LANGUAGE_TEST_FLOWER', $data);
-	}
+        $this->assertArrayHasKey('WINDWALKER_LANGUAGE_TEST_FLOWER', $data);
+    }
 }

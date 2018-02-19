@@ -13,20 +13,20 @@ namespace Windwalker\Utilities\Test;
  */
 class FunctionsTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Tests the with method.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.0
-	 */
-	public function testWith()
-	{
-		$object = with(new \stdClass);
+    /**
+     * Tests the with method.
+     *
+     * @return  void
+     *
+     * @since   2.0
+     */
+    public function testWith()
+    {
+        $object = with(new \stdClass);
 
-		$this->assertEquals(
-			new \stdClass,
-			$object
-		);
-	}
+        $this->assertEquals(
+            new \stdClass,
+            $object
+        );
+    }
 }

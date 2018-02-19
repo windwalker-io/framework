@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -17,25 +17,25 @@ use Symfony\Component\Yaml\Yaml;
  */
 class YamlFormat extends AbstractFormat
 {
-	/**
-	 * Property name.
-	 *
-	 * @var  string
-	 */
-	protected $name = 'yaml';
+    /**
+     * Property name.
+     *
+     * @var  string
+     */
+    protected $name = 'yaml';
 
-	/**
-	 * parse
-	 *
-	 * @param string $string
-	 *
-	 * @return  string[]
-	 */
-	public function parse($string)
-	{
-		$array = Yaml::parse($string);
+    /**
+     * parse
+     *
+     * @param string $string
+     *
+     * @return  string[]
+     */
+    public function parse($string)
+    {
+        $array = Yaml::parse($string);
 
-		return $this->toOneDimension($array);
-	}
+        return $this->toOneDimension($array);
+    }
 }
 

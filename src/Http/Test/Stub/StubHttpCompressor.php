@@ -17,23 +17,23 @@ use Windwalker\Http\Output\HttpCompressor;
  */
 class StubHttpCompressor extends HttpCompressor
 {
-	/**
-	 * checkConnectionAlive
-	 *
-	 * @return  bool
-	 */
-	public function checkConnectionAlive()
-	{
-		return true;
-	}
+    /**
+     * checkConnectionAlive
+     *
+     * @return  bool
+     */
+    public function checkConnectionAlive()
+    {
+        return true;
+    }
 
-	/**
-	 * checkHeadersSent
-	 *
-	 * @return  bool
-	 */
-	public function checkHeadersSent()
-	{
-		return false;
-	}
+    /**
+     * checkHeadersSent
+     *
+     * @return  bool
+     */
+    public function checkHeadersSent()
+    {
+        return false;
+    }
 }

@@ -20,37 +20,37 @@ namespace Windwalker\Form\Field;
  */
 class AbstractHtml5Field extends TextField
 {
-	/**
-	 * prepare
-	 *
-	 * @param array $attrs
-	 *
-	 * @return  void
-	 */
-	public function prepare(&$attrs)
-	{
-		parent::prepare($attrs);
+    /**
+     * prepare
+     *
+     * @param array $attrs
+     *
+     * @return  void
+     */
+    public function prepare(&$attrs)
+    {
+        parent::prepare($attrs);
 
-		$attrs['max'] = $this->getAttribute('max');
-		$attrs['min'] = $this->getAttribute('min');
-		$attrs['step'] = $this->getAttribute('step');
-		$attrs['patten'] = $this->getAttribute('pattern');
-	}
+        $attrs['max']    = $this->getAttribute('max');
+        $attrs['min']    = $this->getAttribute('min');
+        $attrs['step']   = $this->getAttribute('step');
+        $attrs['patten'] = $this->getAttribute('pattern');
+    }
 
-	/**
-	 * getAccessors
-	 *
-	 * @return  array
-	 *
-	 * @since   3.1.2
-	 */
-	protected function getAccessors()
-	{
-		return array_merge(parent::getAccessors(), [
-			'max' => 'max',
-			'min' => 'min',
-			'step' => 'step',
-			'patten' => 'patten',
-		]);
-	}
+    /**
+     * getAccessors
+     *
+     * @return  array
+     *
+     * @since   3.1.2
+     */
+    protected function getAccessors()
+    {
+        return array_merge(parent::getAccessors(), [
+            'max' => 'max',
+            'min' => 'min',
+            'step' => 'step',
+            'patten' => 'patten',
+        ]);
+    }
 }

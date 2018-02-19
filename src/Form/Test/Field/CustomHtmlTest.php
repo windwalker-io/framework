@@ -9,9 +9,9 @@
 namespace Windwalker\Form\Test\Field;
 
 use Windwalker\Dom\HtmlElement;
+use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\CustomHtmlField;
 use Windwalker\Form\Field\TextField;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of TextField
@@ -20,52 +20,52 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
  */
 class CustomHtmlTest extends AbstractDomTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var TextField
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var TextField
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new CustomHtmlField(
-			'flower',
-			'Flower'
-		);
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new CustomHtmlField(
+            'flower',
+            'Flower'
+        );
 
-		$this->instance->setAttribute('content', new HtmlElement('div', 'Sakura', ['data-test-element' => true]));
-	}
+        $this->instance->setAttribute('content', new HtmlElement('div', 'Sakura', ['data-test-element' => true]));
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test prepareAttributes().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Form\Field\TextField::prepareAttributes
-	 */
-	public function testRender()
-	{
-		$html = <<<HTML
+    /**
+     * Method to test prepareAttributes().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Form\Field\TextField::prepareAttributes
+     */
+    public function testRender()
+    {
+        $html = <<<HTML
 <div data-test-element>Sakura</div>
 HTML;
 
-		$this->assertHtmlFormatEquals($html, $this->instance->renderInput());
-	}
+        $this->assertHtmlFormatEquals($html, $this->instance->renderInput());
+    }
 }

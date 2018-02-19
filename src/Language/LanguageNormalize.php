@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,58 +15,57 @@ namespace Windwalker\Language;
  */
 abstract class LanguageNormalize
 {
-	/**
-	 * toLanguageKey
-	 *
-	 * @param string $lang
-	 *
-	 * @return  string
-	 */
-	public static function toLanguageTag($lang)
-	{
-		$lang = str_replace('_', '-', $lang);
+    /**
+     * toLanguageKey
+     *
+     * @param string $lang
+     *
+     * @return  string
+     */
+    public static function toLanguageTag($lang)
+    {
+        $lang = str_replace('_', '-', $lang);
 
-		$lang = explode('-', $lang);
+        $lang = explode('-', $lang);
 
-		if (isset($lang[1]))
-		{
-			$lang[1] = strtoupper($lang[1]);
-		}
+        if (isset($lang[1])) {
+            $lang[1] = strtoupper($lang[1]);
+        }
 
-		$lang[0] = strtolower($lang[0]);
+        $lang[0] = strtolower($lang[0]);
 
-		return implode('-', $lang);
-	}
+        return implode('-', $lang);
+    }
 
-	/**
-	 * getLocaliseClassPrefix
-	 *
-	 * @param string $lang
-	 *
-	 * @return  string
-	 */
-	public static function getLocaliseClassPrefix($lang)
-	{
-		$lang = static::toLanguageTag($lang);
+    /**
+     * getLocaliseClassPrefix
+     *
+     * @param string $lang
+     *
+     * @return  string
+     */
+    public static function getLocaliseClassPrefix($lang)
+    {
+        $lang = static::toLanguageTag($lang);
 
-		$lang = str_replace('-', '', $lang);
+        $lang = str_replace('-', '', $lang);
 
-		return ucfirst($lang);
-	}
+        return ucfirst($lang);
+    }
 
-	/**
-	 * toLanguageKey
-	 *
-	 * @param string $key
-	 *
-	 * @return  string
-	 */
-	public static function toLanguageKey($key)
-	{
-		// Only allow A-Z a-z 0-9 and "_", other characters will be replace with "_".
-		$key = preg_replace('/[^A-Z0-9]+/i', '.', $key);
+    /**
+     * toLanguageKey
+     *
+     * @param string $key
+     *
+     * @return  string
+     */
+    public static function toLanguageKey($key)
+    {
+        // Only allow A-Z a-z 0-9 and "_", other characters will be replace with "_".
+        $key = preg_replace('/[^A-Z0-9]+/i', '.', $key);
 
-		return strtolower(trim($key, '.'));
-	}
+        return strtolower(trim($key, '.'));
+    }
 }
 

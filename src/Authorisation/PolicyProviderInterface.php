@@ -15,12 +15,12 @@ namespace Windwalker\Authorisation;
  */
 interface PolicyProviderInterface
 {
-	/**
-	 * register
-	 *
-	 * @param AuthorisationInterface $authorisation
-	 *
-	 * @return  void
-	 */
-	public function register(AuthorisationInterface $authorisation);
+    /**
+     * register
+     *
+     * @param AuthorisationInterface $authorisation
+     *
+     * @return  void
+     */
+    public function register(AuthorisationInterface $authorisation);
 }

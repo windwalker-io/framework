@@ -15,29 +15,29 @@ namespace Windwalker\Cache\Storage;
  */
 class PhpFileStorage extends FileStorage
 {
-	/**
-	 * read
-	 *
-	 * @param   string $filename
-	 *
-	 * @return  string
-	 */
-	protected function read($filename)
-	{
-		return include $filename;
-	}
+    /**
+     * read
+     *
+     * @param   string $filename
+     *
+     * @return  string
+     */
+    protected function read($filename)
+    {
+        return include $filename;
+    }
 
-	/**
-	 * write
-	 *
-	 * @param string $filename
-	 * @param string $value
-	 * @param int    $options
-	 *
-	 * @return  boolean
-	 */
-	protected function write($filename, $value, $options)
-	{
-		return parent::write($filename, $value, $options);
-	}
+    /**
+     * write
+     *
+     * @param string $filename
+     * @param string $value
+     * @param int    $options
+     *
+     * @return  boolean
+     */
+    protected function write($filename, $value, $options)
+    {
+        return parent::write($filename, $value, $options);
+    }
 }

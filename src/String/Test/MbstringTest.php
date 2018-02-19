@@ -9,7 +9,7 @@
 namespace Windwalker\String\Test;
 
 use PHPUnit\Framework\TestCase;
-use \Windwalker\String\Mbstring;
+use Windwalker\String\Mbstring;
 use Windwalker\Test\Traits\BaseAssertionTrait;
 
 /**
@@ -19,7 +19,7 @@ use Windwalker\Test\Traits\BaseAssertionTrait;
  */
 class MbstringTest extends TestCase
 {
-	use BaseAssertionTrait;
+    use BaseAssertionTrait;
 
     /**
      * Test...
@@ -58,7 +58,7 @@ class MbstringTest extends TestCase
             [0, 'на карте с', 'на карте', 0, 0],
             [false, 'на карте с', 'на каррте', 0],
             [false, 'на карте с', 'на карте', 2],
-            [3, 'missing', 'sing', 0]
+            [3, 'missing', 'sing', 0],
         ];
     }
 
@@ -78,7 +78,7 @@ class MbstringTest extends TestCase
             [10, ' объектов на карте с', 'на карте', 0],
             [0, 'на карте с', 'на карте', 0],
             [false, 'на карте с', 'на каррте', 0],
-            [3, 'на карте с', 'карт', 2]
+            [3, 'на карте с', 'карт', 2],
         ];
     }
 
@@ -96,7 +96,7 @@ class MbstringTest extends TestCase
             ['на карте с', ' объектов на карте с', 10, null],
             ['на ка', ' объектов на карте с', 10, 5],
             ['те с', ' объектов на карте с', -4, null],
-            [false, ' объектов на карте с', 99, null]
+            [false, ' объектов на карте с', 99, null],
         ];
     }
 
@@ -113,7 +113,7 @@ class MbstringTest extends TestCase
             ['Windwalker! Rocks', 'windwalker! rocks'],
             ['FÒÔbàř', 'fòôbàř'],
             ['fòôbàř', 'fòôbàř'],
-            ['白日依山盡', '白日依山盡']
+            ['白日依山盡', '白日依山盡'],
         ];
     }
 
@@ -130,7 +130,7 @@ class MbstringTest extends TestCase
             ['Windwalker! Rocks', 'WINDWALKER! ROCKS'],
             ['FÒÔbàř', 'FÒÔBÀŘ'],
             ['FÒÔBÀŘ', 'FÒÔBÀŘ'],
-            ['白日依山盡', '白日依山盡']
+            ['白日依山盡', '白日依山盡'],
         ];
     }
 
@@ -144,7 +144,7 @@ class MbstringTest extends TestCase
     public function strlenProvider()
     {
         return [
-            ['Windwalker! Rocks', 17]
+            ['Windwalker! Rocks', 17],
         ];
     }
 
@@ -166,7 +166,7 @@ class MbstringTest extends TestCase
                 ['cow', 'hopped'],
                 'the pig jumped over the pig',
                 null,
-                'the cow hopped over the cow'
+                'the cow hopped over the cow',
             ],
             ['шил', 'биш', 'Би шил идэй чадна', 1, 'Би биш идэй чадна'],
             ['/', ':', '/test/slashes/', null, ':test:slashes:'],
@@ -189,7 +189,7 @@ class MbstringTest extends TestCase
             ['string', 2, ['st', 'ri', 'ng']],
             ['волн', 3, ['вол', 'н']],
             ['волн', 1, ['в', 'о', 'л', 'н']],
-            ['волн', 0, false]
+            ['волн', 0, false],
         ];
     }
 
@@ -207,7 +207,7 @@ class MbstringTest extends TestCase
             ['this is string1', 'this is string2', -1],
             ['this is string2', 'this is string1', 1],
             ['бгдпт', 'бгдпт', 0],
-            ['àbc', 'abc', 1]
+            ['àbc', 'abc', 1],
         ];
     }
 
@@ -225,7 +225,7 @@ class MbstringTest extends TestCase
             ['this is string1', 'this is string2', -1],
             ['this is string2', 'this is string1', 1],
             ['a', 'B', 1],
-            ['A', 'b', -1]
+            ['A', 'b', -1],
         ];
     }
 
@@ -259,7 +259,7 @@ class MbstringTest extends TestCase
         return [
             ['haystack', 'needle', false],
             ['before match, after match', 'match', 'match, after match'],
-            ['Би шил идэй чадна', 'шил', 'шил идэй чадна']
+            ['Би шил идэй чадна', 'шил', 'шил идэй чадна'],
         ];
     }
 
@@ -275,7 +275,7 @@ class MbstringTest extends TestCase
         return [
             ['abc def', 'fed cba'],
             ['Би шил', 'лиш иБ'],
-            ['白日依山盡', '盡山依日白']
+            ['白日依山盡', '盡山依日白'],
         ];
     }
 
@@ -300,7 +300,7 @@ class MbstringTest extends TestCase
             ['A321 Main Street', '0123456789', 1, 10, 3],
             ['A321 Main Street', '0123456789', 1, null, 3],
             ['Би шил идэй чадна', 'Би', 0, null, 2],
-            ['чадна Би шил идэй чадна', 'Би', 0, null, 0]
+            ['чадна Би шил идэй чадна', 'Би', 0, null, 0],
         ];
     }
 
@@ -317,7 +317,7 @@ class MbstringTest extends TestCase
             ['321 Broadway Avenue', '321 Main Street', 'Broadway Avenue', 4, null],
             ['321 Broadway Street', '321 Main Street', 'Broadway', 4, 4],
             ['чадна 我能吞', 'чадна Би шил идэй чадна', '我能吞', 6, null],
-            ['чадна 我能吞 шил идэй чадна', 'чадна Би шил идэй чадна', '我能吞', 6, 2]
+            ['чадна 我能吞 шил идэй чадна', 'чадна Би шил идэй чадна', '我能吞', 6, 2],
         ];
     }
 
@@ -337,7 +337,7 @@ class MbstringTest extends TestCase
             ["\t\n\r\x0BБи шил", null, 'Би шил'],
             ["\x0B\t\n\rБи шил", "\t\n\x0B", "\rБи шил"],
             ["\x09Би шил\x0A", "\x09\x0A", "Би шил\x0A"],
-            ['1234abc', '0123456789', 'abc']
+            ['1234abc', '0123456789', 'abc'],
         ];
     }
 
@@ -357,7 +357,7 @@ class MbstringTest extends TestCase
             ["Би шил\t\n\r\x0B", null, 'Би шил'],
             ["Би шил\r\x0B\t\n", "\t\n\x0B", "Би шил\r"],
             ["\x09Би шил\x0A", "\x09\x0A", "\x09Би шил"],
-            ['1234abc', 'abc', '01234']
+            ['1234abc', 'abc', '01234'],
         ];
     }
 
@@ -377,7 +377,7 @@ class MbstringTest extends TestCase
             ["\t\n\r\x0BБи шил\t\n\r\x0B", null, 'Би шил'],
             ["\x0B\t\n\rБи шил\r\x0B\t\n", "\t\n\x0B", "\rБи шил\r"],
             ["\x09Би шил\x0A", "\x09\x0A", "Би шил"],
-            ['1234abc56789', '0123456789', 'abc']
+            ['1234abc56789', '0123456789', 'abc'],
         ];
     }
 
@@ -429,7 +429,7 @@ class MbstringTest extends TestCase
             ["george\r\nwashington", "George\r\nWashington"],
             ['мога', 'Мога'],
             ['αβγ δεζ', 'Αβγ Δεζ'],
-            ['åbc öde', 'Åbc Öde']
+            ['åbc öde', 'Åbc Öde'],
         ];
     }
 
@@ -444,7 +444,7 @@ class MbstringTest extends TestCase
     {
         return [
             ['Åbc Öde €2.0', 'UTF-8', 'ISO-8859-15', "\xc5bc \xd6de \xA42.0"],
-            ['', 'UTF-8', 'ISO-8859-15', '']
+            ['', 'UTF-8', 'ISO-8859-15', ''],
         ];
     }
 
@@ -466,7 +466,7 @@ class MbstringTest extends TestCase
             ["\xFF ABC", false],
             ["\xFa ABC", false],
             ["0xfffd ABC", true],
-            ['', true]
+            ['', true],
         ];
     }
 
@@ -481,7 +481,7 @@ class MbstringTest extends TestCase
     {
         return [
             ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
-            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"]
+            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"],
         ];
     }
 
@@ -496,7 +496,7 @@ class MbstringTest extends TestCase
     {
         return [
             ["\u0422\u0435\u0441\u0442 \u0441\u0438\u0441\u0442\u0435\u043c\u044b", "Тест системы"],
-            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"]
+            ["\u00dcberpr\u00fcfung der Systemumstellung", "Überprüfung der Systemumstellung"],
         ];
     }
 
@@ -892,8 +892,8 @@ class MbstringTest extends TestCase
     /**
      * Test...
      *
-     * @param   string $string       @todo
-     * @param   string $expect       @todo
+     * @param   string $string @todo
+     * @param   string $expect @todo
      *
      * @return  array
      *
@@ -969,7 +969,7 @@ class MbstringTest extends TestCase
             ['FÒÔòôòô', 'ô', 2, Mbstring::CASE_SENSITIVE],
             ['FÒÔòôòô', 'ô', 3, Mbstring::CASE_INSENSITIVE],
             ['объектов на карте с', 'б', 1, Mbstring::CASE_SENSITIVE],
-            ['庭院深深深幾許', '深', 3, Mbstring::CASE_SENSITIVE]
+            ['庭院深深深幾許', '深', 3, Mbstring::CASE_SENSITIVE],
         ];
     }
 
@@ -1017,7 +1017,6 @@ class MbstringTest extends TestCase
      *
      * @return  array
      *
-
      * @dataProvider  unicodeToUtf8Provider
      * @since         2.0
      */
@@ -1078,9 +1077,9 @@ class MbstringTest extends TestCase
         $len = mb_strlen($string);
 
         for ($i = 0; $i < $len; $i++) {
-            $char = mb_substr($string, $i, 1);
+            $char        = mb_substr($string, $i, 1);
             $countBefore = mb_substr_count($string, $char);
-            $countAfter = mb_substr_count($result, $char);
+            $countAfter  = mb_substr_count($result, $char);
 
             self::assertEquals($countBefore, $countAfter);
         }
@@ -1096,7 +1095,7 @@ class MbstringTest extends TestCase
         return [
             ['foo bar'],
             ['∂∆ ˚åß'],
-            ['å´¥©¨ˆßå˚ ∆∂˙©å∑¥øœ¬']
+            ['å´¥©¨ˆßå˚ ∆∂˙©å∑¥øœ¬'],
         ];
     }
 }

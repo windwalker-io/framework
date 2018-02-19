@@ -15,110 +15,109 @@ namespace Windwalker\Edge\Cache;
  */
 class EdgeArrayCache implements EdgeCacheInterface
 {
-	/**
-	 * Property data.
-	 *
-	 * @var  array
-	 */
-	protected $data = [];
+    /**
+     * Property data.
+     *
+     * @var  array
+     */
+    protected $data = [];
 
-	/**
-	 * isExpired
-	 *
-	 * @param   string $path
-	 *
-	 * @return  boolean
-	 */
-	public function isExpired($path)
-	{
-		return true;
-	}
+    /**
+     * isExpired
+     *
+     * @param   string $path
+     *
+     * @return  boolean
+     */
+    public function isExpired($path)
+    {
+        return true;
+    }
 
-	/**
-	 * getCacheKey
-	 *
-	 * @param   string $path
-	 *
-	 * @return  string
-	 */
-	public function getCacheKey($path)
-	{
-		return md5($path);
-	}
+    /**
+     * getCacheKey
+     *
+     * @param   string $path
+     *
+     * @return  string
+     */
+    public function getCacheKey($path)
+    {
+        return md5($path);
+    }
 
-	/**
-	 * get
-	 *
-	 * @param   string $path
-	 *
-	 * @return  string
-	 */
-	public function load($path)
-	{
-		$key = $this->getCacheKey($path);
-		
-		if (isset($this->data[$key]))
-		{
-			return $this->data[$key];
-		}
-		
-		return null;
-	}
+    /**
+     * get
+     *
+     * @param   string $path
+     *
+     * @return  string
+     */
+    public function load($path)
+    {
+        $key = $this->getCacheKey($path);
 
-	/**
-	 * store
-	 *
-	 * @param   string $path
-	 * @param   string $value
-	 *
-	 * @return  static
-	 */
-	public function store($path, $value)
-	{
-		$key = $this->getCacheKey($path);
-		
-		$this->data[$key] = $value;
-		
-		return $this;
-	}
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
+        }
 
-	/**
-	 * remove
-	 *
-	 * @param   string $path
-	 *
-	 * @return  static
-	 */
-	public function remove($path)
-	{
-		$key = $this->getCacheKey($path);
-		
-		unset($this->data[$key]);
-		
-		return $this;
-	}
+        return null;
+    }
 
-	/**
-	 * Method to get property Data
-	 *
-	 * @return  array
-	 */
-	public function getData()
-	{
-		return $this->data;
-	}
+    /**
+     * store
+     *
+     * @param   string $path
+     * @param   string $value
+     *
+     * @return  static
+     */
+    public function store($path, $value)
+    {
+        $key = $this->getCacheKey($path);
 
-	/**
-	 * Method to set property data
-	 *
-	 * @param   array $data
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setData($data)
-	{
-		$this->data = $data;
+        $this->data[$key] = $value;
 
-		return $this;
-	}
+        return $this;
+    }
+
+    /**
+     * remove
+     *
+     * @param   string $path
+     *
+     * @return  static
+     */
+    public function remove($path)
+    {
+        $key = $this->getCacheKey($path);
+
+        unset($this->data[$key]);
+
+        return $this;
+    }
+
+    /**
+     * Method to get property Data
+     *
+     * @return  array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Method to set property data
+     *
+     * @param   array $data
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
 }

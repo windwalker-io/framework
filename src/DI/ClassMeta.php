@@ -10,7 +10,7 @@ namespace Windwalker\DI;
 
 /**
  * The ClassMeta class.
- * 
+ *
  * @method  object  newInstance(array $args = [])
  * @method  object  createObject(array $args = [], $shared = false, $protected = false)
  * @method  object  createSharedObject(array $args = [], $protected = false)
@@ -23,179 +23,172 @@ namespace Windwalker\DI;
  */
 class ClassMeta
 {
-	/**
-	 * Property class.
-	 *
-	 * @var  string
-	 */
-	protected $class;
+    /**
+     * Property class.
+     *
+     * @var  string
+     */
+    protected $class;
 
-	/**
-	 * Property arguments.
-	 *
-	 * @var  array
-	 */
-	protected $arguments = [];
+    /**
+     * Property arguments.
+     *
+     * @var  array
+     */
+    protected $arguments = [];
 
-	/**
-	 * Property caches.
-	 *
-	 * @var  array
-	 */
-	protected $caches = [];
+    /**
+     * Property caches.
+     *
+     * @var  array
+     */
+    protected $caches = [];
 
-	/**
-	 * Property container.
-	 *
-	 * @var  Container
-	 */
-	protected $container;
+    /**
+     * Property container.
+     *
+     * @var  Container
+     */
+    protected $container;
 
-	/**
-	 * ClassMeta constructor.
-	 *
-	 * @param string    $class
-	 * @param Container $container
-	 */
-	public function __construct($class, Container $container)
-	{
-		$this->class = $class;
-		$this->container = $container;
-	}
+    /**
+     * ClassMeta constructor.
+     *
+     * @param string    $class
+     * @param Container $container
+     */
+    public function __construct($class, Container $container)
+    {
+        $this->class     = $class;
+        $this->container = $container;
+    }
 
-	/**
-	 * Method to get property Argument
-	 *
-	 * @param  string $name
-	 * @param  mixed  $default
-	 *
-	 * @return array
-	 */
-	public function getArgument($name, $default = null)
-	{
-		if (!isset($this->arguments[$name]))
-		{
-			return $default;
-		}
+    /**
+     * Method to get property Argument
+     *
+     * @param  string $name
+     * @param  mixed  $default
+     *
+     * @return array
+     */
+    public function getArgument($name, $default = null)
+    {
+        if (!isset($this->arguments[$name])) {
+            return $default;
+        }
 
-		if (isset($this->caches[$name]))
-		{
-			return $this->caches[$name];
-		}
+        if (isset($this->caches[$name])) {
+            return $this->caches[$name];
+        }
 
-		return $this->caches[$name] = $this->container->execute($this->arguments[$name]);
-	}
+        return $this->caches[$name] = $this->container->execute($this->arguments[$name]);
+    }
 
-	/**
-	 * Method to set property argument
-	 *
-	 * @param   string  $name
-	 * @param   mixed  $value
-	 *
-	 * @return  static Return self to support chaining.
-	 */
-	public function setArgument($name, $value)
-	{
-		if (!$value instanceof \Closure)
-		{
-			$value = function () use ($value)
-			{
-			    return $value;
-			};
-		}
+    /**
+     * Method to set property argument
+     *
+     * @param   string $name
+     * @param   mixed  $value
+     *
+     * @return  static Return self to support chaining.
+     */
+    public function setArgument($name, $value)
+    {
+        if (!$value instanceof \Closure) {
+            $value = function () use ($value) {
+                return $value;
+            };
+        }
 
-		$this->arguments[$name] = $value;
-		unset($this->caches[$name]);
+        $this->arguments[$name] = $value;
+        unset($this->caches[$name]);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * removeArgument
-	 *
-	 * @param   string  $name
-	 *
-	 * @return  static
-	 */
-	public function removeArgument($name)
-	{
-		unset($this->arguments[$name]);
-		unset($this->caches[$name]);
+    /**
+     * removeArgument
+     *
+     * @param   string $name
+     *
+     * @return  static
+     */
+    public function removeArgument($name)
+    {
+        unset($this->arguments[$name]);
+        unset($this->caches[$name]);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Arguments
-	 *
-	 * @return  array
-	 */
-	public function getArguments()
-	{
-		$args = [];
+    /**
+     * Method to get property Arguments
+     *
+     * @return  array
+     */
+    public function getArguments()
+    {
+        $args = [];
 
-		foreach ($this->arguments as $name => $callable)
-		{
-			$args[$name] = $this->getArgument($name);
-		}
+        foreach ($this->arguments as $name => $callable) {
+            $args[$name] = $this->getArgument($name);
+        }
 
-		return $args;
-	}
+        return $args;
+    }
 
-	/**
-	 * Method to set property arguments
-	 *
-	 * @param   array $arguments
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setArguments($arguments)
-	{
-		foreach ($arguments as $name => $argument)
-		{
-			$this->setArgument($name, $argument);
-		}
+    /**
+     * Method to set property arguments
+     *
+     * @param   array $arguments
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setArguments($arguments)
+    {
+        foreach ($arguments as $name => $argument) {
+            $this->setArgument($name, $argument);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * reset
-	 *
-	 * @return  static
-	 */
-	public function reset()
-	{
-		$this->arguments = [];
+    /**
+     * reset
+     *
+     * @return  static
+     */
+    public function reset()
+    {
+        $this->arguments = [];
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * __call
-	 *
-	 * @param   string  $name
-	 * @param   array   $args
-	 *
-	 * @return  mixed
-	 */
-	public function __call($name, $args)
-	{
-		$allowMethods = [
-			'newInstance',
-			'createObject',
-			'createSharedObject',
-			'bind',
-			'bindShared'
-		];
+    /**
+     * __call
+     *
+     * @param   string $name
+     * @param   array  $args
+     *
+     * @return  mixed
+     */
+    public function __call($name, $args)
+    {
+        $allowMethods = [
+            'newInstance',
+            'createObject',
+            'createSharedObject',
+            'bind',
+            'bindShared',
+        ];
 
-		if (in_array($name, $allowMethods))
-		{
-			array_unshift($args, $this->class);
+        if (in_array($name, $allowMethods)) {
+            array_unshift($args, $this->class);
 
-			return call_user_func_array([$this->container, $name], $args);
-		}
+            return call_user_func_array([$this->container, $name], $args);
+        }
 
-		throw new \BadMethodCallException(__METHOD__ . '::' . $name . '() not found.');
-	}
+        throw new \BadMethodCallException(__METHOD__ . '::' . $name . '() not found.');
+    }
 }

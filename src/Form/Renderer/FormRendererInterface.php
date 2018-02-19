@@ -17,34 +17,34 @@ use Windwalker\Form\Field\AbstractField;
  */
 interface FormRendererInterface
 {
-	/**
-	 * renderField
-	 *
-	 * @param AbstractField $field
-	 * @param array         $attribs
-	 * @param array         $options
-	 *
-	 * @return string
-	 */
-	public function renderField(AbstractField $field, array $attribs = [], array $options = []);
+    /**
+     * renderField
+     *
+     * @param AbstractField $field
+     * @param array         $attribs
+     * @param array         $options
+     *
+     * @return string
+     */
+    public function renderField(AbstractField $field, array $attribs = [], array $options = []);
 
-	/**
-	 * renderLabel
-	 *
-	 * @param AbstractField $field
-	 * @param array         $attribs
-	 *
-	 * @return string
-	 */
-	public function renderLabel(AbstractField $field, array $attribs = []);
+    /**
+     * renderLabel
+     *
+     * @param AbstractField $field
+     * @param array         $attribs
+     *
+     * @return string
+     */
+    public function renderLabel(AbstractField $field, array $attribs = []);
 
-	/**
-	 * renderInput
-	 *
-	 * @param AbstractField $field
-	 * @param array         $attribs
-	 *
-	 * @return string
-	 */
-	public function renderInput(AbstractField $field, array $attribs = []);
+    /**
+     * renderInput
+     *
+     * @param AbstractField $field
+     * @param array         $attribs
+     *
+     * @return string
+     */
+    public function renderInput(AbstractField $field, array $attribs = []);
 }

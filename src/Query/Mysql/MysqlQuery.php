@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -17,61 +17,62 @@ use Windwalker\Query\Query;
  */
 class MysqlQuery extends Query
 {
-	/**
-	 * Property name.
-	 *
-	 * @var  string
-	 */
-	protected $name = 'mysql';
+    /**
+     * Property name.
+     *
+     * @var  string
+     */
+    protected $name = 'mysql';
 
-	/**
-	 * The character(s) used to quote SQL statement names such as table names or field names,
-	 * etc. The child classes should define this as necessary.  If a single character string the
-	 * same character is used for both sides of the quoted name, else the first character will be
-	 * used for the opening quote and the second for the closing quote.
-	 *
-	 * @var    string
-	 * @since  2.0
-	 */
-	protected $nameQuote = '`';
+    /**
+     * The character(s) used to quote SQL statement names such as table names or field names,
+     * etc. The child classes should define this as necessary.  If a single character string the
+     * same character is used for both sides of the quoted name, else the first character will be
+     * used for the opening quote and the second for the closing quote.
+     *
+     * @var    string
+     * @since  2.0
+     */
+    protected $nameQuote = '`';
 
-	/**
-	 * The null or zero representation of a timestamp for the database driver.  This should be
-	 * defined in child classes to hold the appropriate value for the engine.
-	 *
-	 * @var    string
-	 * @since  2.0
-	 */
-	protected $nullDate = '1000-01-01 00:00:00';
+    /**
+     * The null or zero representation of a timestamp for the database driver.  This should be
+     * defined in child classes to hold the appropriate value for the engine.
+     *
+     * @var    string
+     * @since  2.0
+     */
+    protected $nullDate = '1000-01-01 00:00:00';
 
-	/**
-	 * Class constructor.
-	 *
-	 * @param   \PDO $connection The PDO connection object to help us escape string.
-	 *
-	 * @since   2.0
-	 */
-	public function __construct(\PDO $connection = null)
-	{
-		parent::__construct($connection);
-	}
+    /**
+     * Class constructor.
+     *
+     * @param   \PDO $connection The PDO connection object to help us escape string.
+     *
+     * @since   2.0
+     */
+    public function __construct(\PDO $connection = null)
+    {
+        parent::__construct($connection);
+    }
 
-	/**
-	 * If no connection set, we escape it with default function.
-	 *
-	 * Since mysql_real_escape_string() has been deprecated, we use an alternative one.
-	 * Please see: http://stackoverflow.com/questions/4892882/mysql-real-escape-string-for-multibyte-without-a-connection
-	 *
-	 * @param string $text
-	 *
-	 * @return  string
-	 */
-	protected function escapeWithNoConnection($text)
-	{
-		return str_replace(
-			['\\', "\0", "\n", "\r", "'", '"', "\x1a"],
-			['\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'],
-			$text
-		);
-	}
+    /**
+     * If no connection set, we escape it with default function.
+     *
+     * Since mysql_real_escape_string() has been deprecated, we use an alternative one.
+     * Please see:
+     * http://stackoverflow.com/questions/4892882/mysql-real-escape-string-for-multibyte-without-a-connection
+     *
+     * @param string $text
+     *
+     * @return  string
+     */
+    protected function escapeWithNoConnection($text)
+    {
+        return str_replace(
+            ['\\', "\0", "\n", "\r", "'", '"', "\x1a"],
+            ['\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'],
+            $text
+        );
+    }
 }

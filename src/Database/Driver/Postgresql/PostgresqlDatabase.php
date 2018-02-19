@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -18,115 +18,111 @@ use Windwalker\Query\Postgresql\PostgresqlGrammar;
  */
 class PostgresqlDatabase extends AbstractDatabase
 {
-	/**
-	 * select
-	 *
-	 * @return  static
-	 */
-	public function select()
-	{
-		$this->db->disconnect();
+    /**
+     * select
+     *
+     * @return  static
+     */
+    public function select()
+    {
+        $this->db->disconnect();
 
-		$this->db->setDatabaseName($this->getName());
+        $this->db->setDatabaseName($this->getName());
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * createDatabase
-	 *
-	 * @param bool   $ifNotExists
-	 * @param string $charset
-	 *
-	 * @return  static
-	 */
-	public function create($ifNotExists = false, $charset = 'utf8')
-	{
-		if ($ifNotExists && $this->exists())
-		{
-			return $this;
-		}
+    /**
+     * createDatabase
+     *
+     * @param bool   $ifNotExists
+     * @param string $charset
+     *
+     * @return  static
+     */
+    public function create($ifNotExists = false, $charset = 'utf8')
+    {
+        if ($ifNotExists && $this->exists()) {
+            return $this;
+        }
 
-		$query = PostgresqlGrammar::createDatabase($this->name, $charset);
+        $query = PostgresqlGrammar::createDatabase($this->name, $charset);
 
-		$this->db->setQuery($query)->execute();
+        $this->db->setQuery($query)->execute();
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * dropDatabase
-	 *
-	 * @param bool $ifExists
-	 *
-	 * @return  static
-	 */
-	public function drop($ifExists = false)
-	{
-		if ($this->getName() == $this->db->getDatabase()->getName())
-		{
-			$this->db->disconnect();
-			$this->db->setDatabaseName(null);
-			$this->db->connect();
-		}
+    /**
+     * dropDatabase
+     *
+     * @param bool $ifExists
+     *
+     * @return  static
+     */
+    public function drop($ifExists = false)
+    {
+        if ($this->getName() == $this->db->getDatabase()->getName()) {
+            $this->db->disconnect();
+            $this->db->setDatabaseName(null);
+            $this->db->connect();
+        }
 
-		$pid = version_compare($this->db->getVersion(), '9.2', '>=') ? 'pid' : 'procpid';
+        $pid = version_compare($this->db->getVersion(), '9.2', '>=') ? 'pid' : 'procpid';
 
-		$query = $this->db->getQuery(true);
+        $query = $this->db->getQuery(true);
 
-		$query->select('pg_terminate_backend(' . $pid . ')')
-			->from('pg_stat_activity')
-			->where('datname = ' . $query->quote($this->getName()));
+        $query->select('pg_terminate_backend(' . $pid . ')')
+            ->from('pg_stat_activity')
+            ->where('datname = ' . $query->quote($this->getName()));
 
-		$this->db->setQuery($query)->execute();
+        $this->db->setQuery($query)->execute();
 
-		$query = PostgresqlGrammar::dropDatabase($this->name, $ifExists);
+        $query = PostgresqlGrammar::dropDatabase($this->name, $ifExists);
 
-		$this->db->setQuery($query)->execute();
+        $this->db->setQuery($query)->execute();
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * renameDatabase
-	 *
-	 * @param string  $newName
-	 * @param boolean $returnNew
-	 *
-	 * @return  static
-	 */
-	public function rename($newName, $returnNew = true)
-	{
-		if ($this->db->getDatabase()->getName() == $this->getName())
-		{
-			$this->db->disconnect();
-			$this->db->setDatabaseName(null);
-		}
+    /**
+     * renameDatabase
+     *
+     * @param string  $newName
+     * @param boolean $returnNew
+     *
+     * @return  static
+     */
+    public function rename($newName, $returnNew = true)
+    {
+        if ($this->db->getDatabase()->getName() == $this->getName()) {
+            $this->db->disconnect();
+            $this->db->setDatabaseName(null);
+        }
 
-		$pid = version_compare($this->db->getVersion(), '9.2', '>=') ? 'pid' : 'procpid';
+        $pid = version_compare($this->db->getVersion(), '9.2', '>=') ? 'pid' : 'procpid';
 
-		$query = $this->db->getQuery(true);
+        $query = $this->db->getQuery(true);
 
-		$query->select('pg_terminate_backend(' . $pid . ')')
-			->from('pg_stat_activity')
-			->where('datname = ' . $query->quote($this->getName()));
+        $query->select('pg_terminate_backend(' . $pid . ')')
+            ->from('pg_stat_activity')
+            ->where('datname = ' . $query->quote($this->getName()));
 
-		$this->db->setQuery($query)->execute();
+        $this->db->setQuery($query)->execute();
 
-		$query = sprintf(
-			'ALTER DATABASE %s RENAME TO %s',
-			$this->db->quoteName($this->getName()),
-			$this->db->quoteName($newName)
-		);
+        $query = sprintf(
+            'ALTER DATABASE %s RENAME TO %s',
+            $this->db->quoteName($this->getName()),
+            $this->db->quoteName($newName)
+        );
 
-		$this->db->setQuery($query)->execute();
+        $this->db->setQuery($query)->execute();
 
-		if ($returnNew)
-		{
-			return $this->db->getDatabase($newName)->select();
-		}
+        if ($returnNew) {
+            return $this->db->getDatabase($newName)->select();
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 }
 

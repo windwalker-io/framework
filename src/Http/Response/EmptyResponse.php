@@ -20,27 +20,27 @@ use Windwalker\Http\Stream\Stream;
  */
 class EmptyResponse extends Response
 {
-	/**
-	 * Constructor.
-	 *
-	 * @param  int     $status   The status code.
-	 * @param  array   $headers  The custom headers.
-	 */
-	public function __construct($status = 204, array $headers = [])
-	{
-		$body = new Stream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
+    /**
+     * Constructor.
+     *
+     * @param  int   $status  The status code.
+     * @param  array $headers The custom headers.
+     */
+    public function __construct($status = 204, array $headers = [])
+    {
+        $body = new Stream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
 
-		parent::__construct($body, $status, $headers);
-	}
+        parent::__construct($body, $status, $headers);
+    }
 
-	/**
-	 * Gets the body of the message.
-	 *
-	 * @return StreamInterface Returns the body as a stream.
-	 */
-	public function getBody()
-	{
-		// Always return empty stream
-		return new Stream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
-	}
+    /**
+     * Gets the body of the message.
+     *
+     * @return StreamInterface Returns the body as a stream.
+     */
+    public function getBody()
+    {
+        // Always return empty stream
+        return new Stream('php://memory', Stream::MODE_READ_ONLY_FROM_BEGIN);
+    }
 }

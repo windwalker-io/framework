@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,20 +13,20 @@ namespace Windwalker\Language\Loader;
  */
 interface LoaderInterface
 {
-	/**
-	 * getName
-	 *
-	 * @return  string
-	 */
-	public function getName();
+    /**
+     * getName
+     *
+     * @return  string
+     */
+    public function getName();
 
-	/**
-	 * load
-	 *
-	 * @param string $file
-	 *
-	 * @return  string
-	 */
-	public function load($file);
+    /**
+     * load
+     *
+     * @param string $file
+     *
+     * @return  string
+     */
+    public function load($file);
 }
 

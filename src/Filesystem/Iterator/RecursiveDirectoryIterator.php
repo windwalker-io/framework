@@ -15,29 +15,28 @@ namespace Windwalker\Filesystem\Iterator;
  */
 class RecursiveDirectoryIterator extends \RecursiveDirectoryIterator
 {
-	/**
-	 * Get file information of the current element.
-	 *
-	 * We remove . and .. when fetching folders' path.
-	 *
-	 * @return  \SplFileInfo  The filename, file information, or $this depending on the set flags.
-	 *          See the: http://www.php.net/manual/en/class.filesystemiterator.php#filesystemiterator.constants
-	 *
-	 * @since  2.0
-	 */
-	public function current()
-	{
-		$name = $this->getPathname();
+    /**
+     * Get file information of the current element.
+     *
+     * We remove . and .. when fetching folders' path.
+     *
+     * @return  \SplFileInfo  The filename, file information, or $this depending on the set flags.
+     *          See the: http://www.php.net/manual/en/class.filesystemiterator.php#filesystemiterator.constants
+     *
+     * @since  2.0
+     */
+    public function current()
+    {
+        $name = $this->getPathname();
 
-		$endletters = DIRECTORY_SEPARATOR . '.';
+        $endletters = DIRECTORY_SEPARATOR . '.';
 
-		if (substr($name, -2) == $endletters)
-		{
-			$name = substr($name, 0, -2);
-		}
+        if (substr($name, -2) == $endletters) {
+            $name = substr($name, 0, -2);
+        }
 
-		$file = new \SplFileInfo($name);
+        $file = new \SplFileInfo($name);
 
-		return $file;
-	}
+        return $file;
+    }
 }

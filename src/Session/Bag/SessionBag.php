@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,95 +15,91 @@ namespace Windwalker\Session\Bag;
  */
 class SessionBag implements SessionBagInterface
 {
-	/**
-	 * Property data.
-	 *
-	 * @var  array
-	 */
-	protected $data = [];
+    /**
+     * Property data.
+     *
+     * @var  array
+     */
+    protected $data = [];
 
-	/**
-	 * setData
-	 *
-	 * @param array $data
-	 *
-	 * @return  void
-	 */
-	public function setData(array &$data)
-	{
-		$this->data = &$data;
-	}
+    /**
+     * setData
+     *
+     * @param array $data
+     *
+     * @return  void
+     */
+    public function setData(array &$data)
+    {
+        $this->data = &$data;
+    }
 
-	/**
-	 * get
-	 *
-	 * @param string $key
-	 * @param mixed  $default
-	 *
-	 * @return  mixed
-	 */
-	public function get($key, $default)
-	{
-		return isset($this->data[$key]) ? $this->data[$key] : $default;
-	}
+    /**
+     * get
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return  mixed
+     */
+    public function get($key, $default)
+    {
+        return isset($this->data[$key]) ? $this->data[$key] : $default;
+    }
 
-	/**
-	 * set
-	 *
-	 * @param string $key
-	 * @param mixed  $value
-	 *
-	 * @return  $this
-	 */
-	public function set($key, $value)
-	{
-		if ($value === null)
-		{
-			if (isset($this->data[$key]))
-			{
-				unset($this->data[$key]);
-			}
-		}
-		else
-		{
-			$this->data[$key] = $value;
-		}
+    /**
+     * set
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return  $this
+     */
+    public function set($key, $value)
+    {
+        if ($value === null) {
+            if (isset($this->data[$key])) {
+                unset($this->data[$key]);
+            }
+        } else {
+            $this->data[$key] = $value;
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * has
-	 *
-	 * @param string $name
-	 *
-	 * @return  bool
-	 */
-	public function has($name)
-	{
-		return isset($this->data[$name]);
-	}
+    /**
+     * has
+     *
+     * @param string $name
+     *
+     * @return  bool
+     */
+    public function has($name)
+    {
+        return isset($this->data[$name]);
+    }
 
-	/**
-	 * all
-	 *
-	 * @return  array
-	 */
-	public function all()
-	{
-		return $this->data;
-	}
+    /**
+     * all
+     *
+     * @return  array
+     */
+    public function all()
+    {
+        return $this->data;
+    }
 
-	/**
-	 * clean
-	 *
-	 * @return  $this
-	 */
-	public function clear()
-	{
-		$this->data = [];
+    /**
+     * clean
+     *
+     * @return  $this
+     */
+    public function clear()
+    {
+        $this->data = [];
 
-		return $this;
-	}
+        return $this;
+    }
 }
 

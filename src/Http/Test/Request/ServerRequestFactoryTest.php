@@ -20,382 +20,382 @@ use Windwalker\Http\UploadedFile;
  */
 class ServerRequestFactoryTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Method to test create().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals
-	 */
-	public function testCreate()
-	{
-		$request = ServerRequestFactory::createFromGlobals();
+    /**
+     * Method to test create().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals
+     */
+    public function testCreate()
+    {
+        $request = ServerRequestFactory::createFromGlobals();
 
-		$this->assertTrue($request instanceof ServerRequest);
-	}
+        $this->assertTrue($request instanceof ServerRequest);
+    }
 
-	/**
-	 * Method to test prepareServers().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareServers
-	 */
-	public function testPrepareServers()
-	{
-		$bak = ServerRequestFactory::$apacheRequestHeaders;
+    /**
+     * Method to test prepareServers().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareServers
+     */
+    public function testPrepareServers()
+    {
+        $bak = ServerRequestFactory::$apacheRequestHeaders;
 
-		ServerRequestFactory::$apacheRequestHeaders = [$this, 'apacheRequestHeaders'];
+        ServerRequestFactory::$apacheRequestHeaders = [$this, 'apacheRequestHeaders'];
 
-		$server = [];
-		
-		$server = ServerRequestFactory::prepareServers($server);
+        $server = [];
 
-		$this->assertEquals('foo', $server['HTTP_AUTHORIZATION']);
+        $server = ServerRequestFactory::prepareServers($server);
 
-		// Test no auth
-		ServerRequestFactory::$apacheRequestHeaders = [$this, 'apacheRequestHeadersEmpty'];
+        $this->assertEquals('foo', $server['HTTP_AUTHORIZATION']);
 
-		$server = [];
+        // Test no auth
+        ServerRequestFactory::$apacheRequestHeaders = [$this, 'apacheRequestHeadersEmpty'];
 
-		$server = ServerRequestFactory::prepareServers($server);
+        $server = [];
 
-		$this->assertTrue(empty($server['HTTP_AUTHORIZATION']));
+        $server = ServerRequestFactory::prepareServers($server);
 
-		ServerRequestFactory::$apacheRequestHeaders = $bak;
-	}
+        $this->assertTrue(empty($server['HTTP_AUTHORIZATION']));
 
-	/**
-	 * apacheRequestHeaders
-	 *
-	 * @return  array
-	 */
-	public function apacheRequestHeaders()
-	{
-		return [
-			'authorization' => 'foo'
-		];
-	}
+        ServerRequestFactory::$apacheRequestHeaders = $bak;
+    }
 
-	/**
-	 * apacheRequestHeadersEmpty
-	 *
-	 * @return  array
-	 */
-	public function apacheRequestHeadersEmpty()
-	{
-		return [];
-	}
+    /**
+     * apacheRequestHeaders
+     *
+     * @return  array
+     */
+    public function apacheRequestHeaders()
+    {
+        return [
+            'authorization' => 'foo',
+        ];
+    }
 
-	/**
-	 * Method to test prepareFiles().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareFiles
-	 */
-	public function testPrepareFiles()
-	{
-		$files = [
-			[
-				'tmp_name' => 'php://temp',
-				'size' => 123,
-				'error' => 0,
-				'name' => 'foo_name',
-				'type' => 'foo_type'
-			]
-		];
+    /**
+     * apacheRequestHeadersEmpty
+     *
+     * @return  array
+     */
+    public function apacheRequestHeadersEmpty()
+    {
+        return [];
+    }
 
-		$files = ServerRequestFactory::prepareFiles($files);
+    /**
+     * Method to test prepareFiles().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareFiles
+     */
+    public function testPrepareFiles()
+    {
+        $files = [
+            [
+                'tmp_name' => 'php://temp',
+                'size' => 123,
+                'error' => 0,
+                'name' => 'foo_name',
+                'type' => 'foo_type',
+            ],
+        ];
 
-		$this->assertTrue($files[0] instanceof UploadedFile);
-		$this->assertTrue($files[0]->getStream() instanceof Stream);
-		$this->assertEquals('foo_name', $files[0]->getClientFilename());
-		$this->assertEquals(0, $files[0]->getError());
+        $files = ServerRequestFactory::prepareFiles($files);
 
-		$files = [
-			'first' => [
-				'tmp_name' => [
-					'foo' => 'php://temp',
-					'bar' => 'php://temp',
-				],
-				'size' => [
-					'foo' => 123,
-					'bar' => 321
-				],
-				'error' => [
-					'foo' => 1,
-					'bar' => 2
-				],
-				'name' => [
-					'foo' => 'foo_name',
-					'bar' => 'bar_name'
-				],
-				'type' => [
-					'foo' => 'foo_type',
-					'bar' => 'bar_type'
-				]
-			],
-			'second' => [
-				'tmp_name' => 'php://temp',
-				'size' => 456,
-				'error' => 0,
-				'name' => 'second_name',
-				'type' => 'second_type'
-			]
-		];
+        $this->assertTrue($files[0] instanceof UploadedFile);
+        $this->assertTrue($files[0]->getStream() instanceof Stream);
+        $this->assertEquals('foo_name', $files[0]->getClientFilename());
+        $this->assertEquals(0, $files[0]->getError());
 
-		$files = ServerRequestFactory::prepareFiles($files);
+        $files = [
+            'first' => [
+                'tmp_name' => [
+                    'foo' => 'php://temp',
+                    'bar' => 'php://temp',
+                ],
+                'size' => [
+                    'foo' => 123,
+                    'bar' => 321,
+                ],
+                'error' => [
+                    'foo' => 1,
+                    'bar' => 2,
+                ],
+                'name' => [
+                    'foo' => 'foo_name',
+                    'bar' => 'bar_name',
+                ],
+                'type' => [
+                    'foo' => 'foo_type',
+                    'bar' => 'bar_type',
+                ],
+            ],
+            'second' => [
+                'tmp_name' => 'php://temp',
+                'size' => 456,
+                'error' => 0,
+                'name' => 'second_name',
+                'type' => 'second_type',
+            ],
+        ];
 
-		$this->assertTrue($files['first']['foo'] instanceof UploadedFile);
-		$this->assertTrue($files['first']['bar'] instanceof UploadedFile);
-		$this->assertTrue($files['second'] instanceof UploadedFile);
-	}
+        $files = ServerRequestFactory::prepareFiles($files);
 
-	/**
-	 * Method to test prepareHeaders().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareHeaders
-	 */
-	public function testPrepareHeaders()
-	{
-		$headers = [
-			'HTTP_X_FOO' => 'foo',
-			'HTTP_X_BAR' => 'bar',
-			'HTTP_X_FLOWER' => 'Sakura',
-			'CONTENT_YOO' => 'baz',
-			'CONTENT_BIRD' => 'fly',
-		];
+        $this->assertTrue($files['first']['foo'] instanceof UploadedFile);
+        $this->assertTrue($files['first']['bar'] instanceof UploadedFile);
+        $this->assertTrue($files['second'] instanceof UploadedFile);
+    }
 
-		$expected = [
-			'x-foo' => 'foo',
-			'x-bar' => 'bar',
-			'x-flower' => 'Sakura',
-			'content-yoo' => 'baz',
-			'content-bird' => 'fly',
-		];
+    /**
+     * Method to test prepareHeaders().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareHeaders
+     */
+    public function testPrepareHeaders()
+    {
+        $headers = [
+            'HTTP_X_FOO' => 'foo',
+            'HTTP_X_BAR' => 'bar',
+            'HTTP_X_FLOWER' => 'Sakura',
+            'CONTENT_YOO' => 'baz',
+            'CONTENT_BIRD' => 'fly',
+        ];
 
-		$this->assertEquals($expected, ServerRequestFactory::prepareHeaders($headers));
-	}
+        $expected = [
+            'x-foo' => 'foo',
+            'x-bar' => 'bar',
+            'x-flower' => 'Sakura',
+            'content-yoo' => 'baz',
+            'content-bird' => 'fly',
+        ];
 
-	/**
-	 * Method to test prepareUri().
-	 *
-	 * @param array  $servers
-	 * @param array  $headers
-	 * @param string $expected
-	 *
-	 * @covers \Windwalker\Http\Request\ServerRequestFactory::prepareUri
-	 *
-	 * @dataProvider prepareUri_Provider
-	 */
-	public function testPrepareUri($servers, $headers, $expected)
-	{
-		$uri = ServerRequestFactory::prepareUri($servers, $headers);
+        $this->assertEquals($expected, ServerRequestFactory::prepareHeaders($headers));
+    }
 
-		$this->assertEquals($expected, $uri->__toString());
-	}
+    /**
+     * Method to test prepareUri().
+     *
+     * @param array  $servers
+     * @param array  $headers
+     * @param string $expected
+     *
+     * @covers       \Windwalker\Http\Request\ServerRequestFactory::prepareUri
+     *
+     * @dataProvider prepareUri_Provider
+     */
+    public function testPrepareUri($servers, $headers, $expected)
+    {
+        $uri = ServerRequestFactory::prepareUri($servers, $headers);
 
-	/**
-	 * prepareUri_Provider
-	 *
-	 * @return  array
-	 */
-	public function prepareUri_Provider()
-	{
-		return [
-			'#apache-normal' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => 'example.com',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar?a=wrong'
-				],
-				[],
-				'http://example.com:8080/foo/bar?a=b&c=d',
-				__LINE__,
-			],
-			'#apache-fragment' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => 'example.com',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar#test?a=b&c=d'
-				],
-				[],
-				'http://example.com:8080/foo/bar?a=b&c=d#test',
-				__LINE__,
-			],
-			'#apache-https' => [
-				[
-					'HTTPS' => 'on',
-					'SERVER_NAME' => 'example.com',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar?a=wrong'
-				],
-				[],
-				'https://example.com:8080/foo/bar?a=b&c=d',
-				__LINE__,
-			],
-			'#apache-x-forwarded' => [
-				[
-					'HTTPS' => '',
-					'SERVER_NAME' => 'example.com',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar?a=wrong'
-				],
-				[
-					'x-forwarded-proto' => 'https'
-				],
-				'https://example.com:8080/foo/bar?a=b&c=d',
-				__LINE__,
-			],
-			'#apache-header-host' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => '',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar?a=wrong'
-				],
-				[
-					'host' => 'example.com'
-				],
-				// Will never get port because host in header is a cache
-				'http://example.com/foo/bar?a=b&c=d',
-				__LINE__,
-			],
-			'#apache-ipv6' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => '[2001:db8:a0b:12f0::1]',
-					'SERVER_ADDR' => '2001:db8:a0b:12f0::1',
-					'SERVER_PORT' => 8080,
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar?a=wrong'
-				],
-				[],
-				'http://[2001:db8:a0b:12f0::1]:8080/foo/bar?a=b&c=d',
-				__LINE__,
-			],
-			'#iis-rewritten' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => 'example.com',
-					'IIS_WasUrlRewritten' => '1',
-					'UNENCODED_URL' => 'flower/sakura',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar?a=wrong'
-				],
-				[],
-				'http://example.com:8080/flower/sakura?a=b&c=d',
-				__LINE__,
-			],
-			'#iis-x-rewrite' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => 'example.com',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar?a=wrong',
-					'HTTP_X_REWRITE_URL' => '/flower/sakura?a=wrong',
-				],
-				[],
-				'http://example.com:8080/flower/sakura?a=b&c=d',
-				__LINE__,
-			],
-			'#iis-origin-url' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => 'example.com',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'REQUEST_URI' => '/foo/bar?a=wrong',
-					'HTTP_X_REWRITE_URL' => '/flower/sakura?a=wrong',
-					'HTTP_X_ORIGINAL_URL' => '/flower/olive?a=wrong'
-				],
-				[],
-				'http://example.com:8080/flower/olive?a=b&c=d',
-				__LINE__,
-			],
-			'#orig-path-info' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => 'example.com',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-					'ORIG_PATH_INFO' => '/flower/rose'
-				],
-				[],
-				'http://example.com:8080/flower/rose?a=b&c=d',
-				__LINE__,
-			],
-			'#no-path' => [
-				[
-					'HTTPS' => 'off',
-					'SERVER_NAME' => 'example.com',
-					'SERVER_PORT' => '8080',
-					'QUERY_STRING' => '?a=b&c=d',
-				],
-				[],
-				'http://example.com:8080/?a=b&c=d',
-				__LINE__,
-			],
-		];
-	}
+        $this->assertEquals($expected, $uri->__toString());
+    }
 
-	/**
-	 * Method to test getHostAndPortFromHeaders().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Http\Request\ServerRequestFactory::getHostAndPortFromHeaders
-	 * @TODO   Implement testGetHostAndPortFromHeaders().
-	 */
-	public function testGetHostAndPortFromHeaders()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * prepareUri_Provider
+     *
+     * @return  array
+     */
+    public function prepareUri_Provider()
+    {
+        return [
+            '#apache-normal' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => 'example.com',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                ],
+                [],
+                'http://example.com:8080/foo/bar?a=b&c=d',
+                __LINE__,
+            ],
+            '#apache-fragment' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => 'example.com',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar#test?a=b&c=d',
+                ],
+                [],
+                'http://example.com:8080/foo/bar?a=b&c=d#test',
+                __LINE__,
+            ],
+            '#apache-https' => [
+                [
+                    'HTTPS' => 'on',
+                    'SERVER_NAME' => 'example.com',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                ],
+                [],
+                'https://example.com:8080/foo/bar?a=b&c=d',
+                __LINE__,
+            ],
+            '#apache-x-forwarded' => [
+                [
+                    'HTTPS' => '',
+                    'SERVER_NAME' => 'example.com',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                ],
+                [
+                    'x-forwarded-proto' => 'https',
+                ],
+                'https://example.com:8080/foo/bar?a=b&c=d',
+                __LINE__,
+            ],
+            '#apache-header-host' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => '',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                ],
+                [
+                    'host' => 'example.com',
+                ],
+                // Will never get port because host in header is a cache
+                'http://example.com/foo/bar?a=b&c=d',
+                __LINE__,
+            ],
+            '#apache-ipv6' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => '[2001:db8:a0b:12f0::1]',
+                    'SERVER_ADDR' => '2001:db8:a0b:12f0::1',
+                    'SERVER_PORT' => 8080,
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                ],
+                [],
+                'http://[2001:db8:a0b:12f0::1]:8080/foo/bar?a=b&c=d',
+                __LINE__,
+            ],
+            '#iis-rewritten' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => 'example.com',
+                    'IIS_WasUrlRewritten' => '1',
+                    'UNENCODED_URL' => 'flower/sakura',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                ],
+                [],
+                'http://example.com:8080/flower/sakura?a=b&c=d',
+                __LINE__,
+            ],
+            '#iis-x-rewrite' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => 'example.com',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'HTTP_X_REWRITE_URL' => '/flower/sakura?a=wrong',
+                ],
+                [],
+                'http://example.com:8080/flower/sakura?a=b&c=d',
+                __LINE__,
+            ],
+            '#iis-origin-url' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => 'example.com',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'REQUEST_URI' => '/foo/bar?a=wrong',
+                    'HTTP_X_REWRITE_URL' => '/flower/sakura?a=wrong',
+                    'HTTP_X_ORIGINAL_URL' => '/flower/olive?a=wrong',
+                ],
+                [],
+                'http://example.com:8080/flower/olive?a=b&c=d',
+                __LINE__,
+            ],
+            '#orig-path-info' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => 'example.com',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                    'ORIG_PATH_INFO' => '/flower/rose',
+                ],
+                [],
+                'http://example.com:8080/flower/rose?a=b&c=d',
+                __LINE__,
+            ],
+            '#no-path' => [
+                [
+                    'HTTPS' => 'off',
+                    'SERVER_NAME' => 'example.com',
+                    'SERVER_PORT' => '8080',
+                    'QUERY_STRING' => '?a=b&c=d',
+                ],
+                [],
+                'http://example.com:8080/?a=b&c=d',
+                __LINE__,
+            ],
+        ];
+    }
 
-	/**
-	 * Method to test getRequestUri().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Http\Request\ServerRequestFactory::getRequestUri
-	 * @TODO   Implement testGetRequestUri().
-	 */
-	public function testGetRequestUri()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test getHostAndPortFromHeaders().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Http\Request\ServerRequestFactory::getHostAndPortFromHeaders
+     * @TODO   Implement testGetHostAndPortFromHeaders().
+     */
+    public function testGetHostAndPortFromHeaders()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
-	/**
-	 * Method to test stripQueryString().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Http\Request\ServerRequestFactory::stripQueryString
-	 * @TODO   Implement testStripQueryString().
-	 */
-	public function testStripQueryString()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test getRequestUri().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Http\Request\ServerRequestFactory::getRequestUri
+     * @TODO   Implement testGetRequestUri().
+     */
+    public function testGetRequestUri()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * Method to test stripQueryString().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Http\Request\ServerRequestFactory::stripQueryString
+     * @TODO   Implement testStripQueryString().
+     */
+    public function testStripQueryString()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 }

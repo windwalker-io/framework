@@ -18,37 +18,37 @@ use Windwalker\Console\Test\Stubs\Foo\AaaCommand;
  */
 class FooCommand extends Command
 {
-	/**
-	 * Command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'foo';
+    /**
+     * Command name.
+     *
+     * @var string
+     */
+    protected $name = 'foo';
 
-	/**
-	 * Initialise command.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	protected function init()
-	{
-		$this->description('Foo command desc')
-			->usage('foo <command> [option]')
-			->help('Foo Command Help')
-			->addCommand(new AaaCommand);
-	}
+    /**
+     * Initialise command.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    protected function init()
+    {
+        $this->description('Foo command desc')
+            ->usage('foo <command> [option]')
+            ->help('Foo Command Help')
+            ->addCommand(new AaaCommand);
+    }
 
-	/**
-	 * doExecute
-	 *
-	 * @return int
-	 *
-	 * @since  2.0
-	 */
-	public function doExecute()
-	{
-		return 123;
-	}
+    /**
+     * doExecute
+     *
+     * @return int
+     *
+     * @since  2.0
+     */
+    public function doExecute()
+    {
+        return 123;
+    }
 }

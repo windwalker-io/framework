@@ -15,10 +15,10 @@ namespace Windwalker\Form\Field;
  */
 class NumberField extends AbstractHtml5Field
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'number';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'number';
 }

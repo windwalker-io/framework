@@ -15,10 +15,10 @@ namespace Windwalker\Form\Field;
  */
 class UrlField extends AbstractHtml5Field
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'url';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'url';
 }

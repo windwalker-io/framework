@@ -11,14 +11,12 @@
 $globals = (array) null;
 $_SERVER['HTTP_HOST'];
 
-foreach ($GLOBALS as $key => $value)
-{
-	if ($key === 'GLOBALS' || $key === 'globals' || $key === 'value')
-	{
-		continue;
-	}
+foreach ($GLOBALS as $key => $value) {
+    if ($key === 'GLOBALS' || $key === 'globals' || $key === 'value') {
+        continue;
+    }
 
-	$globals[$key] = $value;
+    $globals[$key] = $value;
 }
 
 parse_str(file_get_contents('php://input'), $globals['data']);

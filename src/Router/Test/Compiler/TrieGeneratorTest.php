@@ -17,58 +17,58 @@ use Windwalker\Router\Compiler\TrieGenerator;
  */
 class TrieGeneratorTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * regexList
-	 *
-	 * @return  array
-	 */
-	public function regexList()
-	{
-		return [
-			[
-				'/flower/:id',
-				['id' => 25],
-				'/flower/25',
-				__LINE__
-			],
-			[
-				'/flower/:id/:alias',
-				['id' => 25, 'alias' => 'sakura'],
-				'/flower/25/sakura',
-				__LINE__
-			],
-			[
-				'/flower/:id/:alias',
-				['alias' => 'sakura'],
-				'/flower/null/sakura',
-				__LINE__
-			],
-			[
-				'/flower/*tags',
-				['id' => 25, 'tags' => ['sakura', 'rose', 'olive']],
-				'/flower/sakura/rose/olive/?id=25',
-				__LINE__
-			],
-			[
-				'/flower/*tags/:alias',
-				['id' => 25, 'alias' => 'wind', 'tags' => ['sakura', 'rose', 'olive']],
-				'/flower/sakura/rose/olive/wind/?id=25',
-				__LINE__
-			],
-		];
-	}
+    /**
+     * regexList
+     *
+     * @return  array
+     */
+    public function regexList()
+    {
+        return [
+            [
+                '/flower/:id',
+                ['id' => 25],
+                '/flower/25',
+                __LINE__,
+            ],
+            [
+                '/flower/:id/:alias',
+                ['id' => 25, 'alias' => 'sakura'],
+                '/flower/25/sakura',
+                __LINE__,
+            ],
+            [
+                '/flower/:id/:alias',
+                ['alias' => 'sakura'],
+                '/flower/null/sakura',
+                __LINE__,
+            ],
+            [
+                '/flower/*tags',
+                ['id' => 25, 'tags' => ['sakura', 'rose', 'olive']],
+                '/flower/sakura/rose/olive/?id=25',
+                __LINE__,
+            ],
+            [
+                '/flower/*tags/:alias',
+                ['id' => 25, 'alias' => 'wind', 'tags' => ['sakura', 'rose', 'olive']],
+                '/flower/sakura/rose/olive/wind/?id=25',
+                __LINE__,
+            ],
+        ];
+    }
 
-	/**
-	 * Method to test generate().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Router\Compiler\BasicGenerator::generate
-	 *
-	 * @dataProvider  regexList
-	 */
-	public function testGenerate($pattern, $data, $expected, $line)
-	{
-		$this->assertEquals($expected, TrieGenerator::generate($pattern, $data), 'Fail at: ' . $line);
-	}
+    /**
+     * Method to test generate().
+     *
+     * @return void
+     *
+     * @covers        \Windwalker\Router\Compiler\BasicGenerator::generate
+     *
+     * @dataProvider  regexList
+     */
+    public function testGenerate($pattern, $data, $expected, $line)
+    {
+        $this->assertEquals($expected, TrieGenerator::generate($pattern, $data), 'Fail at: ' . $line);
+    }
 }

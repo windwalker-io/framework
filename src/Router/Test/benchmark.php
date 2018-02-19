@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,13 +15,12 @@ $routes = file_get_contents(__DIR__ . '/fixtures/routes.txt');
 $routes = explode("\n", trim($routes));
 
 $routeItems = array_map(
-	function ($route)
-	{
-		$route = trim($route, '/');
+    function ($route) {
+        $route = trim($route, '/');
 
-		return new Route($route, $route, ['_return' => $route]);
-	},
-	$routes
+        return new Route($route, $route, ['_return' => $route]);
+    },
+    $routes
 );
 
 $count = count($routes);
@@ -43,74 +42,65 @@ $bench = new \Windwalker\Profiler\Benchmark;
 $avg = [];
 
 $bench->addTask(
-	'Sequential',
-	function() use ($seq, $routes, $count, &$avg)
-	{
-		static $i = 0;
+    'Sequential',
+    function () use ($seq, $routes, $count, &$avg) {
+        static $i = 0;
 
-		if ($i + 1 > $count)
-		{
-			$i = 0;
-		}
+        if ($i + 1 > $count) {
+            $i = 0;
+        }
 
-		$r = $seq->match($routes[$i]);
+        $r = $seq->match($routes[$i]);
 
-		if ($r->getName() == trim($routes[$i], '/'))
-		{
-			echo '.';
-			$avg['seq'] += $seq->getCount();
-		}
+        if ($r->getName() == trim($routes[$i], '/')) {
+            echo '.';
+            $avg['seq'] += $seq->getCount();
+        }
 
-		$i++;
-	}
+        $i++;
+    }
 );
 
 $bench->addTask(
-	'Binary',
-	function() use ($bin, $routes, $count, &$avg)
-	{
-		static $i = 0;
+    'Binary',
+    function () use ($bin, $routes, $count, &$avg) {
+        static $i = 0;
 
-		if ($i + 1 > $count)
-		{
-			$i = 0;
-		}
+        if ($i + 1 > $count) {
+            $i = 0;
+        }
 
-		$r = $bin->match($routes[$i]);
+        $r = $bin->match($routes[$i]);
 
-		if ($r->getName() == trim($routes[$i], '/'))
-		{
-			echo '.';
-			$avg['bin'] += $bin->getCount();
-		}
+        if ($r->getName() == trim($routes[$i], '/')) {
+            echo '.';
+            $avg['bin'] += $bin->getCount();
+        }
 
-		$i++;
-	}
+        $i++;
+    }
 );
 
 $bench->addTask(
-	'Trie',
-	function() use ($trie, $routes, $count, &$avg)
-	{
-		static $i = 0;
+    'Trie',
+    function () use ($trie, $routes, $count, &$avg) {
+        static $i = 0;
 
-		$trie->setTree(unserialize(file_get_contents(__DIR__ . '/fixtures/cache.trie')));
+        $trie->setTree(unserialize(file_get_contents(__DIR__ . '/fixtures/cache.trie')));
 
-		if ($i + 1 > $count)
-		{
-			$i = 0;
-		}
+        if ($i + 1 > $count) {
+            $i = 0;
+        }
 
-		$r = $trie->match($routes[$i]);
+        $r = $trie->match($routes[$i]);
 
-		if ($r->getName() == trim($routes[$i], '/'))
-		{
-			echo '.';
-			$avg['trie'] += $trie->getCount();
-		}
+        if ($r->getName() == trim($routes[$i], '/')) {
+            echo '.';
+            $avg['trie'] += $trie->getCount();
+        }
 
-		$i++;
-	}
+        $i++;
+    }
 );
 
 $bench->execute(1000);

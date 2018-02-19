@@ -17,46 +17,46 @@ use Windwalker\Validator\Rule\AlnumValidator;
  */
 class AlnumValidatorTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var AlnumValidator
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var AlnumValidator
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new AlnumValidator;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new AlnumValidator;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * testValidate
-	 *
-	 * @return  void
-	 *
-	 * @cover  \Windwalker\Validator\Rule\AlnumValidator
-	 */
-	public function testValidate()
-	{
-		$this->assertTrue($this->instance->validate('abc123cba456'));
+    /**
+     * testValidate
+     *
+     * @return  void
+     *
+     * @cover  \Windwalker\Validator\Rule\AlnumValidator
+     */
+    public function testValidate()
+    {
+        $this->assertTrue($this->instance->validate('abc123cba456'));
 
-		$this->assertFalse($this->instance->validate('abc123 cba456'));
-		$this->assertFalse($this->instance->validate('abc_123.cba-456'));
-	}
+        $this->assertFalse($this->instance->validate('abc123 cba456'));
+        $this->assertFalse($this->instance->validate('abc_123.cba-456'));
+    }
 }

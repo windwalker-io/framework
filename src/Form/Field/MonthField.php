@@ -15,10 +15,10 @@ namespace Windwalker\Form\Field;
  */
 class MonthField extends AbstractHtml5Field
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'month';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'month';
 }
