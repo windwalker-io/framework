@@ -31,13 +31,13 @@ class PhpFormat implements FormatInterface
         $header = StructureHelper::getValue($options, 'header');
 
         // Build the object variables string
-        $vars = "";
+        $vars = '';
 
         foreach ($struct as $k => $v) {
             if (is_scalar($v)) {
-                $vars .= sprintf("\t'%s' => '%s',\n", $k, addcslashes($v, '\\\''));
+                $vars .= sprintf("    '%s' => '%s',\n", $k, addcslashes($v, '\\\''));
             } elseif (is_array($v) || is_object($v)) {
-                $vars .= sprintf("\t'%s' => %s,\n", $k, static::getArrayString((array) $v));
+                $vars .= sprintf("    '%s' => %s,\n", $k, static::getArrayString((array) $v));
             }
         }
 
@@ -47,9 +47,9 @@ class PhpFormat implements FormatInterface
             $str .= $header . "\n";
         }
 
-        $str .= "\nreturn array(\n";
+        $str .= "\nreturn [\n";
         $str .= $vars;
-        $str .= ");\n";
+        $str .= "];\n";
 
         // Use the closing tag if set to true in parameters.
         if (StructureHelper::getValue($options, 'closingtag', false)) {
@@ -77,27 +77,27 @@ class PhpFormat implements FormatInterface
      *
      * @param   array $a The array to get as a string.
      *
-     * @return  array
+     * @return  string
      */
     protected static function getArrayString($a, $level = 2)
     {
-        $s = "array(\n";
+        $s = "[\n";
         $i = 0;
 
         foreach ($a as $k => $v) {
-            $s .= ($i) ? ",\n" : '';
-            $s .= str_repeat("\t", $level) . '"' . $k . '" => ';
+            $s .= $i ? ",\n" : '';
+            $s .= str_repeat('    ', $level) . "'" . $k . "' => ";
 
             if (is_array($v) || is_object($v)) {
                 $s .= static::getArrayString((array) $v, $level + 1);
             } else {
-                $s .= '"' . addslashes($v) . '"';
+                $s .= "'" . addslashes($v) . "'";
             }
 
             $i++;
         }
 
-        $s .= "\n" . str_repeat("\t", $level - 1) . ")";
+        $s .= "\n" . str_repeat('    ', $level - 1) . ']';
 
         return $s;
     }

@@ -110,9 +110,7 @@ HTML;
 
         $expect = <<<HTML
 <p>
-Lorem ipsum dolor sit amet,
-consectetur adipiscing elit.
-Curabitur eleifend, ante vitae vestibulum tempus
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eleifend, ante vitae vestibulum tempus
 </p>
 HTML;
 

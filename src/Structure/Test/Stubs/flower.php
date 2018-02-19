@@ -4,14 +4,14 @@ return [
     'flower' => 'sakura',
     'olive' => 'peace',
     'pos1' => [
-        "sunflower" => "love",
+        'sunflower' => 'love'
     ],
     'pos2' => [
-        "cornflower" => "elegant",
+        'cornflower' => 'elegant'
     ],
     'array' => [
-        "0" => "A",
-        "1" => "B",
-        "2" => "C",
+        '0' => 'A',
+        '1' => 'B',
+        '2' => 'C'
     ],
 ];
