@@ -8,6 +8,8 @@
 
 namespace Windwalker\Crypt\Cipher;
 
+use Windwalker\Crypt\CryptHelper;
+
 /**
  * The SodiumCipher class.
  *
@@ -152,7 +154,11 @@ class SodiumCipher extends AbstractCipher
      */
     public static function genRandomBytes($size = SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
     {
-        return sodium_randombytes_buf($size);
+        if (function_exists('sodium_randombytes_buf')) {
+            return sodium_randombytes_buf($size);
+        }
+
+        return CryptHelper::genRandomBytes($size);
     }
 
     /**
