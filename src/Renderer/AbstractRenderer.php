@@ -19,164 +19,158 @@ use Windwalker\Structure\Structure;
  */
 abstract class AbstractRenderer implements RendererInterface
 {
-	/**
-	 * Property paths.
-	 *
-	 * @var  \SplPriorityQueue
-	 */
-	protected $paths = null;
+    /**
+     * Property paths.
+     *
+     * @var  \SplPriorityQueue
+     */
+    protected $paths = null;
 
-	/**
-	 * Property config.
-	 *
-	 * @var  Structure
-	 */
-	protected $config = [];
+    /**
+     * Property config.
+     *
+     * @var  Structure
+     */
+    protected $config = [];
 
-	/**
-	 * Class init.
-	 *
-	 * @param \SplPriorityQueue $paths
-	 * @param array             $config
-	 */
-	public function __construct($paths = null, $config = [])
-	{
-		$this->setPaths($paths);
+    /**
+     * Class init.
+     *
+     * @param \SplPriorityQueue $paths
+     * @param array             $config
+     */
+    public function __construct($paths = null, $config = [])
+    {
+        $this->setPaths($paths);
 
-		$this->config = new Structure($this->config);
+        $this->config = new Structure($this->config);
 
-		$this->config->load($config);
-	}
+        $this->config->load($config);
+    }
 
-	/**
-	 * Method to escape output.
-	 *
-	 * @param   string  $output  The output to escape.
-	 *
-	 * @return  string  The escaped output.
-	 *
-	 * @see     ViewInterface::escape()
-	 * @since   2.0
-	 */
-	public function escape($output)
-	{
-		// Escape the output.
-		return htmlspecialchars($output, ENT_COMPAT, 'UTF-8');
-	}
+    /**
+     * Method to escape output.
+     *
+     * @param   string $output The output to escape.
+     *
+     * @return  string  The escaped output.
+     *
+     * @see     ViewInterface::escape()
+     * @since   2.0
+     */
+    public function escape($output)
+    {
+        // Escape the output.
+        return htmlspecialchars($output, ENT_COMPAT, 'UTF-8');
+    }
 
-	/**
-	 * finFile
-	 *
-	 * @param string $file
-	 * @param string $ext
-	 *
-	 * @return  string
-	 */
-	public function findFile($file, $ext = '')
-	{
-		$paths = clone $this->getPaths();
+    /**
+     * finFile
+     *
+     * @param string $file
+     * @param string $ext
+     *
+     * @return  string
+     */
+    public function findFile($file, $ext = '')
+    {
+        $paths = clone $this->getPaths();
 
-		$file = str_replace('.', '/', $file);
+        $file = str_replace('.', '/', $file);
 
-		$ext = $ext ? '.' . trim($ext, '.') : '';
+        $ext = $ext ? '.' . trim($ext, '.') : '';
 
-		foreach ($paths as $path)
-		{
-			$filePath = $path . '/' . $file . $ext;
+        foreach ($paths as $path) {
+            $filePath = $path . '/' . $file . $ext;
 
-			if (is_file($filePath))
-			{
-				return realpath($filePath);
-			}
-		}
+            if (is_file($filePath)) {
+                return realpath($filePath);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * getPaths
-	 *
-	 * @return  \SplPriorityQueue
-	 */
-	public function getPaths()
-	{
-		return $this->paths;
-	}
+    /**
+     * getPaths
+     *
+     * @return  \SplPriorityQueue
+     */
+    public function getPaths()
+    {
+        return $this->paths;
+    }
 
-	/**
-	 * setPaths
-	 *
-	 * @param   \SplPriorityQueue $paths
-	 *
-	 * @return  AbstractRenderer  Return self to support chaining.
-	 */
-	public function setPaths($paths)
-	{
-		if (!($paths instanceof \SplPriorityQueue))
-		{
-			$priority = new \SplPriorityQueue;
+    /**
+     * setPaths
+     *
+     * @param   \SplPriorityQueue $paths
+     *
+     * @return  AbstractRenderer  Return self to support chaining.
+     */
+    public function setPaths($paths)
+    {
+        if (!($paths instanceof \SplPriorityQueue)) {
+            $priority = new \SplPriorityQueue;
 
-			foreach ((array) $paths as $i => $path)
-			{
-				$priority->insert($path, 100 - ($i * 10));
-			}
+            foreach ((array)$paths as $i => $path) {
+                $priority->insert($path, 100 - ($i * 10));
+            }
 
-			$paths = $priority;
-		}
+            $paths = $priority;
+        }
 
-		$this->paths = $paths;
+        $this->paths = $paths;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * addPath
-	 *
-	 * @param string  $path
-	 * @param integer $priority
-	 *
-	 * @return  static
-	 */
-	public function addPath($path, $priority = 100)
-	{
-		$this->paths->insert($path, $priority);
+    /**
+     * addPath
+     *
+     * @param string  $path
+     * @param integer $priority
+     *
+     * @return  static
+     */
+    public function addPath($path, $priority = 100)
+    {
+        $this->paths->insert($path, $priority);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * dumpPaths
-	 *
-	 * @return  array
-	 */
-	public function dumpPaths()
-	{
-		$paths = clone $this->paths;
+    /**
+     * dumpPaths
+     *
+     * @return  array
+     */
+    public function dumpPaths()
+    {
+        $paths = clone $this->paths;
 
-		$return = [];
+        $return = [];
 
-		foreach ($paths as $path)
-		{
-			$return[] = $path;
-		}
+        foreach ($paths as $path) {
+            $return[] = $path;
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 
-	/**
-	 * __get
-	 *
-	 * @param string $name
-	 *
-	 * @return  mixed
-	 */
-	public function __get($name)
-	{
-		if ($name === 'config')
-		{
-			return $this->$name;
-		}
+    /**
+     * __get
+     *
+     * @param string $name
+     *
+     * @return  mixed
+     */
+    public function __get($name)
+    {
+        if ($name === 'config') {
+            return $this->$name;
+        }
 
-		throw new \UnexpectedValueException('Property ' . $name . ' not extists.');
-	}
+        throw new \UnexpectedValueException('Property ' . $name . ' not extists.');
+    }
 }

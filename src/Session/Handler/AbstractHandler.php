@@ -15,31 +15,31 @@ namespace Windwalker\Session\Handler;
  */
 abstract class AbstractHandler implements HandlerInterface
 {
-	/**
-	 * Property prefix.
-	 *
-	 * @var  string
-	 */
-	protected $prefix = null;
+    /**
+     * Property prefix.
+     *
+     * @var  string
+     */
+    protected $prefix = null;
 
-	/**
-	 * Class init.
-	 *
-	 * @param array $options
-	 */
-	public function __construct($options = [])
-	{
-		$this->prefix = isset($options['prefix']) ? $options['prefix'] : 'wws_';
-	}
+    /**
+     * Class init.
+     *
+     * @param array $options
+     */
+    public function __construct($options = [])
+    {
+        $this->prefix = isset($options['prefix']) ? $options['prefix'] : 'wws_';
+    }
 
-	/**
-	 * register
-	 *
-	 * @return  mixed
-	 */
-	public function register()
-	{
-		session_set_save_handler($this, true);
-	}
+    /**
+     * register
+     *
+     * @return  mixed
+     */
+    public function register()
+    {
+        session_set_save_handler($this, true);
+    }
 }
 

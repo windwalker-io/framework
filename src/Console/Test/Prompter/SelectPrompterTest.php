@@ -8,10 +8,6 @@
 
 namespace Windwalker\Console\Test\Prompter;
 
-use Windwalker\Console\IO\IO;
-use Windwalker\Console\Prompter\CallbackPrompter;
-use Windwalker\Console\Prompter\NotNullPrompter;
-use Windwalker\Console\Prompter\PasswordPrompter;
 use Windwalker\Console\Prompter\SelectPrompter;
 
 /**
@@ -21,44 +17,44 @@ use Windwalker\Console\Prompter\SelectPrompter;
  */
 class SelectPrompterTest extends AbstractPrompterTest
 {
-	/**
-	 * Property options.
-	 *
-	 * @var  array
-	 */
-	protected $options = ['red', 'yellow', 'blue'];
+    /**
+     * Property options.
+     *
+     * @var  array
+     */
+    protected $options = ['red', 'yellow', 'blue'];
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    protected function setUp()
+    {
+        parent::setUp();
 
-		$this->instance = $prompter = new SelectPrompter(null, $this->options, false, $this->io);
-	}
+        $this->instance = $prompter = new SelectPrompter(null, $this->options, false, $this->io);
+    }
 
-	/**
-	 * Test prompter ask.
-	 *
-	 * @return  void
-	 *
-	 * @since  2.0
-	 */
-	public function testAsk()
-	{
-		// Invalidate input test
-		$this->setStream("4\n5\n6\n7\n8");
+    /**
+     * Test prompter ask.
+     *
+     * @return  void
+     *
+     * @since  2.0
+     */
+    public function testAsk()
+    {
+        // Invalidate input test
+        $this->setStream("4\n5\n6\n7\n8");
 
-		$in = $this->instance->setAttemptTimes(5)
-			->ask('Please select an option []:', 2);
+        $in = $this->instance->setAttemptTimes(5)
+            ->ask('Please select an option []:', 2);
 
-		$outputCompare = <<<EOF
+        $outputCompare = <<<EOF
   [0] - red
   [1] - yellow
   [2] - blue
@@ -79,15 +75,15 @@ Please select an option []:
   Not a valid selection
 EOF;
 
-		$this->assertStringDataEquals($outputCompare, $this->io->getTestOutput());
+        $this->assertStringDataEquals($outputCompare, $this->io->getTestOutput());
 
-		// Default value
-		$this->assertEquals($in, 2, 'Return value should be default (2).');
+        // Default value
+        $this->assertEquals($in, 2, 'Return value should be default (2).');
 
-		$this->setStream("1");
+        $this->setStream("1");
 
-		$in = $this->instance->ask('Please select an option []:', 2);
+        $in = $this->instance->ask('Please select an option []:', 2);
 
-		$this->assertEquals($in, 1);
-	}
+        $this->assertEquals($in, 1);
+    }
 }

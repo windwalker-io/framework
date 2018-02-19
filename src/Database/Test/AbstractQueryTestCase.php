@@ -18,36 +18,36 @@ use Windwalker\Test\Traits\BaseAssertionTrait;
  */
 class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
 {
-	use BaseAssertionTrait;
+    use BaseAssertionTrait;
 
-	/**
-	 * Property quote.
-	 *
-	 * @var  array
-	 */
-	protected static $quote = ['"', '"'];
+    /**
+     * Property quote.
+     *
+     * @var  array
+     */
+    protected static $quote = ['"', '"'];
 
-	/**
-	 * quote
-	 *
-	 * @param string $text
-	 *
-	 * @return  string
-	 */
-	protected function qn($text)
-	{
-		return TestStringHelper::quote($text, static::$quote);
-	}
+    /**
+     * quote
+     *
+     * @param string $text
+     *
+     * @return  string
+     */
+    protected function qn($text)
+    {
+        return TestStringHelper::quote($text, static::$quote);
+    }
 
-	/**
-	 * format
-	 *
-	 * @param   string  $sql
-	 *
-	 * @return  String
-	 */
-	protected function format($sql)
-	{
-		return \SqlFormatter::format((string) $sql, false);
-	}
+    /**
+     * format
+     *
+     * @param   string $sql
+     *
+     * @return  String
+     */
+    protected function format($sql)
+    {
+        return \SqlFormatter::format((string)$sql, false);
+    }
 }

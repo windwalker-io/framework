@@ -20,324 +20,285 @@ use Windwalker\Query\QueryInterface;
  */
 class QueryHelper
 {
-	/**
-	 * Property db.
-	 *
-	 * @var  AbstractDatabaseDriver
-	 */
-	protected $db = null;
+    /**
+     * Property db.
+     *
+     * @var  AbstractDatabaseDriver
+     */
+    protected $db = null;
 
-	/**
-	 * Property tables.
-	 *
-	 * @var  array
-	 */
-	protected $tables = [];
+    /**
+     * Property tables.
+     *
+     * @var  array
+     */
+    protected $tables = [];
 
-	/**
-	 * Constructor.
-	 *
-	 * @param AbstractDatabaseDriver $db
-	 */
-	public function __construct(AbstractDatabaseDriver $db = null)
-	{
-		$this->db = $db ? : $this->getDb();
-	}
+    /**
+     * Constructor.
+     *
+     * @param AbstractDatabaseDriver $db
+     */
+    public function __construct(AbstractDatabaseDriver $db = null)
+    {
+        $this->db = $db ?: $this->getDb();
+    }
 
-	/**
-	 * addTable
-	 *
-	 * @param string  $alias
-	 * @param string  $table
-	 * @param mixed   $condition
-	 * @param string  $joinType
-	 * @param boolean $prefix
-	 *
-	 * @return  QueryHelper
-	 */
-	public function addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
-	{
-		$tableStorage = [];
+    /**
+     * addTable
+     *
+     * @param string  $alias
+     * @param string  $table
+     * @param mixed   $condition
+     * @param string  $joinType
+     * @param boolean $prefix
+     *
+     * @return  QueryHelper
+     */
+    public function addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
+    {
+        $tableStorage = [];
 
-		$tableStorage['name'] = $table;
-		$tableStorage['join']  = strtoupper($joinType);
+        $tableStorage['name'] = $table;
+        $tableStorage['join'] = strtoupper($joinType);
 
-		if (is_array($condition))
-		{
-			$condition = [$condition];
-		}
+        if (is_array($condition)) {
+            $condition = [$condition];
+        }
 
-		if ($condition)
-		{
-			$condition = (string) new QueryElement('', $condition, ' AND ');
-		}
-		else
-		{
-			$tableStorage['join'] = 'FROM';
-		}
+        if ($condition) {
+            $condition = (string)new QueryElement('', $condition, ' AND ');
+        } else {
+            $tableStorage['join'] = 'FROM';
+        }
 
-		// Remove too many spaces
-		$condition = preg_replace('/\s(?=\s)/', '', $condition);
+        // Remove too many spaces
+        $condition = preg_replace('/\s(?=\s)/', '', $condition);
 
-		$tableStorage['condition'] = trim($condition);
-		$tableStorage['prefix'] = $prefix;
+        $tableStorage['condition'] = trim($condition);
+        $tableStorage['prefix']    = $prefix;
 
-		$this->tables[$alias] = $tableStorage;
+        $this->tables[$alias] = $tableStorage;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * removeTable
-	 *
-	 * @param string $alias
-	 *
-	 * @return  $this
-	 */
-	public function removeTable($alias)
-	{
-		if (!empty($this->tables[$alias]))
-		{
-			unset($this->tables[$alias]);
-		}
+    /**
+     * removeTable
+     *
+     * @param string $alias
+     *
+     * @return  $this
+     */
+    public function removeTable($alias)
+    {
+        if (!empty($this->tables[$alias])) {
+            unset($this->tables[$alias]);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * getFilterFields
-	 *
-	 * @return  array
-	 */
-	public function getSelectFields()
-	{
-		$fields = [];
+    /**
+     * getFilterFields
+     *
+     * @return  array
+     */
+    public function getSelectFields()
+    {
+        $fields = [];
 
-		$i = 0;
+        $i = 0;
 
-		foreach ($this->tables as $alias => $table)
-		{
-			$columns = $this->db->getTable($table['name'])->getColumns();
+        foreach ($this->tables as $alias => $table) {
+            $columns = $this->db->getTable($table['name'])->getColumns();
 
-			foreach ($columns as $column)
-			{
-				$prefix = $table['prefix'];
+            foreach ($columns as $column) {
+                $prefix = $table['prefix'];
 
-				if ($i === 0)
-				{
-					$prefix = $prefix === null ? false : true;
-				}
-				else
-				{
-					$prefix = $prefix === null ? true : false;
-				}
+                if ($i === 0) {
+                    $prefix = $prefix === null ? false : true;
+                } else {
+                    $prefix = $prefix === null ? true : false;
+                }
 
-				if ($prefix === true)
-				{
-					$fields[] = $this->db->quoteName("{$alias}.{$column} AS {$alias}_{$column}");
-				}
-				else
-				{
-					$fields[] = $this->db->quoteName("{$alias}.{$column} AS {$column}");
-				}
-			}
+                if ($prefix === true) {
+                    $fields[] = $this->db->quoteName("{$alias}.{$column} AS {$alias}_{$column}");
+                } else {
+                    $fields[] = $this->db->quoteName("{$alias}.{$column} AS {$column}");
+                }
+            }
 
-			$i++;
-		}
+            $i++;
+        }
 
-		return $fields;
-	}
+        return $fields;
+    }
 
-	/**
-	 * registerQueryTables
-	 *
-	 * @param QueryInterface $query
-	 *
-	 * @return  QueryInterface
-	 */
-	public function registerQueryTables(QueryInterface $query)
-	{
-		foreach ($this->tables as $alias => $table)
-		{
-			if ($table['join'] === 'FROM')
-			{
-				$query->from($query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias));
-			}
-			else
-			{
-				$query->join(
-					$table['join'],
-					$query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias),
-					$table['condition']
-				);
-			}
-		}
+    /**
+     * registerQueryTables
+     *
+     * @param QueryInterface $query
+     *
+     * @return  QueryInterface
+     */
+    public function registerQueryTables(QueryInterface $query)
+    {
+        foreach ($this->tables as $alias => $table) {
+            if ($table['join'] === 'FROM') {
+                $query->from($query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias));
+            } else {
+                $query->join(
+                    $table['join'],
+                    $query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias),
+                    $table['condition']
+                );
+            }
+        }
 
-		return $query;
-	}
+        return $query;
+    }
 
-	/**
-	 * buildConditions
-	 *
-	 * @param QueryInterface $query
-	 * @param array          $conditions
-	 * @param bool           $allowNulls
-	 *
-	 * @return Query
-	 */
-	public static function buildWheres(QueryInterface $query, array $conditions, $allowNulls = true)
-	{
-		foreach ($conditions as $key => $value)
-		{
-			// NULL
-			if ($value === null && $allowNulls)
-			{
-				$query->where($query->format('%n IS NULL', $key));
-			}
+    /**
+     * buildConditions
+     *
+     * @param QueryInterface $query
+     * @param array          $conditions
+     * @param bool           $allowNulls
+     *
+     * @return Query
+     */
+    public static function buildWheres(QueryInterface $query, array $conditions, $allowNulls = true)
+    {
+        foreach ($conditions as $key => $value) {
+            // NULL
+            if ($value === null && $allowNulls) {
+                $query->where($query->format('%n IS NULL', $key));
+            } // If using Compare class, we convert it to string.
+            elseif ($value instanceof Compare) {
+                $query->where((string)static::buildCompare($key, $value, $query));
+            } // If key is numeric, just send value to query where.
+            elseif (is_numeric($key)) {
+                $query->where($value);
+            } // If is array or object, we use "IN" condition.
+            elseif (is_array($value) || is_object($value)) {
+                if ($value instanceof \Traversable) {
+                    $value = iterator_to_array($value);
+                } elseif (is_object($value)) {
+                    $value = get_object_vars($value);
+                }
 
-			// If using Compare class, we convert it to string.
-			elseif ($value instanceof Compare)
-			{
-				$query->where((string) static::buildCompare($key, $value, $query));
-			}
+                $value = array_map([$query, 'quote'], $value);
 
-			// If key is numeric, just send value to query where.
-			elseif (is_numeric($key))
-			{
-				$query->where($value);
-			}
+                $query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
+            } // Otherwise, we use equal condition.
+            else {
+                $query->where($query->format('%n = %q', $key, $value));
+            }
+        }
 
-			// If is array or object, we use "IN" condition.
-			elseif (is_array($value) || is_object($value))
-			{
-				if ($value instanceof \Traversable)
-				{
-					$value = iterator_to_array($value);
-				}
-				elseif (is_object($value))
-				{
-					$value = get_object_vars($value);
-				}
+        return $query;
+    }
 
-				$value = array_map([$query, 'quote'], $value);
+    /**
+     * buildCompare
+     *
+     * @param string|int     $key
+     * @param Compare        $value
+     * @param QueryInterface $query
+     *
+     * @return  string
+     */
+    public static function buildCompare($key, Compare $value, QueryInterface $query = null)
+    {
+        $query = $query ?: DatabaseFactory::getDbo()->getQuery(true);
 
-				$query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
-			}
+        if (!is_numeric($key)) {
+            $value->setCompare1($key);
+        }
 
-			// Otherwise, we use equal condition.
-			else
-			{
-				$query->where($query->format('%n = %q', $key, $value));
-			}
-		}
+        $value->setHandler(
+            function ($compare1, $compare2, $operator) use ($query) {
+                return $query->format('%n ' . $operator . ' %q', $compare1, $compare2);
+            }
+        );
 
-		return $query;
-	}
+        return (string)$value;
+    }
 
-	/**
-	 * buildCompare
-	 *
-	 * @param string|int      $key
-	 * @param Compare         $value
-	 * @param QueryInterface  $query
-	 *
-	 * @return  string
-	 */
-	public static function buildCompare($key, Compare $value, QueryInterface $query = null)
-	{
-		$query = $query ? : DatabaseFactory::getDbo()->getQuery(true);
+    /**
+     * buildValueAssign
+     *
+     * @param string              $key
+     * @param mixed               $value
+     * @param QueryInterface|null $query
+     *
+     * @return  string
+     */
+    public static function buildValueAssign($key, $value, QueryInterface $query = null)
+    {
+        $query = $query ?: DatabaseFactory::getDbo()->getQuery(true);
 
-		if (!is_numeric($key))
-		{
-			$value->setCompare1($key);
-		}
+        if ($value === null) {
+            return $query->format('%n = NULL', $key);
+        }
 
-		$value->setHandler(
-			function($compare1, $compare2, $operator) use ($query)
-			{
-				return $query->format('%n ' . $operator . ' %q', $compare1, $compare2);
-			}
-		);
+        if ($value instanceof \DateTimeInterface) {
+            return $query->format('%n = %q', $key, $value->format($query->getDateFormat()));
+        }
 
-		return (string) $value;
-	}
+        return $query->format('%n = %q', $key, $value);
+    }
 
-	/**
-	 * buildValueAssign
-	 *
-	 * @param string              $key
-	 * @param mixed               $value
-	 * @param QueryInterface|null $query
-	 *
-	 * @return  string
-	 */
-	public static function buildValueAssign($key, $value, QueryInterface $query = null)
-	{
-		$query = $query ? : DatabaseFactory::getDbo()->getQuery(true);
+    /**
+     * getDb
+     *
+     * @return  AbstractDatabaseDriver
+     */
+    public function getDb()
+    {
+        if (!$this->db) {
+            $this->db = DatabaseFactory::getDbo();
+        }
 
-		if ($value === null)
-		{
-			return $query->format('%n = NULL', $key);
-		}
+        return $this->db;
+    }
 
-		if ($value instanceof \DateTimeInterface)
-		{
-			return $query->format('%n = %q', $key, $value->format($query->getDateFormat()));
-		}
+    /**
+     * setDb
+     *
+     * @param   AbstractDatabaseDriver $db
+     *
+     * @return  QueryHelper  Return self to support chaining.
+     */
+    public function setDb($db)
+    {
+        $this->db = $db;
 
-		return $query->format('%n = %q', $key, $value);
-	}
+        return $this;
+    }
 
-	/**
-	 * getDb
-	 *
-	 * @return  AbstractDatabaseDriver
-	 */
-	public function getDb()
-	{
-		if (!$this->db)
-		{
-			$this->db = DatabaseFactory::getDbo();
-		}
+    /**
+     * Method to get property Tables
+     *
+     * @return  array
+     */
+    public function getTables()
+    {
+        return $this->tables;
+    }
 
-		return $this->db;
-	}
+    /**
+     * Method to set property tables
+     *
+     * @param   array $tables
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setTables(array $tables)
+    {
+        $this->tables = $tables;
 
-	/**
-	 * setDb
-	 *
-	 * @param   AbstractDatabaseDriver $db
-	 *
-	 * @return  QueryHelper  Return self to support chaining.
-	 */
-	public function setDb($db)
-	{
-		$this->db = $db;
-
-		return $this;
-	}
-
-	/**
-	 * Method to get property Tables
-	 *
-	 * @return  array
-	 */
-	public function getTables()
-	{
-		return $this->tables;
-	}
-
-	/**
-	 * Method to set property tables
-	 *
-	 * @param   array $tables
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setTables(array $tables)
-	{
-		$this->tables = $tables;
-
-		return $this;
-	}
+        return $this;
+    }
 }

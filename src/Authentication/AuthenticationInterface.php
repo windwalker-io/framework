@@ -17,36 +17,36 @@ use Windwalker\Authentication\Method\MethodInterface;
  */
 interface AuthenticationInterface
 {
-	/**
-	 * authenticate
-	 *
-	 * @param Credential $credential
-	 *
-	 * @return  bool|Credential
-	 */
-	public function authenticate(Credential $credential);
+    /**
+     * authenticate
+     *
+     * @param Credential $credential
+     *
+     * @return  bool|Credential
+     */
+    public function authenticate(Credential $credential);
 
-	/**
-	 * addMethod
-	 *
-	 * @param string          $name
-	 * @param MethodInterface $method
-	 *
-	 * @return  static
-	 */
-	public function addMethod($name, MethodInterface $method);
+    /**
+     * addMethod
+     *
+     * @param string          $name
+     * @param MethodInterface $method
+     *
+     * @return  static
+     */
+    public function addMethod($name, MethodInterface $method);
 
-	/**
-	 * Method to get property Results
-	 *
-	 * @return  integer[]
-	 */
-	public function getResults();
+    /**
+     * Method to get property Results
+     *
+     * @return  integer[]
+     */
+    public function getResults();
 
-	/**
-	 * Method to get property Credential
-	 *
-	 * @return  Credential
-	 */
-	public function getCredential();
+    /**
+     * Method to get property Credential
+     *
+     * @return  Credential
+     */
+    public function getCredential();
 }

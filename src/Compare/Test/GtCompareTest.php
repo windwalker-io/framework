@@ -17,47 +17,47 @@ use Windwalker\Compare\GtCompare;
  */
 class GtCompareTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var GtCompare
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var GtCompare
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new GtCompare('flower', 'sakura');
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new GtCompare('flower', 'sakura');
+    }
 
-	/**
-	 * testToString
-	 *
-	 * @return  void
-	 */
-	public function testToString()
-	{
-		$this->assertEquals('flower > sakura', $this->instance->toString());
-	}
+    /**
+     * testToString
+     *
+     * @return  void
+     */
+    public function testToString()
+    {
+        $this->assertEquals('flower > sakura', $this->instance->toString());
+    }
 
-	/**
-	 * testToString
-	 *
-	 * @return  void
-	 */
-	public function testCompare()
-	{
-		$compare = new GtCompare(5, '1');
+    /**
+     * testToString
+     *
+     * @return  void
+     */
+    public function testCompare()
+    {
+        $compare = new GtCompare(5, '1');
 
-		$this->assertTrue($compare->compare());
+        $this->assertTrue($compare->compare());
 
-		$compare = new GtCompare(4, 6);
+        $compare = new GtCompare(4, 6);
 
-		$this->assertFalse($compare->compare());
-	}
+        $this->assertFalse($compare->compare());
+    }
 }

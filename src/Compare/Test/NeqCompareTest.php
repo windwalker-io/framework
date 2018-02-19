@@ -17,44 +17,44 @@ use Windwalker\Compare\NeqCompare;
  */
 class NeqCompareTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var NeqCompare
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var NeqCompare
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new NeqCompare('flower', 'sakura');
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new NeqCompare('flower', 'sakura');
+    }
 
-	/**
-	 * testToString
-	 *
-	 * @return  void
-	 */
-	public function testToString()
-	{
-		$this->assertEquals('flower != sakura', $this->instance->toString());
-	}
+    /**
+     * testToString
+     *
+     * @return  void
+     */
+    public function testToString()
+    {
+        $this->assertEquals('flower != sakura', $this->instance->toString());
+    }
 
-	/**
-	 * testToString
-	 *
-	 * @return  void
-	 */
-	public function testCompare()
-	{
-		$compare = new NeqCompare(1, '1');
+    /**
+     * testToString
+     *
+     * @return  void
+     */
+    public function testCompare()
+    {
+        $compare = new NeqCompare(1, '1');
 
-		$this->assertFalse($compare->compare());
-		$this->assertTrue($compare->compare(true));
-	}
+        $this->assertFalse($compare->compare());
+        $this->assertTrue($compare->compare(true));
+    }
 }

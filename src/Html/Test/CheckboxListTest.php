@@ -8,9 +8,9 @@
 
 namespace Windwalker\Html\Test;
 
+use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Html\Option;
 use Windwalker\Html\Select\CheckboxList;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of CheckboxList
@@ -19,29 +19,29 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
  */
 class CheckboxListTest extends AbstractDomTestCase
 {
-	/**
-	 * testCreateList
-	 *
-	 * @return  void
-	 *
-	 * Windwalker\Html\Select\SelectList::toString
-	 */
-	public function testCreateList()
-	{
-		$select = new CheckboxList(
-			'form[timezone]',
-			[
-				new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
-				new Option('Asia - Taipei', 'Asia/Taipei'),
-				new Option('Europe - Paris', 'Asia/Paris'),
-				new Option('UTC', 'UTC'),
-			],
-			['class' => 'input-select'],
-			'UTC',
-			false
-		);
+    /**
+     * testCreateList
+     *
+     * @return  void
+     *
+     * Windwalker\Html\Select\SelectList::toString
+     */
+    public function testCreateList()
+    {
+        $select = new CheckboxList(
+            'form[timezone]',
+            [
+                new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
+                new Option('Asia - Taipei', 'Asia/Taipei'),
+                new Option('Europe - Paris', 'Asia/Paris'),
+                new Option('UTC', 'UTC'),
+            ],
+            ['class' => 'input-select'],
+            'UTC',
+            false
+        );
 
-		$expect = <<<HTML
+        $expect = <<<HTML
 <span class="checkbox-inputs input-select">
 	<input class="opt" value="Asia/Tokyo" type="checkbox" name="form[timezone][]" id="input-form-timezone-asia-tokyo" />
 	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
@@ -57,32 +57,32 @@ class CheckboxListTest extends AbstractDomTestCase
 </span>
 HTML;
 
-		$this->assertHtmlFormatEquals($expect, $select);
-	}
+        $this->assertHtmlFormatEquals($expect, $select);
+    }
 
-	/**
-	 * testCreateList
-	 *
-	 * @return  void
-	 *
-	 * Windwalker\Html\Select\SelectList::toString
-	 */
-	public function testCreateListWithDisabled()
-	{
-		$select = new CheckboxList(
-			'form[timezone]',
-			[
-				new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
-				new Option('Asia - Taipei', 'Asia/Taipei'),
-				new Option('Europe - Paris', 'Asia/Paris'),
-				new Option('UTC', 'UTC'),
-			],
-			['class' => 'input-select', 'disabled' => true, 'readonly' => true],
-			'UTC',
-			false
-		);
+    /**
+     * testCreateList
+     *
+     * @return  void
+     *
+     * Windwalker\Html\Select\SelectList::toString
+     */
+    public function testCreateListWithDisabled()
+    {
+        $select = new CheckboxList(
+            'form[timezone]',
+            [
+                new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
+                new Option('Asia - Taipei', 'Asia/Taipei'),
+                new Option('Europe - Paris', 'Asia/Paris'),
+                new Option('UTC', 'UTC'),
+            ],
+            ['class' => 'input-select', 'disabled' => true, 'readonly' => true],
+            'UTC',
+            false
+        );
 
-		$expect = <<<HTML
+        $expect = <<<HTML
 <span class="checkbox-inputs input-select">
 	<input class="opt" value="Asia/Tokyo" type="checkbox" name="form[timezone][]" id="input-form-timezone-asia-tokyo" disabled="disabled" readonly="readonly" />
 	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
@@ -98,6 +98,6 @@ HTML;
 </span>
 HTML;
 
-		$this->assertHtmlFormatEquals($expect, $select);
-	}
+        $this->assertHtmlFormatEquals($expect, $select);
+    }
 }

@@ -17,169 +17,167 @@ use Windwalker\Compare\Compare;
  */
 class CompareTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var Compare
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var Compare
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new Compare('flower', 'sakura', '=');
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new Compare('flower', 'sakura', '=');
+    }
 
-	/**
-	 * Method to test toString().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::toString
-	 */
-	public function testToString()
-	{
-		$this->assertEquals('flower = sakura', $this->instance->toString());
+    /**
+     * Method to test toString().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::toString
+     */
+    public function testToString()
+    {
+        $this->assertEquals('flower = sakura', $this->instance->toString());
 
-		$this->assertEquals('`flower` = "sakura"', $this->instance->toString('`', '"'));
-		$this->assertEquals('{flower} = [sakura]', $this->instance->toString('{}', '[]'));
-	}
+        $this->assertEquals('`flower` = "sakura"', $this->instance->toString('`', '"'));
+        $this->assertEquals('{flower} = [sakura]', $this->instance->toString('{}', '[]'));
+    }
 
-	/**
-	 * Method to test __toString().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::__toString
-	 */
-	public function test__toString()
-	{
-		$this->assertEquals('flower = sakura', (string) $this->instance);
-	}
+    /**
+     * Method to test __toString().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::__toString
+     */
+    public function test__toString()
+    {
+        $this->assertEquals('flower = sakura', (string)$this->instance);
+    }
 
-	/**
-	 * Method to test getCompare2().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::getCompare2
-	 */
-	public function testGetAndSetCompare2()
-	{
-		$this->instance->setCompare2('rose');
+    /**
+     * Method to test getCompare2().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::getCompare2
+     */
+    public function testGetAndSetCompare2()
+    {
+        $this->instance->setCompare2('rose');
 
-		$this->assertEquals('rose', $this->instance->getCompare2());
-	}
+        $this->assertEquals('rose', $this->instance->getCompare2());
+    }
 
-	/**
-	 * Method to test getCompare1().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::getCompare1
-	 */
-	public function testGetAndSetCompare1()
-	{
-		$this->instance->setCompare2('beautiful');
+    /**
+     * Method to test getCompare1().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::getCompare1
+     */
+    public function testGetAndSetCompare1()
+    {
+        $this->instance->setCompare2('beautiful');
 
-		$this->assertEquals('beautiful', $this->instance->getCompare2());
-	}
+        $this->assertEquals('beautiful', $this->instance->getCompare2());
+    }
 
-	/**
-	 * Method to test swap().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::swap
-	 */
-	public function testSwap()
-	{
-		$this->assertEquals('sakura = flower', $this->instance->swap()->toString());
-	}
+    /**
+     * Method to test swap().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::swap
+     */
+    public function testSwap()
+    {
+        $this->assertEquals('sakura = flower', $this->instance->swap()->toString());
+    }
 
-	/**
-	 * Method to test compare().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::compare
-	 */
-	public function testCompare()
-	{
-		$this->assertFalse($this->instance->compare());
+    /**
+     * Method to test compare().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::compare
+     */
+    public function testCompare()
+    {
+        $this->assertFalse($this->instance->compare());
 
-		$this->instance->setCompare1('sakura');
+        $this->instance->setCompare1('sakura');
 
-		$this->assertTrue($this->instance->compare());
+        $this->assertTrue($this->instance->compare());
 
-		$compare = new Compare(1, 5, '<=');
+        $compare = new Compare(1, 5, '<=');
 
-		$this->assertTrue($compare->compare());
-	}
+        $this->assertTrue($compare->compare());
+    }
 
-	/**
-	 * Method to test getOperator().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::getOperator
-	 */
-	public function testGetAndSetOperator()
-	{
-		$this->instance->setOperator('<');
+    /**
+     * Method to test getOperator().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::getOperator
+     */
+    public function testGetAndSetOperator()
+    {
+        $this->instance->setOperator('<');
 
-		$this->assertEquals('<', $this->instance->getOperator());
-	}
+        $this->assertEquals('<', $this->instance->getOperator());
+    }
 
-	/**
-	 * Method to test quote().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::quote
-	 */
-	public function testQuote()
-	{
-		$this->assertEquals('`foo`', $this->instance->quote('foo', '`'));
-		$this->assertEquals('[foo]', $this->instance->quote('foo', '[]'));
-	}
+    /**
+     * Method to test quote().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::quote
+     */
+    public function testQuote()
+    {
+        $this->assertEquals('`foo`', $this->instance->quote('foo', '`'));
+        $this->assertEquals('[foo]', $this->instance->quote('foo', '[]'));
+    }
 
-	/**
-	 * Method to test getHandler().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\Compare::getHandler
-	 */
-	public function testGetAndSetHandler()
-	{
-		$this->instance->setHandler(
-			function ($compare1, $compare2, $operator)
-			{
-				return strtoupper($compare1 . ' ' . $operator . ' ' . $compare2);
-			}
-		);
+    /**
+     * Method to test getHandler().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\Compare::getHandler
+     */
+    public function testGetAndSetHandler()
+    {
+        $this->instance->setHandler(
+            function ($compare1, $compare2, $operator) {
+                return strtoupper($compare1 . ' ' . $operator . ' ' . $compare2);
+            }
+        );
 
-		$this->assertEquals('FLOWER = SAKURA', $this->instance->toString());
+        $this->assertEquals('FLOWER = SAKURA', $this->instance->toString());
 
-		$self = $this->instance;
+        $self = $this->instance;
 
-		$this->instance->setHandler(
-			function ($compare1, $compare2, $operator, $quote1, $quote2) use ($self)
-			{
-				return strtoupper(
-					$self->quote($compare1, $quote1) . ' ' . $operator . ' ' . $self->quote($compare2, $quote2)
-				);
-			}
-		);
+        $this->instance->setHandler(
+            function ($compare1, $compare2, $operator, $quote1, $quote2) use ($self) {
+                return strtoupper(
+                    $self->quote($compare1, $quote1) . ' ' . $operator . ' ' . $self->quote($compare2, $quote2)
+                );
+            }
+        );
 
-		$this->assertEquals('(FLOWER) = {SAKURA}', $this->instance->toString('()', '{}'));
+        $this->assertEquals('(FLOWER) = {SAKURA}', $this->instance->toString('()', '{}'));
 
-		$this->assertInstanceOf('Closure', $this->instance->getHandler());
-	}
+        $this->assertInstanceOf('Closure', $this->instance->getHandler());
+    }
 }

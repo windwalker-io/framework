@@ -17,51 +17,51 @@ use Windwalker\Compare\InCompare;
  */
 class InCompareTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var InCompare
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var InCompare
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new InCompare('sakura', ['rose', 'sunflower', 'sakura']);
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new InCompare('sakura', ['rose', 'sunflower', 'sakura']);
+    }
 
-	/**
-	 * Method to test compare().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\InCompare::compare
-	 */
-	public function testCompare()
-	{
-		$this->assertTrue($this->instance->compare());
+    /**
+     * Method to test compare().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\InCompare::compare
+     */
+    public function testCompare()
+    {
+        $this->assertTrue($this->instance->compare());
 
-		$compare = new InCompare('1', [1, 2, 3, 4, 5]);
+        $compare = new InCompare('1', [1, 2, 3, 4, 5]);
 
-		$this->assertTrue($compare->compare());
-		$this->assertFalse($compare->compare(true));
-	}
+        $this->assertTrue($compare->compare());
+        $this->assertFalse($compare->compare(true));
+    }
 
-	/**
-	 * Method to test toString().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\InCompare::toString
-	 */
-	public function testToString()
-	{
-		$this->assertEquals('sakura IN (rose,sunflower,sakura)', $this->instance->toString());
-		$this->assertEquals('`sakura` IN ("rose","sunflower","sakura")', $this->instance->toString('`', '"'));
-	}
+    /**
+     * Method to test toString().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\InCompare::toString
+     */
+    public function testToString()
+    {
+        $this->assertEquals('sakura IN (rose,sunflower,sakura)', $this->instance->toString());
+        $this->assertEquals('`sakura` IN ("rose","sunflower","sakura")', $this->instance->toString('`', '"'));
+    }
 }

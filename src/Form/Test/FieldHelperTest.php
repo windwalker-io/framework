@@ -17,36 +17,36 @@ use Windwalker\Form\FieldHelper;
  */
 class FieldHelperTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * setUp
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		FieldHelper::reset();
-	}
+    /**
+     * setUp
+     *
+     * @return  void
+     */
+    protected function setUp()
+    {
+        FieldHelper::reset();
+    }
 
-	/**
-	 * tearDown
-	 *
-	 * @return  void
-	 */
-	protected function tearDown()
-	{
-		FieldHelper::reset();
-	}
+    /**
+     * tearDown
+     *
+     * @return  void
+     */
+    protected function tearDown()
+    {
+        FieldHelper::reset();
+    }
 
-	/**
-	 * Method to test create().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Form\FieldHelper::create
-	 */
-	public function testCreate()
-	{
-		$xml = <<<XML
+    /**
+     * Method to test create().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Form\FieldHelper::create
+     */
+    public function testCreate()
+    {
+        $xml = <<<XML
 <field
 	name="flower"
 	type="text"
@@ -57,12 +57,12 @@ class FieldHelperTest extends \PHPUnit\Framework\TestCase
 	/>
 XML;
 
-		$field = FieldHelper::create($xml);
+        $field = FieldHelper::create($xml);
 
-		$this->assertInstanceOf('Windwalker\\Form\\Field\\TextField', $field);
+        $this->assertInstanceOf('Windwalker\\Form\\Field\\TextField', $field);
 
-		// Add namespace
-		$xml = <<<XML
+        // Add namespace
+        $xml = <<<XML
 <field
 	name="flower"
 	type="stub"
@@ -73,16 +73,16 @@ XML;
 	/>
 XML;
 
-		// Get default
-		$field = FieldHelper::create($xml);
+        // Get default
+        $field = FieldHelper::create($xml);
 
-		$this->assertInstanceOf('Windwalker\\Form\\Field\\TextField', $field);
+        $this->assertInstanceOf('Windwalker\\Form\\Field\\TextField', $field);
 
-		// Get custom
-		FieldHelper::addNamespace('Windwalker\\Form\\Test\\Stub');
+        // Get custom
+        FieldHelper::addNamespace('Windwalker\\Form\\Test\\Stub');
 
-		$field = FieldHelper::create($xml);
+        $field = FieldHelper::create($xml);
 
-		$this->assertInstanceOf('Windwalker\\Form\\Test\\Stub\\StubField', $field);
-	}
+        $this->assertInstanceOf('Windwalker\\Form\\Test\\Stub\\StubField', $field);
+    }
 }

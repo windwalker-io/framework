@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,26 +12,25 @@ $event = new \Windwalker\Event\Event('Aaa');
 
 class AL
 {
-	public function Aaa($event)
-	{
-		echo 'Aaa' . "\n";
-	}
+    public function Aaa($event)
+    {
+        echo 'Aaa' . "\n";
+    }
 
-	public function Bbb($event)
-	{
-		echo 'Bbb' . "\n";
-	}
+    public function Bbb($event)
+    {
+        echo 'Bbb' . "\n";
+    }
 }
 
 $d = new \Windwalker\Event\Dispatcher;
 
 $d->addListener(new AL);
 $d->addListener(
-	function($event)
-	{
-		echo 'Ccc' . "\n";
-	},
-	['Ccc' => 5]
+    function ($event) {
+        echo 'Ccc' . "\n";
+    },
+    ['Ccc' => 5]
 );
 
 $d->triggerEvent($event);

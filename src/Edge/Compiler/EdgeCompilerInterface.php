@@ -15,30 +15,31 @@ namespace Windwalker\Edge\Compiler;
  */
 interface EdgeCompilerInterface
 {
-	/**
-	 * compile
-	 *
-	 * @param   string  $value
-	 *
-	 * @return  string
-	 */
-	public function compile($value);
+    /**
+     * compile
+     *
+     * @param   string $value
+     *
+     * @return  string
+     */
+    public function compile($value);
 
-	/**
-	 * Register a handler for custom directives.
-	 *
-	 * @param  string  $name
-	 * @param  callable  $handler
-	 * @return static
-	 */
-	public function directive($name, $handler);
+    /**
+     * Register a handler for custom directives.
+     *
+     * @param  string   $name
+     * @param  callable $handler
+     *
+     * @return static
+     */
+    public function directive($name, $handler);
 
-	/**
-	 * parser
-	 *
-	 * @param   callable  $handler
-	 *
-	 * @return  static
-	 */
-	public function parser($handler);
+    /**
+     * parser
+     *
+     * @param   callable $handler
+     *
+     * @return  static
+     */
+    public function parser($handler);
 }

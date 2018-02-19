@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,97 +15,97 @@ namespace Windwalker\Session\Database;
  */
 abstract class AbstractDatabaseAdapter
 {
-	/**
-	 * Property db.
-	 *
-	 * @var  object
-	 */
-	protected $db = null;
+    /**
+     * Property db.
+     *
+     * @var  object
+     */
+    protected $db = null;
 
-	/**
-	 * Property options.
-	 *
-	 * @var  array
-	 */
-	protected $options = [
-		'table'    => 'windwalker_sessions',
-		'id_col'   => 'id',
-		'data_col' => 'data',
-		'time_col' => 'time'
-	];
+    /**
+     * Property options.
+     *
+     * @var  array
+     */
+    protected $options = [
+        'table' => 'windwalker_sessions',
+        'id_col' => 'id',
+        'data_col' => 'data',
+        'time_col' => 'time',
+    ];
 
-	/**
-	 * Class init.
-	 *
-	 * @param object $db
-	 * @param array  $options
-	 */
-	public function __construct($db, $options = [])
-	{
-		$this->db = $db;
+    /**
+     * Class init.
+     *
+     * @param object $db
+     * @param array  $options
+     */
+    public function __construct($db, $options = [])
+    {
+        $this->db = $db;
 
-		$this->options = array_merge($this->options, $options);
-	}
+        $this->options = array_merge($this->options, $options);
+    }
 
-	/**
-	 * read
-	 *
-	 * @param string|int $id
-	 *
-	 * @return  string
-	 */
-	abstract public function read($id);
+    /**
+     * read
+     *
+     * @param string|int $id
+     *
+     * @return  string
+     */
+    abstract public function read($id);
 
-	/**
-	 * write
-	 *
-	 * @param string|int $id
-	 * @param string     $data
-	 *
-	 * @return  boolean
-	 */
-	abstract public function write($id, $data);
+    /**
+     * write
+     *
+     * @param string|int $id
+     * @param string     $data
+     *
+     * @return  boolean
+     */
+    abstract public function write($id, $data);
 
-	/**
-	 * destroy
-	 *
-	 * @param string|int $id
-	 *
-	 * @return  boolean
-	 */
-	abstract public function destroy($id);
+    /**
+     * destroy
+     *
+     * @param string|int $id
+     *
+     * @return  boolean
+     */
+    abstract public function destroy($id);
 
-	/**
-	 * gc
-	 *
-	 * @param string $past
-	 *
-	 * @return  bool
-	 */
-	abstract public function gc($past);
+    /**
+     * gc
+     *
+     * @param string $past
+     *
+     * @return  bool
+     */
+    abstract public function gc($past);
 
-	/**
-	 * getDb
-	 *
-	 * @return  object
-	 */
-	public function getDb()
-	{
-		return $this->db;
-	}
+    /**
+     * getDb
+     *
+     * @return  object
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
 
-	/**
-	 * setDb
-	 *
-	 * @param   object $db
-	 *
-	 * @return  AbstractDatabaseAdapter  Return self to support chaining.
-	 */
-	public function setDb($db)
-	{
-		$this->db = $db;
+    /**
+     * setDb
+     *
+     * @param   object $db
+     *
+     * @return  AbstractDatabaseAdapter  Return self to support chaining.
+     */
+    public function setDb($db)
+    {
+        $this->db = $db;
 
-		return $this;
-	}
+        return $this;
+    }
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,36 +14,34 @@ use Windwalker\Authentication\Method\AbstractMethod;
 
 /**
  * The MockMethod class.
- * 
+ *
  * @since  2.0
  */
 class MockMethod extends AbstractMethod
 {
-	/**
-	 * authenticate
-	 *
-	 * @param Credential $credential
-	 *
-	 * @return  integer
-	 */
-	public function authenticate(Credential $credential)
-	{
-		if ($credential->username === 'flower')
-		{
-			if ($credential->password === '1234')
-			{
-				$this->status = Authentication::SUCCESS;
+    /**
+     * authenticate
+     *
+     * @param Credential $credential
+     *
+     * @return  integer
+     */
+    public function authenticate(Credential $credential)
+    {
+        if ($credential->username === 'flower') {
+            if ($credential->password === '1234') {
+                $this->status = Authentication::SUCCESS;
 
-				return true;
-			}
+                return true;
+            }
 
-			$this->status = Authentication::INVALID_CREDENTIAL;
+            $this->status = Authentication::INVALID_CREDENTIAL;
 
-			return false;
-		}
+            return false;
+        }
 
-		$this->status = Authentication::USER_NOT_FOUND;
+        $this->status = Authentication::USER_NOT_FOUND;
 
-		return false;
-	}
+        return false;
+    }
 }

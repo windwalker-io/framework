@@ -8,8 +8,8 @@
 
 namespace Windwalker\Html\Test;
 
-use Windwalker\Html\Media\Audio;
 use Windwalker\Dom\Test\AbstractDomTestCase;
+use Windwalker\Html\Media\Audio;
 
 /**
  * Test class of Audio
@@ -18,53 +18,53 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
  */
 class AudioTest extends AbstractDomTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var Audio
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var Audio
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test addMp3Source().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Html\Media\Audio::addMp3Source
-	 */
-	public function testToString()
-	{
-		$audio = Audio::create(['class' => 'foo'])
-			->addWavSource('foo.wav')
-			->addOggSource('foo.ogg')
-			->addMp3Source('foo.mp3', 'screen and (min-width:320px)')
-			->autoplay(true)
-			->controls(true)
-			->loop(true)
-			->muted(true)
-			->preload(Audio::PRELOAD_METADATA);
+    /**
+     * Method to test addMp3Source().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Html\Media\Audio::addMp3Source
+     */
+    public function testToString()
+    {
+        $audio = Audio::create(['class' => 'foo'])
+            ->addWavSource('foo.wav')
+            ->addOggSource('foo.ogg')
+            ->addMp3Source('foo.mp3', 'screen and (min-width:320px)')
+            ->autoplay(true)
+            ->controls(true)
+            ->loop(true)
+            ->muted(true)
+            ->preload(Audio::PRELOAD_METADATA);
 
-		$html = <<<HTML
+        $html = <<<HTML
 <audio class="foo" autoplay controls loop muted preload="metadata">
     <source src="foo.wav" type="audio/wav" />
 	<source src="foo.ogg" type="audio/ogg" />
@@ -72,6 +72,6 @@ class AudioTest extends AbstractDomTestCase
 </audio>
 HTML;
 
-		$this->assertHtmlFormatEquals($html, $audio);
-	}
+        $this->assertHtmlFormatEquals($html, $audio);
+    }
 }

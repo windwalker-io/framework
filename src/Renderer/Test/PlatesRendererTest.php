@@ -9,8 +9,8 @@
 namespace Windwalker\Renderer\Test;
 
 use League\Plates\Engine;
-use Windwalker\Renderer\PlatesRenderer;
 use Windwalker\Dom\Test\AbstractDomTestCase;
+use Windwalker\Renderer\PlatesRenderer;
 
 /**
  * Test class of PlatesRenderer
@@ -19,90 +19,89 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
  */
 class PlatesRendererTest extends AbstractDomTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var PlatesRenderer
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var PlatesRenderer
+     */
+    protected $instance;
 
-	/**
-	 * Property path.
-	 *
-	 * @var string
-	 */
-	protected static $path;
+    /**
+     * Property path.
+     *
+     * @var string
+     */
+    protected static $path;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		static::$path = realpath(__DIR__ . '/Tmpl/plates');
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        static::$path = realpath(__DIR__ . '/Tmpl/plates');
 
-		if (!static::$path)
-		{
-			throw new \RuntimeException('Path not exists');
-		}
+        if (!static::$path) {
+            throw new \RuntimeException('Path not exists');
+        }
 
-		$this->instance = new PlatesRenderer(static::$path);
-	}
+        $this->instance = new PlatesRenderer(static::$path);
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test getEngine().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Renderer\PlatesRenderer::getEngine
-	 */
-	public function testGetEngine()
-	{
-		$this->instance->config->set('path.found', static::$path);
+    /**
+     * Method to test getEngine().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Renderer\PlatesRenderer::getEngine
+     */
+    public function testGetEngine()
+    {
+        $this->instance->config->set('path.found', static::$path);
 
-		$this->assertTrue($this->instance->getEngine() instanceof Engine);
-	}
+        $this->assertTrue($this->instance->getEngine() instanceof Engine);
+    }
 
-	/**
-	 * Method to test setEngine().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Renderer\PlatesRenderer::setEngine
-	 * @TODO   Implement testSetEngine().
-	 */
-	public function testSetEngine()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test setEngine().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Renderer\PlatesRenderer::setEngine
+     * @TODO   Implement testSetEngine().
+     */
+    public function testSetEngine()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
-	/**
-	 * Method to test render().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Renderer\PlatesRenderer::render
-	 */
-	public function testRender()
-	{
-		$html = $this->instance->render('profile', ['name' => 'Tony Stark']);
+    /**
+     * Method to test render().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Renderer\PlatesRenderer::render
+     */
+    public function testRender()
+    {
+        $html = $this->instance->render('profile', ['name' => 'Tony Stark']);
 
-		$expect = <<<HTML
+        $expect = <<<HTML
 <html>
 <head>
     <title>User Profile</title>
@@ -130,6 +129,6 @@ class PlatesRendererTest extends AbstractDomTestCase
 </html>
 HTML;
 
-		$this->assertDomStringEqualsDomString($expect, $html);
-	}
+        $this->assertDomStringEqualsDomString($expect, $html);
+    }
 }

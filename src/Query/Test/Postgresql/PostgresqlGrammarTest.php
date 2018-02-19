@@ -8,8 +8,8 @@
 
 namespace Windwalker\Query\Test\Postgresql;
 
-use Windwalker\Query\Postgresql\PostgresqlGrammar;
 use Windwalker\Database\Test\AbstractQueryTestCase;
+use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
  * Test class of PostgresqlGrammar
@@ -18,97 +18,97 @@ use Windwalker\Database\Test\AbstractQueryTestCase;
  */
 class PostgresqlGrammarTest extends AbstractQueryTestCase
 {
-	/**
-	 * Method to test showDatabases().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::listDatabases
-	 */
-	public function testShowDatabases()
-	{
-		$expected = "SELECT datname FROM pg_database WHERE a = b AND datistemplate = false;";
+    /**
+     * Method to test showDatabases().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::listDatabases
+     */
+    public function testShowDatabases()
+    {
+        $expected = "SELECT datname FROM pg_database WHERE a = b AND datistemplate = false;";
 
-		$actual = PostgresqlGrammar::listDatabases('a = b');
+        $actual = PostgresqlGrammar::listDatabases('a = b');
 
-		$this->assertEquals($this->format($expected), $this->format($actual));
-	}
+        $this->assertEquals($this->format($expected), $this->format($actual));
+    }
 
-	/**
-	 * Method to test createDatabase().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::createDatabase
-	 */
-	public function testCreateDatabase()
-	{
-		$expected = "CREATE DATABASE {$this->qn('foo')}";
+    /**
+     * Method to test createDatabase().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::createDatabase
+     */
+    public function testCreateDatabase()
+    {
+        $expected = "CREATE DATABASE {$this->qn('foo')}";
 
-		$actual = PostgresqlGrammar::createDatabase('foo');
+        $actual = PostgresqlGrammar::createDatabase('foo');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = "CREATE DATABASE {$this->qn('foo')} ENCODING 'utf8'";
+        $expected = "CREATE DATABASE {$this->qn('foo')} ENCODING 'utf8'";
 
-		$actual = PostgresqlGrammar::createDatabase('foo', 'utf8');
+        $actual = PostgresqlGrammar::createDatabase('foo', 'utf8');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = "CREATE DATABASE {$this->qn('foo')} ENCODING 'utf8' OWNER {$this->qn('bar')}";
+        $expected = "CREATE DATABASE {$this->qn('foo')} ENCODING 'utf8' OWNER {$this->qn('bar')}";
 
-		$actual = PostgresqlGrammar::createDatabase('foo', 'utf8', 'bar');
+        $actual = PostgresqlGrammar::createDatabase('foo', 'utf8', 'bar');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test dropDatabase().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropDatabase
-	 */
-	public function testDropDatabase()
-	{
-		$expected = "DROP DATABASE {$this->qn('foo')}";
+    /**
+     * Method to test dropDatabase().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropDatabase
+     */
+    public function testDropDatabase()
+    {
+        $expected = "DROP DATABASE {$this->qn('foo')}";
 
-		$actual = PostgresqlGrammar::dropDatabase('foo');
+        $actual = PostgresqlGrammar::dropDatabase('foo');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = "DROP DATABASE IF EXISTS {$this->qn('foo')}";
+        $expected = "DROP DATABASE IF EXISTS {$this->qn('foo')}";
 
-		$actual = PostgresqlGrammar::dropDatabase('foo', true);
+        $actual = PostgresqlGrammar::dropDatabase('foo', true);
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test showTableColumns().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::showTableColumns
-	 */
-	public function testShowTableColumns()
-	{
-		$expected = <<<SQL
+    /**
+     * Method to test showTableColumns().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::showTableColumns
+     */
+    public function testShowTableColumns()
+    {
+        $expected = <<<SQL
 SELECT attr.attname AS "column_name",
 	pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "column_type",
 	CASE WHEN attr.attnotnull IS TRUE THEN 'NO' ELSE 'YES' END AS "Null",
@@ -124,24 +124,24 @@ WHERE attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='foo'
 ORDER BY attr.attnum
 SQL;
 
-		$actual = PostgresqlGrammar::showTableColumns('foo');
+        $actual = PostgresqlGrammar::showTableColumns('foo');
 
-		$this->assertEquals(
-			\SqlFormatter::format($expected, false),
-			\SqlFormatter::format($actual, false)
-		);
-	}
+        $this->assertEquals(
+            \SqlFormatter::format($expected, false),
+            \SqlFormatter::format($actual, false)
+        );
+    }
 
-	/**
-	 * Method to test showDbTables().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::showDbTables
-	 */
-	public function testShowDbTables()
-	{
-		$expected = <<<SQL
+    /**
+     * Method to test showDbTables().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::showDbTables
+     */
+    public function testShowDbTables()
+    {
+        $expected = <<<SQL
 SELECT table_name AS "Name"
 FROM information_schema.tables
 WHERE table_type = 'BASE TABLE'
@@ -150,24 +150,24 @@ ORDER BY
   table_name ASC
 SQL;
 
-		$actual = PostgresqlGrammar::showDbTables('foo');
+        $actual = PostgresqlGrammar::showDbTables('foo');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test createTable().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::createTable
-	 */
-	public function testCreateTable()
-	{
-		$expected = <<<SQL
+    /**
+     * Method to test createTable().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::createTable
+     */
+    public function testCreateTable()
+    {
+        $expected = <<<SQL
 CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
   {$this->qn('id')}    serial NOT NULL,
   {$this->qn('name')}  varchar(255) NOT NULL,
@@ -178,24 +178,24 @@ CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
 CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')})
 SQL;
 
-		$columns = [
-			'id' => 'serial NOT NULL',
-			'name' => ['varchar(255)', 'NOT NULL'],
-			'email' => "varchar(255) NOT NULL"
-		];
+        $columns = [
+            'id' => 'serial NOT NULL',
+            'name' => ['varchar(255)', 'NOT NULL'],
+            'email' => "varchar(255) NOT NULL",
+        ];
 
-		$keys = [
-			['type' => 'INDEX', 'name' => 'idx_alias', 'columns' => 'email']
-		];
+        $keys = [
+            ['type' => 'INDEX', 'name' => 'idx_alias', 'columns' => 'email'],
+        ];
 
-		$actual = PostgresqlGrammar::createTable('foo', $columns, 'id', $keys, 'bar', true, 'tablespace');
+        $actual = PostgresqlGrammar::createTable('foo', $columns, 'id', $keys, 'bar', true, 'tablespace');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = <<<SQL
+        $expected = <<<SQL
 CREATE TABLE {$this->qn('foo')} (
   {$this->qn('id')} int(11) NOT NULL,
   {$this->qn('name')} varchar(255) NOT NULL,
@@ -205,253 +205,253 @@ CREATE TABLE {$this->qn('foo')} (
 CREATE UNIQUE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')}, {$this->qn('id')})
 SQL;
 
-		$columns = [
-			'id' => 'int(11) NOT NULL',
-			'name' => ['varchar(255)', 'NOT NULL'],
-			'email' => "varchar(255) NOT NULL"
-		];
+        $columns = [
+            'id' => 'int(11) NOT NULL',
+            'name' => ['varchar(255)', 'NOT NULL'],
+            'email' => "varchar(255) NOT NULL",
+        ];
 
-		$keys = [
-			['type' => 'UNIQUE INDEX', 'name' => 'idx_alias', 'columns' => ['email', 'id']]
-		];
+        $keys = [
+            ['type' => 'UNIQUE INDEX', 'name' => 'idx_alias', 'columns' => ['email', 'id']],
+        ];
 
-		$actual = PostgresqlGrammar::createTable('foo', $columns, ['id', 'email'], $keys, null, false, null);
+        $actual = PostgresqlGrammar::createTable('foo', $columns, ['id', 'email'], $keys, null, false, null);
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test dropTable().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropTable
-	 */
-	public function testDropTable()
-	{
-		$expected = "DROP TABLE {$this->qn('foo')}";
+    /**
+     * Method to test dropTable().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropTable
+     */
+    public function testDropTable()
+    {
+        $expected = "DROP TABLE {$this->qn('foo')}";
 
-		$actual = PostgresqlGrammar::dropTable('foo');
+        $actual = PostgresqlGrammar::dropTable('foo');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = "DROP TABLE IF EXISTS {$this->qn('foo')}";
+        $expected = "DROP TABLE IF EXISTS {$this->qn('foo')}";
 
-		$actual = PostgresqlGrammar::dropTable('foo', true);
+        $actual = PostgresqlGrammar::dropTable('foo', true);
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test alterColumn().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::alterColumn
-	 */
-	public function testAlterColumn()
-	{
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL SET DEFAULT '1'";
+    /**
+     * Method to test alterColumn().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::alterColumn
+     */
+    public function testAlterColumn()
+    {
+        $expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL SET DEFAULT '1'";
 
-		$actual = PostgresqlGrammar::alterColumn('ADD', 'foo', 'bar', 'int(11)', true, '1');
+        $actual = PostgresqlGrammar::alterColumn('ADD', 'foo', 'bar', 'int(11)', true, '1');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
+        $expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
 
-		$actual = PostgresqlGrammar::alterColumn('RENAME', 'foo', ['bar', 'yoo'], null, false, null);
+        $actual = PostgresqlGrammar::alterColumn('RENAME', 'foo', ['bar', 'yoo'], null, false, null);
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test addColumn().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::addColumn
-	 */
-	public function testAddColumn()
-	{
-		$expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL DEFAULT '1'";
+    /**
+     * Method to test addColumn().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::addColumn
+     */
+    public function testAddColumn()
+    {
+        $expected = "ALTER TABLE {$this->qn('foo')} ADD {$this->qn('bar')} int(11) NOT NULL DEFAULT '1'";
 
-		$actual = PostgresqlGrammar::addColumn('foo', 'bar', 'int(11)', false, '1');
+        $actual = PostgresqlGrammar::addColumn('foo', 'bar', 'int(11)', false, '1');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test renameColumn().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::renameColumn
-	 */
-	public function testRenameColumn()
-	{
-		$expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
+    /**
+     * Method to test renameColumn().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::renameColumn
+     */
+    public function testRenameColumn()
+    {
+        $expected = "ALTER TABLE {$this->qn('foo')} RENAME {$this->qn('bar')} TO {$this->qn('yoo')}";
 
-		$actual = PostgresqlGrammar::renameColumn('foo', 'bar', 'yoo');
+        $actual = PostgresqlGrammar::renameColumn('foo', 'bar', 'yoo');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test dropColumn().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropColumn
-	 */
-	public function testDropColumn()
-	{
-		$expected = "ALTER TABLE {$this->qn('foo')} DROP {$this->qn('bar')}";
+    /**
+     * Method to test dropColumn().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropColumn
+     */
+    public function testDropColumn()
+    {
+        $expected = "ALTER TABLE {$this->qn('foo')} DROP {$this->qn('bar')}";
 
-		$actual = PostgresqlGrammar::dropColumn('foo', 'bar');
+        $actual = PostgresqlGrammar::dropColumn('foo', 'bar');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test addIndex().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::addIndex
-	 */
-	public function testAddIndex()
-	{
-		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
+    /**
+     * Method to test addIndex().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::addIndex
+     */
+    public function testAddIndex()
+    {
+        $expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlGrammar::addIndex('foo', 'INDEX', ['alias', 'name'], 'idx_alias');
+        $actual = PostgresqlGrammar::addIndex('foo', 'INDEX', ['alias', 'name'], 'idx_alias');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')})";
+        $expected = "CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')})";
 
-		$actual = PostgresqlGrammar::addIndex('foo', 'INDEX', 'alias', 'idx_alias');
+        $actual = PostgresqlGrammar::addIndex('foo', 'INDEX', 'alias', 'idx_alias');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test buildIndexDeclare().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::buildIndexDeclare
-	 */
-	public function testBuildIndexDeclare()
-	{
-		$expected = "{$this->qn('idx_alias')} ({$this->qn('alias')})";
+    /**
+     * Method to test buildIndexDeclare().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::buildIndexDeclare
+     */
+    public function testBuildIndexDeclare()
+    {
+        $expected = "{$this->qn('idx_alias')} ({$this->qn('alias')})";
 
-		$actual = PostgresqlGrammar::buildIndexDeclare('idx_alias', 'alias', null);
+        $actual = PostgresqlGrammar::buildIndexDeclare('idx_alias', 'alias', null);
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = "{$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
+        $expected = "{$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('alias')}, {$this->qn('name')})";
 
-		$actual = PostgresqlGrammar::buildIndexDeclare('idx_alias', ['alias', 'name'], 'foo');
+        $actual = PostgresqlGrammar::buildIndexDeclare('idx_alias', ['alias', 'name'], 'foo');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test dropIndex().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropIndex
-	 */
-	public function testDropIndex()
-	{
-		$expected = "DROP INDEX {$this->qn('bar')}";
+    /**
+     * Method to test dropIndex().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::dropIndex
+     */
+    public function testDropIndex()
+    {
+        $expected = "DROP INDEX {$this->qn('bar')}";
 
-		$actual = PostgresqlGrammar::dropIndex('bar');
+        $actual = PostgresqlGrammar::dropIndex('bar');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
 
-		$expected = "DROP INDEX CONCURRENTLY IF EXISTS {$this->qn('bar')}";
+        $expected = "DROP INDEX CONCURRENTLY IF EXISTS {$this->qn('bar')}";
 
-		$actual = PostgresqlGrammar::dropIndex('bar', true, true);
+        $actual = PostgresqlGrammar::dropIndex('bar', true, true);
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test build().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::build
-	 */
-	public function testBuild()
-	{
-		$expected = "FLOWER SAKURA SUNFLOWER OLIVE";
+    /**
+     * Method to test build().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::build
+     */
+    public function testBuild()
+    {
+        $expected = "FLOWER SAKURA SUNFLOWER OLIVE";
 
-		$actual = PostgresqlGrammar::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
+        $actual = PostgresqlGrammar::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
 
-		$this->assertEquals(
-			$this->format($expected),
-			$this->format($actual)
-		);
-	}
+        $this->assertEquals(
+            $this->format($expected),
+            $this->format($actual)
+        );
+    }
 
-	/**
-	 * Method to test getQuery().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::getQuery
-	 */
-	public function testGetQuery()
-	{
-		$this->assertInstanceOf('Windwalker\\Query\\Postgresql\\PostgresqlQuery', PostgresqlGrammar::getQuery());
+    /**
+     * Method to test getQuery().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Query\Postgresql\PostgresqlGrammar::getQuery
+     */
+    public function testGetQuery()
+    {
+        $this->assertInstanceOf('Windwalker\\Query\\Postgresql\\PostgresqlQuery', PostgresqlGrammar::getQuery());
 
-		$this->assertSame(PostgresqlGrammar::getQuery(), PostgresqlGrammar::getQuery());
+        $this->assertSame(PostgresqlGrammar::getQuery(), PostgresqlGrammar::getQuery());
 
-		$this->assertNotSame(PostgresqlGrammar::getQuery(), PostgresqlGrammar::getQuery(true));
-	}
+        $this->assertNotSame(PostgresqlGrammar::getQuery(), PostgresqlGrammar::getQuery(true));
+    }
 }

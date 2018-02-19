@@ -15,10 +15,10 @@ namespace Windwalker\Database\Driver;
  */
 interface DatabaseDriverInterface
 {
-	/**
-	 * Is this driver supported.
-	 *
-	 * @return  boolean
-	 */
-	public static function isSupported();
+    /**
+     * Is this driver supported.
+     *
+     * @return  boolean
+     */
+    public static function isSupported();
 }

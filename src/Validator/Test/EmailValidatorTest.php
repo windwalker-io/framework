@@ -17,62 +17,62 @@ use Windwalker\Validator\Rule\EmailValidator;
  */
 class EmailValidatorTest extends AbstractValidateTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var EmailValidator
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var EmailValidator
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new EmailValidator;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new EmailValidator;
+    }
 
-	/**
-	 * testCase
-	 *
-	 * @return  array
-	 */
-	public function validateCase()
-	{
-		return [
-			[
-				'case1',
-				'foo@gmail.com',
-				true
-			],
-			[
-				'case2',
-				'foo bar@gmail.com',
-				false
-			],
-			[
-				'case3',
-				'foo+bar@gmail.com',
-				true
-			],
-			[
-				'case4',
-				'foo.bar-yoo@gmail.com',
-				true
-			],
-			[
-				'case5',
-				'foo@gmail@com',
-				false
-			],
-			[
-				'case6',
-				'foo',
-				false
-			],
-		];
-	}
+    /**
+     * testCase
+     *
+     * @return  array
+     */
+    public function validateCase()
+    {
+        return [
+            [
+                'case1',
+                'foo@gmail.com',
+                true,
+            ],
+            [
+                'case2',
+                'foo bar@gmail.com',
+                false,
+            ],
+            [
+                'case3',
+                'foo+bar@gmail.com',
+                true,
+            ],
+            [
+                'case4',
+                'foo.bar-yoo@gmail.com',
+                true,
+            ],
+            [
+                'case5',
+                'foo@gmail@com',
+                false,
+            ],
+            [
+                'case6',
+                'foo',
+                false,
+            ],
+        ];
+    }
 }

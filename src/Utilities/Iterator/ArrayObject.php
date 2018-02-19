@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2015 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later;
@@ -10,474 +10,454 @@ namespace Windwalker\Utilities\Iterator;
 
 /**
  * The ArrayObject class. Based on ZF2.
- * 
+ *
  * @since  2.1.1
  */
 class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {
-	/**
-	 * Properties of the object have their normal functionality
-	 * when accessed as list (var_dump, foreach, etc.).
-	 */
-	const STD_PROP_LIST = 1;
+    /**
+     * Properties of the object have their normal functionality
+     * when accessed as list (var_dump, foreach, etc.).
+     */
+    const STD_PROP_LIST = 1;
 
-	/**
-	 * Entries can be accessed as properties (read and write).
-	 */
-	const ARRAY_AS_PROPS = 2;
+    /**
+     * Entries can be accessed as properties (read and write).
+     */
+    const ARRAY_AS_PROPS = 2;
 
-	/**
-	 * @var array
-	 */
-	protected $storage;
+    /**
+     * @var array
+     */
+    protected $storage;
 
-	/**
-	 * @var int
-	 */
-	protected $flag;
+    /**
+     * @var int
+     */
+    protected $flag;
 
-	/**
-	 * @var string
-	 */
-	protected $iteratorClass = 'ArrayIterator';
+    /**
+     * @var string
+     */
+    protected $iteratorClass = 'ArrayIterator';
 
-	/**
-	 * @var array
-	 */
-	protected $protectedProperties;
+    /**
+     * @var array
+     */
+    protected $protectedProperties;
 
-	/**
-	 * Constructor
-	 *
-	 * @param array  $input
-	 * @param int    $flags
-	 * @param string $iteratorClass
-	 */
-	public function __construct($input = [], $flags = self::STD_PROP_LIST, $iteratorClass = 'ArrayIterator')
-	{
-		$this->setFlags($flags);
-		$this->storage = $input;
-		$this->setIteratorClass($iteratorClass);
-		$this->protectedProperties = array_keys(get_object_vars($this));
-	}
+    /**
+     * Constructor
+     *
+     * @param array  $input
+     * @param int    $flags
+     * @param string $iteratorClass
+     */
+    public function __construct($input = [], $flags = self::STD_PROP_LIST, $iteratorClass = 'ArrayIterator')
+    {
+        $this->setFlags($flags);
+        $this->storage = $input;
+        $this->setIteratorClass($iteratorClass);
+        $this->protectedProperties = array_keys(get_object_vars($this));
+    }
 
-	/**
-	 * Returns whether the requested key exists
-	 *
-	 * @param  mixed $key
-	 *
-	 * @throws \InvalidArgumentException
-	 * @return boolean
-	 */
-	public function __isset($key)
-	{
-		if ($this->flag == self::ARRAY_AS_PROPS)
-		{
-			return $this->offsetExists($key);
-		}
+    /**
+     * Returns whether the requested key exists
+     *
+     * @param  mixed $key
+     *
+     * @throws \InvalidArgumentException
+     * @return boolean
+     */
+    public function __isset($key)
+    {
+        if ($this->flag == self::ARRAY_AS_PROPS) {
+            return $this->offsetExists($key);
+        }
 
-		if (in_array($key, $this->protectedProperties))
-		{
-			throw new \InvalidArgumentException('$key is a protected property, use a different key');
-		}
+        if (in_array($key, $this->protectedProperties)) {
+            throw new \InvalidArgumentException('$key is a protected property, use a different key');
+        }
 
-		return isset($this->$key);
-	}
+        return isset($this->$key);
+    }
 
-	/**
-	 * Sets the value at the specified key to value
-	 *
-	 * @param  mixed $key
-	 * @param  mixed $value
-	 *
-	 * @throws \InvalidArgumentException
-	 * @return void|mixed
-	 */
-	public function __set($key, $value)
-	{
-		if ($this->flag == self::ARRAY_AS_PROPS)
-		{
-			$this->offsetSet($key, $value);
+    /**
+     * Sets the value at the specified key to value
+     *
+     * @param  mixed $key
+     * @param  mixed $value
+     *
+     * @throws \InvalidArgumentException
+     * @return void|mixed
+     */
+    public function __set($key, $value)
+    {
+        if ($this->flag == self::ARRAY_AS_PROPS) {
+            $this->offsetSet($key, $value);
 
-			return;
-		}
+            return;
+        }
 
-		if (in_array($key, $this->protectedProperties))
-		{
-			throw new \InvalidArgumentException('$key is a protected property, use a different key');
-		}
+        if (in_array($key, $this->protectedProperties)) {
+            throw new \InvalidArgumentException('$key is a protected property, use a different key');
+        }
 
-		$this->$key = $value;
-	}
+        $this->$key = $value;
+    }
 
-	/**
-	 * Unsets the value at the specified key
-	 *
-	 * @param  mixed $key
-	 *
-	 * @throws \InvalidArgumentException
-	 * @return void|mixed
-	 */
-	public function __unset($key)
-	{
-		if ($this->flag == self::ARRAY_AS_PROPS)
-		{
-			$this->offsetUnset($key);
+    /**
+     * Unsets the value at the specified key
+     *
+     * @param  mixed $key
+     *
+     * @throws \InvalidArgumentException
+     * @return void|mixed
+     */
+    public function __unset($key)
+    {
+        if ($this->flag == self::ARRAY_AS_PROPS) {
+            $this->offsetUnset($key);
 
-			return;
-		}
+            return;
+        }
 
-		if (in_array($key, $this->protectedProperties))
-		{
-			throw new \InvalidArgumentException('$key is a protected property, use a different key');
-		}
+        if (in_array($key, $this->protectedProperties)) {
+            throw new \InvalidArgumentException('$key is a protected property, use a different key');
+        }
 
-		unset($this->$key);
-	}
+        unset($this->$key);
+    }
 
-	/**
-	 * Returns the value at the specified key by reference
-	 *
-	 * @param  mixed $key
-	 *
-	 * @throws \InvalidArgumentException
-	 * @return mixed
-	 */
-	public function &__get($key)
-	{
-		$ret = null;
+    /**
+     * Returns the value at the specified key by reference
+     *
+     * @param  mixed $key
+     *
+     * @throws \InvalidArgumentException
+     * @return mixed
+     */
+    public function &__get($key)
+    {
+        $ret = null;
 
-		if ($this->flag == self::ARRAY_AS_PROPS)
-		{
-			$ret =& $this->offsetGet($key);
+        if ($this->flag == self::ARRAY_AS_PROPS) {
+            $ret =& $this->offsetGet($key);
 
-			return $ret;
-		}
+            return $ret;
+        }
 
-		if (in_array($key, $this->protectedProperties))
-		{
-			throw new \InvalidArgumentException('$key is a protected property, use a different key');
-		}
+        if (in_array($key, $this->protectedProperties)) {
+            throw new \InvalidArgumentException('$key is a protected property, use a different key');
+        }
 
-		return $this->$key;
-	}
+        return $this->$key;
+    }
 
-	/**
-	 * Appends the value
-	 *
-	 * @param  mixed $value
-	 *
-	 * @return void
-	 */
-	public function append($value)
-	{
-		$this->storage[] = $value;
-	}
+    /**
+     * Appends the value
+     *
+     * @param  mixed $value
+     *
+     * @return void
+     */
+    public function append($value)
+    {
+        $this->storage[] = $value;
+    }
 
-	/**
-	 * Sort the entries by value
-	 *
-	 * @return void
-	 */
-	public function asort()
-	{
-		asort($this->storage);
-	}
+    /**
+     * Sort the entries by value
+     *
+     * @return void
+     */
+    public function asort()
+    {
+        asort($this->storage);
+    }
 
-	/**
-	 * Get the number of public properties in the ArrayObject
-	 *
-	 * @return int
-	 */
-	public function count()
-	{
-		return count($this->storage);
-	}
+    /**
+     * Get the number of public properties in the ArrayObject
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->storage);
+    }
 
-	/**
-	 * Exchange the array for another one.
-	 *
-	 * @param  array|ArrayObject $data
-	 *
-	 * @throws \InvalidArgumentException
-	 * @return array
-	 */
-	public function exchangeArray($data)
-	{
-		if (!is_array($data) && !is_object($data))
-		{
-			throw new \InvalidArgumentException('Passed variable is not an array or object, using empty array instead');
-		}
+    /**
+     * Exchange the array for another one.
+     *
+     * @param  array|ArrayObject $data
+     *
+     * @throws \InvalidArgumentException
+     * @return array
+     */
+    public function exchangeArray($data)
+    {
+        if (!is_array($data) && !is_object($data)) {
+            throw new \InvalidArgumentException('Passed variable is not an array or object, using empty array instead');
+        }
 
-		if (is_object($data) && ($data instanceof self || $data instanceof \ArrayObject))
-		{
-			$data = $data->getArrayCopy();
-		}
+        if (is_object($data) && ($data instanceof self || $data instanceof \ArrayObject)) {
+            $data = $data->getArrayCopy();
+        }
 
-		if (!is_array($data))
-		{
-			$data = (array) $data;
-		}
+        if (!is_array($data)) {
+            $data = (array)$data;
+        }
 
-		$storage = $this->storage;
+        $storage = $this->storage;
 
-		$this->storage = $data;
+        $this->storage = $data;
 
-		return $storage;
-	}
+        return $storage;
+    }
 
-	/**
-	 * Creates a copy of the ArrayObject.
-	 *
-	 * @return array
-	 */
-	public function getArrayCopy()
-	{
-		return $this->storage;
-	}
+    /**
+     * Creates a copy of the ArrayObject.
+     *
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return $this->storage;
+    }
 
-	/**
-	 * Gets the behavior flags.
-	 *
-	 * @return int
-	 */
-	public function getFlags()
-	{
-		return $this->flag;
-	}
+    /**
+     * Gets the behavior flags.
+     *
+     * @return int
+     */
+    public function getFlags()
+    {
+        return $this->flag;
+    }
 
-	/**
-	 * Create a new iterator from an ArrayObject instance
-	 *
-	 * @return \Iterator
-	 */
-	public function getIterator()
-	{
-		$class = $this->iteratorClass;
+    /**
+     * Create a new iterator from an ArrayObject instance
+     *
+     * @return \Iterator
+     */
+    public function getIterator()
+    {
+        $class = $this->iteratorClass;
 
-		return new $class($this->storage);
-	}
+        return new $class($this->storage);
+    }
 
-	/**
-	 * Gets the iterator classname for the ArrayObject.
-	 *
-	 * @return string
-	 */
-	public function getIteratorClass()
-	{
-		return $this->iteratorClass;
-	}
+    /**
+     * Gets the iterator classname for the ArrayObject.
+     *
+     * @return string
+     */
+    public function getIteratorClass()
+    {
+        return $this->iteratorClass;
+    }
 
-	/**
-	 * Sort the entries by key
-	 *
-	 * @return void
-	 */
-	public function ksort()
-	{
-		ksort($this->storage);
-	}
+    /**
+     * Sort the entries by key
+     *
+     * @return void
+     */
+    public function ksort()
+    {
+        ksort($this->storage);
+    }
 
-	/**
-	 * Sort an array using a case insensitive "natural order" algorithm
-	 *
-	 * @return void
-	 */
-	public function natcasesort()
-	{
-		natcasesort($this->storage);
-	}
+    /**
+     * Sort an array using a case insensitive "natural order" algorithm
+     *
+     * @return void
+     */
+    public function natcasesort()
+    {
+        natcasesort($this->storage);
+    }
 
-	/**
-	 * Sort entries using a "natural order" algorithm
-	 *
-	 * @return void
-	 */
-	public function natsort()
-	{
-		natsort($this->storage);
-	}
+    /**
+     * Sort entries using a "natural order" algorithm
+     *
+     * @return void
+     */
+    public function natsort()
+    {
+        natsort($this->storage);
+    }
 
-	/**
-	 * Returns whether the requested key exists
-	 *
-	 * @param  mixed $key
-	 *
-	 * @return bool
-	 */
-	public function offsetExists($key)
-	{
-		return isset($this->storage[$key]);
-	}
+    /**
+     * Returns whether the requested key exists
+     *
+     * @param  mixed $key
+     *
+     * @return bool
+     */
+    public function offsetExists($key)
+    {
+        return isset($this->storage[$key]);
+    }
 
-	/**
-	 * Returns the value at the specified key
-	 *
-	 * @param  mixed $key
-	 *
-	 * @return mixed
-	 */
-	public function &offsetGet($key)
-	{
-		$ret = null;
+    /**
+     * Returns the value at the specified key
+     *
+     * @param  mixed $key
+     *
+     * @return mixed
+     */
+    public function &offsetGet($key)
+    {
+        $ret = null;
 
-		if (!$this->offsetExists($key))
-		{
-			return $ret;
-		}
+        if (!$this->offsetExists($key)) {
+            return $ret;
+        }
 
-		$ret =& $this->storage[$key];
+        $ret =& $this->storage[$key];
 
-		return $ret;
-	}
+        return $ret;
+    }
 
-	/**
-	 * Sets the value at the specified key to value
-	 *
-	 * @param  mixed $key
-	 * @param  mixed $value
-	 *
-	 * @return void
-	 */
-	public function offsetSet($key, $value)
-	{
-		$this->storage[$key] = $value;
-	}
+    /**
+     * Sets the value at the specified key to value
+     *
+     * @param  mixed $key
+     * @param  mixed $value
+     *
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        $this->storage[$key] = $value;
+    }
 
-	/**
-	 * Unsets the value at the specified key
-	 *
-	 * @param  mixed $key
-	 *
-	 * @return void
-	 */
-	public function offsetUnset($key)
-	{
-		if ($this->offsetExists($key))
-		{
-			unset($this->storage[$key]);
-		}
-	}
+    /**
+     * Unsets the value at the specified key
+     *
+     * @param  mixed $key
+     *
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        if ($this->offsetExists($key)) {
+            unset($this->storage[$key]);
+        }
+    }
 
-	/**
-	 * Serialize an ArrayObject
-	 *
-	 * @return string
-	 */
-	public function serialize()
-	{
-		return serialize(get_object_vars($this));
-	}
+    /**
+     * Serialize an ArrayObject
+     *
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize(get_object_vars($this));
+    }
 
-	/**
-	 * Sets the behavior flags
-	 *
-	 * @param  int $flags
-	 *
-	 * @return void
-	 */
-	public function setFlags($flags)
-	{
-		$this->flag = $flags;
-	}
+    /**
+     * Sets the behavior flags
+     *
+     * @param  int $flags
+     *
+     * @return void
+     */
+    public function setFlags($flags)
+    {
+        $this->flag = $flags;
+    }
 
-	/**
-	 * Sets the iterator classname for the ArrayObject
-	 *
-	 * @param  string $class
-	 *
-	 * @throws \InvalidArgumentException
-	 * @return void
-	 */
-	public function setIteratorClass($class)
-	{
-		if (class_exists($class))
-		{
-			$this->iteratorClass = $class;
+    /**
+     * Sets the iterator classname for the ArrayObject
+     *
+     * @param  string $class
+     *
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    public function setIteratorClass($class)
+    {
+        if (class_exists($class)) {
+            $this->iteratorClass = $class;
 
-			return;
-		}
+            return;
+        }
 
-		if (strpos($class, '\\') === 0)
-		{
-			$class = '\\' . $class;
+        if (strpos($class, '\\') === 0) {
+            $class = '\\' . $class;
 
-			if (class_exists($class))
-			{
-				$this->iteratorClass = $class;
+            if (class_exists($class)) {
+                $this->iteratorClass = $class;
 
-				return;
-			}
-		}
+                return;
+            }
+        }
 
-		throw new \InvalidArgumentException('The iterator class does not exist');
-	}
+        throw new \InvalidArgumentException('The iterator class does not exist');
+    }
 
-	/**
-	 * Sort the entries with a user-defined comparison function and maintain key association
-	 *
-	 * @param  callable $function
-	 *
-	 * @return void
-	 */
-	public function uasort($function)
-	{
-		if (is_callable($function))
-		{
-			uasort($this->storage, $function);
-		}
-	}
+    /**
+     * Sort the entries with a user-defined comparison function and maintain key association
+     *
+     * @param  callable $function
+     *
+     * @return void
+     */
+    public function uasort($function)
+    {
+        if (is_callable($function)) {
+            uasort($this->storage, $function);
+        }
+    }
 
-	/**
-	 * Sort the entries by keys using a user-defined comparison function
-	 *
-	 * @param  callable $function
-	 *
-	 * @return void
-	 */
-	public function uksort($function)
-	{
-		if (is_callable($function))
-		{
-			uksort($this->storage, $function);
-		}
-	}
+    /**
+     * Sort the entries by keys using a user-defined comparison function
+     *
+     * @param  callable $function
+     *
+     * @return void
+     */
+    public function uksort($function)
+    {
+        if (is_callable($function)) {
+            uksort($this->storage, $function);
+        }
+    }
 
-	/**
-	 * Unserialize an ArrayObject
-	 *
-	 * @param  string $data
-	 *
-	 * @return void
-	 */
-	public function unserialize($data)
-	{
-		$ar = unserialize($data);
+    /**
+     * Unserialize an ArrayObject
+     *
+     * @param  string $data
+     *
+     * @return void
+     */
+    public function unserialize($data)
+    {
+        $ar = unserialize($data);
 
-		$this->protectedProperties = array_keys(get_object_vars($this));
+        $this->protectedProperties = array_keys(get_object_vars($this));
 
-		$this->setFlags($ar['flag']);
-		$this->exchangeArray($ar['storage']);
-		$this->setIteratorClass($ar['iteratorClass']);
+        $this->setFlags($ar['flag']);
+        $this->exchangeArray($ar['storage']);
+        $this->setIteratorClass($ar['iteratorClass']);
 
-		foreach ($ar as $k => $v)
-		{
-			switch ($k)
-			{
-				case 'flag':
-					$this->setFlags($v);
-					break;
-				case 'storage':
-					$this->exchangeArray($v);
-					break;
-				case 'iteratorClass':
-					$this->setIteratorClass($v);
-					break;
-				case 'protectedProperties':
-					continue;
-				default:
-					$this->__set($k, $v);
-			}
-		}
-	}
+        foreach ($ar as $k => $v) {
+            switch ($k) {
+                case 'flag':
+                    $this->setFlags($v);
+                    break;
+                case 'storage':
+                    $this->exchangeArray($v);
+                    break;
+                case 'iteratorClass':
+                    $this->setIteratorClass($v);
+                    break;
+                case 'protectedProperties':
+                    continue;
+                default:
+                    $this->__set($k, $v);
+            }
+        }
+    }
 }

@@ -15,10 +15,10 @@ namespace Windwalker\Form\Field;
  */
 class TimeField extends AbstractHtml5Field
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'time';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'time';
 }

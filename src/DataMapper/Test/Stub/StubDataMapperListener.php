@@ -17,346 +17,346 @@ use Windwalker\Event\Event;
  */
 class StubDataMapperListener
 {
-	/**
-	 * Property lastEvent.
-	 *
-	 * @var  Event[]
-	 */
-	public $events;
+    /**
+     * Property lastEvent.
+     *
+     * @var  Event[]
+     */
+    public $events;
 
-	/**
-	 * onFind
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeFind(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onFind
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeFind(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event->setArgument('limit', 20);
-	}
+        $event->setArgument('limit', 20);
+    }
 
-	/**
-	 * onAfterFind
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterFind(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterFind
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterFind(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'][] = ['method' => 'After'];
-	}
+        $event['result'][] = ['method' => 'After'];
+    }
 
-	/**
-	 * onBeforeFindAll
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeFindAll(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeFindAll
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeFindAll(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['limit'] = 20;
-	}
+        $event['limit'] = 20;
+    }
 
-	/**
-	 * onAfterFindAll
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterFindAll(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterFindAll
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterFindAll(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'][] = ['method' => 'After'];
-	}
+        $event['result'][] = ['method' => 'After'];
+    }
 
-	/**
-	 * onBeforeFindOne
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeFindOne(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeFindOne
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeFindOne(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['order'] = 'id';
-	}
+        $event['order'] = 'id';
+    }
 
-	/**
-	 * onAfterFindOne
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterFindOne(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterFindOne
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterFindOne(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result']->foo = 'after';
-	}
+        $event['result']->foo = 'after';
+    }
 
-	/**
-	 * onBeforeFindColumn
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeFindColumn(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeFindColumn
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeFindColumn(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['column'] = 'bar';
-	}
+        $event['column'] = 'bar';
+    }
 
-	/**
-	 * onAfterFindColumn
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterFindColumn(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterFindColumn
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterFindColumn(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'After';
-	}
+        $event['result'] = 'After';
+    }
 
-	/**
-	 * onBeforeCreate
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeCreate(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeCreate
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeCreate(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['dataset'] = [];
-	}
+        $event['dataset'] = [];
+    }
 
-	/**
-	 * onAfterCreate
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterCreate(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterCreate
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterCreate(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'after';
-	}
+        $event['result'] = 'after';
+    }
 
-	/**
-	 * onBeforeCreateOne
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeCreateOne(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeCreateOne
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeCreateOne(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['data'] = [];
-	}
+        $event['data'] = [];
+    }
 
-	/**
-	 * onAfterCreateOne
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterCreateOne(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterCreateOne
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterCreateOne(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'after';
-	}
+        $event['result'] = 'after';
+    }
 
-	/**
-	 * onBeforeUpdate
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeUpdate(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeUpdate
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeUpdate(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['confFields'] = 'state';
-	}
+        $event['confFields'] = 'state';
+    }
 
-	/**
-	 * onAfterUpdate
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterUpdate(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterUpdate
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterUpdate(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'after';
-	}
+        $event['result'] = 'after';
+    }
 
-	/**
-	 * onBeforeUpdateOne
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeUpdateOne(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeUpdateOne
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeUpdateOne(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['confFields'] = 'state';
-	}
+        $event['confFields'] = 'state';
+    }
 
-	/**
-	 * onAfterUpdateOne
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterUpdateOne(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterUpdateOne
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterUpdateOne(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'after';
-	}
+        $event['result'] = 'after';
+    }
 
-	/**
-	 * onBeforeSave
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeSave(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeSave
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeSave(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['confFields'] = 'state';
-	}
+        $event['confFields'] = 'state';
+    }
 
-	/**
-	 * onAfterSave
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterSave(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterSave
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterSave(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'after';
-	}
+        $event['result'] = 'after';
+    }
 
-	/**
-	 * onBeforeSaveOne
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeSaveOne(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeSaveOne
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeSaveOne(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['confFields'] = 'state';
-	}
+        $event['confFields'] = 'state';
+    }
 
-	/**
-	 * onAfterSaveOne
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterSaveOne(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterSaveOne
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterSaveOne(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'after';
-	}
+        $event['result'] = 'after';
+    }
 
-	/**
-	 * onBeforeFlush
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeFlush(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeFlush
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeFlush(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['conditions'] = ['state' => 1];
-	}
+        $event['conditions'] = ['state' => 1];
+    }
 
-	/**
-	 * onAfterFlush
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterFlush(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterFlush
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterFlush(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'after';
-	}
+        $event['result'] = 'after';
+    }
 
-	/**
-	 * onBeforeDelete
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onBeforeDelete(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onBeforeDelete
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onBeforeDelete(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['conditions'] = ['state' => 1];
-	}
+        $event['conditions'] = ['state' => 1];
+    }
 
-	/**
-	 * onAfterDelete
-	 *
-	 * @param Event $event
-	 *
-	 * @return  void
-	 */
-	public function onAfterDelete(Event $event)
-	{
-		$this->events[__FUNCTION__] = clone $event;
+    /**
+     * onAfterDelete
+     *
+     * @param Event $event
+     *
+     * @return  void
+     */
+    public function onAfterDelete(Event $event)
+    {
+        $this->events[__FUNCTION__] = clone $event;
 
-		$event['result'] = 'after';
-	}
+        $event['result'] = 'after';
+    }
 }

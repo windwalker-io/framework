@@ -17,57 +17,57 @@ use Windwalker\Validator\Rule\IpValidator;
  */
 class IpValidatorTest extends AbstractValidateTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var IpValidator
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var IpValidator
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new IpValidator;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new IpValidator;
+    }
 
-	/**
-	 * testCase
-	 *
-	 * @return  array
-	 */
-	public function validateCase()
-	{
-		return [
-			[
-				'case1',
-				'123.45.67.89',
-				true
-			],
-			[
-				'case2',
-				'127.0.0.1',
-				true
-			],
-			[
-				'case3',
-				'192.168.140.155',
-				true
-			],
-			[
-				'case4',
-				'654.321.123.456',
-				false
-			],
-			[
-				'case5',
-				'http://abc.com',
-				false
-			],
-		];
-	}
+    /**
+     * testCase
+     *
+     * @return  array
+     */
+    public function validateCase()
+    {
+        return [
+            [
+                'case1',
+                '123.45.67.89',
+                true,
+            ],
+            [
+                'case2',
+                '127.0.0.1',
+                true,
+            ],
+            [
+                'case3',
+                '192.168.140.155',
+                true,
+            ],
+            [
+                'case4',
+                '654.321.123.456',
+                false,
+            ],
+            [
+                'case5',
+                'http://abc.com',
+                false,
+            ],
+        ];
+    }
 }

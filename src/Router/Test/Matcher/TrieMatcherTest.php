@@ -19,225 +19,224 @@ use Windwalker\Uri\Uri;
  */
 class TrieMatcherTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var TrieMatcher
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var TrieMatcher
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		// $this->markTestSkipped('Not prepare');
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        // $this->markTestSkipped('Not prepare');
 
-		$this->instance = new TrieMatcher;
-	}
+        $this->instance = new TrieMatcher;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * metchCases
-	 *
-	 * @return  array
-	 */
-	public function matchCases()
-	{
-		return [
-			// @ Same route, but different server params
+    /**
+     * metchCases
+     *
+     * @return  array
+     */
+    public function matchCases()
+    {
+        return [
+            // @ Same route, but different server params
 
-			// Port 80 with default route
-			[
-				'http://windwalker.com/flower/5',
-				'flower/:id',
-				'GET',
-				true,
-				__LINE__
-			],
-			// Port 443(default) with SSL
-			[
-				'https://windwalker.com/flower/5',
-				'flower/:id',
-				'GET',
-				false,
-				__LINE__
-			],
-			// Port 137 with SSL
-			[
-				'https://windwalker.com:137/flower/5',
-				'flower/:id',
-				'GET',
-				false,
-				__LINE__
-			],
-			// POST method
-			[
-				'http://windwalker.com/flower/5',
-				'flower/:id',
-				'POST',
-				false,
-				__LINE__
-			],
-			// PUT method
-			[
-				'http://windwalker.com/flower/5',
-				'flower/:id',
-				'PUT',
-				true,
-				__LINE__
-			],
-			// Different host
-			[
-				'http://johnnywalker.com/flower/5',
-				'flower/:id',
-				'GET',
-				false,
-				__LINE__
-			],
-			// @ Match different routes
+            // Port 80 with default route
+            [
+                'http://windwalker.com/flower/5',
+                'flower/:id',
+                'GET',
+                true,
+                __LINE__,
+            ],
+            // Port 443(default) with SSL
+            [
+                'https://windwalker.com/flower/5',
+                'flower/:id',
+                'GET',
+                false,
+                __LINE__,
+            ],
+            // Port 137 with SSL
+            [
+                'https://windwalker.com:137/flower/5',
+                'flower/:id',
+                'GET',
+                false,
+                __LINE__,
+            ],
+            // POST method
+            [
+                'http://windwalker.com/flower/5',
+                'flower/:id',
+                'POST',
+                false,
+                __LINE__,
+            ],
+            // PUT method
+            [
+                'http://windwalker.com/flower/5',
+                'flower/:id',
+                'PUT',
+                true,
+                __LINE__,
+            ],
+            // Different host
+            [
+                'http://johnnywalker.com/flower/5',
+                'flower/:id',
+                'GET',
+                false,
+                __LINE__,
+            ],
+            // @ Match different routes
 
-			// Root
-			[
-				'http://windwalker.com/',
-				'/',
-				'GET',
-				true,
-				__LINE__
-			],
+            // Root
+            [
+                'http://windwalker.com/',
+                '/',
+                'GET',
+                true,
+                __LINE__,
+            ],
 
-			// Basic rules
-			[
-				'http://windwalker.com/flower/5',
-				'flower/:id/item/:alias',
-				'GET',
-				false,
-				__LINE__
-			],
+            // Basic rules
+            [
+                'http://windwalker.com/flower/5',
+                'flower/:id/item/:alias',
+                'GET',
+                false,
+                __LINE__,
+            ],
 
-			// Wildcards
-			[
-				'http://windwalker.com/flower/foo/bar/baz',
-				'flower/*tags',
-				'GET',
-				true,
-				__LINE__
-			],
-			[
-				'http://windwalker.com/flower',
-				'flower/*tags',
-				'GET',
-				false,
-				__LINE__
-			],
-		];
-	}
+            // Wildcards
+            [
+                'http://windwalker.com/flower/foo/bar/baz',
+                'flower/*tags',
+                'GET',
+                true,
+                __LINE__,
+            ],
+            [
+                'http://windwalker.com/flower',
+                'flower/*tags',
+                'GET',
+                false,
+                __LINE__,
+            ],
+        ];
+    }
 
-	/**
-	 * Method to test match().
-	 *
-	 * @return void
-	 *
-	 * @covers       \Windwalker\Router\Matcher\AbstractMatcher::match
-	 */
-	public function testMatch()
-	{
-		$routes = file_get_contents(__DIR__ . '/../fixtures/trie.txt');
+    /**
+     * Method to test match().
+     *
+     * @return void
+     *
+     * @covers       \Windwalker\Router\Matcher\AbstractMatcher::match
+     */
+    public function testMatch()
+    {
+        $routes = file_get_contents(__DIR__ . '/../fixtures/trie.txt');
 
-		$routes = explode("\n", trim($routes));
+        $routes = explode("\n", trim($routes));
 
-		$routes = array_map(
-			function ($route)
-			{
-				$route = trim($route, '/');
+        $routes = array_map(
+            function ($route) {
+                $route = trim($route, '/');
 
-				return new Route($route, $route, ['_return' => $route]);
-			},
-			$routes
-		);
+                return new Route($route, $route, ['_return' => $route]);
+            },
+            $routes
+        );
 
-		$matched = $this->instance->setRoutes($routes)
-			->match('/corge/quux/qux');
+        $matched = $this->instance->setRoutes($routes)
+            ->match('/corge/quux/qux');
 
-		$this->assertFalse(!$matched);
+        $this->assertFalse(!$matched);
 
-		$this->assertEquals('corge/quux/:qux', $matched->getName());
+        $this->assertEquals('corge/quux/:qux', $matched->getName());
 
-		$this->instance->getCount();
-	}
+        $this->instance->getCount();
+    }
 
-	/**
-	 * Method to test match().
-	 *
-	 * @param string  $url
-	 * @param string  $pattern
-	 * @param string  $method
-	 * @param boolean $expected
-	 * @param integer $line
-	 *
-	 * @return void
-	 *
-	 * @covers       \Windwalker\Router\Matcher\TrieMatcher::match
-	 *
-	 * @dataProvider matchCases
-	 */
-	public function testMatchRules($url, $pattern, $method, $expected, $line)
-	{
-		$uri = new Uri($url);
+    /**
+     * Method to test match().
+     *
+     * @param string  $url
+     * @param string  $pattern
+     * @param string  $method
+     * @param boolean $expected
+     * @param integer $line
+     *
+     * @return void
+     *
+     * @covers       \Windwalker\Router\Matcher\TrieMatcher::match
+     *
+     * @dataProvider matchCases
+     */
+    public function testMatchRules($url, $pattern, $method, $expected, $line)
+    {
+        $uri = new Uri($url);
 
-		$host = $uri->getHost();
-		$scheme = $uri->getScheme();
-		$port = $uri->getPort() ? : 80;
+        $host   = $uri->getHost();
+        $scheme = $uri->getScheme();
+        $port   = $uri->getPort() ?: 80;
 
-		$config = [
-			'name' => 'flower',
-			'pattern' => $pattern,
-			'variables' => [
-				'_controller' => 'FlowerController',
-				'id' => 1
-			],
-			'method' => ['GET', 'PUT'],
-			'host' => 'windwalker.com',
-			'scheme' => 'http',
-			'port' => 80,
-			'sslPort' => 443,
-			'requirements' => [
-				'id' => '\d+'
-			]
-		];
+        $config = [
+            'name' => 'flower',
+            'pattern' => $pattern,
+            'variables' => [
+                '_controller' => 'FlowerController',
+                'id' => 1,
+            ],
+            'method' => ['GET', 'PUT'],
+            'host' => 'windwalker.com',
+            'scheme' => 'http',
+            'port' => 80,
+            'sslPort' => 443,
+            'requirements' => [
+                'id' => '\d+',
+            ],
+        ];
 
-		$route = new \Windwalker\Router\Route(
-			$config['name'],
-			$config['pattern'],
-			$config['variables'],
-			$config['method'],
-			$config
-		);
+        $route = new \Windwalker\Router\Route(
+            $config['name'],
+            $config['pattern'],
+            $config['variables'],
+            $config['method'],
+            $config
+        );
 
-		$result = $this->instance
-			->setRoutes([$route])
-			->match(
-				$uri->getPath(),
-				$method,
-				[
-					'host' => $host,
-					'scheme' => $scheme,
-					'port' => $port
-				]
-			);
+        $result = $this->instance
+            ->setRoutes([$route])
+            ->match(
+                $uri->getPath(),
+                $method,
+                [
+                    'host' => $host,
+                    'scheme' => $scheme,
+                    'port' => $port,
+                ]
+            );
 
-		$this->assertEquals($expected, !empty($result), 'Match fail, case on line: ' . $line);
-	}
+        $this->assertEquals($expected, !empty($result), 'Match fail, case on line: ' . $line);
+    }
 }

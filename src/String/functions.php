@@ -8,18 +8,17 @@
 
 use Windwalker\String\StringObject;
 
-if (!function_exists('str'))
-{
-	/**
-	 * str
-	 *
-	 * @param string      $string
-	 * @param null|string $encoding
-	 *
-	 * @return  StringObject
-	 */
-	function str($string = '', $encoding = StringObject::ENCODING_UTF8)
-	{
-		return new StringObject($string, $encoding);
-	}
+if (!function_exists('str')) {
+    /**
+     * str
+     *
+     * @param string      $string
+     * @param null|string $encoding
+     *
+     * @return  StringObject
+     */
+    function str($string = '', $encoding = StringObject::ENCODING_UTF8)
+    {
+        return new StringObject($string, $encoding);
+    }
 }

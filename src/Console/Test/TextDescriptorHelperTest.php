@@ -23,39 +23,39 @@ use Windwalker\Console\Test\Stubs\FooCommand;
  */
 class TextDescriptorHelperTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var TextDescriptorHelper
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var TextDescriptorHelper
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	protected function setUp()
-	{
-		$this->instance = new TextDescriptorHelper(
-			new TextCommandDescriptor,
-			new TextOptionDescriptor
-		);
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    protected function setUp()
+    {
+        $this->instance = new TextDescriptorHelper(
+            new TextCommandDescriptor,
+            new TextOptionDescriptor
+        );
+    }
 
-	/**
-	 * Test describe method.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	public function testDescribe()
-	{
-		$compare = '<comment>Test Console</comment> - version: 1.2.3
+    /**
+     * Test describe method.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    public function testDescribe()
+    {
+        $compare = '<comment>Test Console</comment> - version: 1.2.3
 ------------------------------------------------------------
 
 [<comment>foo</comment> Help]
@@ -80,30 +80,30 @@ Commands:
 
 foo help';
 
-		$console = new Console(new MockIO);
+        $console = new Console(new MockIO);
 
-		$console->setTitle('Test Console')
-			->setVersion('1.2.3')
-			->setDescription('test desc');
+        $console->setTitle('Test Console')
+            ->setVersion('1.2.3')
+            ->setDescription('test desc');
 
-		$command = new FooCommand;
+        $command = new FooCommand;
 
-		$command->setApplication($console)
-			->description('foo desc')
-			->usage('foo command option')
-			->help('foo help');
+        $command->setApplication($console)
+            ->description('foo desc')
+            ->usage('foo command option')
+            ->help('foo help');
 
-		$command->addCommand('bar', 'Bar command desc');
-		$command->addCommand('yoo');
-		$command->addOption(['q', 'quiet'], 'default', 'q desc');
-		$command->addOption(['s', 'sakura'], 'default', 'sakura desc');
-		$command->addOption(['r'], 'default', 'rose desc');
+        $command->addCommand('bar', 'Bar command desc');
+        $command->addCommand('yoo');
+        $command->addOption(['q', 'quiet'], 'default', 'q desc');
+        $command->addOption(['s', 'sakura'], 'default', 'sakura desc');
+        $command->addOption(['r'], 'default', 'rose desc');
 
-		$result = $this->instance->describe($command);
+        $result = $this->instance->describe($command);
 
-		$this->assertEquals(
-			str_replace("\r\n", "\n", trim($compare)),
-			str_replace("\r\n", "\n", trim($result))
-		);
-	}
+        $this->assertEquals(
+            str_replace("\r\n", "\n", trim($compare)),
+            str_replace("\r\n", "\n", trim($result))
+        );
+    }
 }

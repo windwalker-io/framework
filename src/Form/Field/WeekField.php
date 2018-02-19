@@ -15,10 +15,10 @@ namespace Windwalker\Form\Field;
  */
 class WeekField extends AbstractHtml5Field
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'week';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'week';
 }

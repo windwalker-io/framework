@@ -18,50 +18,50 @@ use Windwalker\Language\Language;
  */
 class JsonFormatTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var JsonFormat
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var JsonFormat
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new JsonFormat;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new JsonFormat;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test parse().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Language\Format\JsonFormat::parse
-	 */
-	public function testParse()
-	{
-		$file = file_get_contents(__DIR__ . '/../fixtures/json/en-GB.json');
+    /**
+     * Method to test parse().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Language\Format\JsonFormat::parse
+     */
+    public function testParse()
+    {
+        $file = file_get_contents(__DIR__ . '/../fixtures/json/en-GB.json');
 
-		$lang = new Language;
+        $lang = new Language;
 
-		$lang->addStrings($this->instance->parse($file));
+        $lang->addStrings($this->instance->parse($file));
 
-		$this->assertEquals($lang->translate('WINDWALKER_LANGUAGE_TEST_SAKURA'), 'Sakura');
-		$this->assertEquals($lang->translate('WINDWALKER_LANGUAGE_TEST_Olive'), 'Olive');
-	}
+        $this->assertEquals($lang->translate('WINDWALKER_LANGUAGE_TEST_SAKURA'), 'Sakura');
+        $this->assertEquals($lang->translate('WINDWALKER_LANGUAGE_TEST_Olive'), 'Olive');
+    }
 }

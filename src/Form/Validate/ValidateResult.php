@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -17,141 +17,140 @@ use Windwalker\Form\Field\AbstractField;
  */
 class ValidateResult
 {
-	const STATUS_SUCCESS = 200;
+    const STATUS_SUCCESS = 200;
 
-	const STATUS_REQUIRED = 400;
+    const STATUS_REQUIRED = 400;
 
-	const STATUS_FAILURE = 500;
+    const STATUS_FAILURE = 500;
 
-	/**
-	 * Property success.
-	 *
-	 * @var  boolean
-	 */
-	protected $result = self::STATUS_SUCCESS;
+    /**
+     * Property success.
+     *
+     * @var  boolean
+     */
+    protected $result = self::STATUS_SUCCESS;
 
-	/**
-	 * Property message.
-	 *
-	 * @var string
-	 */
-	protected $message;
+    /**
+     * Property message.
+     *
+     * @var string
+     */
+    protected $message;
 
-	/**
-	 * Property field.
-	 *
-	 * @var AbstractField
-	 */
-	protected $field;
+    /**
+     * Property field.
+     *
+     * @var AbstractField
+     */
+    protected $field;
 
-	/**
-	 * Class init.
-	 *
-	 * @param integer|boolean $result
-	 * @param string          $message
-	 * @param AbstractField  $field
-	 */
-	public function __construct($result = self::STATUS_SUCCESS, $message = null, AbstractField $field = null)
-	{
-		$this->field   = $field;
-		$this->message = $message;
-		$this->result  = $result;
-	}
+    /**
+     * Class init.
+     *
+     * @param integer|boolean $result
+     * @param string          $message
+     * @param AbstractField   $field
+     */
+    public function __construct($result = self::STATUS_SUCCESS, $message = null, AbstractField $field = null)
+    {
+        $this->field   = $field;
+        $this->message = $message;
+        $this->result  = $result;
+    }
 
-	/**
-	 * isSuccess
-	 *
-	 * @return  boolean
-	 */
-	public function isSuccess()
-	{
-		if ($this->result === true || $this->result == static::STATUS_SUCCESS)
-		{
-			return true;
-		}
+    /**
+     * isSuccess
+     *
+     * @return  boolean
+     */
+    public function isSuccess()
+    {
+        if ($this->result === true || $this->result == static::STATUS_SUCCESS) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * isFailure
-	 *
-	 * @return  boolean
-	 */
-	public function isFailure()
-	{
-		return !$this->isSuccess();
-	}
+    /**
+     * isFailure
+     *
+     * @return  boolean
+     */
+    public function isFailure()
+    {
+        return !$this->isSuccess();
+    }
 
-	/**
-	 * Method to get property Message
-	 *
-	 * @return  string
-	 */
-	public function getMessage()
-	{
-		return $this->message;
-	}
+    /**
+     * Method to get property Message
+     *
+     * @return  string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
 
-	/**
-	 * Method to set property message
-	 *
-	 * @param   string $message
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setMessage($message)
-	{
-		$this->message = $message;
+    /**
+     * Method to set property message
+     *
+     * @param   string $message
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Field
-	 *
-	 * @return  AbstractField
-	 */
-	public function getField()
-	{
-		return $this->field;
-	}
+    /**
+     * Method to get property Field
+     *
+     * @return  AbstractField
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
 
-	/**
-	 * Method to set property field
-	 *
-	 * @param   AbstractField $field
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setField(AbstractField $field)
-	{
-		$this->field = $field;
+    /**
+     * Method to set property field
+     *
+     * @param   AbstractField $field
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setField(AbstractField $field)
+    {
+        $this->field = $field;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Result
-	 *
-	 * @return  boolean
-	 */
-	public function getResult()
-	{
-		return $this->result;
-	}
+    /**
+     * Method to get property Result
+     *
+     * @return  boolean
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
 
-	/**
-	 * Method to set property result
-	 *
-	 * @param   boolean $result
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setResult($result)
-	{
-		$this->result = $result;
+    /**
+     * Method to set property result
+     *
+     * @param   boolean $result
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
 
-		return $this;
-	}
+        return $this;
+    }
 }

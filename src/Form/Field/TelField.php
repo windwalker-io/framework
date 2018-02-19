@@ -15,10 +15,10 @@ namespace Windwalker\Form\Field;
  */
 class TelField extends AbstractHtml5Field
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'tel';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'tel';
 }

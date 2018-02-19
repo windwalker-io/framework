@@ -23,161 +23,161 @@ use Windwalker\Http\WebHttpServer;
  */
 class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var StubWeb
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var StubWeb
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$server['HTTP_HOST'] = 'foo.com';
-		$server['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$server['REQUEST_URI'] = '/index.php';
-		$server['SCRIPT_NAME'] = '/index.php';
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $server['HTTP_HOST']       = 'foo.com';
+        $server['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+        $server['REQUEST_URI']     = '/index.php';
+        $server['SCRIPT_NAME']     = '/index.php';
 
-		$this->instance = new StubWeb(ServerRequestFactory::createFromGlobals($server));
-	}
+        $this->instance = new StubWeb(ServerRequestFactory::createFromGlobals($server));
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * test__construct
-	 *
-	 * @return  void
-	 */
-	public function test__construct()
-	{
-		$this->assertInstanceOf(
-			'Windwalker\Structure\Structure',
-			$this->instance->config,
-			'Config property wrong type'
-		);
+    /**
+     * test__construct
+     *
+     * @return  void
+     */
+    public function test__construct()
+    {
+        $this->assertInstanceOf(
+            'Windwalker\Structure\Structure',
+            $this->instance->config,
+            'Config property wrong type'
+        );
 
-		$this->assertInstanceOf(
-			'Windwalker\Environment\WebEnvironment',
-			$this->instance->environment,
-			'Environment property wrong type'
-		);
+        $this->assertInstanceOf(
+            'Windwalker\Environment\WebEnvironment',
+            $this->instance->environment,
+            'Environment property wrong type'
+        );
 
-		$this->assertInstanceOf('Windwalker\Http\WebHttpServer', $this->instance->server);
-		
-		$this->assertInstanceOf('Windwalker\Http\Request\ServerRequest', $this->instance->request);
+        $this->assertInstanceOf('Windwalker\Http\WebHttpServer', $this->instance->server);
 
-		$this->assertInstanceOf('Windwalker\Uri\UriData', $this->instance->uri);
-	}
+        $this->assertInstanceOf('Windwalker\Http\Request\ServerRequest', $this->instance->request);
 
-	/**
-	 * Method to test execute().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Application\AbstractWebApplication::execute
-	 */
-	public function testExecute()
-	{
-		$this->instance->server->setOutput(new MockOutput);
-		
-		ob_start();
-		$this->instance->execute();
-		ob_end_clean();
+        $this->assertInstanceOf('Windwalker\Uri\UriData', $this->instance->uri);
+    }
 
-		$this->assertEquals('Hello World', $this->instance->server->getOutput()->output);
+    /**
+     * Method to test execute().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Application\AbstractWebApplication::execute
+     */
+    public function testExecute()
+    {
+        $this->instance->server->setOutput(new MockOutput);
 
-		$this->assertContains(
-			'text/html; charset=utf-8',
-			$this->instance->server->getOutput()->message->getHeader('Content-Type')
-		);
-	}
+        ob_start();
+        $this->instance->execute();
+        ob_end_clean();
 
-	/**
-	 * Method to test __toString().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Application\AbstractWebApplication::__toString
-	 */
-	public function test__toString()
-	{
-		$this->instance->server->setOutput(new NoHeaderOutput);
-		
-		$this->assertEquals('Hello World', (string) $this->instance);
-	}
+        $this->assertEquals('Hello World', $this->instance->server->getOutput()->output);
 
-	/**
-	 * Method to test redirect().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Application\AbstractWebApplication::redirect
-	 */
-	public function testRedirect()
-	{
-		$this->instance->server->setOutput(new MockOutput);
+        $this->assertContains(
+            'text/html; charset=utf-8',
+            $this->instance->server->getOutput()->message->getHeader('Content-Type')
+        );
+    }
 
-		$this->instance->redirect('/foo');
+    /**
+     * Method to test __toString().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Application\AbstractWebApplication::__toString
+     */
+    public function test__toString()
+    {
+        $this->instance->server->setOutput(new NoHeaderOutput);
 
-		$headers = $this->instance->server->getOutput()->message->getHeaders();
+        $this->assertEquals('Hello World', (string)$this->instance);
+    }
 
-		$array = [
-			'Location: http://foo.com/foo',
-			'Content-Length: 0'
-		];
+    /**
+     * Method to test redirect().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Application\AbstractWebApplication::redirect
+     */
+    public function testRedirect()
+    {
+        $this->instance->server->setOutput(new MockOutput);
 
-		$this->assertEquals($array, HeaderHelper::toHeaderLine($headers));
-		$this->assertEquals('HTTP/1.1 303 See Other', $this->instance->server->getOutput()->status);
+        $this->instance->redirect('/foo');
 
-		// Code
-		$this->instance->server->setOutput(new MockOutput);
+        $headers = $this->instance->server->getOutput()->message->getHeaders();
 
-		$this->instance->redirect('/foo', 307);
+        $array = [
+            'Location: http://foo.com/foo',
+            'Content-Length: 0',
+        ];
 
-		$this->assertEquals('HTTP/1.1 307 Temporary Redirect', $this->instance->server->getOutput()->status);
-	}
+        $this->assertEquals($array, HeaderHelper::toHeaderLine($headers));
+        $this->assertEquals('HTTP/1.1 303 See Other', $this->instance->server->getOutput()->status);
 
-	/**
-	 * testGetAndSetServer
-	 *
-	 * @return  void
-	 */
-	public function testGetAndSetServer()
-	{
-		$server = $this->instance->getServer();
-		
-		$this->instance->setServer($server2 = WebHttpServer::createFromGlobals('trim'));
-		
-		$this->assertNotSame($server, $this->instance->getServer());
-		$this->assertSame($server2, $this->instance->getServer());
-		
-		$this->assertSame($this->instance->request, $this->instance->getServer()->getRequest());
-		$this->assertSame($this->instance->uri, $this->instance->getServer()->getUriData());
-	}
+        // Code
+        $this->instance->server->setOutput(new MockOutput);
 
-	/**
-	 * testGetAndSetEnvironment
-	 *
-	 * @return  void
-	 */
-	public function testGetAndSetEnvironment()
-	{
-		$this->instance->setEnvironment($env = new WebEnvironment);
+        $this->instance->redirect('/foo', 307);
 
-		$this->assertSame($this->instance->browser, $this->instance->environment->getBrowser());
-		$this->assertSame($this->instance->platform, $this->instance->getEnvironment()->getPlatform());
-	}
+        $this->assertEquals('HTTP/1.1 307 Temporary Redirect', $this->instance->server->getOutput()->status);
+    }
+
+    /**
+     * testGetAndSetServer
+     *
+     * @return  void
+     */
+    public function testGetAndSetServer()
+    {
+        $server = $this->instance->getServer();
+
+        $this->instance->setServer($server2 = WebHttpServer::createFromGlobals('trim'));
+
+        $this->assertNotSame($server, $this->instance->getServer());
+        $this->assertSame($server2, $this->instance->getServer());
+
+        $this->assertSame($this->instance->request, $this->instance->getServer()->getRequest());
+        $this->assertSame($this->instance->uri, $this->instance->getServer()->getUriData());
+    }
+
+    /**
+     * testGetAndSetEnvironment
+     *
+     * @return  void
+     */
+    public function testGetAndSetEnvironment()
+    {
+        $this->instance->setEnvironment($env = new WebEnvironment);
+
+        $this->assertSame($this->instance->browser, $this->instance->environment->getBrowser());
+        $this->assertSame($this->instance->platform, $this->instance->getEnvironment()->getPlatform());
+    }
 }

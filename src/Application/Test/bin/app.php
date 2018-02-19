@@ -13,44 +13,42 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 class Application extends \Windwalker\Application\AbstractWebApplication
 {
-	public function dispatch(Request $request, Response $response,  $next = null)
-	{
-		$response->getBody()->write('Hello World');
+    public function dispatch(Request $request, Response $response, $next = null)
+    {
+        $response->getBody()->write('Hello World');
 
-		$response = $next($request, $response, $next);
+        $response = $next($request, $response, $next);
 
-		return $response;
-	}
+        return $response;
+    }
 }
 
 $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create([
-	function (Request $request, Response $response,  $next = null)
-	{
-		$input = \Windwalker\IO\PsrInput::create($request);
+    function (Request $request, Response $response, $next = null) {
+        $input = \Windwalker\IO\PsrInput::create($request);
 
-		show($input->files->get('image.foo.1', '.'));
-		
-		show($request->getBody());
-	    $body = $response->getBody()->__toString();
+        show($input->files->get('image.foo.1', '.'));
 
-		$body = ">>>AAA\n" . $body . "\n<<<AAA";
+        show($request->getBody());
+        $body = $response->getBody()->__toString();
 
-		$response->getBody()->rewind();
-		$response->getBody()->write($body);
+        $body = ">>>AAA\n" . $body . "\n<<<AAA";
 
-		return $next($request, $response);
-	},
-	function (Request $request, Response $response,  $next = null)
-	{
-		$body = $response->getBody()->__toString();
+        $response->getBody()->rewind();
+        $response->getBody()->write($body);
 
-		$body = ">>>BBB\n" . $body . "\n<<<BBB";
+        return $next($request, $response);
+    },
+    function (Request $request, Response $response, $next = null) {
+        $body = $response->getBody()->__toString();
 
-		$response->getBody()->rewind();
-		$response->getBody()->write($body);
+        $body = ">>>BBB\n" . $body . "\n<<<BBB";
 
-		return $next($request, $response);
-	}
+        $response->getBody()->rewind();
+        $response->getBody()->write($body);
+
+        return $next($request, $response);
+    },
 ]);
 
 $app = new Application;

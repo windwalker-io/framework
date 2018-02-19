@@ -18,30 +18,28 @@ use Windwalker\Http\Stream\Stream;
  */
 class RedirectResponse extends Response
 {
-	/**
-	 * Constructor.
-	 *
-	 * @param  string|UriInterface  $uri      The redirect uri.
-	 * @param  int                  $status   The status code.
-	 * @param  array                $headers  The custom headers.
-	 */
-	public function __construct($uri, $status = 303, array $headers = [])
-	{
-		if ($uri instanceof UriInterface || $uri instanceof \Windwalker\Uri\UriInterface)
-		{
-			$uri = (string) $uri;
-		}
+    /**
+     * Constructor.
+     *
+     * @param  string|UriInterface $uri     The redirect uri.
+     * @param  int                 $status  The status code.
+     * @param  array               $headers The custom headers.
+     */
+    public function __construct($uri, $status = 303, array $headers = [])
+    {
+        if ($uri instanceof UriInterface || $uri instanceof \Windwalker\Uri\UriInterface) {
+            $uri = (string)$uri;
+        }
 
-		if (!is_string($uri))
-		{
-			throw new \InvalidArgumentException(sprintf(
-				'Invalid URI type, string or UriInterface required, %s provided.',
-				gettype($uri)
-			));
-		}
+        if (!is_string($uri)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid URI type, string or UriInterface required, %s provided.',
+                gettype($uri)
+            ));
+        }
 
-		$headers['location'] = [$uri];
+        $headers['location'] = [$uri];
 
-		parent::__construct(new Stream('php://temp', 'r'), $status, $headers);
-	}
+        parent::__construct(new Stream('php://temp', 'r'), $status, $headers);
+    }
 }

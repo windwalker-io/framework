@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2015 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later;
@@ -10,243 +10,223 @@ namespace Windwalker\Utilities\Queue;
 
 /**
  * The PriorityQueue class.
- * 
+ *
  * @since  2.1.1
  */
 class PriorityQueue extends \SplPriorityQueue implements \Serializable
 {
-	const MIN = -300;
-	const LOW = -200;
-	const BELOW_NORMAL = -100;
-	const NORMAL = 0;
-	const ABOVE_NORMAL = 100;
-	const HIGH = 200;
-	const MAX = 300;
-	
-	/**
-	 * @var int Seed used to ensure queue order for items of the same priority
-	 */
-	protected $serial = PHP_INT_MAX;
+    const MIN = -300;
+    const LOW = -200;
+    const BELOW_NORMAL = -100;
+    const NORMAL = 0;
+    const ABOVE_NORMAL = 100;
+    const HIGH = 200;
+    const MAX = 300;
 
-	/**
-	 * Class init.
-	 *
-	 * @param array|\SplPriorityQueue $array
-	 * @param int                     $priority
-	 */
-	public function __construct($array = [], $priority = self::NORMAL)
-	{
-		if ($array instanceof \SplPriorityQueue)
-		{
-			$this->merge($array);
-		}
-		else
-		{
-			$this->bind($array, $priority);
-		}
-	}
+    /**
+     * @var int Seed used to ensure queue order for items of the same priority
+     */
+    protected $serial = PHP_INT_MAX;
 
-	/**
-	 * bind
-	 *
-	 * @param array $array
-	 * @param int   $priority
-	 *
-	 * @return  static
-	 */
-	public function bind(array $array = [], $priority = self::NORMAL)
-	{
-		foreach ($array as $item)
-		{
-			$this->insert($item, $priority);
-		}
+    /**
+     * Class init.
+     *
+     * @param array|\SplPriorityQueue $array
+     * @param int                     $priority
+     */
+    public function __construct($array = [], $priority = self::NORMAL)
+    {
+        if ($array instanceof \SplPriorityQueue) {
+            $this->merge($array);
+        } else {
+            $this->bind($array, $priority);
+        }
+    }
 
-		return $this;
-	}
+    /**
+     * bind
+     *
+     * @param array $array
+     * @param int   $priority
+     *
+     * @return  static
+     */
+    public function bind(array $array = [], $priority = self::NORMAL)
+    {
+        foreach ($array as $item) {
+            $this->insert($item, $priority);
+        }
 
-	/**
-	 * register
-	 *
-	 * @param array $items
-	 *
-	 * @return  static
-	 */
-	public function insertArray(array $items)
-	{
-		foreach ($items as $priority => $item)
-		{
-			$this->insert($item, $priority);
-		}
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * register
+     *
+     * @param array $items
+     *
+     * @return  static
+     */
+    public function insertArray(array $items)
+    {
+        foreach ($items as $priority => $item) {
+            $this->insert($item, $priority);
+        }
 
-	/**
-	 * Insert a value with a given priority
-	 *
-	 * Utilizes {@var $serial} to ensure that values of equal priority are
-	 * emitted in the same order in which they are inserted.
-	 *
-	 * @param  mixed $datum
-	 * @param  mixed $priority
-	 *
-	 * @return void
-	 */
-	public function insert($datum, $priority)
-	{
-		if (!is_array($priority))
-		{
-			$priority = [$priority, $this->serial--];
-		}
-		else
-		{
-			$priority[] = $this->serial--;
-		}
+        return $this;
+    }
 
-		parent::insert($datum, $priority);
-	}
+    /**
+     * Insert a value with a given priority
+     *
+     * Utilizes {@var $serial} to ensure that values of equal priority are
+     * emitted in the same order in which they are inserted.
+     *
+     * @param  mixed $datum
+     * @param  mixed $priority
+     *
+     * @return void
+     */
+    public function insert($datum, $priority)
+    {
+        if (!is_array($priority)) {
+            $priority = [$priority, $this->serial--];
+        } else {
+            $priority[] = $this->serial--;
+        }
 
-	/**
-	 * Serialize to an array
-	 *
-	 * Array will be priority => data pairs
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$array = [];
+        parent::insert($datum, $priority);
+    }
 
-		foreach (clone $this as $item)
-		{
-			$array[] = $item;
-		}
+    /**
+     * Serialize to an array
+     *
+     * Array will be priority => data pairs
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
 
-		return $array;
-	}
+        foreach (clone $this as $item) {
+            $array[] = $item;
+        }
 
-	/**
-	 * Serialize
-	 *
-	 * @return string
-	 */
-	public function serialize()
-	{
-		$clone = clone $this;
+        return $array;
+    }
 
-		$clone->setExtractFlags(self::EXTR_BOTH);
+    /**
+     * Serialize
+     *
+     * @return string
+     */
+    public function serialize()
+    {
+        $clone = clone $this;
 
-		$data = [];
+        $clone->setExtractFlags(self::EXTR_BOTH);
 
-		foreach ($clone as $item)
-		{
-			$data[] = $item;
-		}
+        $data = [];
 
-		return serialize($data);
-	}
+        foreach ($clone as $item) {
+            $data[] = $item;
+        }
 
-	/**
-	 * Deserialize
-	 *
-	 * @param  string $data
-	 *
-	 * @return void
-	 */
-	public function unserialize($data)
-	{
-		foreach (unserialize($data) as $item)
-		{
-			$this->insert($item['data'], $item['priority']);
-		}
-	}
+        return serialize($data);
+    }
 
-	/**
-	 * merge
-	 *
-	 * @return static;
-	 */
-	public function merge()
-	{
-		$args = func_get_args();
+    /**
+     * Deserialize
+     *
+     * @param  string $data
+     *
+     * @return void
+     */
+    public function unserialize($data)
+    {
+        foreach (unserialize($data) as $item) {
+            $this->insert($item['data'], $item['priority']);
+        }
+    }
 
-		foreach ($args as $arg)
-		{
-			if (!($arg instanceof \SplPriorityQueue))
-			{
-				throw new \InvalidArgumentException('Only \SplPriorityQueue can merge.');
-			}
+    /**
+     * merge
+     *
+     * @return static;
+     */
+    public function merge()
+    {
+        $args = func_get_args();
 
-			$queue = clone $arg;
+        foreach ($args as $arg) {
+            if (!($arg instanceof \SplPriorityQueue)) {
+                throw new \InvalidArgumentException('Only \SplPriorityQueue can merge.');
+            }
 
-			$queue->setExtractFlags(self::EXTR_BOTH);
+            $queue = clone $arg;
 
-			foreach ($queue as $item)
-			{
-				$this->insert($item['data'], $item['priority']);
-			}
-		}
+            $queue->setExtractFlags(self::EXTR_BOTH);
 
-		return $this;
-	}
+            foreach ($queue as $item) {
+                $this->insert($item['data'], $item['priority']);
+            }
+        }
 
-	/**
-	 * compare
-	 *
-	 * @param mixed $priority1
-	 * @param mixed $priority2
-	 *
-	 * @return  int
-	 */
-	public function compare($priority1, $priority2)
-	{
-		$p1Count = count($priority1);
-		$p2Count = count($priority2);
+        return $this;
+    }
 
-		$count = min($p1Count, $p2Count);
+    /**
+     * compare
+     *
+     * @param mixed $priority1
+     * @param mixed $priority2
+     *
+     * @return  int
+     */
+    public function compare($priority1, $priority2)
+    {
+        $p1Count = count($priority1);
+        $p2Count = count($priority2);
 
-		foreach (range(1, $count) as $i)
-		{
-			$k = $i - 1;
+        $count = min($p1Count, $p2Count);
 
-			if ($priority1[$k] == $priority2[$k])
-			{
-				continue;
-			}
-			elseif ($priority1[$k] > $priority2[$k])
-			{
-				return 1;
-			}
-			else
-			{
-				return -1;
-			}
-		}
+        foreach (range(1, $count) as $i) {
+            $k = $i - 1;
 
-		return 0;
-	}
+            if ($priority1[$k] == $priority2[$k]) {
+                continue;
+            } elseif ($priority1[$k] > $priority2[$k]) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
 
-	/**
-	 * Method to get property Serial
-	 *
-	 * @return  int
-	 */
-	public function getSerial()
-	{
-		return $this->serial;
-	}
+        return 0;
+    }
 
-	/**
-	 * Method to set property serial
-	 *
-	 * @param   int $serial
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setSerial($serial)
-	{
-		$this->serial = $serial;
+    /**
+     * Method to get property Serial
+     *
+     * @return  int
+     */
+    public function getSerial()
+    {
+        return $this->serial;
+    }
 
-		return $this;
-	}
+    /**
+     * Method to set property serial
+     *
+     * @param   int $serial
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setSerial($serial)
+    {
+        $this->serial = $serial;
+
+        return $this;
+    }
 }

@@ -15,10 +15,10 @@ namespace Windwalker\Form\Field;
  */
 class ColorField extends AbstractHtml5Field
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'color';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'color';
 }

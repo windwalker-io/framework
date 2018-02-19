@@ -17,59 +17,59 @@ use Windwalker\Form\FilterHelper;
  */
 class FilterHelperTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * setUp
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		FilterHelper::reset();
-	}
+    /**
+     * setUp
+     *
+     * @return  void
+     */
+    protected function setUp()
+    {
+        FilterHelper::reset();
+    }
 
-	/**
-	 * tearDown
-	 *
-	 * @return  void
-	 */
-	protected function tearDown()
-	{
-		FilterHelper::reset();
-	}
+    /**
+     * tearDown
+     *
+     * @return  void
+     */
+    protected function tearDown()
+    {
+        FilterHelper::reset();
+    }
 
-	/**
-	 * Method to test create().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Form\FilterHelper::create
-	 */
-	public function testCreate()
-	{
-		$filter = FilterHelper::create('mock');
+    /**
+     * Method to test create().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Form\FilterHelper::create
+     */
+    public function testCreate()
+    {
+        $filter = FilterHelper::create('mock');
 
-		$this->assertInstanceOf('Windwalker\\Form\\Filter\\MockFilter', $filter);
+        $this->assertInstanceOf('Windwalker\\Form\\Filter\\MockFilter', $filter);
 
-		$filter = FilterHelper::create('email');
+        $filter = FilterHelper::create('email');
 
-		$this->assertInstanceOf('Windwalker\\Form\\Filter\\DefaultFilter', $filter);
+        $this->assertInstanceOf('Windwalker\\Form\\Filter\\DefaultFilter', $filter);
 
-		FilterHelper::addNamespace('Windwalker\\Form\\Test\\Stub');
+        FilterHelper::addNamespace('Windwalker\\Form\\Test\\Stub');
 
-		$filter = FilterHelper::create('stub');
+        $filter = FilterHelper::create('stub');
 
-		$this->assertInstanceOf('Windwalker\\Form\\Test\\Stub\\StubFilter', $filter);
-	}
+        $this->assertInstanceOf('Windwalker\\Form\\Test\\Stub\\StubFilter', $filter);
+    }
 
-	/**
-	 * testCreateByClassName
-	 *
-	 * @return  void
-	 */
-	public function testCreateByClassName()
-	{
-		$filter = FilterHelper::create('Windwalker\\Form\\Test\\Stub\\StubFilter');
+    /**
+     * testCreateByClassName
+     *
+     * @return  void
+     */
+    public function testCreateByClassName()
+    {
+        $filter = FilterHelper::create('Windwalker\\Form\\Test\\Stub\\StubFilter');
 
-		$this->assertInstanceOf('Windwalker\\Form\\Test\\Stub\\StubFilter', $filter);
-	}
+        $this->assertInstanceOf('Windwalker\\Form\\Test\\Stub\\StubFilter', $filter);
+    }
 }

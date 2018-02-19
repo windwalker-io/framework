@@ -23,159 +23,159 @@ use Windwalker\Validator\ValidatorInterface;
  */
 class ValidatorCompositeTest extends TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var ValidatorComposite
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var ValidatorComposite
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new ValidatorComposite;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new ValidatorComposite;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
-	
-	/**
-	* Method to test __construct().
-	*
-	* @return void
-	*
-	* @covers \Windwalker\Validator\ValidatorComposite::__construct
-	*/
-	public function test__construct()
-	{
-		$v = new ValidatorComposite([
-			UrlValidator::class,
-			AlnumValidator::class
-		]);
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-		static::assertNotEmpty($v->getValidators());
-		static::assertContainsOnlyInstancesOf(ValidatorInterface::class, $v->getValidators());
-	}
+    /**
+     * Method to test __construct().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Validator\ValidatorComposite::__construct
+     */
+    public function test__construct()
+    {
+        $v = new ValidatorComposite([
+            UrlValidator::class,
+            AlnumValidator::class,
+        ]);
 
-	/**
-	* Method to test addValidator().
-	*
-	* @return void
-	*
-	* @covers \Windwalker\Validator\ValidatorComposite::addValidator
-	* @covers \Windwalker\Validator\ValidatorComposite::getValidators
-	*/
-	public function testAddValidator()
-	{
-		$v = new UrlValidator;
-		$this->instance->addValidator($v);
+        static::assertNotEmpty($v->getValidators());
+        static::assertContainsOnlyInstancesOf(ValidatorInterface::class, $v->getValidators());
+    }
 
-		self::assertSame($v, $this->instance->getValidators()[0]);
+    /**
+     * Method to test addValidator().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Validator\ValidatorComposite::addValidator
+     * @covers \Windwalker\Validator\ValidatorComposite::getValidators
+     */
+    public function testAddValidator()
+    {
+        $v = new UrlValidator;
+        $this->instance->addValidator($v);
 
-		$v = (new ValidatorComposite)->addValidator('is_numeric');
+        self::assertSame($v, $this->instance->getValidators()[0]);
 
-		self::assertTrue($v->validate('123.12'));
-	}
+        $v = (new ValidatorComposite)->addValidator('is_numeric');
 
-	/**
-	* Method to test setValidators().
-	*
-	* @return void
-	*
-	* @covers \Windwalker\Validator\ValidatorComposite::setValidators
-	*/
-	public function testSetValidators()
-	{
-		$this->instance->setValidators([
-			UrlValidator::class,
-			AlnumValidator::class
-		]);
+        self::assertTrue($v->validate('123.12'));
+    }
 
-		static::assertNotEmpty($this->instance->getValidators());
-		static::assertContainsOnlyInstancesOf(ValidatorInterface::class, $this->instance->getValidators());
-	}
+    /**
+     * Method to test setValidators().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Validator\ValidatorComposite::setValidators
+     */
+    public function testSetValidators()
+    {
+        $this->instance->setValidators([
+            UrlValidator::class,
+            AlnumValidator::class,
+        ]);
 
-	/**
-	* Method to test getErrors().
-	*
-	* @return void
-	*
-	* @covers \Windwalker\Validator\ValidatorComposite::getErrors
-	*/
-	public function testGetErrors()
-	{
-		$r = $this->instance->setValidators([
-			(new UrlValidator)->setMessage('Invalid URL'),
-			(new IpValidator)->setMessage('Invalid IP')
-		])->validate('Hello');
+        static::assertNotEmpty($this->instance->getValidators());
+        static::assertContainsOnlyInstancesOf(ValidatorInterface::class, $this->instance->getValidators());
+    }
 
-		self::assertFalse($r);
-		self::assertEquals(['Invalid URL', 'Invalid IP'], $this->instance->getErrors());
-	}
+    /**
+     * Method to test getErrors().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Validator\ValidatorComposite::getErrors
+     */
+    public function testGetErrors()
+    {
+        $r = $this->instance->setValidators([
+            (new UrlValidator)->setMessage('Invalid URL'),
+            (new IpValidator)->setMessage('Invalid IP'),
+        ])->validate('Hello');
 
-	/**
-	* Method to test setErrors().
-	*
-	* @return void
-	*
-	* @covers \Windwalker\Validator\ValidatorComposite::setErrors
-	*/
-	public function testSetErrors()
-	{
-		$this->instance->setErrors(['Foo']);
+        self::assertFalse($r);
+        self::assertEquals(['Invalid URL', 'Invalid IP'], $this->instance->getErrors());
+    }
 
-		self::assertEquals(['Foo'], $this->instance->getErrors());
-	}
+    /**
+     * Method to test setErrors().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Validator\ValidatorComposite::setErrors
+     */
+    public function testSetErrors()
+    {
+        $this->instance->setErrors(['Foo']);
 
-	/**
-	* Method to test getResults().
-	*
-	* @return void
-	*
-	* @covers \Windwalker\Validator\ValidatorComposite::getResults
-	*/
-	public function testMatchAll()
-	{
-		$r = $this->instance->setValidators([
-			new AlnumValidator,
-			new PhoneValidator
-		])->validate('1a2b');
+        self::assertEquals(['Foo'], $this->instance->getErrors());
+    }
 
-		$results = $this->instance->getResults();
+    /**
+     * Method to test getResults().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Validator\ValidatorComposite::getResults
+     */
+    public function testMatchAll()
+    {
+        $r = $this->instance->setValidators([
+            new AlnumValidator,
+            new PhoneValidator,
+        ])->validate('1a2b');
 
-		self::assertFalse($r);
-		self::assertEquals([true, false], $results);
-		self::assertTrue($this->instance->validate('0225647186'));
-	}
+        $results = $this->instance->getResults();
 
-	/**
-	 * testMatchOne
-	 *
-	 * @return  void
-	 */
-	public function testMatchOne()
-	{
-		$r = $this->instance->setValidators([
-			new AlnumValidator,
-			new PhoneValidator
-		])->setMode(ValidatorComposite::MODE_MATCH_ONE)
-			->validate('1a2b');
+        self::assertFalse($r);
+        self::assertEquals([true, false], $results);
+        self::assertTrue($this->instance->validate('0225647186'));
+    }
 
-		$results = $this->instance->getResults();
+    /**
+     * testMatchOne
+     *
+     * @return  void
+     */
+    public function testMatchOne()
+    {
+        $r = $this->instance->setValidators([
+            new AlnumValidator,
+            new PhoneValidator,
+        ])->setMode(ValidatorComposite::MODE_MATCH_ONE)
+            ->validate('1a2b');
 
-		self::assertTrue($r);
-		self::assertEquals([true, false], $results);
-	}
+        $results = $this->instance->getResults();
+
+        self::assertTrue($r);
+        self::assertEquals([true, false], $results);
+    }
 }

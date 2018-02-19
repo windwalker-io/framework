@@ -19,46 +19,46 @@ use Windwalker\Form\Renderer\FormRendererInterface;
  */
 class MockFormRenderer implements FormRendererInterface
 {
-	/**
-	 * renderField
-	 *
-	 * @param AbstractField $field
-	 * @param array         $attribs
-	 * @param array         $options
-	 *
-	 * @return string
-	 */
-	public function renderField(AbstractField $field, array $attribs = [], array $options = [])
-	{
-		return (string) new HtmlElement('mock', [
-			$field->renderLabel(),
-			$field->renderInput(),
-		], $attribs);
-	}
+    /**
+     * renderField
+     *
+     * @param AbstractField $field
+     * @param array         $attribs
+     * @param array         $options
+     *
+     * @return string
+     */
+    public function renderField(AbstractField $field, array $attribs = [], array $options = [])
+    {
+        return (string)new HtmlElement('mock', [
+            $field->renderLabel(),
+            $field->renderInput(),
+        ], $attribs);
+    }
 
-	/**
-	 * renderLabel
-	 *
-	 * @param AbstractField $field
-	 * @param array         $attribs
-	 *
-	 * @return string
-	 */
-	public function renderLabel(AbstractField $field, array $attribs = [])
-	{
-		return 'Hello ';
-	}
+    /**
+     * renderLabel
+     *
+     * @param AbstractField $field
+     * @param array         $attribs
+     *
+     * @return string
+     */
+    public function renderLabel(AbstractField $field, array $attribs = [])
+    {
+        return 'Hello ';
+    }
 
-	/**
-	 * renderInput
-	 *
-	 * @param AbstractField $field
-	 * @param array         $attribs
-	 *
-	 * @return string
-	 */
-	public function renderInput(AbstractField $field, array $attribs = [])
-	{
-		return 'World: ' . $field->getFieldName();
-	}
+    /**
+     * renderInput
+     *
+     * @param AbstractField $field
+     * @param array         $attribs
+     *
+     * @return string
+     */
+    public function renderInput(AbstractField $field, array $attribs = [])
+    {
+        return 'World: ' . $field->getFieldName();
+    }
 }

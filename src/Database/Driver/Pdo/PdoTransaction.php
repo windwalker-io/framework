@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -17,55 +17,52 @@ use Windwalker\Database\Command\AbstractTransaction;
  */
 class PdoTransaction extends AbstractTransaction
 {
-	/**
-	 * start
-	 *
-	 * @return  static
-	 */
-	public function start()
-	{
-		if (!$this->nested || !$this->depth)
-		{
-			$this->db->connect()->getConnection()->beginTransaction();
-		}
+    /**
+     * start
+     *
+     * @return  static
+     */
+    public function start()
+    {
+        if (!$this->nested || !$this->depth) {
+            $this->db->connect()->getConnection()->beginTransaction();
+        }
 
-		$this->depth++;
+        $this->depth++;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * commit
-	 *
-	 * @return  static
-	 */
-	public function commit()
-	{
-		if (!$this->nested || $this->depth == 1)
-		{
-			$this->db->connect()->getConnection()->commit();
-		}
+    /**
+     * commit
+     *
+     * @return  static
+     */
+    public function commit()
+    {
+        if (!$this->nested || $this->depth == 1) {
+            $this->db->connect()->getConnection()->commit();
+        }
 
-		$this->depth--;
+        $this->depth--;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * rollback
-	 *
-	 * @return  static
-	 */
-	public function rollback()
-	{
-		if (!$this->nested || $this->depth == 1)
-		{
-			$this->db->connect()->getConnection()->rollBack();
-		}
+    /**
+     * rollback
+     *
+     * @return  static
+     */
+    public function rollback()
+    {
+        if (!$this->nested || $this->depth == 1) {
+            $this->db->connect()->getConnection()->rollBack();
+        }
 
-		$this->depth--;
+        $this->depth--;
 
-		return $this;
-	}
+        return $this;
+    }
 }
 

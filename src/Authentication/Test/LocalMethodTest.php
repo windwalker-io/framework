@@ -19,110 +19,109 @@ use Windwalker\Authentication\Method\LocalMethod;
  */
 class LocalMethodTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var LocalMethod
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var LocalMethod
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$users = [
-			[
-				'username' => 'sakura',
-				'password' => 'qwer'
-			],
-			[
-				'username' => 'flower',
-				'password' => '1234'
-			]
-		];
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $users = [
+            [
+                'username' => 'sakura',
+                'password' => 'qwer',
+            ],
+            [
+                'username' => 'flower',
+                'password' => '1234',
+            ],
+        ];
 
-		$this->instance = new LocalMethod($users);
-	}
+        $this->instance = new LocalMethod($users);
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test authenticate().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Authentication\Method\LocalMethod::authenticate
-	 */
-	public function testAuthenticate()
-	{
-		$this->instance->setVerifyHandler(function($pass, $hash)
-		{
-			return $pass == $hash;
-		});
+    /**
+     * Method to test authenticate().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Authentication\Method\LocalMethod::authenticate
+     */
+    public function testAuthenticate()
+    {
+        $this->instance->setVerifyHandler(function ($pass, $hash) {
+            return $pass == $hash;
+        });
 
-		$credential = new Credential(['username' => 'flower', 'password' => '1234']);
+        $credential = new Credential(['username' => 'flower', 'password' => '1234']);
 
-		// Test success
-		$this->assertTrue($this->instance->authenticate($credential));
+        // Test success
+        $this->assertTrue($this->instance->authenticate($credential));
 
-		$this->assertEquals(Authentication::SUCCESS, $this->instance->getStatus());
+        $this->assertEquals(Authentication::SUCCESS, $this->instance->getStatus());
 
-		// Test invalid
-		$credential->password = '5678';
+        // Test invalid
+        $credential->password = '5678';
 
-		$this->assertFalse($this->instance->authenticate($credential));
+        $this->assertFalse($this->instance->authenticate($credential));
 
-		$this->assertEquals(Authentication::INVALID_CREDENTIAL, $this->instance->getStatus());
+        $this->assertEquals(Authentication::INVALID_CREDENTIAL, $this->instance->getStatus());
 
-		// Test no user
-		$credential->username = 'olive';
+        // Test no user
+        $credential->username = 'olive';
 
-		$this->assertFalse($this->instance->authenticate($credential));
+        $this->assertFalse($this->instance->authenticate($credential));
 
-		$this->assertEquals(Authentication::USER_NOT_FOUND, $this->instance->getStatus());
-	}
+        $this->assertEquals(Authentication::USER_NOT_FOUND, $this->instance->getStatus());
+    }
 
-	/**
-	 * Method to test getVerifyHandler().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Authentication\Method\LocalMethod::getVerifyHandler
-	 * @TODO   Implement testGetVerifyHandler().
-	 */
-	public function testGetVerifyHandler()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test getVerifyHandler().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Authentication\Method\LocalMethod::getVerifyHandler
+     * @TODO   Implement testGetVerifyHandler().
+     */
+    public function testGetVerifyHandler()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
-	/**
-	 * Method to test setVerifyHandler().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Authentication\Method\LocalMethod::setVerifyHandler
-	 * @TODO   Implement testSetVerifyHandler().
-	 */
-	public function testSetVerifyHandler()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test setVerifyHandler().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Authentication\Method\LocalMethod::setVerifyHandler
+     * @TODO   Implement testSetVerifyHandler().
+     */
+    public function testSetVerifyHandler()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 }

@@ -17,13 +17,13 @@ use Windwalker\IO\Cli\Input\CliInput;
  */
 class NullInput extends CliInput
 {
-	/**
-	 * Get a value from standard input.
-	 *
-	 * @return  string  The input string from standard input.
-	 */
-	public function in()
-	{
-		return null;
-	}
+    /**
+     * Get a value from standard input.
+     *
+     * @return  string  The input string from standard input.
+     */
+    public function in()
+    {
+        return null;
+    }
 }

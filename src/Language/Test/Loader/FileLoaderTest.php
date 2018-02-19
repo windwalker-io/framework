@@ -17,44 +17,44 @@ use Windwalker\Language\Loader\FileLoader;
  */
 class FileLoaderTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var FileLoader
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var FileLoader
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new FileLoader;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new FileLoader;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test load().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Language\Loader\FileLoader::load
-	 */
-	public function testLoad()
-	{
-		$data = <<<DATA
+    /**
+     * Method to test load().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Language\Loader\FileLoader::load
+     */
+    public function testLoad()
+    {
+        $data = <<<DATA
 {
 	"windwalker" : {
 		"language-test" : {
@@ -65,6 +65,6 @@ class FileLoaderTest extends \PHPUnit\Framework\TestCase
 }
 DATA;
 
-		$this->assertJsonStringEqualsJsonString($this->instance->load(__DIR__ . '/../fixtures/json/en-GB.json'), $data);
-	}
+        $this->assertJsonStringEqualsJsonString($this->instance->load(__DIR__ . '/../fixtures/json/en-GB.json'), $data);
+    }
 }

@@ -15,54 +15,53 @@ namespace Windwalker\Form\Field;
  */
 class CustomHtmlField extends AbstractField
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'html';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'html';
 
-	/**
-	 * prepareRenderInput
-	 *
-	 * @param array $attrs
-	 *
-	 * @return  array
-	 */
-	public function prepare(&$attrs)
-	{
-	}
+    /**
+     * prepareRenderInput
+     *
+     * @param array $attrs
+     *
+     * @return  array
+     */
+    public function prepare(&$attrs)
+    {
+    }
 
-	/**
-	 * buildInput
-	 *
-	 * @param array $attrs
-	 *
-	 * @return  mixed
-	 */
-	public function buildInput($attrs)
-	{
-		$content = $this->getAttribute('content');
+    /**
+     * buildInput
+     *
+     * @param array $attrs
+     *
+     * @return  mixed
+     */
+    public function buildInput($attrs)
+    {
+        $content = $this->getAttribute('content');
 
-		if (is_callable($content))
-		{
-			return call_user_func($content, $this);
-		}
+        if (is_callable($content)) {
+            return call_user_func($content, $this);
+        }
 
-		return $content;
-	}
+        return $content;
+    }
 
-	/**
-	 * content
-	 *
-	 * @param   string  $content
-	 *
-	 * @return  static
-	 */
-	public function content($content)
-	{
-		$this->set('content', $content);
+    /**
+     * content
+     *
+     * @param   string $content
+     *
+     * @return  static
+     */
+    public function content($content)
+    {
+        $this->set('content', $content);
 
-		return $this;
-	}
+        return $this;
+    }
 }

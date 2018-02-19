@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,76 +15,72 @@ namespace Windwalker\Language\Format;
  */
 abstract class AbstractFormat implements FormatInterface
 {
-	/**
-	 * Property name.
-	 *
-	 * @var  string
-	 */
-	protected $name = '';
+    /**
+     * Property name.
+     *
+     * @var  string
+     */
+    protected $name = '';
 
-	/**
-	 * getName
-	 *
-	 * @return  string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
+    /**
+     * getName
+     *
+     * @return  string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	/**
-	 * parse
-	 *
-	 * @param string $string
-	 *
-	 * @return  array
-	 */
-	abstract public function parse($string);
+    /**
+     * parse
+     *
+     * @param string $string
+     *
+     * @return  array
+     */
+    abstract public function parse($string);
 
-	/**
-	 * Dump to on dimension array.
-	 *
-	 * @param array  $data      The data to convert.
-	 * @param string $separator The key separator.
-	 *
-	 * @return  string[] Dumped array.
-	 */
-	protected function toOneDimension($data, $separator = '_')
-	{
-		$array = [];
+    /**
+     * Dump to on dimension array.
+     *
+     * @param array  $data      The data to convert.
+     * @param string $separator The key separator.
+     *
+     * @return  string[] Dumped array.
+     */
+    protected function toOneDimension($data, $separator = '_')
+    {
+        $array = [];
 
-		$this->asOneDimension($separator, $data, $array);
+        $this->asOneDimension($separator, $data, $array);
 
-		return $array;
-	}
+        return $array;
+    }
 
-	/**
-	 * Method to recursively convert data to one dimension array.
-	 *
-	 * @param string        $separator The key separator.
-	 * @param array|object  $data      Data source of this scope.
-	 * @param array         &$array    The result array, it is pass by reference.
-	 * @param string        $prefix    Last level key prefix.
-	 *
-	 * @return  void
-	 */
-	protected function asOneDimension($separator = '_', $data = null, &$array = [], $prefix = '')
-	{
-		$data = (array) $data;
+    /**
+     * Method to recursively convert data to one dimension array.
+     *
+     * @param string       $separator The key separator.
+     * @param array|object $data      Data source of this scope.
+     * @param array        &$array    The result array, it is pass by reference.
+     * @param string       $prefix    Last level key prefix.
+     *
+     * @return  void
+     */
+    protected function asOneDimension($separator = '_', $data = null, &$array = [], $prefix = '')
+    {
+        $data = (array)$data;
 
-		foreach ($data as $k => $v)
-		{
-			$key = $prefix ? $prefix . $separator . $k : $k;
+        foreach ($data as $k => $v) {
+            $key = $prefix ? $prefix . $separator . $k : $k;
 
-			if (is_object($v) || is_array($v))
-			{
-				$this->asOneDimension($separator, $v, $array, $key);
-			}
-			else
-			{
-				$array[$key] = $v;
-			}
-		}
-	}
+            if (is_object($v) || is_array($v)) {
+                $this->asOneDimension($separator, $v, $array, $key);
+            } else {
+                $array[$key] = $v;
+            }
+        }
+    }
 }
 

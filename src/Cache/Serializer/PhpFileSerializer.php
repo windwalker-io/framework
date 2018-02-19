@@ -15,27 +15,27 @@ namespace Windwalker\Cache\Serializer;
  */
 class PhpFileSerializer implements SerializerInterface
 {
-	/**
-	 * Encode data.
-	 *
-	 * @param   mixed $data
-	 *
-	 * @return  string
-	 */
-	public function serialize($data)
-	{
-		return "<?php \n\nreturn " . var_export($data, true) . ';';
-	}
+    /**
+     * Encode data.
+     *
+     * @param   mixed $data
+     *
+     * @return  string
+     */
+    public function serialize($data)
+    {
+        return "<?php \n\nreturn " . var_export($data, true) . ';';
+    }
 
-	/**
-	 * Decode data.
-	 *
-	 * @param   string $data
-	 *
-	 * @return  mixed
-	 */
-	public function unserialize($data)
-	{
-		return $data;
-	}
+    /**
+     * Decode data.
+     *
+     * @param   string $data
+     *
+     * @return  mixed
+     */
+    public function unserialize($data)
+    {
+        return $data;
+    }
 }

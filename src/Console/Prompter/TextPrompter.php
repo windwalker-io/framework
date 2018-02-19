@@ -15,21 +15,21 @@ namespace Windwalker\Console\Prompter;
  */
 class TextPrompter extends AbstractPrompter
 {
-	/**
-	 * Show prompt to ask user.
-	 *
-	 * @param   string  $msg      Question.
-	 * @param   string  $default  Default value.
-	 *
-	 * @return  string  The value that use input.
-	 *
-	 * @since   2.0
-	 */
-	public function ask($msg = '', $default = null)
-	{
-		$default = $default ? : $this->default;
+    /**
+     * Show prompt to ask user.
+     *
+     * @param   string $msg     Question.
+     * @param   string $default Default value.
+     *
+     * @return  string  The value that use input.
+     *
+     * @since   2.0
+     */
+    public function ask($msg = '', $default = null)
+    {
+        $default = $default ?: $this->default;
 
-		return $this->in($msg) ? : $default;
-	}
+        return $this->in($msg) ?: $default;
+    }
 }
 

@@ -18,91 +18,91 @@ use Windwalker\Test\TestHelper;
  */
 class JsonInputTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var JsonInput
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var JsonInput
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new JsonInput;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new JsonInput;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Test the Windwalker\IO\JsonInput::__construct method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  \Windwalker\IO\JsonInput::__construct
-	 * @since   2.0
-	 */
-	public function test__construct()
-	{
-		$this->assertInstanceOf(
-			'Windwalker\Filter\InputFilter',
-			TestHelper::getValue($this->instance, 'filter')
-		);
+    /**
+     * Test the Windwalker\IO\JsonInput::__construct method.
+     *
+     * @return  void
+     *
+     * @covers  \Windwalker\IO\JsonInput::__construct
+     * @since   2.0
+     */
+    public function test__construct()
+    {
+        $this->assertInstanceOf(
+            'Windwalker\Filter\InputFilter',
+            TestHelper::getValue($this->instance, 'filter')
+        );
 
-		$this->assertEmpty(
-			TestHelper::getValue($this->instance, 'data')
-		);
+        $this->assertEmpty(
+            TestHelper::getValue($this->instance, 'data')
+        );
 
-		// Given Source & filter
-		$src = ['foo' => 'bar'];
-		$json = new JsonInput($src);
+        // Given Source & filter
+        $src  = ['foo' => 'bar'];
+        $json = new JsonInput($src);
 
-		$this->assertEquals(
-			$src,
-			TestHelper::getValue($json, 'data')
-		);
+        $this->assertEquals(
+            $src,
+            TestHelper::getValue($json, 'data')
+        );
 
-		// Src from GLOBAL
-		JsonInput::setRawFormData(null);
+        // Src from GLOBAL
+        JsonInput::setRawFormData(null);
 
-		$GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
-		$json = new JsonInput;
+        $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
+        $json                          = new JsonInput;
 
-		$this->assertEquals(
-			['a' => 1, 'b' => 2],
-			TestHelper::getValue($json, 'data')
-		);
-	}
+        $this->assertEquals(
+            ['a' => 1, 'b' => 2],
+            TestHelper::getValue($json, 'data')
+        );
+    }
 
-	/**
-	 * Test the Windwalker\IO\Json::getRaw method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  \Windwalker\IO\JsonInput::getRawData()
-	 * @since   2.0
-	 */
-	public function testGetRawData()
-	{
-		$GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
+    /**
+     * Test the Windwalker\IO\Json::getRaw method.
+     *
+     * @return  void
+     *
+     * @covers  \Windwalker\IO\JsonInput::getRawData()
+     * @since   2.0
+     */
+    public function testGetRawData()
+    {
+        $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
 
-		$json = new JsonInput;
+        $json = new JsonInput;
 
-		$this->assertEquals(
-			$GLOBALS['HTTP_RAW_POST_DATA'],
-			$json->getRawFormData()
-		);
-	}
+        $this->assertEquals(
+            $GLOBALS['HTTP_RAW_POST_DATA'],
+            $json->getRawFormData()
+        );
+    }
 }

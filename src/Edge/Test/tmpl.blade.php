@@ -1,16 +1,15 @@
-
 <html>
-    <body>
-        {{ $test }}
+<body>
+{{ $test }}
 
-        {!! $escape !!}
+{!! $escape !!}
 
-        {{{ $yoo }}}
+{{{ $yoo }}}
 
-        {{-- Comment --}}
+{{-- Comment --}}
 
-        @foreach($a as $k => $v)
-            <li>{{ $v }}</li>
-        @endforeach
-    </body>
+@foreach($a as $k => $v)
+    <li>{{ $v }}</li>
+@endforeach
+</body>
 </html>

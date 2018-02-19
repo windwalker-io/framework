@@ -17,26 +17,26 @@ use Windwalker\Console\Prompter\PasswordPrompter;
  */
 class FakePasswordPrompter extends PasswordPrompter
 {
-	/**
-	 * We dont't test bash because it break test process in IDE.
-	 *
-	 * @return  string
-	 *
-	 * @since   2.0
-	 */
-	protected function findShell()
-	{
-		return false;
-	}
+    /**
+     * We dont't test bash because it break test process in IDE.
+     *
+     * @return  string
+     *
+     * @since   2.0
+     */
+    protected function findShell()
+    {
+        return false;
+    }
 
-	/**
-	 * canTestStty
-	 *
-	 * @return  boolean
-	 */
-	public function canTestStty()
-	{
-		return $this->findStty();
-	}
+    /**
+     * canTestStty
+     *
+     * @return  boolean
+     */
+    public function canTestStty()
+    {
+        return $this->findStty();
+    }
 }
 

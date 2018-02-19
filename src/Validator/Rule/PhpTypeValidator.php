@@ -17,116 +17,113 @@ use Windwalker\Validator\AbstractValidator;
  */
 class PhpTypeValidator extends AbstractValidator
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type;
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type;
 
-	/**
-	 * PhpTypeValidator constructor.
-	 *
-	 * @param string $type
-	 */
-	public function __construct($type = '')
-	{
-		$this->setType($type);
-	}
+    /**
+     * PhpTypeValidator constructor.
+     *
+     * @param string $type
+     */
+    public function __construct($type = '')
+    {
+        $this->setType($type);
+    }
 
-	/**
-	 * Test value and return boolean
-	 *
-	 * @param mixed $value
-	 *
-	 * @return  boolean
-	 */
-	protected function test($value)
-	{
-		$type = $this->type;
+    /**
+     * Test value and return boolean
+     *
+     * @param mixed $value
+     *
+     * @return  boolean
+     */
+    protected function test($value)
+    {
+        $type = $this->type;
 
-		if (!$type)
-		{
-			return true;
-		}
+        if (!$type) {
+            return true;
+        }
 
-		switch ($type)
-		{
-			case 'numeric':
-				return is_numeric($value);
+        switch ($type) {
+            case 'numeric':
+                return is_numeric($value);
 
-			case 'scalar':
-				return is_scalar($value);
+            case 'scalar':
+                return is_scalar($value);
 
-			case 'callable':
-				return is_callable($value);
+            case 'callable':
+                return is_callable($value);
 
-			case 'iterable':
-				return is_iterable($value);
+            case 'iterable':
+                return is_iterable($value);
 
-			case 'bool':
-				return is_bool($value);
+            case 'bool':
+                return is_bool($value);
 
-			case 'float':
-				return is_float($value);
+            case 'float':
+                return is_float($value);
 
-			case 'real':
-				return is_real($value);
+            case 'real':
+                return is_real($value);
 
-			case 'int':
-				return is_integer($value);
+            case 'int':
+                return is_integer($value);
 
-			case 'long':
-				return is_long($value);
+            case 'long':
+                return is_long($value);
 
-			case 'nan':
-				return is_long($value);
-		}
+            case 'nan':
+                return is_long($value);
+        }
 
-		if (class_exists($type))
-		{
-			return $value instanceof $type;
-		}
+        if (class_exists($type)) {
+            return $value instanceof $type;
+        }
 
-		return strtolower(gettype($value)) === $type;
-	}
+        return strtolower(gettype($value)) === $type;
+    }
 
-	/**
-	 * Method to get property Type
-	 *
-	 * @return  string
-	 */
-	public function getType()
-	{
-		return $this->type;
-	}
+    /**
+     * Method to get property Type
+     *
+     * @return  string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 
-	/**
-	 * Method to set property type
-	 *
-	 * @param   string $type
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setType($type)
-	{
-		$this->type = strtolower($type);
+    /**
+     * Method to set property type
+     *
+     * @param   string $type
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setType($type)
+    {
+        $this->type = strtolower($type);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * formatMessage
-	 *
-	 * @param string $message
-	 * @param mixed  $value
-	 *
-	 * @return string
-	 */
-	protected function formatMessage($message, $value)
-	{
-		$type = class_exists($this->type) ? get_class($value) : gettype($value);
+    /**
+     * formatMessage
+     *
+     * @param string $message
+     * @param mixed  $value
+     *
+     * @return string
+     */
+    protected function formatMessage($message, $value)
+    {
+        $type = class_exists($this->type) ? get_class($value) : gettype($value);
 
-		return sprintf($message, $this->type, $type);
-	}
+        return sprintf($message, $this->type, $type);
+    }
 }

@@ -17,51 +17,51 @@ use Windwalker\Compare\GteCompare;
  */
 class GteCompareTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var GteCompare
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var GteCompare
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new GteCompare('flower', 'sakura');
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new GteCompare('flower', 'sakura');
+    }
 
-	/**
-	 * testToString
-	 *
-	 * @return  void
-	 */
-	public function testToString()
-	{
-		$this->assertEquals('flower >= sakura', $this->instance->toString());
-	}
+    /**
+     * testToString
+     *
+     * @return  void
+     */
+    public function testToString()
+    {
+        $this->assertEquals('flower >= sakura', $this->instance->toString());
+    }
 
-	/**
-	 * testToString
-	 *
-	 * @return  void
-	 */
-	public function testCompare()
-	{
-		$compare = new GteCompare(5, 5);
+    /**
+     * testToString
+     *
+     * @return  void
+     */
+    public function testCompare()
+    {
+        $compare = new GteCompare(5, 5);
 
-		$this->assertTrue($compare->compare());
+        $this->assertTrue($compare->compare());
 
-		$compare = new GteCompare(6, 5);
+        $compare = new GteCompare(6, 5);
 
-		$this->assertTrue($compare->compare());
+        $this->assertTrue($compare->compare());
 
-		$compare = new GteCompare(1, 5);
+        $compare = new GteCompare(1, 5);
 
-		$this->assertFalse($compare->compare());
-	}
+        $this->assertFalse($compare->compare());
+    }
 }

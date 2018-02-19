@@ -17,223 +17,223 @@ use Windwalker\Environment\Platform;
  */
 class PlatformTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var Platform
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var Platform
+     */
+    protected $instance;
 
-	/**
-	 * Property os.
-	 *
-	 * @var boolean
-	 */
-	protected $os;
+    /**
+     * Property os.
+     *
+     * @var boolean
+     */
+    protected $os;
 
-	/**
-	 * Property isWin.
-	 *
-	 * @var  boolean
-	 */
-	protected $isWin;
+    /**
+     * Property isWin.
+     *
+     * @var  boolean
+     */
+    protected $isWin;
 
-	/**
-	 * Property isMac.
-	 *
-	 * @var  boolean
-	 */
-	protected $isMac;
+    /**
+     * Property isMac.
+     *
+     * @var  boolean
+     */
+    protected $isMac;
 
-	/**
-	 * Property isUnix.
-	 *
-	 * @var  boolean
-	 */
-	protected $isUnix;
+    /**
+     * Property isUnix.
+     *
+     * @var  boolean
+     */
+    protected $isUnix;
 
-	/**
-	 * Property isLinux.
-	 *
-	 * @var  boolean
-	 */
-	protected $isLinux;
+    /**
+     * Property isLinux.
+     *
+     * @var  boolean
+     */
+    protected $isLinux;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new Platform;
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new Platform;
 
-		// Detect the native operating system type.
-		$this->os = strtoupper(substr(PHP_OS, 0, 3));
+        // Detect the native operating system type.
+        $this->os = strtoupper(substr(PHP_OS, 0, 3));
 
-		$this->isWin = $this->os === 'WIN';
+        $this->isWin = $this->os === 'WIN';
 
-		$this->isMac = $this->os === 'MAC';
+        $this->isMac = $this->os === 'MAC';
 
-		$this->isUnix = in_array($this->os, ['CYG', 'DAR', 'FRE', 'LIN', 'NET', 'OPE', 'MAC']);
+        $this->isUnix = in_array($this->os, ['CYG', 'DAR', 'FRE', 'LIN', 'NET', 'OPE', 'MAC']);
 
-		$this->isLinux = $this->os === 'LIN';
-	}
+        $this->isLinux = $this->os === 'LIN';
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * getOSTestData
-	 *
-	 * @return  array
-	 */
-	public function getIsWinTestData()
-	{
-		return [
-			['CYGWIN_NT-5.1', false],
-			['Darwin',  false],
-			['FreeBSD', false],
-			['HP-UX',   false],
-			['IRIX64',  false],
-			['Linux',   false],
-			['NetBSD',  false],
-			['OpenBSD', false],
-			['SunOS',   false],
-			['Unix',    false],
-			['WIN32',   true],
-			['WINNT',   true],
-			['Windows', true]
-		];
-	}
+    /**
+     * getOSTestData
+     *
+     * @return  array
+     */
+    public function getIsWinTestData()
+    {
+        return [
+            ['CYGWIN_NT-5.1', false],
+            ['Darwin', false],
+            ['FreeBSD', false],
+            ['HP-UX', false],
+            ['IRIX64', false],
+            ['Linux', false],
+            ['NetBSD', false],
+            ['OpenBSD', false],
+            ['SunOS', false],
+            ['Unix', false],
+            ['WIN32', true],
+            ['WINNT', true],
+            ['Windows', true],
+        ];
+    }
 
-	/**
-	 * getOSTestData
-	 *
-	 * @return  array
-	 */
-	public function getIsUnixTestData()
-	{
-		return [
-			['CYGWIN_NT-5.1', true],
-			['Darwin',  true],
-			['FreeBSD', true],
-			['HP-UX',   true],
-			['IRIX64',  true],
-			['Linux',   true],
-			['NetBSD',  true],
-			['OpenBSD', true],
-			['SunOS',   true],
-			['Unix',    true],
-			['WIN32',   false],
-			['WINNT',   false],
-			['Windows', false]
-		];
-	}
+    /**
+     * getOSTestData
+     *
+     * @return  array
+     */
+    public function getIsUnixTestData()
+    {
+        return [
+            ['CYGWIN_NT-5.1', true],
+            ['Darwin', true],
+            ['FreeBSD', true],
+            ['HP-UX', true],
+            ['IRIX64', true],
+            ['Linux', true],
+            ['NetBSD', true],
+            ['OpenBSD', true],
+            ['SunOS', true],
+            ['Unix', true],
+            ['WIN32', false],
+            ['WINNT', false],
+            ['Windows', false],
+        ];
+    }
 
-	/**
-	 * getOSTestData
-	 *
-	 * @return  array
-	 */
-	public function getIsLinuxTestData()
-	{
-		return [
-			['CYGWIN_NT-5.1', false],
-			['Darwin',  false],
-			['FreeBSD', false],
-			['HP-UX',   false],
-			['IRIX64',  false],
-			['Linux',   true],
-			['NetBSD',  false],
-			['OpenBSD', false],
-			['SunOS',   false],
-			['Unix',    false],
-			['WIN32',   false],
-			['WINNT',   false],
-			['Windows', false]
-		];
-	}
+    /**
+     * getOSTestData
+     *
+     * @return  array
+     */
+    public function getIsLinuxTestData()
+    {
+        return [
+            ['CYGWIN_NT-5.1', false],
+            ['Darwin', false],
+            ['FreeBSD', false],
+            ['HP-UX', false],
+            ['IRIX64', false],
+            ['Linux', true],
+            ['NetBSD', false],
+            ['OpenBSD', false],
+            ['SunOS', false],
+            ['Unix', false],
+            ['WIN32', false],
+            ['WINNT', false],
+            ['Windows', false],
+        ];
+    }
 
-	/**
-	 * Method to test getOS().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Environment\Platform::getOS
-	 */
-	public function testGetOS()
-	{
-		$this->instance->setUname('Darwin');
+    /**
+     * Method to test getOS().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Environment\Platform::getOS
+     */
+    public function testGetOS()
+    {
+        $this->instance->setUname('Darwin');
 
-		$this->assertEquals('DAR', $this->instance->getOS());
-	}
+        $this->assertEquals('DAR', $this->instance->getOS());
+    }
 
-	/**
-	 * Method to test isWin().
-	 *
-	 * @param string  $os
-	 * @param boolean $value
-	 *
-	 * @return void
-	 *
-	 * @dataProvider getIsWinTestData
-	 *
-	 * @covers       Windwalker\Environment\Platform::isWin
-	 */
-	public function testIsWin($os, $value)
-	{
-		$this->instance->setOS(null);
-		$this->instance->setUname($os);
+    /**
+     * Method to test isWin().
+     *
+     * @param string  $os
+     * @param boolean $value
+     *
+     * @return void
+     *
+     * @dataProvider getIsWinTestData
+     *
+     * @covers       Windwalker\Environment\Platform::isWin
+     */
+    public function testIsWin($os, $value)
+    {
+        $this->instance->setOS(null);
+        $this->instance->setUname($os);
 
-		$this->assertEquals($value, $this->instance->isWin());
-	}
+        $this->assertEquals($value, $this->instance->isWin());
+    }
 
-	/**
-	 * Method to test isUnix().
-	 *
-	 * @param string  $os
-	 * @param boolean $value
-	 *
-	 * @return void
-	 *
-	 * @dataProvider getIsUnixTestData
-	 *
-	 * @covers \Windwalker\Environment\Platform::isUnix
-	 */
-	public function testIsUnix($os, $value)
-	{
-		$this->instance->setOS(null);
-		$this->instance->setUname($os);
+    /**
+     * Method to test isUnix().
+     *
+     * @param string  $os
+     * @param boolean $value
+     *
+     * @return void
+     *
+     * @dataProvider getIsUnixTestData
+     *
+     * @covers       \Windwalker\Environment\Platform::isUnix
+     */
+    public function testIsUnix($os, $value)
+    {
+        $this->instance->setOS(null);
+        $this->instance->setUname($os);
 
-		$this->assertEquals($value, $this->instance->isUnix());
-	}
+        $this->assertEquals($value, $this->instance->isUnix());
+    }
 
-	/**
-	 * Method to test isLinux().
-	 *
-	 * @param string  $os
-	 * @param boolean $value
-	 *
-	 * @return void
-	 *
-	 * @dataProvider getIsLinuxTestData
-	 *
-	 * @covers \Windwalker\Environment\Platform::isLinux
-	 */
-	public function testIsLinux($os, $value)
-	{
-		$this->instance->setOS(null);
-		$this->instance->setUname($os);
+    /**
+     * Method to test isLinux().
+     *
+     * @param string  $os
+     * @param boolean $value
+     *
+     * @return void
+     *
+     * @dataProvider getIsLinuxTestData
+     *
+     * @covers       \Windwalker\Environment\Platform::isLinux
+     */
+    public function testIsLinux($os, $value)
+    {
+        $this->instance->setOS(null);
+        $this->instance->setUname($os);
 
-		$this->assertEquals($value, $this->instance->isLinux());
-	}
+        $this->assertEquals($value, $this->instance->isLinux());
+    }
 }

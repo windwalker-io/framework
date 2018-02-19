@@ -15,91 +15,93 @@ namespace Windwalker\Console\Descriptor;
  */
 abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
 {
-	/**
-	 * Command descriptor.
-	 *
-	 * @var DescriptorInterface
-	 *
-	 * @since  2.0
-	 */
-	protected $CommandDescriptor;
+    /**
+     * Command descriptor.
+     *
+     * @var DescriptorInterface
+     *
+     * @since  2.0
+     */
+    protected $CommandDescriptor;
 
-	/**
-	 * Option descriptor.
-	 *
-	 * @var DescriptorInterface
-	 *
-	 * @since  2.0
-	 */
-	protected $optionDescriptor;
+    /**
+     * Option descriptor.
+     *
+     * @var DescriptorInterface
+     *
+     * @since  2.0
+     */
+    protected $optionDescriptor;
 
-	/**
-	 * The class constructor.
-	 *
-	 * @param   DescriptorInterface  $CommandDescriptor  Command descriptor.
-	 * @param   DescriptorInterface  $optionDescriptor   Option descriptor.
-	 *
-	 * @since   2.0
-	 */
-	public function __construct(DescriptorInterface $CommandDescriptor = null, DescriptorInterface $optionDescriptor = null)
-	{
-		$this->CommandDescriptor = $CommandDescriptor;
-		$this->optionDescriptor  = $optionDescriptor;
-	}
+    /**
+     * The class constructor.
+     *
+     * @param   DescriptorInterface $CommandDescriptor Command descriptor.
+     * @param   DescriptorInterface $optionDescriptor  Option descriptor.
+     *
+     * @since   2.0
+     */
+    public function __construct(
+        DescriptorInterface $CommandDescriptor = null,
+        DescriptorInterface $optionDescriptor = null
+    ) {
+        $this->CommandDescriptor = $CommandDescriptor;
+        $this->optionDescriptor  = $optionDescriptor;
+    }
 
-	/**
-	 * Command descriptor getter.
-	 *
-	 * @return  DescriptorInterface
-	 *
-	 * @since   2.0
-	 */
-	public function getCommandDescriptor()
-	{
-		return $this->CommandDescriptor;
-	}
+    /**
+     * Command descriptor getter.
+     *
+     * @return  DescriptorInterface
+     *
+     * @since   2.0
+     */
+    public function getCommandDescriptor()
+    {
+        return $this->CommandDescriptor;
+    }
 
-	/**
-	 * Command descriptor setter.
-	 *
-	 * @param   DescriptorInterface  $CommandDescriptor  Command descriptor.
-	 *
-	 * @return  $this Support chaining.
-	 *
-	 * @since   2.0
-	 */
-	public function setCommandDescriptor($CommandDescriptor)
-	{
-		$this->CommandDescriptor = $CommandDescriptor;
+    /**
+     * Command descriptor setter.
+     *
+     * @param   DescriptorInterface $CommandDescriptor Command descriptor.
+     *
+     * @return  $this Support chaining.
+     *
+     * @since   2.0
+     */
+    public function setCommandDescriptor($CommandDescriptor)
+    {
+        $this->CommandDescriptor = $CommandDescriptor;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Option descriptor getter.
-	 *
-	 * @return \Windwalker\Console\Descriptor\DescriptorInterface
-	 *
-	 * @since   2.0
-	 */
-	public function getOptionDescriptor()
-	{
-		return $this->optionDescriptor;
-	}
+    /**
+     * Option descriptor getter.
+     *
+     * @return \Windwalker\Console\Descriptor\DescriptorInterface
+     *
+     * @since   2.0
+     */
+    public function getOptionDescriptor()
+    {
+        return $this->optionDescriptor;
+    }
 
-	/**
-	 * Option descriptor setter.
-	 *
-	 * @param   DescriptorInterface  $optionDescriptor  Option descriptor.
-	 *
-	 * @return  $this  Support chaining.
-	 *
-	 * @since   2.0
-	 */
-	public function setOptionDescriptor($optionDescriptor)
-	{
-		$this->optionDescriptor = $optionDescriptor;
+    /**
+     * Option descriptor setter.
+     *
+     * @param   DescriptorInterface $optionDescriptor Option descriptor.
+     *
+     * @return  $this  Support chaining.
+     *
+     * @since   2.0
+     */
+    public function setOptionDescriptor($optionDescriptor)
+    {
+        $this->optionDescriptor = $optionDescriptor;
 
-		return $this;
-	}
+        return $this;
+    }
 }

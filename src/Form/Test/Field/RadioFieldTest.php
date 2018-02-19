@@ -8,9 +8,9 @@
 
 namespace Windwalker\Form\Test\Field;
 
+use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\RadioField;
 use Windwalker\Html\Option;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of TextField
@@ -19,63 +19,63 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
  */
 class RadioFieldTest extends AbstractDomTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var RadioField
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var RadioField
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new RadioField(
-			'flower',
-			'Flower',
-			[
-				new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
-				new Option('Asia - Taipei', 'Asia/Taipei'),
-				new Option('Europe - Paris', 'Asia/Paris'),
-				new Option('UTC', 'UTC'),
-			],
-			[
-				'class' => 'stub-flower'
-			]
-		);
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new RadioField(
+            'flower',
+            'Flower',
+            [
+                new Option('Asia - Tokyo', 'Asia/Tokyo', ['class' => 'opt']),
+                new Option('Asia - Taipei', 'Asia/Taipei'),
+                new Option('Europe - Paris', 'Asia/Paris'),
+                new Option('UTC', 'UTC'),
+            ],
+            [
+                'class' => 'stub-flower',
+            ]
+        );
 
-		$this->instance->setAttribute('size',     10);
-		$this->instance->setAttribute('readonly', false);
-		$this->instance->setAttribute('disabled', true);
-		$this->instance->setAttribute('onchange', 'return false;');
-		$this->instance->setAttribute('multiple', false);
-		$this->instance->setAttribute('attribs',  ['data-test-element' => true]);
-	}
+        $this->instance->setAttribute('size', 10);
+        $this->instance->setAttribute('readonly', false);
+        $this->instance->setAttribute('disabled', true);
+        $this->instance->setAttribute('onchange', 'return false;');
+        $this->instance->setAttribute('multiple', false);
+        $this->instance->setAttribute('attribs', ['data-test-element' => true]);
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test prepareAttributes().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Form\Field\TextField::prepareAttributes
-	 */
-	public function testRender()
-	{
-		$html = <<<HTML
+    /**
+     * Method to test prepareAttributes().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Form\Field\TextField::prepareAttributes
+     */
+    public function testRender()
+    {
+        $html = <<<HTML
 <span id="input-flower" class="radio-inputs stub-flower" data-test-element>
 	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="input-flower-asia-tokyo" disabled="disabled" />
 	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
@@ -91,11 +91,11 @@ class RadioFieldTest extends AbstractDomTestCase
 </span>
 HTML;
 
-		$this->assertHtmlFormatEquals($html, $this->instance->renderInput());
+        $this->assertHtmlFormatEquals($html, $this->instance->renderInput());
 
-		$this->instance->setValue('UTC');
+        $this->instance->setValue('UTC');
 
-		$html = <<<HTML
+        $html = <<<HTML
 <span id="input-flower" class="radio-inputs stub-flower" data-test-element>
 	<input class="opt" value="Asia/Tokyo" name="flower" type="radio" id="input-flower-asia-tokyo" disabled="disabled" />
 	<label class="opt" id="input-flower-asia-tokyo-label" for="input-flower-asia-tokyo">Asia - Tokyo</label>
@@ -111,6 +111,6 @@ HTML;
 </span>
 HTML;
 
-		$this->assertHtmlFormatEquals($html, $this->instance->renderInput());
-	}
+        $this->assertHtmlFormatEquals($html, $this->instance->renderInput());
+    }
 }

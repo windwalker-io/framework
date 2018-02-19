@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -10,49 +10,48 @@ namespace Windwalker\Query;
 
 /**
  * The Connection Container class.
- * 
+ *
  * @since  2.0
  */
 abstract class ConnectionContainer
 {
-	/**
-	 * Property connections.
-	 *
-	 * @var  \PDO[]|resource[]
-	 */
-	protected static $connections = [];
+    /**
+     * Property connections.
+     *
+     * @var  \PDO[]|resource[]
+     */
+    protected static $connections = [];
 
-	/**
-	 * getConnection
-	 *
-	 * @param string $driver
-	 *
-	 * @return  null|\PDO|resource
-	 */
-	public static function getConnection($driver)
-	{
-		$driver = strtolower($driver);
+    /**
+     * getConnection
+     *
+     * @param string $driver
+     *
+     * @return  null|\PDO|resource
+     */
+    public static function getConnection($driver)
+    {
+        $driver = strtolower($driver);
 
-		if (empty(static::$connections[$driver]))
-		{
-			return null;
-		}
+        if (empty(static::$connections[$driver])) {
+            return null;
+        }
 
-		return static::$connections[$driver];
-	}
+        return static::$connections[$driver];
+    }
 
-	/**
-	 * setConnection
-	 *
-	 * @param string        $driver
-	 * @param \PDO|resource $connection
-	 *
-	 * @return  void
-	 */
-	public static function setConnection($driver, $connection)
-	{
-		$driver = strtolower($driver);
+    /**
+     * setConnection
+     *
+     * @param string        $driver
+     * @param \PDO|resource $connection
+     *
+     * @return  void
+     */
+    public static function setConnection($driver, $connection)
+    {
+        $driver = strtolower($driver);
 
-		static::$connections[$driver] = $connection;
-	}
+        static::$connections[$driver] = $connection;
+    }
 }

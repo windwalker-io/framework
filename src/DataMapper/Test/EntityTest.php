@@ -18,166 +18,166 @@ use Windwalker\DataMapper\Test\Stub\StubEntity;
  */
 class EntityTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var Entity
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var Entity
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new Entity($this->getTestFields(), $this->getTestData());
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new Entity($this->getTestFields(), $this->getTestData());
+    }
 
-	/**
-	 * getTestFields
-	 *
-	 * @return  array
-	 */
-	protected function getTestFields()
-	{
-		return [
-			'id',
-			'title',
-			'content'
-		];
-	}
+    /**
+     * getTestFields
+     *
+     * @return  array
+     */
+    protected function getTestFields()
+    {
+        return [
+            'id',
+            'title',
+            'content',
+        ];
+    }
 
-	/**
-	 * getTestData
-	 *
-	 * @return  array
-	 */
-	protected function getTestData()
-	{
-		return [
-			'id' => 5,
-			'title' => 'Sakura',
-			'content' => 'foo',
-			'created' => '2014-08-17',
-			'user' => 255,
-			'params' => '{}'
-		];
-	}
+    /**
+     * getTestData
+     *
+     * @return  array
+     */
+    protected function getTestData()
+    {
+        return [
+            'id' => 5,
+            'title' => 'Sakura',
+            'content' => 'foo',
+            'created' => '2014-08-17',
+            'user' => 255,
+            'params' => '{}',
+        ];
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * test__construct
-	 *
-	 * @return  void
-	 */
-	public function test__construct()
-	{
-		$dump = $this->instance->dump();
+    /**
+     * test__construct
+     *
+     * @return  void
+     */
+    public function test__construct()
+    {
+        $dump = $this->instance->dump();
 
-		$this->assertEquals('Sakura', $this->instance->title);
-		$this->assertEquals(false, isset($dump['user']));
-	}
+        $this->assertEquals('Sakura', $this->instance->title);
+        $this->assertEquals(false, isset($dump['user']));
+    }
 
-	/**
-	 * Method to test addFields().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\DataMapper\Entity\Entity::addFields
-	 */
-	public function testAddFields()
-	{
-		$entity = new Entity;
+    /**
+     * Method to test addFields().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\DataMapper\Entity\Entity::addFields
+     */
+    public function testAddFields()
+    {
+        $entity = new Entity;
 
-		$entity->addFields($this->getTestFields());
+        $entity->addFields($this->getTestFields());
 
-		$entity->bind($this->getTestData());
+        $entity->bind($this->getTestData());
 
-		$entity = $entity->dump();
+        $entity = $entity->dump();
 
-		$this->assertFalse(isset($entity['params']));
-		$this->assertEquals('Sakura', $entity['title']);
-	}
+        $this->assertFalse(isset($entity['params']));
+        $this->assertEquals('Sakura', $entity['title']);
+    }
 
-	/**
-	 * Method to test addField().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\DataMapper\Entity\Entity::addField
-	 */
-	public function testAddField()
-	{
-		$this->instance->addField('user');
+    /**
+     * Method to test addField().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\DataMapper\Entity\Entity::addField
+     */
+    public function testAddField()
+    {
+        $this->instance->addField('user');
 
-		$this->instance->bind($this->getTestData());
+        $this->instance->bind($this->getTestData());
 
-		$this->assertEquals(255, $this->instance->user);
-	}
+        $this->assertEquals(255, $this->instance->user);
+    }
 
-	/**
-	 * Method to test removeField().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\DataMapper\Entity\Entity::removeField
-	 */
-	public function testRemoveField()
-	{
-		$this->instance->removeField('content');
+    /**
+     * Method to test removeField().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\DataMapper\Entity\Entity::removeField
+     */
+    public function testRemoveField()
+    {
+        $this->instance->removeField('content');
 
-		$this->instance->bind($this->getTestData());
+        $this->instance->bind($this->getTestData());
 
-		$data = $this->instance->dump();
+        $data = $this->instance->dump();
 
-		$this->assertFalse(isset($data['content']));
-	}
+        $this->assertFalse(isset($data['content']));
+    }
 
-	/**
-	 * testAccessor
-	 *
-	 * @return  void
-	 */
-	public function testAccessor()
-	{
-		$entity = new StubEntity;
+    /**
+     * testAccessor
+     *
+     * @return  void
+     */
+    public function testAccessor()
+    {
+        $entity = new StubEntity;
 
-		$this->assertEquals('foo_bar', $entity->foo_bar);
-	}
+        $this->assertEquals('foo_bar', $entity->foo_bar);
+    }
 
-	/**
-	 * testMutator
-	 *
-	 * @return  void
-	 */
-	public function testMutator()
-	{
-		$entity = new StubEntity;
+    /**
+     * testMutator
+     *
+     * @return  void
+     */
+    public function testMutator()
+    {
+        $entity = new StubEntity;
 
-		$entity->flower_sakura = 'yoo';
+        $entity->flower_sakura = 'yoo';
 
-		$this->assertEquals('yoo_bar', $entity->flower_sakura);
-	}
+        $this->assertEquals('yoo_bar', $entity->flower_sakura);
+    }
 
-	/**
-	 * testJsonSerialize
-	 *
-	 * @return  void
-	 */
-	public function testJsonSerialize()
-	{
-		$this->assertEquals(json_encode($this->instance->dump(true)), json_encode($this->instance));
-	}
+    /**
+     * testJsonSerialize
+     *
+     * @return  void
+     */
+    public function testJsonSerialize()
+    {
+        $this->assertEquals(json_encode($this->instance->dump(true)), json_encode($this->instance));
+    }
 }

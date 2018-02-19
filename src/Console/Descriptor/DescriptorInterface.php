@@ -15,23 +15,23 @@ namespace Windwalker\Console\Descriptor;
  */
 interface DescriptorInterface
 {
-	/**
-	 * Add an item to describe.
-	 *
-	 * @param   mixed  $item  The item you want to describe.
-	 *
-	 * @return  DescriptorInterface  Return this object to support chaining.
-	 *
-	 * @since  2.0
-	 */
-	public function addItem($item);
+    /**
+     * Add an item to describe.
+     *
+     * @param   mixed $item The item you want to describe.
+     *
+     * @return  DescriptorInterface  Return this object to support chaining.
+     *
+     * @since  2.0
+     */
+    public function addItem($item);
 
-	/**
-	 * Render all items description.
-	 *
-	 * @return  string  Rendered result.
-	 *
-	 * @since   2.0
-	 */
-	public function render();
+    /**
+     * Render all items description.
+     *
+     * @return  string  Rendered result.
+     *
+     * @since   2.0
+     */
+    public function render();
 }

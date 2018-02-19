@@ -17,29 +17,29 @@ use Windwalker\Console\Command\Command;
  */
 class BbbCommand extends Command
 {
-	/**
-	 * Initialise command.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	public function init()
-	{
-		$this->setName('bbb');
-	}
+    /**
+     * Initialise command.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    public function init()
+    {
+        $this->setName('bbb');
+    }
 
-	/**
-	 * doExecute
-	 *
-	 * @return int
-	 *
-	 * @since  2.0
-	 */
-	public function doExecute()
-	{
-		$this->out('Bbb Command', false);
+    /**
+     * doExecute
+     *
+     * @return int
+     *
+     * @since  2.0
+     */
+    public function doExecute()
+    {
+        $this->out('Bbb Command', false);
 
-		return 99;
-	}
+        return 99;
+    }
 }

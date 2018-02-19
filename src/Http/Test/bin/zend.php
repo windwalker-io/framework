@@ -12,18 +12,21 @@ use Psr\Http\Message\ResponseInterface;
 include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 $request = Zend\Diactoros\ServerRequestFactory::fromGlobals(
-	$_SERVER,
-	$_GET,
-	$_POST,
-	$_COOKIE,
-	$_FILES
+    $_SERVER,
+    $_GET,
+    $_POST,
+    $_COOKIE,
+    $_FILES
 );
 
-$server = \Zend\Diactoros\Server::createServerFromRequest(function (RequestInterface $request, ResponseInterface $response, $done)
-{
-	$response->getBody()->write("Hello world!");
+$server = \Zend\Diactoros\Server::createServerFromRequest(function (
+    RequestInterface $request,
+    ResponseInterface $response,
+    $done
+) {
+    $response->getBody()->write("Hello world!");
 
-	show($request->getUri());
+    show($request->getUri());
 }, $request);
 
 $server->listen();

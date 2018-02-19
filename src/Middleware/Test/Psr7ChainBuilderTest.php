@@ -23,94 +23,93 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
  */
 class Psr7ChainBuilderTest extends AbstractBaseTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var Psr7ChainBuilder
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var Psr7ChainBuilder
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new ChainBuilder;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new ChainBuilder;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * getHandler
-	 *
-	 * @param   string  $string
-	 *
-	 * @return  \Closure
-	 */
-	protected function getHandler($string)
-	{
-		return function ($req, ResponseInterface $res, $next) use ($string)
-		{
-			$res->getBody()->write(">>> $string\n");
+    /**
+     * getHandler
+     *
+     * @param   string $string
+     *
+     * @return  \Closure
+     */
+    protected function getHandler($string)
+    {
+        return function ($req, ResponseInterface $res, $next) use ($string) {
+            $res->getBody()->write(">>> $string\n");
 
-			/** @var Psr7InvokableInterface $next */
-			$res = call_user_func($next, $req, $res);
+            /** @var Psr7InvokableInterface $next */
+            $res = call_user_func($next, $req, $res);
 
-			$res->getBody()->write("<<< $string\n");
+            $res->getBody()->write("<<< $string\n");
 
-			return $res;
-		};
-	}
-	
-	/**
-	 * Method to test create().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Middleware\Chain\Psr7ChainBuilder::execute
-	 */
-	public function testExecute()
-	{
-		$chain = new Psr7ChainBuilder;
-		$chain->add($this->getHandler('Othello'));
-		$chain->add($this->getHandler('Caesar'));
+            return $res;
+        };
+    }
 
-		$res = $chain->execute(new ServerRequest, new Response);
+    /**
+     * Method to test create().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Middleware\Chain\Psr7ChainBuilder::execute
+     */
+    public function testExecute()
+    {
+        $chain = new Psr7ChainBuilder;
+        $chain->add($this->getHandler('Othello'));
+        $chain->add($this->getHandler('Caesar'));
 
-		$data = "
+        $res = $chain->execute(new ServerRequest, new Response);
+
+        $data = "
 >>> Caesar
 >>> Othello
 <<< Othello
 <<< Caesar";
 
-		$this->assertStringSafeEquals($data, $res->getBody()->__toString());
+        $this->assertStringSafeEquals($data, $res->getBody()->__toString());
 
-		// Test add by array, will be DESC sorting
-		$chain = new Psr7ChainBuilder(
-			[
-			$this->getHandler('Othello'),
-			$this->getHandler('Caesar')
-			], Psr7ChainBuilder::SORT_DESC);
+        // Test add by array, will be DESC sorting
+        $chain = new Psr7ChainBuilder(
+            [
+                $this->getHandler('Othello'),
+                $this->getHandler('Caesar'),
+            ], Psr7ChainBuilder::SORT_DESC);
 
-		$res = $chain->execute(new ServerRequest, new Response);
+        $res = $chain->execute(new ServerRequest, new Response);
 
-		$data = "
+        $data = "
 >>> Othello
 >>> Caesar
 <<< Caesar
 <<< Othello";
 
-		$this->assertStringSafeEquals($data, $res->getBody()->__toString());
-	}
+        $this->assertStringSafeEquals($data, $res->getBody()->__toString());
+    }
 }

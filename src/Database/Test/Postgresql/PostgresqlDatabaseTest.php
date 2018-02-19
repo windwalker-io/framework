@@ -18,209 +18,205 @@ use Windwalker\Query\Postgresql\PostgresqlGrammar;
  */
 class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 {
-	/**
-	 * testAutoSelect
-	 *
-	 * @return  void
-	 */
-	public function testAutoSelect()
-	{
-		$option = static::$dsn;
+    /**
+     * testAutoSelect
+     *
+     * @return  void
+     */
+    public function testAutoSelect()
+    {
+        $option = static::$dsn;
 
-		$option['database'] = static::$dsn['dbname'];
-		$option['password'] = static::$dsn['pass'];
+        $option['database'] = static::$dsn['dbname'];
+        $option['password'] = static::$dsn['pass'];
 
-		$db = new PostgresqlDriver(null, $option);
+        $db = new PostgresqlDriver(null, $option);
 
-		$e = null;
+        $e = null;
 
-		try
-		{
-			$db->setQuery('SELECT * FROM #__flower')->loadAll();
-		}
-		catch (\Exception $e)
-		{
-			// No action
-		}
+        try {
+            $db->setQuery('SELECT * FROM #__flower')->loadAll();
+        } catch (\Exception $e) {
+            // No action
+        }
 
-		$this->assertNull($e, '$e should not be an exception.');
-	}
+        $this->assertNull($e, '$e should not be an exception.');
+    }
 
-	/**
-	 * Method to test select().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::select
-	 */
-	public function testSelect()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test select().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::select
+     */
+    public function testSelect()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
-	/**
-	 * Method to test create().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::create
-	 */
-	public function testCreate()
-	{
-		$database = $this->db->getDatabase('windwalker_foo_test');
+    /**
+     * Method to test create().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::create
+     */
+    public function testCreate()
+    {
+        $database = $this->db->getDatabase('windwalker_foo_test');
 
-		$database->create(true);
+        $database->create(true);
 
-		$dbs = $this->db->listDatabases();
+        $dbs = $this->db->listDatabases();
 
-		$this->assertContains('windwalker_foo_test', $dbs, 'DB: "windwalker_foo_test" not in db name list.');
-	}
+        $this->assertContains('windwalker_foo_test', $dbs, 'DB: "windwalker_foo_test" not in db name list.');
+    }
 
-	/**
-	 * Method to test drop().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::drop
-	 */
-	public function testDrop()
-	{
-		$database = $this->db->getDatabase('windwalker_foo_test');
+    /**
+     * Method to test drop().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::drop
+     */
+    public function testDrop()
+    {
+        $database = $this->db->getDatabase('windwalker_foo_test');
 
-		$database->drop(true);
+        $database->drop(true);
 
-		$dbs = $this->db->listDatabases();
+        $dbs = $this->db->listDatabases();
 
-		$this->assertNotContains('windwalker_foo_test', $dbs, 'DB: "windwalker_foo_test" should not in db name list.');
-	}
+        $this->assertNotContains('windwalker_foo_test', $dbs, 'DB: "windwalker_foo_test" should not in db name list.');
+    }
 
-	/**
-	 * Methos to test DB exists.
-	 *
-	 * @return  void
-	 *
-	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::exsts
-	 */
-	public function testExists()
-	{
-		$database = $this->db->getDatabase('windwalker_foo_test');
+    /**
+     * Methos to test DB exists.
+     *
+     * @return  void
+     *
+     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::exsts
+     */
+    public function testExists()
+    {
+        $database = $this->db->getDatabase('windwalker_foo_test');
 
-		$database->create(true);
+        $database->create(true);
 
-		$this->assertTrue($this->db->getDatabase('windwalker_foo_test')->exists());
-		$this->assertFalse($this->db->getDatabase('windwalker_bar_test')->exists());
+        $this->assertTrue($this->db->getDatabase('windwalker_foo_test')->exists());
+        $this->assertFalse($this->db->getDatabase('windwalker_bar_test')->exists());
 
-		$database->drop();
-	}
+        $database->drop();
+    }
 
-	/**
-	 * Method to test rename().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::rename
-	 */
-	public function testRename()
-	{
-		$database = $this->db->getDatabase(static::$dsn['dbname']);
+    /**
+     * Method to test rename().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::rename
+     */
+    public function testRename()
+    {
+        $database = $this->db->getDatabase(static::$dsn['dbname']);
 
-		$tables = $database->getTables(true);
+        $tables = $database->getTables(true);
 
-		$database = $database->rename('windwalker_bar_test');
+        $database = $database->rename('windwalker_bar_test');
 
-		// Check new db object
-		$this->assertEquals('windwalker_bar_test', $database->getName(), 'Returned object should be new database');
+        // Check new db object
+        $this->assertEquals('windwalker_bar_test', $database->getName(), 'Returned object should be new database');
 
-		$dbs = $this->db->listDatabases();
+        $dbs = $this->db->listDatabases();
 
-		// Check new DB exists
-		$this->assertContains('windwalker_bar_test', $dbs, 'DB: "windwalker_bar_test" not in db name list.');
+        // Check new DB exists
+        $this->assertContains('windwalker_bar_test', $dbs, 'DB: "windwalker_bar_test" not in db name list.');
 
-		// Check new DB tables
-		$this->assertEquals($tables, $database->getTables(true));
+        // Check new DB tables
+        $this->assertEquals($tables, $database->getTables(true));
 
-		// Rename back
-		$database->rename(static::$dsn['dbname']);
-	}
+        // Rename back
+        $database->rename(static::$dsn['dbname']);
+    }
 
-	/**
-	 * Method to test getTables().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTables
-	 */
-	public function testGetTables()
-	{
-		$tables = $this->db->getDatabase(static::$dbname)->getTables();
+    /**
+     * Method to test getTables().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTables
+     */
+    public function testGetTables()
+    {
+        $tables = $this->db->getDatabase(static::$dbname)->getTables();
 
-		$this->assertEquals(
-			[
-				static::$dsn['prefix'] . 'categories',
-				static::$dsn['prefix'] . 'flower',
-				static::$dsn['prefix'] . 'nestedsets',
-			],
-			$tables
-		);
-	}
+        $this->assertEquals(
+            [
+                static::$dsn['prefix'] . 'categories',
+                static::$dsn['prefix'] . 'flower',
+                static::$dsn['prefix'] . 'nestedsets',
+            ],
+            $tables
+        );
+    }
 
-	/**
-	 * Method to test getTableDetails().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetails
-	 */
-	public function testGetTableDetails()
-	{
-		$tables = $this->db->getDatabase(static::$dbname)->getTableDetails();
+    /**
+     * Method to test getTableDetails().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetails
+     */
+    public function testGetTableDetails()
+    {
+        $tables = $this->db->getDatabase(static::$dbname)->getTableDetails();
 
-		$this->assertEquals(static::$dsn['prefix'] . 'flower', $tables[static::$dsn['prefix'] . 'flower']->Name);
-	}
+        $this->assertEquals(static::$dsn['prefix'] . 'flower', $tables[static::$dsn['prefix'] . 'flower']->Name);
+    }
 
-	/**
-	 * Method to test getTableDetail().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetail
-	 */
-	public function testGetTableDetail()
-	{
-		$table = $this->db->getDatabase(static::$dbname)->getTableDetail('#__flower');
+    /**
+     * Method to test getTableDetail().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::getTableDetail
+     */
+    public function testGetTableDetail()
+    {
+        $table = $this->db->getDatabase(static::$dbname)->getTableDetail('#__flower');
 
-		$this->assertEquals(static::$dsn['prefix'] . 'flower', $table->Name);
-	}
+        $this->assertEquals(static::$dsn['prefix'] . 'flower', $table->Name);
+    }
 
-	/**
-	 * Destructor
-	 */
-	public function __destruct()
-	{
-		if (!$this->db)
-		{
-			return;
-		}
+    /**
+     * Destructor
+     */
+    public function __destruct()
+    {
+        if (!$this->db) {
+            return;
+        }
 
-		$this->db->setQuery(PostgresqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
-		$this->db->setQuery(PostgresqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();
+        $this->db->setQuery(PostgresqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
+        $this->db->setQuery(PostgresqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();
 
-		parent::__destruct();
-	}
+        parent::__destruct();
+    }
 
-	/**
-	 * tearDownAfterClass
-	 *
-	 * @return  void
-	 */
-	public static function tearDownAfterClass()
-	{
-		static::$dbo->setQuery(PostgresqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
-		static::$dbo->setQuery(PostgresqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();
+    /**
+     * tearDownAfterClass
+     *
+     * @return  void
+     */
+    public static function tearDownAfterClass()
+    {
+        static::$dbo->setQuery(PostgresqlGrammar::dropDatabase('windwalker_foo_test', true))->execute();
+        static::$dbo->setQuery(PostgresqlGrammar::dropDatabase('windwalker_bar_test', true))->execute();
 
-		parent::tearDownAfterClass();
-	}
+        parent::tearDownAfterClass();
+    }
 }

@@ -15,17 +15,17 @@ namespace Windwalker\Cache\Storage;
  */
 class ForeverFileStorage extends FileStorage
 {
-	/**
-	 * Check whether or not the cached data by id has expired.
-	 *
-	 * @param   string  $key  The storage entry identifier.
-	 *
-	 * @return  boolean  True if the data has expired.
-	 *
-	 * @since   3.2
-	 */
-	public function isExpired($key)
-	{
-		return false;
-	}
+    /**
+     * Check whether or not the cached data by id has expired.
+     *
+     * @param   string $key The storage entry identifier.
+     *
+     * @return  boolean  True if the data has expired.
+     *
+     * @since   3.2
+     */
+    public function isExpired($key)
+    {
+        return false;
+    }
 }

@@ -15,310 +15,300 @@ namespace Windwalker\Renderer;
  */
 class PhpRenderer extends AbstractRenderer
 {
-	/**
-	 * Property block.
-	 *
-	 * @var  array
-	 */
-	protected $block = [];
+    /**
+     * Property block.
+     *
+     * @var  array
+     */
+    protected $block = [];
 
-	/**
-	 * Property blockQueue.
-	 *
-	 * @var  \SplQueue
-	 */
-	protected $blockQueue = null;
+    /**
+     * Property blockQueue.
+     *
+     * @var  \SplQueue
+     */
+    protected $blockQueue = null;
 
-	/**
-	 * Property currentBlock.
-	 *
-	 * @var  string
-	 */
-	protected $currentBlock = null;
+    /**
+     * Property currentBlock.
+     *
+     * @var  string
+     */
+    protected $currentBlock = null;
 
-	/**
-	 * Property extends.
-	 *
-	 * @var  string
-	 */
-	protected $extend = null;
+    /**
+     * Property extends.
+     *
+     * @var  string
+     */
+    protected $extend = null;
 
-	/**
-	 * Property parent.
-	 *
-	 * @var  PhpRenderer
-	 */
-	protected $parent = null;
+    /**
+     * Property parent.
+     *
+     * @var  PhpRenderer
+     */
+    protected $parent = null;
 
-	/**
-	 * Property data.
-	 *
-	 * @var  array
-	 */
-	protected $data = null;
+    /**
+     * Property data.
+     *
+     * @var  array
+     */
+    protected $data = null;
 
-	/**
-	 * Property file.
-	 *
-	 * @var string
-	 */
-	protected $file;
+    /**
+     * Property file.
+     *
+     * @var string
+     */
+    protected $file;
 
-	/**
-	 * render
-	 *
-	 * @param string  $file
-	 * @param array   $__data
-	 *
-	 * @throws  \UnexpectedValueException
-	 * @return  string
-	 */
-	public function render($file, $__data = null)
-	{
-		$this->data = $__data = (array) $__data;
+    /**
+     * render
+     *
+     * @param string $file
+     * @param array  $__data
+     *
+     * @throws  \UnexpectedValueException
+     * @return  string
+     */
+    public function render($file, $__data = null)
+    {
+        $this->data = $__data = (array)$__data;
 
-		$this->prepareData($__data);
+        $this->prepareData($__data);
 
-		$__filePath = $this->findFile($file);
+        $__filePath = $this->findFile($file);
 
-		if (!$__filePath)
-		{
-			$__paths = $this->dumpPaths();
+        if (!$__filePath) {
+            $__paths = $this->dumpPaths();
 
-			$__paths = "\n " . implode(" |\n ", $__paths);
+            $__paths = "\n " . implode(" |\n ", $__paths);
 
-			throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $__paths));
-		}
+            throw new \UnexpectedValueException(sprintf('File: %s not found. Paths in queue: %s', $file, $__paths));
+        }
 
-		foreach ($__data as $key => $value)
-		{
-			if ($key === 'data')
-			{
-				$key = '_data';
-			}
+        foreach ($__data as $key => $value) {
+            if ($key === 'data') {
+                $key = '_data';
+            }
 
-			$$key = $value;
-		}
+            $$key = $value;
+        }
 
-		unset($__data);
+        unset($__data);
 
-		// Start an output buffer.
-		ob_start();
+        // Start an output buffer.
+        ob_start();
 
-		// Load the layout.
-		include $__filePath;
+        // Load the layout.
+        include $__filePath;
 
-		// Get the layout contents.
-		$output = ob_get_clean();
+        // Get the layout contents.
+        $output = ob_get_clean();
 
-		// Handler extend
-		if (!$this->extend)
-		{
-			return $output;
-		}
+        // Handler extend
+        if (!$this->extend) {
+            return $output;
+        }
 
-		/** @var $parent phpRenderer */
-		$parent = $this->createSelf();
+        /** @var $parent phpRenderer */
+        $parent = $this->createSelf();
 
-		foreach ($this->block as $name => $block)
-		{
-			$parent->setBlock($name, $block);
-		}
+        foreach ($this->block as $name => $block) {
+            $parent->setBlock($name, $block);
+        }
 
-		$output = $parent->render($this->extend, $this->data);
+        $output = $parent->render($this->extend, $this->data);
 
-		return $output;
-	}
+        return $output;
+    }
 
-	/**
-	 * finFile
-	 *
-	 * @param string $file
-	 * @param string $ext
-	 *
-	 * @return  string
-	 */
-	public function findFile($file, $ext = 'php')
-	{
-		return parent::findFile($file, $ext);
-	}
+    /**
+     * finFile
+     *
+     * @param string $file
+     * @param string $ext
+     *
+     * @return  string
+     */
+    public function findFile($file, $ext = 'php')
+    {
+        return parent::findFile($file, $ext);
+    }
 
-	/**
-	 * load
-	 *
-	 * @param string $file
-	 * @param array  $data
-	 *
-	 * @return  string
-	 */
-	public function load($file, $data = null)
-	{
-		$data = array_merge($this->data, (array) $data);
+    /**
+     * load
+     *
+     * @param string $file
+     * @param array  $data
+     *
+     * @return  string
+     */
+    public function load($file, $data = null)
+    {
+        $data = array_merge($this->data, (array)$data);
 
-		$renderer = $this->createSelf();
+        $renderer = $this->createSelf();
 
-		return $renderer->render($file, $data);
-	}
+        return $renderer->render($file, $data);
+    }
 
-	/**
-	 * prepareData
-	 *
-	 * @param   array &$data
-	 *
-	 * @return  void
-	 */
-	protected function prepareData(&$data)
-	{
-	}
+    /**
+     * prepareData
+     *
+     * @param   array &$data
+     *
+     * @return  void
+     */
+    protected function prepareData(&$data)
+    {
+    }
 
-	/**
-	 * getParent
-	 *
-	 * @return  mixed|null
-	 */
-	public function parent()
-	{
-		if (!$this->extend)
-		{
-			return null;
-		}
+    /**
+     * getParent
+     *
+     * @return  mixed|null
+     */
+    public function parent()
+    {
+        if (!$this->extend) {
+            return null;
+        }
 
-		if (!$this->parent)
-		{
-			$this->parent = $this->createSelf();
+        if (!$this->parent) {
+            $this->parent = $this->createSelf();
 
-			$this->parent->render($this->extend, $this->data);
-		}
+            $this->parent->render($this->extend, $this->data);
+        }
 
-		return $this->parent->getBlock($this->currentBlock);
-	}
+        return $this->parent->getBlock($this->currentBlock);
+    }
 
-	/**
-	 * createSelf
-	 *
-	 * @return  static
-	 */
-	protected function createSelf()
-	{
-		return new static($this->paths, $this->config);
-	}
+    /**
+     * createSelf
+     *
+     * @return  static
+     */
+    protected function createSelf()
+    {
+        return new static($this->paths, $this->config);
+    }
 
-	/**
-	 * extend
-	 *
-	 * @param string $name
-	 *
-	 * @return  void
-	 *
-	 * @throws \LogicException
-	 */
-	public function extend($name)
-	{
-		if ($this->extend)
-		{
-			throw new \LogicException('Please just extend one file.');
-		}
+    /**
+     * extend
+     *
+     * @param string $name
+     *
+     * @return  void
+     *
+     * @throws \LogicException
+     */
+    public function extend($name)
+    {
+        if ($this->extend) {
+            throw new \LogicException('Please just extend one file.');
+        }
 
-		$this->extend = $name;
-	}
+        $this->extend = $name;
+    }
 
-	/**
-	 * getBlock
-	 *
-	 * @param string $name
-	 *
-	 * @return  mixed
-	 */
-	public function getBlock($name)
-	{
-		return !empty($this->block[$name]) ? $this->block[$name] : null;
-	}
+    /**
+     * getBlock
+     *
+     * @param string $name
+     *
+     * @return  mixed
+     */
+    public function getBlock($name)
+    {
+        return !empty($this->block[$name]) ? $this->block[$name] : null;
+    }
 
-	/**
-	 * setBlock
-	 *
-	 * @param string $name
-	 * @param string $content
-	 *
-	 * @return  PhpRenderer  Return self to support chaining.
-	 */
-	public function setBlock($name, $content = '')
-	{
-		$this->block[$name] = $content;
+    /**
+     * setBlock
+     *
+     * @param string $name
+     * @param string $content
+     *
+     * @return  PhpRenderer  Return self to support chaining.
+     */
+    public function setBlock($name, $content = '')
+    {
+        $this->block[$name] = $content;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * setBlock
-	 *
-	 * @param  string $name
-	 *
-	 * @return void
-	 */
-	public function block($name)
-	{
-		$this->currentBlock = $name;
+    /**
+     * setBlock
+     *
+     * @param  string $name
+     *
+     * @return void
+     */
+    public function block($name)
+    {
+        $this->currentBlock = $name;
 
-		$this->getBlockQueue()->push($name);
+        $this->getBlockQueue()->push($name);
 
-		// Start an output buffer.
-		ob_start();
-	}
+        // Start an output buffer.
+        ob_start();
+    }
 
-	/**
-	 * endblock
-	 *
-	 * @return  void
-	 */
-	public function endblock()
-	{
-		$name = $this->getBlockQueue()->pop();
+    /**
+     * endblock
+     *
+     * @return  void
+     */
+    public function endblock()
+    {
+        $name = $this->getBlockQueue()->pop();
 
-		// If this block name not exists on parent level, we just echo inner content.
-		if (!empty($this->block[$name]))
-		{
-			ob_get_clean();
+        // If this block name not exists on parent level, we just echo inner content.
+        if (!empty($this->block[$name])) {
+            ob_get_clean();
 
-			echo $this->block[$name];
+            echo $this->block[$name];
 
-			return;
-		}
+            return;
+        }
 
-		// Get the layout contents.
-		echo $this->block[$name] = ob_get_clean();
-	}
+        // Get the layout contents.
+        echo $this->block[$name] = ob_get_clean();
+    }
 
-	/**
-	 * getBlockQueue
-	 *
-	 * @return  \SplQueue
-	 */
-	public function getBlockQueue()
-	{
-		if (!$this->blockQueue)
-		{
-			$this->blockQueue = new \SplStack;
-		}
+    /**
+     * getBlockQueue
+     *
+     * @return  \SplQueue
+     */
+    public function getBlockQueue()
+    {
+        if (!$this->blockQueue) {
+            $this->blockQueue = new \SplStack;
+        }
 
-		return $this->blockQueue;
-	}
+        return $this->blockQueue;
+    }
 
-	/**
-	 * reset
-	 *
-	 * @return  static
-	 */
-	public function reset()
-	{
-		$this->file   = null;
-		$this->extend = null;
-		$this->parent = null;
-		$this->data   = null;
-		$this->block  = [];
-		$this->blockQueue   = null;
-		$this->currentBlock = null;
+    /**
+     * reset
+     *
+     * @return  static
+     */
+    public function reset()
+    {
+        $this->file         = null;
+        $this->extend       = null;
+        $this->parent       = null;
+        $this->data         = null;
+        $this->block        = [];
+        $this->blockQueue   = null;
+        $this->currentBlock = null;
 
-		return $this;
-	}
+        return $this;
+    }
 }

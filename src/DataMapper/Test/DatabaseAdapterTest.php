@@ -15,35 +15,35 @@ namespace Windwalker\DataMapper\Test;
  */
 class DatabaseAdapterTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Method to test getInstance().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\DataMapper\Adapter\DatabaseAdapter::getInstance
-	 * @TODO   Implement testGetInstance().
-	 */
-	public function testGetInstance()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test getInstance().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\DataMapper\Adapter\DatabaseAdapter::getInstance
+     * @TODO   Implement testGetInstance().
+     */
+    public function testGetInstance()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
-	/**
-	 * Method to test setInstance().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\DataMapper\Adapter\DatabaseAdapter::setInstance
-	 * @TODO   Implement testSetInstance().
-	 */
-	public function testSetInstance()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
+    /**
+     * Method to test setInstance().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\DataMapper\Adapter\DatabaseAdapter::setInstance
+     * @TODO   Implement testSetInstance().
+     */
+    public function testSetInstance()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 }

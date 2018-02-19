@@ -17,22 +17,22 @@ use Windwalker\Dom\SimpleXml\XmlHelper;
  */
 class XmlHelperTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var \SimpleXMLElement
-	 */
-	protected $xml;
+    /**
+     * Test instance.
+     *
+     * @var \SimpleXMLElement
+     */
+    protected $xml;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$xml = <<<XML
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $xml = <<<XML
 <root>
 	<field
 		name="List"
@@ -62,196 +62,195 @@ class XmlHelperTest extends \PHPUnit\Framework\TestCase
 </root>
 XML;
 
-		$xml = simplexml_load_string($xml);
+        $xml = simplexml_load_string($xml);
 
-		$this->xml = $xml->field;
-	}
+        $this->xml = $xml->field;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test getAttribute().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Dom\SimpleXml\XmlHelper::getAttribute
-	 */
-	public function testGetAttribute()
-	{
-		$this->assertEquals('sun', XmlHelper::getAttribute($this->xml, 'class'));
-		$this->assertEquals('default', XmlHelper::getAttribute($this->xml, 'cloud', 'default'));
-		$this->assertEquals(null, XmlHelper::getAttribute($this->xml, 'cloud'));
-	}
+    /**
+     * Method to test getAttribute().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Dom\SimpleXml\XmlHelper::getAttribute
+     */
+    public function testGetAttribute()
+    {
+        $this->assertEquals('sun', XmlHelper::getAttribute($this->xml, 'class'));
+        $this->assertEquals('default', XmlHelper::getAttribute($this->xml, 'cloud', 'default'));
+        $this->assertEquals(null, XmlHelper::getAttribute($this->xml, 'cloud'));
+    }
 
-	/**
-	 * Method to test get().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Dom\SimpleXml\XmlHelper::get
-	 */
-	public function testGet()
-	{
-		$this->assertEquals('sun', XmlHelper::get($this->xml, 'class'));
-		$this->assertEquals('default', XmlHelper::get($this->xml, 'cloud', 'default'));
-		$this->assertEquals(null, XmlHelper::get($this->xml, 'cloud'));
-	}
+    /**
+     * Method to test get().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Dom\SimpleXml\XmlHelper::get
+     */
+    public function testGet()
+    {
+        $this->assertEquals('sun', XmlHelper::get($this->xml, 'class'));
+        $this->assertEquals('default', XmlHelper::get($this->xml, 'cloud', 'default'));
+        $this->assertEquals(null, XmlHelper::get($this->xml, 'cloud'));
+    }
 
-	/**
-	 * boolCases
-	 *
-	 * @return  array
-	 */
-	public function boolCases()
-	{
-		return [
-			[
-				1,
-				'required',
-				true,
-				null
-			],
-			[
-				2,
-				'disabled',
-				false,
-				null
-			],
-			[
-				3,
-				'boolTrue1',
-				true,
-				null
-			],
-			[
-				4,
-				'boolTrue2',
-				true,
-				null
-			],
-			[
-				5,
-				'boolTrue3',
-				true,
-				null
-			],
-			[
-				6,
-				'boolFalse1',
-				false,
-				null
-			],
-			[
-				7,
-				'boolFalse2',
-				false,
-				null
-			],
-			[
-				8,
-				'boolFalse3',
-				false,
-				null
-			],
-			[
-				10,
-				'boolFalse4',
-				false,
-				null
-			],
-			[
-				11,
-				'boolFalse5',
-				false,
-				null
-			],
-			[
-				'12_default',
-				'flower',
-				false,
-				false
-			]
-		];
-	}
+    /**
+     * boolCases
+     *
+     * @return  array
+     */
+    public function boolCases()
+    {
+        return [
+            [
+                1,
+                'required',
+                true,
+                null,
+            ],
+            [
+                2,
+                'disabled',
+                false,
+                null,
+            ],
+            [
+                3,
+                'boolTrue1',
+                true,
+                null,
+            ],
+            [
+                4,
+                'boolTrue2',
+                true,
+                null,
+            ],
+            [
+                5,
+                'boolTrue3',
+                true,
+                null,
+            ],
+            [
+                6,
+                'boolFalse1',
+                false,
+                null,
+            ],
+            [
+                7,
+                'boolFalse2',
+                false,
+                null,
+            ],
+            [
+                8,
+                'boolFalse3',
+                false,
+                null,
+            ],
+            [
+                10,
+                'boolFalse4',
+                false,
+                null,
+            ],
+            [
+                11,
+                'boolFalse5',
+                false,
+                null,
+            ],
+            [
+                '12_default',
+                'flower',
+                false,
+                false,
+            ],
+        ];
+    }
 
-	/**
-	 * Method to test getBool().
-	 *
-	 * @param string|int $id
-	 * @param string     $name
-	 * @param boolean    $expect
-	 * @param boolean    $default
-	 *
-	 * @return void
-	 *
-	 * @covers       Windwalker\Dom\SimpleXml\XmlHelper::getBool
-	 *
-	 * @dataProvider boolCases
-	 */
-	public function testGetBool($id, $name, $expect, $default)
-	{
-		$this->assertEquals($expect, XmlHelper::getBool($this->xml, $name, $default), 'Case fail: case_' . $id);
-	}
+    /**
+     * Method to test getBool().
+     *
+     * @param string|int $id
+     * @param string     $name
+     * @param boolean    $expect
+     * @param boolean    $default
+     *
+     * @return void
+     *
+     * @covers       Windwalker\Dom\SimpleXml\XmlHelper::getBool
+     *
+     * @dataProvider boolCases
+     */
+    public function testGetBool($id, $name, $expect, $default)
+    {
+        $this->assertEquals($expect, XmlHelper::getBool($this->xml, $name, $default), 'Case fail: case_' . $id);
+    }
 
-	/**
-	 * Method to test getFalse().
-	 *
-	 * @param string|int $id
-	 * @param string     $name
-	 * @param boolean    $expect
-	 * @param boolean    $default
-	 *
-	 * @return void
-	 *
-	 * @covers       Windwalker\Dom\SimpleXml\XmlHelper::getFalse
-	 *
-	 * @dataProvider boolCases
-	 */
-	public function testGetFalse($id, $name, $expect, $default)
-	{
-		$this->assertEquals(!$expect, XmlHelper::getFalse($this->xml, $name, $default), 'Case fail: case_' . $id);
-	}
+    /**
+     * Method to test getFalse().
+     *
+     * @param string|int $id
+     * @param string     $name
+     * @param boolean    $expect
+     * @param boolean    $default
+     *
+     * @return void
+     *
+     * @covers       Windwalker\Dom\SimpleXml\XmlHelper::getFalse
+     *
+     * @dataProvider boolCases
+     */
+    public function testGetFalse($id, $name, $expect, $default)
+    {
+        $this->assertEquals(!$expect, XmlHelper::getFalse($this->xml, $name, $default), 'Case fail: case_' . $id);
+    }
 
-	/**
-	 * Method to test getAttributes().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Dom\SimpleXml\XmlHelper::getAttributes
-	 */
-	public function testGetAttributes()
-	{
-		$attributes = [];
+    /**
+     * Method to test getAttributes().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Dom\SimpleXml\XmlHelper::getAttributes
+     */
+    public function testGetAttributes()
+    {
+        $attributes = [];
 
-		foreach ($this->xml->attributes() as $name => $value)
-		{
-			$attributes[$name] = (string) $value;
-		}
+        foreach ($this->xml->attributes() as $name => $value) {
+            $attributes[$name] = (string)$value;
+        }
 
-		$this->assertEquals($attributes, XmlHelper::getAttributes($this->xml));
-	}
+        $this->assertEquals($attributes, XmlHelper::getAttributes($this->xml));
+    }
 
-	/**
-	 * Method to test def().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Dom\SimpleXml\XmlHelper::def
-	 */
-	public function testDef()
-	{
-		XmlHelper::def($this->xml, 'flower', 'rose');
-		XmlHelper::def($this->xml, 'name', 'Play');
+    /**
+     * Method to test def().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Dom\SimpleXml\XmlHelper::def
+     */
+    public function testDef()
+    {
+        XmlHelper::def($this->xml, 'flower', 'rose');
+        XmlHelper::def($this->xml, 'name', 'Play');
 
-		$this->assertEquals('rose', XmlHelper::get($this->xml, 'flower'));
-		$this->assertEquals('List', XmlHelper::get($this->xml, 'name'));
-	}
+        $this->assertEquals('rose', XmlHelper::get($this->xml, 'flower'));
+        $this->assertEquals('List', XmlHelper::get($this->xml, 'name'));
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,12 +15,12 @@ use Windwalker\Profiler\ProfilerInterface;
  */
 interface ProfilerRendererInterface
 {
-	/**
-	 * Render the profiler.
-	 *
-	 * @param   ProfilerInterface  $profiler  The profiler to render.
-	 *
-	 * @return  string  The rendered profiler.
-	 */
-	public function render(ProfilerInterface $profiler);
+    /**
+     * Render the profiler.
+     *
+     * @param   ProfilerInterface $profiler The profiler to render.
+     *
+     * @return  string  The rendered profiler.
+     */
+    public function render(ProfilerInterface $profiler);
 }

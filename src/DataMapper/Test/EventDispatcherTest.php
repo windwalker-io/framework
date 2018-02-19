@@ -19,234 +19,234 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
  */
 class EventDispatcherTest extends AbstractBaseTestCase
 {
-	/**
-	 * Property instance.
-	 *
-	 * @var  StubDispatcherAwareDatamapper
-	 */
-	protected $instance;
+    /**
+     * Property instance.
+     *
+     * @var  StubDispatcherAwareDatamapper
+     */
+    protected $instance;
 
-	/**
-	 * Property listener.
-	 *
-	 * @var  StubDataMapperListener
-	 */
-	protected $listener;
+    /**
+     * Property listener.
+     *
+     * @var  StubDataMapperListener
+     */
+    protected $listener;
 
-	/**
-	 * setUp
-	 *
-	 * @return  void
-	 */
-	public function setUp()
-	{
-		$this->instance = new StubDispatcherAwareDatamapper('stub');
+    /**
+     * setUp
+     *
+     * @return  void
+     */
+    public function setUp()
+    {
+        $this->instance = new StubDispatcherAwareDatamapper('stub');
 
-		$this->listener = new StubDataMapperListener;
+        $this->listener = new StubDataMapperListener;
 
-		$this->instance->getDispatcher()->addListener($this->listener);
-	}
+        $this->instance->getDispatcher()->addListener($this->listener);
+    }
 
-	/**
-	 * testFind
-	 *
-	 * @return  void
-	 */
-	public function testFind()
-	{
-		$this->instance->find(['id' => 5], 'created', 5, 10);
+    /**
+     * testFind
+     *
+     * @return  void
+     */
+    public function testFind()
+    {
+        $this->instance->find(['id' => 5], 'created', 5, 10);
 
-		$event = $this->listener->events['onBeforeFind'];
+        $event = $this->listener->events['onBeforeFind'];
 
-		// Before
-		$this->assertEquals('onBeforeFind', $event->getName());
-		$this->assertEquals(['id' => 5], $event['conditions']);
-		$this->assertEquals(['created'], $event['order']);
-		$this->assertEquals(5, $event['start']);
-		$this->assertSame($event['mapper'], $this->instance);
+        // Before
+        $this->assertEquals('onBeforeFind', $event->getName());
+        $this->assertEquals(['id' => 5], $event['conditions']);
+        $this->assertEquals(['created'], $event['order']);
+        $this->assertEquals(5, $event['start']);
+        $this->assertSame($event['mapper'], $this->instance);
 
-		// Listener will change limit to 20
-		$this->assertEquals(20, $event['limit']);
-		$this->assertEquals(20, $this->instance->args[3]);
+        // Listener will change limit to 20
+        $this->assertEquals(20, $event['limit']);
+        $this->assertEquals(20, $this->instance->args[3]);
 
-		$event = $this->listener->events['onAfterFind'];
+        $event = $this->listener->events['onAfterFind'];
 
-		// After
-		$this->assertEquals('onAfterFind', $event->getName());
-		$this->assertEquals(['doFind', 'After'], $event['result']->method);
-		$this->assertSame($event['mapper'], $this->instance);
-	}
+        // After
+        $this->assertEquals('onAfterFind', $event->getName());
+        $this->assertEquals(['doFind', 'After'], $event['result']->method);
+        $this->assertSame($event['mapper'], $this->instance);
+    }
 
-	/**
-	 * testFindAll
-	 *
-	 * @return  void
-	 */
-	public function testFindAll()
-	{
-		$this->instance->findAll('created', 5, 10);
+    /**
+     * testFindAll
+     *
+     * @return  void
+     */
+    public function testFindAll()
+    {
+        $this->instance->findAll('created', 5, 10);
 
-		$event = $this->listener->events['onBeforeFindAll'];
+        $event = $this->listener->events['onBeforeFindAll'];
 
-		// Before
-		$this->assertEquals('onBeforeFindAll', $event->getName());
-		$this->assertEquals('created', $event['order']);
-		$this->assertEquals(5, $event['start']);
-		$this->assertSame($event['mapper'], $this->instance);
+        // Before
+        $this->assertEquals('onBeforeFindAll', $event->getName());
+        $this->assertEquals('created', $event['order']);
+        $this->assertEquals(5, $event['start']);
+        $this->assertSame($event['mapper'], $this->instance);
 
-		// Listener will change limit to 20
-		$this->assertEquals(20, $event['limit']);
-		$this->assertEquals(20, $this->instance->args[3]);
+        // Listener will change limit to 20
+        $this->assertEquals(20, $event['limit']);
+        $this->assertEquals(20, $this->instance->args[3]);
 
-		$event = $this->listener->events['onAfterFindAll'];
+        $event = $this->listener->events['onAfterFindAll'];
 
-		// After
-		$this->assertEquals('onAfterFindAll', $event->getName());
-		$this->assertEquals(['doFind', 'After', 'After'], $event['result']->method);
-		$this->assertSame($event['mapper'], $this->instance);
-	}
+        // After
+        $this->assertEquals('onAfterFindAll', $event->getName());
+        $this->assertEquals(['doFind', 'After', 'After'], $event['result']->method);
+        $this->assertSame($event['mapper'], $this->instance);
+    }
 
-	/**
-	 * testFindOne
-	 *
-	 * @return  void
-	 */
-	public function testFindOne()
-	{
-		$result = $this->instance->findOne(['id' => 5], 'created');
+    /**
+     * testFindOne
+     *
+     * @return  void
+     */
+    public function testFindOne()
+    {
+        $result = $this->instance->findOne(['id' => 5], 'created');
 
-		$event = $this->listener->events['onBeforeFindOne'];
+        $event = $this->listener->events['onBeforeFindOne'];
 
-		$this->assertEquals('onBeforeFindOne', $event->getName());
-		$this->assertEquals(['id' => 5], $event['conditions']);
-		$this->assertEquals('id', $event['order']);
-		$this->assertEquals(['id'], $this->instance->args[1]);
-		$this->assertSame($event['mapper'], $this->instance);
+        $this->assertEquals('onBeforeFindOne', $event->getName());
+        $this->assertEquals(['id' => 5], $event['conditions']);
+        $this->assertEquals('id', $event['order']);
+        $this->assertEquals(['id'], $this->instance->args[1]);
+        $this->assertSame($event['mapper'], $this->instance);
 
-		$event = $this->listener->events['onAfterFindOne'];
+        $event = $this->listener->events['onAfterFindOne'];
 
-		$this->assertEquals('onAfterFindOne', $event->getName());
-		$this->assertEquals('doFind', $result->method);
-		$this->assertEquals('after', $result->foo);
-		$this->assertSame($event['mapper'], $this->instance);
-	}
+        $this->assertEquals('onAfterFindOne', $event->getName());
+        $this->assertEquals('doFind', $result->method);
+        $this->assertEquals('after', $result->foo);
+        $this->assertSame($event['mapper'], $this->instance);
+    }
 
-	/**
-	 * testFindColumn
-	 *
-	 * @return  void
-	 */
-	public function testFindColumn()
-	{
-		$result = $this->instance->findColumn('foo', ['id' => 5], 'created', 5, 10);
+    /**
+     * testFindColumn
+     *
+     * @return  void
+     */
+    public function testFindColumn()
+    {
+        $result = $this->instance->findColumn('foo', ['id' => 5], 'created', 5, 10);
 
-		$event = $this->listener->events['onBeforeFindColumn'];
+        $event = $this->listener->events['onBeforeFindColumn'];
 
-		// Before
-		$this->assertEquals('onBeforeFindColumn', $event->getName());
-		$this->assertEquals(['id' => 5], $event['conditions']);
-		$this->assertEquals('created', $event['order']);
-		$this->assertEquals(5, $event['start']);
-		$this->assertSame($event['mapper'], $this->instance);
+        // Before
+        $this->assertEquals('onBeforeFindColumn', $event->getName());
+        $this->assertEquals(['id' => 5], $event['conditions']);
+        $this->assertEquals('created', $event['order']);
+        $this->assertEquals(5, $event['start']);
+        $this->assertSame($event['mapper'], $this->instance);
 
-		// Listener will change this
-		$this->assertEquals('bar', $event['column']);
+        // Listener will change this
+        $this->assertEquals('bar', $event['column']);
 
-		$event = $this->listener->events['onAfterFindColumn'];
+        $event = $this->listener->events['onAfterFindColumn'];
 
-		// After
-		$this->assertEquals('onAfterFindColumn', $event->getName());
-		$this->assertEquals('After', $result);
-		$this->assertSame($event['mapper'], $this->instance);
-	}
+        // After
+        $this->assertEquals('onAfterFindColumn', $event->getName());
+        $this->assertEquals('After', $result);
+        $this->assertSame($event['mapper'], $this->instance);
+    }
 
-	/**
-	 * testCreate
-	 *
-	 * @return  void
-	 */
-	public function testCreate()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testCreate
+     *
+     * @return  void
+     */
+    public function testCreate()
+    {
+        $this->markTestIncomplete();
+    }
 
-	/**
-	 * testCreateOne
-	 *
-	 * @return  void
-	 */
-	public function testCreateOne()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testCreateOne
+     *
+     * @return  void
+     */
+    public function testCreateOne()
+    {
+        $this->markTestIncomplete();
+    }
 
-	/**
-	 * testUpdate
-	 *
-	 * @return  void
-	 */
-	public function testUpdate()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testUpdate
+     *
+     * @return  void
+     */
+    public function testUpdate()
+    {
+        $this->markTestIncomplete();
+    }
 
-	/**
-	 * testUpdateOne
-	 *
-	 * @return  void
-	 */
-	public function testUpdateOne()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testUpdateOne
+     *
+     * @return  void
+     */
+    public function testUpdateOne()
+    {
+        $this->markTestIncomplete();
+    }
 
-	/**
-	 * testUpdateAll
-	 *
-	 * @return  void
-	 */
-	public function testUpdateAll()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testUpdateAll
+     *
+     * @return  void
+     */
+    public function testUpdateAll()
+    {
+        $this->markTestIncomplete();
+    }
 
-	/**
-	 * testSave
-	 *
-	 * @return  void
-	 */
-	public function testSave()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testSave
+     *
+     * @return  void
+     */
+    public function testSave()
+    {
+        $this->markTestIncomplete();
+    }
 
-	/**
-	 * testSaveOne
-	 *
-	 * @return  void
-	 */
-	public function testSaveOne()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testSaveOne
+     *
+     * @return  void
+     */
+    public function testSaveOne()
+    {
+        $this->markTestIncomplete();
+    }
 
-	/**
-	 * testDelete
-	 *
-	 * @return  void
-	 */
-	public function testDelete()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testDelete
+     *
+     * @return  void
+     */
+    public function testDelete()
+    {
+        $this->markTestIncomplete();
+    }
 
-	/**
-	 * testFlush
-	 *
-	 * @return  void
-	 */
-	public function testFlush()
-	{
-		$this->markTestIncomplete();
-	}
+    /**
+     * testFlush
+     *
+     * @return  void
+     */
+    public function testFlush()
+    {
+        $this->markTestIncomplete();
+    }
 }

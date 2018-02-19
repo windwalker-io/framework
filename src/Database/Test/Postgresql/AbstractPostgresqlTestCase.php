@@ -18,56 +18,56 @@ use Windwalker\Database\Test\AbstractDatabaseTestCase;
  */
 abstract class AbstractPostgresqlTestCase extends AbstractDatabaseTestCase
 {
-	/**
-	 * Property driver.
-	 *
-	 * @var  string
-	 */
-	protected static $driver = 'postgresql';
+    /**
+     * Property driver.
+     *
+     * @var  string
+     */
+    protected static $driver = 'postgresql';
 
-	/**
-	 * Property quote.
-	 *
-	 * @var  array
-	 */
-	protected static $quote = ['"', '"'];
+    /**
+     * Property quote.
+     *
+     * @var  array
+     */
+    protected static $quote = ['"', '"'];
 
-	/**
-	 * Property db.
-	 *
-	 * @var PostgresqlDriver
-	 */
-	protected $db;
+    /**
+     * Property db.
+     *
+     * @var PostgresqlDriver
+     */
+    protected $db;
 
-	/**
-	 * Property connection.
-	 *
-	 * @var \PDO
-	 */
-	protected $connection;
+    /**
+     * Property connection.
+     *
+     * @var \PDO
+     */
+    protected $connection;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        parent::setUp();
 
-		$this->db = static::$dbo;
-		$this->connection = $this->db->getConnection();
-	}
+        $this->db         = static::$dbo;
+        $this->connection = $this->db->getConnection();
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		parent::tearDown();
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+    }
 }

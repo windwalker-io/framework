@@ -16,21 +16,21 @@ use Windwalker\Event\Event;
  */
 class SecondListener
 {
-	/**
-	 * Listen to onSomething.
-	 *
-	 * @param   Event  $event  The event.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.0
-	 */
-	public function onSomething(Event $event)
-	{
-		$listeners = $event->getArgument('listeners');
+    /**
+     * Listen to onSomething.
+     *
+     * @param   Event $event The event.
+     *
+     * @return  void
+     *
+     * @since   2.0
+     */
+    public function onSomething(Event $event)
+    {
+        $listeners = $event->getArgument('listeners');
 
-		$listeners[] = 'second';
+        $listeners[] = 'second';
 
-		$event->setArgument('listeners', $listeners);
-	}
+        $event->setArgument('listeners', $listeners);
+    }
 }

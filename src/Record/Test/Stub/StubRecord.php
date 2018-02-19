@@ -17,20 +17,20 @@ use Windwalker\Record\Record;
  */
 class StubRecord extends Record
 {
-	/**
-	 * Method to perform sanity checks on the AbstractTable instance properties to ensure
-	 * they are safe to store in the database.  Child classes should override this
-	 * method to make sure the data they are storing in the database is safe and
-	 * as expected before storage.
-	 *
-	 * @return  static  Method allows chaining
-	 *
-	 * @since   2.0
-	 */
-	public function validate()
-	{
-		throw new \RuntimeException('Record save error');
+    /**
+     * Method to perform sanity checks on the AbstractTable instance properties to ensure
+     * they are safe to store in the database.  Child classes should override this
+     * method to make sure the data they are storing in the database is safe and
+     * as expected before storage.
+     *
+     * @return  static  Method allows chaining
+     *
+     * @since   2.0
+     */
+    public function validate()
+    {
+        throw new \RuntimeException('Record save error');
 
-		return parent::validate();
-	}
+        return parent::validate();
+    }
 }

@@ -16,121 +16,120 @@ namespace Windwalker\Session\Handler;
  */
 class ApcHandler extends AbstractHandler
 {
-	/**
-	 * Constructor
-	 *
-	 * @param array $options Optional parameters
-	 *
-	 * @throws \RuntimeException
-	 *
-	 * @since    2.0
-	 */
-	public function __construct($options)
-	{
-		if (!static::isSupported())
-		{
-			throw new \RuntimeException('APC Extension is not available', 500);
-		}
+    /**
+     * Constructor
+     *
+     * @param array $options Optional parameters
+     *
+     * @throws \RuntimeException
+     *
+     * @since    2.0
+     */
+    public function __construct($options)
+    {
+        if (!static::isSupported()) {
+            throw new \RuntimeException('APC Extension is not available', 500);
+        }
 
-		parent::__construct($options);
-	}
+        parent::__construct($options);
+    }
 
-	/**
-	 * Test to see if the SessionHandler is available.
-	 *
-	 * @return boolean  True on success, false otherwise.
-	 *
-	 * @since   2.0
-	 */
-	public static function isSupported()
-	{
-		return extension_loaded('apc');
-	}
+    /**
+     * Test to see if the SessionHandler is available.
+     *
+     * @return boolean  True on success, false otherwise.
+     *
+     * @since   2.0
+     */
+    public static function isSupported()
+    {
+        return extension_loaded('apc');
+    }
 
-	/**
-	 * Read the data for a particular session identifier from the
-	 * SessionHandler backend.
-	 *
-	 * @param   string  $id  The session identifier.
-	 *
-	 * @return  string  The session data.
-	 *
-	 * @since   2.0
-	 */
-	public function read($id)
-	{
-		return (string) apc_fetch($this->prefix . $id);
-	}
+    /**
+     * Read the data for a particular session identifier from the
+     * SessionHandler backend.
+     *
+     * @param   string $id The session identifier.
+     *
+     * @return  string  The session data.
+     *
+     * @since   2.0
+     */
+    public function read($id)
+    {
+        return (string)apc_fetch($this->prefix . $id);
+    }
 
-	/**
-	 * Write session data to the SessionHandler backend.
-	 *
-	 * @param   string  $id            The session identifier.
-	 * @param   string  $session_data  The session data.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   2.0
-	 */
-	public function write($id, $session_data)
-	{
-		return apc_store($this->prefix . $id, $session_data, ini_get("session.gc_maxlifetime"));
-	}
+    /**
+     * Write session data to the SessionHandler backend.
+     *
+     * @param   string $id           The session identifier.
+     * @param   string $session_data The session data.
+     *
+     * @return  boolean  True on success, false otherwise.
+     *
+     * @since   2.0
+     */
+    public function write($id, $session_data)
+    {
+        return apc_store($this->prefix . $id, $session_data, ini_get("session.gc_maxlifetime"));
+    }
 
-	/**
-	 * Destroy the data for a particular session identifier in the SessionHandler backend.
-	 *
-	 * @param   string  $id  The session identifier.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   2.0
-	 */
-	public function destroy($id)
-	{
-		return apc_delete($this->prefix . $id);
-	}
+    /**
+     * Destroy the data for a particular session identifier in the SessionHandler backend.
+     *
+     * @param   string $id The session identifier.
+     *
+     * @return  boolean  True on success, false otherwise.
+     *
+     * @since   2.0
+     */
+    public function destroy($id)
+    {
+        return apc_delete($this->prefix . $id);
+    }
 
-	/**
-	 * Cleanup old sessions
-	 *
-	 * @link http://php.net/manual/en/sessionhandlerinterafce.gc.php
-	 *
-	 * @param int $maxlifetime Sessions that have not updated for
-	 *                         the last maxlifetime seconds will be removed.
-	 *
-	 * @return bool The return value (usually TRUE on success, FALSE on failure).
-	 *              Note this value is returned internally to PHP for processing.
-	 */
-	public function gc($maxlifetime)
-	{
-		return true;
-	}
+    /**
+     * Cleanup old sessions
+     *
+     * @link http://php.net/manual/en/sessionhandlerinterafce.gc.php
+     *
+     * @param int $maxlifetime Sessions that have not updated for
+     *                         the last maxlifetime seconds will be removed.
+     *
+     * @return bool The return value (usually TRUE on success, FALSE on failure).
+     *              Note this value is returned internally to PHP for processing.
+     */
+    public function gc($maxlifetime)
+    {
+        return true;
+    }
 
-	/**
-	 * Re-initializes existing session, or creates a new one.
-	 *
-	 * @see http://php.net/sessionhandlerinterface.open
-	 *
-	 * @param string $savePath    Save path
-	 * @param string $sessionName Session name, see http://php.net/function.session-name.php
-	 *
-	 * @return bool true on success, false on failure
-	 */
-	public function open($savePath, $sessionName)
-	{
-		return true;
-	}
+    /**
+     * Re-initializes existing session, or creates a new one.
+     *
+     * @see http://php.net/sessionhandlerinterface.open
+     *
+     * @param string $savePath    Save path
+     * @param string $sessionName Session name, see http://php.net/function.session-name.php
+     *
+     * @return bool true on success, false on failure
+     */
+    public function open($savePath, $sessionName)
+    {
+        return true;
+    }
 
-	/**
-	 * Closes the current session.
-	 *
-	 * @see http://php.net/sessionhandlerinterface.close
-	 *
-	 * @return bool true on success, false on failure
-	 */
-	public function close()
-	{
-		return true;
-	}
+    /**
+     * Closes the current session.
+     *
+     * @see http://php.net/sessionhandlerinterface.close
+     *
+     * @return bool true on success, false on failure
+     */
+    public function close()
+    {
+        return true;
+    }
 }

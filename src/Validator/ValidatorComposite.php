@@ -17,253 +17,241 @@ use Windwalker\Validator\Rule\CallbackValidator;
  */
 class ValidatorComposite extends AbstractValidator
 {
-	const MODE_MATCH_ALL = 1;
-	const MODE_MATCH_ONE = 2;
+    const MODE_MATCH_ALL = 1;
+    const MODE_MATCH_ONE = 2;
 
-	/**
-	 * Property validators.
-	 *
-	 * @var  ValidatorInterface[]
-	 */
-	protected $validators = [];
+    /**
+     * Property validators.
+     *
+     * @var  ValidatorInterface[]
+     */
+    protected $validators = [];
 
-	/**
-	 * Property errors.
-	 *
-	 * @var  array
-	 */
-	protected $errors = [];
+    /**
+     * Property errors.
+     *
+     * @var  array
+     */
+    protected $errors = [];
 
-	/**
-	 * Property results.
-	 *
-	 * @var  bool[]
-	 */
-	protected $results = [];
+    /**
+     * Property results.
+     *
+     * @var  bool[]
+     */
+    protected $results = [];
 
-	/**
-	 * Property mode.
-	 *
-	 * @var  int
-	 */
-	protected $mode;
+    /**
+     * Property mode.
+     *
+     * @var  int
+     */
+    protected $mode;
 
-	/**
-	 * ValidatorComposite constructor.
-	 *
-	 * @param ValidatorInterface[] $validators
-	 * @param int                  $mode
-	 */
-	public function __construct(array $validators = [], $mode = self::MODE_MATCH_ALL)
-	{
-		$this->setValidators($validators);
-		$this->mode = $mode;
-	}
+    /**
+     * ValidatorComposite constructor.
+     *
+     * @param ValidatorInterface[] $validators
+     * @param int                  $mode
+     */
+    public function __construct(array $validators = [], $mode = self::MODE_MATCH_ALL)
+    {
+        $this->setValidators($validators);
+        $this->mode = $mode;
+    }
 
-	/**
-	 * Test value and return boolean
-	 *
-	 * @param mixed $value
-	 *
-	 * @return  boolean
-	 */
-	protected function test($value)
-	{
-		$errorMessages = [];
-		$results = [];
+    /**
+     * Test value and return boolean
+     *
+     * @param mixed $value
+     *
+     * @return  boolean
+     */
+    protected function test($value)
+    {
+        $errorMessages = [];
+        $results       = [];
 
-		foreach ($this->validators as $validator)
-		{
-			if (!$result = $validator->validate($value))
-			{
-				$errorMessages[] = $validator->getError();
-			}
+        foreach ($this->validators as $validator) {
+            if (!$result = $validator->validate($value)) {
+                $errorMessages[] = $validator->getError();
+            }
 
-			$results[] = $result;
-		}
+            $results[] = $result;
+        }
 
-		if ($this->mode === static::MODE_MATCH_ALL)
-		{
-			$bool = !in_array(false, $results, true);
-		}
-		else
-		{
-			$bool = in_array(true, $results, true);
-		}
+        if ($this->mode === static::MODE_MATCH_ALL) {
+            $bool = !in_array(false, $results, true);
+        } else {
+            $bool = in_array(true, $results, true);
+        }
 
-		if (!$bool)
-		{
-			$this->setError($this->getMessage());
-			$this->setErrors($errorMessages);
-		}
-		else
-		{
-			$this->setError('');
-			$this->setErrors([]);
-		}
+        if (!$bool) {
+            $this->setError($this->getMessage());
+            $this->setErrors($errorMessages);
+        } else {
+            $this->setError('');
+            $this->setErrors([]);
+        }
 
-		$this->results = $results;
+        $this->results = $results;
 
-		return $bool;
-	}
+        return $bool;
+    }
 
-	/**
-	 * validateOne
-	 *
-	 * @param mixed $value
-	 *
-	 * @return  bool
-	 */
-	public function validateOne($value)
-	{
-		return $this->match($value, static::MODE_MATCH_ONE);
-	}
+    /**
+     * validateOne
+     *
+     * @param mixed $value
+     *
+     * @return  bool
+     */
+    public function validateOne($value)
+    {
+        return $this->match($value, static::MODE_MATCH_ONE);
+    }
 
-	/**
-	 * validateAll
-	 *
-	 * @param mixed $value
-	 *
-	 * @return  bool
-	 */
-	public function validateAll($value)
-	{
-		return $this->match($value, static::MODE_MATCH_ALL);
-	}
+    /**
+     * validateAll
+     *
+     * @param mixed $value
+     *
+     * @return  bool
+     */
+    public function validateAll($value)
+    {
+        return $this->match($value, static::MODE_MATCH_ALL);
+    }
 
-	/**
-	 * match
-	 *
-	 * @param mixed $value
-	 * @param int   $mode
-	 *
-	 * @return  bool
-	 */
-	protected function match($value, $mode)
-	{
-		$backup = $this->getMode();
+    /**
+     * match
+     *
+     * @param mixed $value
+     * @param int   $mode
+     *
+     * @return  bool
+     */
+    protected function match($value, $mode)
+    {
+        $backup = $this->getMode();
 
-		$this->setMode($mode);
+        $this->setMode($mode);
 
-		$result = $this->validate($value);
+        $result = $this->validate($value);
 
-		$this->setMode($backup);
+        $this->setMode($backup);
 
-		return $result;
-	}
+        return $result;
+    }
 
-	/**
-	 * addValidator
-	 *
-	 * @param ValidatorInterface|callable $validator
-	 *
-	 * @return  static
-	 * @throws \InvalidArgumentException
-	 */
-	public function addValidator($validator)
-	{
-		if (!$validator instanceof ValidatorInterface)
-		{
-			if (!is_callable($validator))
-			{
-				throw new \InvalidArgumentException('Validator should be callable or ValidatorInterface.');
-			}
+    /**
+     * addValidator
+     *
+     * @param ValidatorInterface|callable $validator
+     *
+     * @return  static
+     * @throws \InvalidArgumentException
+     */
+    public function addValidator($validator)
+    {
+        if (!$validator instanceof ValidatorInterface) {
+            if (!is_callable($validator)) {
+                throw new \InvalidArgumentException('Validator should be callable or ValidatorInterface.');
+            }
 
-			$validator = new CallbackValidator($validator);
-		}
+            $validator = new CallbackValidator($validator);
+        }
 
-		$this->validators[] = $validator;
+        $this->validators[] = $validator;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Validators
-	 *
-	 * @return  ValidatorInterface[]
-	 */
-	public function getValidators()
-	{
-		return $this->validators;
-	}
+    /**
+     * Method to get property Validators
+     *
+     * @return  ValidatorInterface[]
+     */
+    public function getValidators()
+    {
+        return $this->validators;
+    }
 
-	/**
-	 * Method to set property validators
-	 *
-	 * @param   ValidatorInterface[] $validators
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setValidators(array $validators)
-	{
-		foreach ($validators as $validator)
-		{
-			if (is_string($validator) && is_subclass_of($validator, ValidatorInterface::class))
-			{
-				$validator = new $validator;
-			}
+    /**
+     * Method to set property validators
+     *
+     * @param   ValidatorInterface[] $validators
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setValidators(array $validators)
+    {
+        foreach ($validators as $validator) {
+            if (is_string($validator) && is_subclass_of($validator, ValidatorInterface::class)) {
+                $validator = new $validator;
+            }
 
-			$this->addValidator($validator);
-		}
+            $this->addValidator($validator);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Errors
-	 *
-	 * @return  array
-	 */
-	public function getErrors()
-	{
-		return $this->errors;
-	}
+    /**
+     * Method to get property Errors
+     *
+     * @return  array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 
-	/**
-	 * Method to set property errors
-	 *
-	 * @param   array $errors
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setErrors($errors)
-	{
-		$this->errors = $errors;
+    /**
+     * Method to set property errors
+     *
+     * @param   array $errors
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setErrors($errors)
+    {
+        $this->errors = $errors;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Results
-	 *
-	 * @return  bool[]
-	 */
-	public function getResults()
-	{
-		return $this->results;
-	}
+    /**
+     * Method to get property Results
+     *
+     * @return  bool[]
+     */
+    public function getResults()
+    {
+        return $this->results;
+    }
 
-	/**
-	 * Method to get property Mode
-	 *
-	 * @return  int
-	 */
-	public function getMode()
-	{
-		return $this->mode;
-	}
+    /**
+     * Method to get property Mode
+     *
+     * @return  int
+     */
+    public function getMode()
+    {
+        return $this->mode;
+    }
 
-	/**
-	 * Method to set property mode
-	 *
-	 * @param   int $mode
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setMode($mode)
-	{
-		$this->mode = $mode;
+    /**
+     * Method to set property mode
+     *
+     * @param   int $mode
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
 
-		return $this;
-	}
+        return $this;
+    }
 }

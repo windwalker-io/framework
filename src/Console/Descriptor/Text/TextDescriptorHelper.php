@@ -8,8 +8,8 @@
 
 namespace Windwalker\Console\Descriptor\Text;
 
-use Windwalker\Console\Console;
 use Windwalker\Console\Command\AbstractCommand;
+use Windwalker\Console\Console;
 use Windwalker\Console\Descriptor\AbstractDescriptorHelper;
 
 /**
@@ -19,14 +19,14 @@ use Windwalker\Console\Descriptor\AbstractDescriptorHelper;
  */
 class TextDescriptorHelper extends AbstractDescriptorHelper
 {
-	/**
-	 * Template of console.
-	 *
-	 * @var string
-	 *
-	 * @since  2.0
-	 */
-	protected $template = <<<EOF
+    /**
+     * Template of console.
+     *
+     * @var string
+     *
+     * @since  2.0
+     */
+    protected $template = <<<EOF
 
 <comment>%s</comment> - version: %s
 ------------------------------------------------------------
@@ -42,83 +42,80 @@ Usage:
 %s
 EOF;
 
-	/**
-	 * Describe a command detail.
-	 *
-	 * @param   AbstractCommand  $command  The command to described.
-	 *
-	 * @return  string  Return the described text.
-	 *
-	 * @throws  \RuntimeException
-	 *
-	 * @since  2.0
-	 */
-	public function describe(AbstractCommand $command)
-	{
-		// Describe Options
-		$options          = $command->getAllOptions();
-		$optionDescriptor = $this->getOptionDescriptor();
+    /**
+     * Describe a command detail.
+     *
+     * @param   AbstractCommand $command The command to described.
+     *
+     * @return  string  Return the described text.
+     *
+     * @throws  \RuntimeException
+     *
+     * @since  2.0
+     */
+    public function describe(AbstractCommand $command)
+    {
+        // Describe Options
+        $options          = $command->getAllOptions();
+        $optionDescriptor = $this->getOptionDescriptor();
 
-		foreach ($options as $option)
-		{
-			$optionDescriptor->addItem($option);
-		}
+        foreach ($options as $option) {
+            $optionDescriptor->addItem($option);
+        }
 
-		$render['option'] = count($options) ? "\n\nOptions:\n\n" . $optionDescriptor->render() : '';
+        $render['option'] = count($options) ? "\n\nOptions:\n\n" . $optionDescriptor->render() : '';
 
-		// Describe Commands
-		$commands          = $command->getChildren();
-		$commandDescriptor = $this->getCommandDescriptor();
+        // Describe Commands
+        $commands          = $command->getChildren();
+        $commandDescriptor = $this->getCommandDescriptor();
 
-		foreach ($commands as $cmd)
-		{
-			$commandDescriptor->addItem($cmd);
-		}
+        foreach ($commands as $cmd) {
+            $commandDescriptor->addItem($cmd);
+        }
 
-		$render['command'] = count($commands) ? "\nCommands:\n\n" . $commandDescriptor->render() : '';
+        $render['command'] = count($commands) ? "\nCommands:\n\n" . $commandDescriptor->render() : '';
 
-		// Render Help template
-		/** @var Console $console */
-		$console = $command->getApplication();
+        // Render Help template
+        /** @var Console $console */
+        $console = $command->getApplication();
 
-		if (!($console instanceof Console))
-		{
-			throw new \RuntimeException(sprintf('Help descriptor need Console object in %s command.', get_class($command)));
-		}
+        if (!($console instanceof Console)) {
+            throw new \RuntimeException(sprintf('Help descriptor need Console object in %s command.',
+                get_class($command)));
+        }
 
-		$consoleTitle = $console->getTitle();
-		$version      = $console->getVersion();
+        $consoleTitle = $console->getTitle();
+        $version      = $console->getVersion();
 
-		$commandName = $command->getName();
-		$description = $command->getDescription();
-		$usage       = $command->getUsage();
-		$help        = $command->getHelp();
+        $commandName = $command->getName();
+        $description = $command->getDescription();
+        $usage       = $command->getUsage();
+        $help        = $command->getHelp();
 
-		// Clean line indent of description
-		$description = explode("\n", $description);
+        // Clean line indent of description
+        $description = explode("\n", $description);
 
-		foreach ($description as &$line)
-		{
-			$line = trim($line);
-		}
+        foreach ($description as &$line) {
+            $line = trim($line);
+        }
 
-		$description = implode("\n", $description);
-		$description = $description ? $description . "\n" : '';
+        $description = implode("\n", $description);
+        $description = $description ? $description . "\n" : '';
 
-		$template = sprintf(
-			$this->template,
-			$consoleTitle,
-			$version,
-			$commandName,
-			$description,
-			$usage,
-			$help
-		);
+        $template = sprintf(
+            $this->template,
+            $consoleTitle,
+            $version,
+            $commandName,
+            $description,
+            $usage,
+            $help
+        );
 
-		return str_replace(
-			['{OPTIONS}', '{COMMANDS}'],
-			$render,
-			$template
-		);
-	}
+        return str_replace(
+            ['{OPTIONS}', '{COMMANDS}'],
+            $render,
+            $template
+        );
+    }
 }

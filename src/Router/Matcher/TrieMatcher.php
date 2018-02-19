@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,242 +14,225 @@ use Windwalker\Router\RouteHelper;
 
 /**
  * The TrieMatcher class.
- * 
+ *
  * @since  2.0
  */
 class TrieMatcher extends AbstractMatcher
 {
-	/**
-	 * Property tree.
-	 *
-	 * @var  array
-	 */
-	protected $tree = [];
+    /**
+     * Property tree.
+     *
+     * @var  array
+     */
+    protected $tree = [];
 
-	/**
-	 * Property vars.
-	 *
-	 * @var  array
-	 */
-	protected $vars = [];
+    /**
+     * Property vars.
+     *
+     * @var  array
+     */
+    protected $vars = [];
 
-	/**
-	 * Property method.
-	 *
-	 * @var string
-	 */
-	protected $method;
+    /**
+     * Property method.
+     *
+     * @var string
+     */
+    protected $method;
 
-	/**
-	 * Property options.
-	 *
-	 * @var  array
-	 */
-	protected $options = [];
+    /**
+     * Property options.
+     *
+     * @var  array
+     */
+    protected $options = [];
 
-	/**
-	 * Match routes.
-	 *
-	 * @param string $route
-	 * @param string $method
-	 * @param array  $options
-	 *
-	 * @return  Route|false
-	 */
-	public function match($route, $method = 'GET', $options = [])
-	{
-		$this->method = $method;
-		$this->options = $options;
-		$this->count = 0;
+    /**
+     * Match routes.
+     *
+     * @param string $route
+     * @param string $method
+     * @param array  $options
+     *
+     * @return  Route|false
+     */
+    public function match($route, $method = 'GET', $options = [])
+    {
+        $this->method  = $method;
+        $this->options = $options;
+        $this->count   = 0;
 
-		// Init some data
-		$this->buildRouteMaps()
-			->buildTree();
+        // Init some data
+        $this->buildRouteMaps()
+            ->buildTree();
 
-		// Match
-		$segments = explode('/', RouteHelper::sanitize($route));
+        // Match
+        $segments = explode('/', RouteHelper::sanitize($route));
 
-		$routeItem = $this->matchSegment($segments, $this->tree);
+        $routeItem = $this->matchSegment($segments, $this->tree);
 
-		if (!$routeItem)
-		{
-			return false;
-		}
+        if (!$routeItem) {
+            return false;
+        }
 
-		$routeItem->setVariables(array_merge($routeItem->getVariables(), $this->vars));
+        $routeItem->setVariables(array_merge($routeItem->getVariables(), $this->vars));
 
-		return $routeItem;
-	}
+        return $routeItem;
+    }
 
-	/**
-	 * matchSegment
-	 *
-	 * @param array $segments
-	 * @param array $node
-	 * @param int   $level
-	 *
-	 * @return  bool|Route
-	 */
-	protected function matchSegment($segments, $node, $level = 1)
-	{
-		$segment = isset($segments[$level - 1]) ? $segments[$level - 1] : false;
+    /**
+     * matchSegment
+     *
+     * @param array $segments
+     * @param array $node
+     * @param int   $level
+     *
+     * @return  bool|Route
+     */
+    protected function matchSegment($segments, $node, $level = 1)
+    {
+        $segment = isset($segments[$level - 1]) ? $segments[$level - 1] : false;
 
-		if ($segment === false)
-		{
-			return false;
-		}
+        if ($segment === false) {
+            return false;
+        }
 
-		$segment = $segment ? : '/';
+        $segment = $segment ?: '/';
 
-		foreach ($node as $regex => $child)
-		{
-			$this->count++;
+        foreach ($node as $regex => $child) {
+            $this->count++;
 
-			// Start with a '(' is a regex
-			if ($regex[0] === '(')
-			{
-				preg_match(chr(1) . $regex . chr(1), $segment, $match);
+            // Start with a '(' is a regex
+            if ($regex[0] === '(') {
+                preg_match(chr(1) . $regex . chr(1), $segment, $match);
 
-				if (!$match)
-				{
-					continue;
-				}
+                if (!$match) {
+                    continue;
+                }
 
-				RouteHelper::getVariables($match, $this->vars);
-			}
-			// Otherwise it is a static string
-			else
-			{
-				if ($regex != $segment)
-				{
-					continue;
-				}
-			}
+                RouteHelper::getVariables($match, $this->vars);
+            } // Otherwise it is a static string
+            else {
+                if ($regex != $segment) {
+                    continue;
+                }
+            }
 
-			$result = false;
+            $result = false;
 
-			// Has child, iterate it.
-			if ($child && is_array($child))
-			{
-				$child = $this->matchSegment($segments, $child, $level + 1);
-			}
+            // Has child, iterate it.
+            if ($child && is_array($child)) {
+                $child = $this->matchSegment($segments, $child, $level + 1);
+            }
 
-			// If is string, means we get a route index, using this index to find Route from maps.
-			if (is_string($child))
-			{
-				$child = $this->routes[$this->routeMaps[$child]];
-			}
+            // If is string, means we get a route index, using this index to find Route from maps.
+            if (is_string($child)) {
+                $child = $this->routes[$this->routeMaps[$child]];
+            }
 
-			// Match this Route
-			if ($child instanceof Route)
-			{
-				$result = $this->matchOptions($child, $this->method, $this->options);
-			}
+            // Match this Route
+            if ($child instanceof Route) {
+                $result = $this->matchOptions($child, $this->method, $this->options);
+            }
 
-			// If match fail, continue find next element.
-			if (!$result)
-			{
-				continue;
-			}
+            // If match fail, continue find next element.
+            if (!$result) {
+                continue;
+            }
 
-			return $child;
-		}
+            return $child;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * buildTree
-	 *
-	 * @param bool $refresh
-	 *
-	 * @return  static
-	 */
-	protected function buildTree($refresh = false)
-	{
-		if ($this->tree && $this->debug && $refresh)
-		{
-			return $this;
-		}
+    /**
+     * buildTree
+     *
+     * @param bool $refresh
+     *
+     * @return  static
+     */
+    protected function buildTree($refresh = false)
+    {
+        if ($this->tree && $this->debug && $refresh) {
+            return $this;
+        }
 
-		// Build Tree
-		foreach ($this->routes as $routeItem)
-		{
-			$pattern = $routeItem->getPattern();
+        // Build Tree
+        foreach ($this->routes as $routeItem) {
+            $pattern = $routeItem->getPattern();
 
-			// Compile this route
-			$regex = TrieCompiler::compile($pattern, $routeItem->getRequirements());
+            // Compile this route
+            $regex = TrieCompiler::compile($pattern, $routeItem->getRequirements());
 
-			$regex = trim($regex, chr(1) . '^$');
+            $regex = trim($regex, chr(1) . '^$');
 
-			// Make sure no other '/' is the path separator
-			$regex = str_replace('[^/]', '{:PLACEHOLDER:}', $regex);
+            // Make sure no other '/' is the path separator
+            $regex = str_replace('[^/]', '{:PLACEHOLDER:}', $regex);
 
-			// Split it
-			$regex = explode('/', $regex);
+            // Split it
+            $regex = explode('/', $regex);
 
-			// Start build tree
-			$node = &$this->tree;
+            // Start build tree
+            $node = &$this->tree;
 
-			$length = count($regex);
+            $length = count($regex);
 
-			foreach ((array) $regex as $k => $segment)
-			{
-				// Fallback the placeholder to /
-				$segment = str_replace('{:PLACEHOLDER:}', '[^/]', $segment);
+            foreach ((array)$regex as $k => $segment) {
+                // Fallback the placeholder to /
+                $segment = str_replace('{:PLACEHOLDER:}', '[^/]', $segment);
 
-				$segment = $segment ? : '/';
+                $segment = $segment ?: '/';
 
-				if (!isset($node[$segment]))
-				{
-					$node[$segment] = [];
-				}
+                if (!isset($node[$segment])) {
+                    $node[$segment] = [];
+                }
 
-				// If is last segment, set it as Route name,
-				// that we can search it later or cache this map.
-				if ($k + 1 == $length)
-				{
-					$node[$segment] = $routeItem->getName();
-				}
+                // If is last segment, set it as Route name,
+                // that we can search it later or cache this map.
+                if ($k + 1 == $length) {
+                    $node[$segment] = $routeItem->getName();
+                }
 
-				$node = &$node[$segment];
-			}
-		}
+                $node = &$node[$segment];
+            }
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * clear
-	 *
-	 * @return  void
-	 */
-	public function clear()
-	{
-		$this->tree = [];
-	}
+    /**
+     * clear
+     *
+     * @return  void
+     */
+    public function clear()
+    {
+        $this->tree = [];
+    }
 
-	/**
-	 * Method to get property Tree
-	 *
-	 * @return  array
-	 */
-	public function getTree()
-	{
-		return $this->tree;
-	}
+    /**
+     * Method to get property Tree
+     *
+     * @return  array
+     */
+    public function getTree()
+    {
+        return $this->tree;
+    }
 
-	/**
-	 * Method to set property tree
-	 *
-	 * @param   array $tree
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setTree($tree)
-	{
-		$this->tree = $tree;
+    /**
+     * Method to set property tree
+     *
+     * @param   array $tree
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setTree($tree)
+    {
+        $this->tree = $tree;
 
-		return $this;
-	}
+        return $this;
+    }
 }

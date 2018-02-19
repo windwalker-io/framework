@@ -15,22 +15,22 @@ namespace Windwalker\Crypt;
  */
 interface HasherInterface
 {
-	/**
-	 * create
-	 *
-	 * @param string $text
-	 *
-	 * @return  string
-	 */
-	public function create($text);
+    /**
+     * create
+     *
+     * @param string $text
+     *
+     * @return  string
+     */
+    public function create($text);
 
-	/**
-	 * Verify the password.
-	 *
-	 * @param   string   $text  The plain text.
-	 * @param   string   $hash  The hashed text.
-	 *
-	 * @return  boolean  Verify success or not.
-	 */
-	public function verify($text, $hash);
+    /**
+     * Verify the password.
+     *
+     * @param   string $text The plain text.
+     * @param   string $hash The hashed text.
+     *
+     * @return  boolean  Verify success or not.
+     */
+    public function verify($text, $hash);
 }

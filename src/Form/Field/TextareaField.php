@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -20,70 +20,70 @@ use Windwalker\Dom\HtmlElement;
  */
 class TextareaField extends TextField
 {
-	/**
-	 * Property type.
-	 *
-	 * @var  string
-	 */
-	protected $type = 'textarea';
+    /**
+     * Property type.
+     *
+     * @var  string
+     */
+    protected $type = 'textarea';
 
-	/**
-	 * Property element.
-	 *
-	 * @var  string
-	 */
-	protected $element = 'textarea';
+    /**
+     * Property element.
+     *
+     * @var  string
+     */
+    protected $element = 'textarea';
 
-	/**
-	 * prepareRenderInput
-	 *
-	 * @param array $attrs
-	 *
-	 * @return  void
-	 */
-	public function prepare(&$attrs)
-	{
-		$attrs['name']        = $this->getFieldName();
-		$attrs['id']          = $this->getAttribute('id', $this->getId());
-		$attrs['class']       = $this->getAttribute('class');
-		$attrs['readonly']    = $this->getAttribute('readonly');
-		$attrs['disabled']    = $this->getAttribute('disabled');
-		$attrs['onchange']    = $this->getAttribute('onchange');
-		$attrs['onfocus']     = $this->getAttribute('onfocus');
-		$attrs['onblur']      = $this->getAttribute('onblur');
-		$attrs['placeholder'] = $this->getAttribute('placeholder');
-		$attrs['required']    = $this->required;
+    /**
+     * prepareRenderInput
+     *
+     * @param array $attrs
+     *
+     * @return  void
+     */
+    public function prepare(&$attrs)
+    {
+        $attrs['name']        = $this->getFieldName();
+        $attrs['id']          = $this->getAttribute('id', $this->getId());
+        $attrs['class']       = $this->getAttribute('class');
+        $attrs['readonly']    = $this->getAttribute('readonly');
+        $attrs['disabled']    = $this->getAttribute('disabled');
+        $attrs['onchange']    = $this->getAttribute('onchange');
+        $attrs['onfocus']     = $this->getAttribute('onfocus');
+        $attrs['onblur']      = $this->getAttribute('onblur');
+        $attrs['placeholder'] = $this->getAttribute('placeholder');
+        $attrs['required']    = $this->required;
 
-		$attrs['cols'] = $this->getAttribute('cols');
-		$attrs['rows'] = $this->getAttribute('rows');
-	}
+        $attrs['cols'] = $this->getAttribute('cols');
+        $attrs['rows'] = $this->getAttribute('rows');
+    }
 
-	/**
-	 * buildInput
-	 *
-	 * @param array $attrs
-	 *
-	 * @return  mixed
-	 */
-	public function buildInput($attrs)
-	{
-		return new HtmlElement($this->element, $this->getValue(), $attrs);
-	}
+    /**
+     * buildInput
+     *
+     * @param array $attrs
+     *
+     * @return  mixed
+     */
+    public function buildInput($attrs)
+    {
+        return new HtmlElement($this->element, $this->getValue(), $attrs);
+    }
 
-	/**
-	 * getAccessors
-	 *
-	 * @return  array
-	 *
-	 * @since   3.1.2
-	 */
-	protected function getAccessors()
-	{
-		return array_merge(parent::getAccessors(), [
-			'cols' => 'cols',
-			'rows' => 'rows'
-		]
-		);
-	}
+    /**
+     * getAccessors
+     *
+     * @return  array
+     *
+     * @since   3.1.2
+     */
+    protected function getAccessors()
+    {
+        return array_merge(parent::getAccessors(), [
+                'cols' => 'cols',
+                'rows' => 'rows',
+            ]
+        );
+    }
 }
 

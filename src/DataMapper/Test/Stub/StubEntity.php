@@ -17,24 +17,24 @@ use Windwalker\DataMapper\Entity\Entity;
  */
 class StubEntity extends Entity
 {
-	/**
-	 * getFooBarValue
-	 *
-	 * @return  string
-	 */
-	protected function getFooBarValue()
-	{
-		return 'foo_bar';
-	}
+    /**
+     * getFooBarValue
+     *
+     * @return  string
+     */
+    protected function getFooBarValue()
+    {
+        return 'foo_bar';
+    }
 
-	/**
-	 * setFooBarValue
-	 *
-	 * @param $value
-	 */
-	protected function setFlowerSakuraValue($value)
-	{
-		$this->addField('flower_sakura');
-		$this->data['flower_sakura'] = $value . '_bar';
-	}
+    /**
+     * setFooBarValue
+     *
+     * @param $value
+     */
+    protected function setFlowerSakuraValue($value)
+    {
+        $this->addField('flower_sakura');
+        $this->data['flower_sakura'] = $value . '_bar';
+    }
 }

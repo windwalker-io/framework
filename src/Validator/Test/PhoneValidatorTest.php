@@ -17,62 +17,62 @@ use Windwalker\Validator\Rule\PhoneValidator;
  */
 class PhoneValidatorTest extends AbstractValidateTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var PhoneValidator
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var PhoneValidator
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new PhoneValidator;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new PhoneValidator;
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * testCase
-	 *
-	 * @return  array
-	 */
-	public function validateCase()
-	{
-		return [
-			[
-				'case1',
-				'0225647186',
-				true
-			],
-			[
-				'case2',
-				'0-800-456-7890',
-				true
-			],
-			[
-				'555-365-4785',
-				'',
-				true
-			],
-			[
-				'case4',
-				'4684521546874',
-				true
-			],
-		];
-	}
+    /**
+     * testCase
+     *
+     * @return  array
+     */
+    public function validateCase()
+    {
+        return [
+            [
+                'case1',
+                '0225647186',
+                true,
+            ],
+            [
+                'case2',
+                '0-800-456-7890',
+                true,
+            ],
+            [
+                '555-365-4785',
+                '',
+                true,
+            ],
+            [
+                'case4',
+                '4684521546874',
+                true,
+            ],
+        ];
+    }
 }

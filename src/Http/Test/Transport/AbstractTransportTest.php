@@ -23,256 +23,253 @@ use Windwalker\Uri\UriHelper;
  */
 abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Property options.
-	 *
-	 * @var  array
-	 */
-	protected $options = [
-		'options' => []
-	];
+    /**
+     * Property options.
+     *
+     * @var  array
+     */
+    protected $options = [
+        'options' => [],
+    ];
 
-	/**
-	 * Test instance.
-	 *
-	 * @var AbstractTransport
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var AbstractTransport
+     */
+    protected $instance;
 
-	/**
-	 * Property downloadFile.
-	 *
-	 * @var  string
-	 */
-	protected $destFile;
+    /**
+     * Property downloadFile.
+     *
+     * @var  string
+     */
+    protected $destFile;
 
-	/**
-	 * setUpBeforeClass
-	 *
-	 * @return  void
-	 */
-	public static function setUpBeforeClass()
-	{
-		if (!defined('WINDWALKER_TEST_HTTP_URL'))
-		{
-			static::markTestSkipped('No WINDWALKER_TEST_HTTP_URL provided');
-		}
-	}
+    /**
+     * setUpBeforeClass
+     *
+     * @return  void
+     */
+    public static function setUpBeforeClass()
+    {
+        if (!defined('WINDWALKER_TEST_HTTP_URL')) {
+            static::markTestSkipped('No WINDWALKER_TEST_HTTP_URL provided');
+        }
+    }
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		if (!$this->instance->isSupported())
-		{
-			$this->markTestSkipped(get_class($this->instance) . ' driver not supported.');
-		}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        if (!$this->instance->isSupported()) {
+            $this->markTestSkipped(get_class($this->instance) . ' driver not supported.');
+        }
 
-		$this->destFile = __DIR__ . '/downloaded.tmp';
-	}
+        $this->destFile = __DIR__ . '/downloaded.tmp';
+    }
 
-	/**
-	 * createRequest
-	 *
-	 * @param StreamInterface $stream
-	 *
-	 * @return Request
-	 */
-	protected function createRequest($stream = null)
-	{
-		return new Request($stream ? : new StringStream);
-	}
+    /**
+     * createRequest
+     *
+     * @param StreamInterface $stream
+     *
+     * @return Request
+     */
+    protected function createRequest($stream = null)
+    {
+        return new Request($stream ?: new StringStream);
+    }
 
-	/**
-	 * testRequestGet
-	 *
-	 * @return  void
-	 */
-	public function testRequestGet()
-	{
-		$request = $this->createRequest();
+    /**
+     * testRequestGet
+     *
+     * @return  void
+     */
+    public function testRequestGet()
+    {
+        $request = $this->createRequest();
 
-		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
-			->withMethod('GET');
+        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
+            ->withMethod('GET');
 
-		$response = $this->instance->request($request);
+        $response = $this->instance->request($request);
 
-		$this->assertEquals(200, $response->getStatusCode());
-		$this->assertJson($response->getBody()->getContents());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertJson($response->getBody()->getContents());
 
-		$request = $this->createRequest();
+        $request = $this->createRequest();
 
-		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar&baz[3]=yoo'))
-			->withMethod('GET');
+        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar&baz[3]=yoo'))
+            ->withMethod('GET');
 
-		$response = $this->instance->request($request);
+        $response = $this->instance->request($request);
 
-		$data = json_decode($response->getBody()->getContents(), true);
-		$this->assertEquals(['foo' => 'bar', 'baz' => [3 => 'yoo']], $data['_GET']);
-	}
+        $data = json_decode($response->getBody()->getContents(), true);
+        $this->assertEquals(['foo' => 'bar', 'baz' => [3 => 'yoo']], $data['_GET']);
+    }
 
-	/**
-	 * testBadDomainGet
-	 *
-	 * @return  void
-	 *
-	 * @expectedException  \RuntimeException
-	 */
-	public function testBadDomainGet()
-	{
-		$request = $this->createRequest();
+    /**
+     * testBadDomainGet
+     *
+     * @return  void
+     *
+     * @expectedException  \RuntimeException
+     */
+    public function testBadDomainGet()
+    {
+        $request = $this->createRequest();
 
-		$request = $request->withUri(new PsrUri('http://not.exists.url/flower.sakura'))
-			->withMethod('GET');
+        $request = $request->withUri(new PsrUri('http://not.exists.url/flower.sakura'))
+            ->withMethod('GET');
 
-		$this->instance->request($request);
-	}
+        $this->instance->request($request);
+    }
 
-	/**
-	 * testBadPathGet
-	 *
-	 * @return  void
-	 */
-	public function testBadPathGet()
-	{
-		$request = $this->createRequest();
+    /**
+     * testBadPathGet
+     *
+     * @return  void
+     */
+    public function testBadPathGet()
+    {
+        $request = $this->createRequest();
 
-		$request = $request->withUri(new PsrUri(dirname(WINDWALKER_TEST_HTTP_URL) . '/wrong.php'))
-			->withMethod('POST');
+        $request = $request->withUri(new PsrUri(dirname(WINDWALKER_TEST_HTTP_URL) . '/wrong.php'))
+            ->withMethod('POST');
 
-		$request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
+        $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
 
-		$response = $this->instance->request($request);
+        $response = $this->instance->request($request);
 
-		$this->assertEquals(404, $response->getStatusCode());
-		$this->assertEquals('Not Found', $response->getReasonPhrase());
-	}
+        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals('Not Found', $response->getReasonPhrase());
+    }
 
-	/**
-	 * testRequestPost
-	 *
-	 * @return  void
-	 */
-	public function testRequestPost()
-	{
-		$request = $this->createRequest();
+    /**
+     * testRequestPost
+     *
+     * @return  void
+     */
+    public function testRequestPost()
+    {
+        $request = $this->createRequest();
 
-		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
-			->withMethod('POST');
+        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
+            ->withMethod('POST');
 
-		$request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
+        $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
 
-		$response = $this->instance->request($request);
+        $response = $this->instance->request($request);
 
-		$data = json_decode($response->getBody()->getContents(), true);
+        $data = json_decode($response->getBody()->getContents(), true);
 
-		$this->assertEquals(['foo' => 'bar'], $data['_POST']);
-	}
+        $this->assertEquals(['foo' => 'bar'], $data['_POST']);
+    }
 
-	/**
-	 * testRequestPut
-	 *
-	 * @return  void
-	 */
-	public function testRequestPut()
-	{
-		$request = $this->createRequest();
+    /**
+     * testRequestPut
+     *
+     * @return  void
+     */
+    public function testRequestPut()
+    {
+        $request = $this->createRequest();
 
-		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
-			->withMethod('PUT');
+        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL))
+            ->withMethod('PUT');
 
-		$request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
+        $request->getBody()->write(UriHelper::buildQuery(['foo' => 'bar']));
 
-		$response = $this->instance->request($request);
+        $response = $this->instance->request($request);
 
-		$data = json_decode($response->getBody()->getContents(), true);
+        $data = json_decode($response->getBody()->getContents(), true);
 
-		$this->assertEquals(['foo' => 'bar'], $data['data']);
-		$this->assertEquals('PUT', $data['_SERVER']['REQUEST_METHOD']);
-	}
+        $this->assertEquals(['foo' => 'bar'], $data['data']);
+        $this->assertEquals('PUT', $data['_SERVER']['REQUEST_METHOD']);
+    }
 
-	/**
-	 * testRequestCredentials
-	 *
-	 * @return  void
-	 */
-	public function testRequestCredentials()
-	{
-		$request = $this->createRequest();
+    /**
+     * testRequestCredentials
+     *
+     * @return  void
+     */
+    public function testRequestCredentials()
+    {
+        $request = $this->createRequest();
 
-		$uri = new PsrUri(WINDWALKER_TEST_HTTP_URL);
-		$uri = $uri->withUserInfo('username', 'pass1234');
+        $uri = new PsrUri(WINDWALKER_TEST_HTTP_URL);
+        $uri = $uri->withUserInfo('username', 'pass1234');
 
-		$request = $request->withUri($uri)
-			->withMethod('GET');
+        $request = $request->withUri($uri)
+            ->withMethod('GET');
 
-		$response = $this->instance->request($request);
+        $response = $this->instance->request($request);
 
-		$data = json_decode($response->getBody()->getContents(), true);
+        $data = json_decode($response->getBody()->getContents(), true);
 
-		$this->assertEquals('username', $data['_SERVER']['PHP_AUTH_USER']);
-		$this->assertEquals('pass1234', $data['_SERVER']['PHP_AUTH_PW']);
-	}
+        $this->assertEquals('username', $data['_SERVER']['PHP_AUTH_USER']);
+        $this->assertEquals('pass1234', $data['_SERVER']['PHP_AUTH_PW']);
+    }
 
-	/**
-	 * testRequestPostScalar
-	 *
-	 * @return  void
-	 */
-	public function testRequestPostScalar()
-	{
-		$request = $this->createRequest();
+    /**
+     * testRequestPostScalar
+     *
+     * @return  void
+     */
+    public function testRequestPostScalar()
+    {
+        $request = $this->createRequest();
 
-		$request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar'))
-			->withMethod('POST');
+        $request = $request->withUri(new PsrUri(WINDWALKER_TEST_HTTP_URL . '?foo=bar'))
+            ->withMethod('POST');
 
-		$request->getBody()->write('flower=sakura');
+        $request->getBody()->write('flower=sakura');
 
-		$response = $this->instance->request($request);
+        $response = $this->instance->request($request);
 
-		$data = json_decode($response->getBody()->getContents(), true);
+        $data = json_decode($response->getBody()->getContents(), true);
 
-		$this->assertEquals(['foo' => 'bar'], $data['_GET']);
-		$this->assertEquals(['flower' => 'sakura'], $data['_POST']);
-	}
+        $this->assertEquals(['foo' => 'bar'], $data['_GET']);
+        $this->assertEquals(['flower' => 'sakura'], $data['_POST']);
+    }
 
-	/**
-	 * testDownload
-	 *
-	 * @return  void
-	 */
-	public function testDownload()
-	{
-		$this->unlinkDownloaded();
+    /**
+     * testDownload
+     *
+     * @return  void
+     */
+    public function testDownload()
+    {
+        $this->unlinkDownloaded();
 
-		$this->assertFileNotExists((string) $this->destFile);
+        $this->assertFileNotExists((string)$this->destFile);
 
-		$request = $this->createRequest(new Stream);
+        $request = $this->createRequest(new Stream);
 
-		$src = dirname(WINDWALKER_TEST_HTTP_URL) . '/download_stub.txt';
+        $src = dirname(WINDWALKER_TEST_HTTP_URL) . '/download_stub.txt';
 
-		$request = $request->withUri(new PsrUri($src))
-			->withMethod('GET');
+        $request = $request->withUri(new PsrUri($src))
+            ->withMethod('GET');
 
-		$response = $this->instance->download($request, $this->destFile);
+        $response = $this->instance->download($request, $this->destFile);
 
-		$this->assertEquals('This is test download file.', trim(file_get_contents($this->destFile)));
-	}
+        $this->assertEquals('This is test download file.', trim(file_get_contents($this->destFile)));
+    }
 
-	/**
-	 * unlinkDownloaded
-	 *
-	 * @return  void
-	 */
-	protected function unlinkDownloaded()
-	{
-		if (is_file($this->destFile))
-		{
-			@unlink($this->destFile);
-		}
-	}
+    /**
+     * unlinkDownloaded
+     *
+     * @return  void
+     */
+    protected function unlinkDownloaded()
+    {
+        if (is_file($this->destFile)) {
+            @unlink($this->destFile);
+        }
+    }
 }

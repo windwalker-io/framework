@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -17,33 +17,33 @@ use Windwalker\Router\Route;
  */
 interface MatcherInterface
 {
-	/**
-	 * Match routes.
-	 *
-	 * @param string $route
-	 * @param string $method
-	 * @param array  $options
-	 *
-	 * @return  Route|false
-	 */
-	public function match($route, $method = 'GET', $options = []);
+    /**
+     * Match routes.
+     *
+     * @param string $route
+     * @param string $method
+     * @param array  $options
+     *
+     * @return  Route|false
+     */
+    public function match($route, $method = 'GET', $options = []);
 
-	/**
-	 * build
-	 *
-	 * @param Route $route
-	 * @param array $data
-	 *
-	 * @return  string
-	 */
-	public function build(Route $route, $data = []);
+    /**
+     * build
+     *
+     * @param Route $route
+     * @param array $data
+     *
+     * @return  string
+     */
+    public function build(Route $route, $data = []);
 
-	/**
-	 * Set Routes
-	 *
-	 * @param Route[] $routes
-	 *
-	 * @return  static
-	 */
-	public function setRoutes(array $routes);
+    /**
+     * Set Routes
+     *
+     * @param Route[] $routes
+     *
+     * @return  static
+     */
+    public function setRoutes(array $routes);
 }

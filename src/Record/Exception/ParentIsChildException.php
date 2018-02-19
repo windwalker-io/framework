@@ -15,5 +15,5 @@ namespace Windwalker\Record\Exception;
  */
 class ParentIsChildException extends WrongParentException
 {
-	//
+    //
 }

@@ -15,41 +15,41 @@ namespace Windwalker\Query\Test;
  */
 trait QueryTestTrait
 {
-	/**
-	 * testSuffix
-	 *
-	 * @return  void
-	 */
-	public function testSuffix()
-	{
-		$query = $this->getQuery()
-			->select('*')
-			->from('foo')
-			->where('a = b')
-			->order('id')
-			->suffix('FOR UPDATE');
+    /**
+     * testSuffix
+     *
+     * @return  void
+     */
+    public function testSuffix()
+    {
+        $query = $this->getQuery()
+            ->select('*')
+            ->from('foo')
+            ->where('a = b')
+            ->order('id')
+            ->suffix('FOR UPDATE');
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id FOR UPDATE';
+        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id FOR UPDATE';
 
-		$this->assertEquals($this->format($sql), $this->format($query));
-	}
+        $this->assertEquals($this->format($sql), $this->format($query));
+    }
 
-	/**
-	 * testForUpdate
-	 *
-	 * @return  void
-	 */
-	public function testForUpdate()
-	{
-		$query = $this->getQuery()
-			->select('*')
-			->from('foo')
-			->where('a = b')
-			->order('id')
-			->forUpdate();
+    /**
+     * testForUpdate
+     *
+     * @return  void
+     */
+    public function testForUpdate()
+    {
+        $query = $this->getQuery()
+            ->select('*')
+            ->from('foo')
+            ->where('a = b')
+            ->order('id')
+            ->forUpdate();
 
-		$sql = 'SELECT * FROM foo WHERE a = b ORDER BY id FOR UPDATE';
+        $sql = 'SELECT * FROM foo WHERE a = b ORDER BY id FOR UPDATE';
 
-		$this->assertEquals($this->format($sql), $this->format($query));
-	}
+        $this->assertEquals($this->format($sql), $this->format($query));
+    }
 }

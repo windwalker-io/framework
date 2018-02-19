@@ -15,127 +15,122 @@ namespace Windwalker\Authorisation;
  */
 class Authorisation implements AuthorisationInterface
 {
-	/**
-	 * Property policies.
-	 *
-	 * @var  PolicyInterface[]
-	 */
-	protected $policies = [];
+    /**
+     * Property policies.
+     *
+     * @var  PolicyInterface[]
+     */
+    protected $policies = [];
 
-	/**
-	 * authorise
-	 *
-	 * @param string $policy
-	 * @param mixed  $user
-	 * @param mixed  $data
-	 *
-	 * @return  boolean
-	 */
-	public function authorise($policy, $user, $data = null)
-	{
-		if (!$this->hasPolicy($policy))
-		{
-			throw new \OutOfBoundsException(sprintf('Policy "%s" not exists', $policy));
-		}
-		
-		$args = func_get_args();
-		array_shift($args);
+    /**
+     * authorise
+     *
+     * @param string $policy
+     * @param mixed  $user
+     * @param mixed  $data
+     *
+     * @return  boolean
+     */
+    public function authorise($policy, $user, $data = null)
+    {
+        if (!$this->hasPolicy($policy)) {
+            throw new \OutOfBoundsException(sprintf('Policy "%s" not exists', $policy));
+        }
 
-		return call_user_func_array([$this->getPolicy($policy), 'authorise'], $args);
-	}
+        $args = func_get_args();
+        array_shift($args);
 
-	/**
-	 * addPolicy
-	 *
-	 * @param   string                   $name
-	 * @param   PolicyInterface|callable $handler
-	 *
-	 * @return  static
-	 */
-	public function addPolicy($name, $handler)
-	{
-		if (is_callable($handler))
-		{
-			$handler = new CallbackPolicy($handler);
-		}
+        return call_user_func_array([$this->getPolicy($policy), 'authorise'], $args);
+    }
 
-		if (!$handler instanceof PolicyInterface)
-		{
-			throw new \InvalidArgumentException('Not a valid policy, please give a callable or PolicyInterface');
-		}
+    /**
+     * addPolicy
+     *
+     * @param   string                   $name
+     * @param   PolicyInterface|callable $handler
+     *
+     * @return  static
+     */
+    public function addPolicy($name, $handler)
+    {
+        if (is_callable($handler)) {
+            $handler = new CallbackPolicy($handler);
+        }
 
-		$this->policies[$name] = $handler;
+        if (!$handler instanceof PolicyInterface) {
+            throw new \InvalidArgumentException('Not a valid policy, please give a callable or PolicyInterface');
+        }
 
-		return $this;
-	}
+        $this->policies[$name] = $handler;
 
-	/**
-	 * getPolicy
-	 *
-	 * @param   string  $name
-	 *
-	 * @return  PolicyInterface
-	 */
-	public function getPolicy($name)
-	{
-		if (isset($this->policies[$name]))
-		{
-			return $this->policies[$name];
-		}
+        return $this;
+    }
 
-		return null;
-	}
+    /**
+     * getPolicy
+     *
+     * @param   string $name
+     *
+     * @return  PolicyInterface
+     */
+    public function getPolicy($name)
+    {
+        if (isset($this->policies[$name])) {
+            return $this->policies[$name];
+        }
 
-	/**
-	 * registerPolicy
-	 *
-	 * @param PolicyProviderInterface $policy
-	 *
-	 * @return  static
-	 */
-	public function registerPolicyProvider(PolicyProviderInterface $policy)
-	{
-		$policy->register($this);
+        return null;
+    }
 
-		return $this;
-	}
+    /**
+     * registerPolicy
+     *
+     * @param PolicyProviderInterface $policy
+     *
+     * @return  static
+     */
+    public function registerPolicyProvider(PolicyProviderInterface $policy)
+    {
+        $policy->register($this);
 
-	/**
-	 * hasPolicy
-	 *
-	 * @param   string  $name
-	 *
-	 * @return  boolean
-	 */
-	public function hasPolicy($name)
-	{
-		return isset($this->policies[$name]);
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to get property Policies
-	 *
-	 * @return  PolicyInterface[]
-	 */
-	public function getPolicies()
-	{
-		return $this->policies;
-	}
+    /**
+     * hasPolicy
+     *
+     * @param   string $name
+     *
+     * @return  boolean
+     */
+    public function hasPolicy($name)
+    {
+        return isset($this->policies[$name]);
+    }
 
-	/**
-	 * Method to set property policies
-	 *
-	 * @param   PolicyInterface[] $policies
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setPolicies($policies)
-	{
-		foreach ($policies as $name => $policy)
-		{
-			$this->addPolicy($name, $policy);
-		}
+    /**
+     * Method to get property Policies
+     *
+     * @return  PolicyInterface[]
+     */
+    public function getPolicies()
+    {
+        return $this->policies;
+    }
 
-		return $this;
-	}
+    /**
+     * Method to set property policies
+     *
+     * @param   PolicyInterface[] $policies
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setPolicies($policies)
+    {
+        foreach ($policies as $name => $policy) {
+            $this->addPolicy($name, $policy);
+        }
+
+        return $this;
+    }
 }

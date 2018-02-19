@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project. 
+ * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,62 +12,62 @@ use Windwalker\Dom\HtmlElement;
 
 /**
  * The HtmlOption class.
- * 
+ *
  * @since  2.0
  */
 class Option extends HtmlElement
 {
-	/**
-	 * Property value.
-	 *
-	 * @var  string
-	 */
-	protected $value = '';
+    /**
+     * Property value.
+     *
+     * @var  string
+     */
+    protected $value = '';
 
-	/**
-	 * Property attributes.
-	 *
-	 * @var  string
-	 */
-	protected $attributes = [];
+    /**
+     * Property attributes.
+     *
+     * @var  string
+     */
+    protected $attributes = [];
 
-	/**
-	 * @param string $text
-	 * @param string $value
-	 * @param array  $attribs
-	 */
-	public function __construct($text = null, $value = null, $attribs = [])
-	{
-		$this->value = $value;
+    /**
+     * @param string $text
+     * @param string $value
+     * @param array  $attribs
+     */
+    public function __construct($text = null, $value = null, $attribs = [])
+    {
+        $this->value = $value;
 
-		$attribs['value'] = $value;
+        $attribs['value'] = $value;
 
-		parent::__construct('option', $text, $attribs);
-	}
+        parent::__construct('option', $text, $attribs);
+    }
 
-	/**
-	 * Method to get property Value
-	 *
-	 * @return  string
-	 */
-	public function getValue()
-	{
-		return $this->value;
-	}
+    /**
+     * Method to get property Value
+     *
+     * @return  string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-	/**
-	 * Method to set property value
-	 *
-	 * @param   string $value
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setValue($value)
-	{
-		$this->value = $value;
+    /**
+     * Method to set property value
+     *
+     * @param   string $value
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
 
-		$this['value'] = $value;
+        $this['value'] = $value;
 
-		return $this;
-	}
+        return $this;
+    }
 }

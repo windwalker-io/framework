@@ -19,50 +19,50 @@ use Windwalker\Dom\HtmlElements;
  */
 class HtmlElementsTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var HtmlElements
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var HtmlElements
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$elements = [
-			new HtmlElement('p', 'foo'),
-			new HtmlElement('table', new HtmlElement('tr', new HtmlElement('td', 'bar'))),
-			new HtmlElement('div', 'yoo', ['id' => 'fly']),
-		];
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $elements = [
+            new HtmlElement('p', 'foo'),
+            new HtmlElement('table', new HtmlElement('tr', new HtmlElement('td', 'bar'))),
+            new HtmlElement('div', 'yoo', ['id' => 'fly']),
+        ];
 
-		$this->instance = new HtmlElements($elements);
-	}
+        $this->instance = new HtmlElements($elements);
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * Method to test __toString().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Dom\DomElements::__toString
-	 */
-	public function test__toString()
-	{
-		$expect = <<<DOM
+    /**
+     * Method to test __toString().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Dom\DomElements::__toString
+     */
+    public function test__toString()
+    {
+        $expect = <<<DOM
 <p>foo</p>
 <table>
 	<tr>
@@ -72,9 +72,9 @@ class HtmlElementsTest extends \PHPUnit\Framework\TestCase
 <div id="fly">yoo</div>
 DOM;
 
-		$this->assertEquals(
-			DomHelper::minify($expect),
-			DomHelper::minify($this->instance)
-		);
-	}
+        $this->assertEquals(
+            DomHelper::minify($expect),
+            DomHelper::minify($this->instance)
+        );
+    }
 }

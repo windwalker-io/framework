@@ -17,40 +17,40 @@ use Windwalker\Console\Command\Command;
  */
 class AaaCommand extends Command
 {
-	/**
-	 * Command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'aaa';
+    /**
+     * Command name.
+     *
+     * @var string
+     */
+    protected $name = 'aaa';
 
-	/**
-	 * Initialise command.
-	 *
-	 * @return void
-	 *
-	 * @since  2.0
-	 */
-	public function init()
-	{
-		$this->addCommand(new Aaa\BbbCommand);
+    /**
+     * Initialise command.
+     *
+     * @return void
+     *
+     * @since  2.0
+     */
+    public function init()
+    {
+        $this->addCommand(new Aaa\BbbCommand);
 
-		$this->addGlobalOption('a')
-			->alias('aaa')
-			->alias('a3')
-			->defaultValue(true)
-			->description('AAA options');
-	}
+        $this->addGlobalOption('a')
+            ->alias('aaa')
+            ->alias('a3')
+            ->defaultValue(true)
+            ->description('AAA options');
+    }
 
-	/**
-	 * doExecute
-	 *
-	 * @return int
-	 *
-	 * @since  2.0
-	 */
-	public function doExecute()
-	{
-		echo 'Aaa';
-	}
+    /**
+     * doExecute
+     *
+     * @return int
+     *
+     * @since  2.0
+     */
+    public function doExecute()
+    {
+        echo 'Aaa';
+    }
 }

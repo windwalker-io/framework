@@ -15,42 +15,42 @@ use Windwalker\Event\Event;
  */
 class SomethingListener
 {
-	/**
-	 * Listen to onBeforeSomething.
-	 *
-	 * @param   Event  $event  The event.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.0
-	 */
-	public function onBeforeSomething(Event $event)
-	{
-	}
+    /**
+     * Listen to onBeforeSomething.
+     *
+     * @param   Event $event The event.
+     *
+     * @return  void
+     *
+     * @since   2.0
+     */
+    public function onBeforeSomething(Event $event)
+    {
+    }
 
-	/**
-	 * Listen to onSomething.
-	 *
-	 * @param   Event  $event  The event.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.0
-	 */
-	public function onSomething(Event $event)
-	{
-	}
+    /**
+     * Listen to onSomething.
+     *
+     * @param   Event $event The event.
+     *
+     * @return  void
+     *
+     * @since   2.0
+     */
+    public function onSomething(Event $event)
+    {
+    }
 
-	/**
-	 * Listen to onAfterSomething.
-	 *
-	 * @param   Event  $event  The event.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.0
-	 */
-	public function onAfterSomething(Event $event)
-	{
-	}
+    /**
+     * Listen to onAfterSomething.
+     *
+     * @param   Event $event The event.
+     *
+     * @return  void
+     *
+     * @since   2.0
+     */
+    public function onAfterSomething(Event $event)
+    {
+    }
 }

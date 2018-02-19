@@ -10,11 +10,11 @@ namespace Windwalker\Renderer;
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
-use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\View\FileViewFinder;
 use Illuminate\View\Factory as BladeEnvironment;
+use Illuminate\View\FileViewFinder;
 use Windwalker\Renderer\Blade\BladeExtending;
 use Windwalker\Renderer\Blade\GlobalContainer;
 
@@ -25,356 +25,337 @@ use Windwalker\Renderer\Blade\GlobalContainer;
  */
 class BladeRenderer extends AbstractEngineRenderer
 {
-	/**
-	 * Property blade.
-	 *
-	 * @var  BladeEnvironment
-	 */
-	protected $engine = null;
+    /**
+     * Property blade.
+     *
+     * @var  BladeEnvironment
+     */
+    protected $engine = null;
 
-	/**
-	 * Property filesystem.
-	 *
-	 * @var Filesystem
-	 */
-	protected $filesystem;
+    /**
+     * Property filesystem.
+     *
+     * @var Filesystem
+     */
+    protected $filesystem;
 
-	/**
-	 * Property finder.
-	 *
-	 * @var FileViewFinder
-	 */
-	protected $finder;
+    /**
+     * Property finder.
+     *
+     * @var FileViewFinder
+     */
+    protected $finder;
 
-	/**
-	 * Property resolver.
-	 *
-	 * @var EngineResolver
-	 */
-	protected $resolver;
+    /**
+     * Property resolver.
+     *
+     * @var EngineResolver
+     */
+    protected $resolver;
 
-	/**
-	 * Property dispatcher.
-	 *
-	 * @var Dispatcher
-	 */
-	protected $dispatcher;
+    /**
+     * Property dispatcher.
+     *
+     * @var Dispatcher
+     */
+    protected $dispatcher;
 
-	/**
-	 * Property compiler.
-	 *
-	 * @var CompilerEngine
-	 */
-	protected $compiler;
+    /**
+     * Property compiler.
+     *
+     * @var CompilerEngine
+     */
+    protected $compiler;
 
-	/**
-	 * Property customCompiler.
-	 *
-	 * @var  callable[]
-	 */
-	protected $customCompilers = [];
+    /**
+     * Property customCompiler.
+     *
+     * @var  callable[]
+     */
+    protected $customCompilers = [];
 
-	/**
-	 * render
-	 *
-	 * @param string $file
-	 * @param array  $data
-	 *
-	 * @return  string
-	 */
-	public function render($file, $data = [])
-	{
-		if ($data instanceof \Traversable)
-		{
-			$data = iterator_to_array($data);
-		}
+    /**
+     * render
+     *
+     * @param string $file
+     * @param array  $data
+     *
+     * @return  string
+     */
+    public function render($file, $data = [])
+    {
+        if ($data instanceof \Traversable) {
+            $data = iterator_to_array($data);
+        }
 
-		if (is_object($data))
-		{
-			$data = get_object_vars($data);
-		}
-		
-		return $this->getEngine()->make($file, (array) $data)->render();
-	}
+        if (is_object($data)) {
+            $data = get_object_vars($data);
+        }
 
-	/**
-	 * Method to get property Blade
-	 *
-	 * @param bool $new
-	 *
-	 * @return  BladeEnvironment
-	 */
-	public function getEngine($new = false)
-	{
-		if (!$this->engine || $new)
-		{
-			$this->engine = new BladeEnvironment($this->getResolver(), $this->getFinder(), $this->getDispatcher());
+        return $this->getEngine()->make($file, (array)$data)->render();
+    }
 
-			/** @var BladeCompiler $bladeCompiler */
-			$bladeCompiler = $this->getCompiler()->getCompiler();
+    /**
+     * Method to get property Blade
+     *
+     * @param bool $new
+     *
+     * @return  BladeEnvironment
+     */
+    public function getEngine($new = false)
+    {
+        if (!$this->engine || $new) {
+            $this->engine = new BladeEnvironment($this->getResolver(), $this->getFinder(), $this->getDispatcher());
 
-			foreach (GlobalContainer::getCompilers() as $name => $callback)
-			{
-				BladeExtending::extend($bladeCompiler, $name, $callback);
-			}
+            /** @var BladeCompiler $bladeCompiler */
+            $bladeCompiler = $this->getCompiler()->getCompiler();
 
-			foreach ($this->getCustomCompilers() as $name => $callback)
-			{
-				BladeExtending::extend($bladeCompiler, $name, $callback);
-			}
+            foreach (GlobalContainer::getCompilers() as $name => $callback) {
+                BladeExtending::extend($bladeCompiler, $name, $callback);
+            }
 
-			foreach (GlobalContainer::getExtensions() as $name => $callback)
-			{
-				$bladeCompiler->extend($callback);
-			}
+            foreach ($this->getCustomCompilers() as $name => $callback) {
+                BladeExtending::extend($bladeCompiler, $name, $callback);
+            }
 
-			// B/C for 4.* and 5.*
-			if ($rawTags = GlobalContainer::getRawTags() && is_callable([$bladeCompiler, 'setRawTags']))
-			{
-				$bladeCompiler->setRawTags($rawTags[0], $rawTags[1]);
-			}
+            foreach (GlobalContainer::getExtensions() as $name => $callback) {
+                $bladeCompiler->extend($callback);
+            }
 
-			if ($tags = GlobalContainer::getContentTags())
-			{
-				$bladeCompiler->setContentTags($tags[0], $tags[1]);
-			}
+            // B/C for 4.* and 5.*
+            if ($rawTags = GlobalContainer::getRawTags() && is_callable([$bladeCompiler, 'setRawTags'])) {
+                $bladeCompiler->setRawTags($rawTags[0], $rawTags[1]);
+            }
 
-			if ($tags = GlobalContainer::getEscapedTags())
-			{
-				$bladeCompiler->setEscapedContentTags($tags[0], $tags[1]);
-			}
-		}
+            if ($tags = GlobalContainer::getContentTags()) {
+                $bladeCompiler->setContentTags($tags[0], $tags[1]);
+            }
 
-		return $this->engine;
-	}
+            if ($tags = GlobalContainer::getEscapedTags()) {
+                $bladeCompiler->setEscapedContentTags($tags[0], $tags[1]);
+            }
+        }
 
-	/**
-	 * Method to set property blade
-	 *
-	 * @param   BladeEnvironment $blade
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setEngine($blade)
-	{
-		if (!($blade instanceof BladeEnvironment))
-		{
-			throw new \InvalidArgumentException('Engine object should be Illuminate\View\Environment.');
-		}
+        return $this->engine;
+    }
 
-		$this->engine = $blade;
+    /**
+     * Method to set property blade
+     *
+     * @param   BladeEnvironment $blade
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setEngine($blade)
+    {
+        if (!($blade instanceof BladeEnvironment)) {
+            throw new \InvalidArgumentException('Engine object should be Illuminate\View\Environment.');
+        }
 
-		return $this;
-	}
+        $this->engine = $blade;
 
-	/**
-	 * Method to get property Filesystem
-	 *
-	 * @return  Filesystem
-	 */
-	public function getFilesystem()
-	{
-		if (!$this->filesystem)
-		{
-			$this->filesystem = new Filesystem;
-		}
+        return $this;
+    }
 
-		return $this->filesystem;
-	}
+    /**
+     * Method to get property Filesystem
+     *
+     * @return  Filesystem
+     */
+    public function getFilesystem()
+    {
+        if (!$this->filesystem) {
+            $this->filesystem = new Filesystem;
+        }
 
-	/**
-	 * Method to set property filesystem
-	 *
-	 * @param   Filesystem $filesystem
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setFilesystem($filesystem)
-	{
-		$this->filesystem = $filesystem;
+        return $this->filesystem;
+    }
 
-		return $this;
-	}
+    /**
+     * Method to set property filesystem
+     *
+     * @param   Filesystem $filesystem
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setFilesystem($filesystem)
+    {
+        $this->filesystem = $filesystem;
 
-	/**
-	 * Method to get property Finder
-	 *
-	 * @return  FileViewFinder
-	 */
-	public function getFinder()
-	{
-		if (!$this->finder)
-		{
-			$this->finder = new FileViewFinder($this->getFilesystem(), $this->dumpPaths());
-		}
+        return $this;
+    }
 
-		return $this->finder;
-	}
+    /**
+     * Method to get property Finder
+     *
+     * @return  FileViewFinder
+     */
+    public function getFinder()
+    {
+        if (!$this->finder) {
+            $this->finder = new FileViewFinder($this->getFilesystem(), $this->dumpPaths());
+        }
 
-	/**
-	 * Method to set property finder
-	 *
-	 * @param   FileViewFinder $finder
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setFinder($finder)
-	{
-		$this->finder = $finder;
+        return $this->finder;
+    }
 
-		return $this;
-	}
+    /**
+     * Method to set property finder
+     *
+     * @param   FileViewFinder $finder
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setFinder($finder)
+    {
+        $this->finder = $finder;
 
-	/**
-	 * Method to get property Resolver
-	 *
-	 * @return  EngineResolver
-	 */
-	public function getResolver()
-	{
-		if (!$this->resolver)
-		{
-			$self = $this;
+        return $this;
+    }
 
-			$this->resolver = new EngineResolver;
+    /**
+     * Method to get property Resolver
+     *
+     * @return  EngineResolver
+     */
+    public function getResolver()
+    {
+        if (!$this->resolver) {
+            $self = $this;
 
-			$this->resolver->register(
-				'blade',
-				function() use ($self)
-				{
-					return $self->getCompiler();
-				}
-			);
-		}
+            $this->resolver = new EngineResolver;
 
-		return $this->resolver;
-	}
+            $this->resolver->register(
+                'blade',
+                function () use ($self) {
+                    return $self->getCompiler();
+                }
+            );
+        }
 
-	/**
-	 * Method to set property resolver
-	 *
-	 * @param   EngineResolver $resolver
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setResolver($resolver)
-	{
-		$this->resolver = $resolver;
+        return $this->resolver;
+    }
 
-		return $this;
-	}
+    /**
+     * Method to set property resolver
+     *
+     * @param   EngineResolver $resolver
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setResolver($resolver)
+    {
+        $this->resolver = $resolver;
 
-	/**
-	 * Method to get property Dispatcher
-	 *
-	 * @return  Dispatcher
-	 */
-	public function getDispatcher()
-	{
-		if (!$this->dispatcher)
-		{
-			$this->dispatcher = new Dispatcher;
-		}
+        return $this;
+    }
 
-		return $this->dispatcher;
-	}
+    /**
+     * Method to get property Dispatcher
+     *
+     * @return  Dispatcher
+     */
+    public function getDispatcher()
+    {
+        if (!$this->dispatcher) {
+            $this->dispatcher = new Dispatcher;
+        }
 
-	/**
-	 * Method to set property dispatcher
-	 *
-	 * @param   Dispatcher $dispatcher
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setDispatcher($dispatcher)
-	{
-		$this->dispatcher = $dispatcher;
+        return $this->dispatcher;
+    }
 
-		return $this;
-	}
+    /**
+     * Method to set property dispatcher
+     *
+     * @param   Dispatcher $dispatcher
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setDispatcher($dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
 
-	/**
-	 * Method to get property Compiler
-	 *
-	 * @return  CompilerEngine
-	 */
-	public function getCompiler()
-	{
-		if (!$this->compiler)
-		{
-			$cachePath = $this->config->get('cache_path') ? : GlobalContainer::getCachePath();
+        return $this;
+    }
 
-			if (!$cachePath)
-			{
-				throw new \InvalidArgumentException('Please set cache_path into config.');
-			}
+    /**
+     * Method to get property Compiler
+     *
+     * @return  CompilerEngine
+     */
+    public function getCompiler()
+    {
+        if (!$this->compiler) {
+            $cachePath = $this->config->get('cache_path') ?: GlobalContainer::getCachePath();
 
-			if (!is_dir($cachePath))
-			{
-				mkdir($cachePath, 0755, true);
-			}
+            if (!$cachePath) {
+                throw new \InvalidArgumentException('Please set cache_path into config.');
+            }
 
-			$this->compiler = new CompilerEngine(new BladeCompiler($this->getFilesystem(), $cachePath));
-		}
+            if (!is_dir($cachePath)) {
+                mkdir($cachePath, 0755, true);
+            }
 
-		return $this->compiler;
-	}
+            $this->compiler = new CompilerEngine(new BladeCompiler($this->getFilesystem(), $cachePath));
+        }
 
-	/**
-	 * Method to set property compiler
-	 *
-	 * @param   CompilerEngine $compiler
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setCompiler($compiler)
-	{
-		$this->compiler = $compiler;
+        return $this->compiler;
+    }
 
-		return $this;
-	}
+    /**
+     * Method to set property compiler
+     *
+     * @param   CompilerEngine $compiler
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setCompiler($compiler)
+    {
+        $this->compiler = $compiler;
 
-	/**
-	 * addCustomCompiler
-	 *
-	 * @param   string   $name
-	 * @param   callable $compiler
-	 *
-	 * @return  static
-	 */
-	public function addCustomCompiler($name, $compiler)
-	{
-		if (!is_callable($compiler))
-		{
-			throw new \InvalidArgumentException('Compiler should be callable.');
-		}
+        return $this;
+    }
 
-		$this->customCompilers[$name] = $compiler;
+    /**
+     * addCustomCompiler
+     *
+     * @param   string   $name
+     * @param   callable $compiler
+     *
+     * @return  static
+     */
+    public function addCustomCompiler($name, $compiler)
+    {
+        if (!is_callable($compiler)) {
+            throw new \InvalidArgumentException('Compiler should be callable.');
+        }
 
-		return $this;
-	}
+        $this->customCompilers[$name] = $compiler;
 
-	/**
-	 * Method to get property CustomCompiler
-	 *
-	 * @return  \callable[]
-	 */
-	public function getCustomCompilers()
-	{
-		return $this->customCompilers;
-	}
+        return $this;
+    }
 
-	/**
-	 * Method to set property customCompiler
-	 *
-	 * @param   \callable[] $customCompilers
-	 *
-	 * @return  static  Return self to support chaining.
-	 */
-	public function setCustomCompilers(array $customCompilers)
-	{
-		$this->customCompilers = $customCompilers;
+    /**
+     * Method to get property CustomCompiler
+     *
+     * @return  \callable[]
+     */
+    public function getCustomCompilers()
+    {
+        return $this->customCompilers;
+    }
 
-		return $this;
-	}
+    /**
+     * Method to set property customCompiler
+     *
+     * @param   \callable[] $customCompilers
+     *
+     * @return  static  Return self to support chaining.
+     */
+    public function setCustomCompilers(array $customCompilers)
+    {
+        $this->customCompilers = $customCompilers;
+
+        return $this;
+    }
 }

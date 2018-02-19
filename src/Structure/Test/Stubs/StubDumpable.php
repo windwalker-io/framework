@@ -15,29 +15,29 @@ namespace Windwalker\Structure\Test\Stubs;
  */
 class StubDumpable
 {
-	public $foo = 'foo';
+    public $foo = 'foo';
 
-	protected $bar = 'bar';
+    protected $bar = 'bar';
 
-	private $yoo = 'yoo';
+    private $yoo = 'yoo';
 
-	protected $data = [];
+    protected $data = [];
 
-	protected $iterator;
+    protected $iterator;
 
-	/**
-	 * StubDumpable constructor.
-	 *
-	 * @param static $child
-	 */
-	public function __construct($child = null)
-	{
-		$this->iterator = new \ArrayIterator(['wind' => 'walker']);
+    /**
+     * StubDumpable constructor.
+     *
+     * @param static $child
+     */
+    public function __construct($child = null)
+    {
+        $this->iterator = new \ArrayIterator(['wind' => 'walker']);
 
-		$this->data = [
-			'self' => $this,
-			'new' => $child,
-			'flower' => ['sakura', 'rose']
-		];
-	}
+        $this->data = [
+            'self' => $this,
+            'new' => $child,
+            'flower' => ['sakura', 'rose'],
+        ];
+    }
 }

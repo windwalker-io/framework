@@ -17,51 +17,51 @@ use Windwalker\Compare\NinCompare;
  */
 class NinCompareTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var NinCompare
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var NinCompare
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->instance = new NinCompare('sakura', ['rose', 'sunflower', 'sakura']);
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->instance = new NinCompare('sakura', ['rose', 'sunflower', 'sakura']);
+    }
 
-	/**
-	 * Method to test compare().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\InCompare::compare
-	 */
-	public function testCompare()
-	{
-		$this->assertFalse($this->instance->compare());
+    /**
+     * Method to test compare().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\InCompare::compare
+     */
+    public function testCompare()
+    {
+        $this->assertFalse($this->instance->compare());
 
-		$compare = new NinCompare('1', [1, 2, 3, 4, 5]);
+        $compare = new NinCompare('1', [1, 2, 3, 4, 5]);
 
-		$this->assertFalse($compare->compare());
-		$this->assertTrue($compare->compare(true));
-	}
+        $this->assertFalse($compare->compare());
+        $this->assertTrue($compare->compare(true));
+    }
 
-	/**
-	 * Method to test toString().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Compare\InCompare::toString
-	 */
-	public function testToString()
-	{
-		$this->assertEquals('sakura NOT IN (rose,sunflower,sakura)', $this->instance->toString());
-		$this->assertEquals('`sakura` NOT IN ("rose","sunflower","sakura")', $this->instance->toString('`', '"'));
-	}
+    /**
+     * Method to test toString().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Compare\InCompare::toString
+     */
+    public function testToString()
+    {
+        $this->assertEquals('sakura NOT IN (rose,sunflower,sakura)', $this->instance->toString());
+        $this->assertEquals('`sakura` NOT IN ("rose","sunflower","sakura")', $this->instance->toString('`', '"'));
+    }
 }

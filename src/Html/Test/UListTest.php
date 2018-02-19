@@ -8,9 +8,9 @@
 
 namespace Windwalker\Html\Test;
 
+use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Html\Enum\ListItem;
 use Windwalker\Html\Enum\UList;
-use Windwalker\Dom\Test\AbstractDomTestCase;
 
 /**
  * Test class of UList
@@ -19,57 +19,57 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
  */
 class UListTest extends AbstractDomTestCase
 {
-	/**
-	 * Test instance.
-	 *
-	 * @var UList
-	 */
-	protected $instance;
+    /**
+     * Test instance.
+     *
+     * @var UList
+     */
+    protected $instance;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+    }
 
-	/**
-	 * testCreateList
-	 *
-	 * @return  void
-	 */
-	public function testCreateList()
-	{
-		$list = new UList;
+    /**
+     * testCreateList
+     *
+     * @return  void
+     */
+    public function testCreateList()
+    {
+        $list = new UList;
 
-		$this->assertEquals('<ul></ul>', (string) $list);
+        $this->assertEquals('<ul></ul>', (string)$list);
 
-		$list = new UList(null, ['id' => 'list', 'class' => 'nav']);
+        $list = new UList(null, ['id' => 'list', 'class' => 'nav']);
 
-		$this->assertEquals('<ul id="list" class="nav"></ul>', (string) $list);
+        $this->assertEquals('<ul id="list" class="nav"></ul>', (string)$list);
 
-		$items = [
-			new ListItem('Remember, with great power, comes great responsibility'),
-			new ListItem('Life was like a box of chocolates.'),
-			new ListItem('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item'])
-		];
+        $items = [
+            new ListItem('Remember, with great power, comes great responsibility'),
+            new ListItem('Life was like a box of chocolates.'),
+            new ListItem('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item']),
+        ];
 
-		$list = new UList($items);
+        $list = new UList($items);
 
-		$html = <<<HTML
+        $html = <<<HTML
 <ul>
 	<li>Remember, with great power, comes great responsibility</li>
 	<li>Life was like a box of chocolates.</li>
@@ -77,50 +77,50 @@ class UListTest extends AbstractDomTestCase
 </ul>
 HTML;
 
-		$this->assertHtmlFormatEquals($html, (string) $list);
-	}
+        $this->assertHtmlFormatEquals($html, (string)$list);
+    }
 
-	/**
-	 * Method to test addItem().
-	 *
-	 * @return void
-	 *
-	 * @covers \Windwalker\Html\Enum\AbstractHtmlList::addItem
-	 */
-	public function testAddItem()
-	{
-		$list = new UList;
+    /**
+     * Method to test addItem().
+     *
+     * @return void
+     *
+     * @covers \Windwalker\Html\Enum\AbstractHtmlList::addItem
+     */
+    public function testAddItem()
+    {
+        $list = new UList;
 
-		$list->addItem(new ListItem('123'))
-			->addItem('ABC');
+        $list->addItem(new ListItem('123'))
+            ->addItem('ABC');
 
-		$html = <<<HTML
+        $html = <<<HTML
 <ul>
 	<li>123</li>
 	<li>ABC</li>
 </ul>
 HTML;
 
-		$this->assertHtmlFormatEquals($html, $list);
-	}
+        $this->assertHtmlFormatEquals($html, $list);
+    }
 
-	/**
-	 * testSetItems
-	 *
-	 * @return  void
-	 */
-	public function testSetItems()
-	{
-		$items = [
-			new ListItem('Remember, with great power, comes great responsibility'),
-			new ListItem('Life was like a box of chocolates.'),
-			new ListItem('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item'])
-		];
+    /**
+     * testSetItems
+     *
+     * @return  void
+     */
+    public function testSetItems()
+    {
+        $items = [
+            new ListItem('Remember, with great power, comes great responsibility'),
+            new ListItem('Life was like a box of chocolates.'),
+            new ListItem('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item']),
+        ];
 
-		$list = new UList;
-		$list->setItems($items);
+        $list = new UList;
+        $list->setItems($items);
 
-		$html = <<<HTML
+        $html = <<<HTML
 <ul>
 	<li>Remember, with great power, comes great responsibility</li>
 	<li>Life was like a box of chocolates.</li>
@@ -128,6 +128,6 @@ HTML;
 </ul>
 HTML;
 
-		$this->assertHtmlFormatEquals($html, (string) $list);
-	}
+        $this->assertHtmlFormatEquals($html, (string)$list);
+    }
 }
