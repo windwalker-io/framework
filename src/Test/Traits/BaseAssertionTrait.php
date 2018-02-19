@@ -87,11 +87,11 @@ trait BaseAssertionTrait
     /**
      * assertExpectedException
      *
-     * @param callable $closure
-     * @param string   $class
-     * @param string   $msg
-     * @param int      $code
-     * @param string   $message
+     * @param callable      $closure
+     * @param string|object $class
+     * @param string        $msg
+     * @param int           $code
+     * @param string        $message
      *
      * @return  void
      */
@@ -144,7 +144,7 @@ trait BaseAssertionTrait
      *
      * @return  mixed
      */
-    public function expectException($exception)
+    public function legacyExpectException($exception)
     {
         if (method_exists(TestCase::class, 'expectException')) {
             return parent::expectException($exception);

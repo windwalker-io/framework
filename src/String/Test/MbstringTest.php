@@ -507,7 +507,7 @@ class MbstringTest extends TestCase
      */
     public function testCallStatic()
     {
-        $this->expectException(\BadMethodCallException::class);
+        $this->legacyExpectException(\BadMethodCallException::class);
 
         Mbstring::noexists('test');
     }

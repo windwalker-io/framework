@@ -596,7 +596,7 @@ class ArrTest extends TestCase
             Arr::only((object) $array, ['Lycoris'])
         );
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->legacyExpectException(\InvalidArgumentException::class);
 
         Arr::only('string', ['test']);
     }
@@ -1272,7 +1272,7 @@ class ArrTest extends TestCase
 
         $this->assertEquals($expected, Arr::mergeRecursive($data1, $data2, $data3));
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->legacyExpectException(\InvalidArgumentException::class);
 
         Arr::mergeRecursive('', 123);
     }

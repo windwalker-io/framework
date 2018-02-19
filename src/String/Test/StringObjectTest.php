@@ -133,7 +133,7 @@ class StringObjectTest extends TestCase
             (new StringObject('白日依山盡', StringObject::ENCODING_DEFAULT_ISO))->slice(1, 3)
         );
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->legacyExpectException(\BadMethodCallException::class);
 
         (new StringObject('Foo'))->notexists();
     }
