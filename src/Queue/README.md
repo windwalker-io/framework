@@ -387,7 +387,7 @@ $driver = new \Windwalker\Queue\Driver\RabbitmqQueueDriver('default');
 $driver = new \Windwalker\Queue\Driver\BeanstalkdQueueDriver('127.0.0.1', 'default');
 
 // PHP Resque (Redis)
-$driver = new \Windwalker\Queue\Driver\BeanstalkdQueueDriver('127.0.0.1', 'default');
+$driver = new \Windwalker\Queue\Driver\ResqueQueueDriver('127.0.0.1', 'default');
 
 // PDO
 $driver = new \Windwalker\Queue\Driver\PdoQueueDriver($pdo, 'default', 'queue_jobs'/* table name*/);
