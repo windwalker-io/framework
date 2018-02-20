@@ -1,0 +1,27 @@
+{
+    "name": "windwalker/queue",
+    "type": "windwalker-package",
+    "description": "Windwalker Queue package",
+    "keywords": ["windwalker", "framework", "queue"],
+    "homepage": "https://github.com/ventoviro/windwalker-queue",
+    "license": "LGPL-2.0-or-later",
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "require-dev": {
+        "windwalker/test": "~3.0",
+        "windwalker/database": "~3.0",
+        "jdorn/sql-formatter": "1.*"
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Queue\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    }
+}

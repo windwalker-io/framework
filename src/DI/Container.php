@@ -274,7 +274,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
         $constructor = $reflection->getConstructor();
 
         // If there are no parameters, just return a new object.
-        if (is_null($constructor)) {
+        if (null === $constructor) {
             return new $class;
         }
 
@@ -310,7 +310,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
             $dependencyVarName = $param->getName();
 
             // If we have a dependency, that means it has been type-hinted.
-            if (!is_null($dependency)) {
+            if (null !== $dependency) {
                 $depObject           = null;
                 $dependencyClassName = $dependency->getName();
 
