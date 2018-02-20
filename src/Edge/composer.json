@@ -4,7 +4,7 @@
     "description": "Windwalker Edge package, a blade compatible template engine.",
     "keywords": ["windwalker", "framework", "edge", "template", "engine"],
     "homepage": "https://github.com/ventoviro/windwalker-edge",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

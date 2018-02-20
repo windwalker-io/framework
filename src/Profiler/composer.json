@@ -4,7 +4,7 @@
     "description": "Windwalker Profiler package",
     "keywords": ["windwalker", "framework", "profiler"],
     "homepage": "https://github.com/ventoviro/windwalker-profiler",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

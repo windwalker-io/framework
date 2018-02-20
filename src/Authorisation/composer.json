@@ -4,7 +4,7 @@
     "description": "Windwalker Authorisation package",
     "keywords": ["windwalker", "framework", "authorisation"],
     "homepage": "https://github.com/ventoviro/windwalker-authorisation",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

@@ -4,7 +4,7 @@
     "description": "Windwalker Session package",
     "keywords": ["windwalker", "framework", "session"],
     "homepage": "https://github.com/ventoviro/windwalker-session",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

@@ -4,7 +4,7 @@
     "description": "Windwalker Filesystem package",
     "keywords": ["windwalker", "framework", "filesystem"],
     "homepage": "https://github.com/ventoviro/windwalker-filesystem",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

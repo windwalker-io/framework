@@ -4,7 +4,7 @@
     "description": "Windwalker Dom package",
     "keywords": ["windwalker", "framework", "filesystem"],
     "homepage": "https://github.com/ventoviro/windwalker-dom",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

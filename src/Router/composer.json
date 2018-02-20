@@ -4,7 +4,7 @@
     "description": "Windwalker Router package",
     "keywords": ["windwalker", "framework", "router"],
     "homepage": "https://github.com/ventoviro/windwalker-router",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

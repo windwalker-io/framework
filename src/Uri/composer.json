@@ -4,7 +4,7 @@
     "description": "Windwalker Uri package",
     "keywords": ["windwalker", "framework", "uri"],
     "homepage": "https://github.com/ventoviro/windwalker-uri",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

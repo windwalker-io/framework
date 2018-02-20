@@ -4,7 +4,7 @@
     "description": "Windwalker DI package",
     "keywords": ["windwalker", "framework", "di"],
     "homepage": "https://github.com/ventoviro/windwalker-di",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

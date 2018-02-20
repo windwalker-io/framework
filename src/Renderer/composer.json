@@ -4,7 +4,7 @@
     "description": "Windwalker Renderer package",
     "keywords": ["windwalker", "framework", "renderer"],
     "homepage": "https://github.com/ventoviro/windwalker-renderer",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9",
         "windwalker/structure": "~3.0"

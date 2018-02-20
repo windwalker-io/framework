@@ -4,7 +4,7 @@
     "description": "Windwalker Utilities package",
     "keywords": ["windwalker", "framework", "utilities"],
     "homepage": "https://github.com/ventoviro/windwalker-utilities",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9",
         "windwalker/string": "~3.0"

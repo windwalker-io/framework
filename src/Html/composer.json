@@ -4,7 +4,7 @@
     "description": "Windwalker Html package",
     "keywords": ["windwalker", "framework", "html"],
     "homepage": "https://github.com/ventoviro/windwalker-html",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9",
         "windwalker/dom": "~3.0"

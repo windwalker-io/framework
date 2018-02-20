@@ -4,7 +4,7 @@
     "description": "Windwalker Loader package",
     "keywords": ["windwalker", "framework", "loader"],
     "homepage": "https://github.com/ventoviro/windwalker-loader",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },

@@ -86,6 +86,7 @@ class Build extends AbstractCliApplication
         'middleware' => 'Middleware',
         'profiler' => 'Profiler',
         'query' => 'Query',
+        'queue' => 'Queue',
         'record' => 'Record',
         'renderer' => 'Renderer',
         'router' => 'Router',

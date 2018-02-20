@@ -4,7 +4,7 @@
     "description": "Windwalker Event package",
     "keywords": ["windwalker", "framework", "event"],
     "homepage": "https://github.com/ventoviro/windwalker-event",
-    "license": "LGPL-2.0+",
+    "license": "LGPL-2.0-or-later",
     "require": {
         "php": ">=5.5.9"
     },
