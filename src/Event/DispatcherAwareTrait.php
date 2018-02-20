@@ -34,7 +34,7 @@ trait DispatcherAwareTrait
      */
     public function triggerEvent($event, $args = [])
     {
-        $this->dispatcher->triggerEvent($event, $args);
+        return $this->dispatcher->triggerEvent($event, $args);
     }
 
     /**
