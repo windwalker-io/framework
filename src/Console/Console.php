@@ -272,6 +272,51 @@ class Console extends AbstractConsole
     }
 
     /**
+     * Method to perform basic garbage collection and memory management in the sense of clearing the
+     * stat cache.  We will probably call this method pretty regularly in our main loop.
+     *
+     * @return static
+     */
+    public function gc()
+    {
+        // Perform generic garbage collection.
+        gc_collect_cycles();
+
+        // Clear the stat cache so it doesn't blow up memory.
+        clearstatcache();
+
+        return $this;
+    }
+
+    /**
+     * Activates the circular reference collector
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function gcEnable()
+    {
+        gc_enable();
+
+        return $this;
+    }
+
+    /**
+     * Disable the circular reference collector
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function gcDisable()
+    {
+        gc_disable();
+
+        return $this;
+    }
+
+    /**
      * Sets whether to automatically exit after a command execution or not.
      *
      * @param   boolean $boolean Whether to automatically exit after a command execution or not.
