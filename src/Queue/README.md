@@ -10,7 +10,7 @@ This package provides an universal interface to wrap different message queue ser
 - [RabbitMQ](https://www.rabbitmq.com/) (AMQP)
 - [Beanstalkd](http://kr.github.io/beanstalkd/)
 - [PHP Resque](https://github.com/chrisboulton/php-resque) (Redis)
-- Database
+- Pdo (MySQL)
 - Sync (No queue, execute immediately)
 
 ## Installation via Composer
