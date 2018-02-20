@@ -8,10 +8,8 @@
 
 namespace Windwalker\Queue\Driver;
 
+use Windwalker\Queue\Job\JobInterface;
 use Windwalker\Queue\QueueMessage;
-use Windwalker\Queue\Worker;
-use Windwalker\Event\Event;
-use Windwalker\Structure\Structure;
 
 /**
  * The SyncQueueDriver class.
@@ -21,24 +19,6 @@ use Windwalker\Structure\Structure;
 class SyncQueueDriver implements QueueDriverInterface
 {
     /**
-     * Property worker.
-     *
-     * @var  Worker
-     * @since  __DEPLOY_VERSION__
-     */
-    protected $worker;
-
-    /**
-     * SyncQueueDriver constructor.
-     *
-     * @param Worker $worker
-     */
-    public function __construct(Worker $worker)
-    {
-        $this->worker = $worker;
-    }
-
-    /**
      * push
      *
      * @param QueueMessage $message
@@ -47,11 +27,11 @@ class SyncQueueDriver implements QueueDriverInterface
      */
     public function push(QueueMessage $message)
     {
-        $this->worker->getDispatcher()->listen('onWorkerJobFailure', function (Event $event) {
-            throw $event['exception'];
-        });
+        $job = $message->getJob();
+        /** @var JobInterface $job */
+        $job = unserialize($job);
 
-        $this->worker->process($message, new Structure);
+        $job->execute();
 
         return 0;
     }
