@@ -10,7 +10,6 @@ namespace Windwalker\Queue;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Windwalker\Core\DateTime\Chronos;
 use Windwalker\Queue\Exception\MaxAttemptsExceededException;
 use Windwalker\Queue\Job\JobInterface;
 use Windwalker\Queue\Job\NullJob;
@@ -104,7 +103,7 @@ class Worker implements DispatcherAwareInterface
         gc_enable();
 
         // Last Restart
-        $this->lastRestart = Chronos::create('now')->toUnix();
+        $this->lastRestart = (new \DateTimeImmutable('now'))->format('U');
 
         // Log PID
         $this->pid = getmypid();

@@ -6,7 +6,9 @@
     "homepage": "https://github.com/ventoviro/windwalker-queue",
     "license": "LGPL-2.0-or-later",
     "require": {
-        "php": ">=5.5.9"
+        "php": ">=5.5.9",
+        "windwalker/event": "~3.0",
+        "windwalker/structure": "~3.0"
     },
     "require-dev": {
         "windwalker/test": "~3.0",

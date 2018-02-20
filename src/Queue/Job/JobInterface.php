@@ -22,5 +22,10 @@ interface JobInterface
      */
     public function getName();
 
+    /**
+     * execute
+     *
+     * @return  void
+     */
     public function execute();
 }
