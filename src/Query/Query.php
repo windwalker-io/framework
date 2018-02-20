@@ -827,7 +827,7 @@ class Query implements QueryInterface, PreparableInterface
 
         $expression = $this->getExpression();
 
-        return call_user_func_array([$expression, 'buildExpression'], $args);
+        return new ExpressionWrapper(call_user_func_array([$expression, 'buildExpression'], $args));
     }
 
     /**
@@ -838,6 +838,20 @@ class Query implements QueryInterface, PreparableInterface
     public function expr()
     {
         return call_user_func_array([$this, 'expression'], func_get_args());
+    }
+
+    /**
+     * wrapExpression
+     *
+     * @param mixed $content
+     *
+     * @return  ExpressionWrapper
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function wrapExpression($content)
+    {
+        return new ExpressionWrapper($content);
     }
 
     /**
@@ -882,7 +896,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function group($columns)
     {
-        if (is_null($this->group)) {
+        if (null === $this->group) {
             $this->group = $this->element('GROUP BY', $columns);
         } else {
             $this->group->append($columns);
@@ -906,7 +920,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function having($conditions)
     {
-        if (is_null($this->having)) {
+        if (null === $this->having) {
             $this->having = $this->element('HAVING', [], " AND ");
         }
 
@@ -1029,7 +1043,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function join($type, $table, $conditions = [])
     {
-        if (is_null($this->join)) {
+        if (null === $this->join) {
             $this->join = [];
         }
 
@@ -1098,7 +1112,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function order($columns)
     {
-        if (is_null($this->order)) {
+        if (null === $this->order) {
             $this->order = $this->element('ORDER BY', $columns);
         } else {
             $this->order->append($columns);
@@ -1199,6 +1213,10 @@ class Query implements QueryInterface, PreparableInterface
             return 'NULL';
         }
 
+        if ($text instanceof ExpressionWrapper) {
+            return $text;
+        }
+
         if (is_array($text) || is_object($text)) {
             $text = (array) $text;
 
@@ -1248,6 +1266,10 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function quoteName($name)
     {
+        if ($name instanceof ExpressionWrapper) {
+            return $name;
+        }
+
         if (is_string($name)) {
             $pos         = stripos($name, ' AS ');
             $quotedAlias = '';
@@ -1262,7 +1284,9 @@ class Query implements QueryInterface, PreparableInterface
             $quotedName = $this->quoteNameStr(explode('.', $name));
 
             return $quotedName . ($quotedAlias ? ' AS ' . $quotedAlias : '');
-        } elseif (is_array($name) || is_object($name)) {
+        }
+
+        if (is_array($name) || is_object($name)) {
             $fin = [];
 
             foreach ((array) $name as $n) {
@@ -1303,7 +1327,7 @@ class Query implements QueryInterface, PreparableInterface
         $q     = $this->nameQuote;
 
         foreach ($strArr as $part) {
-            if (is_null($part)) {
+            if (null === $part) {
                 continue;
             }
 
@@ -1357,7 +1381,7 @@ class Query implements QueryInterface, PreparableInterface
     {
         $this->type = 'select';
 
-        if (is_null($this->select)) {
+        if (null === $this->select) {
             $this->select = $this->element('SELECT', $columns);
         } else {
             $this->select->append($columns);
@@ -1383,7 +1407,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function set($conditions, $glue = ',')
     {
-        if (is_null($this->set)) {
+        if (null === $this->set) {
             $glue      = strtoupper($glue);
             $this->set = $this->element('SET', $conditions, PHP_EOL . "\t$glue ");
         } else {
@@ -1458,7 +1482,7 @@ class Query implements QueryInterface, PreparableInterface
             }
         }
 
-        if (is_null($this->values)) {
+        if (null === $this->values) {
             $this->values = $this->element('()', $values, '),' . PHP_EOL . '(');
         } else {
             $this->values->append($values);
@@ -1484,7 +1508,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function where($conditions)
     {
-        if (is_null($this->where)) {
+        if (null === $this->where) {
             $this->where = $this->element('WHERE', [], ' AND ');
         }
 
@@ -1554,7 +1578,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function __clone()
     {
-        foreach ($this as $k => $v) {
+        foreach (get_object_vars($this) as $k => $v) {
             if ($k === 'connection') {
                 continue;
             }
@@ -1587,7 +1611,7 @@ class Query implements QueryInterface, PreparableInterface
 
         // Clear any ORDER BY clause in UNION query
         // See http://dev.mysql.com/doc/refman/5.0/en/union.html
-        if (!is_null($this->order)) {
+        if (null !== $this->order) {
             $this->clear('order');
         }
 
@@ -1601,7 +1625,7 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         // Get the QueryElement if it does not exist
-        if (is_null($this->union)) {
+        if (null === $this->union) {
             $this->union = $this->element($name, $query, "$glue");
         } else // Otherwise append the second UNION.
         {
@@ -1654,7 +1678,7 @@ class Query implements QueryInterface, PreparableInterface
         $glue = ')' . PHP_EOL . 'UNION ALL (';
 
         // Get the JDatabaseQueryElement if it does not exist
-        if (is_null($this->unionAll)) {
+        if (null === $this->unionAll) {
             $this->union = $this->element('()', $query, $glue);
         } // Otherwise append the second UNION.
         else {
@@ -1675,7 +1699,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function suffix($string)
     {
-        if (is_null($this->suffix)) {
+        if (null === $this->suffix) {
             $this->suffix = $this->element('', [], ' ');
         }
 
