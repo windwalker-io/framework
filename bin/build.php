@@ -306,8 +306,8 @@ HELP;
             $content = file_get_contents($file->getPathname());
 
             $content = str_replace(
-                ['{DEPLOY_VERSION}', '__DEPLOY_VERSION__', '{ORGANIZATION}'],
-                [$this->tag, $this->tag, 'Asikart'],
+                ['{DEPLOY_VERSION}', '__DEPLOY_VERSION__', '__LICENSE__', '{ORGANIZATION}'],
+                [$this->tag, $this->tag, 'LGPL-2.0-or-later', 'Asikart'],
                 $content
             );
 
