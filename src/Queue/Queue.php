@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2017 ${ORGANIZATION}.
+ * @copyright  Copyright (C) 2017 $Asikart.
  * @license    __LICENSE__
  */
 
@@ -30,7 +30,7 @@ class Queue
      * For B/C use.
      *
      * @var  callable
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     protected $newInstanceHandler;
 
@@ -240,7 +240,7 @@ class Queue
      *
      * @return  callable
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     public function getNewInstanceHandler()
     {
@@ -254,7 +254,7 @@ class Queue
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     public function setNewInstanceHandler(callable $newInstanceHandler)
     {

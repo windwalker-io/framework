@@ -2,7 +2,7 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
+ * @copyright  Copyright (C) 2018 $Asikart.
  * @license    __LICENSE__
  */
 
@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 /**
  * The ExpressionWrapper class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.3
  */
 class ExpressionWrapper
 {
@@ -19,7 +19,7 @@ class ExpressionWrapper
      * Property content.
      *
      * @var  mixed
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     protected $content;
 
@@ -44,7 +44,7 @@ class ExpressionWrapper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     public function __toString()
     {
@@ -64,7 +64,7 @@ class ExpressionWrapper
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     public function getContent()
     {
@@ -78,7 +78,7 @@ class ExpressionWrapper
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     public function setContent($content)
     {

@@ -293,7 +293,7 @@ class Console extends AbstractConsole
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     public function gcEnable()
     {
@@ -307,7 +307,7 @@ class Console extends AbstractConsole
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     public function gcDisable()
     {

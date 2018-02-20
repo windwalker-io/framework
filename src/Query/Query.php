@@ -847,7 +847,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @return  ExpressionWrapper
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.3
      */
     public function wrapExpression($content)
     {
