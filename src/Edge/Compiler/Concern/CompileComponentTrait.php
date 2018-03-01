@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2018 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Edge\Compiler\Concern;
@@ -11,7 +11,7 @@ namespace Windwalker\Edge\Compiler\Concern;
 /**
  * The CompileComponentTrait class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.3.1
  */
 trait CompileComponentTrait
 {
