@@ -13,6 +13,7 @@ use Windwalker\Edge\Cache\EdgeCacheInterface;
 use Windwalker\Edge\Cache\EdgeFileCache;
 use Windwalker\Edge\Compiler\EdgeCompiler;
 use Windwalker\Edge\Compiler\EdgeCompilerInterface;
+use Windwalker\Edge\Concern\ManageComponentTrait;
 use Windwalker\Edge\Exception\EdgeException;
 use Windwalker\Edge\Extension\EdgeExtensionInterface;
 use Windwalker\Edge\Loader\EdgeLoaderInterface;
@@ -32,6 +33,8 @@ include_once __DIR__ . '/compat.php';
  */
 class Edge
 {
+    use ManageComponentTrait;
+
     /**
      * Property globals.
      *

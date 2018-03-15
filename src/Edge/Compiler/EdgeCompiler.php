@@ -8,6 +8,8 @@
 
 namespace Windwalker\Edge\Compiler;
 
+use Windwalker\Edge\Compiler\Concern\CompileComponentTrait;
+
 /**
  * The EdgeCompiler class.
  *
@@ -19,6 +21,8 @@ namespace Windwalker\Edge\Compiler;
  */
 class EdgeCompiler implements EdgeCompilerInterface
 {
+    use CompileComponentTrait;
+
     /**
      * All custom "directive" handlers.
      *
