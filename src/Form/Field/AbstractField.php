@@ -314,13 +314,37 @@ abstract class AbstractField
         $attrs = array_merge($attrs, (array) $this->getAttribute('controlAttribs'));
 
         if ($this->form && $this->form->getRenderer()) {
-            return $this->form->getRenderer()->renderField($this, $attrs, $options);
+            return $this->wrapElements($this->form->getRenderer()->renderField($this, $attrs, $options));
         }
 
         $label = !empty($options['no_label']) ? '' : $this->renderLabel();
         $input = $this->renderInput();
 
-        return (string) new HtmlElement('div', $label . $input, $attrs);
+        return $this->wrapElements(new HtmlElement('div', $label . $input, $attrs));
+    }
+
+    /**
+     * wrapElements
+     *
+     * @param string $html
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function wrapElements($html)
+    {
+        if (isset($this->attributes['wraps']) && is_array($this->attributes['wraps'])) {
+            $elements = $this->attributes['wraps'];
+            $elements = array_reverse($elements);
+
+            /** @var HtmlElement $element */
+            foreach ($elements as $element) {
+                $html = $element->setContent($html);
+            }
+        }
+
+        return (string) $html;
     }
 
     /**
@@ -1253,7 +1277,24 @@ abstract class AbstractField
             'class',
             'labelClass',
             'controlClass',
+            'wraps'
         ];
+    }
+
+    /**
+     * wrap
+     *
+     * @param HtmlElement $element
+     *
+     * @return  static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function wrap(HtmlElement $element)
+    {
+        $this->attributes['wraps'][] = $element;
+
+        return $this;
     }
 
     /**
