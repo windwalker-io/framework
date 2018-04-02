@@ -111,7 +111,7 @@ trait ManageComponentTrait
      */
     public function endSlot()
     {
-        last($this->componentStack);
+        end($this->componentStack);
         $currentSlot = array_pop(
             $this->slotStack[$this->currentComponent()]
         );
