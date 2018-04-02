@@ -731,10 +731,12 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             'call',
             'group',
             'having',
+            'orHaving',
             'order',
             'limit',
             'select',
             'where',
+            'orWhere',
             'bind',
             'clear',
         ];
