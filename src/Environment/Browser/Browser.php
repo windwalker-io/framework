@@ -196,6 +196,9 @@ class Browser
         if ((stripos($userAgent, 'MSIE') !== false) && (stripos($userAgent, 'Opera') === false)) {
             $this->browser  = static::IE;
             $patternBrowser = 'MSIE';
+        } elseif (stripos($userAgent, 'Trident') !== false) {
+            $this->browser  = static::IE;
+            $patternBrowser = ' rv';
         } elseif (stripos($userAgent, 'Edge') !== false) {
             $this->browser  = static::EDGE;
             $patternBrowser = 'Edge';
@@ -220,7 +223,7 @@ class Browser
         // If we detected a known browser let's attempt to determine the version.
         if ($this->browser) {
             // Build the REGEX pattern to match the browser version string within the user agent string.
-            $pattern = '#(?<browser>Version|' . $patternBrowser . ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
+            $pattern = '#(?<browser>Version|' . $patternBrowser . ')[/: ]+(?<version>[0-9.|a-zA-Z.]*)#';
 
             // Attempt to find version strings in the user agent string.
             $matches = [];
