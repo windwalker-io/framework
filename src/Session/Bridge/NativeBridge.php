@@ -218,8 +218,8 @@ class NativeBridge implements SessionBridgeInterface
     {
         // Need to destroy any existing sessions started with session.auto_start
         if ($this->getId()) {
-            session_unset();
-            session_destroy();
+            @session_unset();
+            @session_destroy();
         }
 
         static::$closed  = true;
