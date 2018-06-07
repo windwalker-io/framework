@@ -13,7 +13,7 @@ namespace Windwalker\Form\Filter;
  *
  * @since  __DEPLOY_VERSION__
  */
-class MaxlengthFilter implements FilterInterface
+class MaxLengthFilter implements FilterInterface
 {
     /**
      * Property max.
