@@ -274,7 +274,13 @@ class PdoDriver extends AbstractDatabaseDriver
         try {
             $this->cursor->execute();
         } catch (\PDOException $e) {
-            throw new \PDOException($e->getMessage() . "\nSQL: " . $this->cursor->queryString, (int) $e->getCode(), $e);
+            $msg = $e->getMessage();
+
+            if ($this->debug) {
+                $msg .= "\nSQL: " . $this->cursor->queryString;
+            }
+
+            throw new \PDOException($msg, (int) $e->getCode(), $e);
         }
 
         $this->lastQuery = $this->cursor->queryString;
