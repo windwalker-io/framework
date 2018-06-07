@@ -42,6 +42,7 @@ use Windwalker\Query\QueryInterface;
  * @method  $this  orWhere($conditions)
  * @method  $this  clear($clause = null)
  * @method  $this  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
+ * @method  $this  forUpdate()
  */
 class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 {
@@ -82,6 +83,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      * @param AbstractDatabaseDriver $db
      *
      * @return  static
+     * @throws \Exception
      */
     public static function newRelation($alias = null, $table = null, $keys = null, $db = null)
     {
@@ -96,6 +98,8 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      * @param   string                 $table Table name.
      * @param   string|array           $keys  Primary key, default will be `id`.
      * @param   AbstractDatabaseDriver $db    Database adapter.
+     *
+     * @throws \Exception
      */
     public function __construct($table = null, $keys = null, AbstractDatabaseDriver $db = null)
     {
@@ -127,6 +131,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      * @param   integer $limit      Limit rows.
      *
      * @return  mixed  Found rows data set.
+     * @throws \Exception
      */
     protected function doFind(array $conditions, array $orders, $start, $limit)
     {
@@ -148,7 +153,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      * @param   integer $start      Limit start number.
      * @param   integer $limit      Limit rows.
      *
-     * @return Query
+     * @return QueryInterface
      * @throws \Exception
      */
     protected function getFindQuery(array $conditions, array $orders, $start, $limit)
@@ -739,6 +744,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             'orWhere',
             'bind',
             'clear',
+            'forUpdate'
         ];
 
         if (in_array($name, $allowMethods)) {
