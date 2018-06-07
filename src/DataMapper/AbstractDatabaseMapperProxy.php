@@ -53,6 +53,8 @@ use Windwalker\Event\Event;
  * @method  static DataMapper  where($conditions, ...$args)
  * @method  static DataMapper  orWhere($conditions)
  * @method  static DataMapper  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
+ * @method  static DataMapper  forUpdate()
+ * @method  static DataMapper  suffix(string $string)
  *
  * @since  3.0
  */

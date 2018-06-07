@@ -43,6 +43,7 @@ use Windwalker\Query\QueryInterface;
  * @method  $this  clear($clause = null)
  * @method  $this  bind($key = null, $value = null, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = [])
  * @method  $this  forUpdate()
+ * @method  $this  suffix(string $string)
  */
 class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
 {
@@ -744,10 +745,11 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             'orWhere',
             'bind',
             'clear',
-            'forUpdate'
+            'forUpdate',
+            'suffix',
         ];
 
-        if (in_array($name, $allowMethods)) {
+        if (in_array($name, $allowMethods, true)) {
             $query = $this->getQuery();
 
             call_user_func_array([$query, $name], $args);
@@ -760,7 +762,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             'removeTable',
         ];
 
-        if (in_array($name, $allowMethods)) {
+        if (in_array($name, $allowMethods, true)) {
             $query = $this->getQueryHelper();
 
             call_user_func_array([$query, $name], $args);
@@ -775,7 +777,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             'outerJoin',
         ];
 
-        if (in_array($name, $allowMethods)) {
+        if (in_array($name, $allowMethods, true)) {
             $name = str_replace('JOIN', '', strtoupper($name));
 
             array_unshift($args, $name);
@@ -783,6 +785,6 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             return call_user_func_array([$this, 'join'], $args);
         }
 
-        throw new \BadMethodCallException(sprintf('Method %s not exists in %s', $name, get_called_class()));
+        throw new \BadMethodCallException(sprintf('Method %s not exists in %s', $name, static::class));
     }
 }
