@@ -145,10 +145,6 @@ class PostgresqlQuery extends Query
                     $query .= (string) $this->noWait;
                 }
 
-                if ($this->suffix) {
-                    $query .= ' ' . (string) $this->suffix;
-                }
-
                 break;
 
             case 'update':
@@ -175,10 +171,6 @@ class PostgresqlQuery extends Query
                     $query .= (string) $this->where;
                 }
 
-                if ($this->suffix) {
-                    $query .= ' ' . (string) $this->suffix;
-                }
-
                 break;
 
             case 'insert':
@@ -202,10 +194,6 @@ class PostgresqlQuery extends Query
                     }
                 }
 
-                if ($this->suffix) {
-                    $query .= ' ' . (string) $this->suffix;
-                }
-
                 break;
 
             default:
@@ -214,6 +202,10 @@ class PostgresqlQuery extends Query
         }
 
         $query = $this->processLimit($query, $this->limit, $this->offset);
+
+        if ($this->suffix) {
+            $query .= ' ' . (string) $this->suffix;
+        }
 
         return $query;
     }

@@ -406,12 +406,12 @@ class Query implements QueryInterface, PreparableInterface
                 break;
         }
 
+        // Process Limit
+        $query = $this->processLimit($query, $this->limit, $this->offset);
+
         if ($this->suffix) {
             $query .= ' ' . (string) $this->suffix;
         }
-
-        // Process Limit
-        $query = $this->processLimit($query, $this->limit, $this->offset);
 
         return $query;
     }
@@ -2015,7 +2015,7 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         // Case 2: Key Provided, null value (unset key from $bounded array)
-        if (is_null($value)) {
+        if (null === $value) {
             if (isset($this->bounded[$key])) {
                 unset($this->bounded[$key]);
             }
@@ -2050,10 +2050,10 @@ class Query implements QueryInterface, PreparableInterface
     {
         if (empty($key)) {
             return $this->bounded;
-        } else {
-            if (isset($this->bounded[$key])) {
-                return $this->bounded[$key];
-            }
+        }
+
+        if (isset($this->bounded[$key])) {
+            return $this->bounded[$key];
         }
 
         return null;
