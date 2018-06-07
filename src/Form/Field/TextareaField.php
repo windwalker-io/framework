@@ -52,6 +52,7 @@ class TextareaField extends TextField
         $attrs['onfocus']     = $this->getAttribute('onfocus');
         $attrs['onblur']      = $this->getAttribute('onblur');
         $attrs['placeholder'] = $this->getAttribute('placeholder');
+        $attrs['maxlength']   = $this->getAttribute('maxlength');
         $attrs['required']    = $this->required;
 
         $attrs['cols'] = $this->getAttribute('cols');

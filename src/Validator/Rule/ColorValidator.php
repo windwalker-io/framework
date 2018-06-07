@@ -40,7 +40,7 @@ class ColorValidator extends AbstractValidator
         $value = ltrim($value, '#');
 
         // The value must be 6 or 3 characters long
-        if (!((strlen($value) == 6 || strlen($value) == 3) && ctype_xdigit($value))) {
+        if (!((strlen($value) === 6 || strlen($value) === 3) && ctype_xdigit($value))) {
             return false;
         }
 
