@@ -83,7 +83,7 @@ class SelectList extends HtmlElement
         if ($group) {
             $content = $this->content[$group];
 
-            array_push($content, $option);
+            $content[] = $option;
 
             $this->content[$group] = $content;
         } else {

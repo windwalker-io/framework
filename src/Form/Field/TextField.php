@@ -8,6 +8,10 @@
 
 namespace Windwalker\Form\Field;
 
+use Windwalker\Dom\SimpleXml\XmlHelper;
+use Windwalker\Html\Form\Datalist;
+use Windwalker\Html\Option;
+
 /**
  * The TextField class.
  *
@@ -30,6 +34,13 @@ class TextField extends AbstractField
      * @var  string
      */
     protected $type = 'text';
+
+    /**
+     * Property options.
+     *
+     * @var  Option[]
+     */
+    protected $options = [];
 
     /**
      * prepareRenderInput
@@ -56,13 +67,116 @@ class TextField extends AbstractField
         $attrs['formmethod']     = $this->getAttribute('formmethod');
         $attrs['formnovalidate'] = $this->getAttribute('formnovalidate');
         $attrs['formtarget']     = $this->getAttribute('formtarget');
-        $attrs['list']           = $this->getAttribute('list');
         $attrs['onchange']       = $this->getAttribute('onchange');
         $attrs['onfocus']        = $this->getAttribute('onfocus');
         $attrs['onblur']         = $this->getAttribute('onblur');
         $attrs['value']          = $this->escape($this->getValue());
+        $attrs['list']           = $this->getAttribute('list', count($this->options) ? $this->getId() . '-list' : null);
 
         $attrs['required'] = $this->required;
+    }
+
+    /**
+     * buildInput
+     *
+     * @param array $attrs
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function buildInput($attrs)
+    {
+        $html = parent::buildInput($attrs);
+
+        if (count($this->options)) {
+            $html .= new Datalist($attrs['list'], $this->options);
+        }
+
+        return $html;
+    }
+
+
+    /**
+     * addOption
+     *
+     * @param Option $option
+     *
+     * @return  static
+     */
+    public function addOption(Option $option)
+    {
+        $options = [$option];
+
+        $this->setOptions($options);
+
+        return $this;
+    }
+
+    /**
+     * option
+     *
+     * @param string $value
+     * @param array  $attribs
+     *
+     * @return static
+     */
+    public function option($value = null, $attribs = [])
+    {
+        $this->addOption(new Option(null, $value, $attribs));
+
+        return $this;
+    }
+
+    /**
+     * setOptions
+     *
+     * @param array|Option[] $options
+     *
+     * @return  static
+     */
+    public function setOptions($options)
+    {
+        $this->handleOptions(null, $options);
+
+        return $this;
+    }
+
+    /**
+     * prepareOptions
+     *
+     * @param string|\SimpleXMLElement $xml
+     * @param Option[]                 $options
+     *
+     * @throws \InvalidArgumentException
+     * @return  void
+     */
+    protected function handleOptions($xml, $options = [])
+    {
+        if ($xml instanceof \SimpleXMLElement) {
+            foreach ($xml->children() as $name => $option) {
+                $attributes = XmlHelper::getAttributes($option);
+
+                $option = new Option((string) $option, XmlHelper::getAttribute($option, 'value'), $attributes);
+
+                $this->options[] = $option;
+            }
+        } else {
+            foreach ($options as $name => $option) {
+                if (!($option instanceof Option)) {
+                    throw new \InvalidArgumentException(
+                        sprintf('Please give me %s class as option, %s given.', 'Windwalker\\Html\\Option',
+                            get_class($option))
+                    );
+                }
+
+                if (is_numeric($name)) {
+                    $this->options[] = $option;
+                } else {
+                    $this->options[$name] = $option;
+                }
+            }
+        }
     }
 
     /**
