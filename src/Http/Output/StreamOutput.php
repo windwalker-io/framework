@@ -64,7 +64,10 @@ class StreamOutput extends Output
 
         if ($range === false) {
             $body = $response->getBody();
-            $body->rewind();
+
+            if ($body->isSeekable()) {
+                $body->rewind();
+            }
 
             while (!$body->eof()) {
                 echo $body->read($maxBufferLength);

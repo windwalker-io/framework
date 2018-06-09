@@ -86,16 +86,20 @@ abstract class StreamHelper
     /**
      * A simple method to quickly send attachment stream download.
      *
-     * @param   string|resource   $source     The file source, can be file path or resource.
-     * @param   ResponseInterface $response   A custom Response object to contain your headers.
-     * @param   array             $options    Options to provide some settings, currently supports
-     *                                        "delay" and "filename".
+     * @param   string|resource|StreamInterface $source    The file source, can be file path or resource.
+     * @param   ResponseInterface               $response  A custom Response object to contain your headers.
+     * @param   array                           $options   Options to provide some settings, currently supports
+     *                                                     "delay" and "filename".
      *
      * @return  void
      */
     public static function sendAttachment($source, ResponseInterface $response = null, $options = [])
     {
-        $stream = new Stream($source, 'r');
+        $stream = $source;
+
+        if (!$stream instanceof StreamInterface) {
+            $stream = new Stream($stream, 'r');
+        }
 
         /** @var MessageInterface|ResponseInterface $response */
         $response = $response ?: new Response;
