@@ -66,15 +66,16 @@ class MysqlTable extends AbstractTable
         $keys = [];
 
         foreach ($schema->getIndexes() as $index) {
-            $keys[$index->getName()] = [
+            $name = $index->getName();
+            $keys[$name] = [
                 'type' => $index->getType(),
-                'name' => $index->getName(),
+                'name' => $name,
                 'columns' => $index->getColumns(),
                 'comment' => $index->getComment() ? 'COMMENT ' . $this->db->quote($index->getComment()) : '',
             ];
         }
 
-        echo $query = MysqlGrammar::createTable(
+        $query = MysqlGrammar::createTable(
             $this->getName(),
             $columns,
             $primary,
