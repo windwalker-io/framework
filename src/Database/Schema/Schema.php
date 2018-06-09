@@ -114,6 +114,11 @@ class Schema
 
         if (!$name) {
             $columns = (array) $key->getColumns();
+
+            $columns = array_map(function ($col) {
+                return explode('(', $col)[0];
+            }, $columns);
+
             $name    = 'idx_' . trim($this->table->getName(), '#_') . '_' . implode('_', $columns);
 
             $key->name($name);

@@ -196,10 +196,8 @@ class MysqlGrammar extends AbstractQueryGrammar
 
             $define = array_merge($define, $key);
 
-            $cols[] = strtoupper(
-                $define['type']) . ' ' . static::buildIndexDeclare($define['name'],
-                $define['columns']
-            );
+            $cols[] = strtoupper($define['type'])
+                . ' ' . static::buildIndexDeclare($define['name'], $define['columns']);
         }
 
         $cols = "(\n" . implode(",\n", $cols) . "\n)";
@@ -432,7 +430,14 @@ class MysqlGrammar extends AbstractQueryGrammar
 
         foreach ((array) $columns as $key => $val) {
             if (is_numeric($key)) {
-                $cols[] = $query->quoteName($val);
+                $vals = explode('(', $val);
+                $key = $query->quoteName($vals[0]);
+
+                if (isset($vals[1])) {
+                    $key .= '(' . trim($vals[1], '()') . ')';
+                }
+
+                $cols[] = $key;
             } else {
                 if (!is_numeric($val)) {
                     $string = is_string($val) ? ' ' . $query->quote($val) : '';
