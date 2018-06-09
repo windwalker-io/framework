@@ -31,10 +31,11 @@ interface DataMapperInterface
      *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
      * @param integer $start      Limit start number.
      * @param integer $limit      Limit rows.
+     * @param string  $key        The index key.
      *
      * @return mixed Found rows data set.
      */
-    public function find($conditions = [], $order = null, $start = null, $limit = null);
+    public function find($conditions = [], $order = null, $start = null, $limit = null, $key = null);
 
     /**
      * Find records without where conditions and return data set.
@@ -47,10 +48,11 @@ interface DataMapperInterface
      *                       - array('catid DESC', 'id') => ORDER BY catid DESC, id
      * @param integer $start Limit start number.
      * @param integer $limit Limit rows.
+     * @param string  $key   The index key.
      *
      * @return mixed Found rows data set.
      */
-    public function findAll($order = null, $start = null, $limit = null);
+    public function findAll($order = null, $start = null, $limit = null, $key = null);
 
     /**
      * Find one record and return a data.
@@ -86,12 +88,13 @@ interface DataMapperInterface
      *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
      * @param integer $start      Limit start number.
      * @param integer $limit      Limit rows.
+     * @param string  $key        The index key.
      *
      * @return  mixed
      *
      * @throws \InvalidArgumentException
      */
-    public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null);
+    public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null);
 
     /**
      * Create records by data set.

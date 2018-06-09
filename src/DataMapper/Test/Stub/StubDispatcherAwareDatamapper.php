@@ -41,9 +41,11 @@ class StubDispatcherAwareDatamapper extends AbstractDataMapper implements Dispat
      * @param integer $start      Limit start number.
      * @param integer $limit      Limit rows.
      *
+     * @param         $key
+     *
      * @return  mixed Found rows data set.
      */
-    protected function doFind(array $conditions, array $orders, $start, $limit)
+    protected function doFind(array $conditions, array $orders, $start, $limit, $key)
     {
         $this->args = func_get_args();
 

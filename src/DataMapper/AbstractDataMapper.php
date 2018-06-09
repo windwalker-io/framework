@@ -143,11 +143,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *                               - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
      * @param   integer $start       Limit start number.
      * @param   integer $limit       Limit rows.
+     * @param   string  $key         The index key.
      *
      * @return  mixed|DataSet Found rows data set.
      * @since   2.0
      */
-    public function find($conditions = [], $order = null, $start = null, $limit = null)
+    public function find($conditions = [], $order = null, $start = null, $limit = null, $key = null)
     {
         if ($conditions instanceof \Traversable) {
             $conditions = iterator_to_array($conditions);
@@ -181,11 +182,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
         ]);
 
         // Find data
-        $result = $this->doFind($conditions, $order, $start, $limit) ?: [];
+        $result = $this->doFind($conditions, $order, $start, $limit, $key) ?: [];
 
-        foreach ($result as $key => $data) {
+        foreach ($result as $k => $data) {
             if (!($data instanceof $this->dataClass)) {
-                $result[$key] = $this->bindData($data);
+                $result[$k] = $this->bindData($data);
             }
         }
 
@@ -210,10 +211,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *                       - array('catid DESC', 'id') => ORDER BY catid DESC, id
      * @param integer $start Limit start number.
      * @param integer $limit Limit rows.
+     * @param string  $key   The index key.
      *
      * @return mixed|DataSet Found rows data set.
      */
-    public function findAll($order = null, $start = null, $limit = null)
+    public function findAll($order = null, $start = null, $limit = null, $key = null)
     {
         // Event
         $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
@@ -222,7 +224,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
             'limit' => &$limit,
         ]);
 
-        $result = $this->find([], $order, $start, $limit);
+        $result = $this->find([], $order, $start, $limit, $key);
 
         // Event
         $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
@@ -288,12 +290,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
      * @param integer $start      Limit start number.
      * @param integer $limit      Limit rows.
+     * @param string  $key        The index key.
      *
      * @return  mixed
      *
      * @throws \InvalidArgumentException
      */
-    public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null)
+    public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null)
     {
         // Event
         $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
@@ -308,12 +311,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
             throw new \InvalidArgumentException('Column name should be string.');
         }
 
-        $dataset = $this->find($conditions, $order, $start, $limit);
+        $dataset = $this->find($conditions, $order, $start, $limit, $key);
 
         $result = [];
 
-        foreach ($dataset as $data) {
-            $result[] = $data->$column;
+        foreach ($dataset as $k => $data) {
+            if ($key === null) {
+                $result[] = $data->$column;
+            } else {
+                $result[$k] = $data->$column;
+            }
         }
 
         // Event
@@ -677,9 +684,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * @param integer $start      Limit start number.
      * @param integer $limit      Limit rows.
      *
+     * @param         $key
+     *
      * @return  mixed Found rows data set.
      */
-    abstract protected function doFind(array $conditions, array $orders, $start, $limit);
+    abstract protected function doFind(array $conditions, array $orders, $start, $limit, $key);
 
     /**
      * Do create action, this method should be override by sub class.

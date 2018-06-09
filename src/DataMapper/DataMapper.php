@@ -130,15 +130,16 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      * @param   array   $orders     Order sort, can ba string, array or object.
      * @param   integer $start      Limit start number.
      * @param   integer $limit      Limit rows.
+     * @param   string  $key        The index key.
      *
      * @return  mixed  Found rows data set.
      * @throws \Exception
      */
-    protected function doFind(array $conditions, array $orders, $start, $limit)
+    protected function doFind(array $conditions, array $orders, $start, $limit, $key)
     {
         $query = $this->getFindQuery($conditions, $orders, $start, $limit);
 
-        $result = $this->db->setQuery($query)->loadAll();
+        $result = $this->db->setQuery($query)->loadAll($key);
 
         // Reset query
         $this->query = null;
@@ -452,16 +453,21 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
      * @param integer $start      Limit start number.
      * @param integer $limit      Limit rows.
+     * @param string  $key        The index key.
      *
      * @return  mixed
      *
      * @throws \InvalidArgumentException
      */
-    public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null)
+    public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null)
     {
         $this->select($column);
 
-        return parent::findColumn($column, $conditions, $order, $start, $limit);
+        if ($key !== null) {
+            $this->select($key);
+        }
+
+        return parent::findColumn($column, $conditions, $order, $start, $limit, $key);
     }
 
     /**
