@@ -346,7 +346,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
         $url = (string) $url;
 
         // If is GET, we merge data into URL.
-        if (strtoupper($method) === 'GET' && is_array($data)) {
+        if (is_array($data) && strtoupper($method) === 'GET') {
             $url = new Uri($url);
 
             foreach ($data as $k => $v) {

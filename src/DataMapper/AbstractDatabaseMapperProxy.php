@@ -109,7 +109,7 @@ class AbstractDatabaseMapperProxy
      * @param $arguments array
      *
      * @return mixed
-     * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
+     * @throws \Exception
      */
     public function __call($name, $arguments)
     {
@@ -125,7 +125,7 @@ class AbstractDatabaseMapperProxy
      * @param $arguments array
      *
      * @return mixed
-     * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
+     * @throws \Exception
      */
     public static function __callStatic($name, $arguments)
     {
@@ -151,6 +151,7 @@ class AbstractDatabaseMapperProxy
      * @param   string $table
      *
      * @return  DatabaseMapperInterface
+     * @throws \Exception
      */
     public static function getInstance($table = null)
     {
@@ -167,6 +168,7 @@ class AbstractDatabaseMapperProxy
      * @param   AbstractDatabaseDriver $db    Database adapter.
      *
      * @return DataMapper
+     * @throws \Exception
      */
     public static function createDataMapper($table = null, $keys = null, $db = null)
     {
