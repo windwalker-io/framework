@@ -106,6 +106,13 @@ class Column
     protected $primary;
 
     /**
+     * Property suffix.
+     *
+     * @var string
+     */
+    protected $suffix;
+
+    /**
      * Class init.
      *
      * @param string $name
@@ -439,5 +446,33 @@ class Column
         }
 
         return $this;
+    }
+
+    /**
+     * Method to set property suffix
+     *
+     * @param   string $suffix
+     *
+     * @return  static  Return self to support chaining.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function suffix($suffix)
+    {
+        $this->suffix = $suffix;
+
+        return $this;
+    }
+
+    /**
+     * getSuffix
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getSuffix()
+    {
+        return $this->suffix;
     }
 }

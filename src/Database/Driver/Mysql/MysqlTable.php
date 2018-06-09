@@ -52,7 +52,8 @@ class MysqlTable extends AbstractTable
                 $column->getAllowNull() ? '' : 'NOT NULL',
                 $column->getDefault() !== false ? 'DEFAULT ' . $this->db->getQuery(true)->validValue($column->getDefault()) : '',
                 $column->getAutoIncrement() ? 'AUTO_INCREMENT' : '',
-                $column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : ''
+                $column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : '',
+                $column->getSuffix()
             );
 
             // Primary
@@ -72,8 +73,16 @@ class MysqlTable extends AbstractTable
             ];
         }
 
-        $query = MysqlGrammar::createTable($this->getName(), $columns, $primary, $keys, $options['auto_increment'],
-            $ifNotExists, $options['engine'], $options['charset']);
+        $query = MysqlGrammar::createTable(
+            $this->getName(),
+            $columns,
+            $primary,
+            $keys,
+            $options['auto_increment'],
+            $ifNotExists,
+            $options['engine'],
+            $options['charset']
+        );
 
         $this->db->setQuery($query)->execute();
 
@@ -125,6 +134,9 @@ class MysqlTable extends AbstractTable
             $column->getComment()
         );
 
+        // Add suffix
+        $query = MysqlGrammar::build($query, $column->getSuffix());
+
         $this->db->setQuery($query)->execute();
 
         return $this->reset();
@@ -162,8 +174,10 @@ class MysqlTable extends AbstractTable
             $default   = $column->getDefault();
             $position  = $column->getPosition();
             $comment   = $column->getComment();
+            $suffix    = $column->getSuffix();
         } else {
             $position = isset($options['position']) ? $options['position'] : null;
+            $suffix = isset($options['suffix']) ? $options['suffix'] : null;
         }
 
         if (!$this->hasColumn($name)) {
@@ -184,6 +198,9 @@ class MysqlTable extends AbstractTable
             $position,
             $comment
         );
+
+        // Add suffix
+        $query = MysqlGrammar::build($query, $suffix);
 
         $this->db->setQuery($query)->execute();
 
@@ -228,8 +245,10 @@ class MysqlTable extends AbstractTable
             $default   = $column->getDefault();
             $position  = $column->getPosition();
             $comment   = $column->getComment();
+            $suffix    = $column->getSuffix();
         } else {
             $position = isset($options['position']) ? $options['position'] : null;
+            $suffix = isset($options['suffix']) ? $options['suffix'] : null;
         }
 
         $type   = MysqlType::getType($type);
@@ -247,6 +266,9 @@ class MysqlTable extends AbstractTable
             $position,
             $comment
         );
+
+        // Add suffix
+        $query = MysqlGrammar::build($query, $suffix);
 
         $this->db->setQuery($query)->execute();
 

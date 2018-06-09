@@ -551,8 +551,8 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                 if (strtolower($detail->Null) === 'no') {
                     $entity[$field] = $detail->Default;
                 }
-            } // Convert to correct type.
-            else {
+            } else {
+                // Convert to correct type.
                 $dataType = DataType::getInstance($this->db->getName());
 
                 $type = explode(' ', $detail->Type)[0];

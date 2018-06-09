@@ -2119,6 +2119,8 @@ class Query implements QueryInterface, PreparableInterface
     {
         if ($value === null) {
             return 'NULL';
+        } elseif ($value instanceof ExpressionWrapper) {
+            return $value->getContent();
         } elseif (is_float($value) || is_double($value)) {
             return (double) $value;
         } elseif (is_numeric($value)) {
