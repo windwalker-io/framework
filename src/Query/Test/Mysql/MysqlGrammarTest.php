@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
   {$this->qn('email')} varchar(255) NOT NULL COMMENT 'Member email',
   PRIMARY KEY ({$this->qn('id')}),
   KEY {$this->qn('idx_alias')} ({$this->qn('email')})
-) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci
 SQL;
 
         $columns = [
@@ -205,7 +205,7 @@ CREATE TABLE {$this->qn('foo')} (
   {$this->qn('email')} varchar(255) NOT NULL COMMENT 'Member email',
   PRIMARY KEY ({$this->qn('id')}, {$this->qn('email')}),
   UNIQUE KEY {$this->qn('idx_alias')} ({$this->qn('email')}, {$this->qn('id')})
-) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=415 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci
 SQL;
 
         $columns = [
