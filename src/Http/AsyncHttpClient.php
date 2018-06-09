@@ -9,13 +9,23 @@
 namespace Windwalker\Http;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Windwalker\Http\Promise\PromiseResponse as Promise;
 use Windwalker\Http\Response\Response;
 use Windwalker\Http\Transport\CurlTransport;
 use Windwalker\Http\Transport\TransportInterface;
 
 /**
  * The AsyncRequest class.
+ *
+ * @method Promise get($url, $data = null, $headers = [])
+ * @method Promise post($url, $data, $headers = [])
+ * @method Promise put($url, $data, $headers = [])
+ * @method Promise patch($url, $data, $headers = [])
+ * @method Promise delete($url, $data = null, $headers = [])
+ * @method Promise head($url, $headers = [])
+ * @method Promise options($url, $headers = [])
+ * @method Promise sendRequest(RequestInterface $request)
+ * @method Promise request($method, $url, $data = null, $headers = [])
  *
  * @since  3.2
  */
@@ -31,9 +41,9 @@ class AsyncHttpClient extends HttpClient
     /**
      * Property handles.
      *
-     * @var  resource[]
+     * @var  []
      */
-    protected $handles = [];
+    protected $tasks = [];
 
     /**
      * Property errors.
@@ -83,14 +93,14 @@ class AsyncHttpClient extends HttpClient
      */
     public function reset()
     {
-        foreach ($this->handles as $handle) {
-            curl_multi_remove_handle($this->mh, $handle);
+        foreach ($this->tasks as $task) {
+            curl_multi_remove_handle($this->mh, $task['handle']);
         }
 
         curl_multi_close($this->mh);
 
-        $this->mh      = null;
-        $this->handles = [];
+        $this->mh    = null;
+        $this->tasks = [];
 
         return $this;
     }
@@ -100,7 +110,7 @@ class AsyncHttpClient extends HttpClient
      *
      * @param   RequestInterface $request The Psr Request object.
      *
-     * @return  ResponseInterface
+     * @return  Promise
      * @throws \RangeException
      */
     public function send(RequestInterface $request)
@@ -108,11 +118,14 @@ class AsyncHttpClient extends HttpClient
         /** @var CurlTransport $transport */
         $transport = $this->getTransport();
 
-        $handle = $this->handles[] = $transport->createHandle($request);
+        $this->tasks[] = [
+            'handle' => $handle = $transport->createHandle($request),
+            'promise' => $promise = new Promise()
+        ];
 
         curl_multi_add_handle($this->getMainHandle(), $handle);
 
-        return new Response;
+        return $promise;
     }
 
     /**
@@ -151,13 +164,19 @@ class AsyncHttpClient extends HttpClient
         $errors    = [];
         $transport = $this->getTransport();
 
-        foreach ($this->handles as $handle) {
+        foreach ($this->tasks as $task) {
+            /** @var Promise $promise */
+            $handle = $task['handle'];
+            $promise = $task['promise'];
+
             $error = curl_error($handle);
 
             if (!$error) {
-                $responses[] = $transport->getResponse(curl_multi_getcontent($handle), curl_getinfo($handle));
+                $responses[] = $res = $transport->getResponse(curl_multi_getcontent($handle), curl_getinfo($handle));
+                $promise->resolve($res);
             } else {
-                $errors[] = new \RuntimeException($error, curl_errno($handle));
+                $errors[] = $e = new \RuntimeException($error, curl_errno($handle));
+                $promise->reject($e);
             }
         }
 
@@ -209,6 +228,18 @@ class AsyncHttpClient extends HttpClient
      */
     public function getHandles()
     {
-        return $this->handles;
+        return array_column($this->tasks, 'handle');
+    }
+
+    /**
+     * Method to get property Tasks
+     *
+     * @return  resource[]
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
     }
 }
