@@ -142,8 +142,8 @@ class MysqlGrammar extends AbstractQueryGrammar
      * @param bool         $ifNotExists
      * @param string       $engine
      * @param string       $defaultCharset
+     * @param string       $collate
      *
-     * @throws \InvalidArgumentException
      * @return  string
      */
     public static function createTable(
@@ -154,7 +154,8 @@ class MysqlGrammar extends AbstractQueryGrammar
         $autoIncrement = null,
         $ifNotExists = true,
         $engine = 'InnoDB',
-        $defaultCharset = 'utf8'
+        $defaultCharset = 'utf8mb4',
+        $collate = 'utf8mb4_unicode_ci'
     ) {
         $query  = static::getQuery();
         $cols   = [];
@@ -195,8 +196,10 @@ class MysqlGrammar extends AbstractQueryGrammar
 
             $define = array_merge($define, $key);
 
-            $cols[] = strtoupper($define['type']) . ' ' . static::buildIndexDeclare($define['name'],
-                    $define['columns']);
+            $cols[] = strtoupper(
+                $define['type']) . ' ' . static::buildIndexDeclare($define['name'],
+                $define['columns']
+            );
         }
 
         $cols = "(\n" . implode(",\n", $cols) . "\n)";
@@ -208,7 +211,8 @@ class MysqlGrammar extends AbstractQueryGrammar
             $cols,
             'ENGINE=' . $engine,
             $autoIncrement ? 'AUTO_INCREMENT=' . $autoIncrement : null,
-            $defaultCharset ? 'DEFAULT CHARSET=' . $defaultCharset : null
+            $defaultCharset ? 'DEFAULT CHARSET=' . $defaultCharset : null,
+            $collate ? 'COLLATE=' . $collate : null
         );
     }
 

@@ -35,7 +35,8 @@ class MysqlTable extends AbstractTable
         $defaultOptions = [
             'auto_increment' => 1,
             'engine' => 'InnoDB',
-            'charset' => 'utf8',
+            'charset' => 'utf8mb4',
+            'collate' => 'utf8mb4_unicode_ci'
         ];
 
         $options = array_merge($defaultOptions, $options);
@@ -73,7 +74,7 @@ class MysqlTable extends AbstractTable
             ];
         }
 
-        $query = MysqlGrammar::createTable(
+        echo $query = MysqlGrammar::createTable(
             $this->getName(),
             $columns,
             $primary,
@@ -81,7 +82,8 @@ class MysqlTable extends AbstractTable
             $options['auto_increment'],
             $ifNotExists,
             $options['engine'],
-            $options['charset']
+            $options['charset'],
+            $options['collate']
         );
 
         $this->db->setQuery($query)->execute();
