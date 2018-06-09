@@ -91,7 +91,11 @@ abstract class AbstractTable
         $schema = $this->callSchema($schema);
 
         foreach ($schema->getColumns() as $column) {
-            $this->addColumn($column);
+            if ($this->hasColumn($column->getName())) {
+                $this->modifyColumn($column);
+            } else {
+                $this->addColumn($column);
+            }
         }
 
         foreach ($schema->getIndexes() as $index) {
