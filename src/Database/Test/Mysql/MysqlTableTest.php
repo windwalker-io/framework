@@ -118,8 +118,8 @@ class MysqlTableTest extends AbstractMysqlTestCase
 
         $table->create(function (Schema $schema) {
             $schema->primary('id')->comment('PK');
-            $schema->varchar('name')->allowNull(false);
-            $schema->varchar('alias');
+            $schema->varchar('name')->length(190)->allowNull(false);
+            $schema->varchar('alias')->length(190);
             $schema->float('float');
             $schema->datetime('created')->defaultValue(null);
 
@@ -131,7 +131,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
         $columns = $table->getColumnDetails();
 
         $this->assertEquals('int(11) unsigned', $columns['id']->Type);
-        $this->assertEquals('varchar(255)', $columns['name']->Type);
+        $this->assertEquals('varchar(190)', $columns['name']->Type);
         $this->assertEquals('UNI', $columns['alias']->Key);
         $this->assertEquals('float(10,2) unsigned', $columns['float']->Type);
         $this->assertEquals($this->db->getQuery(true)->getNullDate(), $columns['created']->Default);
@@ -189,7 +189,7 @@ class MysqlTableTest extends AbstractMysqlTestCase
         $columns = $table->getColumnDetails();
 
         $this->assertEquals('int(11) unsigned', $columns['id']->Type);
-        $this->assertEquals('varchar(255)', $columns['name']->Type);
+        $this->assertEquals('varchar(190)', $columns['name']->Type);
     }
 
     /**
