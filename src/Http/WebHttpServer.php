@@ -233,7 +233,7 @@ class WebHttpServer extends HttpServer
         $file = explode('/', $script);
         $file = array_pop($file);
 
-        if (0 === strpos($route, $file)) {
+        if ($file === '' || 0 === strpos($route, $file)) {
             $route = trim(substr($route, strlen($file)), '/');
         }
 
