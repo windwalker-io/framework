@@ -378,6 +378,10 @@ abstract class AbstractField
     {
         $result = new ValidateResult;
 
+        if ($this->get('disabled')) {
+            return $result;
+        }
+
         if ($this->required && !$this->checkRequired()) {
             return $result->setMessage(sprintf('Field %s value not allow empty.', $this->getLabel()))
                 ->setResult(ValidateResult::STATUS_REQUIRED)
@@ -430,6 +434,10 @@ abstract class AbstractField
      */
     public function filter()
     {
+        if ($this->get('disabled')) {
+            return $this;
+        }
+
         $filter = $this->getFilter();
 
         if (is_callable($filter)) {
