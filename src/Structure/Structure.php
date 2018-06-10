@@ -48,10 +48,10 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     public function __construct($data = null, $format = Format::JSON)
     {
         // Optionally load supplied data.
-        if (is_array($data) || is_object($data)) {
+        if (\is_array($data) || \is_object($data)) {
             $this->bindData($this->data, $data);
-        } elseif (!empty($data) && is_string($data)) {
-            if (strlen($data) < PHP_MAXPATHLEN && is_file($data)) {
+        } elseif (!empty($data) && \is_string($data)) {
+            if (\strlen($data) < PHP_MAXPATHLEN && is_file($data)) {
                 $this->loadFile($data, $format);
             } else {
                 $this->loadString($data, $format);
@@ -131,7 +131,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function exists($path)
     {
-        return !is_null($this->get($path));
+        return null !== $this->get($path);
     }
 
     /**
@@ -148,7 +148,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     {
         $result = StructureHelper::getByPath($this->data, $path, $this->separator);
 
-        return !is_null($result) ? $result : $default;
+        return null !== $result ? $result : $default;
     }
 
     /**
@@ -180,14 +180,15 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Load an array or object of values into the default namespace
      *
-     * @param  array|object $data The value to load into structure.
-     * @param  boolean      $raw  Set to false that we will convert all object to array.
+     * @param  array|object $data    The value to load into structure.
+     * @param  boolean      $raw     Set to false that we will convert all object to array.
+     * @param  array        $options The options to bind data.
      *
      * @return static Return this object to support chaining.
      */
-    public function load($data, $raw = false)
+    public function load($data, $raw = false, array $options = [])
     {
-        $this->bindData($this->data, $data, $raw);
+        $this->bindData($this->data, $data, $raw, $options);
 
         return $this;
     }
@@ -207,7 +208,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     {
         $raw = isset($options['load_raw']) ? $options['load_raw'] : false;
 
-        $this->load(StructureHelper::loadFile($file, $format, $options), $raw);
+        $this->load(StructureHelper::loadFile($file, $format, $options), $raw, $options);
 
         return $this;
     }
@@ -227,7 +228,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     {
         $raw = isset($options['load_raw']) ? $options['load_raw'] : false;
 
-        $this->load(StructureHelper::loadString($data, $format, $options), $raw);
+        $this->load(StructureHelper::loadString($data, $format, $options), $raw, $options);
 
         return $this;
     }
@@ -235,20 +236,21 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Merge a structure data into this object.
      *
-     * @param   Structure|mixed $source Source structure data to merge.
-     * @param   boolean         $raw    Set to false to convert all object to array.
+     * @param   Structure|mixed $source  Source structure data to merge.
+     * @param   boolean         $raw     Set to false to convert all object to array.
+     * @param   array           $options Options to bind data.
      *
      * @return  static  Return this object to support chaining.
      *
      * @since   2.0
      */
-    public function merge($source, $raw = false)
+    public function merge($source, $raw = false, array $options = [])
     {
-        if ($source instanceof Structure) {
+        if ($source instanceof self) {
             $source = $source->getRaw();
         }
 
-        $this->bindData($this->data, $source, $raw);
+        $this->bindData($this->data, $source, $raw, $options);
 
         return $this;
     }
@@ -256,13 +258,14 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Merge a structure data to a node.
      *
-     * @param   string    $path   The path to merge as root.
-     * @param   Structure $source Source structure data to merge.
-     * @param   boolean   $raw    Set to false to convert all object to array.
+     * @param   string    $path    The path to merge as root.
+     * @param   Structure $source  Source structure data to merge.
+     * @param   boolean   $raw     Set to false to convert all object to array.
+     * @param   array     $options Options to bind data.
      *
      * @return  static
      */
-    public function mergeTo($path, $source, $raw = false)
+    public function mergeTo($path, $source, $raw = false, array $options = [])
     {
         $nodes = StructureHelper::getPathNodes($path);
 
@@ -276,13 +279,13 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
             $tmp =& $tmp[$node];
         }
 
-        if ($source instanceof Structure) {
+        if ($source instanceof self) {
             $source = $source->getRaw();
         }
 
         $tmp = $source;
 
-        $this->bindData($this->data, $data, $raw);
+        $this->bindData($this->data, $data, $raw, $options);
 
         return $this;
     }
@@ -302,7 +305,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * getRaw
      *
-     * @return  \stdClass
+     * @return  array
      */
     public function getRaw()
     {
@@ -320,7 +323,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function offsetExists($offset)
     {
-        return (boolean) ($this->get($offset) !== null);
+        return $this->get($offset) !== null;
     }
 
     /**
@@ -378,7 +381,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function set($path, $value)
     {
-        if (is_array($value) || is_object($value)) {
+        if (\is_array($value) || \is_object($value)) {
             $value = StructureHelper::toArray($value, true);
         }
 
@@ -448,26 +451,33 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     /**
      * Method to recursively bind data to a parent object.
      *
-     * @param   array   $parent The parent object on which to attach the data values.
-     * @param   mixed   $data   An array or object of data to bind to the parent object.
-     * @param   boolean $raw    Set to false to convert all object to array.
+     * @param   array   $parent  The parent object on which to attach the data values.
+     * @param   mixed   $data    An array or object of data to bind to the parent object.
+     * @param   boolean $raw     Set to false to convert all object to array.
+     * @param   array   $options The options to bind data.
      *
      * @return  void
      */
-    protected function bindData(&$parent, $data, $raw = false)
+    protected function bindData(&$parent, $data, $raw = false, array $options = [])
     {
         // Ensure the input data is an array.
         if (!$raw) {
             $data = StructureHelper::toArray($data, true);
         }
 
+        $onlyExists = !empty($options['only_exists']);
+
         foreach ($data as $key => $value) {
-            if (in_array($value, $this->ignoreValues, true)) {
+            if (\in_array($value, $this->ignoreValues, true)) {
                 continue;
             }
 
-            if (is_array($value)) {
-                if (!isset($parent[$key]) || !is_array($parent[$key])) {
+            if ($onlyExists && !isset($parent[$key])) {
+                continue;
+            }
+
+            if (\is_array($value)) {
+                if (!isset($parent[$key]) || !\is_array($parent[$key])) {
                     $parent[$key] = [];
                 }
 
@@ -491,12 +501,12 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     {
         $array = [];
 
-        if (is_object($data)) {
+        if (\is_object($data)) {
             $data = get_object_vars($data);
         }
 
         foreach ($data as $k => $v) {
-            if (is_object($v) || is_array($v)) {
+            if (\is_object($v) || \is_array($v)) {
                 $array[$k] = $this->asArray($v);
             } else {
                 $array[$k] = $v;
@@ -562,16 +572,16 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 
         if (!$node) {
             $node = [];
-        } elseif (is_object($node)) {
+        } elseif (\is_object($node)) {
             $node = get_object_vars($node);
         }
 
-        if (!is_array($node)) {
+        if (!\is_array($node)) {
             throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.',
-                $path, gettype($node)));
+                $path, \gettype($node)));
         }
 
-        $args = func_get_args();
+        $args = \func_get_args();
 
         if (count($args) <= 2) {
             $num = array_push($node, $value);
@@ -602,18 +612,18 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
 
         if (!$node) {
             $node = [];
-        } elseif (is_object($node)) {
+        } elseif (\is_object($node)) {
             $node = get_object_vars($node);
         }
 
-        if (!is_array($node)) {
+        if (!\is_array($node)) {
             throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.',
                 $path, gettype($node)));
         }
 
-        $args = func_get_args();
+        $args = \func_get_args();
 
-        if (count($args) <= 2) {
+        if (\count($args) <= 2) {
             $key = array_unshift($node, $value);
         } else {
             $args[0] = &$node;
@@ -637,13 +647,17 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     {
         $node = $this->get($path);
 
-        if (is_object($node)) {
+        if (\is_object($node)) {
             $node = get_object_vars($node);
         }
 
-        if (!is_array($node)) {
-            throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.',
-                $path, gettype($node)));
+        if (!\is_array($node)) {
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'The value at path: %s should be object or array but is %s.',
+                    $path,
+                    \gettype($node)
+            ));
         }
 
         $value = array_shift($node);
@@ -664,13 +678,18 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
     {
         $node = $this->get($path);
 
-        if (is_object($node)) {
+        if (\is_object($node)) {
             $node = get_object_vars($node);
         }
 
-        if (!is_array($node)) {
-            throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.',
-                $path, gettype($node)));
+        if (!\is_array($node)) {
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'The value at path: %s should be object or array but is %s.',
+                    $path,
+                    \gettype($node)
+                )
+            );
         }
 
         $value = array_pop($node);
@@ -708,7 +727,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
      */
     public function count()
     {
-        return count($this->data);
+        return \count($this->data);
     }
 
     /**
