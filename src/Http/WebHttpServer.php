@@ -166,8 +166,9 @@ class WebHttpServer extends HttpServer
                 $response = $response->withoutHeader('Last-Modified')->withHeader('Last-Modified',
                     $this->modifiedDate->format('D, d M Y H:i:s') . ' GMT');
             }
-        } // Force uncachable
-        elseif ($this->getCachable() === static::CACHE_DISABLE) {
+        } elseif ($this->getCachable() === static::CACHE_DISABLE) {
+            // Force uncachable
+
             // Expires in the past.
             $response = $response->withoutHeader('Expires')->withHeader('Expires', 'Mon, 1 Jan 2001 00:00:00 GMT');
 
@@ -232,7 +233,7 @@ class WebHttpServer extends HttpServer
         $file = explode('/', $script);
         $file = array_pop($file);
 
-        if (substr($route, 0, strlen($file)) == $file) {
+        if (0 === strpos($route, $file)) {
             $route = trim(substr($route, strlen($file)), '/');
         }
 
@@ -260,13 +261,12 @@ class WebHttpServer extends HttpServer
         $server = $this->getRequest()->getServerParams();
 
         // If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
-        if (strpos(php_sapi_name(),
-                'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($server['REQUEST_URI'])) {
+        if (strpos(PHP_SAPI, 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($server['REQUEST_URI'])) {
             // We aren't expecting PATH_INFO within PHP_SELF so this should work.
-            $uri = $uri->withPath(rtrim(dirname(ServerHelper::getValue($server, 'PHP_SELF')), '/\\'));
-        } // Pretty much everything else should be handled with SCRIPT_NAME.
-        else {
-            $uri = $uri->withPath(rtrim(dirname(ServerHelper::getValue($server, 'SCRIPT_NAME')), '/\\'));
+            $uri = $uri->withPath(rtrim(\dirname(ServerHelper::getValue($server, 'PHP_SELF')), '/\\'));
+        } else {
+            // Pretty much everything else should be handled with SCRIPT_NAME.
+            $uri = $uri->withPath(rtrim(\dirname(ServerHelper::getValue($server, 'SCRIPT_NAME')), '/\\'));
         }
 
         // Clear the unused parts of the requested URI.
