@@ -130,6 +130,7 @@ class Edge
      * @param array  $__more
      *
      * @return string
+     * @throws EdgeException
      */
     public function render($__layout, $__data = [], $__more = [])
     {
@@ -153,9 +154,7 @@ class Edge
             $$__key = $__value;
         }
 
-        unset($__data);
-        unset($__value);
-        unset($__key);
+        unset($__data, $__value, $__key);
 
         ob_start();
 

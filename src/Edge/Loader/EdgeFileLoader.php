@@ -8,6 +8,8 @@
 
 namespace Windwalker\Edge\Loader;
 
+use Windwalker\Edge\Exception\LayoutNotFoundException;
+
 /**
  * The EdgeFileLoader class.
  *
@@ -65,7 +67,7 @@ class EdgeFileLoader implements EdgeLoaderInterface
         if ($filePath === null) {
             $paths = implode(" |\n ", $this->paths);
 
-            throw new \UnexpectedValueException('View file not found: ' . $key . ".\n (Paths: " . $paths . ')');
+            throw new LayoutNotFoundException('View file not found: ' . $key . ".\n (Paths: " . $paths . ')', 13001);
         }
 
         return $filePath;
