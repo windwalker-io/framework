@@ -8,6 +8,8 @@
 
 namespace Windwalker\DataMapper;
 
+use Windwalker\Cache\Serializer\JsonSerializer;
+use Windwalker\Data\DataInterface;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
 use Windwalker\Database\Schema\DataType;
@@ -261,7 +263,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                 // Then recreate a new Entity to force fields limit.
                 $entity = new Entity($fields, $data);
 
-                $entity = $this->prepareDefaultValue($entity);
+                $entity = $this->validValue($entity);
 
                 $this->db->getWriter()->insertOne($this->table, $entity, $pkName);
 
@@ -315,7 +317,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                 $entity = new Entity($this->getFields($this->table), $data);
 
                 if ($updateNulls) {
-                    $entity = $this->prepareDefaultValue($entity);
+                    $entity = $this->validValue($entity);
                 }
 
                 $this->db->getWriter()->updateOne($this->table, $entity, $condFields, $updateNulls);
@@ -543,11 +545,25 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      *
      * @return  Entity
      */
-    protected function prepareDefaultValue(Entity $entity)
+    protected function validValue(Entity $entity)
     {
         foreach ($entity->getFields() as $field => $detail) {
             $value = $entity[$field];
 
+            // Convert value type
+            if ($value instanceof DataInterface) {
+                $value = $value->format($this->db->getDateFormat());
+            }
+
+            if ($value instanceof JsonSerializer) {
+                $value = json_encode($value);
+            }
+
+            if (\is_object($value) && \is_callable([$value, '__toString'])) {
+                $value = (string) $value;
+            }
+
+            // Start prepare default value
             if (is_array($value) || is_object($value)) {
                 $value = null;
             }
