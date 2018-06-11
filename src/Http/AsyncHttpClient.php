@@ -236,7 +236,7 @@ class AsyncHttpClient extends HttpClient
      *
      * @return  resource[]
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function getTasks()
     {

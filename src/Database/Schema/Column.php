@@ -455,7 +455,7 @@ class Column
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function suffix($suffix)
     {
@@ -469,7 +469,7 @@ class Column
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function getSuffix()
     {

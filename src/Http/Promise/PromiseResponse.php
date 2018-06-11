@@ -2,8 +2,8 @@
 /**
  * Part of earth project.
  *
- * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2018 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Http\Promise;
@@ -13,7 +13,7 @@ use Windwalker\Http\Response\Response;
 /**
  * The PromiseResponse class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.4
  */
 class PromiseResponse extends Response
 {
@@ -38,7 +38,7 @@ class PromiseResponse extends Response
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function then(callable $callback)
     {
@@ -54,7 +54,7 @@ class PromiseResponse extends Response
      *
      * @return  static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function reject(callable $callback)
     {
@@ -70,7 +70,7 @@ class PromiseResponse extends Response
      *
      * @return  mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function resolve($value)
     {

@@ -44,7 +44,7 @@ class Timestamp extends Column
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function autoUpdate($value = 'CURRENT_TIMESTAMP')
     {

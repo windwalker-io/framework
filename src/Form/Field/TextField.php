@@ -83,7 +83,7 @@ class TextField extends AbstractField
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function buildInput($attrs)
     {
