@@ -121,15 +121,27 @@ You can also set a custom name
 $schema->addIndex(array('foo', 'bar'), 'idx_custom_name');
 ```
 
+After 3.4, Windwalker use `utf8mb4` as default charset, The `varchar(255)` type may receive 
+**Error: Specified key was too long; max key length is 767 bytes** error message and unable to set index, you can 
+add index length to solve this problem.
+ 
+```php
+$schema->addIndex('foo(150)');
+```
+
 ## update()
+
+In `update()` method, if a column exists, it will be modified. If a column is not exists, it will be created.
 
 ``` php
 // Will add category_id column and a index
-$table->create(function (Schema $schema)
+$table->update(function (Schema $schema)
 {
     $schema->integer('category_id')->signed(false)->allowNull(false)->comment('Cat Key');
 
 	$schema->addIndex('category_id');
+	
+	$schema->char('title')->length(15); // If title exists, it will change to `char(15)`
 });
 ```
 
@@ -177,11 +189,15 @@ $table->dropIndex(Key::TYPE_INDEX, 'idx_state');
 
 ## changeColumn() & modifyColumn()
 
-``` php
+```php
+use Windwalker\Database\Schema\Column;
+
 // Modify `foo` column to new type or length
 $table->modifyColumn(
-	(new Varchar('foo'))->length(123)->comment('Foo')
+	(new Column('foo', 'varchar'))->length(123)->comment('Foo')
 );
+
+use Windwalker\Database\Schema\Column\Varchar;
 
 // Modify column `foo` to varchar and rename it to `new_name`
 $table->changeColumn('foo', new Varchar('new_name'));
