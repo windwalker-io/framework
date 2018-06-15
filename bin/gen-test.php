@@ -6,6 +6,8 @@
  * @license    GNU Lesser General Public License version 3 or later. see LICENSE
  */
 
+namespace Cli;
+
 use Windwalker\Application\AbstractCliApplication;
 use Windwalker\Console\Prompter\ValidatePrompter;
 use Windwalker\Filesystem\Folder;
@@ -34,6 +36,7 @@ class GenTest extends AbstractCliApplication
      *
      * @throws  \LogicException
      * @throws  \RuntimeException
+     * @throws  \ReflectionException
      */
     public function doExecute()
     {
@@ -54,7 +57,7 @@ class GenTest extends AbstractCliApplication
             exit();
         }
 
-        $replace = new Structure;
+        $replace = new Structure();
 
         $ref = new \ReflectionClass($class);
 
@@ -64,12 +67,15 @@ class GenTest extends AbstractCliApplication
         $replace['origin.class.shortname'] = $ref->getShortName();
         $replace['origin.class.namespace'] = $ref->getNamespaceName();
 
-        $replace['test.dir'] = WINDWALKER_ROOT . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $package . DIRECTORY_SEPARATOR . 'Test';
+        $replace['test.dir'] = WINDWALKER_ROOT . DIRECTORY_SEPARATOR . 'src' .
+            DIRECTORY_SEPARATOR . $package . DIRECTORY_SEPARATOR . 'Test';
 
         $replace['test.class.name']      = $replace['origin.class.namespace'] . '\\Test\\' . $target;
         $replace['test.class.file']      = Path::clean($replace['test.dir'] . DIRECTORY_SEPARATOR . $target . '.php');
         $replace['test.class.dir']       = dirname($replace['test.class.file']);
-        $replace['test.class.shortname'] = $this->getShortname(StringNormalise::toClassNamespace($replace['test.class.name']));
+        $replace['test.class.shortname'] = $this->getShortname(
+            StringNormalise::toClassNamespace($replace['test.class.name'])
+        );
         $replace['test.class.namespace'] = $this->getNamespace($replace['test.class.name']);
 
         $methods     = $ref->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_STATIC);
@@ -77,7 +83,7 @@ class GenTest extends AbstractCliApplication
         $methodCodes = [];
 
         foreach ($methods as $method) {
-            if ($method->getDeclaringClass()->getName() != $replace['origin.class.name']) {
+            if ($method->getDeclaringClass()->getName() !== $replace['origin.class.name']) {
                 continue;
             }
 
@@ -149,6 +155,6 @@ class GenTest extends AbstractCliApplication
     }
 }
 
-$app = new GenTest;
+$app = new GenTest();
 
 $app->execute();
