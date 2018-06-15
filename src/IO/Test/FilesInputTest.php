@@ -33,7 +33,7 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new FilesInput;
+        $this->instance = new FilesInput();
     }
 
     /**

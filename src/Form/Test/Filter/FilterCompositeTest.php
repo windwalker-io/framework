@@ -33,7 +33,7 @@ class FilterCompositeTest extends TestCase
      */
     protected function setUp()
     {
-        $this->instance = new FilterComposite;
+        $this->instance = new FilterComposite();
     }
 
     /**

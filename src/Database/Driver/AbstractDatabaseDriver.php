@@ -223,7 +223,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
         if ($this->middlewares) {
             // Prepare middleware data
-            $data        = new \stdClass;
+            $data        = new \stdClass();
             $data->debug = &$this->debug;
             $data->query = &$this->query;
             $data->sql   = $this->replacePrefix((string) $this->query);
@@ -892,7 +892,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      */
     public function resetMiddlewares()
     {
-        $this->middlewares = new ChainBuilder;
+        $this->middlewares = new ChainBuilder();
         $this->middlewares->add([$this, 'doExecute']);
 
         return $this;

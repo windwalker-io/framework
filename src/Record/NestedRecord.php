@@ -331,7 +331,6 @@ class NestedRecord extends Record
             $this->level     = $repositionData->new_level;
             $this->lft       = $repositionData->new_lft;
             $this->rgt       = $repositionData->new_rgt;
-
         } /*
 		 * If we have a given primary key then we assume we are simply updating this
 		 * node in the tree.  We should assess whether or not we are moving the node
@@ -968,7 +967,7 @@ class NestedRecord extends Record
         }
 
         $k    = $this->getKeyName();
-        $data = new \stdClass;
+        $data = new \stdClass();
 
         // Run the calculations and build the data object by reference position.
         switch ($position) {

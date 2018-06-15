@@ -30,7 +30,7 @@ class SessionTest extends AbstractSessionTestCase
     {
         $this->bridge = new MockArrayBridge('PHPSESSID');
 
-        $this->bag = new ArrayBag;
+        $this->bag = new ArrayBag();
 
         $this->options = [
             'expire_time' => 20,
@@ -183,7 +183,7 @@ class SessionTest extends AbstractSessionTestCase
      */
     public function testTakeAll()
     {
-        $this->instance->setBag('foo', new SessionBag);
+        $this->instance->setBag('foo', new SessionBag());
 
         $this->instance->set('a', 'b', 'foo');
         $this->instance->set('c', 'd', 'foo');
@@ -204,7 +204,7 @@ class SessionTest extends AbstractSessionTestCase
      */
     public function testClean()
     {
-        $this->instance->setBag('foo', new SessionBag);
+        $this->instance->setBag('foo', new SessionBag());
 
         $this->instance->set('a', 'b', 'foo');
         $this->instance->set('c', 'd', 'foo');

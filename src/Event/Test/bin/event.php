@@ -23,9 +23,9 @@ class AL
     }
 }
 
-$d = new \Windwalker\Event\Dispatcher;
+$d = new \Windwalker\Event\Dispatcher();
 
-$d->addListener(new AL);
+$d->addListener(new AL());
 $d->addListener(
     function ($event) {
         echo 'Ccc' . "\n";

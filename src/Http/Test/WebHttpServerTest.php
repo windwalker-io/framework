@@ -55,9 +55,9 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
      */
     protected function createServer($handler, ResponseInterface $response = null)
     {
-        $server = WebHttpServer::create($handler, new ServerRequest, $response);
+        $server = WebHttpServer::create($handler, new ServerRequest(), $response);
 
-        $server->setOutput(new StubStreamOutput);
+        $server->setOutput(new StubStreamOutput());
 
         return $server;
     }
@@ -73,7 +73,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
     {
         $server = $this->createServer(function ($request, ResponseInterface $response) {
             return $response->getBody()->write('Hello');
-        }, new HtmlResponse);
+        }, new HtmlResponse());
 
         $server->listen();
 
@@ -97,7 +97,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
         // Cachable
         $server->cachable(WebHttpServer::CACHE_ENABLE);
 
-        $response = $server->prepareCache(new Response);
+        $response = $server->prepareCache(new Response());
 
         $headers = $response->getHeaders();
 
@@ -105,14 +105,14 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
             $headers['Expires'][0]);
 
         $date = new \DateTime($headers['Expires'][0]);
-        $now  = new \DateTime;
+        $now  = new \DateTime();
 
         $this->assertTrue($date > $now);
 
         // Disable
         $server->cachable(WebHttpServer::CACHE_DISABLE);
 
-        $response = $server->prepareCache(new Response);
+        $response = $server->prepareCache(new Response());
 
         $headers = $response->getHeaders();
 
@@ -126,7 +126,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
         // Custom Header
         $server->cachable(WebHttpServer::CACHE_CUSTOM_HEADER);
 
-        $response = $server->prepareCache(new Response);
+        $response = $server->prepareCache(new Response());
 
         $headers = $response->getHeaders();
 

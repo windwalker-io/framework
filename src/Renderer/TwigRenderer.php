@@ -177,7 +177,7 @@ class TwigRenderer extends AbstractEngineRenderer
     public function getDebugExtension()
     {
         if (!$this->debugExtension) {
-            $this->debugExtension = new \Twig_Extension_Debug;
+            $this->debugExtension = new \Twig_Extension_Debug();
         }
 
         return $this->debugExtension;

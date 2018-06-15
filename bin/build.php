@@ -322,6 +322,6 @@ HELP;
     }
 }
 
-$app = new Build;
+$app = new Build();
 
 $app->execute();

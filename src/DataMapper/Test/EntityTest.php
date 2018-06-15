@@ -99,7 +99,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddFields()
     {
-        $entity = new Entity;
+        $entity = new Entity();
 
         $entity->addFields($this->getTestFields());
 
@@ -152,7 +152,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
      */
     public function testAccessor()
     {
-        $entity = new StubEntity;
+        $entity = new StubEntity();
 
         $this->assertEquals('foo_bar', $entity->foo_bar);
     }
@@ -164,7 +164,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
      */
     public function testMutator()
     {
-        $entity = new StubEntity;
+        $entity = new StubEntity();
 
         $entity->flower_sakura = 'yoo';
 

@@ -256,11 +256,11 @@ class RecordTest extends AbstractMysqlTestCase
 
         $this->assertExpectedException(function () use ($record) {
             $record->validate();
-        }, new \RuntimeException, 'Record save error');
+        }, new \RuntimeException(), 'Record save error');
 
         $this->assertExpectedException(function () use ($record) {
             $record->save([]);
-        }, new \RuntimeException, 'Record save error');
+        }, new \RuntimeException(), 'Record save error');
     }
 
     /**

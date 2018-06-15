@@ -44,8 +44,8 @@ class Cache implements CacheInterface, \ArrayAccess
      */
     public function __construct(CacheItemPoolInterface $storage = null, SerializerInterface $serializer = null)
     {
-        $this->storage    = $storage ?: new ArrayStorage;
-        $this->serializer = $serializer ?: new PhpSerializer;
+        $this->storage    = $storage ?: new ArrayStorage();
+        $this->serializer = $serializer ?: new PhpSerializer();
     }
 
     /**

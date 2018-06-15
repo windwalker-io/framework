@@ -89,7 +89,7 @@ class Schema
     public function addColumn($column)
     {
         if (is_string($column) && class_exists($column)) {
-            $column = new $column;
+            $column = new $column();
         }
 
         if (!$column instanceof Column) {
@@ -119,7 +119,7 @@ class Schema
                 return explode('(', $col)[0];
             }, $columns);
 
-            $name    = 'idx_' . trim($this->table->getName(), '#_') . '_' . implode('_', $columns);
+            $name = 'idx_' . trim($this->table->getName(), '#_') . '_' . implode('_', $columns);
 
             $key->name($name);
         }
@@ -189,7 +189,7 @@ class Schema
 
         $column = array_shift($arguments);
 
-        return $this->add($column, new $class);
+        return $this->add($column, new $class());
     }
 
     /**

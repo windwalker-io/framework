@@ -59,9 +59,9 @@ class TestB extends Middleware
 //
 //$a->call();
 
-$c = new ChainBuilder;
+$c = new ChainBuilder();
 
 $c->add('TestA')
-    ->add(new TestB);
+    ->add(new TestB());
 
 $c->execute();

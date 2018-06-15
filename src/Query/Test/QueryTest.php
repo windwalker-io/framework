@@ -39,7 +39,7 @@ class QueryTest extends AbstractQueryTestCase
      */
     protected function setUp()
     {
-        $this->instance = new Query;
+        $this->instance = new Query();
     }
 
     /**
@@ -49,7 +49,7 @@ class QueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new Query;
+        return new Query();
     }
 
     /**

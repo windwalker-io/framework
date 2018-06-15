@@ -32,7 +32,7 @@ class IpValidatorTest extends AbstractValidateTestCase
      */
     protected function setUp()
     {
-        $this->instance = new IpValidator;
+        $this->instance = new IpValidator();
     }
 
     /**

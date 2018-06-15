@@ -236,7 +236,7 @@ class PsrUriTest extends AbstractBaseTestCase
      */
     public function testQueryEncoded($query, $expected)
     {
-        $uri = new PsrUri;
+        $uri = new PsrUri();
         $uri = $uri->withQuery($query);
         $this->assertEquals($expected, $uri->getQuery());
 
@@ -252,7 +252,7 @@ class PsrUriTest extends AbstractBaseTestCase
      */
     public function testFragmentEncoded()
     {
-        $uri      = new PsrUri;
+        $uri      = new PsrUri();
         $uri      = $uri->withFragment('/p^th?key^=`bar#b@z');
         $expected = '/p%5Eth?key%5E=%60bar%23b@z';
         $this->assertEquals($expected, $uri->getFragment());

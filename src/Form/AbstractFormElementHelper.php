@@ -39,7 +39,7 @@ abstract class AbstractFormElementHelper
     public static function init($reset = false)
     {
         if (!static::$namespaces || $reset) {
-            $namespaces = new \SplPriorityQueue;
+            $namespaces = new \SplPriorityQueue();
 
             $namespaces->insert(static::$defaultNamespace, $reset);
 

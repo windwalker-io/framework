@@ -57,7 +57,7 @@ class OracleQueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new OracleQuery;
+        return new OracleQuery();
     }
 
     /**

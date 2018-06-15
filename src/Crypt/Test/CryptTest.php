@@ -34,7 +34,7 @@ class CryptTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Crypt(new PhpAesCipher);
+        $this->instance = new Crypt(new PhpAesCipher());
     }
 
     /**
@@ -61,7 +61,7 @@ class CryptTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($this->instance->verify('windwalker', $encrypted));
 
-        $crypt = new Crypt(new PhpAesCipher, 'flower');
+        $crypt = new Crypt(new PhpAesCipher(), 'flower');
 
         $encrypted = $crypt->encrypt('windwalker');
 
@@ -93,7 +93,7 @@ class CryptTest extends \PHPUnit\Framework\TestCase
         $key       = 'flower';
         $encrypted = 'VNEc5QYyPCpOUP5UjJnp07eZynRNKoQu';
 
-        $crypt = new Crypt(new BlowfishCipher, $key);
+        $crypt = new Crypt(new BlowfishCipher(), $key);
 
         $decryped = $crypt->decrypt($encrypted);
 

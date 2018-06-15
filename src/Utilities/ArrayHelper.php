@@ -31,7 +31,7 @@ class ArrayHelper
      */
     public static function toObject(array $array, $class = 'stdClass')
     {
-        $obj = new $class;
+        $obj = new $class();
 
         foreach ($array as $k => $v) {
             if (is_array($v)) {
@@ -599,7 +599,7 @@ class ArrayHelper
             }
 
             if (class_exists($type)) {
-                return new $type;
+                return new $type();
             }
 
             throw new \InvalidArgumentException(sprintf('Type or class: %s not exists', $type));
@@ -900,7 +900,7 @@ class ArrayHelper
      */
     public static function mapKey($origin, $map = [])
     {
-        $result = is_array($origin) ? [] : new \stdClass;
+        $result = is_array($origin) ? [] : new \stdClass();
 
         foreach ((array) $origin as $key => $val) {
             $newKey = self::getValue($map, $key);

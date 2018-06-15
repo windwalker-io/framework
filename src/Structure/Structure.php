@@ -657,7 +657,7 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
                     'The value at path: %s should be object or array but is %s.',
                     $path,
                     \gettype($node)
-            ));
+                ));
         }
 
         $value = array_shift($node);

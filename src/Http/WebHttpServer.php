@@ -28,7 +28,9 @@ use Windwalker\Uri\UriData;
 class WebHttpServer extends HttpServer
 {
     const CACHE_ENABLE = true;
+
     const CACHE_DISABLE = false;
+
     const CACHE_CUSTOM_HEADER = null;
 
     /**
@@ -96,7 +98,7 @@ class WebHttpServer extends HttpServer
     ) {
         parent::__construct($handler, $request, $response, $output);
 
-        $this->uriData = new UriData;
+        $this->uriData = new UriData();
 
         $this->loadSystemUris();
 
@@ -180,7 +182,6 @@ class WebHttpServer extends HttpServer
 
             // HTTP 1.0
             $response = $response->withHeader('pragma', 'no-cache');
-
         }
 
         return $response;

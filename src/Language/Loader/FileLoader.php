@@ -16,11 +16,17 @@ namespace Windwalker\Language\Loader;
 class FileLoader extends AbstractLoader
 {
     const MIN = 0;
+
     const LOW = 100;
+
     const BELOW_NORMAL = 200;
+
     const NORMAL = 300;
+
     const ABOVE_NORMAL = 400;
+
     const HIGH = 500;
+
     const MAX = 600;
 
     /**
@@ -46,7 +52,7 @@ class FileLoader extends AbstractLoader
     public function __construct($paths = [], $priority = self::NORMAL)
     {
         if (!($paths instanceof \SplPriorityQueue)) {
-            $queue = new \SplPriorityQueue;
+            $queue = new \SplPriorityQueue();
 
             foreach ((array) $paths as $path) {
                 $queue->insert($path, $priority);

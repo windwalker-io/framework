@@ -40,7 +40,7 @@ class SimpleCipherTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new SimpleCipher;
+        $this->instance = new SimpleCipher();
     }
 
     /**

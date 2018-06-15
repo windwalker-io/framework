@@ -27,7 +27,9 @@ if (!defined('OPENSSL_RAW_DATA')) {
 abstract class AbstractCipher implements CipherInterface
 {
     const PBKDF2_HASH_ALGORITHM = 'SHA256';
+
     const PBKDF2_SALT_BYTE_SIZE = 32;
+
     const PBKDF2_HASH_BYTE_SIZE = 32;
 
     /**
@@ -351,7 +353,6 @@ abstract class AbstractCipher implements CipherInterface
     {
         return hash_hmac(self::PBKDF2_HASH_ALGORITHM, $message, $this->secureHMACKey, true);
     }
-
 
     /**
      * PBKDF2 key derivation function as defined by RSA's PKCS #5: https://www.ietf.org/rfc/rfc2898.txt

@@ -24,18 +24,21 @@ class PdoQueueDriver implements QueueDriverInterface
      * @var  \PDO
      */
     protected $pdo;
+
     /**
      * Property table.
      *
      * @var
      */
     protected $table;
+
     /**
      * Property queue.
      *
      * @var  string
      */
     protected $queue;
+
     /**
      * Property timeout.
      *
@@ -147,7 +150,7 @@ class PdoQueueDriver implements QueueDriverInterface
             throw $t;
         }
 
-        $message = new QueueMessage;
+        $message = new QueueMessage();
 
         $message->setId($data['id']);
         $message->setAttempts($data['attempts']);

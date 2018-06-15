@@ -111,7 +111,7 @@ abstract class AbstractRenderer implements RendererInterface
     public function setPaths($paths)
     {
         if (!($paths instanceof \SplPriorityQueue)) {
-            $priority = new \SplPriorityQueue;
+            $priority = new \SplPriorityQueue();
 
             foreach ((array) $paths as $i => $path) {
                 $priority->insert($path, 100 - ($i * 10));

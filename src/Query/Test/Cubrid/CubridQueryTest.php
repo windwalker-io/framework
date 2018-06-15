@@ -64,7 +64,7 @@ class CubridQueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new CubridQuery;
+        return new CubridQuery();
     }
 
     /**

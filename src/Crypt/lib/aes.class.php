@@ -1,5 +1,6 @@
 <?php
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+
 /*  AES implementation in PHP                                                                     */
 /*    (c) Chris Veness 2005-2011 www.movable-type.co.uk/scripts                                   */
 /*    Right of free use is granted for all commercial or non-commercial use providing this        */
@@ -9,7 +10,6 @@
 
 class Aes
 {
-
     /**
      * AES Cipher function: encrypt 'input' with Rijndael algorithm
      *
@@ -46,9 +46,9 @@ class Aes
         for ($i = 0; $i < 4 * $Nb; $i++) {
             $output[$i] = $state[$i % 4][floor($i / 4)];
         }
+
         return $output;
     }
-
 
     private static function addRoundKey($state, $w, $rnd, $Nb)
     {  // xor Round Key into state S [§5.1.4]
@@ -57,6 +57,7 @@ class Aes
                 $state[$r][$c] ^= $w[$rnd * 4 + $c][$r];
             }
         }
+
         return $state;
     }
 
@@ -67,6 +68,7 @@ class Aes
                 $s[$r][$c] = self::$sBox[$s[$r][$c]];
             }
         }
+
         return $s;
     }
 
@@ -81,6 +83,7 @@ class Aes
                 $s[$r][$c] = $t[$c];
             }           // and copy back
         }          // note that this will work for Nb=4,5,6, but not 7,8 (always 4 for AES):
+
         return $s;  // see fp.gladman.plus.com/cryptography_technology/rijndael/aes.spec.311.pdf 
     }
 
@@ -99,6 +102,7 @@ class Aes
             $s[2][$c] = $a[0] ^ $a[1] ^ $b[2] ^ $a[3] ^ $b[3]; // a0 + a1 + 2*a2 + 3*a3
             $s[3][$c] = $a[0] ^ $b[0] ^ $a[1] ^ $a[2] ^ $b[3]; // 3*a0 + a1 + a2 + 2*a3
         }
+
         return $s;
     }
 
@@ -143,6 +147,7 @@ class Aes
                 $w[$i][$t] = $w[$i - $Nk][$t] ^ $temp[$t];
             }
         }
+
         return $w;
     }
 
@@ -151,6 +156,7 @@ class Aes
         for ($i = 0; $i < 4; $i++) {
             $w[$i] = self::$sBox[$w[$i]];
         }
+
         return $w;
     }
 
@@ -161,6 +167,7 @@ class Aes
             $w[$i] = $w[$i + 1];
         }
         $w[3] = $tmp;
+
         return $w;
     }
 
@@ -438,7 +445,6 @@ class Aes
         [0x1b, 0x00, 0x00, 0x00],
         [0x36, 0x00, 0x00, 0x00],
     ];
-
 }
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
@@ -453,7 +459,6 @@ class Aes
 
 class AesCtr extends Aes
 {
-
     /**
      * Encrypt a text using AES encryption in Counter mode of operation
      *  - see http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf
@@ -541,9 +546,9 @@ class AesCtr extends Aes
         // implode is more efficient than repeated string concatenation
         $ciphertext = $ctrTxt . implode('', $ciphertxt);
         $ciphertext = base64_encode($ciphertext);
+
         return $ciphertext;
     }
-
 
     /**
      * Decrypt a text encrypted by AES in counter mode of operation
@@ -608,7 +613,6 @@ class AesCtr extends Aes
                 // -- xor plaintext with ciphered counter byte-by-byte --
                 $plaintxtByte[$i] = $cipherCntr[$i] ^ ord(substr($ciphertext[$b], $i, 1));
                 $plaintxtByte[$i] = chr($plaintxtByte[$i]);
-
             }
             $plaintxt[$b] = implode('', $plaintxtByte);
         }
@@ -618,7 +622,6 @@ class AesCtr extends Aes
 
         return $plaintext;
     }
-
 
     /*
      * Unsigned right shift function, since PHP has neither >>> operator nor unsigned ints
@@ -637,8 +640,8 @@ class AesCtr extends Aes
         } else {                       // otherwise
             $a = ($a >> $b);               //   use normal right-shift
         }
+
         return $a;
     }
-
 }
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */

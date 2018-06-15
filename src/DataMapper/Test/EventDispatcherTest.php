@@ -42,7 +42,7 @@ class EventDispatcherTest extends AbstractBaseTestCase
     {
         $this->instance = new StubDispatcherAwareDatamapper('stub');
 
-        $this->listener = new StubDataMapperListener;
+        $this->listener = new StubDataMapperListener();
 
         $this->instance->getDispatcher()->addListener($this->listener);
     }

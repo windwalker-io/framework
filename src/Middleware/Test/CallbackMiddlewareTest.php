@@ -35,7 +35,7 @@ class CallbackMiddlewareTest extends AbstractBaseTestCase
      */
     protected function setUp()
     {
-        $this->instance = new CallbackMiddleware;
+        $this->instance = new CallbackMiddleware();
     }
 
     /**
@@ -67,9 +67,9 @@ class CallbackMiddlewareTest extends AbstractBaseTestCase
             }
         );
 
-        $othello = new StubOthelloMiddleware;
+        $othello = new StubOthelloMiddleware();
 
-        $othello->setNext(new EndMiddleware);
+        $othello->setNext(new EndMiddleware());
 
         $this->instance->setNext($othello);
 

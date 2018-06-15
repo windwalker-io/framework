@@ -57,7 +57,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
     public function test__construct()
     {
         // Default constructor call
-        $instance = new Input;
+        $instance = new Input();
 
         $this->assertEquals(
             $_REQUEST,
@@ -70,7 +70,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
         );
 
         // Given source & filter
-        $instance = new Input($_GET, new InputFilter);
+        $instance = new Input($_GET, new InputFilter());
 
         $this->assertEquals(
             $_GET,
@@ -92,7 +92,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
     {
         $_REQUEST['foo'] = 'bar';
 
-        $instance = new Input;
+        $instance = new Input();
 
         $instance->prepareSource($_REQUEST, true);
 
@@ -150,7 +150,6 @@ class InputTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(0, $input->count());
     }
-
 
     /**
      * Test the Windwalker\IO\Input::get method with a normal value.

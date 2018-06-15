@@ -137,7 +137,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
             $trans->rollback();
         }
 
-        $message = new QueueMessage;
+        $message = new QueueMessage();
 
         $message->setId($data['id']);
         $message->setAttempts($data['attempts']);

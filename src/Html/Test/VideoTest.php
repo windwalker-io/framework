@@ -33,7 +33,7 @@ class VideoTest extends AbstractDomTestCase
      */
     protected function setUp()
     {
-        $this->instance = new Video;
+        $this->instance = new Video();
     }
 
     /**

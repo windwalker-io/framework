@@ -33,7 +33,7 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new InputFilter;
+        $this->instance = new InputFilter();
     }
 
     /**
@@ -634,7 +634,7 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Closure', $handler);
 
         // Thor
-        $this->instance->setHandler('hammer', new StubThorCleaner);
+        $this->instance->setHandler('hammer', new StubThorCleaner());
 
         $return = $this->instance->clean('Thor', 'hammer');
 

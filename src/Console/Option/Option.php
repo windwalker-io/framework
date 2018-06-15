@@ -265,7 +265,7 @@ class Option
     public function getIO()
     {
         if (!$this->io) {
-            $this->io = new IO;
+            $this->io = new IO();
         }
 
         return $this->io;

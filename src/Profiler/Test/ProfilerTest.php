@@ -64,7 +64,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($this->instance->getPoints());
         $this->assertEquals(PhpHelper::isHHVM(), $this->instance->getMemoryRealUsage());
 
-        $renderer = new DefaultRenderer;
+        $renderer = new DefaultRenderer();
         $pointOne = new Point('start');
         $pointTwo = new Point('two', 1, 1);
         $points   = [
@@ -243,7 +243,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
         // Reset the property.
         TestHelper::setValue($this->instance, 'renderer', null);
 
-        $renderer = new DefaultRenderer;
+        $renderer = new DefaultRenderer();
 
         $this->instance->setRenderer($renderer);
 
@@ -268,7 +268,6 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
 test 0.000 seconds (+0.000); 0.00 MB (0.000) - start
 test 5.000 seconds (+5.000); 0.00 MB (+0.001) - stop
 RESULT;
-
 
         $this->assertEquals(
             str_replace(["\r", "\n"], '', trim($expected)),

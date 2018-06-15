@@ -91,7 +91,7 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
      */
     public function testExecute()
     {
-        $this->instance->server->setOutput(new MockOutput);
+        $this->instance->server->setOutput(new MockOutput());
 
         ob_start();
         $this->instance->execute();
@@ -114,7 +114,7 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
      */
     public function test__toString()
     {
-        $this->instance->server->setOutput(new NoHeaderOutput);
+        $this->instance->server->setOutput(new NoHeaderOutput());
 
         $this->assertEquals('Hello World', (string) $this->instance);
     }
@@ -128,7 +128,7 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
      */
     public function testRedirect()
     {
-        $this->instance->server->setOutput(new MockOutput);
+        $this->instance->server->setOutput(new MockOutput());
 
         $this->instance->redirect('/foo');
 
@@ -143,7 +143,7 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('HTTP/1.1 303 See Other', $this->instance->server->getOutput()->status);
 
         // Code
-        $this->instance->server->setOutput(new MockOutput);
+        $this->instance->server->setOutput(new MockOutput());
 
         $this->instance->redirect('/foo', 307);
 
@@ -175,7 +175,7 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAndSetEnvironment()
     {
-        $this->instance->setEnvironment($env = new WebEnvironment);
+        $this->instance->setEnvironment($env = new WebEnvironment());
 
         $this->assertSame($this->instance->browser, $this->instance->environment->getBrowser());
         $this->assertSame($this->instance->platform, $this->instance->getEnvironment()->getPlatform());

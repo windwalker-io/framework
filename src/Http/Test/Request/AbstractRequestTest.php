@@ -36,7 +36,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
      */
     protected function setUp()
     {
-        $this->instance = new StubRequest;
+        $this->instance = new StubRequest();
     }
 
     /**
@@ -57,7 +57,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
     public function testConstruct()
     {
         // Test no params
-        $request = new StubRequest;
+        $request = new StubRequest();
 
         $this->assertInstanceOf('Windwalker\Uri\PsrUri', $request->getUri());
         $this->assertEquals('', (string) $request->getUri());
@@ -89,7 +89,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
 
         // Test with object params
         $uri     = new PsrUri('http://example.com/flower/sakura?foo=bar#baz');
-        $body    = new Stream;
+        $body    = new Stream();
         $request = new StubRequest($uri, null, $body);
 
         $this->assertSame($uri, $request->getUri());
@@ -141,7 +141,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
 
         $this->assertExpectedException(function () use ($request) {
             $request->withMethod('FLY');
-        }, new \InvalidArgumentException);
+        }, new \InvalidArgumentException());
     }
 
     /**

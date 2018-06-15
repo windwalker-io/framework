@@ -95,7 +95,7 @@ class Profiler implements ProfilerInterface, \Countable
         $memoryRealUsage = null
     ) {
         $this->name     = $name;
-        $this->renderer = $renderer ?: new DefaultRenderer;
+        $this->renderer = $renderer ?: new DefaultRenderer();
 
         if (empty($points)) {
             $this->points = [];

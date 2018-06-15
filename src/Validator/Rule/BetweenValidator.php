@@ -23,6 +23,7 @@ class BetweenValidator extends AbstractValidator
      * @var float
      */
     protected $start;
+
     /**
      * Property end.
      *
@@ -39,7 +40,7 @@ class BetweenValidator extends AbstractValidator
     public function __construct($start, $end)
     {
         $this->start = (float) $start;
-        $this->end = (float) $end;
+        $this->end   = (float) $end;
     }
 
     /**

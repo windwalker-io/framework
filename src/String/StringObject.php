@@ -60,7 +60,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      * @see http://php.net/manual/en/xml.encoding.php
      */
     const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
+
     const ENCODING_UTF8 = 'UTF-8';
+
     const ENCODING_US_ASCII = 'US-ASCII';
 
     /**

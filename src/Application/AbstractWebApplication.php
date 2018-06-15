@@ -131,7 +131,6 @@ abstract class AbstractWebApplication extends AbstractApplication
         // @event onBeforeRespond
 
         $this->server->getOutput()->respond($response);
-
         // @event onAfterRespond
     }
 

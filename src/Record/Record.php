@@ -28,6 +28,7 @@ use Windwalker\Record\Exception\NoResultException;
 class Record extends Entity
 {
     const UPDATE_NULLS = true;
+
     const LOAD_DEFAULT = true;
 
     /**
@@ -647,7 +648,7 @@ class Record extends Entity
     public function getDispatcher()
     {
         if (!$this->dispatcher && class_exists(Dispatcher::class)) {
-            $this->dispatcher = new Dispatcher;
+            $this->dispatcher = new Dispatcher();
 
             if (is_subclass_of($this, DispatcherAwareInterface::class)) {
                 ListenerMapper::add($this);

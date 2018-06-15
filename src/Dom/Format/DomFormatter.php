@@ -34,11 +34,15 @@ class DomFormatter
     ];
 
     const ELEMENT_TYPE_BLOCK = 0;
+
     const ELEMENT_TYPE_INLINE = 1;
 
     const MATCH_INDENT_NO = 0;
+
     const MATCH_INDENT_DECREASE = 1;
+
     const MATCH_INDENT_INCREASE = 2;
+
     const MATCH_DISCARD = 3;
 
     /**
@@ -56,7 +60,7 @@ class DomFormatter
     public static function getInstance()
     {
         if (empty(static::$instance)) {
-            static::$instance = new static;
+            static::$instance = new static();
         }
 
         return static::$instance;
@@ -160,7 +164,6 @@ class DomFormatter
                     }
 
                     if ($rule === static::MATCH_INDENT_NO) {
-
                     } else {
                         if ($rule === static::MATCH_INDENT_DECREASE) {
                             $nextLineIndentationLevel--;

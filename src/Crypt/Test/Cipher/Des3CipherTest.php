@@ -34,7 +34,7 @@ class Des3CipherTest extends AbstractOpensslTestCase
     {
         parent::setUp();
 
-        $this->instance = new Des3Cipher;
+        $this->instance = new Des3Cipher();
     }
 
     /**

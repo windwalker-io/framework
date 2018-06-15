@@ -20,10 +20,15 @@ use Windwalker\Query\QueryElement;
 class MysqlGrammar extends AbstractQueryGrammar
 {
     const PRIMARY = 'PRIMARY KEY';
+
     const INDEX = 'INDEX';
+
     const UNIQUE = 'UNIQUE';
+
     const SPATIAL = 'SPATIAL';
+
     const FULLTEXT = 'UNIQUE';
+
     const FOREIGN = 'FOREIGN KEY';
 
     /**
@@ -431,7 +436,7 @@ class MysqlGrammar extends AbstractQueryGrammar
         foreach ((array) $columns as $key => $val) {
             if (is_numeric($key)) {
                 $vals = explode('(', $val);
-                $key = $query->quoteName($vals[0]);
+                $key  = $query->quoteName($vals[0]);
 
                 if (isset($vals[1])) {
                     $key .= '(' . trim($vals[1], '()') . ')';
@@ -540,7 +545,7 @@ class MysqlGrammar extends AbstractQueryGrammar
      */
     public static function replace($name, $columns = [], $values = [])
     {
-        $query = new MysqlQuery;
+        $query = new MysqlQuery();
 
         $query = (string) $query->insert($query->quoteName($name))
             ->columns($columns)
@@ -561,7 +566,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     public static function getQuery($new = false)
     {
         if (!static::$query || $new) {
-            static::$query = new MysqlQuery;
+            static::$query = new MysqlQuery();
         }
 
         return static::$query;

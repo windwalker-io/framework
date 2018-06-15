@@ -104,7 +104,7 @@ class StringStreamTest extends AbstractBaseTestCase
      */
     public function testClose()
     {
-        $stream = new StringStream;
+        $stream = new StringStream();
         $stream->write('Foo Bar');
 
         $stream->close();
@@ -163,7 +163,7 @@ class StringStreamTest extends AbstractBaseTestCase
 
         $this->assertExpectedException(function () use ($stream) {
             $stream->tell();
-        }, new \RuntimeException);
+        }, new \RuntimeException());
     }
 
     /**
@@ -300,7 +300,7 @@ class StringStreamTest extends AbstractBaseTestCase
      */
     public function testIsReadable()
     {
-        $stream = new StringStream;
+        $stream = new StringStream();
         $this->assertTrue($stream->isReadable());
     }
 

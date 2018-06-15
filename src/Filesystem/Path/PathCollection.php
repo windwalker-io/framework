@@ -166,7 +166,7 @@ class PathCollection extends ArrayObject
      */
     protected function appendIterator(\Closure $callback = null)
     {
-        $iterator = new \AppendIterator;
+        $iterator = new \AppendIterator();
 
         $paths = (array) parent::getArrayCopy();
 

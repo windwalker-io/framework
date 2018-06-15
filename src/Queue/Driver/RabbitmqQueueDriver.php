@@ -106,7 +106,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
             return null;
         }
 
-        $message = new QueueMessage;
+        $message = new QueueMessage();
 
         $message->setId(0);
         $message->setBody(json_decode($result->body, true));

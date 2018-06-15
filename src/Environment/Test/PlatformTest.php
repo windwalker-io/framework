@@ -67,7 +67,7 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Platform;
+        $this->instance = new Platform();
 
         // Detect the native operating system type.
         $this->os = strtoupper(substr(PHP_OS, 0, 3));

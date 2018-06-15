@@ -20,6 +20,7 @@ namespace Windwalker\Uri;
 abstract class AbstractUri implements UriInterface
 {
     const SCHEME_HTTP = 'http';
+
     const SCHEME_HTTPS = 'https';
 
     /**
@@ -322,7 +323,6 @@ abstract class AbstractUri implements UriInterface
     {
         return $this->getScheme() === 'https' ? true : false;
     }
-
 
     /**
      * Parse a given URI and populate the class fields.

@@ -157,7 +157,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddRuleException()
     {
-        TestHelper::invoke($this->StringInflector, 'addRule', new \stdClass, 'singular');
+        TestHelper::invoke($this->StringInflector, 'addRule', new \stdClass(), 'singular');
     }
 
     /**
@@ -412,11 +412,11 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
         );
 
         // Inject an instance an test.
-        TestHelper::setValue($this->StringInflector, 'instance', new \stdClass);
+        TestHelper::setValue($this->StringInflector, 'instance', new \stdClass());
 
         $this->assertThat(
             StringInflector::getInstance(),
-            $this->equalTo(new \stdClass),
+            $this->equalTo(new \stdClass()),
             'Checks singleton instance is returned.'
         );
 

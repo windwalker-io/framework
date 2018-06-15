@@ -26,7 +26,7 @@ $server = \Windwalker\Http\WebHttpServer::create(function ($request, ResponseInt
     $response = $finalHandler($request, $response);
 
     return $response;
-}, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(), new \Windwalker\Http\Response\HtmlResponse);
+}, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(), new \Windwalker\Http\Response\HtmlResponse());
 
 $server->listen(function ($request, ResponseInterface $response) use ($server) {
     $server->cachable($server::CACHE_CUSTOM_HEADER);

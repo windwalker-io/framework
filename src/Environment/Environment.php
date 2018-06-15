@@ -29,7 +29,7 @@ class Environment
      */
     public function __construct(Platform $platform = null)
     {
-        $this->platform = $platform ?: new Platform;
+        $this->platform = $platform ?: new Platform();
     }
 
     /**

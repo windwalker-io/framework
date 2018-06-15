@@ -32,7 +32,7 @@ class AlnumValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new AlnumValidator;
+        $this->instance = new AlnumValidator();
     }
 
     /**

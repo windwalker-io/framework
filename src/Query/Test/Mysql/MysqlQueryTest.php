@@ -85,7 +85,7 @@ class MysqlQueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new MysqlQuery;
+        return new MysqlQuery();
     }
 
     /**

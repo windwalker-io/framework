@@ -37,7 +37,7 @@ class SodiumCipherTest extends TestCase
             $this->markTestSkipped('libsodium extension or compat not available.');
         }
 
-        $this->instance = new SodiumCipher;
+        $this->instance = new SodiumCipher();
 
         if (!$this->instance->canMemzero()) {
             $this->instance->ignoreMemzero(true);

@@ -57,7 +57,7 @@ class SqliteQueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new SqliteQuery;
+        return new SqliteQuery();
     }
 
     /**

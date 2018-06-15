@@ -34,7 +34,7 @@ class FormWrapperTest extends AbstractDomTestCase
      */
     protected function setUp()
     {
-        $this->instance = new FormWrapper;
+        $this->instance = new FormWrapper();
     }
 
     /**
@@ -106,7 +106,7 @@ class FormWrapperTest extends AbstractDomTestCase
      */
     public function testRenderStart()
     {
-        $form = new FormWrapper;
+        $form = new FormWrapper();
 
         $form->accept('UTF-8')
             ->acceptCharset('UTF-8')

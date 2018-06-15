@@ -35,7 +35,7 @@ class AbstractMessageTest extends AbstractBaseTestCase
      */
     protected function setUp()
     {
-        $this->message = new StubMessage;
+        $this->message = new StubMessage();
     }
 
     /**
@@ -207,7 +207,7 @@ class AbstractMessageTest extends AbstractBaseTestCase
      */
     public function testWithAndGetBody()
     {
-        $message = $this->message->withBody(new Stream);
+        $message = $this->message->withBody(new Stream());
 
         $this->assertNotSame($this->message, $message);
         $this->assertInstanceOf('Psr\Http\Message\StreamInterface', $message->getBody());

@@ -133,7 +133,7 @@ class CacheItem implements CacheItemInterface
      */
     public function isHit()
     {
-        if (new \DateTime > $this->expiration) {
+        if (new \DateTime() > $this->expiration) {
             $this->hit = false;
         }
 
@@ -159,7 +159,6 @@ class CacheItem implements CacheItemInterface
 
         if ($expiration instanceof \DateTimeInterface) {
             $this->expiration = $expiration;
-
         } elseif ($expiration === null) {
             $this->expiration = new \DateTime($this->defaultExpiration);
         } else {
@@ -190,10 +189,10 @@ class CacheItem implements CacheItemInterface
         date_default_timezone_set('UTC');
 
         if ($time instanceof \DateInterval) {
-            $this->expiration = new \DateTime;
+            $this->expiration = new \DateTime();
             $this->expiration->add($time);
         } elseif (is_int($time)) {
-            $this->expiration = new \DateTime;
+            $this->expiration = new \DateTime();
             $this->expiration->add(new \DateInterval('PT' . $time . 'S'));
         } elseif ($time === null) {
             $this->expiration = new \DateTime($this->defaultExpiration);

@@ -57,7 +57,7 @@ class PostgresqlQueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new PostgresqlQuery;
+        return new PostgresqlQuery();
     }
 
     /**

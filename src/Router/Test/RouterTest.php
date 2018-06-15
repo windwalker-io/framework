@@ -34,7 +34,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Router;
+        $this->instance = new Router();
     }
 
     /**
@@ -257,7 +257,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertInstanceOf('Windwalker\Router\Matcher\MatcherInterface', $this->instance->getMatcher());
 
-        $matcher = new TrieMatcher;
+        $matcher = new TrieMatcher();
 
         $this->instance->setMatcher($matcher);
 

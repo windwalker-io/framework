@@ -96,7 +96,6 @@ class TextField extends AbstractField
         return $html;
     }
 
-
     /**
      * addOption
      *

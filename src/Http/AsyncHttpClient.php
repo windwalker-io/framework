@@ -166,7 +166,7 @@ class AsyncHttpClient extends HttpClient
 
         foreach ($this->tasks as $task) {
             /** @var Promise $promise */
-            $handle = $task['handle'];
+            $handle  = $task['handle'];
             $promise = $task['promise'];
 
             $error = curl_error($handle);

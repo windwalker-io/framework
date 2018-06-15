@@ -275,7 +275,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
         // If there are no parameters, just return a new object.
         if (null === $constructor) {
-            return new $class;
+            return new $class();
         }
 
         try {

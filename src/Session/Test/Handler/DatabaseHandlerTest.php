@@ -175,6 +175,5 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
      */
     protected function tearDown()
     {
-
     }
 }

@@ -288,7 +288,7 @@ class PhpRenderer extends AbstractRenderer
     public function getBlockQueue()
     {
         if (!$this->blockQueue) {
-            $this->blockQueue = new \SplStack;
+            $this->blockQueue = new \SplStack();
         }
 
         return $this->blockQueue;

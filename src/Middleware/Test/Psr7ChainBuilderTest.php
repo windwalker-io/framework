@@ -38,7 +38,7 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
      */
     protected function setUp()
     {
-        $this->instance = new ChainBuilder;
+        $this->instance = new ChainBuilder();
     }
 
     /**
@@ -81,11 +81,11 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
      */
     public function testExecute()
     {
-        $chain = new Psr7ChainBuilder;
+        $chain = new Psr7ChainBuilder();
         $chain->add($this->getHandler('Othello'));
         $chain->add($this->getHandler('Caesar'));
 
-        $res = $chain->execute(new ServerRequest, new Response);
+        $res = $chain->execute(new ServerRequest(), new Response());
 
         $data = "
 >>> Caesar
@@ -102,7 +102,7 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
                 $this->getHandler('Caesar'),
             ], Psr7ChainBuilder::SORT_DESC);
 
-        $res = $chain->execute(new ServerRequest, new Response);
+        $res = $chain->execute(new ServerRequest(), new Response());
 
         $data = "
 >>> Othello

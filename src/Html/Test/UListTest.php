@@ -53,7 +53,7 @@ class UListTest extends AbstractDomTestCase
      */
     public function testCreateList()
     {
-        $list = new UList;
+        $list = new UList();
 
         $this->assertEquals('<ul></ul>', (string) $list);
 
@@ -89,7 +89,7 @@ HTML;
      */
     public function testAddItem()
     {
-        $list = new UList;
+        $list = new UList();
 
         $list->addItem(new ListItem('123'))
             ->addItem('ABC');
@@ -117,7 +117,7 @@ HTML;
             new ListItem('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item']),
         ];
 
-        $list = new UList;
+        $list = new UList();
         $list->setItems($items);
 
         $html = <<<HTML

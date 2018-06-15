@@ -44,7 +44,7 @@ class QueryExpressionTest extends AbstractQueryTestCase
      */
     protected function getInstance()
     {
-        return new QueryExpression(new Query);
+        return new QueryExpression(new Query());
     }
 
     /**

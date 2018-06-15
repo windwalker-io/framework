@@ -82,7 +82,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
      */
     protected function createRequest($stream = null)
     {
-        return new Request($stream ?: new StringStream);
+        return new Request($stream ?: new StringStream());
     }
 
     /**
@@ -249,7 +249,7 @@ abstract class AbstractTransportTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFileNotExists((string) $this->destFile);
 
-        $request = $this->createRequest(new Stream);
+        $request = $this->createRequest(new Stream());
 
         $src = dirname(WINDWALKER_TEST_HTTP_URL) . '/download_stub.txt';
 

@@ -1876,7 +1876,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
         $this->assertEquals([$data[0]], ArrayHelper::query($data, ['id' => 1, 'title' => 'Julius Caesar']));
 
         // Test object equals
-        $object      = new \stdClass;
+        $object      = new \stdClass();
         $object->foo = 'bar';
         $this->assertEquals([$data[0], $data[3]], ArrayHelper::query($data, ['data' => $object]));
 
@@ -2136,7 +2136,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
         $this->assertExpectedException(function () {
             ArrayHelper::setByPath($data, 'a.b', 'c', '.', 'Non\Exists\Class');
-        }, new \InvalidArgumentException, 'Type or class: Non\Exists\Class not exists');
+        }, new \InvalidArgumentException(), 'Type or class: Non\Exists\Class not exists');
     }
 
     /**

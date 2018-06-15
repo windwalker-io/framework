@@ -35,7 +35,7 @@ class AbstractApplicationTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new StubApplication;
+        $this->instance = new StubApplication();
     }
 
     /**
@@ -114,7 +114,7 @@ class AbstractApplicationTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($logger instanceof NullLogger, 'Default logger should be NullLogger.');
 
-        $this->instance->setLogger(new MockLogger);
+        $this->instance->setLogger(new MockLogger());
 
         $this->assertTrue($this->instance->getLogger() instanceof MockLogger);
     }

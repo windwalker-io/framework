@@ -79,7 +79,7 @@ abstract class AbstractQueryGrammar implements QueryGrammarInterface
     public static function getQuery($new = false)
     {
         if (!static::$query || $new) {
-            static::$query = new Query;
+            static::$query = new Query();
         }
 
         return static::$query;

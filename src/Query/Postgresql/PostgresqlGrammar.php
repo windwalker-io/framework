@@ -20,10 +20,15 @@ use Windwalker\Query\QueryElement;
 class PostgresqlGrammar extends AbstractQueryGrammar
 {
     const PRIMARY = 'PRIMARY KEY';
+
     const INDEX = 'INDEX';
+
     const UNIQUE = 'UNIQUE';
+
     const SPATIAL = 'SPATIAL';
+
     const FULLTEXT = 'UNIQUE';
+
     const FOREIGN = 'FOREIGN KEY';
 
     /**
@@ -503,7 +508,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     public static function getQuery($new = false)
     {
         if (!static::$query || $new) {
-            static::$query = new PostgresqlQuery;
+            static::$query = new PostgresqlQuery();
         }
 
         return static::$query;

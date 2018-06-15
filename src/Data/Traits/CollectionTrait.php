@@ -329,6 +329,6 @@ trait CollectionTrait
      */
     protected function getNewInstance()
     {
-        return new static;
+        return new static();
     }
 }

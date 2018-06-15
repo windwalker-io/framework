@@ -36,7 +36,7 @@ class MemcachedHandlerTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('Memcached storage is not enabled on this system.');
         }
 
-        $this->instance = new MemcachedHandler;
+        $this->instance = new MemcachedHandler();
     }
 
     /**

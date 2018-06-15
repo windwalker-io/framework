@@ -8,7 +8,6 @@
 
 namespace Windwalker\Query;
 
-
 interface QueryInterface
 {
     /**

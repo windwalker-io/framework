@@ -95,7 +95,7 @@ Apple
 ------WebKitFormBoundary8zi5vcW6H9OgqKSj--
 DATA;
 
-        $input = new FormDataInput;
+        $input = new FormDataInput();
 
         $this->assertEquals(
             ['flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'],

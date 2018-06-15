@@ -34,7 +34,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Container;
+        $this->instance = new Container();
 
         $this->instance->set(
             'Hello',
@@ -77,13 +77,13 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAndSet()
     {
-        $container = new Container;
+        $container = new Container();
 
         // Not share, not protect
         $container->set(
             'flower',
             function () {
-                return new \ArrayObject;
+                return new \ArrayObject();
             },
             false,
             false
@@ -97,7 +97,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container->set(
             'sakura',
             function () {
-                return new \SplPriorityQueue;
+                return new \SplPriorityQueue();
             },
             true,
             false
@@ -111,7 +111,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container->set(
             'sakura',
             function () {
-                return new \SplStack;
+                return new \SplStack();
             },
             true,
             false
@@ -130,13 +130,13 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetAsProtect()
     {
-        $container = new Container;
+        $container = new Container();
 
         // Share, Protect
         $container->set(
             'olive',
             function () {
-                return new \SplStack;
+                return new \SplStack();
             },
             true,
             true
@@ -147,7 +147,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container->set(
             'olive',
             function () {
-                return new \SplQueue;
+                return new \SplQueue();
             },
             true,
             false
@@ -159,7 +159,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 
     public function testSetAndRemoveAlias()
     {
-        $container = new Container;
+        $container = new Container();
 
         $container->share('Flower', 'Sakura')->alias('FlowerAlias', 'Flower');
 
@@ -191,13 +191,13 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testProtect()
     {
-        $container = new Container;
+        $container = new Container();
 
         // Share, Protect
         $container->protect(
             'olive',
             function () {
-                return new \SplStack;
+                return new \SplStack();
             },
             true
         );
@@ -207,7 +207,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container->set(
             'olive',
             function () {
-                return new \SplQueue;
+                return new \SplQueue();
             },
             true,
             false
@@ -226,13 +226,13 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testShare()
     {
-        $container = new Container;
+        $container = new Container();
 
         // Share, not protect
         $container->share(
             'sakura',
             function () {
-                return new \SplPriorityQueue;
+                return new \SplPriorityQueue();
             },
             false
         );
@@ -245,7 +245,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container->set(
             'sakura',
             function () {
-                return new \SplStack;
+                return new \SplStack();
             },
             true,
             false
@@ -291,12 +291,12 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetNewInstance()
     {
-        $container = new Container;
+        $container = new Container();
 
         $container->share(
             'flower',
             function () {
-                return new \ArrayObject;
+                return new \ArrayObject();
             },
             false
         );
@@ -317,7 +317,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateObject()
     {
-        $container = new Container;
+        $container = new Container();
 
         $foo = $container->createObject(\Windwalker\DI\Test\Mock\Foo::class);
 
@@ -327,21 +327,21 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('SplStack', $foo->bar->stack);
 
         // Bind a sub class
-        $container = new Container;
+        $container = new Container();
 
-        $container->share('SplStack', new StubStack);
+        $container->share('SplStack', new StubStack());
 
         $foo = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
 
         $this->assertInstanceOf('Windwalker\\DI\\Test\\Mock\\StubStack', $foo->bar->stack);
 
         // Bind not shared classes
-        $container = new Container;
+        $container = new Container();
 
         $container->set(
             'SplPriorityQueue',
             function () {
-                return new \SplPriorityQueue;
+                return new \SplPriorityQueue();
             }
         );
 
@@ -352,7 +352,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($queue, $foo->bar->queue, 'Non shared class should be not same.');
 
         // Auto created classes should be not shared
-        $container = new Container;
+        $container = new Container();
 
         $bar1 = $container->createObject('Windwalker\\DI\\Test\\Mock\\Bar');
         $bar2 = $container->createObject('Windwalker\\DI\\Test\\Mock\\Bar2');
@@ -360,7 +360,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($bar1->queue, $bar2->queue);
 
         // Not shared object
-        $container = new Container;
+        $container = new Container();
 
         $foo  = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
         $foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
@@ -368,7 +368,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($foo, $foo2);
 
         // Shared object
-        $container = new Container;
+        $container = new Container();
 
         $foo  = $container->createSharedObject('Windwalker\\DI\\Test\\Mock\\Foo');
         $foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
@@ -385,7 +385,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testPrepareObject()
     {
-        $container = new Container;
+        $container = new Container();
 
         $container->prepareObject('Windwalker\\DI\\Test\\Mock\\Foo');
 
@@ -403,7 +403,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testPrepareSharedObject()
     {
-        $container = new Container;
+        $container = new Container();
 
         $container->prepareSharedObject('Windwalker\\DI\\Test\\Mock\\Foo');
 
@@ -422,7 +422,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testNewInstanceWithNoDefaultValueAvailable()
     {
-        $container = new Container;
+        $container = new Container();
 
         $obj = $container->newInstance('ArrayIterator');
 
@@ -499,7 +499,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRegisterServiceProvider()
     {
-        $this->instance->registerServiceProvider(new StubServiceProvider);
+        $this->instance->registerServiceProvider(new StubServiceProvider());
 
         $this->assertEquals('Bingo', $this->instance->get('bingo'));
     }

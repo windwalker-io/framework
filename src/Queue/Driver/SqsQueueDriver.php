@@ -90,7 +90,7 @@ class SqsQueueDriver implements QueueDriverInterface
 
         $data = $result['Messages'][0];
 
-        $res = new QueueMessage;
+        $res = new QueueMessage();
 
         $res->setId($data['MessageId']);
         $res->setAttempts($data['Attributes']['ApproximateReceiveCount']);

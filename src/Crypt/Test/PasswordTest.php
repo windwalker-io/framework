@@ -64,7 +64,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->verify('windwalker', $pass));
 
         // Use default
-        $password = new Password;
+        $password = new Password();
 
         $this->assertTrue($password->verify('windwalker', $password->create('windwalker')));
     }
@@ -99,7 +99,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->verify('windwalker', $pass));
 
         // Use default
-        $password = new Password;
+        $password = new Password();
 
         $this->assertTrue($password->verify('windwalker', $password->create('windwalker')));
     }
@@ -134,7 +134,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->verify('windwalker', $pass));
 
         // Use default
-        $password = new Password;
+        $password = new Password();
 
         $this->assertTrue($password->verify('windwalker', $password->create('windwalker')));
     }
@@ -163,7 +163,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->verify('windwalker', $pass));
 
         // Use default
-        $password = new Password;
+        $password = new Password();
 
         $this->assertTrue($password->verify('windwalker', $password->create('windwalker')));
     }
@@ -186,7 +186,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->verify('windwalker', $pass));
 
         // Use default
-        $password = new Password;
+        $password = new Password();
 
         $this->assertTrue($password->verify('windwalker', $password->create('windwalker')));
     }
@@ -209,7 +209,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->verify('windwalker', $pass));
 
         // Use default
-        $password = new Password;
+        $password = new Password();
 
         $this->assertTrue($password->verify('windwalker', $password->create('windwalker')));
     }

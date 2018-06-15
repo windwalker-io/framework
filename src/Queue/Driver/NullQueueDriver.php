@@ -38,7 +38,7 @@ class NullQueueDriver implements QueueDriverInterface
      */
     public function pop($queue = null)
     {
-        return new QueueMessage;
+        return new QueueMessage();
     }
 
     /**

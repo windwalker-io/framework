@@ -33,7 +33,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new StubOutput;
+        $this->instance = new StubOutput();
     }
 
     /**

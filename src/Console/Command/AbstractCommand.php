@@ -137,11 +137,11 @@ abstract class AbstractCommand implements \ArrayAccess
     public function __construct($name = null, IOInterface $io = null, AbstractCommand $parent = null)
     {
         $this->name   = $name ?: $this->name;
-        $this->io     = $io ?: new IO;
+        $this->io     = $io ?: new IO();
         $this->parent = $parent;
 
-        $this->options       = new OptionSet;
-        $this->globalOptions = new OptionSet;
+        $this->options       = new OptionSet();
+        $this->globalOptions = new OptionSet();
 
         $this->init();
 
@@ -357,7 +357,7 @@ abstract class AbstractCommand implements \ArrayAccess
     public function addCommand($command, $description = null, $options = [], \Closure $handler = null)
     {
         if (is_string($command) && class_exists($command) && is_subclass_of($command, __CLASS__)) {
-            $command = new $command;
+            $command = new $command();
         }
 
         if (!($command instanceof AbstractCommand)) {

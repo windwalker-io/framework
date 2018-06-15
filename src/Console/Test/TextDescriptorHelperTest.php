@@ -41,8 +41,8 @@ class TextDescriptorHelperTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $this->instance = new TextDescriptorHelper(
-            new TextCommandDescriptor,
-            new TextOptionDescriptor
+            new TextCommandDescriptor(),
+            new TextOptionDescriptor()
         );
     }
 
@@ -80,13 +80,13 @@ Commands:
 
 foo help';
 
-        $console = new Console(new MockIO);
+        $console = new Console(new MockIO());
 
         $console->setTitle('Test Console')
             ->setVersion('1.2.3')
             ->setDescription('test desc');
 
-        $command = new FooCommand;
+        $command = new FooCommand();
 
         $command->setApplication($console)
             ->description('foo desc')

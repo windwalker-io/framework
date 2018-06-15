@@ -36,7 +36,7 @@ class IOTest extends \PHPUnit\Framework\TestCase
 
         $_SERVER['argv'] = explode(' ', $_SERVER['argv']);
 
-        $this->instance = new IO;
+        $this->instance = new IO();
     }
 
     /**

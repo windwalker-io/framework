@@ -16,7 +16,9 @@ namespace Windwalker\Html\Grid;
 class KeyValueGrid extends Grid
 {
     const COL_KEY = 'key';
+
     const COL_VALUE = 'value';
+
     const ROW = 'row';
 
     /**

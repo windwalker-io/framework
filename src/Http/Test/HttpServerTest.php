@@ -37,7 +37,6 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-
     }
 
     /**
@@ -92,7 +91,6 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
     public function testCreateFromGlobals()
     {
         $server = $this->createServerFromGlobals(function () {
-
         });
 
         $this->assertEquals(['foo' => 'bar'], $server->getRequest()->getServerParams());
@@ -115,8 +113,8 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
         $server = HttpServer::create(
             function (ServerRequestInterface $request, ResponseInterface $response, $finalHandler) use ($case) {
             },
-            new ServerRequest,
-            new Response
+            new ServerRequest(),
+            new Response()
         );
 
         $this->assertTrue($server instanceof HttpServer);
@@ -136,7 +134,7 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
         };
 
         $server = $this->createServerFromGlobals($handler);
-        $server->setOutput(new StubOutput);
+        $server->setOutput(new StubOutput());
 
         $this->expectOutputString('Flower');
 
@@ -155,7 +153,7 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
         };
 
         $server = $this->createServerFromGlobals($handler);
-        $server->setOutput(new StubOutput);
+        $server->setOutput(new StubOutput());
 
         $this->expectOutputString('Exception: Hello');
 

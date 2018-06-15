@@ -37,6 +37,7 @@ function safeEncrypt($message, $key)
         );
     \Sodium\memzero($message);
     \Sodium\memzero($key);
+
     return $cipher;
 }
 
@@ -61,6 +62,7 @@ function safeDecrypt($encrypted, $key)
     );
     \Sodium\memzero($ciphertext);
     \Sodium\memzero($key);
+
     return $plain;
 }
 

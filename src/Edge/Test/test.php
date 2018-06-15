@@ -10,7 +10,7 @@ error_reporting(-1);
 
 include_once __DIR__ . '/../../../vendor/autoload.php';
 
-$compiler = new \Windwalker\Edge\Compiler\EdgeCompiler;
+$compiler = new \Windwalker\Edge\Compiler\EdgeCompiler();
 
 //$compiler->addExtension(new \Windwalker\Edge\Extension\BasicExtension);
 

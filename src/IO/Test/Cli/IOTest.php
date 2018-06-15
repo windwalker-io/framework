@@ -32,7 +32,7 @@ class IOTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new IO;
+        $this->instance = new IO();
     }
 
     /**

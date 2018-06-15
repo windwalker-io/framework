@@ -16,9 +16,11 @@ namespace Windwalker\Form\Filter;
 class MaxLengthFilter implements FilterInterface
 {
     const TEXT_MAX_UTF8 = 21844;
+
     const TEXT_MAX_ASCII = 65535;
 
     const LONGTEXT_MAX_UTF8 = 1431655765;
+
     const LONGTEXT_MAX_ASCII = 4294967295;
 
     /**

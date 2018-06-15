@@ -76,7 +76,7 @@ class YamlFormat implements FormatInterface
     public static function getParser()
     {
         if (!static::$parser) {
-            static::$parser = new SymfonyYamlParser;
+            static::$parser = new SymfonyYamlParser();
         }
 
         return static::$parser;
@@ -102,7 +102,7 @@ class YamlFormat implements FormatInterface
     public static function getDumper()
     {
         if (!static::$dumper) {
-            static::$dumper = new SymfonyYamlDumper;
+            static::$dumper = new SymfonyYamlDumper();
         }
 
         return static::$dumper;

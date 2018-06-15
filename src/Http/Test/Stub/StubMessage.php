@@ -17,5 +17,4 @@ use Windwalker\Http\AbstractMessage;
  */
 class StubMessage extends AbstractMessage
 {
-
 }

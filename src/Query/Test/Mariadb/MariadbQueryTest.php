@@ -66,7 +66,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new MariadbQuery;
+        return new MariadbQuery();
     }
 
     /**

@@ -39,10 +39,13 @@ namespace Windwalker\String;
 abstract class Mbstring
 {
     const CASE_SENSITIVE = true;
+
     const CASE_INSENSITIVE = false;
 
     const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
+
     const ENCODING_UTF8 = 'UTF-8';
+
     const ENCODING_US_ASCII = 'US-ASCII';
 
     /**

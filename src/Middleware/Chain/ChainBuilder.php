@@ -20,6 +20,7 @@ use Windwalker\Middleware\MiddlewareInterface;
 class ChainBuilder
 {
     const SORT_ASC = 'ASC';
+
     const SORT_DESC = 'DESC';
 
     /**
@@ -146,7 +147,7 @@ class ChainBuilder
      */
     protected function createStack()
     {
-        $stack = new \SplStack;
+        $stack = new \SplStack();
         $stack->setIteratorMode(\SplDoublyLinkedList::IT_MODE_LIFO | \SplDoublyLinkedList::IT_MODE_KEEP);
 
         return $stack;
@@ -215,7 +216,7 @@ class ChainBuilder
     protected function getEndMiddleware()
     {
         if (!$this->endMiddleware) {
-            $this->endMiddleware = new EndMiddleware;
+            $this->endMiddleware = new EndMiddleware();
         }
 
         return $this->endMiddleware;

@@ -142,7 +142,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
             return $this;
         }
 
-        $this->driver = new \Memcached;
+        $this->driver = new \Memcached();
 
         $this->driver->setOption(\Memcached::OPT_COMPRESSION, false);
         $this->driver->setOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE, true);

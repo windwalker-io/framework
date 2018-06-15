@@ -32,7 +32,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Language;
+        $this->instance = new Language();
 
         $this->instance->load(__DIR__ . '/fixtures/ini/en-GB.ini', 'ini')
             ->load(__DIR__ . '/fixtures/ini/zh-TW.ini', 'ini');

@@ -33,7 +33,7 @@ class CallbackValidatorTest extends TestCase
      */
     protected function setUp()
     {
-        $this->instance = new CallbackValidator;
+        $this->instance = new CallbackValidator();
     }
 
     /**

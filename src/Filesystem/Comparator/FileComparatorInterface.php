@@ -8,7 +8,6 @@
 
 namespace Windwalker\Filesystem\Comparator;
 
-
 interface FileComparatorInterface
 {
     public function compare($current, $key, $iterator);

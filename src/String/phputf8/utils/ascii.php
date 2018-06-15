@@ -53,6 +53,7 @@ function utf8_is_ascii_ctrl($str)
         // or are device control codes
         return (preg_match('/[^\x09\x0A\x0D\x20-\x7E]/', $str) !== 1);
     }
+
     return false;
 }
 
@@ -81,6 +82,7 @@ function utf8_strip_non_ascii($str)
     }
     $result = ob_get_contents();
     ob_end_clean();
+
     return $result;
 }
 
@@ -109,6 +111,7 @@ function utf8_strip_ascii_ctrl($str)
     }
     $result = ob_get_contents();
     ob_end_clean();
+
     return $result;
 }
 
@@ -136,6 +139,7 @@ function utf8_strip_non_ascii_ctrl($str)
     }
     $result = ob_get_contents();
     ob_end_clean();
+
     return $result;
 }
 
@@ -164,12 +168,10 @@ function utf8_strip_non_ascii_ctrl($str)
  */
 function utf8_accents_to_ascii($str, $case = 0)
 {
-
     static $UTF8_LOWER_ACCENTS = null;
     static $UTF8_UPPER_ACCENTS = null;
 
     if ($case <= 0) {
-
         if (is_null($UTF8_LOWER_ACCENTS)) {
             $UTF8_LOWER_ACCENTS = [
                 'à' => 'a',
@@ -401,5 +403,4 @@ function utf8_accents_to_ascii($str, $case = 0)
     }
 
     return $str;
-
 }

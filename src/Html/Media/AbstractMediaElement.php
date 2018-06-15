@@ -20,7 +20,9 @@ use Windwalker\Dom\HtmlElements;
 abstract class AbstractMediaElement extends HtmlElement
 {
     const PRELOAD_NONE = 'none';
+
     const PRELOAD_METADATA = 'metadata';
+
     const PRELOAD_AUTO = 'auto';
 
     /**
@@ -39,7 +41,7 @@ abstract class AbstractMediaElement extends HtmlElement
     {
         parent::__construct($this->name, null, $attribs);
 
-        $this->content = new HtmlElements;
+        $this->content = new HtmlElements();
     }
 
     /**

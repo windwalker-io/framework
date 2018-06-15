@@ -118,14 +118,14 @@ class Session implements \ArrayAccess, \IteratorAggregate
         SessionBridgeInterface $bridge = null,
         array $options = []
     ) {
-        $this->bridge = $bridge ?: new NativeBridge;
+        $this->bridge = $bridge ?: new NativeBridge();
 
         // Create handler
-        $this->handler = $handler ?: new NativeHandler;
+        $this->handler = $handler ?: new NativeHandler();
 
         $bags = [
-            'default' => $bag ?: new SessionBag,
-            'flash' => $flashBag ?: new FlashBag,
+            'default' => $bag ?: new SessionBag(),
+            'flash' => $flashBag ?: new FlashBag(),
         ];
 
         $this->setBags($bags);
@@ -1052,7 +1052,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     public function getFlashBag()
     {
         if (empty($this->bags['flash'])) {
-            $this->bags['flash'] = new FlashBag;
+            $this->bags['flash'] = new FlashBag();
         }
 
         return $this->bags['flash'];

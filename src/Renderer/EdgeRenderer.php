@@ -131,7 +131,7 @@ class EdgeRenderer extends AbstractEngineRenderer
     public function getCompiler()
     {
         if (!$this->compiler) {
-            $this->compiler = new EdgeCompiler;
+            $this->compiler = new EdgeCompiler();
         }
 
         return $this->compiler;
@@ -190,7 +190,7 @@ class EdgeRenderer extends AbstractEngineRenderer
             if ($this->config->exists('cache_path')) {
                 $this->cache = new EdgeFileCache($this->config->get('cache_path'));
             } else {
-                $this->cache = new EdgeArrayCache;
+                $this->cache = new EdgeArrayCache();
             }
         }
 

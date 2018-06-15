@@ -61,7 +61,7 @@ class ServerRequestFactory
         $server  = static::prepareServers($server ?: $_SERVER);
         $headers = static::prepareHeaders($server);
 
-        $body = new PhpInputStream;
+        $body = new PhpInputStream();
 
         $method = ServerHelper::getValue($server, 'REQUEST_METHOD', 'GET');
 

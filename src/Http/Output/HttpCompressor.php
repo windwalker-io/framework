@@ -20,7 +20,9 @@ use Windwalker\Http\Stream\Stream;
 class HttpCompressor
 {
     const ENCODING_GZIP = 'gz';
+
     const ENCODING_XGZIP = 'gz';
+
     const ENCODING_DEFLATE = 'deflate';
 
     /**

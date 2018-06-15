@@ -83,7 +83,7 @@ class Console extends AbstractConsole
      */
     public function __construct(IOInterface $io = null, Structure $config = null)
     {
-        $io = $io ?: new IO;
+        $io = $io ?: new IO();
 
         parent::__construct($io, $config);
 

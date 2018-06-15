@@ -71,7 +71,7 @@ class PhpTypeValidatorTest extends TestCase
         self::assertTrue($this->instance->validate([]));
         self::assertFalse($this->instance->validate(''));
 
-        self::assertTrue($this->instance->setType(\stdClass::class)->validate(new \stdClass));
+        self::assertTrue($this->instance->setType(\stdClass::class)->validate(new \stdClass()));
         self::assertTrue($this->instance->setType('numeric')->validate('1.2'));
         self::assertTrue($this->instance->setType('float')->validate(1.2));
         self::assertTrue($this->instance->setType('double')->validate(1.2));
@@ -80,6 +80,6 @@ class PhpTypeValidatorTest extends TestCase
         self::assertFalse($this->instance->setType('scalar')->validate([]));
         self::assertTrue($this->instance->setType('callable')->validate('trim'));
         self::assertTrue($this->instance->setType('array')->validate([]));
-        self::assertTrue($this->instance->setType('object')->validate(new \stdClass));
+        self::assertTrue($this->instance->setType('object')->validate(new \stdClass()));
     }
 }

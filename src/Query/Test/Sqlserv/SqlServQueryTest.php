@@ -58,7 +58,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new SqlservQuery;
+        return new SqlservQuery();
     }
 
     /**

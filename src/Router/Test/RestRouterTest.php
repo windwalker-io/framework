@@ -32,7 +32,7 @@ class RestRouterTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new RestRouter;
+        $this->instance = new RestRouter();
     }
 
     /**

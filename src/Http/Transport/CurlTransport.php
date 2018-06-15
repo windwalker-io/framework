@@ -70,7 +70,7 @@ class CurlTransport extends AbstractTransport
     public function getResponse($content, $info)
     {
         // Create the response object.
-        $return = new Response;
+        $return = new Response();
 
         // Get the number of redirects that occurred.
         $redirects = isset($info['redirect_count']) ? $info['redirect_count'] : 0;

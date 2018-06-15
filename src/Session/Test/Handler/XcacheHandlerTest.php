@@ -36,7 +36,7 @@ class XcacheHandlerTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('XCache is not enabled on this system.');
         }
 
-        $this->instance = new XcacheHandler;
+        $this->instance = new XcacheHandler();
     }
 
     /**

@@ -57,7 +57,7 @@ class PdoQueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new PdoQuery;
+        return new PdoQuery();
     }
 
     /**

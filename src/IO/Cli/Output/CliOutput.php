@@ -35,7 +35,7 @@ class CliOutput extends AbstractCliOutput implements ColorfulOutputInterface
      */
     public function __construct(ColorProcessorInterface $processor = null)
     {
-        $this->setProcessor(($processor instanceof ColorProcessorInterface) ? $processor : new ColorProcessor);
+        $this->setProcessor(($processor instanceof ColorProcessorInterface) ? $processor : new ColorProcessor());
     }
 
     /**

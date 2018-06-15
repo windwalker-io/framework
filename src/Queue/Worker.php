@@ -29,9 +29,13 @@ class Worker implements DispatcherAwareInterface
     use DispatcherAwareTrait;
 
     const STATE_INACTIVE = 'inactive';
+
     const STATE_ACTIVE = 'active';
+
     const STATE_EXITING = 'exiting';
+
     const STATE_PAUSE = 'pause';
+
     const STATE_STOP = 'stop';
 
     /**
@@ -86,8 +90,8 @@ class Worker implements DispatcherAwareInterface
     public function __construct(Queue $manager, DispatcherInterface $dispatcher = null, LoggerInterface $logger = null)
     {
         $this->manager    = $manager;
-        $this->dispatcher = $dispatcher ?: new Dispatcher;
-        $this->logger     = $logger ?: new NullLogger;
+        $this->dispatcher = $dispatcher ?: new Dispatcher();
+        $this->logger     = $logger ?: new NullLogger();
     }
 
     /**
@@ -314,7 +318,7 @@ class Worker implements DispatcherAwareInterface
     protected function handleJobException($job, QueueMessage $message, Structure $options, $e)
     {
         if (!$job instanceof JobInterface) {
-            $job = new NullJob;
+            $job = new NullJob();
         }
 
         $this->logger->error(sprintf(

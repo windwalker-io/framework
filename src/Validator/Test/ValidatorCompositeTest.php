@@ -38,7 +38,7 @@ class ValidatorCompositeTest extends TestCase
      */
     protected function setUp()
     {
-        $this->instance = new ValidatorComposite;
+        $this->instance = new ValidatorComposite();
     }
 
     /**
@@ -79,12 +79,12 @@ class ValidatorCompositeTest extends TestCase
      */
     public function testAddValidator()
     {
-        $v = new UrlValidator;
+        $v = new UrlValidator();
         $this->instance->addValidator($v);
 
         self::assertSame($v, $this->instance->getValidators()[0]);
 
-        $v = (new ValidatorComposite)->addValidator('is_numeric');
+        $v = (new ValidatorComposite())->addValidator('is_numeric');
 
         self::assertTrue($v->validate('123.12'));
     }
@@ -117,8 +117,8 @@ class ValidatorCompositeTest extends TestCase
     public function testGetErrors()
     {
         $r = $this->instance->setValidators([
-            (new UrlValidator)->setMessage('Invalid URL'),
-            (new IpValidator)->setMessage('Invalid IP'),
+            (new UrlValidator())->setMessage('Invalid URL'),
+            (new IpValidator())->setMessage('Invalid IP'),
         ])->validate('Hello');
 
         self::assertFalse($r);
@@ -149,8 +149,8 @@ class ValidatorCompositeTest extends TestCase
     public function testMatchAll()
     {
         $r = $this->instance->setValidators([
-            new AlnumValidator,
-            new PhoneValidator,
+            new AlnumValidator(),
+            new PhoneValidator(),
         ])->validate('1a2b');
 
         $results = $this->instance->getResults();
@@ -168,8 +168,8 @@ class ValidatorCompositeTest extends TestCase
     public function testMatchOne()
     {
         $r = $this->instance->setValidators([
-            new AlnumValidator,
-            new PhoneValidator,
+            new AlnumValidator(),
+            new PhoneValidator(),
         ])->setMode(ValidatorComposite::MODE_MATCH_ONE)
             ->validate('1a2b');
 

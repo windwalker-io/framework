@@ -155,7 +155,7 @@ class StructureHelper
      */
     public static function toObject($array, $class = 'stdClass')
     {
-        $object = new $class;
+        $object = new $class();
 
         foreach ($array as $k => $v) {
             if (is_array($v)) {
@@ -375,7 +375,7 @@ class StructureHelper
     {
         $data = [];
 
-        static::$objectStorage = new \SplObjectStorage;
+        static::$objectStorage = new \SplObjectStorage();
 
         static::doDump($data, $object);
 

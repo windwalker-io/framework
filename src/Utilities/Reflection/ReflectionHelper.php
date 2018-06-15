@@ -63,7 +63,9 @@ namespace Windwalker\Utilities\Reflection;
 class ReflectionHelper
 {
     const IS_IMPLICIT_ABSTRACT = 16;
+
     const IS_EXPLICIT_ABSTRACT = 32;
+
     const IS_FINAL = 64;
 
     /**

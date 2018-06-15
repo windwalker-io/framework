@@ -37,7 +37,6 @@ function utf8_strlen($str)
     return strlen(utf8_decode($str));
 }
 
-
 //--------------------------------------------------------------------
 /**
  * UTF-8 aware alternative to strpos
@@ -57,19 +56,17 @@ function utf8_strlen($str)
  */
 function utf8_strpos($str, $needle, $offset = null)
 {
-
     if (is_null($offset)) {
-
         $ar = explode($needle, $str, 2);
         if (count($ar) > 1) {
             return utf8_strlen($ar[0]);
         }
+
         return false;
-
     } else {
-
         if (!is_int($offset)) {
             trigger_error('utf8_strpos: Offset must be an integer', E_USER_ERROR);
+
             return false;
         }
 
@@ -81,7 +78,6 @@ function utf8_strpos($str, $needle, $offset = null)
 
         return false;
     }
-
 }
 
 //--------------------------------------------------------------------
@@ -103,23 +99,22 @@ function utf8_strpos($str, $needle, $offset = null)
  */
 function utf8_strrpos($str, $needle, $offset = null)
 {
-
     if (is_null($offset)) {
-
         $ar = explode($needle, $str);
 
         if (count($ar) > 1) {
             // Pop off the end of the string where the last match was made
             array_pop($ar);
             $str = join($needle, $ar);
+
             return utf8_strlen($str);
         }
+
         return false;
-
     } else {
-
         if (!is_int($offset)) {
             trigger_error('utf8_strrpos expects parameter 3 to be long', E_USER_WARNING);
+
             return false;
         }
 
@@ -131,7 +126,6 @@ function utf8_strrpos($str, $needle, $offset = null)
 
         return false;
     }
-
 }
 
 //--------------------------------------------------------------------
@@ -167,7 +161,6 @@ function utf8_strrpos($str, $needle, $offset = null)
  */
 function utf8_substr($str, $offset, $length = null)
 {
-
     // generates E_NOTICE
     // for PHP4 objects, but not PHP5 objects
     $str    = (string) $str;
@@ -187,14 +180,12 @@ function utf8_substr($str, $offset, $length = null)
     // normalise negative offsets (we could use a tail
     // anchored pattern, but they are horribly slow!)
     if ($offset < 0) {
-
         // see notes
         $strlen = strlen(utf8_decode($str));
         $offset = $strlen + $offset;
         if ($offset < 0) {
             $offset = 0;
         }
-
     }
 
     $Op = '';
@@ -203,7 +194,6 @@ function utf8_substr($str, $offset, $length = null)
     // establish a pattern for offset, a
     // non-captured group equal in length to offset
     if ($offset > 0) {
-
         $Ox = (int) ($offset / 65535);
         $Oy = $offset % 65535;
 
@@ -212,22 +202,16 @@ function utf8_substr($str, $offset, $length = null)
         }
 
         $Op = '^(?:' . $Op . '.{' . $Oy . '})';
-
     } else {
-
         // offset == 0; just anchor the pattern
         $Op = '^';
-
     }
 
     // establish a pattern for length
     if (is_null($length)) {
-
         // the rest of the string
         $Lp = '(.*)$';
-
     } else {
-
         if (!isset($strlen)) {
             // see notes
             $strlen = strlen(utf8_decode($str));
@@ -239,7 +223,6 @@ function utf8_substr($str, $offset, $length = null)
         }
 
         if ($length > 0) {
-
             // reduce any length that would
             // go passed the end of the string
             $length = min($strlen - $offset, $length);
@@ -253,10 +236,8 @@ function utf8_substr($str, $offset, $length = null)
                 $Lp = '(?:.{65535}){' . $Lx . '}';
             }
             $Lp = '(' . $Lp . '.{' . $Ly . '})';
-
         } else {
             if ($length < 0) {
-
                 if ($length < ($offset - $strlen)) {
                     return '';
                 }
@@ -271,10 +252,8 @@ function utf8_substr($str, $offset, $length = null)
                     $Lp = '(?:.{65535}){' . $Lx . '}';
                 }
                 $Lp = '(.*)(?:' . $Lp . '.{' . $Ly . '})$';
-
             }
         }
-
     }
 
     if (!preg_match('#' . $Op . $Lp . '#us', $str, $match)) {
@@ -282,7 +261,6 @@ function utf8_substr($str, $offset, $length = null)
     }
 
     return $match[1];
-
 }
 
 //---------------------------------------------------------------
@@ -308,7 +286,6 @@ function utf8_substr($str, $offset, $length = null)
  */
 function utf8_strtolower($string)
 {
-
     static $UTF8_UPPER_TO_LOWER = null;
 
     if (is_null($UTF8_UPPER_TO_LOWER)) {
@@ -568,7 +545,6 @@ function utf8_strtolower($string)
  */
 function utf8_strtoupper($string)
 {
-
     static $UTF8_LOWER_TO_UPPER = null;
 
     if (is_null($UTF8_LOWER_TO_UPPER)) {

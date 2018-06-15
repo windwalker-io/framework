@@ -264,7 +264,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
         $result = $dataset[0];
 
         if (!$result) {
-            $result = new $this->dataClass;
+            $result = new $this->dataClass();
         }
 
         // Event
@@ -555,8 +555,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
             'updateNulls' => &$updateNulls,
         ]);
 
-        $createDataset = new $this->datasetClass;
-        $updateDataset = new $this->datasetClass;
+        $createDataset = new $this->datasetClass();
+        $updateDataset = new $this->datasetClass();
 
         foreach ($dataset as $k => $data) {
             if (!($data instanceof $this->dataClass)) {
@@ -784,7 +784,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      */
     protected function bindData($data)
     {
-        $object = new $this->dataClass;
+        $object = new $this->dataClass();
 
         if ($object instanceof DataInterface) {
             return $object->bind($data);
@@ -809,7 +809,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      */
     protected function bindDataset($dataset)
     {
-        $object = new $this->datasetClass;
+        $object = new $this->datasetClass();
 
         if ($object instanceof DataSetInterface) {
             return $object->bind($dataset);
@@ -931,7 +931,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     public function getDispatcher()
     {
         if (!$this->dispatcher && class_exists('Windwalker\Event\Dispatcher')) {
-            $this->dispatcher = new Dispatcher;
+            $this->dispatcher = new Dispatcher();
 
             if (is_subclass_of($this, 'Windwalker\Evebt\DispatcherAwareInterface')) {
                 ListenerMapper::add($this);

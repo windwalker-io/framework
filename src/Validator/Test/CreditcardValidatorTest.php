@@ -32,7 +32,7 @@ class CreditcardValidatorTest extends AbstractValidateTestCase
      */
     protected function setUp()
     {
-        $this->instance = new CreditcardValidator;
+        $this->instance = new CreditcardValidator();
     }
 
     /**

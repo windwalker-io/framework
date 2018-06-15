@@ -8,10 +8,10 @@
 
 include_once __DIR__ . '/../../../vendor/autoload.php';
 
-$session = new \Windwalker\Session\Session;
+$session = new \Windwalker\Session\Session();
 
 $session->start();
 
-$session2 = new \Windwalker\Session\Session;
+$session2 = new \Windwalker\Session\Session();
 
 $session2->start();

@@ -35,7 +35,7 @@ class AuthenticationTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Authentication;
+        $this->instance = new Authentication();
     }
 
     /**
@@ -63,7 +63,7 @@ class AuthenticationTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->instance->authenticate($credential));
 
         // Test for MockMethod
-        $this->instance->addMethod('mock', new MockMethod);
+        $this->instance->addMethod('mock', new MockMethod());
 
         // Test success
         $this->assertTrue($this->instance->authenticate($credential));
@@ -96,7 +96,7 @@ class AuthenticationTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddAndGetMethod()
     {
-        $this->instance->addMethod('flower', new MockMethod);
+        $this->instance->addMethod('flower', new MockMethod());
 
         $this->assertInstanceOf('Windwalker\Authentication\Test\Mock\MockMethod', $this->instance->getMethod('flower'));
     }
@@ -126,8 +126,8 @@ class AuthenticationTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetResults()
     {
-        $this->instance->addMethod('a', new LocalMethod);
-        $this->instance->addMethod('b', new MockMethod);
+        $this->instance->addMethod('a', new LocalMethod());
+        $this->instance->addMethod('b', new MockMethod());
 
         $credential = new Credential(['username' => 'flower', 'password' => '1234']);
 
