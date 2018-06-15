@@ -33,7 +33,7 @@ class JsonFormatTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new JsonFormat;
+        $this->instance = new JsonFormat();
     }
 
     /**
@@ -57,7 +57,7 @@ class JsonFormatTest extends \PHPUnit\Framework\TestCase
     {
         $file = file_get_contents(__DIR__ . '/../fixtures/json/en-GB.json');
 
-        $lang = new Language;
+        $lang = new Language();
 
         $lang->addStrings($this->instance->parse($file));
 

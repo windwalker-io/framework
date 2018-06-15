@@ -51,6 +51,6 @@ $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create([
     },
 ]);
 
-$app = new Application;
+$app = new Application();
 $app->setFinalHandler($chain);
 $app->execute();

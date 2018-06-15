@@ -29,7 +29,7 @@ class GlobalContainerTest extends AbstractDomTestCase
      */
     public function testAddExtension()
     {
-        GlobalContainer::addExtension('stub', new StubTwigExtension);
+        GlobalContainer::addExtension('stub', new StubTwigExtension());
 
         $renderer = new TwigRenderer(__DIR__ . '/../Tmpl/twig');
 

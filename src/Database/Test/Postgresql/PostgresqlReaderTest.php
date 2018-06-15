@@ -377,7 +377,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
      */
     public function testSetDriver()
     {
-        $driver = new PdoDriver;
+        $driver = new PdoDriver();
 
         $reader = clone $this->db->getReader();
 

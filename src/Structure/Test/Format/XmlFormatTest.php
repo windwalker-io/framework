@@ -32,7 +32,7 @@ class XmlFormatTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new XmlFormat;
+        $this->instance = new XmlFormat();
     }
 
     /**

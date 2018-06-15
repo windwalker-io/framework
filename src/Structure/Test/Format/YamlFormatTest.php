@@ -32,7 +32,7 @@ class YamlFormatTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new YamlFormat;
+        $this->instance = new YamlFormat();
     }
 
     /**

@@ -17,5 +17,4 @@ use Windwalker\Database\Iterator\DataIterator;
  */
 class PdoIterator extends DataIterator
 {
-
 }
