@@ -178,8 +178,12 @@ class NestedRecord extends Record
     {
         // Check that the parent_id field is valid.
         if ($this->parent_id == 0) {
-            throw new NestedHandleException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id,
-                get_class($this)));
+            throw new NestedHandleException(
+                sprintf(
+                    'Invalid `parent_id` [%s] in %s', $this->parent_id,
+                    get_class($this)
+                )
+            );
         }
 
         $query = $this->db->getQuery(true)
@@ -188,8 +192,12 @@ class NestedRecord extends Record
             ->where($this->getKeyName() . ' = ' . $this->parent_id);
 
         if (!$this->db->setQuery($query)->loadResult()) {
-            throw new NestedHandleException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id,
-                get_class($this)));
+            throw new NestedHandleException(
+                sprintf(
+                    'Invalid `parent_id` [%s] in %s', $this->parent_id,
+                    get_class($this)
+                )
+            );
         }
 
         $this->checkParent();
@@ -245,8 +253,12 @@ class NestedRecord extends Record
 
         // Make sure the location is valid.
         if (!in_array($position, $allow)) {
-            throw new \InvalidArgumentException(sprintf('%s::setLocation(%d, *%s*)', get_class($this), $referenceId,
-                $position));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '%s::setLocation(%d, *%s*)', get_class($this), $referenceId,
+                    $position
+                )
+            );
         }
 
         // Set the location properties.
@@ -428,8 +440,10 @@ class NestedRecord extends Record
         // Cannot move the node to be a child of itself.
         if (in_array($referenceId, $children)) {
             throw new NestedHandleException(
-                sprintf('%s::moveByReference(%d, %s, %d) parenting to child.', get_class($this), $referenceId,
-                    $position, $pk)
+                sprintf(
+                    '%s::moveByReference(%d, %s, %d) parenting to child.', get_class($this), $referenceId,
+                    $position, $pk
+                )
             );
         }
 
@@ -560,10 +574,12 @@ class NestedRecord extends Record
         $pk = $pk === null ? $this->$k : $pk;
 
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'conditions' => &$pk,
             'children' => &$children,
-        ]);
+        ]
+        );
 
         // Get the node by id.
         $node = $this->getNode($pk);
@@ -752,8 +768,10 @@ class NestedRecord extends Record
              * Increment the level for the children.
              * Add this item's alias to the path (but avoid a leading /)
              */
-            $rightId = $this->rebuild($node->{$this->getKeyName()}, $rightId, $level + 1,
-                $path . (empty($path) ? '' : '/') . $node->alias);
+            $rightId = $this->rebuild(
+                $node->{$this->getKeyName()}, $rightId, $level + 1,
+                $path . (empty($path) ? '' : '/') . $node->alias
+            );
 
             // If there is an update failure, return false to break out of the recursion.
             if ($rightId === false) {

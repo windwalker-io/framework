@@ -139,9 +139,11 @@ class AbstractRequestTest extends AbstractBaseTestCase
         $this->assertNotSame($request, $this->instance);
         $this->assertEquals('PATCH', $request->getMethod());
 
-        $this->assertExpectedException(function () use ($request) {
-            $request->withMethod('FLY');
-        }, new \InvalidArgumentException());
+        $this->assertExpectedException(
+            function () use ($request) {
+                $request->withMethod('FLY');
+            }, new \InvalidArgumentException()
+        );
     }
 
     /**

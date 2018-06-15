@@ -36,21 +36,23 @@ class BladeExtending
         }
 
         // For 4.x before
-        $blade->extend(function ($view, BladeCompiler $compiler) use ($name, $closure) {
-            $pattern = $compiler->createMatcher($name);
+        $blade->extend(
+            function ($view, BladeCompiler $compiler) use ($name, $closure) {
+                $pattern = $compiler->createMatcher($name);
 
-            return preg_replace_callback(
-                $pattern,
-                function ($matches) use ($closure) {
-                    if (empty($matches[2])) {
-                        return $matches[0];
-                    }
+                return preg_replace_callback(
+                    $pattern,
+                    function ($matches) use ($closure) {
+                        if (empty($matches[2])) {
+                            return $matches[0];
+                        }
 
-                    return $matches[1] . $closure($matches[2]);
-                },
-                $view
-            );
-        });
+                        return $matches[1] . $closure($matches[2]);
+                    },
+                    $view
+                );
+            }
+        );
 
         return;
     }

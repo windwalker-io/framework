@@ -74,9 +74,11 @@ class RabbitmqQueueDriver implements QueueDriverInterface
         ];
 
         if ($message->getDelay() > 0) {
-            $options['application_headers'] = new AMQPTable([
-                'x-delay' => $message->getDelay(),
-            ]);
+            $options['application_headers'] = new AMQPTable(
+                [
+                    'x-delay' => $message->getDelay(),
+                ]
+            );
         }
 
         $msg = new AMQPMessage(json_encode($message), $options);

@@ -214,22 +214,34 @@ class FileStorage extends AbstractCacheStorage
         $resource = @fopen($filename, 'rb');
 
         if (!$resource) {
-            throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot open the resource.',
-                $filename));
+            throw new \RuntimeException(
+                sprintf(
+                    'Unable to fetch cache entry for %s.  Connot open the resource.',
+                    $filename
+                )
+            );
         }
 
         // If locking is enabled get a shared lock for reading on the resource.
         if ($this->options['file_locking'] && !flock($resource, LOCK_SH)) {
-            throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot obtain a lock.',
-                $filename));
+            throw new \RuntimeException(
+                sprintf(
+                    'Unable to fetch cache entry for %s.  Connot obtain a lock.',
+                    $filename
+                )
+            );
         }
 
         $data = stream_get_contents($resource);
 
         // If locking is enabled release the lock on the resource.
         if ($this->options['file_locking'] && !flock($resource, LOCK_UN)) {
-            throw new \RuntimeException(sprintf('Unable to fetch cache entry for %s.  Connot release the lock.',
-                $filename));
+            throw new \RuntimeException(
+                sprintf(
+                    'Unable to fetch cache entry for %s.  Connot release the lock.',
+                    $filename
+                )
+            );
         }
 
         fclose($resource);

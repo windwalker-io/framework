@@ -114,10 +114,14 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      */
     public function testSprintf()
     {
-        $this->assertEquals('The Sakura is beautiful~~~!!!',
-            $this->instance->sprintf('WINDWALKER_LANGUAGE_TEST_BEAUTIFUL_FLOWER', 'Sakura'));
-        $this->assertEquals('The Sunflower is beautiful~~~!!!',
-            $this->instance->sprintf('WINDWALKER_LANGUAGE_TEST_BEAUTIFUL_FLOWER', 'Sunflower'));
+        $this->assertEquals(
+            'The Sakura is beautiful~~~!!!',
+            $this->instance->sprintf('WINDWALKER_LANGUAGE_TEST_BEAUTIFUL_FLOWER', 'Sakura')
+        );
+        $this->assertEquals(
+            'The Sunflower is beautiful~~~!!!',
+            $this->instance->sprintf('WINDWALKER_LANGUAGE_TEST_BEAUTIFUL_FLOWER', 'Sunflower')
+        );
     }
 
     /**

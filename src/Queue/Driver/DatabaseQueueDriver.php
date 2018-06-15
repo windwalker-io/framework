@@ -8,10 +8,10 @@
 
 namespace Windwalker\Queue\Driver;
 
-use Windwalker\DateTime\Chronos;
-use Windwalker\Queue\QueueMessage;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\DateTime\Chronos;
 use Windwalker\Query\Query;
+use Windwalker\Queue\QueueMessage;
 
 /**
  * The DatabaseQueueDriver class.
@@ -110,10 +110,12 @@ class DatabaseQueueDriver implements QueueDriverInterface
             ->from($query->quoteName($this->table))
             ->where('queue = %q', $queue)
             ->where('visibility <= %q', $now->format('Y-m-d H:i:s'))
-            ->orWhere(function (Query $query) use ($now) {
-                $query->where('reserved IS NULL')
-                    ->where('reserved < %q', $now->modify('-' . $this->timeout . 'seconds')->format('Y-m-d H:i:s'));
-            });
+            ->orWhere(
+                function (Query $query) use ($now) {
+                    $query->where('reserved IS NULL')
+                        ->where('reserved < %q', $now->modify('-' . $this->timeout . 'seconds')->format('Y-m-d H:i:s'));
+                }
+            );
 
         $trans = $this->db->getTransaction()->start();
 
@@ -191,10 +193,12 @@ class DatabaseQueueDriver implements QueueDriverInterface
             'visibility' => $time->format('Y-m-d H:i:s'),
         ];
 
-        $this->db->getWriter()->updateBatch($this->table, $values, [
+        $this->db->getWriter()->updateBatch(
+            $this->table, $values, [
             'id' => $message->getId(),
             'queue' => $queue,
-        ]);
+        ]
+        );
 
         return $this;
     }

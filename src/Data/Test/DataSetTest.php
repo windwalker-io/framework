@@ -340,11 +340,13 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
      */
     public function testTransform()
     {
-        $self = $this->instance->transform(function ($data) {
-            $data->foo = 'bar';
+        $self = $this->instance->transform(
+            function ($data) {
+                $data->foo = 'bar';
 
-            return $data;
-        });
+                return $data;
+            }
+        );
 
         $this->assertEquals(['bar', 'bar'], $this->instance->foo);
         $this->assertSame($self, $this->instance);
@@ -361,13 +363,15 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     {
         $keys = [];
 
-        $new = $this->instance->map(function ($data, $key) use (&$keys) {
-            $keys[] = $key;
+        $new = $this->instance->map(
+            function ($data, $key) use (&$keys) {
+                $keys[] = $key;
 
-            $data->foo = 'bar';
+                $data->foo = 'bar';
 
-            return $data;
-        });
+                return $data;
+            }
+        );
 
         $this->assertEquals([null, null], $this->instance->foo);
         $this->assertEquals(['bar', 'bar'], $new->foo);
@@ -386,11 +390,13 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     {
         $keys = [];
 
-        $new = $this->instance->filter(function (DataInterface $data, $key) use (&$keys) {
-            $keys[] = $key;
+        $new = $this->instance->filter(
+            function (DataInterface $data, $key) use (&$keys) {
+                $keys[] = $key;
 
-            return $data->flower === 'sakura';
-        });
+                return $data->flower === 'sakura';
+            }
+        );
 
         $this->assertEquals(['sakura'], $new->flower);
         $this->assertEquals(1, count($new));
@@ -407,9 +413,11 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
      */
     public function testWalk()
     {
-        $this->instance->walk(function (&$data, $key, $userdata) {
-            $data->foo = $userdata . ':' . $key;
-        }, 'prefix');
+        $this->instance->walk(
+            function (&$data, $key, $userdata) {
+                $data->foo = $userdata . ':' . $key;
+            }, 'prefix'
+        );
 
         $this->assertEquals(['prefix:0', 'prefix:1'], $this->instance->foo);
     }

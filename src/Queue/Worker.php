@@ -10,13 +10,13 @@ namespace Windwalker\Queue;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Windwalker\Queue\Exception\MaxAttemptsExceededException;
-use Windwalker\Queue\Job\JobInterface;
-use Windwalker\Queue\Job\NullJob;
 use Windwalker\Event\Dispatcher;
 use Windwalker\Event\DispatcherAwareInterface;
 use Windwalker\Event\DispatcherAwareTrait;
 use Windwalker\Event\DispatcherInterface;
+use Windwalker\Queue\Exception\MaxAttemptsExceededException;
+use Windwalker\Queue\Job\JobInterface;
+use Windwalker\Queue\Job\NullJob;
 use Windwalker\Structure\Structure;
 
 /**
@@ -120,10 +120,12 @@ class Worker implements DispatcherAwareInterface
             $this->gc();
 
             // @loop start
-            $this->triggerEvent('onWorkerLoopCycleStart', [
+            $this->triggerEvent(
+                'onWorkerLoopCycleStart', [
                 'worker' => $this,
                 'manager' => $this->manager,
-            ]);
+            ]
+            );
 
             // Timeout handler
             $this->registerSignals($options);
@@ -136,21 +138,25 @@ class Worker implements DispatcherAwareInterface
 
                     $this->logger->error($msg);
 
-                    $this->triggerEvent('onWorkerLoopCycleFailure', [
+                    $this->triggerEvent(
+                        'onWorkerLoopCycleFailure', [
                         'worker' => $this,
                         'exception' => $e,
                         'message' => $msg,
-                    ]);
+                    ]
+                    );
                 }
             }
 
             $this->stopIfNecessary($options);
 
             // @loop end
-            $this->triggerEvent('onWorkerLoopCycleEnd', [
+            $this->triggerEvent(
+                'onWorkerLoopCycleEnd', [
                 'worker' => $this,
                 'manager' => $this->manager,
-            ]);
+            ]
+            );
 
             $this->sleep((int) $options->get('sleep', 1));
         }
@@ -193,12 +199,14 @@ class Worker implements DispatcherAwareInterface
 
         try {
             // @before event
-            $this->triggerEvent('onWorkerBeforeJobRun', [
+            $this->triggerEvent(
+                'onWorkerBeforeJobRun', [
                 'worker' => $this,
                 'message' => $message,
                 'job' => $job,
                 'manager' => $this->manager,
-            ]);
+            ]
+            );
 
             // Fail if max attempts
             if ($maxTries !== 0 && $maxTries < $message->getAttempts()) {
@@ -211,12 +219,14 @@ class Worker implements DispatcherAwareInterface
             $job->execute();
 
             // @after event
-            $this->triggerEvent('onWorkerAfterJobRun', [
+            $this->triggerEvent(
+                'onWorkerAfterJobRun', [
                 'worker' => $this,
                 'message' => $message,
                 'job' => $job,
                 'manager' => $this->manager,
-            ]);
+            ]
+            );
 
             $this->manager->delete($message);
         } catch (\Exception $e) {
@@ -262,9 +272,11 @@ class Worker implements DispatcherAwareInterface
         }
 
         if ($timeout !== 0) {
-            pcntl_signal(SIGALRM, function () use ($timeout) {
+            pcntl_signal(
+                SIGALRM, function () use ($timeout) {
                 $this->stop('A job process over the max timeout: ' . $timeout . ' PID: ' . $this->pid);
-            });
+            }
+            );
 
             pcntl_alarm($timeout + $options->get('sleep'));
         }
@@ -295,10 +307,12 @@ class Worker implements DispatcherAwareInterface
     {
         $this->logger->info('Worker stop: ' . $reason);
 
-        $this->triggerEvent('onWorkerStop', [
+        $this->triggerEvent(
+            'onWorkerStop', [
             'worker' => $this,
             'reason' => $reason,
-        ]);
+        ]
+        );
 
         $this->setState(static::STATE_STOP);
 
@@ -321,13 +335,15 @@ class Worker implements DispatcherAwareInterface
             $job = new NullJob();
         }
 
-        $this->logger->error(sprintf(
-            'Job [%s] (%s) failed: %s - Class: %s',
-            $job->getName(),
-            $message->getId(),
-            $e->getMessage(),
-            get_class($job)
-        ));
+        $this->logger->error(
+            sprintf(
+                'Job [%s] (%s) failed: %s - Class: %s',
+                $job->getName(),
+                $message->getId(),
+                $e->getMessage(),
+                get_class($job)
+            )
+        );
 
         if (method_exists($job, 'failed')) {
             $job->failed($e);
@@ -338,20 +354,24 @@ class Worker implements DispatcherAwareInterface
         // Delete and log error if reach max attempts.
         if ($maxTries !== 0 && $maxTries <= $message->getAttempts()) {
             $this->manager->delete($message);
-            $this->logger->error(sprintf(
-                'Max attempts exceeded. Job: %s (%s) - Class: %s',
-                $job->getName(),
-                $message->getId(),
-                get_class($job)
-            ));
+            $this->logger->error(
+                sprintf(
+                    'Max attempts exceeded. Job: %s (%s) - Class: %s',
+                    $job->getName(),
+                    $message->getId(),
+                    get_class($job)
+                )
+            );
         }
 
-        $this->dispatcher->triggerEvent('onWorkerJobFailure', [
+        $this->dispatcher->triggerEvent(
+            'onWorkerJobFailure', [
             'worker' => $this,
             'exception' => $e,
             'job' => $job,
             'message' => $message,
-        ]);
+        ]
+        );
     }
 
     /**

@@ -107,8 +107,12 @@ class TestHelper
             return $property->getValue($object);
         }
 
-        throw new \InvalidArgumentException(sprintf('Invalid property [%s] for class [%s]', $propertyName,
-            get_class($object)));
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Invalid property [%s] for class [%s]', $propertyName,
+                get_class($object)
+            )
+        );
     }
 
     /**

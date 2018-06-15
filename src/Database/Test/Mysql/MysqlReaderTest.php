@@ -146,12 +146,14 @@ class MysqlReaderTest extends AbstractMysqlTestCase
     public function testCountAffected()
     {
         $this->db->setQuery('INSERT INTO ' . $this->qn('#__flower') . ' (' . $this->qn('catid') . ') VALUES (\'3\')');
-        $this->db->setQuery(sprintf(
-            'INSERT INTO ' . $this->qn('#__flower') . ' (%s, %s, %s) VALUES ("3", "", "")',
-            $this->qn('catid'),
-            $this->qn('meaning'),
-            $this->qn('params')
-        ));
+        $this->db->setQuery(
+            sprintf(
+                'INSERT INTO ' . $this->qn('#__flower') . ' (%s, %s, %s) VALUES ("3", "", "")',
+                $this->qn('catid'),
+                $this->qn('meaning'),
+                $this->qn('params')
+            )
+        );
 
         $this->db->execute();
 

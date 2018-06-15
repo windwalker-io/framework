@@ -254,13 +254,17 @@ class RecordTest extends AbstractMysqlTestCase
     {
         $record = new StubRecord('articles');
 
-        $this->assertExpectedException(function () use ($record) {
-            $record->validate();
-        }, new \RuntimeException(), 'Record save error');
+        $this->assertExpectedException(
+            function () use ($record) {
+                $record->validate();
+            }, new \RuntimeException(), 'Record save error'
+        );
 
-        $this->assertExpectedException(function () use ($record) {
-            $record->save([]);
-        }, new \RuntimeException(), 'Record save error');
+        $this->assertExpectedException(
+            function () use ($record) {
+                $record->save([]);
+            }, new \RuntimeException(), 'Record save error'
+        );
     }
 
     /**

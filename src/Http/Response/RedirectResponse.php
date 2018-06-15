@@ -32,10 +32,12 @@ class RedirectResponse extends Response
         }
 
         if (!is_string($uri)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid URI type, string or UriInterface required, %s provided.',
-                gettype($uri)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid URI type, string or UriInterface required, %s provided.',
+                    gettype($uri)
+                )
+            );
         }
 
         $headers['location'] = [$uri];

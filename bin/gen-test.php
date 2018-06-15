@@ -97,11 +97,13 @@ class GenTest extends AbstractCliApplication
 
         $this->genClass($replace);
 
-        $this->out(sprintf(
-            'Generate test class: <info>%s</info> to file: <info>%s</info>',
-            $replace['test.class.name'],
-            $replace['test.class.file']
-        ));
+        $this->out(
+            sprintf(
+                'Generate test class: <info>%s</info> to file: <info>%s</info>',
+                $replace['test.class.name'],
+                $replace['test.class.file']
+            )
+        );
 
         return true;
     }

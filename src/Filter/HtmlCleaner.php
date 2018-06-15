@@ -269,8 +269,10 @@ class HtmlCleaner
              * OR no tagname
              * OR remove if xssauto is on and tag is blacklisted
              */
-            if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName)) || (!$tagName) || ((in_array(strtolower($tagName),
-                        $this->tagBlacklist)) && ($this->xssAuto))) {
+            if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName)) || (!$tagName) || ((in_array(
+                        strtolower($tagName),
+                        $this->tagBlacklist
+                    )) && ($this->xssAuto))) {
                 $postTag       = substr($postTag, ($tagLength + 2));
                 $tagOpen_start = strpos($postTag, '<');
 
@@ -297,8 +299,10 @@ class HtmlCleaner
                 if (preg_match('#\s*=\s*\"#', $fromSpace, $matches, PREG_OFFSET_CAPTURE)) {
                     $startAtt         = $matches[0][0];
                     $startAttPosition = $matches[0][1];
-                    $closeQuotes      = strpos(substr($fromSpace, ($startAttPosition + strlen($startAtt))),
-                            '"') + $startAttPosition + strlen($startAtt);
+                    $closeQuotes      = strpos(
+                            substr($fromSpace, ($startAttPosition + strlen($startAtt))),
+                            '"'
+                        ) + $startAttPosition + strlen($startAtt);
                     $nextEqual        = $startAttPosition + strpos($startAtt, '=');
                     $openQuotes       = $startAttPosition + strpos($startAtt, '"');
                     $nextSpace        = strpos(substr($fromSpace, $closeQuotes), ' ') + $closeQuotes;
@@ -438,8 +442,10 @@ class HtmlCleaner
                 $attrSubSet[1] = str_replace('"', '', $attrSubSet[1]);
 
                 // Convert single quotes from either side to doubles (Single quotes shouldn't be used to pad attr values)
-                if ((substr($attrSubSet[1], 0, 1) == "'") && (substr($attrSubSet[1], (strlen($attrSubSet[1]) - 1),
-                            1) == "'")) {
+                if ((substr($attrSubSet[1], 0, 1) == "'") && (substr(
+                            $attrSubSet[1], (strlen($attrSubSet[1]) - 1),
+                            1
+                        ) == "'")) {
                     $attrSubSet[1] = substr($attrSubSet[1], 1, (strlen($attrSubSet[1]) - 2));
                 }
 

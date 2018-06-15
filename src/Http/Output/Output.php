@@ -121,8 +121,12 @@ class Output implements OutputInterface
 
         $reasonPhrase = ($reasonPhrase ? ' ' . $reasonPhrase : '');
 
-        $this->header(sprintf('HTTP/%s %d%s', $response->getProtocolVersion(), $response->getStatusCode(),
-            $reasonPhrase));
+        $this->header(
+            sprintf(
+                'HTTP/%s %d%s', $response->getProtocolVersion(), $response->getStatusCode(),
+                $reasonPhrase
+            )
+        );
     }
 
     /**

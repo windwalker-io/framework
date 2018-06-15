@@ -240,9 +240,11 @@ class DataTest extends \PHPUnit\Framework\TestCase
         $data->foo = 'bar';
         $data->baz = 'yoo';
 
-        $new = $data->map(function ($value) {
-            return strtoupper($value);
-        });
+        $new = $data->map(
+            function ($value) {
+                return strtoupper($value);
+            }
+        );
 
         $this->assertEquals('YOO', $new->baz);
     }
@@ -261,9 +263,11 @@ class DataTest extends \PHPUnit\Framework\TestCase
         $data->foo = 'bar';
         $data->baz = 'yoo';
 
-        $data->walk(function (&$value, $key, $userdata) {
-            $value = $userdata . ':' . $key . ':' . strtoupper($value);
-        }, 'prefix');
+        $data->walk(
+            function (&$value, $key, $userdata) {
+                $value = $userdata . ':' . $key . ':' . strtoupper($value);
+            }, 'prefix'
+        );
 
         $this->assertEquals('prefix:baz:YOO', $data->baz);
     }

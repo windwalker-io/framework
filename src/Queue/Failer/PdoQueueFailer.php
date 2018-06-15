@@ -8,8 +8,6 @@
 
 namespace Windwalker\Queue\Failer;
 
-use Windwalker\Core\DateTime\Chronos;
-
 /**
  * The DatabaseQueueFailer class.
  *

@@ -23,33 +23,35 @@ class Application extends \Windwalker\Application\AbstractWebApplication
     }
 }
 
-$chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create([
-    function (Request $request, Response $response, $next = null) {
-        $input = \Windwalker\IO\PsrInput::create($request);
+$chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create(
+    [
+        function (Request $request, Response $response, $next = null) {
+            $input = \Windwalker\IO\PsrInput::create($request);
 
-        show($input->files->get('image.foo.1', '.'));
+            show($input->files->get('image.foo.1', '.'));
 
-        show($request->getBody());
-        $body = $response->getBody()->__toString();
+            show($request->getBody());
+            $body = $response->getBody()->__toString();
 
-        $body = ">>>AAA\n" . $body . "\n<<<AAA";
+            $body = ">>>AAA\n" . $body . "\n<<<AAA";
 
-        $response->getBody()->rewind();
-        $response->getBody()->write($body);
+            $response->getBody()->rewind();
+            $response->getBody()->write($body);
 
-        return $next($request, $response);
-    },
-    function (Request $request, Response $response, $next = null) {
-        $body = $response->getBody()->__toString();
+            return $next($request, $response);
+        },
+        function (Request $request, Response $response, $next = null) {
+            $body = $response->getBody()->__toString();
 
-        $body = ">>>BBB\n" . $body . "\n<<<BBB";
+            $body = ">>>BBB\n" . $body . "\n<<<BBB";
 
-        $response->getBody()->rewind();
-        $response->getBody()->write($body);
+            $response->getBody()->rewind();
+            $response->getBody()->write($body);
 
-        return $next($request, $response);
-    },
-]);
+            return $next($request, $response);
+        },
+    ]
+);
 
 $app = new Application();
 $app->setFinalHandler($chain);

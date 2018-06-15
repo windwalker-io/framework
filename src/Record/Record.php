@@ -207,11 +207,13 @@ class Record extends Entity
         $fields = $this->getFields();
 
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'src' => &$src,
             'fields' => $fields,
             'replaceNulls' => &$replaceNulls,
-        ]);
+        ]
+        );
 
         // Bind the source value, excluding the ignored fields.
         foreach ($src as $k => $v) {
@@ -247,10 +249,12 @@ class Record extends Entity
     public function load($keys = null, $reset = true)
     {
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'conditions' => &$keys,
             'reset' => &$reset,
-        ]);
+        ]
+        );
 
         if ($reset) {
             $this->reset();
@@ -284,9 +288,11 @@ class Record extends Entity
         $row = $this->bind($result);
 
         // Event
-        $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onAfter' . ucfirst(__FUNCTION__), [
             'result' => &$row,
-        ]);
+        ]
+        );
 
         return $row;
     }
@@ -328,9 +334,11 @@ class Record extends Entity
         }
 
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'conditions' => &$conditions,
-        ]);
+        ]
+        );
 
         // If no primary key is given, return false.
         if ($conditions === []) {
@@ -384,14 +392,18 @@ class Record extends Entity
         $action = $new ? 'Create' : 'Update';
 
         // @Event: Create / Update
-        $this->triggerEvent('onBefore' . $action, [
+        $this->triggerEvent(
+            'onBefore' . $action, [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         // @Event: Store
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         // Do Action
         // If a primary key exists update the object, otherwise insert it.
@@ -401,9 +413,11 @@ class Record extends Entity
         $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
         // @Event: Create / Update
-        $this->triggerEvent('onAfter' . $action, [
+        $this->triggerEvent(
+            'onAfter' . $action, [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         return $this;
     }
@@ -443,21 +457,27 @@ class Record extends Entity
     public function update($updateNulls = false)
     {
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
-        $this->triggerEvent('onBeforeStore', [
+        $this->triggerEvent(
+            'onBeforeStore', [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         // Do Action
         $this->getDataMapper()->updateOne($this, $this->getKeyName(true), $updateNulls);
 
         // Event
-        $this->triggerEvent('onAfterStore', [
+        $this->triggerEvent(
+            'onAfterStore', [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 

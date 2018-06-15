@@ -90,9 +90,11 @@ class FormWrapperTest extends AbstractDomTestCase
     {
         $this->assertEquals('</form>', FormWrapper::end());
 
-        FormWrapper::setTokenHandler(function () {
-            return new InputElement('hidden', 'token', 1);
-        });
+        FormWrapper::setTokenHandler(
+            function () {
+                return new InputElement('hidden', 'token', 1);
+            }
+        );
 
         $this->assertEquals('<input type="hidden" name="token" value="1" /></form>', FormWrapper::end());
     }

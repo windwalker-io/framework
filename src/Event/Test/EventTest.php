@@ -161,7 +161,8 @@ class EventTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertCount(0, $this->instance);
 
-        $event = $this->getMockForAbstractClass('Windwalker\Event\Event', [
+        $event = $this->getMockForAbstractClass(
+            'Windwalker\Event\Event', [
                 'test',
                 [
                     'foo' => 'bar',

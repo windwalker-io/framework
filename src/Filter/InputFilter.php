@@ -307,8 +307,10 @@ class InputFilter implements \Serializable
 
         // HTML
         $this->handlers[static::URL] = function ($source) {
-            return (string) filter_var($source, FILTER_SANITIZE_URL,
-                FILTER_FLAG_QUERY_REQUIRED | FILTER_FLAG_PATH_REQUIRED);
+            return (string) filter_var(
+                $source, FILTER_SANITIZE_URL,
+                FILTER_FLAG_QUERY_REQUIRED | FILTER_FLAG_PATH_REQUIRED
+            );
         };
 
         // RAW

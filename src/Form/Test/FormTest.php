@@ -517,8 +517,10 @@ class FormTest extends AbstractBaseTestCase
 
         $form->setRenderer(new MockFormRenderer());
 
-        $this->assertEquals('<mock id="input-windwalker-id-control" class="text-field ">Hello World: windwalker[id]</mock>',
-            $form->renderField('id'));
+        $this->assertEquals(
+            '<mock id="input-windwalker-id-control" class="text-field ">Hello World: windwalker[id]</mock>',
+            $form->renderField('id')
+        );
     }
 
     /**
@@ -601,7 +603,9 @@ class FormTest extends AbstractBaseTestCase
 
         $form->setRenderer($renderer);
 
-        $this->assertEquals('<mock id="input-test-control" class="text-field ">Hello World: test</mock>',
-            trim($form->renderFields()));
+        $this->assertEquals(
+            '<mock id="input-test-control" class="text-field ">Hello World: test</mock>',
+            trim($form->renderFields())
+        );
     }
 }

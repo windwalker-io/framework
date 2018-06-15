@@ -346,8 +346,10 @@ class Grid
             }
         }
 
-        return array_diff(array_keys($this->rows),
-            array_merge($this->specialRows['header'], $this->specialRows['footer']));
+        return array_diff(
+            array_keys($this->rows),
+            array_merge($this->specialRows['header'], $this->specialRows['footer'])
+        );
     }
 
     /**
@@ -395,8 +397,10 @@ class Grid
             $output[] = $this->renderArea($this->specialRows['header'], 'thead', 'th');
         }
 
-        $ids = array_diff(array_keys($this->rows),
-            array_merge($this->specialRows['header'], $this->specialRows['footer']));
+        $ids = array_diff(
+            array_keys($this->rows),
+            array_merge($this->specialRows['header'], $this->specialRows['footer'])
+        );
 
         if (count($ids)) {
             $output[] = $this->renderArea($ids);

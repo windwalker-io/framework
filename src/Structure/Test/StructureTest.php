@@ -205,16 +205,26 @@ class StructureTest extends AbstractBaseTestCase
     {
         $structure = new Structure();
 
-        $this->assertEquals($structure->reset()->loadFile(__DIR__ . '/Stubs/flower.json', 'json')->get('flower'),
-            'sakura');
-        $this->assertEquals($structure->reset()->loadFile(__DIR__ . '/Stubs/flower.yml', 'yaml')->get('flower'),
-            'sakura');
-        $this->assertEquals($structure->reset()->loadFile(__DIR__ . '/Stubs/flower.ini', 'ini')->get('flower'),
-            'sakura');
-        $this->assertEquals($structure->reset()->loadFile(__DIR__ . '/Stubs/flower.xml', 'xml')->get('flower'),
-            'sakura');
-        $this->assertEquals($structure->reset()->loadFile(__DIR__ . '/Stubs/flower.php', 'php')->get('flower'),
-            'sakura');
+        $this->assertEquals(
+            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.json', 'json')->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.yml', 'yaml')->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.ini', 'ini')->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.xml', 'xml')->get('flower'),
+            'sakura'
+        );
+        $this->assertEquals(
+            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.php', 'php')->get('flower'),
+            'sakura'
+        );
     }
 
     /**
@@ -228,14 +238,30 @@ class StructureTest extends AbstractBaseTestCase
     {
         $structure = new Structure();
 
-        $this->assertEquals($structure->reset()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.json'),
-            'json')->get('flower'), 'sakura');
-        $this->assertEquals($structure->reset()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.yml'),
-            'yaml')->get('flower'), 'sakura');
-        $this->assertEquals($structure->reset()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.ini'),
-            'ini')->get('flower'), 'sakura');
-        $this->assertEquals($structure->reset()->loadString(file_get_contents(__DIR__ . '/Stubs/flower.xml'),
-            'xml')->get('flower'), 'sakura');
+        $this->assertEquals(
+            $structure->reset()->loadString(
+                file_get_contents(__DIR__ . '/Stubs/flower.json'),
+                'json'
+            )->get('flower'), 'sakura'
+        );
+        $this->assertEquals(
+            $structure->reset()->loadString(
+                file_get_contents(__DIR__ . '/Stubs/flower.yml'),
+                'yaml'
+            )->get('flower'), 'sakura'
+        );
+        $this->assertEquals(
+            $structure->reset()->loadString(
+                file_get_contents(__DIR__ . '/Stubs/flower.ini'),
+                'ini'
+            )->get('flower'), 'sakura'
+        );
+        $this->assertEquals(
+            $structure->reset()->loadString(
+                file_get_contents(__DIR__ . '/Stubs/flower.xml'),
+                'xml'
+            )->get('flower'), 'sakura'
+        );
     }
 
     /**
@@ -269,12 +295,18 @@ class StructureTest extends AbstractBaseTestCase
 
         $structure1->merge($structure2);
 
-        $this->assertEquals('new bar value 2', $structure1->get('bar.bar2'),
-            'Line: ' . __LINE__ . '. bar.bar2 should be override.');
-        $this->assertEquals('bar value 1', $structure1->get('bar.bar1'),
-            'Line: ' . __LINE__ . '. bar.bar1 should not be override.');
-        $this->assertSame('bar value 3', $structure1->get('bar.bar3'),
-            'Line: ' . __LINE__ . '. bar.bar3 should not be override.');
+        $this->assertEquals(
+            'new bar value 2', $structure1->get('bar.bar2'),
+            'Line: ' . __LINE__ . '. bar.bar2 should be override.'
+        );
+        $this->assertEquals(
+            'bar value 1', $structure1->get('bar.bar1'),
+            'Line: ' . __LINE__ . '. bar.bar1 should not be override.'
+        );
+        $this->assertSame(
+            'bar value 3', $structure1->get('bar.bar3'),
+            'Line: ' . __LINE__ . '. bar.bar3 should not be override.'
+        );
 
         $structure = new Structure(['flower' => 'rose', 'honor' => 'Osmanthus month']);
 
@@ -316,12 +348,18 @@ class StructureTest extends AbstractBaseTestCase
         $structure1->setIgnoreValues([null, '']);
         $structure1->merge($structure2);
 
-        $this->assertEquals('new bar value 2', $structure1->get('bar.bar2'),
-            'Line: ' . __LINE__ . '. bar.bar2 should be override.');
-        $this->assertEquals('bar value 1', $structure1->get('bar.bar1'),
-            'Line: ' . __LINE__ . '. bar.bar1 should not be override.');
-        $this->assertSame('bar value 3', $structure1->get('bar.bar3'),
-            'Line: ' . __LINE__ . '. bar.bar3 should not be override.');
+        $this->assertEquals(
+            'new bar value 2', $structure1->get('bar.bar2'),
+            'Line: ' . __LINE__ . '. bar.bar2 should be override.'
+        );
+        $this->assertEquals(
+            'bar value 1', $structure1->get('bar.bar1'),
+            'Line: ' . __LINE__ . '. bar.bar1 should not be override.'
+        );
+        $this->assertSame(
+            'bar value 3', $structure1->get('bar.bar3'),
+            'Line: ' . __LINE__ . '. bar.bar3 should not be override.'
+        );
 
         $structure = new Structure(['flower' => 'rose', 'honor' => 'Osmanthus month']);
 

@@ -339,8 +339,10 @@ class MysqlGrammar extends AbstractQueryGrammar
     ) {
         $column = [$oldColumn, $newColumn];
 
-        return static::alterColumn('CHANGE', $table, $column, $type, $signed, $allowNull, $default, $position,
-            $comment);
+        return static::alterColumn(
+            'CHANGE', $table, $column, $type, $signed, $allowNull, $default, $position,
+            $comment
+        );
     }
 
     /**
@@ -367,8 +369,10 @@ class MysqlGrammar extends AbstractQueryGrammar
         $position = null,
         $comment = ''
     ) {
-        return static::alterColumn('MODIFY', $table, $column, $type, $signed, $allowNull, $default, $position,
-            $comment);
+        return static::alterColumn(
+            'MODIFY', $table, $column, $type, $signed, $allowNull, $default, $position,
+            $comment
+        );
     }
 
     /**
@@ -447,8 +451,12 @@ class MysqlGrammar extends AbstractQueryGrammar
                 if (!is_numeric($val)) {
                     $string = is_string($val) ? ' ' . $query->quote($val) : '';
 
-                    throw new \InvalidArgumentException(sprintf('Index length should be number, (%s)%s given.',
-                        gettype($val), $string));
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Index length should be number, (%s)%s given.',
+                            gettype($val), $string
+                        )
+                    );
                 }
 
                 $cols[] = $query->quoteName($key) . '(' . $val . ')';

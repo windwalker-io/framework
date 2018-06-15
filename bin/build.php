@@ -182,8 +182,12 @@ class Build extends AbstractCliApplication
         $this->exec(sprintf('git branch -D %s-%s', $this->branch, $subtree));
 
         // Add remote repo
-        $this->exec(sprintf('git remote add %s git@github.com:%s/windwalker-%s.git', $subtree, $this->organization,
-            $subtree));
+        $this->exec(
+            sprintf(
+                'git remote add %s git@github.com:%s/windwalker-%s.git', $subtree, $this->organization,
+                $subtree
+            )
+        );
 
         $force = $this->io->getOption('f') ?: $this->io->getOption('force', false);
 
@@ -192,8 +196,12 @@ class Build extends AbstractCliApplication
         if (!$force) {
             $this->exec(sprintf('git fetch %s', $subtree));
 
-            $this->exec(sprintf('git checkout -b %s-%s --track %s/%s', $this->branch, $subtree, $subtree,
-                $this->branch));
+            $this->exec(
+                sprintf(
+                    'git checkout -b %s-%s --track %s/%s', $this->branch, $subtree, $subtree,
+                    $this->branch
+                )
+            );
 
             $this->exec(sprintf('git merge sub-%s', $subtree));
         }
@@ -294,8 +302,12 @@ HELP;
     {
         $this->out('Replacing Docblock');
 
-        $files = new RecursiveIteratorIterator(new \RecursiveDirectoryIterator(WINDWALKER_ROOT . '/src',
-            \FilesystemIterator::SKIP_DOTS));
+        $files = new RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                WINDWALKER_ROOT . '/src',
+                \FilesystemIterator::SKIP_DOTS
+            )
+        );
 
         /** @var \SplFileInfo $file */
         foreach ($files as $file) {

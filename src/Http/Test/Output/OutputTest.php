@@ -60,8 +60,10 @@ class OutputTest extends \PHPUnit\Framework\TestCase
         };
 
         // Test return body
-        $return = (string) $this->instance->respond(new TextResponse('Flower', 256, ['x-foo' => 'bar']),
-            true)->getBody();
+        $return = (string) $this->instance->respond(
+            new TextResponse('Flower', 256, ['x-foo' => 'bar']),
+            true
+        )->getBody();
 
         $this->assertEquals('Flower', (string) $return);
 
@@ -128,15 +130,18 @@ class OutputTest extends \PHPUnit\Framework\TestCase
      */
     public function testSendHeaders()
     {
-        $this->instance->sendHeaders(new TextResponse('Flower', 256, [
-                'x-foo' => 'bar',
-                'x-flower' => [
-                    'sakura',
-                    'rose',
-                    'olive',
-                ],
-            ]
-        ));
+        $this->instance->sendHeaders(
+            new TextResponse(
+                'Flower', 256, [
+                    'x-foo' => 'bar',
+                    'x-flower' => [
+                        'sakura',
+                        'rose',
+                        'olive',
+                    ],
+                ]
+            )
+        );
 
         $expected = [
             'X-Foo' => ['bar'],

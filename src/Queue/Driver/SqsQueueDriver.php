@@ -79,10 +79,12 @@ class SqsQueueDriver implements QueueDriverInterface
      */
     public function pop($queue = null)
     {
-        $result = $this->client->receiveMessage([
-            'QueueUrl' => $this->getQueueUrl($queue),
-            'AttributeNames' => ['ApproximateReceiveCount'],
-        ]);
+        $result = $this->client->receiveMessage(
+            [
+                'QueueUrl' => $this->getQueueUrl($queue),
+                'AttributeNames' => ['ApproximateReceiveCount'],
+            ]
+        );
 
         if ($result['Messages'] === null) {
             return null;
@@ -113,10 +115,12 @@ class SqsQueueDriver implements QueueDriverInterface
      */
     public function delete(QueueMessage $message)
     {
-        $this->client->deleteMessage([
-            'QueueUrl' => $this->getQueueUrl($message->getQueueName()),
-            'ReceiptHandle' => $this->getReceiptHandle($message),
-        ]);
+        $this->client->deleteMessage(
+            [
+                'QueueUrl' => $this->getQueueUrl($message->getQueueName()),
+                'ReceiptHandle' => $this->getReceiptHandle($message),
+            ]
+        );
 
         return $this;
     }
@@ -130,11 +134,13 @@ class SqsQueueDriver implements QueueDriverInterface
      */
     public function release(QueueMessage $message)
     {
-        $this->client->changeMessageVisibility([
-            'QueueUrl' => $this->getQueueUrl($message->getQueueName()),
-            'ReceiptHandle' => $this->getReceiptHandle($message),
-            'VisibilityTimeout' => $message->getDelay(),
-        ]);
+        $this->client->changeMessageVisibility(
+            [
+                'QueueUrl' => $this->getQueueUrl($message->getQueueName()),
+                'ReceiptHandle' => $this->getReceiptHandle($message),
+                'VisibilityTimeout' => $message->getDelay(),
+            ]
+        );
 
         return $this;
     }

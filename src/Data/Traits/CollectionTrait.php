@@ -258,8 +258,12 @@ trait CollectionTrait
         $keys = $this->keys();
 
         // Keep keys same as origin
-        return $this->bindNewInstance(array_combine($keys,
-            array_map($callback, $this->convertArray(clone $this), $keys)));
+        return $this->bindNewInstance(
+            array_combine(
+                $keys,
+                array_map($callback, $this->convertArray(clone $this), $keys)
+            )
+        );
     }
 
     /**

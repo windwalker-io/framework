@@ -492,10 +492,12 @@ class ServerRequestFactory
         }
 
         if (!preg_match('/^(HTTP\/)?(\d+(?:\.\d+)+)/', $server['SERVER_PROTOCOL'], $matches)) {
-            throw new \UnexpectedValueException(sprintf(
-                'Invalid protocol version format (%s)',
-                $server['SERVER_PROTOCOL']
-            ));
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'Invalid protocol version format (%s)',
+                    $server['SERVER_PROTOCOL']
+                )
+            );
         }
 
         return $matches[2];

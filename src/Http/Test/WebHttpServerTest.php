@@ -71,9 +71,11 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
      */
     public function testListen()
     {
-        $server = $this->createServer(function ($request, ResponseInterface $response) {
-            return $response->getBody()->write('Hello');
-        }, new HtmlResponse());
+        $server = $this->createServer(
+            function ($request, ResponseInterface $response) {
+                return $response->getBody()->write('Hello');
+            }, new HtmlResponse()
+        );
 
         $server->listen();
 
@@ -91,8 +93,10 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
      */
     public function testPrepareCache()
     {
-        $server = $this->createServer(function () {
-        });
+        $server = $this->createServer(
+            function () {
+            }
+        );
 
         // Cachable
         $server->cachable(WebHttpServer::CACHE_ENABLE);
@@ -101,8 +105,10 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
 
         $headers = $response->getHeaders();
 
-        $this->assertRegExp('/[\w]{3}, [\d]{1,2} [\w]{3} [\d]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT/',
-            $headers['Expires'][0]);
+        $this->assertRegExp(
+            '/[\w]{3}, [\d]{1,2} [\w]{3} [\d]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT/',
+            $headers['Expires'][0]
+        );
 
         $date = new \DateTime($headers['Expires'][0]);
         $now  = new \DateTime();
@@ -118,10 +124,14 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('Mon, 1 Jan 2001 00:00:00 GMT', $headers['Expires'][0]);
         $this->assertEquals('no-cache', $headers['Pragma'][0]);
-        $this->assertEquals('no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
-            $headers['Cache-Control'][0]);
-        $this->assertRegExp('/[\w]{3}, [\d]{1,2} [\w]{3} [\d]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT/',
-            $headers['Last-Modified'][0]);
+        $this->assertEquals(
+            'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+            $headers['Cache-Control'][0]
+        );
+        $this->assertRegExp(
+            '/[\w]{3}, [\d]{1,2} [\w]{3} [\d]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT/',
+            $headers['Last-Modified'][0]
+        );
 
         // Custom Header
         $server->cachable(WebHttpServer::CACHE_CUSTOM_HEADER);
@@ -158,8 +168,10 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetContentType()
     {
-        $server = $this->createServer(function () {
-        });
+        $server = $this->createServer(
+            function () {
+            }
+        );
 
         $server->setContentType('text/html');
         $server->setCharSet('latin1');
@@ -241,8 +253,9 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetUriData()
     {
-        $server = new WebHttpServer(function () {
-        }, ServerRequestFactory::createFromGlobals(
+        $server = new WebHttpServer(
+            function () {
+            }, ServerRequestFactory::createFromGlobals(
             [
                 'HTTPS' => 'off',
                 'SERVER_NAME' => 'example.com',
@@ -251,7 +264,8 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
                 'REQUEST_URI' => '/flower/sakura/index.php/foo/bar?a=wrong',
                 'SCRIPT_NAME' => '/flower/sakura/index.php',
             ]
-        ));
+        )
+        );
 
         $uri = $server->getUriData();
 
@@ -263,9 +277,13 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('http://example.com:8080', $uri->host);
         $this->assertEquals('/flower/sakura', $uri->path);
 
-        $server = new WebHttpServer(function () {
-        }, new ServerRequest(['SCRIPT_NAME' => '/flower/sakura/index.php'], [],
-            'http://example.com:8080/flower/sakura/index.php/foo/bar?a=b&c=d', 'GET'));
+        $server = new WebHttpServer(
+            function () {
+            }, new ServerRequest(
+            ['SCRIPT_NAME' => '/flower/sakura/index.php'], [],
+            'http://example.com:8080/flower/sakura/index.php/foo/bar?a=b&c=d', 'GET'
+        )
+        );
 
         $this->assertEquals($uri, $server->getUriData());
     }

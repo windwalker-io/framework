@@ -90,8 +90,10 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateFromGlobals()
     {
-        $server = $this->createServerFromGlobals(function () {
-        });
+        $server = $this->createServerFromGlobals(
+            function () {
+            }
+        );
 
         $this->assertEquals(['foo' => 'bar'], $server->getRequest()->getServerParams());
         $this->assertEquals(['flower' => 'sakura'], $server->getRequest()->getQueryParams());
@@ -157,11 +159,13 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
 
         $this->expectOutputString('Exception: Hello');
 
-        $server->listen(function (\Exception $e, $request, ResponseInterface $response) {
-            $response->getBody()->rewind();
+        $server->listen(
+            function (\Exception $e, $request, ResponseInterface $response) {
+                $response->getBody()->rewind();
 
-            return $response->getBody()->write(get_class($e) . ': ' . $e->getMessage());
-        });
+                return $response->getBody()->write(get_class($e) . ': ' . $e->getMessage());
+            }
+        );
     }
 
     /**

@@ -202,8 +202,12 @@ class AsyncHttpClient extends HttpClient
     public function setTransport(TransportInterface $transport)
     {
         if (!$transport instanceof CurlTransport) {
-            throw new \InvalidArgumentException(sprintf('%s only supports %s', get_called_class(),
-                CurlTransport::class));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '%s only supports %s', get_called_class(),
+                    CurlTransport::class
+                )
+            );
         }
 
         $this->transport = $transport;

@@ -111,9 +111,11 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
     protected function getEndMiddleware()
     {
         if (!$this->endMiddleware) {
-            $this->endMiddleware = new Psr7Middleware(function ($request, $response) {
-                return $response;
-            });
+            $this->endMiddleware = new Psr7Middleware(
+                function ($request, $response) {
+                    return $response;
+                }
+            );
         }
 
         return $this->endMiddleware;

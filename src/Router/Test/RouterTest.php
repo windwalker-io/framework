@@ -216,8 +216,10 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->instance->addRoutes($routes);
 
         $this->assertEquals('flower/25/sakura', $this->instance->build('flower', ['id' => 25, 'alias' => 'sakura']));
-        $this->assertEquals('/flower/25/sakura',
-            $this->instance->build('flower', ['id' => 25, 'alias' => 'sakura'], true));
+        $this->assertEquals(
+            '/flower/25/sakura',
+            $this->instance->build('flower', ['id' => 25, 'alias' => 'sakura'], true)
+        );
     }
 
     /**
@@ -273,9 +275,11 @@ class RouterTest extends \PHPUnit\Framework\TestCase
      */
     public function testGroup()
     {
-        $this->instance->group('/sky', function (Router $router) {
+        $this->instance->group(
+            '/sky', function (Router $router) {
             $router->addRoute(new Route(null, 'flower/(id)/(alias)', ['_controller' => 'FlowerController']));
-        });
+        }
+        );
 
         $result = $this->instance->match('/sky/flower/5/foo');
 

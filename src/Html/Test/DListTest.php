@@ -159,8 +159,10 @@ HTML;
 
         $list->addDescription('Spider Man', 'Remember, with great power, comes great responsibility')
             ->addDescription('Forrest Gump', 'Life was like a box of chocolates.')
-            ->addDescription('Inception', 'You mustn’t be afraid to dream a little bigger,darling.', [],
-                ['class' => 'nav-item']);
+            ->addDescription(
+                'Inception', 'You mustn’t be afraid to dream a little bigger,darling.', [],
+                ['class' => 'nav-item']
+            );
 
         $html = <<<HTML
 <dl>

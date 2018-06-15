@@ -176,9 +176,11 @@ class StreamTest extends AbstractBaseTestCase
 
         $stream->detach();
 
-        $this->assertExpectedException(function () use ($stream) {
-            $stream->tell();
-        }, new \RuntimeException());
+        $this->assertExpectedException(
+            function () use ($stream) {
+                $stream->tell();
+            }, new \RuntimeException()
+        );
     }
 
     /**

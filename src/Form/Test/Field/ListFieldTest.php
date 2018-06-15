@@ -130,9 +130,11 @@ HTML;
             ]
         );
 
-        $field->group('Europe', function (ListField $field) {
+        $field->group(
+            'Europe', function (ListField $field) {
             $field->option('Paris', 'Europe/Paris');
-        })->option('UTC', 'UTC');
+        }
+        )->option('UTC', 'UTC');
 
         $html = <<<HTML
 <select name="timezone" id="input-timezone">

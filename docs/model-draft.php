@@ -12,9 +12,11 @@ $model = UserModel::create();
 $items = $model->getItems();
 
 // Where Conditions
-$model->setScope('activated', function ($query, $model) {
+$model->setScope(
+    'activated', function ($query, $model) {
     $query->where('activated >= 1');
-});
+}
+);
 
 $items = $model->reset()
     ->filter('registered', new DateTime('now'))

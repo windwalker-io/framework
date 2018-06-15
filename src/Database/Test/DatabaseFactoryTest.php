@@ -33,8 +33,10 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('No mysql test DSN');
         }
 
-        $this->assertInstanceOf('Windwalker\\Database\\Driver\\Mysql\\MysqlDriver',
-            DatabaseFactory::getDbo('mysql', $options));
+        $this->assertInstanceOf(
+            'Windwalker\\Database\\Driver\\Mysql\\MysqlDriver',
+            DatabaseFactory::getDbo('mysql', $options)
+        );
 
         $this->resetDatabaseFactory();
 
@@ -85,8 +87,10 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('No mysql test DSN');
         }
 
-        $this->assertInstanceOf('Windwalker\\Database\\Driver\\Mysql\\MysqlDriver',
-            DatabaseFactory::createDbo('mysql', $options));
+        $this->assertInstanceOf(
+            'Windwalker\\Database\\Driver\\Mysql\\MysqlDriver',
+            DatabaseFactory::createDbo('mysql', $options)
+        );
 
         $this->resetDatabaseFactory();
     }

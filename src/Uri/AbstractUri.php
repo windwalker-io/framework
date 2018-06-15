@@ -127,8 +127,10 @@ abstract class AbstractUri implements UriInterface
         $uri = '';
         $uri .= in_array('scheme', $parts) ? (!empty($this->scheme) ? $this->scheme . '://' : '') : '';
         $uri .= in_array('user', $parts) ? $this->user : '';
-        $uri .= in_array('pass',
-            $parts) ? (!empty($this->pass) ? ':' : '') . $this->pass . (!empty($this->user) ? '@' : '') : '';
+        $uri .= in_array(
+            'pass',
+            $parts
+        ) ? (!empty($this->pass) ? ':' : '') . $this->pass . (!empty($this->user) ? '@' : '') : '';
         $uri .= in_array('host', $parts) ? $this->host : '';
         $uri .= in_array('port', $parts) ? (!empty($this->port) ? ':' : '') . $this->port : '';
         $uri .= in_array('path', $parts) ? $this->path ? '/' . ltrim($this->path, '/') : '' : '';

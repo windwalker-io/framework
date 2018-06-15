@@ -316,9 +316,11 @@ class PsrUriTest extends AbstractBaseTestCase
      */
     public function testInvalidArguments($method, $value)
     {
-        $this->assertExpectedException(function () use ($method, $value) {
-            $uri = new PsrUri('https://example.com/');
-            $uri->$method($value);
-        }, 'InvalidArgumentException');
+        $this->assertExpectedException(
+            function () use ($method, $value) {
+                $uri = new PsrUri('https://example.com/');
+                $uri->$method($value);
+            }, 'InvalidArgumentException'
+        );
     }
 }

@@ -75,14 +75,16 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
      */
     public function testMiddleware()
     {
-        $this->db->addMiddleware(function (\stdClass $data, MiddlewareInterface $next) {
-            /** @var Query $query */
-            $query = $data->query;
+        $this->db->addMiddleware(
+            function (\stdClass $data, MiddlewareInterface $next) {
+                /** @var Query $query */
+                $query = $data->query;
 
-            $query->limit(3);
+                $query->limit(3);
 
-            return $next->execute($data);
-        });
+                return $next->execute($data);
+            }
+        );
 
         $items = $this->db->setQuery($this->db->getQuery(true)->select('*')->from('#__flower'))->loadAll();
 
@@ -98,16 +100,20 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
     {
         $profiler = [];
 
-        $this->db->addMiddleware(new DbProfilerMiddleware(function ($db, $data) use (&$profiler) {
-            $profiler['db']     = $db;
-            $profiler['before'] = true;
-        },
-            function ($db, $data) use (&$profiler) {
-                $profiler['db']    = $db;
-                $profiler['after'] = true;
+        $this->db->addMiddleware(
+            new DbProfilerMiddleware(
+                function ($db, $data) use (&$profiler) {
+                    $profiler['db']     = $db;
+                    $profiler['before'] = true;
+                },
+                function ($db, $data) use (&$profiler) {
+                    $profiler['db']    = $db;
+                    $profiler['after'] = true;
 
-                $profiler = array_merge($profiler, (array) $data);
-            }));
+                    $profiler = array_merge($profiler, (array) $data);
+                }
+            )
+        );
 
         $this->db->setQuery('SELECT * FROM #__flower')->execute();
 

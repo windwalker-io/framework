@@ -395,7 +395,8 @@ class ArrayHelper
         $key           = (array) $k;
         $sortLocale    = $locale;
 
-        usort($a,
+        usort(
+            $a,
             function ($a, $b) use ($sortCase, $sortDirection, $key, $sortLocale, $caseSensitive, $locale, $direction) {
                 for ($i = 0, $count = count($key); $i < $count; $i++) {
                     if (isset($sortDirection[$i])) {
@@ -431,7 +432,8 @@ class ArrayHelper
                 }
 
                 return 0;
-            });
+            }
+        );
 
         return $a;
     }
@@ -877,8 +879,12 @@ class ArrayHelper
                     $results[] = (static::getByPath($array, $key) === $val);
                 } else {
                     // Workaround for PHP object compare bug, see: https://bugs.php.net/bug.php?id=62976
-                    $compare1 = is_object(static::getByPath($array, $key)) ? get_object_vars(static::getByPath($array,
-                        $key)) : static::getByPath($array, $key);
+                    $compare1 = is_object(static::getByPath($array, $key)) ? get_object_vars(
+                        static::getByPath(
+                            $array,
+                            $key
+                        )
+                    ) : static::getByPath($array, $key);
                     $compare2 = is_object($val) ? get_object_vars($val) : $val;
 
                     $results[] = ($compare1 == $compare2);

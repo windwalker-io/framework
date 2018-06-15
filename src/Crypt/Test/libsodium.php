@@ -8,11 +8,13 @@
 
 include_once __DIR__ . '/../../../vendor/autoload.php';
 
-var_dump([
-    \Sodium\library_version_major(),
-    \Sodium\library_version_minor(),
-    \Sodium\version_string(),
-]);
+var_dump(
+    [
+        \Sodium\library_version_major(),
+        \Sodium\library_version_minor(),
+        \Sodium\version_string(),
+    ]
+);
 
 /**
  * Encrypt a message

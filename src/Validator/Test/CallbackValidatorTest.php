@@ -55,9 +55,11 @@ class CallbackValidatorTest extends TestCase
      */
     public function test__construct()
     {
-        $v = new CallbackValidator(function ($value) {
-            return is_array($value);
-        });
+        $v = new CallbackValidator(
+            function ($value) {
+                return is_array($value);
+            }
+        );
 
         self::assertTrue($v->validate([]));
         self::assertFalse($v->validate('Foo'));
@@ -74,9 +76,11 @@ class CallbackValidatorTest extends TestCase
      */
     public function testAccessHandler()
     {
-        $this->instance->setHandler(function ($value) {
-            return is_array($value);
-        });
+        $this->instance->setHandler(
+            function ($value) {
+                return is_array($value);
+            }
+        );
 
         self::assertTrue($this->instance->validate([]));
         self::assertFalse($this->instance->validate('Foo'));

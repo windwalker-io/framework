@@ -502,8 +502,10 @@ HTML;
     {
         $this->instance->setValidator(new EmailValidator());
 
-        $this->assertInstanceOf('Windwalker\\Validator\\Rule\\EmailValidator',
-            $this->instance->getValidator()->getValidators()[0]);
+        $this->assertInstanceOf(
+            'Windwalker\\Validator\\Rule\\EmailValidator',
+            $this->instance->getValidator()->getValidators()[0]
+        );
 
         self::assertFalse($this->instance->getValidator()->validate('hello'));
         self::assertTrue($this->instance->getValidator()->validate('hello@example.com'));
@@ -736,8 +738,10 @@ HTML;
      */
     public function testGetAttributes()
     {
-        $this->assertEquals(['placeholder' => 'The Flower', 'class' => 'stub-flower'],
-            $this->instance->getAttributes());
+        $this->assertEquals(
+            ['placeholder' => 'The Flower', 'class' => 'stub-flower'],
+            $this->instance->getAttributes()
+        );
     }
 
     /**

@@ -577,8 +577,12 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
         }
 
         if (!\is_array($node)) {
-            throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.',
-                $path, \gettype($node)));
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'The value at path: %s should be object or array but is %s.',
+                    $path, \gettype($node)
+                )
+            );
         }
 
         $args = \func_get_args();
@@ -617,8 +621,12 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
         }
 
         if (!\is_array($node)) {
-            throw new \UnexpectedValueException(sprintf('The value at path: %s should be object or array but is %s.',
-                $path, gettype($node)));
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'The value at path: %s should be object or array but is %s.',
+                    $path, gettype($node)
+                )
+            );
         }
 
         $args = \func_get_args();
@@ -657,7 +665,8 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
                     'The value at path: %s should be object or array but is %s.',
                     $path,
                     \gettype($node)
-                ));
+                )
+            );
         }
 
         $value = array_shift($node);

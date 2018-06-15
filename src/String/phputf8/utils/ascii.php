@@ -74,7 +74,8 @@ function utf8_strip_non_ascii($str)
     ob_start();
     while (preg_match(
         '/^([\x00-\x7F]+)|([^\x00-\x7F]+)/S',
-        $str, $matches)) {
+        $str, $matches
+    )) {
         if (!isset($matches[2])) {
             echo $matches[0];
         }
@@ -103,7 +104,8 @@ function utf8_strip_ascii_ctrl($str)
     ob_start();
     while (preg_match(
         '/^([^\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+)|([\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+)/S',
-        $str, $matches)) {
+        $str, $matches
+    )) {
         if (!isset($matches[2])) {
             echo $matches[0];
         }
@@ -131,7 +133,8 @@ function utf8_strip_non_ascii_ctrl($str)
     ob_start();
     while (preg_match(
         '/^([\x09\x0A\x0D\x20-\x7E]+)|([^\x09\x0A\x0D\x20-\x7E]+)/S',
-        $str, $matches)) {
+        $str, $matches
+    )) {
         if (!isset($matches[2])) {
             echo $matches[0];
         }

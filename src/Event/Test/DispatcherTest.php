@@ -277,23 +277,35 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->hasListener($listener3, 'onSomething'));
         $this->assertTrue($this->instance->hasListener($listener3, 'onAfterSomething'));
 
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener1, 'onBeforeSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener1, 'onBeforeSomething')
+        );
         $this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onSomething'));
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener1, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener1, 'onAfterSomething')
+        );
 
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener1, 'onBeforeSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener1, 'onBeforeSomething')
+        );
         $this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onSomething'));
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener1, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener1, 'onAfterSomething')
+        );
 
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener3, 'onBeforeSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener3, 'onBeforeSomething')
+        );
         $this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener3, 'onSomething'));
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener3, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener3, 'onAfterSomething')
+        );
     }
 
     /**
@@ -321,12 +333,18 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->hasListener($listener, 'onSomething'));
         $this->assertTrue($this->instance->hasListener($listener, 'onAfterSomething'));
 
-        $this->assertEquals(ListenerPriority::MIN,
-            $this->instance->getListenerPriority($listener, 'onBeforeSomething'));
-        $this->assertEquals(ListenerPriority::ABOVE_NORMAL,
-            $this->instance->getListenerPriority($listener, 'onSomething'));
-        $this->assertEquals(ListenerPriority::HIGH,
-            $this->instance->getListenerPriority($listener, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::MIN,
+            $this->instance->getListenerPriority($listener, 'onBeforeSomething')
+        );
+        $this->assertEquals(
+            ListenerPriority::ABOVE_NORMAL,
+            $this->instance->getListenerPriority($listener, 'onSomething')
+        );
+        $this->assertEquals(
+            ListenerPriority::HIGH,
+            $this->instance->getListenerPriority($listener, 'onAfterSomething')
+        );
     }
 
     /**
@@ -344,8 +362,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
 
         $this->instance->listen('onBeforeSomething', $listener, ListenerPriority::MIN);
 
-        $this->assertEquals(ListenerPriority::MIN,
-            $this->instance->getListenerPriority($listener, 'onBeforeSomething'));
+        $this->assertEquals(
+            ListenerPriority::MIN,
+            $this->instance->getListenerPriority($listener, 'onBeforeSomething')
+        );
     }
 
     /**
@@ -399,8 +419,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->hasListener($listener, 'onAfterSomething'));
 
         $this->assertEquals(ListenerPriority::HIGH, $this->instance->getListenerPriority($listener, 'onSomething'));
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener, 'onAfterSomething')
+        );
     }
 
     /**

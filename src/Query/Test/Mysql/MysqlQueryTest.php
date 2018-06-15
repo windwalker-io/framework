@@ -185,8 +185,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
             // Check the state of the other clauses.
             foreach ($clauses as $clause2) {
                 if ($clause != $clause2) {
-                    $this->assertNotNull(TestHelper::getValue($query, $clause2),
-                        $clause2 . ' Should not be NULL if we clear ' . $clause . '.');
+                    $this->assertNotNull(
+                        TestHelper::getValue($query, $clause2),
+                        $clause2 . ' Should not be NULL if we clear ' . $clause . '.'
+                    );
                 }
             }
         }
@@ -245,8 +247,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
 
             // Now check the claues have not been affected.
             foreach ($clauses as $clause) {
-                $this->assertNotNull(TestHelper::getValue($query, $clause),
-                    $clause . ' should exists if we clear ' . $type);
+                $this->assertNotNull(
+                    TestHelper::getValue($query, $clause),
+                    $clause . ' should exists if we clear ' . $type
+                );
             }
         }
     }
@@ -265,16 +269,20 @@ class MysqlQueryTest extends AbstractQueryTestCase
             ->columns('a, b, c')
             ->values('1, 2, 3');
 
-        $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string) $query));
+        $this->assertEquals(
+            'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            trim((string) $query)
+        );
 
         $query = $this->getQuery()
             ->insert('foo')
             ->columns(['a', 'b', 'c'])
             ->values('1, 2, 3');
 
-        $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a,b,c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string) $query));
+        $this->assertEquals(
+            'INSERT INTO foo' . PHP_EOL . '(a,b,c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -318,8 +326,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
             ->delete('foo')
             ->where('flower = "sakura"');
 
-        $this->assertEquals('DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
-            trim((string) $query));
+        $this->assertEquals(
+            'DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -341,8 +351,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
         $this->assertEquals(trim($this->pdo->quote($this->escapeString), "'"), $query->escape($this->escapeString));
 
         // Use Pdo object to escape.
-        $this->assertEquals(trim($this->pdo->quote($this->escapeString), "'"),
-            $this->instance->escape($this->escapeString));
+        $this->assertEquals(
+            trim($this->pdo->quote($this->escapeString), "'"),
+            $this->instance->escape($this->escapeString)
+        );
     }
 
     /**
@@ -381,8 +393,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
             ->from('foo AS a')
             ->from($query, 'b');
 
-        $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo AS a,' . PHP_EOL . '(SELECT *' . PHP_EOL . 'FROM foo) AS b',
-            trim((string) $query));
+        $this->assertEquals(
+            'SELECT *' . PHP_EOL . 'FROM foo AS a,' . PHP_EOL . '(SELECT *' . PHP_EOL . 'FROM foo) AS b',
+            trim((string) $query)
+        );
 
         // Array
         $query = $this->getQuery()
@@ -430,8 +444,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
             ->from('foo AS a')
             ->group('a.id');
 
-        $this->assertEquals('SELECT a.*' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'GROUP BY a.id',
-            trim((string) $query));
+        $this->assertEquals(
+            'SELECT a.*' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'GROUP BY a.id',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -448,8 +464,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
             ->from('foo AS a')
             ->having('aid = "sun"');
 
-        $this->assertEquals('SELECT a.id AS aid' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'HAVING aid = "sun"',
-            trim((string) $query));
+        $this->assertEquals(
+            'SELECT a.id AS aid' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'HAVING aid = "sun"',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -560,7 +578,8 @@ class MysqlQueryTest extends AbstractQueryTestCase
         $query = $this->getQuery()
             ->select('a.*, b.*')
             ->from('foo AS a')
-            ->join('INNER',
+            ->join(
+                'INNER',
                 [
                     'bar AS b ON a.id = b.aid',
                     'yoo AS y ON a.id = y.aid',
@@ -1003,8 +1022,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
             ->columns('a, b, c')
             ->values('1, 2, 3');
 
-        $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string) $query));
+        $this->assertEquals(
+            'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            trim((string) $query)
+        );
 
         $query = $this->getQuery()
             ->insert('foo')
@@ -1066,8 +1087,10 @@ class MysqlQueryTest extends AbstractQueryTestCase
             ->delete('foo')
             ->where('flower = "sakura"');
 
-        $this->assertEquals('DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
-            trim((string) $query));
+        $this->assertEquals(
+            'DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
+            trim((string) $query)
+        );
     }
 
     /**

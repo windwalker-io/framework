@@ -177,8 +177,10 @@ class DomFormatter
                         $indentationLevel = 0;
                     }
 
-                    $output .= str_repeat($this->options['indentation_character'],
-                            $indentationLevel) . $matches[0] . "\n";
+                    $output .= str_repeat(
+                            $this->options['indentation_character'],
+                            $indentationLevel
+                        ) . $matches[0] . "\n";
 
                     break;
                 }

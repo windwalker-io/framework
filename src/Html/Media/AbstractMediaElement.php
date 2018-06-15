@@ -97,7 +97,8 @@ abstract class AbstractMediaElement extends HtmlElement
      */
     public function addSource($type, $src, $media = null)
     {
-        $this->content[] = new HtmlElement('source', null, [
+        $this->content[] = new HtmlElement(
+            'source', null, [
                 'src' => $src,
                 'type' => $this->name . '/' . strtolower($type),
                 'media' => $media,

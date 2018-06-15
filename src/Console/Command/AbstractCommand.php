@@ -188,8 +188,10 @@ abstract class AbstractCommand implements \ArrayAccess
             } catch (WrongArgumentException $e) {
                 $command = $this->getChild($name);
 
-                throw new \RuntimeException($e->getMessage() . "\n\n[Usage] " . $command->getUsage(), $e->getCode(),
-                    $e);
+                throw new \RuntimeException(
+                    $e->getMessage() . "\n\n[Usage] " . $command->getUsage(), $e->getCode(),
+                    $e
+                );
             } catch (\Exception $e) {
                 throw $e;
             }
@@ -883,8 +885,10 @@ abstract class AbstractCommand implements \ArrayAccess
              *
              * And if the string of wrong name can be found in a command name, we also notice user to choose it.
              */
-            if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / $denominator) || strpos($commandName,
-                    $wrongName) !== false) {
+            if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / $denominator) || strpos(
+                    $commandName,
+                    $wrongName
+                ) !== false) {
                 $alternatives[] = "    " . $commandName;
             }
         }

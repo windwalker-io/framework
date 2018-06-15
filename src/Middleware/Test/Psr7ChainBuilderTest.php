@@ -100,7 +100,8 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
             [
                 $this->getHandler('Othello'),
                 $this->getHandler('Caesar'),
-            ], Psr7ChainBuilder::SORT_DESC);
+            ], Psr7ChainBuilder::SORT_DESC
+        );
 
         $res = $chain->execute(new ServerRequest(), new Response());
 

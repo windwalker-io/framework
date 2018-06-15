@@ -80,8 +80,12 @@ EOF;
         $console = $command->getApplication();
 
         if (!($console instanceof Console)) {
-            throw new \RuntimeException(sprintf('Help descriptor need Console object in %s command.',
-                get_class($command)));
+            throw new \RuntimeException(
+                sprintf(
+                    'Help descriptor need Console object in %s command.',
+                    get_class($command)
+                )
+            );
         }
 
         $consoleTitle = $console->getTitle();

@@ -16,8 +16,12 @@ $compiler = new \Windwalker\Edge\Compiler\EdgeCompiler();
 
 //echo $compiler->compile(file_get_contents(__DIR__ . '/tmpl.blade.php'));
 
-$edge = new \Windwalker\Edge\Edge(new \Windwalker\Edge\Loader\EdgeFileLoader([
-    __DIR__
-]));
+$edge = new \Windwalker\Edge\Edge(
+    new \Windwalker\Edge\Loader\EdgeFileLoader(
+        [
+            __DIR__
+        ]
+    )
+);
 
 echo $edge->render('tmpl.components.main');

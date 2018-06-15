@@ -1884,8 +1884,10 @@ class ArrayHelperTest extends AbstractBaseTestCase
         $this->assertEquals([$data[0]], ArrayHelper::query($data, ['data' => $data[0]['data']], true));
 
         // Test Keep Key
-        $this->assertEquals([1 => $data[1], 2 => $data[2], 3 => $data[3]],
-            ArrayHelper::query($data, ['id >=' => 2], false, true));
+        $this->assertEquals(
+            [1 => $data[1], 2 => $data[2], 3 => $data[3]],
+            ArrayHelper::query($data, ['id >=' => 2], false, true)
+        );
     }
 
     /**
@@ -1920,9 +1922,11 @@ class ArrayHelperTest extends AbstractBaseTestCase
             ],
         ];
 
-        $results = ArrayHelper::query($data, function ($key, $value) {
+        $results = ArrayHelper::query(
+            $data, function ($key, $value) {
             return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
-        });
+        }
+        );
 
         $this->assertEquals([$data[0], $data[3]], $results);
     }
@@ -2134,9 +2138,11 @@ class ArrayHelperTest extends AbstractBaseTestCase
 
         $this->assertEquals('value', $data['double']['separators']);
 
-        $this->assertExpectedException(function () {
-            ArrayHelper::setByPath($data, 'a.b', 'c', '.', 'Non\Exists\Class');
-        }, new \InvalidArgumentException(), 'Type or class: Non\Exists\Class not exists');
+        $this->assertExpectedException(
+            function () {
+                ArrayHelper::setByPath($data, 'a.b', 'c', '.', 'Non\Exists\Class');
+            }, new \InvalidArgumentException(), 'Type or class: Non\Exists\Class not exists'
+        );
     }
 
     /**

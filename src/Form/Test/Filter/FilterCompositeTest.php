@@ -71,11 +71,15 @@ class FilterCompositeTest extends TestCase
     public function testClean()
     {
         $this->instance
-            ->addFilter(function ($text) {
-                return ltrim($text);
-            })->addFilter(function ($text) {
-                return strtoupper($text);
-            });
+            ->addFilter(
+                function ($text) {
+                    return ltrim($text);
+                }
+            )->addFilter(
+                function ($text) {
+                    return strtoupper($text);
+                }
+            );
 
         self::assertEquals('FOO  ', $this->instance->clean('  foo  '));
     }
