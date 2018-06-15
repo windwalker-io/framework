@@ -2,8 +2,8 @@
 /**
  * Part of phoenix project.
  *
- * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2018 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Validator\Rule;
@@ -13,7 +13,7 @@ use Windwalker\Validator\AbstractValidator;
 /**
  * The BetweenValidator class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.4.1
  */
 class BetweenValidator extends AbstractValidator
 {
@@ -60,7 +60,7 @@ class BetweenValidator extends AbstractValidator
      *
      * @return  float
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.1
      */
     public function getStart()
     {
@@ -74,7 +74,7 @@ class BetweenValidator extends AbstractValidator
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.1
      */
     public function setStart($start)
     {
@@ -88,7 +88,7 @@ class BetweenValidator extends AbstractValidator
      *
      * @return  float
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.1
      */
     public function getEnd()
     {
@@ -102,7 +102,7 @@ class BetweenValidator extends AbstractValidator
      *
      * @return  static  Return self to support chaining.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.1
      */
     public function setEnd($end)
     {
