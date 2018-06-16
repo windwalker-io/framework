@@ -51,6 +51,7 @@ class CookieTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\CookieInput::__construct
      * @since   2.0
      */
@@ -70,6 +71,7 @@ class CookieTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\CookieInput::set
      * @since   2.0
      */

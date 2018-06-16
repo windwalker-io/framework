@@ -53,6 +53,7 @@ class DatabaseFactoryTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Database\DatabaseFactory::setDefaultDbo
      */
     public function testSetDefaultDbo()

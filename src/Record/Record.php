@@ -158,8 +158,7 @@ class Record extends Entity
      *
      * @return  static  Method allows chaining
      *
-     * @throws \RuntimeException
-     *
+     * @throws \Exception
      * @since   2.0
      */
     public function save($src, $updateNulls = false)
@@ -183,8 +182,7 @@ class Record extends Entity
      *
      * @return static Method allows chaining
      *
-     * @throws \InvalidArgumentException
-     *
+     * @throws \Exception
      * @since   2.0
      */
     public function bind($src, $replaceNulls = false)
@@ -238,12 +236,8 @@ class Record extends Entity
      * @param   boolean $reset   True to reset the default values before loading the new row.
      *
      * @return  static  Method allows chaining
-     * @throws \Windwalker\Record\Exception\NoResultException
-     *
+     * @throws \Exception
      * @since   2.0
-     * @throws  \RuntimeException
-     * @throws  \UnexpectedValueException
-     * @throws  \InvalidArgumentException
      */
     public function load($keys = null, $reset = true)
     {
@@ -304,10 +298,7 @@ class Record extends Entity
      *
      * @return  static  Method allows chaining
      *
-     * @throws  \InvalidArgumentException
-     * @throws  \RuntimeException
-     * @throws  \UnexpectedValueException
-     *
+     * @throws \Exception
      * @since   2.0
      */
     public function delete($conditions = null)
@@ -382,6 +373,7 @@ class Record extends Entity
      *
      * @return  static  Method allows chaining
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function store($updateNulls = false)
@@ -426,7 +418,7 @@ class Record extends Entity
      *
      * @return  static
      *
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function create()
     {
@@ -452,6 +444,7 @@ class Record extends Entity
      * @param bool $updateNulls
      *
      * @return  static
+     * @throws \Exception
      */
     public function update($updateNulls = false)
     {
@@ -515,6 +508,7 @@ class Record extends Entity
      * @param bool $reset
      *
      * @return \stdClass[]
+     * @throws \Exception
      */
     public function getFields($reset = false)
     {
@@ -557,6 +551,7 @@ class Record extends Entity
      *
      * @return  boolean  True if the primary key(s) have been set.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function hasPrimaryKey()
@@ -588,10 +583,7 @@ class Record extends Entity
      *
      * @return bool
      *
-     * @throws \Windwalker\Record\Exception\NoResultException
-     * @throws \UnexpectedValueException
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function valueExists($field, $value = null)
     {
@@ -702,6 +694,7 @@ class Record extends Entity
      *
      * @return  static
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function reset($loadDefault = true)
@@ -722,6 +715,7 @@ class Record extends Entity
      * @param bool $replace
      *
      * @return static
+     * @throws \Exception
      */
     public function loadDefault($replace = false)
     {

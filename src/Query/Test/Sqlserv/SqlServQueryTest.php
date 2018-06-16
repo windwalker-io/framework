@@ -99,6 +99,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClear()
@@ -118,6 +119,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearClause()
@@ -172,6 +174,7 @@ class SqlservQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearType()

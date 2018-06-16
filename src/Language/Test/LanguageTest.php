@@ -69,6 +69,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::translate
      */
     public function testTranslate()
@@ -90,6 +91,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::plural
      */
     public function testPlural()
@@ -110,6 +112,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::sprintf
      */
     public function testSprintf()
@@ -142,6 +145,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::addString
      */
     public function testAddString()
@@ -158,6 +162,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::addStrings
      * @TODO   Implement testAddStrings().
      */
@@ -179,6 +184,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::setDebug
      */
     public function testSetDebug()
@@ -332,6 +338,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::getUsed
      */
     public function testGetUsed()
@@ -438,6 +445,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      * @param   string $text
      *
      * @return  string
+     * @throws \ReflectionException
      */
     public function translate($text)
     {

@@ -27,10 +27,8 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
      * @param mixed $middleware The middleware, can be a object, class name, callback, or middleware object.
      *                          These type will all convert to middleware object and store in chain.
      *
-     * @throws  \LogicException
-     * @throws  \InvalidArgumentException
-     *
      * @return  static Return self to support chaining.
+     * @throws \ReflectionException
      */
     public function add($middleware)
     {
@@ -43,6 +41,7 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
      * @param   mixed $middleware
      *
      * @return  MiddlewareInterface
+     * @throws \ReflectionException
      */
     protected function marshalMiddleware($middleware)
     {

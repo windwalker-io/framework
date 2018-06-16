@@ -373,6 +373,7 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Database\Command\AbstractReader::setDriver
      */
     public function testSetDriver()

@@ -107,6 +107,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClear()
@@ -126,6 +127,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearClause()
@@ -180,6 +182,7 @@ class MariadbQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearType()

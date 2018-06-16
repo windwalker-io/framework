@@ -59,6 +59,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
      * @param string $key The unique key of this item in the cache
      *
      * @return CacheItemInterface  The newly populated CacheItem class representing the stored data in the cache
+     * @throws \Exception
      */
     public function getItem($key)
     {

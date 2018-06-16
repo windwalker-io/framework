@@ -52,6 +52,7 @@ class ServerRequestTest extends \PHPUnit\Framework\TestCase
      * testConstruct
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function testConstruct()
     {

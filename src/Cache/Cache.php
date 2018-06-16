@@ -79,6 +79,7 @@ class Cache implements CacheInterface, \ArrayAccess
      *                      then the library may set a default value for it or let the driver take care of that.
      *
      * @return  CacheItemInterface  Return CacheItem to chaining.
+     * @throws \Exception
      */
     public function set($key, $val, $ttl = null)
     {
@@ -138,6 +139,7 @@ class Cache implements CacheInterface, \ArrayAccess
      *                        then the library may set a default value for it or let the driver take care of that.
      *
      * @return static Return self to support chaining.
+     * @throws \Exception
      */
     public function setMultiple(array $items, $ttl = null)
     {
@@ -169,8 +171,8 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param string   $key      The key of the item to fetch.
      * @param callable $callable The callback to fetch data.
      *
-     * @throws \InvalidArgumentException
      * @return  mixed
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function call($key, $callable)
     {
@@ -260,6 +262,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param mixed $offset Offset key.
      *
      * @return  boolean
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function offsetExists($offset)
     {
@@ -271,8 +274,8 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @param mixed $offset Offset key.
      *
-     * @throws  \InvalidArgumentException
      * @return  mixed The value to return.
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function offsetGet($offset)
     {
@@ -285,8 +288,8 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param mixed $offset Offset key.
      * @param mixed $value  The value to set.
      *
-     * @throws  \InvalidArgumentException
      * @return  void
+     * @throws \Exception
      */
     public function offsetSet($offset, $value)
     {
@@ -298,8 +301,8 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @param mixed $offset Offset key to unset.
      *
-     * @throws  \InvalidArgumentException
      * @return  void
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function offsetUnset($offset)
     {

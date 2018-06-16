@@ -62,6 +62,7 @@ class StringStreamTest extends AbstractBaseTestCase
      * testConstruct
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function testConstruct()
     {

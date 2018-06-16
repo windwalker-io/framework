@@ -130,7 +130,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      * @param array  $args
      *
      * @return  mixed
-     * @throws \BadMethodCallException
+     * @throws \ReflectionException
      */
     public function __call($name, array $args)
     {

@@ -22,6 +22,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
      * testAutoSelect
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function testAutoSelect()
     {

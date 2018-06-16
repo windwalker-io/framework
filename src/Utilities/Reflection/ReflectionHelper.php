@@ -74,6 +74,7 @@ class ReflectionHelper
      * @param string|object $class The class name.
      *
      * @return  \ReflectionClass Reflection instance.
+     * @throws \ReflectionException
      */
     public static function get($class)
     {
@@ -100,6 +101,7 @@ class ReflectionHelper
      * @param string|object $class The class or object to get reflection.
      *
      * @return  string The class file path.
+     * @throws \ReflectionException
      */
     public static function getPath($class)
     {
@@ -138,6 +140,7 @@ class ReflectionHelper
      * @param array  $args The arguments of this methods.
      *
      * @return  mixed  Return value from reflection class.
+     * @throws \ReflectionException
      */
     public static function __callStatic($name, $args)
     {

@@ -261,6 +261,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      *                 Returns an object if the class exists and false otherwise
      *
      * @throws DependencyResolutionException
+     * @throws \ReflectionException
      * @since   3.0
      */
     public function newInstance($class, array $args = [])
@@ -299,6 +300,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * @return array Array of arguments to pass to the method.
      *
      * @throws DependencyResolutionException
+     * @throws \ReflectionException
      * @since   2.0
      */
     protected function getMethodArgs(\ReflectionMethod $method, array $args = [])

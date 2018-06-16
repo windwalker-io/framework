@@ -126,6 +126,7 @@ class MysqlQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClear()
@@ -145,6 +146,7 @@ class MysqlQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearClause()
@@ -199,6 +201,7 @@ class MysqlQueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearType()

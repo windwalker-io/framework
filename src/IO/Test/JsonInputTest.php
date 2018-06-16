@@ -51,6 +51,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\JsonInput::__construct
      * @since   2.0
      */

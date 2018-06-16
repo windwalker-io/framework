@@ -62,6 +62,7 @@ class CacheItem implements CacheItemInterface
      * @param   mixed             $value The value for the cache item.
      * @param   \DateInterval|int $ttl   The expire time.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function __construct($key, $value = null, $ttl = null)

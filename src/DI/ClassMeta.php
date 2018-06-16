@@ -127,6 +127,8 @@ class ClassMeta
      * Method to get property Arguments
      *
      * @return  array
+     * @throws Exception\DependencyResolutionException
+     * @throws \ReflectionException
      */
     public function getArguments()
     {

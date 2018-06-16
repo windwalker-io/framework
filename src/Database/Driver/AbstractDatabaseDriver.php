@@ -160,6 +160,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      * @param   null  $connection The database connection instance.
      * @param   array $options    List of options used to configure the connection
      *
+     * @throws \ReflectionException
      * @since   2.0
      */
     public function __construct($connection = null, $options = [])
@@ -866,6 +867,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  static
      *
+     * @throws \ReflectionException
      * @since   3.0
      */
     public function addMiddleware($middleware)
@@ -892,6 +894,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  static  Return self to support chaining.
      *
+     * @throws \ReflectionException
      * @since   3.0
      */
     public function resetMiddlewares()

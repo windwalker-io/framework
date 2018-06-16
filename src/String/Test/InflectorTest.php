@@ -101,6 +101,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::addRule
      * @since   2.0
      */
@@ -151,6 +152,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::addRule
      * @expectedException  InvalidArgumentException
      * @since   2.0
@@ -165,6 +167,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::getCachedPlural
      * @since   2.0
      */
@@ -190,6 +193,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::getCachedSingular
      * @since   2.0
      */
@@ -215,6 +219,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::matchRegexRule
      * @since   2.0
      */
@@ -243,6 +248,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::setCache
      * @since   2.0
      */
@@ -274,6 +280,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::addCountableRule
      * @since   2.0
      */
@@ -307,6 +314,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::addWord
      * @since   2.0
      */
@@ -346,6 +354,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::addPluraliseRule
      * @since   2.0
      */
@@ -373,6 +382,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::addSingulariseRule
      * @since   2.0
      */
@@ -400,6 +410,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\String\StringInflector::getInstance
      * @since   2.0
      */

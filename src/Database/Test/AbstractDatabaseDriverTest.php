@@ -72,6 +72,7 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
      * testMiddleware
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function testMiddleware()
     {
@@ -95,6 +96,7 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
      * Method to test disconnect().
      *
      * @return void
+     * @throws \ReflectionException
      */
     public function testProfilerMiddleware()
     {

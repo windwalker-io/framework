@@ -90,6 +90,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      */
     public function testNestedCall()
@@ -149,6 +150,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @since  2.0
      */
     public function testSetAutoExit()
@@ -179,6 +181,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @since  2.0
      */
     public function testConstruct()
@@ -195,6 +198,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      */
     public function testDoExecute()

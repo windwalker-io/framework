@@ -42,6 +42,8 @@ class ChainBuilder
      *
      * @param MiddlewareInterface[] $middlewares
      * @param string                $sort
+     *
+     * @throws \ReflectionException
      */
     public function __construct(array $middlewares = [], $sort = self::SORT_DESC)
     {
@@ -56,10 +58,8 @@ class ChainBuilder
      * @param mixed $middleware The middleware, can be a object, class name, callback, or middleware object.
      *                          These type will all convert to middleware object and store in chain.
      *
-     * @throws  \LogicException
-     * @throws  \InvalidArgumentException
-     *
      * @return  static Return self to support chaining.
+     * @throws \ReflectionException
      */
     public function add($middleware)
     {
@@ -88,7 +88,7 @@ class ChainBuilder
             $reflection = new \ReflectionClass($middleware);
 
             if (!$reflection->isInstantiable()) {
-                throw new \LogicException(sprintf('Element %s should be an instantiable class name.'));
+                throw new \LogicException(sprintf('Element %s should be an instantiable class name.', $reflection->getName()));
             }
 
             $args = func_get_args();
@@ -195,6 +195,7 @@ class ChainBuilder
      * @param string $sort
      *
      * @return  static
+     * @throws \ReflectionException
      */
     public function addMiddlewares(array $middlewares, $sort = self::SORT_DESC)
     {
@@ -229,6 +230,7 @@ class ChainBuilder
      * @param   MiddlewareInterface|callable $middleware
      *
      * @return  static  Return self to support chaining.
+     * @throws \ReflectionException
      */
     public function setEndMiddleware($middleware)
     {

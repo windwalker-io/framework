@@ -52,6 +52,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\Input::__construct
      */
     public function test__construct()
@@ -87,6 +88,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
      * testPrepareSource
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function testPrepareSource()
     {
@@ -108,6 +110,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\IO\Input::__get
      */
     public function test__get()
@@ -528,6 +531,7 @@ class InputTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\IO\Input::loadAllInputs
      */
     public function testLoadAllInputs()

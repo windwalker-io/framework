@@ -73,6 +73,7 @@ class PdoDriver extends AbstractDatabaseDriver
      * @param   \PDO  $connection The pdo connection object.
      * @param   array $options    List of options used to configure the connection
      *
+     * @throws \ReflectionException
      * @since   2.0
      */
     public function __construct(\PDO $connection = null, $options = [])

@@ -154,6 +154,7 @@ class Language implements LanguageInterface
      * @param string $key
      *
      * @return  string
+     * @throws \ReflectionException
      */
     public function translate($key)
     {
@@ -192,6 +193,7 @@ class Language implements LanguageInterface
      * @param int    $count
      *
      * @return  string
+     * @throws \ReflectionException
      */
     public function plural($string, $count = 1)
     {
@@ -259,6 +261,7 @@ class Language implements LanguageInterface
      * @param string $key
      *
      * @return  mixed
+     * @throws \ReflectionException
      */
     public function sprintf($key)
     {

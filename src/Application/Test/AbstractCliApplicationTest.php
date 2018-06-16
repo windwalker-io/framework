@@ -40,6 +40,7 @@ class AbstractCliApplicationTest extends \PHPUnit\Framework\TestCase
      * test__construct
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function test__construct()
     {

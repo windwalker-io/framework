@@ -206,6 +206,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Profiler\Profiler::getMemoryPeakBytes
      */
     public function testGetMemoryPeakBytes()
@@ -236,6 +237,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Profiler\Profiler::setRenderer
      */
     public function testGetAndSetRenderer()

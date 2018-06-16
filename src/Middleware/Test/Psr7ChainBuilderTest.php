@@ -35,6 +35,7 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
      * This method is called before a test is executed.
      *
      * @return void
+     * @throws \ReflectionException
      */
     protected function setUp()
     {
@@ -77,6 +78,7 @@ class Psr7ChainBuilderTest extends AbstractBaseTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Middleware\Chain\Psr7ChainBuilder::execute
      */
     public function testExecute()

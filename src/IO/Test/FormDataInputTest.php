@@ -51,6 +51,7 @@ class FormDataInputTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\FormDataInput::__construct
      * @since   2.0
      */

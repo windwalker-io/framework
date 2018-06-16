@@ -115,8 +115,8 @@ class FileStorage extends AbstractCacheStorage
      *
      * @return  CacheItemInterface
      *
+     * @throws \Exception
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function getItem($key)
     {

@@ -275,6 +275,7 @@ class NestedRecord extends Record
      *
      * @return  static  Return self to support chaining.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function store($updateNulls = false)
@@ -713,8 +714,8 @@ class NestedRecord extends Record
      *
      * @return  integer  1 + value of root rgt on success, false on failure
      *
+     * @throws \Exception
      * @since   2.0
-     * @throws  \RuntimeException on database error.
      */
     public function rebuild($parentId = null, $leftId = 0, $level = 0, $path = '')
     {
@@ -806,6 +807,7 @@ class NestedRecord extends Record
      *
      * @return  static  Method support chaining.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function rebuildPath($pk = null)
@@ -858,6 +860,7 @@ class NestedRecord extends Record
      * createRoot
      *
      * @return  boolean
+     * @throws \Exception
      */
     public function createRoot()
     {
@@ -888,8 +891,7 @@ class NestedRecord extends Record
      * @param bool $loadDefault
      *
      * @return  static
-     * @throws \InvalidArgumentException
-     *
+     * @throws \Exception
      * @since   3.2.1
      */
     public function reset($loadDefault = true)
