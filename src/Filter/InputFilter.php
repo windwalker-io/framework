@@ -18,20 +18,35 @@ use Windwalker\Filter\Cleaner\CleanerInterface;
 class InputFilter implements \Serializable
 {
     const INTEGER = 'INTEGER';
+
     const UINT = 'UINT';
+
     const FLOAT = 'FLOAT';
+
     const BOOLEAN = 'BOOLEAN';
+
     const WORD = 'WORD';
+
     const ALNUM = 'ALNUM';
+
     const CMD = 'CMD';
+
     const BASE64 = 'BASE64';
+
     const STRING = 'STRING';
+
     const HTML = 'HTML';
+
     const ARRAY_TYPE = 'ARRAY';
+
     const PATH = 'PATH';
+
     const USERNAME = 'USERNAME';
+
     const EMAIL = 'EMAIL';
+
     const URL = 'URL';
+
     const RAW = 'RAW';
 
     /**
@@ -62,7 +77,7 @@ class InputFilter implements \Serializable
      */
     public function __construct(HtmlCleaner $htmlCleaner = null)
     {
-        $this->htmlCleaner = $htmlCleaner ?: new HtmlCleaner;
+        $this->htmlCleaner = $htmlCleaner ?: new HtmlCleaner();
 
         $this->loadDefaultHandlers();
     }
@@ -292,8 +307,10 @@ class InputFilter implements \Serializable
 
         // HTML
         $this->handlers[static::URL] = function ($source) {
-            return (string) filter_var($source, FILTER_SANITIZE_URL,
-                FILTER_FLAG_QUERY_REQUIRED | FILTER_FLAG_PATH_REQUIRED);
+            return (string) filter_var(
+                $source, FILTER_SANITIZE_URL,
+                FILTER_FLAG_QUERY_REQUIRED | FILTER_FLAG_PATH_REQUIRED
+            );
         };
 
         // RAW

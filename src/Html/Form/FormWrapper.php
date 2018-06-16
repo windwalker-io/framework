@@ -18,10 +18,13 @@ use Windwalker\Dom\HtmlElement;
 class FormWrapper extends HtmlElement
 {
     const METHOD_GET = 'get';
+
     const METHOD_POST = 'post';
 
     const ENCTYPE_URLENCODED = 'application/x-www-form-urlencoded';
+
     const ENCTYPE_FORM_DATA = 'multipart/form-data';
+
     const ENCTYPE_TEXT_PLAIN = 'text/plain';
 
     /**

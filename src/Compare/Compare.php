@@ -69,8 +69,10 @@ class Compare
     public function toString($quote1 = null, $quote2 = null)
     {
         if (is_callable($this->handler)) {
-            return call_user_func_array($this->handler,
-                [$this->compare1, $this->compare2, $this->operator, $quote1, $quote2]);
+            return call_user_func_array(
+                $this->handler,
+                [$this->compare1, $this->compare2, $this->operator, $quote1, $quote2]
+            );
         }
 
         $return = [];

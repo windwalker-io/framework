@@ -373,11 +373,12 @@ class PostgresqlReaderTest extends AbstractPostgresqlTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Database\Command\AbstractReader::setDriver
      */
     public function testSetDriver()
     {
-        $driver = new PdoDriver;
+        $driver = new PdoDriver();
 
         $reader = clone $this->db->getReader();
 

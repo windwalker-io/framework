@@ -82,7 +82,7 @@ class IronmqQueueDriver implements QueueDriverInterface
             return null;
         }
 
-        $message = new QueueMessage;
+        $message = new QueueMessage();
 
         $message->setId($result->id);
         $message->setAttempts($result->reserved_count);

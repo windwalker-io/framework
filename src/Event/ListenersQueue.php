@@ -54,8 +54,8 @@ class ListenersQueue implements \IteratorAggregate, \Countable
      */
     public function __construct()
     {
-        $this->queue   = new \SplPriorityQueue;
-        $this->storage = new \SplObjectStorage;
+        $this->queue   = new \SplPriorityQueue();
+        $this->storage = new \SplObjectStorage();
     }
 
     /**
@@ -96,7 +96,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
             $this->storage->detach($listener);
             $this->storage->rewind();
 
-            $this->queue = new \SplPriorityQueue;
+            $this->queue = new \SplPriorityQueue();
 
             foreach ($this->storage as $listener) {
                 $priority = $this->storage->getInfo();

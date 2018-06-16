@@ -32,7 +32,7 @@ class PhpLoaderTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new PhpLoader;
+        $this->instance = new PhpLoader();
     }
 
     /**

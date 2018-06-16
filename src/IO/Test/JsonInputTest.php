@@ -33,7 +33,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new JsonInput;
+        $this->instance = new JsonInput();
     }
 
     /**
@@ -51,6 +51,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\JsonInput::__construct
      * @since   2.0
      */
@@ -78,7 +79,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
         JsonInput::setRawFormData(null);
 
         $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
-        $json                          = new JsonInput;
+        $json                          = new JsonInput();
 
         $this->assertEquals(
             ['a' => 1, 'b' => 2],
@@ -98,7 +99,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
     {
         $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
 
-        $json = new JsonInput;
+        $json = new JsonInput();
 
         $this->assertEquals(
             $GLOBALS['HTTP_RAW_POST_DATA'],

@@ -34,7 +34,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new CliInput;
+        $this->instance = new CliInput();
     }
 
     /**
@@ -121,7 +121,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['argv'] = ['/dev/null', '--ab', 'cd', '--ef', '--gh=bam'];
 
-        $this->instance = new CliInput;
+        $this->instance = new CliInput();
 
         $this->assertThat(
             $this->instance->get('ab'),
@@ -160,7 +160,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
-        $this->instance = new CliInput;
+        $this->instance = new CliInput();
 
         $this->assertThat(
             $this->instance->get('a'),
@@ -202,7 +202,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['argv'] = $inputArgv;
 
-        $this->instance = new CliInput;
+        $this->instance = new CliInput();
 
         $this->assertThat(
             TestHelper::getValue($this->instance, 'data'),
@@ -365,7 +365,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
-        $this->instance = new CliInput;
+        $this->instance = new CliInput();
 
         $this->assertEquals(['a' => 1, 'b' => 1, 'c' => 1, 'e' => 'f'], $this->instance->all());
     }
@@ -397,7 +397,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
-        $input = new CliInput;
+        $input = new CliInput();
 
         $this->assertEquals('foobar', $input->getArgument(0));
         $this->assertEquals('d', $input->getArgument(5, 'd'));
@@ -414,7 +414,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
-        $input = new CliInput;
+        $input = new CliInput();
 
         $input->setArgument(2, 'bar');
 
@@ -475,7 +475,7 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['argv'] = ['/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk'];
 
-        $input = new CliInput;
+        $input = new CliInput();
 
         $this->assertEquals('/dev/null', $input->getCalledScript());
     }

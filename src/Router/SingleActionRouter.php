@@ -35,7 +35,7 @@ class SingleActionRouter extends Router
     {
         $this->addMaps($routes);
 
-        $this->matcher = $matcher ?: new SequentialMatcher;
+        $this->matcher = $matcher ?: new SequentialMatcher();
     }
 
     /**

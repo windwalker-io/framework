@@ -33,13 +33,14 @@ class AbstractCliApplicationTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new StubCli;
+        $this->instance = new StubCli();
     }
 
     /**
      * test__construct
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function test__construct()
     {

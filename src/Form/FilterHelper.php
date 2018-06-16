@@ -42,7 +42,7 @@ class FilterHelper extends AbstractFormElementHelper
     public static function create($filter, \SplPriorityQueue $namespaces = null)
     {
         if (class_exists($filter)) {
-            return new $filter;
+            return new $filter();
         }
 
         $namespaces = $namespaces ?: static::getNamespaces();
@@ -51,7 +51,7 @@ class FilterHelper extends AbstractFormElementHelper
             $class = trim($namespace, '\\') . '\\' . ucfirst($filter) . 'Filter';
 
             if (class_exists($class)) {
-                return new $class;
+                return new $class();
             }
         }
 

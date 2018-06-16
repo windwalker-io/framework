@@ -51,7 +51,6 @@ class PostgresqlExpression extends QueryExpression
         return 'NOW()';
     }
 
-
     /**
      * Used to get a string to extract year from date column.
      *

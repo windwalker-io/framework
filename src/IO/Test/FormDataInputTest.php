@@ -51,6 +51,7 @@ class FormDataInputTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\FormDataInput::__construct
      * @since   2.0
      */
@@ -95,7 +96,7 @@ Apple
 ------WebKitFormBoundary8zi5vcW6H9OgqKSj--
 DATA;
 
-        $input = new FormDataInput;
+        $input = new FormDataInput();
 
         $this->assertEquals(
             ['flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'],

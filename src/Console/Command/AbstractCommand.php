@@ -137,11 +137,11 @@ abstract class AbstractCommand implements \ArrayAccess
     public function __construct($name = null, IOInterface $io = null, AbstractCommand $parent = null)
     {
         $this->name   = $name ?: $this->name;
-        $this->io     = $io ?: new IO;
+        $this->io     = $io ?: new IO();
         $this->parent = $parent;
 
-        $this->options       = new OptionSet;
-        $this->globalOptions = new OptionSet;
+        $this->options       = new OptionSet();
+        $this->globalOptions = new OptionSet();
 
         $this->init();
 
@@ -188,8 +188,10 @@ abstract class AbstractCommand implements \ArrayAccess
             } catch (WrongArgumentException $e) {
                 $command = $this->getChild($name);
 
-                throw new \RuntimeException($e->getMessage() . "\n\n[Usage] " . $command->getUsage(), $e->getCode(),
-                    $e);
+                throw new \RuntimeException(
+                    $e->getMessage() . "\n\n[Usage] " . $command->getUsage(), $e->getCode(),
+                    $e
+                );
             } catch (\Exception $e) {
                 throw $e;
             }
@@ -262,9 +264,9 @@ abstract class AbstractCommand implements \ArrayAccess
      * @param   string      $name The command name.
      * @param   IOInterface $io   The Cli IO object.
      *
-     * @throws  CommandNotFoundException
      * @return  mixed
      *
+     * @throws \Exception
      * @since  2.0
      */
     protected function executeSubCommand($name, IOInterface $io = null)
@@ -357,7 +359,7 @@ abstract class AbstractCommand implements \ArrayAccess
     public function addCommand($command, $description = null, $options = [], \Closure $handler = null)
     {
         if (is_string($command) && class_exists($command) && is_subclass_of($command, __CLASS__)) {
-            $command = new $command;
+            $command = new $command();
         }
 
         if (!($command instanceof AbstractCommand)) {
@@ -883,8 +885,10 @@ abstract class AbstractCommand implements \ArrayAccess
              *
              * And if the string of wrong name can be found in a command name, we also notice user to choose it.
              */
-            if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / $denominator) || strpos($commandName,
-                    $wrongName) !== false) {
+            if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / $denominator) || strpos(
+                    $commandName,
+                    $wrongName
+                ) !== false) {
                 $alternatives[] = "    " . $commandName;
             }
         }

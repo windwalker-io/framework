@@ -25,7 +25,7 @@ class Prompter
      */
     public static function boolean($msg = '', $default = null)
     {
-        $prompter = new BooleanPrompter;
+        $prompter = new BooleanPrompter();
 
         return $prompter->ask($msg, $default);
     }
@@ -40,7 +40,7 @@ class Prompter
      */
     public static function text($msg = '', $default = null)
     {
-        $prompter = new TextPrompter;
+        $prompter = new TextPrompter();
 
         return $prompter->ask($msg, $default);
     }
@@ -65,7 +65,7 @@ class Prompter
         $attemptTimes = 3,
         $failCloseMessage = false
     ) {
-        $prompter = new CallbackPrompter;
+        $prompter = new CallbackPrompter();
 
         $prompter->setHandler($handler);
 
@@ -94,7 +94,7 @@ class Prompter
         $attemptTimes = 3,
         $failCloseMessage = false
     ) {
-        $prompter = new ValidatePrompter;
+        $prompter = new ValidatePrompter();
 
         $prompter->setOptions($options);
 
@@ -121,7 +121,7 @@ class Prompter
         $attemptTimes = 3,
         $failCloseMessage = false
     ) {
-        $prompter = new NotNullPrompter;
+        $prompter = new NotNullPrompter();
 
         static::prepareCallbackPrompter($prompter, $noValidMessage, $attemptTimes, $failCloseMessage);
 
@@ -148,7 +148,7 @@ class Prompter
         $attemptTimes = 3,
         $failCloseMessage = false
     ) {
-        $prompter = new SelectPrompter;
+        $prompter = new SelectPrompter();
 
         $prompter->setOptions($options);
 
@@ -175,7 +175,7 @@ class Prompter
         $attemptTimes = 3,
         $failCloseMessage = false
     ) {
-        $prompter = new PasswordPrompter;
+        $prompter = new PasswordPrompter();
 
         static::prepareCallbackPrompter($prompter, $noValidMessage, $attemptTimes, $failCloseMessage);
 

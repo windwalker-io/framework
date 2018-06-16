@@ -36,7 +36,7 @@ class TrieMatcherTest extends \PHPUnit\Framework\TestCase
     {
         // $this->markTestSkipped('Not prepare');
 
-        $this->instance = new TrieMatcher;
+        $this->instance = new TrieMatcher();
     }
 
     /**

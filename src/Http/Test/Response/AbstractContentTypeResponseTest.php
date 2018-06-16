@@ -82,6 +82,7 @@ class AbstractContentTypeResponseTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Http\Response\AbstractContentTypeResponse::normalizeContentType
      */
     public function testNormalizeContentType()

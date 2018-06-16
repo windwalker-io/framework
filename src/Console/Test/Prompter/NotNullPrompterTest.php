@@ -43,8 +43,10 @@ class NotNullPrompterTest extends AbstractPrompterTest
      */
     public function testAsk()
     {
-        $this->assertEquals($this->instance->ask('Tell me something: ', 'sakura'), 'sakura',
-            'Should validate fail and return default.');
+        $this->assertEquals(
+            $this->instance->ask('Tell me something: ', 'sakura'), 'sakura',
+            'Should validate fail and return default.'
+        );
 
         $this->setStream('sakura');
 

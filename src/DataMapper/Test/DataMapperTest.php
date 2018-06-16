@@ -31,6 +31,7 @@ class DataMapperTest extends DatabaseTest
      * This method is called before a test is executed.
      *
      * @return void
+     * @throws \Exception
      */
     protected function setUp()
     {
@@ -41,12 +42,12 @@ class DataMapperTest extends DatabaseTest
         $this->instance = new DataMapper('ww_flower');
     }
 
-
     /**
      * Method to test find().
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\DataMapper\AbstractDataMapper::find
      */
     public function testFind()
@@ -274,7 +275,6 @@ class DataMapperTest extends DatabaseTest
         $this->assertEquals([0, 0, 0], $updateDataset->state);
 
         $this->assertInstanceOf('Windwalker\\Data\\Data', $returns[0], 'Return not Data object.');
-
         // TODO: Test Update Nulls
     }
 
@@ -304,7 +304,6 @@ class DataMapperTest extends DatabaseTest
         $this->assertEquals('{}', $this->loadToData('SELECT * FROM ww_flower WHERE id = 11 LIMIT 1')->params);
 
         $this->assertInstanceOf('Windwalker\\Data\\Data', $updateData, 'Return not Data object.');
-
         // TODO: Test Update Nulls
     }
 
@@ -420,6 +419,7 @@ class DataMapperTest extends DatabaseTest
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\DataMapper\AbstractDataMapper::getKeyName
      */
     public function testGetKeyName()

@@ -44,8 +44,8 @@ class Cache implements CacheInterface, \ArrayAccess
      */
     public function __construct(CacheItemPoolInterface $storage = null, SerializerInterface $serializer = null)
     {
-        $this->storage    = $storage ?: new ArrayStorage;
-        $this->serializer = $serializer ?: new PhpSerializer;
+        $this->storage    = $storage ?: new ArrayStorage();
+        $this->serializer = $serializer ?: new PhpSerializer();
     }
 
     /**
@@ -56,6 +56,7 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @return  mixed  The cached value or null if not exists.
      *
+     * @throws \Psr\Cache\InvalidArgumentException
      * @since   2.0
      */
     public function get($key)
@@ -78,6 +79,7 @@ class Cache implements CacheInterface, \ArrayAccess
      *                      then the library may set a default value for it or let the driver take care of that.
      *
      * @return  CacheItemInterface  Return CacheItem to chaining.
+     * @throws \Exception
      */
     public function set($key, $val, $ttl = null)
     {
@@ -96,6 +98,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param string $key The unique cache key of the item to remove
      *
      * @return static
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function remove($key)
     {
@@ -121,6 +124,7 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @return array An array of CacheItem classes.
      *               The resulting array must use the CacheItem's key as the associative key for the array.
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function getMultiple(array $keys)
     {
@@ -135,6 +139,7 @@ class Cache implements CacheInterface, \ArrayAccess
      *                        then the library may set a default value for it or let the driver take care of that.
      *
      * @return static Return self to support chaining.
+     * @throws \Exception
      */
     public function setMultiple(array $items, $ttl = null)
     {
@@ -151,6 +156,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param array $keys The array of keys to be removed
      *
      * @return static Return self to support chaining.
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function removeMultiple(array $keys)
     {
@@ -165,8 +171,8 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param string   $key      The key of the item to fetch.
      * @param callable $callable The callback to fetch data.
      *
-     * @throws \InvalidArgumentException
      * @return  mixed
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function call($key, $callable)
     {
@@ -219,6 +225,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param string $key
      *
      * @return  bool
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function exists($key)
     {
@@ -255,6 +262,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param mixed $offset Offset key.
      *
      * @return  boolean
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function offsetExists($offset)
     {
@@ -266,8 +274,8 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @param mixed $offset Offset key.
      *
-     * @throws  \InvalidArgumentException
      * @return  mixed The value to return.
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function offsetGet($offset)
     {
@@ -280,8 +288,8 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param mixed $offset Offset key.
      * @param mixed $value  The value to set.
      *
-     * @throws  \InvalidArgumentException
      * @return  void
+     * @throws \Exception
      */
     public function offsetSet($offset, $value)
     {
@@ -293,8 +301,8 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @param mixed $offset Offset key to unset.
      *
-     * @throws  \InvalidArgumentException
      * @return  void
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function offsetUnset($offset)
     {

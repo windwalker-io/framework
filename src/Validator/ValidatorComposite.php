@@ -18,6 +18,7 @@ use Windwalker\Validator\Rule\CallbackValidator;
 class ValidatorComposite extends AbstractValidator
 {
     const MODE_MATCH_ALL = 1;
+
     const MODE_MATCH_ONE = 2;
 
     /**
@@ -188,7 +189,7 @@ class ValidatorComposite extends AbstractValidator
     {
         foreach ($validators as $validator) {
             if (is_string($validator) && is_subclass_of($validator, ValidatorInterface::class)) {
-                $validator = new $validator;
+                $validator = new $validator();
             }
 
             $this->addValidator($validator);

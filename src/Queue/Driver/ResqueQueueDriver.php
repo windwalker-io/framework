@@ -97,7 +97,7 @@ class ResqueQueueDriver implements QueueDriverInterface
             return null;
         }
 
-        $message = new QueueMessage;
+        $message = new QueueMessage();
 
         $attempts = $job['attempts'];
         $attempts++;

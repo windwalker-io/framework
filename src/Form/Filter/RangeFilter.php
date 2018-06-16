@@ -2,8 +2,8 @@
 /**
  * Part of earth project.
  *
- * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
- * @license    __LICENSE__
+ * @copyright  Copyright (C) 2018 $Asikart.
+ * @license    LGPL-2.0-or-later
  */
 
 namespace Windwalker\Form\Filter;
@@ -11,7 +11,7 @@ namespace Windwalker\Form\Filter;
 /**
  * The RangeFilter class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  3.4
  */
 class RangeFilter implements FilterInterface
 {

@@ -61,7 +61,7 @@ class ServerRequestFactory
         $server  = static::prepareServers($server ?: $_SERVER);
         $headers = static::prepareHeaders($server);
 
-        $body = new PhpInputStream;
+        $body = new PhpInputStream();
 
         $method = ServerHelper::getValue($server, 'REQUEST_METHOD', 'GET');
 
@@ -492,10 +492,12 @@ class ServerRequestFactory
         }
 
         if (!preg_match('/^(HTTP\/)?(\d+(?:\.\d+)+)/', $server['SERVER_PROTOCOL'], $matches)) {
-            throw new \UnexpectedValueException(sprintf(
-                'Invalid protocol version format (%s)',
-                $server['SERVER_PROTOCOL']
-            ));
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'Invalid protocol version format (%s)',
+                    $server['SERVER_PROTOCOL']
+                )
+            );
         }
 
         return $matches[2];

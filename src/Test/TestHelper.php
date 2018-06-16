@@ -84,8 +84,8 @@ class TestHelper
      *
      * @return  mixed  The value of the property.
      *
+     * @throws \ReflectionException
      * @since   2.0
-     * @throws  \InvalidArgumentException if property not available.
      */
     public static function getValue($object, $propertyName)
     {
@@ -107,8 +107,12 @@ class TestHelper
             return $property->getValue($object);
         }
 
-        throw new \InvalidArgumentException(sprintf('Invalid property [%s] for class [%s]', $propertyName,
-            get_class($object)));
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Invalid property [%s] for class [%s]', $propertyName,
+                get_class($object)
+            )
+        );
     }
 
     /**
@@ -123,6 +127,7 @@ class TestHelper
      *
      * @return  mixed
      *
+     * @throws \ReflectionException
      * @since   2.0
      */
     public static function invoke($object, $methodName)
@@ -151,6 +156,7 @@ class TestHelper
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @since   2.0
      */
     public static function setValue($object, $propertyName, $value)

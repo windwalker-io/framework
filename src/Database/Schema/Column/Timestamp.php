@@ -28,8 +28,13 @@ class Timestamp extends Column
      * @param string $comment
      * @param array  $options
      */
-    public function __construct($name = null, $allowNull = false, $default = 'current_timestamp', $comment = '', $options = [])
-    {
+    public function __construct(
+        $name = null,
+        $allowNull = false,
+        $default = 'current_timestamp',
+        $comment = '',
+        $options = []
+    ) {
         if (stripos($default, 'current_timestamp') === 0) {
             $default = new ExpressionWrapper($default);
         }
@@ -44,7 +49,7 @@ class Timestamp extends Column
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function autoUpdate($value = 'CURRENT_TIMESTAMP')
     {

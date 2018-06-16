@@ -59,7 +59,7 @@ class StubStreamOutput extends StreamOutput
      */
     public function __construct()
     {
-        $this->message = new Response;
+        $this->message = new Response();
     }
 
     /**

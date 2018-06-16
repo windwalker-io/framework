@@ -1,4 +1,3 @@
-
 <p class="alert alert-info">
     {!! $title ?? '' !!}
 

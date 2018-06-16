@@ -36,9 +36,9 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $this->instance = new ClassLoader(
-            new MockFileMappingLoader,
-            new MockPsr0Loader,
-            new MockPsr4Loader
+            new MockFileMappingLoader(),
+            new MockPsr0Loader(),
+            new MockPsr4Loader()
         );
 
         $this->instance->register();
@@ -129,7 +129,7 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
         $this->assertFileEquals(__DIR__ . '/fixtures/Psr0/Olive/Peace.php', $psr0->getLastRequired());
 
         $psr0 = $this->instance->unregister()
-            ->setPsr0Loader(new MockPsr0Loader)
+            ->setPsr0Loader(new MockPsr0Loader())
             ->register()
             ->getPsr0Loader();
 
@@ -145,7 +145,7 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($psr0->getLastRequired());
 
         $psr0 = $this->instance->unregister()
-            ->setPsr0Loader(new MockPsr0Loader)
+            ->setPsr0Loader(new MockPsr0Loader())
             ->register()
             ->getPsr0Loader();
 
@@ -181,7 +181,7 @@ class ClassLoaderTest extends \PHPUnit\Framework\TestCase
         $this->assertFileEquals(__DIR__ . '/fixtures/Rose/Love.php', $psr4->getLastRequired());
 
         $psr4 = $this->instance->unregister()
-            ->setPsr4Loader(new MockPsr4Loader)
+            ->setPsr4Loader(new MockPsr4Loader())
             ->register()
             ->getPsr4Loader();
 

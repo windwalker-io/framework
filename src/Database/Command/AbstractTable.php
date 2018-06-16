@@ -539,7 +539,7 @@ abstract class AbstractTable
 
         $class = sprintf('Windwalker\Database\Driver\%s\%sType', $driver, $driver);
 
-        return new $class;
+        return new $class();
     }
 
     /**

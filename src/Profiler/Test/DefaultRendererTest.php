@@ -34,7 +34,7 @@ class DefaultRendererTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new DefaultRenderer;
+        $this->instance = new DefaultRenderer();
     }
 
     /**

@@ -59,7 +59,7 @@ trait PreparableTrait
             return $this;
         }
 
-        $obj = new \stdClass;
+        $obj = new \stdClass();
 
         $obj->value         = &$value;
         $obj->dataType      = $dataType;

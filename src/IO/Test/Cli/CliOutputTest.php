@@ -32,7 +32,7 @@ class CliOutputTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new CliOutput;
+        $this->instance = new CliOutput();
     }
 
     /**

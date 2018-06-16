@@ -17,5 +17,4 @@ use Windwalker\Http\Test\Stub\StubStreamOutput;
  */
 class MockOutput extends StubStreamOutput
 {
-
 }

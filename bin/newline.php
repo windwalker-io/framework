@@ -76,6 +76,6 @@ class Newline extends AbstractCliApplication
     }
 }
 
-$app = new Newline;
+$app = new Newline();
 
 $app->execute();

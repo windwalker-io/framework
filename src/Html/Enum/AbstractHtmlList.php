@@ -98,7 +98,7 @@ abstract class AbstractHtmlList extends HtmlElement
      */
     public function setItems(array $items)
     {
-        $this->content = new HtmlElements;
+        $this->content = new HtmlElements();
 
         foreach ($items as $item) {
             $this->addItem($item);

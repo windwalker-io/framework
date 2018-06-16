@@ -56,7 +56,7 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
      */
     protected function createClient($options = [], $transport = null)
     {
-        $this->transport = $transport = $transport ?: new MockTransport;
+        $this->transport = $transport = $transport ?: new MockTransport();
 
         return new HttpClient($options, $transport);
     }
@@ -125,7 +125,7 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
      */
     public function testSend()
     {
-        $request = new Request;
+        $request = new Request();
 
         $this->instance->send($request);
 

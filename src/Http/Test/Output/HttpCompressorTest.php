@@ -60,8 +60,10 @@ class HttpCompressorTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsSupported()
     {
-        $this->assertEquals(extension_loaded('zlib') || ini_get('zlib.output_compression'),
-            HttpCompressor::isSupported());
+        $this->assertEquals(
+            extension_loaded('zlib') || ini_get('zlib.output_compression'),
+            HttpCompressor::isSupported()
+        );
     }
 
     /**

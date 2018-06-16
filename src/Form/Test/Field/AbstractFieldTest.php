@@ -266,7 +266,7 @@ HTML;
                 'class' => 'stub-flower',
             ],
             null,
-            new IpValidator
+            new IpValidator()
         );
 
         // No value will not validate
@@ -344,7 +344,7 @@ HTML;
 
         $this->assertEquals('abcfoo_bar-yoodivdatadiv456789', $field->filter()->getValue());
 
-        $field->setFilter(new MockFilter)->setValue('foo');
+        $field->setFilter(new MockFilter())->setValue('foo');
 
         $this->assertEquals('abc', $field->filter()->getValue());
     }
@@ -500,10 +500,12 @@ HTML;
      */
     public function testSetValidator()
     {
-        $this->instance->setValidator(new EmailValidator);
+        $this->instance->setValidator(new EmailValidator());
 
-        $this->assertInstanceOf('Windwalker\\Validator\\Rule\\EmailValidator',
-            $this->instance->getValidator()->getValidators()[0]);
+        $this->assertInstanceOf(
+            'Windwalker\\Validator\\Rule\\EmailValidator',
+            $this->instance->getValidator()->getValidators()[0]
+        );
 
         self::assertFalse($this->instance->getValidator()->validate('hello'));
         self::assertTrue($this->instance->getValidator()->validate('hello@example.com'));
@@ -533,7 +535,7 @@ HTML;
         $this->assertEquals('123123', $this->instance->setValue('abc123cba123fgh')->filter()->getValue());
 
         // Set filter object
-        $this->instance->resetFilters()->setFilter(new StubFilter);
+        $this->instance->resetFilters()->setFilter(new StubFilter());
 
         $this->assertEquals('123123', $this->instance->setValue('abc123cba123fgh')->filter()->getValue());
     }
@@ -736,8 +738,10 @@ HTML;
      */
     public function testGetAttributes()
     {
-        $this->assertEquals(['placeholder' => 'The Flower', 'class' => 'stub-flower'],
-            $this->instance->getAttributes());
+        $this->assertEquals(
+            ['placeholder' => 'The Flower', 'class' => 'stub-flower'],
+            $this->instance->getAttributes()
+        );
     }
 
     /**

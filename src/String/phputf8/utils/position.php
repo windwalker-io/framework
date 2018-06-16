@@ -30,7 +30,6 @@
  */
 function utf8_byte_position()
 {
-
     $args = func_get_args();
     $str  =& array_shift($args);
     if (!is_string($str)) {
@@ -65,7 +64,6 @@ function utf8_byte_position()
         $safety_valve = 50;
 
         do {
-
             if (($c - $prev[1]) == 0) {
                 // Hack: gone past end of string
                 $error = 0;
@@ -93,12 +91,10 @@ function utf8_byte_position()
 
             // ready for next time around
             $i = $j;
-
             // from 7 it is faster to iterate over the string
         } while (($error > 7) && --$safety_valve);
 
         if ($error && $error <= 7) {
-
             if ($c < $offset) {
                 // move up
                 while ($error--) {
@@ -142,7 +138,6 @@ function utf8_byte_position()
  */
 function utf8_locate_current_chr(&$str, $idx)
 {
-
     if ($idx <= 0) {
         return 0;
     }
@@ -178,7 +173,6 @@ function utf8_locate_current_chr(&$str, $idx)
  */
 function utf8_locate_next_chr(&$str, $idx)
 {
-
     if ($idx <= 0) {
         return 0;
     }

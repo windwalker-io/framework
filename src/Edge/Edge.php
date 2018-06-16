@@ -117,9 +117,9 @@ class Edge
         EdgeCompilerInterface $compiler = null,
         EdgeCacheInterface $cache = null
     ) {
-        $this->compiler = $compiler ?: new EdgeCompiler;
-        $this->loader   = $loader ?: new EdgeStringLoader;
-        $this->cache    = $cache ?: new EdgeArrayCache;
+        $this->compiler = $compiler ?: new EdgeCompiler();
+        $this->loader   = $loader ?: new EdgeStringLoader();
+        $this->cache    = $cache ?: new EdgeArrayCache();
     }
 
     /**
@@ -448,6 +448,7 @@ class Edge
      * @param  string $empty
      *
      * @return string
+     * @throws EdgeException
      */
     public function renderEach($view, $data, $iterator, $empty = 'raw|')
     {

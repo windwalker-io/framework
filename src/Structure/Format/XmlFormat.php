@@ -53,7 +53,7 @@ class XmlFormat implements FormatInterface
      */
     public static function stringToStruct($data, array $options = [])
     {
-        $obj = new \stdClass;
+        $obj = new \stdClass();
 
         // Parse the XML string.
         $xml = simplexml_load_string($data);
@@ -107,7 +107,7 @@ class XmlFormat implements FormatInterface
                 break;
 
             default:
-                $value = new \stdClass;
+                $value = new \stdClass();
 
                 foreach ($node->children() as $child) {
                     $value->$child['name'] = static::getValueFromNode($child);

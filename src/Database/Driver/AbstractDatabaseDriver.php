@@ -160,6 +160,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      * @param   null  $connection The database connection instance.
      * @param   array $options    List of options used to configure the connection
      *
+     * @throws \ReflectionException
      * @since   2.0
      */
     public function __construct($connection = null, $options = [])
@@ -223,7 +224,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
         if ($this->middlewares) {
             // Prepare middleware data
-            $data        = new \stdClass;
+            $data        = new \stdClass();
             $data->debug = &$this->debug;
             $data->query = &$this->query;
             $data->sql   = $this->replacePrefix((string) $this->query);
@@ -374,8 +375,10 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
         $name = $name ?: $this->database;
 
         if (empty($this->databases[$name]) || $new) {
-            $class = sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->name),
-                ucfirst($this->name));
+            $class = sprintf(
+                'Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->name),
+                ucfirst($this->name)
+            );
 
             if (!class_exists($class)) {
                 throw new \InvalidArgumentException(sprintf('Class %s not exists.', $class));
@@ -439,8 +442,10 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     public function getTransaction($nested = true, $new = false)
     {
         if (!$this->transaction || $new) {
-            $class = sprintf('Windwalker\\Database\\Driver\\%s\\%sTransaction', ucfirst($this->name),
-                ucfirst($this->name));
+            $class = sprintf(
+                'Windwalker\\Database\\Driver\\%s\\%sTransaction', ucfirst($this->name),
+                ucfirst($this->name)
+            );
 
             $this->transaction = new $class($this, $nested);
         }
@@ -862,6 +867,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  static
      *
+     * @throws \ReflectionException
      * @since   3.0
      */
     public function addMiddleware($middleware)
@@ -888,11 +894,12 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      *
      * @return  static  Return self to support chaining.
      *
+     * @throws \ReflectionException
      * @since   3.0
      */
     public function resetMiddlewares()
     {
-        $this->middlewares = new ChainBuilder;
+        $this->middlewares = new ChainBuilder();
         $this->middlewares->add([$this, 'doExecute']);
 
         return $this;

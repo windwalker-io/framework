@@ -32,7 +32,7 @@ class NoneValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new NoneValidator;
+        $this->instance = new NoneValidator();
     }
 
     /**

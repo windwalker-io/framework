@@ -314,8 +314,8 @@ You can also set attribute to input wrapper and label, use `controlAttr()` and `
 ``` php
 $form->addField(new TextField('name', 'Label'))
     ->set('id', 'my-name')
-    ->required()
-    ->disabled();
+    ->required(true)
+    ->disabled(true);
 ```
 
 Set to false.
@@ -327,16 +327,24 @@ $form->addField(new TextField('name', 'Label'))
     ->disabled(false);
 ```
 
-### XML
+### Wrap by Elements
 
-``` xml
-<field
-    name="name"
-    label="Label"
-    id="my-name"
-    required="true"
-    disabled="false"
-/>
+Use `wrap()` to wrap field by HTML elements to support Web Components or Vue.js pattern.
+
+```php
+$form->addField(new TextField('name', 'Label'))
+    ->wrap(new HtmlElement('transition', null, ['name' => 'fade']))
+    ->wrap(new HtmlElement('dom-repeat', null, ['items' => 'sakuras']));
+```
+
+Result:
+
+```html
+<transition name="fade">
+    <dom-repeat items="sakuras">
+        {Your field}
+    </dom-repeat>
+</transition>
 ```
 
 ## Filter

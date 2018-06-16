@@ -123,7 +123,7 @@ class HttpServer
     ) {
         $this->handler  = $handler;
         $this->request  = $request;
-        $this->response = $response ?: new Response;
+        $this->response = $response ?: new Response();
         $this->output   = $output ?: $this->getOutput();
     }
 
@@ -203,7 +203,7 @@ class HttpServer
     public function getOutput()
     {
         if (!$this->output) {
-            $this->output = new Output;
+            $this->output = new Output();
         }
 
         return $this->output;

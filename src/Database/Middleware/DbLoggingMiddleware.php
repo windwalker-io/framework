@@ -36,7 +36,7 @@ class DbLoggingMiddleware extends AbstractMiddleware implements LoggerAwareInter
      */
     public function __construct(LoggerAwareInterface $logger = null)
     {
-        $this->logger = $logger ?: new NullLogger;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -60,10 +60,12 @@ class DbLoggingMiddleware extends AbstractMiddleware implements LoggerAwareInter
             $result = $this->next->execute($data);
         } catch (\RuntimeException $e) {
             // Throw the normal query exception.
-            $this->logger->log(LogLevel::ERROR, 'Database query failed (error #{code}): {message}',
-                ['code' => $e->getCode(), 'message' => $e->getMessage()]);
+            $this->logger->log(
+                LogLevel::ERROR, 'Database query failed (error #{code}): {message}',
+                ['code' => $e->getCode(), 'message' => $e->getMessage()]
+            );
 
-            throw new $e;
+            throw new $e();
         }
 
         return $result;

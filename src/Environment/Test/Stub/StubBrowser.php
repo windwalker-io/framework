@@ -108,6 +108,7 @@ class StubBrowser extends Browser
      *
      * @return  mixed  The value of the class variable.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function getProperty($name)

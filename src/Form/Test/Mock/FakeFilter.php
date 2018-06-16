@@ -15,5 +15,4 @@ namespace Windwalker\Form\Test\Mock;
  */
 class FakeFilter
 {
-
 }

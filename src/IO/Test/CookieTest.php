@@ -33,7 +33,7 @@ class CookieTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new CookieInput;
+        $this->instance = new CookieInput();
     }
 
     /**
@@ -51,13 +51,14 @@ class CookieTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\CookieInput::__construct
      * @since   2.0
      */
     public function test__construct()
     {
         // Default constructor call
-        $instance = new CookieInput;
+        $instance = new CookieInput();
 
         $this->assertEquals(
             $_COOKIE,
@@ -70,12 +71,13 @@ class CookieTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\CookieInput::set
      * @since   2.0
      */
     public function testSet()
     {
-        $instance = new CookieInput;
+        $instance = new CookieInput();
         $instance->set('foo', 'bar');
 
         $data = TestHelper::getValue($instance, 'data');

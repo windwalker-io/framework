@@ -398,11 +398,13 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
      */
     public function mapColumn($field, callable $callback)
     {
-        return $this->map(function (Data $data) use ($field, $callback) {
-            $data->$field = $callback($data->$field);
+        return $this->map(
+            function (Data $data) use ($field, $callback) {
+                $data->$field = $callback($data->$field);
 
-            return $data;
-        });
+                return $data;
+            }
+        );
     }
 
     /**
@@ -670,9 +672,11 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
     {
         $fields = (array) $fields;
 
-        return $this->map(function (Data $data) use ($fields) {
-            return $data->except($fields);
-        });
+        return $this->map(
+            function (Data $data) use ($fields) {
+                return $data->except($fields);
+            }
+        );
     }
 
     /**
@@ -686,9 +690,11 @@ class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Se
     {
         $fields = (array) $fields;
 
-        return $this->map(function (Data $data) use ($fields) {
-            return $data->only($fields);
-        });
+        return $this->map(
+            function (Data $data) use ($fields) {
+                return $data->only($fields);
+            }
+        );
     }
 
     /**

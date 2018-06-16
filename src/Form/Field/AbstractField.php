@@ -376,7 +376,7 @@ abstract class AbstractField
      */
     public function validate()
     {
-        $result = new ValidateResult;
+        $result = new ValidateResult();
 
         if ($this->get('disabled')) {
             return $result;
@@ -738,7 +738,7 @@ abstract class AbstractField
      */
     public function resetValidators()
     {
-        $this->validator = new ValidatorComposite;
+        $this->validator = new ValidatorComposite();
 
         return $this;
     }
@@ -819,7 +819,7 @@ abstract class AbstractField
      */
     public function resetFilters()
     {
-        $this->filter = new FilterComposite;
+        $this->filter = new FilterComposite();
 
         return $this;
     }

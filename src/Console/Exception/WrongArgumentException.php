@@ -15,5 +15,4 @@ namespace Windwalker\Console\Exception;
  */
 class WrongArgumentException extends \RuntimeException
 {
-
 }

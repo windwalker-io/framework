@@ -62,6 +62,7 @@ class CacheItem implements CacheItemInterface
      * @param   mixed             $value The value for the cache item.
      * @param   \DateInterval|int $ttl   The expire time.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function __construct($key, $value = null, $ttl = null)
@@ -133,7 +134,7 @@ class CacheItem implements CacheItemInterface
      */
     public function isHit()
     {
-        if (new \DateTime > $this->expiration) {
+        if (new \DateTime() > $this->expiration) {
             $this->hit = false;
         }
 
@@ -159,7 +160,6 @@ class CacheItem implements CacheItemInterface
 
         if ($expiration instanceof \DateTimeInterface) {
             $this->expiration = $expiration;
-
         } elseif ($expiration === null) {
             $this->expiration = new \DateTime($this->defaultExpiration);
         } else {
@@ -183,6 +183,7 @@ class CacheItem implements CacheItemInterface
      *
      * @return static
      *   The called object.
+     * @throws \Exception
      */
     public function expiresAfter($time)
     {
@@ -190,10 +191,10 @@ class CacheItem implements CacheItemInterface
         date_default_timezone_set('UTC');
 
         if ($time instanceof \DateInterval) {
-            $this->expiration = new \DateTime;
+            $this->expiration = new \DateTime();
             $this->expiration->add($time);
         } elseif (is_int($time)) {
-            $this->expiration = new \DateTime;
+            $this->expiration = new \DateTime();
             $this->expiration->add(new \DateInterval('PT' . $time . 'S'));
         } elseif ($time === null) {
             $this->expiration = new \DateTime($this->defaultExpiration);

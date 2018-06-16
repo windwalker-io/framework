@@ -43,11 +43,13 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
     {
         parent::setUpBeforeClass();
 
-        static::$dbo->getTable('windwalker_sessions')->save(function (Schema $schema) {
-            $schema->varchar('id')->allowNull(false);
-            $schema->text('data');
-            $schema->varchar('time');
-        });
+        static::$dbo->getTable('windwalker_sessions')->save(
+            function (Schema $schema) {
+                $schema->varchar('id')->allowNull(false);
+                $schema->text('data');
+                $schema->varchar('time');
+            }
+        );
     }
 
     /**
@@ -97,6 +99,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\Session\Handler\DatabaseHandler::read
      */
     public function testReadAndWrite()
@@ -175,6 +178,5 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
      */
     protected function tearDown()
     {
-
     }
 }

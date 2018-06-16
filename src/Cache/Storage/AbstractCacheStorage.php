@@ -66,9 +66,10 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
      *
      * @param array $keys
      *
-     * @return  \Traversable A traversable collection of Cache Items in the same order as the $keys
+     * @return array|CacheItemInterface A traversable collection of Cache Items in the same order as the $keys
      *                       parameter, keyed by the cache keys of each item. If no items are found
      *                       an empty Traversable collection will be returned.
+     * @throws InvalidArgumentException
      */
     public function getItems(array $keys = [])
     {
@@ -179,7 +180,7 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
 
         $this->differed[$item->getKey()] = $item;
 
-        return $this;
+        return true;
     }
 
     /**

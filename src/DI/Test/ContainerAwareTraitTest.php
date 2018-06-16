@@ -54,7 +54,7 @@ class ContainerAwareTraitTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAndSetContainer()
     {
-        $this->instance->setContainer(new Container);
+        $this->instance->setContainer(new Container());
 
         $this->assertInstanceOf(Container::class, $this->instance->getContainer());
     }

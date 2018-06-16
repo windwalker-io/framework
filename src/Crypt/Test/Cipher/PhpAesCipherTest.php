@@ -33,7 +33,7 @@ class PhpAesCipherTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new PhpAesCipher;
+        $this->instance = new PhpAesCipher();
     }
 
     /**

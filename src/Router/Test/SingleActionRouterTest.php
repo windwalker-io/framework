@@ -32,7 +32,7 @@ class SingleActionRouterTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new SingleActionRouter;
+        $this->instance = new SingleActionRouter();
     }
 
     /**

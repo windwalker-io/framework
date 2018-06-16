@@ -33,7 +33,7 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new InputFilter;
+        $this->instance = new InputFilter();
     }
 
     /**
@@ -604,8 +604,10 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
      */
     public function testClean($id, $type, $data, $expect, $message)
     {
-        $this->assertEquals($expect, $this->instance->clean($data, $type),
-            $message . ': ' . $id . '. Using filter: ' . $type);
+        $this->assertEquals(
+            $expect, $this->instance->clean($data, $type),
+            $message . ': ' . $id . '. Using filter: ' . $type
+        );
     }
 
     /**
@@ -634,7 +636,7 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Closure', $handler);
 
         // Thor
-        $this->instance->setHandler('hammer', new StubThorCleaner);
+        $this->instance->setHandler('hammer', new StubThorCleaner());
 
         $return = $this->instance->clean('Thor', 'hammer');
 

@@ -18,8 +18,11 @@ use Windwalker\Database\Schema\DataType;
 class MysqlType extends DataType
 {
     const INTEGER = 'int';
+
     const BOOLEAN = 'bool';
+
     const ENUM = 'enum';
+
     const SET = 'set';
 
     /**

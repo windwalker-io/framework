@@ -71,5 +71,6 @@ function utf8_trim($str, $charlist = false)
     if ($charlist === false) {
         return trim($str);
     }
+
     return utf8_ltrim(utf8_rtrim($str, $charlist), $charlist);
 }

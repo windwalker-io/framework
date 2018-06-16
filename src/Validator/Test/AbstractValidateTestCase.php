@@ -50,11 +50,15 @@ abstract class AbstractValidateTestCase extends \PHPUnit\Framework\TestCase
     public function testValidate($name, $input, $expect)
     {
         if ($expect) {
-            $this->assertTrue($this->instance->validate($input),
-                'Validate case: ' . $name . ' should be TRUE but FALSE. Input: ' . $input);
+            $this->assertTrue(
+                $this->instance->validate($input),
+                'Validate case: ' . $name . ' should be TRUE but FALSE. Input: ' . $input
+            );
         } else {
-            $this->assertFalse($this->instance->validate($input),
-                'Validate case: ' . $name . ' should be FALSE but TRUE. Input: ' . $input);
+            $this->assertFalse(
+                $this->instance->validate($input),
+                'Validate case: ' . $name . ' should be FALSE but TRUE. Input: ' . $input
+            );
         }
     }
 }

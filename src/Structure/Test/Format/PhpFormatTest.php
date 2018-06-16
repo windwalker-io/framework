@@ -32,7 +32,7 @@ class PhpFormatTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new PhpFormat;
+        $this->instance = new PhpFormat();
     }
 
     /**

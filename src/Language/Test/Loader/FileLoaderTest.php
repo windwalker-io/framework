@@ -32,7 +32,7 @@ class FileLoaderTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new FileLoader;
+        $this->instance = new FileLoader();
     }
 
     /**

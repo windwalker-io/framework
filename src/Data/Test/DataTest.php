@@ -68,12 +68,11 @@ class DataTest extends \PHPUnit\Framework\TestCase
      */
     public function testBind()
     {
-        $data = new Data;
+        $data = new Data();
 
         $data->bind($this->getTestData());
 
         $this->assertEquals('sakura', $data->flower);
-
         // $data->bind((array) new FakeData);
     }
 
@@ -210,7 +209,7 @@ class DataTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertFalse($this->instance->isNull());
 
-        $data = new Data;
+        $data = new Data();
 
         $this->assertTrue($data->isNull());
     }
@@ -236,14 +235,16 @@ class DataTest extends \PHPUnit\Framework\TestCase
      */
     public function testMap()
     {
-        $data = new Data;
+        $data = new Data();
 
         $data->foo = 'bar';
         $data->baz = 'yoo';
 
-        $new = $data->map(function ($value) {
-            return strtoupper($value);
-        });
+        $new = $data->map(
+            function ($value) {
+                return strtoupper($value);
+            }
+        );
 
         $this->assertEquals('YOO', $new->baz);
     }
@@ -257,14 +258,16 @@ class DataTest extends \PHPUnit\Framework\TestCase
      */
     public function testWalk()
     {
-        $data = new Data;
+        $data = new Data();
 
         $data->foo = 'bar';
         $data->baz = 'yoo';
 
-        $data->walk(function (&$value, $key, $userdata) {
-            $value = $userdata . ':' . $key . ':' . strtoupper($value);
-        }, 'prefix');
+        $data->walk(
+            function (&$value, $key, $userdata) {
+                $value = $userdata . ':' . $key . ':' . strtoupper($value);
+            }, 'prefix'
+        );
 
         $this->assertEquals('prefix:baz:YOO', $data->baz);
     }
@@ -276,9 +279,9 @@ class DataTest extends \PHPUnit\Framework\TestCase
      */
     public function testClone()
     {
-        $data      = new Data;
-        $data->foo = new \stdClass;
-        $data->bar = new \stdClass;
+        $data      = new Data();
+        $data->foo = new \stdClass();
+        $data->bar = new \stdClass();
         $data->baz = 'yoo';
 
         $data2 = clone $data;

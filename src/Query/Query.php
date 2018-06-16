@@ -2023,7 +2023,7 @@ class Query implements QueryInterface, PreparableInterface
             return $this;
         }
 
-        $obj = new \stdClass;
+        $obj = new \stdClass();
 
         $obj->value         = $value;
         $obj->dataType      = $dataType;

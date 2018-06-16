@@ -27,6 +27,5 @@ class NullJob implements JobInterface
 
     public function execute()
     {
-
     }
 }

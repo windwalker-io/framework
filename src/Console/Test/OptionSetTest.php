@@ -46,7 +46,7 @@ class OptionSetTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = $optionset = new OptionSet;
+        $this->instance = $optionset = new OptionSet();
 
         $optionset[] = $this->options['a'] = new Option(['a', 'A', 'ace'], 1, 'Ace');
 

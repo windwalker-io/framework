@@ -33,7 +33,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Response;
+        $this->instance = new Response();
     }
 
     /**
@@ -49,7 +49,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
     public function testConstruct()
     {
         // Test no params
-        $res = new Response;
+        $res = new Response();
 
         $this->assertInstanceOf('Windwalker\Http\Stream\Stream', $res->getBody());
         $this->assertEquals('php://memory', $res->getBody()->getMetadata('uri'));
@@ -73,7 +73,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         fclose($body);
 
         // Test with object params
-        $body = new Stream;
+        $body = new Stream();
         $res  = new Response($body);
 
         $this->assertSame($body, $res->getBody());
@@ -111,7 +111,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetReasonPhrase()
     {
-        $res = new Response;
+        $res = new Response();
 
         $res = $res->withStatus(200);
 

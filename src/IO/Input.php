@@ -97,7 +97,7 @@ class Input implements \Serializable, \Countable
         if ($filter) {
             $this->filter = $filter;
         } else {
-            $this->filter = class_exists('Windwalker\\Filter\\InputFilter') ? new InputFilter : new NullFilter;
+            $this->filter = class_exists('Windwalker\\Filter\\InputFilter') ? new InputFilter() : new NullFilter();
         }
 
         $this->prepareSource($source);
@@ -250,9 +250,11 @@ class Input implements \Serializable, \Countable
 
         $value = $this->filter->clean($value, 'array');
 
-        return array_map(function ($v) use ($filter) {
-            return $this->filter->clean($v, $filter);
-        }, $value);
+        return array_map(
+            function ($v) use ($filter) {
+                return $this->filter->clean($v, $filter);
+            }, $value
+        );
     }
 
     /**
@@ -500,7 +502,7 @@ class Input implements \Serializable, \Countable
         // Unserialize the data, and inputs.
         list($this->data, $this->inputs) = unserialize($input);
 
-        $this->filter = class_exists('Windwalker\\Filter\\InputFilter') ? new InputFilter : new NullFilter;
+        $this->filter = class_exists('Windwalker\\Filter\\InputFilter') ? new InputFilter() : new NullFilter();
     }
 
     /**
@@ -721,7 +723,7 @@ class Input implements \Serializable, \Countable
             }
 
             if (class_exists($type)) {
-                return new $type;
+                return new $type();
             }
 
             throw new \InvalidArgumentException(sprintf('Type or class: %s not exists', $type));

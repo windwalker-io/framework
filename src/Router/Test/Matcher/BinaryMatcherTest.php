@@ -33,7 +33,7 @@ class BinaryMatcherTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new BinaryMatcher;
+        $this->instance = new BinaryMatcher();
     }
 
     /**

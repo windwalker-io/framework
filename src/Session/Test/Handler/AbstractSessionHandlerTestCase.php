@@ -29,7 +29,7 @@ class AbstractSessionHandlerTestCase extends AbstractSessionTestCase
     {
         $this->bridge = new MockArrayBridge('PHPSESSID');
 
-        $this->bag = new ArrayBag;
+        $this->bag = new ArrayBag();
 
         $this->options = [
             'expire_time' => 20,

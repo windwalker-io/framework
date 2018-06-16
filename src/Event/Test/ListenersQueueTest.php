@@ -34,12 +34,11 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      */
     public function testAdd()
     {
-        $listener1 = new EmptyListener;
-        $listener2 = new EmptyListener;
+        $listener1 = new EmptyListener();
+        $listener2 = new EmptyListener();
         $listener3 = function () {
-
         };
-        $listener4 = new EmptyListener;
+        $listener4 = new EmptyListener();
 
         $this->instance->add($listener1, 5);
         $this->instance->add($listener2, 5);
@@ -68,7 +67,7 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddExisting()
     {
-        $listener = new EmptyListener;
+        $listener = new EmptyListener();
 
         $this->instance->add($listener, 5);
         $this->instance->add($listener, 0);
@@ -86,12 +85,11 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetPriorityNonExisting()
     {
-        $this->assertNull($this->instance->getPriority(new EmptyListener));
+        $this->assertNull($this->instance->getPriority(new EmptyListener()));
 
         $this->assertFalse(
             $this->instance->getPriority(
                 function () {
-
                 },
                 false
             )
@@ -107,12 +105,11 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      */
     public function testRemove()
     {
-        $listener1 = new EmptyListener;
-        $listener2 = new EmptyListener;
+        $listener1 = new EmptyListener();
+        $listener2 = new EmptyListener();
         $listener3 = function () {
-
         };
-        $listener4 = new EmptyListener;
+        $listener4 = new EmptyListener();
 
         $this->instance->add($listener1, 0);
         $this->instance->add($listener2, 0);
@@ -152,28 +149,25 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEmpty($this->instance->getAll());
 
-        $listener0 = new EmptyListener;
-        $listener1 = new EmptyListener;
-        $listener2 = new EmptyListener;
+        $listener0 = new EmptyListener();
+        $listener1 = new EmptyListener();
+        $listener2 = new EmptyListener();
 
         $listener3 = function () {
-
         };
 
-        $listener4 = new EmptyListener;
-        $listener5 = new EmptyListener;
+        $listener4 = new EmptyListener();
+        $listener5 = new EmptyListener();
 
         $listener6 = function () {
-
         };
 
-        $listener7 = new EmptyListener;
+        $listener7 = new EmptyListener();
 
         $listener8 = function () {
-
         };
 
-        $listener9 = new EmptyListener;
+        $listener9 = new EmptyListener();
 
         $this->instance->add($listener0, 10);
         $this->instance->add($listener1, 3);
@@ -209,28 +203,25 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetIterator()
     {
-        $listener0 = new EmptyListener;
-        $listener1 = new EmptyListener;
-        $listener2 = new EmptyListener;
+        $listener0 = new EmptyListener();
+        $listener1 = new EmptyListener();
+        $listener2 = new EmptyListener();
 
         $listener3 = function () {
-
         };
 
-        $listener4 = new EmptyListener;
-        $listener5 = new EmptyListener;
+        $listener4 = new EmptyListener();
+        $listener5 = new EmptyListener();
 
         $listener6 = function () {
-
         };
 
-        $listener7 = new EmptyListener;
+        $listener7 = new EmptyListener();
 
         $listener8 = function () {
-
         };
 
-        $listener9 = new EmptyListener;
+        $listener9 = new EmptyListener();
 
         $this->instance->add($listener0, 10);
         $this->instance->add($listener1, 3);
@@ -270,9 +261,9 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetIteratorMultipleIterations()
     {
-        $listener0 = new EmptyListener;
-        $listener1 = new EmptyListener;
-        $listener2 = new EmptyListener;
+        $listener0 = new EmptyListener();
+        $listener1 = new EmptyListener();
+        $listener2 = new EmptyListener();
 
         $this->instance->add($listener0, 0);
         $this->instance->add($listener1, 1);
@@ -304,8 +295,8 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertCount(0, $this->instance);
 
-        $listener1 = new EmptyListener;
-        $listener2 = new EmptyListener;
+        $listener1 = new EmptyListener();
+        $listener2 = new EmptyListener();
 
         $this->instance->add($listener1, 0);
         $this->instance->add($listener2, 0);
@@ -324,6 +315,6 @@ class ListenersQueueTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new ListenersQueue;
+        $this->instance = new ListenersQueue();
     }
 }

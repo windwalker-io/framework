@@ -537,29 +537,22 @@ abstract class UnicodeHelper
         ob_start();
 
         foreach (array_keys($arr) as $k) {
-
             # ASCII range (including control chars)
             if (($arr[$k] >= 0) && ($arr[$k] <= 0x007f)) {
-
                 echo chr($arr[$k]);
-
                 # 2 byte sequence
             } else {
                 if ($arr[$k] <= 0x07ff) {
-
                     echo chr(0xc0 | ($arr[$k] >> 6));
                     echo chr(0x80 | ($arr[$k] & 0x003f));
-
                     # Byte order mark (skip)
                 } else {
                     if ($arr[$k] == 0xFEFF) {
-
                         // nop -- zap the BOM
 
                         # Test for illegal surrogates
                     } else {
                         if ($arr[$k] >= 0xD800 && $arr[$k] <= 0xDFFF) {
-
                             // found a surrogate
                             trigger_error(
                                 'utf8_from_unicode: Illegal surrogate ' .
@@ -568,26 +561,20 @@ abstract class UnicodeHelper
                             );
 
                             return false;
-
                             # 3 byte sequence
                         } else {
                             if ($arr[$k] <= 0xffff) {
-
                                 echo chr(0xe0 | ($arr[$k] >> 12));
                                 echo chr(0x80 | (($arr[$k] >> 6) & 0x003f));
                                 echo chr(0x80 | ($arr[$k] & 0x003f));
-
                                 # 4 byte sequence
                             } else {
                                 if ($arr[$k] <= 0x10ffff) {
-
                                     echo chr(0xf0 | ($arr[$k] >> 18));
                                     echo chr(0x80 | (($arr[$k] >> 12) & 0x3f));
                                     echo chr(0x80 | (($arr[$k] >> 6) & 0x3f));
                                     echo chr(0x80 | ($arr[$k] & 0x3f));
-
                                 } else {
-
                                     trigger_error(
                                         'utf8_from_unicode: Codepoint out of Unicode range ' .
                                         'at index: ' . $k . ', value: ' . $arr[$k],
@@ -677,7 +664,6 @@ abstract class UnicodeHelper
                     $mUcs4  = ($mUcs4 & 1) << 30;
                     $mState = 5;
                     $mBytes = 6;
-
                 } else {
                     /* Current octet is neither in the US-ASCII range nor a legal first
                      * octet of a multi-octet sequence.

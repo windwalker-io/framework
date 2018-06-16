@@ -25,9 +25,7 @@
  */
 function utf8_ireplace($search, $replace, $str, $count = null)
 {
-
     if (!is_array($search)) {
-
         $slen = strlen($search);
         if ($slen == 0) {
             return $str;
@@ -50,34 +48,23 @@ function utf8_ireplace($search, $replace, $str, $count = null)
             $matched += $mlen + $lendif;
             $i++;
         }
+
         return $str;
-
     } else {
-
         foreach (array_keys($search) as $k) {
-
             if (is_array($replace)) {
-
                 if (array_key_exists($k, $replace)) {
-
                     $str = utf8_ireplace($search[$k], $replace[$k], $str, $count);
-
                 } else {
-
                     $str = utf8_ireplace($search[$k], '', $str, $count);
-
                 }
-
             } else {
-
                 $str = utf8_ireplace($search[$k], $replace, $str, $count);
-
             }
         }
+
         return $str;
-
     }
-
 }
 
 

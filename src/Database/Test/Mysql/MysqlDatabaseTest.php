@@ -22,6 +22,7 @@ class MysqlDatabaseTest extends AbstractMysqlTestCase
      * testAutoSelect
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function testAutoSelect()
     {

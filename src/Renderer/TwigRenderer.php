@@ -81,8 +81,10 @@ class TwigRenderer extends AbstractEngineRenderer
     {
         if (!$this->loader) {
             if ($this->config->get('path_separator')) {
-                $this->loader = new TwigFilesystemLoader(iterator_to_array(clone $this->getPaths()),
-                    $this->config->get('path_separator'));
+                $this->loader = new TwigFilesystemLoader(
+                    iterator_to_array(clone $this->getPaths()),
+                    $this->config->get('path_separator')
+                );
             } else {
                 $this->loader = new \Twig_Loader_Filesystem(iterator_to_array(clone $this->getPaths()));
             }
@@ -177,7 +179,7 @@ class TwigRenderer extends AbstractEngineRenderer
     public function getDebugExtension()
     {
         if (!$this->debugExtension) {
-            $this->debugExtension = new \Twig_Extension_Debug;
+            $this->debugExtension = new \Twig_Extension_Debug();
         }
 
         return $this->debugExtension;

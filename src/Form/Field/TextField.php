@@ -83,7 +83,7 @@ class TextField extends AbstractField
      *
      * @return  string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4
      */
     public function buildInput($attrs)
     {
@@ -95,7 +95,6 @@ class TextField extends AbstractField
 
         return $html;
     }
-
 
     /**
      * addOption
@@ -165,8 +164,10 @@ class TextField extends AbstractField
             foreach ($options as $name => $option) {
                 if (!($option instanceof Option)) {
                     throw new \InvalidArgumentException(
-                        sprintf('Please give me %s class as option, %s given.', 'Windwalker\\Html\\Option',
-                            get_class($option))
+                        sprintf(
+                            'Please give me %s class as option, %s given.', 'Windwalker\\Html\\Option',
+                            get_class($option)
+                        )
                     );
                 }
 
@@ -188,7 +189,8 @@ class TextField extends AbstractField
      */
     protected function getAccessors()
     {
-        return array_merge(parent::getAccessors(), [
+        return array_merge(
+            parent::getAccessors(), [
             'placeholder' => 'placeholder',
             'size' => 'size',
             'maxlength' => 'maxlength',
@@ -197,6 +199,7 @@ class TextField extends AbstractField
             'onchange' => 'onchange',
             'onfocus' => 'onfocus',
             'onblur' => 'onblur',
-        ]);
+        ]
+        );
     }
 }

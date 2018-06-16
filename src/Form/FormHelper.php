@@ -139,7 +139,7 @@ class FormHelper
             }
 
             if (class_exists($type)) {
-                return new $type;
+                return new $type();
             }
 
             throw new \InvalidArgumentException(sprintf('Type %s not supported of class not exists', $type));

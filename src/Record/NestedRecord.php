@@ -178,8 +178,12 @@ class NestedRecord extends Record
     {
         // Check that the parent_id field is valid.
         if ($this->parent_id == 0) {
-            throw new NestedHandleException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id,
-                get_class($this)));
+            throw new NestedHandleException(
+                sprintf(
+                    'Invalid `parent_id` [%s] in %s', $this->parent_id,
+                    get_class($this)
+                )
+            );
         }
 
         $query = $this->db->getQuery(true)
@@ -188,8 +192,12 @@ class NestedRecord extends Record
             ->where($this->getKeyName() . ' = ' . $this->parent_id);
 
         if (!$this->db->setQuery($query)->loadResult()) {
-            throw new NestedHandleException(sprintf('Invalid `parent_id` [%s] in %s', $this->parent_id,
-                get_class($this)));
+            throw new NestedHandleException(
+                sprintf(
+                    'Invalid `parent_id` [%s] in %s', $this->parent_id,
+                    get_class($this)
+                )
+            );
         }
 
         $this->checkParent();
@@ -245,8 +253,12 @@ class NestedRecord extends Record
 
         // Make sure the location is valid.
         if (!in_array($position, $allow)) {
-            throw new \InvalidArgumentException(sprintf('%s::setLocation(%d, *%s*)', get_class($this), $referenceId,
-                $position));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '%s::setLocation(%d, *%s*)', get_class($this), $referenceId,
+                    $position
+                )
+            );
         }
 
         // Set the location properties.
@@ -263,6 +275,7 @@ class NestedRecord extends Record
      *
      * @return  static  Return self to support chaining.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function store($updateNulls = false)
@@ -331,7 +344,6 @@ class NestedRecord extends Record
             $this->level     = $repositionData->new_level;
             $this->lft       = $repositionData->new_lft;
             $this->rgt       = $repositionData->new_rgt;
-
         } /*
 		 * If we have a given primary key then we assume we are simply updating this
 		 * node in the tree.  We should assess whether or not we are moving the node
@@ -429,8 +441,10 @@ class NestedRecord extends Record
         // Cannot move the node to be a child of itself.
         if (in_array($referenceId, $children)) {
             throw new NestedHandleException(
-                sprintf('%s::moveByReference(%d, %s, %d) parenting to child.', get_class($this), $referenceId,
-                    $position, $pk)
+                sprintf(
+                    '%s::moveByReference(%d, %s, %d) parenting to child.', get_class($this), $referenceId,
+                    $position, $pk
+                )
             );
         }
 
@@ -561,10 +575,12 @@ class NestedRecord extends Record
         $pk = $pk === null ? $this->$k : $pk;
 
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'conditions' => &$pk,
             'children' => &$children,
-        ]);
+        ]
+        );
 
         // Get the node by id.
         $node = $this->getNode($pk);
@@ -698,8 +714,8 @@ class NestedRecord extends Record
      *
      * @return  integer  1 + value of root rgt on success, false on failure
      *
+     * @throws \Exception
      * @since   2.0
-     * @throws  \RuntimeException on database error.
      */
     public function rebuild($parentId = null, $leftId = 0, $level = 0, $path = '')
     {
@@ -753,8 +769,10 @@ class NestedRecord extends Record
              * Increment the level for the children.
              * Add this item's alias to the path (but avoid a leading /)
              */
-            $rightId = $this->rebuild($node->{$this->getKeyName()}, $rightId, $level + 1,
-                $path . (empty($path) ? '' : '/') . $node->alias);
+            $rightId = $this->rebuild(
+                $node->{$this->getKeyName()}, $rightId, $level + 1,
+                $path . (empty($path) ? '' : '/') . $node->alias
+            );
 
             // If there is an update failure, return false to break out of the recursion.
             if ($rightId === false) {
@@ -789,6 +807,7 @@ class NestedRecord extends Record
      *
      * @return  static  Method support chaining.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function rebuildPath($pk = null)
@@ -841,6 +860,7 @@ class NestedRecord extends Record
      * createRoot
      *
      * @return  boolean
+     * @throws \Exception
      */
     public function createRoot()
     {
@@ -871,8 +891,7 @@ class NestedRecord extends Record
      * @param bool $loadDefault
      *
      * @return  static
-     * @throws \InvalidArgumentException
-     *
+     * @throws \Exception
      * @since   3.2.1
      */
     public function reset($loadDefault = true)
@@ -968,7 +987,7 @@ class NestedRecord extends Record
         }
 
         $k    = $this->getKeyName();
-        $data = new \stdClass;
+        $data = new \stdClass();
 
         // Run the calculations and build the data object by reference position.
         switch ($position) {

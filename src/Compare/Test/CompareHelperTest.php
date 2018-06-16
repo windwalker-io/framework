@@ -18,6 +18,7 @@ use Windwalker\Compare\CompareHelper;
 class CompareHelperTest extends \PHPUnit\Framework\TestCase
 {
     const STRICT = true;
+
     const NOT_STRICT = false;
 
     /**

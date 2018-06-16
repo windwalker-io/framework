@@ -115,8 +115,8 @@ class Language implements LanguageInterface
      */
     public function __construct($locale = 'en-GB', $defaultLocale = 'en-GB', $loaders = null, $formats = null)
     {
-        $formats = $formats ?: new IniFormat;
-        $loaders = $loaders ?: new FileLoader;
+        $formats = $formats ?: new IniFormat();
+        $loaders = $loaders ?: new FileLoader();
 
         $this->setLocale($locale);
         $this->setDefaultLocale($locale);
@@ -154,6 +154,7 @@ class Language implements LanguageInterface
      * @param string $key
      *
      * @return  string
+     * @throws \ReflectionException
      */
     public function translate($key)
     {
@@ -192,6 +193,7 @@ class Language implements LanguageInterface
      * @param int    $count
      *
      * @return  string
+     * @throws \ReflectionException
      */
     public function plural($string, $count = 1)
     {
@@ -259,6 +261,7 @@ class Language implements LanguageInterface
      * @param string $key
      *
      * @return  mixed
+     * @throws \ReflectionException
      */
     public function sprintf($key)
     {
@@ -352,7 +355,7 @@ class Language implements LanguageInterface
                 throw new \DomainException('Format ' . $name . ' not support. Class: ' . $class . ' not found');
             }
 
-            $this->loaders[$name] = new $class;
+            $this->loaders[$name] = new $class();
         }
 
         return $this->loaders[$name];
@@ -413,7 +416,7 @@ class Language implements LanguageInterface
                 throw new \DomainException('Format ' . $name . ' not support. Class: ' . $class . ' not found');
             }
 
-            $this->formats[$name] = new $class;
+            $this->formats[$name] = new $class();
         }
 
         return $this->formats[$name];
@@ -564,7 +567,7 @@ class Language implements LanguageInterface
                 $class = 'Windwalker\\Language\\Localise\\NullLocalise';
             }
 
-            $this->localises[$locale] = new $class;
+            $this->localises[$locale] = new $class();
         }
 
         return $this->localises[$locale];
@@ -620,6 +623,7 @@ class Language implements LanguageInterface
      * @param int    $level
      *
      * @return  array
+     * @throws \ReflectionException
      */
     protected function backtrace($string, $level = 1)
     {

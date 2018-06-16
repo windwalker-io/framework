@@ -47,7 +47,7 @@ class WebEnvironment extends Environment
      */
     public function __construct(Browser $browser = null, Platform $platform = null)
     {
-        $this->browser = $browser ?: new Browser;
+        $this->browser = $browser ?: new Browser();
 
         parent::__construct($platform);
     }

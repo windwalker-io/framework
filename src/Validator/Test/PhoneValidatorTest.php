@@ -32,7 +32,7 @@ class PhoneValidatorTest extends AbstractValidateTestCase
      */
     protected function setUp()
     {
-        $this->instance = new PhoneValidator;
+        $this->instance = new PhoneValidator();
     }
 
     /**

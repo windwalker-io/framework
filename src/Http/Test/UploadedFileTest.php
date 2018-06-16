@@ -145,9 +145,11 @@ class UploadedFileTest extends AbstractBaseTestCase
 
         $this->assertFalse(is_file($to));
 
-        $this->assertExpectedException(function () use ($upload, $to) {
-            $upload->moveTo($to);
-        }, 'RuntimeException', 'Error moving uploaded file');
+        $this->assertExpectedException(
+            function () use ($upload, $to) {
+                $upload->moveTo($to);
+            }, 'RuntimeException', 'Error moving uploaded file'
+        );
     }
 
     /**

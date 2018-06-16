@@ -15,5 +15,4 @@ namespace Windwalker\Queue\Exception;
  */
 class MaxAttemptsExceededException extends \RuntimeException
 {
-
 }

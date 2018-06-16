@@ -8,10 +8,10 @@
 
 namespace Windwalker\Queue\Driver;
 
-use Windwalker\DateTime\Chronos;
-use Windwalker\Queue\QueueMessage;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
+use Windwalker\DateTime\Chronos;
 use Windwalker\Query\Query;
+use Windwalker\Queue\QueueMessage;
 
 /**
  * The DatabaseQueueDriver class.
@@ -70,6 +70,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      * @param QueueMessage $message
      *
      * @return int|string
+     * @throws \Exception
      */
     public function push(QueueMessage $message)
     {
@@ -95,8 +96,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      * @param string $queue
      *
      * @return QueueMessage
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function pop($queue = null)
     {
@@ -110,10 +110,12 @@ class DatabaseQueueDriver implements QueueDriverInterface
             ->from($query->quoteName($this->table))
             ->where('queue = %q', $queue)
             ->where('visibility <= %q', $now->format('Y-m-d H:i:s'))
-            ->orWhere(function (Query $query) use ($now) {
-                $query->where('reserved IS NULL')
-                    ->where('reserved < %q', $now->modify('-' . $this->timeout . 'seconds')->format('Y-m-d H:i:s'));
-            });
+            ->orWhere(
+                function (Query $query) use ($now) {
+                    $query->where('reserved IS NULL')
+                        ->where('reserved < %q', $now->modify('-' . $this->timeout . 'seconds')->format('Y-m-d H:i:s'));
+                }
+            );
 
         $trans = $this->db->getTransaction()->start();
 
@@ -137,7 +139,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
             $trans->rollback();
         }
 
-        $message = new QueueMessage;
+        $message = new QueueMessage();
 
         $message->setId($data['id']);
         $message->setAttempts($data['attempts']);
@@ -178,6 +180,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      * @param QueueMessage|string $message
      *
      * @return static
+     * @throws \Exception
      */
     public function release(QueueMessage $message)
     {
@@ -191,10 +194,12 @@ class DatabaseQueueDriver implements QueueDriverInterface
             'visibility' => $time->format('Y-m-d H:i:s'),
         ];
 
-        $this->db->getWriter()->updateBatch($this->table, $values, [
+        $this->db->getWriter()->updateBatch(
+            $this->table, $values, [
             'id' => $message->getId(),
             'queue' => $queue,
-        ]);
+        ]
+        );
 
         return $this;
     }

@@ -47,7 +47,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
      */
     public function __construct(Structure $config = null)
     {
-        $this->config = $config instanceof Structure ? $config : new Structure;
+        $this->config = $config instanceof Structure ? $config : new Structure();
 
         $this->init();
     }
@@ -141,7 +141,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
     {
         // If a logger hasn't been set, use NullLogger
         if (!($this->logger instanceof LoggerInterface)) {
-            $this->logger = new NullLogger;
+            $this->logger = new NullLogger();
         }
 
         return $this->logger;

@@ -396,7 +396,6 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      */
     public function find()
     {
-
     }
 
     /**
@@ -412,7 +411,6 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      */
     public function findAll()
     {
-
     }
 
     /**
@@ -428,7 +426,6 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      */
     public function toArray()
     {
-
     }
 
     /**
@@ -444,7 +441,6 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      */
     public function getFiles($rescursive = false)
     {
-
     }
 
     /**
@@ -460,7 +456,6 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      */
     public function getFolders($rescursive)
     {
-
     }
 
     /**
@@ -476,7 +471,6 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      */
     public function appendAll()
     {
-
     }
 
     /**
@@ -492,6 +486,5 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      */
     public function prependAll()
     {
-
     }
 }

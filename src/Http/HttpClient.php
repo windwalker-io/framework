@@ -52,7 +52,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
     public function __construct($options = [], TransportInterface $transport = null)
     {
         $this->options   = (array) $options;
-        $this->transport = $transport ?: new CurlTransport;
+        $this->transport = $transport ?: new CurlTransport();
     }
 
     /**
@@ -69,7 +69,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      */
     public function request($method, $url, $data = null, $headers = [])
     {
-        $request = $this->prepareRequest(new Request, $method, $url, $data, $headers);
+        $request = $this->prepareRequest(new Request(), $method, $url, $data, $headers);
 
         return $this->send($request);
     }
@@ -86,7 +86,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      */
     public function download($url, $dest, $data = null, $headers = [])
     {
-        $request = $this->prepareRequest(new Request, 'GET', $url, $data, $headers);
+        $request = $this->prepareRequest(new Request(), 'GET', $url, $data, $headers);
 
         $transport = $this->getTransport();
 

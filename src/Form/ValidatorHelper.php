@@ -44,11 +44,11 @@ class ValidatorHelper extends AbstractFormElementHelper
     public static function create($rule, \SplPriorityQueue $namespaces = null)
     {
         if (!$rule) {
-            return new NoneValidator;
+            return new NoneValidator();
         }
 
         if (class_exists($rule)) {
-            return new $rule;
+            return new $rule();
         }
 
         $namespaces = $namespaces ?: static::getNamespaces();
@@ -57,7 +57,7 @@ class ValidatorHelper extends AbstractFormElementHelper
             $class = $namespace . '\\' . ucfirst($rule) . 'Validator';
 
             if (class_exists($class)) {
-                return new $class;
+                return new $class();
             }
         }
 

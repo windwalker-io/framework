@@ -20,7 +20,9 @@ include_once __DIR__ . '/../lib/aes.class.php';
 class PhpAesCipher implements CipherInterface
 {
     const KEY_128BIT = 128;
+
     const KEY_192BIT = 192;
+
     const KEY_256BIT = 256;
 
     /**

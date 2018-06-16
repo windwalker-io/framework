@@ -35,7 +35,7 @@ class ServerRequestTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new ServerRequest;
+        $this->instance = new ServerRequest();
     }
 
     /**
@@ -52,6 +52,7 @@ class ServerRequestTest extends \PHPUnit\Framework\TestCase
      * testConstruct
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function testConstruct()
     {

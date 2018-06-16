@@ -33,7 +33,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Request;
+        $this->instance = new Request();
     }
 
     /**

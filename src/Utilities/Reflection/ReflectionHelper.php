@@ -63,7 +63,9 @@ namespace Windwalker\Utilities\Reflection;
 class ReflectionHelper
 {
     const IS_IMPLICIT_ABSTRACT = 16;
+
     const IS_EXPLICIT_ABSTRACT = 32;
+
     const IS_FINAL = 64;
 
     /**
@@ -72,6 +74,7 @@ class ReflectionHelper
      * @param string|object $class The class name.
      *
      * @return  \ReflectionClass Reflection instance.
+     * @throws \ReflectionException
      */
     public static function get($class)
     {
@@ -85,7 +88,7 @@ class ReflectionHelper
      *
      * @return  \ReflectionClass Reflection instance.
      *
-     * @throws \InvalidArgumentException
+     * @throws \ReflectionException
      */
     protected static function getReflection($class)
     {
@@ -98,6 +101,7 @@ class ReflectionHelper
      * @param string|object $class The class or object to get reflection.
      *
      * @return  string The class file path.
+     * @throws \ReflectionException
      */
     public static function getPath($class)
     {
@@ -136,6 +140,7 @@ class ReflectionHelper
      * @param array  $args The arguments of this methods.
      *
      * @return  mixed  Return value from reflection class.
+     * @throws \ReflectionException
      */
     public static function __callStatic($name, $args)
     {

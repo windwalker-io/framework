@@ -13,11 +13,11 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 ini_set('memory_limit', '128M');
 
-$finder = new \Windwalker\Edge\Loader\EdgeFileLoader;
+$finder = new \Windwalker\Edge\Loader\EdgeFileLoader();
 
 $finder->addPath(__DIR__ . '/edge');
 
-$edge = new \Windwalker\Edge\Edge($finder, new EdgeCompiler, new EdgeArrayCache());
+$edge = new \Windwalker\Edge\Edge($finder, new EdgeCompiler(), new EdgeArrayCache());
 
 //$edge->addExtension(new \Windwalker\Edge\Extension\BasicExtension);
 

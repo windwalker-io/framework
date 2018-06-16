@@ -56,8 +56,12 @@ class PdoAdapter extends AbstractDatabaseAdapter
 
             $stmt->execute();
         } catch (\PDOException $e) {
-            throw new \RuntimeException(sprintf('PDOException was thrown when trying to delete a session: %s',
-                $e->getMessage()), 0, $e);
+            throw new \RuntimeException(
+                sprintf(
+                    'PDOException was thrown when trying to delete a session: %s',
+                    $e->getMessage()
+                ), 0, $e
+            );
         }
 
         return true;
@@ -84,8 +88,12 @@ class PdoAdapter extends AbstractDatabaseAdapter
 
             $stmt->execute();
         } catch (\PDOException $e) {
-            throw new \RuntimeException(sprintf('PDOException was thrown when trying to delete expired sessions: %s',
-                $e->getMessage()), 0, $e);
+            throw new \RuntimeException(
+                sprintf(
+                    'PDOException was thrown when trying to delete expired sessions: %s',
+                    $e->getMessage()
+                ), 0, $e
+            );
         }
 
         return true;
@@ -120,8 +128,12 @@ class PdoAdapter extends AbstractDatabaseAdapter
 
             return '';
         } catch (\PDOException $e) {
-            throw new \RuntimeException(sprintf('PDOException was thrown when trying to read the session data: %s',
-                $e->getMessage()), 0, $e);
+            throw new \RuntimeException(
+                sprintf(
+                    'PDOException was thrown when trying to read the session data: %s',
+                    $e->getMessage()
+                ), 0, $e
+            );
         }
     }
 
@@ -191,8 +203,12 @@ class PdoAdapter extends AbstractDatabaseAdapter
                 }
             }
         } catch (\PDOException $e) {
-            throw new \RuntimeException(sprintf('PDOException was thrown when trying to write the session data: %s',
-                $e->getMessage()), 0, $e);
+            throw new \RuntimeException(
+                sprintf(
+                    'PDOException was thrown when trying to write the session data: %s',
+                    $e->getMessage()
+                ), 0, $e
+            );
         }
 
         return true;
@@ -218,8 +234,10 @@ class PdoAdapter extends AbstractDatabaseAdapter
                     "WHEN NOT MATCHED THEN INSERT ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (:id, :data, :time) " .
                     "WHEN MATCHED THEN UPDATE SET {$this->options['data_col']} = :data, {$this->options['time_col']} = :time";
 
-            case 'sqlsrv' === $driver && version_compare($this->db->getAttribute(\PDO::ATTR_SERVER_VERSION), '10',
-                    '>='):
+            case 'sqlsrv' === $driver && version_compare(
+                    $this->db->getAttribute(\PDO::ATTR_SERVER_VERSION), '10',
+                    '>='
+                ):
                 // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
                 // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
                 return "MERGE INTO {$this->options['table']} WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON ({$this->options['id_col']} = :id) " .

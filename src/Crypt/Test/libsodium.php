@@ -8,11 +8,13 @@
 
 include_once __DIR__ . '/../../../vendor/autoload.php';
 
-var_dump([
-    \Sodium\library_version_major(),
-    \Sodium\library_version_minor(),
-    \Sodium\version_string(),
-]);
+var_dump(
+    [
+        \Sodium\library_version_major(),
+        \Sodium\library_version_minor(),
+        \Sodium\version_string(),
+    ]
+);
 
 /**
  * Encrypt a message
@@ -37,6 +39,7 @@ function safeEncrypt($message, $key)
         );
     \Sodium\memzero($message);
     \Sodium\memzero($key);
+
     return $cipher;
 }
 
@@ -61,6 +64,7 @@ function safeDecrypt($encrypted, $key)
     );
     \Sodium\memzero($ciphertext);
     \Sodium\memzero($key);
+
     return $plain;
 }
 

@@ -102,8 +102,12 @@ class StructureHelper
         $class = sprintf('%s\Format\%sFormat', __NAMESPACE__, ucfirst(strtolower($format)));
 
         if (!class_exists($class)) {
-            throw new \DomainException(sprintf('Structure format: %s not supported. Class: %s not found.', $format,
-                $class));
+            throw new \DomainException(
+                sprintf(
+                    'Structure format: %s not supported. Class: %s not found.', $format,
+                    $class
+                )
+            );
         }
 
         return $class;
@@ -155,7 +159,7 @@ class StructureHelper
      */
     public static function toObject($array, $class = 'stdClass')
     {
-        $object = new $class;
+        $object = new $class();
 
         foreach ($array as $k => $v) {
             if (is_array($v)) {
@@ -375,7 +379,7 @@ class StructureHelper
     {
         $data = [];
 
-        static::$objectStorage = new \SplObjectStorage;
+        static::$objectStorage = new \SplObjectStorage();
 
         static::doDump($data, $object);
 

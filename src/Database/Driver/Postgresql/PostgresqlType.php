@@ -19,8 +19,11 @@ use Windwalker\Database\Schema\DataType;
 class PostgresqlType extends DataType
 {
     const INTEGER = 'integer';
+
     const BOOLEAN = 'bool';
+
     const SERIAL = 'serial';
+
     const REAL = 'real';
 
     /**

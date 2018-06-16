@@ -21,7 +21,6 @@
  */
 function utf8_strcspn($str, $mask, $start = null, $length = null)
 {
-
     if (empty($mask) || strlen($mask) == 0) {
         return null;
     }
@@ -39,6 +38,5 @@ function utf8_strcspn($str, $mask, $start = null, $length = null)
     }
 
     return 0;
-
 }
 

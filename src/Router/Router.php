@@ -50,7 +50,7 @@ class Router
     {
         $this->addRoutes($routes);
 
-        $this->matcher = $matcher ?: new SequentialMatcher;
+        $this->matcher = $matcher ?: new SequentialMatcher();
     }
 
     /**

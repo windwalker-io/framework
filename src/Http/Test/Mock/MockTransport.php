@@ -55,7 +55,7 @@ class MockTransport extends AbstractTransport
      */
     protected function doRequest(RequestInterface $request)
     {
-        return new Response;
+        return new Response();
     }
 
     /**

@@ -15,8 +15,6 @@ namespace Windwalker\Html\Test;
  */
 class AbstractInputListTest extends \PHPUnit\Framework\TestCase
 {
-
-
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.

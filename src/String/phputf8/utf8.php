@@ -36,7 +36,6 @@ if (preg_match('/^.{1}$/u', "ñ", $UTF8_ar) != 1) {
 }
 unset($UTF8_ar);
 
-
 /**
  * Load the smartest implementations of utf8_strpos, utf8_strrpos
  * and utf8_substr

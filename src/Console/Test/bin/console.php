@@ -14,7 +14,7 @@ if (!is_file($autoload)) {
 
 include_once $autoload;
 
-$console = new \Windwalker\Console\Console;
+$console = new \Windwalker\Console\Console();
 
 $console->execute();
 
@@ -38,7 +38,7 @@ HELP
 
 $console->setHandler(
     function ($command) {
-        $prompter = new \Windwalker\Console\Prompter\BooleanPrompter;
+        $prompter = new \Windwalker\Console\Prompter\BooleanPrompter();
 
         $result = $prompter->ask('Do you wan to do this [Y/n]: ');
 

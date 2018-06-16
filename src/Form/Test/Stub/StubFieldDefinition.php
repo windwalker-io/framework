@@ -41,7 +41,7 @@ class StubFieldDefinition implements FieldDefinitionInterface
 
         $form->addField(new TextField('email', 'Email'), null, 'b')
             ->required()
-            ->setValidator(new EmailValidator)
+            ->setValidator(new EmailValidator())
             ->set('class', 'control-input');
 
         $form->addField(new PasswordField('password', 'Password'), 'pf', 'b')

@@ -18,6 +18,7 @@ namespace Windwalker\String;
 abstract class StringHelper
 {
     const INCREMENT_STYLE_DASH = 'dash';
+
     const INCREMENT_STYLE_DEFAULT = 'default';
 
     /**

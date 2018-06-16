@@ -47,20 +47,17 @@ class BooleanPrompterTest extends AbstractPrompterTest
 
         $this->assertTrue($in, 'Input result should be TRUE.');
 
-
         $this->setStream("yes");
 
         $in = $this->instance->ask();
 
         $this->assertTrue($in, 'Input result should be TRUE.');
 
-
         $this->setStream("Y");
 
         $in = $this->instance->ask();
 
         $this->assertTrue($in, 'Input result should be TRUE.');
-
 
         $this->setStream("n");
 

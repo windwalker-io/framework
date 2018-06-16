@@ -92,7 +92,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
             return null;
         }
 
-        $message = new QueueMessage;
+        $message = new QueueMessage();
 
         $message->setId($job->getId());
         $message->setAttempts($this->client->statsJob($job)->reserves);

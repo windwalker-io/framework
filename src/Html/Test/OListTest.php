@@ -53,7 +53,7 @@ class OListTest extends AbstractDomTestCase
      */
     public function testCreateList()
     {
-        $list = new OList;
+        $list = new OList();
 
         $this->assertEquals('<ol></ol>', (string) $list);
 
@@ -89,7 +89,7 @@ HTML;
      */
     public function testAddItem()
     {
-        $list = new OList;
+        $list = new OList();
 
         $list->addItem(new ListItem('123'))
             ->addItem('ABC');
@@ -117,7 +117,7 @@ HTML;
             new ListItem('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item']),
         ];
 
-        $list = new OList;
+        $list = new OList();
         $list->setItems($items);
 
         $html = <<<HTML
