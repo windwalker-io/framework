@@ -151,6 +151,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      * @param array  $args
      *
      * @return  static
+     * @throws \ReflectionException
      */
     protected function callProxy($class, $method, array $args)
     {

@@ -101,8 +101,7 @@ class Record extends Entity
      *                                      compose the primary key.
      * @param   AbstractDataMapper $mapper  The DataMapper Adapter to access database.
      *
-     * @throws \InvalidArgumentException
-     *
+     * @throws \Exception
      * @since   2.0
      */
     public function __construct($table = null, $keys = 'id', AbstractDataMapper $mapper = null)
@@ -739,6 +738,7 @@ class Record extends Entity
      * Method to get property Mapper
      *
      * @return  AbstractDataMapper
+     * @throws \Exception
      */
     public function getDataMapper()
     {

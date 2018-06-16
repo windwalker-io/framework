@@ -264,9 +264,9 @@ abstract class AbstractCommand implements \ArrayAccess
      * @param   string      $name The command name.
      * @param   IOInterface $io   The Cli IO object.
      *
-     * @throws  CommandNotFoundException
      * @return  mixed
      *
+     * @throws \Exception
      * @since  2.0
      */
     protected function executeSubCommand($name, IOInterface $io = null)

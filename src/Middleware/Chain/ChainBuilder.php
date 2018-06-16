@@ -80,6 +80,7 @@ class ChainBuilder
      * @param   mixed $middleware
      *
      * @return  MiddlewareInterface
+     * @throws \ReflectionException
      */
     protected function marshalMiddleware($middleware)
     {

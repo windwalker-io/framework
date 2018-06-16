@@ -377,6 +377,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * @return  mixed
      *
      * @throws DependencyResolutionException
+     * @throws \ReflectionException
      */
     public function execute($callable, $args = [])
     {

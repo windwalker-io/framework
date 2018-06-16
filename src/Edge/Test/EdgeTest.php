@@ -58,6 +58,7 @@ class EdgeTest extends AbstractDomTestCase
      *
      * @return void
      *
+     * @throws \Windwalker\Edge\Exception\EdgeException
      * @covers \Windwalker\Edge\Edge::render
      */
     public function testRender()

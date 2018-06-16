@@ -284,6 +284,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::getOrphans
      */
     public function testGetOrphans()

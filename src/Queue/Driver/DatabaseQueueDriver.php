@@ -70,6 +70,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      * @param QueueMessage $message
      *
      * @return int|string
+     * @throws \Exception
      */
     public function push(QueueMessage $message)
     {
@@ -95,8 +96,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      * @param string $queue
      *
      * @return QueueMessage
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function pop($queue = null)
     {
@@ -180,6 +180,7 @@ class DatabaseQueueDriver implements QueueDriverInterface
      * @param QueueMessage|string $message
      *
      * @return static
+     * @throws \Exception
      */
     public function release(QueueMessage $message)
     {

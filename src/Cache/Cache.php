@@ -56,6 +56,7 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @return  mixed  The cached value or null if not exists.
      *
+     * @throws \Psr\Cache\InvalidArgumentException
      * @since   2.0
      */
     public function get($key)
@@ -96,6 +97,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param string $key The unique cache key of the item to remove
      *
      * @return static
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function remove($key)
     {
@@ -121,6 +123,7 @@ class Cache implements CacheInterface, \ArrayAccess
      *
      * @return array An array of CacheItem classes.
      *               The resulting array must use the CacheItem's key as the associative key for the array.
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function getMultiple(array $keys)
     {
@@ -151,6 +154,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param array $keys The array of keys to be removed
      *
      * @return static Return self to support chaining.
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function removeMultiple(array $keys)
     {
@@ -219,6 +223,7 @@ class Cache implements CacheInterface, \ArrayAccess
      * @param string $key
      *
      * @return  bool
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function exists($key)
     {

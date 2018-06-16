@@ -31,6 +31,7 @@ class DataMapperTest extends DatabaseTest
      * This method is called before a test is executed.
      *
      * @return void
+     * @throws \Exception
      */
     protected function setUp()
     {
@@ -46,6 +47,7 @@ class DataMapperTest extends DatabaseTest
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\DataMapper\AbstractDataMapper::find
      */
     public function testFind()
@@ -417,6 +419,7 @@ class DataMapperTest extends DatabaseTest
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\DataMapper\AbstractDataMapper::getKeyName
      */
     public function testGetKeyName()

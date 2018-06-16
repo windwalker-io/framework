@@ -99,6 +99,7 @@ class DatabaseHandlerTest extends AbstractDatabaseTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\Session\Handler\DatabaseHandler::read
      */
     public function testReadAndWrite()

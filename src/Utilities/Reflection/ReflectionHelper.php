@@ -87,7 +87,7 @@ class ReflectionHelper
      *
      * @return  \ReflectionClass Reflection instance.
      *
-     * @throws \InvalidArgumentException
+     * @throws \ReflectionException
      */
     protected static function getReflection($class)
     {

@@ -419,6 +419,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      * @see  https://github.com/ventoviro/windwalker/issues/318
      *
      * @return  void
+     * @throws \Windwalker\DI\Exception\DependencyResolutionException
      */
     public function testNewInstanceWithNoDefaultValueAvailable()
     {

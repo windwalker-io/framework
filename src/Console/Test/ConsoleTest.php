@@ -111,6 +111,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      * testExecuteByPath
      *
      * @return  void
+     * @throws \Exception
      */
     public function testExecuteByPath()
     {
@@ -321,6 +322,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      */
     public function testSetHandler()

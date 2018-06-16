@@ -182,6 +182,7 @@ class CacheItem implements CacheItemInterface
      *
      * @return static
      *   The called object.
+     * @throws \Exception
      */
     public function expiresAfter($time)
     {

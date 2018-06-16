@@ -68,6 +68,7 @@ class PdoQueueDriver implements QueueDriverInterface
      * @param QueueMessage $message
      *
      * @return int|string
+     * @throws \Exception
      */
     public function push(QueueMessage $message)
     {
@@ -190,6 +191,7 @@ class PdoQueueDriver implements QueueDriverInterface
      * @param QueueMessage|string $message
      *
      * @return static
+     * @throws \Exception
      */
     public function release(QueueMessage $message)
     {

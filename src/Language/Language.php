@@ -620,6 +620,7 @@ class Language implements LanguageInterface
      * @param int    $level
      *
      * @return  array
+     * @throws \ReflectionException
      */
     protected function backtrace($string, $level = 1)
     {

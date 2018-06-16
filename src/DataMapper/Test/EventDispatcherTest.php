@@ -37,6 +37,7 @@ class EventDispatcherTest extends AbstractBaseTestCase
      * setUp
      *
      * @return  void
+     * @throws \Exception
      */
     public function setUp()
     {

@@ -81,6 +81,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @expectedException \UnexpectedValueException
      *
      * @covers \Windwalker\Record\NestedRecord::validate
@@ -97,6 +98,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @expectedException \UnexpectedValueException
      *
      * @covers \Windwalker\Record\NestedRecord::validate

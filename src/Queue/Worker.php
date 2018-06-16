@@ -101,6 +101,7 @@ class Worker implements DispatcherAwareInterface
      * @param Structure    $options
      *
      * @return  void
+     * @throws \Exception
      */
     public function loop($queue, Structure $options)
     {

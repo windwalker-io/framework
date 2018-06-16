@@ -70,6 +70,8 @@ class ClassMeta
      * @param  mixed  $default
      *
      * @return array
+     * @throws Exception\DependencyResolutionException
+     * @throws \ReflectionException
      */
     public function getArgument($name, $default = null)
     {

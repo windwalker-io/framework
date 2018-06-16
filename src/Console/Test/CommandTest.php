@@ -63,6 +63,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::execute
@@ -111,6 +112,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::addCommand
@@ -388,6 +390,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::getHandler
@@ -480,6 +483,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::renderAlternatives

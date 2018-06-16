@@ -448,6 +448,7 @@ class Edge
      * @param  string $empty
      *
      * @return string
+     * @throws EdgeException
      */
     public function renderEach($view, $data, $iterator, $empty = 'raw|')
     {

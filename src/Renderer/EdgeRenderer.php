@@ -109,6 +109,7 @@ class EdgeRenderer extends AbstractEngineRenderer
      * @param array  $data
      *
      * @return  string
+     * @throws \Windwalker\Edge\Exception\EdgeException
      */
     public function render($file, $data = [])
     {

@@ -95,6 +95,7 @@ class Console extends AbstractConsole
      *
      * @return  int  The Unix Console/Shell exit code.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function execute()
