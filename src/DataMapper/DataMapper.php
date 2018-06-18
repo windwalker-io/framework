@@ -553,7 +553,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             $value = $entity[$field];
 
             // Convert value type
-            if ($value instanceof DataInterface) {
+            if ($value instanceof \DateTimeInterface) {
                 $value = $value->format($this->db->getDateFormat());
             }
 
