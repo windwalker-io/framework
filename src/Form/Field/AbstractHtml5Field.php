@@ -8,11 +8,11 @@
 
 namespace Windwalker\Form\Field;
 
+use Windwalker\Form\Filter\RangeFilter;
+
 /**
  * The AbstractHtml5Field class.
  *
- * @method  mixed|$this  max(integer $value = null)
- * @method  mixed|$this  min(integer $value = null)
  * @method  mixed|$this  step(integer $value = null)
  * @method  mixed|$this  patten(string $value = null)
  *
@@ -38,6 +38,70 @@ class AbstractHtml5Field extends TextField
     }
 
     /**
+     * max
+     *
+     * @param int  $max
+     * @param bool $addFilter
+     * @param bool $forceInt
+     *
+     * @return  static|mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function max($max = null, $addFilter = true, $forceInt = false)
+    {
+        if ($addFilter) {
+            $this->addFilter(new RangeFilter(null, $max, $forceInt));
+        }
+
+        return $this->attr('max', $max);
+    }
+
+    /**
+     * min
+     *
+     * @param int  $min
+     * @param bool $addFilter
+     * @param bool $forceInt
+     *
+     * @return  mixed|static
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function min($min = null, $addFilter = true, $forceInt = false)
+    {
+        if ($addFilter) {
+            $this->addFilter(new RangeFilter($min, null, $forceInt));
+        }
+
+        return $this->attr('min', $min);
+    }
+
+    /**
+     * range
+     *
+     * @param int  $min
+     * @param int  $max
+     * @param bool $addFilter
+     * @param bool $forceInt
+     *
+     * @return  $this
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function range($min, $max, $addFilter = true, $forceInt = false)
+    {
+        if ($addFilter) {
+            $this->addFilter(new RangeFilter($min, $max, $forceInt));
+        }
+
+        $this->min($min, false)
+            ->max($max, false);
+
+        return $this;
+    }
+
+    /**
      * getAccessors
      *
      * @return  array
@@ -46,13 +110,11 @@ class AbstractHtml5Field extends TextField
      */
     protected function getAccessors()
     {
-        return array_merge(
-            parent::getAccessors(), [
+        return array_merge(parent::getAccessors(), [
             'max' => 'max',
             'min' => 'min',
             'step' => 'step',
             'patten' => 'patten',
-        ]
-        );
+        ]);
     }
 }

@@ -9,6 +9,7 @@
 namespace Windwalker\Form\Field;
 
 use Windwalker\Dom\SimpleXml\XmlHelper;
+use Windwalker\Form\Filter\MaxLengthFilter;
 use Windwalker\Html\Form\Datalist;
 use Windwalker\Html\Option;
 
@@ -17,7 +18,6 @@ use Windwalker\Html\Option;
  *
  * @method  mixed|$this  placeholder(string $value = null)
  * @method  mixed|$this  size(integer $value = null)
- * @method  mixed|$this  maxlength(integer $value = null)
  * @method  mixed|$this  autofocus(string $value = null)
  * @method  mixed|$this  autocomplete(string $value = null)
  * @method  mixed|$this  onchange(string $value = null)
@@ -142,6 +142,26 @@ class TextField extends AbstractField
     }
 
     /**
+     * max
+     *
+     * @param int  $length
+     * @param bool $addFilter
+     * @param bool $utf8
+     *
+     * @return  static|mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function maxlength($length = null, $addFilter = true, $utf8 = true)
+    {
+        if ($addFilter) {
+            $this->addFilter(new MaxLengthFilter($length, $utf8));
+        }
+
+        return $this->attr('maxlength', $length);
+    }
+
+    /**
      * prepareOptions
      *
      * @param string|\SimpleXMLElement $xml
@@ -165,7 +185,8 @@ class TextField extends AbstractField
                 if (!($option instanceof Option)) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            'Please give me %s class as option, %s given.', 'Windwalker\\Html\\Option',
+                            'Please give me %s class as option, %s given.',
+                            Option::class,
                             get_class($option)
                         )
                     );
@@ -189,8 +210,7 @@ class TextField extends AbstractField
      */
     protected function getAccessors()
     {
-        return array_merge(
-            parent::getAccessors(), [
+        return array_merge(parent::getAccessors(), [
             'placeholder' => 'placeholder',
             'size' => 'size',
             'maxlength' => 'maxlength',
@@ -199,7 +219,6 @@ class TextField extends AbstractField
             'onchange' => 'onchange',
             'onfocus' => 'onfocus',
             'onblur' => 'onblur',
-        ]
-        );
+        ]);
     }
 }
