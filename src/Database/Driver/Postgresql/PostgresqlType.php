@@ -50,10 +50,10 @@ class PostgresqlType extends DataType
      * @var  array
      */
     public static $typeDefinitions = [
-        self::BOOLEAN => [1, 0, 'boolean'],
-        self::SERIAL => [null, 0, 'integer'],
-        self::INTEGER => [null, 0, 'integer'],
-        self::SMALLINT => [null, 0, 'integer'],
+        self::BOOLEAN => [1, 0, 'bool'],
+        self::SERIAL => [null, 0, 'int'],
+        self::INTEGER => [null, 0, 'int'],
+        self::SMALLINT => [null, 0, 'int'],
         self::REAL => [null, 0, 'float'],
         self::TIMESTAMP => [null, '1970-01-01 00:00:00', 'string'],
         self::INTERVAL => [16, 0, 'string'],

@@ -117,8 +117,8 @@ class Edge
         EdgeCompilerInterface $compiler = null,
         EdgeCacheInterface $cache = null
     ) {
-        $this->compiler = $compiler ?: new EdgeCompiler();
         $this->loader   = $loader ?: new EdgeStringLoader();
+        $this->compiler = $compiler ?: new EdgeCompiler();
         $this->cache    = $cache ?: new EdgeArrayCache();
     }
 

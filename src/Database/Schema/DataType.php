@@ -90,21 +90,21 @@ class DataType
      * @var  array
      */
     public static $typeDefinitions = [
-        self::BOOLEAN => [1, 0, 'boolean'],
+        self::BOOLEAN => [1, 0, 'bool'],
 
         self::CHAR => [255, '', 'string'],
         self::VARCHAR => [255, '', 'string'],
         self::TEXT => [null, '', 'string'],
         self::LONGTEXT => [null, '', 'string'],
 
-        self::BIT => [1, 0, 'integer'],
-        self::BIT_VARYING => [1, 0, 'integer'],
+        self::BIT => [1, 0, 'int'],
+        self::BIT_VARYING => [1, 0, 'int'],
 
-        self::BIGINT => [20, 0, 'integer'],
-        self::INTEGER => [11, 0, 'integer'],
-        self::SMALLINT => [6, 0, 'integer'],
-        self::TINYINT => [4, 0, 'integer'],
-        self::NUMERIC => [10, 0, 'integer'],
+        self::BIGINT => [20, 0, 'int'],
+        self::INTEGER => [11, 0, 'int'],
+        self::SMALLINT => [6, 0, 'int'],
+        self::TINYINT => [4, 0, 'int'],
+        self::NUMERIC => [10, 0, 'int'],
 
         self::DECIMAL => ['10,2', 0, 'float'],
         self::FLOAT => ['10,2', 0, 'float'],
