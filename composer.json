@@ -14,7 +14,8 @@
         "php": ">=5.5.9",
         "psr/log": "~1.0",
         "psr/http-message": "~1.0",
-        "psr/cache": "~1.0"
+        "psr/cache": "~1.0",
+        "composer/ca-bundle": "^1.1"
     },
     "require-dev": {
         "jdorn/sql-formatter": "~1.0",

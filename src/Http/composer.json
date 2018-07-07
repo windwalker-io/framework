@@ -8,7 +8,8 @@
     "require": {
         "php": ">=5.5.9",
         "psr/http-message": "1.*",
-        "windwalker/uri": "~3.0"
+        "windwalker/uri": "~3.0",
+        "composer/ca-bundle": "^1.1"
     },
     "require-dev": {
         "windwalker/environment": "~3.0",

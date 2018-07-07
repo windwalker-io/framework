@@ -8,6 +8,7 @@
 
 namespace Windwalker\Http\Transport;
 
+use Composer\CaBundle\CaBundle;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -133,7 +134,7 @@ class CurlTransport extends AbstractTransport
         $options[CURLOPT_NOBODY] = ($request->getMethod() === 'HEAD');
 
         // Initialize the certificate store
-        $options[CURLOPT_CAINFO] = $this->getOption('certpath', __DIR__ . '/cacert.pem');
+        $options = $this->setCABundleToOptions($options);
 
         // Set HTTP Version
         switch ($request->getProtocolVersion()) {
@@ -255,5 +256,32 @@ class CurlTransport extends AbstractTransport
     public static function isSupported()
     {
         return function_exists('curl_init') && is_callable('curl_init');
+    }
+
+    /**
+     * setCABundleToOptions
+     *
+     * @param array $options
+     *
+     * @return  array
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function setCABundleToOptions(array $options)
+    {
+        if ($this->getOption('certpath')) {
+            $options[CURLOPT_CAINFO] = $this->getOption('certpath');
+            return $options;
+        }
+
+        $caPathOrFile = CaBundle::getBundledCaBundlePath();
+
+        if (is_dir($caPathOrFile) || (is_link($caPathOrFile) && is_dir(readlink($caPathOrFile)))) {
+            $options[CURLOPT_CAPATH] = $caPathOrFile;
+        } else {
+            $options[CURLOPT_CAINFO] = $caPathOrFile;
+        }
+
+        return $options;
     }
 }
