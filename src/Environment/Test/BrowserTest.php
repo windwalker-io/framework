@@ -177,7 +177,7 @@ class BrowserTest extends \PHPUnit\Framework\TestCase
 
         // Test the assertions.
         $this->assertEquals($browser, $this->instance->getBrowser(), 'Browser detection failed: ' . $ua);
-        $this->assertEquals($version, $this->instance->getBrowserVersion(), 'Version detection failed: ' . $ua);
+        $this->assertEquals((float) $version, (float) $this->instance->getBrowserVersion(), 'Version detection failed: ' . $ua);
     }
 
     /**

@@ -444,7 +444,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase
             ["Би шил\t\n\r\x0B", null, 'Би шил'],
             ["Би шил\r\x0B\t\n", "\t\n\x0B", "Би шил\r"],
             ["\x09Би шил\x0A", "\x09\x0A", "\x09Би шил"],
-            ['1234abc', 'abc', '01234'],
+            ['1234abc', 'abc', '1234'],
         ];
     }
 
