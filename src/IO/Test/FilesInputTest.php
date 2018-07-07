@@ -33,7 +33,7 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new FilesInput;
+        $this->instance = new FilesInput();
     }
 
     /**
@@ -51,6 +51,7 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\FilesInput::__construct
      * @since   2.0
      */
@@ -67,6 +68,7 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\FilesInput::get
      * @since   2.0
      */
@@ -141,6 +143,7 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
      *
      * @return  void
      *
+     * @throws \ReflectionException
      * @covers  \Windwalker\IO\FilesInput::decodeData
      * @since   2.0
      */

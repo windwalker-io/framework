@@ -18,10 +18,15 @@ use Psr\Http\Message\StreamInterface;
 class Stream implements StreamInterface
 {
     const MODE_READ_ONLY_FROM_BEGIN = 'rb';
+
     const MODE_READ_WRITE_FROM_BEGIN = 'rb+';
+
     const MODE_WRITE_ONLY_RESET = 'wb';
+
     const MODE_READ_WRITE_RESET = 'wb+';
+
     const MODE_WRITE_ONLY_FROM_END = 'ab';
+
     const MODE_READ_WRITE_FROM_END = 'ab+';
 
     /**

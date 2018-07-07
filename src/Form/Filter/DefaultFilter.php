@@ -67,7 +67,7 @@ class DefaultFilter implements FilterInterface
     protected static function getFilter()
     {
         if (!static::$filter) {
-            static::$filter = new InputFilter;
+            static::$filter = new InputFilter();
         }
 
         return static::$filter;

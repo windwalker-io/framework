@@ -44,7 +44,7 @@ class StubOutput extends Output
      */
     public function __construct()
     {
-        $this->message = new Response;
+        $this->message = new Response();
     }
 
     /**

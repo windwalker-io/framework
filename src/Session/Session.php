@@ -118,14 +118,14 @@ class Session implements \ArrayAccess, \IteratorAggregate
         SessionBridgeInterface $bridge = null,
         array $options = []
     ) {
-        $this->bridge = $bridge ?: new NativeBridge;
+        $this->bridge = $bridge ?: new NativeBridge();
 
         // Create handler
-        $this->handler = $handler ?: new NativeHandler;
+        $this->handler = $handler ?: new NativeHandler();
 
         $bags = [
-            'default' => $bag ?: new SessionBag,
-            'flash' => $flashBag ?: new FlashBag,
+            'default' => $bag ?: new SessionBag(),
+            'flash' => $flashBag ?: new FlashBag(),
         ];
 
         $this->setBags($bags);
@@ -195,8 +195,10 @@ class Session implements \ArrayAccess, \IteratorAggregate
             $cookie['path'] = $this->getOption('cookie_path');
         }
 
-        $this->bridge->setCookieParams($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'],
-            true);
+        $this->bridge->setCookieParams(
+            $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'],
+            true
+        );
     }
 
     /**
@@ -272,8 +274,10 @@ class Session implements \ArrayAccess, \IteratorAggregate
          * then the session cookie must be deleted.
          */
         if (isset($_COOKIE[$this->bridge->getName()])) {
-            setcookie($this->bridge->getName(), '', time() - 42000, $this->getOption('cookie_path'),
-                $this->getOption('cookie_domain'));
+            setcookie(
+                $this->bridge->getName(), '', time() - 42000, $this->getOption('cookie_path'),
+                $this->getOption('cookie_domain')
+            );
         }
 
         $this->bridge->destroy();
@@ -334,8 +338,10 @@ class Session implements \ArrayAccess, \IteratorAggregate
         $this->registerHandler();
 
         // Restore config
-        $this->bridge->setCookieParams($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'],
-            true);
+        $this->bridge->setCookieParams(
+            $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'],
+            true
+        );
 
         // Restart session with new id
         $this->bridge->restart(true);
@@ -1052,7 +1058,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     public function getFlashBag()
     {
         if (empty($this->bags['flash'])) {
-            $this->bags['flash'] = new FlashBag;
+            $this->bags['flash'] = new FlashBag();
         }
 
         return $this->bags['flash'];

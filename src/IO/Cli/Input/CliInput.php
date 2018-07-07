@@ -120,7 +120,7 @@ class CliInput extends Input implements CliInputInterface
         // Unserialize the executable, args, options, data, and inputs.
         list($this->calledScript, $this->args, $this->filter, $this->data, $this->inputs) = unserialize($input);
 
-        $this->filter = $this->filter ?: new NullFilter;
+        $this->filter = $this->filter ?: new NullFilter();
     }
 
     /**

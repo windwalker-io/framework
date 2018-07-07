@@ -16,10 +16,15 @@ namespace Windwalker\Crypt;
 class Password implements HasherInterface
 {
     const MD5 = 3;
+
     const BLOWFISH = 4;
+
     const SHA256 = 5;
+
     const SHA512 = 6;
+
     const SODIUM_ARGON2 = 7;
+
     const SODIUM_SCRYPT = 8;
 
     /**

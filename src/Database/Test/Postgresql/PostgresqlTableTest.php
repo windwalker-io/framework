@@ -107,15 +107,17 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
     {
         $table = $this->db->getTable('#__cloud');
 
-        $table->create(function (Schema $schema) {
-            $schema->primary('id')->signed(false)->comment('PK');
-            $schema->varchar('name')->allowNull(false);
-            $schema->varchar('alias');
-            $schema->float('float');
-            $schema->addIndex('name', 'idx_name')->comment('Test');
-            $schema->addIndex('float');
-            $schema->addUniqueKey('alias', 'idx_alias')->comment('Alias Index');
-        });
+        $table->create(
+            function (Schema $schema) {
+                $schema->primary('id')->signed(false)->comment('PK');
+                $schema->varchar('name')->allowNull(false);
+                $schema->varchar('alias');
+                $schema->float('float');
+                $schema->addIndex('name', 'idx_name')->comment('Test');
+                $schema->addIndex('float');
+                $schema->addUniqueKey('alias', 'idx_alias')->comment('Alias Index');
+            }
+        );
 
         $columns = $table->getColumnDetails();
 

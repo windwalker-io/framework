@@ -83,7 +83,7 @@ class Console extends AbstractConsole
      */
     public function __construct(IOInterface $io = null, Structure $config = null)
     {
-        $io = $io ?: new IO;
+        $io = $io ?: new IO();
 
         parent::__construct($io, $config);
 
@@ -95,6 +95,7 @@ class Console extends AbstractConsole
      *
      * @return  int  The Unix Console/Shell exit code.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function execute()
@@ -128,7 +129,7 @@ class Console extends AbstractConsole
     {
         $command = $command ?: $this->getRootCommand();
 
-        if ((!$command->getHandler() && !count($this->io->getArguments()))) {
+        if (!$command->getHandler() && !count($this->io->getArguments())) {
             $this->set('show_help', true);
         }
 
@@ -148,8 +149,12 @@ class Console extends AbstractConsole
             $exitCode = $e->getCode();
             $error    = true;
         } catch (\Throwable $t) {
-            $command->renderException(new \ErrorException($t->getMessage(), $t->getCode(), E_ERROR, $t->getFile(),
-                $t->getLine(), $t));
+            $command->renderException(
+                new \ErrorException(
+                    $t->getMessage(), $t->getCode(), E_ERROR, $t->getFile(),
+                    $t->getLine(), $t
+                )
+            );
 
             $exitCode = $t->getCode();
             $error    = true;
@@ -159,7 +164,7 @@ class Console extends AbstractConsole
             $exitCode = 0;
         } elseif (($error && $exitCode === 0) || $exitCode === false) {
             $exitCode = 1;
-        } elseif ($exitCode > 255 || $exitCode == -1) {
+        } elseif ($exitCode > 255 || (int) $exitCode === -1) {
             $exitCode = 255;
         }
 

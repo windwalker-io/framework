@@ -16,10 +16,13 @@ namespace Windwalker\String;
 class Str
 {
     const CASE_SENSITIVE = true;
+
     const CASE_INSENSITIVE = false;
 
     const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
+
     const ENCODING_UTF8 = 'UTF-8';
+
     const ENCODING_US_ASCII = 'US-ASCII';
 
     /**

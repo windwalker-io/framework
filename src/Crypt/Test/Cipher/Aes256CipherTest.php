@@ -32,7 +32,7 @@ class Aes256CipherTest extends AbstractOpensslTestCase
      */
     protected function setUp()
     {
-        $this->instance = new Aes256Cipher;
+        $this->instance = new Aes256Cipher();
     }
 
     /**

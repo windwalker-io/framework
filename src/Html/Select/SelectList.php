@@ -151,8 +151,8 @@ class SelectList extends HtmlElement
                 }
 
                 $this->content[$name] = new HtmlElement('optgroup', $option, ['label' => $name]);
-            } // Not array means it is an option
-            else {
+            } else {
+                // Not array means it is an option
                 if ($this->checkSelected($option->getValue())) {
                     $option['selected'] = 'selected';
                 }

@@ -32,7 +32,7 @@ class IniFormatTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new IniFormat;
+        $this->instance = new IniFormat();
     }
 
     /**

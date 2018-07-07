@@ -33,13 +33,14 @@ class ChainBuilderTest extends AbstractBaseTestCase
      * This method is called before a test is executed.
      *
      * @return void
+     * @throws \ReflectionException
      */
     protected function setUp()
     {
-        $this->instance = new ChainBuilder;
+        $this->instance = new ChainBuilder();
 
-        $this->instance->add(new StubCaesarMiddleware)
-            ->add(new StubOthelloMiddleware);
+        $this->instance->add(new StubCaesarMiddleware())
+            ->add(new StubOthelloMiddleware());
     }
 
     /**
@@ -57,14 +58,15 @@ class ChainBuilderTest extends AbstractBaseTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Middleware\Chain\ChainBuilder::add
      */
     public function testAdd()
     {
-        $builder = new ChainBuilder;
+        $builder = new ChainBuilder();
 
-        $builder->add(new StubCaesarMiddleware)
-            ->add(new StubOthelloMiddleware);
+        $builder->add(new StubCaesarMiddleware())
+            ->add(new StubOthelloMiddleware());
 
         // The ordering will be reverse
         $wares = array_values(iterator_to_array(TestHelper::getValue($builder, 'stack')));
@@ -94,8 +96,8 @@ class ChainBuilderTest extends AbstractBaseTestCase
     public function testExecuteByArray()
     {
         $middlewares = [
-            new StubOthelloMiddleware,
-            new StubCaesarMiddleware,
+            new StubOthelloMiddleware(),
+            new StubCaesarMiddleware(),
         ];
 
         $builder = new ChainBuilder($middlewares);
@@ -109,8 +111,8 @@ class ChainBuilderTest extends AbstractBaseTestCase
         $this->assertStringSafeEquals($data, $builder->execute());
 
         $middlewares = [
-            new StubOthelloMiddleware,
-            new StubCaesarMiddleware,
+            new StubOthelloMiddleware(),
+            new StubCaesarMiddleware(),
         ];
 
         $builder = new ChainBuilder($middlewares, ChainBuilder::SORT_ASC);

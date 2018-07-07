@@ -310,8 +310,10 @@ class FilesystemTest extends AbstractFilesystemTest
      */
     public function testCreateIterator()
     {
-        $this->assertInstanceOf('Windwalker\\Filesystem\\Iterator\\RecursiveDirectoryIterator',
-            Filesystem::createIterator(static::$dest));
+        $this->assertInstanceOf(
+            'Windwalker\\Filesystem\\Iterator\\RecursiveDirectoryIterator',
+            Filesystem::createIterator(static::$dest)
+        );
         $this->assertInstanceOf('RecursiveIteratorIterator', Filesystem::createIterator(static::$dest, true));
     }
 }

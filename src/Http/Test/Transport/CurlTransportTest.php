@@ -41,7 +41,7 @@ class CurlTransportTest extends AbstractTransportTest
      */
     protected function setUp()
     {
-        $this->instance = new CurlTransport;
+        $this->instance = new CurlTransport();
 
         parent::setUp();
     }

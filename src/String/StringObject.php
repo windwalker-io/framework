@@ -60,7 +60,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      * @see http://php.net/manual/en/xml.encoding.php
      */
     const ENCODING_DEFAULT_ISO = 'ISO-8859-1';
+
     const ENCODING_UTF8 = 'UTF-8';
+
     const ENCODING_US_ASCII = 'US-ASCII';
 
     /**
@@ -128,7 +130,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      * @param array  $args
      *
      * @return  mixed
-     * @throws \BadMethodCallException
+     * @throws \ReflectionException
      */
     public function __call($name, array $args)
     {
@@ -149,6 +151,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      * @param array  $args
      *
      * @return  static
+     * @throws \ReflectionException
      */
     protected function callProxy($class, $method, array $args)
     {

@@ -32,7 +32,7 @@ class BenchmarkTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Benchmark;
+        $this->instance = new Benchmark();
 
         $this->instance->setTimeFormat(Benchmark::MILLI_SECOND);
     }

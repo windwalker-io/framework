@@ -30,7 +30,6 @@ function utf8_strlen($str)
     return mb_strlen($str);
 }
 
-
 //--------------------------------------------------------------------
 /**
  * Assumes mbstring internal encoding is set to UTF-8
@@ -73,10 +72,12 @@ function utf8_strrpos($str, $search, $offset = false)
         if (empty($str)) {
             return false;
         }
+
         return mb_strrpos($str, $search);
     } else {
         if (!is_int($offset)) {
             trigger_error('utf8_strrpos expects parameter 3 to be long', E_USER_WARNING);
+
             return false;
         }
 

@@ -33,7 +33,7 @@ class AaaCommand extends Command
      */
     public function init()
     {
-        $this->addCommand(new Aaa\BbbCommand);
+        $this->addCommand(new Aaa\BbbCommand());
 
         $this->addGlobalOption('a')
             ->alias('aaa')

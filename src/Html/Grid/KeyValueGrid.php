@@ -16,7 +16,9 @@ namespace Windwalker\Html\Grid;
 class KeyValueGrid extends Grid
 {
     const COL_KEY = 'key';
+
     const COL_VALUE = 'value';
+
     const ROW = 'row';
 
     /**
@@ -96,9 +98,11 @@ class KeyValueGrid extends Grid
      */
     public function addItems($items = null, $attribs = [])
     {
-        $this->configure($items, function (KeyValueGrid $grid, $key, $value) use ($attribs) {
+        $this->configure(
+            $items, function (KeyValueGrid $grid, $key, $value) use ($attribs) {
             $grid->addItem($key, $value, $attribs);
-        });
+        }
+        );
 
         return $this;
     }

@@ -55,9 +55,11 @@ class XmlResponse extends TextResponse
             return $data;
         }
 
-        throw new \InvalidArgumentException(sprintf(
-            'Invalid XML content type, %s provided.',
-            gettype($data)
-        ));
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Invalid XML content type, %s provided.',
+                gettype($data)
+            )
+        );
     }
 }

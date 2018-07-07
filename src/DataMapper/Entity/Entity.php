@@ -96,8 +96,12 @@ class Entity extends Data implements \JsonSerializable
     public function addField($field, $default = null)
     {
         if ($default !== null && (is_array($default) || is_object($default))) {
-            throw new \InvalidArgumentException(sprintf('Default value should be scalar, %s given.',
-                gettype($default)));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Default value should be scalar, %s given.',
+                    gettype($default)
+                )
+            );
         }
 
         $defaultProfile = [
@@ -113,11 +117,13 @@ class Entity extends Data implements \JsonSerializable
         ];
 
         if (is_string($field)) {
-            $field = array_merge($defaultProfile, [
+            $field = array_merge(
+                $defaultProfile, [
                 'Field' => $field,
                 'Type' => gettype($default),
                 'Default' => $default,
-            ]);
+            ]
+            );
         }
 
         if (is_array($field) || is_object($field)) {

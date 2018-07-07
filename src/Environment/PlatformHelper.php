@@ -60,7 +60,7 @@ class PlatformHelper
     public static function getPlatform()
     {
         if (!static::$platform) {
-            static::$platform = new Platform;
+            static::$platform = new Platform();
         }
 
         return static::$platform;

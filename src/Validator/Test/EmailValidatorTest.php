@@ -32,7 +32,7 @@ class EmailValidatorTest extends AbstractValidateTestCase
      */
     protected function setUp()
     {
-        $this->instance = new EmailValidator;
+        $this->instance = new EmailValidator();
     }
 
     /**

@@ -323,14 +323,14 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
 
     public function testDumpObjectValue()
     {
-        $data = new StubDumpable(new StubDumpable);
+        $data = new StubDumpable(new StubDumpable());
 
         $dumped = StructureHelper::dumpObjectValues($data);
 
         $this->assertEquals('foo', $dumped['foo']);
         $this->assertEquals('bar', $dumped['bar']);
         $this->assertNull($dumped['data']['self']);
-        $this->assertEquals(StructureHelper::dumpObjectValues(new StubDumpable), $dumped['data']['new']);
+        $this->assertEquals(StructureHelper::dumpObjectValues(new StubDumpable()), $dumped['data']['new']);
         $this->assertEquals(['sakura', 'rose'], $dumped['data']['flower']);
         $this->assertEquals(['wind' => 'walker'], $dumped['iterator']);
     }

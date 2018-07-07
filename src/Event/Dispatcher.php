@@ -198,7 +198,7 @@ class Dispatcher implements DispatcherInterface
 
             foreach ($priorities as $name => $priority) {
                 if (!isset($this->listeners[$name])) {
-                    $this->listeners[$name] = new ListenersQueue;
+                    $this->listeners[$name] = new ListenersQueue();
                 }
 
                 $this->listeners[$name]->add($listener, $priority);
@@ -225,7 +225,7 @@ class Dispatcher implements DispatcherInterface
         foreach ($methods as $event) {
             // Retain this inner code after removal of the outer `if`.
             if (!isset($this->listeners[$event])) {
-                $this->listeners[$event] = new ListenersQueue;
+                $this->listeners[$event] = new ListenersQueue();
             }
 
             $priority = isset($priorities[$event]) ? $priorities[$event] : $defaultPriority;

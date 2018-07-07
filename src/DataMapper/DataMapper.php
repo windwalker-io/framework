@@ -187,9 +187,11 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             $conditions = $conds;
 
             // Add dot to orders
-            $orders = array_map(function ($value) use ($alias) {
-                return strpos($value, '.') !== false ? $value : $alias . '.' . $value;
-            }, $orders);
+            $orders = array_map(
+                function ($value) use ($alias) {
+                    return strpos($value, '.') !== false ? $value : $alias . '.' . $value;
+                }, $orders
+            );
         }
 
         // Conditions.
@@ -551,7 +553,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             $value = $entity[$field];
 
             // Convert value type
-            if ($value instanceof DataInterface) {
+            if ($value instanceof \DateTimeInterface) {
                 $value = $value->format($this->db->getDateFormat());
             }
 

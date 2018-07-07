@@ -64,7 +64,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertFalse($this->instance->getArgument('non-existing', false));
 
-        $object = new \stdClass;
+        $object = new \stdClass();
         $array  = [
             'foo' => 'bar',
             'test' => [
@@ -114,7 +114,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEmpty($this->instance->getArguments());
 
-        $object = new \stdClass;
+        $object = new \stdClass();
         $array  = [
             'foo' => 'bar',
             'test' => [
@@ -161,7 +161,8 @@ class EventTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertCount(0, $this->instance);
 
-        $event = $this->getMockForAbstractClass('Windwalker\Event\Event', [
+        $event = $this->getMockForAbstractClass(
+            'Windwalker\Event\Event', [
                 'test',
                 [
                     'foo' => 'bar',
@@ -182,7 +183,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
      */
     public function testSerializeUnserialize()
     {
-        $object = new \stdClass;
+        $object = new \stdClass();
         $array  = [
             'foo' => 'bar',
             'test' => [
@@ -233,7 +234,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertNull($this->instance['foo']);
 
-        $object = new \stdClass;
+        $object = new \stdClass();
         $array  = [
             'foo' => 'bar',
             'test' => [
@@ -264,7 +265,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddArgument()
     {
-        $object = new \stdClass;
+        $object = new \stdClass();
 
         $array = [
             'test' => [
@@ -307,7 +308,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetArgument()
     {
-        $object = new \stdClass;
+        $object = new \stdClass();
 
         $array = [
             'test' => [
@@ -376,7 +377,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
                 'foo' => 'bar',
                 'test' => 'test',
             ],
-            'foo' => new \stdClass,
+            'foo' => new \stdClass(),
         ];
 
         $event = new Event('test', $arguments);
@@ -423,7 +424,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
                 'foo' => 'bar',
                 'test' => 'test',
             ],
-            'foo' => new \stdClass,
+            'foo' => new \stdClass(),
         ];
 
         $this->instance['foo'] = $argument;

@@ -64,7 +64,7 @@ class StreamTest extends AbstractBaseTestCase
 
         $this->assertInstanceOf('Windwalker\Http\Stream\Stream', $stream);
 
-        $stream = new Stream;
+        $stream = new Stream();
 
         $this->assertInternalType('resource', TestHelper::getValue($stream, 'resource'));
         $this->assertEquals('php://memory', TestHelper::getValue($stream, 'stream'));
@@ -176,9 +176,11 @@ class StreamTest extends AbstractBaseTestCase
 
         $stream->detach();
 
-        $this->assertExpectedException(function () use ($stream) {
-            $stream->tell();
-        }, new \RuntimeException);
+        $this->assertExpectedException(
+            function () use ($stream) {
+                $stream->tell();
+            }, new \RuntimeException()
+        );
     }
 
     /**

@@ -66,7 +66,8 @@ class ButtonField extends AbstractField
      */
     protected function getAccessors()
     {
-        return array_merge(parent::getAccessors(), [
+        return array_merge(
+            parent::getAccessors(), [
                 'text' => 'text',
             ]
         );

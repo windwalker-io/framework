@@ -44,7 +44,7 @@ class Queue
         $this->driver = $driver;
 
         $this->newInstanceHandler = function ($class) {
-            return new $class;
+            return new $class();
         };
     }
 
@@ -84,7 +84,7 @@ class Queue
             json_decode($body, true);
         }
 
-        $message = new QueueMessage;
+        $message = new QueueMessage();
         $message->setBody($body);
         $message->setDelay($delay);
         $message->setQueueName($queue);
@@ -115,7 +115,7 @@ class Queue
     public function delete($message)
     {
         if (!$message instanceof QueueMessage) {
-            $msg = new QueueMessage;
+            $msg = new QueueMessage();
             $msg->setId($message);
         }
 
@@ -135,7 +135,7 @@ class Queue
     public function release($message, $delay = 0)
     {
         if (!$message instanceof QueueMessage) {
-            $msg = new QueueMessage;
+            $msg = new QueueMessage();
             $msg->setId($message);
         }
 
@@ -155,7 +155,7 @@ class Queue
      */
     public function getMessageByJob($job, array $data = [])
     {
-        $message = new QueueMessage;
+        $message = new QueueMessage();
 
         $job = $this->createJobInstance($job);
 

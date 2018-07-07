@@ -165,7 +165,7 @@ class BladeRenderer extends AbstractEngineRenderer
     public function getFilesystem()
     {
         if (!$this->filesystem) {
-            $this->filesystem = new Filesystem;
+            $this->filesystem = new Filesystem();
         }
 
         return $this->filesystem;
@@ -223,7 +223,7 @@ class BladeRenderer extends AbstractEngineRenderer
         if (!$this->resolver) {
             $self = $this;
 
-            $this->resolver = new EngineResolver;
+            $this->resolver = new EngineResolver();
 
             $this->resolver->register(
                 'blade',
@@ -258,7 +258,7 @@ class BladeRenderer extends AbstractEngineRenderer
     public function getDispatcher()
     {
         if (!$this->dispatcher) {
-            $this->dispatcher = new Dispatcher;
+            $this->dispatcher = new Dispatcher();
         }
 
         return $this->dispatcher;

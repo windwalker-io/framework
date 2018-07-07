@@ -44,7 +44,7 @@ class MemcacheHandler extends AbstractHandler
             throw new \RuntimeException('Memcache Extension is not available', 500);
         }
 
-        $this->memcache = $memcache ?: new \Memcache;
+        $this->memcache = $memcache ?: new \Memcache();
 
         $this->ttl = isset($options['expiretime']) ? (int) $options['expiretime'] : 86400;
 

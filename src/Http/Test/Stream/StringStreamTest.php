@@ -62,6 +62,7 @@ class StringStreamTest extends AbstractBaseTestCase
      * testConstruct
      *
      * @return  void
+     * @throws \ReflectionException
      */
     public function testConstruct()
     {
@@ -104,7 +105,7 @@ class StringStreamTest extends AbstractBaseTestCase
      */
     public function testClose()
     {
-        $stream = new StringStream;
+        $stream = new StringStream();
         $stream->write('Foo Bar');
 
         $stream->close();
@@ -161,9 +162,11 @@ class StringStreamTest extends AbstractBaseTestCase
 
         $stream->detach();
 
-        $this->assertExpectedException(function () use ($stream) {
-            $stream->tell();
-        }, new \RuntimeException);
+        $this->assertExpectedException(
+            function () use ($stream) {
+                $stream->tell();
+            }, new \RuntimeException()
+        );
     }
 
     /**
@@ -300,7 +303,7 @@ class StringStreamTest extends AbstractBaseTestCase
      */
     public function testIsReadable()
     {
-        $stream = new StringStream;
+        $stream = new StringStream();
         $this->assertTrue($stream->isReadable());
     }
 

@@ -19,14 +19,16 @@ $request = Zend\Diactoros\ServerRequestFactory::fromGlobals(
     $_FILES
 );
 
-$server = \Zend\Diactoros\Server::createServerFromRequest(function (
-    RequestInterface $request,
-    ResponseInterface $response,
-    $done
-) {
-    $response->getBody()->write("Hello world!");
+$server = \Zend\Diactoros\Server::createServerFromRequest(
+    function (
+        RequestInterface $request,
+        ResponseInterface $response,
+        $done
+    ) {
+        $response->getBody()->write("Hello world!");
 
-    show($request->getUri());
-}, $request);
+        show($request->getUri());
+    }, $request
+);
 
 $server->listen();

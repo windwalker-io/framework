@@ -102,7 +102,7 @@ abstract class StreamHelper
         }
 
         /** @var MessageInterface|ResponseInterface $response */
-        $response = $response ?: new Response;
+        $response = $response ?: new Response();
 
         $filename = null;
 
@@ -121,7 +121,7 @@ abstract class StreamHelper
         $output = static::$outputObject;
 
         if (!$output instanceof StreamOutput) {
-            $output = new StreamOutput;
+            $output = new StreamOutput();
         }
 
         if (isset($options['delay'])) {

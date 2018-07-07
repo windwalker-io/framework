@@ -30,6 +30,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      * setUpBeforeClass
      *
      * @return  void
+     * @throws \Exception
      */
     public static function setUpBeforeClass()
     {
@@ -45,6 +46,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      * This method is called before a test is executed.
      *
      * @return void
+     * @throws \Exception
      */
     protected function setUp()
     {
@@ -81,6 +83,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @expectedException \UnexpectedValueException
      *
      * @covers \Windwalker\Record\NestedRecord::validate
@@ -97,6 +100,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @expectedException \UnexpectedValueException
      *
      * @covers \Windwalker\Record\NestedRecord::validate
@@ -113,6 +117,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\Record\NestedRecord::setLocation
      */
     public function testSetLocationAndStore()
@@ -261,6 +266,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\Record\NestedRecord::move
      */
     public function testMove()
@@ -277,6 +283,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\Record\NestedRecord::moveByReference
      */
     public function testMoveByReference()
@@ -293,6 +300,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @expectedException \RuntimeException
      *
      * @covers \Windwalker\Record\NestedRecord::delete
@@ -353,6 +361,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @covers \Windwalker\Record\NestedRecord::rebuildPath
      */
     public function testRebuildPath()

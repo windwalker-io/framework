@@ -30,7 +30,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 
         $compare = new EqCompare('a', 'b');
 
-        $data          = new \stdClass;
+        $data          = new \stdClass();
         $data->catid   = 3;
         $data->title   = 'Sakura';
         $data->meaning = '';
@@ -78,7 +78,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 
         $compare = new EqCompare('c', 'd');
 
-        $data          = new \stdClass;
+        $data          = new \stdClass();
         $data->id      = 86;
         $data->title   = 'Sakura2';
         $data->meaning = '';
@@ -107,7 +107,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
         $this->assertEquals('Sunflower2', $item->title);
 
         // Test multiple keys
-        $data           = new \stdClass;
+        $data           = new \stdClass();
         $data->catid    = 2;
         $data->ordering = 8;
         $data->title    = 'Rose';
@@ -131,7 +131,7 @@ class MysqlWriterTest extends AbstractMysqlTestCase
         $writer = $this->db->getWriter();
 
         // Insert
-        $data          = new \stdClass;
+        $data          = new \stdClass();
         $data->catid   = 3;
         $data->title   = 'Sakura';
         $data->meaning = '';

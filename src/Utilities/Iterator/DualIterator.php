@@ -19,13 +19,19 @@ namespace Windwalker\Utilities\Iterator;
 class DualIterator implements \Iterator
 {
     const CURRENT_LHS = 0x01;
+
     const CURRENT_RHS = 0x02;
+
     const CURRENT_ARRAY = 0x03;
+
     const CURRENT_0 = 0x00;
 
     const KEY_LHS = 0x10;
+
     const KEY_RHS = 0x20;
+
     const KEY_ARRAY = 0x30;
+
     const KEY_0 = 0x00;
 
     const DEFAULT_FLAGS = 0x33;

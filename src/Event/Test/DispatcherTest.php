@@ -234,7 +234,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddListenerEmpty()
     {
-        $listener = new EmptyListener;
+        $listener = new EmptyListener();
         $this->instance->addListener($listener);
 
         $this->assertFalse($this->instance->hasListener($listener));
@@ -254,9 +254,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     public function testAddListener()
     {
         // Add 3 listeners listening to the same events.
-        $listener1 = new SomethingListener;
-        $listener2 = new SomethingListener;
-        $listener3 = new SomethingListener;
+        $listener1 = new SomethingListener();
+        $listener2 = new SomethingListener();
+        $listener3 = new SomethingListener();
 
         $this->instance->addListener($listener1)
             ->addListener($listener2)
@@ -277,23 +277,35 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->hasListener($listener3, 'onSomething'));
         $this->assertTrue($this->instance->hasListener($listener3, 'onAfterSomething'));
 
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener1, 'onBeforeSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener1, 'onBeforeSomething')
+        );
         $this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onSomething'));
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener1, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener1, 'onAfterSomething')
+        );
 
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener1, 'onBeforeSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener1, 'onBeforeSomething')
+        );
         $this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener1, 'onSomething'));
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener1, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener1, 'onAfterSomething')
+        );
 
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener3, 'onBeforeSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener3, 'onBeforeSomething')
+        );
         $this->assertEquals(ListenerPriority::NORMAL, $this->instance->getListenerPriority($listener3, 'onSomething'));
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener3, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener3, 'onAfterSomething')
+        );
     }
 
     /**
@@ -306,7 +318,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddListenerSpecifiedPriorities()
     {
-        $listener = new SomethingListener;
+        $listener = new SomethingListener();
 
         $this->instance->addListener(
             $listener,
@@ -321,12 +333,18 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->hasListener($listener, 'onSomething'));
         $this->assertTrue($this->instance->hasListener($listener, 'onAfterSomething'));
 
-        $this->assertEquals(ListenerPriority::MIN,
-            $this->instance->getListenerPriority($listener, 'onBeforeSomething'));
-        $this->assertEquals(ListenerPriority::ABOVE_NORMAL,
-            $this->instance->getListenerPriority($listener, 'onSomething'));
-        $this->assertEquals(ListenerPriority::HIGH,
-            $this->instance->getListenerPriority($listener, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::MIN,
+            $this->instance->getListenerPriority($listener, 'onBeforeSomething')
+        );
+        $this->assertEquals(
+            ListenerPriority::ABOVE_NORMAL,
+            $this->instance->getListenerPriority($listener, 'onSomething')
+        );
+        $this->assertEquals(
+            ListenerPriority::HIGH,
+            $this->instance->getListenerPriority($listener, 'onAfterSomething')
+        );
     }
 
     /**
@@ -344,8 +362,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
 
         $this->instance->listen('onBeforeSomething', $listener, ListenerPriority::MIN);
 
-        $this->assertEquals(ListenerPriority::MIN,
-            $this->instance->getListenerPriority($listener, 'onBeforeSomething'));
+        $this->assertEquals(
+            ListenerPriority::MIN,
+            $this->instance->getListenerPriority($listener, 'onBeforeSomething')
+        );
     }
 
     /**
@@ -358,7 +378,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddListenerLessEvents()
     {
-        $listener = new SomethingListener;
+        $listener = new SomethingListener();
 
         $this->instance->addListener(
             $listener,
@@ -384,7 +404,6 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     public function testAddClosureListener()
     {
         $listener = function (EventInterface $event) {
-
         };
 
         $this->instance->addListener(
@@ -400,8 +419,10 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->hasListener($listener, 'onAfterSomething'));
 
         $this->assertEquals(ListenerPriority::HIGH, $this->instance->getListenerPriority($listener, 'onSomething'));
-        $this->assertEquals(ListenerPriority::NORMAL,
-            $this->instance->getListenerPriority($listener, 'onAfterSomething'));
+        $this->assertEquals(
+            ListenerPriority::NORMAL,
+            $this->instance->getListenerPriority($listener, 'onAfterSomething')
+        );
     }
 
     /**
@@ -417,7 +438,6 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     {
         $this->instance->addListener(
             function (EventInterface $event) {
-
             }
         );
     }
@@ -447,9 +467,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetListenerPriority()
     {
-        $this->assertNull($this->instance->getListenerPriority(new \stdClass, 'onTest'));
+        $this->assertNull($this->instance->getListenerPriority(new \stdClass(), 'onTest'));
 
-        $listener = new SomethingListener;
+        $listener = new SomethingListener();
         $this->instance->addListener($listener);
 
         $this->assertEquals(
@@ -473,9 +493,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEmpty($this->instance->getListeners('onSomething'));
 
-        $listener1 = new SomethingListener;
-        $listener2 = new SomethingListener;
-        $listener3 = new SomethingListener;
+        $listener1 = new SomethingListener();
+        $listener2 = new SomethingListener();
+        $listener3 = new SomethingListener();
 
         $this->instance->addListener($listener1)
             ->addListener($listener2)
@@ -510,9 +530,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testHasListener()
     {
-        $this->assertFalse($this->instance->hasListener(new \stdClass, 'onTest'));
+        $this->assertFalse($this->instance->hasListener(new \stdClass(), 'onTest'));
 
-        $listener = new SomethingListener;
+        $listener = new SomethingListener();
         $this->instance->addListener($listener);
         $this->assertTrue($this->instance->hasListener($listener, new Event('onSomething')));
     }
@@ -527,7 +547,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testRemoveListeners()
     {
-        $listener = new SomethingListener;
+        $listener = new SomethingListener();
         $this->instance->addListener($listener);
 
         // Remove the listener from all events.
@@ -563,9 +583,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testClearListeners()
     {
-        $listener1 = new SomethingListener;
-        $listener2 = new SomethingListener;
-        $listener3 = new SomethingListener;
+        $listener1 = new SomethingListener();
+        $listener2 = new SomethingListener();
+        $listener3 = new SomethingListener();
 
         $this->instance->addListener($listener1)
             ->addListener($listener2)
@@ -617,9 +637,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(0, $this->instance->countListeners('onTest'));
 
-        $listener1 = new SomethingListener;
-        $listener2 = new SomethingListener;
-        $listener3 = new SomethingListener;
+        $listener1 = new SomethingListener();
+        $listener2 = new SomethingListener();
+        $listener3 = new SomethingListener();
 
         $this->instance->addListener($listener1)
             ->addListener($listener2)
@@ -656,9 +676,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testTriggerEventSamePriority()
     {
-        $first  = new FirstListener;
-        $second = new SecondListener;
-        $third  = new ThirdListener;
+        $first  = new FirstListener();
+        $second = new SecondListener();
+        $third  = new ThirdListener();
 
         $fourth = function (Event $event) {
             $listeners   = $event->getArgument('listeners');
@@ -700,9 +720,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testTriggerEventDifferentPriorities()
     {
-        $first  = new FirstListener;
-        $second = new SecondListener;
-        $third  = new ThirdListener;
+        $first  = new FirstListener();
+        $second = new SecondListener();
+        $third  = new ThirdListener();
 
         $fourth = function (Event $event) {
             $listeners   = $event->getArgument('listeners');
@@ -744,9 +764,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testTriggerEventStopped()
     {
-        $first  = new FirstListener;
-        $second = new SecondListener;
-        $third  = new ThirdListener;
+        $first  = new FirstListener();
+        $second = new SecondListener();
+        $third  = new ThirdListener();
 
         $stopper = function (Event $event) {
             $event->stop();
@@ -825,6 +845,6 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Dispatcher;
+        $this->instance = new Dispatcher();
     }
 }

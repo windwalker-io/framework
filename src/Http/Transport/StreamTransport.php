@@ -151,7 +151,7 @@ class StreamTransport extends AbstractTransport
     protected function getResponse(array $headers, $body)
     {
         // Create the response object.
-        $return = new Response;
+        $return = new Response();
 
         // Set the body for the response.
         $return->getBody()->write($body);

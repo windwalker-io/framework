@@ -146,12 +146,14 @@ class MysqlReaderTest extends AbstractMysqlTestCase
     public function testCountAffected()
     {
         $this->db->setQuery('INSERT INTO ' . $this->qn('#__flower') . ' (' . $this->qn('catid') . ') VALUES (\'3\')');
-        $this->db->setQuery(sprintf(
-            'INSERT INTO ' . $this->qn('#__flower') . ' (%s, %s, %s) VALUES ("3", "", "")',
-            $this->qn('catid'),
-            $this->qn('meaning'),
-            $this->qn('params')
-        ));
+        $this->db->setQuery(
+            sprintf(
+                'INSERT INTO ' . $this->qn('#__flower') . ' (%s, %s, %s) VALUES ("3", "", "")',
+                $this->qn('catid'),
+                $this->qn('meaning'),
+                $this->qn('params')
+            )
+        );
 
         $this->db->execute();
 
@@ -380,11 +382,12 @@ class MysqlReaderTest extends AbstractMysqlTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Database\Command\AbstractReader::setDriver
      */
     public function testSetDriver()
     {
-        $driver = new PdoDriver;
+        $driver = new PdoDriver();
 
         $reader = clone $this->db->getReader();
 

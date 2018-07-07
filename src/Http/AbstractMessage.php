@@ -76,17 +76,21 @@ abstract class AbstractMessage implements MessageInterface
     public function withProtocolVersion($version)
     {
         if (!is_string($version)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid version number, require string type, %s provided',
-                gettype($version)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid version number, require string type, %s provided',
+                    gettype($version)
+                )
+            );
         }
 
         if (!HeaderHelper::isValidProtocolVersion($version)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid version number, require "<major>.<minor>" format, %s provided',
-                $version
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid version number, require "<major>.<minor>" format, %s provided',
+                    $version
+                )
+            );
         }
 
         $new           = clone $this;

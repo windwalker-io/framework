@@ -32,7 +32,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new Language;
+        $this->instance = new Language();
 
         $this->instance->load(__DIR__ . '/fixtures/ini/en-GB.ini', 'ini')
             ->load(__DIR__ . '/fixtures/ini/zh-TW.ini', 'ini');
@@ -69,6 +69,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::translate
      */
     public function testTranslate()
@@ -90,6 +91,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::plural
      */
     public function testPlural()
@@ -110,14 +112,19 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::sprintf
      */
     public function testSprintf()
     {
-        $this->assertEquals('The Sakura is beautiful~~~!!!',
-            $this->instance->sprintf('WINDWALKER_LANGUAGE_TEST_BEAUTIFUL_FLOWER', 'Sakura'));
-        $this->assertEquals('The Sunflower is beautiful~~~!!!',
-            $this->instance->sprintf('WINDWALKER_LANGUAGE_TEST_BEAUTIFUL_FLOWER', 'Sunflower'));
+        $this->assertEquals(
+            'The Sakura is beautiful~~~!!!',
+            $this->instance->sprintf('WINDWALKER_LANGUAGE_TEST_BEAUTIFUL_FLOWER', 'Sakura')
+        );
+        $this->assertEquals(
+            'The Sunflower is beautiful~~~!!!',
+            $this->instance->sprintf('WINDWALKER_LANGUAGE_TEST_BEAUTIFUL_FLOWER', 'Sunflower')
+        );
     }
 
     /**
@@ -138,6 +145,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::addString
      */
     public function testAddString()
@@ -154,6 +162,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::addStrings
      * @TODO   Implement testAddStrings().
      */
@@ -175,6 +184,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::setDebug
      */
     public function testSetDebug()
@@ -280,6 +290,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::getOrphans
      */
     public function testGetOrphans()
@@ -327,6 +338,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Language::getUsed
      */
     public function testGetUsed()
@@ -433,6 +445,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
      * @param   string $text
      *
      * @return  string
+     * @throws \ReflectionException
      */
     public function translate($text)
     {

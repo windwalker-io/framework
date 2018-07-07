@@ -129,7 +129,7 @@ class BrowserTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_CUSTOM_HEADER'] = 'Client custom header';
         $_SERVER['HTTP_AUTHORIZATION'] = 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==';
 
-        $this->instance = new StubBrowser;
+        $this->instance = new StubBrowser();
     }
 
     /**

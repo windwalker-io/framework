@@ -14,22 +14,26 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 //
 //show($request->getUri());
 
-$server = \Windwalker\Http\WebHttpServer::create(function ($request, ResponseInterface $response, $finalHandler) {
-    // $response = $response->withHeader('Content-Type', 'application/json');
+$server = \Windwalker\Http\WebHttpServer::create(
+    function ($request, ResponseInterface $response, $finalHandler) {
+        // $response = $response->withHeader('Content-Type', 'application/json');
 
 //	$response->getBody()->write('Hello World!');
 
-    $response = new \Windwalker\Http\Response\HtmlResponse('<root><f>中文 World!</f></root>');
+        $response = new \Windwalker\Http\Response\HtmlResponse('<root><f>中文 World!</f></root>');
 
-    $response = $response->withHeader('asd', 123);
+        $response = $response->withHeader('asd', 123);
 
-    $response = $finalHandler($request, $response);
+        $response = $finalHandler($request, $response);
 
-    return $response;
-}, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(), new \Windwalker\Http\Response\HtmlResponse);
+        return $response;
+    }, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(), new \Windwalker\Http\Response\HtmlResponse()
+);
 
-$server->listen(function ($request, ResponseInterface $response) use ($server) {
-    $server->cachable($server::CACHE_CUSTOM_HEADER);
+$server->listen(
+    function ($request, ResponseInterface $response) use ($server) {
+        $server->cachable($server::CACHE_CUSTOM_HEADER);
 
-    return $response = $server->getCompressor()->compress($response);
-});
+        return $response = $server->getCompressor()->compress($response);
+    }
+);

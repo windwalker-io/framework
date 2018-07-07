@@ -83,8 +83,10 @@ class PostgresqlTable extends AbstractTable
         $inherits   = isset($options['inherits']) ? $options['inherits'] : null;
         $tablespace = isset($options['tablespace']) ? $options['tablespace'] : null;
 
-        $query = PostgresqlGrammar::createTable($this->getName(), $columns, $primary, $keys, $inherits, $ifNotExists,
-            $tablespace);
+        $query = PostgresqlGrammar::createTable(
+            $this->getName(), $columns, $primary, $keys, $inherits, $ifNotExists,
+            $tablespace
+        );
 
         $comments    = isset($options['comments']) ? $options['comments'] : [];
         $keyComments = isset($options['key_comments']) ? $options['key_comments'] : [];
@@ -483,12 +485,14 @@ class PostgresqlTable extends AbstractTable
      */
     public function rename($newName, $returnNew = true)
     {
-        $this->db->setQuery(PostgresqlGrammar::build(
-            'ALTER TABLE',
-            $this->db->quoteName($this->getName()),
-            'RENAME TO',
-            $this->db->quoteName($newName)
-        ));
+        $this->db->setQuery(
+            PostgresqlGrammar::build(
+                'ALTER TABLE',
+                $this->db->quoteName($this->getName()),
+                'RENAME TO',
+                $this->db->quoteName($newName)
+            )
+        );
 
         $this->db->execute();
 
@@ -581,7 +585,8 @@ class PostgresqlTable extends AbstractTable
      */
     public function getIndexes()
     {
-        $this->db->setQuery('
+        $this->db->setQuery(
+            '
 SELECT
 	t.relname AS table_name,
 	i.relname AS index_name,
@@ -598,7 +603,8 @@ WHERE t.oid = ix.indrelid
 	AND a.attnum = ANY(ix.indkey)
 	AND t.relkind = \'r\'
 	AND t.relname = ' . $this->db->quote($this->db->replacePrefix($this->getName())) . '
-ORDER BY t.relname, i.relname;');
+ORDER BY t.relname, i.relname;'
+        );
 
         $keys = $this->db->loadAll();
 

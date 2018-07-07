@@ -68,7 +68,7 @@ class MustacheRendererTest extends AbstractDomTestCase
      */
     public function testRender()
     {
-        $html = $this->instance->render('hello', new Chris);
+        $html = $this->instance->render('hello', new Chris());
 
         $expect = <<<HTML
 Hello Chris

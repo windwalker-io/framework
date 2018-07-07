@@ -38,7 +38,7 @@ class ValidatorCompositeTest extends TestCase
      */
     protected function setUp()
     {
-        $this->instance = new ValidatorComposite;
+        $this->instance = new ValidatorComposite();
     }
 
     /**
@@ -60,10 +60,12 @@ class ValidatorCompositeTest extends TestCase
      */
     public function test__construct()
     {
-        $v = new ValidatorComposite([
-            UrlValidator::class,
-            AlnumValidator::class,
-        ]);
+        $v = new ValidatorComposite(
+            [
+                UrlValidator::class,
+                AlnumValidator::class,
+            ]
+        );
 
         static::assertNotEmpty($v->getValidators());
         static::assertContainsOnlyInstancesOf(ValidatorInterface::class, $v->getValidators());
@@ -79,12 +81,12 @@ class ValidatorCompositeTest extends TestCase
      */
     public function testAddValidator()
     {
-        $v = new UrlValidator;
+        $v = new UrlValidator();
         $this->instance->addValidator($v);
 
         self::assertSame($v, $this->instance->getValidators()[0]);
 
-        $v = (new ValidatorComposite)->addValidator('is_numeric');
+        $v = (new ValidatorComposite())->addValidator('is_numeric');
 
         self::assertTrue($v->validate('123.12'));
     }
@@ -98,10 +100,12 @@ class ValidatorCompositeTest extends TestCase
      */
     public function testSetValidators()
     {
-        $this->instance->setValidators([
-            UrlValidator::class,
-            AlnumValidator::class,
-        ]);
+        $this->instance->setValidators(
+            [
+                UrlValidator::class,
+                AlnumValidator::class,
+            ]
+        );
 
         static::assertNotEmpty($this->instance->getValidators());
         static::assertContainsOnlyInstancesOf(ValidatorInterface::class, $this->instance->getValidators());
@@ -116,10 +120,12 @@ class ValidatorCompositeTest extends TestCase
      */
     public function testGetErrors()
     {
-        $r = $this->instance->setValidators([
-            (new UrlValidator)->setMessage('Invalid URL'),
-            (new IpValidator)->setMessage('Invalid IP'),
-        ])->validate('Hello');
+        $r = $this->instance->setValidators(
+            [
+                (new UrlValidator())->setMessage('Invalid URL'),
+                (new IpValidator())->setMessage('Invalid IP'),
+            ]
+        )->validate('Hello');
 
         self::assertFalse($r);
         self::assertEquals(['Invalid URL', 'Invalid IP'], $this->instance->getErrors());
@@ -148,10 +154,12 @@ class ValidatorCompositeTest extends TestCase
      */
     public function testMatchAll()
     {
-        $r = $this->instance->setValidators([
-            new AlnumValidator,
-            new PhoneValidator,
-        ])->validate('1a2b');
+        $r = $this->instance->setValidators(
+            [
+                new AlnumValidator(),
+                new PhoneValidator(),
+            ]
+        )->validate('1a2b');
 
         $results = $this->instance->getResults();
 
@@ -167,10 +175,12 @@ class ValidatorCompositeTest extends TestCase
      */
     public function testMatchOne()
     {
-        $r = $this->instance->setValidators([
-            new AlnumValidator,
-            new PhoneValidator,
-        ])->setMode(ValidatorComposite::MODE_MATCH_ONE)
+        $r = $this->instance->setValidators(
+            [
+                new AlnumValidator(),
+                new PhoneValidator(),
+            ]
+        )->setMode(ValidatorComposite::MODE_MATCH_ONE)
             ->validate('1a2b');
 
         $results = $this->instance->getResults();

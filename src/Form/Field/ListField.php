@@ -94,7 +94,8 @@ class ListField extends AbstractField
      */
     protected function getAccessors()
     {
-        return array_merge(parent::getAccessors(), [
+        return array_merge(
+            parent::getAccessors(), [
                 'size' => 'size',
                 'onchange' => 'onchange',
                 'multiple' => 'multiple',
@@ -247,17 +248,23 @@ class ListField extends AbstractField
                     foreach ($option as $opt) {
                         if (!($opt instanceof Option)) {
                             throw new \InvalidArgumentException(
-                                sprintf('Please give me %s class as option, %s given.', 'Windwalker\\Html\\Option',
-                                    get_class($opt))
+                                sprintf(
+                                    'Please give me %s class as option, %s given.',
+                                    'Windwalker\\Html\\Option',
+                                    get_class($opt)
+                                )
                             );
                         }
                     }
-                } // If not array, means it is option
-                else {
+                } else {
+                    // If not array, means it is option
                     if (!($option instanceof Option)) {
                         throw new \InvalidArgumentException(
-                            sprintf('Please give me %s class as option, %s given.', 'Windwalker\\Html\\Option',
-                                get_class($option))
+                            sprintf(
+                                'Please give me %s class as option, %s given.',
+                                'Windwalker\\Html\\Option',
+                                get_class($option)
+                            )
                         );
                     }
                 }
@@ -265,7 +272,10 @@ class ListField extends AbstractField
                 if (is_numeric($name)) {
                     $this->options[] = $option;
                 } else {
-                    $this->options[$name] = $option;
+                    $this->options[$name] = array_merge(
+                        isset($this->options[$name]) ? $this->options[$name] : [],
+                        $option
+                    );
                 }
             }
         }

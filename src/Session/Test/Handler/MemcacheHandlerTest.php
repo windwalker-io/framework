@@ -36,7 +36,7 @@ class MemcacheHandlerTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('Memcache is not enabled on this system.');
         }
 
-        $this->instance = new MemcacheHandler;
+        $this->instance = new MemcacheHandler();
     }
 
     /**

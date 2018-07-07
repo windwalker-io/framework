@@ -34,11 +34,13 @@ class EdgeTest extends AbstractDomTestCase
      */
     protected function setUp()
     {
-        $this->instance = new Edge(new EdgeFileLoader(
-            [
-                __DIR__ . '/tmpl',
-            ]
-        ));
+        $this->instance = new Edge(
+            new EdgeFileLoader(
+                [
+                    __DIR__ . '/tmpl',
+                ]
+            )
+        );
     }
 
     /**
@@ -56,6 +58,7 @@ class EdgeTest extends AbstractDomTestCase
      *
      * @return void
      *
+     * @throws \Windwalker\Edge\Exception\EdgeException
      * @covers \Windwalker\Edge\Edge::render
      */
     public function testRender()

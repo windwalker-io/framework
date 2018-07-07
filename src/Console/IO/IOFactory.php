@@ -30,7 +30,7 @@ class IOFactory
     public static function getIO()
     {
         if (!static::$io) {
-            static::$io = new IO;
+            static::$io = new IO();
         }
 
         return static::$io;

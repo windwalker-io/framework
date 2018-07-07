@@ -37,7 +37,7 @@ class FooCommand extends Command
         $this->description('Foo command desc')
             ->usage('foo <command> [option]')
             ->help('Foo Command Help')
-            ->addCommand(new AaaCommand);
+            ->addCommand(new AaaCommand());
     }
 
     /**

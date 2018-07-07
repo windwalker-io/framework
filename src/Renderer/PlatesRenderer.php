@@ -42,8 +42,10 @@ class PlatesRenderer extends AbstractEngineRenderer
     public function getEngine($new = false)
     {
         if (!$this->engine || $new) {
-            $this->engine = new PlatesEngine(dirname($this->config->get('path.found')),
-                ltrim($this->config->get('extension', '.tpl'), '.'));
+            $this->engine = new PlatesEngine(
+                dirname($this->config->get('path.found')),
+                ltrim($this->config->get('extension', '.tpl'), '.')
+            );
 
             foreach ($this->folders as $namespace => $folder) {
                 $this->engine->addFolder($namespace, $folder['folder'], $folder['fallback']);

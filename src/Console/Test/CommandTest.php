@@ -40,9 +40,9 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $command = new RootCommand('default', new MockIO);
+        $command = new RootCommand('default', new MockIO());
 
-        $command->setApplication(new Console);
+        $command->setApplication(new Console());
 
         $command->addCommand(
             'yoo',
@@ -63,6 +63,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::execute
@@ -111,6 +112,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::addCommand
@@ -143,7 +145,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(56, $command->execute(), 'Wrong exit code returned.');
 
         // Test send an instance
-        $this->instance->addCommand(new FooCommand);
+        $this->instance->addCommand(new FooCommand());
 
         $this->assertInstanceOf(
             'Windwalker\\Console\\Test\\Stubs\\FooCommand',
@@ -183,8 +185,10 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 
         $this->assertInternalType('array', $args, 'Return not array');
 
-        $this->assertInstanceOf('Windwalker\\Console\\Command\\AbstractCommand', array_shift($args),
-            'Array element not Command object');
+        $this->assertInstanceOf(
+            'Windwalker\\Console\\Command\\AbstractCommand', array_shift($args),
+            'Array element not Command object'
+        );
     }
 
     /**
@@ -221,7 +225,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(1, (int) $cmd->getOption('Y'), 'uppercase option value not matched.');
 
         // Test for global option
-        $cmd->addCommand(new FooCommand);
+        $cmd->addCommand(new FooCommand());
 
         $this->assertSame(1, (int) $cmd->getChild('foo')->getOption('y'), 'Sub command should have global option');
 
@@ -267,8 +271,10 @@ class CommandTest extends \PHPUnit\Framework\TestCase
 
         $this->assertInternalType('array', $array);
 
-        $this->assertInstanceOf('Windwalker\\Console\\Option\\Option', array_shift($array),
-            'Array element not Option object');
+        $this->assertInstanceOf(
+            'Windwalker\\Console\\Option\\Option', array_shift($array),
+            'Array element not Option object'
+        );
     }
 
     /**
@@ -317,13 +323,14 @@ class CommandTest extends \PHPUnit\Framework\TestCase
             )
         );
 
-
         $array = $this->instance->getAllOptions();
 
         $this->assertInternalType('array', $array);
 
-        $this->assertInstanceOf('Windwalker\\Console\\Option\\Option', array_shift($array),
-            'Array element not Option object');
+        $this->assertInstanceOf(
+            'Windwalker\\Console\\Option\\Option', array_shift($array),
+            'Array element not Option object'
+        );
     }
 
     /**
@@ -383,6 +390,7 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::getHandler
@@ -430,10 +438,12 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetAndGetApplication()
     {
-        $this->instance->setApplication(new Console);
+        $this->instance->setApplication(new Console());
 
-        $this->assertInstanceOf('Windwalker\\Console\\Console', $this->instance->getApplication(),
-            'Returned not Console object.');
+        $this->assertInstanceOf(
+            'Windwalker\\Console\\Console', $this->instance->getApplication(),
+            'Returned not Console object.'
+        );
     }
 
     /**
@@ -468,12 +478,12 @@ class CommandTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('yoo <command> [option]', $this->instance->getUsage(), 'Usage text not matched.');
     }
 
-
     /**
      * Test renderAlternatives.
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::renderAlternatives

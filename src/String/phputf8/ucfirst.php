@@ -30,6 +30,7 @@ function utf8_ucfirst($str)
             break;
         default:
             preg_match('/^(.{1})(.*)$/us', $str, $matches);
+
             return utf8_strtoupper($matches[1]) . $matches[2];
             break;
     }

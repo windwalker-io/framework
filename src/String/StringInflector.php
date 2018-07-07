@@ -306,9 +306,9 @@ class StringInflector
     public static function getInstance($new = false)
     {
         if ($new) {
-            return new static;
+            return new static();
         } elseif (!is_object(static::$instance)) {
-            static::$instance = new static;
+            static::$instance = new static();
         }
 
         return static::$instance;

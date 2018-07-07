@@ -54,7 +54,7 @@ class DListTest extends AbstractDomTestCase
      */
     public function testCreateList()
     {
-        $list = new DList;
+        $list = new DList();
 
         $this->assertEquals('<dl></dl>', (string) $list);
 
@@ -98,7 +98,7 @@ HTML;
      */
     public function testAddItem()
     {
-        $list = new DList;
+        $list = new DList();
 
         $list->addTitle(new DListTitle('123'))
             ->addDesc('ABC');
@@ -129,7 +129,7 @@ HTML;
             new DListDescription('You mustn’t be afraid to dream a little bigger,darling.', ['class' => 'nav-item']),
         ];
 
-        $list = new DList;
+        $list = new DList();
         $list->setItems($items);
 
         $html = <<<HTML
@@ -155,12 +155,14 @@ HTML;
      */
     public function testAddDescription()
     {
-        $list = new DList;
+        $list = new DList();
 
         $list->addDescription('Spider Man', 'Remember, with great power, comes great responsibility')
             ->addDescription('Forrest Gump', 'Life was like a box of chocolates.')
-            ->addDescription('Inception', 'You mustn’t be afraid to dream a little bigger,darling.', [],
-                ['class' => 'nav-item']);
+            ->addDescription(
+                'Inception', 'You mustn’t be afraid to dream a little bigger,darling.', [],
+                ['class' => 'nav-item']
+            );
 
         $html = <<<HTML
 <dl>

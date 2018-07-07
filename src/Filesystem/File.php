@@ -299,7 +299,5 @@ class File
         if ($filename !== null) {
             $path .= DIRECTORY_SEPARATOR . $filename;
         }
-
-
     }
 }

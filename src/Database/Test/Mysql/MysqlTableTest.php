@@ -116,17 +116,19 @@ class MysqlTableTest extends AbstractMysqlTestCase
     {
         $table = $this->db->getTable('#__cloud');
 
-        $table->create(function (Schema $schema) {
-            $schema->primary('id')->comment('PK');
-            $schema->varchar('name')->length(190)->allowNull(false);
-            $schema->varchar('alias')->length(190);
-            $schema->float('float');
-            $schema->datetime('created')->defaultValue(null);
+        $table->create(
+            function (Schema $schema) {
+                $schema->primary('id')->comment('PK');
+                $schema->varchar('name')->length(190)->allowNull(false);
+                $schema->varchar('alias')->length(190);
+                $schema->float('float');
+                $schema->datetime('created')->defaultValue(null);
 
-            $schema->addIndex('name', 'idx_name')->comment('Test');
-            $schema->addIndex('float');
-            $schema->addUniqueKey('alias', 'idx_alias')->comment('Alias Index');
-        });
+                $schema->addIndex('name', 'idx_name')->comment('Test');
+                $schema->addIndex('float');
+                $schema->addUniqueKey('alias', 'idx_alias')->comment('Alias Index');
+            }
+        );
 
         $columns = $table->getColumnDetails();
 
@@ -148,11 +150,13 @@ class MysqlTableTest extends AbstractMysqlTestCase
     {
         $table = $this->db->getTable('#__strict');
 
-        $table->create(function (Schema $schema) {
-            $schema->primary('id')->comment('PK');
-            $schema->datetime('date')->allowNull(false)->defaultValue(null);
-            $schema->varchar('data')->allowNull(false)->defaultValue('test');
-        });
+        $table->create(
+            function (Schema $schema) {
+                $schema->primary('id')->comment('PK');
+                $schema->datetime('date')->allowNull(false)->defaultValue(null);
+                $schema->varchar('data')->allowNull(false)->defaultValue('test');
+            }
+        );
 
         $columns = $table->getColumnDetails();
 
@@ -297,8 +301,10 @@ class MysqlTableTest extends AbstractMysqlTestCase
     {
         $table = $this->db->getTable('#__categories');
 
-        $table->addColumn('state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State',
-            ['position' => 'AFTER ordering', 'length' => 1]);
+        $table->addColumn(
+            'state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State',
+            ['position' => 'AFTER ordering', 'length' => 1]
+        );
 
         $columns = $table->getColumns();
 

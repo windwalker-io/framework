@@ -16,10 +16,13 @@ namespace Windwalker\Profiler;
 class Benchmark
 {
     const SECOND = 1;
+
     const MILLI_SECOND = 1000;
+
     const MICRO_SECOND = 1000000;
 
     const SORT_ASC = 'asc';
+
     const SORT_DESC = 'desc';
 
     /**

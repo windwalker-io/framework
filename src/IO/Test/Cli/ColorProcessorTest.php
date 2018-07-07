@@ -41,7 +41,7 @@ class ColorProcessorTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new ColorProcessor;
+        $this->instance = new ColorProcessor();
 
         $this->winOs = TestEnvironment::isWindows();
 

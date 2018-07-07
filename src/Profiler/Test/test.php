@@ -8,7 +8,7 @@
 
 include_once __DIR__ . '/../../../vendor/autoload.php';
 
-$benchmark = new \Windwalker\Profiler\Benchmark;
+$benchmark = new \Windwalker\Profiler\Benchmark();
 
 class Test
 {
@@ -24,7 +24,7 @@ class Test
 }
 
 $f1 = function () {
-    $t = new Test;
+    $t = new Test();
 
     $t->f1();
 };

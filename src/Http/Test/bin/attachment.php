@@ -14,14 +14,18 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 //
 //show($request->getUri());
 
-$server = \Windwalker\Http\WebHttpServer::create(function ($request, ResponseInterface $response, $finalHandler) {
-    $res = new \Windwalker\Http\Response\AttachmentResponse;
-    $res = $res->withFile(__DIR__ . '/.htaccess');
-    $res = $res->withFilename('Hello.txt');
+$server = \Windwalker\Http\WebHttpServer::create(
+    function ($request, ResponseInterface $response, $finalHandler) {
+        $res = new \Windwalker\Http\Response\AttachmentResponse();
+        $res = $res->withFile(__DIR__ . '/.htaccess');
+        $res = $res->withFilename('Hello.txt');
 
-    return $res;
-}, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals());
+        return $res;
+    }, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals()
+);
 
-$server->listen(function ($request, $response) use ($server) {
-    return $response;
-});
+$server->listen(
+    function ($request, $response) use ($server) {
+        return $response;
+    }
+);

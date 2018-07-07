@@ -91,6 +91,8 @@ class DomElement implements \ArrayAccess
             return $this->toString();
         } catch (\Exception $e) {
             return (string) $e;
+        } catch (\Throwable $e) {
+            return (string) $e;
         }
     }
 

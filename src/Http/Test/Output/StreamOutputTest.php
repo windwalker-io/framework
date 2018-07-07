@@ -33,7 +33,7 @@ class StreamOutputTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new StubStreamOutput;
+        $this->instance = new StubStreamOutput();
     }
 
     /**

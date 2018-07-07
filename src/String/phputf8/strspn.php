@@ -20,7 +20,6 @@
  */
 function utf8_strspn($str, $mask, $start = null, $length = null)
 {
-
     $mask = preg_replace('!([\\\\\\-\\]\\[/^])!', '\\\${1}', $mask);
 
     // Fix for $start but no $length argument.
@@ -39,6 +38,5 @@ function utf8_strspn($str, $mask, $start = null, $length = null)
     }
 
     return 0;
-
 }
 

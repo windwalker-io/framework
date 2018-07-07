@@ -16,6 +16,7 @@ namespace Windwalker\Utilities;
 class Arr
 {
     const SORT_ASC = false;
+
     const SORT_DESC = true;
 
     /**
@@ -67,7 +68,7 @@ class Arr
      */
     public static function toObject(array $array, $class = 'stdClass')
     {
-        $obj = new $class;
+        $obj = new $class();
 
         foreach ($array as $k => $v) {
             if (is_array($v)) {
@@ -238,7 +239,7 @@ class Arr
             }
 
             if (class_exists($type)) {
-                return new $type;
+                return new $type();
             }
 
             throw new \InvalidArgumentException(sprintf('Type or class: %s not exists', $type));
@@ -871,7 +872,6 @@ class Arr
                 }
 
                 $output .= "\n{$quoteTabes})\n";
-
             } else {
                 $output .= "\n{$quoteTabes}*MAX LEVEL*\n";
             }

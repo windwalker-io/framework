@@ -27,7 +27,7 @@ class MockIO extends IO
      */
     public function __construct(CliInputInterface $input = null, CliOutputInterface $output = null)
     {
-        parent::__construct($input, new MockOutput);
+        parent::__construct($input, new MockOutput());
     }
 
     /**

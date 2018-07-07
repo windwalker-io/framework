@@ -39,7 +39,7 @@ class ListenerMapper
         $targetClass = strtolower(trim($targetClass, '\\'));
 
         if (is_string($listener) && class_exists($listener)) {
-            $listener = new $listener;
+            $listener = new $listener();
         }
 
         if (!is_object($listener) || is_callable($listener)) {

@@ -91,9 +91,13 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
      */
     public function testFilter($string, $expected, $num)
     {
-        $this->assertEquals($expected, HeaderHelper::filter($string),
-            'Result should be: ' . str_replace(["\t", "\n", "\r"], ["\\t", "\\n", "\\r"],
-                HeaderHelper::filter($string)) . ' - #' . $num);
+        $this->assertEquals(
+            $expected, HeaderHelper::filter($string),
+            'Result should be: ' . str_replace(
+                ["\t", "\n", "\r"], ["\\t", "\\n", "\\r"],
+                HeaderHelper::filter($string)
+            ) . ' - #' . $num
+        );
     }
 
     /**
@@ -135,10 +139,11 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsValidValue($string, $expected, $num)
     {
-        $this->assertEquals($expected, HeaderHelper::isValidValue($string),
-            str_replace(["\t", "\n", "\r"], ["\\t", "\\n", "\\r"], $string) . ' assert fail - #' . $num);
+        $this->assertEquals(
+            $expected, HeaderHelper::isValidValue($string),
+            str_replace(["\t", "\n", "\r"], ["\\t", "\\n", "\\r"], $string) . ' assert fail - #' . $num
+        );
     }
-
 
     /**
      * isValidValue_Provider
@@ -228,7 +233,7 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFalse(HeaderHelper::arrayOnlyContainsString($actual));
 
-        $actual = ['A', 'B', new \stdClass];
+        $actual = ['A', 'B', new \stdClass()];
 
         $this->assertFalse(HeaderHelper::arrayOnlyContainsString($actual));
     }
@@ -303,7 +308,7 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
             ['123', false],
             [123, false],
             [1.0, false],
-            [new \stdClass, false],
+            [new \stdClass(), false],
             [[], false],
             [null, false],
         ];
@@ -318,14 +323,14 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
      */
     public function testPrepareAttachmentHeaders()
     {
-        $response = HeaderHelper::prepareAttachmentHeaders(new Response);
+        $response = HeaderHelper::prepareAttachmentHeaders(new Response());
 
         $this->assertEquals(['application/octet-stream'], $response->getHeader('Content-Type'));
         $this->assertEquals(['binary'], $response->getHeader('Content-Transfer-Encoding'));
         $this->assertEquals(['no-store, no-cache, must-revalidate'], $response->getHeader('Cache-Control'));
         $this->assertEquals([], $response->getHeader('Content-Disposition'));
 
-        $response = HeaderHelper::prepareAttachmentHeaders(new Response, 'foo.zip');
+        $response = HeaderHelper::prepareAttachmentHeaders(new Response(), 'foo.zip');
 
         $this->assertEquals(['attachment; filename="foo.zip"'], $response->getHeader('Content-Disposition'));
     }

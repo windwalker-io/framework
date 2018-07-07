@@ -25,19 +25,19 @@ $routeItems = array_map(
 
 $count = count($routes);
 
-$seq = new \Windwalker\Router\Matcher\SequentialMatcher;
+$seq = new \Windwalker\Router\Matcher\SequentialMatcher();
 
 $seq->setRoutes($routeItems)->setDebug(false);
 
-$trie = new \Windwalker\Router\Matcher\TrieMatcher;
+$trie = new \Windwalker\Router\Matcher\TrieMatcher();
 
 $trie->setRoutes($routeItems)->setDebug(false);
 
-$bin = new \Windwalker\Router\Matcher\BinaryMatcher;
+$bin = new \Windwalker\Router\Matcher\BinaryMatcher();
 
 $bin->setRoutes($routeItems)->setDebug(false);
 
-$bench = new \Windwalker\Profiler\Benchmark;
+$bench = new \Windwalker\Profiler\Benchmark();
 
 $avg = [];
 

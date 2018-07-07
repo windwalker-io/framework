@@ -36,10 +36,12 @@ class TextResponse extends AbstractContentTypeResponse
         }
 
         if (!$body instanceof StreamInterface) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid body content type %s, please provide string or StreamInterface',
-                gettype($body)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid body content type %s, please provide string or StreamInterface',
+                    gettype($body)
+                )
+            );
         }
 
         return $body;

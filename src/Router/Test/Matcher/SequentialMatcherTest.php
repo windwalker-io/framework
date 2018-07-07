@@ -33,7 +33,7 @@ class SequentialMatcherTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new SequentialMatcher;
+        $this->instance = new SequentialMatcher();
     }
 
     /**

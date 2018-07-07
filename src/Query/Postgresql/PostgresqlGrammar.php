@@ -20,10 +20,15 @@ use Windwalker\Query\QueryElement;
 class PostgresqlGrammar extends AbstractQueryGrammar
 {
     const PRIMARY = 'PRIMARY KEY';
+
     const INDEX = 'INDEX';
+
     const UNIQUE = 'UNIQUE';
+
     const SPATIAL = 'SPATIAL';
+
     const FULLTEXT = 'UNIQUE';
+
     const FOREIGN = 'FOREIGN KEY';
 
     /**
@@ -114,16 +119,20 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 
         // Default
         $query->select('attrdef.adsrc AS "Default"')
-            ->leftJoin('pg_catalog.pg_attrdef AS attrdef',
-                'attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum');
+            ->leftJoin(
+                'pg_catalog.pg_attrdef AS attrdef',
+                'attr.attrelid = attrdef.adrelid AND attr.attnum = attrdef.adnum'
+            );
 
         // Comment
         $query->select('pg_catalog.col_description(attr.attrelid, attr.attnum) AS "Comment"');
 
         // General
-        $query->where('attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=' . $query->quote($table) . '
+        $query->where(
+            'attr.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=' . $query->quote($table) . '
 	AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
-	nspname = \'public\'))')
+	nspname = \'public\'))'
+        )
             ->where('attr.attnum > 0 AND NOT attr.attisdropped')
             ->order('attr.attnum');
 
@@ -212,8 +221,10 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 
             $define = array_merge($define, $key);
 
-            $indexes[] = 'CREATE ' . $define['type'] . ' ' . static::buildIndexDeclare($define['name'],
-                    $define['columns'], $name);
+            $indexes[] = 'CREATE ' . $define['type'] . ' ' . static::buildIndexDeclare(
+                    $define['name'],
+                    $define['columns'], $name
+                );
         }
 
         $indexes = implode(";\n", $indexes);
@@ -409,8 +420,12 @@ class PostgresqlGrammar extends AbstractQueryGrammar
                 if (!is_numeric($val)) {
                     $string = is_string($val) ? ' ' . $query->quote($val) : '';
 
-                    throw new \InvalidArgumentException(sprintf('Index length should be number, (%s)%s given.',
-                        gettype($val), $string));
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Index length should be number, (%s)%s given.',
+                            gettype($val), $string
+                        )
+                    );
                 }
 
                 $cols[] = $query->quoteName($key) . '(' . $val . ')';
@@ -503,7 +518,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     public static function getQuery($new = false)
     {
         if (!static::$query || $new) {
-            static::$query = new PostgresqlQuery;
+            static::$query = new PostgresqlQuery();
         }
 
         return static::$query;

@@ -78,12 +78,14 @@ class StreamHelperTest extends \PHPUnit\Framework\TestCase
      */
     public function testSendAttachment()
     {
-        StreamHelper::$outputObject = new StubStreamOutput;
+        StreamHelper::$outputObject = new StubStreamOutput();
 
-        StreamHelper::sendAttachment(__FILE__, $response = new Response);
+        StreamHelper::sendAttachment(__FILE__, $response = new Response());
 
         $this->assertEquals(file_get_contents(__FILE__), StreamHelper::$outputObject->output);
-        $this->assertEquals(['application/octet-stream'],
-            StreamHelper::$outputObject->message->getHeader('content-type'));
+        $this->assertEquals(
+            ['application/octet-stream'],
+            StreamHelper::$outputObject->message->getHeader('content-type')
+        );
     }
 }

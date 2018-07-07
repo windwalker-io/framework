@@ -32,7 +32,7 @@ class BlowfishCipherTest extends AbstractOpensslTestCase
      */
     protected function setUp()
     {
-        $this->instance = new BlowfishCipher;
+        $this->instance = new BlowfishCipher();
     }
 
     /**

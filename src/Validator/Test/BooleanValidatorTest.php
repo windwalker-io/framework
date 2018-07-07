@@ -32,7 +32,7 @@ class BooleanValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new BooleanValidator;
+        $this->instance = new BooleanValidator();
     }
 
     /**

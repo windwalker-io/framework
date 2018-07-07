@@ -22,10 +22,10 @@ class FunctionsTest extends \PHPUnit\Framework\TestCase
      */
     public function testWith()
     {
-        $object = with(new \stdClass);
+        $object = with(new \stdClass());
 
         $this->assertEquals(
-            new \stdClass,
+            new \stdClass(),
             $object
         );
     }

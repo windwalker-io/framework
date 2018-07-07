@@ -40,6 +40,7 @@ class PostgresqlDriver extends PdoDriver
      * @param   \PDO  $connection The pdo connection object.
      * @param   array $options    List of options used to configure the connection
      *
+     * @throws \ReflectionException
      * @since   2.1
      */
     public function __construct(\PDO $connection = null, $options = [])

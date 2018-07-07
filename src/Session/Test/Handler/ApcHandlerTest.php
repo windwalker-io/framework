@@ -35,7 +35,6 @@ class ApcHandlerTest extends \PHPUnit\Framework\TestCase
         if (!ApcHandler::isSupported()) {
             $this->markTestSkipped('Apc is not enabled on this system.');
         }
-
         // $this->instance = new ApcHandler;
     }
 

@@ -32,7 +32,7 @@ class JsonFormatTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new JsonFormat;
+        $this->instance = new JsonFormat();
     }
 
     /**

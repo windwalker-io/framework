@@ -61,8 +61,8 @@ abstract class AbstractConsole
             $this->close();
         }
 
-        $this->io     = $io instanceof IOInterface ? $io : new IO;
-        $this->config = $config instanceof Structure ? $config : new Structure;
+        $this->io     = $io instanceof IOInterface ? $io : new IO();
+        $this->config = $config instanceof Structure ? $config : new Structure();
 
         $this->init();
 
@@ -292,8 +292,8 @@ abstract class AbstractConsole
     {
         if (!$this->descriptor) {
             $this->descriptor = new TextDescriptorHelper(
-                new TextCommandDescriptor,
-                new TextOptionDescriptor
+                new TextCommandDescriptor(),
+                new TextOptionDescriptor()
             );
         }
 

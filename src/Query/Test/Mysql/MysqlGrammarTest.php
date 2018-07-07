@@ -274,8 +274,10 @@ SQL;
 
         $expected = "ALTER TABLE {$this->qn('foo')} CHANGE {$this->qn('bar')} {$this->qn('yoo')} text AFTER {$this->qn('id')}";
 
-        $actual = MysqlGrammar::alterColumn('CHANGE', 'foo', ['bar', 'yoo'], 'text', true, true, false, 'AFTER id',
-            null);
+        $actual = MysqlGrammar::alterColumn(
+            'CHANGE', 'foo', ['bar', 'yoo'], 'text', true, true, false, 'AFTER id',
+            null
+        );
 
         $this->assertEquals(
             $this->format($expected),

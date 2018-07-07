@@ -66,7 +66,7 @@ class MysqlTable extends AbstractTable
         $keys = [];
 
         foreach ($schema->getIndexes() as $index) {
-            $name = $index->getName();
+            $name        = $index->getName();
             $keys[$name] = [
                 'type' => $index->getType(),
                 'name' => $name,
@@ -180,7 +180,7 @@ class MysqlTable extends AbstractTable
             $suffix    = $column->getSuffix();
         } else {
             $position = isset($options['position']) ? $options['position'] : null;
-            $suffix = isset($options['suffix']) ? $options['suffix'] : null;
+            $suffix   = isset($options['suffix']) ? $options['suffix'] : null;
         }
 
         if (!$this->hasColumn($name)) {
@@ -251,7 +251,7 @@ class MysqlTable extends AbstractTable
             $suffix    = $column->getSuffix();
         } else {
             $position = isset($options['position']) ? $options['position'] : null;
-            $suffix = isset($options['suffix']) ? $options['suffix'] : null;
+            $suffix   = isset($options['suffix']) ? $options['suffix'] : null;
         }
 
         $type   = MysqlType::getType($type);

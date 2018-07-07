@@ -50,7 +50,7 @@ class Command extends AbstractCommand
     public function addCommand($command, $description = null, $options = [], \Closure $code = null)
     {
         if (is_string($command) && class_exists($command) && is_subclass_of($command, __CLASS__)) {
-            $command = new $command;
+            $command = new $command();
         }
 
         if (!($command instanceof AbstractCommand)) {

@@ -36,9 +36,9 @@ class MiddlewareTest extends AbstractBaseTestCase
      */
     protected function setUp()
     {
-        $this->instance = new StubCaesarMiddleware;
+        $this->instance = new StubCaesarMiddleware();
 
-        $this->instance->setNext(new StubOthelloMiddleware);
+        $this->instance->setNext(new StubOthelloMiddleware());
     }
 
     /**
@@ -74,7 +74,7 @@ class MiddlewareTest extends AbstractBaseTestCase
     {
         $othello = $this->instance->getNext();
 
-        $othello->setNext(new EndMiddleware);
+        $othello->setNext(new EndMiddleware());
 
         $expected = <<<EOF
 >>> Caesar
@@ -95,8 +95,8 @@ EOF;
     {
         $othello = $this->instance->getNext();
 
-        $othello->setNext($dm = new StubDataMiddleware);
-        $dm->setNext(new EndMiddleware);
+        $othello->setNext($dm = new StubDataMiddleware());
+        $dm->setNext(new EndMiddleware());
 
         $expected = <<<EOF
 >>> Caesar

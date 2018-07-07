@@ -30,7 +30,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 
         $compare = new EqCompare('a', 'b');
 
-        $data         = new \stdClass;
+        $data         = new \stdClass();
         $data->catid  = 3;
         $data->title  = 'Sakura';
         $data->params = $compare;
@@ -75,7 +75,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 
         $compare = new EqCompare('c', 'd');
 
-        $data         = new \stdClass;
+        $data         = new \stdClass();
         $data->id     = 86;
         $data->title  = 'Sakura2';
         $data->params = $compare;
@@ -101,7 +101,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
         $this->assertEquals('Sunflower2', $item->title);
 
         // Test multiple keys
-        $data           = new \stdClass;
+        $data           = new \stdClass();
         $data->catid    = 2;
         $data->ordering = 8;
         $data->title    = 'Rose';
@@ -125,7 +125,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
         $writer = $this->db->getWriter();
 
         // Insert
-        $data        = new \stdClass;
+        $data        = new \stdClass();
         $data->catid = 3;
         $data->title = 'Sakura';
 

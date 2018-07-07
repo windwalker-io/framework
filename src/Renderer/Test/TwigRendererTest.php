@@ -145,7 +145,7 @@ HTML;
      */
     public function testAddExtension()
     {
-        $this->instance->addExtension(new StubTwigExtension);
+        $this->instance->addExtension(new StubTwigExtension());
 
         $html = $this->instance->render('ext-test.twig');
 

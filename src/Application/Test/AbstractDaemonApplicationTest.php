@@ -36,7 +36,6 @@ class AbstractDaemonApplicationTest extends \PHPUnit\Framework\TestCase
         if (!extension_loaded('PCNTL')) {
             $this->markTestSkipped('The PCNTL extension is not available.');
         }
-
         // $this->instance = new StubDeamon;
     }
 

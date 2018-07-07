@@ -20,7 +20,9 @@ namespace Windwalker\Html\Grid;
 class Grid
 {
     const ROW_HEAD = 1;
+
     const ROW_FOOT = 2;
+
     const ROW_NORMAL = 3;
 
     /**
@@ -291,7 +293,7 @@ class Grid
     public function setRowCell($name, $content, $attribs = [], $replace = true)
     {
         if ($replace || !isset($this->rows[$this->activeRow][$name])) {
-            $cell                                = new \stdClass;
+            $cell                                = new \stdClass();
             $cell->attribs                       = $attribs;
             $cell->content                       = $content;
             $this->rows[$this->activeRow][$name] = $cell;
@@ -344,8 +346,10 @@ class Grid
             }
         }
 
-        return array_diff(array_keys($this->rows),
-            array_merge($this->specialRows['header'], $this->specialRows['footer']));
+        return array_diff(
+            array_keys($this->rows),
+            array_merge($this->specialRows['header'], $this->specialRows['footer'])
+        );
     }
 
     /**
@@ -393,8 +397,10 @@ class Grid
             $output[] = $this->renderArea($this->specialRows['header'], 'thead', 'th');
         }
 
-        $ids = array_diff(array_keys($this->rows),
-            array_merge($this->specialRows['header'], $this->specialRows['footer']));
+        $ids = array_diff(
+            array_keys($this->rows),
+            array_merge($this->specialRows['header'], $this->specialRows['footer'])
+        );
 
         if (count($ids)) {
             $output[] = $this->renderArea($ids);

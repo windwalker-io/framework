@@ -104,7 +104,7 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
         $this->assertXmlStringEqualsXmlString($expected, $response->getBody()->__toString());
         $this->assertEquals(['application/xml; charset=utf-8'], $response->getHeader('Content-Type'));
 
-        $xml = new \DOMDocument;
+        $xml = new \DOMDocument();
         $xml->loadXML("<root />");
 
         $child = $xml->createElement('foo', 'bar');

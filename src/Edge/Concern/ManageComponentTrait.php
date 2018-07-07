@@ -46,16 +46,17 @@ trait ManageComponentTrait
     /**
      * Start a component rendering process.
      *
-     * @param  string  $name
+     * @param  string $name
      * @param  array  $data
+     *
      * @return void
      */
     public function startComponent($name, array $data = [])
     {
         if (ob_start()) {
-            $this->componentStack[] = $name;
+            $this->componentStack[]                         = $name;
             $this->componentData[$this->currentComponent()] = $data;
-            $this->slots[$this->currentComponent()] = [];
+            $this->slots[$this->currentComponent()]         = [];
         }
     }
 
@@ -67,13 +68,15 @@ trait ManageComponentTrait
     public function renderComponent()
     {
         $name = array_pop($this->componentStack);
+
         return $this->render($name, $this->componentData($name));
     }
 
     /**
      * Get the data for the given component.
      *
-     * @param  string  $name
+     * @param  string $name
+     *
      * @return array
      */
     protected function componentData($name)
@@ -88,8 +91,9 @@ trait ManageComponentTrait
     /**
      * Start the slot rendering process.
      *
-     * @param  string  $name
-     * @param  string|null  $content
+     * @param  string      $name
+     * @param  string|null $content
+     *
      * @return void
      */
     public function slot($name, $content = null)
@@ -99,7 +103,7 @@ trait ManageComponentTrait
         } else {
             if (ob_start()) {
                 $this->slots[$this->currentComponent()][$name] = '';
-                $this->slotStack[$this->currentComponent()][] = $name;
+                $this->slotStack[$this->currentComponent()][]  = $name;
             }
         }
     }
@@ -112,7 +116,7 @@ trait ManageComponentTrait
     public function endSlot()
     {
         end($this->componentStack);
-        $currentSlot = array_pop(
+        $currentSlot   = array_pop(
             $this->slotStack[$this->currentComponent()]
         );
         $this->slots[$this->currentComponent()]

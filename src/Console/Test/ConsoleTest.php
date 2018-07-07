@@ -40,7 +40,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $io = new MockIO;
+        $io = new MockIO();
 
         $io->setArguments(['foo']);
 
@@ -63,7 +63,6 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     public function testGetAndSetLogger()
     {
         $this->markTestSkipped('Re adding this test when we support PSR Logger');
-
         /* Re adding this test when we support PSR Logger
 
         $this->assertInstanceOf('Psr\\Log\\NullLogger', $this->instance->getLogger());
@@ -91,11 +90,12 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      */
     public function testNestedCall()
     {
-        $this->instance->addCommand(new FooCommand);
+        $this->instance->addCommand(new FooCommand());
 
         $this->instance->io->setArguments(['foo', 'aaa', 'bbb']);
 
@@ -112,10 +112,11 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      * testExecuteByPath
      *
      * @return  void
+     * @throws \Exception
      */
     public function testExecuteByPath()
     {
-        $this->instance->addCommand(new FooCommand);
+        $this->instance->addCommand(new FooCommand());
 
         $code = $this->instance->executeByPath('foo aaa bbb', [], $this->instance->io);
 
@@ -133,7 +134,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetCommand()
     {
-        $this->instance->addCommand(new FooCommand);
+        $this->instance->addCommand(new FooCommand());
 
         $command = $this->instance->getCommand('foo/aaa');
 
@@ -149,6 +150,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @since  2.0
      */
     public function testSetAutoExit()
@@ -169,7 +171,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddCommand()
     {
-        $this->instance->addCommand(new FooCommand);
+        $this->instance->addCommand(new FooCommand());
 
         $this->assertEquals('foo', $this->instance->getRootCommand()->getChild('foo')->getName());
     }
@@ -179,28 +181,29 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @since  2.0
      */
     public function testConstruct()
     {
-        $console = new Console(new MockIO);
+        $console = new Console(new MockIO());
 
         $this->assertInstanceOf('Windwalker\\Console\\IO\\IO', $console->io);
 
         $this->assertInstanceOf('Windwalker\\Structure\\Structure', TestHelper::getValue($console, 'config'));
     }
 
-
     /**
      * Test doExecute.
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      */
     public function testDoExecute()
     {
-        $this->instance->addCommand(new FooCommand);
+        $this->instance->addCommand(new FooCommand());
 
         $result = $this->instance->execute();
 
@@ -217,8 +220,10 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      */
     public function testRegisterRootCommand()
     {
-        $this->assertInstanceOf('Windwalker\\Console\\Command\\RootCommand', $this->instance->getRootCommand(),
-            'Default Command wrong');
+        $this->assertInstanceOf(
+            'Windwalker\\Console\\Command\\RootCommand', $this->instance->getRootCommand(),
+            'Default Command wrong'
+        );
     }
 
     /**
@@ -232,8 +237,10 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     {
         $this->instance->register('bar');
 
-        $this->assertInstanceOf('Windwalker\\Console\\Command\\Command',
-            $this->instance->getRootCommand()->getChild('bar'), 'Need Command instance');
+        $this->assertInstanceOf(
+            'Windwalker\\Console\\Command\\Command',
+            $this->instance->getRootCommand()->getChild('bar'), 'Need Command instance'
+        );
     }
 
     /**
@@ -319,6 +326,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \Exception
      * @since  2.0
      */
     public function testSetHandler()
@@ -329,9 +337,11 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
             }
         );
 
-        $this->assertInstanceOf('\Closure', $this->instance->getRootCommand()->getHandler(),
-            'Code need to be a closure.');
+        $this->assertInstanceOf(
+            '\Closure', $this->instance->getRootCommand()->getHandler(),
+            'Code need to be a closure.'
+        );
 
-        $this->assertEquals(221, $this->instance->getRootCommand()->setIO(new MockIO)->execute());
+        $this->assertEquals(221, $this->instance->getRootCommand()->setIO(new MockIO())->execute());
     }
 }

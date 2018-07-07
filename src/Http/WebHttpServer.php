@@ -28,7 +28,9 @@ use Windwalker\Uri\UriData;
 class WebHttpServer extends HttpServer
 {
     const CACHE_ENABLE = true;
+
     const CACHE_DISABLE = false;
+
     const CACHE_CUSTOM_HEADER = null;
 
     /**
@@ -96,7 +98,7 @@ class WebHttpServer extends HttpServer
     ) {
         parent::__construct($handler, $request, $response, $output);
 
-        $this->uriData = new UriData;
+        $this->uriData = new UriData();
 
         $this->loadSystemUris();
 
@@ -135,8 +137,10 @@ class WebHttpServer extends HttpServer
         }
 
         if (!$response->hasHeader('content-type')) {
-            $response = $response->withHeader('content-type',
-                $this->getContentType() . '; charset=' . $this->getCharSet());
+            $response = $response->withHeader(
+                'content-type',
+                $this->getContentType() . '; charset=' . $this->getCharSet()
+            );
         }
 
         return $this->prepareCache($response);
@@ -156,15 +160,19 @@ class WebHttpServer extends HttpServer
         // Force cachable
         if ($this->getCachable() === static::CACHE_ENABLE) {
             // Expires.
-            $response = $response->withoutHeader('Expires')->withHeader('Expires',
-                gmdate('D, d M Y H:i:s', time() + 900) . ' GMT');
+            $response = $response->withoutHeader('Expires')->withHeader(
+                'Expires',
+                gmdate('D, d M Y H:i:s', time() + 900) . ' GMT'
+            );
 
             // Last modified.
             if ($this->modifiedDate instanceof \DateTime) {
                 $this->modifiedDate->setTimezone(new \DateTimeZone('UTC'));
 
-                $response = $response->withoutHeader('Last-Modified')->withHeader('Last-Modified',
-                    $this->modifiedDate->format('D, d M Y H:i:s') . ' GMT');
+                $response = $response->withoutHeader('Last-Modified')->withHeader(
+                    'Last-Modified',
+                    $this->modifiedDate->format('D, d M Y H:i:s') . ' GMT'
+                );
             }
         } elseif ($this->getCachable() === static::CACHE_DISABLE) {
             // Force uncachable
@@ -173,14 +181,17 @@ class WebHttpServer extends HttpServer
             $response = $response->withoutHeader('Expires')->withHeader('Expires', 'Mon, 1 Jan 2001 00:00:00 GMT');
 
             // Always modified.
-            $response = $response->withoutHeader('Last-Modified')->withHeader('Last-Modified',
-                gmdate('D, d M Y H:i:s') . ' GMT');
-            $response = $response->withoutHeader('Cache-Control')->withHeader('Cache-Control',
-                'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+            $response = $response->withoutHeader('Last-Modified')->withHeader(
+                'Last-Modified',
+                gmdate('D, d M Y H:i:s') . ' GMT'
+            );
+            $response = $response->withoutHeader('Cache-Control')->withHeader(
+                'Cache-Control',
+                'no-store, no-cache, must-revalidate, post-check=0, pre-check=0'
+            );
 
             // HTTP 1.0
             $response = $response->withHeader('pragma', 'no-cache');
-
         }
 
         return $response;

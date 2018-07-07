@@ -13,6 +13,7 @@ use Windwalker\Data\DataSet;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Event\DispatcherInterface;
 use Windwalker\Event\Event;
+use Windwalker\String\StringInflector;
 
 /**
  * The AbstractDataMapperProxy class.
@@ -177,8 +178,10 @@ class AbstractDatabaseMapperProxy
 
         $mapper = new DataMapper($table, $keys, $db);
 
-        if (static::$alias) {
+        if (static::$alias !== null) {
             $mapper->alias(static::$alias);
+        } else {
+            $mapper->alias(StringInflector::getInstance()->toSingular($table));
         }
 
         if (static::$dataClass) {
@@ -189,7 +192,7 @@ class AbstractDatabaseMapperProxy
             $mapper->setDatasetClass(static::$dataSetClass);
         }
 
-        $mapper->getDispatcher()->addListener(new static);
+        $mapper->getDispatcher()->addListener(new static());
 
         static::init($mapper);
 

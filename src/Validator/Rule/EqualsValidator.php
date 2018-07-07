@@ -54,8 +54,8 @@ class EqualsValidator extends AbstractValidator
     {
         if ($this->strict) {
             return ($this->compare === $value);
-        } else {
-            return ($this->compare == $value);
         }
+
+        return ($this->compare == $value);
     }
 }

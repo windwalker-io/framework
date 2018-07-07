@@ -28,6 +28,7 @@ use Windwalker\Record\Exception\NoResultException;
 class Record extends Entity
 {
     const UPDATE_NULLS = true;
+
     const LOAD_DEFAULT = true;
 
     /**
@@ -100,8 +101,7 @@ class Record extends Entity
      *                                      compose the primary key.
      * @param   AbstractDataMapper $mapper  The DataMapper Adapter to access database.
      *
-     * @throws \InvalidArgumentException
-     *
+     * @throws \Exception
      * @since   2.0
      */
     public function __construct($table = null, $keys = 'id', AbstractDataMapper $mapper = null)
@@ -158,8 +158,7 @@ class Record extends Entity
      *
      * @return  static  Method allows chaining
      *
-     * @throws \RuntimeException
-     *
+     * @throws \Exception
      * @since   2.0
      */
     public function save($src, $updateNulls = false)
@@ -183,8 +182,7 @@ class Record extends Entity
      *
      * @return static Method allows chaining
      *
-     * @throws \InvalidArgumentException
-     *
+     * @throws \Exception
      * @since   2.0
      */
     public function bind($src, $replaceNulls = false)
@@ -206,11 +204,13 @@ class Record extends Entity
         $fields = $this->getFields();
 
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'src' => &$src,
             'fields' => $fields,
             'replaceNulls' => &$replaceNulls,
-        ]);
+        ]
+        );
 
         // Bind the source value, excluding the ignored fields.
         foreach ($src as $k => $v) {
@@ -236,20 +236,18 @@ class Record extends Entity
      * @param   boolean $reset   True to reset the default values before loading the new row.
      *
      * @return  static  Method allows chaining
-     * @throws \Windwalker\Record\Exception\NoResultException
-     *
+     * @throws \Exception
      * @since   2.0
-     * @throws  \RuntimeException
-     * @throws  \UnexpectedValueException
-     * @throws  \InvalidArgumentException
      */
     public function load($keys = null, $reset = true)
     {
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'conditions' => &$keys,
             'reset' => &$reset,
-        ]);
+        ]
+        );
 
         if ($reset) {
             $this->reset();
@@ -283,9 +281,11 @@ class Record extends Entity
         $row = $this->bind($result);
 
         // Event
-        $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onAfter' . ucfirst(__FUNCTION__), [
             'result' => &$row,
-        ]);
+        ]
+        );
 
         return $row;
     }
@@ -298,10 +298,7 @@ class Record extends Entity
      *
      * @return  static  Method allows chaining
      *
-     * @throws  \InvalidArgumentException
-     * @throws  \RuntimeException
-     * @throws  \UnexpectedValueException
-     *
+     * @throws \Exception
      * @since   2.0
      */
     public function delete($conditions = null)
@@ -327,9 +324,11 @@ class Record extends Entity
         }
 
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'conditions' => &$conditions,
-        ]);
+        ]
+        );
 
         // If no primary key is given, return false.
         if ($conditions === []) {
@@ -374,6 +373,7 @@ class Record extends Entity
      *
      * @return  static  Method allows chaining
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function store($updateNulls = false)
@@ -383,14 +383,18 @@ class Record extends Entity
         $action = $new ? 'Create' : 'Update';
 
         // @Event: Create / Update
-        $this->triggerEvent('onBefore' . $action, [
+        $this->triggerEvent(
+            'onBefore' . $action, [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         // @Event: Store
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         // Do Action
         // If a primary key exists update the object, otherwise insert it.
@@ -400,9 +404,11 @@ class Record extends Entity
         $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
         // @Event: Create / Update
-        $this->triggerEvent('onAfter' . $action, [
+        $this->triggerEvent(
+            'onAfter' . $action, [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         return $this;
     }
@@ -412,7 +418,7 @@ class Record extends Entity
      *
      * @return  static
      *
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function create()
     {
@@ -438,25 +444,32 @@ class Record extends Entity
      * @param bool $updateNulls
      *
      * @return  static
+     * @throws \Exception
      */
     public function update($updateNulls = false)
     {
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), [
+        $this->triggerEvent(
+            'onBefore' . ucfirst(__FUNCTION__), [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
-        $this->triggerEvent('onBeforeStore', [
+        $this->triggerEvent(
+            'onBeforeStore', [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         // Do Action
         $this->getDataMapper()->updateOne($this, $this->getKeyName(true), $updateNulls);
 
         // Event
-        $this->triggerEvent('onAfterStore', [
+        $this->triggerEvent(
+            'onAfterStore', [
             'updateNulls' => &$updateNulls,
-        ]);
+        ]
+        );
 
         $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
 
@@ -495,6 +508,7 @@ class Record extends Entity
      * @param bool $reset
      *
      * @return \stdClass[]
+     * @throws \Exception
      */
     public function getFields($reset = false)
     {
@@ -537,6 +551,7 @@ class Record extends Entity
      *
      * @return  boolean  True if the primary key(s) have been set.
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function hasPrimaryKey()
@@ -568,10 +583,7 @@ class Record extends Entity
      *
      * @return bool
      *
-     * @throws \Windwalker\Record\Exception\NoResultException
-     * @throws \UnexpectedValueException
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function valueExists($field, $value = null)
     {
@@ -647,7 +659,7 @@ class Record extends Entity
     public function getDispatcher()
     {
         if (!$this->dispatcher && class_exists(Dispatcher::class)) {
-            $this->dispatcher = new Dispatcher;
+            $this->dispatcher = new Dispatcher();
 
             if (is_subclass_of($this, DispatcherAwareInterface::class)) {
                 ListenerMapper::add($this);
@@ -682,6 +694,7 @@ class Record extends Entity
      *
      * @return  static
      *
+     * @throws \Exception
      * @since   2.0
      */
     public function reset($loadDefault = true)
@@ -702,6 +715,7 @@ class Record extends Entity
      * @param bool $replace
      *
      * @return static
+     * @throws \Exception
      */
     public function loadDefault($replace = false)
     {
@@ -718,6 +732,7 @@ class Record extends Entity
      * Method to get property Mapper
      *
      * @return  AbstractDataMapper
+     * @throws \Exception
      */
     public function getDataMapper()
     {

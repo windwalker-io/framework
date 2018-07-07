@@ -33,7 +33,7 @@ class YamlFormatTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->instance = new YamlFormat;
+        $this->instance = new YamlFormat();
     }
 
     /**
@@ -51,13 +51,14 @@ class YamlFormatTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Language\Format\YamlFormat::parse
      */
     public function testParse()
     {
         $file = file_get_contents(__DIR__ . '/../fixtures/yaml/en-GB.yml');
 
-        $lang = new Language;
+        $lang = new Language();
 
         $lang->addStrings($this->instance->parse($file));
 

@@ -22,7 +22,6 @@
  */
 function utf8_stristr($str, $search)
 {
-
     if (strlen($search) == 0) {
         return $str;
     }

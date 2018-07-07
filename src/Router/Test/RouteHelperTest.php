@@ -64,7 +64,9 @@ class RouteHelperTest extends \PHPUnit\Framework\TestCase
             'flower' => 'sakura',
         ];
 
-        $this->assertEquals(['flower' => 'sakura', 'id' => 5, 'bar' => 'foo'],
-            RouteHelper::getVariables($array, $vars));
+        $this->assertEquals(
+            ['flower' => 'sakura', 'id' => 5, 'bar' => 'foo'],
+            RouteHelper::getVariables($array, $vars)
+        );
     }
 }

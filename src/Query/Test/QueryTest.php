@@ -39,7 +39,7 @@ class QueryTest extends AbstractQueryTestCase
      */
     protected function setUp()
     {
-        $this->instance = new Query;
+        $this->instance = new Query();
     }
 
     /**
@@ -49,7 +49,7 @@ class QueryTest extends AbstractQueryTestCase
      */
     protected function getQuery()
     {
-        return new Query;
+        return new Query();
     }
 
     /**
@@ -100,6 +100,7 @@ class QueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClear()
@@ -119,6 +120,7 @@ class QueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearClause()
@@ -159,8 +161,10 @@ class QueryTest extends AbstractQueryTestCase
             // Check the state of the other clauses.
             foreach ($clauses as $clause2) {
                 if ($clause != $clause2) {
-                    $this->assertNotNull(TestHelper::getValue($query, $clause2),
-                        $clause2 . ' Should not be NULL if we clear ' . $clause . '.');
+                    $this->assertNotNull(
+                        TestHelper::getValue($query, $clause2),
+                        $clause2 . ' Should not be NULL if we clear ' . $clause . '.'
+                    );
                 }
             }
         }
@@ -171,6 +175,7 @@ class QueryTest extends AbstractQueryTestCase
      *
      * @return void
      *
+     * @throws \ReflectionException
      * @covers \Windwalker\Query\Query::clear
      */
     public function testClearType()
@@ -219,8 +224,10 @@ class QueryTest extends AbstractQueryTestCase
 
             // Now check the claues have not been affected.
             foreach ($clauses as $clause) {
-                $this->assertNotNull(TestHelper::getValue($query, $clause),
-                    $clause . ' should exists if we clear ' . $type);
+                $this->assertNotNull(
+                    TestHelper::getValue($query, $clause),
+                    $clause . ' should exists if we clear ' . $type
+                );
             }
         }
     }
@@ -239,16 +246,20 @@ class QueryTest extends AbstractQueryTestCase
             ->columns('a, b, c')
             ->values('1, 2, 3');
 
-        $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string) $query));
+        $this->assertEquals(
+            'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            trim((string) $query)
+        );
 
         $query = $this->getQuery()
             ->insert('foo')
             ->columns(['a', 'b', 'c'])
             ->values('1, 2, 3');
 
-        $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a,b,c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string) $query));
+        $this->assertEquals(
+            'INSERT INTO foo' . PHP_EOL . '(a,b,c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -292,8 +303,10 @@ class QueryTest extends AbstractQueryTestCase
             ->delete('foo')
             ->where('flower = "sakura"');
 
-        $this->assertEquals('DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
-            trim((string) $query));
+        $this->assertEquals(
+            'DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -306,8 +319,10 @@ class QueryTest extends AbstractQueryTestCase
      */
     public function testEscape()
     {
-        $this->assertEquals('foo "\'\'_-!@#$%^&*() \n' . " \t " . '\r \000',
-            $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0"));
+        $this->assertEquals(
+            'foo "\'\'_-!@#$%^&*() \n' . " \t " . '\r \000',
+            $this->instance->escape("foo \"'_-!@#$%^&*() \n \t \r \0")
+        );
     }
 
     /**
@@ -346,8 +361,10 @@ class QueryTest extends AbstractQueryTestCase
             ->from('foo AS a')
             ->from($query, 'b');
 
-        $this->assertEquals('SELECT *' . PHP_EOL . 'FROM foo AS a,' . PHP_EOL . '(SELECT *' . PHP_EOL . 'FROM foo) AS b',
-            trim((string) $query));
+        $this->assertEquals(
+            'SELECT *' . PHP_EOL . 'FROM foo AS a,' . PHP_EOL . '(SELECT *' . PHP_EOL . 'FROM foo) AS b',
+            trim((string) $query)
+        );
 
         // Array
         $query = $this->getQuery()
@@ -395,8 +412,10 @@ class QueryTest extends AbstractQueryTestCase
             ->from('foo AS a')
             ->group('a.id');
 
-        $this->assertEquals('SELECT a.*' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'GROUP BY a.id',
-            trim((string) $query));
+        $this->assertEquals(
+            'SELECT a.*' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'GROUP BY a.id',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -413,8 +432,10 @@ class QueryTest extends AbstractQueryTestCase
             ->from('foo AS a')
             ->having('aid = "sun"');
 
-        $this->assertEquals('SELECT a.id AS aid' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'HAVING aid = "sun"',
-            trim((string) $query));
+        $this->assertEquals(
+            'SELECT a.id AS aid' . PHP_EOL . 'FROM foo AS a' . PHP_EOL . 'HAVING aid = "sun"',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -450,11 +471,13 @@ class QueryTest extends AbstractQueryTestCase
             ->select('*')
             ->from('foo')
             ->having('a = b')
-            ->orHaving(function (Query $query) {
-                $query->having('c = d')
-                    ->having('e = f')
-                    ->having('g = h');
-            })
+            ->orHaving(
+                function (Query $query) {
+                    $query->having('c = d')
+                        ->having('e = f')
+                        ->having('g = h');
+                }
+            )
             ->order('id');
 
         $sql = 'SELECT * FROM foo HAVING a = b AND (c = d OR e = f OR g = h)  ORDER BY id';
@@ -570,7 +593,8 @@ class QueryTest extends AbstractQueryTestCase
         $query = $this->getQuery()
             ->select('a.*, b.*')
             ->from('foo AS a')
-            ->join('INNER',
+            ->join(
+                'INNER',
                 [
                     'bar AS b ON a.id = b.aid',
                     'yoo AS y ON a.id = y.aid',
@@ -1010,8 +1034,10 @@ class QueryTest extends AbstractQueryTestCase
             ->columns('a, b, c')
             ->values('1, 2, 3');
 
-        $this->assertEquals('INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
-            trim((string) $query));
+        $this->assertEquals(
+            'INSERT INTO foo' . PHP_EOL . '(a, b, c) VALUES ' . PHP_EOL . '(1, 2, 3)',
+            trim((string) $query)
+        );
 
         $query = $this->getQuery()
             ->insert('foo')
@@ -1073,8 +1099,10 @@ class QueryTest extends AbstractQueryTestCase
             ->delete('foo')
             ->where('flower = "sakura"');
 
-        $this->assertEquals('DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
-            trim((string) $query));
+        $this->assertEquals(
+            'DELETE ' . PHP_EOL . 'FROM foo' . PHP_EOL . 'WHERE flower = "sakura"',
+            trim((string) $query)
+        );
     }
 
     /**
@@ -1110,11 +1138,13 @@ class QueryTest extends AbstractQueryTestCase
             ->select('*')
             ->from('foo')
             ->where('a = b')
-            ->orWhere(function (Query $query) {
-                $query->where('c = d')
-                    ->where('e = f')
-                    ->where('g = h');
-            })
+            ->orWhere(
+                function (Query $query) {
+                    $query->where('c = d')
+                        ->where('e = f')
+                        ->where('g = h');
+                }
+            )
             ->order('id');
 
         $sql = 'SELECT * FROM foo WHERE a = b AND (c = d OR e = f OR g = h)  ORDER BY id';

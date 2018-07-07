@@ -67,9 +67,11 @@ class LocalMethodTest extends \PHPUnit\Framework\TestCase
      */
     public function testAuthenticate()
     {
-        $this->instance->setVerifyHandler(function ($pass, $hash) {
-            return $pass == $hash;
-        });
+        $this->instance->setVerifyHandler(
+            function ($pass, $hash) {
+                return $pass == $hash;
+            }
+        );
 
         $credential = new Credential(['username' => 'flower', 'password' => '1234']);
 

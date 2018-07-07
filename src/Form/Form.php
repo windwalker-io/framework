@@ -161,7 +161,7 @@ class Form implements \IteratorAggregate
             $field = $name;
         } else {
             if (is_string($field) && class_exists($field)) {
-                $field = new $field;
+                $field = new $field();
             }
 
             if (!$field instanceof AbstractField) {

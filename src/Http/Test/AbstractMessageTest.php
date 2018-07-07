@@ -35,7 +35,7 @@ class AbstractMessageTest extends AbstractBaseTestCase
      */
     protected function setUp()
     {
-        $this->message = new StubMessage;
+        $this->message = new StubMessage();
     }
 
     /**
@@ -66,9 +66,11 @@ class AbstractMessageTest extends AbstractBaseTestCase
         $this->assertEquals('1.0', $message->getProtocolVersion());
 
         // Wrong type
-        $this->assertExpectedException(function () use ($message) {
-            $message->withProtocolVersion(1.0);
-        }, 'InvalidArgumentException');
+        $this->assertExpectedException(
+            function () use ($message) {
+                $message->withProtocolVersion(1.0);
+            }, 'InvalidArgumentException'
+        );
     }
 
     /**
@@ -207,7 +209,7 @@ class AbstractMessageTest extends AbstractBaseTestCase
      */
     public function testWithAndGetBody()
     {
-        $message = $this->message->withBody(new Stream);
+        $message = $this->message->withBody(new Stream());
 
         $this->assertNotSame($this->message, $message);
         $this->assertInstanceOf('Psr\Http\Message\StreamInterface', $message->getBody());

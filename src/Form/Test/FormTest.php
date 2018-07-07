@@ -54,7 +54,7 @@ class FormTest extends AbstractBaseTestCase
     {
         $form = new Form($control);
 
-        $form->defineFormFields(new StubFieldDefinition);
+        $form->defineFormFields(new StubFieldDefinition());
 
         return $form;
     }
@@ -117,7 +117,7 @@ class FormTest extends AbstractBaseTestCase
      */
     public function testAddAndGetFields()
     {
-        $form = new Form;
+        $form = new Form();
 
         $form->addFields(
             [
@@ -170,7 +170,7 @@ class FormTest extends AbstractBaseTestCase
      */
     public function testAddAndGetField()
     {
-        $form = new Form;
+        $form = new Form();
 
         $form->addField(new TextField('foo'));
 
@@ -196,7 +196,7 @@ class FormTest extends AbstractBaseTestCase
     {
         FieldHelper::reset();
 
-        $form = new Form;
+        $form = new Form();
 
         $form->addFieldNamespace('TestNS');
 
@@ -218,7 +218,7 @@ class FormTest extends AbstractBaseTestCase
     {
         FilterHelper::reset();
 
-        $form = new Form;
+        $form = new Form();
 
         $form->addFilterNamespace('TestNS');
 
@@ -240,7 +240,7 @@ class FormTest extends AbstractBaseTestCase
     {
         ValidatorHelper::reset();
 
-        $form = new Form;
+        $form = new Form();
 
         $form->addValidatorNamespace('TestNS');
 
@@ -515,10 +515,12 @@ class FormTest extends AbstractBaseTestCase
 
         // Use renderer
 
-        $form->setRenderer(new MockFormRenderer);
+        $form->setRenderer(new MockFormRenderer());
 
-        $this->assertEquals('<mock id="input-windwalker-id-control" class="text-field ">Hello World: windwalker[id]</mock>',
-            $form->renderField('id'));
+        $this->assertEquals(
+            '<mock id="input-windwalker-id-control" class="text-field ">Hello World: windwalker[id]</mock>',
+            $form->renderField('id')
+        );
     }
 
     /**
@@ -594,14 +596,16 @@ class FormTest extends AbstractBaseTestCase
      */
     public function testSetAndGetFieldRendererHandler()
     {
-        $renderer = new MockFormRenderer;
+        $renderer = new MockFormRenderer();
 
-        $form = new Form;
-        $form->add('test', new TextField);
+        $form = new Form();
+        $form->add('test', new TextField());
 
         $form->setRenderer($renderer);
 
-        $this->assertEquals('<mock id="input-test-control" class="text-field ">Hello World: test</mock>',
-            trim($form->renderFields()));
+        $this->assertEquals(
+            '<mock id="input-test-control" class="text-field ">Hello World: test</mock>',
+            trim($form->renderFields())
+        );
     }
 }

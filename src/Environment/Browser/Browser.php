@@ -18,31 +18,53 @@ namespace Windwalker\Environment\Browser;
 class Browser
 {
     const DEVICE_WINDOWS = 'Windows';
+
     const DEVICE_WINDOWS_PHONE = 'Windows Phone';
+
     const DEVICE_WINDOWS_CE = 'Windows CE';
+
     const DEVICE_IPHONE = 'iPhone';
+
     const DEVICE_IPAD = 'iPad';
+
     const DEVICE_IPOD = 'iPod';
+
     const DEVICE_MAC = 'Mac';
+
     const DEVICE_BLACKBERRY = 'Blackberry';
+
     const DEVICE_ANDROID = 'Android';
+
     const DEVICE_LINUX = 'Linux';
 
     const ENGINE_TRIDENT = 'Trident';
+
     const ENGINE_EDGE_HTML = 'EdgeHTML';
+
     const ENGINE_WEBKIT = 'Webkit';
+
     const ENGINE_GECKO = 'Gecko';
+
     const ENGINE_PRESTO = 'Presto';
+
     const ENGINE_KHTML = 'KHTML';
 
     const AMAYA = 'Amaya';
+
     const IE = 'MSIE';
+
     const EDGE = 'Edge';
+
     const FIREFOX = 'Firefox';
+
     const CHROME = 'Chrome';
+
     const SAFARI = 'Safari';
+
     const OPERA = 'Opera';
+
     const VIVALDI = 'Vivaldi';
+
     const ANDROID_TABLET = 'Android Tablet';
 
     /**
@@ -425,7 +447,6 @@ class Browser
                 $this->device = self::DEVICE_LINUX;
 
                 break;
-
         }
 
         // Mark this detection routine as run.
