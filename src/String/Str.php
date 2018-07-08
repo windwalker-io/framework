@@ -289,7 +289,7 @@ class Str
             return $string;
         }
 
-        $left  = Mbstring::substr($string, 0, $position, $encoding);
+        $left = Mbstring::substr($string, 0, $position, $encoding);
         $right = Mbstring::substr($string, $position, $length, $encoding);
 
         return $left . $insert . $right;
@@ -370,7 +370,7 @@ class Str
      */
     public static function intersectLeft($string1, $string2, $encoding = null)
     {
-        $encoding  = $encoding === null ? mb_internal_encoding() : $encoding;
+        $encoding = $encoding === null ? mb_internal_encoding() : $encoding;
         $maxLength = min(Mbstring::strlen($string1, $encoding), Mbstring::strlen($string2, $encoding));
         $intersect = '';
 
@@ -398,7 +398,7 @@ class Str
      */
     public static function intersectRight($string1, $string2, $encoding = null)
     {
-        $encoding  = $encoding === null ? mb_internal_encoding() : $encoding;
+        $encoding = $encoding === null ? mb_internal_encoding() : $encoding;
         $maxLength = min(Mbstring::strlen($string1, $encoding), Mbstring::strlen($string2, $encoding));
         $intersect = '';
 
@@ -429,7 +429,7 @@ class Str
      */
     public static function intersect($string1, $string2, $encoding = null)
     {
-        $encoding   = $encoding === null ? mb_internal_encoding() : $encoding;
+        $encoding = $encoding === null ? mb_internal_encoding() : $encoding;
         $str1Length = Mbstring::strlen($string1, $encoding);
         $str2Length = Mbstring::strlen($string2, $encoding);
 
@@ -479,9 +479,9 @@ class Str
         $substring = ' ',
         $encoding = null
     ) {
-        $encoding  = $encoding === null ? mb_internal_encoding() : $encoding;
+        $encoding = $encoding === null ? mb_internal_encoding() : $encoding;
         $strLength = Mbstring::strlen($string, $encoding);
-        $padding   = $length - $strLength;
+        $padding = $length - $strLength;
 
         return static::doPad($string, (int) floor($padding / 2), (int) ceil($padding / 2), $substring, $encoding);
     }
@@ -546,15 +546,15 @@ class Str
         $substring,
         $encoding = null
     ) {
-        $strLength    = Mbstring::strlen($string, $encoding);
-        $padLength    = Mbstring::strlen($substring, $encoding);
+        $strLength = Mbstring::strlen($string, $encoding);
+        $padLength = Mbstring::strlen($substring, $encoding);
         $paddedLength = $strLength + $left + $right;
 
         if (!$padLength || $paddedLength <= $strLength) {
             return $string;
         }
 
-        $leftStr  = Mbstring::substr(str_repeat($substring, (int) ceil($left / $padLength)), 0, $left, $encoding);
+        $leftStr = Mbstring::substr(str_repeat($substring, (int) ceil($left / $padLength)), 0, $left, $encoding);
         $rightStr = Mbstring::substr(str_repeat($substring, (int) ceil($right / $padLength)), 0, $right, $encoding);
 
         return $leftStr . $string . $rightStr;
@@ -684,7 +684,7 @@ class Str
             $length = Mbstring::strlen($string, $encoding);
         } elseif ($end >= 0 && $end <= $start) {
             $length = $start - $end;
-            $start  = $end;
+            $start = $end;
         } elseif ($end < 0) {
             $length = Mbstring::strlen($string, $encoding) + $end - $start;
         } else {
@@ -766,7 +766,7 @@ class Str
 
         if (!$wordBreak && Mbstring::strpos($result, ' ', 0, $encoding) !== $length) {
             $position = Mbstring::strrpos($result, ' ', 0, $encoding);
-            $result   = Mbstring::substr($result, 0, $position, $encoding);
+            $result = Mbstring::substr($result, 0, $position, $encoding);
         }
 
         return $result . $suffix;
@@ -808,15 +808,17 @@ class Str
     public static function filter($string, callable $callback, $encoding = null)
     {
         return static::map(
-            $string, function ($char, &$key) use ($callback) {
-            if ($callback instanceof \Closure) {
-                $result = $callback($char, $key);
-            } else {
-                $result = $callback($char);
-            }
+            $string,
+            function ($char, &$key) use ($callback) {
+                if ($callback instanceof \Closure) {
+                    $result = $callback($char, $key);
+                } else {
+                    $result = $callback($char);
+                }
 
-            return $result ? $char : '';
-        }, $encoding
+                return $result ? $char : '';
+            },
+            $encoding
         );
     }
 
@@ -832,15 +834,17 @@ class Str
     public static function reject($string, callable $callback, $encoding = null)
     {
         return static::filter(
-            $string, function ($char, &$key) use ($callback) {
-            if ($callback instanceof \Closure) {
-                $result = $callback($char, $key);
-            } else {
-                $result = $callback($char);
-            }
+            $string,
+            function ($char, &$key) use ($callback) {
+                if ($callback instanceof \Closure) {
+                    $result = $callback($char, $key);
+                } else {
+                    $result = $callback($char);
+                }
 
-            return !$result;
-        }, $encoding
+                return !$result;
+            },
+            $encoding
         );
     }
 }

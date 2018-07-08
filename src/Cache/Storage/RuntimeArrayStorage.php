@@ -71,7 +71,7 @@ class RuntimeArrayStorage extends AbstractCacheStorage
      */
     public function save(CacheItemInterface $item, $ttl = null)
     {
-        $key   = $item->getKey();
+        $key = $item->getKey();
         $value = $item->get();
 
         static::$store[$key] = $value;

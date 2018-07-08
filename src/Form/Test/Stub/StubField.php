@@ -33,16 +33,16 @@ class StubField extends AbstractField
      */
     public function prepare(&$attrs)
     {
-        $attrs['type']      = 'text';
-        $attrs['name']      = $this->getFieldName();
-        $attrs['id']        = $this->getAttribute('id', $this->getId());
-        $attrs['class']     = $this->getAttribute('class');
-        $attrs['size']      = $this->getAttribute('size');
+        $attrs['type'] = 'text';
+        $attrs['name'] = $this->getFieldName();
+        $attrs['id'] = $this->getAttribute('id', $this->getId());
+        $attrs['class'] = $this->getAttribute('class');
+        $attrs['size'] = $this->getAttribute('size');
         $attrs['maxlength'] = $this->getAttribute('size');
-        $attrs['readonly']  = $this->getAttribute('readonly');
-        $attrs['disabled']  = $this->getAttribute('disabled');
-        $attrs['onchange']  = $this->getAttribute('onchange');
-        $attrs['value']     = $this->getValue();
+        $attrs['readonly'] = $this->getAttribute('readonly');
+        $attrs['disabled'] = $this->getAttribute('disabled');
+        $attrs['onchange'] = $this->getAttribute('onchange');
+        $attrs['value'] = $this->getValue();
 
         $attrs = array_merge($attrs, (array) $this->getAttribute('attribs'));
     }

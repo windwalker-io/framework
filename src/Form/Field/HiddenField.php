@@ -31,13 +31,13 @@ class HiddenField extends AbstractField
      */
     public function prepare(&$attrs)
     {
-        $attrs['type']     = 'hidden';
-        $attrs['name']     = $this->getFieldName();
-        $attrs['id']       = $this->getAttribute('id', $this->getId());
-        $attrs['class']    = $this->getAttribute('class');
+        $attrs['type'] = 'hidden';
+        $attrs['name'] = $this->getFieldName();
+        $attrs['id'] = $this->getAttribute('id', $this->getId());
+        $attrs['class'] = $this->getAttribute('class');
         $attrs['disabled'] = $this->getAttribute('disabled');
         $attrs['onchange'] = $this->getAttribute('onchange');
-        $attrs['value']    = $this->getValue();
+        $attrs['value'] = $this->getValue();
     }
 }
 

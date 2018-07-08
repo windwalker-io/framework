@@ -53,9 +53,9 @@ class ValidateResult
      */
     public function __construct($result = self::STATUS_SUCCESS, $message = null, AbstractField $field = null)
     {
-        $this->field   = $field;
+        $this->field = $field;
         $this->message = $message;
-        $this->result  = $result;
+        $this->result = $result;
     }
 
     /**

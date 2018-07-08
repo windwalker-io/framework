@@ -27,8 +27,8 @@ class InputElement extends HtmlElement
      */
     public function __construct($type, $name, $value = '', $attribs = [])
     {
-        $attribs['type']  = $type;
-        $attribs['name']  = $name;
+        $attribs['type'] = $type;
+        $attribs['name'] = $name;
         $attribs['value'] = $value;
 
         parent::__construct('input', null, $attribs);

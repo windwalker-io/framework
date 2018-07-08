@@ -421,7 +421,8 @@ abstract class AbstractTable
      */
     public function getName()
     {
-        if ($this->database instanceof AbstractDatabase && $this->database->getName() != $this->db->getCurrentDatabase()) {
+        if ($this->database instanceof AbstractDatabase && $this->database->getName() != $this->db->getCurrentDatabase(
+            )) {
             return $this->database->getName() . '.' . $this->name;
         }
 
@@ -553,7 +554,7 @@ abstract class AbstractTable
     {
         $typeMapper = $this->getDataType();
 
-        $type   = $typeMapper::getType($column->getType());
+        $type = $typeMapper::getType($column->getType());
         $length = $column->getLength() ?: $typeMapper::getLength($type);
 
         $length = $length ? '(' . $length . ')' : null;
@@ -595,8 +596,8 @@ abstract class AbstractTable
     public function reset()
     {
         $this->columnCache = [];
-        $this->indexCache  = [];
-        $this->database    = null;
+        $this->indexCache = [];
+        $this->database = null;
 
         return $this;
     }

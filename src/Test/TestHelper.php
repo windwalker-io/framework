@@ -39,10 +39,10 @@ class TestHelper
         foreach ($array as $index => $method) {
             if (is_array($method)) {
                 $methodName = $index;
-                $callback   = $method;
+                $callback = $method;
             } else {
                 $methodName = $method;
-                $callback   = [get_called_class(), 'mock' . $method];
+                $callback = [get_called_class(), 'mock' . $method];
             }
 
             $mockObject->expects($test->any())
@@ -109,7 +109,8 @@ class TestHelper
 
         throw new \InvalidArgumentException(
             sprintf(
-                'Invalid property [%s] for class [%s]', $propertyName,
+                'Invalid property [%s] for class [%s]',
+                $propertyName,
                 get_class($object)
             )
         );

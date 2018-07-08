@@ -67,7 +67,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
         );
 
         // Given Source & filter
-        $src  = ['foo' => 'bar'];
+        $src = ['foo' => 'bar'];
         $json = new JsonInput($src);
 
         $this->assertEquals(
@@ -79,7 +79,7 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
         JsonInput::setRawFormData(null);
 
         $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
-        $json                          = new JsonInput();
+        $json = new JsonInput();
 
         $this->assertEquals(
             ['a' => 1, 'b' => 2],

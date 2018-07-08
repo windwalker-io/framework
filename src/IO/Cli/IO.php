@@ -43,7 +43,7 @@ class IO implements IOInterface, \IteratorAggregate, \ArrayAccess, \Serializable
      */
     public function __construct(CliInputInterface $input = null, CliOutputInterface $output = null)
     {
-        $this->input  = $input ?: new CliInput();
+        $this->input = $input ?: new CliInput();
         $this->output = $output ?: new CliOutput();
     }
 

@@ -117,9 +117,9 @@ class Edge
         EdgeCompilerInterface $compiler = null,
         EdgeCacheInterface $cache = null
     ) {
-        $this->loader   = $loader ?: new EdgeStringLoader();
+        $this->loader = $loader ?: new EdgeStringLoader();
         $this->compiler = $compiler ?: new EdgeCompiler();
-        $this->cache    = $cache ?: new EdgeArrayCache();
+        $this->cache = $cache ?: new EdgeArrayCache();
     }
 
     /**
@@ -359,7 +359,9 @@ class Edge
         $sectionContent = str_replace('@@parent', '--parent--holder--', $sectionContent);
 
         return str_replace(
-            '--parent--holder--', '@parent', str_replace('@parent', '', $sectionContent)
+            '--parent--holder--',
+            '@parent',
+            str_replace('@parent', '', $sectionContent)
         );
     }
 
@@ -488,10 +490,10 @@ class Edge
     {
         $this->renderCount = 0;
 
-        $this->sections     = [];
+        $this->sections = [];
         $this->sectionStack = [];
 
-        $this->pushes    = [];
+        $this->pushes = [];
         $this->pushStack = [];
     }
 

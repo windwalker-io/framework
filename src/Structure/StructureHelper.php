@@ -104,7 +104,8 @@ class StructureHelper
         if (!class_exists($class)) {
             throw new \DomainException(
                 sprintf(
-                    'Structure format: %s not supported. Class: %s not found.', $format,
+                    'Structure format: %s not supported. Class: %s not found.',
+                    $format,
                     $class
                 )
             );
@@ -270,7 +271,7 @@ class StructureHelper
         }
 
         $previous = null;
-        $dataTmp  = &$data;
+        $dataTmp = &$data;
 
         foreach ($nodes as $node) {
             if (is_array($dataTmp)) {
@@ -279,7 +280,7 @@ class StructureHelper
                 }
 
                 $previous = &$dataTmp;
-                $dataTmp  = &$dataTmp[$node];
+                $dataTmp = &$dataTmp[$node];
             } else {
                 return false;
             }

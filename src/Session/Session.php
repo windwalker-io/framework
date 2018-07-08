@@ -196,7 +196,10 @@ class Session implements \ArrayAccess, \IteratorAggregate
         }
 
         $this->bridge->setCookieParams(
-            $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'],
+            $cookie['lifetime'],
+            $cookie['path'],
+            $cookie['domain'],
+            $cookie['secure'],
             true
         );
     }
@@ -275,7 +278,10 @@ class Session implements \ArrayAccess, \IteratorAggregate
          */
         if (isset($_COOKIE[$this->bridge->getName()])) {
             setcookie(
-                $this->bridge->getName(), '', time() - 42000, $this->getOption('cookie_path'),
+                $this->bridge->getName(),
+                '',
+                time() - 42000,
+                $this->getOption('cookie_path'),
                 $this->getOption('cookie_domain')
             );
         }
@@ -339,7 +345,10 @@ class Session implements \ArrayAccess, \IteratorAggregate
 
         // Restore config
         $this->bridge->setCookieParams(
-            $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'],
+            $cookie['lifetime'],
+            $cookie['path'],
+            $cookie['domain'],
+            $cookie['secure'],
             true
         );
 
@@ -825,9 +834,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     protected function createToken($length = 32)
     {
         static $chars = '0123456789abcdef';
-        $max   = strlen($chars) - 1;
+        $max = strlen($chars) - 1;
         $token = '';
-        $name  = $this->getName();
+        $name = $this->getName();
 
         for ($i = 0; $i < $length; ++$i) {
             $token .= $chars[(mt_rand(0, $max))];

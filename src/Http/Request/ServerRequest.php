@@ -117,12 +117,12 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
             $body = new PhpInputStream();
         }
 
-        $this->serverParams  = $serverParams;
+        $this->serverParams = $serverParams;
         $this->uploadedFiles = $uploadedFiles;
-        $this->cookieParams  = $cookies;
-        $this->queryParams   = $queryParams;
-        $this->parsedBody    = $parsedBody;
-        $this->protocol      = $protocol;
+        $this->cookieParams = $cookies;
+        $this->queryParams = $queryParams;
+        $this->parsedBody = $parsedBody;
+        $this->protocol = $protocol;
 
         parent::__construct($uri, $method, $body, $headers);
     }

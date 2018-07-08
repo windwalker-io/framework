@@ -580,7 +580,8 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
             throw new \UnexpectedValueException(
                 sprintf(
                     'The value at path: %s should be object or array but is %s.',
-                    $path, \gettype($node)
+                    $path,
+                    \gettype($node)
                 )
             );
         }
@@ -624,7 +625,8 @@ class Structure implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, 
             throw new \UnexpectedValueException(
                 sprintf(
                     'The value at path: %s should be object or array but is %s.',
-                    $path, gettype($node)
+                    $path,
+                    gettype($node)
                 )
             );
         }

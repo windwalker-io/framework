@@ -103,7 +103,7 @@ trait CollectionTrait
      */
     public function partition(callable $callback, $keepKey = false)
     {
-        $true  = [];
+        $true = [];
         $false = [];
 
         if (is_string($callback)) {
@@ -121,7 +121,7 @@ trait CollectionTrait
         }
 
         if (!$keepKey) {
-            $true  = array_values($true);
+            $true = array_values($true);
             $false = array_values($false);
         }
 

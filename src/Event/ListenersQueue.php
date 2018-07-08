@@ -54,7 +54,7 @@ class ListenersQueue implements \IteratorAggregate, \Countable
      */
     public function __construct()
     {
-        $this->queue   = new \SplPriorityQueue();
+        $this->queue = new \SplPriorityQueue();
         $this->storage = new \SplObjectStorage();
     }
 

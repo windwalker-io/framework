@@ -71,7 +71,7 @@ class ArrayStorage extends AbstractCacheStorage
      */
     public function save(CacheItemInterface $item, $ttl = null)
     {
-        $key   = $item->getKey();
+        $key = $item->getKey();
         $value = $item->get();
 
         $this->data[$key] = $value;

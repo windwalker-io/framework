@@ -302,7 +302,12 @@ class MysqlTableTest extends AbstractMysqlTestCase
         $table = $this->db->getTable('#__categories');
 
         $table->addColumn(
-            'state', DataType::INTEGER, Column::SIGNED, Column::NOT_NULL, 0, 'State',
+            'state',
+            DataType::INTEGER,
+            Column::SIGNED,
+            Column::NOT_NULL,
+            0,
+            'State',
             ['position' => 'AFTER ordering', 'length' => 1]
         );
 

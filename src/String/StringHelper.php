@@ -121,7 +121,7 @@ abstract class StringHelper
 
         // Regular expression search and replace patterns.
         if (is_array($styleSpec[0])) {
-            $rxSearch  = $styleSpec[0][0];
+            $rxSearch = $styleSpec[0][0];
             $rxReplace = $styleSpec[0][1];
         } else {
             $rxSearch = $rxReplace = $styleSpec[0];
@@ -137,10 +137,10 @@ abstract class StringHelper
 
         // Check if we are incrementing an existing pattern, or appending a new one.
         if (preg_match($rxSearch, $string, $matches)) {
-            $n      = empty($n) ? ($matches[1] + 1) : $n;
+            $n = empty($n) ? ($matches[1] + 1) : $n;
             $string = preg_replace($rxReplace, sprintf($oldFormat, $n), $string);
         } else {
-            $n      = empty($n) ? 2 : $n;
+            $n = empty($n) ? 2 : $n;
             $string .= sprintf($newFormat, $n);
         }
 

@@ -65,7 +65,7 @@ EOF;
         }
 
         /** @var Command $command */
-        $name        = $command->getName();
+        $name = $command->getName();
         $description = $command->getDescription() ?: 'No description';
 
         $template = str_replace('{WIDTH}', $this->maxLength + $this->offsetAfterCommand, $this->template);
@@ -75,12 +75,12 @@ EOF;
 
         $description = explode("\n", $description);
 
-        $line1  = array_shift($description);
+        $line1 = array_shift($description);
         $body[] = sprintf($template, $name, $line1);
 
         foreach ($description as $line) {
-            $line   = trim($line);
-            $line   = sprintf($template, '', $line);
+            $line = trim($line);
+            $line = sprintf($template, '', $line);
             $body[] = $line;
         }
 

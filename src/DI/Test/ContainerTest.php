@@ -362,7 +362,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         // Not shared object
         $container = new Container();
 
-        $foo  = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
+        $foo = $container->createObject('Windwalker\\DI\\Test\\Mock\\Foo');
         $foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
 
         $this->assertNotSame($foo, $foo2);
@@ -370,7 +370,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         // Shared object
         $container = new Container();
 
-        $foo  = $container->createSharedObject('Windwalker\\DI\\Test\\Mock\\Foo');
+        $foo = $container->createSharedObject('Windwalker\\DI\\Test\\Mock\\Foo');
         $foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
 
         $this->assertSame($foo, $foo2);
@@ -407,7 +407,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 
         $container->prepareSharedObject('Windwalker\\DI\\Test\\Mock\\Foo');
 
-        $foo  = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
+        $foo = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
         $foo2 = $container->get('Windwalker\\DI\\Test\\Mock\\Foo');
 
         $this->assertSame($foo, $foo2);

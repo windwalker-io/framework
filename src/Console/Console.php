@@ -147,7 +147,7 @@ class Console extends AbstractConsole
             $command->renderException($e);
 
             $exitCode = $e->getCode();
-            $error    = true;
+            $error = true;
         } catch (\Throwable $t) {
             $command->renderException(
                 new \ErrorException(
@@ -157,7 +157,7 @@ class Console extends AbstractConsole
             );
 
             $exitCode = $t->getCode();
-            $error    = true;
+            $error = true;
         }
 
         if ($exitCode === true) {

@@ -67,9 +67,9 @@ class AbstractRequestTest extends AbstractBaseTestCase
         $this->assertEquals([], $request->getHeaders());
 
         // Test with params
-        $uri     = 'http://example.com/?foo=bar#baz';
-        $method  = 'post';
-        $body    = fopen($tmpfile = tempnam(sys_get_temp_dir(), 'windwalker'), 'wb+');
+        $uri = 'http://example.com/?foo=bar#baz';
+        $method = 'post';
+        $body = fopen($tmpfile = tempnam(sys_get_temp_dir(), 'windwalker'), 'wb+');
         $headers = [
             'X-Foo' => ['Flower', 'Sakura'],
             'Content-Type' => 'application/json',
@@ -88,8 +88,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
         fclose($body);
 
         // Test with object params
-        $uri     = new PsrUri('http://example.com/flower/sakura?foo=bar#baz');
-        $body    = new Stream();
+        $uri = new PsrUri('http://example.com/flower/sakura?foo=bar#baz');
+        $body = new Stream();
         $request = new StubRequest($uri, null, $body);
 
         $this->assertSame($uri, $request->getUri());
@@ -142,7 +142,8 @@ class AbstractRequestTest extends AbstractBaseTestCase
         $this->assertExpectedException(
             function () use ($request) {
                 $request->withMethod('FLY');
-            }, new \InvalidArgumentException()
+            },
+            new \InvalidArgumentException()
         );
     }
 

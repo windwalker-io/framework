@@ -276,7 +276,7 @@ class ArrayHelper
      */
     public static function group(array $source, $key = null)
     {
-        $result  = [];
+        $result = [];
         $counter = [];
 
         foreach ($source as $index => $value) {
@@ -287,7 +287,7 @@ class ArrayHelper
                     continue;
                 }
 
-                $resultKey   = $value[$key];
+                $resultKey = $value[$key];
                 $resultValue = $source[$index];
             } elseif (is_object($value)) {
                 // If the key does not exist, ignore it.
@@ -295,18 +295,18 @@ class ArrayHelper
                     continue;
                 }
 
-                $resultKey   = $value->$key;
+                $resultKey = $value->$key;
                 $resultValue = $source[$index];
             } else {
                 // Just a scalar value.
-                $resultKey   = $value;
+                $resultKey = $value;
                 $resultValue = $index;
             }
 
             // The counter tracks how many times a key has been used.
             if (empty($counter[$resultKey])) {
                 // The first time around we just assign the value to the key.
-                $result[$resultKey]  = $resultValue;
+                $result[$resultKey] = $resultValue;
                 $counter[$resultKey] = 1;
             } elseif ($counter[$resultKey] == 1) {
                 // If there is a second time, we convert the value into an array.
@@ -358,8 +358,8 @@ class ArrayHelper
     public static function pivot($array)
     {
         $array = (array) $array;
-        $new   = [];
-        $keys  = array_keys($array);
+        $new = [];
+        $keys = array_keys($array);
 
         foreach ($keys as $k => $val) {
             foreach ((array) $array[$val] as $k2 => $v2) {
@@ -390,10 +390,10 @@ class ArrayHelper
             $locale = [$locale];
         }
 
-        $sortCase      = (array) $caseSensitive;
+        $sortCase = (array) $caseSensitive;
         $sortDirection = (array) $direction;
-        $key           = (array) $k;
-        $sortLocale    = $locale;
+        $key = (array) $k;
+        $sortLocale = $locale;
 
         usort(
             $a,
@@ -653,7 +653,7 @@ class ArrayHelper
         }
 
         $previous = null;
-        $dataTmp  = &$data;
+        $dataTmp = &$data;
 
         foreach ($nodes as $node) {
             if (is_object($dataTmp)) {
@@ -662,14 +662,14 @@ class ArrayHelper
                 }
 
                 $previous = &$dataTmp;
-                $dataTmp  = &$dataTmp->$node;
+                $dataTmp = &$dataTmp->$node;
             } elseif (is_array($dataTmp)) {
                 if (empty($dataTmp[$node])) {
                     return false;
                 }
 
                 $previous = &$dataTmp;
-                $dataTmp  = &$dataTmp[$node];
+                $dataTmp = &$dataTmp[$node];
             } else {
                 return false;
             }
@@ -703,11 +703,11 @@ class ArrayHelper
 
         $self = __FUNCTION__;
 
-        $type       = gettype($data);
-        $tabs       = str_repeat('    ', $tabLevel);
+        $type = gettype($data);
+        $tabs = str_repeat('    ', $tabLevel);
         $quoteTabes = str_repeat('    ', $tabLevel - 1);
-        $output     = '';
-        $elements   = [];
+        $output = '';
+        $elements = [];
 
         $recursiveType = ['object', 'array'];
 
@@ -715,8 +715,8 @@ class ArrayHelper
         if (in_array($type, $recursiveType)) {
             // If type is object, try to get properties by Reflection.
             if ($type === 'object') {
-                $output     = get_class($data) . ' ' . ucfirst($type);
-                $ref        = new \ReflectionObject($data);
+                $output = get_class($data) . ' ' . ucfirst($type);
+                $ref = new \ReflectionObject($data);
                 $properties = $ref->getProperties();
 
                 foreach ($properties as $property) {
@@ -738,7 +738,7 @@ class ArrayHelper
                 }
             } // If type is array, just retun it's value.
             elseif ($type === 'array') {
-                $output   = ucfirst($type);
+                $output = ucfirst($type);
                 $elements = $data;
             }
 
@@ -822,7 +822,7 @@ class ArrayHelper
      */
     public static function query($array, $queries = [], $strict = false, $keepKey = false)
     {
-        $array   = static::toArray($array, false);
+        $array = static::toArray($array, false);
         $results = [];
 
         // If queries is callback, we run this logic to compare values.

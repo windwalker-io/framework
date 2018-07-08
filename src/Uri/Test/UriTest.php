@@ -65,7 +65,9 @@ class UriTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstruct()
     {
-        $object = new Uri('http://someuser:somepass@www.example.com:80/path/file.html?var=value&amp;test=true#fragment');
+        $object = new Uri(
+            'http://someuser:somepass@www.example.com:80/path/file.html?var=value&amp;test=true#fragment'
+        );
 
         $this->assertThat(
             $object->getHost(),
@@ -110,7 +112,9 @@ class UriTest extends \PHPUnit\Framework\TestCase
 
         $this->assertThat(
             $this->object->toString(),
-            $this->equalTo('ftp://root:secret@www.example.org:8888/this/is/a/path/to/a/file?somevar=somevalue&somevar2=somevalue2#someFragment')
+            $this->equalTo(
+                'ftp://root:secret@www.example.org:8888/this/is/a/path/to/a/file?somevar=somevalue&somevar2=somevalue2#someFragment'
+            )
         );
     }
 

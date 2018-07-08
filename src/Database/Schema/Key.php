@@ -68,8 +68,8 @@ class Key
      */
     public function __construct($type = null, $columns = [], $name = null, $comment = null)
     {
-        $this->name    = $name;
-        $this->type    = $type;
+        $this->name = $name;
+        $this->type = $type;
         $this->columns = (array) $columns;
         $this->comment = $comment;
     }

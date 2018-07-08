@@ -56,9 +56,9 @@ class PdoQueueDriver implements QueueDriverInterface
      */
     public function __construct(\PDO $db, $queue = 'default', $table = 'queue_jobs', $timeout = 60)
     {
-        $this->pdo     = $db;
-        $this->table   = $table;
-        $this->queue   = $queue;
+        $this->pdo = $db;
+        $this->table = $table;
+        $this->queue = $queue;
         $this->timeout = $timeout;
     }
 
@@ -118,7 +118,11 @@ class PdoQueueDriver implements QueueDriverInterface
         $stat = $this->pdo->prepare($sql);
         $stat->bindValue(':queue', $queue);
         $stat->bindValue(':visibility', $now->format('Y-m-d H:i:s'), \PDO::PARAM_STR);
-        $stat->bindValue(':reserved', $now->modify('-' . $this->timeout . 'seconds')->format('Y-m-d H:i:s'), \PDO::PARAM_STR);
+        $stat->bindValue(
+            ':reserved',
+            $now->modify('-' . $this->timeout . 'seconds')->format('Y-m-d H:i:s'),
+            \PDO::PARAM_STR
+        );
 
         try {
             $stat->execute();

@@ -64,9 +64,9 @@ EOF;
         }
 
         /** @var Option $command */
-        $name        = $option->getName();
+        $name = $option->getName();
         $description = $option->getDescription() ?: 'No description';
-        $aliases     = $option->getAliases();
+        $aliases = $option->getAliases();
 
         // Merge aliases
         array_unshift($aliases, $name);
@@ -84,12 +84,12 @@ EOF;
 
         $description = explode("\n", $description);
 
-        $line1  = array_shift($description);
+        $line1 = array_shift($description);
         $body[] = sprintf($template, $name, $line1);
 
         foreach ($description as $line) {
-            $line   = trim($line);
-            $line   = sprintf($template, '', $line);
+            $line = trim($line);
+            $line = sprintf($template, '', $line);
             $body[] = $line;
         }
 
@@ -108,7 +108,7 @@ EOF;
         // Count the max command length as column width.
         foreach ($this->items as $item) {
             /** @var $item Option */
-            $name    = $item->getName();
+            $name = $item->getName();
             $aliases = $item->getAliases();
 
             // Merge aliases

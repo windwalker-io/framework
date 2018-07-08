@@ -93,7 +93,7 @@ abstract class AbstractMessage implements MessageInterface
             );
         }
 
-        $new           = clone $this;
+        $new = clone $this;
         $new->protocol = $version;
 
         return $new;
@@ -289,7 +289,7 @@ abstract class AbstractMessage implements MessageInterface
         }
 
         $normalized = strtolower($name);
-        $original   = $this->headerNames[$normalized];
+        $original = $this->headerNames[$normalized];
 
         $new = clone $this;
 
@@ -347,7 +347,7 @@ abstract class AbstractMessage implements MessageInterface
         $name = HeaderHelper::normalizeHeaderName($name);
 
         $new->headerNames[$normalized] = $name;
-        $new->headers[$name]           = [];
+        $new->headers[$name] = [];
 
         return $new;
     }

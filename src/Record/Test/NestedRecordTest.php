@@ -215,7 +215,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
     {
         $path = $this->instance->getPath(5, true);
 
-        $ids   = ArrayHelper::getColumn($path, 'id');
+        $ids = ArrayHelper::getColumn($path, 'id');
         $paths = ArrayHelper::getColumn($path, 'path');
 
         $this->assertEquals([1, 2, 5], $ids);
@@ -233,7 +233,7 @@ class NestedRecordTest extends AbstractMysqlTestCase
     {
         $tree = $this->instance->getTree(1, true);
 
-        $ids   = [1, 6, 2, 4, 3, 5, 7];
+        $ids = [1, 6, 2, 4, 3, 5, 7];
         $paths = [
             '',
             'rose',

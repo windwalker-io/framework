@@ -231,7 +231,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
         }
 
         // Read the contents of the process id file as an integer.
-        $fp  = fopen($pidFile, 'r');
+        $fp = fopen($pidFile, 'r');
         $pid = fread($fp, filesize($pidFile));
         $pid = (int) $pid;
         fclose($fp);
@@ -302,7 +302,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
         // The pid file location.  This defaults to a path inside the /tmp directory.
         $name = $this->config->get('application_name');
-        $tmp  = (string) $this->config->get('application_pid_file', strtolower('/tmp/' . $name . '/' . $name . '.pid'));
+        $tmp = (string) $this->config->get('application_pid_file', strtolower('/tmp/' . $name . '/' . $name . '.pid'));
         $this->config->set('application_pid_file', $tmp);
 
         /*
@@ -312,12 +312,12 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
          */
 
         // The user id under which to run the daemon.
-        $tmp     = (int) $this->config->get('application_uid', 0);
+        $tmp = (int) $this->config->get('application_uid', 0);
         $options = ['options' => ['min_range' => 0, 'max_range' => 65000]];
         $this->config->set('application_uid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
         // The group id under which to run the daemon.
-        $tmp     = (int) $this->config->get('application_gid', 0);
+        $tmp = (int) $this->config->get('application_gid', 0);
         $options = ['options' => ['min_range' => 0, 'max_range' => 65000]];
         $this->config->set('application_gid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
@@ -475,7 +475,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
         }
 
         // Get the user and group information based on uid and gid.
-        $user  = posix_getpwuid($uid);
+        $user = posix_getpwuid($uid);
         $group = posix_getgrgid($gid);
 
         $this->getLogger()->info('Changed daemon identity to ' . $user['name'] . ':' . $group['name']);
@@ -501,9 +501,9 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
         }
 
         // Reset Process Information
-        $this->safeMode  = !!@ ini_get('safe_mode');
+        $this->safeMode = !!@ ini_get('safe_mode');
         $this->processId = 0;
-        $this->running   = false;
+        $this->running = false;
 
         // Detach process!
         try {
@@ -518,7 +518,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
                 // Set the process id.
                 $this->processId = (int) posix_getpid();
-                $this->parentId  = $this->processId;
+                $this->parentId = $this->processId;
             }
         } catch (\RuntimeException $e) {
             $this->getLogger()->emergency('Unable to fork.');
@@ -538,7 +538,9 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
         // Write out the process id file for concurrency management.
         if (!$this->writeProcessIdFile()) {
-            $this->getLogger()->emergency('Unable to write the pid file at: ' . $this->config->get('application_pid_file'));
+            $this->getLogger()->emergency(
+                'Unable to write the pid file at: ' . $this->config->get('application_pid_file')
+            );
 
             return false;
         }
@@ -713,7 +715,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
         // Only read the pid for the parent file.
         if ($this->parentId == $this->processId) {
             // Read the contents of the process id file as an integer.
-            $fp  = fopen($this->config->get('application_pid_file'), 'r');
+            $fp = fopen($this->config->get('application_pid_file'), 'r');
             $pid = fread($fp, filesize($this->config->get('application_pid_file')));
             $pid = (int) $pid;
             fclose($fp);

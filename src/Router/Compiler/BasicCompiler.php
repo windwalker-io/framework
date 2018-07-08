@@ -85,9 +85,9 @@ abstract class BasicCompiler
         preg_match_all($find, $regex, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
-            $name       = $match[1];
+            $name = $match[1];
             $subpattern = static::requirementPattern($name, $requirements);
-            $regex      = str_replace("({$name})", $subpattern, $regex);
+            $regex = str_replace("({$name})", $subpattern, $regex);
         }
 
         return $regex;

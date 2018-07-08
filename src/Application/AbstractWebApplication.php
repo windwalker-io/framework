@@ -93,9 +93,9 @@ abstract class AbstractWebApplication extends AbstractApplication
         Structure $config = null,
         WebEnvironment $environment = null
     ) {
-        $request     = $request ?: ServerRequestFactory::createFromGlobals();
+        $request = $request ?: ServerRequestFactory::createFromGlobals();
         $environment = $environment ?: WebEnvironment::create($request->getServerParams());
-        $server      = WebHttpServer::create([$this, 'dispatch'], $request);
+        $server = WebHttpServer::create([$this, 'dispatch'], $request);
 
         $this->setEnvironment($environment);
         $this->setServer($server);
@@ -211,12 +211,12 @@ abstract class AbstractWebApplication extends AbstractApplication
             // We just need the prefix since we have a path relative to the root.
             if ($url[0] === '/') {
                 $url = $prefix . $url;
-            } // It's relative to where we are now, so lets add that.
-            else {
+            } else {
+                // It's relative to where we are now, so lets add that.
                 $parts = explode('/', $uri->toString(['path']));
                 array_pop($parts);
                 $path = implode('/', $parts) . '/';
-                $url  = $prefix . $path . $url;
+                $url = $prefix . $path . $url;
             }
         }
 
@@ -225,9 +225,11 @@ abstract class AbstractWebApplication extends AbstractApplication
             echo "<script>document.location.href='$url';</script>\n";
         } else {
             // We have to use a JavaScript redirect here because MSIE doesn't play nice with utf-8 URLs.
-            if (($this->environment->browser->getEngine() == Browser::ENGINE_TRIDENT) && !ApplicationHelper::isAscii($url)) {
+            if (($this->environment->browser->getEngine() === Browser::ENGINE_TRIDENT)
+                && !ApplicationHelper::isAscii($url)) {
                 $html = '<html><head>';
-                $html .= '<meta http-equiv="content-type" content="text/html; charset=' . $this->server->getCharSet() . '" />';
+                $html .= '<meta http-equiv="content-type" content="text/html; charset='
+                    . $this->server->getCharSet() . '" />';
                 $html .= '<script>document.location.href=\'' . $url . '\';</script>';
                 $html .= '</head><body></body></html>';
 
@@ -402,7 +404,7 @@ abstract class AbstractWebApplication extends AbstractApplication
             'server',
         ];
 
-        if (in_array($name, $allowNames)) {
+        if (in_array($name, $allowNames, true)) {
             return $this->$name;
         }
 
@@ -413,7 +415,7 @@ abstract class AbstractWebApplication extends AbstractApplication
             'platform',
         ];
 
-        if (in_array(strtolower($name), $getters)) {
+        if (in_array(strtolower($name), $getters, true)) {
             $method = 'get' . ucfirst($name);
 
             return $this->$method();

@@ -202,7 +202,7 @@ class MockArrayBridge implements SessionBridgeInterface
         }
 
         // Nothing to do since we don't persist the session data
-        $this->closed  = false;
+        $this->closed = false;
         $this->started = false;
     }
 

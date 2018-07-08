@@ -9,7 +9,6 @@
 namespace Windwalker\DataMapper;
 
 use Windwalker\Cache\Serializer\JsonSerializer;
-use Windwalker\Data\DataInterface;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Query\QueryHelper;
 use Windwalker\Database\Schema\DataType;
@@ -190,7 +189,8 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
             $orders = array_map(
                 function ($value) use ($alias) {
                     return strpos($value, '.') !== false ? $value : $alias . '.' . $value;
-                }, $orders
+                },
+                $orders
             );
         }
 
@@ -531,7 +531,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
                 $field->Default = $this->db->getTable($table)->getDataType()->getDefaultValue($type);
             }
 
-            $field                 = (object) $field;
+            $field = (object) $field;
             $fields[$field->Field] = $field;
         }
 
@@ -723,7 +723,7 @@ class DataMapper extends AbstractDataMapper implements DatabaseMapperInterface
      */
     public function reset()
     {
-        $this->query       = null;
+        $this->query = null;
         $this->queryHelper = null;
 
         return $this;

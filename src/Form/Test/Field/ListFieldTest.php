@@ -131,9 +131,10 @@ HTML;
         );
 
         $field->group(
-            'Europe', function (ListField $field) {
-            $field->option('Paris', 'Europe/Paris');
-        }
+            'Europe',
+            function (ListField $field) {
+                $field->option('Paris', 'Europe/Paris');
+            }
         )->option('UTC', 'UTC');
 
         $html = <<<HTML

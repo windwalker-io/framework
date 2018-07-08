@@ -8,8 +8,6 @@
 
 namespace Windwalker\Renderer\Twig;
 
-use Twig_Loader_Filesystem;
-
 /**
  * The TwigFilesystemLoader class.
  *

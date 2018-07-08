@@ -89,9 +89,9 @@ class Worker implements DispatcherAwareInterface
      */
     public function __construct(Queue $manager, DispatcherInterface $dispatcher = null, LoggerInterface $logger = null)
     {
-        $this->manager    = $manager;
+        $this->manager = $manager;
         $this->dispatcher = $dispatcher ?: new Dispatcher();
-        $this->logger     = $logger ?: new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -122,10 +122,11 @@ class Worker implements DispatcherAwareInterface
 
             // @loop start
             $this->triggerEvent(
-                'onWorkerLoopCycleStart', [
-                'worker' => $this,
-                'manager' => $this->manager,
-            ]
+                'onWorkerLoopCycleStart',
+                [
+                    'worker' => $this,
+                    'manager' => $this->manager,
+                ]
             );
 
             // Timeout handler
@@ -140,11 +141,12 @@ class Worker implements DispatcherAwareInterface
                     $this->logger->error($msg);
 
                     $this->triggerEvent(
-                        'onWorkerLoopCycleFailure', [
-                        'worker' => $this,
-                        'exception' => $e,
-                        'message' => $msg,
-                    ]
+                        'onWorkerLoopCycleFailure',
+                        [
+                            'worker' => $this,
+                            'exception' => $e,
+                            'message' => $msg,
+                        ]
                     );
                 }
             }
@@ -153,10 +155,11 @@ class Worker implements DispatcherAwareInterface
 
             // @loop end
             $this->triggerEvent(
-                'onWorkerLoopCycleEnd', [
-                'worker' => $this,
-                'manager' => $this->manager,
-            ]
+                'onWorkerLoopCycleEnd',
+                [
+                    'worker' => $this,
+                    'manager' => $this->manager,
+                ]
             );
 
             $this->sleep((int) $options->get('sleep', 1));
@@ -201,12 +204,13 @@ class Worker implements DispatcherAwareInterface
         try {
             // @before event
             $this->triggerEvent(
-                'onWorkerBeforeJobRun', [
-                'worker' => $this,
-                'message' => $message,
-                'job' => $job,
-                'manager' => $this->manager,
-            ]
+                'onWorkerBeforeJobRun',
+                [
+                    'worker' => $this,
+                    'message' => $message,
+                    'job' => $job,
+                    'manager' => $this->manager,
+                ]
             );
 
             // Fail if max attempts
@@ -221,12 +225,13 @@ class Worker implements DispatcherAwareInterface
 
             // @after event
             $this->triggerEvent(
-                'onWorkerAfterJobRun', [
-                'worker' => $this,
-                'message' => $message,
-                'job' => $job,
-                'manager' => $this->manager,
-            ]
+                'onWorkerAfterJobRun',
+                [
+                    'worker' => $this,
+                    'message' => $message,
+                    'job' => $job,
+                    'manager' => $this->manager,
+                ]
             );
 
             $this->manager->delete($message);
@@ -274,9 +279,10 @@ class Worker implements DispatcherAwareInterface
 
         if ($timeout !== 0) {
             pcntl_signal(
-                SIGALRM, function () use ($timeout) {
-                $this->stop('A job process over the max timeout: ' . $timeout . ' PID: ' . $this->pid);
-            }
+                SIGALRM,
+                function () use ($timeout) {
+                    $this->stop('A job process over the max timeout: ' . $timeout . ' PID: ' . $this->pid);
+                }
             );
 
             pcntl_alarm($timeout + $options->get('sleep'));
@@ -309,10 +315,11 @@ class Worker implements DispatcherAwareInterface
         $this->logger->info('Worker stop: ' . $reason);
 
         $this->triggerEvent(
-            'onWorkerStop', [
-            'worker' => $this,
-            'reason' => $reason,
-        ]
+            'onWorkerStop',
+            [
+                'worker' => $this,
+                'reason' => $reason,
+            ]
         );
 
         $this->setState(static::STATE_STOP);
@@ -366,12 +373,13 @@ class Worker implements DispatcherAwareInterface
         }
 
         $this->dispatcher->triggerEvent(
-            'onWorkerJobFailure', [
-            'worker' => $this,
-            'exception' => $e,
-            'job' => $job,
-            'message' => $message,
-        ]
+            'onWorkerJobFailure',
+            [
+                'worker' => $this,
+                'exception' => $e,
+                'job' => $job,
+                'message' => $message,
+            ]
         );
     }
 

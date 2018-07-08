@@ -209,8 +209,8 @@ class Path
      */
     public static function normalize($path, $ds = DIRECTORY_SEPARATOR)
     {
-        $parts    = [];
-        $path     = static::clean($path, $ds);
+        $parts = [];
+        $path = static::clean($path, $ds);
         $segments = explode($ds, $path);
 
         foreach ($segments as $segment) {

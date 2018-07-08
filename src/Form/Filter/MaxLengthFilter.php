@@ -18,10 +18,13 @@ class MaxLengthFilter implements FilterInterface
     /*
      * MySQL text length. @see https://stackoverflow.com/a/23169977
      */
-    const TEXT_MAX_ASCII     = 65535;
-    const TEXT_MAX_UTF8      = 21844;
+    const TEXT_MAX_ASCII = 65535;
+
+    const TEXT_MAX_UTF8 = 21844;
+
     const LONGTEXT_MAX_ASCII = 4294967295;
-    const LONGTEXT_MAX_UTF8  = 1431655765;
+
+    const LONGTEXT_MAX_UTF8 = 1431655765;
 
     /**
      * Property max.
@@ -45,7 +48,7 @@ class MaxLengthFilter implements FilterInterface
      */
     public function __construct($max, $utf8 = true)
     {
-        $this->max  = (int) $max;
+        $this->max = (int) $max;
         $this->utf8 = (bool) $utf8;
     }
 

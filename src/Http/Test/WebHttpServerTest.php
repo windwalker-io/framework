@@ -74,7 +74,8 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
         $server = $this->createServer(
             function ($request, ResponseInterface $response) {
                 return $response->getBody()->write('Hello');
-            }, new HtmlResponse()
+            },
+            new HtmlResponse()
         );
 
         $server->listen();
@@ -111,7 +112,7 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
         );
 
         $date = new \DateTime($headers['Expires'][0]);
-        $now  = new \DateTime();
+        $now = new \DateTime();
 
         $this->assertTrue($date > $now);
 
@@ -280,9 +281,9 @@ class WebHttpServerTest extends \PHPUnit\Framework\TestCase
         $server = new WebHttpServer(
             function () {
             }, new ServerRequest(
-            ['SCRIPT_NAME' => '/flower/sakura/index.php'], [],
-            'http://example.com:8080/flower/sakura/index.php/foo/bar?a=b&c=d', 'GET'
-        )
+                ['SCRIPT_NAME' => '/flower/sakura/index.php'], [],
+                'http://example.com:8080/flower/sakura/index.php/foo/bar?a=b&c=d', 'GET'
+            )
         );
 
         $this->assertEquals($uri, $server->getUriData());

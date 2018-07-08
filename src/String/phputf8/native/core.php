@@ -163,7 +163,7 @@ function utf8_substr($str, $offset, $length = null)
 {
     // generates E_NOTICE
     // for PHP4 objects, but not PHP5 objects
-    $str    = (string) $str;
+    $str = (string) $str;
     $offset = (int) $offset;
     if (!is_null($length)) {
         $length = (int) $length;

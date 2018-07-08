@@ -676,18 +676,18 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testTriggerEventSamePriority()
     {
-        $first  = new FirstListener();
+        $first = new FirstListener();
         $second = new SecondListener();
-        $third  = new ThirdListener();
+        $third = new ThirdListener();
 
         $fourth = function (Event $event) {
-            $listeners   = $event->getArgument('listeners');
+            $listeners = $event->getArgument('listeners');
             $listeners[] = 'fourth';
             $event->setArgument('listeners', $listeners);
         };
 
         $fifth = function (Event $event) {
-            $listeners   = $event->getArgument('listeners');
+            $listeners = $event->getArgument('listeners');
             $listeners[] = 'fifth';
             $event->setArgument('listeners', $listeners);
         };
@@ -720,18 +720,18 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testTriggerEventDifferentPriorities()
     {
-        $first  = new FirstListener();
+        $first = new FirstListener();
         $second = new SecondListener();
-        $third  = new ThirdListener();
+        $third = new ThirdListener();
 
         $fourth = function (Event $event) {
-            $listeners   = $event->getArgument('listeners');
+            $listeners = $event->getArgument('listeners');
             $listeners[] = 'fourth';
             $event->setArgument('listeners', $listeners);
         };
 
         $fifth = function (Event $event) {
-            $listeners   = $event->getArgument('listeners');
+            $listeners = $event->getArgument('listeners');
             $listeners[] = 'fifth';
             $event->setArgument('listeners', $listeners);
         };
@@ -764,9 +764,9 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
      */
     public function testTriggerEventStopped()
     {
-        $first  = new FirstListener();
+        $first = new FirstListener();
         $second = new SecondListener();
-        $third  = new ThirdListener();
+        $third = new ThirdListener();
 
         $stopper = function (Event $event) {
             $event->stop();
@@ -824,7 +824,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     {
         $event = new Event('onSomething');
 
-        $foo  = 'foo';
+        $foo = 'foo';
         $args = ['foo' => &$foo];
 
         $this->instance->triggerEvent($event, $args);

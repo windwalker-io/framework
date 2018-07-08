@@ -28,7 +28,8 @@ $server = \Zend\Diactoros\Server::createServerFromRequest(
         $response->getBody()->write("Hello world!");
 
         show($request->getUri());
-    }, $request
+    },
+    $request
 );
 
 $server->listen();

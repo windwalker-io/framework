@@ -192,8 +192,8 @@ class Password implements HasherInterface
      */
     public static function genRandomPassword($length = 8)
     {
-        $salt     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        $base     = strlen($salt);
+        $salt = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $base = strlen($salt);
         $password = '';
 
         /*
@@ -204,7 +204,7 @@ class Password implements HasherInterface
          * predictable.
          */
         $random = CryptHelper::genRandomBytes($length + 1);
-        $shift  = ord($random[0]);
+        $shift = ord($random[0]);
 
         for ($i = 1; $i <= $length; ++$i) {
             $password .= $salt[($shift + ord($random[$i])) % $base];

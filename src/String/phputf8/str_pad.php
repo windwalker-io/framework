@@ -30,7 +30,7 @@ function utf8_str_pad($input, $length, $padStr = ' ', $type = STR_PAD_RIGHT)
     }
 
     $padStrLen = utf8_strlen($padStr);
-    $padLen    = $length - $inputLen;
+    $padLen = $length - $inputLen;
 
     if ($type == STR_PAD_RIGHT) {
         $repeatTimes = ceil($padLen / $padStrLen);
@@ -45,13 +45,13 @@ function utf8_str_pad($input, $length, $padStr = ' ', $type = STR_PAD_RIGHT)
     }
 
     if ($type == STR_PAD_BOTH) {
-        $padLen           /= 2;
-        $padAmountLeft    = floor($padLen);
-        $padAmountRight   = ceil($padLen);
-        $repeatTimesLeft  = ceil($padAmountLeft / $padStrLen);
+        $padLen /= 2;
+        $padAmountLeft = floor($padLen);
+        $padAmountRight = ceil($padLen);
+        $repeatTimesLeft = ceil($padAmountLeft / $padStrLen);
         $repeatTimesRight = ceil($padAmountRight / $padStrLen);
 
-        $paddingLeft  = utf8_substr(str_repeat($padStr, $repeatTimesLeft), 0, $padAmountLeft);
+        $paddingLeft = utf8_substr(str_repeat($padStr, $repeatTimesLeft), 0, $padAmountLeft);
         $paddingRight = utf8_substr(str_repeat($padStr, $repeatTimesRight), 0, $padAmountLeft);
 
         return $paddingLeft . $input . $paddingRight;

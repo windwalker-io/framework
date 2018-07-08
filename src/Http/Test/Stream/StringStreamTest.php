@@ -165,7 +165,8 @@ class StringStreamTest extends AbstractBaseTestCase
         $this->assertExpectedException(
             function () use ($stream) {
                 $stream->tell();
-            }, new \RuntimeException()
+            },
+            new \RuntimeException()
         );
     }
 

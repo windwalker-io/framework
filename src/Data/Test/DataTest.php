@@ -266,7 +266,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
         $data->walk(
             function (&$value, $key, $userdata) {
                 $value = $userdata . ':' . $key . ':' . strtoupper($value);
-            }, 'prefix'
+            },
+            'prefix'
         );
 
         $this->assertEquals('prefix:baz:YOO', $data->baz);
@@ -279,7 +280,7 @@ class DataTest extends \PHPUnit\Framework\TestCase
      */
     public function testClone()
     {
-        $data      = new Data();
+        $data = new Data();
         $data->foo = new \stdClass();
         $data->bar = new \stdClass();
         $data->baz = 'yoo';

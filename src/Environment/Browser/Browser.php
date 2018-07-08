@@ -216,29 +216,29 @@ class Browser
 
         // Attempt to detect the browser type.  Obviously we are only worried about major browsers.
         if ((stripos($userAgent, 'MSIE') !== false) && (stripos($userAgent, 'Opera') === false)) {
-            $this->browser  = static::IE;
+            $this->browser = static::IE;
             $patternBrowser = 'MSIE';
         } elseif (stripos($userAgent, 'Trident') !== false) {
-            $this->browser  = static::IE;
+            $this->browser = static::IE;
             $patternBrowser = ' rv';
         } elseif (stripos($userAgent, 'Edge') !== false) {
-            $this->browser  = static::EDGE;
+            $this->browser = static::EDGE;
             $patternBrowser = 'Edge';
         } elseif ((stripos($userAgent, 'Firefox') !== false) && (stripos($userAgent, 'like Firefox') === false)) {
-            $this->browser  = static::FIREFOX;
+            $this->browser = static::FIREFOX;
             $patternBrowser = 'Firefox';
         } elseif (stripos($userAgent, 'Vivaldi') !== false) {
             // Vivaldi must before Chrome & Safari
-            $this->browser  = static::VIVALDI;
+            $this->browser = static::VIVALDI;
             $patternBrowser = 'Vivaldi';
         } elseif (stripos($userAgent, 'Chrome') !== false) {
-            $this->browser  = static::CHROME;
+            $this->browser = static::CHROME;
             $patternBrowser = 'Chrome';
         } elseif (stripos($userAgent, 'Safari') !== false) {
-            $this->browser  = static::SAFARI;
+            $this->browser = static::SAFARI;
             $patternBrowser = 'Safari';
         } elseif (stripos($userAgent, 'Opera') !== false) {
-            $this->browser  = static::OPERA;
+            $this->browser = static::OPERA;
             $patternBrowser = 'Opera';
         }
 
@@ -510,7 +510,7 @@ class Browser
      *
      * @param bool $refresh
      *
-     * @return  int
+     * @return  string
      */
     public function getEngine($refresh = false)
     {

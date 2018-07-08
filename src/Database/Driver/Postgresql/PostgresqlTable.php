@@ -36,11 +36,11 @@ class PostgresqlTable extends AbstractTable
             'sequences' => [],
         ];
 
-        $options  = array_merge($defaultOptions, $options);
-        $schema   = $this->callSchema($schema);
-        $columns  = [];
+        $options = array_merge($defaultOptions, $options);
+        $schema = $this->callSchema($schema);
+        $columns = [];
         $comments = [];
-        $primary  = [];
+        $primary = [];
 
         foreach ($schema->getColumns() as $column) {
             $column = $this->prepareColumn($column);
@@ -62,7 +62,7 @@ class PostgresqlTable extends AbstractTable
             }
         }
 
-        $keys        = [];
+        $keys = [];
         $keyComments = [];
 
         foreach ($schema->getIndexes() as $index) {
@@ -77,18 +77,23 @@ class PostgresqlTable extends AbstractTable
             }
         }
 
-        $options['comments']     = $comments;
+        $options['comments'] = $comments;
         $options['key_comments'] = $keyComments;
 
-        $inherits   = isset($options['inherits']) ? $options['inherits'] : null;
+        $inherits = isset($options['inherits']) ? $options['inherits'] : null;
         $tablespace = isset($options['tablespace']) ? $options['tablespace'] : null;
 
         $query = PostgresqlGrammar::createTable(
-            $this->getName(), $columns, $primary, $keys, $inherits, $ifNotExists,
+            $this->getName(),
+            $columns,
+            $primary,
+            $keys,
+            $inherits,
+            $ifNotExists,
             $tablespace
         );
 
-        $comments    = isset($options['comments']) ? $options['comments'] : [];
+        $comments = isset($options['comments']) ? $options['comments'] : [];
         $keyComments = isset($options['key_comments']) ? $options['key_comments'] : [];
 
         // Comments
@@ -208,19 +213,19 @@ class PostgresqlTable extends AbstractTable
         $column = $name;
 
         if ($column instanceof Column) {
-            $name      = $column->getName();
-            $type      = $column->getType();
-            $length    = $column->getLength();
+            $name = $column->getName();
+            $type = $column->getType();
+            $length = $column->getLength();
             $allowNull = $column->getAllowNull();
-            $default   = $column->getDefault();
-            $comment   = $column->getComment();
+            $default = $column->getDefault();
+            $comment = $column->getComment();
         }
 
         if (!$this->hasColumn($name)) {
             return $this;
         }
 
-        $type   = PostgresqlType::getType($type);
+        $type = PostgresqlType::getType($type);
         $length = isset($length) ? $length : PostgresqlType::getLength($type);
         $length = PostgresqlType::noLength($type) ? null : $length;
         $length = $length ? '(' . $length . ')' : null;
@@ -297,15 +302,15 @@ class PostgresqlTable extends AbstractTable
         $column = $name = $newName;
 
         if ($column instanceof Column) {
-            $name      = $column->getName();
-            $type      = $column->getType();
-            $length    = $column->getLength();
+            $name = $column->getName();
+            $type = $column->getType();
+            $length = $column->getLength();
             $allowNull = $column->getAllowNull();
-            $default   = $column->getDefault();
-            $comment   = $column->getComment();
+            $default = $column->getDefault();
+            $comment = $column->getComment();
         }
 
-        $type   = PostgresqlType::getType($type);
+        $type = PostgresqlType::getType($type);
         $length = isset($length) ? $length : PostgresqlType::getLength($type);
         $length = PostgresqlType::noLength($type) ? null : $length;
         $length = $length ? '(' . $length . ')' : null;
@@ -609,18 +614,18 @@ ORDER BY t.relname, i.relname;'
         $keys = $this->db->loadAll();
 
         foreach ($keys as $key) {
-            $key->Table       = $this->getName();
-            $key->Non_unique  = !$key->is_unique;
-            $key->Key_name    = $key->index_name;
+            $key->Table = $this->getName();
+            $key->Non_unique = !$key->is_unique;
+            $key->Key_name = $key->index_name;
             $key->Column_name = $key->column_name;
-            $key->Collation   = 'A';
+            $key->Collation = 'A';
             $key->Cardinality = 0;
-            $key->Sub_part    = null;
-            $key->Packed      = null;
-            $key->Null        = null;
-            $key->Index_type  = 'BTREE';
+            $key->Sub_part = null;
+            $key->Packed = null;
+            $key->Null = null;
+            $key->Index_type = 'BTREE';
             // TODO: Finish comments query
-            $key->Comment       = null;
+            $key->Comment = null;
             $key->Index_comment = null;
         }
 
@@ -664,7 +669,9 @@ ORDER BY t.relname, i.relname;'
 
             $query->select($this->db->quoteName($name))
                 ->from('pg_class AS s')
-                ->leftJoin("pg_depend d ON d.objid=s.oid AND d.classid='pg_class'::regclass AND d.refclassid='pg_class'::regclass")
+                ->leftJoin(
+                    "pg_depend d ON d.objid=s.oid AND d.classid='pg_class'::regclass AND d.refclassid='pg_class'::regclass"
+                )
                 ->leftJoin('pg_class t ON t.oid=d.refobjid')
                 ->leftJoin('pg_namespace n ON n.oid=t.relnamespace')
                 ->leftJoin('pg_attribute a ON a.attrelid=t.oid AND a.attnum=d.refobjsubid')

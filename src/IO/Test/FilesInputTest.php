@@ -164,7 +164,7 @@ class FilesInputTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $decoded);
 
         $dataArr = ['first', 'second'];
-        $data    = [$dataArr, $dataArr, $dataArr, $dataArr, $dataArr];
+        $data = [$dataArr, $dataArr, $dataArr, $dataArr, $dataArr];
 
         $decoded = TestHelper::invoke($this->instance, 'decodeData', $data);
 

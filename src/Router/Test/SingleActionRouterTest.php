@@ -79,13 +79,13 @@ class SingleActionRouterTest extends \PHPUnit\Framework\TestCase
         $this->instance->addMaps($routes);
 
         $result = $this->instance->match('flower/5/foo');
-        $vars   = $this->instance->getVariables();
+        $vars = $this->instance->getVariables();
 
         $this->assertEquals('FlowerController', $result);
         $this->assertEquals('foo', $vars['alias']);
 
         $result = $this->instance->match('foo/bar/5/baz');
-        $vars   = $this->instance->getVariables();
+        $vars = $this->instance->getVariables();
 
         $this->assertEquals('SakuraController', $result);
         $this->assertEquals('baz', $vars['sakura']);

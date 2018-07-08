@@ -495,22 +495,22 @@ class Query implements QueryInterface, PreparableInterface
         switch ($clause) {
             case 'select':
                 $this->select = null;
-                $this->type   = null;
+                $this->type = null;
                 break;
 
             case 'delete':
                 $this->delete = null;
-                $this->type   = null;
+                $this->type = null;
                 break;
 
             case 'update':
                 $this->update = null;
-                $this->type   = null;
+                $this->type = null;
                 break;
 
             case 'insert':
-                $this->insert             = null;
-                $this->type               = null;
+                $this->insert = null;
+                $this->type = null;
                 $this->autoIncrementField = null;
                 break;
 
@@ -562,7 +562,7 @@ class Query implements QueryInterface, PreparableInterface
 
             case 'limit':
                 $this->offset = 0;
-                $this->limit  = 0;
+                $this->limit = 0;
                 break;
 
             case 'suffix':
@@ -574,28 +574,28 @@ class Query implements QueryInterface, PreparableInterface
                 break;
 
             default:
-                $this->type               = null;
-                $this->select             = null;
-                $this->delete             = null;
-                $this->update             = null;
-                $this->insert             = null;
-                $this->from               = null;
-                $this->join               = null;
-                $this->set                = null;
-                $this->where              = null;
-                $this->group              = null;
-                $this->having             = null;
-                $this->order              = null;
-                $this->columns            = null;
-                $this->values             = null;
+                $this->type = null;
+                $this->select = null;
+                $this->delete = null;
+                $this->update = null;
+                $this->insert = null;
+                $this->from = null;
+                $this->join = null;
+                $this->set = null;
+                $this->where = null;
+                $this->group = null;
+                $this->having = null;
+                $this->order = null;
+                $this->columns = null;
+                $this->values = null;
                 $this->autoIncrementField = null;
-                $this->exec               = null;
-                $this->call               = null;
-                $this->union              = null;
-                $this->offset             = 0;
-                $this->limit              = 0;
-                $this->suffix             = null;
-                $this->bounded            = [];
+                $this->exec = null;
+                $this->call = null;
+                $this->union = null;
+                $this->offset = 0;
+                $this->limit = 0;
+                $this->suffix = null;
+                $this->bounded = [];
                 break;
         }
 
@@ -669,7 +669,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function delete($table = null)
     {
-        $this->type   = 'delete';
+        $this->type = 'delete';
         $this->delete = $this->element('DELETE', null);
 
         if (!empty($table)) {
@@ -1020,8 +1020,8 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function insert($table, $incrementField = false)
     {
-        $this->type               = 'insert';
-        $this->insert             = $this->element('INSERT INTO', $table);
+        $this->type = 'insert';
+        $this->insert = $this->element('INSERT INTO', $table);
         $this->autoIncrementField = $incrementField;
 
         return $this;
@@ -1137,7 +1137,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function limit($limit = null, $offset = null)
     {
-        $this->limit  = $limit;
+        $this->limit = $limit;
         $this->offset = $offset;
 
         return $this;
@@ -1271,12 +1271,12 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         if (is_string($name)) {
-            $pos         = stripos($name, ' AS ');
+            $pos = stripos($name, ' AS ');
             $quotedAlias = '';
 
             if ($pos !== false) {
                 $alias = substr($name, $pos + 4);
-                $name  = substr($name, 0, $pos);
+                $name = substr($name, 0, $pos);
 
                 $quotedAlias = $this->quoteNameStr([$alias]);
             }
@@ -1324,7 +1324,7 @@ class Query implements QueryInterface, PreparableInterface
     protected function quoteNameStr($strArr)
     {
         $parts = [];
-        $q     = $this->nameQuote;
+        $q = $this->nameQuote;
 
         foreach ($strArr as $part) {
             if (null === $part) {
@@ -1408,7 +1408,7 @@ class Query implements QueryInterface, PreparableInterface
     public function set($conditions, $glue = ',')
     {
         if (null === $this->set) {
-            $glue      = strtoupper($glue);
+            $glue = strtoupper($glue);
             $this->set = $this->element('SET', $conditions, PHP_EOL . "\t$glue ");
         } else {
             $this->set->append($conditions);
@@ -1453,7 +1453,7 @@ class Query implements QueryInterface, PreparableInterface
      */
     public function update($table)
     {
-        $this->type   = 'update';
+        $this->type = 'update';
         $this->update = $this->element('UPDATE', $table);
 
         return $this;
@@ -1778,12 +1778,12 @@ class Query implements QueryInterface, PreparableInterface
     public function format($format)
     {
         $query = $this;
-        $args  = array_slice(func_get_args(), 1);
+        $args = array_slice(func_get_args(), 1);
         array_unshift($args, null);
 
         $expression = $this->getExpression();
 
-        $i    = 1;
+        $i = 1;
         $func = function ($match) use ($query, $args, &$i, $expression) {
             if (isset($match[6]) && $match[6] === '%') {
                 return '%';
@@ -2025,9 +2025,9 @@ class Query implements QueryInterface, PreparableInterface
 
         $obj = new \stdClass();
 
-        $obj->value         = $value;
-        $obj->dataType      = $dataType;
-        $obj->length        = $length;
+        $obj->value = $value;
+        $obj->dataType = $dataType;
+        $obj->length = $length;
         $obj->driverOptions = $driverOptions;
 
         // Case 3: Simply add the Key/Value into the bounded array

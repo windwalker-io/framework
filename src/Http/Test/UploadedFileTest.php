@@ -148,7 +148,9 @@ class UploadedFileTest extends AbstractBaseTestCase
         $this->assertExpectedException(
             function () use ($upload, $to) {
                 $upload->moveTo($to);
-            }, 'RuntimeException', 'Error moving uploaded file'
+            },
+            'RuntimeException',
+            'Error moving uploaded file'
         );
     }
 

@@ -182,7 +182,7 @@ abstract class AbstractField
         if ($name instanceof \SimpleXMLElement) {
             $this->handleXml($name);
         } else {
-            $this->name  = $name;
+            $this->name = $name;
             $this->label = $label;
 
             $this->attributes = $attributes;
@@ -269,9 +269,9 @@ abstract class AbstractField
      */
     public function renderLabel()
     {
-        $attrs['id']    = $this->getAttribute('labelId', $this->getId() . '-label');
+        $attrs['id'] = $this->getAttribute('labelId', $this->getId() . '-label');
         $attrs['class'] = $this->getAttribute('labelClass');
-        $attrs['for']   = $this->getAttribute('for', $this->getId());
+        $attrs['for'] = $this->getAttribute('for', $this->getId());
         $attrs['title'] = $this->getAttribute('description');
 
         $attrs = array_merge($attrs, (array) $this->getAttribute('labelAttribs'));
@@ -308,7 +308,7 @@ abstract class AbstractField
      */
     public function render(array $options = [])
     {
-        $attrs['id']    = $this->getAttribute('controlId', $this->getId() . '-control');
+        $attrs['id'] = $this->getAttribute('controlId', $this->getId() . '-control');
         $attrs['class'] = $this->type . '-field ' . $this->getAttribute('controlClass');
 
         $attrs = array_merge($attrs, (array) $this->getAttribute('controlAttribs'));
@@ -833,7 +833,7 @@ abstract class AbstractField
      */
     protected function handleXml(\SimpleXMLElement $xml)
     {
-        $this->name  = XmlHelper::get($xml, 'name');
+        $this->name = XmlHelper::get($xml, 'name');
         $this->label = XmlHelper::get($xml, 'label');
 
         $this->attributes = XmlHelper::getAttributes($xml);

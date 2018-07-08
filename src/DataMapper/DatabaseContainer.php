@@ -57,7 +57,9 @@ class DatabaseContainer
     public static function setDb($db)
     {
         if (!is_callable($db) && !$db instanceof AbstractDatabaseDriver) {
-            throw new \InvalidArgumentException('Please use AbstractDatabaseDriver or callable as global database driver.');
+            throw new \InvalidArgumentException(
+                'Please use AbstractDatabaseDriver or callable as global database driver.'
+            );
         }
 
         static::$db = $db;

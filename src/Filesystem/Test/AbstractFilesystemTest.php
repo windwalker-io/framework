@@ -72,7 +72,7 @@ abstract class AbstractFilesystemTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         static::$dest = __DIR__ . '/dest';
-        static::$src  = __DIR__ . '/files';
+        static::$src = __DIR__ . '/files';
 
         Filesystem::copy(static::$src, static::$dest);
     }

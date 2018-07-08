@@ -56,7 +56,7 @@ abstract class AbstractMysqlTestCase extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->db         = static::$dbo;
+        $this->db = static::$dbo;
         $this->connection = $this->db->getConnection();
 
         // Set Mysql to strict mode

@@ -29,7 +29,7 @@ function utf8_to_unicode($str)
 {
     $mState = 0;     // cached expected number of octets after the current octet
     // until the beginning of the next UTF8 character sequence
-    $mUcs4  = 0;     // cached Unicode character
+    $mUcs4 = 0;     // cached Unicode character
     $mBytes = 1;     // cached expected number of octets in the current sequence
 
     $out = [];
@@ -44,27 +44,27 @@ function utf8_to_unicode($str)
             // multi-octet sequence.
             if (0 == (0x80 & ($in))) {
                 // US-ASCII, pass straight through.
-                $out[]  = $in;
+                $out[] = $in;
                 $mBytes = 1;
             } else {
                 if (0xC0 == (0xE0 & ($in))) {
                     // First octet of 2 octet sequence
-                    $mUcs4  = ($in);
-                    $mUcs4  = ($mUcs4 & 0x1F) << 6;
+                    $mUcs4 = ($in);
+                    $mUcs4 = ($mUcs4 & 0x1F) << 6;
                     $mState = 1;
                     $mBytes = 2;
                 } else {
                     if (0xE0 == (0xF0 & ($in))) {
                         // First octet of 3 octet sequence
-                        $mUcs4  = ($in);
-                        $mUcs4  = ($mUcs4 & 0x0F) << 12;
+                        $mUcs4 = ($in);
+                        $mUcs4 = ($mUcs4 & 0x0F) << 12;
                         $mState = 2;
                         $mBytes = 3;
                     } else {
                         if (0xF0 == (0xF8 & ($in))) {
                             // First octet of 4 octet sequence
-                            $mUcs4  = ($in);
-                            $mUcs4  = ($mUcs4 & 0x07) << 18;
+                            $mUcs4 = ($in);
+                            $mUcs4 = ($mUcs4 & 0x07) << 18;
                             $mState = 3;
                             $mBytes = 4;
                         } else {
@@ -77,15 +77,15 @@ function utf8_to_unicode($str)
                                 * Rather than trying to resynchronize, we will carry on until the end
                                 * of the sequence and let the later error handling code catch it.
                                 */
-                                $mUcs4  = ($in);
-                                $mUcs4  = ($mUcs4 & 0x03) << 24;
+                                $mUcs4 = ($in);
+                                $mUcs4 = ($mUcs4 & 0x03) << 24;
                                 $mState = 4;
                                 $mBytes = 5;
                             } else {
                                 if (0xFC == (0xFE & ($in))) {
                                     // First octet of 6 octet sequence, see comments for 5 octet sequence.
-                                    $mUcs4  = ($in);
-                                    $mUcs4  = ($mUcs4 & 1) << 30;
+                                    $mUcs4 = ($in);
+                                    $mUcs4 = ($mUcs4 & 1) << 30;
                                     $mState = 5;
                                     $mBytes = 6;
                                 } else {
@@ -111,8 +111,8 @@ function utf8_to_unicode($str)
             if (0x80 == (0xC0 & ($in))) {
                 // Legal continuation.
                 $shift = ($mState - 1) * 6;
-                $tmp   = $in;
-                $tmp   = ($tmp & 0x0000003F) << $shift;
+                $tmp = $in;
+                $tmp = ($tmp & 0x0000003F) << $shift;
                 $mUcs4 |= $tmp;
 
                 /**
@@ -148,7 +148,7 @@ function utf8_to_unicode($str)
 
                     //initialize UTF8 cache
                     $mState = 0;
-                    $mUcs4  = 0;
+                    $mUcs4 = 0;
                     $mBytes = 1;
                 }
             } else {

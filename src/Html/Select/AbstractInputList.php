@@ -131,24 +131,28 @@ class AbstractInputList extends HtmlElement
             $attrs['type'] = $this->type;
             $attrs['name'] = $this->getAttribute('name');
 
-            $attrs['id']       = $option->getAttribute('id');
-            $attrs['id']       = $attrs['id'] ?: strtolower(
+            $attrs['id'] = $option->getAttribute('id');
+            $attrs['id'] = $attrs['id'] ?: strtolower(
                 trim(
                     preg_replace(
-                        '/[^A-Z0-9_\.-]/i', '-',
+                        '/[^A-Z0-9_\.-]/i',
+                        '-',
                         $attrs['name'] ?: 'empty'
-                    ), '-'
+                    ),
+                    '-'
                 )
             );
-            $attrs['id']       .= '-' . strtolower(
+            $attrs['id'] .= '-' . strtolower(
                     trim(
                         preg_replace(
-                            '/[^A-Z0-9_\.-]/i', '-',
+                            '/[^A-Z0-9_\.-]/i',
+                            '-',
                             $option->getValue() ?: 'empty'
-                        ), '-'
+                        ),
+                        '-'
                     )
                 );
-            $attrs['id']       = 'input-' . $attrs['id'];
+            $attrs['id'] = 'input-' . $attrs['id'];
             $attrs['disabled'] = $this->disabled;
             $attrs['readonly'] = $this->readonly;
 
@@ -201,13 +205,13 @@ class AbstractInputList extends HtmlElement
 
         $this->prepareOptions();
 
-        $attrs          = $this->getAttributes();
-        $attrs['id']    = $this->getAttribute('id');
+        $attrs = $this->getAttributes();
+        $attrs['id'] = $this->getAttribute('id');
         $attrs['class'] = $this->type . '-inputs ' . $this->getAttribute('class');
 
-        $attrs['name']     = null;
+        $attrs['name'] = null;
         $attrs['onchange'] = null;
-        $attrs['size']     = null;
+        $attrs['size'] = null;
 
         return HtmlBuilder::create($this->name, $this->content, $attrs, $forcePair);
     }
@@ -223,12 +227,12 @@ class AbstractInputList extends HtmlElement
     {
         $attrs = $option->getAttributes();
 
-        $attrs['id']      = $option->getAttribute('id') . '-label';
-        $attrs['for']     = $option->getAttribute('id');
-        $attrs['value']   = null;
+        $attrs['id'] = $option->getAttribute('id') . '-label';
+        $attrs['for'] = $option->getAttribute('id');
+        $attrs['value'] = null;
         $attrs['checked'] = null;
-        $attrs['type']    = null;
-        $attrs['name']    = null;
+        $attrs['type'] = null;
+        $attrs['name'] = null;
 
         return new HtmlElement('label', $option->getContent(), $attrs);
     }

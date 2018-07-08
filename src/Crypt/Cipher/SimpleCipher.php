@@ -136,8 +136,8 @@ class SimpleCipher implements CipherInterface
      */
     private function getRandomKey($length = self::DEFAULT_RANDOM_BYTE_LENGTH)
     {
-        $key        = '';
-        $salt       = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $key = '';
+        $salt = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $saltLength = strlen($salt);
 
         // Build the random key.
@@ -160,8 +160,8 @@ class SimpleCipher implements CipherInterface
      */
     private function hexToInt($s, $i)
     {
-        $j  = (int) $i * 2;
-        $k  = 0;
+        $j = (int) $i * 2;
+        $k = 0;
         $s1 = (string) $s;
 
         // Get the character at position $j.

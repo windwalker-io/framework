@@ -124,8 +124,8 @@ class BrowserTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $_SERVER['HTTP_HOST']          = 'mydomain.com';
-        $_SERVER['HTTP_USER_AGENT']    = 'Mozilla/5.0';
+        $_SERVER['HTTP_HOST'] = 'mydomain.com';
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
         $_SERVER['HTTP_CUSTOM_HEADER'] = 'Client custom header';
         $_SERVER['HTTP_AUTHORIZATION'] = 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==';
 
@@ -177,7 +177,11 @@ class BrowserTest extends \PHPUnit\Framework\TestCase
 
         // Test the assertions.
         $this->assertEquals($browser, $this->instance->getBrowser(), 'Browser detection failed: ' . $ua);
-        $this->assertEquals((float) $version, (float) $this->instance->getBrowserVersion(), 'Version detection failed: ' . $ua);
+        $this->assertEquals(
+            (float) $version,
+            (float) $this->instance->getBrowserVersion(),
+            'Version detection failed: ' . $ua
+        );
     }
 
     /**

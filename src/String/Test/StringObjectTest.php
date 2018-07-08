@@ -301,7 +301,7 @@ class StringObjectTest extends TestCase
      */
     public function testToLowerCase($string, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->toLowerCase();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -335,7 +335,7 @@ class StringObjectTest extends TestCase
      */
     public function testToUpperCase($string, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->toUpperCase();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -370,7 +370,7 @@ class StringObjectTest extends TestCase
      */
     public function testLength($string, $expected, $encoding = null)
     {
-        $s      = new StringObject($string, $encoding);
+        $s = new StringObject($string, $encoding);
         $length = $s->length();
 
         self::assertEquals($expected, $length);
@@ -411,7 +411,7 @@ class StringObjectTest extends TestCase
      */
     public function testReplace($string, $search, $replacement, $expected, $count)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->replace($search, $replacement, $c);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -519,7 +519,7 @@ class StringObjectTest extends TestCase
      */
     public function testReverse($string, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->reverse();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -551,7 +551,7 @@ class StringObjectTest extends TestCase
             return;
         }
 
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->substrReplace($replace, $start, $offset);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -570,7 +570,7 @@ class StringObjectTest extends TestCase
      */
     public function testTrimLeft($string, $charlist, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->trimLeft($charlist);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -591,7 +591,7 @@ class StringObjectTest extends TestCase
      */
     public function testTrimRight($string, $charlist, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->trimRight($charlist);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -612,7 +612,7 @@ class StringObjectTest extends TestCase
      */
     public function testTrim($string, $charlist, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->trim($charlist);
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -630,7 +630,7 @@ class StringObjectTest extends TestCase
      */
     public function testUpperCaseFirst($string, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->upperCaseFirst();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -648,7 +648,7 @@ class StringObjectTest extends TestCase
      */
     public function testLowerCaseFirst($string, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->lowerCaseFirst();
 
         self::assertInstanceOf(StringObject::class, $s2);
@@ -668,7 +668,7 @@ class StringObjectTest extends TestCase
      */
     public function testUpperCaseWords($string, $expected)
     {
-        $s  = new StringObject($string);
+        $s = new StringObject($string);
         $s2 = $s->upperCaseWords();
 
         self::assertInstanceOf(StringObject::class, $s2);

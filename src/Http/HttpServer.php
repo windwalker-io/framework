@@ -121,10 +121,10 @@ class HttpServer
         ResponseInterface $response = null,
         OutputInterface $output = null
     ) {
-        $this->handler  = $handler;
-        $this->request  = $request;
+        $this->handler = $handler;
+        $this->request = $request;
         $this->response = $response ?: new Response();
-        $this->output   = $output ?: $this->getOutput();
+        $this->output = $output ?: $this->getOutput();
     }
 
     /**

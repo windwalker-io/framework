@@ -61,7 +61,7 @@ abstract class AbstractConsole
             $this->close();
         }
 
-        $this->io     = $io instanceof IOInterface ? $io : new IO();
+        $this->io = $io instanceof IOInterface ? $io : new IO();
         $this->config = $config instanceof Structure ? $config : new Structure();
 
         $this->init();

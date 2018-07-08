@@ -235,7 +235,8 @@ class PdoAdapter extends AbstractDatabaseAdapter
                     "WHEN MATCHED THEN UPDATE SET {$this->options['data_col']} = :data, {$this->options['time_col']} = :time";
 
             case 'sqlsrv' === $driver && version_compare(
-                    $this->db->getAttribute(\PDO::ATTR_SERVER_VERSION), '10',
+                    $this->db->getAttribute(\PDO::ATTR_SERVER_VERSION),
+                    '10',
                     '>='
                 ):
                 // MERGE is only available since SQL Server 2008 and must be terminated by semicolon

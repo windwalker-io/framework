@@ -76,7 +76,7 @@ class Authentication implements AuthenticationInterface
             $status = $method->getStatus();
 
             $this->results[$name] = $status;
-            $this->credential     = $credential;
+            $this->credential = $credential;
 
             if ($result === true && $status === static::SUCCESS) {
                 $credential['_authenticated_method'] = $name;

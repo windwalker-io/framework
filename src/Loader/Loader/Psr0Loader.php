@@ -131,14 +131,15 @@ class Psr0Loader extends AbstractLoader
     {
         foreach ($this->namespaces as $namespace => $path) {
             if (null === $namespace || $namespace === substr($className, 0, strlen($namespace))) {
-                $fileName  = '';
+                $fileName = '';
                 $namespace = '';
 
                 if (false !== ($lastNsPos = strripos($className, $this->namespaceSeparator))) {
                     $namespace = substr($className, 0, $lastNsPos);
                     $className = substr($className, $lastNsPos + 1);
-                    $fileName  = str_replace(
-                            $this->namespaceSeparator, DIRECTORY_SEPARATOR,
+                    $fileName = str_replace(
+                            $this->namespaceSeparator,
+                            DIRECTORY_SEPARATOR,
                             $namespace
                         ) . DIRECTORY_SEPARATOR;
                 }

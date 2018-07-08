@@ -40,7 +40,7 @@ class DatabaseQueueFailer implements QueueFailerInterface
      */
     public function __construct(AbstractDatabaseDriver $db, $table = 'queue_failed_jobs')
     {
-        $this->db    = $db;
+        $this->db = $db;
         $this->table = $table;
     }
 

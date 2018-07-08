@@ -108,13 +108,17 @@ class ColorProcessor implements ColorProcessorInterface
         foreach ($matches[0] as $i => $m) {
             if (array_key_exists($matches[1][$i], $this->styles)) {
                 $string = $this->replaceColors(
-                    $string, $matches[1][$i], $matches[2][$i],
+                    $string,
+                    $matches[1][$i],
+                    $matches[2][$i],
                     $this->styles[$matches[1][$i]]
                 );
             } // Custom format
             elseif (strpos($matches[1][$i], '=')) {
                 $string = $this->replaceColors(
-                    $string, $matches[1][$i], $matches[2][$i],
+                    $string,
+                    $matches[1][$i],
+                    $matches[2][$i],
                     ColorStyle::fromString($matches[1][$i])
                 );
             }

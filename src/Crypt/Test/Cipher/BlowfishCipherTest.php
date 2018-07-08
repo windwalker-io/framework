@@ -62,9 +62,9 @@ class BlowfishCipherTest extends AbstractOpensslTestCase
      */
     public function testDecryptLegacy()
     {
-        $data      = 'windwalker';
-        $key       = 'flower';
-        $iv        = 'VNEc5QYyPCo=';
+        $data = 'windwalker';
+        $key = 'flower';
+        $iv = 'VNEc5QYyPCo=';
         $encrypted = 'VNEc5QYyPCpOUP5UjJnp07eZynRNKoQu';
 
         $decryped = $this->instance->decrypt($encrypted, $key, base64_decode($iv));

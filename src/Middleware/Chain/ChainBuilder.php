@@ -88,7 +88,9 @@ class ChainBuilder
             $reflection = new \ReflectionClass($middleware);
 
             if (!$reflection->isInstantiable()) {
-                throw new \LogicException(sprintf('Element %s should be an instantiable class name.', $reflection->getName()));
+                throw new \LogicException(
+                    sprintf('Element %s should be an instantiable class name.', $reflection->getName())
+                );
             }
 
             $args = func_get_args();

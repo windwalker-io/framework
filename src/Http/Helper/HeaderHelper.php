@@ -32,7 +32,7 @@ abstract class HeaderHelper
      */
     public static function getValue(array $headers, $name, $default = null)
     {
-        $name    = strtolower($name);
+        $name = strtolower($name);
         $headers = array_change_key_case($headers, CASE_LOWER);
 
         if (array_key_exists($name, $headers)) {
@@ -76,7 +76,7 @@ abstract class HeaderHelper
      */
     public static function filter($value)
     {
-        $value  = (string) $value;
+        $value = (string) $value;
         $length = strlen($value);
         $string = '';
 
@@ -90,7 +90,7 @@ abstract class HeaderHelper
 
                 if ($lf === 10 && in_array($ws, [9, 32], true)) {
                     $string .= $value[$i] . $value[$i + 1];
-                    $i      += 1;
+                    $i += 1;
                 }
 
                 continue;

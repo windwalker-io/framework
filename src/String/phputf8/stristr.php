@@ -26,7 +26,7 @@ function utf8_stristr($str, $search)
         return $str;
     }
 
-    $lstr    = utf8_strtolower($str);
+    $lstr = utf8_strtolower($str);
     $lsearch = utf8_strtolower($search);
     //Windwalker SPECIFIC FIX - BEGIN
     preg_match('/^(.*)' . preg_quote($lsearch, '/') . '/Us', $lstr, $matches);

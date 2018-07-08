@@ -61,12 +61,12 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
                 throw new \InvalidArgumentException('Invalid header name');
             }
 
-            $normalized                     = strtolower($name);
+            $normalized = strtolower($name);
             $this->headerNames[$normalized] = $name;
-            $this->headers[$name]           = $value;
+            $this->headers[$name] = $value;
         }
 
-        $this->stream     = $body;
+        $this->stream = $body;
         $this->statusCode = $status;
     }
 
@@ -111,8 +111,8 @@ class Response extends AbstractMessage implements MessageInterface, ResponseInte
             throw new \InvalidArgumentException('Invalid status code: ' . $code);
         }
 
-        $new               = clone $this;
-        $new->statusCode   = (int) $code;
+        $new = clone $this;
+        $new->statusCode = (int) $code;
         $new->reasonPhrase = $reasonPhrase;
 
         return $new;

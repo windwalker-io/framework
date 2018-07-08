@@ -57,7 +57,7 @@ class TextPrompterTest extends AbstractPrompterTest
 
         /** @var $prompter AbstractPrompter */
         $prompter = $this->instance;
-        $in       = $prompter();
+        $in = $prompter();
 
         $this->assertEquals($in, 'n');
 

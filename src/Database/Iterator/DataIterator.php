@@ -54,7 +54,7 @@ class DataIterator implements \Countable, \Iterator
     public function __construct(AbstractReader $reader, $class = 'stdClass')
     {
         $this->reader = $reader;
-        $this->class  = $class;
+        $this->class = $class;
 
         $this->next();
     }

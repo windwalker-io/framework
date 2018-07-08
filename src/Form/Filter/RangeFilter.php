@@ -45,8 +45,8 @@ class RangeFilter implements FilterInterface
      */
     public function __construct($min = null, $max = null, $forceInt = false)
     {
-        $this->min      = $min;
-        $this->max      = $max;
+        $this->min = $min;
+        $this->max = $max;
         $this->forceInt = (bool) $forceInt;
     }
 

@@ -47,7 +47,7 @@ class CommandNotFoundException extends \RuntimeException
      */
     public function __construct($message, AbstractCommand $command, $argument)
     {
-        $this->command  = $command;
+        $this->command = $command;
         $this->argument = $argument;
 
         parent::__construct($message, 2);

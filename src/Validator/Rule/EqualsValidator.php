@@ -40,7 +40,7 @@ class EqualsValidator extends AbstractValidator
     public function __construct($compare, $strict = false)
     {
         $this->compare = $compare;
-        $this->strict  = $strict;
+        $this->strict = $strict;
     }
 
     /**

@@ -90,14 +90,14 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
                 throw new \InvalidArgumentException('Invalid header name');
             }
 
-            $normalized                     = strtolower($name);
+            $normalized = strtolower($name);
             $this->headerNames[$normalized] = $name;
-            $this->headers[$name]           = $value;
+            $this->headers[$name] = $value;
         }
 
         $this->stream = $body;
         $this->method = $this->validateMethod($method);
-        $this->uri    = $uri;
+        $this->uri = $uri;
     }
 
     /**
@@ -165,7 +165,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
             throw new \InvalidArgumentException('RequestTarget cannot contain whitespace.');
         }
 
-        $new                = clone $this;
+        $new = clone $this;
         $new->requestTarget = $requestTarget;
 
         return $new;
@@ -256,7 +256,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
      */
     public function withUri(UriInterface $uri, $preserveHost = false)
     {
-        $new      = clone $this;
+        $new = clone $this;
         $new->uri = $uri;
 
         if ($preserveHost) {
@@ -274,7 +274,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
         }
 
         $new->headerNames['host'] = 'Host';
-        $new->headers['Host']     = [$host];
+        $new->headers['Host'] = [$host];
 
         return $new;
     }

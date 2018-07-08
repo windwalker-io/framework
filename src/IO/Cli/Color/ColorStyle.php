@@ -166,8 +166,8 @@ final class ColorStyle
      */
     public static function fromString($string)
     {
-        $fg      = '';
-        $bg      = '';
+        $fg = '';
+        $bg = '';
         $options = [];
 
         $parts = explode(';', $string);

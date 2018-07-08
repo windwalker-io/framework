@@ -86,7 +86,9 @@ class PathCollection extends ArrayObject
             $path = new PathLocator($path);
         } // If type of this element not match our interface, throw exception.
         else {
-            throw new \InvalidArgumentException('PathCollection need every path element instance of PathLocatorInterface.');
+            throw new \InvalidArgumentException(
+                'PathCollection need every path element instance of PathLocatorInterface.'
+            );
         }
 
         if ($key) {

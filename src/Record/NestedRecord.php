@@ -87,7 +87,7 @@ class NestedRecord extends Record
      */
     public function getPath($pk = null, $allFields = false)
     {
-        $k  = $this->getKeyName();
+        $k = $this->getKeyName();
         $pk = $pk === null ? $this->$k : $pk;
 
         // Get the path from the node to the root.
@@ -117,7 +117,7 @@ class NestedRecord extends Record
      */
     public function getTree($pk = null, $allFields = false)
     {
-        $k  = $this->getKeyName();
+        $k = $this->getKeyName();
         $pk = (is_null($pk)) ? $this->$k : $pk;
 
         // Get the node and children as a tree.
@@ -147,8 +147,8 @@ class NestedRecord extends Record
      */
     public function isLeaf($pk = null)
     {
-        $key  = $this->getKeyName();
-        $pk   = (is_null($pk)) ? $this->$key : $pk;
+        $key = $this->getKeyName();
+        $pk = (is_null($pk)) ? $this->$key : $pk;
         $node = $this->getNode($pk);
 
         // Get the node by primary key.
@@ -180,7 +180,8 @@ class NestedRecord extends Record
         if ($this->parent_id == 0) {
             throw new NestedHandleException(
                 sprintf(
-                    'Invalid `parent_id` [%s] in %s', $this->parent_id,
+                    'Invalid `parent_id` [%s] in %s',
+                    $this->parent_id,
                     get_class($this)
                 )
             );
@@ -194,7 +195,8 @@ class NestedRecord extends Record
         if (!$this->db->setQuery($query)->loadResult()) {
             throw new NestedHandleException(
                 sprintf(
-                    'Invalid `parent_id` [%s] in %s', $this->parent_id,
+                    'Invalid `parent_id` [%s] in %s',
+                    $this->parent_id,
                     get_class($this)
                 )
             );
@@ -218,7 +220,7 @@ class NestedRecord extends Record
                 throw new ParentIsSelfException('Parent should not be self.');
             }
 
-            $tree        = $this->getTree($this->id);
+            $tree = $this->getTree($this->id);
             $childrenIds = array_column($tree, 'id');
 
             if (in_array($this->parent_id, $childrenIds)) {
@@ -255,14 +257,16 @@ class NestedRecord extends Record
         if (!in_array($position, $allow)) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    '%s::setLocation(%d, *%s*)', get_class($this), $referenceId,
+                    '%s::setLocation(%d, *%s*)',
+                    get_class($this),
+                    $referenceId,
                     $position
                 )
             );
         }
 
         // Set the location properties.
-        $this->location   = $position;
+        $this->location = $position;
         $this->locationId = $referenceId;
 
         return $this;
@@ -341,9 +345,9 @@ class NestedRecord extends Record
 
             // Set the object values.
             $this->parent_id = $repositionData->new_parent_id;
-            $this->level     = $repositionData->new_level;
-            $this->lft       = $repositionData->new_lft;
-            $this->rgt       = $repositionData->new_rgt;
+            $this->level = $repositionData->new_level;
+            $this->lft = $repositionData->new_lft;
+            $this->rgt = $repositionData->new_rgt;
         } /*
 		 * If we have a given primary key then we assume we are simply updating this
 		 * node in the tree.  We should assess whether or not we are moving the node
@@ -373,7 +377,7 @@ class NestedRecord extends Record
      */
     public function move($delta, $conditions = [])
     {
-        $k  = $this->getKeyName();
+        $k = $this->getKeyName();
         $pk = $this->$k;
 
         $query = $this->db->getQuery(true)
@@ -421,7 +425,7 @@ class NestedRecord extends Record
      */
     public function moveByReference($referenceId, $position = self::LOCATION_AFTER, $pk = null)
     {
-        $k  = $this->getKeyName();
+        $k = $this->getKeyName();
         $pk = $pk === null ? $this->$k : $pk;
 
         // Get the node by id.
@@ -442,8 +446,11 @@ class NestedRecord extends Record
         if (in_array($referenceId, $children)) {
             throw new NestedHandleException(
                 sprintf(
-                    '%s::moveByReference(%d, %s, %d) parenting to child.', get_class($this), $referenceId,
-                    $position, $pk
+                    '%s::moveByReference(%d, %s, %d) parenting to child.',
+                    get_class($this),
+                    $referenceId,
+                    $position,
+                    $pk
                 )
             );
         }
@@ -527,7 +534,7 @@ class NestedRecord extends Record
          * Calculate the offset between where the node used to be in the tree and
          * where it needs to be in the tree for left ids (also works for right ids).
          */
-        $offset      = $repositionData->new_lft - $node->lft;
+        $offset = $repositionData->new_lft - $node->lft;
         $levelOffset = $repositionData->new_level - $node->level;
 
         // Move the nodes back into position in the tree using the calculated offsets.
@@ -552,9 +559,9 @@ class NestedRecord extends Record
 
         // Set the object values.
         $this->parent_id = $repositionData->new_parent_id;
-        $this->level     = $repositionData->new_level;
-        $this->lft       = $repositionData->new_lft;
-        $this->rgt       = $repositionData->new_rgt;
+        $this->level = $repositionData->new_level;
+        $this->lft = $repositionData->new_lft;
+        $this->rgt = $repositionData->new_rgt;
 
         return true;
     }
@@ -571,15 +578,16 @@ class NestedRecord extends Record
      */
     public function delete($pk = null, $children = true)
     {
-        $k  = $this->getKeyName();
+        $k = $this->getKeyName();
         $pk = $pk === null ? $this->$k : $pk;
 
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__), [
-            'conditions' => &$pk,
-            'children' => &$children,
-        ]
+            'onBefore' . ucfirst(__FUNCTION__),
+            [
+                'conditions' => &$pk,
+                'children' => &$children,
+            ]
         );
 
         // Get the node by id.
@@ -719,7 +727,7 @@ class NestedRecord extends Record
      */
     public function rebuild($parentId = null, $leftId = 0, $level = 0, $path = '')
     {
-        $fields    = $this->getFields();
+        $fields = $this->getFields();
         $buildPath = true;
 
         // If there is no alias or path field, just return true.
@@ -770,7 +778,9 @@ class NestedRecord extends Record
              * Add this item's alias to the path (but avoid a leading /)
              */
             $rightId = $this->rebuild(
-                $node->{$this->getKeyName()}, $rightId, $level + 1,
+                $node->{$this->getKeyName()},
+                $rightId,
+                $level + 1,
                 $path . (empty($path) ? '' : '/') . $node->alias
             );
 
@@ -819,7 +829,7 @@ class NestedRecord extends Record
             return $this;
         }
 
-        $k  = $this->getKeyName();
+        $k = $this->getKeyName();
         $pk = $pk === null ? $this->$k : $pk;
 
         // Get the aliases for the path from the node to the root node.
@@ -869,12 +879,12 @@ class NestedRecord extends Record
         $key = $this->getKeyName();
 
         $record->parent_id = 0;
-        $record->lft       = 0;
-        $record->rgt       = 1;
-        $record->level     = 0;
-        $record->title     = 'root';
-        $record->alias     = 'root';
-        $record->access    = 1;
+        $record->lft = 0;
+        $record->rgt = 1;
+        $record->level = 0;
+        $record->title = 'root';
+        $record->alias = 'root';
+        $record->access = 1;
 
         $record->store();
 
@@ -953,7 +963,7 @@ class NestedRecord extends Record
 
         // Do some simple calculations.
         $row->numChildren = (int) ($row->rgt - $row->lft - 1) / 2;
-        $row->width       = (int) $row->rgt - $row->lft + 1;
+        $row->width = (int) $row->rgt - $row->lft + 1;
 
         return $row;
     }
@@ -986,50 +996,50 @@ class NestedRecord extends Record
             return false;
         }
 
-        $k    = $this->getKeyName();
+        $k = $this->getKeyName();
         $data = new \stdClass();
 
         // Run the calculations and build the data object by reference position.
         switch ($position) {
             case static::LOCATION_FIRST_CHILD:
-                $data->left_where  = 'lft > ' . $referenceNode->lft;
+                $data->left_where = 'lft > ' . $referenceNode->lft;
                 $data->right_where = 'rgt >= ' . $referenceNode->lft;
 
-                $data->new_lft       = $referenceNode->lft + 1;
-                $data->new_rgt       = $referenceNode->lft + $nodeWidth;
+                $data->new_lft = $referenceNode->lft + 1;
+                $data->new_rgt = $referenceNode->lft + $nodeWidth;
                 $data->new_parent_id = $referenceNode->$k;
-                $data->new_level     = $referenceNode->level + 1;
+                $data->new_level = $referenceNode->level + 1;
                 break;
 
             case static::LOCATION_LAST_CHILD:
-                $data->left_where  = 'lft > ' . ($referenceNode->rgt);
+                $data->left_where = 'lft > ' . ($referenceNode->rgt);
                 $data->right_where = 'rgt >= ' . ($referenceNode->rgt);
 
-                $data->new_lft       = $referenceNode->rgt;
-                $data->new_rgt       = $referenceNode->rgt + $nodeWidth - 1;
+                $data->new_lft = $referenceNode->rgt;
+                $data->new_rgt = $referenceNode->rgt + $nodeWidth - 1;
                 $data->new_parent_id = $referenceNode->$k;
-                $data->new_level     = $referenceNode->level + 1;
+                $data->new_level = $referenceNode->level + 1;
                 break;
 
             case static::LOCATION_BEFORE;
-                $data->left_where  = 'lft >= ' . $referenceNode->lft;
+                $data->left_where = 'lft >= ' . $referenceNode->lft;
                 $data->right_where = 'rgt >= ' . $referenceNode->lft;
 
-                $data->new_lft       = $referenceNode->lft;
-                $data->new_rgt       = $referenceNode->lft + $nodeWidth - 1;
+                $data->new_lft = $referenceNode->lft;
+                $data->new_rgt = $referenceNode->lft + $nodeWidth - 1;
                 $data->new_parent_id = $referenceNode->parent_id;
-                $data->new_level     = $referenceNode->level;
+                $data->new_level = $referenceNode->level;
                 break;
 
             default:
             case static::LOCATION_AFTER:
-                $data->left_where  = 'lft > ' . $referenceNode->rgt;
+                $data->left_where = 'lft > ' . $referenceNode->rgt;
                 $data->right_where = 'rgt > ' . $referenceNode->rgt;
 
-                $data->new_lft       = $referenceNode->rgt + 1;
-                $data->new_rgt       = $referenceNode->rgt + $nodeWidth;
+                $data->new_lft = $referenceNode->rgt + 1;
+                $data->new_rgt = $referenceNode->rgt + $nodeWidth;
                 $data->new_parent_id = $referenceNode->parent_id;
-                $data->new_level     = $referenceNode->level;
+                $data->new_level = $referenceNode->level;
                 break;
         }
 

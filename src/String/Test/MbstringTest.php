@@ -1077,9 +1077,9 @@ class MbstringTest extends TestCase
         $len = mb_strlen($string);
 
         for ($i = 0; $i < $len; $i++) {
-            $char        = mb_substr($string, $i, 1);
+            $char = mb_substr($string, $i, 1);
             $countBefore = mb_substr_count($string, $char);
-            $countAfter  = mb_substr_count($result, $char);
+            $countAfter = mb_substr_count($result, $char);
 
             self::assertEquals($countBefore, $countAfter);
         }

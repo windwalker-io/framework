@@ -43,17 +43,17 @@ class TextareaField extends TextField
      */
     public function prepare(&$attrs)
     {
-        $attrs['name']        = $this->getFieldName();
-        $attrs['id']          = $this->getAttribute('id', $this->getId());
-        $attrs['class']       = $this->getAttribute('class');
-        $attrs['readonly']    = $this->getAttribute('readonly');
-        $attrs['disabled']    = $this->getAttribute('disabled');
-        $attrs['onchange']    = $this->getAttribute('onchange');
-        $attrs['onfocus']     = $this->getAttribute('onfocus');
-        $attrs['onblur']      = $this->getAttribute('onblur');
+        $attrs['name'] = $this->getFieldName();
+        $attrs['id'] = $this->getAttribute('id', $this->getId());
+        $attrs['class'] = $this->getAttribute('class');
+        $attrs['readonly'] = $this->getAttribute('readonly');
+        $attrs['disabled'] = $this->getAttribute('disabled');
+        $attrs['onchange'] = $this->getAttribute('onchange');
+        $attrs['onfocus'] = $this->getAttribute('onfocus');
+        $attrs['onblur'] = $this->getAttribute('onblur');
         $attrs['placeholder'] = $this->getAttribute('placeholder');
-        $attrs['maxlength']   = $this->getAttribute('maxlength');
-        $attrs['required']    = $this->required;
+        $attrs['maxlength'] = $this->getAttribute('maxlength');
+        $attrs['required'] = $this->required;
 
         $attrs['cols'] = $this->getAttribute('cols');
         $attrs['rows'] = $this->getAttribute('rows');
@@ -81,7 +81,8 @@ class TextareaField extends TextField
     protected function getAccessors()
     {
         return array_merge(
-            parent::getAccessors(), [
+            parent::getAccessors(),
+            [
                 'cols' => 'cols',
                 'rows' => 'rows',
             ]

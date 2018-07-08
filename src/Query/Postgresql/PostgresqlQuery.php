@@ -264,12 +264,12 @@ class PostgresqlQuery extends Query
                 break;
 
             default:
-                $this->type      = null;
-                $this->limit     = null;
-                $this->offset    = null;
+                $this->type = null;
+                $this->limit = null;
+                $this->offset = null;
                 $this->forUpdate = null;
-                $this->forShare  = null;
-                $this->noWait    = null;
+                $this->forShare = null;
+                $this->noWait = null;
                 $this->returning = null;
                 parent::clear($clause);
                 break;
@@ -291,7 +291,7 @@ class PostgresqlQuery extends Query
     public function forUpdate($table_name = null, $glue = ',')
     {
         if (is_null($this->forUpdate)) {
-            $glue            = strtoupper($glue);
+            $glue = strtoupper($glue);
             $this->forUpdate = new QueryElement('FOR UPDATE', $table_name ? 'OF ' . $table_name : null, "$glue ");
         } else {
             $this->forUpdate->append($table_name);
@@ -313,7 +313,7 @@ class PostgresqlQuery extends Query
     public function forShare($table_name = null, $glue = ',')
     {
         if (is_null($this->forShare)) {
-            $glue           = strtoupper($glue);
+            $glue = strtoupper($glue);
             $this->forShare = new QueryElement('FOR SHARE', $table_name ? 'OF ' . $table_name : null, "$glue ");
         } else {
             $this->forShare->append($table_name);

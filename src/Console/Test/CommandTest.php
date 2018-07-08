@@ -186,7 +186,8 @@ class CommandTest extends \PHPUnit\Framework\TestCase
         $this->assertInternalType('array', $args, 'Return not array');
 
         $this->assertInstanceOf(
-            'Windwalker\\Console\\Command\\AbstractCommand', array_shift($args),
+            'Windwalker\\Console\\Command\\AbstractCommand',
+            array_shift($args),
             'Array element not Command object'
         );
     }
@@ -272,7 +273,8 @@ class CommandTest extends \PHPUnit\Framework\TestCase
         $this->assertInternalType('array', $array);
 
         $this->assertInstanceOf(
-            'Windwalker\\Console\\Option\\Option', array_shift($array),
+            'Windwalker\\Console\\Option\\Option',
+            array_shift($array),
             'Array element not Option object'
         );
     }
@@ -328,7 +330,8 @@ class CommandTest extends \PHPUnit\Framework\TestCase
         $this->assertInternalType('array', $array);
 
         $this->assertInstanceOf(
-            'Windwalker\\Console\\Option\\Option', array_shift($array),
+            'Windwalker\\Console\\Option\\Option',
+            array_shift($array),
             'Array element not Option object'
         );
     }
@@ -441,7 +444,8 @@ class CommandTest extends \PHPUnit\Framework\TestCase
         $this->instance->setApplication(new Console());
 
         $this->assertInstanceOf(
-            'Windwalker\\Console\\Console', $this->instance->getApplication(),
+            'Windwalker\\Console\\Console',
+            $this->instance->getApplication(),
             'Returned not Console object.'
         );
     }

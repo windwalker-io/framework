@@ -67,8 +67,8 @@ class ServerRequestTest extends \PHPUnit\Framework\TestCase
             'files' => new UploadedFile('php://temp', 0),
         ];
 
-        $uri     = new PsrUri('http://example.com');
-        $method  = 'POST';
+        $uri = new PsrUri('http://example.com');
+        $method = 'POST';
         $headers = [
             'Host' => ['example.com'],
         ];
@@ -89,7 +89,7 @@ class ServerRequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($method, $request->getMethod());
         $this->assertEquals($headers, $request->getHeaders());
 
-        $body   = $request->getBody();
+        $body = $request->getBody();
         $stream = TestHelper::getValue($body, 'stream');
 
         $this->assertEquals('php://memory', $stream);

@@ -134,7 +134,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
      */
     public function testGetTable()
     {
-        $table  = $this->db->getTable('#__flower');
+        $table = $this->db->getTable('#__flower');
         $driver = ucfirst(static::$driver);
 
         $this->assertInstanceOf(
@@ -155,7 +155,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
     public function testGetDatabase()
     {
         $database = $this->db->getDatabase(static::$dbname);
-        $driver   = ucfirst(static::$driver);
+        $driver = ucfirst(static::$driver);
 
         $this->assertInstanceOf(
             sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', $driver, $driver),
@@ -216,7 +216,7 @@ class MysqlDriverTest extends AbstractMysqlTestCase
         $this->assertTrue($trans->getNested());
 
         // Test get
-        $trans  = $this->db->getTransaction();
+        $trans = $this->db->getTransaction();
         $driver = ucfirst(static::$driver);
 
         $this->assertInstanceOf(

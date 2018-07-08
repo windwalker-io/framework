@@ -186,7 +186,9 @@ class ResqueQueueDriver implements QueueDriverInterface
     {
         if (!class_exists(\ResqueScheduler::class)) {
             if ($throwError) {
-                throw new \DomainException('Please install chrisboulton/php-resque-scheduler to support delayed messages for Resque.');
+                throw new \DomainException(
+                    'Please install chrisboulton/php-resque-scheduler to support delayed messages for Resque.'
+                );
             }
 
             return false;

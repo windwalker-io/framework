@@ -30,9 +30,9 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 
         $compare = new EqCompare('a', 'b');
 
-        $data         = new \stdClass();
-        $data->catid  = 3;
-        $data->title  = 'Sakura';
+        $data = new \stdClass();
+        $data->catid = 3;
+        $data->title = 'Sakura';
         $data->params = $compare;
 
         $writer->insertOne('#__flower', $data, 'id');
@@ -47,7 +47,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
         $this->assertEquals((string) $compare, $item->params);
 
         // Use array
-        $data          = [];
+        $data = [];
         $data['catid'] = 4;
         $data['title'] = 'Sunflower';
 
@@ -75,9 +75,9 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
 
         $compare = new EqCompare('c', 'd');
 
-        $data         = new \stdClass();
-        $data->id     = 86;
-        $data->title  = 'Sakura2';
+        $data = new \stdClass();
+        $data->id = 86;
+        $data->title = 'Sakura2';
         $data->params = $compare;
 
         $writer->updateOne('#__flower', $data, 'id');
@@ -88,8 +88,8 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
         $this->assertEquals((string) $compare, $item->params);
 
         // Use array
-        $data          = [];
-        $data['id']    = 87;
+        $data = [];
+        $data['id'] = 87;
         $data['catid'] = 5;
         $data['title'] = 'Sunflower2';
 
@@ -101,10 +101,10 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
         $this->assertEquals('Sunflower2', $item->title);
 
         // Test multiple keys
-        $data           = new \stdClass();
-        $data->catid    = 2;
+        $data = new \stdClass();
+        $data->catid = 2;
         $data->ordering = 8;
-        $data->title    = 'Rose';
+        $data->title = 'Rose';
 
         $writer->updateOne('#__flower', $data, ['catid', 'ordering']);
 
@@ -125,7 +125,7 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
         $writer = $this->db->getWriter();
 
         // Insert
-        $data        = new \stdClass();
+        $data = new \stdClass();
         $data->catid = 3;
         $data->title = 'Sakura';
 
@@ -140,8 +140,8 @@ class PostgresqlWriterTest extends AbstractPostgresqlTestCase
         $this->assertEquals('Sakura', $item->title);
 
         // Update
-        $data          = [];
-        $data['id']    = 88;
+        $data = [];
+        $data['id'] = 88;
         $data['catid'] = 3;
         $data['title'] = 'Sakura2';
 

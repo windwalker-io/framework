@@ -99,12 +99,12 @@ class Option
     public function __construct($aliases, $default = null, $description = null, $global = false)
     {
         $aliases = (array) $aliases;
-        $name    = array_shift($aliases);
+        $name = array_shift($aliases);
 
-        $this->name        = $name;
-        $this->default     = $default;
+        $this->name = $name;
+        $this->default = $default;
         $this->description = $description;
-        $this->global      = $global;
+        $this->global = $global;
 
         if (count($aliases)) {
             $this->setAliases($aliases);

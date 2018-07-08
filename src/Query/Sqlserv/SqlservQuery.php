@@ -97,7 +97,7 @@ class SqlservQuery extends Query
                         $query .= (string) $this->columns;
                     }
 
-                    $elements  = $this->insert->getElements();
+                    $elements = $this->insert->getElements();
                     $tableName = array_shift($elements);
 
                     $query .= ' VALUES ';

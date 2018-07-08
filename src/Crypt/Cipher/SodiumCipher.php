@@ -73,7 +73,7 @@ class SodiumCipher extends AbstractCipher
     {
         $plain = parent::decrypt($data, $key, $nonce);
 
-        $key   = (string) $key;
+        $key = (string) $key;
         $nonce = (string) $nonce;
 
         $this->memzero($data);
@@ -99,7 +99,7 @@ class SodiumCipher extends AbstractCipher
     {
         $encrypted = parent::encrypt($data, $key, $nonce);
 
-        $key   = (string) $key;
+        $key = (string) $key;
         $nonce = (string) $nonce;
 
         $this->memzero($data);

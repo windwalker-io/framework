@@ -69,9 +69,9 @@ class CompareValidator extends AbstractValidator
      */
     protected function test($value)
     {
-        $compare  = $this->compare;
+        $compare = $this->compare;
         $operator = $this->operator;
-        $strict   = $this->strict;
+        $strict = $this->strict;
 
         return CompareHelper::compare($value, $compare, $operator, $strict);
     }

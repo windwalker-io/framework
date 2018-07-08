@@ -53,7 +53,9 @@ class FieldHelper extends AbstractFormElementHelper
 
             $field = static::createByXml($xml, $namespaces);
         } elseif (!($field instanceof AbstractField)) {
-            throw new \InvalidArgumentException('Windwalker\\Form\\Form::addField() need AbstractField or SimpleXMLElement.');
+            throw new \InvalidArgumentException(
+                'Windwalker\\Form\\Form::addField() need AbstractField or SimpleXMLElement.'
+            );
         }
 
         return $field;

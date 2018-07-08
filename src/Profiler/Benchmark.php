@@ -86,8 +86,8 @@ class Benchmark
         $name = $name ?: 'benchmark-' . uniqid();
 
         $this->profiler = $profiler ?: new Profiler($name);
-        $this->name     = $name;
-        $this->times    = $times;
+        $this->name = $name;
+        $this->times = $times;
     }
 
     /**

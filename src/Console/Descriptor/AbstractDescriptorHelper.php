@@ -46,7 +46,7 @@ abstract class AbstractDescriptorHelper implements DescriptorHelperInterface
         DescriptorInterface $optionDescriptor = null
     ) {
         $this->CommandDescriptor = $CommandDescriptor;
-        $this->optionDescriptor  = $optionDescriptor;
+        $this->optionDescriptor = $optionDescriptor;
     }
 
     /**

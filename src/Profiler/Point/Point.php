@@ -55,8 +55,8 @@ class Point implements PointInterface
      */
     public function __construct($name, $timing = 0.0, $memory = 0, $data = [])
     {
-        $this->name   = $name;
-        $this->time   = (float) $timing;
+        $this->name = $name;
+        $this->time = (float) $timing;
         $this->memory = (int) $memory;
 
         $this->setData($data);

@@ -42,7 +42,7 @@ class DomElements implements \IteratorAggregate, \ArrayAccess, \Countable
         }
 
         $this->elements = (array) $elements;
-        $this->strict   = $strict;
+        $this->strict = $strict;
     }
 
     /**

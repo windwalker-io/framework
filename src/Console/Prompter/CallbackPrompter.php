@@ -203,7 +203,7 @@ class CallbackPrompter extends AbstractPrompter
             return $this->failToClose;
         }
 
-        $this->failToClose  = $failToClose;
+        $this->failToClose = $failToClose;
         $this->closeMessage = $message ? $message : $this->closeMessage;
 
         return $this;

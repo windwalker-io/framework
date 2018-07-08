@@ -103,15 +103,17 @@ abstract class DatabaseFactory
     public static function createDbo($driver, array $options)
     {
         // Sanitize the database connector options.
-        $options['driver']   = preg_replace('/[^A-Z0-9_\.-]/i', '', $driver);
+        $options['driver'] = preg_replace('/[^A-Z0-9_\.-]/i', '', $driver);
         $options['database'] = (isset($options['database'])) ? $options['database'] : null;
-        $options['select']   = (isset($options['select'])) ? $options['select'] : true;
+        $options['select'] = (isset($options['select'])) ? $options['select'] : true;
 
         // Use custom Resource
         $resource = isset($options['resource']) ? $options['resource'] : null;
 
         // Derive the class name from the driver.
-        $class = '\\Windwalker\\Database\\Driver\\' . ucfirst(strtolower($options['driver'])) . '\\' . ucfirst(strtolower($options['driver'])) . 'Driver';
+        $class = '\\Windwalker\\Database\\Driver\\' . ucfirst(strtolower($options['driver'])) . '\\' . ucfirst(
+                strtolower($options['driver'])
+            ) . 'Driver';
 
         // If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
         if (!class_exists($class)) {

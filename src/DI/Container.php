@@ -70,7 +70,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function __construct(Container $parent = null, array $children = [])
     {
-        $this->parent   = $parent;
+        $this->parent = $parent;
         $this->children = $children;
     }
 
@@ -308,12 +308,12 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
         $methodArgs = [];
 
         foreach ($method->getParameters() as $param) {
-            $dependency        = $param->getClass();
+            $dependency = $param->getClass();
             $dependencyVarName = $param->getName();
 
             // If we have a dependency, that means it has been type-hinted.
             if (null !== $dependency) {
-                $depObject           = null;
+                $depObject = null;
                 $dependencyClassName = $dependency->getName();
 
                 // If the dependency class name is registered with this container or a parent, use it.

@@ -49,8 +49,8 @@ class QueryElement
     public function __construct($name, $elements, $glue = ',')
     {
         $this->elements = [];
-        $this->name     = $name;
-        $this->glue     = $glue;
+        $this->name = $name;
+        $this->glue = $glue;
 
         $this->append($elements);
     }

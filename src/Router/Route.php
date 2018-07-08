@@ -117,7 +117,7 @@ class Route implements \IteratorAggregate
      */
     public function __construct($name, $pattern, $variables = [], $allowMethods = [], $options = [])
     {
-        $this->name      = $name;
+        $this->name = $name;
         $this->variables = $variables;
 
         $this->setPattern($pattern);

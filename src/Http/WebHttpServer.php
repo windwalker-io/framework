@@ -210,13 +210,13 @@ class WebHttpServer extends HttpServer
     protected function loadSystemUris($requestUri = null)
     {
         $server = $this->getRequest()->getServerParams();
-        $uri    = $this->getSystemUri($requestUri);
+        $uri = $this->getSystemUri($requestUri);
 
         $original = $requestUri ? new PsrUri($requestUri) : $this->getRequest()->getUri();
 
         // Get the host and path from the URI.
-        $host   = $uri->withQuery('')->withFragment('')->withPath('')->__toString();
-        $path   = rtrim($uri->getPath(), '/\\');
+        $host = $uri->withQuery('')->withFragment('')->withPath('')->__toString();
+        $path = rtrim($uri->getPath(), '/\\');
         $script = trim(ServerHelper::getValue($server, 'SCRIPT_NAME', ''), '/');
 
         // Check if the path includes "index.php".
@@ -229,12 +229,12 @@ class WebHttpServer extends HttpServer
         $scriptName = pathinfo($script, PATHINFO_BASENAME);
 
         // Set the base URI both as just a path and as the full URI.
-        $this->uriData->full    = rtrim($original->__toString(), '/');
+        $this->uriData->full = rtrim($original->__toString(), '/');
         $this->uriData->current = rtrim($original->withQuery('')->withFragment('')->__toString(), '/');
-        $this->uriData->script  = $scriptName;
-        $this->uriData->root    = $host . $path;
-        $this->uriData->host    = $host;
-        $this->uriData->path    = $path;
+        $this->uriData->script = $scriptName;
+        $this->uriData->root = $host . $path;
+        $this->uriData->host = $host;
+        $this->uriData->path = $path;
 
         // Set the extended (non-base) part of the request URI as the route.
         $route = substr_replace($this->uriData->current, '', 0, strlen($this->uriData->root));

@@ -87,10 +87,11 @@ abstract class AbstractCipher implements CipherInterface
     public function __construct($key = null, array $options = [])
     {
         $this->privateKey = $key;
-        $this->options    = array_merge(
+        $this->options = array_merge(
             [
                 'pbkdf2_iteration' => 12000,
-            ], $options
+            ],
+            $options
         );
     }
 
@@ -124,12 +125,13 @@ abstract class AbstractCipher implements CipherInterface
         $hmac = $this->hmac($this->pbkdf2Salt . $iv . $encrypted);
 
         return implode(
-            ':', [
-            base64_encode($hmac),
-            base64_encode($this->pbkdf2Salt),
-            base64_encode($iv),
-            base64_encode($encrypted),
-        ]
+            ':',
+            [
+                base64_encode($hmac),
+                base64_encode($this->pbkdf2Salt),
+                base64_encode($iv),
+                base64_encode($encrypted),
+            ]
         );
     }
 
@@ -164,10 +166,10 @@ abstract class AbstractCipher implements CipherInterface
         if (strpos($data, ':') !== false) {
             list($hmac, $pbkdf2Salt, $ivFromData, $encrypted) = explode(':', $data);
 
-            $hmac       = base64_decode($hmac);
+            $hmac = base64_decode($hmac);
             $pbkdf2Salt = base64_decode($pbkdf2Salt);
             $ivFromData = base64_decode($ivFromData);
-            $encrypted  = base64_decode($encrypted);
+            $encrypted = base64_decode($encrypted);
 
             $iv = $iv ?: $ivFromData;
 
@@ -236,7 +238,7 @@ abstract class AbstractCipher implements CipherInterface
         }
 
         $knownLen = strlen($knownHash);
-        $userLen  = strlen($userHash);
+        $userLen = strlen($userHash);
 
         if ($userLen !== $knownLen) {
             return false;

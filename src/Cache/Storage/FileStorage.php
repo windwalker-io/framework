@@ -68,8 +68,8 @@ class FileStorage extends AbstractCacheStorage
      */
     public function __construct($path, $group = '', $denyAccess = false, $ttl = null, $options = [])
     {
-        $this->path       = $path;
-        $this->group      = $group;
+        $this->path = $path;
+        $this->group = $group;
         $this->denyAccess = $denyAccess;
 
         $options = array_merge($this->options, $options);
@@ -160,7 +160,7 @@ class FileStorage extends AbstractCacheStorage
      */
     public function save(CacheItemInterface $item)
     {
-        $key   = $item->getKey();
+        $key = $item->getKey();
         $value = $item->get();
 
         $fileName = $this->fetchStreamUri($key);

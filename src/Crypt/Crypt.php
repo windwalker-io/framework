@@ -50,8 +50,8 @@ class Crypt implements CryptInterface
     public function __construct(CipherInterface $cipher, $key = null, $iv = null)
     {
         $this->cipher = $cipher;
-        $this->iv     = $iv;
-        $this->key    = $key;
+        $this->iv = $iv;
+        $this->key = $key;
 
         if (!is_string($this->key) && $this->key !== null) {
             throw new \InvalidArgumentException('Public key should be string');
@@ -72,7 +72,7 @@ class Crypt implements CryptInterface
     public function encrypt($string, $key = null, $iv = null)
     {
         $key = $key ?: $this->getKey();
-        $iv  = $iv ?: $this->getIv();
+        $iv = $iv ?: $this->getIv();
 
         return $this->cipher->encrypt($string, $key, $iv);
     }
@@ -89,7 +89,7 @@ class Crypt implements CryptInterface
     public function decrypt($string, $key = null, $iv = null)
     {
         $key = $key ?: $this->getKey();
-        $iv  = $iv ?: $this->getIv();
+        $iv = $iv ?: $this->getIv();
 
         return $this->cipher->decrypt($string, $key, $iv);
     }

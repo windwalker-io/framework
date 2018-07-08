@@ -70,7 +70,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
         $this->connect();
 
         $value = $this->driver->get($key);
-        $code  = $this->driver->getResultCode();
+        $code = $this->driver->getResultCode();
 
         $item = new CacheItem($key);
 

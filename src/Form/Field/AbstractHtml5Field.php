@@ -31,9 +31,9 @@ class AbstractHtml5Field extends TextField
     {
         parent::prepare($attrs);
 
-        $attrs['max']    = $this->getAttribute('max');
-        $attrs['min']    = $this->getAttribute('min');
-        $attrs['step']   = $this->getAttribute('step');
+        $attrs['max'] = $this->getAttribute('max');
+        $attrs['min'] = $this->getAttribute('min');
+        $attrs['step'] = $this->getAttribute('step');
         $attrs['patten'] = $this->getAttribute('pattern');
     }
 
@@ -110,11 +110,14 @@ class AbstractHtml5Field extends TextField
      */
     protected function getAccessors()
     {
-        return array_merge(parent::getAccessors(), [
-            'max' => 'max',
-            'min' => 'min',
-            'step' => 'step',
-            'patten' => 'patten',
-        ]);
+        return array_merge(
+            parent::getAccessors(),
+            [
+                'max' => 'max',
+                'min' => 'min',
+                'step' => 'step',
+                'patten' => 'patten',
+            ]
+        );
     }
 }

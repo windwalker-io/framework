@@ -99,9 +99,10 @@ class KeyValueGrid extends Grid
     public function addItems($items = null, $attribs = [])
     {
         $this->configure(
-            $items, function (KeyValueGrid $grid, $key, $value) use ($attribs) {
-            $grid->addItem($key, $value, $attribs);
-        }
+            $items,
+            function (KeyValueGrid $grid, $key, $value) use ($attribs) {
+                $grid->addItem($key, $value, $attribs);
+            }
         );
 
         return $this;

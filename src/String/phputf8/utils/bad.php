@@ -32,8 +32,8 @@ function utf8_bad_find($str)
         '|[\xF1-\xF3][\x80-\xBF]{3}' .            # planes 4-15
         '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .        # plane 16
         '|(.{1}))';                              # invalid byte
-    $pos      = 0;
-    $badList  = [];
+    $pos = 0;
+    $badList = [];
     while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
         $bytes = strlen($matches[0]);
         if (isset($matches[2])) {
@@ -72,8 +72,8 @@ function utf8_bad_findall($str)
         '|[\xF1-\xF3][\x80-\xBF]{3}' .            # planes 4-15
         '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .        # plane 16
         '|(.{1}))';                              # invalid byte
-    $pos      = 0;
-    $badList  = [];
+    $pos = 0;
+    $badList = [];
     while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
         $bytes = strlen($matches[0]);
         if (isset($matches[2])) {
@@ -246,7 +246,7 @@ function utf8_bad_identify($str, &$i)
 {
     $mState = 0;     // cached expected number of octets after the current octet
     // until the beginning of the next UTF8 character sequence
-    $mUcs4  = 0;     // cached Unicode character
+    $mUcs4 = 0;     // cached Unicode character
     $mBytes = 1;     // cached expected number of octets in the current sequence
 
     $len = strlen($str);
@@ -263,22 +263,22 @@ function utf8_bad_identify($str, &$i)
             } else {
                 if (0xC0 == (0xE0 & ($in))) {
                     // First octet of 2 octet sequence
-                    $mUcs4  = ($in);
-                    $mUcs4  = ($mUcs4 & 0x1F) << 6;
+                    $mUcs4 = ($in);
+                    $mUcs4 = ($mUcs4 & 0x1F) << 6;
                     $mState = 1;
                     $mBytes = 2;
                 } else {
                     if (0xE0 == (0xF0 & ($in))) {
                         // First octet of 3 octet sequence
-                        $mUcs4  = ($in);
-                        $mUcs4  = ($mUcs4 & 0x0F) << 12;
+                        $mUcs4 = ($in);
+                        $mUcs4 = ($mUcs4 & 0x0F) << 12;
                         $mState = 2;
                         $mBytes = 3;
                     } else {
                         if (0xF0 == (0xF8 & ($in))) {
                             // First octet of 4 octet sequence
-                            $mUcs4  = ($in);
-                            $mUcs4  = ($mUcs4 & 0x07) << 18;
+                            $mUcs4 = ($in);
+                            $mUcs4 = ($mUcs4 & 0x07) << 18;
                             $mState = 3;
                             $mBytes = 4;
                         } else {
@@ -311,8 +311,8 @@ function utf8_bad_identify($str, &$i)
             if (0x80 == (0xC0 & ($in))) {
                 // Legal continuation.
                 $shift = ($mState - 1) * 6;
-                $tmp   = $in;
-                $tmp   = ($tmp & 0x0000003F) << $shift;
+                $tmp = $in;
+                $tmp = ($tmp & 0x0000003F) << $shift;
                 $mUcs4 |= $tmp;
 
                 /**
@@ -339,7 +339,7 @@ function utf8_bad_identify($str, &$i)
 
                     //initialize UTF8 cache
                     $mState = 0;
-                    $mUcs4  = 0;
+                    $mUcs4 = 0;
                     $mBytes = 1;
                 }
             } else {

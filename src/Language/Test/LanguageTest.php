@@ -309,7 +309,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['windwalker.language.test.no.exists.flower', 'a.key.not.exists'], array_keys($orphans));
 
         $position = $orphans['a.key.not.exists']['position'];
-        $ref      = new \ReflectionMethod($this, __FUNCTION__);
+        $ref = new \ReflectionMethod($this, __FUNCTION__);
         $this->assertEquals(__METHOD__, $position['class'] . '::' . $position['function']);
         $this->assertEquals(__FILE__, $position['file']);
         $this->assertEquals($ref->getStartLine(), $position['line']);
@@ -324,7 +324,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $orphans = $this->instance->getOrphans();
 
         $position = $orphans['another.key.not.exists']['position'];
-        $ref      = new \ReflectionMethod($this, __FUNCTION__);
+        $ref = new \ReflectionMethod($this, __FUNCTION__);
         $this->assertEquals(__METHOD__, $position['class'] . '::' . $position['function']);
         $this->assertEquals(__FILE__, $position['file']);
         $this->assertEquals($ref->getStartLine(), $position['line']);

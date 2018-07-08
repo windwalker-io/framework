@@ -67,7 +67,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
         $renderer = new DefaultRenderer();
         $pointOne = new Point('start');
         $pointTwo = new Point('two', 1, 1);
-        $points   = [
+        $points = [
             'start' => $pointOne,
             'two' => $pointTwo,
         ];
@@ -174,7 +174,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetTimeBetween()
     {
-        $first  = new Point('start');
+        $first = new Point('start');
         $second = new Point('stop', 1.5);
 
         $profiler = new Profiler('test', null, [$first, $second]);
@@ -192,7 +192,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testgetMemoryBetween()
     {
-        $first  = new Point('start');
+        $first = new Point('start');
         $second = new Point('stop', 0, 1000);
 
         $profiler = new Profiler('test', null, [$first, $second]);
@@ -261,7 +261,7 @@ class ProfilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRender()
     {
-        $first  = new Point('start');
+        $first = new Point('start');
         $second = new Point('stop', 5, 1000);
 
         $profiler = new Profiler('test', null, [$first, $second]);
@@ -303,9 +303,9 @@ RESULT;
     public function testGetIterator()
     {
         // Create 3 points.
-        $first  = new Point('test');
+        $first = new Point('test');
         $second = new Point('second', 1.5, 1000);
-        $third  = new Point('third', 2.5, 2000);
+        $third = new Point('third', 2.5, 2000);
 
         $points = [
             'test' => $first,

@@ -42,19 +42,19 @@ class ButtonField extends AbstractField
      */
     public function prepare(&$attrs)
     {
-        $attrs['type']           = $this->get('type', 'submit');
-        $attrs['name']           = $this->getFieldName();
-        $attrs['id']             = $this->getAttribute('id', $this->getId());
-        $attrs['class']          = $this->getAttribute('class');
-        $attrs['autofocus']      = $this->getAttribute('autofocus');
-        $attrs['form']           = $this->getAttribute('form');
-        $attrs['formaction']     = $this->getAttribute('formaction');
-        $attrs['formenctype']    = $this->getAttribute('formenctype');
-        $attrs['formmethod']     = $this->getAttribute('formmethod');
+        $attrs['type'] = $this->get('type', 'submit');
+        $attrs['name'] = $this->getFieldName();
+        $attrs['id'] = $this->getAttribute('id', $this->getId());
+        $attrs['class'] = $this->getAttribute('class');
+        $attrs['autofocus'] = $this->getAttribute('autofocus');
+        $attrs['form'] = $this->getAttribute('form');
+        $attrs['formaction'] = $this->getAttribute('formaction');
+        $attrs['formenctype'] = $this->getAttribute('formenctype');
+        $attrs['formmethod'] = $this->getAttribute('formmethod');
         $attrs['formnovalidate'] = $this->getAttribute('formnovalidate');
-        $attrs['formtarget']     = $this->getAttribute('formtarget');
-        $attrs['disabled']       = $this->getAttribute('disabled');
-        $attrs['required']       = $this->required;
+        $attrs['formtarget'] = $this->getAttribute('formtarget');
+        $attrs['disabled'] = $this->getAttribute('disabled');
+        $attrs['required'] = $this->required;
     }
 
     /**
@@ -67,7 +67,8 @@ class ButtonField extends AbstractField
     protected function getAccessors()
     {
         return array_merge(
-            parent::getAccessors(), [
+            parent::getAccessors(),
+            [
                 'text' => 'text',
             ]
         );

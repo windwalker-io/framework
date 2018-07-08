@@ -61,7 +61,8 @@ class DbLoggingMiddleware extends AbstractMiddleware implements LoggerAwareInter
         } catch (\RuntimeException $e) {
             // Throw the normal query exception.
             $this->logger->log(
-                LogLevel::ERROR, 'Database query failed (error #{code}): {message}',
+                LogLevel::ERROR,
+                'Database query failed (error #{code}): {message}',
                 ['code' => $e->getCode(), 'message' => $e->getMessage()]
             );
 

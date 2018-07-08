@@ -89,8 +89,8 @@ class CryptTest extends \PHPUnit\Framework\TestCase
      */
     public function testDecryptLegacy()
     {
-        $data      = 'windwalker';
-        $key       = 'flower';
+        $data = 'windwalker';
+        $key = 'flower';
         $encrypted = 'VNEc5QYyPCpOUP5UjJnp07eZynRNKoQu';
 
         $crypt = new Crypt(new BlowfishCipher(), $key);

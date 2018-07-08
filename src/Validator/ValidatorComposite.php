@@ -71,7 +71,7 @@ class ValidatorComposite extends AbstractValidator
     protected function test($value)
     {
         $errorMessages = [];
-        $results       = [];
+        $results = [];
 
         foreach ($this->validators as $validator) {
             if (!$result = $validator->validate($value)) {

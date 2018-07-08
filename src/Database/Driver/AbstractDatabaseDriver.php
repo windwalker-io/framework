@@ -168,7 +168,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
         // Initialise object variables.
         $this->connection = $connection;
 
-        $this->database    = (isset($options['database'])) ? $options['database'] : '';
+        $this->database = (isset($options['database'])) ? $options['database'] : '';
         $this->tablePrefix = (isset($options['prefix'])) ? $options['prefix'] : 'wind_';
 
         // Set class options.
@@ -224,11 +224,11 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
         if ($this->middlewares) {
             // Prepare middleware data
-            $data        = new \stdClass();
+            $data = new \stdClass();
             $data->debug = &$this->debug;
             $data->query = &$this->query;
-            $data->sql   = $this->replacePrefix((string) $this->query);
-            $data->db    = $this;
+            $data->sql = $this->replacePrefix((string) $this->query);
+            $data->db = $this;
 
             if ($this->query instanceof PreparableInterface) {
                 $data->bounded = $this->query->getBounded();
@@ -376,7 +376,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
         if (empty($this->databases[$name]) || $new) {
             $class = sprintf(
-                'Windwalker\\Database\\Driver\\%s\\%sDatabase', ucfirst($this->name),
+                'Windwalker\\Database\\Driver\\%s\\%sDatabase',
+                ucfirst($this->name),
                 ucfirst($this->name)
             );
 
@@ -443,7 +444,8 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     {
         if (!$this->transaction || $new) {
             $class = sprintf(
-                'Windwalker\\Database\\Driver\\%s\\%sTransaction', ucfirst($this->name),
+                'Windwalker\\Database\\Driver\\%s\\%sTransaction',
+                ucfirst($this->name),
                 ucfirst($this->name)
             );
 
@@ -503,10 +505,10 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     public function replacePrefix($sql, $prefix = '#__')
     {
         $startPos = 0;
-        $literal  = '';
+        $literal = '';
 
         $sql = trim($sql);
-        $n   = strlen($sql);
+        $n = strlen($sql);
 
         while ($startPos < $n) {
             $ip = strpos($sql, $prefix, $startPos);
@@ -520,7 +522,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
             if (($k !== false) && (($k < $j) || ($j === false))) {
                 $quoteChar = '"';
-                $j         = $k;
+                $j = $k;
             } else {
                 $quoteChar = "'";
             }
@@ -529,7 +531,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
                 $j = $n;
             }
 
-            $literal  .= str_replace($prefix, $this->tablePrefix, substr($sql, $startPos, $j - $startPos));
+            $literal .= str_replace($prefix, $this->tablePrefix, substr($sql, $startPos, $j - $startPos));
             $startPos = $j;
 
             $j = $startPos + 1;
@@ -540,7 +542,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
             // Quote comes first, find end of quote
             while (true) {
-                $k       = strpos($sql, $quoteChar, $j);
+                $k = strpos($sql, $quoteChar, $j);
                 $escaped = false;
 
                 if ($k === false) {
@@ -567,7 +569,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
                 break;
             }
 
-            $literal  .= substr($sql, $startPos, $k - $startPos + 1);
+            $literal .= substr($sql, $startPos, $k - $startPos + 1);
             $startPos = $k + 1;
         }
 
@@ -589,10 +591,10 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
      */
     public static function splitSql($sql)
     {
-        $start   = 0;
-        $open    = false;
-        $char    = '';
-        $end     = strlen($sql);
+        $start = 0;
+        $open = false;
+        $char = '';
+        $end = strlen($sql);
         $queries = [];
 
         for ($i = 0; $i < $end; $i++) {
@@ -620,7 +622,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
 
             if (($current === ';' && !$open) || $i == $end - 1) {
                 $queries[] = substr($sql, $start, ($i - $start + 1));
-                $start     = $i + 1;
+                $start = $i + 1;
             }
         }
 

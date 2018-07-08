@@ -58,9 +58,9 @@ class DatabaseQueueDriver implements QueueDriverInterface
      */
     public function __construct(AbstractDatabaseDriver $db, $queue = 'default', $table = 'queue_jobs', $timeout = 60)
     {
-        $this->db      = $db;
-        $this->table   = $table;
-        $this->queue   = $queue;
+        $this->db = $db;
+        $this->table = $table;
+        $this->queue = $queue;
         $this->timeout = $timeout;
     }
 
@@ -195,10 +195,12 @@ class DatabaseQueueDriver implements QueueDriverInterface
         ];
 
         $this->db->getWriter()->updateBatch(
-            $this->table, $values, [
-            'id' => $message->getId(),
-            'queue' => $queue,
-        ]
+            $this->table,
+            $values,
+            [
+                'id' => $message->getId(),
+                'queue' => $queue,
+            ]
         );
 
         return $this;

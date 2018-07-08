@@ -131,8 +131,8 @@ class StringStream extends Stream implements StreamInterface
         $resource = $this->resource;
 
         $this->resource = null;
-        $this->stream   = null;
-        $this->pointer  = 0;
+        $this->stream = null;
+        $this->pointer = 0;
         $this->seekable = true;
         $this->writable = true;
 
@@ -266,7 +266,7 @@ class StringStream extends Stream implements StreamInterface
         $length = strlen($string);
 
         $start = substr($this->resource, 0, $this->pointer);
-        $end   = substr($this->resource, $this->pointer + $length);
+        $end = substr($this->resource, $this->pointer + $length);
 
         $this->resource = $start . $string . $end;
 
@@ -302,7 +302,7 @@ class StringStream extends Stream implements StreamInterface
 
         $result = substr($this->resource, $this->readPosition, $length);
 
-        $this->pointer      += $length;
+        $this->pointer += $length;
         $this->readPosition = $this->pointer;
 
         return $result;
@@ -348,10 +348,10 @@ class StringStream extends Stream implements StreamInterface
     {
         $metadata = $this->metadata;
 
-        $metadata['eof']          = $this->eof();
-        $metadata['seekable']     = $this->isSeekable();
+        $metadata['eof'] = $this->eof();
+        $metadata['seekable'] = $this->isSeekable();
         $metadata['unread_bytes'] = $this->getSize() - $this->pointer;
-        $metadata['mode']         = 'rb';
+        $metadata['mode'] = 'rb';
 
         if ($this->isWritable()) {
             $metadata['mode'] = 'r+b';

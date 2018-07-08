@@ -92,8 +92,8 @@ class ContentTypeResponseTest extends AbstractBaseTestCase
      */
     public function testXmlOutput()
     {
-        $xml             = new \SimpleXMLElement('<root />');
-        $child           = $xml->addChild('foo', 'bar');
+        $xml = new \SimpleXMLElement('<root />');
+        $child = $xml->addChild('foo', 'bar');
         $child['flower'] = 'sakura';
 
         $response = new XmlResponse($xml);

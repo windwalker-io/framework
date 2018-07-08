@@ -108,9 +108,10 @@ HTML;
     public function testAddCompilers()
     {
         $this->instance->addCustomCompiler(
-            'upper', function ($expression) {
-            return "<?php echo strtoupper({$expression}); ?>";
-        }
+            'upper',
+            function ($expression) {
+                return "<?php echo strtoupper({$expression}); ?>";
+            }
         );
 
         $expect = <<<HTML

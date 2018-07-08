@@ -56,7 +56,7 @@ EOF;
     public function describe(AbstractCommand $command)
     {
         // Describe Options
-        $options          = $command->getAllOptions();
+        $options = $command->getAllOptions();
         $optionDescriptor = $this->getOptionDescriptor();
 
         foreach ($options as $option) {
@@ -66,7 +66,7 @@ EOF;
         $render['option'] = count($options) ? "\n\nOptions:\n\n" . $optionDescriptor->render() : '';
 
         // Describe Commands
-        $commands          = $command->getChildren();
+        $commands = $command->getChildren();
         $commandDescriptor = $this->getCommandDescriptor();
 
         foreach ($commands as $cmd) {
@@ -89,12 +89,12 @@ EOF;
         }
 
         $consoleTitle = $console->getTitle();
-        $version      = $console->getVersion();
+        $version = $console->getVersion();
 
         $commandName = $command->getName();
         $description = $command->getDescription();
-        $usage       = $command->getUsage();
-        $help        = $command->getHelp();
+        $usage = $command->getUsage();
+        $help = $command->getHelp();
 
         // Clean line indent of description
         $description = explode("\n", $description);

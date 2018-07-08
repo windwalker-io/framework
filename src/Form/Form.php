@@ -188,7 +188,7 @@ class Form implements \IteratorAggregate
         $field = FieldHelper::create($field);
 
         $fieldset = $fieldset ?: $this->wrap['fieldset'];
-        $group    = $group ?: $this->wrap['group'];
+        $group = $group ?: $this->wrap['group'];
 
         if ($fieldset) {
             $field->setFieldset($fieldset);
@@ -198,7 +198,7 @@ class Form implements \IteratorAggregate
             $field->setGroup($group);
         }
 
-        $group    = $field->getGroup();
+        $group = $field->getGroup();
         $fieldset = $field->getFieldset();
 
         if ($group && !in_array($group, $this->groups)) {
@@ -229,7 +229,7 @@ class Form implements \IteratorAggregate
     public function wrap($fieldset, $group, \Closure $handler)
     {
         $bakFieldset = $this->wrap['fieldset'];
-        $bakGroup    = $this->wrap['group'];
+        $bakGroup = $this->wrap['group'];
 
         if ($fieldset !== null) {
             $this->wrap['fieldset'] = $fieldset;

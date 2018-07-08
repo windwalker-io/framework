@@ -54,9 +54,9 @@ trait ManageComponentTrait
     public function startComponent($name, array $data = [])
     {
         if (ob_start()) {
-            $this->componentStack[]                         = $name;
+            $this->componentStack[] = $name;
             $this->componentData[$this->currentComponent()] = $data;
-            $this->slots[$this->currentComponent()]         = [];
+            $this->slots[$this->currentComponent()] = [];
         }
     }
 
@@ -103,7 +103,7 @@ trait ManageComponentTrait
         } else {
             if (ob_start()) {
                 $this->slots[$this->currentComponent()][$name] = '';
-                $this->slotStack[$this->currentComponent()][]  = $name;
+                $this->slotStack[$this->currentComponent()][] = $name;
             }
         }
     }
@@ -116,7 +116,7 @@ trait ManageComponentTrait
     public function endSlot()
     {
         end($this->componentStack);
-        $currentSlot   = array_pop(
+        $currentSlot = array_pop(
             $this->slotStack[$this->currentComponent()]
         );
         $this->slots[$this->currentComponent()]

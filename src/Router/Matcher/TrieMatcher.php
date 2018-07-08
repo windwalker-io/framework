@@ -58,9 +58,9 @@ class TrieMatcher extends AbstractMatcher
      */
     public function match($route, $method = 'GET', $options = [])
     {
-        $this->method  = $method;
+        $this->method = $method;
         $this->options = $options;
-        $this->count   = 0;
+        $this->count = 0;
 
         // Init some data
         $this->buildRouteMaps()

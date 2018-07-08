@@ -1517,7 +1517,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
      */
     public function testSetValue()
     {
-        $data  = [
+        $data = [
             'Archer' => 'Unlimited Blade World',
             'Saber' => 'Excalibur',
             'Lancer' => 'Gáe Bulg',
@@ -1714,8 +1714,8 @@ class ArrayHelperTest extends AbstractBaseTestCase
         // $key is undefined (implementation dependent).
         if ($expect != $output && $swappable_keys) {
             list($k1, $k2) = $swappable_keys;
-            $e1          = $output[$k1];
-            $e2          = $output[$k2];
+            $e1 = $output[$k1];
+            $e2 = $output[$k2];
             $output[$k1] = $e2;
             $output[$k2] = $e1;
         }
@@ -1876,7 +1876,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
         $this->assertEquals([$data[0]], ArrayHelper::query($data, ['id' => 1, 'title' => 'Julius Caesar']));
 
         // Test object equals
-        $object      = new \stdClass();
+        $object = new \stdClass();
         $object->foo = 'bar';
         $this->assertEquals([$data[0], $data[3]], ArrayHelper::query($data, ['data' => $object]));
 
@@ -1923,9 +1923,10 @@ class ArrayHelperTest extends AbstractBaseTestCase
         ];
 
         $results = ArrayHelper::query(
-            $data, function ($key, $value) {
-            return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
-        }
+            $data,
+            function ($key, $value) {
+                return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
+            }
         );
 
         $this->assertEquals([$data[0], $data[3]], $results);
@@ -1962,7 +1963,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
      */
     public function testMapKey()
     {
-        $data  = [
+        $data = [
             'top' => 'Captain America',
             'middle' => 'Iron Man',
             'bottom' => 'Thor',
@@ -1974,7 +1975,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'bottom' => 'middle',
         ];
 
-        $expected  = [
+        $expected = [
             'top' => 'Captain America',
             'middle' => 'Thor',
             'bottom' => 'Iron Man',
@@ -2141,7 +2142,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
         $this->assertExpectedException(
             function () {
                 ArrayHelper::setByPath($data, 'a.b', 'c', '.', 'Non\Exists\Class');
-            }, new \InvalidArgumentException(), 'Type or class: Non\Exists\Class not exists'
+            },
+            new \InvalidArgumentException(),
+            'Type or class: Non\Exists\Class not exists'
         );
     }
 

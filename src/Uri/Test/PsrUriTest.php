@@ -141,12 +141,12 @@ class PsrUriTest extends AbstractBaseTestCase
         $this->assertEquals('http://example.com/foo/bar', $new->__toString());
 
         // Encoded
-        $uri      = $uri->withPath('/foo^bar');
+        $uri = $uri->withPath('/foo^bar');
         $expected = '/foo%5Ebar';
         $this->assertEquals($expected, $uri->getPath());
 
         // Not double encoded
-        $uri      = $uri->withPath('/foo%5Ebar');
+        $uri = $uri->withPath('/foo%5Ebar');
         $expected = '/foo%5Ebar';
         $this->assertEquals($expected, $uri->getPath());
     }
@@ -252,14 +252,14 @@ class PsrUriTest extends AbstractBaseTestCase
      */
     public function testFragmentEncoded()
     {
-        $uri      = new PsrUri();
-        $uri      = $uri->withFragment('/p^th?key^=`bar#b@z');
+        $uri = new PsrUri();
+        $uri = $uri->withFragment('/p^th?key^=`bar#b@z');
         $expected = '/p%5Eth?key%5E=%60bar%23b@z';
         $this->assertEquals($expected, $uri->getFragment());
 
         // No double encoded
         $expected = '/p%5Eth?key%5E=%60bar%23b@z';
-        $uri      = $uri->withFragment($expected);
+        $uri = $uri->withFragment($expected);
         $this->assertEquals($expected, $uri->getFragment());
     }
 
@@ -320,7 +320,8 @@ class PsrUriTest extends AbstractBaseTestCase
             function () use ($method, $value) {
                 $uri = new PsrUri('https://example.com/');
                 $uri->$method($value);
-            }, 'InvalidArgumentException'
+            },
+            'InvalidArgumentException'
         );
     }
 }

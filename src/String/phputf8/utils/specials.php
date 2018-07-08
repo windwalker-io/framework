@@ -520,8 +520,8 @@ function utf8_specials_pattern()
             0xfe7c,
             0xfe7d,
         ];
-        $pattern            = preg_quote(utf8_from_unicode($UTF8_SPECIAL_CHARS), '/');
-        $pattern            = '/[\x00-\x19' . $pattern . ']/u';
+        $pattern = preg_quote(utf8_from_unicode($UTF8_SPECIAL_CHARS), '/');
+        $pattern = '/[\x00-\x19' . $pattern . ']/u';
     }
 
     return $pattern;

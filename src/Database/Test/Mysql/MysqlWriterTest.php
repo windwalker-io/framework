@@ -30,11 +30,11 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 
         $compare = new EqCompare('a', 'b');
 
-        $data          = new \stdClass();
-        $data->catid   = 3;
-        $data->title   = 'Sakura';
+        $data = new \stdClass();
+        $data->catid = 3;
+        $data->title = 'Sakura';
         $data->meaning = '';
-        $data->params  = $compare;
+        $data->params = $compare;
 
         $writer->insertOne('#__flower', $data, 'id');
 
@@ -48,11 +48,11 @@ class MysqlWriterTest extends AbstractMysqlTestCase
         $this->assertEquals((string) $compare, $item->params);
 
         // Use array
-        $data            = [];
-        $data['catid']   = 4;
-        $data['title']   = 'Sunflower';
+        $data = [];
+        $data['catid'] = 4;
+        $data['title'] = 'Sunflower';
         $data['meaning'] = '';
-        $data['params']  = '';
+        $data['params'] = '';
 
         $writer->insertOne('#__flower', $data, 'id');
 
@@ -78,11 +78,11 @@ class MysqlWriterTest extends AbstractMysqlTestCase
 
         $compare = new EqCompare('c', 'd');
 
-        $data          = new \stdClass();
-        $data->id      = 86;
-        $data->title   = 'Sakura2';
+        $data = new \stdClass();
+        $data->id = 86;
+        $data->title = 'Sakura2';
         $data->meaning = '';
-        $data->params  = $compare;
+        $data->params = $compare;
 
         $writer->updateOne('#__flower', $data, 'id');
 
@@ -92,12 +92,12 @@ class MysqlWriterTest extends AbstractMysqlTestCase
         $this->assertEquals((string) $compare, $item->params);
 
         // Use array
-        $data            = [];
-        $data['id']      = 87;
-        $data['catid']   = 5;
-        $data['title']   = 'Sunflower2';
+        $data = [];
+        $data['id'] = 87;
+        $data['catid'] = 5;
+        $data['title'] = 'Sunflower2';
         $data['meaning'] = '';
-        $data['params']  = '';
+        $data['params'] = '';
 
         $writer->updateOne('#__flower', $data, 'id');
 
@@ -107,10 +107,10 @@ class MysqlWriterTest extends AbstractMysqlTestCase
         $this->assertEquals('Sunflower2', $item->title);
 
         // Test multiple keys
-        $data           = new \stdClass();
-        $data->catid    = 2;
+        $data = new \stdClass();
+        $data->catid = 2;
         $data->ordering = 8;
-        $data->title    = 'Rose';
+        $data->title = 'Rose';
 
         $writer->updateOne('#__flower', $data, ['catid', 'ordering']);
 
@@ -131,11 +131,11 @@ class MysqlWriterTest extends AbstractMysqlTestCase
         $writer = $this->db->getWriter();
 
         // Insert
-        $data          = new \stdClass();
-        $data->catid   = 3;
-        $data->title   = 'Sakura';
+        $data = new \stdClass();
+        $data->catid = 3;
+        $data->title = 'Sakura';
         $data->meaning = '';
-        $data->params  = '';
+        $data->params = '';
 
         $writer->saveOne('#__flower', $data, 'id');
 
@@ -148,12 +148,12 @@ class MysqlWriterTest extends AbstractMysqlTestCase
         $this->assertEquals('Sakura', $item->title);
 
         // Update
-        $data            = [];
-        $data['id']      = 88;
-        $data['catid']   = 3;
-        $data['title']   = 'Sakura2';
+        $data = [];
+        $data['id'] = 88;
+        $data['catid'] = 3;
+        $data['title'] = 'Sakura2';
         $data['meaning'] = '';
-        $data['params']  = '';
+        $data['params'] = '';
 
         $writer->saveOne('#__flower', $data, 'id');
 
@@ -304,7 +304,8 @@ class MysqlWriterTest extends AbstractMysqlTestCase
      */
     public function testInsertId()
     {
-        $this->db->setQuery('INSERT INTO #__flower (catid, title, meaning, params) VALUES ("3", "Foo3", "", "")')->execute();
+        $this->db->setQuery('INSERT INTO #__flower (catid, title, meaning, params) VALUES ("3", "Foo3", "", "")')
+            ->execute();
 
         $this->assertEquals(91, $this->db->getWriter()->insertId());
     }

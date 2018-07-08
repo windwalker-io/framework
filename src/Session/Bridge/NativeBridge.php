@@ -205,7 +205,7 @@ class NativeBridge implements SessionBridgeInterface
     {
         session_write_close();
 
-        static::$closed  = true;
+        static::$closed = true;
         static::$started = false;
     }
 
@@ -222,7 +222,7 @@ class NativeBridge implements SessionBridgeInterface
             @session_destroy();
         }
 
-        static::$closed  = true;
+        static::$closed = true;
         static::$started = false;
     }
 

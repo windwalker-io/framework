@@ -140,7 +140,7 @@ class PostgresqlDriverTest extends AbstractPostgresqlTestCase
      */
     public function testGetTable()
     {
-        $table  = $this->db->getTable('#__flower');
+        $table = $this->db->getTable('#__flower');
         $driver = ucfirst(static::$driver);
 
         $this->assertInstanceOf(
@@ -161,7 +161,7 @@ class PostgresqlDriverTest extends AbstractPostgresqlTestCase
     public function testGetDatabase()
     {
         $database = $this->db->getDatabase(static::$dbname);
-        $driver   = ucfirst(static::$driver);
+        $driver = ucfirst(static::$driver);
 
         $this->assertInstanceOf(
             sprintf('Windwalker\\Database\\Driver\\%s\\%sDatabase', $driver, $driver),
@@ -222,7 +222,7 @@ class PostgresqlDriverTest extends AbstractPostgresqlTestCase
         $this->assertTrue($trans->getNested());
 
         // Test get
-        $trans  = $this->db->getTransaction();
+        $trans = $this->db->getTransaction();
         $driver = ucfirst(static::$driver);
 
         $this->assertInstanceOf(

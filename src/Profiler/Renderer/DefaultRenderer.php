@@ -35,7 +35,7 @@ class DefaultRenderer implements ProfilerRendererInterface
 
         foreach ($points as $point) {
             $previousTime = $lastPoint ? $lastPoint->getTime() : 0.0;
-            $previousMem  = $lastPoint ? $lastPoint->getMemory(true) : 0;
+            $previousMem = $lastPoint ? $lastPoint->getMemory(true) : 0;
 
             $tmpl = '%s %.3f seconds (+%.3f); %0.2f MB (%s%0.3f) - %s';
 

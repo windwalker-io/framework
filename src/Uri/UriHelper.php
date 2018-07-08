@@ -63,7 +63,7 @@ class UriHelper
         $result = false;
 
         // Build arrays of values we need to decode before parsing
-        $entities     = [
+        $entities = [
             '%21',
             '%2A',
             '%27',
@@ -272,8 +272,8 @@ class UriHelper
                     unset($path[$i]);
                     unset($path[$i - 1]);
                     $path = array_values($path);
-                    $i    -= 2;
-                    $n    -= 2;
+                    $i -= 2;
+                    $n -= 2;
                 }
             }
         }

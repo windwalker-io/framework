@@ -43,8 +43,8 @@ function utf8_ucwords($str)
 function utf8_ucwords_callback($matches)
 {
     $leadingws = $matches[2];
-    $ucfirst   = utf8_strtoupper($matches[3]);
-    $ucword    = utf8_substr_replace(ltrim($matches[0]), $ucfirst, 0, 1);
+    $ucfirst = utf8_strtoupper($matches[3]);
+    $ucword = utf8_substr_replace(ltrim($matches[0]), $ucfirst, 0, 1);
 
     return $leadingws . $ucword;
 }

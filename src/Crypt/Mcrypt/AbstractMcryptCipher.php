@@ -106,7 +106,9 @@ abstract class AbstractMcryptCipher implements CipherInterface
     public function encrypt($data, $key = null, $iv = null)
     {
         // @see https://github.com/ventoviro/windwalker-crypt/issues/2
-        throw new \LogicException('Sorry, due to the secure issue, McryptCipher is nolonger supported, you can only decrypt data now.');
+        throw new \LogicException(
+            'Sorry, due to the secure issue, McryptCipher is nolonger supported, you can only decrypt data now.'
+        );
 
         return;
 

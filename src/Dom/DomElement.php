@@ -51,7 +51,7 @@ class DomElement implements \ArrayAccess
             $content = new DomElements($content);
         }
 
-        $this->name    = $name;
+        $this->name = $name;
         $this->attribs = $attribs;
         $this->content = $content;
     }

@@ -58,7 +58,7 @@ abstract class AbstractCacheStorage implements CacheItemPoolInterface
     public function __construct($ttl = null, $options = [])
     {
         $this->options = $options;
-        $this->ttl     = $ttl ?: 900;
+        $this->ttl = $ttl ?: 900;
     }
 
     /**

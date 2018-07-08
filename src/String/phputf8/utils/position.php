@@ -31,7 +31,7 @@
 function utf8_byte_position()
 {
     $args = func_get_args();
-    $str  =& array_shift($args);
+    $str =& array_shift($args);
     if (!is_string($str)) {
         return false;
     }
@@ -67,7 +67,7 @@ function utf8_byte_position()
             if (($c - $prev[1]) == 0) {
                 // Hack: gone past end of string
                 $error = 0;
-                $i     = strlen($str);
+                $i = strlen($str);
                 break;
             }
 

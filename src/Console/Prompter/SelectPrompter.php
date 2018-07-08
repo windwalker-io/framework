@@ -68,11 +68,11 @@ class SelectPrompter extends ValidatePrompter
      */
     protected function renderList()
     {
-        $list        = '';
+        $list = '';
         $alignSpaces = 8;
 
         // Count key length
-        $keys    = array_keys($this->options);
+        $keys = array_keys($this->options);
         $lengths = array_map('strlen', $keys);
         $longest = max($lengths);
         $longest = $longest >= $alignSpaces ? $alignSpaces : $longest;

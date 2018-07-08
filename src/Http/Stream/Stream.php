@@ -134,7 +134,7 @@ class Stream implements StreamInterface
         $resource = $this->resource;
 
         $this->resource = null;
-        $this->stream   = null;
+        $this->stream = null;
 
         return $resource;
     }

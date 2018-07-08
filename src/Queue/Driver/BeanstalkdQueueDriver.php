@@ -50,7 +50,7 @@ class BeanstalkdQueueDriver implements QueueDriverInterface
      */
     public function __construct($host, $queue, $timeout = 60)
     {
-        $this->queue   = $queue;
+        $this->queue = $queue;
         $this->timeout = $timeout;
 
         $this->client = $this->getPheanstalk($host);

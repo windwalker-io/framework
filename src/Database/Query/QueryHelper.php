@@ -76,7 +76,7 @@ class QueryHelper
         $condition = preg_replace('/\s(?=\s)/', '', $condition);
 
         $tableStorage['condition'] = trim($condition);
-        $tableStorage['prefix']    = $prefix;
+        $tableStorage['prefix'] = $prefix;
 
         $this->tables[$alias] = $tableStorage;
 

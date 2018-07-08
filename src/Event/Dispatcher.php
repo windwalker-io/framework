@@ -151,7 +151,7 @@ class Dispatcher implements DispatcherInterface
      */
     public function clearEvents()
     {
-        $events       = $this->events;
+        $events = $this->events;
         $this->events = [];
 
         return $events;
@@ -189,7 +189,9 @@ class Dispatcher implements DispatcherInterface
         // We deal with a callable.
         if (is_callable($listener)) {
             if (empty($priorities)) {
-                throw new \InvalidArgumentException('No event name(s) and priority specified for the Closure listener.');
+                throw new \InvalidArgumentException(
+                    'No event name(s) and priority specified for the Closure listener.'
+                );
             }
 
             if (is_string($priorities)) {

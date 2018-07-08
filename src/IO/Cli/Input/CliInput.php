@@ -188,8 +188,8 @@ class CliInput extends Input implements CliInputInterface
                     $out[$key] = $value;
                 } // --bar=baz
                 else {
-                    $key       = substr($arg, 2, $eqPos - 2);
-                    $value     = substr($arg, $eqPos + 1);
+                    $key = substr($arg, 2, $eqPos - 2);
+                    $value = substr($arg, $eqPos + 1);
                     $out[$key] = $value;
                 }
             } // -k=value -abc
@@ -197,16 +197,16 @@ class CliInput extends Input implements CliInputInterface
                 if (substr($arg, 0, 1) === '-') {
                     // -k=value
                     if (substr($arg, 2, 1) === '=') {
-                        $key       = substr($arg, 1, 1);
-                        $value     = substr($arg, 3);
+                        $key = substr($arg, 1, 1);
+                        $value = substr($arg, 3);
                         $out[$key] = $value;
                     } // -abc
                     else {
                         $chars = str_split(substr($arg, 1));
 
                         foreach ($chars as $char) {
-                            $key       = $char;
-                            $value     = isset($out[$key]) ? $out[$key] : true;
+                            $key = $char;
+                            $value = isset($out[$key]) ? $out[$key] : true;
                             $out[$key] = $value;
                         }
 

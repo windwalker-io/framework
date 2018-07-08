@@ -294,7 +294,7 @@ class DomElementTest extends AbstractDomTestCase
     {
         $element = new DomElement('field', 'data', ['id' => 'foo']);
 
-        $element['id']    = 'bar';
+        $element['id'] = 'bar';
         $element['class'] = 'yoo';
 
         $this->assertEquals(

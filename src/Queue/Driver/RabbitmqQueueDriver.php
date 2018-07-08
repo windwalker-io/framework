@@ -52,7 +52,7 @@ class RabbitmqQueueDriver implements QueueDriverInterface
     {
         $this->client = $this->getAMQPConnection($options);
 
-        $this->queue   = $queue;
+        $this->queue = $queue;
         $this->channel = $this->client->channel();
     }
 

@@ -253,7 +253,8 @@ class Input implements \Serializable, \Countable
         return array_map(
             function ($v) use ($filter) {
                 return $this->filter->clean($v, $filter);
-            }, $value
+            },
+            $value
         );
     }
 

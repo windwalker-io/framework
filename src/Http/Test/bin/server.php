@@ -27,7 +27,9 @@ $server = \Windwalker\Http\WebHttpServer::create(
         $response = $finalHandler($request, $response);
 
         return $response;
-    }, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(), new \Windwalker\Http\Response\HtmlResponse()
+    },
+    \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals(),
+    new \Windwalker\Http\Response\HtmlResponse()
 );
 
 $server->listen(

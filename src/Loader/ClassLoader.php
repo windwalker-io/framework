@@ -50,8 +50,8 @@ class ClassLoader
     public function __construct(FileMappingLoader $files = null, Psr0Loader $psr0 = null, Psr4Loader $psr4 = null)
     {
         $this->files = $files ?: new FileMappingLoader();
-        $this->psr0  = $psr0 ?: new Psr0Loader();
-        $this->psr4  = $psr4 ?: new Psr4Loader();
+        $this->psr0 = $psr0 ?: new Psr0Loader();
+        $this->psr4 = $psr4 ?: new Psr4Loader();
     }
 
     /**

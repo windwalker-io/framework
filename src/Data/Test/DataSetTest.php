@@ -416,7 +416,8 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
         $this->instance->walk(
             function (&$data, $key, $userdata) {
                 $data->foo = $userdata . ':' . $key;
-            }, 'prefix'
+            },
+            'prefix'
         );
 
         $this->assertEquals(['prefix:0', 'prefix:1'], $this->instance->foo);
@@ -467,7 +468,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
      */
     public function testKsort()
     {
-        $dataset    = new DataSet();
+        $dataset = new DataSet();
         $dataset[1] = ['flower' => 'sakura'];
         $dataset[2] = ['flower' => 'rose'];
         $dataset[0] = ['flower' => 'sunflower'];
@@ -476,9 +477,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(['sunflower', 'sakura', 'rose'], array_values($dataset->flower));
 
-        $dataset          = new DataSet();
-        $dataset['001']   = ['flower' => 'sakura'];
-        $dataset['2']     = ['flower' => 'rose'];
+        $dataset = new DataSet();
+        $dataset['001'] = ['flower' => 'sakura'];
+        $dataset['2'] = ['flower' => 'rose'];
         $dataset['00030'] = ['flower' => 'sunflower'];
 
         $dataset->ksort(SORT_STRING);
@@ -495,7 +496,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
      */
     public function testKrsort()
     {
-        $dataset    = new DataSet();
+        $dataset = new DataSet();
         $dataset[1] = ['flower' => 'sakura'];
         $dataset[2] = ['flower' => 'rose'];
         $dataset[0] = ['flower' => 'sunflower'];
@@ -504,9 +505,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(['rose', 'sakura', 'sunflower'], array_values($dataset->flower));
 
-        $dataset          = new DataSet();
-        $dataset['001']   = ['flower' => 'sakura'];
-        $dataset['2']     = ['flower' => 'rose'];
+        $dataset = new DataSet();
+        $dataset['001'] = ['flower' => 'sakura'];
+        $dataset['2'] = ['flower' => 'rose'];
         $dataset['00030'] = ['flower' => 'sunflower'];
 
         $dataset->krsort(SORT_STRING);

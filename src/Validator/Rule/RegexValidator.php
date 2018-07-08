@@ -40,7 +40,7 @@ class RegexValidator extends AbstractValidator
     public function __construct($regex = null, $modifiers = '')
     {
         $this->modifiers = $modifiers ?: $this->modifiers;
-        $this->regex     = $regex ?: $this->regex;
+        $this->regex = $regex ?: $this->regex;
     }
 
     /**

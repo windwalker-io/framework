@@ -292,9 +292,9 @@ class Arr
             return $data;
         }
 
-        $node     = null;
+        $node = null;
         $previous = null;
-        $dataTmp  = &$data;
+        $dataTmp = &$data;
 
         foreach ($nodes as $node) {
             if (is_object($dataTmp)) {
@@ -303,14 +303,14 @@ class Arr
                 }
 
                 $previous = &$dataTmp;
-                $dataTmp  = &$dataTmp->$node;
+                $dataTmp = &$dataTmp->$node;
             } elseif (is_array($dataTmp)) {
                 if (empty($dataTmp[$node])) {
                     return $data;
                 }
 
                 $previous = &$dataTmp;
-                $dataTmp  = &$dataTmp[$node];
+                $dataTmp = &$dataTmp[$node];
             } else {
                 return $data;
             }
@@ -413,8 +413,8 @@ class Arr
     public static function find(array $data, callable $callback = null, $keepKey = false, $offset = null, $limit = null)
     {
         $results = [];
-        $i       = 0;
-        $c       = 0;
+        $i = 0;
+        $c = 0;
 
         $callback = null === $callback ? 'is_null' : $callback;
 
@@ -682,7 +682,7 @@ class Arr
      */
     public static function group(array $array, $key = null, $forceArray = false)
     {
-        $results  = [];
+        $results = [];
         $hasArray = [];
 
         foreach ($array as $index => $value) {
@@ -692,11 +692,11 @@ class Arr
                     continue;
                 }
 
-                $resultKey   = static::get($value, $key);
+                $resultKey = static::get($value, $key);
                 $resultValue = $array[$index];
             } else {
                 // Scalar value.
-                $resultKey   = $value;
+                $resultKey = $value;
                 $resultValue = $index;
             }
 
@@ -704,7 +704,7 @@ class Arr
             if (!isset($results[$resultKey])) {
                 // Force first element in array.
                 if ($forceArray) {
-                    $results[$resultKey]  = [$resultValue];
+                    $results[$resultKey] = [$resultValue];
                     $hasArray[$resultKey] = true;
                 } else {
                     // Keep first element single.
@@ -800,11 +800,11 @@ class Arr
 
         $self = __FUNCTION__;
 
-        $type       = gettype($data);
-        $tabs       = str_repeat('    ', $tabLevel);
+        $type = gettype($data);
+        $tabs = str_repeat('    ', $tabLevel);
         $quoteTabes = str_repeat('    ', $tabLevel - 1);
-        $output     = '';
-        $elements   = [];
+        $output = '';
+        $elements = [];
 
         $recursiveType = ['object', 'array'];
 
@@ -813,9 +813,9 @@ class Arr
             // If type is object, try to get properties by Reflection.
             if ($type === 'object') {
                 // Remove special characters from anonymous class name.
-                $ref        = new \ReflectionObject($data);
-                $class      = $ref->getName();
-                $output     = $class . ' ' . ucfirst($type);
+                $ref = new \ReflectionObject($data);
+                $class = $ref->getName();
+                $output = $class . ' ' . ucfirst($type);
                 $properties = $ref->getProperties();
 
                 // Fix for ArrayObject & ArrayIterator
@@ -846,7 +846,7 @@ class Arr
                 }
             } elseif ($type === 'array') {
                 // If type is array, just return it's value.
-                $output   = ucfirst($type);
+                $output = ucfirst($type);
                 $elements = $data;
             }
 
@@ -894,12 +894,12 @@ class Arr
         $args = func_get_args();
 
         $output = '';
-        $last   = array_pop($args);
+        $last = array_pop($args);
 
         if (is_int($last)) {
             $level = $last;
         } else {
-            $level  = 5;
+            $level = 5;
             $args[] = $last;
         }
 

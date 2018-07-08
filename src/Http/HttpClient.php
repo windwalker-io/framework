@@ -51,7 +51,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
      */
     public function __construct($options = [], TransportInterface $transport = null)
     {
-        $this->options   = (array) $options;
+        $this->options = (array) $options;
         $this->transport = $transport ?: new CurlTransport();
     }
 
@@ -353,7 +353,7 @@ class HttpClient implements HttpClientInterface, HttpPlugClientInterface
                 $url->setVar($k, $v);
             }
 
-            $url  = (string) $url;
+            $url = (string) $url;
             $data = null;
         }
 

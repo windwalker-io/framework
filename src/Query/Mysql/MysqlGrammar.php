@@ -162,8 +162,8 @@ class MysqlGrammar extends AbstractQueryGrammar
         $defaultCharset = 'utf8mb4',
         $collate = 'utf8mb4_unicode_ci'
     ) {
-        $query  = static::getQuery();
-        $cols   = [];
+        $query = static::getQuery();
+        $cols = [];
         $engine = $engine ?: 'InnoDB';
 
         foreach ($columns as $cName => $details) {
@@ -340,7 +340,14 @@ class MysqlGrammar extends AbstractQueryGrammar
         $column = [$oldColumn, $newColumn];
 
         return static::alterColumn(
-            'CHANGE', $table, $column, $type, $signed, $allowNull, $default, $position,
+            'CHANGE',
+            $table,
+            $column,
+            $type,
+            $signed,
+            $allowNull,
+            $default,
+            $position,
             $comment
         );
     }
@@ -370,7 +377,14 @@ class MysqlGrammar extends AbstractQueryGrammar
         $comment = ''
     ) {
         return static::alterColumn(
-            'MODIFY', $table, $column, $type, $signed, $allowNull, $default, $position,
+            'MODIFY',
+            $table,
+            $column,
+            $type,
+            $signed,
+            $allowNull,
+            $default,
+            $position,
             $comment
         );
     }
@@ -409,7 +423,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     public static function addIndex($table, $type, $columns, $name, $comment = null)
     {
         $query = static::getQuery();
-        $cols  = static::buildIndexDeclare($name, $columns);
+        $cols = static::buildIndexDeclare($name, $columns);
 
         $comment = $comment ? 'COMMENT ' . $query->quote($comment) : '';
 
@@ -435,12 +449,12 @@ class MysqlGrammar extends AbstractQueryGrammar
     public static function buildIndexDeclare($name, $columns, $table = null)
     {
         $query = static::getQuery();
-        $cols  = [];
+        $cols = [];
 
         foreach ((array) $columns as $key => $val) {
             if (is_numeric($key)) {
                 $vals = explode('(', $val);
-                $key  = $query->quoteName($vals[0]);
+                $key = $query->quoteName($vals[0]);
 
                 if (isset($vals[1])) {
                     $key .= '(' . trim($vals[1], '()') . ')';
@@ -454,7 +468,8 @@ class MysqlGrammar extends AbstractQueryGrammar
                     throw new \InvalidArgumentException(
                         sprintf(
                             'Index length should be number, (%s)%s given.',
-                            gettype($val), $string
+                            gettype($val),
+                            $string
                         )
                     );
                 }

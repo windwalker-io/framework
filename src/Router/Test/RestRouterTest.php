@@ -141,13 +141,13 @@ class RestRouterTest extends \PHPUnit\Framework\TestCase
         $this->instance->addMaps($routes);
 
         $result = $this->instance->match('flower/5/foo');
-        $vars   = $this->instance->getVariables();
+        $vars = $this->instance->getVariables();
 
         $this->assertEquals('Flower\\Controller\\Get', $result);
         $this->assertEquals('foo', $vars['alias']);
 
         $result = $this->instance->match('foo/bar/5/baz', 'POST');
-        $vars   = $this->instance->getVariables();
+        $vars = $this->instance->getVariables();
 
         $this->assertEquals('Sakura\\Controller\\Create', $result);
         $this->assertEquals('baz', $vars['sakura']);
@@ -157,7 +157,7 @@ class RestRouterTest extends \PHPUnit\Framework\TestCase
             ->setCustomMethod('PUT');
 
         $result = $this->instance->match('foo/bar/5/baz', 'POST');
-        $vars   = $this->instance->getVariables();
+        $vars = $this->instance->getVariables();
 
         $this->assertEquals('Sakura\\Controller\\Update', $result);
         $this->assertEquals('baz', $vars['sakura']);

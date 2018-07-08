@@ -74,10 +74,10 @@ class ListField extends AbstractField
      */
     public function prepare(&$attrs)
     {
-        $attrs['name']     = $this->getFieldName();
-        $attrs['id']       = $this->getAttribute('id', $this->getId());
-        $attrs['class']    = $this->getAttribute('class');
-        $attrs['size']     = $this->getAttribute('size');
+        $attrs['name'] = $this->getFieldName();
+        $attrs['id'] = $this->getAttribute('id', $this->getId());
+        $attrs['class'] = $this->getAttribute('class');
+        $attrs['size'] = $this->getAttribute('size');
         $attrs['readonly'] = $this->getAttribute('readonly');
         $attrs['disabled'] = $this->getAttribute('disabled');
         $attrs['onchange'] = $this->getAttribute('onchange');
@@ -95,7 +95,8 @@ class ListField extends AbstractField
     protected function getAccessors()
     {
         return array_merge(
-            parent::getAccessors(), [
+            parent::getAccessors(),
+            [
                 'size' => 'size',
                 'onchange' => 'onchange',
                 'multiple' => 'multiple',

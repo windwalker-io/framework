@@ -37,7 +37,7 @@ class PdoQueueFailer implements QueueFailerInterface
      */
     public function __construct(\PDO $pdo, $table = 'queue_failed_jobs')
     {
-        $this->pdo   = $pdo;
+        $this->pdo = $pdo;
         $this->table = $table;
     }
 

@@ -119,7 +119,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      */
     public function __construct($string = '', $encoding = self::ENCODING_UTF8)
     {
-        $this->string   = $string;
+        $this->string = $string;
         $this->encoding = $encoding === null ? static::ENCODING_UTF8 : $encoding;
     }
 
@@ -157,7 +157,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     {
         $new = $this->cloneInstance();
 
-        $ref    = new \ReflectionMethod($class, $method);
+        $ref = new \ReflectionMethod($class, $method);
         $params = $ref->getParameters();
         array_shift($params);
 

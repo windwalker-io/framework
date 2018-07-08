@@ -221,7 +221,8 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     public function testRegisterRootCommand()
     {
         $this->assertInstanceOf(
-            'Windwalker\\Console\\Command\\RootCommand', $this->instance->getRootCommand(),
+            'Windwalker\\Console\\Command\\RootCommand',
+            $this->instance->getRootCommand(),
             'Default Command wrong'
         );
     }
@@ -239,7 +240,8 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
 
         $this->assertInstanceOf(
             'Windwalker\\Console\\Command\\Command',
-            $this->instance->getRootCommand()->getChild('bar'), 'Need Command instance'
+            $this->instance->getRootCommand()->getChild('bar'),
+            'Need Command instance'
         );
     }
 
@@ -338,7 +340,8 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertInstanceOf(
-            '\Closure', $this->instance->getRootCommand()->getHandler(),
+            '\Closure',
+            $this->instance->getRootCommand()->getHandler(),
             'Code need to be a closure.'
         );
 

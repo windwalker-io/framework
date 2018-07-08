@@ -37,7 +37,7 @@ class IniFormat implements FormatInterface
      */
     public static function structToString($struct, array $options = [])
     {
-        $local  = [];
+        $local = [];
         $global = [];
 
         // Iterate over the object to set the properties.
@@ -93,9 +93,9 @@ class IniFormat implements FormatInterface
             return new \stdClass();
         }
 
-        $obj     = new \stdClass();
+        $obj = new \stdClass();
         $section = false;
-        $lines   = explode("\n", $data);
+        $lines = explode("\n", $data);
 
         // Process the lines.
         foreach ($lines as $line) {
@@ -112,7 +112,7 @@ class IniFormat implements FormatInterface
 
                 // If we are processing sections and the line is a section add the object and continue.
                 if (($line[0] === '[') && ($line[$length - 1] === ']')) {
-                    $section       = substr($line, 1, $length - 2);
+                    $section = substr($line, 1, $length - 2);
                     $obj->$section = new \stdClass();
                     continue;
                 }

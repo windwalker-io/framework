@@ -59,7 +59,7 @@ abstract class AbstractWriter
     {
         $fields = [];
         $values = [];
-        $item   = [];
+        $item = [];
 
         if (!is_array($data) && !is_object($data)) {
             throw new \InvalidArgumentException('Please give me array or object to insert.');
@@ -212,7 +212,9 @@ abstract class AbstractWriter
     public function saveOne($table, &$data, $key, $updateNulls = false)
     {
         if (is_array($key) || is_object($key)) {
-            throw new \InvalidArgumentException(__NAMESPACE__ . '::save() dose not support multiple keys, please give me only one key.');
+            throw new \InvalidArgumentException(
+                __NAMESPACE__ . '::save() dose not support multiple keys, please give me only one key.'
+            );
         }
 
         if (is_array($data)) {

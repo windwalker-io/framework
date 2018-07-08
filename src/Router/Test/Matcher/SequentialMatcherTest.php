@@ -189,9 +189,9 @@ class SequentialMatcherTest extends \PHPUnit\Framework\TestCase
     {
         $uri = new Uri($url);
 
-        $host   = $uri->getHost();
+        $host = $uri->getHost();
         $scheme = $uri->getScheme();
-        $port   = $uri->getPort() ?: 80;
+        $port = $uri->getPort() ?: 80;
 
         $config = [
             'name' => 'flower',

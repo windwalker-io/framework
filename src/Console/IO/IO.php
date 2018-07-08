@@ -123,7 +123,7 @@ class IO extends WindwalkerIO implements IOInterface, \IteratorAggregate, \Array
      */
     public function __clone()
     {
-        $this->input  = clone $this->input;
+        $this->input = clone $this->input;
         $this->output = clone $this->output;
     }
 

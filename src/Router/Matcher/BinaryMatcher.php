@@ -37,12 +37,12 @@ class BinaryMatcher extends AbstractMatcher
 
         $keys = array_keys($this->routeMaps);
 
-        $left  = 0;
+        $left = 0;
         $right = count($this->routeMaps) - 1;
 
         while ($left <= $right) {
-            $middle    = round(($left + $right) / 2);
-            $key       = $keys[$middle];
+            $middle = round(($left + $right) / 2);
+            $key = $keys[$middle];
             $routeItem = $this->routes[$this->routeMaps[$key]];
 
             $this->count++;

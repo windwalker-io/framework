@@ -27,7 +27,7 @@ class JsonFormat implements FormatInterface
      */
     public static function structToString($struct, array $options = [])
     {
-        $depth  = StructureHelper::getValue($options, 'depth');
+        $depth = StructureHelper::getValue($options, 'depth');
         $option = StructureHelper::getValue($options, 'options', 0);
 
         $depth = $depth ?: 512;
@@ -45,8 +45,8 @@ class JsonFormat implements FormatInterface
      */
     public static function stringToStruct($data, array $options = [])
     {
-        $assoc  = StructureHelper::getValue($options, 'assoc', false);
-        $depth  = StructureHelper::getValue($options, 'depth', 512);
+        $assoc = StructureHelper::getValue($options, 'assoc', false);
+        $depth = StructureHelper::getValue($options, 'depth', 512);
         $option = StructureHelper::getValue($options, 'options', 0);
 
         if (PHP_VERSION >= 5.4) {

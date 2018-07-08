@@ -21,7 +21,8 @@ $server = \Windwalker\Http\WebHttpServer::create(
         $res = $res->withFilename('Hello.txt');
 
         return $res;
-    }, \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals()
+    },
+    \Windwalker\Http\Request\ServerRequestFactory::createFromGlobals()
 );
 
 $server->listen(

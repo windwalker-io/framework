@@ -51,7 +51,9 @@ class SingleActionRouter extends Router
     public function addMap($pattern, $controller = null)
     {
         if (!is_string($controller)) {
-            throw new \InvalidArgumentException('Please give me controller name string. ' . ucfirst(gettype($controller)) . ' given.');
+            throw new \InvalidArgumentException(
+                'Please give me controller name string. ' . ucfirst(gettype($controller)) . ' given.'
+            );
         }
 
         if ($pattern instanceof Route) {

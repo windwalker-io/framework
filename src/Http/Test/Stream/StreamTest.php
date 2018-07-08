@@ -60,7 +60,7 @@ class StreamTest extends AbstractBaseTestCase
     public function testConstruct()
     {
         $resource = fopen('php://memory', Stream::MODE_READ_WRITE_RESET);
-        $stream   = new Stream($resource);
+        $stream = new Stream($resource);
 
         $this->assertInstanceOf('Windwalker\Http\Stream\Stream', $stream);
 
@@ -128,7 +128,7 @@ class StreamTest extends AbstractBaseTestCase
     public function testDetach()
     {
         $resource = fopen('php://memory', Stream::MODE_READ_WRITE_RESET);
-        $stream   = new Stream($resource);
+        $stream = new Stream($resource);
 
         $this->assertSame($resource, $stream->detach());
         $this->assertAttributeEmpty('resource', $stream);
@@ -179,7 +179,8 @@ class StreamTest extends AbstractBaseTestCase
         $this->assertExpectedException(
             function () use ($stream) {
                 $stream->tell();
-            }, new \RuntimeException()
+            },
+            new \RuntimeException()
         );
     }
 
@@ -195,7 +196,7 @@ class StreamTest extends AbstractBaseTestCase
         $this->createTempFile();
         file_put_contents($this->tmpnam, 'FOO BAR');
         $resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
-        $stream   = new Stream($resource);
+        $stream = new Stream($resource);
 
         fseek($resource, 2);
         $this->assertFalse($stream->eof());
@@ -231,7 +232,7 @@ class StreamTest extends AbstractBaseTestCase
 
         file_put_contents($this->tmpnam, 'FOO BAR');
         $resource = fopen($this->tmpnam, Stream::MODE_READ_WRITE_RESET);
-        $stream   = new Stream($resource);
+        $stream = new Stream($resource);
 
         $this->assertTrue($stream->isSeekable());
     }
@@ -249,7 +250,7 @@ class StreamTest extends AbstractBaseTestCase
         file_put_contents($this->tmpnam, 'FOO BAR');
 
         $resource = fopen($this->tmpnam, Stream::MODE_READ_ONLY_FROM_BEGIN);
-        $stream   = new Stream($resource);
+        $stream = new Stream($resource);
 
         $this->assertTrue($stream->seek(2));
         $this->assertEquals(2, $stream->tell());

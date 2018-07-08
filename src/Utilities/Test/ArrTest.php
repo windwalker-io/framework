@@ -632,42 +632,53 @@ class ArrTest extends TestCase
         ];
 
         $results = Arr::find(
-            $data, function ($value, $key) {
-            return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
-        }
+            $data,
+            function ($value, $key) {
+                return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
+            }
         );
 
         $this->assertEquals([$data[0], $data[3]], $results);
 
         // Keep key
         $results = Arr::find(
-            $data, function ($value, &$key) {
-            $key++;
+            $data,
+            function ($value, &$key) {
+                $key++;
 
-            return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
-        }, true
+                return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
+            },
+            true
         );
 
         $this->assertEquals([1 => $data[0], 4 => $data[3]], $results);
 
         // Offset limit
         $results = Arr::find(
-            $data, function ($value, &$key) {
-            $key++;
+            $data,
+            function ($value, &$key) {
+                $key++;
 
-            return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
-        }, false, 0, 1
+                return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
+            },
+            false,
+            0,
+            1
         );
 
         $this->assertEquals([$data[0]], $results);
 
         // Offset limit
         $results = Arr::find(
-            $data, function ($value, &$key) {
-            $key++;
+            $data,
+            function ($value, &$key) {
+                $key++;
 
-            return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
-        }, false, 1, 1
+                return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
+            },
+            false,
+            1,
+            1
         );
 
         $this->assertEquals([$data[3]], $results);
@@ -707,17 +718,19 @@ class ArrTest extends TestCase
         ];
 
         $result = Arr::findFirst(
-            $data, function ($value, $key) {
-            return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
-        }
+            $data,
+            function ($value, $key) {
+                return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
+            }
         );
 
         $this->assertEquals($data[0], $result);
 
         $result = Arr::findFirst(
-            $data, function ($value, $key) {
-            return $value['title'] === 'No exists';
-        }
+            $data,
+            function ($value, $key) {
+                return $value['title'] === 'No exists';
+            }
         );
 
         $this->assertNull($result);
@@ -754,9 +767,10 @@ class ArrTest extends TestCase
         ];
 
         $results = Arr::reject(
-            $data, function ($value, $key) {
-            return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
-        }
+            $data,
+            function ($value, $key) {
+                return $value['title'] === 'Julius Caesar' || $value['id'] == 4;
+            }
         );
 
         $this->assertEquals([$data[1], $data[2]], $results);
@@ -1438,21 +1452,27 @@ OUT;
         ];
 
         self::assertEquals(
-            $expected, Arr::map(
-            $data, function ($value, $key) {
-            return $value . ' #';
-        }, true
-        )
+            $expected,
+            Arr::map(
+                $data,
+                function ($value, $key) {
+                    return $value . ' #';
+                },
+                true
+            )
         );
 
         self::assertEquals(
-            $expected2, Arr::map(
-            $data, function ($value, &$key) {
-            $key .= '@';
+            $expected2,
+            Arr::map(
+                $data,
+                function ($value, &$key) {
+                    $key .= '@';
 
-            return $value . ' #';
-        }, true
-        )
+                    return $value . ' #';
+                },
+                true
+            )
         );
     }
 }

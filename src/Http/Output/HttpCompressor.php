@@ -111,7 +111,7 @@ class HttpCompressor
         // Iterate through the encodings and attempt to compress the data using any found supported encodings.
         foreach ($encodings as $encoding) {
             // Attempt to gzip encode the data with an optimal level 4.
-            $data   = $response->getBody();
+            $data = $response->getBody();
             $gzdata = $this->encode($data, $supported[$encoding]);
 
             // If there was a problem encoding the data just try the next encoding scheme.

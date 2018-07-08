@@ -40,7 +40,7 @@ class MysqlTable extends AbstractTable
         ];
 
         $options = array_merge($defaultOptions, $options);
-        $schema  = $this->callSchema($schema);
+        $schema = $this->callSchema($schema);
         $columns = [];
         $primary = [];
 
@@ -51,7 +51,9 @@ class MysqlTable extends AbstractTable
                 $column->getType() . $column->getLength(),
                 $column->getSigned() ? '' : 'UNSIGNED',
                 $column->getAllowNull() ? '' : 'NOT NULL',
-                $column->getDefault() !== false ? 'DEFAULT ' . $this->db->getQuery(true)->validValue($column->getDefault()) : '',
+                $column->getDefault() !== false ? 'DEFAULT ' . $this->db->getQuery(true)->validValue(
+                        $column->getDefault()
+                    ) : '',
                 $column->getAutoIncrement() ? 'AUTO_INCREMENT' : '',
                 $column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : '',
                 $column->getSuffix()
@@ -66,7 +68,7 @@ class MysqlTable extends AbstractTable
         $keys = [];
 
         foreach ($schema->getIndexes() as $index) {
-            $name        = $index->getName();
+            $name = $index->getName();
             $keys[$name] = [
                 'type' => $index->getType(),
                 'name' => $name,
@@ -168,26 +170,26 @@ class MysqlTable extends AbstractTable
         $options = []
     ) {
         if ($name instanceof Column) {
-            $column    = $name;
-            $length    = $column->getLength();
-            $name      = $column->getName();
-            $type      = $column->getType();
-            $signed    = $column->getSigned();
+            $column = $name;
+            $length = $column->getLength();
+            $name = $column->getName();
+            $type = $column->getType();
+            $signed = $column->getSigned();
             $allowNull = $column->getAllowNull();
-            $default   = $column->getDefault();
-            $position  = $column->getPosition();
-            $comment   = $column->getComment();
-            $suffix    = $column->getSuffix();
+            $default = $column->getDefault();
+            $position = $column->getPosition();
+            $comment = $column->getComment();
+            $suffix = $column->getSuffix();
         } else {
             $position = isset($options['position']) ? $options['position'] : null;
-            $suffix   = isset($options['suffix']) ? $options['suffix'] : null;
+            $suffix = isset($options['suffix']) ? $options['suffix'] : null;
         }
 
         if (!$this->hasColumn($name)) {
             return $this;
         }
 
-        $type   = MysqlType::getType($type);
+        $type = MysqlType::getType($type);
         $length = isset($length) ? $length : MysqlType::getLength($type);
         $length = $length ? '(' . $length . ')' : null;
 
@@ -239,22 +241,22 @@ class MysqlTable extends AbstractTable
         }
 
         if ($newName instanceof Column) {
-            $column    = $newName;
-            $length    = $column->getLength();
-            $newName   = $column->getName();
-            $type      = $column->getType() . $length;
-            $signed    = $column->getSigned();
+            $column = $newName;
+            $length = $column->getLength();
+            $newName = $column->getName();
+            $type = $column->getType() . $length;
+            $signed = $column->getSigned();
             $allowNull = $column->getAllowNull();
-            $default   = $column->getDefault();
-            $position  = $column->getPosition();
-            $comment   = $column->getComment();
-            $suffix    = $column->getSuffix();
+            $default = $column->getDefault();
+            $position = $column->getPosition();
+            $comment = $column->getComment();
+            $suffix = $column->getSuffix();
         } else {
             $position = isset($options['position']) ? $options['position'] : null;
-            $suffix   = isset($options['suffix']) ? $options['suffix'] : null;
+            $suffix = isset($options['suffix']) ? $options['suffix'] : null;
         }
 
-        $type   = MysqlType::getType($type);
+        $type = MysqlType::getType($type);
         $length = isset($length) ? $length : MysqlType::getLength($type);
         $length = $length ? '(' . $length . ')' : null;
 
@@ -350,7 +352,9 @@ class MysqlTable extends AbstractTable
      */
     public function rename($newName, $returnNew = true)
     {
-        $this->db->setQuery('RENAME TABLE ' . $this->db->quoteName($this->getName()) . ' TO ' . $this->db->quoteName($newName));
+        $this->db->setQuery(
+            'RENAME TABLE ' . $this->db->quoteName($this->getName()) . ' TO ' . $this->db->quoteName($newName)
+        );
 
         $this->db->execute();
 

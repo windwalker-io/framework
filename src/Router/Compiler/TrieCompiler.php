@@ -37,7 +37,7 @@ abstract class TrieCompiler
         // Sanitize and explode the pattern.
         $pattern = RouteHelper::sanitize($pattern);
 
-        $vars  = [];
+        $vars = [];
         $regex = [];
 
         // Loop on each segment
@@ -50,7 +50,7 @@ abstract class TrieCompiler
                 $regex[] = '.*';
             } elseif ($segment[0] === '*') {
                 // Match a splat and capture the data to a named variable.
-                $vars[]  = $segment = substr($segment, 1);
+                $vars[] = $segment = substr($segment, 1);
                 $regex[] = '(?P<' . $segment . '>.*)';
             } elseif ($segment[0] === '\\' && $segment[1] === '*') {
                 // Match an escaped splat segment.
@@ -60,7 +60,7 @@ abstract class TrieCompiler
                 $regex[] = '[^/]*';
             } elseif ($segment[0] === ':') {
                 // Match a named variable and capture the data.
-                $vars[]  = $segment = substr($segment, 1);
+                $vars[] = $segment = substr($segment, 1);
                 $regex[] = static::requirementPattern($segment, $requirements);
             } elseif ($segment[0] === '\\' && $segment[1] === ':') {
                 // Match a segment with an escaped variable character prefix.

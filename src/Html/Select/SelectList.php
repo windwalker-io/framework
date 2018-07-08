@@ -118,7 +118,7 @@ class SelectList extends HtmlElement
     public function toString($forcePair = false)
     {
         $tmpContent = clone $this->getContent();
-        $tmpName    = $this->getAttribute('name');
+        $tmpName = $this->getAttribute('name');
 
         $this->prepareOptions();
 

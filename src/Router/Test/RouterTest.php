@@ -276,9 +276,10 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testGroup()
     {
         $this->instance->group(
-            '/sky', function (Router $router) {
-            $router->addRoute(new Route(null, 'flower/(id)/(alias)', ['_controller' => 'FlowerController']));
-        }
+            '/sky',
+            function (Router $router) {
+                $router->addRoute(new Route(null, 'flower/(id)/(alias)', ['_controller' => 'FlowerController']));
+            }
         );
 
         $result = $this->instance->match('/sky/flower/5/foo');

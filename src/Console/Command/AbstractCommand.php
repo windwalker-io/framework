@@ -136,11 +136,11 @@ abstract class AbstractCommand implements \ArrayAccess
      */
     public function __construct($name = null, IOInterface $io = null, AbstractCommand $parent = null)
     {
-        $this->name   = $name ?: $this->name;
-        $this->io     = $io ?: new IO();
+        $this->name = $name ?: $this->name;
+        $this->io = $io ?: new IO();
         $this->parent = $parent;
 
-        $this->options       = new OptionSet();
+        $this->options = new OptionSet();
         $this->globalOptions = new OptionSet();
 
         $this->init();
@@ -173,7 +173,9 @@ abstract class AbstractCommand implements \ArrayAccess
             $name = $this->io->getArgument(0);
 
             // Show help if a command also has logic
-            if ($this->console instanceof AbstractConsole && $this->console->get('show_help') && !isset($this->children[$name])) {
+            if ($this->console instanceof AbstractConsole && $this->console->get(
+                    'show_help'
+                ) && !isset($this->children[$name])) {
                 $this->io->out($this->console->describeCommand($this));
 
                 return $this->postExecute(true);
@@ -450,8 +452,8 @@ abstract class AbstractCommand implements \ArrayAccess
      */
     public function getChild($path)
     {
-        $path    = str_replace(['/', '\\'], '\\', $path);
-        $names   = explode('\\', $path);
+        $path = str_replace(['/', '\\'], '\\', $path);
+        $names = explode('\\', $path);
         $command = $this;
 
         foreach ($names as $name) {
@@ -867,7 +869,7 @@ abstract class AbstractCommand implements \ArrayAccess
     public function renderAlternatives($wrongName, $exception)
     {
         /** @var $exception \InvalidArgumentException */
-        $message      = $exception->getMessage();
+        $message = $exception->getMessage();
         $autoComplete = '';
         $alternatives = [];
 

@@ -38,10 +38,10 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $server['HTTP_HOST']       = 'foo.com';
+        $server['HTTP_HOST'] = 'foo.com';
         $server['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-        $server['REQUEST_URI']     = '/index.php';
-        $server['SCRIPT_NAME']     = '/index.php';
+        $server['REQUEST_URI'] = '/index.php';
+        $server['SCRIPT_NAME'] = '/index.php';
 
         $this->instance = new StubWeb(ServerRequestFactory::createFromGlobals($server));
     }

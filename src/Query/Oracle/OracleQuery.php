@@ -135,7 +135,7 @@ class OracleQuery extends Query implements Query\PreparableInterface
      */
     public function limit($limit = null, $offset = null)
     {
-        $this->limit  = (int) $limit;
+        $this->limit = (int) $limit;
         $this->offset = (int) $offset;
 
         return $this;

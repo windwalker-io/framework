@@ -353,7 +353,9 @@ class PdoDriver extends AbstractDatabaseDriver
         $builder = sprintf('Windwalker\\Query\\%s\\%sGrammar', $this->name, $this->name);
 
         if (!class_exists($builder)) {
-            throw new \LogicException($builder . ' not found, you should implement ' . __METHOD__ . ' in current deriver class.');
+            throw new \LogicException(
+                $builder . ' not found, you should implement ' . __METHOD__ . ' in current deriver class.'
+            );
         }
 
         /** @var $builder \Windwalker\Query\QueryGrammarInterface */

@@ -118,11 +118,12 @@ class Entity extends Data implements \JsonSerializable
 
         if (is_string($field)) {
             $field = array_merge(
-                $defaultProfile, [
-                'Field' => $field,
-                'Type' => gettype($default),
-                'Default' => $default,
-            ]
+                $defaultProfile,
+                [
+                    'Field' => $field,
+                    'Type' => gettype($default),
+                    'Default' => $default,
+                ]
             );
         }
 

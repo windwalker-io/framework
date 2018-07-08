@@ -51,27 +51,27 @@ class TextField extends AbstractField
      */
     public function prepare(&$attrs)
     {
-        $attrs['type']           = $this->type ?: 'text';
-        $attrs['name']           = $this->getFieldName();
-        $attrs['id']             = $this->getAttribute('id', $this->getId());
-        $attrs['class']          = $this->getAttribute('class');
-        $attrs['placeholder']    = $this->getAttribute('placeholder');
-        $attrs['size']           = $this->getAttribute('size');
-        $attrs['maxlength']      = $this->getAttribute('maxlength');
-        $attrs['readonly']       = $this->getAttribute('readonly');
-        $attrs['disabled']       = $this->getAttribute('disabled');
-        $attrs['autofocus']      = $this->getAttribute('autofocus');
-        $attrs['autocomplete']   = $this->getAttribute('autocomplete');
-        $attrs['form']           = $this->getAttribute('form');
-        $attrs['formenctype']    = $this->getAttribute('formenctype');
-        $attrs['formmethod']     = $this->getAttribute('formmethod');
+        $attrs['type'] = $this->type ?: 'text';
+        $attrs['name'] = $this->getFieldName();
+        $attrs['id'] = $this->getAttribute('id', $this->getId());
+        $attrs['class'] = $this->getAttribute('class');
+        $attrs['placeholder'] = $this->getAttribute('placeholder');
+        $attrs['size'] = $this->getAttribute('size');
+        $attrs['maxlength'] = $this->getAttribute('maxlength');
+        $attrs['readonly'] = $this->getAttribute('readonly');
+        $attrs['disabled'] = $this->getAttribute('disabled');
+        $attrs['autofocus'] = $this->getAttribute('autofocus');
+        $attrs['autocomplete'] = $this->getAttribute('autocomplete');
+        $attrs['form'] = $this->getAttribute('form');
+        $attrs['formenctype'] = $this->getAttribute('formenctype');
+        $attrs['formmethod'] = $this->getAttribute('formmethod');
         $attrs['formnovalidate'] = $this->getAttribute('formnovalidate');
-        $attrs['formtarget']     = $this->getAttribute('formtarget');
-        $attrs['onchange']       = $this->getAttribute('onchange');
-        $attrs['onfocus']        = $this->getAttribute('onfocus');
-        $attrs['onblur']         = $this->getAttribute('onblur');
-        $attrs['value']          = $this->escape($this->getValue());
-        $attrs['list']           = $this->getAttribute('list', count($this->options) ? $this->getId() . '-list' : null);
+        $attrs['formtarget'] = $this->getAttribute('formtarget');
+        $attrs['onchange'] = $this->getAttribute('onchange');
+        $attrs['onfocus'] = $this->getAttribute('onfocus');
+        $attrs['onblur'] = $this->getAttribute('onblur');
+        $attrs['value'] = $this->escape($this->getValue());
+        $attrs['list'] = $this->getAttribute('list', count($this->options) ? $this->getId() . '-list' : null);
 
         $attrs['required'] = $this->required;
     }
@@ -210,15 +210,18 @@ class TextField extends AbstractField
      */
     protected function getAccessors()
     {
-        return array_merge(parent::getAccessors(), [
-            'placeholder' => 'placeholder',
-            'size' => 'size',
-            'maxlength' => 'maxlength',
-            'autofocus' => 'autofocus',
-            'autocomplete' => 'autocomplete',
-            'onchange' => 'onchange',
-            'onfocus' => 'onfocus',
-            'onblur' => 'onblur',
-        ]);
+        return array_merge(
+            parent::getAccessors(),
+            [
+                'placeholder' => 'placeholder',
+                'size' => 'size',
+                'maxlength' => 'maxlength',
+                'autofocus' => 'autofocus',
+                'autocomplete' => 'autocomplete',
+                'onchange' => 'onchange',
+                'onfocus' => 'onfocus',
+                'onblur' => 'onblur',
+            ]
+        );
     }
 }

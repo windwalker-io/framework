@@ -34,17 +34,17 @@ function utf8_ireplace($search, $replace, $str, $count = null)
         $lendif = strlen($replace) - strlen($search);
         $search = utf8_strtolower($search);
 
-        $search  = preg_quote($search, '/');
-        $lstr    = utf8_strtolower($str);
-        $i       = 0;
+        $search = preg_quote($search, '/');
+        $lstr = utf8_strtolower($str);
+        $i = 0;
         $matched = 0;
         while (preg_match('/(.*)' . $search . '/Us', $lstr, $matches)) {
             if ($i === $count) {
                 break;
             }
-            $mlen    = strlen($matches[0]);
-            $lstr    = substr($lstr, $mlen);
-            $str     = substr_replace($str, $replace, $matched + strlen($matches[1]), $slen);
+            $mlen = strlen($matches[0]);
+            $lstr = substr($lstr, $mlen);
+            $str = substr_replace($str, $replace, $matched + strlen($matches[1]), $slen);
             $matched += $mlen + $lendif;
             $i++;
         }

@@ -605,7 +605,8 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
     public function testClean($id, $type, $data, $expect, $message)
     {
         $this->assertEquals(
-            $expect, $this->instance->clean($data, $type),
+            $expect,
+            $this->instance->clean($data, $type),
             $message . ': ' . $id . '. Using filter: ' . $type
         );
     }

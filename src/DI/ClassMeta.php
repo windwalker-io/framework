@@ -59,7 +59,7 @@ class ClassMeta
      */
     public function __construct($class, Container $container)
     {
-        $this->class     = $class;
+        $this->class = $class;
         $this->container = $container;
     }
 

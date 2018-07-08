@@ -132,12 +132,12 @@ class Column
         $comment = '',
         $options = []
     ) {
-        $this->name      = $name;
-        $this->type      = $type;
-        $this->signed    = $signed;
+        $this->name = $name;
+        $this->type = $type;
+        $this->signed = $signed;
         $this->allowNull = $allowNull;
-        $this->default   = $default;
-        $this->comment   = $comment;
+        $this->default = $default;
+        $this->comment = $comment;
 
         $this->setOptions($options);
     }
@@ -403,14 +403,14 @@ class Column
         if ($options['primary']) {
             $options['auto_increment'] = true;
 
-            $this->signed    = false;
+            $this->signed = false;
             $this->allowNull = false;
         }
 
         $this->autoIncrement = $options['auto_increment'];
-        $this->position      = $options['position'];
-        $this->length        = $options['length'];
-        $this->primary       = $options['primary'];
+        $this->position = $options['position'];
+        $this->length = $options['length'];
+        $this->primary = $options['primary'];
 
         return $this;
     }
@@ -439,10 +439,10 @@ class Column
         $this->primary = $primary;
 
         if ($primary) {
-            $this->signed        = false;
-            $this->allowNull     = false;
+            $this->signed = false;
+            $this->allowNull = false;
             $this->autoIncrement = true;
-            $this->default       = false;
+            $this->default = false;
         }
 
         return $this;

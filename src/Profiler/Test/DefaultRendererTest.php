@@ -57,9 +57,9 @@ class DefaultRendererTest extends \PHPUnit\Framework\TestCase
     public function testRender()
     {
         // Create a few points.
-        $first  = new Point('first');
+        $first = new Point('first');
         $second = new Point('second', 1.5, 1048576);
-        $third  = new Point('third', 2.5, 2097152);
+        $third = new Point('third', 2.5, 2097152);
         $fourth = new Point('fourth', 3, 1572864);
 
         // Create a profiler and inject the points.

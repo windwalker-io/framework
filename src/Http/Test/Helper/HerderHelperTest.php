@@ -92,9 +92,11 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
     public function testFilter($string, $expected, $num)
     {
         $this->assertEquals(
-            $expected, HeaderHelper::filter($string),
+            $expected,
+            HeaderHelper::filter($string),
             'Result should be: ' . str_replace(
-                ["\t", "\n", "\r"], ["\\t", "\\n", "\\r"],
+                ["\t", "\n", "\r"],
+                ["\\t", "\\n", "\\r"],
                 HeaderHelper::filter($string)
             ) . ' - #' . $num
         );
@@ -140,7 +142,8 @@ class HerderHelperTest extends \PHPUnit\Framework\TestCase
     public function testIsValidValue($string, $expected, $num)
     {
         $this->assertEquals(
-            $expected, HeaderHelper::isValidValue($string),
+            $expected,
+            HeaderHelper::isValidValue($string),
             str_replace(["\t", "\n", "\r"], ["\\t", "\\n", "\\r"], $string) . ' assert fail - #' . $num
         );
     }

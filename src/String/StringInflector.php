@@ -192,7 +192,7 @@ class StringInflector
     {
         // Cycle through the regex rules.
         foreach ($this->rules[$ruleType] as $regex => $replacement) {
-            $matches     = 0;
+            $matches = 0;
             $matchedWord = preg_replace($regex, $replacement, $word, -1, $matches);
 
             if ($matches > 0) {

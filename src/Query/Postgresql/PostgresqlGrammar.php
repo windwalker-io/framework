@@ -47,9 +47,9 @@ class PostgresqlGrammar extends AbstractQueryGrammar
      */
     public static function listDatabases($where = null)
     {
-        $where   = (array) $where;
+        $where = (array) $where;
         $where[] = 'datistemplate = false';
-        $where   = new QueryElement('WHERE', $where, ' AND ');
+        $where = new QueryElement('WHERE', $where, ' AND ');
 
         return 'SELECT datname FROM pg_database ' . $where . ';';
     }
@@ -154,7 +154,9 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         $query->select('table_name AS "Name"')
             ->from('information_schema.tables')
             ->where('table_type=' . $query->quote('BASE TABLE'))
-            ->where('table_schema NOT IN (' . $query->quote('pg_catalog') . ', ' . $query->quote('information_schema') . ')')
+            ->where(
+                'table_schema NOT IN (' . $query->quote('pg_catalog') . ', ' . $query->quote('information_schema') . ')'
+            )
             ->order('table_name ASC');
 
         if ($where) {
@@ -187,7 +189,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         $tablespace = null
     ) {
         $query = static::getQuery();
-        $cols  = [];
+        $cols = [];
 
         foreach ($columns as $cName => $details) {
             $details = (array) $details;
@@ -223,7 +225,8 @@ class PostgresqlGrammar extends AbstractQueryGrammar
 
             $indexes[] = 'CREATE ' . $define['type'] . ' ' . static::buildIndexDeclare(
                     $define['name'],
-                    $define['columns'], $name
+                    $define['columns'],
+                    $name
                 );
         }
 
@@ -411,7 +414,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
     public static function buildIndexDeclare($name, $columns, $table = null)
     {
         $query = static::getQuery();
-        $cols  = [];
+        $cols = [];
 
         foreach ((array) $columns as $key => $val) {
             if (is_numeric($key)) {
@@ -423,7 +426,8 @@ class PostgresqlGrammar extends AbstractQueryGrammar
                     throw new \InvalidArgumentException(
                         sprintf(
                             'Index length should be number, (%s)%s given.',
-                            gettype($val), $string
+                            gettype($val),
+                            $string
                         )
                     );
                 }

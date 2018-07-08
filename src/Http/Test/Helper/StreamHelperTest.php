@@ -29,7 +29,7 @@ class StreamHelperTest extends \PHPUnit\Framework\TestCase
      */
     public function testCopy()
     {
-        $src  = new Stream(__FILE__, Stream::MODE_READ_ONLY_FROM_BEGIN);
+        $src = new Stream(__FILE__, Stream::MODE_READ_ONLY_FROM_BEGIN);
         $dest = new Stream('php://memory', Stream::MODE_READ_WRITE_FROM_BEGIN);
 
         StreamHelper::copy($src, $dest);

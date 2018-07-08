@@ -31,7 +31,7 @@ class CallbackMiddleware extends AbstractMiddleware
     public function __construct($handler = null, $next = null)
     {
         $this->handler = $handler;
-        $this->next    = $next;
+        $this->next = $next;
     }
 
     /**

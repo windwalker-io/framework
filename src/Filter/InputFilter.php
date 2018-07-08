@@ -156,7 +156,9 @@ class InputFilter implements \Serializable
     public function addHandler($name, $handler)
     {
         if (is_object($handler) && !($handler instanceof CleanerInterface) && !($handler instanceof \Closure)) {
-            throw new \InvalidArgumentException('Object filter handler should extends CleanerInterface or be a Closure.');
+            throw new \InvalidArgumentException(
+                'Object filter handler should extends CleanerInterface or be a Closure.'
+            );
         }
 
         $this->handlers[strtoupper($name)] = $handler;
@@ -308,7 +310,8 @@ class InputFilter implements \Serializable
         // HTML
         $this->handlers[static::URL] = function ($source) {
             return (string) filter_var(
-                $source, FILTER_SANITIZE_URL,
+                $source,
+                FILTER_SANITIZE_URL,
                 FILTER_FLAG_QUERY_REQUIRED | FILTER_FLAG_PATH_REQUIRED
             );
         };
@@ -352,7 +355,7 @@ class InputFilter implements \Serializable
      */
     public function serialize()
     {
-        $this->handlers       = null;
+        $this->handlers = null;
         $this->defaultHandler = null;
 
         // Serialize the options, data, and inputs.

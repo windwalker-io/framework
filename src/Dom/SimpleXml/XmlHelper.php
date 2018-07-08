@@ -137,7 +137,7 @@ class XmlHelper
     public static function def(\SimpleXMLElement $xml, $attr, $value)
     {
         $value = (string) $value;
-        $attr  = (string) $attr;
+        $attr = (string) $attr;
 
         $xml[$attr] = isset($xml[$attr]) ? (string) $xml[$attr] : (string) $value;
     }

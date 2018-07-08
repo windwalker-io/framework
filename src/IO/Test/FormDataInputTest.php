@@ -67,7 +67,7 @@ class FormDataInputTest extends \PHPUnit\Framework\TestCase
         );
 
         // Given Source & filter
-        $src   = ['foo' => 'bar'];
+        $src = ['foo' => 'bar'];
         $input = new FormDataInput($src);
 
         $this->assertEquals(

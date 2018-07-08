@@ -161,11 +161,13 @@ class EdgeCompiler implements EdgeCompilerInterface
     protected function storeVerbatimBlocks($value)
     {
         return preg_replace_callback(
-            '/(?<!@)@verbatim(.*?)@endverbatim/s', function ($matches) {
-            $this->verbatimBlocks[] = $matches[1];
+            '/(?<!@)@verbatim(.*?)@endverbatim/s',
+            function ($matches) {
+                $this->verbatimBlocks[] = $matches[1];
 
-            return $this->verbatimPlaceholder;
-        }, $value
+                return $this->verbatimPlaceholder;
+            },
+            $value
         );
     }
 
@@ -179,9 +181,11 @@ class EdgeCompiler implements EdgeCompilerInterface
     protected function restoreVerbatimBlocks($result)
     {
         $result = preg_replace_callback(
-            '/' . preg_quote($this->verbatimPlaceholder) . '/', function () {
-            return array_shift($this->verbatimBlocks);
-        }, $result
+            '/' . preg_quote($this->verbatimPlaceholder) . '/',
+            function () {
+                return array_shift($this->verbatimBlocks);
+            },
+            $result
         );
 
         $this->verbatimBlocks = [];
@@ -253,35 +257,36 @@ class EdgeCompiler implements EdgeCompilerInterface
         ];
 
         uksort(
-            $methods, function ($method1, $method2) use ($methods) {
-            // Ensure the longest tags are processed first
-            if ($methods[$method1] > $methods[$method2]) {
-                return -1;
-            }
+            $methods,
+            function ($method1, $method2) use ($methods) {
+                // Ensure the longest tags are processed first
+                if ($methods[$method1] > $methods[$method2]) {
+                    return -1;
+                }
 
-            if ($methods[$method1] < $methods[$method2]) {
-                return 1;
-            }
+                if ($methods[$method1] < $methods[$method2]) {
+                    return 1;
+                }
 
-            // Otherwise give preference to raw tags (assuming they've overridden)
-            if ($method1 === 'compileRawEchos') {
-                return -1;
-            }
+                // Otherwise give preference to raw tags (assuming they've overridden)
+                if ($method1 === 'compileRawEchos') {
+                    return -1;
+                }
 
-            if ($method2 === 'compileRawEchos') {
-                return 1;
-            }
+                if ($method2 === 'compileRawEchos') {
+                    return 1;
+                }
 
-            if ($method1 === 'compileEscapedEchos') {
-                return -1;
-            }
+                if ($method1 === 'compileEscapedEchos') {
+                    return -1;
+                }
 
-            if ($method2 === 'compileEscapedEchos') {
-                return 1;
-            }
+                if ($method2 === 'compileEscapedEchos') {
+                    return 1;
+                }
 
-            return null;
-        }
+                return null;
+            }
         );
 
         return $methods;
@@ -314,7 +319,8 @@ class EdgeCompiler implements EdgeCompilerInterface
     {
         return preg_replace_callback(
             '/\B@(@?\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x',
-            [$this, 'compileStatement'], $value
+            [$this, 'compileStatement'],
+            $value
         );
     }
 
@@ -397,7 +403,9 @@ class EdgeCompiler implements EdgeCompilerInterface
         $callback = function ($matches) {
             $whitespace = empty($matches[3]) ? '' : $matches[3] . $matches[3];
 
-            return $matches[1] ? $matches[0] : '<?php echo e(' . $this->compileEchoDefaults($matches[2]) . '); ?>' . $whitespace;
+            return $matches[1] ? $matches[0] : '<?php echo e(' . $this->compileEchoDefaults(
+                    $matches[2]
+                ) . '); ?>' . $whitespace;
         };
 
         return preg_replace_callback($pattern, $callback, $value);

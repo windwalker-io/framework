@@ -40,7 +40,7 @@ abstract class Folder
         @set_time_limit(ini_get('max_execution_time'));
 
         // Eliminate trailing directory separators, if any
-        $src  = rtrim($src, '/\\');
+        $src = rtrim($src, '/\\');
         $dest = rtrim($dest, '/\\');
 
         if (!is_dir($src)) {
@@ -60,7 +60,7 @@ abstract class Folder
 
         // Walk through the directory copying files and recursing into folders.
         foreach ($sources as $file) {
-            $srcFile  = $src . '/' . $file;
+            $srcFile = $src . '/' . $file;
             $destFile = $dest . '/' . $file;
 
             if (is_dir($srcFile)) {
@@ -127,7 +127,7 @@ abstract class Folder
             $obdSeparator = defined('PHP_WINDOWS_VERSION_MAJOR') ? ';' : ':';
 
             // Create the array of open_basedir paths
-            $obdArray  = explode($obdSeparator, $obd);
+            $obdArray = explode($obdSeparator, $obd);
             $inBaseDir = false;
 
             // Iterate through open_basedir paths looking for a match
@@ -285,8 +285,8 @@ abstract class Folder
 
                 case ($pathType === static::PATH_RELATIVE):
                     $pathLength = strlen($path);
-                    $name       = $file->getRealPath();
-                    $name       = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
+                    $name = $file->getRealPath();
+                    $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
 
                 case ($pathType === static::PATH_ABSOLUTE):
@@ -312,7 +312,7 @@ abstract class Folder
      */
     public static function items($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
     {
-        $files      = [];
+        $files = [];
         $pathLength = strlen($path);
 
         /** @var $file \SplFileInfo */
@@ -324,8 +324,8 @@ abstract class Folder
 
                 case ($pathType === static::PATH_RELATIVE):
                     $pathLength = strlen($path);
-                    $name       = $file->getRealPath();
-                    $name       = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
+                    $name = $file->getRealPath();
+                    $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
 
                 case ($pathType === static::PATH_ABSOLUTE):
@@ -362,8 +362,8 @@ abstract class Folder
 
                 case ($pathType === static::PATH_RELATIVE):
                     $pathLength = strlen($path);
-                    $name       = $file->getRealPath();
-                    $name       = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
+                    $name = $file->getRealPath();
+                    $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
 
                 case ($pathType === static::PATH_ABSOLUTE):
@@ -399,7 +399,7 @@ abstract class Folder
 
         if ($level == 0) {
             $index = 0;
-            $base  = Path::clean($path);
+            $base = Path::clean($path);
         }
 
         if ($level < $maxLevel) {
@@ -409,7 +409,7 @@ abstract class Folder
 
             // First path, index foldernames
             foreach ($folders as $name) {
-                $id       = ++$index;
+                $id = ++$index;
                 $fullName = Path::clean($path . '/' . $name);
 
                 $dirs[] = [

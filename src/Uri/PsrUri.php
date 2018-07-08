@@ -123,7 +123,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 
         $scheme = UriHelper::filterScheme($scheme);
 
-        $new         = clone $this;
+        $new = clone $this;
         $new->scheme = $scheme;
 
         return $new;
@@ -154,7 +154,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
             throw new \InvalidArgumentException('URI Password should be a string or NULL.');
         }
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->user = $user;
         $new->pass = $password;
 
@@ -181,7 +181,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
             throw new \InvalidArgumentException('URI Host should be a string.');
         }
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->host = $host;
 
         return $new;
@@ -219,7 +219,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
             }
         }
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->port = $port;
 
         return $new;
@@ -263,7 +263,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
         $path = UriHelper::cleanPath($path);
         $path = UriHelper::filterPath($path);
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->path = $path;
 
         return $new;
@@ -293,8 +293,8 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 
         $query = UriHelper::filterQuery($query);
 
-        $new        = clone $this;
-        $new->vars  = UriHelper::parseQuery($query);
+        $new = clone $this;
+        $new->vars = UriHelper::parseQuery($query);
         $new->query = $query;
 
         return $new;
@@ -323,7 +323,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
 
         $fragment = UriHelper::filterFragment($fragment);
 
-        $new           = clone $this;
+        $new = clone $this;
         $new->fragment = $fragment;
 
         return $new;

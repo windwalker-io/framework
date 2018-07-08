@@ -301,12 +301,12 @@ class PhpRenderer extends AbstractRenderer
      */
     public function reset()
     {
-        $this->file         = null;
-        $this->extend       = null;
-        $this->parent       = null;
-        $this->data         = null;
-        $this->block        = [];
-        $this->blockQueue   = null;
+        $this->file = null;
+        $this->extend = null;
+        $this->parent = null;
+        $this->data = null;
+        $this->block = [];
+        $this->blockQueue = null;
         $this->currentBlock = null;
 
         return $this;

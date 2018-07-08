@@ -55,7 +55,7 @@ class DataStore
         $this->setCallback($callback);
 
         $this->protected = $protected;
-        $this->shared    = $shared;
+        $this->shared = $shared;
     }
 
     /**

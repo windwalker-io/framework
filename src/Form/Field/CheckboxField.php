@@ -33,15 +33,15 @@ class CheckboxField extends AbstractField
     {
         $value = $this->getValue();
 
-        $attrs['type']     = 'checkbox';
-        $attrs['name']     = $this->getFieldName();
-        $attrs['id']       = $this->getAttribute('id', $this->getId());
-        $attrs['class']    = $this->getAttribute('class');
+        $attrs['type'] = 'checkbox';
+        $attrs['name'] = $this->getFieldName();
+        $attrs['id'] = $this->getAttribute('id', $this->getId());
+        $attrs['class'] = $this->getAttribute('class');
         $attrs['readonly'] = $this->getAttribute('readonly');
         $attrs['disabled'] = $this->getAttribute('disabled');
         $attrs['onchange'] = $this->getAttribute('onchange');
-        $attrs['value']    = $this->getAttribute('value');
-        $attrs['checked']  = $value ? 'true' : null;
+        $attrs['value'] = $this->getAttribute('value');
+        $attrs['checked'] = $value ? 'true' : null;
         $attrs['required'] = $this->required;
     }
 }

@@ -96,7 +96,7 @@ class Request extends AbstractRequest implements RequestInterface
     {
         if (strtolower($name) === 'host' && ($this->uri && $this->uri->getHost())) {
             $this->headerNames['host'] = $name;
-            $this->headers[$name]      = [$this->getHostFromUri()];
+            $this->headers[$name] = [$this->getHostFromUri()];
         }
 
         return parent::hasHeader($name);

@@ -95,7 +95,7 @@ class Output implements OutputInterface
     public function sendHeaders(ResponseInterface $response)
     {
         foreach ($response->getHeaders() as $header => $values) {
-            $first  = true;
+            $first = true;
             $header = HeaderHelper::normalizeHeaderName($header);
 
             foreach ($values as $value) {
@@ -123,7 +123,9 @@ class Output implements OutputInterface
 
         $this->header(
             sprintf(
-                'HTTP/%s %d%s', $response->getProtocolVersion(), $response->getStatusCode(),
+                'HTTP/%s %d%s',
+                $response->getProtocolVersion(),
+                $response->getStatusCode(),
                 $reasonPhrase
             )
         );
