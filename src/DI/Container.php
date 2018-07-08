@@ -375,13 +375,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      *
      * @param callable $callable
      * @param array    $args
+     * @param object   $context
      *
      * @return  mixed
      *
      * @throws DependencyResolutionException
      * @throws \ReflectionException
      */
-    public function execute($callable, $args = [])
+    public function execute($callable, array $args = [], $context = null)
     {
         if ($callable instanceof \Closure) {
             $ref = new \ReflectionObject($callable);
@@ -399,20 +400,44 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
             $args = $this->getMethodArgs($ref->getMethod($method), $args);
         }
 
-        switch (count($args)) {
-            case 0:
-                return $callable();
-            case 1:
-                return $callable($args[0]);
-            case 2:
-                return $callable($args[0], $args[1]);
-            case 3:
-                return $callable($args[0], $args[1], $args[2]);
-            case 4:
-                return $callable($args[0], $args[1], $args[2], $args[3]);
-            default:
-                return call_user_func_array($callable, $args);
+        $closure = function () use ($args, $callable) {
+            switch (count($args)) {
+                case 0:
+                    return $callable();
+                case 1:
+                    return $callable($args[0]);
+                case 2:
+                    return $callable($args[0], $args[1]);
+                case 3:
+                    return $callable($args[0], $args[1], $args[2]);
+                case 4:
+                    return $callable($args[0], $args[1], $args[2], $args[3]);
+                default:
+                    return call_user_func_array($callable, $args);
+            }
+        };
+
+        if ($context) {
+            $closure = $closure->bindTo($context, $context);
         }
+
+        return $closure();
+    }
+
+    /**
+     * Alias of execute().
+     *
+     * @param callable $callable
+     * @param array    $args
+     * @param object   $context
+     *
+     * @return  mixed
+     * @throws DependencyResolutionException
+     * @throws \ReflectionException
+     */
+    public function call($callable, array $args = [], $context = null)
+    {
+        return $this->execute($callable, $args, $context);
     }
 
     /**

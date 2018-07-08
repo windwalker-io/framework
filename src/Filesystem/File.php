@@ -155,7 +155,8 @@ class File
 
             // In case of restricted permissions we zap it one way or the other
             // as long as the owner is either the webserver or the ftp
-            if (!@ unlink($file)) {
+            // TODO: Remove exception and use PHP7 throwable
+            if (!unlink($file)) {
                 throw new FilesystemException(__METHOD__ . ': Failed deleting ' . basename($file));
             }
         }
