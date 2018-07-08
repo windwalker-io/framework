@@ -46,7 +46,7 @@ class AbstractHtml5Field extends TextField
      *
      * @return  static|mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.2
      */
     public function max($max = null, $addFilter = true, $forceInt = false)
     {
@@ -66,7 +66,7 @@ class AbstractHtml5Field extends TextField
      *
      * @return  mixed|static
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.2
      */
     public function min($min = null, $addFilter = true, $forceInt = false)
     {
@@ -87,7 +87,7 @@ class AbstractHtml5Field extends TextField
      *
      * @return  $this
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.2
      */
     public function range($min, $max, $addFilter = true, $forceInt = false)
     {

@@ -150,7 +150,7 @@ class TextField extends AbstractField
      *
      * @return  static|mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.2
      */
     public function maxlength($length = null, $addFilter = true, $utf8 = true)
     {

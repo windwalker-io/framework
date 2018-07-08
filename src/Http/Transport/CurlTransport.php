@@ -265,7 +265,7 @@ class CurlTransport extends AbstractTransport
      *
      * @return  array
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  3.4.2
      */
     protected function setCABundleToOptions(array $options)
     {
