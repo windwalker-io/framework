@@ -44,4 +44,3 @@ class CubridQuery extends Query
      */
     protected $nullDate = '0000-00-00 00:00:00';
 }
-

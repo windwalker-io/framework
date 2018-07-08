@@ -134,8 +134,8 @@ class FormDataInput extends Input
             if (strpos($block, 'application/octet-stream') !== false) {
                 // match "name", then everything after "stream" (optional) except for prepending newlines
                 preg_match("/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s", $block, $matches);
-            } // parse all other fields
-            else {
+            } else {
+                // parse all other fields
                 // match "name" and optional value in between newline sequences
                 preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?[\n|\r]$/s', $block, $matches);
             }

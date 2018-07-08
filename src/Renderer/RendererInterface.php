@@ -32,4 +32,3 @@ interface RendererInterface
      */
     public function escape($output);
 }
-

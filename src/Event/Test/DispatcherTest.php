@@ -48,11 +48,6 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->instance->hasEvent('onTest'));
         $this->assertSame($event, $this->instance->getEvent('onTest'));
 
-//		$immutableEvent = new EventImmutable('onAfterSomething');
-//		$this->instance->setEvent($immutableEvent);
-//		$this->assertTrue($this->instance->hasEvent('onAfterSomething'));
-//		$this->assertSame($immutableEvent, $this->instance->getEvent('onAfterSomething'));
-
         // Setting an existing event will replace the old one.
         $eventCopy = new Event('onTest');
         $this->instance->setEvent($eventCopy);
@@ -74,11 +69,6 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $this->instance->addEvent($event);
         $this->assertTrue($this->instance->hasEvent('onTest'));
         $this->assertSame($event, $this->instance->getEvent('onTest'));
-
-//		$immutableEvent = new EventImmutable('onAfterSomething');
-//		$this->instance->addEvent($immutableEvent);
-//		$this->assertTrue($this->instance->hasEvent('onAfterSomething'));
-//		$this->assertSame($immutableEvent, $this->instance->getEvent('onAfterSomething'));
 
         // Adding an existing event will have no effect.
         $eventCopy = new Event('onTest');

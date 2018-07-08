@@ -119,6 +119,7 @@ class HtmlFormatter extends DomFormatter
         // indents the input, and restores the script body.
         if (preg_match_all('/<script\b[^>]*>([\s\S]*?)<\/script>/mi', $input, $matches)) {
             $this->temporaryReplacementsScript = $matches[0];
+
             foreach ($matches[0] as $i => $match) {
                 $input = str_replace($match, '<script>' . ($i + 1) . '</script>', $input);
             }

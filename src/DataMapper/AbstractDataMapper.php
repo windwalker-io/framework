@@ -970,7 +970,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     public function useTransaction($yn = null)
     {
         if ($yn !== null) {
-            $this->useTransaction = (boolean) $yn;
+            $this->useTransaction = (bool) $yn;
         }
 
         return $this->useTransaction;

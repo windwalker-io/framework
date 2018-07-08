@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of ww4 project.
+ * Part of ww4 project.  @codingStandardsIgnoreStart
  *
  * @copyright  Copyright (C) 2016 LYRASOFT.
  * @license    Please see LICENSE file.

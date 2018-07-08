@@ -617,11 +617,14 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
         // If the fork failed, throw an exception.
         if ($pid === -1) {
             throw new \RuntimeException('The process could not be forked.');
-        } elseif ($pid === 0) // Update the process id for the child.
-        {
+        }
+
+        if ($pid === 0) {
+            // Update the process id for the child.
             $this->processId = (int) posix_getpid();
-        } else // Log the fork in the parent.
-        {
+        } else {
+            // Log the fork in the parent.
+
             // Log the fork.
             $this->getLogger()->debug('Process forked ' . $pid);
         }

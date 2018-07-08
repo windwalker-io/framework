@@ -45,9 +45,12 @@ class PostgresqlExpression extends QueryExpression
      * @return  string  Return string used in query to obtain
      *
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function current_timestamp()
     {
+        // @codingStandardsIgnoreEnd
         return 'NOW()';
     }
 
@@ -163,9 +166,12 @@ class PostgresqlExpression extends QueryExpression
      * @return  string  Returns the cast value.
      *
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function cast_as_char($value)
     {
+        // @codingStandardsIgnoreEnd
         return $value . '::text';
     }
 }

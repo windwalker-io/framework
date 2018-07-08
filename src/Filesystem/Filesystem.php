@@ -11,10 +11,6 @@ namespace Windwalker\Filesystem;
 use Windwalker\Filesystem\Comparator\FileComparatorInterface;
 use Windwalker\Filesystem\Iterator\RecursiveDirectoryIterator;
 
-if (!class_exists('CallbackFilterIterator')) {
-    include_once __DIR__ . '/Iterator/CallbackFilterIterator.php';
-}
-
 /**
  * Class Filesystem
  *
@@ -251,8 +247,8 @@ abstract class Filesystem
             $condition = function ($current, $key, $iterator) use ($condition) {
                 return @preg_match($condition, $iterator->getFilename()) && !$iterator->isDot();
             };
-        } // If condition is compare object, wrap it with callback.
-        elseif ($condition instanceof FileComparatorInterface) {
+        } elseif ($condition instanceof FileComparatorInterface) {
+            // If condition is compare object, wrap it with callback.
             /**
              * Files callback
              *
@@ -312,7 +308,8 @@ abstract class Filesystem
         if ($recursive) {
             $options = $options ?: (\FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO);
         } else {
-            $options = $options ?: (\FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS);
+            $options = $options ?: (\FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO
+                | \FilesystemIterator::SKIP_DOTS);
         }
 
         try {

@@ -30,7 +30,7 @@ interface HttpClientInterface
      *
      * @return  ResponseInterface
      */
-    public function request($method, $url, $data = null, $headers);
+    public function request($method, $url, $data = null, $headers = []);
 
     /**
      * Send a request to remote.

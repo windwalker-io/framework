@@ -95,7 +95,7 @@ class HttpServer
      */
     public static function create(
         $handler = null,
-        ServerRequestInterface $request,
+        ServerRequestInterface $request = null,
         ResponseInterface $response = null,
         OutputInterface $output = null
     ) {
@@ -117,7 +117,7 @@ class HttpServer
      */
     public function __construct(
         $handler = null,
-        ServerRequestInterface $request,
+        ServerRequestInterface $request = null,
         ResponseInterface $response = null,
         OutputInterface $output = null
     ) {

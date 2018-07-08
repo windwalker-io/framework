@@ -173,9 +173,8 @@ abstract class AbstractCommand implements \ArrayAccess
             $name = $this->io->getArgument(0);
 
             // Show help if a command also has logic
-            if ($this->console instanceof AbstractConsole && $this->console->get(
-                    'show_help'
-                ) && !isset($this->children[$name])) {
+            if ($this->console instanceof AbstractConsole && $this->console->get('show_help')
+                && !isset($this->children[$name])) {
                 $this->io->out($this->console->describeCommand($this));
 
                 return $this->postExecute(true);
@@ -191,7 +190,8 @@ abstract class AbstractCommand implements \ArrayAccess
                 $command = $this->getChild($name);
 
                 throw new \RuntimeException(
-                    $e->getMessage() . "\n\n[Usage] " . $command->getUsage(), $e->getCode(),
+                    $e->getMessage() . "\n\n[Usage] " . $command->getUsage(),
+                    $e->getCode(),
                     $e
                 );
             } catch (\Exception $e) {
@@ -887,10 +887,8 @@ abstract class AbstractCommand implements \ArrayAccess
              *
              * And if the string of wrong name can be found in a command name, we also notice user to choose it.
              */
-            if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / $denominator) || strpos(
-                    $commandName,
-                    $wrongName
-                ) !== false) {
+            if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / $denominator)
+                || strpos($commandName, $wrongName) !== false) {
                 $alternatives[] = "    " . $commandName;
             }
         }
@@ -928,6 +926,7 @@ abstract class AbstractCommand implements \ArrayAccess
         /** @var $exception \Exception */
         $class = get_class($exception);
 
+        // @codingStandardsIgnoreStart
         $output = <<<EOF
 <error>Exception '{$class}' with message:</error> <fg=cyan;options=bold>{$exception->getMessage()}</fg=cyan;options=bold>
 <info>in {$exception->getFile()}:{$exception->getLine()}</info>
@@ -935,6 +934,7 @@ abstract class AbstractCommand implements \ArrayAccess
 <error>Stack trace:</error>
 {$exception->getTraceAsString()}
 EOF;
+        // @codingStandardsIgnoreEnd
 
         $this->out('');
         $this->err($output);

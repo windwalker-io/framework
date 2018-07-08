@@ -164,8 +164,8 @@ class StreamTransport extends AbstractTransport
 
         if (is_numeric($code)) {
             $return = $return->withStatus($code);
-        } // No valid response code was detected.
-        elseif (!$this->getOption('allow_empty_status_code', false)) {
+        } elseif (!$this->getOption('allow_empty_status_code', false)) {
+            // No valid response code was detected.
             throw new \UnexpectedValueException('No HTTP response code found.');
         }
         // Add the response headers to the response object.

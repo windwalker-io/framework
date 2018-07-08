@@ -314,8 +314,8 @@ class NestedRecord extends Record
                 $this->db->setQuery($query);
 
                 $reference = $this->db->loadOne();
-            } // We have a real node set as a location reference.
-            else {
+            } else {
+                // We have a real node set as a location reference.
                 // Get the reference node by primary key.
                 if (!$reference = $this->getNode($this->locationId)) {
                     throw new NestedHandleException('Cannot get node by location id: ' . $this->locationId);
@@ -348,12 +348,13 @@ class NestedRecord extends Record
             $this->level = $repositionData->new_level;
             $this->lft = $repositionData->new_lft;
             $this->rgt = $repositionData->new_rgt;
-        } /*
-		 * If we have a given primary key then we assume we are simply updating this
-		 * node in the tree.  We should assess whether or not we are moving the node
-		 * or just updating its data fields.
-		 */
-        else {
+        } else {
+            /*
+             * If we have a given primary key then we assume we are simply updating this
+             * node in the tree.  We should assess whether or not we are moving the node
+             * or just updating its data fields.
+             */
+
             // If the location has been set, move the node to its new location.
             if ($this->locationId > 0) {
                 $this->moveByReference($this->locationId, $this->location, $this->$k);
@@ -494,8 +495,8 @@ class NestedRecord extends Record
 
             // Get the reposition data for shifting the tree and re-inserting the node.
             $repositionData = $this->getTreeRepositionData($reference, $node->width, $position);
-        } // We are moving the tree to be the last child of the root node
-        else {
+        } else {
+            // We are moving the tree to be the last child of the root node
             // Get the last root node as the reference node.
             $query->clear()
                 ->select($this->getKeyName() . ', parent_id, level, lft, rgt')
@@ -619,8 +620,8 @@ class NestedRecord extends Record
                 ->where('rgt > ' . (int) $node->rgt);
 
             $this->db->setQuery($query)->execute();
-        } // Leave the children and move them up a level.
-        else {
+        } else {
+            // Leave the children and move them up a level.
             // Delete the node.
             $query->clear()
                 ->delete($query->quoteName($this->table))
@@ -1021,7 +1022,7 @@ class NestedRecord extends Record
                 $data->new_level = $referenceNode->level + 1;
                 break;
 
-            case static::LOCATION_BEFORE;
+            case static::LOCATION_BEFORE:
                 $data->left_where = 'lft >= ' . $referenceNode->lft;
                 $data->right_where = 'rgt >= ' . $referenceNode->lft;
 

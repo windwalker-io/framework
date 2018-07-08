@@ -29,4 +29,3 @@ interface LoaderInterface
      */
     public function load($file);
 }
-

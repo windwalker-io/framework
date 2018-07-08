@@ -31,4 +31,3 @@ interface FormatInterface
      */
     public function parse($string);
 }
-

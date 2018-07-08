@@ -325,7 +325,7 @@ class StringInflector
      */
     public function isCountable($word)
     {
-        return (boolean) in_array($word, $this->rules['countable']);
+        return in_array($word, $this->rules['countable'], true);
     }
 
     /**

@@ -44,7 +44,7 @@ class YamlFormat implements FormatInterface
      *
      * @since   2.0
      */
-    static public function structToString($struct, array $options = [])
+    public static function structToString($struct, array $options = [])
     {
         $inline = StructureHelper::getValue($options, 'inline', 2);
         $indent = StructureHelper::getValue($options, 'indent', 0);
@@ -63,7 +63,7 @@ class YamlFormat implements FormatInterface
      *
      * @since   2.0
      */
-    static public function stringToStruct($data, array $options = [])
+    public static function stringToStruct($data, array $options = [])
     {
         return static::getParser()->parse(trim($data));
     }

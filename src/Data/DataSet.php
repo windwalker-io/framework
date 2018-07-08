@@ -16,7 +16,13 @@ use Windwalker\Utilities\Arr;
  *
  * @since 2.0
  */
-class DataSet implements DataSetInterface, \IteratorAggregate, \ArrayAccess, \Serializable, \Countable, \JsonSerializable
+class DataSet implements
+    DataSetInterface,
+    \IteratorAggregate,
+    \ArrayAccess,
+    \Serializable,
+    \Countable,
+    \JsonSerializable
 {
     use CollectionTrait;
 

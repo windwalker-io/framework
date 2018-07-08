@@ -10,10 +10,6 @@ namespace Windwalker\Filesystem\Path;
 
 use Windwalker\Filesystem\Filesystem;
 
-if (!class_exists('CallbackFilterIterator')) {
-    include_once __DIR__ . '/../Iterator/CallbackFilterIterator.php';
-}
-
 /**
  * A Path locator class
  *
@@ -328,7 +324,7 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     /**
      * Get a parent path of given condition.
      *
-     * @param   boolean $condition Parent condition.
+     * @param   bool|int|string $condition Parent condition.
      *
      * @return  static  Return this object to support chaining.
      *
@@ -337,13 +333,13 @@ class PathLocator implements PathLocatorInterface, \IteratorAggregate
     public function parent($condition = null)
     {
         // Up one level
-        if (is_null($condition)) {
+        if (null === $condition) {
             array_pop($this->paths);
-        } // Up mutiple level
-        elseif (is_int($condition)) {
+        } elseif (is_int($condition)) {
+            // Up mutiple level
             $this->paths = array_slice($this->paths, 0, -$condition);
-        } // Find a dir name and go to this level
-        elseif (is_string($condition)) {
+        } elseif (is_string($condition)) {
+            // Find a dir name and go to this level
             $paths = $this->paths;
 
             $paths = array_reverse($paths);

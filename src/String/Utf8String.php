@@ -8,23 +8,8 @@
 
 namespace Windwalker\String;
 
-// PHP mbstring and iconv local configuration. Port from Joomla String.
-if (version_compare(PHP_VERSION, '5.6', '>=')) {
-    @ini_set('default_charset', 'UTF-8');
-} else {
-    // Check if mbstring extension is loaded and attempt to load it if not present except for windows
-    if (extension_loaded('mbstring')) {
-        @ini_set('mbstring.internal_encoding', 'UTF-8');
-        @ini_set('mbstring.http_input', 'UTF-8');
-        @ini_set('mbstring.http_output', 'UTF-8');
-    }
-    // Same for iconv
-    if (function_exists('iconv')) {
-        iconv_set_encoding('internal_encoding', 'UTF-8');
-        iconv_set_encoding('input_encoding', 'UTF-8');
-        iconv_set_encoding('output_encoding', 'UTF-8');
-    }
-}
+@ini_set('default_charset', 'UTF-8');
+
 /**
  * Include the utf8 package
  */

@@ -11,10 +11,6 @@ namespace Windwalker\Filesystem\Path;
 use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Iterator\ArrayObject;
 
-if (!class_exists('CallbackFilterIterator')) {
-    include_once __DIR__ . '/../Iterator/CallbackFilterIterator.php';
-}
-
 /**
  * A PathLocator collection class
  *
@@ -81,11 +77,11 @@ class PathCollection extends ArrayObject
         // You can create any your Path locator class implements from PathLocatorInterface.
         if ($path instanceof PathLocatorInterface) {
             // Nothing to do
-        } // If this element is a path string, we create a PathLocator to wrap it.
-        elseif (is_string($path) || !$path) {
+        } elseif (is_string($path) || !$path) {
+            // If this element is a path string, we create a PathLocator to wrap it.
             $path = new PathLocator($path);
-        } // If type of this element not match our interface, throw exception.
-        else {
+        } else {
+            // If type of this element not match our interface, throw exception.
             throw new \InvalidArgumentException(
                 'PathCollection need every path element instance of PathLocatorInterface.'
             );

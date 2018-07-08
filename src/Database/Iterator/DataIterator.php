@@ -112,7 +112,7 @@ class DataIterator implements \Countable, \Iterator
      */
     public function valid()
     {
-        return (boolean) $this->current();
+        return (bool) $this->current();
     }
 
     /**

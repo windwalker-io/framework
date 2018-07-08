@@ -6,6 +6,7 @@
  * @license    GNU Lesser General Public License version 3 or later.
  */
 
+// @codingStandardsIgnoreStart
 /**
  * The WindTalker class.
  *
@@ -14,3 +15,4 @@
 class WindTalker
 {
 }
+// @codingStandardsIgnoreEnd

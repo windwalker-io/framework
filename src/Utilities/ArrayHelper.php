@@ -736,8 +736,8 @@ class ArrayHelper
 
                     $elements[$pType] = $property->getValue($data);
                 }
-            } // If type is array, just retun it's value.
-            elseif ($type === 'array') {
+            } elseif ($type === 'array') {
+                // If type is array, just retun it's value.
                 $output = ucfirst($type);
                 $elements = $data;
             }

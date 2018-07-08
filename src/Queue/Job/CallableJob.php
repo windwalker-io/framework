@@ -35,7 +35,7 @@ class CallableJob implements JobInterface
      * @param string   $name
      * @param callable $callback
      */
-    public function __construct($name = null, callable $callback)
+    public function __construct($name = null, callable $callback = null)
     {
         $this->callback = $callback;
         $this->name = $name;

@@ -111,8 +111,8 @@ class TrieMatcher extends AbstractMatcher
                 }
 
                 RouteHelper::getVariables($match, $this->vars);
-            } // Otherwise it is a static string
-            else {
+            } else {
+                // Otherwise it is a static string
                 if ($regex != $segment) {
                     continue;
                 }

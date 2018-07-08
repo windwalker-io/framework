@@ -50,4 +50,3 @@ interface LanguageInterface
      */
     public function exists($key);
 }
-

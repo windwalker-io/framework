@@ -8,6 +8,7 @@
 
 namespace Windwalker\Profiler;
 
+use Windwalker\Profiler\Point\PointInterface;
 use Windwalker\Profiler\Point\ProfilerItemInterface;
 use Windwalker\Profiler\Point\ProfilerPointInterface;
 
@@ -86,7 +87,7 @@ interface ProfilerInterface
     /**
      * Get the points in this profiler (from the first to the last).
      *
-     * @return  ProfilerPointInterface[]  An array of points in this profiler.
+     * @return  PointInterface[]  An array of points in this profiler.
      */
     public function getPoints();
 

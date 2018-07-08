@@ -138,4 +138,3 @@ interface QueryGrammarInterface
      */
     public static function getQuery($new = false);
 }
-

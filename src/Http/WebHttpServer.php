@@ -92,7 +92,7 @@ class WebHttpServer extends HttpServer
      */
     public function __construct(
         $handler = null,
-        ServerRequestInterface $request,
+        ServerRequestInterface $request = null,
         ResponseInterface $response = null,
         OutputInterface $output = null
     ) {

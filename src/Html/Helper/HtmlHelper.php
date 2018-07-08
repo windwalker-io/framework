@@ -63,7 +63,7 @@ abstract class HtmlHelper extends TestDomHelper
                         $html .= "</" . $openedtags[$i] . ">";
                     }
                 } else {
-                    unset ($closedtags[array_search($openedtags[$i], $closedtags)]);
+                    unset($closedtags[array_search($openedtags[$i], $closedtags)]);
                 }
             }
 
@@ -111,6 +111,7 @@ abstract class HtmlHelper extends TestDomHelper
                     $output .= '[' . implode(',', $child) . ']';
                     break;
                 }
+                // Go to next body
 
             case 'object':
                 $array = is_object($data) ? get_object_vars($data) : $data;

@@ -269,11 +269,9 @@ class HtmlCleaner
              * OR no tagname
              * OR remove if xssauto is on and tag is blacklisted
              */
-            if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName)) || (!$tagName) || ((in_array(
-                        strtolower($tagName),
-                        $this->tagBlacklist
-                    )) && ($this->xssAuto))) {
-                $postTag = substr($postTag, ($tagLength + 2));
+            if (!preg_match('/^[a-z][a-z0-9]*$/i', $tagName) || !$tagName
+                || (\in_array(strtolower($tagName), $this->tagBlacklist, true) && $this->xssAuto)) {
+                $postTag = substr($postTag, $tagLength + 2);
                 $tagOpen_start = strpos($postTag, '<');
 
                 // Strip tag
@@ -300,9 +298,9 @@ class HtmlCleaner
                     $startAtt = $matches[0][0];
                     $startAttPosition = $matches[0][1];
                     $closeQuotes = strpos(
-                            substr($fromSpace, ($startAttPosition + strlen($startAtt))),
-                            '"'
-                        ) + $startAttPosition + strlen($startAtt);
+                        substr($fromSpace, ($startAttPosition + strlen($startAtt))),
+                        '"'
+                    ) + $startAttPosition + strlen($startAtt);
                     $nextEqual = $startAttPosition + strpos($startAtt, '=');
                     $openQuotes = $startAttPosition + strpos($startAtt, '"');
                     $nextSpace = strpos(substr($fromSpace, $closeQuotes), ' ') + $closeQuotes;

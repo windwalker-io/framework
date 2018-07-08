@@ -131,10 +131,13 @@ class QueryExpression
      *
      * @return  string
      *
+     * @codingStandardsIgnoreStart
+     *
      * @since   2.0
      */
     public function current_timestamp()
     {
+        // @codingStandardsIgnoreEnd
         return 'CURRENT_TIMESTAMP()';
     }
 
@@ -271,10 +274,14 @@ class QueryExpression
      * @return  string  The required char length call.
      *
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function char_length($field, $operator = null, $condition = null)
     {
-        return 'CHAR_LENGTH(' . $field . ')' . (isset($operator) && isset($condition) ? ' ' . $operator . ' ' . $condition : '');
+        // @codingStandardsIgnoreEnd
+        return 'CHAR_LENGTH(' . $field . ')' .
+            ($operator !== null && $condition !== null ? ' ' . $operator . ' ' . $condition : '');
     }
 
     /**
@@ -287,9 +294,12 @@ class QueryExpression
      * @return  string  Returns the cast value.
      *
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function cast_as_char($value)
     {
+        // @codingStandardsIgnoreEnd
         return $value;
     }
 

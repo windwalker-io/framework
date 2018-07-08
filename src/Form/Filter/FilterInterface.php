@@ -24,4 +24,3 @@ interface FilterInterface
      */
     public function clean($text);
 }
-

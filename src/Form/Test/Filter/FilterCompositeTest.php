@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project.
+ * Part of Windwalker project.  @codingStandardsIgnoreStart
  *
  * @copyright  Copyright (C) 2017 Asikart.
  * @license    LGPL-2.0-or-later

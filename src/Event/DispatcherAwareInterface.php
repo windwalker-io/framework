@@ -29,4 +29,3 @@ interface DispatcherAwareInterface
      */
     public function setDispatcher(DispatcherInterface $dispatcher);
 }
-

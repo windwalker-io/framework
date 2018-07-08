@@ -112,14 +112,14 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
                 array(
                     __DIR__ . 'files'
                 ),
-                
+
                 array(
                     Path::clean(__DIR__ . 'files/folder1'),
                     Path::clean(__DIR__ . 'files/folder1/file1'),
                     Path::clean(__DIR__ . 'files/folder2/file2.html'),
                     Path::clean(__DIR__ . 'files/file2.txt')
                 ),
-                
+
                 true
             )
             */
@@ -183,7 +183,7 @@ class PathCollectionTest extends \PHPUnit\Framework\TestCase
      *
      * @since  2.0
      */
-    public function test__construct()
+    public function testConstruct()
     {
         $collections = new PathCollection('/var/www/foo/bar');
 

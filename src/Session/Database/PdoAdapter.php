@@ -60,7 +60,9 @@ class PdoAdapter extends AbstractDatabaseAdapter
                 sprintf(
                     'PDOException was thrown when trying to delete a session: %s',
                     $e->getMessage()
-                ), 0, $e
+                ),
+                0,
+                $e
             );
         }
 
@@ -92,7 +94,9 @@ class PdoAdapter extends AbstractDatabaseAdapter
                 sprintf(
                     'PDOException was thrown when trying to delete expired sessions: %s',
                     $e->getMessage()
-                ), 0, $e
+                ),
+                0,
+                $e
             );
         }
 
@@ -110,7 +114,9 @@ class PdoAdapter extends AbstractDatabaseAdapter
      */
     public function read($sessionId)
     {
-        $sql = "SELECT {$this->options['data_col']} FROM {$this->options['table']} WHERE {$this->options['id_col']} = :id";
+        $sql = "SELECT {$this->options['data_col']} 
+ FROM {$this->options['table']} 
+ WHERE {$this->options['id_col']} = :id";
 
         try {
             $stmt = $this->db->prepare($sql);
@@ -132,7 +138,9 @@ class PdoAdapter extends AbstractDatabaseAdapter
                 sprintf(
                     'PDOException was thrown when trying to read the session data: %s',
                     $e->getMessage()
-                ), 0, $e
+                ),
+                0,
+                $e
             );
         }
     }
@@ -168,7 +176,9 @@ class PdoAdapter extends AbstractDatabaseAdapter
             }
 
             $updateStmt = $this->db->prepare(
-                "UPDATE {$this->options['table']} SET {$this->options['data_col']} = :data, {$this->options['time_col']} = :time WHERE {$this->options['id_col']} = :id"
+                "UPDATE {$this->options['table']} SET {$this->options['data_col']} = :data,
+ {$this->options['time_col']} = :time
+ WHERE {$this->options['id_col']} = :id"
             );
 
             $updateStmt->bindParam(':id', $sessionId, \PDO::PARAM_STR);
@@ -185,7 +195,11 @@ class PdoAdapter extends AbstractDatabaseAdapter
             if (!$updateStmt->rowCount()) {
                 try {
                     $insertStmt = $this->db->prepare(
-                        "INSERT INTO {$this->options['table']} ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (:id, :data, :time)"
+                        "INSERT INTO {$this->options['table']} 
+ ({$this->options['id_col']}, 
+ {$this->options['data_col']}, 
+ {$this->options['time_col']}) 
+ VALUES (:id, :data, :time)"
                     );
 
                     $insertStmt->bindParam(':id', $sessionId, \PDO::PARAM_STR);
@@ -194,7 +208,8 @@ class PdoAdapter extends AbstractDatabaseAdapter
 
                     $insertStmt->execute();
                 } catch (\PDOException $e) {
-                    // Handle integrity violation SQLSTATE 23000 (or a subclass like 23505 in Postgres) for duplicate keys
+                    // Handle integrity violation SQLSTATE 23000
+                    // (or a subclass like 23505 in Postgres) for duplicate keys
                     if (0 === strpos($e->getCode(), '23')) {
                         $updateStmt->execute();
                     } else {
@@ -207,7 +222,9 @@ class PdoAdapter extends AbstractDatabaseAdapter
                 sprintf(
                     'PDOException was thrown when trying to write the session data: %s',
                     $e->getMessage()
-                ), 0, $e
+                ),
+                0,
+                $e
             );
         }
 
@@ -225,20 +242,32 @@ class PdoAdapter extends AbstractDatabaseAdapter
 
         switch ($driver) {
             case 'mysql':
-                return "INSERT INTO {$this->options['table']} ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (:id, :data, :time) " .
-                    "ON DUPLICATE KEY UPDATE {$this->options['data_col']} = VALUES({$this->options['data_col']}), {$this->options['time_col']} = VALUES({$this->options['time_col']})";
+                return <<<SQL
+INSERT INTO {$this->options['table']} ({$this->options['id_col']}, 
+{$this->options['data_col']}, 
+{$this->options['time_col']}) 
+ VALUES (:id, :data, :time)
+ ON DUPLICATE KEY UPDATE {$this->options['data_col']} = VALUES({$this->options['data_col']}), 
+ {$this->options['time_col']} = VALUES({$this->options['time_col']}) 
+SQL;
 
             case 'oci':
                 // DUAL is Oracle specific dummy table
-                return "MERGE INTO {$this->options['table']} USING DUAL ON ({$this->options['id_col']} = :id) " .
-                    "WHEN NOT MATCHED THEN INSERT ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (:id, :data, :time) " .
-                    "WHEN MATCHED THEN UPDATE SET {$this->options['data_col']} = :data, {$this->options['time_col']} = :time";
+                return <<<SQL
+ MERGE INTO {$this->options['table']} USING DUAL ON ({$this->options['id_col']} = :id) 
+ WHEN NOT MATCHED THEN INSERT ({$this->options['id_col']}, 
+ {$this->options['data_col']}, 
+ {$this->options['time_col']}) 
+ VALUES (:id, :data, :time)  
+ WHEN MATCHED THEN UPDATE SET {$this->options['data_col']} = :data, {$this->options['time_col']} = :time
+SQL;
 
             case 'sqlsrv' === $driver && version_compare(
-                    $this->db->getAttribute(\PDO::ATTR_SERVER_VERSION),
-                    '10',
-                    '>='
-                ):
+                $this->db->getAttribute(\PDO::ATTR_SERVER_VERSION),
+                '10',
+                '>='
+            ):
+                // @codingStandardsIgnoreStart
                 // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
                 // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
                 return "MERGE INTO {$this->options['table']} WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON ({$this->options['id_col']} = :id) " .
@@ -249,6 +278,7 @@ class PdoAdapter extends AbstractDatabaseAdapter
                 return "INSERT OR REPLACE INTO {$this->options['table']} ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (:id, :data, :time)";
         }
 
+        // @codingStandardsIgnoreEnd
         return '';
     }
 }

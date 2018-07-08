@@ -100,7 +100,7 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
         // Remove a session from the database.
         $this->db->setQuery($query);
 
-        return (boolean) $this->db->execute();
+        return (bool) $this->db->execute();
     }
 
     /**
@@ -119,6 +119,6 @@ class JoomlaAdapter extends AbstractDatabaseAdapter
         // Remove expired sessions from the database.
         $this->db->setQuery($query);
 
-        return (boolean) $this->db->execute();
+        return (bool) $this->db->execute();
     }
 }

@@ -53,7 +53,7 @@ abstract class StringHelper
 
         $string = (string) $string;
 
-        return !(boolean) strlen($string);
+        return !(bool) strlen($string);
     }
 
     /**
@@ -117,7 +117,9 @@ abstract class StringHelper
      */
     public static function increment($string, $style = self::INCREMENT_STYLE_DEFAULT, $n = 0)
     {
-        $styleSpec = isset(self::$incrementStyles[$style]) ? self::$incrementStyles[$style] : self::$incrementStyles['default'];
+        $styleSpec = isset(self::$incrementStyles[$style])
+            ? self::$incrementStyles[$style]
+            : self::$incrementStyles['default'];
 
         // Regular expression search and replace patterns.
         if (is_array($styleSpec[0])) {

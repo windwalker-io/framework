@@ -39,7 +39,7 @@ class XcacheHandler extends AbstractHandler
      *
      * @since   2.0
      */
-    static public function isSupported()
+    public static function isSupported()
     {
         return (extension_loaded('xcache'));
     }

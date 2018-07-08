@@ -18,4 +18,3 @@ use Windwalker\Query\Mysql\MysqlExpression;
 class MariadbExpression extends MysqlExpression
 {
 }
-

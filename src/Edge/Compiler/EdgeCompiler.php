@@ -404,8 +404,8 @@ class EdgeCompiler implements EdgeCompilerInterface
             $whitespace = empty($matches[3]) ? '' : $matches[3] . $matches[3];
 
             return $matches[1] ? $matches[0] : '<?php echo e(' . $this->compileEchoDefaults(
-                    $matches[2]
-                ) . '); ?>' . $whitespace;
+                $matches[2]
+            ) . '); ?>' . $whitespace;
         };
 
         return preg_replace_callback($pattern, $callback, $value);
@@ -802,7 +802,9 @@ class EdgeCompiler implements EdgeCompilerInterface
     {
         $expression = $this->stripParentheses($expression);
 
+        // @codingStandardsIgnoreStart
         $data = "<?php echo \$this->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__path'))); ?>";
+        // @codingStandardsIgnoreEnd
 
         $this->footer[] = $data;
 
@@ -820,7 +822,9 @@ class EdgeCompiler implements EdgeCompilerInterface
     {
         $expression = $this->stripParentheses($expression);
 
+        // @codingStandardsIgnoreStart
         return "<?php echo \$this->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__path'))); ?>";
+        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -834,7 +838,9 @@ class EdgeCompiler implements EdgeCompilerInterface
     {
         $expression = $this->stripParentheses($expression);
 
+        // @codingStandardsIgnoreStart
         return "<?php if (\$this->exists($expression)) echo \$this->render($expression, \$this->arrayExcept(get_defined_vars(), array('__data', '__path'))); ?>";
+        // @codingStandardsIgnoreEnd
     }
 
     /**

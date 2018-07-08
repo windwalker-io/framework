@@ -24,4 +24,3 @@ class MariadbQuery extends MysqlQuery
      */
     protected $name = 'mariadb';
 }
-

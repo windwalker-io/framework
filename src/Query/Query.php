@@ -380,8 +380,8 @@ class Query implements QueryInterface, PreparableInterface
                 // Set method
                 if ($this->set) {
                     $query .= (string) $this->set;
-                } // Columns-Values method
-                elseif ($this->values) {
+                } elseif ($this->values) {
+                    // Columns-Values method
                     if ($this->columns) {
                         $query .= (string) $this->columns;
                     }
@@ -1680,8 +1680,8 @@ class Query implements QueryInterface, PreparableInterface
         // Get the JDatabaseQueryElement if it does not exist
         if (null === $this->unionAll) {
             $this->union = $this->element('()', $query, $glue);
-        } // Otherwise append the second UNION.
-        else {
+        } else {
+            // Otherwise append the second UNION.
             $this->union->append($query);
         }
 

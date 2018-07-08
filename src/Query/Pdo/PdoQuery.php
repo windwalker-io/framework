@@ -18,4 +18,3 @@ use Windwalker\Query\Query;
 class PdoQuery extends Query
 {
 }
-

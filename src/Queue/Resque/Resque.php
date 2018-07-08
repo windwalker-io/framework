@@ -29,9 +29,9 @@ class Resque extends PhpResque
     {
         if (count($items) > 0) {
             return self::removeItems($queue, $items);
-        } else {
-            return self::removeList($queue);
         }
+
+        return self::removeList($queue);
     }
 
     /**
@@ -74,8 +74,10 @@ class Resque extends PhpResque
 
         // move back from temp queue to original queue
         $finished = false;
+
         while (!$finished) {
             $string = self::redis()->rpoplpush($requeueQueue, self::redis()->getPrefix() . $originalQueue);
+
             if (empty($string)) {
                 $finished = true;
             }
@@ -104,20 +106,20 @@ class Resque extends PhpResque
         $decoded = json_decode($string, true);
 
         foreach ($items as $key => $val) {
-            # class name only  ex: item[0] = ['class']
+            // class name only  ex: item[0] = ['class']
             if (is_numeric($key)) {
                 if ($decoded['class'] == $val) {
                     return true;
                 }
-                # class name with args , example: item[0] = ['class' => {'foo' => 1, 'bar' => 2}]
+                // class name with args , example: item[0] = ['class' => {'foo' => 1, 'bar' => 2}]
             } elseif (is_array($val)) {
                 $decodedArgs = (array) $decoded['args'][0];
-                if ($decoded['class'] == $key &&
-                    count($decodedArgs) > 0 && count(array_diff($decodedArgs, $val)) == 0
-                ) {
+
+                if ($decoded['class'] == $key && count($decodedArgs) > 0
+                    && count(array_diff($decodedArgs, $val)) == 0) {
                     return true;
                 }
-                # class name with ID, example: item[0] = ['class' => 'id']
+                // class name with ID, example: item[0] = ['class' => 'id']
             } else {
                 if ($decoded['class'] == $key && $decoded['id'] == $val) {
                     return true;
@@ -145,7 +147,7 @@ class Resque extends PhpResque
         return ($result == 1) ? $counter : 0;
     }
 
-    /*
+    /**
      * Generate an identifier to attach to a job for status tracking.
      *
      * @return string

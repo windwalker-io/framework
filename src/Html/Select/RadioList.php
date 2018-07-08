@@ -22,4 +22,3 @@ class RadioList extends AbstractInputList
      */
     protected $type = 'radio';
 }
-

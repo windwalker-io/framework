@@ -227,16 +227,16 @@ class Benchmark
         }
 
         switch ($this->format) {
-            case static::MILLI_SECOND :
+            case static::MILLI_SECOND:
                 $unit = 'ms';
                 break;
 
-            case static::MICRO_SECOND :
+            case static::MICRO_SECOND:
                 $unit = 'μs';
                 break;
 
-            case static::SECOND :
-            default :
+            case static::SECOND:
+            default:
                 $unit = 's';
                 break;
         }

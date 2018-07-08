@@ -215,8 +215,8 @@ class UploadedFile implements UploadedFileInterface
         // If we sent a stream or is CLI, use stream to write file.
         if (!$sapi || $sapi === 'cli' || !$this->file) {
             $this->writeFile($targetPath);
-        } // If we sent a plain string as file path, use  move_uploaded_file()
-        else {
+        } else {
+            // If we sent a plain string as file path, use  move_uploaded_file()
             if (move_uploaded_file($this->file, $targetPath) === false) {
                 throw new \RuntimeException('Error moving uploaded file');
             }

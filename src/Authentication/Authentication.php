@@ -71,7 +71,7 @@ class Authentication implements AuthenticationInterface
     {
         $this->results = [];
 
-        foreach ($this->methods AS $name => $method) {
+        foreach ($this->methods as $name => $method) {
             $result = $method->authenticate($credential);
             $status = $method->getStatus();
 

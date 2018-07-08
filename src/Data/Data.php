@@ -55,8 +55,8 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
         // If is Traversable, get iterator.
         if ($values instanceof \Traversable) {
             $values = iterator_to_array($values);
-        } // If is object, convert it to array
-        elseif (is_object($values)) {
+        } elseif (is_object($values)) {
+            // If is object, convert it to array
             $values = get_object_vars($values);
         }
 
@@ -277,7 +277,7 @@ class Data implements DataInterface, \IteratorAggregate, \ArrayAccess, \Countabl
      */
     public function notNull()
     {
-        return (boolean) count($this);
+        return (bool) count($this);
     }
 
     /**

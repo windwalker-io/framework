@@ -77,9 +77,10 @@ class CurlTransport extends AbstractTransport
         $redirects = isset($info['redirect_count']) ? $info['redirect_count'] : 0;
 
         /*
-         * Split the response into headers and body. If cURL encountered redirects, the headers for the redirected requests will
-         * also be included. So we split the response into header + body + the number of redirects and only use the last two
-         * sections which should be the last set of headers and the actual body.
+         * Split the response into headers and body. If cURL encountered redirects,
+         * the headers for the redirected requests will
+         * also be included. So we split the response into header + body + the number of redirects
+         * and only use the last two sections which should be the last set of headers and the actual body.
          */
         $response = explode("\r\n\r\n", $content, 2 + $redirects);
 
@@ -208,7 +209,9 @@ class CurlTransport extends AbstractTransport
          * Follow redirects if server config allows
          */
         if (!ini_get('open_basedir')) {
-            $options[CURLOPT_FOLLOWLOCATION] = (bool) isset($this->options['follow_location']) ? $this->options['follow_location'] : true;
+            $options[CURLOPT_FOLLOWLOCATION] = (bool) isset($this->options['follow_location'])
+                ? $this->options['follow_location']
+                : true;
         }
 
         // Set any custom transport options

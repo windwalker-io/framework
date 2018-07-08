@@ -20,12 +20,15 @@ if (!function_exists('with')) {
      * @since  2.0
      *
      * @return mixed
+     *
+     * @deprecated Use native syntax.
      */
     function with($object)
     {
         return $object;
     }
 }
+
 if (!function_exists('show')) {
     /**
      * Dump Array or Object as tree node. If send multiple params in this method, this function will batch print it.

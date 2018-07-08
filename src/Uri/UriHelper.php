@@ -150,6 +150,7 @@ class UriHelper
         }
 
         $parts = explode('&', $query);
+
         foreach ($parts as $index => $part) {
             list($key, $value) = static::splitQueryValue($part);
 

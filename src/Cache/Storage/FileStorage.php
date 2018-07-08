@@ -16,7 +16,7 @@ use Windwalker\Cache\Item\CacheItem;
  *
  * Supported options:
  * - ttl (integer)          : The default number of seconds for the cache life.
- * - file.locking (boolean) :
+ * - file.locking (bool) :
  * - file.path              : The path for cache files.
  *
  * @since  2.0

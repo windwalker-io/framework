@@ -27,10 +27,15 @@ class SqlservExpression extends QueryExpression
      * @return  string  The required char length call.
      *
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function char_length($field, $operator = null, $condition = null)
     {
-        return 'DATALENGTH(' . $field . ')' . (isset($operator) && isset($condition) ? ' ' . $operator . ' ' . $condition : '');
+        // @codingStandardsIgnoreEnd
+        return 'DATALENGTH(' . $field . ')' . ($operator !== null && $condition !== null
+                ? ' ' . $operator . ' ' . $condition
+                : '');
     }
 
     /**
@@ -47,9 +52,9 @@ class SqlservExpression extends QueryExpression
     {
         if ($separator) {
             return '(' . implode('+' . $this->query->quote($separator) . '+', $values) . ')';
-        } else {
-            return '(' . implode('+', $values) . ')';
         }
+
+        return '(' . implode('+', $values) . ')';
     }
 
     /**
@@ -88,9 +93,12 @@ class SqlservExpression extends QueryExpression
      * @return  string  Returns the cast value.
      *
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function cast_as_char($value)
     {
+        // @codingStandardsIgnoreEnd
         return 'CAST(' . $value . ' as NVARCHAR(10))';
     }
 }

@@ -18,4 +18,3 @@ use Windwalker\Query\QueryExpression;
 class PdoExpression extends QueryExpression
 {
 }
-

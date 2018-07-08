@@ -46,9 +46,12 @@ class CubridExpression extends QueryExpression
      * @return  string  Returns the cast value.
      *
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function cast_as_char($value)
     {
+        // @codingStandardsIgnoreEnd
         return "CAST(" . $value . " AS CHAR)";
     }
 }

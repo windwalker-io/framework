@@ -538,7 +538,7 @@ class Language implements LanguageInterface
      *
      * @return  Language  Return self to support chaining.
      */
-    public function setLocalise($locale = 'en-GB', LocaliseInterface $localise)
+    public function setLocalise($locale = 'en-GB', LocaliseInterface $localise = null)
     {
         $locale = LanguageNormalize::toLanguageTag($locale);
 

@@ -178,17 +178,20 @@ abstract class Mbstring
 
         if ($length === 1) {
             return preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY);
-        } elseif ($length > 1) {
+        }
+
+        if ($length > 1) {
             $return_value = [];
             $string_length = static::strlen($string, $encoding);
+
             for ($i = 0; $i < $string_length; $i += $length) {
                 $return_value[] = static::substr($string, $i, $length, $encoding);
             }
 
             return $return_value;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -615,6 +618,7 @@ abstract class Mbstring
 
         for ($i = 0; $i < $len; $i++) {
             $in = ord($str{$i});
+
             if ($mState === 0) {
                 // When mState is zero we expect either a US-ASCII character or a
                 // multi-octet sequence.

@@ -97,17 +97,18 @@ class OracleQuery extends Query implements Query\PreparableInterface
     {
         // Check if we need to mangle the query.
         if ($limit || $offset) {
-            $query = "SELECT windwalker2.*
+            $query = 'SELECT windwalker2.*
 		              FROM (
 		                  SELECT windwalker1.*, ROWNUM AS windwalker_db_rownum
 		                  FROM (
-		                      " . $query . "
+		                      ' . $query . '
 		                  ) windwalker1
-		              ) windwalker2";
+		              ) windwalker2';
 
             // Check if the limit value is greater than zero.
             if ($limit > 0) {
-                $query .= ' WHERE windwalker2.windwalker_db_rownum BETWEEN ' . ($offset + 1) . ' AND ' . ($offset + $limit);
+                $query .= ' WHERE windwalker2.windwalker_db_rownum BETWEEN '
+                    . ($offset + 1) . ' AND ' . ($offset + $limit);
             } else {
                 // Check if there is an offset and then use this.
                 if ($offset) {

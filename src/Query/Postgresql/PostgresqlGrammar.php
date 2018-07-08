@@ -224,10 +224,10 @@ class PostgresqlGrammar extends AbstractQueryGrammar
             $define = array_merge($define, $key);
 
             $indexes[] = 'CREATE ' . $define['type'] . ' ' . static::buildIndexDeclare(
-                    $define['name'],
-                    $define['columns'],
-                    $name
-                );
+                $define['name'],
+                $define['columns'],
+                $name
+            );
         }
 
         $indexes = implode(";\n", $indexes);
@@ -277,7 +277,7 @@ class PostgresqlGrammar extends AbstractQueryGrammar
      *
      * @return string
      */
-    public static function comment($object = 'COLUMN', $table, $column, $comment)
+    public static function comment($object, $table, $column, $comment)
     {
         $query = static::getQuery();
 

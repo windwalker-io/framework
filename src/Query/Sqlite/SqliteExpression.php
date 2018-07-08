@@ -54,9 +54,14 @@ class SqliteExpression extends QueryExpression
      * @return  string  The required char length call.
      *
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function char_length($field, $operator = null, $condition = null)
     {
-        return 'length(' . $field . ')' . (isset($operator) && isset($condition) ? ' ' . $operator . ' ' . $condition : '');
+        // @codingStandardsIgnoreEnd
+        return 'length(' . $field . ')' . ($operator !== null && $condition !== null
+                ? ' ' . $operator . ' ' . $condition
+                : '');
     }
 }

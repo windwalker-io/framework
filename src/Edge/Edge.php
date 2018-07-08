@@ -19,9 +19,6 @@ use Windwalker\Edge\Extension\EdgeExtensionInterface;
 use Windwalker\Edge\Loader\EdgeLoaderInterface;
 use Windwalker\Edge\Loader\EdgeStringLoader;
 
-// Simple fix for Blade escape
-include_once __DIR__ . '/compat.php';
-
 /**
  * The Edge template engine.
  *
@@ -117,6 +114,9 @@ class Edge
         EdgeCompilerInterface $compiler = null,
         EdgeCacheInterface $cache = null
     ) {
+        // Simple fix for Blade escape
+        include_once __DIR__ . '/compat.php';
+
         $this->loader = $loader ?: new EdgeStringLoader();
         $this->compiler = $compiler ?: new EdgeCompiler();
         $this->cache = $cache ?: new EdgeArrayCache();
@@ -465,12 +465,10 @@ class Edge
 
                 $result .= $this->render($view, $data);
             }
-        }
-
-        // If there is no data in the array, we will render the contents of the empty
-        // view. Alternatively, the "empty view" could be a raw string that begins
-        // with "raw|" for convenience and to let this know that it is a string.
-        else {
+        } else {
+            // If there is no data in the array, we will render the contents of the empty
+            // view. Alternatively, the "empty view" could be a raw string that begins
+            // with "raw|" for convenience and to let this know that it is a string.
             if (strpos($empty, 'raw|') === 0) {
                 $result = substr($empty, 4);
             } else {

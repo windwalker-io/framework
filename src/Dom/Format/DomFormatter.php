@@ -178,9 +178,9 @@ class DomFormatter
                     }
 
                     $output .= str_repeat(
-                            $this->options['indentation_character'],
-                            $indentationLevel
-                        ) . $matches[0] . "\n";
+                        $this->options['indentation_character'],
+                        $indentationLevel
+                    ) . $matches[0] . "\n";
 
                     break;
                 }
