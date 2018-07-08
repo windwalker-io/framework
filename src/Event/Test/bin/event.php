@@ -22,7 +22,6 @@ class AL
         echo 'Bbb' . "\n";
     }
 }
-
 $d = new \Windwalker\Event\Dispatcher();
 
 $d->addListener(new AL());

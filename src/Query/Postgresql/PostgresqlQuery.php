@@ -422,4 +422,3 @@ class PostgresqlQuery extends Query
         return $query;
     }
 }
-

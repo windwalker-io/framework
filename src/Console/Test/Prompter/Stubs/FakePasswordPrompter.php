@@ -39,4 +39,3 @@ class FakePasswordPrompter extends PasswordPrompter
         return $this->findStty();
     }
 }
-

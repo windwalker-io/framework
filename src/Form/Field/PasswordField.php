@@ -34,4 +34,3 @@ class PasswordField extends TextField
         parent::prepare($attrs);
     }
 }
-

@@ -79,7 +79,6 @@ function utf8_strpos($str, $needle, $offset = null)
         return false;
     }
 }
-
 //--------------------------------------------------------------------
 /**
  * UTF-8 aware alternative to strrpos
@@ -127,7 +126,6 @@ function utf8_strrpos($str, $needle, $offset = null)
         return false;
     }
 }
-
 //--------------------------------------------------------------------
 /**
  * UTF-8 aware alternative to substr

@@ -111,4 +111,3 @@ class SelectPrompter extends ValidatePrompter
         };
     }
 }
-

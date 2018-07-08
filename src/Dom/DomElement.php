@@ -254,4 +254,3 @@ class DomElement implements \ArrayAccess
         unset($this->attribs[$offset]);
     }
 }
-

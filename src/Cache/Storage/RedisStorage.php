@@ -164,4 +164,3 @@ class RedisStorage extends AbstractDriverCacheStorage
         return $this;
     }
 }
-

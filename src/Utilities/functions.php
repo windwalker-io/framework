@@ -26,7 +26,6 @@ if (!function_exists('with')) {
         return $object;
     }
 }
-
 if (!function_exists('show')) {
     /**
      * Dump Array or Object as tree node. If send multiple params in this method, this function will batch print it.

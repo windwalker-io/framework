@@ -178,8 +178,8 @@ abstract class AbstractWriter
                 // If the value is null and we want to update nulls then set it.
                 if ($updateNulls) {
                     $val = 'NULL';
-                } // If the value is null and we do not want to update nulls then ignore this field.
-                else {
+                } else {
+                    // If the value is null and we do not want to update nulls then ignore this field.
                     continue;
                 }
             } else // The field is not null so we prep it for update.

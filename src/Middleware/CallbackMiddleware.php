@@ -70,4 +70,3 @@ class CallbackMiddleware extends AbstractMiddleware
         return $this;
     }
 }
-

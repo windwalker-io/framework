@@ -227,9 +227,12 @@ class CliInputTest extends \PHPUnit\Framework\TestCase
      * php test.php --key1 value1 -a --key2 -b b-value --c
      *
      * Note that this pattern is not supported: -abc c-value
+     *
+     * @codingStandardsIgnoreStart
      */
     public function provider_parseArguments()
     {
+        // @codingStandardsIgnoreEnd
         return [
 
             // php test.php --foo --bar=baz

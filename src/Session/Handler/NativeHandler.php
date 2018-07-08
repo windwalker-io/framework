@@ -35,4 +35,3 @@ class NativeHandler extends \SessionHandler implements HandlerInterface
         return true;
     }
 }
-

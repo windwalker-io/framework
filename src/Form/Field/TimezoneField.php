@@ -54,4 +54,3 @@ class TimezoneField extends ListField
         return $zones;
     }
 }
-

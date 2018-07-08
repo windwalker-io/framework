@@ -22,7 +22,6 @@ class Application extends \Windwalker\Application\AbstractWebApplication
         return $response;
     }
 }
-
 $chain = \Windwalker\Middleware\Chain\Psr7ChainBuilder::create(
     [
         function (Request $request, Response $response, $next = null) {

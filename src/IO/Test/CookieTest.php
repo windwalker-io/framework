@@ -54,9 +54,13 @@ class CookieTest extends \PHPUnit\Framework\TestCase
      * @throws \ReflectionException
      * @covers  \Windwalker\IO\CookieInput::__construct
      * @since   2.0
+     *
+     * @codingStandardsIgnoreStart
      */
     public function test__construct()
     {
+        // @codingStandardsIgnoreEnd
+
         // Default constructor call
         $instance = new CookieInput();
 
@@ -86,7 +90,6 @@ class CookieTest extends \PHPUnit\Framework\TestCase
         $this->assertContains('bar', $data);
     }
 }
-
 // Stub for setcookie
 namespace Windwalker\IO;
 

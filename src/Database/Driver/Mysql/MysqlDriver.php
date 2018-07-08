@@ -51,4 +51,3 @@ class MysqlDriver extends PdoDriver
         parent::__construct($connection, $options);
     }
 }
-

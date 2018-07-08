@@ -77,4 +77,3 @@ abstract class AbstractCliOutput implements CliOutputInterface
         return $this;
     }
 }
-

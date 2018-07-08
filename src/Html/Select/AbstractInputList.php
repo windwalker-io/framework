@@ -143,15 +143,15 @@ class AbstractInputList extends HtmlElement
                 )
             );
             $attrs['id'] .= '-' . strtolower(
-                    trim(
-                        preg_replace(
-                            '/[^A-Z0-9_\.-]/i',
-                            '-',
-                            $option->getValue() ?: 'empty'
-                        ),
-                        '-'
-                    )
-                );
+                trim(
+                    preg_replace(
+                        '/[^A-Z0-9_\.-]/i',
+                        '-',
+                        $option->getValue() ?: 'empty'
+                    ),
+                    '-'
+                )
+            );
             $attrs['id'] = 'input-' . $attrs['id'];
             $attrs['disabled'] = $this->disabled;
             $attrs['readonly'] = $this->readonly;
@@ -309,4 +309,3 @@ class AbstractInputList extends HtmlElement
         return $this;
     }
 }
-

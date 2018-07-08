@@ -85,4 +85,3 @@ abstract class AbstractQueryGrammar implements QueryGrammarInterface
         return static::$query;
     }
 }
-

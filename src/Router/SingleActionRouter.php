@@ -116,4 +116,3 @@ class SingleActionRouter extends Router
         return $this;
     }
 }
-

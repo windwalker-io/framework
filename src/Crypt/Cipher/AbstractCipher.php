@@ -180,8 +180,8 @@ abstract class AbstractCipher implements CipherInterface
             if (!$this->equalHashes($calculatedHmac, $hmac)) {
                 throw new \RuntimeException('HMAC ERROR: Invalid HMAC.');
             }
-        } // For 3.1 and older legacy
-        else {
+        } else {
+            // For 3.1 and older legacy
             $data = base64_decode($data);
 
             if (!$iv) {

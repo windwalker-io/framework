@@ -27,7 +27,6 @@ class TestA extends Middleware
         echo "AAAA\n";
     }
 }
-
 class TestB extends Middleware
 {
     /**
@@ -44,7 +43,6 @@ class TestB extends Middleware
         echo "BBBB\n";
     }
 }
-
 //$a = new TestA;
 //$b = new TestB;
 //

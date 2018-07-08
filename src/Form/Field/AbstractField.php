@@ -971,7 +971,7 @@ abstract class AbstractField
      *
      * @TODO  Use Accessors and magic call to handle all attributes.
      */
-    protected function addClassName($to = 'class', $value)
+    protected function addClassName($to = 'class', $value = null)
     {
         $classes = explode(' ', (string) $this->getAttribute($to));
 
@@ -990,7 +990,7 @@ abstract class AbstractField
      *
      * @TODO  Use Accessors and magic call to handle all attributes.
      */
-    public function removeClassName($from = 'class', $value)
+    public function removeClassName($from = 'class', $value = null)
     {
         $classes = explode(' ', (string) $this->getAttribute($from));
 

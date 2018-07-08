@@ -34,4 +34,3 @@ class EmailField extends TextField
         parent::prepare($attrs);
     }
 }
-

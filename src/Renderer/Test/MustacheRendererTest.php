@@ -143,7 +143,6 @@ HTML;
         );
     }
 }
-
 /**
  * The Chris class.
  *

@@ -418,4 +418,3 @@ abstract class AbstractReader implements \IteratorAggregate
         return $this;
     }
 }
-

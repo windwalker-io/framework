@@ -122,4 +122,3 @@ class SqlservQuery extends Query
         return $query;
     }
 }
-

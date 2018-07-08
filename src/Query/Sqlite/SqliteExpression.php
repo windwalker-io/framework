@@ -60,4 +60,3 @@ class SqliteExpression extends QueryExpression
         return 'length(' . $field . ')' . (isset($operator) && isset($condition) ? ' ' . $operator . ' ' . $condition : '');
     }
 }
-

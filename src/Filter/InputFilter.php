@@ -380,4 +380,3 @@ class InputFilter implements \Serializable
         $this->loadDefaultHandlers();
     }
 }
-

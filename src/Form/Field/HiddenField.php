@@ -40,4 +40,3 @@ class HiddenField extends AbstractField
         $attrs['value'] = $this->getValue();
     }
 }
-

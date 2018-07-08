@@ -34,4 +34,3 @@ interface CliOutputInterface
      */
     public function err($text = '');
 }
-

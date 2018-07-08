@@ -122,4 +122,3 @@ class ValidatePrompter extends CallbackPrompter
         return $this;
     }
 }
-

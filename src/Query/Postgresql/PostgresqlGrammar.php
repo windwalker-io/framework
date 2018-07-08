@@ -543,4 +543,3 @@ class PostgresqlGrammar extends AbstractQueryGrammar
         // No use now
     }
 }
-

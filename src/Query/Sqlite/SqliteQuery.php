@@ -161,4 +161,3 @@ class SqliteQuery extends Query
         return parent::clear($clause);
     }
 }
-

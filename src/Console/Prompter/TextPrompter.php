@@ -32,4 +32,3 @@ class TextPrompter extends AbstractPrompter
         return $this->in($msg) ?: $default;
     }
 }
-

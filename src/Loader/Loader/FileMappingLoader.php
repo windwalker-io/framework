@@ -61,4 +61,3 @@ class FileMappingLoader extends AbstractLoader
         return $this;
     }
 }
-

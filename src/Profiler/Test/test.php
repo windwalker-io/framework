@@ -22,7 +22,6 @@ class Test
         sha1(uniqid());
     }
 }
-
 $f1 = function () {
     $t = new Test();
 

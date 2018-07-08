@@ -34,4 +34,3 @@ class PhpFormat extends AbstractFormat
         return $this->toOneDimension($array);
     }
 }
-

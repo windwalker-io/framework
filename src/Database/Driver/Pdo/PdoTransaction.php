@@ -65,4 +65,3 @@ class PdoTransaction extends AbstractTransaction
         return $this;
     }
 }
-

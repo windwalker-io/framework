@@ -52,4 +52,3 @@ class CubridExpression extends QueryExpression
         return "CAST(" . $value . " AS CHAR)";
     }
 }
-

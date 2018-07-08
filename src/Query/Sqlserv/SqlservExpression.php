@@ -94,4 +94,3 @@ class SqlservExpression extends QueryExpression
         return 'CAST(' . $value . ' as NVARCHAR(10))';
     }
 }
-

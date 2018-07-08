@@ -103,4 +103,3 @@ class MysqlDatabase extends AbstractDatabase
         return $this;
     }
 }
-

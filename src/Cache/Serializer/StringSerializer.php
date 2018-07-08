@@ -44,4 +44,3 @@ class StringSerializer implements SerializerInterface
         return $data;
     }
 }
-

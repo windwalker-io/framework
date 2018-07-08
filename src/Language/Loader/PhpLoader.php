@@ -34,4 +34,3 @@ class PhpLoader extends FileLoader
         return include $file;
     }
 }
-

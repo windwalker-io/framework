@@ -170,4 +170,3 @@ class PdoReader extends AbstractReader
         return parent::getCursor();
     }
 }
-

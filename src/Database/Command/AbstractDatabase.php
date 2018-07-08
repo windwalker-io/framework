@@ -244,4 +244,3 @@ abstract class AbstractDatabase
         return $this;
     }
 }
-

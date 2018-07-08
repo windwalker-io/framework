@@ -71,4 +71,3 @@ abstract class AbstractPrompterTest extends AbstractBaseTestCase
         return $this->memory;
     }
 }
-

@@ -8,6 +8,8 @@
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
+// @codingStandardsIgnoreStart
+
 class Aes
 {
     /**
@@ -88,7 +90,8 @@ class Aes
     }
 
     private static function mixColumns($s, $Nb)
-    {   // combine bytes of each col of state S [§5.1.3]
+    {
+        // combine bytes of each col of state S [§5.1.3]
         for ($c = 0; $c < 4; $c++) {
             $a = [4];  // 'a' is a copy of the current column from 's'
             $b = [4];  // 'b' is a•{02} in GF(2^8)
@@ -645,3 +648,5 @@ class AesCtr extends Aes
     }
 }
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+
+// @codingStandardsIgnoreEnd

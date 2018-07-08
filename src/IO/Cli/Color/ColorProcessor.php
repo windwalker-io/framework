@@ -113,8 +113,8 @@ class ColorProcessor implements ColorProcessorInterface
                     $matches[2][$i],
                     $this->styles[$matches[1][$i]]
                 );
-            } // Custom format
-            elseif (strpos($matches[1][$i], '=')) {
+            } elseif (strpos($matches[1][$i], '=')) {
+                // Custom format
                 $string = $this->replaceColors(
                     $string,
                     $matches[1][$i],

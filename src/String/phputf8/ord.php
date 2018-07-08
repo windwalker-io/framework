@@ -96,4 +96,3 @@ function utf8_ord($chr)
         return false;
     }
 }
-

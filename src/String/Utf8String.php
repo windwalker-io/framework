@@ -25,7 +25,6 @@ if (version_compare(PHP_VERSION, '5.6', '>=')) {
         iconv_set_encoding('output_encoding', 'UTF-8');
     }
 }
-
 /**
  * Include the utf8 package
  */

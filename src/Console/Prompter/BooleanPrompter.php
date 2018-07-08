@@ -127,4 +127,3 @@ class BooleanPrompter extends TextPrompter
         return $this;
     }
 }
-

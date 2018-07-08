@@ -425,4 +425,3 @@ class FileStorage extends AbstractCacheStorage
         return $this;
     }
 }
-

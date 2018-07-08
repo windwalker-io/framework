@@ -39,4 +39,3 @@ class PhpSerializer implements SerializerInterface
         return unserialize($data);
     }
 }
-

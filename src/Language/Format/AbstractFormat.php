@@ -83,4 +83,3 @@ abstract class AbstractFormat implements FormatInterface
         }
     }
 }
-

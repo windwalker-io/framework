@@ -68,4 +68,3 @@ abstract class LanguageNormalize
         return strtolower(trim($key, '.'));
     }
 }
-

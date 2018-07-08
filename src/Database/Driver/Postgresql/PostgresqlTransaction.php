@@ -59,4 +59,3 @@ class PostgresqlTransaction extends PdoTransaction
         return $this;
     }
 }
-

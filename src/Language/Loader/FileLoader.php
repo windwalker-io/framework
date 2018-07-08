@@ -109,4 +109,3 @@ class FileLoader extends AbstractLoader
         return false;
     }
 }
-

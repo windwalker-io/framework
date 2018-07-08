@@ -51,7 +51,6 @@ function utf8_strpos($str, $search, $offset = false)
         return mb_strpos($str, $search, $offset);
     }
 }
-
 //--------------------------------------------------------------------
 /**
  * Assumes mbstring internal encoding is set to UTF-8
@@ -90,7 +89,6 @@ function utf8_strrpos($str, $search, $offset = false)
         return false;
     }
 }
-
 //--------------------------------------------------------------------
 /**
  * Assumes mbstring internal encoding is set to UTF-8
@@ -112,7 +110,6 @@ function utf8_substr($str, $offset, $length = false)
         return mb_substr($str, $offset, $length);
     }
 }
-
 //--------------------------------------------------------------------
 /**
  * Assumes mbstring internal encoding is set to UTF-8

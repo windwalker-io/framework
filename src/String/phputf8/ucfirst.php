@@ -35,4 +35,3 @@ function utf8_ucfirst($str)
             break;
     }
 }
-

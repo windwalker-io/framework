@@ -48,7 +48,6 @@ if (!defined('UTF8_CORE')) {
         require_once UTF8 . '/native/core.php';
     }
 }
-
 /**
  * Load the native implementation of utf8_substr_replace
  */

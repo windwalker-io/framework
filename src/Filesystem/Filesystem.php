@@ -343,4 +343,3 @@ abstract class Filesystem
         return $array;
     }
 }
-

@@ -421,8 +421,8 @@ abstract class AbstractTable
      */
     public function getName()
     {
-        if ($this->database instanceof AbstractDatabase && $this->database->getName() != $this->db->getCurrentDatabase(
-            )) {
+        if ($this->database instanceof AbstractDatabase
+            && $this->database->getName() != $this->db->getCurrentDatabase()) {
             return $this->database->getName() . '.' . $this->name;
         }
 

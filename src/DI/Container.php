@@ -319,13 +319,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
                 // If the dependency class name is registered with this container or a parent, use it.
                 if ($this->exists($dependencyClassName)) {
                     $depObject = $this->get($dependencyClassName);
-                } // If an arg provided, use it.
-                elseif (array_key_exists($dependencyVarName, $args)) {
+                } elseif (array_key_exists($dependencyVarName, $args)) {
+                    // If an arg provided, use it.
                     $methodArgs[] = $args[$dependencyVarName];
 
                     continue;
-                } // Otherwise we create this object recursive
-                elseif (!$dependency->isAbstract() && !$dependency->isInterface() && !$dependency->isTrait()) {
+                } elseif (!$dependency->isAbstract() && !$dependency->isInterface() && !$dependency->isTrait()) {
+                    // Otherwise we create this object recursive
+
                     // Find child args if set
                     if (isset($args[$dependencyClassName]) && is_array($args[$dependencyClassName])) {
                         $childArgs = $args[$dependencyClassName];
@@ -348,8 +349,10 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
                 $methodArgs[] = $args[$dependencyVarName];
 
                 continue;
-            } // Finally, if there is a default parameter, use it.
-            elseif ($param->isOptional()) {
+            }
+
+            if ($param->isOptional()) {
+                // Finally, if there is a default parameter, use it.
                 if ($param->isDefaultValueAvailable()) {
                     $methodArgs[] = $param->getDefaultValue();
                 }

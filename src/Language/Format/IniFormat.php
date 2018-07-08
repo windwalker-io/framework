@@ -34,4 +34,3 @@ class IniFormat extends AbstractFormat
         return parse_ini_string($string);
     }
 }
-

@@ -42,4 +42,3 @@ class MysqlExpression extends QueryExpression
         }
     }
 }
-

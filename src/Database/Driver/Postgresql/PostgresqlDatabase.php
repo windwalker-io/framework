@@ -125,4 +125,3 @@ class PostgresqlDatabase extends AbstractDatabase
         return $this;
     }
 }
-

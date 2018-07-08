@@ -92,4 +92,3 @@ abstract class AbstractLoader
         return $this;
     }
 }
-

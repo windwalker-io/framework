@@ -64,7 +64,7 @@ abstract class AbstractPrompter implements PrompterInterface
      *
      * @since   2.0
      */
-    function __construct($question = null, $default = null, IOInterface $io = null)
+    public function __construct($question = null, $default = null, IOInterface $io = null)
     {
         $this->io = $io ?: IOFactory::getIO();
         $this->question = $question;
