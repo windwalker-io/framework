@@ -26,43 +26,43 @@ class FileStorage extends AbstractCacheStorage
     /**
      * Property path.
      *
-     * @var  string
+     * @var string
      */
     protected $path = null;
 
     /**
      * Property group.
      *
-     * @var  string
+     * @var string
      */
     protected $group = '';
 
     /**
      * Property denyAccess.
      *
-     * @var  bool
+     * @var bool
      */
     protected $denyAccess = false;
 
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [
-        'format' => '.data',
+        'format'       => '.data',
         'file_locking' => true,
-        'deny_code' => '<?php die("Access Deny"); ?>',
+        'deny_code'    => '<?php die("Access Deny"); ?>',
     ];
 
     /**
      * Constructor.
      *
-     * @param   int    $path
-     * @param   string $group
-     * @param   bool   $denyAccess
-     * @param   int    $ttl
-     * @param   mixed  $options An options array, or an object that implements \ArrayAccess
+     * @param int    $path
+     * @param string $group
+     * @param bool   $denyAccess
+     * @param int    $ttl
+     * @param mixed  $options    An options array, or an object that implements \ArrayAccess
      *
      * @since   2.0
      */
@@ -82,7 +82,7 @@ class FileStorage extends AbstractCacheStorage
     /**
      * This will wipe out the entire cache's keys....
      *
-     * @return  boolean  The result of the clear operation.
+     * @return bool The result of the clear operation.
      *
      * @since   2.0
      */
@@ -95,7 +95,7 @@ class FileStorage extends AbstractCacheStorage
             new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($filePath)
             ),
-            '/' . preg_quote($this->options['format']) . '$/i'
+            '/'.preg_quote($this->options['format']).'$/i'
         );
 
         /* @var  \RecursiveDirectoryIterator $file */
@@ -111,11 +111,12 @@ class FileStorage extends AbstractCacheStorage
     /**
      * Method to get a storage entry value from a key.
      *
-     * @param   string $key The storage entry identifier.
-     *
-     * @return  CacheItemInterface
+     * @param string $key The storage entry identifier.
      *
      * @throws \Exception
+     *
+     * @return CacheItemInterface
+     *
      * @since   2.0
      */
     public function getItem($key)
@@ -140,9 +141,9 @@ class FileStorage extends AbstractCacheStorage
     /**
      * Method to remove a storage entry for a key.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  boolean  True on success
+     * @return bool True on success
      *
      * @since   2.0
      */
@@ -172,7 +173,7 @@ class FileStorage extends AbstractCacheStorage
         }
 
         if ($this->denyAccess) {
-            $value = $this->options['deny_code'] . $value;
+            $value = $this->options['deny_code'].$value;
         }
 
         $success = $this->write(
@@ -185,13 +186,13 @@ class FileStorage extends AbstractCacheStorage
     }
 
     /**
-     * write
+     * write.
      *
      * @param string $filename
      * @param string $value
      * @param int    $options
      *
-     * @return  boolean
+     * @return bool
      */
     protected function write($filename, $value, $options)
     {
@@ -203,11 +204,11 @@ class FileStorage extends AbstractCacheStorage
     }
 
     /**
-     * read
+     * read.
      *
-     * @param   string $filename
+     * @param string $filename
      *
-     * @return  string
+     * @return string
      */
     protected function read($filename)
     {
@@ -252,9 +253,9 @@ class FileStorage extends AbstractCacheStorage
     /**
      * Method to determine whether a storage entry has been set for a key and not expired.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  boolean  Tue of exists and not expired.
+     * @return bool Tue of exists and not expired.
      *
      * @since   2.0
      */
@@ -280,12 +281,13 @@ class FileStorage extends AbstractCacheStorage
     /**
      * Check that the file path is a directory and writable.
      *
-     * @param   string $filePath A file path.
+     * @param string $filePath A file path.
      *
-     * @return  boolean  The method will always return true, if it returns.
+     * @throws \RuntimeException if the file path is invalid.
+     *
+     * @return bool The method will always return true, if it returns.
      *
      * @since   2.0
-     * @throws  \RuntimeException if the file path is invalid.
      */
     protected function checkFilePath($filePath)
     {
@@ -303,12 +305,13 @@ class FileStorage extends AbstractCacheStorage
     /**
      * Get the full stream URI for the cache entry.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  string  The full stream URI for the cache entry.
+     * @throws \RuntimeException if the cache path is invalid.
+     *
+     * @return string The full stream URI for the cache entry.
      *
      * @since   2.0
-     * @throws  \RuntimeException if the cache path is invalid.
      */
     public function fetchStreamUri($key)
     {
@@ -321,9 +324,9 @@ class FileStorage extends AbstractCacheStorage
         }
 
         return sprintf(
-            '%s/%s~%s' . $this->options['format'],
+            '%s/%s~%s'.$this->options['format'],
             $filePath,
-            ($this->group) ? $this->group . '/' : $this->group,
+            ($this->group) ? $this->group.'/' : $this->group,
             hash('sha1', $key)
         );
     }
@@ -331,9 +334,9 @@ class FileStorage extends AbstractCacheStorage
     /**
      * Check whether or not the cached data by id has expired.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  boolean  True if the data has expired.
+     * @return bool True if the data has expired.
      *
      * @since   2.0
      */
@@ -348,11 +351,11 @@ class FileStorage extends AbstractCacheStorage
     }
 
     /**
-     * getDenyAccess
+     * getDenyAccess.
      *
-     * @param boolean $bool
+     * @param bool $bool
      *
-     * @return  boolean
+     * @return bool
      */
     public function denyAccess($bool = null)
     {
@@ -364,9 +367,9 @@ class FileStorage extends AbstractCacheStorage
     }
 
     /**
-     * Method to get property Group
+     * Method to get property Group.
      *
-     * @return  string
+     * @return string
      */
     public function getGroup()
     {
@@ -374,11 +377,11 @@ class FileStorage extends AbstractCacheStorage
     }
 
     /**
-     * Method to set property group
+     * Method to set property group.
      *
-     * @param   string $group
+     * @param string $group
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setGroup($group)
     {
@@ -388,9 +391,9 @@ class FileStorage extends AbstractCacheStorage
     }
 
     /**
-     * Method to get property Path
+     * Method to get property Path.
      *
-     * @return  string
+     * @return string
      */
     public function getPath()
     {
@@ -398,11 +401,11 @@ class FileStorage extends AbstractCacheStorage
     }
 
     /**
-     * Method to set property path
+     * Method to set property path.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPath($path)
     {
@@ -412,11 +415,11 @@ class FileStorage extends AbstractCacheStorage
     }
 
     /**
-     * setFileFormat
+     * setFileFormat.
      *
-     * @param   string $format
+     * @param string $format
      *
-     * @return  static
+     * @return static
      */
     public function setFileFormat($format)
     {

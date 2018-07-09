@@ -29,14 +29,14 @@ class ValidatePrompter extends CallbackPrompter
     /**
      * Constructor.
      *
-     * @param   string      $question The question you want to ask.
-     * @param   array       $options  The option list to validate input.
-     * @param               $default  $default   The default value.
-     * @param   IOInterface $io       The input object.
+     * @param string      $question The question you want to ask.
+     * @param array       $options  The option list to validate input.
+     * @param             $default  $default   The default value.
+     * @param IOInterface $io       The input object.
      *
      * @since   2.0
      */
-    function __construct($question = null, $options = [], $default = null, IOInterface $io = null)
+    public function __construct($question = null, $options = [], $default = null, IOInterface $io = null)
     {
         $this->options = $options;
 
@@ -46,7 +46,7 @@ class ValidatePrompter extends CallbackPrompter
     /**
      * Get callable handler.
      *
-     * @return  callable  The validate callback.
+     * @return callable The validate callback.
      *
      * @since   2.0
      */
@@ -70,10 +70,10 @@ class ValidatePrompter extends CallbackPrompter
     /**
      * Add an option.
      *
-     * @param   string $description Option description.
-     * @param   string $option      Option key, if this param is NULL, will use int as option key.
+     * @param string $description Option description.
+     * @param string $option      Option key, if this param is NULL, will use int as option key.
      *
-     * @return  ValidatePrompter  Return self to support chaining.
+     * @return ValidatePrompter Return self to support chaining.
      *
      * @since   2.0
      */
@@ -91,9 +91,9 @@ class ValidatePrompter extends CallbackPrompter
     /**
      * Remove an option by key.
      *
-     * @param   mixed $key The option key you want to remove.
+     * @param mixed $key The option key you want to remove.
      *
-     * @return  ValidatePrompter  Return self to support chaining.
+     * @return ValidatePrompter Return self to support chaining.
      *
      * @since   2.0
      */
@@ -109,9 +109,9 @@ class ValidatePrompter extends CallbackPrompter
     /**
      * Set option list.
      *
-     * @param   array $options The option list.
+     * @param array $options The option list.
      *
-     * @return  ValidatePrompter  Return self to support chaining.
+     * @return ValidatePrompter Return self to support chaining.
      *
      * @since   2.0
      */

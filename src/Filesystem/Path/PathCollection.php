@@ -12,7 +12,7 @@ use Windwalker\Filesystem\Filesystem;
 use Windwalker\Filesystem\Iterator\ArrayObject;
 
 /**
- * A PathLocator collection class
+ * A PathLocator collection class.
  *
  * @since  2.0
  */
@@ -28,7 +28,7 @@ class PathCollection extends ArrayObject
     /**
      * PathCollection constructor.
      *
-     * @param  array $paths The PathLocator array.
+     * @param array $paths The PathLocator array.
      *
      * @since  2.0
      */
@@ -40,9 +40,9 @@ class PathCollection extends ArrayObject
     /**
      * Batch add paths to bag.
      *
-     * @param  mixed $paths Paths to add to path bag, string will be converted to PathLocator object.
+     * @param mixed $paths Paths to add to path bag, string will be converted to PathLocator object.
      *
-     * @return  PathCollection  Return this object to support chaining.
+     * @return PathCollection Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -62,12 +62,13 @@ class PathCollection extends ArrayObject
     /**
      * Add one path to bag.
      *
-     * @param   mixed  $path   The path your want to store in bag,
-     *                         have to be a string or PathLocator object.
-     * @param   string $key    Path key, useful when you want to remove a path.
+     * @param mixed  $path The path your want to store in bag,
+     *                     have to be a string or PathLocator object.
+     * @param string $key  Path key, useful when you want to remove a path.
      *
      * @throws \InvalidArgumentException
-     * @return  PathCollection  Return this object to support chaining.
+     *
+     * @return PathCollection Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -99,9 +100,9 @@ class PathCollection extends ArrayObject
     /**
      * Using key to remove a path from bag.
      *
-     * @param   string $key The key of path you want to remove.
+     * @param string $key The key of path you want to remove.
      *
-     * @return  PathCollection  Return this object to support chaining.
+     * @return PathCollection Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -115,7 +116,7 @@ class PathCollection extends ArrayObject
     /**
      * Get all paths with key from bag.
      *
-     * @return  array  An array includes all path objects.
+     * @return array An array includes all path objects.
      *
      * @since  2.0
      */
@@ -127,12 +128,12 @@ class PathCollection extends ArrayObject
     /**
      * Using key to get a path.
      *
-     * @param  string $key       The key of path you want to get.
-     * @param  string $default   If path not exists, return this default path.
-     *                           Default value can be PathLocator object string or null.
-     *                           String will auto wrapped by object, if is null, just return null.
+     * @param string $key     The key of path you want to get.
+     * @param string $default If path not exists, return this default path.
+     *                        Default value can be PathLocator object string or null.
+     *                        String will auto wrapped by object, if is null, just return null.
      *
-     * @return  PathLocator  The path which you want.
+     * @return PathLocator The path which you want.
      *
      * @since  2.0
      */
@@ -156,9 +157,9 @@ class PathCollection extends ArrayObject
     /**
      * Append all paths' iterator into an OuterIterator.
      *
-     * @param  \Closure $callback Contains the logic of how to get iterator from path object.
+     * @param \Closure $callback Contains the logic of how to get iterator from path object.
      *
-     * @return  \AppendIterator  Appended iterators.
+     * @return \AppendIterator Appended iterators.
      *
      * @since  2.0
      */
@@ -186,9 +187,9 @@ class PathCollection extends ArrayObject
     /**
      * Get all files and folders as an iterator.
      *
-     * @param  boolean $recursive True to support recrusive.
+     * @param bool $recursive True to support recrusive.
      *
-     * @return  \AppendIterator  An OutterIterator contains all paths' iterator.
+     * @return \AppendIterator An OutterIterator contains all paths' iterator.
      *
      * @since  2.0
      */
@@ -204,17 +205,17 @@ class PathCollection extends ArrayObject
     /**
      * Find one file from all paths.
      *
-     * @param  mixed   $condition      Finding condition, that can be a string, a regex or a callback function.
-     *                                 Callback example:
-     *                                 <code>
-     *                                 function($current, $key, $iterator)
-     *                                 {
-     *                                 return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
-     *                                 }
-     *                                 </code>
-     * @param  boolean $recursive      True to resursive.
+     * @param mixed $condition Finding condition, that can be a string, a regex or a callback function.
+     *                         Callback example:
+     *                         <code>
+     *                         function($current, $key, $iterator)
+     *                         {
+     *                         return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
+     *                         }
+     *                         </code>
+     * @param bool  $recursive True to resursive.
      *
-     * @return  \SplFileInfo  Finded file info object.
+     * @return \SplFileInfo Finded file info object.
      *
      * @since  2.0
      */
@@ -234,17 +235,17 @@ class PathCollection extends ArrayObject
     /**
      * Find all files from paths.
      *
-     * @param  mixed   $condition      Finding condition, that can be a string, a regex or a callback function.
-     *                                 Callback example:
-     *                                 <code>
-     *                                 function($current, $key, $iterator)
-     *                                 {
-     *                                 return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
-     *                                 }
-     *                                 </code>
-     * @param  boolean $recursive      True to resursive.
+     * @param mixed $condition Finding condition, that can be a string, a regex or a callback function.
+     *                         Callback example:
+     *                         <code>
+     *                         function($current, $key, $iterator)
+     *                         {
+     *                         return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
+     *                         }
+     *                         </code>
+     * @param bool  $recursive True to resursive.
      *
-     * @return  \AppendIterator  Finded files or paths iterator.
+     * @return \AppendIterator Finded files or paths iterator.
      *
      * @since  2.0
      */
@@ -258,11 +259,11 @@ class PathCollection extends ArrayObject
     }
 
     /**
-     * Get file iterator of all paths
+     * Get file iterator of all paths.
      *
-     * @param  boolean $recursive True to resursive.
+     * @param bool $recursive True to resursive.
      *
-     * @return  \AppendIterator  Iterator only include files.
+     * @return \AppendIterator Iterator only include files.
      */
     public function getFiles($recursive = false)
     {
@@ -274,11 +275,11 @@ class PathCollection extends ArrayObject
     }
 
     /**
-     * Get folder iterator of all paths
+     * Get folder iterator of all paths.
      *
-     * @param  boolean $recursive True to resursive.
+     * @param bool $recursive True to resursive.
      *
-     * @return  \AppendIterator  Iterator only include dirs.
+     * @return \AppendIterator Iterator only include dirs.
      */
     public function getFolders($recursive = false)
     {
@@ -292,9 +293,9 @@ class PathCollection extends ArrayObject
     /**
      * Set prefix to all paths.
      *
-     * @param  string $prefix The prefix path you want to prepend when path convert to string.
+     * @param string $prefix The prefix path you want to prepend when path convert to string.
      *
-     * @return  PathCollection  Return this object to support chaining.
+     * @return PathCollection Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -310,9 +311,9 @@ class PathCollection extends ArrayObject
     /**
      * Append a new path to all paths.
      *
-     * @param   string $appended Path to append.
+     * @param string $appended Path to append.
      *
-     * @return  PathCollection  Return this object to support chaining.
+     * @return PathCollection Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -328,9 +329,9 @@ class PathCollection extends ArrayObject
     /**
      * Prepend a new path to all paths.
      *
-     * @param  string $prepended Path to prepend.
+     * @param string $prepended Path to prepend.
      *
-     * @return  PathCollection  Return this object to support chaining.
+     * @return PathCollection Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -348,7 +349,7 @@ class PathCollection extends ArrayObject
      *
      * @param bool $reindex
      *
-     * @return  array  Raw paths.
+     * @return array Raw paths.
      *
      * @since  2.0
      */
@@ -372,9 +373,9 @@ class PathCollection extends ArrayObject
      *
      * When running recursive scan dir, we have to avoid to re scan same dir.
      *
-     * @param  PathLocator $path The path to detect is subdir or not.
+     * @param PathLocator $path The path to detect is subdir or not.
      *
-     * @return  boolean  Is subdir or not.
+     * @return bool Is subdir or not.
      *
      * @since  2.0
      */

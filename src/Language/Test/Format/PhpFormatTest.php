@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Language\Test\Format;
 use Windwalker\Language\Format\PhpFormat;
 
 /**
- * Test class of PhpFormat
+ * Test class of PhpFormat.
  *
  * @since 2.0
  */
@@ -54,7 +54,7 @@ class PhpFormatTest extends \PHPUnit\Framework\TestCase
      */
     public function testParse()
     {
-        $data = include __DIR__ . '/../fixtures/php/en-GB.php';
+        $data = include __DIR__.'/../fixtures/php/en-GB.php';
 
         $this->assertArrayHasKey('WINDWALKER_LANGUAGE_TEST_SAKURA', $this->instance->parse($data));
     }

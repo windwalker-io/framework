@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Html\Media\Audio;
 
 /**
- * Test class of Audio
+ * Test class of Audio.
  *
  * @since 2.1
  */
@@ -64,7 +64,7 @@ class AudioTest extends AbstractDomTestCase
             ->muted(true)
             ->preload(Audio::PRELOAD_METADATA);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <audio class="foo" autoplay controls loop muted preload="metadata">
     <source src="foo.wav" type="audio/wav" />
 	<source src="foo.ogg" type="audio/ogg" />

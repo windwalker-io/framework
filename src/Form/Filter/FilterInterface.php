@@ -9,18 +9,18 @@
 namespace Windwalker\Form\Filter;
 
 /**
- * Interface FilterInterface
+ * Interface FilterInterface.
  *
  * @since  2.0
  */
 interface FilterInterface
 {
     /**
-     * clean
+     * clean.
      *
      * @param string $text
      *
-     * @return  mixed
+     * @return mixed
      */
     public function clean($text);
 }

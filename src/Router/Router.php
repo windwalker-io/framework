@@ -22,21 +22,21 @@ class Router
     /**
      * Property routes.
      *
-     * @var  Route[]
+     * @var Route[]
      */
     protected $routes = [];
 
     /**
      * Property matcher.
      *
-     * @var  MatcherInterface
+     * @var MatcherInterface
      */
     protected $matcher;
 
     /**
      * Property group.
      *
-     * @var  string
+     * @var string
      */
     protected $group;
 
@@ -54,12 +54,12 @@ class Router
     }
 
     /**
-     * addMap
+     * addMap.
      *
      * @param string $pattern
      * @param array  $variables
      *
-     * @return  Route
+     * @return Route
      */
     public function addMap($pattern, $variables = [])
     {
@@ -71,11 +71,11 @@ class Router
     }
 
     /**
-     * addMaps
+     * addMaps.
      *
      * @param array $maps
      *
-     * @return  $this
+     * @return $this
      */
     public function addMaps(array $maps)
     {
@@ -87,7 +87,7 @@ class Router
     }
 
     /**
-     * Add Route
+     * Add Route.
      *
      * @param string|Route $name
      * @param string       $pattern
@@ -95,7 +95,7 @@ class Router
      * @param array        $method
      * @param array        $options
      *
-     * @return  Route
+     * @return Route
      */
     public function addRoute($name, $pattern = null, $variables = [], $method = [], $options = [])
     {
@@ -112,7 +112,7 @@ class Router
         // Group
         if ($this->group) {
             $pattern = $route->getPattern();
-            $pattern = rtrim($this->group, '/') . '/' . ltrim($pattern, '/');
+            $pattern = rtrim($this->group, '/').'/'.ltrim($pattern, '/');
             $route->setPattern($pattern);
         }
 
@@ -127,11 +127,11 @@ class Router
     }
 
     /**
-     * hasRoute
+     * hasRoute.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  boolean
+     * @return bool
      */
     public function hasRoute($name)
     {
@@ -139,27 +139,25 @@ class Router
     }
 
     /**
-     * getRoute
+     * getRoute.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  Route
+     * @return Route
      */
     public function getRoute($name)
     {
         if ($this->hasRoute($name)) {
             return $this->routes[$name];
         }
-
-        return null;
     }
 
     /**
-     * addRoutes
+     * addRoutes.
      *
      * @param array $routes
      *
-     * @return  Router
+     * @return Router
      */
     public function addRoutes(array $routes)
     {
@@ -171,12 +169,12 @@ class Router
     }
 
     /**
-     * group
+     * group.
      *
-     * @param   string   $prefix
-     * @param   \Closure $callback
+     * @param string   $prefix
+     * @param \Closure $callback
      *
-     * @return  static
+     * @return static
      */
     public function group($prefix, \Closure $callback)
     {
@@ -190,13 +188,13 @@ class Router
     }
 
     /**
-     * parseRoute
+     * parseRoute.
      *
      * @param string $route
      * @param string $method
      * @param array  $options
      *
-     * @return  Route|boolean
+     * @return Route|bool
      */
     public function match($route, $method = 'GET', $options = [])
     {
@@ -218,7 +216,7 @@ class Router
     }
 
     /**
-     * buildRoute
+     * buildRoute.
      *
      * @param string $name
      * @param array  $queries
@@ -229,7 +227,7 @@ class Router
     public function build($name, $queries = [], $rootSlash = false)
     {
         if (!$this->hasRoute($name)) {
-            throw new \OutOfRangeException('Route: ' . $name . ' not found.');
+            throw new \OutOfRangeException('Route: '.$name.' not found.');
         }
 
         $route = $this->matcher->build($this->routes[$name], (array) $queries);
@@ -242,9 +240,9 @@ class Router
     }
 
     /**
-     * Method to get property Matcher
+     * Method to get property Matcher.
      *
-     * @return  MatcherInterface
+     * @return MatcherInterface
      */
     public function getMatcher()
     {
@@ -252,11 +250,11 @@ class Router
     }
 
     /**
-     * Method to set property matcher
+     * Method to set property matcher.
      *
-     * @param   MatcherInterface $matcher
+     * @param MatcherInterface $matcher
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setMatcher($matcher)
     {
@@ -266,9 +264,9 @@ class Router
     }
 
     /**
-     * Method to get property Routes
+     * Method to get property Routes.
      *
-     * @return  Route[]
+     * @return Route[]
      */
     public function getRoutes()
     {
@@ -276,11 +274,11 @@ class Router
     }
 
     /**
-     * Method to set property routes
+     * Method to set property routes.
      *
-     * @param   Route[] $routes
+     * @param Route[] $routes
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setRoutes($routes)
     {

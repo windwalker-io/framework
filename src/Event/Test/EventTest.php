@@ -18,16 +18,16 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Object under tests.
      *
-     * @var    Event
+     * @var Event
      *
      * @since  2.0
      */
     private $instance;
 
     /**
-     * testConstruct
+     * testConstruct.
      *
-     * @return  void
+     * @return void
      */
     public function testConstruct()
     {
@@ -44,7 +44,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getName method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -56,7 +56,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getArgument method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -66,9 +66,9 @@ class EventTest extends \PHPUnit\Framework\TestCase
 
         $object = new \stdClass();
         $array = [
-            'foo' => 'bar',
+            'foo'  => 'bar',
             'test' => [
-                'foo' => 'bar',
+                'foo'  => 'bar',
                 'test' => 'test',
             ],
         ];
@@ -76,7 +76,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
         $arguments = [
             'string' => 'bar',
             'object' => $object,
-            'array' => $array,
+            'array'  => $array,
         ];
 
         $event = new Event('onTest', $arguments);
@@ -89,7 +89,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the hasArgument method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -106,7 +106,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the getArguments method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -116,9 +116,9 @@ class EventTest extends \PHPUnit\Framework\TestCase
 
         $object = new \stdClass();
         $array = [
-            'foo' => 'bar',
+            'foo'  => 'bar',
             'test' => [
-                'foo' => 'bar',
+                'foo'  => 'bar',
                 'test' => 'test',
             ],
         ];
@@ -126,7 +126,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
         $arguments = [
             'string' => 'bar',
             'object' => $object,
-            'array' => $array,
+            'array'  => $array,
         ];
 
         $args = ['test', $arguments];
@@ -141,7 +141,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
      * Test the isStopped method.
      * An immutable event shoudln't be stopped, otherwise it won't trigger.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -153,7 +153,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the count method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -166,7 +166,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
             [
                 'test',
                 [
-                    'foo' => 'bar',
+                    'foo'  => 'bar',
                     'test' => ['test'],
                 ],
             ]
@@ -178,7 +178,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the serialize and unserialize methods.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -186,9 +186,9 @@ class EventTest extends \PHPUnit\Framework\TestCase
     {
         $object = new \stdClass();
         $array = [
-            'foo' => 'bar',
+            'foo'  => 'bar',
             'test' => [
-                'foo' => 'bar',
+                'foo'  => 'bar',
                 'test' => 'test',
             ],
         ];
@@ -196,7 +196,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
         $arguments = [
             'string' => 'bar',
             'object' => $object,
-            'array' => $array,
+            'array'  => $array,
         ];
 
         $event = new Event('onTest', $arguments);
@@ -211,7 +211,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the offsetExists method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -227,7 +227,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the offsetGet method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -237,9 +237,9 @@ class EventTest extends \PHPUnit\Framework\TestCase
 
         $object = new \stdClass();
         $array = [
-            'foo' => 'bar',
+            'foo'  => 'bar',
             'test' => [
-                'foo' => 'bar',
+                'foo'  => 'bar',
                 'test' => 'test',
             ],
         ];
@@ -247,7 +247,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
         $arguments = [
             'string' => 'bar',
             'object' => $object,
-            'array' => $array,
+            'array'  => $array,
         ];
 
         $event = new Event('onTest', $arguments);
@@ -260,7 +260,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addArgument method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -270,7 +270,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
 
         $array = [
             'test' => [
-                'foo' => 'bar',
+                'foo'  => 'bar',
                 'test' => 'test',
             ],
         ];
@@ -287,7 +287,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the addArgument method when the argument already exists, it should be untouched.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -303,7 +303,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setArgument method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -313,7 +313,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
 
         $array = [
             'test' => [
-                'foo' => 'bar',
+                'foo'  => 'bar',
                 'test' => 'test',
             ],
         ];
@@ -330,7 +330,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the setArgument method when the argument already exists, it should be overriden.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -346,7 +346,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the removeArgument method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -365,7 +365,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the clearArguments method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -375,7 +375,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
 
         $arguments = [
             'test' => [
-                'foo' => 'bar',
+                'foo'  => 'bar',
                 'test' => 'test',
             ],
             'foo' => new \stdClass(),
@@ -393,7 +393,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the stop method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -409,7 +409,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the offsetSet method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -422,7 +422,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
 
         $argument = [
             'test' => [
-                'foo' => 'bar',
+                'foo'  => 'bar',
                 'test' => 'test',
             ],
             'foo' => new \stdClass(),
@@ -438,7 +438,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
      *
      * @expectedException  \InvalidArgumentException
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -450,7 +450,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the offsetUnset method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -470,7 +470,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
      *
      * This method is called before a test is executed.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */

@@ -20,14 +20,14 @@ class UrlValidator extends RegexValidator
      *
      * @note Origin regular exp is from: http://www.w3schools.com/php/php_form_url_email.asp
      *
-     * @var  string
+     * @var string
      */
     protected $regex = '\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]';
 
     /**
      * The regular expression modifiers to use when testing a value.
      *
-     * @var  string
+     * @var string
      */
     protected $modifiers = 'i';
 }

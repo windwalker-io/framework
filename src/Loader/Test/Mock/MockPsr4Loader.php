@@ -39,9 +39,9 @@ class MockPsr4Loader extends Psr4Loader
     }
 
     /**
-     * Method to get property LastRequired
+     * Method to get property LastRequired.
      *
-     * @return  string
+     * @return string
      */
     public function getLastRequired()
     {
@@ -49,11 +49,11 @@ class MockPsr4Loader extends Psr4Loader
     }
 
     /**
-     * requireFile
+     * requireFile.
      *
      * @param string $file
      *
-     * @return  static
+     * @return static
      */
     protected function requireFile($file)
     {

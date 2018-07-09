@@ -32,11 +32,11 @@ abstract class AbstractHtmlList extends HtmlElement
     }
 
     /**
-     * Quick create for PHP 5.3
+     * Quick create for PHP 5.3.
      *
-     * @param   array $attribs
+     * @param array $attribs
      *
-     * @return  static
+     * @return static
      */
     public static function create($attribs = [])
     {
@@ -44,12 +44,12 @@ abstract class AbstractHtmlList extends HtmlElement
     }
 
     /**
-     * addItem
+     * addItem.
      *
-     * @param   ListItem|string $item
-     * @param   array           $attribs
+     * @param ListItem|string $item
+     * @param array           $attribs
      *
-     * @return  static
+     * @return static
      */
     public function addItem($item, $attribs = [])
     {
@@ -63,12 +63,12 @@ abstract class AbstractHtmlList extends HtmlElement
     }
 
     /**
-     * Alias of addItem()
+     * Alias of addItem().
      *
      * @param string $item
      * @param array  $attribs
      *
-     * @return  static
+     * @return static
      */
     public function item($item, $attribs = [])
     {
@@ -76,25 +76,25 @@ abstract class AbstractHtmlList extends HtmlElement
     }
 
     /**
-     * child
+     * child.
      *
      * @param string|HtmlElement      $title
      * @param string|AbstractHtmlList $child
      * @param array                   $attribs
      *
-     * @return  static
+     * @return static
      */
     public function child($title, $child, $attribs = [])
     {
-        return $this->addItem($title . $child, $attribs);
+        return $this->addItem($title.$child, $attribs);
     }
 
     /**
-     * setItems
+     * setItems.
      *
-     * @param   ListItem[] $items
+     * @param ListItem[] $items
      *
-     * @return  static
+     * @return static
      */
     public function setItems(array $items)
     {

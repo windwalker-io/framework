@@ -5,104 +5,103 @@
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later. see LICENSE
  */
-
 use Windwalker\Application\AbstractCliApplication;
 
-include_once __DIR__ . '/../vendor/autoload.php';
+include_once __DIR__.'/../vendor/autoload.php';
 
-define('WINDWALKER_ROOT', realpath(__DIR__ . '/..'));
+define('WINDWALKER_ROOT', realpath(__DIR__.'/..'));
 
 /**
  * Class Build to build subtrees.
  *
  * @since 1.0
  */
-class Build extends AbstractCliApplication
+class build extends AbstractCliApplication
 {
     /**
      * Property organization.
      *
-     * @var  string
+     * @var string
      */
     protected $organization = 'ventoviro';
 
     /**
      * Property lastOutput.
      *
-     * @var  mixed
+     * @var mixed
      */
     protected $lastOutput = null;
 
     /**
      * Property lastReturn.
      *
-     * @var  mixed
+     * @var mixed
      */
     protected $lastReturn = null;
 
     /**
      * Property master.
      *
-     * @var  string
+     * @var string
      */
     protected $branch = null;
 
     /**
      * Property tag.
      *
-     * @var  string
+     * @var string
      */
     protected $tag = null;
 
     /**
      * Property subtrees.
      *
-     * @var  array
+     * @var array
      */
     protected $subtrees = [
-        'application' => 'Application',
+        'application'    => 'Application',
         'authentication' => 'Authentication',
-        'authorisation' => 'Authorisation',
-        'cache' => 'Cache',
-        'compare' => 'Compare',
-        'console' => 'Console',
-        'crypt' => 'Crypt',
-        'data' => 'Data',
-        'database' => 'Database',
-        'datamapper' => 'DataMapper',
-        'di' => 'DI',
-        'dom' => 'Dom',
-        'edge' => 'Edge',
-        'environment' => 'Environment',
-        'event' => 'Event',
-        'filesystem' => 'Filesystem',
-        'filter' => 'Filter',
-        'form' => 'Form',
-        'html' => 'Html',
-        'http' => 'Http',
-        'io' => 'IO',
-        'language' => 'Language',
-        'loader' => 'Loader',
-        'middleware' => 'Middleware',
-        'profiler' => 'Profiler',
-        'query' => 'Query',
-        'queue' => 'Queue',
-        'record' => 'Record',
-        'renderer' => 'Renderer',
-        'router' => 'Router',
-        'session' => 'Session',
-        'string' => 'String',
-        'structure' => 'Structure',
-        'test' => 'Test',
-        'uri' => 'Uri',
-        'utilities' => 'Utilities',
-        'validator' => 'Validator',
+        'authorisation'  => 'Authorisation',
+        'cache'          => 'Cache',
+        'compare'        => 'Compare',
+        'console'        => 'Console',
+        'crypt'          => 'Crypt',
+        'data'           => 'Data',
+        'database'       => 'Database',
+        'datamapper'     => 'DataMapper',
+        'di'             => 'DI',
+        'dom'            => 'Dom',
+        'edge'           => 'Edge',
+        'environment'    => 'Environment',
+        'event'          => 'Event',
+        'filesystem'     => 'Filesystem',
+        'filter'         => 'Filter',
+        'form'           => 'Form',
+        'html'           => 'Html',
+        'http'           => 'Http',
+        'io'             => 'IO',
+        'language'       => 'Language',
+        'loader'         => 'Loader',
+        'middleware'     => 'Middleware',
+        'profiler'       => 'Profiler',
+        'query'          => 'Query',
+        'queue'          => 'Queue',
+        'record'         => 'Record',
+        'renderer'       => 'Renderer',
+        'router'         => 'Router',
+        'session'        => 'Session',
+        'string'         => 'String',
+        'structure'      => 'Structure',
+        'test'           => 'Test',
+        'uri'            => 'Uri',
+        'utilities'      => 'Utilities',
+        'validator'      => 'Validator',
     ];
 
     /**
      * Method to run this application.
      *
-     * @return  boolean
+     * @return bool
      */
     protected function doExecute()
     {
@@ -126,23 +125,23 @@ class Build extends AbstractCliApplication
 
         $this->exec('git fetch origin');
 
-        $this->exec('git branch -D ' . $branch);
+        $this->exec('git branch -D '.$branch);
 
-        $this->exec('git checkout -b ' . $branch);
+        $this->exec('git checkout -b '.$branch);
 
         $this->exec('git merge master');
 
         if ($this->tag) {
-            $this->exec('git tag -d ' . $tag);
+            $this->exec('git tag -d '.$tag);
 
-            $this->exec('git push origin :refs/tags/' . $tag);
+            $this->exec('git push origin :refs/tags/'.$tag);
 
-            $this->exec('git tag ' . $tag);
+            $this->exec('git tag '.$tag);
 
-            $this->exec(sprintf('git push origin %s' . $force, $this->tag));
+            $this->exec(sprintf('git push origin %s'.$force, $this->tag));
         }
 
-        $this->exec(sprintf('git push origin %s %s:%s master:master' . $force, $tag, $branch, $branch));
+        $this->exec(sprintf('git push origin %s %s:%s master:master'.$force, $tag, $branch, $branch));
 
         $allows = $this->io->getArguments();
 
@@ -167,7 +166,7 @@ class Build extends AbstractCliApplication
      * @param string $subtree
      * @param string $namespace
      *
-     * @return  void
+     * @return void
      */
     protected function splitTree($subtree, $namespace)
     {
@@ -176,7 +175,7 @@ class Build extends AbstractCliApplication
 
         // Do split
         $this->exec(sprintf('git branch -D sub-%s', $subtree));
-        $this->exec('git subtree split -P src/' . $namespace . ' -b sub-' . $subtree);
+        $this->exec('git subtree split -P src/'.$namespace.' -b sub-'.$subtree);
 
         // Create a new branch
         $this->exec(sprintf('git branch -D %s-%s', $this->branch, $subtree));
@@ -206,10 +205,10 @@ class Build extends AbstractCliApplication
             $this->exec(sprintf('git merge sub-%s', $subtree));
         }
 
-        $this->exec(sprintf('git push %s sub-%s:%s ' . $force, $subtree, $subtree, $this->branch));
+        $this->exec(sprintf('git push %s sub-%s:%s '.$force, $subtree, $subtree, $this->branch));
 
         if ($this->tag) {
-            $this->exec('git checkout sub-' . $subtree);
+            $this->exec('git checkout sub-'.$subtree);
 
             $this->exec(sprintf('git tag -d %s', $this->tag));
 
@@ -220,7 +219,7 @@ class Build extends AbstractCliApplication
             $this->exec(sprintf('git push %s %s', $subtree, $this->tag));
         }
 
-        $this->exec('git checkout ' . $this->branch);
+        $this->exec('git checkout '.$this->branch);
     }
 
     /**
@@ -230,16 +229,16 @@ class Build extends AbstractCliApplication
      * @param array  $arguments
      * @param array  $options
      *
-     * @return  string
+     * @return string
      */
     protected function exec($command, $arguments = [], $options = [])
     {
         $arguments = implode(' ', (array) $arguments);
-        $options   = implode(' ', (array) $options);
+        $options = implode(' ', (array) $options);
 
         $command = sprintf('%s %s %s', $command, $arguments, $options);
 
-        $this->out('>> ' . $command);
+        $this->out('>> '.$command);
 
         if ($this->io->getOption('dry-run')) {
             return '';
@@ -251,13 +250,13 @@ class Build extends AbstractCliApplication
     }
 
     /**
-     * help
+     * help.
      *
-     * @return  boolean
+     * @return bool
      */
     protected function help()
     {
-        $help = <<<HELP
+        $help = <<<'HELP'
 Windwalker Build Command.
 
 Will run subtree split and push every packages to it's repos.
@@ -278,11 +277,11 @@ HELP;
     }
 
     /**
-     * stop
+     * stop.
      *
      * @param string $msg
      *
-     * @return  void
+     * @return void
      */
     protected function stop($msg = null)
     {
@@ -294,9 +293,9 @@ HELP;
     }
 
     /**
-     * replaceDocblockTags
+     * replaceDocblockTags.
      *
-     * @return  void
+     * @return void
      */
     protected function replaceDocblockTags()
     {
@@ -304,7 +303,7 @@ HELP;
 
         $files = new RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
-                WINDWALKER_ROOT . '/src',
+                WINDWALKER_ROOT.'/src',
                 \FilesystemIterator::SKIP_DOTS
             )
         );
@@ -325,7 +324,7 @@ HELP;
 
             file_put_contents($file->getPathname(), $content);
 
-            $this->out('[Replace Docblock] ' . $file->getPathname());
+            $this->out('[Replace Docblock] '.$file->getPathname());
         }
 
         $this->exec('git checkout master');

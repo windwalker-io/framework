@@ -68,24 +68,24 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     /**
      * Property string.
      *
-     * @var  string
+     * @var string
      */
     protected $string = '';
 
     /**
      * Property encoding.
      *
-     * @var  string
+     * @var string
      */
     protected $encoding = null;
 
     /**
-     * create
+     * create.
      *
      * @param string      $string
      * @param null|string $encoding
      *
-     * @return  static
+     * @return static
      */
     public static function create($string = '', $encoding = self::ENCODING_UTF8)
     {
@@ -93,12 +93,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * fromArray
+     * fromArray.
      *
      * @param array       $strings
      * @param null|string $encoding
      *
-     * @return  static[]
+     * @return static[]
      */
     public static function fromArray(array $strings, $encoding = self::ENCODING_UTF8)
     {
@@ -124,13 +124,14 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * __call
+     * __call.
      *
      * @param string $name
      * @param array  $args
      *
-     * @return  mixed
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function __call($name, array $args)
     {
@@ -144,14 +145,15 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * callProxy
+     * callProxy.
      *
      * @param string $class
      * @param string $method
      * @param array  $args
      *
-     * @return  static
      * @throws \ReflectionException
+     *
+     * @return static
      */
     protected function callProxy($class, $method, array $args)
     {
@@ -187,11 +189,13 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @link  http://php.net/manual/en/iteratoraggregate.getiterator.php
+     *
      * @return \Traversable An instance of an object implementing <b>Iterator</b> or
-     *        <b>Traversable</b>
+     *                      <b>Traversable</b>
+     *
      * @since 5.0.0
      */
     public function getIterator()
@@ -200,7 +204,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
      *
      * @link  http://php.net/manual/en/arrayaccess.offsetexists.php
      *
@@ -208,10 +212,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      *                      An offset to check for.
      *                      </p>
      *
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
+     * @return bool true on success or false on failure.
+     *              </p>
+     *              <p>
+     *              The return value will be casted to boolean if non-boolean was returned.
+     *
      * @since 5.0.0
      */
     public function offsetExists($offset)
@@ -222,7 +227,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
      *
      * @param int $offset The offset to retrieve.
      *
@@ -234,7 +239,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Offset to set
+     * Offset to set.
      *
      * @link  http://php.net/manual/en/arrayaccess.offsetset.php
      *
@@ -246,6 +251,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      *                      </p>
      *
      * @return void
+     *
      * @since 5.0.0
      */
     public function offsetSet($offset, $string)
@@ -254,7 +260,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
      *
      * @link  http://php.net/manual/en/arrayaccess.offsetunset.php
      *
@@ -263,6 +269,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
      *                      </p>
      *
      * @return void
+     *
      * @since 5.0.0
      */
     public function offsetUnset($offset)
@@ -275,13 +282,15 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Count elements of an object
+     * Count elements of an object.
      *
      * @link  http://php.net/manual/en/countable.count.php
+     *
      * @return int The custom count as an integer.
-     *        </p>
-     *        <p>
-     *        The return value is cast to an integer.
+     *             </p>
+     *             <p>
+     *             The return value is cast to an integer.
+     *
      * @since 5.1.0
      */
     public function count()
@@ -292,7 +301,7 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     /**
      * Magic method to convert this object to string.
      *
-     * @return  string
+     * @return string
      */
     public function __toString()
     {
@@ -300,9 +309,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Method to get property Encoding
+     * Method to get property Encoding.
      *
-     * @return  string
+     * @return string
      */
     public function getEncoding()
     {
@@ -310,11 +319,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Method to set property encoding
+     * Method to set property encoding.
      *
-     * @param   string $encoding
+     * @param string $encoding
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function withEncoding($encoding)
     {
@@ -326,9 +335,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Method to get property String
+     * Method to get property String.
      *
-     * @return  string
+     * @return string
      */
     public function getString()
     {
@@ -336,11 +345,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * Method to set property string
+     * Method to set property string.
      *
-     * @param   string $string
+     * @param string $string
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function withString($string)
     {
@@ -352,9 +361,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * toLowerCase
+     * toLowerCase.
      *
-     * @return  static
+     * @return static
      */
     public function toLowerCase()
     {
@@ -366,9 +375,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * toUpperCase
+     * toUpperCase.
      *
-     * @return  static
+     * @return static
      */
     public function toUpperCase()
     {
@@ -380,9 +389,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * length
+     * length.
      *
-     * @return  int
+     * @return int
      */
     public function length()
     {
@@ -390,11 +399,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * split
+     * split.
      *
      * @param int $length
      *
-     * @return  array|bool
+     * @return array|bool
      */
     public function chop($length = 1)
     {
@@ -402,13 +411,13 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * replace
+     * replace.
      *
      * @param array|string $search
      * @param array|string $replacement
      * @param int|null     $count
      *
-     * @return  static
+     * @return static
      */
     public function replace($search, $replacement, &$count = null)
     {
@@ -420,12 +429,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * compare
+     * compare.
      *
      * @param string $compare
      * @param bool   $caseSensitive
      *
-     * @return  int
+     * @return int
      */
     public function compare($compare, $caseSensitive = true)
     {
@@ -437,9 +446,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * reverse
+     * reverse.
      *
-     * @return  static
+     * @return static
      */
     public function reverse()
     {
@@ -451,13 +460,13 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * substrReplace
+     * substrReplace.
      *
      * @param string $replace
      * @param int    $start
      * @param int    $offset
      *
-     * @return  static
+     * @return static
      */
     public function substrReplace($replace, $start, $offset = null)
     {
@@ -469,11 +478,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * ltrim
+     * ltrim.
      *
      * @param string|null $charlist
      *
-     * @return  static
+     * @return static
      */
     public function trimLeft($charlist = null)
     {
@@ -485,11 +494,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * rtrim
+     * rtrim.
      *
      * @param string|null $charlist
      *
-     * @return  static
+     * @return static
      */
     public function trimRight($charlist = null)
     {
@@ -501,11 +510,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * trim
+     * trim.
      *
      * @param string|null $charlist
      *
-     * @return  static
+     * @return static
      */
     public function trim($charlist = null)
     {
@@ -517,9 +526,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * ucfirst
+     * ucfirst.
      *
-     * @return  static
+     * @return static
      */
     public function upperCaseFirst()
     {
@@ -531,9 +540,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * lcfirst
+     * lcfirst.
      *
-     * @return  static
+     * @return static
      */
     public function lowerCaseFirst()
     {
@@ -545,9 +554,9 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * upperCaseWords
+     * upperCaseWords.
      *
-     * @return  static
+     * @return static
      */
     public function upperCaseWords()
     {
@@ -559,12 +568,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * substrCount
+     * substrCount.
      *
      * @param string $search
      * @param bool   $caseSensitive
      *
-     * @return  int
+     * @return int
      */
     public function substrCount($search, $caseSensitive = true)
     {
@@ -572,11 +581,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * indexOf
+     * indexOf.
      *
      * @param string $search
      *
-     * @return  int|bool
+     * @return int|bool
      */
     public function indexOf($search)
     {
@@ -584,11 +593,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * indexOf
+     * indexOf.
      *
      * @param string $search
      *
-     * @return  int|bool
+     * @return int|bool
      */
     public function indexOfLast($search)
     {
@@ -596,12 +605,12 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * explode
+     * explode.
      *
      * @param string   $delimiter
      * @param int|null $limit
      *
-     * @return  array
+     * @return array
      */
     public function explode($delimiter, $limit = null)
     {
@@ -616,11 +625,11 @@ class StringObject implements \Countable, \ArrayAccess, \IteratorAggregate, Stri
     }
 
     /**
-     * apply
+     * apply.
      *
      * @param callable $callback
      *
-     * @return  static
+     * @return static
      */
     public function apply(callable $callback)
     {

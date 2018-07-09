@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -11,7 +11,7 @@ namespace Windwalker\Crypt\Test\Cipher;
 use Windwalker\Crypt\Cipher\BlowfishCipher;
 
 /**
- * Test class of CipherBlowfish
+ * Test class of CipherBlowfish.
  *
  * @since 3.0
  */
@@ -56,9 +56,9 @@ class BlowfishCipherTest extends AbstractOpensslTestCase
     }
 
     /**
-     * testDecryptLegacy
+     * testDecryptLegacy.
      *
-     * @return  void
+     * @return void
      */
     public function testDecryptLegacy()
     {

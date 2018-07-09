@@ -43,27 +43,27 @@ class Timestamp extends Column
     }
 
     /**
-     * autoUpdate
+     * autoUpdate.
      *
      * @param string $value
      *
-     * @return  $this
+     * @return $this
      *
      * @since  3.4
      */
     public function autoUpdate($value = 'CURRENT_TIMESTAMP')
     {
-        $this->suffix = ' ON UPDATE ' . $value;
+        $this->suffix = ' ON UPDATE '.$value;
 
         return $this;
     }
 
     /**
-     * setOptions
+     * setOptions.
      *
      * @param array $options
      *
-     * @return  static
+     * @return static
      */
     public function setOptions(array $options)
     {

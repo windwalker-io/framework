@@ -22,12 +22,12 @@ class TestHelper
      *
      * This method assumes that the mock callback is named {mock}{method name}.
      *
-     * @param   \PHPUnit_Framework_MockObject_MockObject $mockObject The mock object that the callbacks are being
-     *                                                               assigned to.
-     * @param   \PHPUnit_Framework_TestCase              $test       The test.
-     * @param   array                                    $array      An array of methods names to mock with callbacks.
+     * @param \PHPUnit_Framework_MockObject_MockObject $mockObject The mock object that the callbacks are being
+     *                                                             assigned to.
+     * @param \PHPUnit_Framework_TestCase              $test       The test.
+     * @param array                                    $array      An array of methods names to mock with callbacks.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -42,7 +42,7 @@ class TestHelper
                 $callback = $method;
             } else {
                 $methodName = $method;
-                $callback = [get_called_class(), 'mock' . $method];
+                $callback = [get_called_class(), 'mock'.$method];
             }
 
             $mockObject->expects($test->any())
@@ -54,13 +54,13 @@ class TestHelper
     /**
      * Assigns mock values to methods.
      *
-     * @param   \PHPUnit_Framework_MockObject_MockObject $mockObject   The mock object.
-     * @param   \PHPUnit_Framework_TestCase              $test         The test.
-     * @param   array                                    $array        An associative array of methods to mock with
-     *                                                                 return values:<br /> string (method name) =>
-     *                                                                 mixed (return value)
+     * @param \PHPUnit_Framework_MockObject_MockObject $mockObject The mock object.
+     * @param \PHPUnit_Framework_TestCase              $test       The test.
+     * @param array                                    $array      An associative array of methods to mock with
+     *                                                             return values:<br /> string (method name) =>
+     *                                                             mixed (return value)
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -79,12 +79,13 @@ class TestHelper
     /**
      * Helper method that gets a protected or private property in a class by relfection.
      *
-     * @param   object $object       The object from which to return the property value.
-     * @param   string $propertyName The name of the property to return.
-     *
-     * @return  mixed  The value of the property.
+     * @param object $object       The object from which to return the property value.
+     * @param string $propertyName The name of the property to return.
      *
      * @throws \ReflectionException
+     *
+     * @return mixed The value of the property.
+     *
      * @since   2.0
      */
     public static function getValue($object, $propertyName)
@@ -123,12 +124,13 @@ class TestHelper
      *
      * $this->asserTrue(TestCase::invoke('methodName', $this->object, 123));
      *
-     * @param   object $object     The object on which to invoke the method.
-     * @param   string $methodName The name of the method to invoke.
-     *
-     * @return  mixed
+     * @param object $object     The object on which to invoke the method.
+     * @param string $methodName The name of the method to invoke.
      *
      * @throws \ReflectionException
+     *
+     * @return mixed
+     *
      * @since   2.0
      */
     public static function invoke($object, $methodName)
@@ -151,13 +153,14 @@ class TestHelper
     /**
      * Helper method that sets a protected or private property in a class by relfection.
      *
-     * @param   object $object       The object for which to set the property.
-     * @param   string $propertyName The name of the property to set.
-     * @param   mixed  $value        The value to set for the property.
-     *
-     * @return  void
+     * @param object $object       The object for which to set the property.
+     * @param string $propertyName The name of the property to set.
+     * @param mixed  $value        The value to set for the property.
      *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @since   2.0
      */
     public static function setValue($object, $propertyName, $value)
@@ -170,8 +173,7 @@ class TestHelper
             $property->setAccessible(true);
 
             $property->setValue($object, $value);
-        } elseif (get_parent_class($object)) // Hrm, maybe dealing with a private property in the parent class.
-        {
+        } elseif (get_parent_class($object)) { // Hrm, maybe dealing with a private property in the parent class.
             $property = new \ReflectionProperty(get_parent_class($object), $propertyName);
             $property->setAccessible(true);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -14,7 +14,7 @@ use Windwalker\Middleware\MiddlewareInterface;
 use Windwalker\Query\Query;
 
 /**
- * Test class of AbstractDatabaseDriver
+ * Test class of AbstractDatabaseDriver.
  *
  * @since 3.0
  */
@@ -69,10 +69,11 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
     }
 
     /**
-     * testMiddleware
+     * testMiddleware.
      *
-     * @return  void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function testMiddleware()
     {
@@ -95,8 +96,9 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
     /**
      * Method to test disconnect().
      *
-     * @return void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function testProfilerMiddleware()
     {
@@ -121,7 +123,7 @@ class AbstractDatabaseDriverTest extends AbstractMysqlTestCase
 
         $this->assertSame($this->db, $profiler['db']);
 
-        $this->assertSame('SELECT * FROM ' . static::$dsn['prefix'] . 'flower', (string) $profiler['sql']);
+        $this->assertSame('SELECT * FROM '.static::$dsn['prefix'].'flower', (string) $profiler['sql']);
 
         $this->assertTrue($profiler['before']);
         $this->assertTrue($profiler['after']);

@@ -10,15 +10,15 @@ namespace Windwalker\String;
 
 @ini_set('default_charset', 'UTF-8');
 
-/**
+/*
  * Include the utf8 package
  */
 if (!defined('UTF8')) {
-    require_once __DIR__ . '/phputf8/utf8.php';
+    require_once __DIR__.'/phputf8/utf8.php';
 }
 
 if (!function_exists('utf8_strcasecmp')) {
-    require_once __DIR__ . '/phputf8/strcasecmp.php';
+    require_once __DIR__.'/phputf8/strcasecmp.php';
 }
 
 /**
@@ -29,7 +29,6 @@ if (!function_exists('utf8_strcasecmp')) {
  * This class is based on Joomla String package
  *
  * @since       2.0
- *
  * @deprecated  Use Mbstring instead, this class will be rewrite after 4.0
  */
 abstract class Utf8String
@@ -38,7 +37,7 @@ abstract class Utf8String
      * Tests whether a string contains only 7bit ASCII bytes.
      * You might use this to conditionally check whether a string
      * needs handling as UTF-8 or not, potentially offering performance
-     * benefits by using the native PHP equivalent if it's just ASCII e.g.;
+     * benefits by using the native PHP equivalent if it's just ASCII e.g.;.
      *
      * ``` php
      * if (String::is_ascii($someString))
@@ -52,16 +51,16 @@ abstract class Utf8String
      * }
      * ```
      *
-     * @param   string $str The string to test.
+     * @param string $str The string to test.
      *
-     * @return  boolean True if the string is all ASCII
+     * @return bool True if the string is all ASCII
      *
      * @since   2.0
      */
     public static function is_ascii($str)
     {
         // Search for any bytes which are outside the ASCII range...
-        return (preg_match('/(?:[^\x00-\x7F])/', $str) !== 1);
+        return preg_match('/(?:[^\x00-\x7F])/', $str) !== 1;
     }
 
     /**
@@ -69,11 +68,11 @@ abstract class Utf8String
      *
      * Find position of first occurrence of a string.
      *
-     * @param   string  $str    String being examined
-     * @param   string  $search String being searched for
-     * @param   integer $offset Optional, specifies the position from which the search should be performed
+     * @param string $str    String being examined
+     * @param string $search String being searched for
+     * @param int    $offset Optional, specifies the position from which the search should be performed
      *
-     * @return  mixed  Number of characters before the first match or FALSE on failure
+     * @return mixed Number of characters before the first match or FALSE on failure
      *
      * @see     http://www.php.net/strpos
      * @since   2.0
@@ -89,13 +88,13 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to strrpos
-     * Finds position of last occurrence of a string
+     * Finds position of last occurrence of a string.
      *
-     * @param   string  $str    String being examined.
-     * @param   string  $search String being searched for.
-     * @param   integer $offset Offset from the left of the string.
+     * @param string $str    String being examined.
+     * @param string $search String being searched for.
+     * @param int    $offset Offset from the left of the string.
      *
-     * @return  mixed  Number of characters before the last match or false on failure
+     * @return mixed Number of characters before the last match or false on failure
      *
      * @see     http://www.php.net/strrpos
      * @since   2.0
@@ -107,13 +106,13 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to substr
-     * Return part of a string given character offset (and optionally length)
+     * Return part of a string given character offset (and optionally length).
      *
-     * @param   string  $str    String being processed
-     * @param   integer $offset Number of UTF-8 characters offset (from left)
-     * @param   integer $length Optional length in UTF-8 characters from offset
+     * @param string $str    String being processed
+     * @param int    $offset Number of UTF-8 characters offset (from left)
+     * @param int    $length Optional length in UTF-8 characters from offset
      *
-     * @return  mixed string or FALSE if failure
+     * @return mixed string or FALSE if failure
      *
      * @see     http://www.php.net/substr
      * @since   2.0
@@ -128,7 +127,7 @@ abstract class Utf8String
     }
 
     /**
-     * UTF-8 aware alternative to strtlower
+     * UTF-8 aware alternative to strtlower.
      *
      * Make a string lowercase
      * Note: The concept of a characters "case" only exists is some alphabets
@@ -136,9 +135,9 @@ abstract class Utf8String
      * not exist in the Chinese alphabet, for example. See Unicode Standard
      * Annex #21: Case Mappings
      *
-     * @param   string $str String being processed
+     * @param string $str String being processed
      *
-     * @return  mixed  Either string in lowercase or FALSE is UTF-8 invalid
+     * @return mixed Either string in lowercase or FALSE is UTF-8 invalid
      *
      * @see     http://www.php.net/strtolower
      * @since   2.0
@@ -154,11 +153,11 @@ abstract class Utf8String
      * Note: The concept of a characters "case" only exists is some alphabets
      * such as Latin, Greek, Cyrillic, Armenian and archaic Georgian - it does
      * not exist in the Chinese alphabet, for example. See Unicode Standard
-     * Annex #21: Case Mappings
+     * Annex #21: Case Mappings.
      *
-     * @param   string $str String being processed
+     * @param string $str String being processed
      *
-     * @return  mixed  Either string in uppercase or FALSE is UTF-8 invalid
+     * @return mixed Either string in uppercase or FALSE is UTF-8 invalid
      *
      * @see     http://www.php.net/strtoupper
      * @since   2.0
@@ -173,9 +172,9 @@ abstract class Utf8String
      *
      * Returns the number of characters in the string (NOT THE NUMBER OF BYTES),
      *
-     * @param   string $str UTF-8 string.
+     * @param string $str UTF-8 string.
      *
-     * @return  integer  Number of UTF-8 characters in string.
+     * @return int Number of UTF-8 characters in string.
      *
      * @see     http://www.php.net/strlen
      * @since   2.0
@@ -187,14 +186,14 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to str_ireplace
-     * Case-insensitive version of str_replace
+     * Case-insensitive version of str_replace.
      *
-     * @param   string  $search  String to search
-     * @param   string  $replace Existing string to replace
-     * @param   string  $str     New string to replace with
-     * @param   integer $count   Optional count value to be passed by reference
+     * @param string $search  String to search
+     * @param string $replace Existing string to replace
+     * @param string $str     New string to replace with
+     * @param int    $count   Optional count value to be passed by reference
      *
-     * @return  string  UTF-8 String
+     * @return string UTF-8 String
      *
      * @see     http://www.php.net/str_ireplace
      * @since   2.0
@@ -202,7 +201,7 @@ abstract class Utf8String
     public static function str_ireplace($search, $replace, $str, $count = null)
     {
         if (!function_exists('utf8_ireplace')) {
-            require_once __DIR__ . '/phputf8/str_ireplace.php';
+            require_once __DIR__.'/phputf8/str_ireplace.php';
         }
 
         if ($count === null) {
@@ -214,12 +213,12 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to str_split
-     * Convert a string to an array
+     * Convert a string to an array.
      *
-     * @param   string  $str       UTF-8 encoded string to process
-     * @param   integer $split_len Number to characters to split string by
+     * @param string $str       UTF-8 encoded string to process
+     * @param int    $split_len Number to characters to split string by
      *
-     * @return  array
+     * @return array
      *
      * @see     http://www.php.net/str_split
      * @since   2.0
@@ -227,7 +226,7 @@ abstract class Utf8String
     public static function str_split($str, $split_len = 1)
     {
         if (!function_exists('utf8_str_split')) {
-            require_once __DIR__ . '/phputf8/str_split.php';
+            require_once __DIR__.'/phputf8/str_split.php';
         }
 
         return utf8_str_split($str, $split_len);
@@ -235,13 +234,13 @@ abstract class Utf8String
 
     /**
      * UTF-8/LOCALE aware alternative to strcasecmp
-     * A case insensitive string comparison
+     * A case insensitive string comparison.
      *
-     * @param   string $str1   string 1 to compare
-     * @param   string $str2   string 2 to compare
-     * @param   mixed  $locale The locale used by strcoll or false to use classical comparison
+     * @param string $str1   string 1 to compare
+     * @param string $str2   string 2 to compare
+     * @param mixed  $locale The locale used by strcoll or false to use classical comparison
      *
-     * @return  integer   < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
+     * @return int < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
      *
      * @see     http://www.php.net/strcasecmp
      * @see     http://www.php.net/strcoll
@@ -260,7 +259,7 @@ abstract class Utf8String
 
             // See if we have successfully set locale to UTF-8
             if (!stristr($locale, 'UTF-8') && stristr($locale, '_') && preg_match('~\.(\d+)$~', $locale, $m)) {
-                $encoding = 'CP' . $m[1];
+                $encoding = 'CP'.$m[1];
             } elseif (stristr($locale, 'UTF-8') || stristr($locale, 'utf8')) {
                 $encoding = 'UTF-8';
             } else {
@@ -283,13 +282,13 @@ abstract class Utf8String
 
     /**
      * UTF-8/LOCALE aware alternative to strcmp
-     * A case sensitive string comparison
+     * A case sensitive string comparison.
      *
-     * @param   string $str1   string 1 to compare
-     * @param   string $str2   string 2 to compare
-     * @param   mixed  $locale The locale used by strcoll or false to use classical comparison
+     * @param string $str1   string 1 to compare
+     * @param string $str2   string 2 to compare
+     * @param mixed  $locale The locale used by strcoll or false to use classical comparison
      *
-     * @return  integer  < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
+     * @return int < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
      *
      * @see     http://www.php.net/strcmp
      * @see     http://www.php.net/strcoll
@@ -308,7 +307,7 @@ abstract class Utf8String
 
             // See if we have successfully set locale to UTF-8
             if (!stristr($locale, 'UTF-8') && stristr($locale, '_') && preg_match('~\.(\d+)$~', $locale, $m)) {
-                $encoding = 'CP' . $m[1];
+                $encoding = 'CP'.$m[1];
             } elseif (stristr($locale, 'UTF-8') || stristr($locale, 'utf8')) {
                 $encoding = 'UTF-8';
             } else {
@@ -328,14 +327,14 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to strcspn
-     * Find length of initial segment not matching mask
+     * Find length of initial segment not matching mask.
      *
-     * @param   string  $str    The string to process
-     * @param   string  $mask   The mask
-     * @param   integer $start  Optional starting character position (in characters)
-     * @param   integer $length Optional length
+     * @param string $str    The string to process
+     * @param string $mask   The mask
+     * @param int    $start  Optional starting character position (in characters)
+     * @param int    $length Optional length
      *
-     * @return  integer  The length of the initial segment of str1 which does not contain any of the characters in str2
+     * @return int The length of the initial segment of str1 which does not contain any of the characters in str2
      *
      * @see     http://www.php.net/strcspn
      * @since   2.0
@@ -343,7 +342,7 @@ abstract class Utf8String
     public static function strcspn($str, $mask, $start = null, $length = null)
     {
         if (!function_exists('utf8_strcspn')) {
-            require_once __DIR__ . '/phputf8/strcspn.php';
+            require_once __DIR__.'/phputf8/strcspn.php';
         }
 
         if ($start === null && $length === null) {
@@ -361,10 +360,10 @@ abstract class Utf8String
      * UTF-8 aware alternative to stristr
      * Returns all of haystack from the first occurrence of needle to the end.
      * needle and haystack are examined in a case-insensitive manner
-     * Find first occurrence of a string using case insensitive comparison
+     * Find first occurrence of a string using case insensitive comparison.
      *
-     * @param   string $str    The haystack
-     * @param   string $search The needle
+     * @param string $str    The haystack
+     * @param string $search The needle
      *
      * @return string the sub string
      *
@@ -374,7 +373,7 @@ abstract class Utf8String
     public static function stristr($str, $search)
     {
         if (!function_exists('utf8_stristr')) {
-            require_once __DIR__ . '/phputf8/stristr.php';
+            require_once __DIR__.'/phputf8/stristr.php';
         }
 
         return utf8_stristr($str, $search);
@@ -382,11 +381,11 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to strrev
-     * Reverse a string
+     * Reverse a string.
      *
-     * @param   string $str String to be reversed
+     * @param string $str String to be reversed
      *
-     * @return  string   The string in reverse character order
+     * @return string The string in reverse character order
      *
      * @see     http://www.php.net/strrev
      * @since   2.0
@@ -394,7 +393,7 @@ abstract class Utf8String
     public static function strrev($str)
     {
         if (!function_exists('utf8_strrev')) {
-            require_once __DIR__ . '/phputf8/strrev.php';
+            require_once __DIR__.'/phputf8/strrev.php';
         }
 
         return utf8_strrev($str);
@@ -402,14 +401,14 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to strspn
-     * Find length of initial segment matching mask
+     * Find length of initial segment matching mask.
      *
-     * @param   string  $str    The haystack
-     * @param   string  $mask   The mask
-     * @param   integer $start  Start optional
-     * @param   integer $length Length optional
+     * @param string $str    The haystack
+     * @param string $mask   The mask
+     * @param int    $start  Start optional
+     * @param int    $length Length optional
      *
-     * @return  integer
+     * @return int
      *
      * @see     http://www.php.net/strspn
      * @since   2.0
@@ -417,7 +416,7 @@ abstract class Utf8String
     public static function strspn($str, $mask, $start = null, $length = null)
     {
         if (!function_exists('utf8_strspn')) {
-            require_once __DIR__ . '/phputf8/strspn.php';
+            require_once __DIR__.'/phputf8/strspn.php';
         }
 
         if ($start === null && $length === null) {
@@ -433,14 +432,14 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware substr_replace
-     * Replace text within a portion of a string
+     * Replace text within a portion of a string.
      *
-     * @param   string  $str    The haystack
-     * @param   string  $repl   The replacement string
-     * @param   integer $start  Start
-     * @param   integer $length Length (optional)
+     * @param string $str    The haystack
+     * @param string $repl   The replacement string
+     * @param int    $start  Start
+     * @param int    $length Length (optional)
      *
-     * @return  string
+     * @return string
      *
      * @see     http://www.php.net/substr_replace
      * @since   2.0
@@ -456,17 +455,17 @@ abstract class Utf8String
     }
 
     /**
-     * UTF-8 aware replacement for ltrim()
+     * UTF-8 aware replacement for ltrim().
      *
      * Strip whitespace (or other characters) from the beginning of a string
      * You only need to use this if you are supplying the charlist
      * optional arg and it contains UTF-8 characters. Otherwise ltrim will
      * work normally on a UTF-8 string
      *
-     * @param   string $str      The string to be trimmed
-     * @param   string $charlist The optional charlist of additional characters to trim
+     * @param string $str      The string to be trimmed
+     * @param string $charlist The optional charlist of additional characters to trim
      *
-     * @return  string  The trimmed string
+     * @return string The trimmed string
      *
      * @see     http://www.php.net/ltrim
      * @since   2.0
@@ -478,7 +477,7 @@ abstract class Utf8String
         }
 
         if (!function_exists('utf8_ltrim')) {
-            require_once __DIR__ . '/phputf8/trim.php';
+            require_once __DIR__.'/phputf8/trim.php';
         }
 
         if ($charlist === null) {
@@ -493,12 +492,12 @@ abstract class Utf8String
      * Strip whitespace (or other characters) from the end of a string
      * You only need to use this if you are supplying the charlist
      * optional arg and it contains UTF-8 characters. Otherwise rtrim will
-     * work normally on a UTF-8 string
+     * work normally on a UTF-8 string.
      *
-     * @param   string $str      The string to be trimmed
-     * @param   string $charlist The optional charlist of additional characters to trim
+     * @param string $str      The string to be trimmed
+     * @param string $charlist The optional charlist of additional characters to trim
      *
-     * @return  string  The trimmed string
+     * @return string The trimmed string
      *
      * @see     http://www.php.net/rtrim
      * @since   2.0
@@ -510,7 +509,7 @@ abstract class Utf8String
         }
 
         if (!function_exists('utf8_rtrim')) {
-            require_once __DIR__ . '/phputf8/trim.php';
+            require_once __DIR__.'/phputf8/trim.php';
         }
 
         if ($charlist === null) {
@@ -525,12 +524,12 @@ abstract class Utf8String
      * Strip whitespace (or other characters) from the beginning and end of a string
      * Note: you only need to use this if you are supplying the charlist
      * optional arg and it contains UTF-8 characters. Otherwise trim will
-     * work normally on a UTF-8 string
+     * work normally on a UTF-8 string.
      *
-     * @param   string $str      The string to be trimmed
-     * @param   string $charlist The optional charlist of additional characters to trim
+     * @param string $str      The string to be trimmed
+     * @param string $charlist The optional charlist of additional characters to trim
      *
-     * @return  string  The trimmed string
+     * @return string The trimmed string
      *
      * @see     http://www.php.net/trim
      * @since   2.0
@@ -542,7 +541,7 @@ abstract class Utf8String
         }
 
         if (!function_exists('utf8_trim')) {
-            require_once __DIR__ . '/phputf8/trim.php';
+            require_once __DIR__.'/phputf8/trim.php';
         }
 
         if ($charlist === null) {
@@ -554,15 +553,15 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to ucfirst
-     * Make a string's first character uppercase or all words' first character uppercase
+     * Make a string's first character uppercase or all words' first character uppercase.
      *
-     * @param   string $str          String to be processed
-     * @param   string $delimiter    The words delimiter (null means do not split the string)
-     * @param   string $newDelimiter The new words delimiter (null means equal to $delimiter)
+     * @param string $str          String to be processed
+     * @param string $delimiter    The words delimiter (null means do not split the string)
+     * @param string $newDelimiter The new words delimiter (null means equal to $delimiter)
      *
-     * @return  string  If $delimiter is null, return the string with first character as upper case (if applicable)
-     *                  else consider the string of words separated by the delimiter, apply the ucfirst to each words
-     *                  and return the string with the new delimiter
+     * @return string If $delimiter is null, return the string with first character as upper case (if applicable)
+     *                else consider the string of words separated by the delimiter, apply the ucfirst to each words
+     *                and return the string with the new delimiter
      *
      * @see     http://www.php.net/ucfirst
      * @since   2.0
@@ -570,7 +569,7 @@ abstract class Utf8String
     public static function ucfirst($str, $delimiter = null, $newDelimiter = null)
     {
         if (!function_exists('utf8_ucfirst')) {
-            require_once __DIR__ . '/phputf8/ucfirst.php';
+            require_once __DIR__.'/phputf8/ucfirst.php';
         }
 
         if ($delimiter === null) {
@@ -586,11 +585,11 @@ abstract class Utf8String
 
     /**
      * UTF-8 aware alternative to ucwords
-     * Uppercase the first character of each word in a string
+     * Uppercase the first character of each word in a string.
      *
-     * @param   string $str String to be processed
+     * @param string $str String to be processed
      *
-     * @return  string  String with first char of each word uppercase
+     * @return string String with first char of each word uppercase
      *
      * @see     http://www.php.net/ucwords
      * @since   2.0
@@ -598,7 +597,7 @@ abstract class Utf8String
     public static function ucwords($str)
     {
         if (!function_exists('utf8_ucwords')) {
-            require_once __DIR__ . '/phputf8/ucwords.php';
+            require_once __DIR__.'/phputf8/ucwords.php';
         }
 
         return utf8_ucwords($str);
@@ -607,14 +606,13 @@ abstract class Utf8String
     /**
      * Transcode a string.
      *
-     * @param   string $source        The string to transcode.
-     * @param   string $from_encoding The source encoding.
-     * @param   string $to_encoding   The target encoding.
+     * @param string $source        The string to transcode.
+     * @param string $from_encoding The source encoding.
+     * @param string $to_encoding   The target encoding.
      *
-     * @return  mixed  The transcoded string, or null if the source was not a string.
+     * @return mixed The transcoded string, or null if the source was not a string.
      *
      * @link    https://bugs.php.net/bug.php?id=48147
-     *
      * @since   2.0
      */
     public static function transcode($source, $from_encoding, $to_encoding)
@@ -624,15 +622,13 @@ abstract class Utf8String
 
             switch (ICONV_IMPL) {
                 case 'glibc':
-                    return @$function($from_encoding, $to_encoding . '//TRANSLIT,IGNORE', $source);
+                    return @$function($from_encoding, $to_encoding.'//TRANSLIT,IGNORE', $source);
 
                 case 'libiconv':
                 default:
-                    return $function($from_encoding, $to_encoding . '//IGNORE//TRANSLIT', $source);
+                    return $function($from_encoding, $to_encoding.'//IGNORE//TRANSLIT', $source);
             }
         }
-
-        return null;
     }
 
     /**
@@ -640,18 +636,19 @@ abstract class Utf8String
      *
      * Note: this function has been modified to simple return true or false.
      *
-     * @param   string $str UTF-8 encoded string.
+     * @param string $str UTF-8 encoded string.
      *
-     * @return  boolean  true if valid
+     * @return bool true if valid
      *
      * @author  <hsivonen@iki.fi>
+     *
      * @see     http://hsivonen.iki.fi/php-utf8/
      * @see     compliant
      * @since   2.0
      */
     public static function valid($str)
     {
-        require_once __DIR__ . '/phputf8/utils/validation.php';
+        require_once __DIR__.'/phputf8/utils/validation.php';
 
         return utf8_is_valid($str);
     }
@@ -665,11 +662,11 @@ abstract class Utf8String
      * it to validate user input, you place yourself at the risk that
      * attackers will be able to inject 5 and 6 byte sequences (which
      * may or may not be a significant risk, depending on what you are
-     * are doing)
+     * are doing).
      *
-     * @param   string $str UTF-8 string to check
+     * @param string $str UTF-8 string to check
      *
-     * @return  boolean  TRUE if string is valid UTF-8
+     * @return bool TRUE if string is valid UTF-8
      *
      * @see     valid
      * @see     http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php#54805
@@ -677,17 +674,17 @@ abstract class Utf8String
      */
     public static function compliant($str)
     {
-        require_once __DIR__ . '/phputf8/utils/validation.php';
+        require_once __DIR__.'/phputf8/utils/validation.php';
 
         return utf8_compliant($str);
     }
 
     /**
-     * Converts Unicode sequences to UTF-8 string
+     * Converts Unicode sequences to UTF-8 string.
      *
-     * @param   string $str Unicode string to convert
+     * @param string $str Unicode string to convert
      *
-     * @return  string  UTF-8 string
+     * @return string UTF-8 string
      *
      * @since   2.0
      */
@@ -707,11 +704,11 @@ abstract class Utf8String
     }
 
     /**
-     * Converts Unicode sequences to UTF-16 string
+     * Converts Unicode sequences to UTF-16 string.
      *
-     * @param   string $str Unicode string to convert
+     * @param string $str Unicode string to convert
      *
-     * @return  string  UTF-16 string
+     * @return string UTF-16 string
      *
      * @since   2.0
      */

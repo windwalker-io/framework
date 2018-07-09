@@ -9,18 +9,18 @@
 namespace Windwalker\Router;
 
 /**
- * Interface RouterInterface
+ * Interface RouterInterface.
  */
 interface RouterInterface
 {
     /**
-     * match
+     * match.
      *
      * @param string $route
      *
-     * @return  mixed
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return mixed
      */
     public function match($route);
 }

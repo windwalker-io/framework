@@ -9,19 +9,20 @@
 namespace Windwalker\Language\Loader;
 
 /**
- * Class PhpLoader
+ * Class PhpLoader.
  *
  * @since 2.0
  */
 class PhpLoader extends FileLoader
 {
     /**
-     * load
+     * load.
      *
      * @param string $file
      *
      * @throws \RuntimeException
-     * @return  null|string
+     *
+     * @return null|string
      */
     public function load($file)
     {

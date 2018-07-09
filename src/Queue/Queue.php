@@ -29,7 +29,8 @@ class Queue
     /**
      * For B/C use.
      *
-     * @var  callable
+     * @var callable
+     *
      * @since  3.3
      */
     protected $newInstanceHandler;
@@ -49,14 +50,14 @@ class Queue
     }
 
     /**
-     * push
+     * push.
      *
      * @param mixed  $job
      * @param int    $delay
      * @param string $queue
      * @param array  $options
      *
-     * @return  int|string
+     * @return int|string
      */
     public function push($job, $delay = 0, $queue = null, array $options = [])
     {
@@ -69,14 +70,14 @@ class Queue
     }
 
     /**
-     * pushRaw
+     * pushRaw.
      *
      * @param string|array $body
      * @param int          $delay
      * @param null         $queue
      * @param array        $options
      *
-     * @return  int|string
+     * @return int|string
      */
     public function pushRaw($body, $delay = 0, $queue = null, array $options = [])
     {
@@ -94,11 +95,11 @@ class Queue
     }
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
-     * @return  QueueMessage
+     * @return QueueMessage
      */
     public function pop($queue = null)
     {
@@ -106,11 +107,11 @@ class Queue
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|mixed $message
      *
-     * @return  void
+     * @return void
      */
     public function delete($message)
     {
@@ -125,12 +126,12 @@ class Queue
     }
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|mixed $message
      * @param int                $delay
      *
-     * @return  void
+     * @return void
      */
     public function release($message, $delay = 0)
     {
@@ -145,13 +146,14 @@ class Queue
     }
 
     /**
-     * getMessage
+     * getMessage.
      *
      * @param mixed $job
      * @param array $data
      *
-     * @return QueueMessage
      * @throws \InvalidArgumentException
+     *
+     * @return QueueMessage
      */
     public function getMessageByJob($job, array $data = [])
     {
@@ -169,12 +171,13 @@ class Queue
     }
 
     /**
-     * createJobInstance
+     * createJobInstance.
      *
      * @param mixed $job
      *
-     * @return  JobInterface
      * @throws \InvalidArgumentException
+     *
+     * @return JobInterface
      */
     protected function createJobInstance($job)
     {
@@ -212,9 +215,9 @@ class Queue
     }
 
     /**
-     * Method to get property Driver
+     * Method to get property Driver.
      *
-     * @return  QueueDriverInterface
+     * @return QueueDriverInterface
      */
     public function getDriver()
     {
@@ -222,11 +225,11 @@ class Queue
     }
 
     /**
-     * Method to set property driver
+     * Method to set property driver.
      *
-     * @param   QueueDriverInterface $driver
+     * @param QueueDriverInterface $driver
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDriver(QueueDriverInterface $driver)
     {
@@ -236,9 +239,9 @@ class Queue
     }
 
     /**
-     * Method to get property NewInstanceHandler
+     * Method to get property NewInstanceHandler.
      *
-     * @return  callable
+     * @return callable
      *
      * @since  3.3
      */
@@ -248,11 +251,11 @@ class Queue
     }
 
     /**
-     * Method to set property newInstanceHandler
+     * Method to set property newInstanceHandler.
      *
-     * @param   callable $newInstanceHandler
+     * @param callable $newInstanceHandler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since  3.3
      */

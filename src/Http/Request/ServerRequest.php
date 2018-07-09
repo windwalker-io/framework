@@ -44,58 +44,58 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
     /**
      * Property attributes.
      *
-     * @var  array
+     * @var array
      */
     protected $attributes;
 
     /**
      * Property cookieParams.
      *
-     * @var  array
+     * @var array
      */
     protected $cookieParams;
 
     /**
      * Property parsedBody.
      *
-     * @var  array
+     * @var array
      */
     protected $parsedBody;
 
     /**
      * Property queryParams.
      *
-     * @var  array
+     * @var array
      */
     protected $queryParams;
 
     /**
      * Property serverParams.
      *
-     * @var  array
+     * @var array
      */
     protected $serverParams;
 
     /**
      * Property uploadedFiles.
      *
-     * @var  UploadedFileInterface[]
+     * @var UploadedFileInterface[]
      */
     protected $uploadedFiles;
 
     /**
-     * Class init
+     * Class init.
      *
-     * @param   array                           $serverParams  Server parameters, typically from $_SERVER
-     * @param   UploadedFileInterface[]         $uploadedFiles Upload file information, a tree of UploadedFiles
-     * @param   string                          $uri           URI for the request, if any.
-     * @param   string                          $method        HTTP method for the request, if any.
-     * @param   string|resource|StreamInterface $body          Message body, if any.
-     * @param   array                           $headers       Headers for the message, if any.
-     * @param   array                           $cookies       Cookie values, typically is $_COOKIE.
-     * @param   array                           $queryParams   Http query, typically is $_GET.
-     * @param   string                          $parsedBody    Parsed body, typically is $_POST.
-     * @param   string                          $protocol      The protocol version, default is 1.1.
+     * @param array                           $serverParams  Server parameters, typically from $_SERVER
+     * @param UploadedFileInterface[]         $uploadedFiles Upload file information, a tree of UploadedFiles
+     * @param string                          $uri           URI for the request, if any.
+     * @param string                          $method        HTTP method for the request, if any.
+     * @param string|resource|StreamInterface $body          Message body, if any.
+     * @param array                           $headers       Headers for the message, if any.
+     * @param array                           $cookies       Cookie values, typically is $_COOKIE.
+     * @param array                           $queryParams   Http query, typically is $_GET.
+     * @param string                          $parsedBody    Parsed body, typically is $_POST.
+     * @param string                          $protocol      The protocol version, default is 1.1.
      */
     public function __construct(
         array $serverParams = [],
@@ -170,9 +170,9 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
      * immutability of the message, and MUST return an instance that has the
      * updated cookie values.
      *
-     * @param   array $cookies Array of key/value pairs representing cookies.
+     * @param array $cookies Array of key/value pairs representing cookies.
      *
-     * @return  static
+     * @return static
      */
     public function withCookieParams(array $cookies)
     {
@@ -242,7 +242,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
      * instantiation, or MAY be injected via withUploadedFiles().
      *
      * @return UploadedFileInterface[] An array tree of UploadedFileInterface instances; an empty
-     *     array MUST be returned if no data is present.
+     *                                 array MUST be returned if no data is present.
      */
     public function getUploadedFiles()
     {
@@ -256,10 +256,11 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
      * immutability of the message, and MUST return an instance that has the
      * updated body parameters.
      *
-     * @param  array $uploadedFiles An array tree of UploadedFileInterface instances.
+     * @param array $uploadedFiles An array tree of UploadedFileInterface instances.
+     *
+     * @throws \InvalidArgumentException if an invalid structure is provided.
      *
      * @return static
-     * @throws \InvalidArgumentException if an invalid structure is provided.
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
@@ -287,7 +288,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
      * the absence of body content.
      *
      * @return null|array|object The deserialized body parameters, if any.
-     *     These will typically be an array or object.
+     *                           These will typically be an array or object.
      */
     public function getParsedBody()
     {
@@ -319,9 +320,10 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface, M
      * @param null|array|object $data The deserialized body data. This will
      *                                typically be in an array or object.
      *
-     * @return static
      * @throws \InvalidArgumentException if an unsupported argument type is
-     *     provided.
+     *                                   provided.
+     *
+     * @return static
      */
     public function withParsedBody($data)
     {

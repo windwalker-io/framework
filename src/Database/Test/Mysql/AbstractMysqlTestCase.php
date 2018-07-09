@@ -21,14 +21,14 @@ abstract class AbstractMysqlTestCase extends AbstractDatabaseTestCase
     /**
      * Property driver.
      *
-     * @var  string
+     * @var string
      */
     protected static $driver = 'mysql';
 
     /**
      * Property quote.
      *
-     * @var  array
+     * @var array
      */
     protected static $quote = ['`', '`'];
 
@@ -70,6 +70,6 @@ abstract class AbstractMysqlTestCase extends AbstractDatabaseTestCase
             'NO_ZERO_IN_DATE',
         ];
 
-        $this->connection->exec("SET @@SESSION.sql_mode = '" . implode(',', $modes) . "';");
+        $this->connection->exec("SET @@SESSION.sql_mode = '".implode(',', $modes)."';");
     }
 }

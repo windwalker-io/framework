@@ -34,10 +34,10 @@ class PsrUri extends AbstractUri implements PsrUriInterface
     /**
      * Property standardSchemes.
      *
-     * @var  integer[]
+     * @var int[]
      */
     protected $standardSchemes = [
-        'http' => 80,
+        'http'  => 80,
         'https' => 443,
     ];
 
@@ -45,7 +45,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      * Constructor.
      * You can pass a URI string to the constructor to initialise a specific URI.
      *
-     * @param   string $uri The optional URI string
+     * @param string $uri The optional URI string
      *
      * @since   2.0
      */
@@ -75,7 +75,7 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * @see https://tools.ietf.org/html/rfc3986#section-3.2
      *
-     * @return  string  The URI authority, in "[user-info@]host[:port]" format.
+     * @return string The URI authority, in "[user-info@]host[:port]" format.
      */
     public function getAuthority()
     {
@@ -88,11 +88,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
         $userInfo = $this->getUserInfo();
 
         if ($userInfo) {
-            $authority = $userInfo . '@' . $authority;
+            $authority = $userInfo.'@'.$authority;
         }
 
         if (!$this->isStandardPort($this->scheme, $this->host, $this->port)) {
-            $authority .= ':' . $this->port;
+            $authority .= ':'.$this->port;
         }
 
         return $authority;
@@ -109,11 +109,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * An empty scheme is equivalent to removing the scheme.
      *
-     * @param   string $scheme The scheme to use with the new instance.
+     * @param string $scheme The scheme to use with the new instance.
      *
-     * @return  static  A new instance with the specified scheme.
+     * @throws \InvalidArgumentException for invalid or unsupported schemes.
      *
-     * @throws  \InvalidArgumentException for invalid or unsupported schemes.
+     * @return static A new instance with the specified scheme.
      */
     public function withScheme($scheme)
     {
@@ -139,10 +139,10 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      * user; an empty string for the user is equivalent to removing user
      * information.
      *
-     * @param  string $user     The user name to use for authority.
-     * @param  string $password The password associated with $user.
+     * @param string $user     The user name to use for authority.
+     * @param string $password The password associated with $user.
      *
-     * @return  static  A new instance with the specified user information.
+     * @return static A new instance with the specified user information.
      */
     public function withUserInfo($user, $password = null)
     {
@@ -169,11 +169,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * An empty host value is equivalent to removing the host.
      *
-     * @param   string $host The hostname to use with the new instance.
+     * @param string $host The hostname to use with the new instance.
      *
-     * @return  static  A new instance with the specified host.
+     * @throws \InvalidArgumentException for invalid hostnames.
      *
-     * @throws  \InvalidArgumentException for invalid hostnames.
+     * @return static A new instance with the specified host.
      */
     public function withHost($host)
     {
@@ -199,11 +199,12 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      * A null value provided for the port is equivalent to removing the port
      * information.
      *
-     * @param   int $port   The port to use with the new instance; a null value
-     *                      removes the port information.
+     * @param int $port The port to use with the new instance; a null value
+     *                  removes the port information.
      *
-     * @return  static  A new instance with the specified port.
-     * @throws  \InvalidArgumentException for invalid ports.
+     * @throws \InvalidArgumentException for invalid ports.
+     *
+     * @return static A new instance with the specified port.
      */
     public function withPort($port)
     {
@@ -243,10 +244,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      * Users can provide both encoded and decoded path characters.
      * Implementations ensure the correct encoding as outlined in getPath().
      *
-     * @param   string $path The path to use with the new instance.
+     * @param string $path The path to use with the new instance.
      *
-     * @return  static  A new instance with the specified path.
-     * @throws  \InvalidArgumentException for invalid paths.
+     * @throws \InvalidArgumentException for invalid paths.
+     *
+     * @return static A new instance with the specified path.
      */
     public function withPath($path)
     {
@@ -280,10 +282,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * An empty query string value is equivalent to removing the query string.
      *
-     * @param  string|array $query The query string to use with the new instance.
+     * @param string|array $query The query string to use with the new instance.
      *
-     * @return  static  A new instance with the specified query string.
-     * @throws  \InvalidArgumentException for invalid query strings.
+     * @throws \InvalidArgumentException for invalid query strings.
+     *
+     * @return static A new instance with the specified query string.
      */
     public function withQuery($query)
     {
@@ -311,9 +314,9 @@ class PsrUri extends AbstractUri implements PsrUriInterface
      *
      * An empty fragment value is equivalent to removing the fragment.
      *
-     * @param   string $fragment The fragment to use with the new instance.
+     * @param string $fragment The fragment to use with the new instance.
      *
-     * @return  static  A new instance with the specified fragment.
+     * @return static A new instance with the specified fragment.
      */
     public function withFragment($fragment)
     {
@@ -332,11 +335,11 @@ class PsrUri extends AbstractUri implements PsrUriInterface
     /**
      * Is a given port non-standard for the current scheme?
      *
-     * @param  string $scheme
-     * @param  string $host
-     * @param  int    $port
+     * @param string $scheme
+     * @param string $host
+     * @param int    $port
      *
-     * @return  boolean
+     * @return bool
      */
     protected function isStandardPort($scheme, $host, $port)
     {
@@ -348,6 +351,6 @@ class PsrUri extends AbstractUri implements PsrUriInterface
             return true;
         }
 
-        return (isset($this->standardSchemes[$scheme]) && $port == $this->standardSchemes[$scheme]);
+        return isset($this->standardSchemes[$scheme]) && $port == $this->standardSchemes[$scheme];
     }
 }

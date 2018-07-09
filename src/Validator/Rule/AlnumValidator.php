@@ -18,14 +18,14 @@ class AlnumValidator extends RegexValidator
     /**
      * The regular expression to use in testing value.
      *
-     * @var  string
+     * @var string
      */
     protected $regex = '^[a-zA-Z0-9]*$';
 
     /**
      * The regular expression modifiers to use when testing a value.
      *
-     * @var  string
+     * @var string
      */
     protected $modifiers = 'i';
 }

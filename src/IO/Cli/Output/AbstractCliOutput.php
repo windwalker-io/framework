@@ -9,7 +9,7 @@
 namespace Windwalker\IO\Cli\Output;
 
 /**
- * Class AbstractCliOutput
+ * Class AbstractCliOutput.
  *
  * @since 2.0
  */
@@ -18,21 +18,21 @@ abstract class AbstractCliOutput implements CliOutputInterface
     /**
      * Property outStream.
      *
-     * @var  resource
+     * @var resource
      */
     protected $outputStream = STDOUT;
 
     /**
      * Property errorStream.
      *
-     * @var  resource
+     * @var resource
      */
     protected $errorStream = STDERR;
 
     /**
-     * getOutStream
+     * getOutStream.
      *
-     * @return  resource
+     * @return resource
      */
     public function getOutputStream()
     {
@@ -40,11 +40,11 @@ abstract class AbstractCliOutput implements CliOutputInterface
     }
 
     /**
-     * setOutStream
+     * setOutStream.
      *
-     * @param   resource $outStream
+     * @param resource $outStream
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOutputStream($outStream)
     {
@@ -54,9 +54,9 @@ abstract class AbstractCliOutput implements CliOutputInterface
     }
 
     /**
-     * Method to get property ErrorStream
+     * Method to get property ErrorStream.
      *
-     * @return  resource
+     * @return resource
      */
     public function getErrorStream()
     {
@@ -64,11 +64,11 @@ abstract class AbstractCliOutput implements CliOutputInterface
     }
 
     /**
-     * Method to set property errorStream
+     * Method to set property errorStream.
      *
-     * @param   resource $errorStream
+     * @param resource $errorStream
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setErrorStream($errorStream)
     {

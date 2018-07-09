@@ -25,7 +25,7 @@ class BinaryMatcher extends AbstractMatcher
      * @param string $method
      * @param array  $options
      *
-     * @return  Route|false
+     * @return Route|false
      */
     public function match($route, $method = 'GET', $options = [])
     {
@@ -62,11 +62,11 @@ class BinaryMatcher extends AbstractMatcher
     }
 
     /**
-     * buildRouteMaps
+     * buildRouteMaps.
      *
      * @param bool $refresh
      *
-     * @return  static
+     * @return static
      */
     protected function buildRouteMaps($refresh = false)
     {

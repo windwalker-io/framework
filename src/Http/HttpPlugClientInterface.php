@@ -16,17 +16,17 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @since  3.0.1
  */
-interface HttpClient
+interface HttpPlugClientInterface
 {
     /**
      * Sends a PSR-7 request.
      *
      * @param RequestInterface $request
      *
-     * @return ResponseInterface
-     *
      * @throws \Http\Client\Exception If an error happens during processing the request.
      * @throws \Exception             If processing the request is impossible (eg. bad configuration).
+     *
+     * @return ResponseInterface
      */
     public function sendRequest(RequestInterface $request);
 }

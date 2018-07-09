@@ -11,7 +11,7 @@ namespace Windwalker\Query\Oracle;
 use Windwalker\Query\QueryExpression;
 
 /**
- * Class OracleExpression
+ * Class OracleExpression.
  *
  * @since 2.0
  */

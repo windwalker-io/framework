@@ -11,7 +11,7 @@ namespace Windwalker\Query;
 use Windwalker\Query\Query\PreparableInterface;
 
 /**
- * Class AbstractQuery
+ * Class AbstractQuery.
  *
  * @since 2.0
  */
@@ -20,14 +20,15 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = '';
 
     /**
      * The database driver.
      *
-     * @var    \PDO
+     * @var \PDO
+     *
      * @since  2.0
      */
     protected $connection = null;
@@ -35,7 +36,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The SQL query (if a direct query string was provided).
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $sql = null;
@@ -43,7 +45,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The query type.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $type = null;
@@ -51,7 +54,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The query element for a generic query (type = null).
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $element = null;
@@ -59,7 +63,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The select element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $select = null;
@@ -67,7 +72,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The delete element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $delete = null;
@@ -75,7 +81,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The update element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $update = null;
@@ -83,7 +90,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The insert element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $insert = null;
@@ -91,7 +99,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The from element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $from = null;
@@ -99,7 +108,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The join element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $join = null;
@@ -107,7 +117,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The set element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $set = null;
@@ -115,7 +126,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The where element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $where = null;
@@ -123,7 +135,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The group by element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $group = null;
@@ -131,7 +144,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The having element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $having = null;
@@ -139,7 +153,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The column list for an INSERT statement.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $columns = null;
@@ -147,7 +162,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The values list for an INSERT statement.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $values = null;
@@ -155,7 +171,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The order element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $order = null;
@@ -163,7 +180,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The offset for the result set.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $offset;
@@ -171,7 +189,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The limit for the result set.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $limit;
@@ -179,7 +198,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The query suffix string.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  3.2.7
      */
     protected $suffix;
@@ -187,7 +207,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The auto increment insert field element.
      *
-     * @var    object
+     * @var object
+     *
      * @since  2.0
      */
     protected $autoIncrementField = null;
@@ -195,7 +216,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The call element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $call = null;
@@ -203,7 +225,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The exec element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $exec = null;
@@ -211,7 +234,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The union element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $union = null;
@@ -219,7 +243,8 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * The unionAll element.
      *
-     * @var    QueryElement
+     * @var QueryElement
+     *
      * @since  2.0
      */
     protected $unionAll = null;
@@ -227,7 +252,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Property dateFormat.
      *
-     * @var  string
+     * @var string
      */
     protected $dateFormat = 'Y-m-d H:i:s';
 
@@ -235,7 +260,8 @@ class Query implements QueryInterface, PreparableInterface
      * The null or zero representation of a timestamp for the database driver.  This should be
      * defined in child classes to hold the appropriate value for the engine.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nullDate = '0000-00-00 00:00:00';
@@ -243,21 +269,22 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Property nameQuote.
      *
-     * @var  string
+     * @var string
      */
     protected $nameQuote = '"';
 
     /**
      * Property expression.
      *
-     * @var  QueryExpression
+     * @var QueryExpression
      */
     protected $expression = null;
 
     /**
      * Holds key / value pair of bound objects.
      *
-     * @var    mixed
+     * @var mixed
+     *
      * @since  2.0
      */
     protected $bounded = [];
@@ -265,7 +292,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Class constructor.
      *
-     * @param   \PDO $connection The PDO connection object to help us escape string.
+     * @param \PDO $connection The PDO connection object to help us escape string.
      *
      * @since   2.0
      */
@@ -277,7 +304,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Magic function to convert the query to a string.
      *
-     * @return  string    The completed query.
+     * @return string The completed query.
      *
      * @since   2.0
      */
@@ -289,7 +316,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Convert the query to a string.
      *
-     * @return  string    The completed query.
+     * @return string The completed query.
      *
      * @since   2.0
      */
@@ -410,7 +437,7 @@ class Query implements QueryInterface, PreparableInterface
         $query = $this->processLimit($query, $this->limit, $this->offset);
 
         if ($this->suffix) {
-            $query .= ' ' . (string) $this->suffix;
+            $query .= ' '.(string) $this->suffix;
         }
 
         return $query;
@@ -419,9 +446,9 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Get clause  value.
      *
-     * @param   string $clause Get query clause.
+     * @param string $clause Get query clause.
      *
-     * @return  QueryElement|mixed
+     * @return QueryElement|mixed
      */
     public function get($clause)
     {
@@ -429,11 +456,11 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Magic function to get protected variable value
+     * Magic function to get protected variable value.
      *
-     * @param   string $name The name of the variable.
+     * @param string $name The name of the variable.
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -452,9 +479,9 @@ class Query implements QueryInterface, PreparableInterface
      * $query->call('a.*')->call('b.id');
      * $query->call(array('a.*', 'b.id'));
      *
-     * @param   mixed $columns A string or an array of field names.
+     * @param mixed $columns A string or an array of field names.
      *
-     * @return  static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -474,9 +501,9 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Clear data from the query or a specific clause of the query.
      *
-     * @param   string|array $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
+     * @param string|array $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -605,9 +632,9 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Adds a column, or array of column names that would be used for an INSERT INTO statement.
      *
-     * @param   mixed $columns A column name, or array of column names.
+     * @param mixed $columns A column name, or array of column names.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -628,10 +655,11 @@ class Query implements QueryInterface, PreparableInterface
      * This method is provided for use where the query object is passed to a function for modification.
      * If you have direct access to the database object, it is recommended you use the getDateFormat method directly.
      *
-     * @return  string  The format string.
+     * @throws \RuntimeException
+     *
+     * @return string The format string.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function dateFormat()
     {
@@ -644,13 +672,13 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * echo $query->dump();
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
     public function dump()
     {
-        return '<pre class="windwalker-db-query">' . $this . '</pre>';
+        return '<pre class="windwalker-db-query">'.$this.'</pre>';
     }
 
     /**
@@ -661,9 +689,9 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->delete('#__a')->where('id = 1');
      *
-     * @param   string $table The name of the table to delete from.
+     * @param string $table The name of the table to delete from.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -687,13 +715,14 @@ class Query implements QueryInterface, PreparableInterface
      *
      * Note that 'e' is an alias for this method as it is in JDatabaseDatabaseDriver.
      *
-     * @param   string  $text  The string to be escaped.
-     * @param   boolean $extra Optional parameter to provide extra escaping.
+     * @param string $text  The string to be escaped.
+     * @param bool   $extra Optional parameter to provide extra escaping.
      *
-     * @return  string  The escaped string.
+     * @throws \RuntimeException if the internal db property is not a valid object.
+     *
+     * @return string The escaped string.
      *
      * @since   2.0
-     * @throws  \RuntimeException if the internal db property is not a valid object.
      */
     public function escape($text, $extra = false)
     {
@@ -721,7 +750,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @param string $text
      *
-     * @return  string  The escaped string.
+     * @return string The escaped string.
      */
     protected function escapeWithNoConnection($text)
     {
@@ -737,10 +766,10 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Proxy of escape.
      *
-     * @param   string  $text  The string to be escaped.
-     * @param   boolean $extra Optional parameter to provide extra escaping.
+     * @param string $text  The string to be escaped.
+     * @param bool   $extra Optional parameter to provide extra escaping.
      *
-     * @return  string  The escaped string.
+     * @return string The escaped string.
      */
     public function e($text, $extra = false)
     {
@@ -757,9 +786,9 @@ class Query implements QueryInterface, PreparableInterface
      * $query->exec('a.*')->exec('b.id');
      * $query->exec(array('a.*', 'b.id'));
      *
-     * @param   mixed $columns A string or an array of field names.
+     * @param mixed $columns A string or an array of field names.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -784,16 +813,17 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->select('*')->from('#__a');
      *
-     * @param   mixed  $tables          A string or array of table names.
-     *                                  This can be a JDatabaseQuery object (or a child of it) when used
-     *                                  as a subquery in FROM clause along with a value for $subQueryAlias.
-     * @param   string $subQueryAlias   Alias used when $tables is a JDatabaseQuery.
+     * @param mixed  $tables        A string or array of table names.
+     *                              This can be a JDatabaseQuery object (or a child of it) when used
+     *                              as a subquery in FROM clause along with a value for $subQueryAlias.
+     * @param string $subQueryAlias Alias used when $tables is a JDatabaseQuery.
      *
-     * @return static  Returns this object to allow chaining.
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     *
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
-     * @throws  \InvalidArgumentException
-     * @throws  \RuntimeException
      */
     public function from($tables, $subQueryAlias = null)
     {
@@ -802,7 +832,7 @@ class Query implements QueryInterface, PreparableInterface
                 throw new \InvalidArgumentException('Invalid subquery.');
             }
 
-            $tables = PHP_EOL . '(' . trim((string) $tables) . ') AS ' . $subQueryAlias;
+            $tables = PHP_EOL.'('.trim((string) $tables).') AS '.$subQueryAlias;
         }
 
         if (is_null($this->from)) {
@@ -815,11 +845,11 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * expression
+     * expression.
      *
      * @param string $name
      *
-     * @return  string
+     * @return string
      */
     public function expression($name)
     {
@@ -831,9 +861,9 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Alias of expression()
+     * Alias of expression().
      *
-     * @return  mixed
+     * @return mixed
      */
     public function expr()
     {
@@ -841,11 +871,11 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * wrapExpression
+     * wrapExpression.
      *
      * @param mixed $content
      *
-     * @return  ExpressionWrapper
+     * @return ExpressionWrapper
      *
      * @since  3.3
      */
@@ -855,13 +885,13 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * element
+     * element.
      *
-     * @param   string $name     The name of the element.
-     * @param   mixed  $elements String or array.
-     * @param   string $glue     The glue for elements.
+     * @param string $name     The name of the element.
+     * @param mixed  $elements String or array.
+     * @param string $glue     The glue for elements.
      *
-     * @return  QueryElement
+     * @return QueryElement
      */
     public function element($name, $elements, $glue = ',')
     {
@@ -869,13 +899,13 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * ele
+     * ele.
      *
-     * @param   string $name     The name of the element.
-     * @param   mixed  $elements String or array.
-     * @param   string $glue     The glue for elements.
+     * @param string $name     The name of the element.
+     * @param mixed  $elements String or array.
+     * @param string $glue     The glue for elements.
      *
-     * @return  QueryElement
+     * @return QueryElement
      */
     public function ele($name, $elements, $glue = ',')
     {
@@ -888,9 +918,9 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->group('id');
      *
-     * @param   mixed $columns A string or array of ordering columns.
+     * @param mixed $columns A string or array of ordering columns.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -911,17 +941,17 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->group('id')->having('COUNT(id) > 5');
      *
-     * @param   mixed $conditions A string or array of columns.
-     * @param   mixed ...$args    Support more arguments to format query.
+     * @param mixed $conditions A string or array of columns.
+     * @param mixed ...$args    Support more arguments to format query.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
     public function having($conditions)
     {
         if (null === $this->having) {
-            $this->having = $this->element('HAVING', [], " AND ");
+            $this->having = $this->element('HAVING', [], ' AND ');
         }
 
         $args = func_get_args();
@@ -949,9 +979,9 @@ class Query implements QueryInterface, PreparableInterface
      * Result:
      * HAVING ... AND (a < 5 OR b > 6)
      *
-     * @param   mixed|callable $conditions A string, array of where conditions or callback to support logic.
+     * @param mixed|callable $conditions A string, array of where conditions or callback to support logic.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   3.0
      */
@@ -990,7 +1020,7 @@ class Query implements QueryInterface, PreparableInterface
      * @param array|string $table     The table name with alias.
      * @param array|string $condition The join condition.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1011,10 +1041,10 @@ class Query implements QueryInterface, PreparableInterface
      * $query->insert('#__a')->columns('id, title')->values('1,2')->values('3,4');
      * $query->insert('#__a')->columns('id, title')->values(array('1,2', '3,4'));
      *
-     * @param   mixed   $table          The name of the table to insert data into.
-     * @param   boolean $incrementField The name of the field to auto increment.
+     * @param mixed $table          The name of the table to insert data into.
+     * @param bool  $incrementField The name of the field to auto increment.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1033,11 +1063,11 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->join('INNER', 'table AS b', 'b.id = a.id');
      *
-     * @param   string       $type       The type of join. This string is prepended to the JOIN keyword.
-     * @param   string       $table      The table name with alias.
-     * @param   string|array $conditions A string or array of conditions.
+     * @param string       $type       The type of join. This string is prepended to the JOIN keyword.
+     * @param string       $table      The table name with alias.
+     * @param string|array $conditions A string or array of conditions.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1048,10 +1078,10 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         if (is_string($table)) {
-            $table = $table . ($conditions ? ' ON ' . implode(' AND ', (array) $conditions) : '');
+            $table = $table.($conditions ? ' ON '.implode(' AND ', (array) $conditions) : '');
         }
 
-        $this->join[] = $this->element(strtoupper($type) . ' JOIN', (array) $table);
+        $this->join[] = $this->element(strtoupper($type).' JOIN', (array) $table);
 
         return $this;
     }
@@ -1065,7 +1095,7 @@ class Query implements QueryInterface, PreparableInterface
      * @param array|string $table     The table name with alias.
      * @param array|string $condition The join condition.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1085,12 +1115,13 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->where('modified_date <> '.$query->nullDate());
      *
-     * @param   boolean $quoted Optionally wraps the null date in database quotes (true by default).
+     * @param bool $quoted Optionally wraps the null date in database quotes (true by default).
      *
-     * @return  string  Null or zero representation of a timestamp.
+     * @throws \RuntimeException
+     *
+     * @return string Null or zero representation of a timestamp.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function nullDate($quoted = true)
     {
@@ -1104,9 +1135,9 @@ class Query implements QueryInterface, PreparableInterface
      * $query->order('foo')->order('bar');
      * $query->order(array('foo','bar'));
      *
-     * @param   mixed $columns A string or array of ordering columns.
+     * @param mixed $columns A string or array of ordering columns.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1128,8 +1159,8 @@ class Query implements QueryInterface, PreparableInterface
      * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
      * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
      *
-     * @param   integer $limit  The limit for the result set
-     * @param   integer $offset The offset for the result set
+     * @param int $limit  The limit for the result set
+     * @param int $offset The offset for the result set
      *
      * @return static Returns this object to allow chaining.
      *
@@ -1148,19 +1179,20 @@ class Query implements QueryInterface, PreparableInterface
      * additions to make the query limited to a particular number of
      * results, or start at a particular offset.
      *
-     * @param   string  $query  The query in string format
-     * @param   integer $limit  The limit for the result set
-     * @param   integer $offset The offset for the result set
+     * @param string $query  The query in string format
+     * @param int    $limit  The limit for the result set
+     * @param int    $offset The offset for the result set
      *
      * @return string
+     *
      * @since   2.0
      */
     public function processLimit($query, $limit, $offset = null)
     {
         if ($limit && $offset === null) {
-            $query .= ' LIMIT ' . (int) $limit;
+            $query .= ' LIMIT '.(int) $limit;
         } elseif ($limit) {
-            $query .= ' LIMIT ' . (int) $offset . ', ' . (int) $limit;
+            $query .= ' LIMIT '.(int) $offset.', '.(int) $limit;
         }
 
         return $query;
@@ -1175,7 +1207,7 @@ class Query implements QueryInterface, PreparableInterface
      * @param array|string $table     The table name with alias.
      * @param array|string $condition The join condition.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1199,13 +1231,14 @@ class Query implements QueryInterface, PreparableInterface
      * $query->q('fulltext');
      * $query->q(array('option', 'fulltext'));
      *
-     * @param   mixed   $text   A string or an array of strings to quote.
-     * @param   boolean $escape True to escape the string, false to leave it unchanged.
+     * @param mixed $text   A string or an array of strings to quote.
+     * @param bool  $escape True to escape the string, false to leave it unchanged.
      *
-     * @return  string  The quoted input string.
+     * @throws \RuntimeException if the internal db property is not a valid object.
+     *
+     * @return string The quoted input string.
      *
      * @since   2.0
-     * @throws  \RuntimeException if the internal db property is not a valid object.
      */
     public function quote($text, $escape = true)
     {
@@ -1227,16 +1260,16 @@ class Query implements QueryInterface, PreparableInterface
             return $text;
         }
 
-        return '\'' . ($escape ? $this->escape($text) : $text) . '\'';
+        return '\''.($escape ? $this->escape($text) : $text).'\'';
     }
 
     /**
      * Proxy of quote().
      *
-     * @param   mixed   $text   A string or an array of strings to quote.
-     * @param   boolean $escape True to escape the string, false to leave it unchanged.
+     * @param mixed $text   A string or an array of strings to quote.
+     * @param bool  $escape True to escape the string, false to leave it unchanged.
      *
-     * @return  string
+     * @return string
      */
     public function q($text, $escape = true)
     {
@@ -1256,13 +1289,14 @@ class Query implements QueryInterface, PreparableInterface
      * $query->quoteName('#__a');
      * $query->qn('#__a');
      *
-     * @param   mixed $name   The identifier name to wrap in quotes, or an array of identifier names to wrap in quotes.
-     *                        Each type supports dot-notation name.
+     * @param mixed $name The identifier name to wrap in quotes, or an array of identifier names to wrap in quotes.
+     *                    Each type supports dot-notation name.
      *
-     * @return  mixed  The quote wrapped name, same type of $name.
+     * @throws \RuntimeException if the internal db property is not a valid object.
+     *
+     * @return mixed The quote wrapped name, same type of $name.
      *
      * @since   2.0
-     * @throws  \RuntimeException if the internal db property is not a valid object.
      */
     public function quoteName($name)
     {
@@ -1283,7 +1317,7 @@ class Query implements QueryInterface, PreparableInterface
 
             $quotedName = $this->quoteNameStr(explode('.', $name));
 
-            return $quotedName . ($quotedAlias ? ' AS ' . $quotedAlias : '');
+            return $quotedName.($quotedAlias ? ' AS '.$quotedAlias : '');
         }
 
         if (is_array($name) || is_object($name)) {
@@ -1302,10 +1336,10 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Proxy of quoteName().
      *
-     * @param   mixed $name   The identifier name to wrap in quotes, or an array of identifier names to wrap in quotes.
-     *                        Each type supports dot-notation name.
+     * @param mixed $name The identifier name to wrap in quotes, or an array of identifier names to wrap in quotes.
+     *                    Each type supports dot-notation name.
      *
-     * @return  mixed  The quote wrapped name, same type of $name.
+     * @return mixed The quote wrapped name, same type of $name.
      */
     public function qn($name)
     {
@@ -1315,9 +1349,9 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Quote strings coming from quoteName call.
      *
-     * @param   array $strArr Array of strings coming from quoteName dot-explosion.
+     * @param array $strArr Array of strings coming from quoteName dot-explosion.
      *
-     * @return  string  Dot-imploded string of quoted parts.
+     * @return string Dot-imploded string of quoted parts.
      *
      * @since   2.0
      */
@@ -1332,9 +1366,9 @@ class Query implements QueryInterface, PreparableInterface
             }
 
             if (strlen($q) == 1) {
-                $parts[] = $q . $part . $q;
+                $parts[] = $q.$part.$q;
             } else {
-                $parts[] = $q{0} . $part . $q{1};
+                $parts[] = $q[0].$part.$q[1];
             }
         }
 
@@ -1350,7 +1384,7 @@ class Query implements QueryInterface, PreparableInterface
      * @param array|string $table     The table name with alias.
      * @param array|string $condition The join condition.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1371,9 +1405,9 @@ class Query implements QueryInterface, PreparableInterface
      * $query->select('a.*')->select('b.id');
      * $query->select(array('a.*', 'b.id'));
      *
-     * @param   mixed $columns A string or an array of field names.
+     * @param mixed $columns A string or an array of field names.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1397,11 +1431,11 @@ class Query implements QueryInterface, PreparableInterface
      * $query->set('a = 1')->set('b = 2');
      * $query->set(array('a = 1', 'b = 2');
      *
-     * @param   mixed  $conditions   A string or array of string conditions.
-     * @param   string $glue         The glue by which to join the condition strings. Defaults to ,.
-     *                               Note that the glue is set on first use and cannot be changed.
+     * @param mixed  $conditions A string or array of string conditions.
+     * @param string $glue       The glue by which to join the condition strings. Defaults to ,.
+     *                           Note that the glue is set on first use and cannot be changed.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1409,7 +1443,7 @@ class Query implements QueryInterface, PreparableInterface
     {
         if (null === $this->set) {
             $glue = strtoupper($glue);
-            $this->set = $this->element('SET', $conditions, PHP_EOL . "\t$glue ");
+            $this->set = $this->element('SET', $conditions, PHP_EOL."\t$glue ");
         } else {
             $this->set->append($conditions);
         }
@@ -1424,9 +1458,9 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->setQuery('select * from #__users');
      *
-     * @param   mixed $sql A SQL query string or DatabaseQuery object
+     * @param mixed $sql A SQL query string or DatabaseQuery object
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1445,9 +1479,9 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->update('#__foo')->set(...);
      *
-     * @param   string $table A table to update.
+     * @param string $table A table to update.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1466,9 +1500,9 @@ class Query implements QueryInterface, PreparableInterface
      * $query->values('1,2,3')->values('4,5,6');
      * $query->values(array('1,2,3', '4,5,6'));
      *
-     * @param   string $values A single tuple, or array of tuples.
+     * @param string $values A single tuple, or array of tuples.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1483,7 +1517,7 @@ class Query implements QueryInterface, PreparableInterface
         }
 
         if (null === $this->values) {
-            $this->values = $this->element('()', $values, '),' . PHP_EOL . '(');
+            $this->values = $this->element('()', $values, '),'.PHP_EOL.'(');
         } else {
             $this->values->append($values);
         }
@@ -1499,10 +1533,10 @@ class Query implements QueryInterface, PreparableInterface
      * $query->where(array('a = 1', 'b = 2'));
      * $query->where('%n = %q', 'a', 'b');
      *
-     * @param   mixed $conditions A string or array of where conditions.
-     * @param   mixed ...$args    Support more arguments to format query.
+     * @param mixed $conditions A string or array of where conditions.
+     * @param mixed ...$args    Support more arguments to format query.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -1537,9 +1571,9 @@ class Query implements QueryInterface, PreparableInterface
      * Result:
      * WHERE ... AND (a < 5 OR b > 6)
      *
-     * @param   mixed|callable $conditions A string, array of where conditions or callback to support logic.
+     * @param mixed|callable $conditions A string, array of where conditions or callback to support logic.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   3.0
      */
@@ -1572,7 +1606,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Method to provide deep copy support to nested objects and arrays when cloning.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -1598,10 +1632,10 @@ class Query implements QueryInterface, PreparableInterface
      * $query->union('SELECT name FROM  #__foo','distinct')
      * $query->union(array('SELECT name FROM  #__foo', 'SELECT name FROM  #__bar'))
      *
-     * @param   mixed   $query    The Query object or string to union.
-     * @param   boolean $distinct True to only return distinct rows from the union.
+     * @param mixed $query    The Query object or string to union.
+     * @param bool  $distinct True to only return distinct rows from the union.
      *
-     * @return  mixed    The Query object on success or boolean false on failure.
+     * @return mixed The Query object on success or boolean false on failure.
      *
      * @since   2.0
      */
@@ -1618,17 +1652,16 @@ class Query implements QueryInterface, PreparableInterface
         // Set up the DISTINCT flag, the name with parentheses, and the glue.
         if ($distinct) {
             $name = '()';
-            $glue = ')' . PHP_EOL . 'UNION DISTINCT (';
+            $glue = ')'.PHP_EOL.'UNION DISTINCT (';
         } else {
             $name = '()';
-            $glue = ')' . PHP_EOL . 'UNION (';
+            $glue = ')'.PHP_EOL.'UNION (';
         }
 
         // Get the QueryElement if it does not exist
         if (null === $this->union) {
             $this->union = $this->element($name, $query, "$glue");
-        } else // Otherwise append the second UNION.
-        {
+        } else { // Otherwise append the second UNION.
             $this->union->append($query);
         }
 
@@ -1641,9 +1674,9 @@ class Query implements QueryInterface, PreparableInterface
      * Usage:
      * $query->unionDistinct('SELECT name FROM  #__foo')
      *
-     * @param   mixed $query The Query object or string to union.
+     * @param mixed $query The Query object or string to union.
      *
-     * @return  mixed   The Query object on success or boolean false on failure.
+     * @return mixed The Query object on success or boolean false on failure.
      *
      * @since   2.0
      */
@@ -1663,19 +1696,18 @@ class Query implements QueryInterface, PreparableInterface
      * $query->unionAll('SELECT name FROM  #__foo')
      * $query->unionAll(array('SELECT name FROM  #__foo','SELECT name FROM  #__bar'))
      *
-     * @param   mixed $query The Query object or string to union.
+     * @param mixed $query The Query object or string to union.
      *
-     * @return  mixed  The Query object on success or boolean false on failure.
+     * @return mixed The Query object on success or boolean false on failure.
      *
      * @see     union
-     *
      * @since   2.0
      */
     public function unionAll($query)
     {
         $this->type = 'union';
 
-        $glue = ')' . PHP_EOL . 'UNION ALL (';
+        $glue = ')'.PHP_EOL.'UNION ALL (';
 
         // Get the JDatabaseQueryElement if it does not exist
         if (null === $this->unionAll) {
@@ -1693,7 +1725,7 @@ class Query implements QueryInterface, PreparableInterface
      *
      * @param string $string
      *
-     * @return  static
+     * @return static
      *
      * @since   3.2.7
      */
@@ -1717,7 +1749,7 @@ class Query implements QueryInterface, PreparableInterface
     /**
      * Add FOR UPDATE after query string.
      *
-     * @return  static
+     * @return static
      *
      * @since   3.2.7
      */
@@ -1767,9 +1799,9 @@ class Query implements QueryInterface, PreparableInterface
      * The argument specifier is optional but recommended for clarity.
      * The argument index used for unspecified tokens is incremented only when used.
      *
-     * @param   string $format The formatting string.
+     * @param string $format The formatting string.
      *
-     * @return  string  Returns a string produced according to the formatting string.
+     * @return string Returns a string produced according to the formatting string.
      *
      * @note    This method is a modified version from Joomla.
      *
@@ -1895,7 +1927,7 @@ class Query implements QueryInterface, PreparableInterface
             return '';
         };
 
-        /**
+        /*
          * Regexp to find an replace all tokens.
          * Matched fields:
          * 0: Full token
@@ -1910,9 +1942,9 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * getName
+     * getName.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -1920,9 +1952,9 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * getExpression
+     * getExpression.
      *
-     * @return  QueryExpression
+     * @return QueryExpression
      */
     public function getExpression()
     {
@@ -1930,21 +1962,21 @@ class Query implements QueryInterface, PreparableInterface
             return $this->expression;
         }
 
-        $class = __NAMESPACE__ . '\\' . ucfirst($this->getName()) . '\\' . ucfirst($this->getName()) . 'Expression';
+        $class = __NAMESPACE__.'\\'.ucfirst($this->getName()).'\\'.ucfirst($this->getName()).'Expression';
 
         if (!class_exists($class)) {
-            $class = __NAMESPACE__ . '\\' . 'QueryExpression';
+            $class = __NAMESPACE__.'\\'.'QueryExpression';
         }
 
         return $this->expression = new $class($this);
     }
 
     /**
-     * setExpression
+     * setExpression.
      *
-     * @param   \Windwalker\Query\QueryExpression $expression
+     * @param \Windwalker\Query\QueryExpression $expression
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setExpression(QueryExpression $expression)
     {
@@ -1954,9 +1986,9 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Method to get property Connection
+     * Method to get property Connection.
      *
-     * @return  \PDO
+     * @return \PDO
      */
     public function &getConnection()
     {
@@ -1964,11 +1996,11 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Method to set property connection
+     * Method to set property connection.
      *
-     * @param   \PDO $connection
+     * @param \PDO $connection
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setConnection(&$connection)
     {
@@ -1982,17 +2014,17 @@ class Query implements QueryInterface, PreparableInterface
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param   string|integer|array $key            The key that will be used in your SQL query to reference the
-     *                                               value. Usually of the form ':key', but can also be an integer.
-     * @param   mixed                &$value         The value that will be bound. The value is passed by reference to
-     *                                               support output parameters such as those possible with stored
-     *                                               procedures.
-     * @param   integer              $dataType       Constant corresponding to a SQL datatype.
-     * @param   integer              $length         The length of the variable. Usually required for OUTPUT
-     *                                               parameters.
-     * @param   array                $driverOptions  Optional driver options to be used.
+     * @param string|int|array $key           The key that will be used in your SQL query to reference the
+     *                                        value. Usually of the form ':key', but can also be an integer.
+     * @param mixed            &$value        The value that will be bound. The value is passed by reference to
+     *                                        support output parameters such as those possible with stored
+     *                                        procedures.
+     * @param int              $dataType      Constant corresponding to a SQL datatype.
+     * @param int              $length        The length of the variable. Usually required for OUTPUT
+     *                                        parameters.
+     * @param array            $driverOptions Optional driver options to be used.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -2040,9 +2072,9 @@ class Query implements QueryInterface, PreparableInterface
      * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then
      * that item is returned.
      *
-     * @param   mixed $key The bounded variable key to retrieve.
+     * @param mixed $key The bounded variable key to retrieve.
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -2055,14 +2087,12 @@ class Query implements QueryInterface, PreparableInterface
         if (isset($this->bounded[$key])) {
             return $this->bounded[$key];
         }
-
-        return null;
     }
 
     /**
-     * Method to get property DateFormat
+     * Method to get property DateFormat.
      *
-     * @return  string
+     * @return string
      */
     public function getDateFormat()
     {
@@ -2070,11 +2100,11 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Method to set property dateFormat
+     * Method to set property dateFormat.
      *
-     * @param   string $dateFormat
+     * @param string $dateFormat
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDateFormat($dateFormat)
     {
@@ -2084,9 +2114,9 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Method to get property NullDate
+     * Method to get property NullDate.
      *
-     * @return  string
+     * @return string
      */
     public function getNullDate()
     {
@@ -2094,11 +2124,11 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Method to set property nullDate
+     * Method to set property nullDate.
      *
-     * @param   string $nullDate
+     * @param string $nullDate
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setNullDate($nullDate)
     {
@@ -2108,12 +2138,12 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * getValidValue
+     * getValidValue.
      *
      * @param string $value
      * @param bool   $allowExpression
      *
-     * @return  float|int|string
+     * @return float|int|string
      */
     public function validValue($value, $allowExpression = false)
     {
@@ -2121,8 +2151,8 @@ class Query implements QueryInterface, PreparableInterface
             return 'NULL';
         } elseif ($value instanceof ExpressionWrapper) {
             return $value->getContent();
-        } elseif (is_float($value) || is_double($value)) {
-            return (double) $value;
+        } elseif (is_float($value) || is_float($value)) {
+            return (float) $value;
         } elseif (is_numeric($value)) {
             return (int) $value;
         }
@@ -2135,11 +2165,11 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * getValidDatetime
+     * getValidDatetime.
      *
-     * @param   string $string
+     * @param string $string
      *
-     * @return  string
+     * @return string
      */
     public function validDatetime($string)
     {
@@ -2149,9 +2179,9 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * getBuilder
+     * getBuilder.
      *
-     * @return  QueryGrammarInterface
+     * @return QueryGrammarInterface
      */
     public function getGrammar()
     {
@@ -2159,7 +2189,7 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Unsetting PDO connection before going to sleep (this is needed if the query gets serialized)
+     * Unsetting PDO connection before going to sleep (this is needed if the query gets serialized).
      */
     public function __sleep()
     {
@@ -2167,7 +2197,7 @@ class Query implements QueryInterface, PreparableInterface
     }
 
     /**
-     * Trying to re-retrieve the pdo connection after waking up
+     * Trying to re-retrieve the pdo connection after waking up.
      */
     public function __wakeup()
     {

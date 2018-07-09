@@ -27,53 +27,53 @@ class StringStream extends Stream implements StreamInterface
     /**
      * Property position.
      *
-     * @var  integer
+     * @var int
      */
     protected $pointer = 0;
 
     /**
      * Property pointer.
      *
-     * @var  integer
+     * @var int
      */
     protected $readPosition = 0;
 
     /**
      * Property metadata.
      *
-     * @var  array
+     * @var array
      */
     private $metadata = [
         'wrapper_type' => 'string',
-        'stream_type' => 'STDIO',
-        'mode' => 'r+b',
+        'stream_type'  => 'STDIO',
+        'mode'         => 'r+b',
         'unread_bytes' => 0,
-        'seekable' => true,
-        'uri' => '',
-        'timed_out' => false,
-        'blocked' => true,
-        'eof' => false,
+        'seekable'     => true,
+        'uri'          => '',
+        'timed_out'    => false,
+        'blocked'      => true,
+        'eof'          => false,
     ];
 
     /**
      * Property seekable.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $seekable = true;
 
     /**
      * Property writable.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $writable = true;
 
     /**
      * Class init.
      *
-     * @param  string $stream The stream resource cursor.
-     * @param  string $mode   Mode with which to open stream
+     * @param string $stream The stream resource cursor.
+     * @param string $mode   Mode with which to open stream
      */
     public function __construct($stream = '', $mode = 'rb+')
     {
@@ -93,10 +93,10 @@ class StringStream extends Stream implements StreamInterface
     /**
      * Method to attach resource into object.
      *
-     * @param   string|resource $stream The stream resource cursor.
-     * @param   string          $mode   Mode with which to open stream
+     * @param string|resource $stream The stream resource cursor.
+     * @param string          $mode   Mode with which to open stream
      *
-     * @return  static Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function attach($stream, $mode = 'rb+')
     {
@@ -147,17 +147,18 @@ class StringStream extends Stream implements StreamInterface
     public function getSize()
     {
         if ($this->resource === null) {
-            return null;
+            return;
         }
 
         return strlen($this->resource);
     }
 
     /**
-     * Returns the current position of the file read/write pointer
+     * Returns the current position of the file read/write pointer.
+     *
+     * @throws \RuntimeException on error.
      *
      * @return int Position of the file pointer
-     * @throws \RuntimeException on error.
      */
     public function tell()
     {
@@ -200,9 +201,9 @@ class StringStream extends Stream implements StreamInterface
      *                    offset bytes SEEK_CUR: Set position to current location plus offset
      *                    SEEK_END: Set position to end-of-stream plus offset.
      *
-     * @return boolean
-     *
      * @throws \RuntimeException on failure.
+     *
+     * @return bool
      */
     public function seek($offset, $whence = SEEK_SET)
     {
@@ -234,6 +235,7 @@ class StringStream extends Stream implements StreamInterface
      *
      * @see  seek()
      * @link http://www.php.net/manual/en/function.fseek.php
+     *
      * @throws \RuntimeException on failure.
      */
     public function rewind()
@@ -258,8 +260,9 @@ class StringStream extends Stream implements StreamInterface
      *
      * @param string $string The string that is to be written.
      *
-     * @return int Returns the number of bytes written to the stream.
      * @throws \RuntimeException on failure.
+     *
+     * @return int Returns the number of bytes written to the stream.
      */
     public function write($string)
     {
@@ -268,9 +271,9 @@ class StringStream extends Stream implements StreamInterface
         $start = substr($this->resource, 0, $this->pointer);
         $end = substr($this->resource, $this->pointer + $length);
 
-        $this->resource = $start . $string . $end;
+        $this->resource = $start.$string.$end;
 
-        $this->pointer = strlen($start . $string);
+        $this->pointer = strlen($start.$string);
 
         return $string;
     }
@@ -292,9 +295,10 @@ class StringStream extends Stream implements StreamInterface
      *                    them. Fewer than $length bytes may be returned if underlying stream
      *                    call returns fewer bytes.
      *
-     * @return string Returns the data read from the stream, or an empty string
-     *     if no bytes are available.
      * @throws \RuntimeException if an error occurs.
+     *
+     * @return string Returns the data read from the stream, or an empty string
+     *                if no bytes are available.
      */
     public function read($length)
     {
@@ -309,11 +313,12 @@ class StringStream extends Stream implements StreamInterface
     }
 
     /**
-     * Returns the remaining contents in a string
+     * Returns the remaining contents in a string.
+     *
+     * @throws \RuntimeException if unable to read or an error occurs while
+     *                           reading.
      *
      * @return string
-     * @throws \RuntimeException if unable to read or an error occurs while
-     *     reading.
      */
     public function getContents()
     {
@@ -341,8 +346,8 @@ class StringStream extends Stream implements StreamInterface
      * @param string $key Specific metadata to retrieve.
      *
      * @return array|mixed|null Returns an associative array if no key is
-     *     provided. Returns a specific key value if a key is provided and the
-     *     value is found, or null if the key is not found.
+     *                          provided. Returns a specific key value if a key is provided and the
+     *                          value is found, or null if the key is not found.
      */
     public function getMetadata($key = null)
     {
@@ -362,16 +367,16 @@ class StringStream extends Stream implements StreamInterface
         }
 
         if (!array_key_exists($key, $metadata)) {
-            return null;
+            return;
         }
 
         return $metadata[$key];
     }
 
     /**
-     * Method to get property Resource
+     * Method to get property Resource.
      *
-     * @return  resource
+     * @return resource
      */
     public function getResource()
     {
@@ -379,11 +384,11 @@ class StringStream extends Stream implements StreamInterface
     }
 
     /**
-     * Method to set property seekable
+     * Method to set property seekable.
      *
-     * @param   boolean $seekable
+     * @param bool $seekable
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function seekable($seekable)
     {
@@ -393,11 +398,11 @@ class StringStream extends Stream implements StreamInterface
     }
 
     /**
-     * Method to set property writable
+     * Method to set property writable.
      *
-     * @param   boolean $writable
+     * @param bool $writable
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function writable($writable)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Filesystem\Exception\FilesystemException;
 use Windwalker\Filesystem\File;
 
 /**
- * Test class of File
+ * Test class of File.
  *
  * @since 2.0
  */
@@ -31,9 +31,9 @@ class FileTest extends AbstractFilesystemTest
 
         $this->assertEquals('Wu-la', $name);
 
-        $name = File::stripExtension(__DIR__ . '/Wu-la.la');
+        $name = File::stripExtension(__DIR__.'/Wu-la.la');
 
-        $this->assertEquals(__DIR__ . '/Wu-la', $name);
+        $this->assertEquals(__DIR__.'/Wu-la', $name);
     }
 
     /**
@@ -59,7 +59,7 @@ class FileTest extends AbstractFilesystemTest
      */
     public function testGetFilename()
     {
-        $name = File::getFilename(__DIR__ . '/Wu-la.la');
+        $name = File::getFilename(__DIR__.'/Wu-la.la');
 
         $this->assertEquals('Wu-la.la', $name);
     }
@@ -67,7 +67,7 @@ class FileTest extends AbstractFilesystemTest
     /**
      * Provides the data to test the makeSafe method.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -116,10 +116,10 @@ class FileTest extends AbstractFilesystemTest
     /**
      * Method to test makeSafe().
      *
-     * @param   string $name       The name of the file to test filtering of
-     * @param   array  $stripChars Whether to filter spaces out the name or not
-     * @param   string $expected   The expected safe file name
-     * @param   string $message    The message to show on failure of test
+     * @param string $name       The name of the file to test filtering of
+     * @param array  $stripChars Whether to filter spaces out the name or not
+     * @param string $expected   The expected safe file name
+     * @param string $message    The message to show on failure of test
      *
      * @return void
      *
@@ -141,14 +141,14 @@ class FileTest extends AbstractFilesystemTest
      */
     public function testCopy()
     {
-        File::copy(static::$dest . '/folder1/level2/file3', static::$dest . '/folder2/level2/file4');
+        File::copy(static::$dest.'/folder1/level2/file3', static::$dest.'/folder2/level2/file4');
 
-        $this->assertFileExists(static::$dest . '/folder2/level2/file4');
+        $this->assertFileExists(static::$dest.'/folder2/level2/file4');
 
         // Copy force
-        File::copy(static::$dest . '/folder1/level2/file3', static::$dest . '/folder2/level2/file4', true);
+        File::copy(static::$dest.'/folder1/level2/file3', static::$dest.'/folder2/level2/file4', true);
 
-        $this->assertFileExists(static::$dest . '/folder2/level2/file4');
+        $this->assertFileExists(static::$dest.'/folder2/level2/file4');
     }
 
     /**
@@ -160,12 +160,12 @@ class FileTest extends AbstractFilesystemTest
      */
     public function testDelete()
     {
-        File::delete(static::$dest . '/folder1/path1');
+        File::delete(static::$dest.'/folder1/path1');
 
-        $this->assertFileNotExists(static::$dest . '/folder1/path1');
+        $this->assertFileNotExists(static::$dest.'/folder1/path1');
 
         try {
-            File::delete(static::$dest . '/folder1/path2');
+            File::delete(static::$dest.'/folder1/path2');
         } catch (FilesystemException $e) {
             $this->assertInstanceOf('Windwalker\\Filesystem\\Exception\\FilesystemException', $e);
         }
@@ -180,14 +180,14 @@ class FileTest extends AbstractFilesystemTest
      */
     public function testMove()
     {
-        File::move(static::$dest . '/folder1/path1', static::$dest . '/folder2/level3/path2');
+        File::move(static::$dest.'/folder1/path1', static::$dest.'/folder2/level3/path2');
 
-        $this->assertFileExists(static::$dest . '/folder2/level3/path2');
+        $this->assertFileExists(static::$dest.'/folder2/level3/path2');
 
         // Move force
-        File::move(static::$dest . '/folder1/level2/file3', static::$dest . '/folder2/level3/path2', true);
+        File::move(static::$dest.'/folder1/level2/file3', static::$dest.'/folder2/level3/path2', true);
 
-        $this->assertFileExists(static::$dest . '/folder2/level3/path2');
+        $this->assertFileExists(static::$dest.'/folder2/level3/path2');
     }
 
     /**
@@ -199,9 +199,9 @@ class FileTest extends AbstractFilesystemTest
      */
     public function testWrite()
     {
-        File::write(static::$dest . '/folder3/level2/test.txt', 'tmpFile');
+        File::write(static::$dest.'/folder3/level2/test.txt', 'tmpFile');
 
-        $this->assertStringEqualsFile(static::$dest . '/folder3/level2/test.txt', 'tmpFile');
+        $this->assertStringEqualsFile(static::$dest.'/folder3/level2/test.txt', 'tmpFile');
     }
 
     /**

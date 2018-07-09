@@ -13,7 +13,7 @@ use Windwalker\Middleware\EndMiddleware;
 use Windwalker\Middleware\MiddlewareInterface;
 
 /**
- * The Chain Builder
+ * The Chain Builder.
  *
  * @since 2.0
  */
@@ -26,14 +26,14 @@ class ChainBuilder
     /**
      * The middleware chain.
      *
-     * @var  MiddlewareInterface[]|\SplStack
+     * @var MiddlewareInterface[]|\SplStack
      */
     protected $stack;
 
     /**
      * Property endMiddleware.
      *
-     * @var  MiddlewareInterface
+     * @var MiddlewareInterface
      */
     protected $endMiddleware;
 
@@ -58,8 +58,9 @@ class ChainBuilder
      * @param mixed $middleware The middleware, can be a object, class name, callback, or middleware object.
      *                          These type will all convert to middleware object and store in chain.
      *
-     * @return  static Return self to support chaining.
      * @throws \ReflectionException
+     *
+     * @return static Return self to support chaining.
      */
     public function add($middleware)
     {
@@ -75,12 +76,13 @@ class ChainBuilder
     }
 
     /**
-     * marshalMiddleware
+     * marshalMiddleware.
      *
-     * @param   mixed $middleware
+     * @param mixed $middleware
      *
-     * @return  MiddlewareInterface
      * @throws \ReflectionException
+     *
+     * @return MiddlewareInterface
      */
     protected function marshalMiddleware($middleware)
     {
@@ -112,7 +114,7 @@ class ChainBuilder
     /**
      * Call chaining.
      *
-     * @param  mixed $data
+     * @param mixed $data
      *
      * @return mixed
      */
@@ -129,7 +131,7 @@ class ChainBuilder
         }
 
         if (!count($this->stack)) {
-            return null;
+            return;
         }
 
         // Start call chaining.
@@ -144,9 +146,9 @@ class ChainBuilder
     }
 
     /**
-     * createStack
+     * createStack.
      *
-     * @return  \SplStack
+     * @return \SplStack
      */
     protected function createStack()
     {
@@ -157,9 +159,9 @@ class ChainBuilder
     }
 
     /**
-     * Method to get property Stack
+     * Method to get property Stack.
      *
-     * @return  \SplStack|MiddlewareInterface[]
+     * @return \SplStack|MiddlewareInterface[]
      */
     public function getStack()
     {
@@ -167,11 +169,11 @@ class ChainBuilder
     }
 
     /**
-     * Method to set property stack
+     * Method to set property stack.
      *
-     * @param   \SplStack $stack
+     * @param \SplStack $stack
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setStack(\SplStack $stack)
     {
@@ -181,9 +183,9 @@ class ChainBuilder
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  void
+     * @return void
      */
     protected function reset()
     {
@@ -191,13 +193,14 @@ class ChainBuilder
     }
 
     /**
-     * addMiddlewares
+     * addMiddlewares.
      *
      * @param array  $middlewares
      * @param string $sort
      *
-     * @return  static
      * @throws \ReflectionException
+     *
+     * @return static
      */
     public function addMiddlewares(array $middlewares, $sort = self::SORT_DESC)
     {
@@ -213,9 +216,9 @@ class ChainBuilder
     }
 
     /**
-     * getEndMiddleware
+     * getEndMiddleware.
      *
-     * @return  MiddlewareInterface
+     * @return MiddlewareInterface
      */
     protected function getEndMiddleware()
     {
@@ -227,12 +230,13 @@ class ChainBuilder
     }
 
     /**
-     * Method to set property endMiddleware
+     * Method to set property endMiddleware.
      *
-     * @param   MiddlewareInterface|callable $middleware
+     * @param MiddlewareInterface|callable $middleware
      *
-     * @return  static  Return self to support chaining.
      * @throws \ReflectionException
+     *
+     * @return static Return self to support chaining.
      */
     public function setEndMiddleware($middleware)
     {
@@ -244,9 +248,9 @@ class ChainBuilder
     }
 
     /**
-     * dumpStack
+     * dumpStack.
      *
-     * @return  array
+     * @return array
      */
     public function dumpStack()
     {

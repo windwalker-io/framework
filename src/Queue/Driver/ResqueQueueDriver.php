@@ -23,7 +23,7 @@ class ResqueQueueDriver implements QueueDriverInterface
     /**
      * Property queue.
      *
-     * @var  string
+     * @var string
      */
     protected $queue;
 
@@ -42,12 +42,13 @@ class ResqueQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * push
+     * push.
      *
      * @param QueueMessage $message
      *
-     * @return int|string
      * @throws \DomainException
+     *
+     * @return int|string
      */
     public function push(QueueMessage $message)
     {
@@ -77,7 +78,7 @@ class ResqueQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
@@ -94,7 +95,7 @@ class ResqueQueueDriver implements QueueDriverInterface
         $job = Resque::pop($queue);
 
         if (!$job) {
-            return null;
+            return;
         }
 
         $message = new QueueMessage();
@@ -113,7 +114,7 @@ class ResqueQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|string $message
      *
@@ -129,7 +130,7 @@ class ResqueQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|string $message
      *
@@ -175,12 +176,13 @@ class ResqueQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * supportDelayed
+     * supportDelayed.
      *
      * @param bool $throwError
      *
-     * @return bool
      * @throws \DomainException
+     *
+     * @return bool
      */
     public static function supportDelayed($throwError = false)
     {
@@ -198,13 +200,14 @@ class ResqueQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * connect
+     * connect.
      *
      * @param string $host
      * @param int    $port
      *
-     * @return  void
      * @throws \DomainException
+     *
+     * @return void
      */
     public function connect($host, $port)
     {

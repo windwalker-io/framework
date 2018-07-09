@@ -23,16 +23,16 @@ class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
     /**
      * Property quote.
      *
-     * @var  array
+     * @var array
      */
     protected static $quote = ['"', '"'];
 
     /**
-     * quote
+     * quote.
      *
      * @param string $text
      *
-     * @return  string
+     * @return string
      */
     protected function qn($text)
     {
@@ -40,11 +40,11 @@ class AbstractQueryTestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * format
+     * format.
      *
-     * @param   string $sql
+     * @param string $sql
      *
-     * @return  String
+     * @return string
      */
     protected function format($sql)
     {

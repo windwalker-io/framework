@@ -36,21 +36,21 @@ class Schema
     /**
      * Property columns.
      *
-     * @var  Column[]
+     * @var Column[]
      */
     protected $columns = [];
 
     /**
      * Property indexes.
      *
-     * @var  Key[]
+     * @var Key[]
      */
     protected $indexes = [];
 
     /**
      * Property table.
      *
-     * @var  AbstractTable
+     * @var AbstractTable
      */
     protected $table;
 
@@ -65,12 +65,12 @@ class Schema
     }
 
     /**
-     * addColumn
+     * addColumn.
      *
      * @param string        $name
      * @param Column|string $column
      *
-     * @return  Column
+     * @return Column
      */
     public function add($name, $column)
     {
@@ -80,11 +80,11 @@ class Schema
     }
 
     /**
-     * addColumn
+     * addColumn.
      *
-     * @param   Column|string $column
+     * @param Column|string $column
      *
-     * @return  Column
+     * @return Column
      */
     public function addColumn($column)
     {
@@ -93,7 +93,7 @@ class Schema
         }
 
         if (!$column instanceof Column) {
-            throw new \InvalidArgumentException(__METHOD__ . ' argument 1 need Column instance.');
+            throw new \InvalidArgumentException(__METHOD__.' argument 1 need Column instance.');
         }
 
         $this->columns[$column->getName()] = $column;
@@ -102,11 +102,11 @@ class Schema
     }
 
     /**
-     * addKey
+     * addKey.
      *
      * @param Key $key
      *
-     * @return  Key
+     * @return Key
      */
     public function addKey(Key $key)
     {
@@ -122,7 +122,7 @@ class Schema
                 $columns
             );
 
-            $name = 'idx_' . trim($this->table->getName(), '#_') . '_' . implode('_', $columns);
+            $name = 'idx_'.trim($this->table->getName(), '#_').'_'.implode('_', $columns);
 
             $key->name($name);
         }
@@ -133,7 +133,7 @@ class Schema
     }
 
     /**
-     * addIndex
+     * addIndex.
      *
      * @param array|string $columns
      * @param string       $name
@@ -146,7 +146,7 @@ class Schema
     }
 
     /**
-     * addUniqueKey
+     * addUniqueKey.
      *
      * @param array|string $columns
      * @param string       $name
@@ -159,7 +159,7 @@ class Schema
     }
 
     /**
-     * addPrimaryKey
+     * addPrimaryKey.
      *
      * @param array $columns
      *
@@ -180,10 +180,10 @@ class Schema
      */
     public function __call($name, $arguments)
     {
-        $class = 'Windwalker\Database\Schema\Column\\' . ucfirst($name);
+        $class = 'Windwalker\Database\Schema\Column\\'.ucfirst($name);
 
         if (!class_exists($class)) {
-            $class = 'Windwalker\Database\Schema\Column\\' . ucfirst($name) . 'Type';
+            $class = 'Windwalker\Database\Schema\Column\\'.ucfirst($name).'Type';
         }
 
         if (!class_exists($class)) {
@@ -196,9 +196,9 @@ class Schema
     }
 
     /**
-     * Method to get property Table
+     * Method to get property Table.
      *
-     * @return  AbstractTable
+     * @return AbstractTable
      */
     public function getTable()
     {
@@ -206,11 +206,11 @@ class Schema
     }
 
     /**
-     * Method to set property table
+     * Method to set property table.
      *
-     * @param   AbstractTable $table
+     * @param AbstractTable $table
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTable($table)
     {
@@ -220,9 +220,9 @@ class Schema
     }
 
     /**
-     * Method to get property Columns
+     * Method to get property Columns.
      *
-     * @return  Column[]
+     * @return Column[]
      */
     public function getColumns()
     {
@@ -230,11 +230,11 @@ class Schema
     }
 
     /**
-     * Method to set property columns
+     * Method to set property columns.
      *
-     * @param   Column[] $columns
+     * @param Column[] $columns
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setColumns($columns)
     {
@@ -244,9 +244,9 @@ class Schema
     }
 
     /**
-     * Method to get property Indexes
+     * Method to get property Indexes.
      *
-     * @return  Key[]
+     * @return Key[]
      */
     public function getIndexes()
     {
@@ -254,11 +254,11 @@ class Schema
     }
 
     /**
-     * Method to set property indexes
+     * Method to set property indexes.
      *
-     * @param   Key[] $indexes
+     * @param Key[] $indexes
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setIndexes($indexes)
     {
@@ -268,9 +268,9 @@ class Schema
     }
 
     /**
-     * getDateFormat
+     * getDateFormat.
      *
-     * @return  string
+     * @return string
      *
      * @since   3.0
      */
@@ -280,9 +280,9 @@ class Schema
     }
 
     /**
-     * getNullDate
+     * getNullDate.
      *
-     * @return  string
+     * @return string
      *
      * @since   3.0
      */

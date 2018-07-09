@@ -22,14 +22,15 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Property children.
      *
-     * @var  Container[]
+     * @var Container[]
      */
     protected $children = [];
 
     /**
      * Holds the key aliases.
      *
-     * @var    array $aliases
+     * @var array
+     *
      * @since  2.0
      */
     protected $aliases = [];
@@ -38,7 +39,8 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * Holds the keys, their callbacks, and whether or not
      * the item is meant to be a shared resource.
      *
-     * @var    DataStore[]
+     * @var DataStore[]
+     *
      * @since  2.0
      */
     protected $dataStore = [];
@@ -46,7 +48,8 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Parent for hierarchical containers.
      *
-     * @var    Container
+     * @var Container
+     *
      * @since  2.0
      */
     protected $parent;
@@ -54,21 +57,21 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Property args.
      *
-     * @var    array
+     * @var array
      *
      * @since  3.0
      */
     protected $args = [];
 
     /**
-     * Constructor for the DI Container
+     * Constructor for the DI Container.
      *
-     * @param   Container   $parent   Parent for hierarchical containers.
-     * @param   Container[] $children Children Containers.
+     * @param Container   $parent   Parent for hierarchical containers.
+     * @param Container[] $children Children Containers.
      *
      * @since   2.0
      */
-    public function __construct(Container $parent = null, array $children = [])
+    public function __construct(self $parent = null, array $children = [])
     {
         $this->parent = $parent;
         $this->children = $children;
@@ -77,10 +80,10 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Create an alias for a given key for easy access.
      *
-     * @param   string $alias The alias name
-     * @param   string $key   The key to alias
+     * @param string $alias The alias name
+     * @param string $key   The key to alias
      *
-     * @return  static  This object for chaining.
+     * @return static This object for chaining.
      *
      * @since   2.0
      */
@@ -96,7 +99,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      *
      * @param string $alias The alias name to remove.
      *
-     * @return  static Support chaining.
+     * @return static Support chaining.
      *
      * @since  3.2
      */
@@ -112,9 +115,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Search the aliases property for a matching alias key.
      *
-     * @param   string $key The key to search for.
+     * @param string $key The key to search for.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -131,12 +134,12 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * Bind a class or key to another instance, container will return instance if it has been set
      * or created, otherwise it will create new one.
      *
-     * @param   string $name
-     * @param   mixed  $value
-     * @param   bool   $shared
-     * @param   bool   $protected
+     * @param string $name
+     * @param mixed  $value
+     * @param bool   $shared
+     * @param bool   $protected
      *
-     * @return  static
+     * @return static
      *
      * @since   3.0
      */
@@ -157,13 +160,13 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * bindShared
+     * bindShared.
      *
      * @param string $name
      * @param mixed  $value
      * @param bool   $protected
      *
-     * @return  static
+     * @return static
      *
      * @since   3.0
      */
@@ -173,7 +176,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * prepareObject
+     * prepareObject.
      *
      * @param string   $class
      * @param callable $extend
@@ -200,13 +203,13 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * prepareSharedObject
+     * prepareSharedObject.
      *
      * @param string   $class
      * @param callable $extend
      * @param bool     $protected
      *
-     * @return  static
+     * @return static
      *
      * @since   3.0
      */
@@ -216,7 +219,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * createObject
+     * createObject.
      *
      * @param string $class
      * @param array  $args
@@ -224,6 +227,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * @param bool   $protected
      *
      * @return object
+     *
      * @since   3.0
      */
     public function createObject($class, array $args = [], $shared = false, $protected = false)
@@ -236,7 +240,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * createSharedObject
+     * createSharedObject.
      *
      * @param string $class
      * @param array  $args
@@ -252,16 +256,17 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * Create an object of class $key;
+     * Create an object of class $key;.
      *
-     * @param   string $class The class name to build.
-     * @param   array  $args  The default args if no class hint provided.
-     *
-     * @return mixed  Instance of class specified by $key with all dependencies injected.
-     *                 Returns an object if the class exists and false otherwise
+     * @param string $class The class name to build.
+     * @param array  $args  The default args if no class hint provided.
      *
      * @throws DependencyResolutionException
      * @throws \ReflectionException
+     *
+     * @return mixed Instance of class specified by $key with all dependencies injected.
+     *               Returns an object if the class exists and false otherwise
+     *
      * @since   3.0
      */
     public function newInstance($class, array $args = [])
@@ -284,7 +289,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
             $newInstanceArgs = $this->getMethodArgs($constructor, $args);
         } catch (DependencyResolutionException $e) {
-            throw new DependencyResolutionException($e->getMessage() . ' / Target class: ' . $class, $e->getCode(), $e);
+            throw new DependencyResolutionException($e->getMessage().' / Target class: '.$class, $e->getCode(), $e);
         }
 
         // Create a callable for the dataStore
@@ -294,13 +299,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Build an array of constructor parameters.
      *
-     * @param   \ReflectionMethod $method Method for which to build the argument array.
-     * @param   array             $args   The default args if class hint not provided.
-     *
-     * @return array Array of arguments to pass to the method.
+     * @param \ReflectionMethod $method Method for which to build the argument array.
+     * @param array             $args   The default args if class hint not provided.
      *
      * @throws DependencyResolutionException
      * @throws \ReflectionException
+     *
+     * @return array Array of arguments to pass to the method.
+     *
      * @since   2.0
      */
     protected function getMethodArgs(\ReflectionMethod $method, array $args = [])
@@ -380,10 +386,10 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * @param array    $args
      * @param object   $context
      *
-     * @return  mixed
-     *
      * @throws DependencyResolutionException
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function execute($callable, array $args = [], $context = null)
     {
@@ -434,9 +440,10 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * @param array    $args
      * @param object   $context
      *
-     * @return  mixed
      * @throws DependencyResolutionException
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function call($callable, array $args = [], $context = null)
     {
@@ -444,11 +451,11 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * whenCreating
+     * whenCreating.
      *
-     * @param   string $class
+     * @param string $class
      *
-     * @return  ClassMeta
+     * @return ClassMeta
      */
     public function whenCreating($class)
     {
@@ -463,9 +470,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * Create a child Container with a new property scope that
      * that has the ability to access the parent scope when resolving.
      *
-     * @param   string $name The child name.
+     * @param string $name The child name.
      *
-     * @return  static  The new container object.
+     * @return static The new container object.
      *
      * @since   2.0
      */
@@ -483,13 +490,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
      * works very similar to a decorator pattern.  Note that this only works on service Closures
      * that have been defined in the current Provider, not parent providers.
      *
-     * @param   string   $key      The unique identifier for the Closure or property.
-     * @param   \Closure $callable A Closure to wrap the original service Closure.
+     * @param string   $key      The unique identifier for the Closure or property.
+     * @param \Closure $callable A Closure to wrap the original service Closure.
      *
-     * @return  static
+     * @throws \InvalidArgumentException
+     *
+     * @return static
      *
      * @since   2.0
-     * @throws  \InvalidArgumentException
      */
     public function extend($key, $callable)
     {
@@ -515,14 +523,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Method to set the key and callback to the dataStore array.
      *
-     * @param   string  $key       Name of dataStore key to set.
-     * @param   mixed   $value     Callable function to run or string to retrieve when requesting the specified $key.
-     * @param   boolean $shared    True to create and store a shared instance.
-     * @param   boolean $protected True to protect this item from being overwritten. Useful for services.
+     * @param string $key       Name of dataStore key to set.
+     * @param mixed  $value     Callable function to run or string to retrieve when requesting the specified $key.
+     * @param bool   $shared    True to create and store a shared instance.
+     * @param bool   $protected True to protect this item from being overwritten. Useful for services.
      *
-     * @return  static  This object for chaining.
+     * @throws \OutOfBoundsException Thrown if the provided key is already set and is protected.
      *
-     * @throws  \OutOfBoundsException  Thrown if the provided key is already set and is protected.
+     * @return static This object for chaining.
      *
      * @since   2.0
      */
@@ -543,11 +551,11 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Convenience method for creating protected keys.
      *
-     * @param   string   $key      Name of dataStore key to set.
-     * @param   callable $callback Callable function to run when requesting the specified $key.
-     * @param   bool     $shared   True to create and store a shared instance.
+     * @param string   $key      Name of dataStore key to set.
+     * @param callable $callback Callable function to run when requesting the specified $key.
+     * @param bool     $shared   True to create and store a shared instance.
      *
-     * @return  static  This object for chaining.
+     * @return static This object for chaining.
      *
      * @since   2.0
      */
@@ -559,11 +567,11 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Convenience method for creating shared keys.
      *
-     * @param   string         $key       Name of dataStore key to set.
-     * @param   callable|mixed $callback  Callable function to run when requesting the specified $key.
-     * @param   bool           $protected True to create and store a shared instance.
+     * @param string         $key       Name of dataStore key to set.
+     * @param callable|mixed $callback  Callable function to run when requesting the specified $key.
+     * @param bool           $protected True to create and store a shared instance.
      *
-     * @return  static  This object for chaining.
+     * @return static This object for chaining.
      *
      * @since   2.0
      */
@@ -573,13 +581,14 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * Method to retrieve the results of running the $callback for the specified $key;
+     * Method to retrieve the results of running the $callback for the specified $key;.
      *
-     * @param   string  $key      Name of the dataStore key to get.
-     * @param   boolean $forceNew True to force creation and return of a new instance.
+     * @param string $key      Name of the dataStore key to get.
+     * @param bool   $forceNew True to force creation and return of a new instance.
      *
-     * @return  mixed   Results of running the $callback for the specified $key.
      * @throws \UnexpectedValueException
+     *
+     * @return mixed Results of running the $callback for the specified $key.
      *
      * @since   2.0
      */
@@ -597,9 +606,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Remove an item from container.
      *
-     * @param   string $key Name of the dataStore key to get.
+     * @param string $key Name of the dataStore key to get.
      *
-     * @return  static  This object for chaining.
+     * @return static This object for chaining.
      *
      * @since   2.1
      */
@@ -617,9 +626,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Method to check if specified dataStore key exists.
      *
-     * @param   string $key Name of the dataStore key to check.
+     * @param string $key Name of the dataStore key to check.
      *
-     * @return  boolean  True for success
+     * @return bool True for success
      *
      * @since   2.0
      */
@@ -631,9 +640,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Get the raw data assigned to a key.
      *
-     * @param   string $key The key for which to get the stored item.
+     * @param string $key The key for which to get the stored item.
      *
-     * @return  DataStore
+     * @return DataStore
      *
      * @since   2.0
      */
@@ -643,20 +652,18 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
 
         if (isset($this->dataStore[$key])) {
             return $this->dataStore[$key];
-        } elseif ($this->parent instanceof Container) {
+        } elseif ($this->parent instanceof self) {
             return $this->parent->getRaw($key);
         }
-
-        return null;
     }
 
     /**
      * Method to force the container to return a new instance
      * of the results of the callback for requested $key.
      *
-     * @param   string $key Name of the dataStore key to get.
+     * @param string $key Name of the dataStore key to get.
      *
-     * @return  mixed   Results of running the $callback for the specified $key.
+     * @return mixed Results of running the $callback for the specified $key.
      *
      * @since   2.0
      */
@@ -668,11 +675,11 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Fork an instance to a new key.
      *
-     * @param   string $key      Origin key.
-     * @param   string $newKey   New key.
-     * @param   bool   $forceNew Force new.
+     * @param string $key      Origin key.
+     * @param string $newKey   New key.
+     * @param bool   $forceNew Force new.
      *
-     * @return  mixed  Forked instance.
+     * @return mixed Forked instance.
      *
      * @since   2.0.7
      */
@@ -688,9 +695,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Register a service provider to the container.
      *
-     * @param   ServiceProviderInterface $provider The service provider to register.w
+     * @param ServiceProviderInterface $provider The service provider to register.w
      *
-     * @return  static  This object for chaining.
+     * @return static This object for chaining.
      *
      * @since   2.0
      */
@@ -702,9 +709,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * Method to get property Parent
+     * Method to get property Parent.
      *
-     * @return  static  Parent container.
+     * @return static Parent container.
      *
      * @since  2.0.4
      */
@@ -714,11 +721,11 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * Method to set property parent
+     * Method to set property parent.
      *
-     * @param   Container $parent Parent container.
+     * @param Container $parent Parent container.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since  2.0.4
      */
@@ -730,16 +737,16 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * addChild
+     * addChild.
      *
      * @param string    $name
      * @param Container $container
      *
-     * @return  static
+     * @return static
      *
      * @since   2.1
      */
-    public function addChild($name, Container $container)
+    public function addChild($name, self $container)
     {
         $container->setParent($this);
 
@@ -749,12 +756,12 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * getChild
+     * getChild.
      *
-     * @param   string  $name
-     * @param   boolean $forceNew
+     * @param string $name
+     * @param bool   $forceNew
      *
-     * @return  static
+     * @return static
      *
      * @since   2.1
      */
@@ -768,11 +775,11 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * hasChild
+     * hasChild.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  boolean
+     * @return bool
      */
     public function hasChild($name)
     {
@@ -780,11 +787,11 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * removeChild
+     * removeChild.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static
+     * @return static
      *
      * @since   2.1
      */
@@ -798,9 +805,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * Method to get property Children
+     * Method to get property Children.
      *
-     * @return  static[]
+     * @return static[]
      *
      * @since   2.1
      */
@@ -810,11 +817,11 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * Method to set property children
+     * Method to set property children.
      *
-     * @param   Container[] $children
+     * @param Container[] $children
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.1
      */
@@ -826,7 +833,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return \Traversable An instance of an object implementing Iterator or Traversable
      *
@@ -840,9 +847,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Is a property exists or not.
      *
-     * @param   mixed $offset Offset key.
+     * @param mixed $offset Offset key.
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.1
      */
@@ -854,9 +861,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Get a property.
      *
-     * @param   mixed $offset Offset key.
+     * @param mixed $offset Offset key.
      *
-     * @return  mixed  The value to return.
+     * @return mixed The value to return.
      *
      * @since   2.1
      */
@@ -868,10 +875,10 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Set a value to property.
      *
-     * @param   mixed $offset Offset key.
-     * @param   mixed $value  The value to set.
+     * @param mixed $offset Offset key.
+     * @param mixed $value  The value to set.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.1
      */
@@ -883,9 +890,9 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Unset a property.
      *
-     * @param   mixed $offset Offset key to unset.
+     * @param mixed $offset Offset key to unset.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.1
      */
@@ -897,7 +904,7 @@ class Container implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Count this object.
      *
-     * @return  integer
+     * @return int
      *
      * @since   2.1
      */

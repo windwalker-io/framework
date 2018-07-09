@@ -12,7 +12,7 @@ use Windwalker\Filter\InputFilter;
 use Windwalker\IO\Filter\NullFilter;
 
 /**
- * Class Input
+ * Class Input.
  *
  * @property    Input                    $get
  * @property    Input                    $post
@@ -29,12 +29,12 @@ use Windwalker\IO\Filter\NullFilter;
  * @property    CookieInput              $cookie
  * @property    JsonInput                $json
  *
- * @method      integer  getInt()       getInt($name, $default = null, $separator = '.')    Get a signed integer.
- * @method      integer  getUint()      getUint($name, $default = null, $separator = '.')   Get an unsigned integer.
+ * @method      int  getInt()       getInt($name, $default = null, $separator = '.')    Get a signed integer.
+ * @method      int  getUint()      getUint($name, $default = null, $separator = '.')   Get an unsigned integer.
  * @method      float    getFloat()     getFloat($name, $default = null, $separator = '.')  Get a floating-point
  *              number.
- * @method      boolean  getBool()      getBool($name, $default = null, $separator = '.')   Get a boolean.
- * @method      boolean  getBoolean()   getBoolean($name, $default = null, $separator = '.')   Get a boolean.
+ * @method      bool  getBool()      getBool($name, $default = null, $separator = '.')   Get a boolean.
+ * @method      bool  getBoolean()   getBoolean($name, $default = null, $separator = '.')   Get a boolean.
  * @method      string   getWord()      getWord($name, $default = null, $separator = '.')
  * @method      string   getAlnum()     getAlnum($name, $default = null, $separator = '.')
  * @method      string   getCmd()       getCmd($name, $default = null, $separator = '.')
@@ -56,15 +56,17 @@ class Input implements \Serializable, \Countable
     /**
      * Input data.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $data = [];
 
     /**
-     * Input objects
+     * Input objects.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $inputs = [];
@@ -72,7 +74,8 @@ class Input implements \Serializable, \Countable
     /**
      * Filter object to use.
      *
-     * @var    \Windwalker\Filter\InputFilter
+     * @var \Windwalker\Filter\InputFilter
+     *
      * @since  2.0
      */
     protected $filter = null;
@@ -80,15 +83,15 @@ class Input implements \Serializable, \Countable
     /**
      * Property method.
      *
-     * @var  string
+     * @var string
      */
     protected $method;
 
     /**
      * Constructor.
      *
-     * @param   array       $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-     * @param   InputFilter $filter The input filter object.
+     * @param array       $source Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+     * @param InputFilter $filter The input filter object.
      *
      * @since   2.0
      */
@@ -106,10 +109,10 @@ class Input implements \Serializable, \Countable
     /**
      * Prepare source.
      *
-     * @param   array   $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-     * @param   boolean $reference If set to true, he source in first argument will be reference.
+     * @param array $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+     * @param bool  $reference If set to true, he source in first argument will be reference.
      *
-     * @return  void
+     * @return void
      */
     public function prepareSource(&$source = null, $reference = false)
     {
@@ -125,11 +128,11 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * Magic method to get an input object
+     * Magic method to get an input object.
      *
-     * @param   mixed $name Name of the input object to retrieve.
+     * @param mixed $name Name of the input object to retrieve.
      *
-     * @return  Input  The request input object
+     * @return Input The request input object
      *
      * @since   2.0
      */
@@ -141,10 +144,10 @@ class Input implements \Serializable, \Countable
 
         $filter = ($this->filter instanceof NullFilter) ? null : $this->filter;
 
-        $className = __NAMESPACE__ . '\\' . ucfirst($name) . 'Input';
+        $className = __NAMESPACE__.'\\'.ucfirst($name).'Input';
 
         if (!class_exists($className)) {
-            $className = __NAMESPACE__ . '\\' . ucfirst($name);
+            $className = __NAMESPACE__.'\\'.ucfirst($name);
         }
 
         if (class_exists($className)) {
@@ -153,10 +156,10 @@ class Input implements \Serializable, \Countable
             return $this->inputs[$name];
         }
 
-        $superGlobal = '_' . strtoupper($name);
+        $superGlobal = '_'.strtoupper($name);
 
         if (isset($GLOBALS[$superGlobal])) {
-            $this->inputs[$name] = new Input($GLOBALS[$superGlobal], $filter);
+            $this->inputs[$name] = new self($GLOBALS[$superGlobal], $filter);
 
             return $this->inputs[$name];
         }
@@ -168,21 +171,19 @@ class Input implements \Serializable, \Countable
 
             return $this->inputs[$name];
         }
-
-        return null;
     }
 
     /**
-     * __set
+     * __set.
      *
-     * @param   string $name
-     * @param   Input  $value
+     * @param string $name
+     * @param Input  $value
      *
-     * @return  void
+     * @return void
      */
     public function __set($name, $value)
     {
-        if (!$value instanceof Input) {
+        if (!$value instanceof self) {
             throw new \InvalidArgumentException('Input should be instance of Input object');
         }
 
@@ -195,7 +196,7 @@ class Input implements \Serializable, \Countable
     /**
      * Get the number of variables.
      *
-     * @return  integer  The number of variables in the input.
+     * @return int The number of variables in the input.
      *
      * @since   2.0
      * @see     Countable::count()
@@ -208,10 +209,10 @@ class Input implements \Serializable, \Countable
     /**
      * Gets a value from the input data.
      *
-     * @param   string $name      Name of the value to get.
-     * @param   mixed  $default   Default value to return if variable does not exist.
-     * @param   string $filter    Filter to apply to the value.
-     * @param   string $separator Separator for path.
+     * @param string $name      Name of the value to get.
+     * @param mixed  $default   Default value to return if variable does not exist.
+     * @param string $filter    Filter to apply to the value.
+     * @param string $separator Separator for path.
      *
      * @return mixed The filtered input value.
      *
@@ -231,10 +232,10 @@ class Input implements \Serializable, \Countable
     /**
      * Gets a value from the input data.
      *
-     * @param   string $name      Name of the value to get.
-     * @param   mixed  $default   Default value to return if variable does not exist.
-     * @param   string $separator Separator for path.
-     * @param   string $filter    Filter to apply to the value.
+     * @param string $name      Name of the value to get.
+     * @param mixed  $default   Default value to return if variable does not exist.
+     * @param string $separator Separator for path.
+     * @param string $filter    Filter to apply to the value.
      *
      * @return mixed The filtered input value.
      *
@@ -259,11 +260,11 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * Sets a value
+     * Sets a value.
      *
-     * @param   string $name      Name of the value to set.
-     * @param   mixed  $value     Value to assign to the input.
-     * @param   string $separator Symbol to separate path.
+     * @param string $name      Name of the value to set.
+     * @param mixed  $value     Value to assign to the input.
+     * @param string $separator Symbol to separate path.
      *
      * @since   2.0
      */
@@ -275,9 +276,9 @@ class Input implements \Serializable, \Countable
     /**
      * Define a value. The value will only be set if there's no value for the name or if it is null.
      *
-     * @param   string $name      Name of the value to define.
-     * @param   mixed  $value     Value to assign to the input.
-     * @param   string $separator Symbol to separate paths.
+     * @param string $name      Name of the value to define.
+     * @param mixed  $value     Value to assign to the input.
+     * @param string $separator Symbol to separate paths.
      *
      * @since   2.0
      */
@@ -293,8 +294,8 @@ class Input implements \Serializable, \Countable
     /**
      * Check if a value name exists.
      *
-     * @param   string $name      Value name
-     * @param   string $separator Symbol to separate path.
+     * @param string $name      Value name
+     * @param string $separator Symbol to separate path.
      *
      * @return bool
      *
@@ -308,12 +309,12 @@ class Input implements \Serializable, \Countable
     /**
      * Gets an array of values from the request.
      *
-     * @param   array $vars         Associative array of keys and filter types to apply.
-     *                              If empty and datasource is null, all the input data will be returned
-     *                              but filtered using the default case in JFilterInput::clean.
-     * @param   mixed $datasource   Array to retrieve data from, or null
+     * @param array $vars       Associative array of keys and filter types to apply.
+     *                          If empty and datasource is null, all the input data will be returned
+     *                          but filtered using the default case in JFilterInput::clean.
+     * @param mixed $datasource Array to retrieve data from, or null
      *
-     * @return  mixed  The filtered input data.
+     * @return mixed The filtered input data.
      *
      * @since   2.0
      */
@@ -347,12 +348,12 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * extract
+     * extract.
      *
-     * @param   string $name
-     * @param   string $separator
+     * @param string $name
+     * @param string $separator
      *
-     * @return  static
+     * @return static
      */
     public function extract($name, $separator = '.')
     {
@@ -362,12 +363,12 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * merge
+     * merge.
      *
      * @param array $array
      * @param bool  $recursive
      *
-     * @return  static
+     * @return static
      */
     public function merge(array $array, $recursive = false)
     {
@@ -381,12 +382,12 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * mergeRecursive
+     * mergeRecursive.
      *
      * @param array $array1
      * @param array $array2
      *
-     * @return  array
+     * @return array
      */
     protected static function mergeRecursive(array $array1, array $array2)
     {
@@ -394,7 +395,7 @@ class Input implements \Serializable, \Countable
 
         foreach ($array2 as $key => &$value) {
             if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = static::mergeRecursive($merged [$key], $value);
+                $merged[$key] = static::mergeRecursive($merged[$key], $value);
             } else {
                 $merged[$key] = $value;
             }
@@ -406,10 +407,10 @@ class Input implements \Serializable, \Countable
     /**
      * Magic method to get filtered input data.
      *
-     * @param   string $name      Name of the filter type prefixed with 'get'.
-     * @param   array  $arguments [0] The name of the variable [1] The default value.
+     * @param string $name      Name of the filter type prefixed with 'get'.
+     * @param array  $arguments [0] The name of the variable [1] The default value.
      *
-     * @return  mixed   The filtered input value.
+     * @return mixed The filtered input value.
      *
      * @since   2.0
      */
@@ -425,7 +426,7 @@ class Input implements \Serializable, \Countable
             }
 
             if (!array_key_exists(0, $arguments)) {
-                throw new \BadMethodCallException(get_called_class() . '::' . $name . '() has no argument.');
+                throw new \BadMethodCallException(get_called_class().'::'.$name.'() has no argument.');
             }
 
             $separator = isset($arguments[2]) ? $arguments[2] : '.';
@@ -437,7 +438,7 @@ class Input implements \Serializable, \Countable
     /**
      * Gets the request method.
      *
-     * @return  string   The request method.
+     * @return string The request method.
      *
      * @since   2.0
      */
@@ -453,11 +454,11 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * Method to set property method
+     * Method to set property method.
      *
-     * @param   string $method
+     * @param string $method
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   3.0
      */
@@ -471,7 +472,7 @@ class Input implements \Serializable, \Countable
     /**
      * Method to serialize the input.
      *
-     * @return  string  The serialized input.
+     * @return string The serialized input.
      *
      * @since   2.0
      */
@@ -492,9 +493,9 @@ class Input implements \Serializable, \Countable
     /**
      * Method to unserialize the input.
      *
-     * @param   string $input The serialized input.
+     * @param string $input The serialized input.
      *
-     * @return  Input  The input object.
+     * @return Input The input object.
      *
      * @since   2.0
      */
@@ -509,7 +510,7 @@ class Input implements \Serializable, \Countable
     /**
      * Method to load all of the global inputs.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -540,9 +541,9 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * getAllInputs
+     * getAllInputs.
      *
-     * @return  Input[]
+     * @return Input[]
      */
     public function getAllInputs()
     {
@@ -552,9 +553,9 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * dumpAllInputs
+     * dumpAllInputs.
      *
-     * @return  array
+     * @return array
      */
     public function dumpAllInputs()
     {
@@ -570,11 +571,11 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * Method to set property data
+     * Method to set property data.
      *
-     * @param   array $data
+     * @param array $data
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setData($data)
     {
@@ -584,9 +585,9 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * Method to get property Filter
+     * Method to get property Filter.
      *
-     * @return  InputFilter
+     * @return InputFilter
      */
     public function getFilter()
     {
@@ -594,11 +595,11 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * Method to set property filter
+     * Method to set property filter.
      *
-     * @param   InputFilter $filter
+     * @param InputFilter $filter
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setFilter($filter)
     {
@@ -608,9 +609,9 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * Method to get property Data
+     * Method to get property Data.
      *
-     * @return  array
+     * @return array
      */
     public function getRawData()
     {
@@ -618,7 +619,7 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * toArray
+     * toArray.
      *
      * @param string $filter
      *
@@ -630,12 +631,12 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * convertToArray
+     * convertToArray.
      *
      * @param array  $data
      * @param string $filter
      *
-     * @return  array
+     * @return array
      */
     protected function convertToArray($data, $filter = 'raw')
     {
@@ -661,7 +662,7 @@ class Input implements \Serializable, \Countable
      * @param mixed  $path      The key path.
      * @param string $separator Separator of paths.
      *
-     * @return  mixed Found value, null if not exists.
+     * @return mixed Found value, null if not exists.
      *
      * @since   3.0
      */
@@ -670,7 +671,7 @@ class Input implements \Serializable, \Countable
         $nodes = array_values(array_filter(explode($separator, $path), 'strlen'));
 
         if (empty($nodes)) {
-            return null;
+            return;
         }
 
         $dataTmp = $data;
@@ -681,7 +682,7 @@ class Input implements \Serializable, \Countable
             } elseif (is_array($dataTmp) && isset($dataTmp[$arg])) {
                 $dataTmp = $dataTmp[$arg];
             } else {
-                return null;
+                return;
             }
         }
 
@@ -689,7 +690,7 @@ class Input implements \Serializable, \Countable
     }
 
     /**
-     * setByPath
+     * setByPath.
      *
      * @param mixed  &$data
      * @param string $path
@@ -697,7 +698,7 @@ class Input implements \Serializable, \Countable
      * @param string $separator
      * @param string $storeType
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   3.0
      */
@@ -714,9 +715,9 @@ class Input implements \Serializable, \Countable
          *
          * @param string $type
          *
-         * @return  array
-         *
          * @throws \InvalidArgumentException
+         *
+         * @return array
          */
         $createStore = function ($type) {
             if (strtolower($type) === 'array') {

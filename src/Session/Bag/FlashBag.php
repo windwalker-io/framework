@@ -9,19 +9,19 @@
 namespace Windwalker\Session\Bag;
 
 /**
- * Class FlashBag
+ * Class FlashBag.
  *
  * @since 2.0
  */
 class FlashBag extends SessionBag implements FlashBagInterface
 {
     /**
-     * add
+     * add.
      *
      * @param string $msg
      * @param string $type
      *
-     * @return  $this
+     * @return $this
      */
     public function add($msg, $type = 'info')
     {
@@ -39,7 +39,7 @@ class FlashBag extends SessionBag implements FlashBagInterface
     /**
      * Take all and clean.
      *
-     * @return  array
+     * @return array
      */
     public function takeAll()
     {
@@ -51,11 +51,11 @@ class FlashBag extends SessionBag implements FlashBagInterface
     }
 
     /**
-     * getType
+     * getType.
      *
      * @param string $type
      *
-     * @return  array
+     * @return array
      */
     public function getType($type)
     {

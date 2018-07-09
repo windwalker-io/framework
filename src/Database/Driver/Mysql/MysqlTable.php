@@ -15,28 +15,28 @@ use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Mysql\MysqlGrammar;
 
 /**
- * Class MysqlTable
+ * Class MysqlTable.
  *
  * @since 2.0
  */
 class MysqlTable extends AbstractTable
 {
     /**
-     * create
+     * create.
      *
      * @param callable|Schema $schema
      * @param bool            $ifNotExists
      * @param array           $options
      *
-     * @return  $this
+     * @return $this
      */
     public function create($schema, $ifNotExists = true, $options = [])
     {
         $defaultOptions = [
             'auto_increment' => 1,
-            'engine' => 'InnoDB',
-            'charset' => 'utf8mb4',
-            'collate' => 'utf8mb4_unicode_ci'
+            'engine'         => 'InnoDB',
+            'charset'        => 'utf8mb4',
+            'collate'        => 'utf8mb4_unicode_ci',
         ];
 
         $options = array_merge($defaultOptions, $options);
@@ -48,14 +48,14 @@ class MysqlTable extends AbstractTable
             $column = $this->prepareColumn($column);
 
             $columns[$column->getName()] = MysqlGrammar::build(
-                $column->getType() . $column->getLength(),
+                $column->getType().$column->getLength(),
                 $column->getSigned() ? '' : 'UNSIGNED',
                 $column->getAllowNull() ? '' : 'NOT NULL',
-                $column->getDefault() !== false ? 'DEFAULT ' . $this->db->getQuery(true)->validValue(
+                $column->getDefault() !== false ? 'DEFAULT '.$this->db->getQuery(true)->validValue(
                         $column->getDefault()
                     ) : '',
                 $column->getAutoIncrement() ? 'AUTO_INCREMENT' : '',
-                $column->getComment() ? 'COMMENT ' . $this->db->quote($column->getComment()) : '',
+                $column->getComment() ? 'COMMENT '.$this->db->quote($column->getComment()) : '',
                 $column->getSuffix()
             );
 
@@ -70,10 +70,10 @@ class MysqlTable extends AbstractTable
         foreach ($schema->getIndexes() as $index) {
             $name = $index->getName();
             $keys[$name] = [
-                'type' => $index->getType(),
-                'name' => $name,
+                'type'    => $index->getType(),
+                'name'    => $name,
                 'columns' => $index->getColumns(),
-                'comment' => $index->getComment() ? 'COMMENT ' . $this->db->quote($index->getComment()) : '',
+                'comment' => $index->getComment() ? 'COMMENT '.$this->db->quote($index->getComment()) : '',
             ];
         }
 
@@ -95,7 +95,7 @@ class MysqlTable extends AbstractTable
     }
 
     /**
-     * addColumn
+     * addColumn.
      *
      * @param string $name
      * @param string $type
@@ -105,7 +105,7 @@ class MysqlTable extends AbstractTable
      * @param string $comment
      * @param array  $options
      *
-     * @return  static
+     * @return static
      */
     public function addColumn(
         $name,
@@ -131,7 +131,7 @@ class MysqlTable extends AbstractTable
         $query = MysqlGrammar::addColumn(
             $this->getName(),
             $column->getName(),
-            $column->getType() . $column->getLength(),
+            $column->getType().$column->getLength(),
             $column->getSigned(),
             $column->getAllowNull(),
             $column->getDefault(),
@@ -148,7 +148,7 @@ class MysqlTable extends AbstractTable
     }
 
     /**
-     * modifyColumn
+     * modifyColumn.
      *
      * @param string|Column $name
      * @param string        $type
@@ -158,7 +158,7 @@ class MysqlTable extends AbstractTable
      * @param string        $comment
      * @param array         $options
      *
-     * @return  static
+     * @return static
      */
     public function modifyColumn(
         $name,
@@ -191,12 +191,12 @@ class MysqlTable extends AbstractTable
 
         $type = MysqlType::getType($type);
         $length = isset($length) ? $length : MysqlType::getLength($type);
-        $length = $length ? '(' . $length . ')' : null;
+        $length = $length ? '('.$length.')' : null;
 
         $query = MysqlGrammar::modifyColumn(
             $this->getName(),
             $name,
-            $type . $length,
+            $type.$length,
             $signed,
             $allowNull,
             $default,
@@ -213,7 +213,7 @@ class MysqlTable extends AbstractTable
     }
 
     /**
-     * changeColumn
+     * changeColumn.
      *
      * @param string        $oldName
      * @param string|Column $newName
@@ -224,7 +224,7 @@ class MysqlTable extends AbstractTable
      * @param string        $comment
      * @param array         $options
      *
-     * @return  static
+     * @return static
      */
     public function changeColumn(
         $oldName,
@@ -244,7 +244,7 @@ class MysqlTable extends AbstractTable
             $column = $newName;
             $length = $column->getLength();
             $newName = $column->getName();
-            $type = $column->getType() . $length;
+            $type = $column->getType().$length;
             $signed = $column->getSigned();
             $allowNull = $column->getAllowNull();
             $default = $column->getDefault();
@@ -258,13 +258,13 @@ class MysqlTable extends AbstractTable
 
         $type = MysqlType::getType($type);
         $length = isset($length) ? $length : MysqlType::getLength($type);
-        $length = $length ? '(' . $length . ')' : null;
+        $length = $length ? '('.$length.')' : null;
 
         $query = MysqlGrammar::changeColumn(
             $this->getName(),
             $oldName,
             $newName,
-            $type . $length,
+            $type.$length,
             $signed,
             $allowNull,
             $default,
@@ -281,7 +281,7 @@ class MysqlTable extends AbstractTable
     }
 
     /**
-     * addIndex
+     * addIndex.
      *
      * @param string       $type
      * @param array|string $columns
@@ -323,11 +323,11 @@ class MysqlTable extends AbstractTable
     }
 
     /**
-     * dropIndex
+     * dropIndex.
      *
      * @param string $name
      *
-     * @return  static
+     * @return static
      */
     public function dropIndex($name)
     {
@@ -343,17 +343,17 @@ class MysqlTable extends AbstractTable
     }
 
     /**
-     * rename
+     * rename.
      *
-     * @param string  $newName
-     * @param boolean $returnNew
+     * @param string $newName
+     * @param bool   $returnNew
      *
-     * @return  $this
+     * @return $this
      */
     public function rename($newName, $returnNew = true)
     {
         $this->db->setQuery(
-            'RENAME TABLE ' . $this->db->quoteName($this->getName()) . ' TO ' . $this->db->quoteName($newName)
+            'RENAME TABLE '.$this->db->quoteName($this->getName()).' TO '.$this->db->quoteName($newName)
         );
 
         $this->db->execute();
@@ -366,7 +366,7 @@ class MysqlTable extends AbstractTable
     }
 
     /**
-     * getColumnDetails
+     * getColumnDetails.
      *
      * @param bool $refresh
      *
@@ -384,15 +384,15 @@ class MysqlTable extends AbstractTable
     }
 
     /**
-     * getIndexes
+     * getIndexes.
      *
-     * @return  array
+     * @return array
      */
     public function getIndexes()
     {
         if (!$this->indexCache) {
             // Get the details columns information.
-            $this->db->setQuery('SHOW KEYS FROM ' . $this->db->quoteName($this->getName()));
+            $this->db->setQuery('SHOW KEYS FROM '.$this->db->quoteName($this->getName()));
 
             $this->indexCache = $this->db->loadAll();
         }

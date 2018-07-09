@@ -18,17 +18,17 @@ interface CollectorInterface
     /**
      * Get a value.
      *
-     * @param   string $name    The data name you want to get.
-     * @param   mixed  $default The default value if not exists.
+     * @param string $name    The data name you want to get.
+     * @param mixed  $default The default value if not exists.
      *
-     * @return  mixed  The found value or default.
+     * @return mixed The found value or default.
      */
     public function get($name, $default = null);
 
     /**
      * Get all data.
      *
-     * @return  array
+     * @return array
      */
     public function getData();
 }

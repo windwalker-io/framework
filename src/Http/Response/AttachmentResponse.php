@@ -22,9 +22,9 @@ class AttachmentResponse extends Response
     /**
      * Constructor.
      *
-     * @param  string $body    The body data.
-     * @param  int    $status  The status code.
-     * @param  array  $headers The custom headers.
+     * @param string $body    The body data.
+     * @param int    $status  The status code.
+     * @param array  $headers The custom headers.
      */
     public function __construct($body = 'php://temp', $status = 200, array $headers = [])
     {
@@ -40,30 +40,32 @@ class AttachmentResponse extends Response
     }
 
     /**
-     * withFile
+     * withFile.
      *
      * @param string $file
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function withFile($file)
     {
         if (!is_file($file)) {
-            throw new \InvalidArgumentException('File: ' . $file . ' not exists.');
+            throw new \InvalidArgumentException('File: '.$file.' not exists.');
         }
 
         return $this->withFileStream(new Stream($file));
     }
 
     /**
-     * withFileData
+     * withFileData.
      *
      * @param string $data
      *
-     * @return  static
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
+     *
+     * @return static
      */
     public function withFileData($data)
     {
@@ -76,12 +78,13 @@ class AttachmentResponse extends Response
     }
 
     /**
-     * withFileStream
+     * withFileStream.
      *
      * @param StreamInterface $stream
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     protected function withFileStream(StreamInterface $stream)
     {
@@ -89,15 +92,16 @@ class AttachmentResponse extends Response
     }
 
     /**
-     * withFilename
+     * withFilename.
      *
      * @param string $filename
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function withFilename($filename)
     {
-        return $this->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        return $this->withHeader('Content-Disposition', 'attachment; filename="'.$filename.'"');
     }
 }

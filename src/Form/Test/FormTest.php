@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -18,7 +18,7 @@ use Windwalker\Form\ValidatorHelper;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * Test class of Form
+ * Test class of Form.
  *
  * @since 2.0
  */
@@ -42,11 +42,11 @@ class FormTest extends AbstractBaseTestCase
     }
 
     /**
-     * getByDefine
+     * getByDefine.
      *
      * @param string $control
      *
-     * @return  Form
+     * @return Form
      *
      * @covers  \Windwalker\Form\Form::defineFormFields
      */
@@ -60,11 +60,11 @@ class FormTest extends AbstractBaseTestCase
     }
 
     /**
-     * getByDefine
+     * getByDefine.
      *
      * @param string $control
      *
-     * @return  Form
+     * @return Form
      *
      * @covers  \Windwalker\Form\Form::loadFile
      */
@@ -72,7 +72,7 @@ class FormTest extends AbstractBaseTestCase
     {
         $form = new Form($control);
 
-        $form->loadFile(__DIR__ . '/Stub/fields.xml');
+        $form->loadFile(__DIR__.'/Stub/fields.xml');
 
         return $form;
     }
@@ -388,7 +388,7 @@ class FormTest extends AbstractBaseTestCase
     {
         $data = [
             'id' => 5,
-            'u' => [
+            'u'  => [
                 'username' => 'foo',
             ],
         ];
@@ -414,11 +414,11 @@ class FormTest extends AbstractBaseTestCase
 
         $data = [
             'id' => 5,
-            'u' => [
+            'u'  => [
                 'username' => 'foo',
             ],
             'b' => [
-                'email' => 'bar@gmail.com',
+                'email'    => 'bar@gmail.com',
                 'password' => '123_ abc4456qwe:$yui',
             ],
         ];
@@ -431,11 +431,11 @@ class FormTest extends AbstractBaseTestCase
 
         $data = [
             'id' => 5,
-            'u' => [
+            'u'  => [
                 'username' => 'foo',
             ],
             'b' => [
-                'email' => 'bar/gmail.com',
+                'email'    => 'bar/gmail.com',
                 'password' => '123_ abc4456qwe:$yui',
             ],
         ];
@@ -465,11 +465,11 @@ class FormTest extends AbstractBaseTestCase
 
         $data = [
             'id' => 5,
-            'u' => [
+            'u'  => [
                 'username' => 'foo',
             ],
             'b' => [
-                'email' => 'bar/gmail.com',
+                'email'    => 'bar/gmail.com',
                 'password' => '123_ abc4456qwe:$yui',
             ],
         ];
@@ -557,9 +557,9 @@ class FormTest extends AbstractBaseTestCase
     }
 
     /**
-     * testFilterAndGetValues
+     * testFilterAndGetValues.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Form\Form::filter
      * @covers \Windwalker\Form\Form::getValues
@@ -570,11 +570,11 @@ class FormTest extends AbstractBaseTestCase
 
         $data = [
             'id' => '123abc',
-            'u' => [
+            'u'  => [
                 'username' => 'foo',
             ],
             'b' => [
-                'email' => 'bar@gmail.com',
+                'email'    => 'bar@gmail.com',
                 'password' => '123_ abc/\4,456qwe:$yui',
             ],
         ];
@@ -590,9 +590,9 @@ class FormTest extends AbstractBaseTestCase
     }
 
     /**
-     * testSetAndGetFieldRendererHandler
+     * testSetAndGetFieldRendererHandler.
      *
-     * @return  void
+     * @return void
      */
     public function testSetAndGetFieldRendererHandler()
     {

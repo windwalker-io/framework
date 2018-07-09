@@ -18,15 +18,15 @@ use Windwalker\Database\Driver\Pdo\PdoHelper;
 abstract class TestDsnResolver
 {
     /**
-     * getDsn
+     * getDsn.
      *
      * @param string $driver
      *
-     * @return  array|bool
+     * @return array|bool
      */
     public static function getDsn($driver)
     {
-        $const = 'WINDWALKER_TEST_DB_DSN_' . strtoupper($driver);
+        $const = 'WINDWALKER_TEST_DB_DSN_'.strtoupper($driver);
 
         // First let's look to see if we have a DSN defined or in the environment variables.
         if (defined($const) || getenv($const)) {

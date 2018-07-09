@@ -9,25 +9,25 @@
 namespace Windwalker\Language\Format;
 
 /**
- * Class FormatInterface
+ * Class FormatInterface.
  *
  * @since 2.0
  */
 interface FormatInterface
 {
     /**
-     * getName
+     * getName.
      *
-     * @return  string
+     * @return string
      */
     public function getName();
 
     /**
-     * parse
+     * parse.
      *
      * @param string $string
      *
-     * @return  array
+     * @return array
      */
     public function parse($string);
 }

@@ -18,28 +18,28 @@ class Compare
     /**
      * Operator symbol.
      *
-     * @var  string
+     * @var string
      */
     protected $operator = '';
 
     /**
      * Compare 1, at left.
      *
-     * @var  string
+     * @var string
      */
     protected $compare1;
 
     /**
      * Compare 2, at right.
      *
-     * @var  string
+     * @var string
      */
     protected $compare2;
 
     /**
      * The compare callback.
      *
-     * @var  callable
+     * @var callable
      */
     protected $handler = null;
 
@@ -64,7 +64,7 @@ class Compare
      * @param string $quote1 Quote compare1.
      * @param string $quote2 Quote compare2.
      *
-     * @return  string
+     * @return string
      */
     public function toString($quote1 = null, $quote2 = null)
     {
@@ -93,21 +93,21 @@ class Compare
     /**
      * Magic method to convert this to string.
      *
-     * @return  string
+     * @return string
      */
     public function __toString()
     {
         try {
             return $this->toString();
         } catch (\Exception $e) {
-            return '<pre>' . $e . '</pre>';
+            return '<pre>'.$e.'</pre>';
         }
     }
 
     /**
      * Compare 2 getter.
      *
-     * @return  string
+     * @return string
      */
     public function getCompare2()
     {
@@ -117,9 +117,9 @@ class Compare
     /**
      * Compare 2 setter.
      *
-     * @param   string $compare2 Compare 2.
+     * @param string $compare2 Compare 2.
      *
-     * @return  Compare  Return self to support chaining.
+     * @return Compare Return self to support chaining.
      */
     public function setCompare2($compare2)
     {
@@ -131,7 +131,7 @@ class Compare
     /**
      * Compare 1 getter.
      *
-     * @return  string
+     * @return string
      */
     public function getCompare1()
     {
@@ -141,9 +141,9 @@ class Compare
     /**
      * Compare 1 setter.
      *
-     * @param   string $compare1 Compare 1.
+     * @param string $compare1 Compare 1.
      *
-     * @return  Compare  Return self to support chaining.
+     * @return Compare Return self to support chaining.
      */
     public function setCompare1($compare1)
     {
@@ -155,7 +155,7 @@ class Compare
     /**
      * Swap compares.
      *
-     * @return  Compare  Return self to support chaining.
+     * @return Compare Return self to support chaining.
      */
     public function swap()
     {
@@ -173,7 +173,7 @@ class Compare
      *
      * @param bool $strict Use strict compare.
      *
-     * @return  boolean  The result of compare.
+     * @return bool The result of compare.
      */
     public function compare($strict = false)
     {
@@ -183,7 +183,7 @@ class Compare
     /**
      * Operator getter.
      *
-     * @return  string
+     * @return string
      */
     public function getOperator()
     {
@@ -191,11 +191,11 @@ class Compare
     }
 
     /**
-     * Method to set property operator
+     * Method to set property operator.
      *
-     * @param   string $operator
+     * @param string $operator
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOperator($operator)
     {
@@ -207,10 +207,10 @@ class Compare
     /**
      * Quote our compare string.
      *
-     * @param   string $string The string to quote.
-     * @param   string $quote  The quote symbol.
+     * @param string $string The string to quote.
+     * @param string $quote  The quote symbol.
      *
-     * @return  string Quoted string.
+     * @return string Quoted string.
      */
     public function quote($string, $quote = "''")
     {
@@ -222,13 +222,13 @@ class Compare
             $quote[1] = $quote[0];
         }
 
-        return $quote[0] . $string . $quote[1];
+        return $quote[0].$string.$quote[1];
     }
 
     /**
      * Get handler.
      *
-     * @return  callable
+     * @return callable
      */
     public function getHandler()
     {
@@ -238,9 +238,9 @@ class Compare
     /**
      * Ser handler.
      *
-     * @param   callable $handler The compare handler.
+     * @param callable $handler The compare handler.
      *
-     * @return  Compare  Return self to support chaining.
+     * @return Compare Return self to support chaining.
      */
     public function setHandler($handler)
     {

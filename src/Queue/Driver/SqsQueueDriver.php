@@ -48,7 +48,7 @@ class SqsQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * push
+     * push.
      *
      * @param QueueMessage $message
      *
@@ -57,7 +57,7 @@ class SqsQueueDriver implements QueueDriverInterface
     public function push(QueueMessage $message)
     {
         $request = [
-            'QueueUrl' => $this->getQueueUrl($message->getQueueName()),
+            'QueueUrl'    => $this->getQueueUrl($message->getQueueName()),
             'MessageBody' => json_encode($message),
         ];
 
@@ -71,7 +71,7 @@ class SqsQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
@@ -81,13 +81,13 @@ class SqsQueueDriver implements QueueDriverInterface
     {
         $result = $this->client->receiveMessage(
             [
-                'QueueUrl' => $this->getQueueUrl($queue),
+                'QueueUrl'       => $this->getQueueUrl($queue),
                 'AttributeNames' => ['ApproximateReceiveCount'],
             ]
         );
 
         if ($result['Messages'] === null) {
-            return null;
+            return;
         }
 
         $data = $result['Messages'][0];
@@ -105,19 +105,19 @@ class SqsQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|string $message
      *
      * @return static
-     * @internal param null $queue
      *
+     * @internal param null $queue
      */
     public function delete(QueueMessage $message)
     {
         $this->client->deleteMessage(
             [
-                'QueueUrl' => $this->getQueueUrl($message->getQueueName()),
+                'QueueUrl'      => $this->getQueueUrl($message->getQueueName()),
                 'ReceiptHandle' => $this->getReceiptHandle($message),
             ]
         );
@@ -126,7 +126,7 @@ class SqsQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|string $message
      *
@@ -136,8 +136,8 @@ class SqsQueueDriver implements QueueDriverInterface
     {
         $this->client->changeMessageVisibility(
             [
-                'QueueUrl' => $this->getQueueUrl($message->getQueueName()),
-                'ReceiptHandle' => $this->getReceiptHandle($message),
+                'QueueUrl'          => $this->getQueueUrl($message->getQueueName()),
+                'ReceiptHandle'     => $this->getReceiptHandle($message),
                 'VisibilityTimeout' => $message->getDelay(),
             ]
         );
@@ -146,7 +146,7 @@ class SqsQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * getQueueUrl
+     * getQueueUrl.
      *
      * @param string $queue
      *
@@ -164,11 +164,11 @@ class SqsQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * getReceiptHandle
+     * getReceiptHandle.
      *
      * @param QueueMessage $message
      *
-     * @return  string
+     * @return string
      */
     public function getReceiptHandle(QueueMessage $message)
     {
@@ -176,14 +176,15 @@ class SqsQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * getSqsClient
+     * getSqsClient.
      *
      * @param string $key
      * @param string $secret
      * @param array  $options
      *
-     * @return  SqsClient
      * @throws \DomainException
+     *
+     * @return SqsClient
      */
     public function getSqsClient($key, $secret, array $options = [])
     {
@@ -192,10 +193,10 @@ class SqsQueueDriver implements QueueDriverInterface
         }
 
         $defaultOptions = [
-            'region' => 'ap-northeast-1',
-            'version' => 'latest',
+            'region'      => 'ap-northeast-1',
+            'version'     => 'latest',
             'credentials' => [
-                'key' => $key,
+                'key'    => $key,
                 'secret' => $secret,
             ],
         ];

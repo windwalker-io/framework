@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,16 +11,16 @@ namespace Windwalker\Router\Test\Compiler;
 use Windwalker\Router\Compiler\TrieGenerator;
 
 /**
- * Test class of TrieGenerator
+ * Test class of TrieGenerator.
  *
  * @since 2.0
  */
 class TrieGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * regexList
+     * regexList.
      *
-     * @return  array
+     * @return array
      */
     public function regexList()
     {
@@ -69,6 +69,6 @@ class TrieGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testGenerate($pattern, $data, $expected, $line)
     {
-        $this->assertEquals($expected, TrieGenerator::generate($pattern, $data), 'Fail at: ' . $line);
+        $this->assertEquals($expected, TrieGenerator::generate($pattern, $data), 'Fail at: '.$line);
     }
 }

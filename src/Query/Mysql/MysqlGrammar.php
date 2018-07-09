@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
 
 /**
- * Class MysqlQueryGrammar
+ * Class MysqlQueryGrammar.
  *
  * @since 2.0
  */
@@ -34,33 +34,33 @@ class MysqlGrammar extends AbstractQueryGrammar
     /**
      * Property query.
      *
-     * @var  Query
+     * @var Query
      */
     public static $query = null;
 
     /**
-     * showDatabases
+     * showDatabases.
      *
      * @param array $where
      *
-     * @return  string
+     * @return string
      */
     public static function listDatabases($where = null)
     {
         $where = $where ? new QueryElement('WHERE', $where, 'AND') : null;
 
-        return 'SHOW DATABASES ' . $where;
+        return 'SHOW DATABASES '.$where;
     }
 
     /**
-     * createDatabase
+     * createDatabase.
      *
      * @param string $name
      * @param bool   $isNotExists
      * @param string $charset
      * @param string $collate
      *
-     * @return  string
+     * @return string
      */
     public static function createDatabase($name, $isNotExists = false, $charset = null, $collate = null)
     {
@@ -70,18 +70,18 @@ class MysqlGrammar extends AbstractQueryGrammar
             'CREATE DATABASE',
             $isNotExists ? 'IF NOT EXISTS' : null,
             $query->quoteName($name),
-            $charset ? 'CHARACTER SET=' . $query->quote($charset) : null,
-            $collate ? 'COLLATE=' . $query->quote($collate) : null
+            $charset ? 'CHARACTER SET='.$query->quote($charset) : null,
+            $collate ? 'COLLATE='.$query->quote($collate) : null
         );
     }
 
     /**
-     * dropTable
+     * dropTable.
      *
      * @param string $db
      * @param bool   $ifExist
      *
-     * @return  string
+     * @return string
      */
     public static function dropDatabase($db, $ifExist = false)
     {
@@ -95,13 +95,13 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * showTableColumn
+     * showTableColumn.
      *
      * @param string       $table
      * @param bool         $full
      * @param string|array $where
      *
-     * @return  string
+     * @return string
      */
     public static function showTableColumns($table, $full = false, $where = null)
     {
@@ -117,12 +117,12 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * showDbTables
+     * showDbTables.
      *
      * @param string $dbname
      * @param string $where
      *
-     * @return  string
+     * @return string
      */
     public static function showDbTables($dbname, $where = null)
     {
@@ -137,7 +137,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * createTable
+     * createTable.
      *
      * @param string       $name
      * @param array        $columns
@@ -149,7 +149,7 @@ class MysqlGrammar extends AbstractQueryGrammar
      * @param string       $defaultCharset
      * @param string       $collate
      *
-     * @return  string
+     * @return string
      */
     public static function createTable(
         $name,
@@ -180,7 +180,7 @@ class MysqlGrammar extends AbstractQueryGrammar
 
         if ($pks) {
             $pks = [
-                'type' => 'PRIMARY KEY',
+                'type'    => 'PRIMARY KEY',
                 'columns' => (array) $pks,
             ];
 
@@ -189,8 +189,8 @@ class MysqlGrammar extends AbstractQueryGrammar
 
         foreach ($keys as $key) {
             $define = [
-                'type' => 'KEY',
-                'name' => null,
+                'type'    => 'KEY',
+                'name'    => null,
                 'columns' => [],
                 'comment' => '',
             ];
@@ -202,31 +202,31 @@ class MysqlGrammar extends AbstractQueryGrammar
             $define = array_merge($define, $key);
 
             $cols[] = strtoupper($define['type'])
-                . ' ' . static::buildIndexDeclare($define['name'], $define['columns']);
+                .' '.static::buildIndexDeclare($define['name'], $define['columns']);
         }
 
-        $cols = "(\n" . implode(",\n", $cols) . "\n)";
+        $cols = "(\n".implode(",\n", $cols)."\n)";
 
         return static::build(
             'CREATE TABLE',
             $ifNotExists ? 'IF NOT EXISTS' : null,
             $query->quoteName($name),
             $cols,
-            'ENGINE=' . $engine,
-            $autoIncrement ? 'AUTO_INCREMENT=' . $autoIncrement : null,
-            $defaultCharset ? 'DEFAULT CHARSET=' . $defaultCharset : null,
-            $collate ? 'COLLATE=' . $collate : null
+            'ENGINE='.$engine,
+            $autoIncrement ? 'AUTO_INCREMENT='.$autoIncrement : null,
+            $defaultCharset ? 'DEFAULT CHARSET='.$defaultCharset : null,
+            $collate ? 'COLLATE='.$collate : null
         );
     }
 
     /**
-     * dropTable
+     * dropTable.
      *
      * @param string $table
      * @param bool   $ifExists
      * @param string $option
      *
-     * @return  string
+     * @return string
      */
     public static function dropTable($table, $ifExists = false, $option = '')
     {
@@ -241,7 +241,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * alterColumn
+     * alterColumn.
      *
      * @param string $operation
      * @param string $table
@@ -253,7 +253,7 @@ class MysqlGrammar extends AbstractQueryGrammar
      * @param null   $position
      * @param string $comment
      *
-     * @return  string
+     * @return string
      */
     public static function alterColumn(
         $operation,
@@ -278,14 +278,14 @@ class MysqlGrammar extends AbstractQueryGrammar
             $type ?: 'text',
             $signed ? null : 'UNSIGNED',
             $allowNull ? null : 'NOT NULL',
-            $default !== false ? 'DEFAULT ' . static::getQuery()->validValue($default) : null,
-            $comment ? 'COMMENT ' . $query->quote($comment) : null,
+            $default !== false ? 'DEFAULT '.static::getQuery()->validValue($default) : null,
+            $comment ? 'COMMENT '.$query->quote($comment) : null,
             static::handleColumnPosition($position)
         );
     }
 
     /**
-     * Add column
+     * Add column.
      *
      * @param string $table
      * @param string $column
@@ -296,7 +296,7 @@ class MysqlGrammar extends AbstractQueryGrammar
      * @param string $position
      * @param string $comment
      *
-     * @return  string
+     * @return string
      */
     public static function addColumn(
         $table,
@@ -312,7 +312,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * changeColumn
+     * changeColumn.
      *
      * @param string $table
      * @param string $oldColumn
@@ -324,7 +324,7 @@ class MysqlGrammar extends AbstractQueryGrammar
      * @param string $position
      * @param string $comment
      *
-     * @return  string
+     * @return string
      */
     public static function changeColumn(
         $table,
@@ -353,7 +353,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * modifyColumn
+     * modifyColumn.
      *
      * @param string $table
      * @param string $column
@@ -364,7 +364,7 @@ class MysqlGrammar extends AbstractQueryGrammar
      * @param string $position
      * @param string $comment
      *
-     * @return  string
+     * @return string
      */
     public static function modifyColumn(
         $table,
@@ -390,12 +390,12 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * dropColumn
+     * dropColumn.
      *
      * @param string $table
      * @param string $column
      *
-     * @return  string
+     * @return string
      */
     public static function dropColumn($table, $column)
     {
@@ -410,7 +410,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * addIndex
+     * addIndex.
      *
      * @param string       $table
      * @param string       $type
@@ -425,7 +425,7 @@ class MysqlGrammar extends AbstractQueryGrammar
         $query = static::getQuery();
         $cols = static::buildIndexDeclare($name, $columns);
 
-        $comment = $comment ? 'COMMENT ' . $query->quote($comment) : '';
+        $comment = $comment ? 'COMMENT '.$query->quote($comment) : '';
 
         return static::build(
             'ALTER TABLE',
@@ -438,7 +438,7 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * buildIndexDeclare
+     * buildIndexDeclare.
      *
      * @param string $name
      * @param array  $columns
@@ -457,13 +457,13 @@ class MysqlGrammar extends AbstractQueryGrammar
                 $key = $query->quoteName($vals[0]);
 
                 if (isset($vals[1])) {
-                    $key .= '(' . trim($vals[1], '()') . ')';
+                    $key .= '('.trim($vals[1], '()').')';
                 }
 
                 $cols[] = $key;
             } else {
                 if (!is_numeric($val)) {
-                    $string = is_string($val) ? ' ' . $query->quote($val) : '';
+                    $string = is_string($val) ? ' '.$query->quote($val) : '';
 
                     throw new \InvalidArgumentException(
                         sprintf(
@@ -474,26 +474,26 @@ class MysqlGrammar extends AbstractQueryGrammar
                     );
                 }
 
-                $cols[] = $query->quoteName($key) . '(' . $val . ')';
+                $cols[] = $query->quoteName($key).'('.$val.')';
             }
         }
 
-        $cols = '(' . implode(', ', $cols) . ')';
+        $cols = '('.implode(', ', $cols).')';
 
         return static::build(
             $name ? $query->quoteName($name) : null,
-            $table ? 'ON ' . $query->quoteName($table) : null,
+            $table ? 'ON '.$query->quoteName($table) : null,
             $cols
         );
     }
 
     /**
-     * dropIndex
+     * dropIndex.
      *
      * @param string $table
      * @param string $name
      *
-     * @return  string
+     * @return string
      */
     public static function dropIndex($table, $name)
     {
@@ -508,9 +508,9 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * build
+     * build.
      *
-     * @return  string
+     * @return string
      */
     public static function build()
     {
@@ -530,18 +530,18 @@ class MysqlGrammar extends AbstractQueryGrammar
     }
 
     /**
-     * handleColumnPosition
+     * handleColumnPosition.
      *
      * @param string $position
      *
-     * @return  string
+     * @return string
      */
     protected static function handleColumnPosition($position)
     {
         $query = static::getQuery();
 
         if (!$position) {
-            return null;
+            return;
         }
 
         $posColumn = '';
@@ -554,17 +554,17 @@ class MysqlGrammar extends AbstractQueryGrammar
             $posColumn = $query->quoteName($posColumn);
         }
 
-        return $position . ' ' . $posColumn;
+        return $position.' '.$posColumn;
     }
 
     /**
-     * replace
+     * replace.
      *
      * @param string $name
      * @param array  $columns
      * @param array  $values
      *
-     * @return  string
+     * @return string
      */
     public static function replace($name, $columns = [], $values = [])
     {
@@ -576,15 +576,15 @@ class MysqlGrammar extends AbstractQueryGrammar
 
         $query = substr(trim($query), 6);
 
-        return 'REPLACE' . $query;
+        return 'REPLACE'.$query;
     }
 
     /**
-     * getQuery
+     * getQuery.
      *
      * @param bool $new
      *
-     * @return  Query
+     * @return Query
      */
     public static function getQuery($new = false)
     {

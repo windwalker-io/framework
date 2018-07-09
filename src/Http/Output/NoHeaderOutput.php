@@ -18,13 +18,13 @@ class NoHeaderOutput extends Output
     /**
      * Method to override parent header() and do nothing.
      *
-     * @param   string  $string    The header string.
-     * @param   boolean $replace   The optional replace parameter indicates whether the header should
-     *                             replace a previous similar header, or add a second header of the same type.
-     * @param   integer $code      Forces the HTTP response code to the specified value. Note that
-     *                             this parameter only has an effect if the string is not empty.
+     * @param string $string  The header string.
+     * @param bool   $replace The optional replace parameter indicates whether the header should
+     *                        replace a previous similar header, or add a second header of the same type.
+     * @param int    $code    Forces the HTTP response code to the specified value. Note that
+     *                        this parameter only has an effect if the string is not empty.
      *
-     * @return  static
+     * @return static
      */
     public function header($string, $replace = true, $code = null)
     {

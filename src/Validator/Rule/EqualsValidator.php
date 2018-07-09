@@ -20,14 +20,14 @@ class EqualsValidator extends AbstractValidator
     /**
      * Property data.
      *
-     * @var  mixed
+     * @var mixed
      */
     protected $compare = '';
 
     /**
      * Property strict.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $strict = false;
 
@@ -48,14 +48,14 @@ class EqualsValidator extends AbstractValidator
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {
         if ($this->strict) {
-            return ($this->compare === $value);
+            return $this->compare === $value;
         }
 
-        return ($this->compare == $value);
+        return $this->compare == $value;
     }
 }

@@ -20,16 +20,16 @@ class FileField extends TextField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'file';
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return array
      */
     public function prepare(&$attrs)
     {
@@ -39,9 +39,9 @@ class FileField extends TextField
     }
 
     /**
-     * getAccessors
+     * getAccessors.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.1.2
      */

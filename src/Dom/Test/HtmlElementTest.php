@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,16 +12,16 @@ use Windwalker\Dom\Helper\DomHelper;
 use Windwalker\Dom\HtmlElement;
 
 /**
- * Test class of HtmlElement
+ * Test class of HtmlElement.
  *
  * @since 2.0
  */
 class HtmlElementTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * domTestCase
+     * domTestCase.
      *
-     * @return  array
+     * @return array
      */
     public function domTestCase()
     {
@@ -58,7 +58,7 @@ class HtmlElementTest extends \PHPUnit\Framework\TestCase
 				</ul>',
                 'ul',
                 new HtmlElement('option', 'Yes', ['value' => 1])
-                . new HtmlElement('option', 'No', ['value' => 0]),
+                .new HtmlElement('option', 'No', ['value' => 0]),
                 ['id' => 'foo', 'class' => 'bar'],
                 false,
             ],
@@ -92,12 +92,12 @@ class HtmlElementTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test create().
      *
-     * @param string  $name
-     * @param string  $expect
-     * @param string  $tag
-     * @param string  $content
-     * @param array   $attribs
-     * @param boolean $forcePaired
+     * @param string $name
+     * @param string $expect
+     * @param string $tag
+     * @param string $content
+     * @param array  $attribs
+     * @param bool   $forcePaired
      *
      * @return void
      *
@@ -112,7 +112,7 @@ class HtmlElementTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             DomHelper::minify($expect),
             DomHelper::minify($element->toString($forcePaired)),
-            'Dom build case fail: ' . $name
+            'Dom build case fail: '.$name
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Mysql\MysqlGrammar;
 
 /**
- * Test class of MysqlGrammar
+ * Test class of MysqlGrammar.
  *
  * @since 2.0
  */
@@ -21,7 +21,7 @@ class MysqlGrammarTest extends AbstractQueryTestCase
     /**
      * Property quote.
      *
-     * @var  array
+     * @var array
      */
     protected static $quote = '`';
 
@@ -34,7 +34,7 @@ class MysqlGrammarTest extends AbstractQueryTestCase
      */
     public function testShowDatabases()
     {
-        $expected = "SHOW DATABASES WHERE a = b";
+        $expected = 'SHOW DATABASES WHERE a = b';
 
         $actual = MysqlGrammar::listDatabases('a = b');
 
@@ -182,8 +182,8 @@ CREATE TABLE IF NOT EXISTS {$this->qn('foo')} (
 SQL;
 
         $columns = [
-            'id' => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
-            'name' => ['varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''],
+            'id'    => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
+            'name'  => ['varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''],
             'email' => "varchar(255) NOT NULL COMMENT 'Member email'",
         ];
 
@@ -209,8 +209,8 @@ CREATE TABLE {$this->qn('foo')} (
 SQL;
 
         $columns = [
-            'id' => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
-            'name' => ['varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''],
+            'id'    => 'int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT \'Primary Key\'',
+            'name'  => ['varchar(255)', 'NOT NULL', 'COMMENT \'Member Name\''],
             'email' => "varchar(255) NOT NULL COMMENT 'Member email'",
         ];
 
@@ -452,7 +452,7 @@ SQL;
      */
     public function testBuild()
     {
-        $expected = "FLOWER SAKURA SUNFLOWER OLIVE";
+        $expected = 'FLOWER SAKURA SUNFLOWER OLIVE';
 
         $actual = MysqlGrammar::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Application\Test\Stub\StubCli;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of AbstractCliApplication
+ * Test class of AbstractCliApplication.
  *
  * @since 2.0
  */
@@ -37,10 +37,11 @@ class AbstractCliApplicationTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test__construct
+     * test__construct.
      *
-     * @return  void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function test__construct()
     {

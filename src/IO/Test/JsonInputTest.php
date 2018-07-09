@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\IO\JsonInput;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of JsonInput
+ * Test class of JsonInput.
  *
  * @since 2.0
  */
@@ -49,10 +49,12 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\JsonInput::__construct method.
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\IO\JsonInput::__construct
+     *
      * @since   2.0
      */
     public function test__construct()
@@ -90,9 +92,10 @@ class JsonInputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Json::getRaw method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\JsonInput::getRawData()
+     *
      * @since   2.0
      */
     public function testGetRawData()

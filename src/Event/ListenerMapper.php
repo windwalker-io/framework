@@ -18,17 +18,17 @@ class ListenerMapper
     /**
      * Property maps.
      *
-     * @var  array
+     * @var array
      */
     protected static $maps = [];
 
     /**
-     * mapListener
+     * mapListener.
      *
-     * @param   string          $targetClass
-     * @param   object|callable $listener
+     * @param string          $targetClass
+     * @param object|callable $listener
      *
-     * @return  boolean
+     * @return bool
      */
     public static function register($targetClass, $listener)
     {
@@ -56,11 +56,11 @@ class ListenerMapper
     }
 
     /**
-     * add
+     * add.
      *
-     * @param   DispatcherAwareInterface $target
+     * @param DispatcherAwareInterface $target
      *
-     * @return  boolean
+     * @return bool
      */
     public static function add(DispatcherAwareInterface $target)
     {

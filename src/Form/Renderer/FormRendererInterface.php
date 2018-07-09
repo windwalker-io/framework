@@ -18,7 +18,7 @@ use Windwalker\Form\Field\AbstractField;
 interface FormRendererInterface
 {
     /**
-     * renderField
+     * renderField.
      *
      * @param AbstractField $field
      * @param array         $attribs
@@ -29,7 +29,7 @@ interface FormRendererInterface
     public function renderField(AbstractField $field, array $attribs = [], array $options = []);
 
     /**
-     * renderLabel
+     * renderLabel.
      *
      * @param AbstractField $field
      * @param array         $attribs
@@ -39,7 +39,7 @@ interface FormRendererInterface
     public function renderLabel(AbstractField $field, array $attribs = []);
 
     /**
-     * renderInput
+     * renderInput.
      *
      * @param AbstractField $field
      * @param array         $attribs

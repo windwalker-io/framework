@@ -13,11 +13,10 @@ use Windwalker\Console\Descriptor\Text\TextCommandDescriptor;
 use Windwalker\Console\Descriptor\Text\TextDescriptorHelper;
 use Windwalker\Console\Descriptor\Text\TextOptionDescriptor;
 use Windwalker\Console\Test\Mock\MockIO;
-use Windwalker\Console\Test\Output\TestStdout;
 use Windwalker\Console\Test\Stubs\FooCommand;
 
 /**
- * Class TextDescriptorHelperTest
+ * Class TextDescriptorHelperTest.
  *
  * @since  2.0
  */

@@ -21,7 +21,6 @@ if (!defined('OPENSSL_RAW_DATA')) {
  *       Chosen-Cipher and Timing attack.
  *
  * @see    http://stackoverflow.com/a/19445173
- *
  * @since  2.0
  */
 abstract class AbstractCipher implements CipherInterface
@@ -42,35 +41,35 @@ abstract class AbstractCipher implements CipherInterface
     /**
      * Property key.
      *
-     * @var  string
+     * @var string
      */
     protected $privateKey;
 
     /**
      * Property pbkdf2Salt.
      *
-     * @var  string
+     * @var string
      */
     protected $pbkdf2Salt;
 
     /**
      * Property secureEncryptionKey.
      *
-     * @var  string
+     * @var string
      */
     protected $secureEncryptionKey;
 
     /**
      * Property secureHMACKey.
      *
-     * @var  string
+     * @var string
      */
     protected $secureHMACKey;
 
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options;
 
@@ -78,11 +77,9 @@ abstract class AbstractCipher implements CipherInterface
      * Constructor.
      *
      * @param string $key
-     *
      * @param array  $options
      *
      * @since  2.0
-     *
      */
     public function __construct($key = null, array $options = [])
     {
@@ -98,14 +95,14 @@ abstract class AbstractCipher implements CipherInterface
     /**
      * Method to encrypt a data string.
      *
-     * @param   string $data The data string to encrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
-     *
-     * @return  string  The encrypted data string.
+     * @param string $data The data string to encrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
+     *
+     * @return string The encrypted data string.
      *
      * @since   2.0
      */
@@ -122,7 +119,7 @@ abstract class AbstractCipher implements CipherInterface
         // Encrypt the data.
         $encrypted = $this->doEncrypt($data, $key, $iv);
 
-        $hmac = $this->hmac($this->pbkdf2Salt . $iv . $encrypted);
+        $hmac = $this->hmac($this->pbkdf2Salt.$iv.$encrypted);
 
         return implode(
             ':',
@@ -136,26 +133,26 @@ abstract class AbstractCipher implements CipherInterface
     }
 
     /**
-     * doEncrypt
+     * doEncrypt.
      *
-     * @param   string $data The data string to encrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The data string to encrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string
+     * @return string
      */
     abstract protected function doEncrypt($data, $key, $iv);
 
     /**
      * Method to decrypt a data string.
      *
-     * @param   string $data The encrypted string to decrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
-     *
-     * @return  string  The decrypted data string.
+     * @param string $data The encrypted string to decrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
      * @throws \RuntimeException
+     *
+     * @return string The decrypted data string.
      *
      * @since    2.0
      */
@@ -175,7 +172,7 @@ abstract class AbstractCipher implements CipherInterface
 
             $this->derivateSecureKeys($key, $pbkdf2Salt);
 
-            $calculatedHmac = $this->hmac($pbkdf2Salt . $iv . $encrypted);
+            $calculatedHmac = $this->hmac($pbkdf2Salt.$iv.$encrypted);
 
             if (!$this->equalHashes($calculatedHmac, $hmac)) {
                 throw new \RuntimeException('HMAC ERROR: Invalid HMAC.');
@@ -208,13 +205,13 @@ abstract class AbstractCipher implements CipherInterface
     }
 
     /**
-     * doDecrypt
+     * doDecrypt.
      *
-     * @param   string $data The encrypted string to decrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The encrypted string to decrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string
+     * @return string
      */
     abstract protected function doDecrypt($data, $key, $iv);
 
@@ -255,11 +252,11 @@ abstract class AbstractCipher implements CipherInterface
     }
 
     /**
-     * getIVKey
-     *
-     * @return  string
+     * getIVKey.
      *
      * @throws \RuntimeException
+     *
+     * @return string
      */
     public function getIVKey()
     {
@@ -273,27 +270,27 @@ abstract class AbstractCipher implements CipherInterface
     }
 
     /**
-     * randomPseudoBytes
+     * randomPseudoBytes.
      *
      * @param int $size
      *
-     * @return  string
-     *
      * @throws \RuntimeException
+     *
+     * @return string
      */
     abstract protected function randomPseudoBytes($size = null);
 
     /**
-     * getIVSize
+     * getIVSize.
      *
-     * @return  integer
+     * @return int
      */
     abstract public function getIVSize();
 
     /**
-     * Method to get property PrivateKey
+     * Method to get property PrivateKey.
      *
-     * @return  string
+     * @return string
      */
     public function getPrivateKey()
     {
@@ -301,11 +298,11 @@ abstract class AbstractCipher implements CipherInterface
     }
 
     /**
-     * Method to set property privateKey
+     * Method to set property privateKey.
      *
-     * @param   string $privateKey
+     * @param string $privateKey
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPrivateKey($privateKey)
     {
@@ -360,7 +357,7 @@ abstract class AbstractCipher implements CipherInterface
     }
 
     /**
-     * PBKDF2 key derivation function as defined by RSA's PKCS #5: https://www.ietf.org/rfc/rfc2898.txt
+     * PBKDF2 key derivation function as defined by RSA's PKCS #5: https://www.ietf.org/rfc/rfc2898.txt.
      *
      * Test vectors can be found here: https://www.ietf.org/rfc/rfc6070.txt
      * This implementation of PBKDF2 was originally created by https://defuse.ca

@@ -11,7 +11,7 @@ namespace Windwalker\Query\Sqlite;
 use Windwalker\Query\QueryExpression;
 
 /**
- * Class SqliteExpression
+ * Class SqliteExpression.
  *
  * @since 2.0
  */
@@ -23,17 +23,17 @@ class SqliteExpression extends QueryExpression
      * Usage:
      * $query->select($query->concatenate(array('a', 'b')));
      *
-     * @param   array  $values    An array of values to concatenate.
-     * @param   string $separator As separator to place between each value.
+     * @param array  $values    An array of values to concatenate.
+     * @param string $separator As separator to place between each value.
      *
-     * @return  string  The concatenated values.
+     * @return string The concatenated values.
      *
      * @since   2.0
      */
     public function concatenate($values, $separator = null)
     {
         if ($separator) {
-            return implode(' || ' . $this->query->quote($separator) . ' || ', $values);
+            return implode(' || '.$this->query->quote($separator).' || ', $values);
         } else {
             return implode(' || ', $values);
         }
@@ -47,11 +47,11 @@ class SqliteExpression extends QueryExpression
      * Usage:
      * $query->select($query->charLength('a'));
      *
-     * @param   string $field     A value.
-     * @param   string $operator  Comparison operator between charLength integer value and $condition
-     * @param   string $condition Integer value to compare charLength with.
+     * @param string $field     A value.
+     * @param string $operator  Comparison operator between charLength integer value and $condition
+     * @param string $condition Integer value to compare charLength with.
      *
-     * @return  string  The required char length call.
+     * @return string The required char length call.
      *
      * @since   2.0
      *
@@ -60,8 +60,8 @@ class SqliteExpression extends QueryExpression
     public function char_length($field, $operator = null, $condition = null)
     {
         // @codingStandardsIgnoreEnd
-        return 'length(' . $field . ')' . ($operator !== null && $condition !== null
-                ? ' ' . $operator . ' ' . $condition
+        return 'length('.$field.')'.($operator !== null && $condition !== null
+                ? ' '.$operator.' '.$condition
                 : '');
     }
 }

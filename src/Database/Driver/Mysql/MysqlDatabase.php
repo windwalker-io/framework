@@ -12,32 +12,32 @@ use Windwalker\Database\Command\AbstractDatabase;
 use Windwalker\Query\Mysql\MysqlGrammar;
 
 /**
- * Class MysqlDatabase
+ * Class MysqlDatabase.
  *
  * @since 2.0
  */
 class MysqlDatabase extends AbstractDatabase
 {
     /**
-     * select
+     * select.
      *
-     * @return  static
+     * @return static
      */
     public function select()
     {
-        $this->db->setQuery('USE ' . $this->db->quoteName($this->name))->execute();
+        $this->db->setQuery('USE '.$this->db->quoteName($this->name))->execute();
 
         return $this;
     }
 
     /**
-     * createDatabase
+     * createDatabase.
      *
      * @param bool   $ifNotExists
      * @param string $charset
      * @param string $collate
      *
-     * @return  static
+     * @return static
      */
     public function create($ifNotExists = false, $charset = 'utf8', $collate = 'utf8_unicode_ci')
     {
@@ -49,11 +49,11 @@ class MysqlDatabase extends AbstractDatabase
     }
 
     /**
-     * dropDatabase
+     * dropDatabase.
      *
      * @param bool $ifExists
      *
-     * @return  static
+     * @return static
      */
     public function drop($ifExists = false)
     {
@@ -65,12 +65,12 @@ class MysqlDatabase extends AbstractDatabase
     }
 
     /**
-     * renameDatabase
+     * renameDatabase.
      *
-     * @param string  $newName
-     * @param boolean $returnNew
+     * @param string $newName
+     * @param bool   $returnNew
      *
-     * @return  static
+     * @return static
      */
     public function rename($newName, $returnNew = true)
     {

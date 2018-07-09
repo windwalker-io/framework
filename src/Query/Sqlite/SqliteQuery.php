@@ -11,7 +11,7 @@ namespace Windwalker\Query\Sqlite;
 use Windwalker\Query\Query;
 
 /**
- * Class SqliteQuery
+ * Class SqliteQuery.
  *
  * @since 2.0
  */
@@ -20,7 +20,8 @@ class SqliteQuery extends Query
     /**
      * The name of the database driver.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     public $name = 'sqlite';
@@ -31,7 +32,8 @@ class SqliteQuery extends Query
      * same character is used for both sides of the quoted name, else the first character will be
      * used for the opening quote and the second for the closing quote.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nameQuote = '`';
@@ -39,7 +41,8 @@ class SqliteQuery extends Query
     /**
      * Holds key / value pair of bound objects.
      *
-     * @var    mixed
+     * @var mixed
+     *
      * @since  2.0
      */
     protected $bounded = [];
@@ -49,16 +52,16 @@ class SqliteQuery extends Query
      * execution. Also removes a variable that has been bounded from the internal bounded array when the passed in
      * value is null.
      *
-     * @param   string|integer $key             The key that will be used in your SQL query to reference the value.
-     *                                          Usually of the form ':key', but can also be an integer.
-     * @param   mixed          &$value          The value that will be bound. The value is passed by reference to
-     *                                          support output parameters such as those possible with stored
-     *                                          procedures.
-     * @param   integer        $dataType        Constant corresponding to a SQL datatype.
-     * @param   integer        $length          The length of the variable. Usually required for OUTPUT parameters.
-     * @param   array          $driverOptions   Optional driver options to be used.
+     * @param string|int $key           The key that will be used in your SQL query to reference the value.
+     *                                  Usually of the form ':key', but can also be an integer.
+     * @param mixed      &$value        The value that will be bound. The value is passed by reference to
+     *                                  support output parameters such as those possible with stored
+     *                                  procedures.
+     * @param int        $dataType      Constant corresponding to a SQL datatype.
+     * @param int        $length        The length of the variable. Usually required for OUTPUT parameters.
+     * @param array      $driverOptions Optional driver options to be used.
      *
-     * @return  static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -97,9 +100,9 @@ class SqliteQuery extends Query
      * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then
      * that item is returned.
      *
-     * @param   mixed $key The bounded variable key to retrieve.
+     * @param mixed $key The bounded variable key to retrieve.
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -112,8 +115,6 @@ class SqliteQuery extends Query
                 return $this->bounded[$key];
             }
         }
-
-        return null;
     }
 
     /**
@@ -121,10 +122,10 @@ class SqliteQuery extends Query
      *
      * Note: Using query objects with bound variables is preferable to the below.
      *
-     * @param   string  $text  The string to be escaped.
-     * @param   boolean $extra Unused optional parameter to provide extra escaping.
+     * @param string $text  The string to be escaped.
+     * @param bool   $extra Unused optional parameter to provide extra escaping.
      *
-     * @return  string  The escaped string.
+     * @return string The escaped string.
      *
      * @since   2.0
      */
@@ -144,9 +145,9 @@ class SqliteQuery extends Query
     /**
      * Clear data from the query or a specific clause of the query.
      *
-     * @param   string $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
+     * @param string $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
      *
-     * @return  SqliteQuery  Returns this object to allow chaining.
+     * @return SqliteQuery Returns this object to allow chaining.
      *
      * @since   2.0
      */

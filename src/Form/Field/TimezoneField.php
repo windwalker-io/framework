@@ -20,14 +20,14 @@ class TimezoneField extends ListField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'timezone';
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
-     * @return  array
+     * @return array
      */
     protected function prepareOptions()
     {

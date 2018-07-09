@@ -14,7 +14,6 @@ namespace Windwalker\Html\Grid;
  * This is currently a Joomla JGrid fork.
  *
  * @see    https://github.com/joomla/joomla-cms/blob/staging/libraries/joomla/grid/grid.php
- *
  * @since  2.1
  */
 class Grid
@@ -26,39 +25,44 @@ class Grid
     const ROW_NORMAL = 3;
 
     /**
-     * Array of columns
+     * Array of columns.
+     *
      * @var array
      */
     protected $columns = [];
 
     /**
-     * Current active row
+     * Current active row.
+     *
      * @var int
      */
     protected $activeRow = 0;
 
     /**
-     * Rows of the table (including header and footer rows)
+     * Rows of the table (including header and footer rows).
+     *
      * @var array
      */
     protected $rows = [];
 
     /**
-     * Header and Footer row-IDs
+     * Header and Footer row-IDs.
+     *
      * @var array
      */
     protected $specialRows = ['header' => [], 'footer' => []];
 
     /**
-     * Associative array of attributes for the table-tag
+     * Associative array of attributes for the table-tag.
+     *
      * @var array
      */
     protected $attribs;
 
     /**
-     * Constructor for a Grid object
+     * Constructor for a Grid object.
      *
-     * @param   array $attribs Associative array of attributes for the table-tag
+     * @param array $attribs Associative array of attributes for the table-tag
      *
      * @since   2.1
      */
@@ -68,7 +72,7 @@ class Grid
     }
 
     /**
-     * create
+     * create.
      *
      * @param array $attribs
      *
@@ -82,7 +86,7 @@ class Grid
     /**
      * Magic function to render this object as a table.
      *
-     * @return  string
+     * @return string
      *
      * @since 2.1
      */
@@ -96,12 +100,12 @@ class Grid
     }
 
     /**
-     * Method to set the attributes for a table-tag
+     * Method to set the attributes for a table-tag.
      *
-     * @param   array $attribs Associative array of attributes for the table-tag
-     * @param   bool  $replace Replace possibly existing attributes
+     * @param array $attribs Associative array of attributes for the table-tag
+     * @param bool  $replace Replace possibly existing attributes
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since 2.1
      */
@@ -117,9 +121,9 @@ class Grid
     }
 
     /**
-     * Get the Attributes of the current table
+     * Get the Attributes of the current table.
      *
-     * @return  array Associative array of attributes
+     * @return array Associative array of attributes
      *
      * @since 2.1
      */
@@ -129,11 +133,11 @@ class Grid
     }
 
     /**
-     * Add new column name to process
+     * Add new column name to process.
      *
-     * @param   string $name Internal column name
+     * @param string $name Internal column name
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since 2.1
      */
@@ -145,9 +149,9 @@ class Grid
     }
 
     /**
-     * Returns the list of internal columns
+     * Returns the list of internal columns.
      *
-     * @return  array List of internal columns
+     * @return array List of internal columns
      *
      * @since 2.1
      */
@@ -157,11 +161,11 @@ class Grid
     }
 
     /**
-     * Delete column by name
+     * Delete column by name.
      *
-     * @param   string $name Name of the column to be deleted
+     * @param string $name Name of the column to be deleted
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since 2.1
      */
@@ -179,11 +183,11 @@ class Grid
 
     /**
      * Method to set a whole range of columns at once
-     * This can be used to re-order the columns, too
+     * This can be used to re-order the columns, too.
      *
-     * @param   array $columns List of internal column names
+     * @param array $columns List of internal column names
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since 2.1
      */
@@ -196,12 +200,12 @@ class Grid
 
     /**
      * Adds a row to the table and sets the currently
-     * active row to the new row
+     * active row to the new row.
      *
-     * @param   array    $attribs Associative array of attributes for the row
-     * @param   int|bool $special 1 for a new row in the header, 2 for a new row in the footer
+     * @param array    $attribs Associative array of attributes for the row
+     * @param int|bool $special 1 for a new row in the header, 2 for a new row in the footer
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since   2.1
      */
@@ -222,7 +226,7 @@ class Grid
     }
 
     /**
-     * Method to get the attributes of the currently active row
+     * Method to get the attributes of the currently active row.
      *
      * @return array Associative array of attributes
      *
@@ -234,11 +238,11 @@ class Grid
     }
 
     /**
-     * Method to set the attributes of the currently active row
+     * Method to set the attributes of the currently active row.
      *
-     * @param   array $attribs Associative array of attributes
+     * @param array $attribs Associative array of attributes
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since   2.1
      */
@@ -250,9 +254,9 @@ class Grid
     }
 
     /**
-     * Get the currently active row ID
+     * Get the currently active row ID.
      *
-     * @return  int ID of the currently active row
+     * @return int ID of the currently active row
      *
      * @since   2.1
      */
@@ -262,11 +266,11 @@ class Grid
     }
 
     /**
-     * Set the currently active row
+     * Set the currently active row.
      *
-     * @param   int $id ID of the row to be set to current
+     * @param int $id ID of the row to be set to current
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since  2.1
      */
@@ -279,14 +283,14 @@ class Grid
 
     /**
      * Set cell content for a specific column for the
-     * currently active row
+     * currently active row.
      *
-     * @param   string $name    Name of the column
-     * @param   string $content Content for the cell
-     * @param   array  $attribs Associative array of attributes for the td-element
-     * @param   bool   $replace If false, the content is appended to the current content of the cell
+     * @param string $name    Name of the column
+     * @param string $content Content for the cell
+     * @param array  $attribs Associative array of attributes for the td-element
+     * @param bool   $replace If false, the content is appended to the current content of the cell
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since 2.1
      */
@@ -306,11 +310,11 @@ class Grid
     }
 
     /**
-     * Get all data for a row
+     * Get all data for a row.
      *
-     * @param   int|bool $id ID of the row to return
+     * @param int|bool $id ID of the row to return
      *
-     * @return  array Array of columns of a table row
+     * @return array Array of columns of a table row
      *
      * @since   2.1
      */
@@ -328,11 +332,11 @@ class Grid
     }
 
     /**
-     * Get the IDs of all rows in the table
+     * Get the IDs of all rows in the table.
      *
-     * @param   int|bool $special false for the standard rows, 1 for the header rows, 2 for the footer rows
+     * @param int|bool $special false for the standard rows, 1 for the header rows, 2 for the footer rows
      *
-     * @return  array Array of IDs
+     * @return array Array of IDs
      *
      * @since 2.1
      */
@@ -353,11 +357,11 @@ class Grid
     }
 
     /**
-     * Delete a row from the object
+     * Delete a row from the object.
      *
-     * @param   int $id ID of the row to be deleted
+     * @param int $id ID of the row to be deleted
      *
-     * @return  static This object for chaining
+     * @return static This object for chaining
      *
      * @since   2.1
      */
@@ -382,16 +386,16 @@ class Grid
     }
 
     /**
-     * Render the HTML table
+     * Render the HTML table.
      *
-     * @return  string The rendered HTML table
+     * @return string The rendered HTML table
      *
      * @since   2.1
      */
     public function toString()
     {
         $output = [];
-        $output[] = '<table' . $this->renderAttributes($this->getTableAttributes()) . '>';
+        $output[] = '<table'.$this->renderAttributes($this->getTableAttributes()).'>';
 
         if (count($this->specialRows['header'])) {
             $output[] = $this->renderArea($this->specialRows['header'], 'thead', 'th');
@@ -416,11 +420,11 @@ class Grid
     }
 
     /**
-     * Render an area of the table
+     * Render an area of the table.
      *
-     * @param   array  $ids  IDs of the rows to render
-     * @param   string $area Name of the area to render. Valid: tbody, tfoot, thead
-     * @param   string $cell Name of the cell to render. Valid: td, th
+     * @param array  $ids  IDs of the rows to render
+     * @param string $area Name of the area to render. Valid: tbody, tfoot, thead
+     * @param string $cell Name of the cell to render. Valid: td, th
      *
      * @return string The rendered table area
      *
@@ -429,34 +433,34 @@ class Grid
     protected function renderArea($ids, $area = 'tbody', $cell = 'td')
     {
         $output = [];
-        $output[] = '<' . $area . ">\n";
+        $output[] = '<'.$area.">\n";
 
         foreach ($ids as $id) {
-            $output[] = "\t<tr" . $this->renderAttributes($this->rows[$id]['_row']) . ">\n";
+            $output[] = "\t<tr".$this->renderAttributes($this->rows[$id]['_row']).">\n";
 
             foreach ($this->getColumns() as $name) {
                 if (isset($this->rows[$id][$name])) {
                     $column = $this->rows[$id][$name];
-                    $output[] = "\t\t<" . $cell . $this->renderAttributes(
+                    $output[] = "\t\t<".$cell.$this->renderAttributes(
                         $column->attribs
-                    ) . '>' . $column->content . '</' . $cell . ">\n";
+                    ).'>'.$column->content.'</'.$cell.">\n";
                 }
             }
 
             $output[] = "\t</tr>\n";
         }
 
-        $output[] = '</' . $area . '>';
+        $output[] = '</'.$area.'>';
 
         return implode('', $output);
     }
 
     /**
-     * Renders an HTML attribute from an associative array
+     * Renders an HTML attribute from an associative array.
      *
-     * @param   array $attributes Associative array of attributes
+     * @param array $attributes Associative array of attributes
      *
-     * @return  string The HTML attribute string
+     * @return string The HTML attribute string
      *
      * @since   2.1
      */
@@ -469,9 +473,9 @@ class Grid
         $return = [];
 
         foreach ($attributes as $key => $value) {
-            $return[] = $key . '="' . $value . '"';
+            $return[] = $key.'="'.$value.'"';
         }
 
-        return ' ' . implode(' ', $return);
+        return ' '.implode(' ', $return);
     }
 }

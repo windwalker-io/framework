@@ -16,12 +16,12 @@ namespace Windwalker\Console\Prompter;
 class Prompter
 {
     /**
-     * boolean
+     * boolean.
      *
      * @param string $msg
      * @param mixed  $default
      *
-     * @return  boolean
+     * @return bool
      */
     public static function boolean($msg = '', $default = null)
     {
@@ -31,12 +31,12 @@ class Prompter
     }
 
     /**
-     * text
+     * text.
      *
      * @param string $msg
      * @param mixed  $default
      *
-     * @return  string
+     * @return string
      */
     public static function text($msg = '', $default = null)
     {
@@ -46,7 +46,7 @@ class Prompter
     }
 
     /**
-     * callback
+     * callback.
      *
      * @param string   $msg
      * @param callable $handler
@@ -55,7 +55,7 @@ class Prompter
      * @param int      $attemptTimes
      * @param bool     $failCloseMessage
      *
-     * @return  string
+     * @return string
      */
     public static function callback(
         $msg = '',
@@ -75,7 +75,7 @@ class Prompter
     }
 
     /**
-     * validText
+     * validText.
      *
      * @param string $msg
      * @param array  $options
@@ -84,7 +84,7 @@ class Prompter
      * @param int    $attemptTimes
      * @param bool   $failCloseMessage
      *
-     * @return  string
+     * @return string
      */
     public static function validText(
         $msg = '',
@@ -104,7 +104,7 @@ class Prompter
     }
 
     /**
-     * notNullText
+     * notNullText.
      *
      * @param string $msg
      * @param mixed  $default
@@ -112,7 +112,7 @@ class Prompter
      * @param int    $attemptTimes
      * @param bool   $failCloseMessage
      *
-     * @return  string
+     * @return string
      */
     public static function notNullText(
         $msg = '',
@@ -129,7 +129,7 @@ class Prompter
     }
 
     /**
-     * selector
+     * selector.
      *
      * @param string $msg
      * @param array  $options
@@ -138,7 +138,7 @@ class Prompter
      * @param int    $attemptTimes
      * @param bool   $failCloseMessage
      *
-     * @return  string
+     * @return string
      */
     public static function selector(
         $msg = '',
@@ -158,7 +158,7 @@ class Prompter
     }
 
     /**
-     * password
+     * password.
      *
      * @param string $msg
      * @param mixed  $default
@@ -166,7 +166,7 @@ class Prompter
      * @param int    $attemptTimes
      * @param bool   $failCloseMessage
      *
-     * @return  string
+     * @return string
      */
     public static function password(
         $msg,
@@ -183,11 +183,11 @@ class Prompter
     }
 
     /**
-     * prepareCallbackPrompter
+     * prepareCallbackPrompter.
      *
      * @param CallbackPrompter $prompter
      * @param string|null      $noValidMessage
-     * @param integer          $attemptTimes
+     * @param int              $attemptTimes
      * @param string|null      $failCloseMessage
      *
      * @return CallbackPrompter

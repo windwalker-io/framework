@@ -18,9 +18,9 @@ class SomethingListener
     /**
      * Listen to onBeforeSomething.
      *
-     * @param   Event $event The event.
+     * @param Event $event The event.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -31,9 +31,9 @@ class SomethingListener
     /**
      * Listen to onSomething.
      *
-     * @param   Event $event The event.
+     * @param Event $event The event.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -44,9 +44,9 @@ class SomethingListener
     /**
      * Listen to onAfterSomething.
      *
-     * @param   Event $event The event.
+     * @param Event $event The event.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */

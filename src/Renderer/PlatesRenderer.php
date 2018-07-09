@@ -21,23 +21,23 @@ class PlatesRenderer extends AbstractEngineRenderer
     /**
      * Property extensions.
      *
-     * @var  ExtensionInterface[]
+     * @var ExtensionInterface[]
      */
     protected $extensions = [];
 
     /**
      * Property folders.
      *
-     * @var  array
+     * @var array
      */
     protected $folders = [];
 
     /**
-     * Method to get property Engine
+     * Method to get property Engine.
      *
-     * @param   boolean $new
+     * @param bool $new
      *
-     * @return  PlatesEngine
+     * @return PlatesEngine
      */
     public function getEngine($new = false)
     {
@@ -60,11 +60,11 @@ class PlatesRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property engine
+     * Method to set property engine.
      *
-     * @param   PlatesEngine $engine
+     * @param PlatesEngine $engine
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setEngine($engine)
     {
@@ -78,12 +78,12 @@ class PlatesRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * render
+     * render.
      *
      * @param string $file
      * @param array  $data
      *
-     * @return  string
+     * @return string
      */
     public function render($file, $data = [])
     {
@@ -95,12 +95,12 @@ class PlatesRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * findFile
+     * findFile.
      *
      * @param string $file
      * @param string $ext
      *
-     * @return  string
+     * @return string
      */
     public function findFile($file, $ext = '')
     {
@@ -110,11 +110,11 @@ class PlatesRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * addExtension
+     * addExtension.
      *
      * @param ExtensionInterface $extension
      *
-     * @return  static
+     * @return static
      */
     public function addExtension(ExtensionInterface $extension)
     {
@@ -124,18 +124,18 @@ class PlatesRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * addFolder
+     * addFolder.
      *
-     * @param   string  $namespace
-     * @param   string  $folder
-     * @param   boolean $fallback
+     * @param string $namespace
+     * @param string $folder
+     * @param bool   $fallback
      *
-     * @return  static
+     * @return static
      */
     public function addFolder($namespace, $folder, $fallback = false)
     {
         $this->folders[$namespace] = [
-            'folder' => $folder,
+            'folder'   => $folder,
             'fallback' => $fallback,
         ];
 

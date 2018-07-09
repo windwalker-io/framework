@@ -21,7 +21,7 @@ class CreditcardValidator extends RegexValidator
      * @note Origin regular exp is from:
      *       http://www.virtuosimedia.com/dev/php/37-tested-php-perl-and-javascript-regular-expressions
      *
-     * @var  string
+     * @var string
      *
      * @codingStandardsIgnoreStart
      */
@@ -31,7 +31,7 @@ class CreditcardValidator extends RegexValidator
     /**
      * The regular expression modifiers to use when testing a value.
      *
-     * @var  string
+     * @var string
      */
     protected $modifiers = 'i';
 }

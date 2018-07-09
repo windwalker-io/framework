@@ -9,7 +9,7 @@
 namespace Windwalker\Session\Database;
 
 /**
- * Class PdoAdapter
+ * Class PdoAdapter.
  *
  * The class is based on Symfony PdoSessionHandler
  *
@@ -20,7 +20,7 @@ class PdoAdapter extends AbstractDatabaseAdapter
     /**
      * Property db.
      *
-     * @var  \PDO
+     * @var \PDO
      */
     protected $db = null;
 
@@ -36,13 +36,13 @@ class PdoAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * destroy
+     * destroy.
      *
      * @param int|string $sessionId
      *
-     * @return  bool
-     *
      * @throws \RuntimeException
+     *
+     * @return bool
      */
     public function destroy($sessionId)
     {
@@ -70,13 +70,13 @@ class PdoAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * gc
+     * gc.
      *
      * @param string $past
      *
-     * @return  bool
-     *
      * @throws \RuntimeException
+     *
+     * @return bool
      */
     public function gc($past)
     {
@@ -104,13 +104,13 @@ class PdoAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * read
+     * read.
      *
      * @param int|string $sessionId
      *
-     * @return  string
-     *
      * @throws \RuntimeException
+     *
+     * @return string
      */
     public function read($sessionId)
     {
@@ -146,14 +146,14 @@ class PdoAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * write
+     * write.
      *
      * @param int|string $sessionId
      * @param string     $data
      *
-     * @return  bool
-     *
      * @throws \RuntimeException
+     *
+     * @return bool
      */
     public function write($sessionId, $data)
     {
@@ -270,8 +270,8 @@ SQL;
                 // @codingStandardsIgnoreStart
                 // MERGE is only available since SQL Server 2008 and must be terminated by semicolon
                 // It also requires HOLDLOCK according to http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-                return "MERGE INTO {$this->options['table']} WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON ({$this->options['id_col']} = :id) " .
-                    "WHEN NOT MATCHED THEN INSERT ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (:id, :data, :time) " .
+                return "MERGE INTO {$this->options['table']} WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON ({$this->options['id_col']} = :id) ".
+                    "WHEN NOT MATCHED THEN INSERT ({$this->options['id_col']}, {$this->options['data_col']}, {$this->options['time_col']}) VALUES (:id, :data, :time) ".
                     "WHEN MATCHED THEN UPDATE SET {$this->options['data_col']} = :data, {$this->options['time_col']} = :time;";
 
             case 'sqlite':

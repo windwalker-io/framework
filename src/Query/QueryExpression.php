@@ -9,7 +9,7 @@
 namespace Windwalker\Query;
 
 /**
- * Class QueryExpression
+ * Class QueryExpression.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class QueryExpression
     /**
      * Property query.
      *
-     * @var  QueryInterface
+     * @var QueryInterface
      */
     protected $query = null;
 
@@ -31,11 +31,11 @@ class QueryExpression
     }
 
     /**
-     * isExpression
+     * isExpression.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isExpression($value)
     {
@@ -43,11 +43,11 @@ class QueryExpression
     }
 
     /**
-     * buildExpression
+     * buildExpression.
      *
      * @param string $name
      *
-     * @return  mixed|QueryElement
+     * @return mixed|QueryElement
      */
     public function buildExpression($name)
     {
@@ -59,13 +59,13 @@ class QueryExpression
             return call_user_func_array([$this, $name], $args);
         }
 
-        return (string) strtoupper($name) . '(' . implode(', ', $args) . ')';
+        return (string) strtoupper($name).'('.implode(', ', $args).')';
     }
 
     /**
-     * getQuery
+     * getQuery.
      *
-     * @return  \Windwalker\Query\QueryInterface
+     * @return \Windwalker\Query\QueryInterface
      */
     public function getQuery()
     {
@@ -73,11 +73,11 @@ class QueryExpression
     }
 
     /**
-     * setQuery
+     * setQuery.
      *
-     * @param   \Windwalker\Query\QueryInterface $query
+     * @param \Windwalker\Query\QueryInterface $query
      *
-     * @return  QueryExpression  Return self to support chaining.
+     * @return QueryExpression Return self to support chaining.
      */
     public function setQuery($query)
     {
@@ -92,19 +92,19 @@ class QueryExpression
      * Usage:
      * $query->select($query->concatenate(array('a', 'b')));
      *
-     * @param   array  $values    An array of values to concatenate.
-     * @param   string $separator As separator to place between each value.
+     * @param array  $values    An array of values to concatenate.
+     * @param string $separator As separator to place between each value.
      *
-     * @return  string  The concatenated values.
+     * @return string The concatenated values.
      *
      * @since   2.0
      */
     public function concatenate($values, $separator = null)
     {
         if ($separator) {
-            return 'CONCATENATE(' . implode(' || ' . $this->query->quote($separator) . ' || ', $values) . ')';
+            return 'CONCATENATE('.implode(' || '.$this->query->quote($separator).' || ', $values).')';
         } else {
-            return 'CONCATENATE(' . implode(' || ', $values) . ')';
+            return 'CONCATENATE('.implode(' || ', $values).')';
         }
     }
 
@@ -114,10 +114,10 @@ class QueryExpression
      * Usage:
      * $query->select($query->concatenate(array('a', 'b')));
      *
-     * @param   array  $values    An array of values to concatenate.
-     * @param   string $separator As separator to place between each value.
+     * @param array  $values    An array of values to concatenate.
+     * @param string $separator As separator to place between each value.
      *
-     * @return  string  The concatenated values.
+     * @return string The concatenated values.
      *
      * @since   2.0
      */
@@ -129,7 +129,7 @@ class QueryExpression
     /**
      * Gets the current date and time.
      *
-     * @return  string
+     * @return string
      *
      * @codingStandardsIgnoreStart
      *
@@ -147,15 +147,15 @@ class QueryExpression
      * Usage:
      * $query->select($query->year($query->quoteName('dateColumn')));
      *
-     * @param   string $date Date column containing year to be extracted.
+     * @param string $date Date column containing year to be extracted.
      *
-     * @return  string  Returns string to extract year from a date.
+     * @return string Returns string to extract year from a date.
      *
      * @since   2.0
      */
     public function year($date)
     {
-        return 'YEAR(' . $date . ')';
+        return 'YEAR('.$date.')';
     }
 
     /**
@@ -164,15 +164,15 @@ class QueryExpression
      * Usage:
      * $query->select($query->month($query->quoteName('dateColumn')));
      *
-     * @param   string $date Date column containing month to be extracted.
+     * @param string $date Date column containing month to be extracted.
      *
-     * @return  string  Returns string to extract month from a date.
+     * @return string Returns string to extract month from a date.
      *
      * @since   2.0
      */
     public function month($date)
     {
-        return 'MONTH(' . $date . ')';
+        return 'MONTH('.$date.')';
     }
 
     /**
@@ -181,15 +181,15 @@ class QueryExpression
      * Usage:
      * $query->select($query->day($query->quoteName('dateColumn')));
      *
-     * @param   string $date Date column containing day to be extracted.
+     * @param string $date Date column containing day to be extracted.
      *
-     * @return  string  Returns string to extract day from a date.
+     * @return string Returns string to extract day from a date.
      *
      * @since   2.0
      */
     public function day($date)
     {
-        return 'DAY(' . $date . ')';
+        return 'DAY('.$date.')';
     }
 
     /**
@@ -198,15 +198,15 @@ class QueryExpression
      * Usage:
      * $query->select($query->hour($query->quoteName('dateColumn')));
      *
-     * @param   string $date Date column containing hour to be extracted.
+     * @param string $date Date column containing hour to be extracted.
      *
-     * @return  string  Returns string to extract hour from a date.
+     * @return string Returns string to extract hour from a date.
      *
      * @since   2.0
      */
     public function hour($date)
     {
-        return 'HOUR(' . $date . ')';
+        return 'HOUR('.$date.')';
     }
 
     /**
@@ -215,15 +215,15 @@ class QueryExpression
      * Usage:
      * $query->select($query->minute($query->quoteName('dateColumn')));
      *
-     * @param   string $date Date column containing minute to be extracted.
+     * @param string $date Date column containing minute to be extracted.
      *
-     * @return  string  Returns string to extract minute from a date.
+     * @return string Returns string to extract minute from a date.
      *
      * @since   2.0
      */
     public function minute($date)
     {
-        return 'MINUTE(' . $date . ')';
+        return 'MINUTE('.$date.')';
     }
 
     /**
@@ -232,15 +232,15 @@ class QueryExpression
      * Usage:
      * $query->select($query->second($query->quoteName('dateColumn')));
      *
-     * @param   string $date Date column containing second to be extracted.
+     * @param string $date Date column containing second to be extracted.
      *
-     * @return  string  Returns string to extract second from a date.
+     * @return string Returns string to extract second from a date.
      *
      * @since   2.0
      */
     public function second($date)
     {
-        return 'SECOND(' . $date . ')';
+        return 'SECOND('.$date.')';
     }
 
     /**
@@ -251,15 +251,15 @@ class QueryExpression
      * Usage:
      * query->where($query->length('a').' > 3');
      *
-     * @param   string $value The string to measure.
+     * @param string $value The string to measure.
      *
-     * @return  integer
+     * @return int
      *
      * @since   2.0
      */
     public function length($value)
     {
-        return 'LENGTH(' . $value . ')';
+        return 'LENGTH('.$value.')';
     }
 
     /**
@@ -267,11 +267,11 @@ class QueryExpression
      *
      * Note, use 'length' to find the number of bytes in a string.
      *
-     * @param   string $field     A value.
-     * @param   string $operator  Comparison operator between charLength integer value and $condition
-     * @param   string $condition Integer value to compare charLength with.
+     * @param string $field     A value.
+     * @param string $operator  Comparison operator between charLength integer value and $condition
+     * @param string $condition Integer value to compare charLength with.
      *
-     * @return  string  The required char length call.
+     * @return string The required char length call.
      *
      * @since   2.0
      *
@@ -280,8 +280,8 @@ class QueryExpression
     public function char_length($field, $operator = null, $condition = null)
     {
         // @codingStandardsIgnoreEnd
-        return 'CHAR_LENGTH(' . $field . ')' .
-            ($operator !== null && $condition !== null ? ' ' . $operator . ' ' . $condition : '');
+        return 'CHAR_LENGTH('.$field.')'.
+            ($operator !== null && $condition !== null ? ' '.$operator.' '.$condition : '');
     }
 
     /**
@@ -289,9 +289,9 @@ class QueryExpression
      *
      * Ensure that the value is properly quoted before passing to the method.
      *
-     * @param   string $value The value to cast as a char.
+     * @param string $value The value to cast as a char.
      *
-     * @return  string  Returns the cast value.
+     * @return string Returns the cast value.
      *
      * @since   2.0
      *
@@ -304,25 +304,25 @@ class QueryExpression
     }
 
     /**
-     * caseCondition
+     * caseCondition.
      *
-     * @param   array  $cases
-     * @param   string $else
+     * @param array  $cases
+     * @param string $else
      *
-     * @return  string
+     * @return string
      *
      * @since   2.1
      */
     public function caseCondition(array $cases, $else = null)
     {
-        $expression = "CASE";
+        $expression = 'CASE';
 
         foreach ($cases as $condition => $case) {
-            $expression .= $condition . ' THEN' . $case . "\n";
+            $expression .= $condition.' THEN'.$case."\n";
         }
 
         if ($else) {
-            $expression .= 'ELSE ' . $else . "\n";
+            $expression .= 'ELSE '.$else."\n";
         }
 
         $expression .= 'END';

@@ -12,7 +12,7 @@ use Windwalker\Database\Driver\Pdo\PdoReader;
 use Windwalker\Query\Query;
 
 /**
- * Class PostgresqlReader
+ * Class PostgresqlReader.
  *
  * @since 2.0
  */
@@ -21,9 +21,9 @@ class PostgresqlReader extends PdoReader
     /**
      * Method to get the auto-incremented value from the last INSERT statement.
      *
-     * @param   string $name Name of the sequence object from which the ID should be returned.
+     * @param string $name Name of the sequence object from which the ID should be returned.
      *
-     * @return  string  The value of the auto-increment field from the last inserted row.
+     * @return string The value of the auto-increment field from the last inserted row.
      *
      * @since   2.1
      */
@@ -55,7 +55,7 @@ class PostgresqlReader extends PdoReader
 
         $colNameQuery->select('column_default')
             ->from('information_schema.columns')
-            ->where("table_name=" . $this->db->quote($this->db->replacePrefix(trim($table[0], '"'))))
+            ->where('table_name='.$this->db->quote($this->db->replacePrefix(trim($table[0], '"'))))
             ->where("column_default LIKE '%nextval%'");
 
         $colName = $this->db->getReader($colNameQuery)->loadArray();

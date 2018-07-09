@@ -14,7 +14,7 @@ use Windwalker\Database\Schema\DataType;
 use Windwalker\Database\Schema\Schema;
 
 /**
- * Class DatabaseTable
+ * Class DatabaseTable.
  *
  * @since 2.0
  */
@@ -23,7 +23,7 @@ abstract class AbstractTable
     /**
      * Property table.
      *
-     * @var  string
+     * @var string
      */
     protected $name = null;
 
@@ -37,21 +37,21 @@ abstract class AbstractTable
     /**
      * Property indexesCache.
      *
-     * @var  \stdClass[]
+     * @var \stdClass[]
      */
     protected $indexCache;
 
     /**
      * Property database.
      *
-     * @var  AbstractDatabase
+     * @var AbstractDatabase
      */
     protected $database;
 
     /**
      * Property driver.
      *
-     * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @var \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     protected $db;
 
@@ -69,22 +69,22 @@ abstract class AbstractTable
     }
 
     /**
-     * create
+     * create.
      *
-     * @param   callable|Schema $callback
-     * @param   bool            $ifNotExists
-     * @param   array           $options
+     * @param callable|Schema $callback
+     * @param bool            $ifNotExists
+     * @param array           $options
      *
-     * @return  static
+     * @return static
      */
     abstract public function create($callback, $ifNotExists = true, $options = []);
 
     /**
-     * update
+     * update.
      *
-     * @param   callable|Schema $schema
+     * @param callable|Schema $schema
      *
-     * @return  static
+     * @return static
      */
     public function update($schema)
     {
@@ -106,13 +106,13 @@ abstract class AbstractTable
     }
 
     /**
-     * save
+     * save.
      *
-     * @param   callable|Schema $schema
-     * @param   bool            $ifNotExists
-     * @param   array           $options
+     * @param callable|Schema $schema
+     * @param bool            $ifNotExists
+     * @param array           $options
      *
-     * @return  $this
+     * @return $this
      */
     public function save($schema, $ifNotExists = true, $options = [])
     {
@@ -131,12 +131,12 @@ abstract class AbstractTable
     }
 
     /**
-     * drop
+     * drop.
      *
      * @param bool   $ifExists
      * @param string $option
      *
-     * @return  static
+     * @return static
      */
     public function drop($ifExists = true, $option = '')
     {
@@ -150,9 +150,9 @@ abstract class AbstractTable
     }
 
     /**
-     * exists
+     * exists.
      *
-     * @return  boolean
+     * @return bool
      */
     public function exists()
     {
@@ -162,36 +162,37 @@ abstract class AbstractTable
     }
 
     /**
-     * rename
+     * rename.
      *
-     * @param string  $newName
-     * @param boolean $returnNew
+     * @param string $newName
+     * @param bool   $returnNew
      *
-     * @return  $this
+     * @return $this
      */
     abstract public function rename($newName, $returnNew = true);
 
     /**
      * Locks a table in the database.
      *
-     * @return  static  Returns this object to support chaining.
+     * @throws \RuntimeException
+     *
+     * @return static Returns this object to support chaining.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function lock()
     {
-        $this->db->setQuery('LOCK TABLES ' . $this->db->quoteName($this->getName()) . ' WRITE');
+        $this->db->setQuery('LOCK TABLES '.$this->db->quoteName($this->getName()).' WRITE');
 
         return $this;
     }
 
     /**
-     * unlock
+     * unlock.
      *
-     * @return  static  Returns this object to support chaining.
+     * @throws \RuntimeException
      *
-     * @throws  \RuntimeException
+     * @return static Returns this object to support chaining.
      */
     public function unlock()
     {
@@ -203,22 +204,23 @@ abstract class AbstractTable
     /**
      * Method to truncate a table.
      *
-     * @return  static
+     * @throws \RuntimeException
+     *
+     * @return static
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function truncate()
     {
-        $this->db->setQuery('TRUNCATE TABLE ' . $this->db->quoteName($this->getName()))->execute();
+        $this->db->setQuery('TRUNCATE TABLE '.$this->db->quoteName($this->getName()))->execute();
 
         return $this;
     }
 
     /**
-     * getDetail
+     * getDetail.
      *
-     * @return  array|boolean
+     * @return array|bool
      */
     public function getDetail()
     {
@@ -238,7 +240,7 @@ abstract class AbstractTable
     }
 
     /**
-     * getColumnDetails
+     * getColumnDetails.
      *
      * @param bool $refresh
      *
@@ -247,9 +249,9 @@ abstract class AbstractTable
     abstract public function getColumnDetails($refresh = false);
 
     /**
-     * getColumnDetail
+     * getColumnDetail.
      *
-     * @param   string $column
+     * @param string $column
      *
      * @return \stdClass
      */
@@ -261,11 +263,11 @@ abstract class AbstractTable
     }
 
     /**
-     * hasColumn
+     * hasColumn.
      *
-     * @param   string $column
+     * @param string $column
      *
-     * @return  boolean
+     * @return bool
      */
     public function hasColumn($column)
     {
@@ -273,7 +275,7 @@ abstract class AbstractTable
     }
 
     /**
-     * addColumn
+     * addColumn.
      *
      * @param string $name
      * @param string $type
@@ -283,7 +285,7 @@ abstract class AbstractTable
      * @param string $comment
      * @param array  $options
      *
-     * @return  static
+     * @return static
      */
     abstract public function addColumn(
         $name,
@@ -296,11 +298,11 @@ abstract class AbstractTable
     );
 
     /**
-     * dropColumn
+     * dropColumn.
      *
      * @param string $name
      *
-     * @return  static
+     * @return static
      */
     public function dropColumn($name)
     {
@@ -318,7 +320,7 @@ abstract class AbstractTable
     }
 
     /**
-     * modifyColumn
+     * modifyColumn.
      *
      * @param string|Column $name
      * @param string        $type
@@ -328,7 +330,7 @@ abstract class AbstractTable
      * @param string        $comment
      * @param array         $options
      *
-     * @return  static
+     * @return static
      */
     abstract public function modifyColumn(
         $name,
@@ -341,7 +343,7 @@ abstract class AbstractTable
     );
 
     /**
-     * changeColumn
+     * changeColumn.
      *
      * @param string        $oldName
      * @param string|Column $newName
@@ -352,7 +354,7 @@ abstract class AbstractTable
      * @param string        $comment
      * @param array         $options
      *
-     * @return  static
+     * @return static
      */
     abstract public function changeColumn(
         $oldName,
@@ -366,7 +368,7 @@ abstract class AbstractTable
     );
 
     /**
-     * addIndex
+     * addIndex.
      *
      * @param string $type
      * @param array  $columns
@@ -379,27 +381,27 @@ abstract class AbstractTable
     abstract public function addIndex($type, $columns = [], $name = null, $comment = null, $options = []);
 
     /**
-     * dropIndex
+     * dropIndex.
      *
      * @param string $name
      *
-     * @return  static
+     * @return static
      */
     abstract public function dropIndex($name);
 
     /**
-     * getIndexes
+     * getIndexes.
      *
-     * @return  array
+     * @return array
      */
     abstract public function getIndexes();
 
     /**
-     * hasIndex
+     * hasIndex.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  boolean
+     * @return bool
      */
     public function hasIndex($name)
     {
@@ -415,26 +417,26 @@ abstract class AbstractTable
     }
 
     /**
-     * Method to get property Table
+     * Method to get property Table.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
         if ($this->database instanceof AbstractDatabase
             && $this->database->getName() != $this->db->getCurrentDatabase()) {
-            return $this->database->getName() . '.' . $this->name;
+            return $this->database->getName().'.'.$this->name;
         }
 
         return $this->name;
     }
 
     /**
-     * Method to set property table
+     * Method to set property table.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setName($name)
     {
@@ -444,9 +446,9 @@ abstract class AbstractTable
     }
 
     /**
-     * Method to get property Db
+     * Method to get property Db.
      *
-     * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @return \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     public function getDriver()
     {
@@ -454,11 +456,11 @@ abstract class AbstractTable
     }
 
     /**
-     * Method to set property db
+     * Method to set property db.
      *
-     * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db
+     * @param \Windwalker\Database\Driver\AbstractDatabaseDriver $db
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDriver($db)
     {
@@ -468,9 +470,9 @@ abstract class AbstractTable
     }
 
     /**
-     * getSchema
+     * getSchema.
      *
-     * @return  Schema
+     * @return Schema
      */
     public function getSchema()
     {
@@ -478,11 +480,11 @@ abstract class AbstractTable
     }
 
     /**
-     * callSchema
+     * callSchema.
      *
-     * @param   callable|Schema $schema
+     * @param callable|Schema $schema
      *
-     * @return  Schema
+     * @return Schema
      */
     protected function callSchema($schema)
     {
@@ -502,9 +504,9 @@ abstract class AbstractTable
     }
 
     /**
-     * Method to get property Database
+     * Method to get property Database.
      *
-     * @return  AbstractDatabase
+     * @return AbstractDatabase
      */
     public function getDatabase()
     {
@@ -512,11 +514,11 @@ abstract class AbstractTable
     }
 
     /**
-     * Method to set property database
+     * Method to set property database.
      *
-     * @param   AbstractDatabase $database
+     * @param AbstractDatabase $database
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDatabase($database)
     {
@@ -530,9 +532,9 @@ abstract class AbstractTable
     }
 
     /**
-     * getTypeMapper
+     * getTypeMapper.
      *
-     * @return  DataType
+     * @return DataType
      */
     public function getDataType()
     {
@@ -544,11 +546,11 @@ abstract class AbstractTable
     }
 
     /**
-     * prepareColumn
+     * prepareColumn.
      *
      * @param Column $column
      *
-     * @return  Column
+     * @return Column
      */
     protected function prepareColumn(Column $column)
     {
@@ -557,7 +559,7 @@ abstract class AbstractTable
         $type = $typeMapper::getType($column->getType());
         $length = $column->getLength() ?: $typeMapper::getLength($type);
 
-        $length = $length ? '(' . $length . ')' : null;
+        $length = $length ? '('.$length.')' : null;
 
         // Prepare default value
         $this->prepareDefaultValue($column);
@@ -567,11 +569,11 @@ abstract class AbstractTable
     }
 
     /**
-     * prepareDefaultValue
+     * prepareDefaultValue.
      *
      * @param Column $column
      *
-     * @return  Column
+     * @return Column
      */
     protected function prepareDefaultValue(Column $column)
     {
@@ -589,9 +591,9 @@ abstract class AbstractTable
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  static
+     * @return static
      */
     public function reset()
     {

@@ -9,8 +9,6 @@
 namespace Windwalker\DataMapper\Test;
 
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
-use Windwalker\DataMapper\Adapter\AbstractDatabaseAdapter;
-use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 
 /**
  * The DatabaseTest class.
@@ -22,14 +20,14 @@ abstract class DatabaseTest extends AbstractDatabaseTestCase
     /**
      * Property driver.
      *
-     * @var  string
+     * @var string
      */
     protected static $driver = 'mysql';
 
     /**
-     * setUpBeforeClass
+     * setUpBeforeClass.
      *
-     * @return  void
+     * @return void
      */
     public static function setUpBeforeClass()
     {
@@ -37,13 +35,13 @@ abstract class DatabaseTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * loadToDataset
+     * loadToDataset.
      *
      * @param mixed  $query
      * @param string $class
      * @param string $dataClass
      *
-     * @return  mixed
+     * @return mixed
      */
     protected function loadToDataset(
         $query,
@@ -56,12 +54,12 @@ abstract class DatabaseTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * loadToData
+     * loadToData.
      *
      * @param mixed  $query
      * @param string $dataClass
      *
-     * @return  mixed
+     * @return mixed
      */
     protected function loadToData($query, $dataClass = 'Windwalker\\Data\\Data')
     {
@@ -71,9 +69,9 @@ abstract class DatabaseTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * show
+     * show.
      *
-     * @return  void
+     * @return void
      */
     protected function show()
     {

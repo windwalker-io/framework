@@ -22,17 +22,17 @@ class Arr
     /**
      * SAPI mocck name to support test.
      *
-     * @var  string
+     * @var string
      */
     public static $sapi = PHP_SAPI;
 
     /**
      * Utility function to convert all types to an array.
      *
-     * @param   mixed $data      The data to convert.
-     * @param   bool  $recursive Recursive if data is nested.
+     * @param mixed $data      The data to convert.
+     * @param bool  $recursive Recursive if data is nested.
      *
-     * @return  array  The converted array.
+     * @return array The converted array.
      */
     public static function toArray($data, $recursive = false)
     {
@@ -59,10 +59,10 @@ class Arr
     /**
      * Utility function to map an array to a stdClass object.
      *
-     * @param   array  $array The array to map.
-     * @param   string $class Name of the class to create
+     * @param array  $array The array to map.
+     * @param string $class Name of the class to create
      *
-     * @return  object  The object mapped from the given array
+     * @return object The object mapped from the given array
      *
      * @since   2.0
      */
@@ -88,7 +88,7 @@ class Arr
      * @param string       $key       The key path name.
      * @param string       $delimiter The separator to split paths.
      *
-     * @return  bool
+     * @return bool
      *
      * @since 4.0
      */
@@ -128,8 +128,9 @@ class Arr
      * @param mixed        $value     Value to set if not exists.
      * @param string       $delimiter Separator to split paths.
      *
-     * @return  array|object
      * @throws \InvalidArgumentException
+     *
+     * @return array|object
      *
      * @since 4.0
      */
@@ -143,12 +144,12 @@ class Arr
     }
 
     /**
-     * getPathNodes
+     * getPathNodes.
      *
      * @param string|array $path
      * @param string       $delimiter
      *
-     * @return  array
+     * @return array
      */
     private static function getPathNodes($path, $delimiter = '.')
     {
@@ -211,8 +212,9 @@ class Arr
      * @param string $delimiter Separator to split path.
      * @param string $storeType The new store data type, default is `array`. you can set object class name.
      *
-     * @return  array|object
      * @throws \InvalidArgumentException
+     *
+     * @return array|object
      *
      * @since   2.0
      */
@@ -229,9 +231,9 @@ class Arr
          *
          * @param string $type Type name.
          *
-         * @return  array
-         *
          * @throws \InvalidArgumentException
+         *
+         * @return array
          */
         $createStore = function ($type) {
             if (strtolower($type) === 'array') {
@@ -282,7 +284,7 @@ class Arr
      * @param string       $key       The key path name.
      * @param string       $delimiter The separator to split paths.
      *
-     * @return  array|object
+     * @return array|object
      */
     public static function remove($data, $key, $delimiter = '.')
     {
@@ -327,11 +329,11 @@ class Arr
     }
 
     /**
-     * Collapse array to one dimension
+     * Collapse array to one dimension.
      *
-     * @param   array|object $data
+     * @param array|object $data
      *
-     * @return  array
+     * @return array
      */
     public static function collapse($data)
     {
@@ -341,10 +343,10 @@ class Arr
     /**
      * Method to recursively convert data to one dimension array.
      *
-     * @param   array|object $array     The array or object to convert.
-     * @param   string       $delimiter The key path delimiter.
-     * @param   int          $depth     Only flatten limited depth, 0 means on limit.
-     * @param   string       $prefix    Last level key prefix.
+     * @param array|object $array     The array or object to convert.
+     * @param string       $delimiter The key path delimiter.
+     * @param int          $depth     Only flatten limited depth, 0 means on limit.
+     * @param string       $prefix    Last level key prefix.
      *
      * @return array
      */
@@ -353,7 +355,7 @@ class Arr
         $temp = [];
 
         foreach (static::toArray($array, false) as $k => $v) {
-            $key = $prefix !== null ? $prefix . $delimiter . $k : $k;
+            $key = $prefix !== null ? $prefix.$delimiter.$k : $k;
 
             if (($depth === 0 || $depth > 1) && (is_object($v) || is_array($v))) {
                 $temp[] = static::flatten($v, $delimiter, $depth === 0 ? $depth : $depth - 1, (string) $key);
@@ -372,13 +374,14 @@ class Arr
     }
 
     /**
-     * keep
+     * keep.
      *
      * @param array|object $data
      * @param array        $fields
      *
-     * @return  array|object
      * @throws \InvalidArgumentException
+     *
+     * @return array|object
      */
     public static function only($data, array $fields)
     {
@@ -400,7 +403,7 @@ class Arr
     }
 
     /**
-     * find
+     * find.
      *
      * @param array    $data
      * @param callable $callback
@@ -446,12 +449,12 @@ class Arr
     }
 
     /**
-     * findFirst
+     * findFirst.
      *
      * @param array    $data
      * @param callable $callback
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function findFirst(array $data, callable $callback = null)
     {
@@ -461,13 +464,13 @@ class Arr
     }
 
     /**
-     * reject
+     * reject.
      *
      * @param array    $data
      * @param callable $callback
      * @param bool     $keepKey
      *
-     * @return  array
+     * @return array
      */
     public static function reject(array $data, callable $callback, $keepKey = false)
     {
@@ -485,14 +488,14 @@ class Arr
     }
 
     /**
-     * takeout
+     * takeout.
      *
      * @param array|object $data
      * @param string       $key
      * @param mixed        $default
      * @param string       $delimiter
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function takeout(&$data, $key, $default = null, $delimiter = '.')
     {
@@ -508,14 +511,14 @@ class Arr
     }
 
     /**
-     * sort
+     * sort.
      *
      * @param array           $data
      * @param callable|string $condition
      * @param bool            $descending
      * @param int             $options
      *
-     * @return  array
+     * @return array
      *
      * @since   4.0
      */
@@ -566,9 +569,9 @@ class Arr
      *     '6000' => 'Used'
      * );
      *
-     * @param   array $array The source array.
+     * @param array $array The source array.
      *
-     * @return  array  The inverted array.
+     * @return array The inverted array.
      *
      * @since   2.0
      */
@@ -615,11 +618,11 @@ class Arr
      *             (
      *                 [value] => bbb
      *                 [text] => bbb
-     *             )
+     *             ).
      *
-     * @param   array $array An array with two level.
+     * @param array $array An array with two level.
      *
-     * @return  array An pivoted array.
+     * @return array An pivoted array.
      */
     public static function pivot(array $array)
     {
@@ -637,9 +640,9 @@ class Arr
     /**
      * Method to determine if an array is an associative array.
      *
-     * @param   array $array An array to test.
+     * @param array $array An array to test.
      *
-     * @return  boolean  True if the array is an associative array.
+     * @return bool True if the array is an associative array.
      *
      * @since   2.0
      */
@@ -657,9 +660,9 @@ class Arr
     /**
      * Is a value an array or array accessible.
      *
-     * @param   mixed $array
+     * @param mixed $array
      *
-     * @return  bool
+     * @return bool
      *
      * @since  4.0
      */
@@ -730,11 +733,11 @@ class Arr
     }
 
     /**
-     * Multidimensional array safe unique test
+     * Multidimensional array safe unique test.
      *
-     * @param   array $array The array to make unique.
+     * @param array $array The array to make unique.
      *
-     * @return  array
+     * @return array
      *
      * @see     http://php.net/manual/en/function.array-unique.php
      * @since   2.0
@@ -751,11 +754,12 @@ class Arr
     /**
      * Merge array recursively.
      *
-     * @param   array $array1  Array 1 to be merge.
-     * @param   array ...$args Array more to be merge.
+     * @param array $array1  Array 1 to be merge.
+     * @param array ...$args Array more to be merge.
      *
-     * @return  array Merged array.
      * @throws \InvalidArgumentException
+     *
+     * @return array Merged array.
      *
      * @since   4.0
      */
@@ -773,7 +777,7 @@ class Arr
 
             foreach ($array as $key => &$value) {
                 if (is_array($value) && isset($result[$key]) && is_array($result[$key])) {
-                    $result[$key] = static::mergeRecursive($result [$key], $value);
+                    $result[$key] = static::mergeRecursive($result[$key], $value);
                 } else {
                     $result[$key] = $value;
                 }
@@ -786,10 +790,10 @@ class Arr
     /**
      * Recursive dump variables and limit by level.
      *
-     * @param   mixed $data  The variable you want to dump.
-     * @param   int   $depth The level number to limit recursive loop.
+     * @param mixed $data  The variable you want to dump.
+     * @param int   $depth The level number to limit recursive loop.
      *
-     * @return  string  Dumped data.
+     * @return string Dumped data.
      *
      * @since   2.0
      */
@@ -815,7 +819,7 @@ class Arr
                 // Remove special characters from anonymous class name.
                 $ref = new \ReflectionObject($data);
                 $class = $ref->getName();
-                $output = $class . ' ' . ucfirst($type);
+                $output = $class.' '.ucfirst($type);
                 $properties = $ref->getProperties();
 
                 // Fix for ArrayObject & ArrayIterator
@@ -831,7 +835,7 @@ class Arr
                     if ($property->isProtected()) {
                         $pType .= ':protected';
                     } elseif ($property->isPrivate()) {
-                        $pType .= ':' . $class . ':private';
+                        $pType .= ':'.$class.':private';
                     }
 
                     if ($property->isStatic()) {
@@ -883,11 +887,11 @@ class Arr
     }
 
     /**
-     * show
+     * show.
      *
      * @param array ...$args
      *
-     * @return  string
+     * @return string
      */
     public static function show($arg)
     {
@@ -916,7 +920,7 @@ class Arr
             $i = 1;
 
             foreach ($args as $arg) {
-                $prints[] = "[Value $i]\n" . static::dump($arg, $level);
+                $prints[] = "[Value $i]\n".static::dump($arg, $level);
                 $i++;
             }
 
@@ -934,13 +938,13 @@ class Arr
     }
 
     /**
-     * map
+     * map.
      *
      * @param array    $array
      * @param callable $callback
      * @param bool     $recursive
      *
-     * @return  array
+     * @return array
      */
     public static function map(array $array, callable $callback, $recursive = false)
     {

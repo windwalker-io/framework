@@ -9,7 +9,7 @@
 namespace Windwalker\Event;
 
 /**
- * Class EventInterface
+ * Class EventInterface.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ interface EventInterface
     /**
      * Get the event name.
      *
-     * @return  string  The event name.
+     * @return string The event name.
      *
      * @since   2.0
      */
@@ -27,7 +27,7 @@ interface EventInterface
     /**
      * Tell if the event propagation is stopped.
      *
-     * @return  boolean  True if stopped, false otherwise.
+     * @return bool True if stopped, false otherwise.
      *
      * @since   2.0
      */

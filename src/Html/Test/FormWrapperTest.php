@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -13,7 +13,7 @@ use Windwalker\Html\Form\FormWrapper;
 use Windwalker\Html\Form\InputElement;
 
 /**
- * Test class of FormWrapper
+ * Test class of FormWrapper.
  *
  * @since 2.1
  */
@@ -120,7 +120,7 @@ class FormWrapperTest extends AbstractDomTestCase
             ->novalidate(true)
             ->target('_blank');
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <form accept="UTF-8" accept-charset="UTF-8" action="foo.php" autocomplete="off" enctype="application/x-www-form-urlencoded" method="post" name="test" novalidate="novalidate" target="_blank">
 HTML;
 

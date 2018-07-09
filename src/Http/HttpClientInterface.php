@@ -12,7 +12,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Interface HttpClientInterface
+ * Interface HttpClientInterface.
  *
  * @since  2.1
  */
@@ -28,16 +28,16 @@ interface HttpClientInterface
      * @param mixed         $data    The request body data, can be an array of POST data.
      * @param array         $headers The headers array.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public function request($method, $url, $data = null, $headers = []);
 
     /**
      * Send a request to remote.
      *
-     * @param   RequestInterface $request The Psr Request object.
+     * @param RequestInterface $request The Psr Request object.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public function send(RequestInterface $request);
 }

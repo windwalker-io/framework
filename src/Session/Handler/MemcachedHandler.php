@@ -9,7 +9,7 @@
 namespace Windwalker\Session\Handler;
 
 /**
- * Class MemcachedHandler
+ * Class MemcachedHandler.
  *
  * @since 2.0
  */
@@ -25,17 +25,18 @@ class MemcachedHandler extends AbstractHandler
     /**
      * Property ttl.
      *
-     * @var  integer
+     * @var int
      */
     protected $ttl = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param   \Memcached $memcached A Memcached instance
-     * @param   array      $options   Optional parameters.
+     * @param \Memcached $memcached A Memcached instance
+     * @param array      $options   Optional parameters.
      *
      * @throws \RuntimeException
+     *
      * @since   2.0
      */
     public function __construct(\Memcached $memcached = null, $options = [])
@@ -54,22 +55,22 @@ class MemcachedHandler extends AbstractHandler
     /**
      * Test to see if the SessionHandler is available.
      *
-     * @return boolean  True on success, false otherwise.
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
     public static function isSupported()
     {
-        return (extension_loaded('memcached') && class_exists('Memcached'));
+        return extension_loaded('memcached') && class_exists('Memcached');
     }
 
     /**
-     * open
+     * open.
      *
      * @param string $savePath
      * @param string $sessionName
      *
-     * @return  bool
+     * @return bool
      */
     public function open($savePath, $sessionName)
     {
@@ -77,9 +78,9 @@ class MemcachedHandler extends AbstractHandler
     }
 
     /**
-     * close
+     * close.
      *
-     * @return  bool
+     * @return bool
      */
     public function close()
     {
@@ -87,48 +88,48 @@ class MemcachedHandler extends AbstractHandler
     }
 
     /**
-     * read
+     * read.
      *
      * @param string $id
      *
-     * @return  string
+     * @return string
      */
     public function read($id)
     {
-        return $this->memcached->get($this->prefix . $id) ?: '';
+        return $this->memcached->get($this->prefix.$id) ?: '';
     }
 
     /**
-     * write
+     * write.
      *
      * @param string $id
      * @param string $data
      *
-     * @return  bool
+     * @return bool
      */
     public function write($id, $data)
     {
-        return $this->memcached->set($this->prefix . $id, $data, 0, time() + $this->ttl);
+        return $this->memcached->set($this->prefix.$id, $data, 0, time() + $this->ttl);
     }
 
     /**
-     * destroy
+     * destroy.
      *
      * @param int|string $id
      *
-     * @return  bool
+     * @return bool
      */
     public function destroy($id)
     {
-        return $this->memcached->delete($this->prefix . $id);
+        return $this->memcached->delete($this->prefix.$id);
     }
 
     /**
-     * gc
+     * gc.
      *
      * @param int|string $maxlifetime
      *
-     * @return  bool
+     * @return bool
      */
     public function gc($maxlifetime)
     {
@@ -137,7 +138,7 @@ class MemcachedHandler extends AbstractHandler
     }
 
     /**
-     * Return a Memcache instance
+     * Return a Memcache instance.
      *
      * @return \Memcache
      */

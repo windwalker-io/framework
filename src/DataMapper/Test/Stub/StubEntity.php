@@ -18,9 +18,9 @@ use Windwalker\DataMapper\Entity\Entity;
 class StubEntity extends Entity
 {
     /**
-     * getFooBarValue
+     * getFooBarValue.
      *
-     * @return  string
+     * @return string
      */
     protected function getFooBarValue()
     {
@@ -28,13 +28,13 @@ class StubEntity extends Entity
     }
 
     /**
-     * setFooBarValue
+     * setFooBarValue.
      *
      * @param $value
      */
     protected function setFlowerSakuraValue($value)
     {
         $this->addField('flower_sakura');
-        $this->data['flower_sakura'] = $value . '_bar';
+        $this->data['flower_sakura'] = $value.'_bar';
     }
 }

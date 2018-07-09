@@ -10,14 +10,14 @@
 /**
  * UTF-8 aware alternative to ucfirst
  * Make a string's first character uppercase
- * Note: requires utf8_strtoupper
+ * Note: requires utf8_strtoupper.
  *
  * @param string
  *
  * @return string with first character as upper case (if applicable)
+ *
  * @see     http://www.php.net/ucfirst
  * @see     utf8_strtoupper
- * @package utf8
  */
 function utf8_ucfirst($str)
 {
@@ -31,7 +31,7 @@ function utf8_ucfirst($str)
         default:
             preg_match('/^(.{1})(.*)$/us', $str, $matches);
 
-            return utf8_strtoupper($matches[1]) . $matches[2];
+            return utf8_strtoupper($matches[1]).$matches[2];
             break;
     }
 }

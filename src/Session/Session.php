@@ -19,7 +19,7 @@ use Windwalker\Session\Handler\HandlerInterface;
 use Windwalker\Session\Handler\NativeHandler;
 
 /**
- * Class for managing HTTP sessions
+ * Class for managing HTTP sessions.
  *
  * Provides access to session-state values as well as session-level
  * settings and lifetime management methods.
@@ -42,11 +42,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
 
     /**
      * Internal state.
-     * One of 'inactive'|'active'|'expired'|'destroyed'|'error'
+     * One of 'inactive'|'active'|'expired'|'destroyed'|'error'.
      *
-     * @var  string
+     * @var string
+     *
      * @see     getState()
-     *
      * @since   2.0
      */
     protected $state;
@@ -56,7 +56,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * Set this property to your array to help you test.
      *
-     * @var  array
+     * @var array
      *
      * @since  2.0
      */
@@ -65,7 +65,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * The session data bags.
      *
-     * @var  SessionBagInterface[]
+     * @var SessionBagInterface[]
      */
     protected $bags = [];
 
@@ -74,40 +74,40 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * Set this to your own bridge to help test.
      *
-     * @var  SessionBridgeInterface
+     * @var SessionBridgeInterface
      */
     protected $bridge = null;
 
     /**
      * Session handler(storage).
      *
-     * @var  HandlerInterface
+     * @var HandlerInterface
      */
     protected $handler = null;
 
     /**
      * Session options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [];
 
     /**
      * Debug mode.
      *
-     * @var boolean
+     * @var bool
      */
     protected $debug;
 
     /**
      * Session constructor.
      *
-     * @param   HandlerInterface       $handler   The type of storage for the session.
-     * @param   SessionBagInterface    $bag       The session data bags.
-     * @param   FlashBagInterface      $flashBag  The session flash bags.
-     * @param   SessionBridgeInterface $bridge    The session bridge, default is PHP NativeBridge.
-     *                                            Set this to your own bridge to help test.
-     * @param   array                  $options   Optional parameters.
+     * @param HandlerInterface       $handler  The type of storage for the session.
+     * @param SessionBagInterface    $bag      The session data bags.
+     * @param FlashBagInterface      $flashBag The session flash bags.
+     * @param SessionBridgeInterface $bridge   The session bridge, default is PHP NativeBridge.
+     *                                         Set this to your own bridge to help test.
+     * @param array                  $options  Optional parameters.
      *
      * @since   2.0
      */
@@ -125,7 +125,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
 
         $bags = [
             'default' => $bag ?: new SessionBag(),
-            'flash' => $flashBag ?: new FlashBag(),
+            'flash'   => $flashBag ?: new FlashBag(),
         ];
 
         $this->setBags($bags);
@@ -140,7 +140,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Initialise Session params.
      *
-     * @return  void
+     * @return void
      */
     protected function init()
     {
@@ -165,7 +165,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Get php cookie parameters.
      *
-     * @return  array
+     * @return array
      */
     protected function getCookieParams()
     {
@@ -175,7 +175,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Set session cookie parameters, this method should call before session started.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -207,7 +207,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Start a session.
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.0
      */
@@ -227,9 +227,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * doStart
+     * doStart.
      *
-     * @return  boolean
+     * @return bool
      *
      * @since  3.0
      */
@@ -252,13 +252,13 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Frees all session variables and destroys all data registered to a session
+     * Frees all session variables and destroys all data registered to a session.
      *
      * This method resets the $_SESSION variable and destroys all of the data associated
      * with the current session in its storage (file or DB). It forces new session to be
      * started after this method is called. It does not unset the session cookie.
      *
-     * @return  boolean  True on success
+     * @return bool True on success
      *
      * @see     session_destroy()
      * @see     session_unset()
@@ -297,7 +297,8 @@ class Session implements \ArrayAccess, \IteratorAggregate
      * Restart an expired or locked session.
      *
      * @throws \RuntimeException
-     * @return  boolean  True on success
+     *
+     * @return bool True on success
      *
      * @see     destroy
      * @since   2.0
@@ -321,10 +322,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Create a new session and copy variables from the old one
+     * Create a new session and copy variables from the old one.
      *
      * @throws \RuntimeException
-     * @return  boolean $result true on success
+     *
+     * @return bool $result true on success
      *
      * @since   2.0
      */
@@ -359,7 +361,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Writes session data and ends session
+     * Writes session data and ends session.
      *
      * Session data is usually stored after your script terminated without the need
      * to call close(), but as session data is locked to prevent concurrent
@@ -369,7 +371,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      * frames by ending the session as soon as all changes to session variables are
      * done.
      *
-     * @return  static
+     * @return static
      *
      * @see     session_write_close()
      * @since   2.0
@@ -386,9 +388,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Re generate the session id.
      *
-     * @param   bool $destroy Destroy session or not.
+     * @param bool $destroy Destroy session or not.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0.4
      */
@@ -400,7 +402,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Do some checks for security reason
+     * Do some checks for security reason.
      *
      * - timeout check (expire)
      * - ip-fixiation
@@ -408,9 +410,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * If one check failed, session data has to be cleaned.
      *
-     * @param   boolean $restart Reactivate session
+     * @param bool $restart Reactivate session
      *
-     * @return  boolean  True on success
+     * @return bool True on success
      *
      * @see     http://shiflett.org/articles/the-truth-about-sessions
      * @since   2.0
@@ -462,9 +464,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Set counter of session usage
+     * Set counter of session usage.
      *
-     * @return  static Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -472,7 +474,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     {
         $counter = $this->get('session.counter', 0);
 
-        ++$counter;
+        $counter++;
 
         $this->set('session.counter', $counter);
 
@@ -480,9 +482,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Set the session timers
+     * Set the session timers.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -503,14 +505,15 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Get data from the session store
+     * Get data from the session store.
      *
-     * @param   string $name      Name of a variable
-     * @param   mixed  $default   Default value of a variable if not set
-     * @param   string $namespace Namespace to use, default to 'default'
+     * @param string $name      Name of a variable
+     * @param mixed  $default   Default value of a variable if not set
+     * @param string $namespace Namespace to use, default to 'default'
      *
-     * @throws  \RuntimeException
-     * @return  mixed  Value of a variable
+     * @throws \RuntimeException
+     *
+     * @return mixed Value of a variable
      *
      * @since   2.0
      */
@@ -530,10 +533,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Get all session data.
      *
-     * @param   string $namespace Session namespace, default is `default`.
+     * @param string $namespace Session namespace, default is `default`.
      *
-     * @return  array
      * @throws \RuntimeException
+     *
+     * @return array
      *
      * @since   2.0
      */
@@ -553,10 +557,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Get all session data and clean them.
      *
-     * @param   string $namespace Session namespace, default is `default`.
+     * @param string $namespace Session namespace, default is `default`.
      *
-     * @return  array
      * @throws \RuntimeException
+     *
+     * @return array
      *
      * @since   2.0.4
      */
@@ -581,9 +586,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Clean all data from a bag (namespace).
      *
-     * @param   string $namespace $namespace  Session namespace, default is `default`.
+     * @param string $namespace $namespace  Session namespace, default is `default`.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0.4
      */
@@ -597,12 +602,13 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Set data into the session store.
      *
-     * @param   string $name      Name of a variable.
-     * @param   mixed  $value     Value of a variable.
-     * @param   string $namespace Namespace to use, default to 'default'.
+     * @param string $name      Name of a variable.
+     * @param mixed  $value     Value of a variable.
+     * @param string $namespace Namespace to use, default to 'default'.
      *
      * @throws \RuntimeException
-     * @return  static  Return self to support chaining.
+     *
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -610,7 +616,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     {
         if ($this->state !== static::STATE_ACTIVE && $this->state !== static::STATE_EXPIRED) {
             if ($this->debug) {
-                throw new \RuntimeException('Session is not active. Now is: ' . $this->state);
+                throw new \RuntimeException('Session is not active. Now is: '.$this->state);
             }
 
             return false;
@@ -622,13 +628,14 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Check whether data exists in the session store
+     * Check whether data exists in the session store.
      *
-     * @param   string $name      Name of variable
-     * @param   string $namespace Namespace to use, default to 'default'
+     * @param string $name      Name of variable
+     * @param string $namespace Namespace to use, default to 'default'
      *
-     * @throws  \RuntimeException
-     * @return  boolean  True if the variable exists
+     * @throws \RuntimeException
+     *
+     * @return bool True if the variable exists
      *
      * @since   2.0
      */
@@ -646,13 +653,14 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Unset data from the session store
+     * Unset data from the session store.
      *
-     * @param   string $name      Name of variable
-     * @param   string $namespace Namespace to use, default to 'default'
+     * @param string $name      Name of variable
+     * @param string $namespace Namespace to use, default to 'default'
      *
      * @throws \RuntimeException
-     * @return  mixed   The value from session or NULL if not set
+     *
+     * @return mixed The value from session or NULL if not set
      *
      * @since   2.0
      */
@@ -677,7 +685,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
      * @param array|string $msg  The message you want to set, can be an array to storage multiple messages.
      * @param string       $type The message type, default is `info`.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -691,7 +699,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Take all flashes and clean them from bag.
      *
-     * @return  array  All flashes data.
+     * @return array All flashes data.
      *
      * @since   2.0
      */
@@ -701,11 +709,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
-     * @param   string $namespace The namespace to get data.
+     * @param string $namespace The namespace to get data.
      *
-     * @return  Traversable An instance of an object implementing Iterator Traversable
+     * @return Traversable An instance of an object implementing Iterator Traversable
      *
      * @since   2.0
      */
@@ -717,9 +725,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to get property Bridge
+     * Method to get property Bridge.
      *
-     * @return  SessionBridgeInterface
+     * @return SessionBridgeInterface
      *
      * @since   2.0
      */
@@ -729,11 +737,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to set property bridge
+     * Method to set property bridge.
      *
-     * @param   SessionBridgeInterface $bridge
+     * @param SessionBridgeInterface $bridge
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -745,9 +753,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to get property Handler
+     * Method to get property Handler.
      *
-     * @return  HandlerInterface
+     * @return HandlerInterface
      *
      * @since   2.0
      */
@@ -757,11 +765,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to set property handler
+     * Method to set property handler.
      *
-     * @param   HandlerInterface $handler
+     * @param HandlerInterface $handler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -773,9 +781,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Get session name
+     * Get session name.
      *
-     * @return  string  The session name
+     * @return string The session name
      *
      * @since   2.0
      */
@@ -785,9 +793,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Get session id
+     * Get session id.
      *
-     * @return  string  The session name
+     * @return string The session name
      *
      * @since   2.0
      */
@@ -797,9 +805,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Shorthand to check if the session is active
+     * Shorthand to check if the session is active.
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.0
      */
@@ -809,9 +817,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Check whether this session is currently created
+     * Check whether this session is currently created.
      *
-     * @return  boolean  True on success.
+     * @return bool True on success.
      *
      * @since   2.0
      */
@@ -823,11 +831,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Create a token-string
+     * Create a token-string.
      *
-     * @param   integer $length Length of string
+     * @param int $length Length of string
      *
-     * @return  string  Generated token
+     * @return string Generated token
      *
      * @since   2.0
      */
@@ -838,17 +846,17 @@ class Session implements \ArrayAccess, \IteratorAggregate
         $token = '';
         $name = $this->getName();
 
-        for ($i = 0; $i < $length; ++$i) {
+        for ($i = 0; $i < $length; $i++) {
             $token .= $chars[(mt_rand(0, $max))];
         }
 
-        return md5($token . $name);
+        return md5($token.$name);
     }
 
     /**
-     * Method to get property State
+     * Method to get property State.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -858,11 +866,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to set property state
+     * Method to set property state.
      *
-     * @param   string $state
+     * @param string $state
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -876,7 +884,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Get cookie source, default is $_COOKIE.
      *
-     * @return  array  Cookie source
+     * @return array Cookie source
      *
      * @since   2.0
      */
@@ -894,9 +902,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
      *
      * Set this property to your array to help you test.
      *
-     * @param   array $cookie Cookie source.
+     * @param array $cookie Cookie source.
      *
-     * @return  Session  Return self to support chaining.
+     * @return Session Return self to support chaining.
      *
      * @since   2.0
      */
@@ -908,12 +916,12 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @param   string $name
-     * @param   mixed  $default
+     * @param string $name
+     * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -927,12 +935,12 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   string $name
-     * @param   mixed  $value
+     * @param string $name
+     * @param mixed  $value
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -944,9 +952,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -956,11 +964,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   array $options
+     * @param array $options
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -974,7 +982,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Register handler as PHP session handler.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -988,7 +996,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Get all Session bags.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -1000,9 +1008,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Set Session bags.
      *
-     * @param   SessionBagInterface[] $bags
+     * @param SessionBagInterface[] $bags
      *
-     * @return  Session  Return self to support chaining.
+     * @return Session Return self to support chaining.
      *
      * @since   2.0
      */
@@ -1018,10 +1026,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Get session bag.
      *
-     * @param   string $name Bag name to get.
+     * @param string $name Bag name to get.
      *
-     * @throws  \UnexpectedValueException
-     * @return  SessionBagInterface
+     * @throws \UnexpectedValueException
+     *
+     * @return SessionBagInterface
      *
      * @since   2.0
      */
@@ -1039,10 +1048,10 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Set session bag by name.
      *
-     * @param   string              $name Session bag name to set.
-     * @param   SessionBagInterface $bag  Session bag object.
+     * @param string              $name Session bag name to set.
+     * @param SessionBagInterface $bag  Session bag object.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -1060,7 +1069,7 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Get Flash bag.
      *
-     * @return  FlashBagInterface
+     * @return FlashBagInterface
      *
      * @since   2.0
      */
@@ -1074,11 +1083,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Set Flash Bag
+     * Set Flash Bag.
      *
-     * @param   FlashBagInterface $bag The flash bag object.
+     * @param FlashBagInterface $bag The flash bag object.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -1090,18 +1099,18 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * preapreBagsData
+     * preapreBagsData.
      *
-     * @param   SessionBagInterface[] $bags
+     * @param SessionBagInterface[] $bags
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
     protected function prepareBagsData(array $bags)
     {
         foreach ($bags as $name => $bag) {
-            $ns = '_' . strtolower($name);
+            $ns = '_'.strtolower($name);
 
             $session = &$this->getBridge()->getStorage();
 
@@ -1116,11 +1125,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Method to set property debug
+     * Method to set property debug.
      *
-     * @param   boolean $debug
+     * @param bool $debug
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.0
      */
@@ -1134,9 +1143,9 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Is a property exists or not.
      *
-     * @param   mixed $offset Offset key.
+     * @param mixed $offset Offset key.
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.0
      */
@@ -1148,10 +1157,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Get a property.
      *
-     * @param   mixed $offset Offset key.
+     * @param mixed $offset Offset key.
      *
-     * @throws  \InvalidArgumentException
-     * @return  mixed The value to return.
+     * @throws \InvalidArgumentException
+     *
+     * @return mixed The value to return.
      *
      * @since   2.0
      */
@@ -1163,11 +1173,12 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Set a value to property.
      *
-     * @param   mixed $offset Offset key.
-     * @param   mixed $value  The value to set.
+     * @param mixed $offset Offset key.
+     * @param mixed $value  The value to set.
      *
-     * @throws  \InvalidArgumentException
-     * @return  void
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      *
      * @since   2.0
      */
@@ -1179,10 +1190,11 @@ class Session implements \ArrayAccess, \IteratorAggregate
     /**
      * Unset a property.
      *
-     * @param   mixed $offset Offset key to unset.
+     * @param mixed $offset Offset key to unset.
      *
-     * @throws  \InvalidArgumentException
-     * @return  void
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      *
      * @since   2.0
      */

@@ -18,7 +18,7 @@ class Environment
     /**
      * Property server.
      *
-     * @var  Platform
+     * @var Platform
      */
     public $platform;
 
@@ -33,9 +33,9 @@ class Environment
     }
 
     /**
-     * Method to get property Server
+     * Method to get property Server.
      *
-     * @return  \Windwalker\Environment\Platform
+     * @return \Windwalker\Environment\Platform
      */
     public function getPlatform()
     {
@@ -43,11 +43,11 @@ class Environment
     }
 
     /**
-     * Method to set property server
+     * Method to set property server.
      *
-     * @param   \Windwalker\Environment\Platform $platform
+     * @param \Windwalker\Environment\Platform $platform
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPlatform($platform)
     {

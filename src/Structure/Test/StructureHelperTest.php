@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -13,7 +13,7 @@ use Windwalker\Structure\StructureHelper;
 use Windwalker\Structure\Test\Stubs\StubDumpable;
 
 /**
- * Test class of StructureHelper
+ * Test class of StructureHelper.
  *
  * @since 2.1
  */
@@ -88,8 +88,8 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => [
+            'olive'  => 'peace',
+            'pos1'   => [
                 'sunflower' => 'love',
             ],
             'pos2' => [
@@ -120,8 +120,8 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => (object) [
+            'olive'  => 'peace',
+            'pos1'   => (object) [
                 'sunflower' => 'love',
             ],
             'pos2' => new Structure(
@@ -181,9 +181,9 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testRemoveByPath
+     * testRemoveByPath.
      *
-     * @return  void
+     * @return void
      */
     public function testRemoveByPath()
     {
@@ -232,19 +232,20 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testFlatten
+     * testFlatten.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Structure\StructureHelper::flatten
+     *
      * @since   2.0
      */
     public function testFlatten()
     {
         $array = [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => [
+            'olive'  => 'peace',
+            'pos1'   => [
                 'sunflower' => 'love',
             ],
             'pos2' => [
@@ -262,9 +263,9 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Data provider for object inputs
+     * Data provider for object inputs.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -305,13 +306,13 @@ class StructureHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testToArray
+     * testToArray.
      *
      * @param $input
      * @param $recursive
      * @param $expect
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestToArray
      * @covers        \Windwalker\Utilities\ArrayHelper::toArray

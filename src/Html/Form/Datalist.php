@@ -21,12 +21,12 @@ class Datalist extends HtmlElement
     /**
      * Element content.
      *
-     * @var  Option[]
+     * @var Option[]
      */
     protected $content;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string     $id
      * @param mixed|null $options
@@ -40,11 +40,11 @@ class Datalist extends HtmlElement
     }
 
     /**
-     * addOption
+     * addOption.
      *
      * @param Option $option
      *
-     * @return  static
+     * @return static
      */
     public function addOption(Option $option)
     {
@@ -54,12 +54,12 @@ class Datalist extends HtmlElement
     }
 
     /**
-     * option
+     * option.
      *
      * @param string $value
      * @param array  $attribs
      *
-     * @return  static
+     * @return static
      */
     public function option($value = null, $attribs = [])
     {
@@ -67,9 +67,9 @@ class Datalist extends HtmlElement
     }
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
-     * @return  void
+     * @return void
      */
     protected function prepareOptions()
     {
@@ -77,9 +77,9 @@ class Datalist extends HtmlElement
     }
 
     /**
-     * __clone
+     * __clone.
      *
-     * @return  void
+     * @return void
      */
     public function __clone()
     {

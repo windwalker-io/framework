@@ -20,42 +20,43 @@ abstract class AbstractContentTypeResponse extends Response
     /**
      * Content type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'text/plain';
 
     /**
      * Constructor.
      *
-     * @param  string $body    The body data.
-     * @param  int    $status  The status code.
-     * @param  array  $headers The custom headers.
+     * @param string $body    The body data.
+     * @param int    $status  The status code.
+     * @param array  $headers The custom headers.
      */
     public function __construct($body = '', $status = 200, array $headers = [])
     {
         parent::__construct(
             $this->handleBody($body),
             $status,
-            $this->addContentTypeToHeader($headers, $this->type . '; charset=utf-8')
+            $this->addContentTypeToHeader($headers, $this->type.'; charset=utf-8')
         );
     }
 
     /**
      * Handle body to stream object.
      *
-     * @param   string $body The body data.
+     * @param string $body The body data.
      *
-     * @return  StreamInterface  Converted to stream object.
+     * @return StreamInterface Converted to stream object.
      */
     abstract protected function handleBody($body);
 
     /**
-     * withContent
+     * withContent.
      *
-     * @param   string $content
+     * @param string $content
      *
-     * @return  static
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function withContent($content)
     {
@@ -65,9 +66,9 @@ abstract class AbstractContentTypeResponse extends Response
     /**
      * Add Content-Type to header.
      *
-     * @param   string $contentType The content type.
+     * @param string $contentType The content type.
      *
-     * @return  static
+     * @return static
      */
     public function withContentType($contentType)
     {
@@ -77,7 +78,7 @@ abstract class AbstractContentTypeResponse extends Response
 
         $this->type = $contentType[0];
 
-        $contentType[0] .= ';' . (isset($contentType[1]) ? $contentType[1] : ' charset=utf-8');
+        $contentType[0] .= ';'.(isset($contentType[1]) ? $contentType[1] : ' charset=utf-8');
 
         return $this->withHeader('Content-Type', $contentType[0]);
     }
@@ -85,8 +86,8 @@ abstract class AbstractContentTypeResponse extends Response
     /**
      * Add content-type to headers variable if not exists.
      *
-     * @param   array  $headers     The headers variable.
-     * @param   string $contentType The content-type.
+     * @param array  $headers     The headers variable.
+     * @param string $contentType The content-type.
      *
      * @return array
      */
@@ -104,9 +105,9 @@ abstract class AbstractContentTypeResponse extends Response
     /**
      * Normalize content-type.
      *
-     * @param   string $contentType Content-type string.
+     * @param string $contentType Content-type string.
      *
-     * @return  string
+     * @return string
      */
     protected function normalizeContentType($contentType)
     {

@@ -9,18 +9,18 @@
 namespace Windwalker\Language;
 
 /**
- * Class LanguageNormalize
+ * Class LanguageNormalize.
  *
  * @since 2.0
  */
 abstract class LanguageNormalize
 {
     /**
-     * toLanguageKey
+     * toLanguageKey.
      *
      * @param string $lang
      *
-     * @return  string
+     * @return string
      */
     public static function toLanguageTag($lang)
     {
@@ -38,11 +38,11 @@ abstract class LanguageNormalize
     }
 
     /**
-     * getLocaliseClassPrefix
+     * getLocaliseClassPrefix.
      *
      * @param string $lang
      *
-     * @return  string
+     * @return string
      */
     public static function getLocaliseClassPrefix($lang)
     {
@@ -54,11 +54,11 @@ abstract class LanguageNormalize
     }
 
     /**
-     * toLanguageKey
+     * toLanguageKey.
      *
      * @param string $key
      *
-     * @return  string
+     * @return string
      */
     public static function toLanguageKey($key)
     {

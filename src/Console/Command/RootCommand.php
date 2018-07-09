@@ -40,7 +40,7 @@ class RootCommand extends Command
             ->description('The default application command')
             ->help(
             // @TODO: Complete the help.
-                <<<HELP
+                <<<'HELP'
 Welcome to Windwalker Console.
 HELP
             );
@@ -69,10 +69,11 @@ HELP
     }
 
     /**
-     * prepareExecute
+     * prepareExecute.
      *
-     * @throws  \Exception
-     * @return  void
+     * @throws \Exception
+     *
+     * @return void
      */
     protected function prepareExecute()
     {

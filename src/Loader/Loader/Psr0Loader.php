@@ -9,7 +9,7 @@
 namespace Windwalker\Loader\Loader;
 
 /**
- * Class Psr0Loader
+ * Class Psr0Loader.
  *
  * @note  This class based on SplClassLoader class.
  *       See: https://gist.github.com/jwage/221634
@@ -21,21 +21,21 @@ class Psr0Loader extends AbstractLoader
     /**
      * Property fileExtension.
      *
-     * @var  string
+     * @var string
      */
     private $fileExtension = '.php';
 
     /**
      * Property namespace.
      *
-     * @var  string
+     * @var string
      */
     private $namespaces = [];
 
     /**
      * Property namespaceSeparator.
      *
-     * @var  string
+     * @var string
      */
     private $namespaceSeparator = '\\';
 
@@ -51,12 +51,12 @@ class Psr0Loader extends AbstractLoader
     }
 
     /**
-     * addNamespace
+     * addNamespace.
      *
      * @param string $prefix
      * @param string $path
      *
-     * @return  Psr0Loader
+     * @return Psr0Loader
      */
     public function addNamespace($prefix, $path)
     {
@@ -64,7 +64,7 @@ class Psr0Loader extends AbstractLoader
         $prefix = trim($prefix, '\\');
 
         // Normalize the base directory with a trailing separator
-        $path = rtrim($path, '/') . DIRECTORY_SEPARATOR;
+        $path = rtrim($path, '/').DIRECTORY_SEPARATOR;
         $path = rtrim($path, DIRECTORY_SEPARATOR);
 
         $this->namespaces[$prefix] = $path;
@@ -141,12 +141,12 @@ class Psr0Loader extends AbstractLoader
                         $this->namespaceSeparator,
                         DIRECTORY_SEPARATOR,
                         $namespace
-                    ) . DIRECTORY_SEPARATOR;
+                    ).DIRECTORY_SEPARATOR;
                 }
 
-                $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . $this->fileExtension;
+                $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className).$this->fileExtension;
 
-                $this->requireFile(($path !== null ? $path . DIRECTORY_SEPARATOR : '') . $fileName);
+                $this->requireFile(($path !== null ? $path.DIRECTORY_SEPARATOR : '').$fileName);
 
                 break;
             }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\IO\CookieInput;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of Cookie
+ * Test class of Cookie.
  *
  * @since 2.0
  */
@@ -49,10 +49,12 @@ class CookieTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Cookie::__construct method.
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\IO\CookieInput::__construct
+     *
      * @since   2.0
      *
      * @codingStandardsIgnoreStart
@@ -73,10 +75,12 @@ class CookieTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Cookie::set method.
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\IO\CookieInput::set
+     *
      * @since   2.0
      */
     public function testSet()
@@ -91,20 +95,21 @@ class CookieTest extends \PHPUnit\Framework\TestCase
     }
 }
 // Stub for setcookie
+
 namespace Windwalker\IO;
 
 /**
  * Stub.
  *
- * @param   string $name     Name
- * @param   string $value    Value
- * @param   int    $expire   Expire
- * @param   string $path     Path
- * @param   string $domain   Domain
- * @param   bool   $secure   Secure
- * @param   bool   $httpOnly HttpOnly
+ * @param string $name     Name
+ * @param string $value    Value
+ * @param int    $expire   Expire
+ * @param string $path     Path
+ * @param string $domain   Domain
+ * @param bool   $secure   Secure
+ * @param bool   $httpOnly HttpOnly
  *
- * @return  void
+ * @return void
  *
  * @since   2.0
  */

@@ -23,40 +23,40 @@ class AbstractInputList extends HtmlElement
     /**
      * Property selected.
      *
-     * @var  mixed
+     * @var mixed
      */
     protected $checked = null;
 
     /**
      * Property disabled.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $disabled = false;
 
     /**
      * Property readonly.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $readonly = false;
 
     /**
      * Element content.
      *
-     * @var  Option[]
+     * @var Option[]
      */
     protected $content = [];
 
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = '';
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string     $name
      * @param mixed|null $options
@@ -73,12 +73,12 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * addOption
+     * addOption.
      *
      * @param Option $option
      * @param string $group
      *
-     * @return  static
+     * @return static
      */
     public function addOption(Option $option, $group = null)
     {
@@ -96,14 +96,14 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * option
+     * option.
      *
      * @param string $text
      * @param string $value
      * @param array  $attribs
      * @param string $group
      *
-     * @return  SelectList
+     * @return SelectList
      */
     public function option($text = null, $value = null, $attribs = [], $group = null)
     {
@@ -111,9 +111,9 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
-     * @return  void
+     * @return void
      */
     public function prepareOptions()
     {
@@ -142,7 +142,7 @@ class AbstractInputList extends HtmlElement
                     '-'
                 )
             );
-            $attrs['id'] .= '-' . strtolower(
+            $attrs['id'] .= '-'.strtolower(
                 trim(
                     preg_replace(
                         '/[^A-Z0-9_\.-]/i',
@@ -152,7 +152,7 @@ class AbstractInputList extends HtmlElement
                     '-'
                 )
             );
-            $attrs['id'] = 'input-' . $attrs['id'];
+            $attrs['id'] = 'input-'.$attrs['id'];
             $attrs['disabled'] = $this->disabled;
             $attrs['readonly'] = $this->readonly;
 
@@ -173,11 +173,11 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * isChecked
+     * isChecked.
      *
-     * @param  Option $option
+     * @param Option $option
      *
-     * @return  bool
+     * @return bool
      */
     protected function isChecked(Option $option)
     {
@@ -185,11 +185,11 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * toString
+     * toString.
      *
-     * @param boolean $forcePair
+     * @param bool $forcePair
      *
-     * @return  string
+     * @return string
      */
     public function toString($forcePair = false)
     {
@@ -207,7 +207,7 @@ class AbstractInputList extends HtmlElement
 
         $attrs = $this->getAttributes();
         $attrs['id'] = $this->getAttribute('id');
-        $attrs['class'] = $this->type . '-inputs ' . $this->getAttribute('class');
+        $attrs['class'] = $this->type.'-inputs '.$this->getAttribute('class');
 
         $attrs['name'] = null;
         $attrs['onchange'] = null;
@@ -217,17 +217,17 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * createLabel
+     * createLabel.
      *
      * @param Option $option
      *
-     * @return  Htmlelement
+     * @return Htmlelement
      */
     protected function createLabel($option)
     {
         $attrs = $option->getAttributes();
 
-        $attrs['id'] = $option->getAttribute('id') . '-label';
+        $attrs['id'] = $option->getAttribute('id').'-label';
         $attrs['for'] = $option->getAttribute('id');
         $attrs['value'] = null;
         $attrs['checked'] = null;
@@ -238,9 +238,9 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * Method to get property Checked
+     * Method to get property Checked.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getChecked()
     {
@@ -248,11 +248,11 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * Method to set property checked
+     * Method to set property checked.
      *
-     * @param   mixed $checked
+     * @param mixed $checked
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setChecked($checked)
     {
@@ -262,9 +262,9 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * Method to get property Disabled
+     * Method to get property Disabled.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getDisabled()
     {
@@ -272,11 +272,11 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * Method to set property disabled
+     * Method to set property disabled.
      *
-     * @param   boolean $disabled
+     * @param bool $disabled
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDisabled($disabled)
     {
@@ -286,9 +286,9 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * Method to get property Readonly
+     * Method to get property Readonly.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getReadonly()
     {
@@ -296,11 +296,11 @@ class AbstractInputList extends HtmlElement
     }
 
     /**
-     * Method to set property readonly
+     * Method to set property readonly.
      *
-     * @param   boolean $readonly
+     * @param bool $readonly
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setReadonly($readonly)
     {

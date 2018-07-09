@@ -9,21 +9,21 @@
 namespace Windwalker\Session\Handler;
 
 /**
- * Interface HandlerInterface
+ * Interface HandlerInterface.
  */
 interface HandlerInterface extends \SessionHandlerInterface
 {
     /**
-     * isSupported
+     * isSupported.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isSupported();
 
     /**
-     * register
+     * register.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function register();
 }

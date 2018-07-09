@@ -5,10 +5,9 @@
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
-
 use Psr\Http\Message\ResponseInterface;
 
-include_once __DIR__ . '/../../../../vendor/autoload.php';
+include_once __DIR__.'/../../../../vendor/autoload.php';
 
 //show($request = \Windwalker\Http\ServerRequestFactory::fromGlobals());
 //
@@ -22,7 +21,7 @@ $server = \Windwalker\Http\WebHttpServer::createFromRequest(
     ) {
         // $response = $response->withHeader('Content-Type', 'application/json');
 
-//	$response->getBody()->write('Hello World!');
+        //	$response->getBody()->write('Hello World!');
 
         $response = new \Windwalker\Http\Response\XmlResponse('<root><f>中文 World!</f></root>');
 

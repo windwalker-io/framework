@@ -18,13 +18,13 @@ use Illuminate\View\Compilers\BladeCompiler;
 class BladeExtending
 {
     /**
-     * extend
+     * extend.
      *
-     * @param   BladeCompiler $blade
-     * @param   string        $name
-     * @param   callable      $closure
+     * @param BladeCompiler $blade
+     * @param string        $name
+     * @param callable      $closure
      *
-     * @return  void
+     * @return void
      */
     public static function extend(BladeCompiler $blade, $name, $closure)
     {
@@ -47,13 +47,11 @@ class BladeExtending
                             return $matches[0];
                         }
 
-                        return $matches[1] . $closure($matches[2]);
+                        return $matches[1].$closure($matches[2]);
                     },
                     $view
                 );
             }
         );
-
-        return;
     }
 }

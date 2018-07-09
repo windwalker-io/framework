@@ -18,7 +18,7 @@ class EdgeStringLoader implements EdgeLoaderInterface
     /**
      * Property content.
      *
-     * @var  string
+     * @var string
      */
     protected $content;
 
@@ -33,11 +33,11 @@ class EdgeStringLoader implements EdgeLoaderInterface
     }
 
     /**
-     * load
+     * load.
      *
-     * @param   string $key
+     * @param string $key
      *
-     * @return  string
+     * @return string
      */
     public function find($key)
     {
@@ -45,11 +45,11 @@ class EdgeStringLoader implements EdgeLoaderInterface
     }
 
     /**
-     * loadFile
+     * loadFile.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public function load($path)
     {
@@ -57,9 +57,9 @@ class EdgeStringLoader implements EdgeLoaderInterface
     }
 
     /**
-     * Method to get property Content
+     * Method to get property Content.
      *
-     * @return  string
+     * @return string
      */
     public function getContent()
     {
@@ -67,11 +67,11 @@ class EdgeStringLoader implements EdgeLoaderInterface
     }
 
     /**
-     * Method to set property content
+     * Method to set property content.
      *
-     * @param   string $content
+     * @param string $content
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setContent($content)
     {

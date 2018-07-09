@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ use Windwalker\Http\Response\TextResponse;
 use Windwalker\Http\Test\Stub\StubStreamOutput;
 
 /**
- * Test class of StreamOutput
+ * Test class of StreamOutput.
  *
  * @since 3.0
  */

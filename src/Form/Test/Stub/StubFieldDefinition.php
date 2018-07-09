@@ -27,7 +27,7 @@ class StubFieldDefinition implements FieldDefinitionInterface
      *
      * @param Form $form The Windwalker form object.
      *
-     * @return  void
+     * @return void
      */
     public function define(Form $form)
     {

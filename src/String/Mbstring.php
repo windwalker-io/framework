@@ -52,7 +52,7 @@ abstract class Mbstring
      * Tests whether a string contains only 7bit ASCII bytes.
      * You might use this to conditionally check whether a string
      * needs handling as UTF-8 or not, potentially offering performance
-     * benefits by using the native PHP equivalent if it's just ASCII e.g.;
+     * benefits by using the native PHP equivalent if it's just ASCII e.g.;.
      *
      * ``` php
      * if (String::is_ascii($someString))
@@ -66,32 +66,33 @@ abstract class Mbstring
      * }
      * ```
      *
-     * @param   string $str The string to test.
+     * @param string $str The string to test.
      *
-     * @return  boolean True if the string is all ASCII
+     * @return bool True if the string is all ASCII
      *
      * @since   2.0
      */
     public static function isAscii($str)
     {
         // Search for any bytes which are outside the ASCII range...
-        return (preg_match('/(?:[^\x00-\x7F])/', $str) !== 1);
+        return preg_match('/(?:[^\x00-\x7F])/', $str) !== 1;
     }
 
     /**
-     * __callStatic
+     * __callStatic.
      *
      * @param string $name
      * @param array  $args
      *
-     * @return  mixed
      * @throws \BadMethodCallException
+     *
+     * @return mixed
      */
     public static function __callStatic($name, $args)
     {
         $underscoreName = trim(strtolower(preg_replace('#([A-Z])#', '_$1', $name)));
 
-        $function = 'mb_' . $underscoreName;
+        $function = 'mb_'.$underscoreName;
 
         if (function_exists($function)) {
             return call_user_func_array($function, $args);
@@ -101,7 +102,7 @@ abstract class Mbstring
     }
 
     /**
-     * str_ireplace
+     * str_ireplace.
      *
      * @param      $search
      * @param      $replace
@@ -109,7 +110,7 @@ abstract class Mbstring
      * @param null $count
      * @param null $encoding
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function strIreplace($search, $replace, $str, $count = null, $encoding = null)
     {
@@ -129,7 +130,7 @@ abstract class Mbstring
             $i = 0;
             $matched = 0;
 
-            while (preg_match('/(.*)' . $search . '/Us', $lstr, $matches)) {
+            while (preg_match('/(.*)'.$search.'/Us', $lstr, $matches)) {
                 if ($count !== null && $i === $count) {
                     break;
                 }
@@ -163,21 +164,21 @@ abstract class Mbstring
     }
 
     /**
-     * str_split
+     * str_split.
      *
      * @see  http://php.net/manual/en/function.str-split.php#117112
      *
      * @param     $string
      * @param int $length
      *
-     * @return  array|bool
+     * @return array|bool
      */
     public static function strSplit($string, $length = 1, $encoding = null)
     {
         $encoding = $encoding === null ? mb_internal_encoding() : $encoding;
 
         if ($length === 1) {
-            return preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY);
+            return preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY);
         }
 
         if ($length > 1) {
@@ -196,12 +197,12 @@ abstract class Mbstring
 
     /**
      * UTF-8/LOCALE aware alternative to strcasecmp
-     * A case insensitive string comparison
+     * A case insensitive string comparison.
      *
-     * @param   string $str1 string 1 to compare
-     * @param   string $str2 string 2 to compare
+     * @param string $str1 string 1 to compare
+     * @param string $str2 string 2 to compare
      *
-     * @return  integer   < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
+     * @return int < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
      *
      * @see     http://www.php.net/strcasecmp
      * @since   2.0
@@ -214,12 +215,12 @@ abstract class Mbstring
     }
 
     /**
-     * A case sensitive string comparison
+     * A case sensitive string comparison.
      *
-     * @param   string $str1 string 1 to compare
-     * @param   string $str2 string 2 to compare
+     * @param string $str1 string 1 to compare
+     * @param string $str2 string 2 to compare
      *
-     * @return  integer  < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
+     * @return int < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
      *
      * @since   2.0
      */
@@ -230,14 +231,14 @@ abstract class Mbstring
 
     /**
      * UTF-8 aware alternative to strcspn
-     * Find length of initial segment not matching mask
+     * Find length of initial segment not matching mask.
      *
-     * @param   string  $str    The string to process
-     * @param   string  $mask   The mask
-     * @param   integer $start  Optional starting character position (in characters)
-     * @param   integer $length Optional length
+     * @param string $str    The string to process
+     * @param string $mask   The mask
+     * @param int    $start  Optional starting character position (in characters)
+     * @param int    $length Optional length
      *
-     * @return  integer  The length of the initial segment of str1 which does not contain any of the characters in str2
+     * @return int The length of the initial segment of str1 which does not contain any of the characters in str2
      *
      * @see     http://www.php.net/strcspn
      * @since   2.0
@@ -261,7 +262,7 @@ abstract class Mbstring
             $str = static::substr($str, $start, $length, $encoding);
         }
 
-        preg_match('/^[^' . $mask . ']+/u', $str, $matches);
+        preg_match('/^[^'.$mask.']+/u', $str, $matches);
 
         if (isset($matches[0])) {
             return static::strlen($matches[0], $encoding);
@@ -272,11 +273,11 @@ abstract class Mbstring
 
     /**
      * UTF-8 aware alternative to strrev
-     * Reverse a string
+     * Reverse a string.
      *
-     * @param   string $str String to be reversed
+     * @param string $str String to be reversed
      *
-     * @return  string   The string in reverse character order
+     * @return string The string in reverse character order
      *
      * @see     http://www.php.net/strrev
      * @since   2.0
@@ -290,14 +291,14 @@ abstract class Mbstring
 
     /**
      * UTF-8 aware alternative to strspn
-     * Find length of initial segment matching mask
+     * Find length of initial segment matching mask.
      *
-     * @param   string  $str    The haystack
-     * @param   string  $mask   The mask
-     * @param   integer $start  Start optional
-     * @param   integer $length Length optional
+     * @param string $str    The haystack
+     * @param string $mask   The mask
+     * @param int    $start  Start optional
+     * @param int    $length Length optional
      *
-     * @return  integer
+     * @return int
      *
      * @see     http://www.php.net/strspn
      * @since   2.0
@@ -322,7 +323,7 @@ abstract class Mbstring
             $str = static::substr($str, $start, $length, $encoding);
         }
 
-        preg_match('/^[' . $mask . ']+/u', $str, $matches);
+        preg_match('/^['.$mask.']+/u', $str, $matches);
 
         if (isset($matches[0])) {
             return static::strlen($matches[0], $encoding);
@@ -333,14 +334,14 @@ abstract class Mbstring
 
     /**
      * UTF-8 aware substr_replace
-     * Replace text within a portion of a string
+     * Replace text within a portion of a string.
      *
-     * @param   string  $str    The haystack
-     * @param   string  $repl   The replacement string
-     * @param   integer $start  Start
-     * @param   integer $length Length (optional)
+     * @param string $str    The haystack
+     * @param string $repl   The replacement string
+     * @param int    $start  Start
+     * @param int    $length Length (optional)
      *
-     * @return  string
+     * @return string
      *
      * @see     http://www.php.net/substr_replace
      * @since   2.0
@@ -362,17 +363,17 @@ abstract class Mbstring
     }
 
     /**
-     * UTF-8 aware replacement for ltrim()
+     * UTF-8 aware replacement for ltrim().
      *
      * Strip whitespace (or other characters) from the beginning of a string
      * You only need to use this if you are supplying the charlist
      * optional arg and it contains UTF-8 characters. Otherwise ltrim will
      * work normally on a UTF-8 string
      *
-     * @param   string $str      The string to be trimmed
-     * @param   string $charlist The optional charlist of additional characters to trim
+     * @param string $str      The string to be trimmed
+     * @param string $charlist The optional charlist of additional characters to trim
      *
-     * @return  string  The trimmed string
+     * @return string The trimmed string
      *
      * @see     http://www.php.net/ltrim
      * @since   2.0
@@ -390,7 +391,7 @@ abstract class Mbstring
         // quote charlist for use in a characterclass
         $charlist = preg_replace('!([\\\\\\-\\]\\[/^])!', '\\\${1}', $charlist);
 
-        return preg_replace('/^[' . $charlist . ']+/u', '', $str);
+        return preg_replace('/^['.$charlist.']+/u', '', $str);
     }
 
     /**
@@ -398,12 +399,12 @@ abstract class Mbstring
      * Strip whitespace (or other characters) from the end of a string
      * You only need to use this if you are supplying the charlist
      * optional arg and it contains UTF-8 characters. Otherwise rtrim will
-     * work normally on a UTF-8 string
+     * work normally on a UTF-8 string.
      *
-     * @param   string $str      The string to be trimmed
-     * @param   string $charlist The optional charlist of additional characters to trim
+     * @param string $str      The string to be trimmed
+     * @param string $charlist The optional charlist of additional characters to trim
      *
-     * @return  string  The trimmed string
+     * @return string The trimmed string
      *
      * @see     http://www.php.net/rtrim
      * @since   2.0
@@ -421,7 +422,7 @@ abstract class Mbstring
         // quote charlist for use in a characterclass
         $charlist = preg_replace('!([\\\\\\-\\]\\[/^])!', '\\\${1}', $charlist);
 
-        return preg_replace('/[' . $charlist . ']+$/u', '', $str);
+        return preg_replace('/['.$charlist.']+$/u', '', $str);
     }
 
     /**
@@ -429,12 +430,12 @@ abstract class Mbstring
      * Strip whitespace (or other characters) from the beginning and end of a string
      * Note: you only need to use this if you are supplying the charlist
      * optional arg and it contains UTF-8 characters. Otherwise trim will
-     * work normally on a UTF-8 string
+     * work normally on a UTF-8 string.
      *
-     * @param   string $str      The string to be trimmed
-     * @param   string $charlist The optional charlist of additional characters to trim
+     * @param string $str      The string to be trimmed
+     * @param string $charlist The optional charlist of additional characters to trim
      *
-     * @return  string  The trimmed string
+     * @return string The trimmed string
      *
      * @see     http://www.php.net/trim
      * @since   2.0
@@ -454,14 +455,14 @@ abstract class Mbstring
 
     /**
      * UTF-8 aware alternative to ucfirst
-     * Make a string's first character uppercase or all words' first character uppercase
+     * Make a string's first character uppercase or all words' first character uppercase.
      *
-     * @param   string $str       String to be processed
-     * @param   string $delimiter The words delimiter (null means do not split the string)
+     * @param string $str       String to be processed
+     * @param string $delimiter The words delimiter (null means do not split the string)
      *
-     * @return  string  If $delimiter is null, return the string with first character as upper case (if applicable)
-     *                  else consider the string of words separated by the delimiter, apply the ucfirst to each words
-     *                  and return the string with the new delimiter
+     * @return string If $delimiter is null, return the string with first character as upper case (if applicable)
+     *                else consider the string of words separated by the delimiter, apply the ucfirst to each words
+     *                and return the string with the new delimiter
      *
      * @see     http://www.php.net/ucfirst
      * @since   2.0
@@ -480,18 +481,18 @@ abstract class Mbstring
             default:
                 preg_match('/^(.{1})(.*)$/us', $str, $matches);
 
-                return static::strtoupper($matches[1], $encoding) . $matches[2];
+                return static::strtoupper($matches[1], $encoding).$matches[2];
                 break;
         }
     }
 
     /**
-     * lcfirst
+     * lcfirst.
      *
      * @param string      $str
      * @param string|null $encoding
      *
-     * @return  string
+     * @return string
      */
     public static function lcfirst($str, $encoding = null)
     {
@@ -507,18 +508,18 @@ abstract class Mbstring
             default:
                 preg_match('/^(.{1})(.*)$/us', $str, $matches);
 
-                return static::strtolower($matches[1], $encoding) . $matches[2];
+                return static::strtolower($matches[1], $encoding).$matches[2];
                 break;
         }
     }
 
     /**
      * UTF-8 aware alternative to ucwords
-     * Uppercase the first character of each word in a string
+     * Uppercase the first character of each word in a string.
      *
-     * @param   string $str String to be processed
+     * @param string $str String to be processed
      *
-     * @return  string  String with first char of each word uppercase
+     * @return string String with first char of each word uppercase
      *
      * @see     http://www.php.net/ucwords
      * @since   2.0
@@ -539,21 +540,21 @@ abstract class Mbstring
                 $ucfirst = static::strtoupper($matches[3], $encoding);
                 $ucword = static::substrReplace(ltrim($matches[0]), $ucfirst, 0, 1);
 
-                return $leadingws . $ucword;
+                return $leadingws.$ucword;
             },
             $str
         );
     }
 
     /**
-     * substr_count
+     * substr_count.
      *
      * @param string      $string
      * @param string      $search
      * @param bool        $caseSensitive
      * @param string|null $encoding
      *
-     * @return  int
+     * @return int
      */
     public static function substrCount(
         $string,
@@ -574,14 +575,13 @@ abstract class Mbstring
     /**
      * Transcode a string.
      *
-     * @param   string $source The string to transcode.
-     * @param   string $from   The source encoding.
-     * @param   string $to     The target encoding.
+     * @param string $source The string to transcode.
+     * @param string $from   The source encoding.
+     * @param string $to     The target encoding.
      *
-     * @return  string  The transcoded string.
+     * @return string The transcoded string.
      *
      * @link    https://bugs.php.net/bug.php?id=48147
-     *
      * @since   2.0
      */
     public static function convertEncoding($source, $from, $to)
@@ -598,11 +598,12 @@ abstract class Mbstring
      *
      * Note: this function has been modified to simple return true or false.
      *
-     * @param   string $str UTF-8 encoded string.
+     * @param string $str UTF-8 encoded string.
      *
-     * @return  boolean  true if valid
+     * @return bool true if valid
      *
      * @author  <hsivonen@iki.fi>
+     *
      * @see     http://hsivonen.iki.fi/php-utf8/
      * @see     compliant
      * @since   2.0
@@ -617,7 +618,7 @@ abstract class Mbstring
         $len = strlen($str);
 
         for ($i = 0; $i < $len; $i++) {
-            $in = ord($str{$i});
+            $in = ord($str[$i]);
 
             if ($mState === 0) {
                 // When mState is zero we expect either a US-ASCII character or a
@@ -728,11 +729,11 @@ abstract class Mbstring
      * it to validate user input, you place yourself at the risk that
      * attackers will be able to inject 5 and 6 byte sequences (which
      * may or may not be a significant risk, depending on what you are
-     * are doing)
+     * are doing).
      *
-     * @param   string $str UTF-8 string to check
+     * @param string $str UTF-8 string to check
      *
-     * @return  boolean  TRUE if string is valid UTF-8
+     * @return bool TRUE if string is valid UTF-8
      *
      * @see     isUtf8
      * @see     http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php#54805
@@ -748,15 +749,15 @@ abstract class Mbstring
         // modifier is used, then it's valid UTF-8. If the UTF-8 is somehow
         // invalid, nothing at all will match, even if the string contains
         // some valid sequences
-        return (preg_match('/^.{1}/us', $str, $ar) === 1);
+        return preg_match('/^.{1}/us', $str, $ar) === 1;
     }
 
     /**
-     * Converts Unicode sequences to UTF-8 string
+     * Converts Unicode sequences to UTF-8 string.
      *
-     * @param   string $str Unicode string to convert
+     * @param string $str Unicode string to convert
      *
-     * @return  string  UTF-8 string
+     * @return string UTF-8 string
      *
      * @since   2.0
      */
@@ -772,11 +773,11 @@ abstract class Mbstring
     }
 
     /**
-     * Converts Unicode sequences to UTF-16 string
+     * Converts Unicode sequences to UTF-16 string.
      *
-     * @param   string $str Unicode string to convert
+     * @param string $str Unicode string to convert
      *
-     * @return  string  UTF-16 string
+     * @return string UTF-16 string
      *
      * @since   2.0
      */
@@ -792,12 +793,12 @@ abstract class Mbstring
     }
 
     /**
-     * shuffle
+     * shuffle.
      *
      * @param string $string
      * @param string $encoding
      *
-     * @return  string
+     * @return string
      *
      * @since  3.2
      */

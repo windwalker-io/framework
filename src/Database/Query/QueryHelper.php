@@ -16,21 +16,21 @@ use Windwalker\Query\QueryElement;
 use Windwalker\Query\QueryInterface;
 
 /**
- * Class QueryHelper
+ * Class QueryHelper.
  */
 class QueryHelper
 {
     /**
      * Property db.
      *
-     * @var  AbstractDatabaseDriver
+     * @var AbstractDatabaseDriver
      */
     protected $db = null;
 
     /**
      * Property tables.
      *
-     * @var  array
+     * @var array
      */
     protected $tables = [];
 
@@ -45,15 +45,15 @@ class QueryHelper
     }
 
     /**
-     * addTable
+     * addTable.
      *
-     * @param string  $alias
-     * @param string  $table
-     * @param mixed   $condition
-     * @param string  $joinType
-     * @param boolean $prefix
+     * @param string $alias
+     * @param string $table
+     * @param mixed  $condition
+     * @param string $joinType
+     * @param bool   $prefix
      *
-     * @return  QueryHelper
+     * @return QueryHelper
      */
     public function addTable($alias, $table, $condition = null, $joinType = 'LEFT', $prefix = null)
     {
@@ -84,11 +84,11 @@ class QueryHelper
     }
 
     /**
-     * removeTable
+     * removeTable.
      *
      * @param string $alias
      *
-     * @return  $this
+     * @return $this
      */
     public function removeTable($alias)
     {
@@ -100,9 +100,9 @@ class QueryHelper
     }
 
     /**
-     * getFilterFields
+     * getFilterFields.
      *
-     * @return  array
+     * @return array
      */
     public function getSelectFields()
     {
@@ -136,21 +136,21 @@ class QueryHelper
     }
 
     /**
-     * registerQueryTables
+     * registerQueryTables.
      *
      * @param QueryInterface $query
      *
-     * @return  QueryInterface
+     * @return QueryInterface
      */
     public function registerQueryTables(QueryInterface $query)
     {
         foreach ($this->tables as $alias => $table) {
             if ($table['join'] === 'FROM') {
-                $query->from($query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias));
+                $query->from($query->quoteName($table['name']).' AS '.$query->quoteName($alias));
             } else {
                 $query->join(
                     $table['join'],
-                    $query->quoteName($table['name']) . ' AS ' . $query->quoteName($alias),
+                    $query->quoteName($table['name']).' AS '.$query->quoteName($alias),
                     $table['condition']
                 );
             }
@@ -160,7 +160,7 @@ class QueryHelper
     }
 
     /**
-     * buildConditions
+     * buildConditions.
      *
      * @param QueryInterface $query
      * @param array          $conditions
@@ -190,7 +190,7 @@ class QueryHelper
 
                 $value = array_map([$query, 'quote'], $value);
 
-                $query->where($query->quoteName($key) . new QueryElement('IN ()', $value, ','));
+                $query->where($query->quoteName($key).new QueryElement('IN ()', $value, ','));
             } // Otherwise, we use equal condition.
             else {
                 $query->where($query->format('%n = %q', $key, $value));
@@ -201,13 +201,13 @@ class QueryHelper
     }
 
     /**
-     * buildCompare
+     * buildCompare.
      *
      * @param string|int     $key
      * @param Compare        $value
      * @param QueryInterface $query
      *
-     * @return  string
+     * @return string
      */
     public static function buildCompare($key, Compare $value, QueryInterface $query = null)
     {
@@ -219,7 +219,7 @@ class QueryHelper
 
         $value->setHandler(
             function ($compare1, $compare2, $operator) use ($query) {
-                return $query->format('%n ' . $operator . ' %q', $compare1, $compare2);
+                return $query->format('%n '.$operator.' %q', $compare1, $compare2);
             }
         );
 
@@ -227,13 +227,13 @@ class QueryHelper
     }
 
     /**
-     * buildValueAssign
+     * buildValueAssign.
      *
      * @param string              $key
      * @param mixed               $value
      * @param QueryInterface|null $query
      *
-     * @return  string
+     * @return string
      */
     public static function buildValueAssign($key, $value, QueryInterface $query = null)
     {
@@ -251,9 +251,9 @@ class QueryHelper
     }
 
     /**
-     * getDb
+     * getDb.
      *
-     * @return  AbstractDatabaseDriver
+     * @return AbstractDatabaseDriver
      */
     public function getDb()
     {
@@ -265,11 +265,11 @@ class QueryHelper
     }
 
     /**
-     * setDb
+     * setDb.
      *
-     * @param   AbstractDatabaseDriver $db
+     * @param AbstractDatabaseDriver $db
      *
-     * @return  QueryHelper  Return self to support chaining.
+     * @return QueryHelper Return self to support chaining.
      */
     public function setDb($db)
     {
@@ -279,9 +279,9 @@ class QueryHelper
     }
 
     /**
-     * Method to get property Tables
+     * Method to get property Tables.
      *
-     * @return  array
+     * @return array
      */
     public function getTables()
     {
@@ -289,11 +289,11 @@ class QueryHelper
     }
 
     /**
-     * Method to set property tables
+     * Method to set property tables.
      *
-     * @param   array $tables
+     * @param array $tables
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTables(array $tables)
     {

@@ -28,6 +28,5 @@ class MockLogger extends AbstractLogger
      */
     public function log($level, $message, array $context = [])
     {
-        return null;
     }
 }

@@ -20,7 +20,7 @@ class FilterHelper extends AbstractFormElementHelper
     /**
      * Property fieldNamespaces.
      *
-     * @var  \SplPriorityQueue
+     * @var \SplPriorityQueue
      */
     protected static $namespaces = null;
 
@@ -32,12 +32,12 @@ class FilterHelper extends AbstractFormElementHelper
     protected static $defaultNamespace = 'Windwalker\\Form\\Filter';
 
     /**
-     * createFilter
+     * createFilter.
      *
      * @param string            $filter
      * @param \SplPriorityQueue $namespaces
      *
-     * @return  bool|DefaultFilter
+     * @return bool|DefaultFilter
      */
     public static function create($filter, \SplPriorityQueue $namespaces = null)
     {
@@ -48,7 +48,7 @@ class FilterHelper extends AbstractFormElementHelper
         $namespaces = $namespaces ?: static::getNamespaces();
 
         foreach ($namespaces as $namespace) {
-            $class = trim($namespace, '\\') . '\\' . ucfirst($filter) . 'Filter';
+            $class = trim($namespace, '\\').'\\'.ucfirst($filter).'Filter';
 
             if (class_exists($class)) {
                 return new $class();

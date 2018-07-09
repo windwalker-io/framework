@@ -47,7 +47,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     protected $protectedProperties;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array  $input
      * @param int    $flags
@@ -62,12 +62,13 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Returns whether the requested key exists
+     * Returns whether the requested key exists.
      *
-     * @param  mixed $key
+     * @param mixed $key
      *
      * @throws \InvalidArgumentException
-     * @return boolean
+     *
+     * @return bool
      */
     public function __isset($key)
     {
@@ -83,12 +84,13 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sets the value at the specified key to value
+     * Sets the value at the specified key to value.
      *
-     * @param  mixed $key
-     * @param  mixed $value
+     * @param mixed $key
+     * @param mixed $value
      *
      * @throws \InvalidArgumentException
+     *
      * @return void|mixed
      */
     public function __set($key, $value)
@@ -105,11 +107,12 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Unsets the value at the specified key
+     * Unsets the value at the specified key.
      *
-     * @param  mixed $key
+     * @param mixed $key
      *
      * @throws \InvalidArgumentException
+     *
      * @return void|mixed
      */
     public function __unset($key)
@@ -126,11 +129,12 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Returns the value at the specified key by reference
+     * Returns the value at the specified key by reference.
      *
-     * @param  mixed $key
+     * @param mixed $key
      *
      * @throws \InvalidArgumentException
+     *
      * @return mixed
      */
     public function &__get($key)
@@ -138,7 +142,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
         $ret = null;
 
         if ($this->flag == self::ARRAY_AS_PROPS) {
-            $ret =& $this->offsetGet($key);
+            $ret = &$this->offsetGet($key);
 
             return $ret;
         }
@@ -151,9 +155,9 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Appends the value
+     * Appends the value.
      *
-     * @param  mixed $value
+     * @param mixed $value
      *
      * @return void
      */
@@ -163,7 +167,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sort the entries by value
+     * Sort the entries by value.
      *
      * @return void
      */
@@ -173,7 +177,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Get the number of public properties in the ArrayObject
+     * Get the number of public properties in the ArrayObject.
      *
      * @return int
      */
@@ -185,9 +189,10 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     /**
      * Exchange the array for another one.
      *
-     * @param  array|ArrayObject $data
+     * @param array|ArrayObject $data
      *
      * @throws \InvalidArgumentException
+     *
      * @return array
      */
     public function exchangeArray($data)
@@ -232,7 +237,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Create a new iterator from an ArrayObject instance
+     * Create a new iterator from an ArrayObject instance.
      *
      * @return \Iterator
      */
@@ -254,7 +259,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sort the entries by key
+     * Sort the entries by key.
      *
      * @return void
      */
@@ -264,7 +269,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sort an array using a case insensitive "natural order" algorithm
+     * Sort an array using a case insensitive "natural order" algorithm.
      *
      * @return void
      */
@@ -274,7 +279,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sort entries using a "natural order" algorithm
+     * Sort entries using a "natural order" algorithm.
      *
      * @return void
      */
@@ -284,9 +289,9 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Returns whether the requested key exists
+     * Returns whether the requested key exists.
      *
-     * @param  mixed $key
+     * @param mixed $key
      *
      * @return bool
      */
@@ -296,9 +301,9 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Returns the value at the specified key
+     * Returns the value at the specified key.
      *
-     * @param  mixed $key
+     * @param mixed $key
      *
      * @return mixed
      */
@@ -310,16 +315,16 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
             return $ret;
         }
 
-        $ret =& $this->storage[$key];
+        $ret = &$this->storage[$key];
 
         return $ret;
     }
 
     /**
-     * Sets the value at the specified key to value
+     * Sets the value at the specified key to value.
      *
-     * @param  mixed $key
-     * @param  mixed $value
+     * @param mixed $key
+     * @param mixed $value
      *
      * @return void
      */
@@ -329,9 +334,9 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Unsets the value at the specified key
+     * Unsets the value at the specified key.
      *
-     * @param  mixed $key
+     * @param mixed $key
      *
      * @return void
      */
@@ -343,7 +348,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Serialize an ArrayObject
+     * Serialize an ArrayObject.
      *
      * @return string
      */
@@ -353,9 +358,9 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sets the behavior flags
+     * Sets the behavior flags.
      *
-     * @param  int $flags
+     * @param int $flags
      *
      * @return void
      */
@@ -365,11 +370,12 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sets the iterator classname for the ArrayObject
+     * Sets the iterator classname for the ArrayObject.
      *
-     * @param  string $class
+     * @param string $class
      *
      * @throws \InvalidArgumentException
+     *
      * @return void
      */
     public function setIteratorClass($class)
@@ -381,7 +387,7 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
         }
 
         if (strpos($class, '\\') === 0) {
-            $class = '\\' . $class;
+            $class = '\\'.$class;
 
             if (class_exists($class)) {
                 $this->iteratorClass = $class;
@@ -394,9 +400,9 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sort the entries with a user-defined comparison function and maintain key association
+     * Sort the entries with a user-defined comparison function and maintain key association.
      *
-     * @param  callable $function
+     * @param callable $function
      *
      * @return void
      */
@@ -408,9 +414,9 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Sort the entries by keys using a user-defined comparison function
+     * Sort the entries by keys using a user-defined comparison function.
      *
-     * @param  callable $function
+     * @param callable $function
      *
      * @return void
      */
@@ -422,9 +428,9 @@ class ArrayObject implements \IteratorAggregate, \ArrayAccess, \Serializable, \C
     }
 
     /**
-     * Unserialize an ArrayObject
+     * Unserialize an ArrayObject.
      *
-     * @param  string $data
+     * @param string $data
      *
      * @return void
      */

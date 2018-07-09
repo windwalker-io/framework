@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -13,7 +13,7 @@ use Windwalker\Edge\Edge;
 use Windwalker\Edge\Loader\EdgeFileLoader;
 
 /**
- * Test class of Edge
+ * Test class of Edge.
  *
  * @since 3.0
  */
@@ -37,7 +37,7 @@ class EdgeTest extends AbstractDomTestCase
         $this->instance = new Edge(
             new EdgeFileLoader(
                 [
-                    __DIR__ . '/tmpl',
+                    __DIR__.'/tmpl',
                 ]
             )
         );
@@ -56,16 +56,17 @@ class EdgeTest extends AbstractDomTestCase
     /**
      * Method to test render().
      *
+     * @throws \Windwalker\Edge\Exception\EdgeException
+     *
      * @return void
      *
-     * @throws \Windwalker\Edge\Exception\EdgeException
      * @covers \Windwalker\Edge\Edge::render
      */
     public function testRender()
     {
         $result = $this->instance->render('hello');
 
-        $expected = <<<HTML
+        $expected = <<<'HTML'
 <html>
     <body>
         This is the master sidebar.

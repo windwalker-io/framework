@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project.  @codingStandardsIgnoreStart
+ * Part of Windwalker project.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2017 Asikart.
  * @license    LGPL-2.0-or-later
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Form\Filter\FilterComposite;
 
 /**
- * Test class of \Windwalker\Form\Filter\FilterComposite
+ * Test class of \Windwalker\Form\Filter\FilterComposite.
  *
  * @since 3.2
  */

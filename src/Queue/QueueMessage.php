@@ -24,42 +24,42 @@ class QueueMessage implements \JsonSerializable
     /**
      * Property id.
      *
-     * @var  int|string
+     * @var int|string
      */
     protected $id;
 
     /**
      * Property attempts.
      *
-     * @var  int
+     * @var int
      */
     protected $attempts = 0;
 
     /**
      * Message body from remote server.
      *
-     * @var  array
+     * @var array
      */
     protected $body = [];
 
     /**
      * Message body from remote server.
      *
-     * @var  string
+     * @var string
      */
     protected $rawBody = [];
 
     /**
      * Property delay.
      *
-     * @var  int
+     * @var int
      */
     protected $delay = 0;
 
     /**
      * Property deleted.
      *
-     * @var  bool
+     * @var bool
      */
     protected $deleted = false;
 
@@ -86,12 +86,12 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * get
+     * get.
      *
      * @param string $name
      * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function get($name, $default = null)
     {
@@ -103,12 +103,12 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * set
+     * set.
      *
      * @param string $name
      * @param mixed  $value
      *
-     * @return  static
+     * @return static
      */
     public function set($name, $value)
     {
@@ -118,9 +118,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property Id
+     * Method to get property Id.
      *
-     * @return  int|string
+     * @return int|string
      */
     public function getId()
     {
@@ -128,11 +128,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property id
+     * Method to set property id.
      *
-     * @param   int|string $id
+     * @param int|string $id
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setId($id)
     {
@@ -142,9 +142,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property Attempts
+     * Method to get property Attempts.
      *
-     * @return  int
+     * @return int
      */
     public function getAttempts()
     {
@@ -152,11 +152,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property attempts
+     * Method to set property attempts.
      *
-     * @param   int $attempts
+     * @param int $attempts
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setAttempts($attempts)
     {
@@ -166,9 +166,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property Job
+     * Method to get property Job.
      *
-     * @return  string
+     * @return string
      */
     public function getJob()
     {
@@ -176,11 +176,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property job
+     * Method to set property job.
      *
-     * @param   string $job
+     * @param string $job
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setJob($job)
     {
@@ -190,9 +190,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property Data
+     * Method to get property Data.
      *
-     * @return  array
+     * @return array
      */
     public function getData()
     {
@@ -200,11 +200,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property data
+     * Method to set property data.
      *
-     * @param   array $data
+     * @param array $data
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setData(array $data)
     {
@@ -214,9 +214,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property Queue
+     * Method to get property Queue.
      *
-     * @return  string
+     * @return string
      */
     public function getQueueName()
     {
@@ -224,11 +224,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property queue
+     * Method to set property queue.
      *
-     * @param   string $queue
+     * @param string $queue
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setQueueName($queue)
     {
@@ -238,9 +238,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property Body
+     * Method to get property Body.
      *
-     * @return  array
+     * @return array
      */
     public function getBody()
     {
@@ -248,11 +248,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property body
+     * Method to set property body.
      *
-     * @param   array $body
+     * @param array $body
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setBody($body)
     {
@@ -262,9 +262,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property RawData
+     * Method to get property RawData.
      *
-     * @return  string
+     * @return string
      */
     public function getRawBody()
     {
@@ -272,11 +272,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property rawData
+     * Method to set property rawData.
      *
-     * @param   string $rawBody
+     * @param string $rawBody
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setRawBody($rawBody)
     {
@@ -286,9 +286,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property Name
+     * Method to get property Name.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -296,11 +296,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property name
+     * Method to set property name.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setName($name)
     {
@@ -310,9 +310,9 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to get property Delay
+     * Method to get property Delay.
      *
-     * @return  int
+     * @return int
      */
     public function getDelay()
     {
@@ -320,11 +320,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * Method to set property delay
+     * Method to set property delay.
      *
-     * @param   int $delay
+     * @param int $delay
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDelay($delay)
     {
@@ -334,11 +334,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * isDeleted
+     * isDeleted.
      *
      * @param bool $bool
      *
-     * @return  bool|static
+     * @return bool|static
      */
     public function isDeleted($bool = null)
     {
@@ -352,11 +352,11 @@ class QueueMessage implements \JsonSerializable
     }
 
     /**
-     * jsonSerialize
-     *
-     * @return  array
+     * jsonSerialize.
      *
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     public function jsonSerialize()
     {

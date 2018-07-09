@@ -9,7 +9,7 @@
 namespace Windwalker\Cache\Serializer;
 
 /**
- * Class JsonHandler
+ * Class JsonHandler.
  *
  * @since 2.0
  */
@@ -18,9 +18,9 @@ class JsonSerializer implements SerializerInterface
     /**
      * Encode data.
      *
-     * @param   mixed $data
+     * @param mixed $data
      *
-     * @return  string
+     * @return string
      */
     public function serialize($data)
     {
@@ -30,9 +30,9 @@ class JsonSerializer implements SerializerInterface
     /**
      * Decode data.
      *
-     * @param   string $data
+     * @param string $data
      *
-     * @return  mixed
+     * @return mixed
      */
     public function unserialize($data)
     {

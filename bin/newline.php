@@ -5,31 +5,30 @@
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later. see LICENSE
  */
-
 use Windwalker\Application\AbstractCliApplication;
 
-include_once __DIR__ . '/../vendor/autoload.php';
+include_once __DIR__.'/../vendor/autoload.php';
 
-define('WINDWALKER_ROOT', realpath(__DIR__ . '/..'));
+define('WINDWALKER_ROOT', realpath(__DIR__.'/..'));
 
 /**
  * Class Build to build subtrees.
  *
  * @since 1.0
  */
-class Newline extends AbstractCliApplication
+class newline extends AbstractCliApplication
 {
     /**
      * Method to run the application routines.  Most likely you will want to instantiate a controller
      * and execute it, or perform some sort of task directly.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0
      */
     protected function doExecute()
     {
-        $root = $this->io->getArgument(0, WINDWALKER_ROOT . '/src');
+        $root = $this->io->getArgument(0, WINDWALKER_ROOT.'/src');
 
         $dirs = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root));
 
@@ -53,14 +52,14 @@ class Newline extends AbstractCliApplication
 
             $count++;
 
-            $this->out('Add new line to: ' . $file);
+            $this->out('Add new line to: '.$file);
 
             switch ($lastChar) {
-                case ' ' :
+                case ' ':
                     $content = substr($content, 0, -1);
                     break;
 
-                case '}' :
+                case '}':
                     $content .= "\n";
                     break;
             }
@@ -69,7 +68,7 @@ class Newline extends AbstractCliApplication
         }
 
         if ($count) {
-            $this->out($count . ' files add new line.');
+            $this->out($count.' files add new line.');
         } else {
             $this->out('No file found.');
         }

@@ -5,18 +5,17 @@
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
  */
-
 use Windwalker\Middleware\Chain\ChainBuilder;
 use Windwalker\Middleware\Middleware;
 
-include dirname(__DIR__) . '/vendor/autoload.php';
+include dirname(__DIR__).'/vendor/autoload.php';
 
 class TestA extends Middleware
 {
     /**
-     * call
+     * call.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function call()
     {
@@ -30,9 +29,9 @@ class TestA extends Middleware
 class TestB extends Middleware
 {
     /**
-     * call
+     * call.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function call()
     {

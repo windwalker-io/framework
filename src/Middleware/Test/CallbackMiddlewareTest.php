@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Middleware\Test\Stub\StubOthelloMiddleware;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * Test class of CallbackMiddleware
+ * Test class of CallbackMiddleware.
  *
  * @since 2.0
  */
@@ -73,7 +73,7 @@ class CallbackMiddlewareTest extends AbstractBaseTestCase
 
         $this->instance->setNext($othello);
 
-        $data = <<<EOF
+        $data = <<<'EOF'
 Coriolanus
 >>> Othello
 <<< Othello

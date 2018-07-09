@@ -23,60 +23,60 @@ class Form implements \IteratorAggregate
     /**
      * Property fields.
      *
-     * @var  AbstractField[]
+     * @var AbstractField[]
      */
     protected $fields = [];
 
     /**
      * Property control.
      *
-     * @var  string
+     * @var string
      */
     protected $control = null;
 
     /**
      * Property xml.
      *
-     * @var  \SimpleXmlElement
+     * @var \SimpleXmlElement
      */
     protected $xml = null;
 
     /**
      * Property fieldsets.
      *
-     * @var  string[]
+     * @var string[]
      */
     protected $fieldsets = [];
 
     /**
      * Property groups.
      *
-     * @var  string[]
+     * @var string[]
      */
     protected $groups = [];
 
     /**
      * Property fieldRenderHandler.
      *
-     * @var  FormRendererInterface
+     * @var FormRendererInterface
      */
     protected $renderer;
 
     /**
      * Property errors.
      *
-     * @var  ValidateResult[]
+     * @var ValidateResult[]
      */
     protected $errors = [];
 
     /**
      * Property wraps.
      *
-     * @var  array
+     * @var array
      */
     protected $wrap = [
         'fieldset' => null,
-        'group' => null,
+        'group'    => null,
     ];
 
     /**
@@ -90,11 +90,11 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * load
+     * load.
      *
      * @param string|\SimpleXMLElement $xml
      *
-     * @return  static
+     * @return static
      */
     public function loadXml($xml)
     {
@@ -110,11 +110,11 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * loadFile
+     * loadFile.
      *
      * @param string $file
      *
-     * @return  static
+     * @return static
      */
     public function loadFile($file)
     {
@@ -124,7 +124,7 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * addFields
+     * addFields.
      *
      * @param \Traversable|\SimpleXMLElement $fields
      * @param string                         $fieldset
@@ -165,7 +165,7 @@ class Form implements \IteratorAggregate
             }
 
             if (!$field instanceof AbstractField) {
-                throw new \InvalidArgumentException(__METHOD__ . ' argument 2 should be sub class of AbstractField.');
+                throw new \InvalidArgumentException(__METHOD__.' argument 2 should be sub class of AbstractField.');
             }
 
             $field->setName($name);
@@ -175,13 +175,13 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * addField
+     * addField.
      *
      * @param string|AbstractField|\SimpleXMLElement $field
      * @param string                                 $fieldset
      * @param string                                 $group
      *
-     * @return  AbstractField|ListField
+     * @return AbstractField|ListField
      */
     public function addField($field, $fieldset = null, $group = null)
     {
@@ -218,13 +218,13 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * wrap
+     * wrap.
      *
      * @param string   $fieldset
      * @param string   $group
      * @param \Closure $handler
      *
-     * @return  static
+     * @return static
      */
     public function wrap($fieldset, $group, \Closure $handler)
     {
@@ -253,12 +253,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * fieldset
+     * fieldset.
      *
      * @param string   $fieldset
      * @param \Closure $handler
      *
-     * @return  static
+     * @return static
      */
     public function fieldset($fieldset, \Closure $handler)
     {
@@ -266,12 +266,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * group
+     * group.
      *
      * @param string   $group
      * @param \Closure $handler
      *
-     * @return  static
+     * @return static
      */
     public function group($group, \Closure $handler)
     {
@@ -279,12 +279,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to set property fieldNamespaces
+     * Method to set property fieldNamespaces.
      *
      * @param string $ns
      * @param int    $priority
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function addFieldNamespace($ns, $priority = 256)
     {
@@ -294,12 +294,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to set property fieldNamespaces
+     * Method to set property fieldNamespaces.
      *
      * @param string $ns
      * @param int    $priority
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function addFilterNamespace($ns, $priority = 256)
     {
@@ -309,12 +309,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to set property fieldNamespaces
+     * Method to set property fieldNamespaces.
      *
      * @param string $ns
      * @param int    $priority
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function addValidatorNamespace($ns, $priority = 256)
     {
@@ -324,7 +324,7 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return \Iterator|AbstractField[] An instance of an object implementing Iterator or Traversable
      */
@@ -334,11 +334,11 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * getCallbackIterator
+     * getCallbackIterator.
      *
      * @param \Closure $handler
      *
-     * @return  \CallbackFilterIterator|AbstractField[] An instance of an object implementing Iterator or Traversable
+     * @return \CallbackFilterIterator|AbstractField[] An instance of an object implementing Iterator or Traversable
      */
     public function getCallbackIterator(\Closure $handler)
     {
@@ -346,34 +346,34 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * getField
+     * getField.
      *
      * @param string $name
      * @param string $group
      *
-     * @return  AbstractField
+     * @return AbstractField
      */
     public function getField($name, $group = '')
     {
         if ($group) {
-            $name = $group . '/' . $name;
+            $name = $group.'/'.$name;
         }
 
         return isset($this->fields[$name]) ? $this->fields[$name] : null;
     }
 
     /**
-     * removeField
+     * removeField.
      *
      * @param string $name
      * @param string $group
      *
-     * @return  $this
+     * @return $this
      */
     public function removeField($name, $group = null)
     {
         if ($group) {
-            $name = $group . '/' . $name;
+            $name = $group.'/'.$name;
         }
 
         if (isset($this->fields[$name])) {
@@ -384,12 +384,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * removeField
+     * removeField.
      *
      * @param string $fieldset
      * @param string $group
      *
-     * @return  $this
+     * @return $this
      */
     public function removeFields($fieldset = null, $group = null)
     {
@@ -407,12 +407,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * getFields
+     * getFields.
      *
      * @param string $fieldset
      * @param string $group
      *
-     * @return  AbstractField[]
+     * @return AbstractField[]
      */
     public function getFields($fieldset = null, $group = null)
     {
@@ -423,7 +423,7 @@ class Form implements \IteratorAggregate
          * @param string                  $key
          * @param \CallbackFilterIterator $iterator
          *
-         * @return  boolean
+         * @return bool
          */
         $handler = function ($current, $key, $iterator) use ($fieldset, $group) {
             if ($fieldset && $current->getFieldset() != $fieldset) {
@@ -441,9 +441,9 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Fieldsets
+     * Method to get property Fieldsets.
      *
-     * @return  array
+     * @return array
      */
     public function getFieldsets()
     {
@@ -451,9 +451,9 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Groups
+     * Method to get property Groups.
      *
-     * @return  array
+     * @return array
      */
     public function getGroups()
     {
@@ -461,14 +461,14 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * setAttribute
+     * setAttribute.
      *
      * @param string $field
      * @param string $name
      * @param mixed  $value
      * @param string $group
      *
-     * @return  static
+     * @return static
      */
     public function setAttribute($field, $name, $value, $group = null)
     {
@@ -482,14 +482,14 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * getAttribute
+     * getAttribute.
      *
      * @param string $field
      * @param string $name
      * @param mixed  $default
      * @param string $group
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getAttribute($field, $name, $default = null, $group = null)
     {
@@ -503,14 +503,14 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * setAttributes
+     * setAttributes.
      *
      * @param string $name
      * @param mixed  $value
      * @param string $fieldset
      * @param string $group
      *
-     * @return  static
+     * @return static
      */
     public function setAttributes($name, $value, $fieldset = null, $group = null)
     {
@@ -522,14 +522,14 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * appendAttributes
+     * appendAttributes.
      *
      * @param string $name
      * @param mixed  $value
      * @param string $fieldset
      * @param string $group
      *
-     * @return  static
+     * @return static
      */
     public function appendAttributes($name, $value, $fieldset = null, $group = null)
     {
@@ -541,11 +541,11 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * bind
+     * bind.
      *
      * @param array $data
      *
-     * @return  static
+     * @return static
      */
     public function bind($data)
     {
@@ -561,9 +561,9 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  static
+     * @return static
      */
     public function clearValues()
     {
@@ -575,9 +575,9 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  static
+     * @return static
      */
     public function reset()
     {
@@ -589,9 +589,9 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * filter
+     * filter.
      *
-     * @return  static
+     * @return static
      */
     public function filter()
     {
@@ -603,9 +603,9 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * validate
+     * validate.
      *
-     * @return  boolean
+     * @return bool
      */
     public function validate()
     {
@@ -629,12 +629,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * getViews
+     * getViews.
      *
      * @param string $fieldset
      * @param string $group
      *
-     * @return  array
+     * @return array
      */
     public function getViews($fieldset = null, $group = null)
     {
@@ -651,12 +651,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * prepareStore
+     * prepareStore.
      *
      * @param string $fieldset
      * @param string $group
      *
-     * @return  void
+     * @return void
      */
     public function prepareStore($fieldset = null, $group = null)
     {
@@ -666,7 +666,7 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * renderField
+     * renderField.
      *
      * @param string $name
      * @param string $group
@@ -682,7 +682,7 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * renderFields
+     * renderFields.
      *
      * @param string $fieldset
      * @param string $group
@@ -695,16 +695,16 @@ class Form implements \IteratorAggregate
         $output = '';
 
         foreach ($this->getFields($fieldset, $group) as $field) {
-            $output .= "\n" . $field->render($options);
+            $output .= "\n".$field->render($options);
         }
 
         return $output;
     }
 
     /**
-     * Method to get property Control
+     * Method to get property Control.
      *
-     * @return  string
+     * @return string
      */
     public function getControl()
     {
@@ -712,11 +712,11 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to set property control
+     * Method to set property control.
      *
-     * @param   string $control
+     * @param string $control
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setControl($control)
     {
@@ -730,11 +730,11 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * defineFormFields
+     * defineFormFields.
      *
      * @param FieldDefinitionInterface $fields
      *
-     * @return  $this
+     * @return $this
      */
     public function defineFormFields(FieldDefinitionInterface $fields)
     {
@@ -744,9 +744,9 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to get property Errors
+     * Method to get property Errors.
      *
-     * @return  ValidateResult[]
+     * @return ValidateResult[]
      */
     public function getErrors()
     {
@@ -754,11 +754,11 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to set property errors
+     * Method to set property errors.
      *
-     * @param   ValidateResult[] $errors
+     * @param ValidateResult[] $errors
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setErrors($errors)
     {
@@ -768,12 +768,12 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * getValues
+     * getValues.
      *
      * @param string $fieldset
      * @param string $group
      *
-     * @return  array
+     * @return array
      */
     public function getValues($fieldset = null, $group = null)
     {
@@ -787,9 +787,9 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to get property FieldRenderHandler
+     * Method to get property FieldRenderHandler.
      *
-     * @return  FormRendererInterface
+     * @return FormRendererInterface
      */
     public function getRenderer()
     {
@@ -797,11 +797,11 @@ class Form implements \IteratorAggregate
     }
 
     /**
-     * Method to set property fieldRenderHandler
+     * Method to set property fieldRenderHandler.
      *
-     * @param   FormRendererInterface $renderer
+     * @param FormRendererInterface $renderer
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setRenderer(FormRendererInterface $renderer = null)
     {

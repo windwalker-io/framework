@@ -13,7 +13,7 @@ use Windwalker\Loader\Loader\Psr0Loader;
 use Windwalker\Loader\Loader\Psr4Loader;
 
 /**
- * Class ClassLoader
+ * Class ClassLoader.
  *
  * @since 2.0
  */
@@ -22,21 +22,21 @@ class ClassLoader
     /**
      * Property psr0.
      *
-     * @var  Psr0Loader
+     * @var Psr0Loader
      */
     protected $psr0 = null;
 
     /**
      * Property psr4.
      *
-     * @var  Psr4Loader
+     * @var Psr4Loader
      */
     protected $psr4 = null;
 
     /**
      * Property files.
      *
-     * @var  FileMappingLoader
+     * @var FileMappingLoader
      */
     protected $files = null;
 
@@ -55,9 +55,9 @@ class ClassLoader
     }
 
     /**
-     * register
+     * register.
      *
-     * @return  ClassLoader
+     * @return ClassLoader
      */
     public function register()
     {
@@ -69,9 +69,9 @@ class ClassLoader
     }
 
     /**
-     * unregister
+     * unregister.
      *
-     * @return  $this
+     * @return $this
      */
     public function unregister()
     {
@@ -83,12 +83,12 @@ class ClassLoader
     }
 
     /**
-     * addPsr0
+     * addPsr0.
      *
      * @param string|array $class
      * @param string       $path
      *
-     * @return  $this
+     * @return $this
      */
     public function addPsr0($class, $path = null)
     {
@@ -104,12 +104,12 @@ class ClassLoader
     }
 
     /**
-     * addPsr4
+     * addPsr4.
      *
      * @param string|array $class
      * @param string       $path
      *
-     * @return  $this
+     * @return $this
      */
     public function addPsr4($class, $path = null)
     {
@@ -125,12 +125,12 @@ class ClassLoader
     }
 
     /**
-     * addMap
+     * addMap.
      *
      * @param string|array $class
      * @param string       $path
      *
-     * @return  $this
+     * @return $this
      */
     public function addMap($class, $path = null)
     {
@@ -146,9 +146,9 @@ class ClassLoader
     }
 
     /**
-     * Method to get property Psr0
+     * Method to get property Psr0.
      *
-     * @return  Psr0Loader
+     * @return Psr0Loader
      */
     public function getPsr0Loader()
     {
@@ -156,11 +156,11 @@ class ClassLoader
     }
 
     /**
-     * Method to set property psr0
+     * Method to set property psr0.
      *
-     * @param   Psr0Loader $psr0
+     * @param Psr0Loader $psr0
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPsr0Loader($psr0)
     {
@@ -170,9 +170,9 @@ class ClassLoader
     }
 
     /**
-     * Method to get property Psr4
+     * Method to get property Psr4.
      *
-     * @return  Psr4Loader
+     * @return Psr4Loader
      */
     public function getPsr4Loader()
     {
@@ -180,11 +180,11 @@ class ClassLoader
     }
 
     /**
-     * Method to set property psr4
+     * Method to set property psr4.
      *
-     * @param   Psr4Loader $psr4
+     * @param Psr4Loader $psr4
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPsr4Loader($psr4)
     {
@@ -194,9 +194,9 @@ class ClassLoader
     }
 
     /**
-     * Method to get property Files
+     * Method to get property Files.
      *
-     * @return  FileMappingLoader
+     * @return FileMappingLoader
      */
     public function getFilesLoader()
     {
@@ -204,11 +204,11 @@ class ClassLoader
     }
 
     /**
-     * Method to set property files
+     * Method to set property files.
      *
-     * @param   FileMappingLoader $files
+     * @param FileMappingLoader $files
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setFilesLoader($files)
     {

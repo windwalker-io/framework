@@ -18,14 +18,14 @@ class CallableJob implements JobInterface
     /**
      * Property callable.
      *
-     * @var  callable
+     * @var callable
      */
     protected $callback;
 
     /**
      * Property name.
      *
-     * @var  null|string
+     * @var null|string
      */
     protected $name;
 
@@ -42,9 +42,9 @@ class CallableJob implements JobInterface
     }
 
     /**
-     * getName
+     * getName.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -52,9 +52,9 @@ class CallableJob implements JobInterface
     }
 
     /**
-     * handle
+     * handle.
      *
-     * @return  void
+     * @return void
      */
     public function execute()
     {

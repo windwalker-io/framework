@@ -21,7 +21,7 @@ class LocalMethod extends AbstractMethod
     /**
      * Property users.
      *
-     * @var  array
+     * @var array
      */
     protected $users = [];
 
@@ -43,11 +43,11 @@ class LocalMethod extends AbstractMethod
     }
 
     /**
-     * authenticate
+     * authenticate.
      *
      * @param Credential $credential
      *
-     * @return  integer
+     * @return int
      */
     public function authenticate(Credential $credential)
     {
@@ -94,9 +94,9 @@ class LocalMethod extends AbstractMethod
     }
 
     /**
-     * Method to get property VerifyHandler
+     * Method to get property VerifyHandler.
      *
-     * @return  callable
+     * @return callable
      */
     public function getVerifyHandler()
     {
@@ -110,11 +110,11 @@ class LocalMethod extends AbstractMethod
     }
 
     /**
-     * Method to set property verifyHandler
+     * Method to set property verifyHandler.
      *
-     * @param   callable $verifyHandler
+     * @param callable $verifyHandler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setVerifyHandler($verifyHandler)
     {
@@ -124,9 +124,9 @@ class LocalMethod extends AbstractMethod
     }
 
     /**
-     * Method to get property Users
+     * Method to get property Users.
      *
-     * @return  array
+     * @return array
      */
     public function getUsers()
     {
@@ -134,11 +134,11 @@ class LocalMethod extends AbstractMethod
     }
 
     /**
-     * Method to set property users
+     * Method to set property users.
      *
-     * @param   array $users
+     * @param array $users
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setUsers($users)
     {

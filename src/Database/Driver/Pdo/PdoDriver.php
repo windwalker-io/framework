@@ -13,7 +13,7 @@ use Windwalker\Query\Query;
 use Windwalker\Query\Query\PreparableInterface;
 
 /**
- * Class PdoDriver
+ * Class PdoDriver.
  *
  * @since 2.0
  */
@@ -22,7 +22,8 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * The name of the database driver.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $name = 'pdo';
@@ -30,7 +31,8 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * The prepared statement.
      *
-     * @var    \PDOStatement
+     * @var \PDOStatement
+     *
      * @since  2.0
      */
     protected $cursor;
@@ -38,7 +40,8 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * The database connection resource.
      *
-     * @var    \PDO
+     * @var \PDO
+     *
      * @since  2.0
      */
     protected $connection;
@@ -53,14 +56,14 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Property reader.
      *
-     * @var  PdoReader
+     * @var PdoReader
      */
     protected $reader = null;
 
     /**
      * Is this driver supported.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isSupported()
     {
@@ -70,21 +73,22 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Constructor.
      *
-     * @param   \PDO  $connection The pdo connection object.
-     * @param   array $options    List of options used to configure the connection
+     * @param \PDO  $connection The pdo connection object.
+     * @param array $options    List of options used to configure the connection
      *
      * @throws \ReflectionException
+     *
      * @since   2.0
      */
     public function __construct(\PDO $connection = null, $options = [])
     {
         $defaultOptions = [
-            'driver' => 'odbc',
-            'dsn' => '',
-            'host' => 'localhost',
-            'database' => '',
-            'user' => '',
-            'password' => '',
+            'driver'        => 'odbc',
+            'dsn'           => '',
+            'host'          => 'localhost',
+            'database'      => '',
+            'user'          => '',
+            'password'      => '',
             'driverOptions' => [],
         ];
 
@@ -100,10 +104,11 @@ class PdoDriver extends AbstractDatabaseDriver
     }
 
     /**
-     * connect
+     * connect.
      *
-     * @throws  \RuntimeException
-     * @return  static
+     * @throws \RuntimeException
+     *
+     * @return static
      */
     public function connect()
     {
@@ -122,7 +127,7 @@ class PdoDriver extends AbstractDatabaseDriver
             );
         } catch (\PDOException $e) {
             throw new \RuntimeException(
-                'Could not connect to PDO: ' . $e->getMessage() . '. DSN: ' . $dsn,
+                'Could not connect to PDO: '.$e->getMessage().'. DSN: '.$dsn,
                 $e->getCode(), $e
             );
         }
@@ -136,7 +141,7 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Disconnects the database.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -153,13 +158,13 @@ class PdoDriver extends AbstractDatabaseDriver
 
     /**
      * Retrieve a PDO database connection attribute
-     * http://www.php.net/manual/en/pdo.getattribute.php
+     * http://www.php.net/manual/en/pdo.getattribute.php.
      *
      * Usage: $db->getOption(PDO::ATTR_CASE);
      *
-     * @param   mixed $key One of the PDO::ATTR_* Constants
+     * @param mixed $key One of the PDO::ATTR_* Constants
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -172,16 +177,16 @@ class PdoDriver extends AbstractDatabaseDriver
 
     /**
      * Sets an attribute on the PDO database handle.
-     * http://www.php.net/manual/en/pdo.setattribute.php
+     * http://www.php.net/manual/en/pdo.setattribute.php.
      *
      * Usage: $db->setOption(PDO::ATTR_CASE, PDO::CASE_UPPER);
      *
-     * @param   integer $key     One of the PDO::ATTR_* Constants
-     * @param   mixed   $value   One of the associated PDO Constants
-     *                           related to the particular attribute
-     *                           key.
+     * @param int   $key   One of the PDO::ATTR_* Constants
+     * @param mixed $value One of the associated PDO Constants
+     *                     related to the particular attribute
+     *                     key.
      *
-     * @return boolean
+     * @return bool
      *
      * @since  2.0
      */
@@ -193,9 +198,9 @@ class PdoDriver extends AbstractDatabaseDriver
     }
 
     /**
-     * Get the version of the database connector
+     * Get the version of the database connector.
      *
-     * @return  string  The database connector version.
+     * @return string The database connector version.
      *
      * @since   2.0
      */
@@ -209,12 +214,13 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Select a database for use.
      *
-     * @param   string $database The name of the database to select for use.
+     * @param string $database The name of the database to select for use.
      *
-     * @return  static
+     * @throws \RuntimeException
+     *
+     * @return static
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function select($database)
     {
@@ -228,10 +234,10 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Sets the SQL statement string for later execution.
      *
-     * @param   mixed $query         The SQL statement to set either as a JDatabaseQuery object or a string.
-     * @param   array $driverOptions The optional PDO driver options
+     * @param mixed $query         The SQL statement to set either as a JDatabaseQuery object or a string.
+     * @param array $driverOptions The optional PDO driver options
      *
-     * @return  PdoDriver  This object to support method chaining.
+     * @return PdoDriver This object to support method chaining.
      *
      * @since   2.0
      */
@@ -249,7 +255,8 @@ class PdoDriver extends AbstractDatabaseDriver
      * Execute the SQL statement.
      *
      * @throws \RuntimeException
-     * @return  \PDOStatement|false  A database cursor resource on success, boolean false on failure.
+     *
+     * @return \PDOStatement|false A database cursor resource on success, boolean false on failure.
      *
      * @since   2.0
      */
@@ -280,7 +287,7 @@ class PdoDriver extends AbstractDatabaseDriver
             $msg = $e->getMessage();
 
             if ($this->debug) {
-                $msg .= "\nSQL: " . $this->cursor->queryString;
+                $msg .= "\nSQL: ".$this->cursor->queryString;
             }
 
             throw new \PDOException($msg, (int) $e->getCode(), $e);
@@ -294,9 +301,9 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Method to free up the memory used for the result set.
      *
-     * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+     * @param mixed $cursor The optional result set cursor from which to fetch the row.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -316,18 +323,19 @@ class PdoDriver extends AbstractDatabaseDriver
     /**
      * Get the current query object or a new Query object.
      *
-     * @param   boolean $new False to return the current query object, True to return a new Query object.
+     * @param bool $new False to return the current query object, True to return a new Query object.
      *
-     * @return  Query  The current query object or a new object extending the Query class.
+     * @throws \RuntimeException
+     *
+     * @return Query The current query object or a new object extending the Query class.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function getQuery($new = false)
     {
         if ($new) {
             // Derive the class name from the driver.
-            $class = 'Windwalker\\Query\\' . ucfirst($this->name) . '\\' . ucfirst($this->name) . 'Query';
+            $class = 'Windwalker\\Query\\'.ucfirst($this->name).'\\'.ucfirst($this->name).'Query';
 
             // Make sure we have a query class for this driver.
             if (class_exists($class)) {
@@ -343,10 +351,11 @@ class PdoDriver extends AbstractDatabaseDriver
     }
 
     /**
-     * getDatabaseList
+     * getDatabaseList.
      *
      * @throws \LogicException
-     * @return  mixed
+     *
+     * @return mixed
      */
     public function listDatabases()
     {
@@ -354,11 +363,11 @@ class PdoDriver extends AbstractDatabaseDriver
 
         if (!class_exists($builder)) {
             throw new \LogicException(
-                $builder . ' not found, you should implement ' . __METHOD__ . ' in current deriver class.'
+                $builder.' not found, you should implement '.__METHOD__.' in current deriver class.'
             );
         }
 
-        /** @var $builder \Windwalker\Query\QueryGrammarInterface */
+        /* @var $builder \Windwalker\Query\QueryGrammarInterface */
 
         return $this->setQuery($builder::listDatabases())->loadColumn();
     }

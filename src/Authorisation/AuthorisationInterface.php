@@ -16,32 +16,32 @@ namespace Windwalker\Authorisation;
 interface AuthorisationInterface
 {
     /**
-     * authorise
+     * authorise.
      *
      * @param string $policy
      * @param mixed  $user
      * @param mixed  $data
      *
-     * @return  boolean
+     * @return bool
      */
     public function authorise($policy, $user, $data = null);
 
     /**
-     * addPolicy
+     * addPolicy.
      *
-     * @param   string                   $name
-     * @param   PolicyInterface|callable $handler
+     * @param string                   $name
+     * @param PolicyInterface|callable $handler
      *
-     * @return  static
+     * @return static
      */
     public function addPolicy($name, $handler);
 
     /**
-     * registerPolicy
+     * registerPolicy.
      *
      * @param PolicyProviderInterface $policy
      *
-     * @return  static
+     * @return static
      */
     public function registerPolicyProvider(PolicyProviderInterface $policy);
 }

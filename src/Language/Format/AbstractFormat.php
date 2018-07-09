@@ -9,7 +9,7 @@
 namespace Windwalker\Language\Format;
 
 /**
- * Class AbstractFormat
+ * Class AbstractFormat.
  *
  * @since 2.0
  */
@@ -18,14 +18,14 @@ abstract class AbstractFormat implements FormatInterface
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = '';
 
     /**
-     * getName
+     * getName.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -33,11 +33,11 @@ abstract class AbstractFormat implements FormatInterface
     }
 
     /**
-     * parse
+     * parse.
      *
      * @param string $string
      *
-     * @return  array
+     * @return array
      */
     abstract public function parse($string);
 
@@ -47,7 +47,7 @@ abstract class AbstractFormat implements FormatInterface
      * @param array  $data      The data to convert.
      * @param string $separator The key separator.
      *
-     * @return  string[] Dumped array.
+     * @return string[] Dumped array.
      */
     protected function toOneDimension($data, $separator = '_')
     {
@@ -66,14 +66,14 @@ abstract class AbstractFormat implements FormatInterface
      * @param array        &$array    The result array, it is pass by reference.
      * @param string       $prefix    Last level key prefix.
      *
-     * @return  void
+     * @return void
      */
     protected function asOneDimension($separator = '_', $data = null, &$array = [], $prefix = '')
     {
         $data = (array) $data;
 
         foreach ($data as $k => $v) {
-            $key = $prefix ? $prefix . $separator . $k : $k;
+            $key = $prefix ? $prefix.$separator.$k : $k;
 
             if (is_object($v) || is_array($v)) {
                 $this->asOneDimension($separator, $v, $array, $key);

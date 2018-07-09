@@ -80,56 +80,56 @@ class DataType
     /**
      * Property typeMapping.
      *
-     * @var  array
+     * @var array
      */
     protected static $typeMapping = [];
 
     /**
-     * "Default Length", "Default Value", "PHP Type"
+     * "Default Length", "Default Value", "PHP Type".
      *
-     * @var  array
+     * @var array
      */
     public static $typeDefinitions = [
         self::BOOLEAN => [1, 0, 'bool'],
 
-        self::CHAR => [255, '', 'string'],
-        self::VARCHAR => [255, '', 'string'],
-        self::TEXT => [null, '', 'string'],
+        self::CHAR     => [255, '', 'string'],
+        self::VARCHAR  => [255, '', 'string'],
+        self::TEXT     => [null, '', 'string'],
         self::LONGTEXT => [null, '', 'string'],
 
-        self::BIT => [1, 0, 'int'],
+        self::BIT         => [1, 0, 'int'],
         self::BIT_VARYING => [1, 0, 'int'],
 
-        self::BIGINT => [20, 0, 'int'],
-        self::INTEGER => [11, 0, 'int'],
+        self::BIGINT   => [20, 0, 'int'],
+        self::INTEGER  => [11, 0, 'int'],
         self::SMALLINT => [6, 0, 'int'],
-        self::TINYINT => [4, 0, 'int'],
-        self::NUMERIC => [10, 0, 'int'],
+        self::TINYINT  => [4, 0, 'int'],
+        self::NUMERIC  => [10, 0, 'int'],
 
         self::DECIMAL => ['10,2', 0, 'float'],
-        self::FLOAT => ['10,2', 0, 'float'],
-        self::REAL => ['10,2', 0, 'float'],
-        self::DOUBLE => ['10,2', 0, 'float'],
+        self::FLOAT   => ['10,2', 0, 'float'],
+        self::REAL    => ['10,2', 0, 'float'],
+        self::DOUBLE  => ['10,2', 0, 'float'],
 
-        self::DATE => [null, '0000-00-00', 'string'],
-        self::TIME => [null, '00:00:00', 'string'],
+        self::DATE      => [null, '0000-00-00', 'string'],
+        self::TIME      => [null, '00:00:00', 'string'],
         self::TIMESTAMP => [null, '0', 'string'],
-        self::DATETIME => [null, '0000-00-00 00:00:00', 'string'],
+        self::DATETIME  => [null, '0000-00-00 00:00:00', 'string'],
     ];
 
     /**
      * Property instances.
      *
-     * @var  static[]
+     * @var static[]
      */
     protected static $instances = [];
 
     /**
-     * getInstance
+     * getInstance.
      *
-     * @param   string $driver
+     * @param string $driver
      *
-     * @return  static
+     * @return static
      */
     public static function getInstance($driver)
     {
@@ -145,11 +145,11 @@ class DataType
     }
 
     /**
-     * getLength
+     * getLength.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  integer
+     * @return int
      */
     public static function getLength($type)
     {
@@ -157,11 +157,11 @@ class DataType
     }
 
     /**
-     * getDefaultValue
+     * getDefaultValue.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  string
+     * @return string
      */
     public static function getDefaultValue($type)
     {
@@ -169,11 +169,11 @@ class DataType
     }
 
     /**
-     * getPhpType
+     * getPhpType.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  string
+     * @return string
      */
     public static function getPhpType($type)
     {
@@ -181,12 +181,12 @@ class DataType
     }
 
     /**
-     * getProfile
+     * getProfile.
      *
-     * @param string  $type
-     * @param integer $key
+     * @param string $type
+     * @param int    $key
      *
-     * @return  string
+     * @return string
      */
     protected static function getProfile($type, $key = null)
     {
@@ -199,16 +199,14 @@ class DataType
         if (array_key_exists($type, self::$typeDefinitions)) {
             return self::$typeDefinitions[$type][$key];
         }
-
-        return null;
     }
 
     /**
-     * getType
+     * getType.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  string
+     * @return string
      */
     public static function getType($type)
     {

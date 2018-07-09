@@ -7,7 +7,7 @@
  */
 
 /**
- * Define UTF8_CORE as required
+ * Define UTF8_CORE as required.
  */
 if (!defined('UTF8_CORE')) {
     define('UTF8_CORE', true);
@@ -22,15 +22,16 @@ if (!defined('UTF8_CORE')) {
  * to '?', which, for the purpose of counting, is alright - It's
  * much faster than iconv_strlen
  * Note: this function does not count bad UTF-8 bytes in the string
- * - these are simply ignored
+ * - these are simply ignored.
+ *
  * @author  <chernyshevsky at hotmail dot com>
+ *
  * @link    http://www.php.net/manual/en/function.strlen.php
  * @link    http://www.php.net/manual/en/function.utf8-decode.php
  *
  * @param string UTF-8 string
  *
  * @return int number of UTF-8 characters in string
- * @package utf8
  */
 function utf8_strlen($str)
 {
@@ -42,17 +43,17 @@ function utf8_strlen($str)
  * UTF-8 aware alternative to strpos
  * Find position of first occurrence of a string
  * Note: This will get alot slower if offset is used
- * Note: requires utf8_strlen amd utf8_substr to be loaded
+ * Note: requires utf8_strlen amd utf8_substr to be loaded.
  *
  * @param string haystack
  * @param string needle (you should validate this with utf8_is_valid)
- * @param integer offset in characters (from left)
+ * @param int offset in characters (from left)
  *
  * @return mixed integer position or FALSE on failure
+ *
  * @see     http://www.php.net/strpos
  * @see     utf8_strlen
  * @see     utf8_substr
- * @package utf8
  */
 function utf8_strpos($str, $needle, $offset = null)
 {
@@ -84,17 +85,17 @@ function utf8_strpos($str, $needle, $offset = null)
  * UTF-8 aware alternative to strrpos
  * Find position of last occurrence of a char in a string
  * Note: This will get alot slower if offset is used
- * Note: requires utf8_substr and utf8_strlen to be loaded
+ * Note: requires utf8_substr and utf8_strlen to be loaded.
  *
  * @param string haystack
  * @param string needle (you should validate this with utf8_is_valid)
- * @param integer (optional) offset (from left)
+ * @param int (optional) offset (from left)
  *
  * @return mixed integer position or FALSE on failure
+ *
  * @see     http://www.php.net/strrpos
  * @see     utf8_substr
  * @see     utf8_strlen
- * @package utf8
  */
 function utf8_strrpos($str, $needle, $offset = null)
 {
@@ -104,7 +105,7 @@ function utf8_strrpos($str, $needle, $offset = null)
         if (count($ar) > 1) {
             // Pop off the end of the string where the last match was made
             array_pop($ar);
-            $str = join($needle, $ar);
+            $str = implode($needle, $ar);
 
             return utf8_strlen($str);
         }
@@ -129,7 +130,7 @@ function utf8_strrpos($str, $needle, $offset = null)
 //--------------------------------------------------------------------
 /**
  * UTF-8 aware alternative to substr
- * Return part of a string given character offset (and optionally length)
+ * Return part of a string given character offset (and optionally length).
  *
  * Note arguments: comparied to substr - if offset or length are
  * not integers, this version will not complain but rather massages them
@@ -151,11 +152,10 @@ function utf8_strrpos($str, $needle, $offset = null)
  * @author  Chris Smith<chris@jalakai.co.uk>
  *
  * @param string
- * @param integer number of UTF-8 characters offset (from left)
- * @param integer (optional) length in UTF-8 characters from offset
+ * @param int number of UTF-8 characters offset (from left)
+ * @param int (optional) length in UTF-8 characters from offset
  *
  * @return mixed string or FALSE if failure
- * @package utf8
  */
 function utf8_substr($str, $offset, $length = null)
 {
@@ -196,10 +196,10 @@ function utf8_substr($str, $offset, $length = null)
         $Oy = $offset % 65535;
 
         if ($Ox) {
-            $Op = '(?:.{65535}){' . $Ox . '}';
+            $Op = '(?:.{65535}){'.$Ox.'}';
         }
 
-        $Op = '^(?:' . $Op . '.{' . $Oy . '})';
+        $Op = '^(?:'.$Op.'.{'.$Oy.'})';
     } else {
         // offset == 0; just anchor the pattern
         $Op = '^';
@@ -231,9 +231,9 @@ function utf8_substr($str, $offset, $length = null)
             // negative length requires a captured group
             // of length characters
             if ($Lx) {
-                $Lp = '(?:.{65535}){' . $Lx . '}';
+                $Lp = '(?:.{65535}){'.$Lx.'}';
             }
-            $Lp = '(' . $Lp . '.{' . $Ly . '})';
+            $Lp = '('.$Lp.'.{'.$Ly.'})';
         } else {
             if ($length < 0) {
                 if ($length < ($offset - $strlen)) {
@@ -247,14 +247,14 @@ function utf8_substr($str, $offset, $length = null)
                 // except a group of  -length characters
                 // anchored at the tail-end of the string
                 if ($Lx) {
-                    $Lp = '(?:.{65535}){' . $Lx . '}';
+                    $Lp = '(?:.{65535}){'.$Lx.'}';
                 }
-                $Lp = '(.*)(?:' . $Lp . '.{' . $Ly . '})$';
+                $Lp = '(.*)(?:'.$Lp.'.{'.$Ly.'})$';
             }
         }
     }
 
-    if (!preg_match('#' . $Op . $Lp . '#us', $str, $match)) {
+    if (!preg_match('#'.$Op.$Lp.'#us', $str, $match)) {
         return '';
     }
 
@@ -269,18 +269,19 @@ function utf8_substr($str, $offset, $length = null)
  * such as Latin, Greek, Cyrillic, Armenian and archaic Georgian - it does
  * not exist in the Chinese alphabet, for example. See Unicode Standard
  * Annex #21: Case Mappings
- * Note: requires utf8_to_unicode and utf8_from_unicode
+ * Note: requires utf8_to_unicode and utf8_from_unicode.
+ *
  * @author  Andreas Gohr <andi@splitbrain.org>
  *
  * @param string
  *
  * @return mixed either string in lowercase or FALSE is UTF-8 invalid
+ *
  * @see     http://www.php.net/strtolower
  * @see     utf8_to_unicode
  * @see     utf8_from_unicode
  * @see     http://www.unicode.org/reports/tr21/tr21-5.html
  * @see     http://dev.splitbrain.org/view/darcs/dokuwiki/inc/utf8.php
- * @package utf8
  */
 function utf8_strtolower($string)
 {
@@ -528,18 +529,19 @@ function utf8_strtolower($string)
  * such as Latin, Greek, Cyrillic, Armenian and archaic Georgian - it does
  * not exist in the Chinese alphabet, for example. See Unicode Standard
  * Annex #21: Case Mappings
- * Note: requires utf8_to_unicode and utf8_from_unicode
+ * Note: requires utf8_to_unicode and utf8_from_unicode.
+ *
  * @author  Andreas Gohr <andi@splitbrain.org>
  *
  * @param string
  *
  * @return mixed either string in lowercase or FALSE is UTF-8 invalid
+ *
  * @see     http://www.php.net/strtoupper
  * @see     utf8_to_unicode
  * @see     utf8_from_unicode
  * @see     http://www.unicode.org/reports/tr21/tr21-5.html
  * @see     http://dev.splitbrain.org/view/darcs/dokuwiki/inc/utf8.php
- * @package utf8
  */
 function utf8_strtoupper($string)
 {

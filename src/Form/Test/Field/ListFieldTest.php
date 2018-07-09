@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Form\Field\ListField;
 use Windwalker\Html\Option;
 
 /**
- * Test class of TextField
+ * Test class of TextField.
  *
  * @since 2.0
  */
@@ -75,7 +75,7 @@ class ListFieldTest extends AbstractDomTestCase
      */
     public function testRender()
     {
-        $html = <<<HTML
+        $html = <<<'HTML'
 <select name="flower" id="input-flower" class="stub-flower" size="10" disabled="disabled" onchange="return false;" data-test-element>
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
@@ -87,7 +87,7 @@ HTML;
 
         $this->instance->setValue(1);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <select name="flower" id="input-flower" class="stub-flower" size="10" disabled="disabled" onchange="return false;" data-test-element>
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
@@ -99,7 +99,7 @@ HTML;
 
         $this->instance->setAttribute('multiple', true);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <select name="flower[]" id="input-flower" class="stub-flower" size="10" disabled="disabled" onchange="return false;" multiple="true" data-test-element>
 	<option value="" selected="selected"></option>
 	<option value="Yes">1</option>
@@ -137,7 +137,7 @@ HTML;
             }
         )->option('UTC', 'UTC');
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <select name="timezone" id="input-timezone">
 	<optgroup label="Asia">
 		<option class="opt" value="Asia/Tokyo">Tokyo</option>

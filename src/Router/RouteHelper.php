@@ -20,23 +20,23 @@ abstract class RouteHelper
      *
      * @param string $pattern
      *
-     * @return  string
+     * @return string
      */
     public static function sanitize($pattern)
     {
-        return '/' . trim(parse_url((string) $pattern, PHP_URL_PATH), ' /');
+        return '/'.trim(parse_url((string) $pattern, PHP_URL_PATH), ' /');
     }
 
     /**
-     * normalise
+     * normalise.
      *
      * @param string $route
      *
-     * @return  string
+     * @return string
      */
     public static function normalise($route)
     {
-        return '/' . ltrim($route, '/');
+        return '/'.ltrim($route, '/');
     }
 
     /**
@@ -45,7 +45,7 @@ abstract class RouteHelper
      * @param array $matches Regex matched result.
      * @param array &$vars   Variables to store data.
      *
-     * @return  array
+     * @return array
      */
     public static function getVariables($matches, &$vars = null)
     {
@@ -73,16 +73,16 @@ abstract class RouteHelper
     }
 
     /**
-     * getEnvironment
+     * getEnvironment.
      *
-     * @return  array
+     * @return array
      */
     public static function getEnvironment()
     {
         return [
-            'host' => $_SERVER['HTTP_HOST'],
+            'host'   => $_SERVER['HTTP_HOST'],
             'scheme' => $_SERVER['REQUEST_SCHEME'],
-            'port' => $_SERVER['SERVER_PORT'],
+            'port'   => $_SERVER['SERVER_PORT'],
         ];
     }
 }

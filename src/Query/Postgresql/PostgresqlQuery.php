@@ -12,16 +12,17 @@ use Windwalker\Query\Query;
 use Windwalker\Query\QueryElement;
 
 /**
- * Class PostgresqlQuery
+ * Class PostgresqlQuery.
  *
  * @since 2.0
  */
 class PostgresqlQuery extends Query
 {
     /**
-     * The database driver name
+     * The database driver name.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     public $name = 'postgresql';
@@ -32,7 +33,8 @@ class PostgresqlQuery extends Query
      * same character is used for both sides of the quoted name, else the first character will be
      * used for the opening quote and the second for the closing quote.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nameQuote = '"';
@@ -41,63 +43,70 @@ class PostgresqlQuery extends Query
      * The null or zero representation of a timestamp for the database driver.  This should be
      * defined in child classes to hold the appropriate value for the engine.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nullDate = '1970-01-01 00:00:00';
 
     /**
-     * The FOR UPDATE element used in "FOR UPDATE" lock
+     * The FOR UPDATE element used in "FOR UPDATE" lock.
      *
-     * @var    object
+     * @var object
+     *
      * @since  2.0
      */
     protected $forUpdate = null;
 
     /**
-     * The FOR SHARE element used in "FOR SHARE" lock
+     * The FOR SHARE element used in "FOR SHARE" lock.
      *
-     * @var    object
+     * @var object
+     *
      * @since  2.0
      */
     protected $forShare = null;
 
     /**
-     * The NOWAIT element used in "FOR SHARE" and "FOR UPDATE" lock
+     * The NOWAIT element used in "FOR SHARE" and "FOR UPDATE" lock.
      *
-     * @var    object
+     * @var object
+     *
      * @since  2.0
      */
     protected $noWait = null;
 
     /**
-     * The LIMIT element
+     * The LIMIT element.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $limit = null;
 
     /**
-     * The OFFSET element
+     * The OFFSET element.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $offset = null;
 
     /**
-     * The RETURNING element of INSERT INTO
+     * The RETURNING element of INSERT INTO.
      *
-     * @var    object
+     * @var object
+     *
      * @since  2.0
      */
     protected $returning = null;
 
     /**
-     * Magic function to convert the query to a string, only for PostgreSQL specific queries
+     * Magic function to convert the query to a string, only for PostgreSQL specific queries.
      *
-     * @return  string    The completed query.
+     * @return string The completed query.
      *
      * @since   2.0
      */
@@ -204,7 +213,7 @@ class PostgresqlQuery extends Query
         $query = $this->processLimit($query, $this->limit, $this->offset);
 
         if ($this->suffix) {
-            $query .= ' ' . (string) $this->suffix;
+            $query .= ' '.(string) $this->suffix;
         }
 
         return $query;
@@ -213,9 +222,9 @@ class PostgresqlQuery extends Query
     /**
      * Clear data from the query or a specific clause of the query.
      *
-     * @param   string $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
+     * @param string $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
      *
-     * @return  PostgresqlQuery  Returns this object to allow chaining.
+     * @return PostgresqlQuery Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -279,12 +288,12 @@ class PostgresqlQuery extends Query
     }
 
     /**
-     * Sets the FOR UPDATE lock on select's output row
+     * Sets the FOR UPDATE lock on select's output row.
      *
-     * @param   string $table_name The table to lock
-     * @param   string $glue       The glue by which to join the conditions. Defaults to ',' .
+     * @param string $table_name The table to lock
+     * @param string $glue       The glue by which to join the conditions. Defaults to ',' .
      *
-     * @return  PostgresqlQuery  FOR UPDATE query element
+     * @return PostgresqlQuery FOR UPDATE query element
      *
      * @since   2.0
      */
@@ -292,7 +301,7 @@ class PostgresqlQuery extends Query
     {
         if (is_null($this->forUpdate)) {
             $glue = strtoupper($glue);
-            $this->forUpdate = new QueryElement('FOR UPDATE', $table_name ? 'OF ' . $table_name : null, "$glue ");
+            $this->forUpdate = new QueryElement('FOR UPDATE', $table_name ? 'OF '.$table_name : null, "$glue ");
         } else {
             $this->forUpdate->append($table_name);
         }
@@ -301,12 +310,12 @@ class PostgresqlQuery extends Query
     }
 
     /**
-     * Sets the FOR SHARE lock on select's output row
+     * Sets the FOR SHARE lock on select's output row.
      *
-     * @param   string $table_name The table to lock
-     * @param   string $glue       The glue by which to join the conditions. Defaults to ',' .
+     * @param string $table_name The table to lock
+     * @param string $glue       The glue by which to join the conditions. Defaults to ',' .
      *
-     * @return  PostgresqlQuery  FOR SHARE query element
+     * @return PostgresqlQuery FOR SHARE query element
      *
      * @since   2.0
      */
@@ -314,7 +323,7 @@ class PostgresqlQuery extends Query
     {
         if (is_null($this->forShare)) {
             $glue = strtoupper($glue);
-            $this->forShare = new QueryElement('FOR SHARE', $table_name ? 'OF ' . $table_name : null, "$glue ");
+            $this->forShare = new QueryElement('FOR SHARE', $table_name ? 'OF '.$table_name : null, "$glue ");
         } else {
             $this->forShare->append($table_name);
         }
@@ -323,9 +332,9 @@ class PostgresqlQuery extends Query
     }
 
     /**
-     * Sets the NOWAIT lock on select's output row
+     * Sets the NOWAIT lock on select's output row.
      *
-     * @return  PostgresqlQuery  NOWAIT query element
+     * @return PostgresqlQuery NOWAIT query element
      *
      * @since   2.0
      */
@@ -341,10 +350,10 @@ class PostgresqlQuery extends Query
     }
 
     /**
-     * Set the LIMIT clause to the query
+     * Set the LIMIT clause to the query.
      *
-     * @param   integer $limit  Number of rows to return
-     * @param   integer $offset The offset for the result set
+     * @param int $limit  Number of rows to return
+     * @param int $offset The offset for the result set
      *
      * @return PostgresqlQuery Returns this object to allow chaining.
      *
@@ -362,11 +371,11 @@ class PostgresqlQuery extends Query
     }
 
     /**
-     * Set the OFFSET clause to the query
+     * Set the OFFSET clause to the query.
      *
-     * @param   integer $offset An integer for skipping rows
+     * @param int $offset An integer for skipping rows
      *
-     * @return  PostgresqlQuery  Returns this object to allow chaining.
+     * @return PostgresqlQuery Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -382,9 +391,9 @@ class PostgresqlQuery extends Query
     /**
      * Add the RETURNING element to INSERT INTO statement.
      *
-     * @param   mixed $pkCol The name of the primary key column.
+     * @param mixed $pkCol The name of the primary key column.
      *
-     * @return  PostgresqlQuery  Returns this object to allow chaining.
+     * @return PostgresqlQuery Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -402,21 +411,22 @@ class PostgresqlQuery extends Query
      * additions to make the query limited to a particular number of
      * results, or start at a particular offset.
      *
-     * @param   string  $query  The query in string format
-     * @param   integer $limit  The limit for the result set
-     * @param   integer $offset The offset for the result set
+     * @param string $query  The query in string format
+     * @param int    $limit  The limit for the result set
+     * @param int    $offset The offset for the result set
      *
      * @return string
+     *
      * @since   2.0
      */
     public function processLimit($query, $limit, $offset = null)
     {
         if ($limit > 0) {
-            $query .= ' LIMIT ' . $limit;
+            $query .= ' LIMIT '.$limit;
         }
 
         if ($offset > 0) {
-            $query .= ' OFFSET ' . $offset;
+            $query .= ' OFFSET '.$offset;
         }
 
         return $query;

@@ -21,21 +21,21 @@ class CompareValidator extends AbstractValidator
     /**
      * Property operator.
      *
-     * @var  string
+     * @var string
      */
     protected $operator;
 
     /**
      * Property compare.
      *
-     * @var  mixed|null
+     * @var mixed|null
      */
     protected $compare;
 
     /**
      * Property strict.
      *
-     * @var  bool
+     * @var bool
      */
     protected $strict;
 
@@ -60,12 +60,13 @@ class CompareValidator extends AbstractValidator
     }
 
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
      * @throws \InvalidArgumentException
+     *
+     * @return bool
      */
     protected function test($value)
     {
@@ -77,9 +78,9 @@ class CompareValidator extends AbstractValidator
     }
 
     /**
-     * Method to get property Operator
+     * Method to get property Operator.
      *
-     * @return  string
+     * @return string
      */
     public function getOperator()
     {
@@ -87,11 +88,11 @@ class CompareValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property operator
+     * Method to set property operator.
      *
-     * @param   string $operator
+     * @param string $operator
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOperator($operator)
     {
@@ -101,9 +102,9 @@ class CompareValidator extends AbstractValidator
     }
 
     /**
-     * Method to get property Compare
+     * Method to get property Compare.
      *
-     * @return  mixed|null
+     * @return mixed|null
      */
     public function getCompare()
     {
@@ -111,11 +112,11 @@ class CompareValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property compare
+     * Method to set property compare.
      *
-     * @param   mixed|null $compare
+     * @param mixed|null $compare
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setCompare($compare)
     {
@@ -125,11 +126,11 @@ class CompareValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property strict
+     * Method to set property strict.
      *
-     * @param   bool $strict
+     * @param bool $strict
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setStrict($strict)
     {

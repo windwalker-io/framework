@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Data\DataInterface;
 use Windwalker\Data\DataSet;
 
 /**
- * Test class of DataSet
+ * Test class of DataSet.
  *
  * @since 2.0
  */
@@ -38,9 +38,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * getTestData
+     * getTestData.
      *
-     * @return  Data[]
+     * @return Data[]
      */
     protected function getTestData()
     {
@@ -290,9 +290,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testDump
+     * testDump.
      *
-     * @return  void
+     * @return void
      */
     public function testDump()
     {
@@ -332,9 +332,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Method to test transform()
+     * Method to test transform().
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::transform
      */
@@ -353,9 +353,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Method to test transform()
+     * Method to test transform().
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::map
      */
@@ -380,9 +380,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testFilter
+     * testFilter.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::filter
      */
@@ -405,9 +405,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Method to test walk()
+     * Method to test walk().
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::walk
      */
@@ -415,7 +415,7 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     {
         $this->instance->walk(
             function (&$data, $key, $userdata) {
-                $data->foo = $userdata . ':' . $key;
+                $data->foo = $userdata.':'.$key;
             },
             'prefix'
         );
@@ -424,9 +424,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testClone
+     * testClone.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::__clone
      */
@@ -442,9 +442,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetKeys
+     * testGetKeys.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::getKeys
      */
@@ -460,9 +460,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testKsort
+     * testKsort.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::ksort
      */
@@ -488,9 +488,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testKrsort
+     * testKrsort.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::krsort
      */
@@ -516,9 +516,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testUksort
+     * testUksort.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::uksort
      */
@@ -528,9 +528,9 @@ class DataSetTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testShuffle
+     * testShuffle.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Data\DataSet::shuffle
      */

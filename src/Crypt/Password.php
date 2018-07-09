@@ -30,21 +30,21 @@ class Password implements HasherInterface
     /**
      * Property salt.
      *
-     * @var  string
+     * @var string
      */
     protected $salt;
 
     /**
      * Property cost.
      *
-     * @var  integer
+     * @var int
      */
     protected $cost;
 
     /**
      * Property type.
      *
-     * @var  int
+     * @var int
      */
     protected $type;
 
@@ -65,11 +65,11 @@ class Password implements HasherInterface
     }
 
     /**
-     * create
+     * create.
      *
      * @param string $password
      *
-     * @return  string
+     * @return string
      */
     public function create($password)
     {
@@ -81,19 +81,19 @@ class Password implements HasherInterface
 
         switch ($this->type) {
             case static::MD5:
-                $salt = '$1$' . $salt . '$';
+                $salt = '$1$'.$salt.'$';
                 break;
 
             case static::SHA256:
                 $cost = CryptHelper::limitInteger($this->cost, 1000);
 
-                $salt = '$5$rounds=' . $cost . '$' . $salt . '$';
+                $salt = '$5$rounds='.$cost.'$'.$salt.'$';
                 break;
 
             case static::SHA512:
                 $cost = CryptHelper::limitInteger($this->cost, 1000);
 
-                $salt = '$6$rounds=' . $cost . '$' . $salt . '$';
+                $salt = '$6$rounds='.$cost.'$'.$salt.'$';
                 break;
 
             case static::SODIUM_ARGON2:
@@ -126,7 +126,7 @@ class Password implements HasherInterface
         }
 
         if (!function_exists('crypt')) {
-            throw new \RangeException("crypt() must be loaded for Password::create method");
+            throw new \RangeException('crypt() must be loaded for Password::create method');
         }
 
         return crypt($password, $salt);
@@ -135,10 +135,10 @@ class Password implements HasherInterface
     /**
      * Verify the password.
      *
-     * @param   string $password The password plain text.
-     * @param   string $hash     The hashed password.
+     * @param string $password The password plain text.
+     * @param string $hash     The hashed password.
      *
-     * @return  boolean  Verify success or not.
+     * @return bool Verify success or not.
      *
      * @see  https://github.com/ircmaxell/password_compat/blob/92951ae05e988803fdc1cd49f7e4cd29ca7b75e9/lib/password.php#L230-L247
      */
@@ -152,12 +152,12 @@ class Password implements HasherInterface
     }
 
     /**
-     * verifySodium
+     * verifySodium.
      *
      * @param string $password
      * @param string $hash
      *
-     * @return  bool
+     * @return bool
      */
     protected function verifySodium($password, $hash)
     {
@@ -183,16 +183,16 @@ class Password implements HasherInterface
      *
      * This is a fork of Joomla JUserHelper::genRandomPassword()
      *
-     * @param   integer $length Length of the password to generate
+     * @param int $length Length of the password to generate
      *
-     * @return  string  Random Password
+     * @return string Random Password
      *
      * @see     https://github.com/joomla/joomla-cms/blob/staging/libraries/joomla/user/helper.php#L642
      * @since   2.0.9
      */
     public static function genRandomPassword($length = 8)
     {
-        $salt = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $salt = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $base = strlen($salt);
         $password = '';
 
@@ -206,7 +206,7 @@ class Password implements HasherInterface
         $random = CryptHelper::genRandomBytes($length + 1);
         $shift = ord($random[0]);
 
-        for ($i = 1; $i <= $length; ++$i) {
+        for ($i = 1; $i <= $length; $i++) {
             $password .= $salt[($shift + ord($random[$i])) % $base];
 
             $shift += ord($random[$i]);
@@ -216,9 +216,9 @@ class Password implements HasherInterface
     }
 
     /**
-     * Method to get property Salt
+     * Method to get property Salt.
      *
-     * @return  string
+     * @return string
      */
     public function getSalt()
     {
@@ -226,11 +226,11 @@ class Password implements HasherInterface
     }
 
     /**
-     * Method to set property salt
+     * Method to set property salt.
      *
-     * @param   string $salt
+     * @param string $salt
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setSalt($salt)
     {
@@ -240,9 +240,9 @@ class Password implements HasherInterface
     }
 
     /**
-     * Method to get property Cost
+     * Method to get property Cost.
      *
-     * @return  int
+     * @return int
      */
     public function getCost()
     {
@@ -250,12 +250,13 @@ class Password implements HasherInterface
     }
 
     /**
-     * Method to set property cost
+     * Method to set property cost.
      *
-     * @param   int $cost
+     * @param int $cost
      *
      * @throws \InvalidArgumentException
-     * @return  static  Return self to support chaining.
+     *
+     * @return static Return self to support chaining.
      */
     public function setCost($cost)
     {
@@ -265,9 +266,9 @@ class Password implements HasherInterface
     }
 
     /**
-     * Method to get property Type
+     * Method to get property Type.
      *
-     * @return  int
+     * @return int
      */
     public function getType()
     {
@@ -275,12 +276,13 @@ class Password implements HasherInterface
     }
 
     /**
-     * Method to set property type
+     * Method to set property type.
      *
-     * @param   int $type
+     * @param int $type
      *
-     * @return  static  Return self to support chaining.
      * @throws \DomainException
+     *
+     * @return static Return self to support chaining.
      */
     public function setType($type)
     {
@@ -300,11 +302,11 @@ class Password implements HasherInterface
     }
 
     /**
-     * isSodiumAlgo
+     * isSodiumAlgo.
      *
      * @param int $type
      *
-     * @return  bool
+     * @return bool
      */
     public static function isSodiumAlgo($type)
     {
@@ -312,14 +314,14 @@ class Password implements HasherInterface
     }
 
     /**
-     * isSodiumHash
+     * isSodiumHash.
      *
      * @param string $hash
      *
-     * @return  bool
+     * @return bool
      */
     public static function isSodiumHash($hash)
     {
-        return (strpos($hash, '$argon2i') === 0 || strpos($hash, '$7$C6') === 0);
+        return strpos($hash, '$argon2i') === 0 || strpos($hash, '$7$C6') === 0;
     }
 }

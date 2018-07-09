@@ -21,14 +21,14 @@ class IronmqQueueDriver implements QueueDriverInterface
     /**
      * Property client.
      *
-     * @var  IronMQ
+     * @var IronMQ
      */
     protected $client;
 
     /**
      * Property queue.
      *
-     * @var  string
+     * @var string
      */
     protected $queue;
 
@@ -48,7 +48,7 @@ class IronmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * push
+     * push.
      *
      * @param QueueMessage $message
      *
@@ -66,7 +66,7 @@ class IronmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
@@ -79,7 +79,7 @@ class IronmqQueueDriver implements QueueDriverInterface
         $result = $this->client->reserveMessage($queue);
 
         if (!$result) {
-            return null;
+            return;
         }
 
         $message = new QueueMessage();
@@ -95,7 +95,7 @@ class IronmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|string $message
      *
@@ -111,7 +111,7 @@ class IronmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|string $message
      *
@@ -132,13 +132,13 @@ class IronmqQueueDriver implements QueueDriverInterface
     }
 
     /**
-     * getIronMQ
+     * getIronMQ.
      *
      * @param       $projectId
      * @param       $token
      * @param array $options
      *
-     * @return  IronMQ
+     * @return IronMQ
      */
     public function getIronMQ($projectId, $token, array $options)
     {
@@ -148,7 +148,7 @@ class IronmqQueueDriver implements QueueDriverInterface
 
         $defaultOptions = [
             'project_id' => $projectId,
-            'token' => $token,
+            'token'      => $token,
         ];
 
         $options = array_merge($defaultOptions, $options);

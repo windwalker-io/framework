@@ -20,7 +20,7 @@ class StubCaesarMiddleware extends AbstractMiddleware
     /**
      * Call next middleware.
      *
-     * @param  array $data
+     * @param array $data
      *
      * @return mixed
      */

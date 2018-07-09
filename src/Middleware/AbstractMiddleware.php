@@ -18,14 +18,14 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     /**
      * THe next middleware.
      *
-     * @var  mixed|MiddlewareInterface
+     * @var mixed|MiddlewareInterface
      */
     protected $next = null;
 
     /**
      * Get next middleware.
      *
-     * @return  mixed|MiddlewareInterface
+     * @return mixed|MiddlewareInterface
      */
     public function getNext()
     {
@@ -35,9 +35,9 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     /**
      * Set next middleware.
      *
-     * @param   callable|MiddlewareInterface $callable The middleware object.
+     * @param callable|MiddlewareInterface $callable The middleware object.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setNext($callable)
     {

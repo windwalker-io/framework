@@ -12,7 +12,7 @@ use Windwalker\Console\Descriptor\AbstractDescriptor;
 use Windwalker\Console\Option\Option;
 
 /**
- * Class Option AbstractDescriptor
+ * Class Option AbstractDescriptor.
  *
  * @since    2.0
  */
@@ -43,17 +43,18 @@ class TextOptionDescriptor extends AbstractDescriptor
      *
      * @since  2.0
      */
-    protected $template = <<<EOF
+    protected $template = <<<'EOF'
   <info>%-{WIDTH}s</info>%s
 EOF;
 
     /**
      * Render an item description.
      *
-     * @param   mixed $option The item to br described.
+     * @param mixed $option The item to br described.
      *
-     * @throws  \InvalidArgumentException
-     * @return  string  Rendered description.
+     * @throws \InvalidArgumentException
+     *
+     * @return string Rendered description.
      *
      * @since   2.0
      */
@@ -72,7 +73,7 @@ EOF;
         array_unshift($aliases, $name);
 
         foreach ($aliases as &$alias) {
-            $alias = strlen($alias) > 1 ? '--' . $alias : '-' . $alias;
+            $alias = strlen($alias) > 1 ? '--'.$alias : '-'.$alias;
         }
 
         $name = implode(' | ', $aliases);
@@ -99,7 +100,7 @@ EOF;
     /**
      * Render all items description.
      *
-     * @return  string
+     * @return string
      *
      * @since  2.0
      */
@@ -115,7 +116,7 @@ EOF;
             array_unshift($aliases, $name);
 
             foreach ($aliases as &$alias) {
-                $alias = strlen($alias) > 1 ? '--' . $alias : '-' . $alias;
+                $alias = strlen($alias) > 1 ? '--'.$alias : '-'.$alias;
             }
 
             $name = implode(' | ', $aliases);

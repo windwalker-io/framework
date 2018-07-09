@@ -5,17 +5,16 @@
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
-
 use Windwalker\Edge\Cache\EdgeArrayCache;
 use Windwalker\Edge\Compiler\EdgeCompiler;
 
-include_once __DIR__ . '/../../../../vendor/autoload.php';
+include_once __DIR__.'/../../../../vendor/autoload.php';
 
 ini_set('memory_limit', '128M');
 
 $finder = new \Windwalker\Edge\Loader\EdgeFileLoader();
 
-$finder->addPath(__DIR__ . '/edge');
+$finder->addPath(__DIR__.'/edge');
 
 $edge = new \Windwalker\Edge\Edge($finder, new EdgeCompiler(), new EdgeArrayCache());
 

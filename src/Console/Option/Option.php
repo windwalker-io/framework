@@ -25,7 +25,7 @@ class Option
     /**
      * Option name.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -34,7 +34,7 @@ class Option
     /**
      * Option aliases.
      *
-     * @var  array
+     * @var array
      *
      * @since  2.0
      */
@@ -43,7 +43,7 @@ class Option
     /**
      * Option description.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -52,7 +52,7 @@ class Option
     /**
      * Global option or not.
      *
-     * @var  boolean
+     * @var bool
      *
      * @since  2.0
      */
@@ -61,7 +61,7 @@ class Option
     /**
      * The default when option not sent.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -88,11 +88,11 @@ class Option
     /**
      * Class Constructor.
      *
-     * @param   mixed   $aliases       The option name. Can be a string, an array or an object.
-     *                                 If we use array, the first element will be option name, others will be alias.
-     * @param   mixed   $default       The default value when we get a non-exists option.
-     * @param   string  $description   The option description.
-     * @param   boolean $global        True is a global option.
+     * @param mixed  $aliases     The option name. Can be a string, an array or an object.
+     *                            If we use array, the first element will be option name, others will be alias.
+     * @param mixed  $default     The default value when we get a non-exists option.
+     * @param string $description The option description.
+     * @param bool   $global      True is a global option.
      *
      * @since   2.0
      */
@@ -114,9 +114,9 @@ class Option
     /**
      * Alias setter.
      *
-     * @param   string $alias The option alias.
+     * @param string $alias The option alias.
      *
-     * @return  Option  Return this object to support chaining.
+     * @return Option Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -130,7 +130,7 @@ class Option
     /**
      * Alias getter.
      *
-     * @return array  The option alias.
+     * @return array The option alias.
      *
      * @since  2.0
      */
@@ -142,9 +142,9 @@ class Option
     /**
      * Has alias.
      *
-     * @param   string $alias The option alias to find.
+     * @param string $alias The option alias to find.
      *
-     * @return  boolean
+     * @return bool
      *
      * @since  2.0
      */
@@ -160,9 +160,9 @@ class Option
     /**
      * Add a new alias.
      *
-     * @param   string $alias The alias name.
+     * @param string $alias The alias name.
      *
-     * @return  static
+     * @return static
      */
     public function alias($alias)
     {
@@ -174,9 +174,9 @@ class Option
     /**
      * Default value getter.
      *
-     * @param   mixed $default The default value.
+     * @param mixed $default The default value.
      *
-     * @return  Option  Return this object to support chaining.
+     * @return Option Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -190,7 +190,7 @@ class Option
     /**
      * Default value getter.
      *
-     * @return string  The default value.
+     * @return string The default value.
      *
      * @since  2.0
      */
@@ -202,9 +202,9 @@ class Option
     /**
      * Description setter.
      *
-     * @param   string $description The description.
+     * @param string $description The description.
      *
-     * @return  Option  Return this object to support chaining.
+     * @return Option Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -218,7 +218,7 @@ class Option
     /**
      * Description getter.
      *
-     * @return  string  The description.
+     * @return string The description.
      *
      * @since   2.0
      */
@@ -230,9 +230,9 @@ class Option
     /**
      * Name setter.
      *
-     * @param   string $name Name of this option.
+     * @param string $name Name of this option.
      *
-     * @return  Option  Return this object to support chaining.
+     * @return Option Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -246,7 +246,7 @@ class Option
     /**
      * Name getter.
      *
-     * @return  string  Name of this option.
+     * @return string Name of this option.
      *
      * @since   2.0
      */
@@ -258,7 +258,7 @@ class Option
     /**
      * Get Cli Input object.
      *
-     * @return  IOInterface  The Cli IO object.
+     * @return IOInterface The Cli IO object.
      *
      * @since   2.0
      */
@@ -274,9 +274,9 @@ class Option
     /**
      * Set Cli Input object.
      *
-     * @param   IOInterface $io The Cli IO object.
+     * @param IOInterface $io The Cli IO object.
      *
-     * @return  Option  Return this object to support chaining.
+     * @return Option Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -290,7 +290,7 @@ class Option
     /**
      * Get the value of this option which sent from command line.
      *
-     * @return  mixed  The value of this option.
+     * @return mixed The value of this option.
      *
      * @since   2.0
      */
@@ -316,7 +316,7 @@ class Option
     /**
      * Is this a global option?
      *
-     * @return  bool  True is a global option.
+     * @return bool True is a global option.
      *
      * @since   2.0
      */
@@ -328,9 +328,9 @@ class Option
     /**
      * Set this option is global or not.
      *
-     * @param   boolean $global True is a global option.
+     * @param bool $global True is a global option.
      *
-     * @return  Option  Return this object to support chaining.
+     * @return Option Return this object to support chaining.
      *
      * @since   2.0
      */

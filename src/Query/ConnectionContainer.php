@@ -18,35 +18,35 @@ abstract class ConnectionContainer
     /**
      * Property connections.
      *
-     * @var  \PDO[]|resource[]
+     * @var \PDO[]|resource[]
      */
     protected static $connections = [];
 
     /**
-     * getConnection
+     * getConnection.
      *
      * @param string $driver
      *
-     * @return  null|\PDO|resource
+     * @return null|\PDO|resource
      */
     public static function getConnection($driver)
     {
         $driver = strtolower($driver);
 
         if (empty(static::$connections[$driver])) {
-            return null;
+            return;
         }
 
         return static::$connections[$driver];
     }
 
     /**
-     * setConnection
+     * setConnection.
      *
      * @param string        $driver
      * @param \PDO|resource $connection
      *
-     * @return  void
+     * @return void
      */
     public static function setConnection($driver, $connection)
     {

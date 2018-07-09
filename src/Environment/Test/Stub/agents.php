@@ -1,11 +1,10 @@
 <?php
 /**
- * Part of Windwalker project.  @codingStandardsIgnoreStart
+ * Part of Windwalker project.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
-
 use Windwalker\Environment\Browser\Browser;
 
 return [
@@ -61,7 +60,7 @@ return [
         Browser::ENGINE_TRIDENT,
         Browser::IE,
         '8',
-        'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; ' .
+        'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; '.
         '.NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 1.0.3705; .NET CLR 1.1.4322)',
     ],
     [
@@ -110,7 +109,7 @@ return [
         Browser::ENGINE_TRIDENT,
         Browser::IE,
         '7',
-        'Mozilla/4.0 (compatible; MSIE 7.0; AOL 9.6; AOLBuild 4340.128; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; ' .
+        'Mozilla/4.0 (compatible; MSIE 7.0; AOL 9.6; AOLBuild 4340.128; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; '.
         '.NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)',
     ],
     [
@@ -119,7 +118,7 @@ return [
         Browser::ENGINE_TRIDENT,
         Browser::IE,
         '8',
-        'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; ' .
+        'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; '.
         '.NET CLR 3.0.30729; .NET4.0C; Maxthon 2.0)',
     ],
     [
@@ -240,7 +239,7 @@ return [
         Browser::ENGINE_WEBKIT,
         Browser::SAFARI,
         '4',
-        'Mozilla/5.0 (Linux; U; Android 2.3.4; en-us; Silk/1.1.0-84) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 ' .
+        'Mozilla/5.0 (Linux; U; Android 2.3.4; en-us; Silk/1.1.0-84) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 '.
         'Mobile Safari/533.1 Silk-Accelerated=false',
     ],
     [
@@ -277,7 +276,7 @@ return [
         Browser::ENGINE_WEBKIT,
         Browser::SAFARI,
         '4.0.4',
-        'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 ' .
+        'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 '.
         'Mobile/7B314 Safari/531.21.10gin_lib.cc',
     ],
     [
@@ -286,7 +285,7 @@ return [
         Browser::ENGINE_WEBKIT,
         Browser::SAFARI,
         '4.0.4',
-        'Mozilla/5.0(iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 ' .
+        'Mozilla/5.0(iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 '.
         'Mobile/7B314 Safari/531.21.10gin_lib.cc',
     ],
 
@@ -297,7 +296,7 @@ return [
         Browser::ENGINE_WEBKIT,
         Browser::SAFARI,
         '4.0.5',
-        'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 ' .
+        'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 '.
         'Mobile/8B5097d Safari/6531.22.7',
     ],
 
@@ -308,7 +307,7 @@ return [
         Browser::ENGINE_WEBKIT,
         Browser::SAFARI,
         '4.0.4',
-        'Mozilla/5.0(iPod; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 ' .
+        'Mozilla/5.0(iPod; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 '.
         'Mobile/7B314 Safari/531.21.10gin_lib.cc',
     ],
 

@@ -18,19 +18,19 @@ class DList extends AbstractHtmlList
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'dl';
 
     /**
-     * addDescription
+     * addDescription.
      *
      * @param string $title
      * @param string $description
      * @param array  $titleAttribs
      * @param array  $descAttribs
      *
-     * @return  static
+     * @return static
      */
     public function addDescription($title, $description, $titleAttribs = [], $descAttribs = [])
     {
@@ -41,12 +41,12 @@ class DList extends AbstractHtmlList
     }
 
     /**
-     * addItem
+     * addItem.
      *
-     * @param   DListDescription|string $item
-     * @param   array                   $attribs
+     * @param DListDescription|string $item
+     * @param array                   $attribs
      *
-     * @return  static
+     * @return static
      */
     public function addDesc($item, $attribs = [])
     {
@@ -60,12 +60,12 @@ class DList extends AbstractHtmlList
     }
 
     /**
-     * desc
+     * desc.
      *
-     * @param   DListDescription|string $item
-     * @param   array                   $attribs
+     * @param DListDescription|string $item
+     * @param array                   $attribs
      *
-     * @return  static
+     * @return static
      */
     public function desc($item, $attribs = [])
     {
@@ -73,12 +73,12 @@ class DList extends AbstractHtmlList
     }
 
     /**
-     * addItem
+     * addItem.
      *
-     * @param   DListTitle|string $item
-     * @param   array             $attribs
+     * @param DListTitle|string $item
+     * @param array             $attribs
      *
-     * @return  static
+     * @return static
      */
     public function addTitle($item, $attribs = [])
     {
@@ -92,12 +92,12 @@ class DList extends AbstractHtmlList
     }
 
     /**
-     * title
+     * title.
      *
-     * @param   DListTitle|string $item
-     * @param   array             $attribs
+     * @param DListTitle|string $item
+     * @param array             $attribs
      *
-     * @return  static
+     * @return static
      */
     public function title($item, $attribs = [])
     {
@@ -105,12 +105,12 @@ class DList extends AbstractHtmlList
     }
 
     /**
-     * addItem
+     * addItem.
      *
-     * @param   DListTitle|string $item
-     * @param   array             $attribs
+     * @param DListTitle|string $item
+     * @param array             $attribs
      *
-     * @return  static
+     * @return static
      */
     public function addItem($item, $attribs = [])
     {

@@ -18,12 +18,12 @@ use Windwalker\Database\Driver\AbstractDatabaseDriver;
 abstract class DatabaseHelper
 {
     /**
-     * batchQuery
+     * batchQuery.
      *
-     * @param   AbstractDatabaseDriver $db
-     * @param   array|string           $queries
+     * @param AbstractDatabaseDriver $db
+     * @param array|string           $queries
      *
-     * @return  boolean
+     * @return bool
      */
     public static function batchQuery(AbstractDatabaseDriver $db, $queries)
     {

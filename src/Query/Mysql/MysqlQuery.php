@@ -11,7 +11,7 @@ namespace Windwalker\Query\Mysql;
 use Windwalker\Query\Query;
 
 /**
- * Class MysqlQuery
+ * Class MysqlQuery.
  *
  * @since 2.0
  */
@@ -20,7 +20,7 @@ class MysqlQuery extends Query
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'mysql';
 
@@ -30,7 +30,8 @@ class MysqlQuery extends Query
      * same character is used for both sides of the quoted name, else the first character will be
      * used for the opening quote and the second for the closing quote.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nameQuote = '`';
@@ -39,7 +40,8 @@ class MysqlQuery extends Query
      * The null or zero representation of a timestamp for the database driver.  This should be
      * defined in child classes to hold the appropriate value for the engine.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nullDate = '1000-01-01 00:00:00';
@@ -47,7 +49,7 @@ class MysqlQuery extends Query
     /**
      * Class constructor.
      *
-     * @param   \PDO $connection The PDO connection object to help us escape string.
+     * @param \PDO $connection The PDO connection object to help us escape string.
      *
      * @since   2.0
      */
@@ -65,7 +67,7 @@ class MysqlQuery extends Query
      *
      * @param string $text
      *
-     * @return  string
+     * @return string
      */
     protected function escapeWithNoConnection($text)
     {

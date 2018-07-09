@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -15,7 +15,7 @@ use Windwalker\Uri\Uri;
 use Windwalker\Uri\UriHelper;
 
 /**
- * Test class of HttpClient
+ * Test class of HttpClient.
  *
  * @since 2.1
  */
@@ -31,7 +31,7 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
     /**
      * Property mock.
      *
-     * @var  MockTransport
+     * @var MockTransport
      */
     protected $transport;
 
@@ -47,12 +47,12 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * createClient
+     * createClient.
      *
      * @param array $options
      * @param null  $transport
      *
-     * @return  HttpClient
+     * @return HttpClient
      */
     protected function createClient($options = [], $transport = null)
     {
@@ -72,9 +72,9 @@ class HttpClientTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testDownload
+     * testDownload.
      *
-     * @return  void
+     * @return void
      */
     public function testDownload()
     {

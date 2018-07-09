@@ -9,7 +9,7 @@
 namespace Windwalker\Compare;
 
 /**
- * Class InCompare
+ * Class InCompare.
  *
  * @since 2.0
  */
@@ -18,14 +18,14 @@ class InCompare extends Compare
     /**
      * Operator symbol.
      *
-     * @var  string
+     * @var string
      */
     protected $operator = 'IN';
 
     /**
      * The separator symbol.
      *
-     * @var  string
+     * @var string
      */
     protected $separator = ',';
 
@@ -34,7 +34,7 @@ class InCompare extends Compare
      *
      * @param bool $strict Use strict compare.
      *
-     * @return  boolean  The result of compare.
+     * @return bool The result of compare.
      */
     public function compare($strict = false)
     {
@@ -55,7 +55,7 @@ class InCompare extends Compare
      * @param string $quote1 Quote compare1.
      * @param string $quote2 Quote compare2.
      *
-     * @return  string
+     * @return string
      */
     public function toString($quote1 = null, $quote2 = null)
     {
@@ -90,16 +90,16 @@ class InCompare extends Compare
                 $compare2
             );
 
-            $return[] = '(' . implode($this->separator, $compare2) . ')';
+            $return[] = '('.implode($this->separator, $compare2).')';
         }
 
         return implode(' ', $return);
     }
 
     /**
-     * getSeparator
+     * getSeparator.
      *
-     * @return  string
+     * @return string
      */
     public function getSeparator()
     {
@@ -107,11 +107,11 @@ class InCompare extends Compare
     }
 
     /**
-     * setSeparator
+     * setSeparator.
      *
-     * @param   string $separator
+     * @param string $separator
      *
-     * @return  InCompare  Return self to support chaining.
+     * @return InCompare Return self to support chaining.
      */
     public function setSeparator($separator)
     {

@@ -9,7 +9,7 @@
 namespace Windwalker\Compare;
 
 /**
- * Class NeqCompare
+ * Class NeqCompare.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class NeqCompare extends Compare
     /**
      * Operator symbol.
      *
-     * @var  string
+     * @var string
      */
     protected $operator = '!=';
 }

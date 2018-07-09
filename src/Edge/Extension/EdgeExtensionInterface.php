@@ -16,30 +16,30 @@ namespace Windwalker\Edge\Extension;
 interface EdgeExtensionInterface
 {
     /**
-     * getName
+     * getName.
      *
-     * @return  string
+     * @return string
      */
     public function getName();
 
     /**
-     * getDirectives
+     * getDirectives.
      *
-     * @return  callable[]
+     * @return callable[]
      */
     public function getDirectives();
 
     /**
-     * getGlobals
+     * getGlobals.
      *
-     * @return  array
+     * @return array
      */
     public function getGlobals();
 
     /**
-     * getParsers
+     * getParsers.
      *
-     * @return  callable[]
+     * @return callable[]
      */
     public function getParsers();
 }

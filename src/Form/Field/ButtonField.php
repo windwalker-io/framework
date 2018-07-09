@@ -22,23 +22,23 @@ class ButtonField extends AbstractField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'button';
 
     /**
      * Property element.
      *
-     * @var  string
+     * @var string
      */
     protected $element = 'button';
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return array
      */
     public function prepare(&$attrs)
     {
@@ -58,9 +58,9 @@ class ButtonField extends AbstractField
     }
 
     /**
-     * getAccessors
+     * getAccessors.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.1.2
      */
@@ -75,11 +75,11 @@ class ButtonField extends AbstractField
     }
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  mixed
+     * @return mixed
      */
     public function buildInput($attrs)
     {

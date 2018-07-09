@@ -21,11 +21,11 @@ use Windwalker\Form\Filter\RangeFilter;
 class AbstractHtml5Field extends TextField
 {
     /**
-     * prepare
+     * prepare.
      *
      * @param array $attrs
      *
-     * @return  void
+     * @return void
      */
     public function prepare(&$attrs)
     {
@@ -38,13 +38,13 @@ class AbstractHtml5Field extends TextField
     }
 
     /**
-     * max
+     * max.
      *
      * @param int  $max
      * @param bool $addFilter
      * @param bool $forceInt
      *
-     * @return  static|mixed
+     * @return static|mixed
      *
      * @since  3.4.2
      */
@@ -58,13 +58,13 @@ class AbstractHtml5Field extends TextField
     }
 
     /**
-     * min
+     * min.
      *
      * @param int  $min
      * @param bool $addFilter
      * @param bool $forceInt
      *
-     * @return  mixed|static
+     * @return mixed|static
      *
      * @since  3.4.2
      */
@@ -78,14 +78,14 @@ class AbstractHtml5Field extends TextField
     }
 
     /**
-     * range
+     * range.
      *
      * @param int  $min
      * @param int  $max
      * @param bool $addFilter
      * @param bool $forceInt
      *
-     * @return  $this
+     * @return $this
      *
      * @since  3.4.2
      */
@@ -102,9 +102,9 @@ class AbstractHtml5Field extends TextField
     }
 
     /**
-     * getAccessors
+     * getAccessors.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.1.2
      */
@@ -113,9 +113,9 @@ class AbstractHtml5Field extends TextField
         return array_merge(
             parent::getAccessors(),
             [
-                'max' => 'max',
-                'min' => 'min',
-                'step' => 'step',
+                'max'    => 'max',
+                'min'    => 'min',
+                'step'   => 'step',
                 'patten' => 'patten',
             ]
         );

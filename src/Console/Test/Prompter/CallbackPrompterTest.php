@@ -11,7 +11,7 @@ namespace Windwalker\Console\Test\Prompter;
 use Windwalker\Console\Prompter\CallbackPrompter;
 
 /**
- * Class CallbackPrompterTest
+ * Class CallbackPrompterTest.
  *
  * @since  2.0
  */
@@ -38,7 +38,7 @@ class CallbackPrompterTest extends AbstractPrompterTest
     /**
      * Test prompter ask.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */

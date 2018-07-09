@@ -5,17 +5,16 @@
  * @copyright  Copyright (C) 2016 LYRASOFT.
  * @license    Please see LICENSE file.
  */
-
 use Windwalker\String\StringObject;
 
 if (!function_exists('str')) {
     /**
-     * str
+     * str.
      *
      * @param string      $string
      * @param null|string $encoding
      *
-     * @return  StringObject
+     * @return StringObject
      */
     function str($string = '', $encoding = StringObject::ENCODING_UTF8)
     {

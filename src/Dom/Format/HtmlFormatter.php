@@ -18,7 +18,7 @@ class HtmlFormatter extends DomFormatter
     /**
      * Property inlineElements.
      *
-     * @var  array
+     * @var array
      */
     protected $inlineElements = [
         'b',
@@ -48,7 +48,7 @@ class HtmlFormatter extends DomFormatter
     /**
      * Property unpairedElements.
      *
-     * @var  array
+     * @var array
      */
     protected $unpairedElements = [
         'img',
@@ -69,23 +69,23 @@ class HtmlFormatter extends DomFormatter
     /**
      * Property temporaryReplacementsScript.
      *
-     * @var  array
+     * @var array
      */
     protected $temporaryReplacementsScript = [];
 
     /**
      * Property temporaryReplacementsInline.
      *
-     * @var  array
+     * @var array
      */
     protected $temporaryReplacementsInline = [];
 
     /**
-     * indent
+     * indent.
      *
-     * @param   string $input
+     * @param string $input
      *
-     * @return  string
+     * @return string
      */
     public function indent($input)
     {
@@ -107,11 +107,11 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * tempScripts
+     * tempScripts.
      *
-     * @param   string $input
+     * @param string $input
      *
-     * @return  string
+     * @return string
      */
     protected function tempScripts($input)
     {
@@ -121,7 +121,7 @@ class HtmlFormatter extends DomFormatter
             $this->temporaryReplacementsScript = $matches[0];
 
             foreach ($matches[0] as $i => $match) {
-                $input = str_replace($match, '<script>' . ($i + 1) . '</script>', $input);
+                $input = str_replace($match, '<script>'.($i + 1).'</script>', $input);
             }
         }
 
@@ -129,36 +129,36 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * restoreScripts
+     * restoreScripts.
      *
-     * @param   string $output
+     * @param string $output
      *
-     * @return  string
+     * @return string
      */
     protected function restoreScripts($output)
     {
         foreach ($this->temporaryReplacementsScript as $i => $original) {
-            $output = str_replace('<script>' . ($i + 1) . '</script>', $original, $output);
+            $output = str_replace('<script>'.($i + 1).'</script>', $original, $output);
         }
 
         return $output;
     }
 
     /**
-     * tempInlineElements
+     * tempInlineElements.
      *
-     * @param   string $input
+     * @param string $input
      *
-     * @return  string
+     * @return string
      */
     protected function tempInlineElements($input)
     {
         // Remove inline elements and replace them with text entities.
-        if (preg_match_all('/<(' . implode('|', $this->inlineElements) . ')[^>]*>(?:[^<]*)<\/\1>/', $input, $matches)) {
+        if (preg_match_all('/<('.implode('|', $this->inlineElements).')[^>]*>(?:[^<]*)<\/\1>/', $input, $matches)) {
             $this->temporaryReplacementsInline = $matches[0];
 
             foreach ($matches[0] as $i => $match) {
-                $input = str_replace($match, 'ᐃ' . ($i + 1) . 'ᐃ', $input);
+                $input = str_replace($match, 'ᐃ'.($i + 1).'ᐃ', $input);
             }
         }
 
@@ -166,27 +166,27 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * restoreInlineElements
+     * restoreInlineElements.
      *
-     * @param   string $output
+     * @param string $output
      *
-     * @return  string
+     * @return string
      */
     protected function restoreInlineElements($output)
     {
         foreach ($this->temporaryReplacementsInline as $i => $original) {
-            $output = str_replace('ᐃ' . ($i + 1) . 'ᐃ', $original, $output);
+            $output = str_replace('ᐃ'.($i + 1).'ᐃ', $original, $output);
         }
 
         return $output;
     }
 
     /**
-     * Method to set property inlineElements
+     * Method to set property inlineElements.
      *
-     * @param   array $inlineElements
+     * @param array $inlineElements
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setInlineElements($inlineElements)
     {
@@ -196,9 +196,9 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * getTagPatterns
+     * getTagPatterns.
      *
-     * @return  array
+     * @return array
      */
     protected function getTagPatterns()
     {
@@ -208,7 +208,7 @@ class HtmlFormatter extends DomFormatter
             // DOCTYPE
             '/^<!([^>]*)>/' => static::MATCH_INDENT_NO,
             // tag with implied closing
-            '/^<(' . $this->getUnpairedElements(true) . ')([^>]*)>/' => static::MATCH_INDENT_NO,
+            '/^<('.$this->getUnpairedElements(true).')([^>]*)>/' => static::MATCH_INDENT_NO,
             // opening tag
             '/^<[^\/]([^>]*)>/' => static::MATCH_INDENT_INCREASE,
             // closing tag
@@ -223,10 +223,10 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * @param   string  $elementName Element name, e.g. "b".
-     * @param   integer $type
+     * @param string $elementName Element name, e.g. "b".
+     * @param int    $type
      *
-     * @return  void
+     * @return void
      */
     public function setElementType($elementName, $type)
     {
@@ -244,11 +244,11 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * addInlineElement
+     * addInlineElement.
      *
-     * @param   string $element
+     * @param string $element
      *
-     * @return  static
+     * @return static
      */
     public function addInlineElement($element)
     {
@@ -258,11 +258,11 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * addUnpairedElement
+     * addUnpairedElement.
      *
-     * @param   string $element
+     * @param string $element
      *
-     * @return  static
+     * @return static
      */
     public function addUnpairedElement($element)
     {
@@ -272,11 +272,11 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * Method to set property unpairedElements
+     * Method to set property unpairedElements.
      *
-     * @param   array $unpairedElements
+     * @param array $unpairedElements
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setUnpairedElements($unpairedElements)
     {
@@ -286,9 +286,9 @@ class HtmlFormatter extends DomFormatter
     }
 
     /**
-     * Method to get property UnpairedElements
+     * Method to get property UnpairedElements.
      *
-     * @return  array
+     * @return array
      */
     public function getUnpairedElements($implode = false)
     {

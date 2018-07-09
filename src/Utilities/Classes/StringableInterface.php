@@ -9,7 +9,7 @@
 namespace Windwalker\Utilities\Classes;
 
 /**
- * Interface StringableInterface
+ * Interface StringableInterface.
  *
  * @since  3.2
  */
@@ -18,7 +18,7 @@ interface StringableInterface
     /**
      * Magic method to convert this object to string.
      *
-     * @return  string
+     * @return string
      */
     public function __toString();
 }

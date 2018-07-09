@@ -26,9 +26,9 @@ class StreamTransport extends AbstractTransport
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param   RequestInterface $request The request object to store request params.
+     * @param RequestInterface $request The request object to store request params.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -47,8 +47,7 @@ class StreamTransport extends AbstractTransport
             // If the data is a scalar value simply add it to the stream context options.
             if (is_scalar($data)) {
                 $options['content'] = $data;
-            } else // Otherwise we need to encode the value first.
-            {
+            } else { // Otherwise we need to encode the value first.
                 $options['content'] = http_build_query($data);
             }
 
@@ -140,13 +139,14 @@ class StreamTransport extends AbstractTransport
     /**
      * Method to get a response object from a server response.
      *
-     * @param   array  $headers The response headers as an array.
-     * @param   string $body    The response body as a string.
+     * @param array  $headers The response headers as an array.
+     * @param string $body    The response body as a string.
      *
-     * @return  Response
+     * @throws \UnexpectedValueException
+     *
+     * @return Response
      *
      * @since   2.1
-     * @throws  \UnexpectedValueException
      */
     protected function getResponse(array $headers, $body)
     {
@@ -181,10 +181,11 @@ class StreamTransport extends AbstractTransport
     /**
      * Use stream to download file.
      *
-     * @param   RequestInterface       $request The request object to store request params.
-     * @param   string|StreamInterface $dest    The dest path to store file.
+     * @param RequestInterface       $request The request object to store request params.
+     * @param string|StreamInterface $dest    The dest path to store file.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
+     *
      * @since   2.1
      */
     public function download(RequestInterface $request, $dest)
@@ -207,9 +208,9 @@ class StreamTransport extends AbstractTransport
     }
 
     /**
-     * Method to check if HTTP transport layer available for using
+     * Method to check if HTTP transport layer available for using.
      *
-     * @return  boolean  True if available else false
+     * @return bool True if available else false
      *
      * @since   2.0
      */

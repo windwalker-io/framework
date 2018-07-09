@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Form\Test;
 use Windwalker\Form\ValidatorHelper;
 
 /**
- * Test class of ValidatorHelper
+ * Test class of ValidatorHelper.
  *
  * @since 2.0
  */
@@ -66,9 +66,9 @@ class ValidatorHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testCreateByClassName
+     * testCreateByClassName.
      *
-     * @return  void
+     * @return void
      */
     public function testCreateByClassName()
     {

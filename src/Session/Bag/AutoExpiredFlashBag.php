@@ -9,7 +9,7 @@
 namespace Windwalker\Session\Bag;
 
 /**
- * Class FlashBag
+ * Class FlashBag.
  *
  * @since 2.0
  */
@@ -18,19 +18,19 @@ class AutoExpiredFlashBag extends FlashBag
     /**
      * Property data.
      *
-     * @var  array
+     * @var array
      */
     protected $data = [
-        'last' => [],
+        'last'    => [],
         'current' => [],
     ];
 
     /**
-     * setData
+     * setData.
      *
      * @param array $data
      *
-     * @return  void
+     * @return void
      */
     public function setData(array &$data)
     {
@@ -46,12 +46,12 @@ class AutoExpiredFlashBag extends FlashBag
     }
 
     /**
-     * add
+     * add.
      *
      * @param string $msg
      * @param string $type
      *
-     * @return  $this
+     * @return $this
      */
     public function add($msg, $type = 'info')
     {
@@ -69,7 +69,7 @@ class AutoExpiredFlashBag extends FlashBag
     /**
      * Take all and clean.
      *
-     * @return  array
+     * @return array
      */
     public function takeAll()
     {
@@ -81,9 +81,9 @@ class AutoExpiredFlashBag extends FlashBag
     }
 
     /**
-     * all
+     * all.
      *
-     * @return  array
+     * @return array
      */
     public function all()
     {
@@ -91,9 +91,9 @@ class AutoExpiredFlashBag extends FlashBag
     }
 
     /**
-     * clean
+     * clean.
      *
-     * @return  $this
+     * @return $this
      */
     public function clear()
     {
@@ -103,11 +103,11 @@ class AutoExpiredFlashBag extends FlashBag
     }
 
     /**
-     * getType
+     * getType.
      *
      * @param string $type
      *
-     * @return  array
+     * @return array
      */
     public function getType($type)
     {

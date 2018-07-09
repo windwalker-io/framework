@@ -11,7 +11,7 @@ namespace Windwalker\Database\Command;
 use Windwalker\Database\Driver\AbstractDatabaseDriver;
 
 /**
- * Class DatabaseTransaction
+ * Class DatabaseTransaction.
  *
  * @since 2.0
  */
@@ -20,14 +20,15 @@ abstract class AbstractTransaction
     /**
      * Property driver.
      *
-     * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @var \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     protected $db;
 
     /**
      * The depth of the current transaction.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     protected $depth = 0;
@@ -35,7 +36,7 @@ abstract class AbstractTransaction
     /**
      * Property nested.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $nested = true;
 
@@ -53,30 +54,30 @@ abstract class AbstractTransaction
     }
 
     /**
-     * start
+     * start.
      *
-     * @return  static
+     * @return static
      */
     abstract public function start();
 
     /**
-     * commit
+     * commit.
      *
-     * @return  static
+     * @return static
      */
     abstract public function commit();
 
     /**
-     * rollback
+     * rollback.
      *
-     * @return  static
+     * @return static
      */
     abstract public function rollback();
 
     /**
-     * getNested
+     * getNested.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getNested()
     {
@@ -84,11 +85,11 @@ abstract class AbstractTransaction
     }
 
     /**
-     * setNested
+     * setNested.
      *
-     * @param   boolean $nested
+     * @param bool $nested
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setNested($nested)
     {
@@ -98,9 +99,9 @@ abstract class AbstractTransaction
     }
 
     /**
-     * Method to get property Db
+     * Method to get property Db.
      *
-     * @return  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @return \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     public function getDriver()
     {
@@ -108,11 +109,11 @@ abstract class AbstractTransaction
     }
 
     /**
-     * Method to set property db
+     * Method to set property db.
      *
-     * @param   \Windwalker\Database\Driver\AbstractDatabaseDriver $db
+     * @param \Windwalker\Database\Driver\AbstractDatabaseDriver $db
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDriver($db)
     {

@@ -9,7 +9,7 @@
 namespace Windwalker\Form;
 
 /**
- * Field Definition Interface
+ * Field Definition Interface.
  *
  * @since  2.0
  */
@@ -20,7 +20,7 @@ interface FieldDefinitionInterface
      *
      * @param Form $form The Windwalker form object.
      *
-     * @return  void
+     * @return void
      */
     public function define(Form $form);
 }

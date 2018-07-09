@@ -23,8 +23,8 @@ class EmptyResponse extends Response
     /**
      * Constructor.
      *
-     * @param  int   $status  The status code.
-     * @param  array $headers The custom headers.
+     * @param int   $status  The status code.
+     * @param array $headers The custom headers.
      */
     public function __construct($status = 204, array $headers = [])
     {

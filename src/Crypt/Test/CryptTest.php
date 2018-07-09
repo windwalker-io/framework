@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Crypt\Cipher\PhpAesCipher;
 use Windwalker\Crypt\Crypt;
 
 /**
- * Test class of Crypt
+ * Test class of Crypt.
  *
  * @since 2.0
  */
@@ -83,9 +83,9 @@ class CryptTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testDecryptLegacy
+     * testDecryptLegacy.
      *
-     * @return  void
+     * @return void
      */
     public function testDecryptLegacy()
     {

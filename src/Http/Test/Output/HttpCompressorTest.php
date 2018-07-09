@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -13,7 +13,7 @@ use Windwalker\Http\Response\TextResponse;
 use Windwalker\Http\Test\Stub\StubHttpCompressor;
 
 /**
- * Test class of HttpCompressor
+ * Test class of HttpCompressor.
  *
  * @since 3.0
  */
@@ -91,9 +91,9 @@ class HttpCompressorTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testCompressData
+     * testCompressData.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Http\Output\HttpCompressor::encode
      */

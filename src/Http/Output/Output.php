@@ -21,7 +21,7 @@ class Output implements OutputInterface
     /**
      * Property headerSent.
      *
-     * @var  string
+     * @var string
      */
     public $headerSent = 'headers_sent';
 
@@ -29,10 +29,10 @@ class Output implements OutputInterface
      * Method to send the application response to the client.  All headers will be sent prior to the main
      * application output data.
      *
-     * @param   ResponseInterface $response   Respond body output.
-     * @param   boolean           $returnBody Return body as string.
+     * @param ResponseInterface $response   Respond body output.
+     * @param bool              $returnBody Return body as string.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   3.0
      */
@@ -48,8 +48,6 @@ class Output implements OutputInterface
         }
 
         $this->sendBody($response);
-
-        return null;
     }
 
     /**
@@ -68,13 +66,13 @@ class Output implements OutputInterface
     /**
      * Method to send a header to the client.  We wrap header() function with this method for testing reason.
      *
-     * @param   string  $string    The header string.
-     * @param   boolean $replace   The optional replace parameter indicates whether the header should
-     *                             replace a previous similar header, or add a second header of the same type.
-     * @param   integer $code      Forces the HTTP response code to the specified value. Note that
-     *                             this parameter only has an effect if the string is not empty.
+     * @param string $string  The header string.
+     * @param bool   $replace The optional replace parameter indicates whether the header should
+     *                        replace a previous similar header, or add a second header of the same type.
+     * @param int    $code    Forces the HTTP response code to the specified value. Note that
+     *                        this parameter only has an effect if the string is not empty.
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @see     header()
      */
@@ -88,9 +86,9 @@ class Output implements OutputInterface
     /**
      * Send all response headers.
      *
-     * @param   ResponseInterface $response Response object to contain headers.
+     * @param ResponseInterface $response Response object to contain headers.
      *
-     * @return  Output  Instance of $this to allow chaining.
+     * @return Output Instance of $this to allow chaining.
      */
     public function sendHeaders(ResponseInterface $response)
     {
@@ -111,15 +109,15 @@ class Output implements OutputInterface
     /**
      * Send HTTP status line.
      *
-     * @param   ResponseInterface $response Response object to contain status code and protocol version.
+     * @param ResponseInterface $response Response object to contain status code and protocol version.
      *
-     * @return  void
+     * @return void
      */
     public function sendStatusLine(ResponseInterface $response)
     {
         $reasonPhrase = $response->getReasonPhrase();
 
-        $reasonPhrase = ($reasonPhrase ? ' ' . $reasonPhrase : '');
+        $reasonPhrase = ($reasonPhrase ? ' '.$reasonPhrase : '');
 
         $this->header(
             sprintf(
@@ -132,7 +130,7 @@ class Output implements OutputInterface
     }
 
     /**
-     * checkHeaderSent
+     * checkHeaderSent.
      *
      * @return bool
      */

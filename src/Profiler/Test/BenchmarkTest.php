@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Profiler\Test;
 use Windwalker\Profiler\Benchmark;
 
 /**
- * Test class of Benchmark
+ * Test class of Benchmark.
  *
  * @since 2.0
  */
@@ -118,7 +118,7 @@ class BenchmarkTest extends \PHPUnit\Framework\TestCase
 
         $this->instance->setRenderOneHandler(
             function ($name, $result, $round, $format) {
-                return $name . ':123123';
+                return $name.':123123';
             }
         );
 

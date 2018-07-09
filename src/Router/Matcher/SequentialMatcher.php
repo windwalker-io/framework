@@ -24,7 +24,7 @@ class SequentialMatcher extends AbstractMatcher
      * @param string $method
      * @param array  $options
      *
-     * @return  Route|false
+     * @return Route|false
      */
     public function match($route, $method = 'GET', $options = [])
     {

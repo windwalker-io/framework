@@ -25,7 +25,8 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * The application configuration object.
      *
-     * @var    Structure
+     * @var Structure
+     *
      * @since  2.0
      */
     protected $config;
@@ -33,7 +34,8 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * A logger object.
      *
-     * @var    LoggerInterface
+     * @var LoggerInterface
+     *
      * @since  2.0
      */
     protected $logger;
@@ -41,7 +43,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Class constructor of Application.
      *
-     * @param   Structure $config An optional argument to provide a Structure object to be config.
+     * @param Structure $config An optional argument to provide a Structure object to be config.
      *
      * @since   2.0
      */
@@ -55,9 +57,9 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Method to close the application.
      *
-     * @param   integer|string $message The exit code (optional; default is 0).
+     * @param int|string $message The exit code (optional; default is 0).
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -70,7 +72,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
      * Method to run the application routines. Most likely you will want to instantiate a controller
      * and execute it, or perform some sort of task directly.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -79,7 +81,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Execute the application.
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -100,7 +102,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Prepare execute hook.
      *
-     * @return  void
+     * @return void
      */
     protected function prepareExecute()
     {
@@ -109,7 +111,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Post execute hook.
      *
-     * @return  mixed
+     * @return mixed
      */
     protected function postExecute()
     {
@@ -118,10 +120,10 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Returns a property of the object or the default value if the property is not set.
      *
-     * @param   string $key     The name of the property.
-     * @param   mixed  $default The default value (optional) if none is set.
+     * @param string $key     The name of the property.
+     * @param mixed  $default The default value (optional) if none is set.
      *
-     * @return  mixed   The value of the configuration.
+     * @return mixed The value of the configuration.
      *
      * @since   2.0
      */
@@ -133,7 +135,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Get the logger.
      *
-     * @return  LoggerInterface
+     * @return LoggerInterface
      *
      * @since   2.0
      */
@@ -153,7 +155,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
      * Called at the end of the AbstractApplication::__construct() method.
      * This is for developers to inject initialisation code for their application classes.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -164,10 +166,10 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Modifies a property of the object, creating it if it does not already exist.
      *
-     * @param   string $key   The name of the property.
-     * @param   mixed  $value The value of the property to set (optional).
+     * @param string $key   The name of the property.
+     * @param mixed  $value The value of the property to set (optional).
      *
-     * @return  mixed   Previous value of the property
+     * @return mixed Previous value of the property
      *
      * @since   2.0
      */
@@ -183,9 +185,9 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Sets the configuration for the application.
      *
-     * @param   Structure $config A structure object holding the configuration.
+     * @param Structure $config A structure object holding the configuration.
      *
-     * @return  AbstractApplication  Returns itself to support chaining.
+     * @return AbstractApplication Returns itself to support chaining.
      *
      * @since   2.0
      */
@@ -199,9 +201,9 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * Set the logger.
      *
-     * @param   LoggerInterface $logger The logger.
+     * @param LoggerInterface $logger The logger.
      *
-     * @return  AbstractApplication  Returns itself to support chaining.
+     * @return AbstractApplication Returns itself to support chaining.
      *
      * @since   2.0
      */
@@ -215,9 +217,9 @@ abstract class AbstractApplication implements LoggerAwareInterface
     /**
      * is utilized for reading data from inaccessible members.
      *
-     * @param   $name  string
+     * @param   $name string
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __get($name)
     {
@@ -229,6 +231,6 @@ abstract class AbstractApplication implements LoggerAwareInterface
             return $this->$name;
         }
 
-        throw new \UnexpectedValueException('Property: ' . $name . ' not found in ' . get_called_class());
+        throw new \UnexpectedValueException('Property: '.$name.' not found in '.get_called_class());
     }
 }

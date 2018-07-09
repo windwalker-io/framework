@@ -13,7 +13,7 @@ use Windwalker\Renderer\Twig\TwigFilesystemLoader;
 use Windwalker\Structure\Structure;
 
 /**
- * Class PhpRenderer
+ * Class PhpRenderer.
  *
  * @since 2.0
  */
@@ -22,50 +22,51 @@ class TwigRenderer extends AbstractEngineRenderer
     /**
      * Property twig.
      *
-     * @var  \Twig_Environment
+     * @var \Twig_Environment
      */
     protected $engine = null;
 
     /**
      * Property loader.
      *
-     * @var  \Twig_LoaderInterface
+     * @var \Twig_LoaderInterface
      */
     protected $loader = null;
 
     /**
      * Property extensions.
      *
-     * @var  \Twig_ExtensionInterface[]
+     * @var \Twig_ExtensionInterface[]
      */
     protected $extensions = [];
 
     /**
      * Property config.
      *
-     * @var  Structure|array
+     * @var Structure|array
      */
     protected $config = [];
 
     /**
      * Property debugExtension.
      *
-     * @var  \Twig_Extension_Debug
+     * @var \Twig_Extension_Debug
      */
     protected $debugExtension = null;
 
     /**
-     * render
+     * render.
      *
      * @param string       $file
      * @param array|object $data
      *
-     * @throws  \UnexpectedValueException
-     * @return  string
+     * @throws \UnexpectedValueException
+     *
+     * @return string
      */
     public function render($file, $data = [])
     {
-        $file = pathinfo($file, PATHINFO_EXTENSION) === 'twig' ? $file : $file . '.twig';
+        $file = pathinfo($file, PATHINFO_EXTENSION) === 'twig' ? $file : $file.'.twig';
 
         $this->extensions = array_merge($this->extensions, (array) $this->config->get('extensions', []));
 
@@ -73,9 +74,9 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * getLoader
+     * getLoader.
      *
-     * @return  \Twig_LoaderInterface
+     * @return \Twig_LoaderInterface
      */
     public function getLoader()
     {
@@ -94,11 +95,11 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * setLoader
+     * setLoader.
      *
-     * @param   \Twig_LoaderInterface $loader
+     * @param \Twig_LoaderInterface $loader
      *
-     * @return  TwigRenderer  Return self to support chaining.
+     * @return TwigRenderer Return self to support chaining.
      */
     public function setLoader(\Twig_LoaderInterface $loader)
     {
@@ -108,11 +109,11 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * addExtension
+     * addExtension.
      *
      * @param \Twig_ExtensionInterface $extension
      *
-     * @return  static
+     * @return static
      */
     public function addExtension(\Twig_ExtensionInterface $extension)
     {
@@ -122,11 +123,11 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * getTwig
+     * getTwig.
      *
      * @param bool $new
      *
-     * @return  \Twig_Environment
+     * @return \Twig_Environment
      */
     public function getEngine($new = false)
     {
@@ -154,11 +155,11 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * setTwig
+     * setTwig.
      *
-     * @param   \Twig_Environment $twig
+     * @param \Twig_Environment $twig
      *
-     * @return  TwigRenderer  Return self to support chaining.
+     * @return TwigRenderer Return self to support chaining.
      */
     public function setEngine($twig)
     {
@@ -172,9 +173,9 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property DebugExtension
+     * Method to get property DebugExtension.
      *
-     * @return  \Twig_Extension_Debug
+     * @return \Twig_Extension_Debug
      */
     public function getDebugExtension()
     {
@@ -186,11 +187,11 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property debugExtension
+     * Method to set property debugExtension.
      *
-     * @param   \Twig_ExtensionInterface $debugExtension
+     * @param \Twig_ExtensionInterface $debugExtension
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDebugExtension(\Twig_ExtensionInterface $debugExtension)
     {
@@ -200,9 +201,9 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to get property Extensions
+     * Method to get property Extensions.
      *
-     * @return  \Twig_ExtensionInterface[]
+     * @return \Twig_ExtensionInterface[]
      */
     public function getExtensions()
     {
@@ -210,11 +211,11 @@ class TwigRenderer extends AbstractEngineRenderer
     }
 
     /**
-     * Method to set property extensions
+     * Method to set property extensions.
      *
-     * @param   \Twig_ExtensionInterface[] $extensions Twig extenions
+     * @param \Twig_ExtensionInterface[] $extensions Twig extenions
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setExtensions($extensions)
     {

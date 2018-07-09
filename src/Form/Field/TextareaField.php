@@ -23,23 +23,23 @@ class TextareaField extends TextField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'textarea';
 
     /**
      * Property element.
      *
-     * @var  string
+     * @var string
      */
     protected $element = 'textarea';
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  void
+     * @return void
      */
     public function prepare(&$attrs)
     {
@@ -60,11 +60,11 @@ class TextareaField extends TextField
     }
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  mixed
+     * @return mixed
      */
     public function buildInput($attrs)
     {
@@ -72,9 +72,9 @@ class TextareaField extends TextField
     }
 
     /**
-     * getAccessors
+     * getAccessors.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.1.2
      */

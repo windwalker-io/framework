@@ -9,109 +9,109 @@
 namespace Windwalker\Query;
 
 /**
- * QueryGrammar interface
+ * QueryGrammar interface.
  *
  * @since 2.0
  */
 interface QueryGrammarInterface
 {
     /**
-     * showDatabases
+     * showDatabases.
      *
-     * @return  string
+     * @return string
      */
     public static function listDatabases();
 
     /**
-     * createDatabase
+     * createDatabase.
      *
      * @param string $name
      *
-     * @return  string
+     * @return string
      */
     public static function createDatabase($name);
 
     /**
-     * dropTable
+     * dropTable.
      *
      * @param string $name
      *
-     * @return  string
+     * @return string
      */
     public static function dropDatabase($name);
 
     /**
-     * showTableColumn
+     * showTableColumn.
      *
      * @param string $table
      *
-     * @return  string
+     * @return string
      */
     public static function showTableColumns($table);
 
     /**
-     * showDbTables
+     * showDbTables.
      *
      * @param string $dbname
      *
-     * @return  string
+     * @return string
      */
     public static function showDbTables($dbname);
 
     /**
-     * createTable
+     * createTable.
      *
      * @param string $name
      * @param array  $columns
      *
-     * @return  string
+     * @return string
      */
     public static function createTable($name, $columns);
 
     /**
-     * dropTable
+     * dropTable.
      *
      * @param string $table
      *
-     * @return  string
+     * @return string
      */
     public static function dropTable($table);
 
     /**
-     * Add column
+     * Add column.
      *
      * @param string $table
      * @param string $column
      * @param string $type
      *
-     * @return  string
+     * @return string
      */
     public static function addColumn($table, $column, $type = 'text');
 
     /**
-     * changeColumn
+     * changeColumn.
      *
      * @param string $table
      * @param string $oldColumn
      * @param string $newColumn
      * @param string $type
      *
-     * @return  string
+     * @return string
      */
     public static function changeColumn($table, $oldColumn, $newColumn, $type = 'text');
 
     /**
-     * dropColumn
+     * dropColumn.
      *
      * @param string $table
      * @param string $column
      *
-     * @return  string
+     * @return string
      */
     public static function dropColumn($table, $column);
 
     /**
-     * addIndex
+     * addIndex.
      *
      * @param string $table
      * @param string $type
@@ -123,18 +123,18 @@ interface QueryGrammarInterface
     public static function addIndex($table, $type, $columns, $name);
 
     /**
-     * build
+     * build.
      *
-     * @return  string
+     * @return string
      */
     public static function build();
 
     /**
-     * getQuery
+     * getQuery.
      *
      * @param bool $new
      *
-     * @return  Query
+     * @return Query
      */
     public static function getQuery($new = false);
 }

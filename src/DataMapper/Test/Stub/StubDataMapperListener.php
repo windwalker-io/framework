@@ -20,16 +20,16 @@ class StubDataMapperListener
     /**
      * Property lastEvent.
      *
-     * @var  Event[]
+     * @var Event[]
      */
     public $events;
 
     /**
-     * onFind
+     * onFind.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeFind(Event $event)
     {
@@ -39,11 +39,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterFind
+     * onAfterFind.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterFind(Event $event)
     {
@@ -53,11 +53,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeFindAll
+     * onBeforeFindAll.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeFindAll(Event $event)
     {
@@ -67,11 +67,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterFindAll
+     * onAfterFindAll.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterFindAll(Event $event)
     {
@@ -81,11 +81,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeFindOne
+     * onBeforeFindOne.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeFindOne(Event $event)
     {
@@ -95,11 +95,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterFindOne
+     * onAfterFindOne.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterFindOne(Event $event)
     {
@@ -109,11 +109,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeFindColumn
+     * onBeforeFindColumn.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeFindColumn(Event $event)
     {
@@ -123,11 +123,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterFindColumn
+     * onAfterFindColumn.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterFindColumn(Event $event)
     {
@@ -137,11 +137,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeCreate
+     * onBeforeCreate.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeCreate(Event $event)
     {
@@ -151,11 +151,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterCreate
+     * onAfterCreate.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterCreate(Event $event)
     {
@@ -165,11 +165,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeCreateOne
+     * onBeforeCreateOne.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeCreateOne(Event $event)
     {
@@ -179,11 +179,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterCreateOne
+     * onAfterCreateOne.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterCreateOne(Event $event)
     {
@@ -193,11 +193,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeUpdate
+     * onBeforeUpdate.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeUpdate(Event $event)
     {
@@ -207,11 +207,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterUpdate
+     * onAfterUpdate.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterUpdate(Event $event)
     {
@@ -221,11 +221,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeUpdateOne
+     * onBeforeUpdateOne.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeUpdateOne(Event $event)
     {
@@ -235,11 +235,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterUpdateOne
+     * onAfterUpdateOne.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterUpdateOne(Event $event)
     {
@@ -249,11 +249,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeSave
+     * onBeforeSave.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeSave(Event $event)
     {
@@ -263,11 +263,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterSave
+     * onAfterSave.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterSave(Event $event)
     {
@@ -277,11 +277,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeSaveOne
+     * onBeforeSaveOne.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeSaveOne(Event $event)
     {
@@ -291,11 +291,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterSaveOne
+     * onAfterSaveOne.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterSaveOne(Event $event)
     {
@@ -305,11 +305,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeFlush
+     * onBeforeFlush.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeFlush(Event $event)
     {
@@ -319,11 +319,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterFlush
+     * onAfterFlush.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterFlush(Event $event)
     {
@@ -333,11 +333,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onBeforeDelete
+     * onBeforeDelete.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onBeforeDelete(Event $event)
     {
@@ -347,11 +347,11 @@ class StubDataMapperListener
     }
 
     /**
-     * onAfterDelete
+     * onAfterDelete.
      *
      * @param Event $event
      *
-     * @return  void
+     * @return void
      */
     public function onAfterDelete(Event $event)
     {

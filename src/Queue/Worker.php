@@ -41,7 +41,7 @@ class Worker implements DispatcherAwareInterface
     /**
      * Property queue.
      *
-     * @var  Queue
+     * @var Queue
      */
     protected $manager;
 
@@ -55,7 +55,7 @@ class Worker implements DispatcherAwareInterface
     /**
      * Property state.
      *
-     * @var  string
+     * @var string
      */
     protected $state = self::STATE_INACTIVE;
 
@@ -69,14 +69,14 @@ class Worker implements DispatcherAwareInterface
     /**
      * Property lastRestart.
      *
-     * @var  int
+     * @var int
      */
     protected $lastRestart;
 
     /**
      * Property pid.
      *
-     * @var  int
+     * @var int
      */
     protected $pid;
 
@@ -95,13 +95,14 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * loop
+     * loop.
      *
      * @param string|array $queue
      * @param Structure    $options
      *
-     * @return  void
      * @throws \Exception
+     *
+     * @return void
      */
     public function loop($queue, Structure $options)
     {
@@ -113,7 +114,7 @@ class Worker implements DispatcherAwareInterface
         // Log PID
         $this->pid = getmypid();
 
-        $this->logger->info('A worker start running... PID: ' . $this->pid);
+        $this->logger->info('A worker start running... PID: '.$this->pid);
 
         $this->setState(static::STATE_ACTIVE);
 
@@ -124,7 +125,7 @@ class Worker implements DispatcherAwareInterface
             $this->triggerEvent(
                 'onWorkerLoopCycleStart',
                 [
-                    'worker' => $this,
+                    'worker'  => $this,
                     'manager' => $this->manager,
                 ]
             );
@@ -143,9 +144,9 @@ class Worker implements DispatcherAwareInterface
                     $this->triggerEvent(
                         'onWorkerLoopCycleFailure',
                         [
-                            'worker' => $this,
+                            'worker'    => $this,
                             'exception' => $e,
-                            'message' => $msg,
+                            'message'   => $msg,
                         ]
                     );
                 }
@@ -157,7 +158,7 @@ class Worker implements DispatcherAwareInterface
             $this->triggerEvent(
                 'onWorkerLoopCycleEnd',
                 [
-                    'worker' => $this,
+                    'worker'  => $this,
                     'manager' => $this->manager,
                 ]
             );
@@ -167,12 +168,12 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * runNextJob
+     * runNextJob.
      *
      * @param string|array $queue
      * @param Structure    $options
      *
-     * @return  void
+     * @return void
      */
     public function runNextJob($queue, Structure $options)
     {
@@ -186,12 +187,12 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * process
+     * process.
      *
      * @param QueueMessage $message
      * @param Structure    $options
      *
-     * @return  void
+     * @return void
      */
     public function process(QueueMessage $message, Structure $options)
     {
@@ -206,9 +207,9 @@ class Worker implements DispatcherAwareInterface
             $this->triggerEvent(
                 'onWorkerBeforeJobRun',
                 [
-                    'worker' => $this,
+                    'worker'  => $this,
                     'message' => $message,
-                    'job' => $job,
+                    'job'     => $job,
                     'manager' => $this->manager,
                 ]
             );
@@ -217,7 +218,7 @@ class Worker implements DispatcherAwareInterface
             if ($maxTries !== 0 && $maxTries < $message->getAttempts()) {
                 $this->manager->delete($message);
 
-                throw new MaxAttemptsExceededException('Max attempts exceed for Message: ' . $message->getId());
+                throw new MaxAttemptsExceededException('Max attempts exceed for Message: '.$message->getId());
             }
 
             // run
@@ -227,9 +228,9 @@ class Worker implements DispatcherAwareInterface
             $this->triggerEvent(
                 'onWorkerAfterJobRun',
                 [
-                    'worker' => $this,
+                    'worker'  => $this,
                     'message' => $message,
-                    'job' => $job,
+                    'job'     => $job,
                     'manager' => $this->manager,
                 ]
             );
@@ -247,9 +248,9 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * canLoop
+     * canLoop.
      *
-     * @return  bool
+     * @return bool
      */
     protected function canLoop()
     {
@@ -257,11 +258,11 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * registerTimeoutHandler
+     * registerTimeoutHandler.
      *
      * @param Structure $options
      *
-     * @return  void
+     * @return void
      */
     protected function registerSignals(Structure $options)
     {
@@ -274,14 +275,14 @@ class Worker implements DispatcherAwareInterface
         if (version_compare(PHP_VERSION, '7.1', '>=')) {
             pcntl_async_signals(true);
         } else {
-            declare (ticks=1);
+            declare(ticks=1);
         }
 
         if ($timeout !== 0) {
             pcntl_signal(
                 SIGALRM,
                 function () use ($timeout) {
-                    $this->stop('A job process over the max timeout: ' . $timeout . ' PID: ' . $this->pid);
+                    $this->stop('A job process over the max timeout: '.$timeout.' PID: '.$this->pid);
                 }
             );
 
@@ -294,9 +295,9 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * shoutdown
+     * shoutdown.
      *
-     * @return  void
+     * @return void
      */
     public function shutdown()
     {
@@ -304,7 +305,7 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * stop
+     * stop.
      *
      * @param string $reason
      *
@@ -312,7 +313,7 @@ class Worker implements DispatcherAwareInterface
      */
     public function stop($reason = 'Unkonwn reason')
     {
-        $this->logger->info('Worker stop: ' . $reason);
+        $this->logger->info('Worker stop: '.$reason);
 
         $this->triggerEvent(
             'onWorkerStop',
@@ -328,7 +329,7 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * handleException
+     * handleException.
      *
      * @param JobInterface          $job
      * @param QueueMessage          $message
@@ -375,20 +376,20 @@ class Worker implements DispatcherAwareInterface
         $this->dispatcher->triggerEvent(
             'onWorkerJobFailure',
             [
-                'worker' => $this,
+                'worker'    => $this,
                 'exception' => $e,
-                'job' => $job,
-                'message' => $message,
+                'job'       => $job,
+                'message'   => $message,
             ]
         );
     }
 
     /**
-     * getNextMessage
+     * getNextMessage.
      *
      * @param $queue
      *
-     * @return  null|QueueMessage
+     * @return null|QueueMessage
      */
     protected function getNextMessage($queue)
     {
@@ -399,16 +400,14 @@ class Worker implements DispatcherAwareInterface
                 return $message;
             }
         }
-
-        return null;
     }
 
     /**
-     * sleep
+     * sleep.
      *
      * @param int $seconds
      *
-     * @return  void
+     * @return void
      */
     protected function sleep($seconds)
     {
@@ -419,7 +418,7 @@ class Worker implements DispatcherAwareInterface
      * Method to perform basic garbage collection and memory management in the sense of clearing the
      * stat cache.  We will probably call this method pretty regularly in our main loop.
      *
-     * @return  void
+     * @return void
      */
     protected function gc()
     {
@@ -431,9 +430,9 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * Method to get property Manager
+     * Method to get property Manager.
      *
-     * @return  Queue
+     * @return Queue
      */
     public function getManager()
     {
@@ -441,9 +440,9 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * Method to get property State
+     * Method to get property State.
      *
-     * @return  string
+     * @return string
      */
     public function getState()
     {
@@ -451,11 +450,11 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * setState
+     * setState.
      *
      * @param string $state
      *
-     * @return  void
+     * @return void
      */
     public function setState($state)
     {
@@ -463,11 +462,11 @@ class Worker implements DispatcherAwareInterface
     }
 
     /**
-     * stopIfNecessary
+     * stopIfNecessary.
      *
      * @param Structure $options
      *
-     * @return  void
+     * @return void
      */
     public function stopIfNecessary(Structure $options)
     {
@@ -477,16 +476,16 @@ class Worker implements DispatcherAwareInterface
             $signal = file_get_contents($restartSignal);
 
             if ($this->lastRestart < $signal) {
-                $this->stop('Receive restart signal. PID: ' . $this->pid);
+                $this->stop('Receive restart signal. PID: '.$this->pid);
             }
         }
 
         if ((memory_get_usage() / 1024 / 1024) >= (int) $options->get('memory_limit', 128)) {
-            $this->stop('Memory usage exceeded. PID: ' . $this->pid);
+            $this->stop('Memory usage exceeded. PID: '.$this->pid);
         }
 
         if ($this->getState() === static::STATE_EXITING) {
-            $this->stop('Shutdown by signal. PID: ' . $this->pid);
+            $this->stop('Shutdown by signal. PID: '.$this->pid);
         }
     }
 }

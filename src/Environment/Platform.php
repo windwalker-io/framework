@@ -25,14 +25,14 @@ class Platform
     /**
      * Property uname.
      *
-     * @var  string
+     * @var string
      */
     protected $uname = PHP_OS;
 
     /**
      * Property globals.
      *
-     * @var  array
+     * @var array
      */
     protected $server = [];
 
@@ -47,9 +47,9 @@ class Platform
     }
 
     /**
-     * isWeb
+     * isWeb.
      *
-     * @return  boolean
+     * @return bool
      */
     public function isWeb()
     {
@@ -57,9 +57,9 @@ class Platform
     }
 
     /**
-     * isCli
+     * isCli.
      *
-     * @return  boolean
+     * @return bool
      */
     public function isCli()
     {
@@ -67,11 +67,11 @@ class Platform
     }
 
     /**
-     * getOS
+     * getOS.
      *
      * @see  https://gist.github.com/asika32764/90e49a82c124858c9e1a
      *
-     * @return  string
+     * @return string
      */
     public function getOS()
     {
@@ -84,9 +84,9 @@ class Platform
     }
 
     /**
-     * isWin
+     * isWin.
      *
-     * @return  bool
+     * @return bool
      */
     public function isWin()
     {
@@ -94,11 +94,11 @@ class Platform
     }
 
     /**
-     * isUnix
+     * isUnix.
      *
      * @see  https://gist.github.com/asika32764/90e49a82c124858c9e1a
      *
-     * @return  bool
+     * @return bool
      */
     public function isUnix()
     {
@@ -119,9 +119,9 @@ class Platform
     }
 
     /**
-     * isLinux
+     * isLinux.
      *
-     * @return  bool
+     * @return bool
      */
     public function isLinux()
     {
@@ -129,11 +129,11 @@ class Platform
     }
 
     /**
-     * Method to set property os
+     * Method to set property os.
      *
-     * @param   string $os
+     * @param string $os
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOS($os)
     {
@@ -143,9 +143,9 @@ class Platform
     }
 
     /**
-     * Method to get property Uname
+     * Method to get property Uname.
      *
-     * @return  string
+     * @return string
      */
     public function getUname()
     {
@@ -153,11 +153,11 @@ class Platform
     }
 
     /**
-     * Method to set property uname
+     * Method to set property uname.
      *
-     * @param   string $uname
+     * @param string $uname
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setUname($uname)
     {
@@ -167,9 +167,9 @@ class Platform
     }
 
     /**
-     * getWorkingDirectory
+     * getWorkingDirectory.
      *
-     * @return  string
+     * @return string
      */
     public function getWorkingDirectory()
     {
@@ -177,11 +177,11 @@ class Platform
     }
 
     /**
-     * getRoot
+     * getRoot.
      *
      * @param bool $full
      *
-     * @return  string
+     * @return string
      */
     public function getRoot($full = true)
     {
@@ -189,9 +189,9 @@ class Platform
     }
 
     /**
-     * getDocumentRoot
+     * getDocumentRoot.
      *
-     * @return  string
+     * @return string
      */
     public function getServerPublicRoot()
     {
@@ -199,11 +199,11 @@ class Platform
     }
 
     /**
-     * getEntry
+     * getEntry.
      *
-     * @param   bool $full
+     * @param bool $full
      *
-     * @return  string
+     * @return string
      */
     public function getEntry($full = true)
     {
@@ -217,21 +217,21 @@ class Platform
             $file = substr($file, strlen($wdir));
         }
 
-        $file = trim($file, '.' . DIRECTORY_SEPARATOR);
+        $file = trim($file, '.'.DIRECTORY_SEPARATOR);
 
         if ($full && $this->isCli()) {
-            $file = $wdir . DIRECTORY_SEPARATOR . $file;
+            $file = $wdir.DIRECTORY_SEPARATOR.$file;
         }
 
         return $file;
     }
 
     /**
-     * getRequestUri
+     * getRequestUri.
      *
-     * @param   bool $withParams
+     * @param bool $withParams
      *
-     * @return  string
+     * @return string
      */
     public function getRequestUri($withParams = true)
     {
@@ -243,9 +243,9 @@ class Platform
     }
 
     /**
-     * getHost
+     * getHost.
      *
-     * @return  string
+     * @return string
      */
     public function getHost()
     {
@@ -253,9 +253,9 @@ class Platform
     }
 
     /**
-     * getPort
+     * getPort.
      *
-     * @return  string
+     * @return string
      */
     public function getPort()
     {
@@ -263,9 +263,9 @@ class Platform
     }
 
     /**
-     * getScheme
+     * getScheme.
      *
-     * @return  string
+     * @return string
      */
     public function getScheme()
     {
@@ -273,12 +273,12 @@ class Platform
     }
 
     /**
-     * getServerParam
+     * getServerParam.
      *
      * @param string $key
      * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     protected function getServerParam($key, $default = null)
     {

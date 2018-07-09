@@ -7,10 +7,10 @@
  */
 
 return [
-    'WINDWALKER_LANGUAGE_TEST_FLOWER' => "Flower",
-    'WINDWALKER_LANGUAGE' => [
+    'WINDWALKER_LANGUAGE_TEST_FLOWER' => 'Flower',
+    'WINDWALKER_LANGUAGE'             => [
         'TEST' => [
-            'SAKURA' => "Sakura",
+            'SAKURA' => 'Sakura',
         ],
     ],
 ];

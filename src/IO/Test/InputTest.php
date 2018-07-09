@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\IO\Input;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of Input
+ * Test class of Input.
  *
  * @since 2.0
  */
@@ -50,9 +50,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::__construct method.
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\IO\Input::__construct
      */
     public function test__construct()
@@ -85,10 +86,11 @@ class InputTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testPrepareSource
+     * testPrepareSource.
      *
-     * @return  void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function testPrepareSource()
     {
@@ -108,9 +110,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test __get().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\IO\Input::__get
      */
     public function test__get()
@@ -157,9 +160,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::get method with a normal value.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::get
+     *
      * @since   2.0
      */
     public function testGetWithStandardValue()
@@ -172,9 +176,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::get method with empty string.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::get
+     *
      * @since   2.0
      */
     public function testGetWithEmptyString()
@@ -189,9 +194,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::get method with integer 0.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::get
+     *
      * @since   2.0
      */
     public function testGetWith0()
@@ -206,9 +212,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::get method with float 0.0.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::get
+     *
      * @since   2.0
      */
     public function testGetWith0Point0()
@@ -223,16 +230,17 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::get method with string "0".
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::get
+     *
      * @since   2.0
      */
     public function testGetWithString0()
     {
-        $instance = $this->newInstance(['foo' => "0"]);
+        $instance = $this->newInstance(['foo' => '0']);
 
-        $this->assertEquals("0", $instance->get('foo'));
+        $this->assertEquals('0', $instance->get('foo'));
 
         $this->assertInternalType('string', $instance->get('foo'));
     }
@@ -240,9 +248,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::get method with false.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::get
+     *
      * @since   2.0
      */
     public function testGetWithFalse()
@@ -257,9 +266,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests retrieving a default value..
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::get
+     *
      * @since   2.0
      */
     public function testGetDefault()
@@ -273,9 +283,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::def method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::def
+     *
      * @since   2.0
      */
     public function testDefNotReadWhenValueExists()
@@ -290,9 +301,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::def method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::def
+     *
      * @since   2.0
      */
     public function testDefRead()
@@ -307,9 +319,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::set method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::set
+     *
      * @since   2.0
      */
     public function testSet()
@@ -324,9 +337,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::exists method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::exists
+     *
      * @since   3.2
      */
     public function testExists()
@@ -339,11 +353,11 @@ class InputTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetByPath
+     * testGetByPath.
      *
      * @covers  \Windwalker\IO\Input::getByPath
      *
-     * @return  void
+     * @return void
      */
     public function testGetByPath()
     {
@@ -361,11 +375,11 @@ class InputTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetByPath
+     * testGetByPath.
      *
      * @covers  \Windwalker\IO\Input::setByPath
      *
-     * @return  void
+     * @return void
      */
     public function testSetByPath()
     {
@@ -385,9 +399,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::getArray method without specified variables.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::compact
+     *
      * @since   2.0
      */
     public function testToArray()
@@ -426,9 +441,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the Windwalker\IO\Input::compact method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Input::compact
+     *
      * @since   2.0
      */
     public function testCompact()
@@ -529,9 +545,10 @@ class InputTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test loadAllInputs().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\IO\Input::loadAllInputs
      */
     public function testLoadAllInputs()
@@ -554,11 +571,11 @@ class InputTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * newInstance
+     * newInstance.
      *
      * @param array $data
      *
-     * @return  Input
+     * @return Input
      */
     protected function newInstance($data = [])
     {

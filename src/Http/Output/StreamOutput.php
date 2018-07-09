@@ -20,14 +20,14 @@ class StreamOutput extends Output
     /**
      * Property maxBufferLength.
      *
-     * @var  integer
+     * @var int
      */
     protected $maxBufferLength = 8192;
 
     /**
      * Delay every loop for microseconds.
      *
-     * @var  integer
+     * @var int
      */
     protected $delay = null;
 
@@ -35,10 +35,10 @@ class StreamOutput extends Output
      * Method to send the application response to the client.  All headers will be sent prior to the main
      * application output data.
      *
-     * @param   ResponseInterface $response   Respond body output.
-     * @param   boolean           $returnBody Return body as string.
+     * @param ResponseInterface $response   Respond body output.
+     * @param bool              $returnBody Return body as string.
      *
-     * @return  void
+     * @return void
      *
      * @since   3.0
      */
@@ -52,9 +52,9 @@ class StreamOutput extends Output
     /**
      * Send body as response.
      *
-     * @param   ResponseInterface $response Response object.
+     * @param ResponseInterface $response Response object.
      *
-     * @return  void
+     * @return void
      */
     public function sendBody(ResponseInterface $response)
     {
@@ -80,7 +80,7 @@ class StreamOutput extends Output
 
         list($unit, $first, $last, $length) = array_values($range);
 
-        ++$last;
+        $last++;
 
         $body = $response->getBody();
         $body->seek($first);
@@ -107,9 +107,9 @@ class StreamOutput extends Output
     /**
      * Prepare content-length header.
      *
-     * @param   ResponseInterface $response The response object with headers.
+     * @param ResponseInterface $response The response object with headers.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     protected function prepareContentLength(ResponseInterface $response)
     {
@@ -127,9 +127,9 @@ class StreamOutput extends Output
      *
      * @see  http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16
      *
-     * @param   string $header
+     * @param string $header
      *
-     * @return  false|array  An array with [unit, first, last, length] elements;
+     * @return false|array An array with [unit, first, last, length] elements;
      */
     protected function getContentRange($header)
     {
@@ -148,9 +148,9 @@ class StreamOutput extends Output
     }
 
     /**
-     * Method to get property MaxBufferLength
+     * Method to get property MaxBufferLength.
      *
-     * @return  int
+     * @return int
      */
     public function getMaxBufferLength()
     {
@@ -158,11 +158,11 @@ class StreamOutput extends Output
     }
 
     /**
-     * Method to set property maxBufferLength
+     * Method to set property maxBufferLength.
      *
-     * @param   int $maxBufferLength
+     * @param int $maxBufferLength
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setMaxBufferLength($maxBufferLength)
     {
@@ -172,9 +172,9 @@ class StreamOutput extends Output
     }
 
     /**
-     * Method to get property Delay
+     * Method to get property Delay.
      *
-     * @return  int
+     * @return int
      */
     public function getDelay()
     {
@@ -182,11 +182,11 @@ class StreamOutput extends Output
     }
 
     /**
-     * Method to set property delay
+     * Method to set property delay.
      *
-     * @param   int $delay
+     * @param int $delay
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDelay($delay)
     {
@@ -198,7 +198,7 @@ class StreamOutput extends Output
     /**
      * Delay the output loop.
      *
-     * @return  void
+     * @return void
      */
     protected function delay()
     {

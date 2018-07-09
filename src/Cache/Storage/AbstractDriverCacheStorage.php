@@ -9,7 +9,7 @@
 namespace Windwalker\Cache\Storage;
 
 /**
- * Class AbstractDriverCacheStorage
+ * Class AbstractDriverCacheStorage.
  *
  * @since 2.0
  */
@@ -18,16 +18,16 @@ abstract class AbstractDriverCacheStorage extends AbstractCacheStorage
     /**
      * Property driver.
      *
-     * @var  \Memcached
+     * @var \Memcached
      */
     protected $driver = null;
 
     /**
      * Constructor.
      *
-     * @param   object $driver  The cache storage driver.
-     * @param   int    $ttl     The Time To Live (TTL) of an item
-     * @param   mixed  $options An options array, or an object that implements \ArrayAccess
+     * @param object $driver  The cache storage driver.
+     * @param int    $ttl     The Time To Live (TTL) of an item
+     * @param mixed  $options An options array, or an object that implements \ArrayAccess
      *
      * @since   2.0
      */
@@ -39,16 +39,16 @@ abstract class AbstractDriverCacheStorage extends AbstractCacheStorage
     }
 
     /**
-     * connect
+     * connect.
      *
-     * @return  static
+     * @return static
      */
     abstract protected function connect();
 
     /**
-     * getDriver
+     * getDriver.
      *
-     * @return  object
+     * @return object
      */
     public function getDriver()
     {
@@ -56,11 +56,11 @@ abstract class AbstractDriverCacheStorage extends AbstractCacheStorage
     }
 
     /**
-     * setDriver
+     * setDriver.
      *
-     * @param   object $driver
+     * @param object $driver
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDriver($driver)
     {

@@ -9,7 +9,7 @@
 namespace Windwalker\Profiler\Point;
 
 /**
- * Interface PointInterface
+ * Interface PointInterface.
  *
  * @since  2.0
  */
@@ -18,7 +18,7 @@ interface PointInterface
     /**
      * Get the name of this profile point.
      *
-     * @return  string  The name of this profile point.
+     * @return string The name of this profile point.
      */
     public function getName();
 
@@ -26,7 +26,7 @@ interface PointInterface
      * Get the elapsed time in seconds since the first
      * point in the profiler it belongs to was marked.
      *
-     * @return  float  The time in seconds.
+     * @return float The time in seconds.
      */
     public function getTime();
 
@@ -36,14 +36,14 @@ interface PointInterface
      *
      * @param bool $megaBytes
      *
-     * @return  integer  The amount of allocated memory in B.
+     * @return int The amount of allocated memory in B.
      */
     public function getMemory($megaBytes = false);
 
     /**
-     * getData
+     * getData.
      *
-     * @return  CollectorInterface
+     * @return CollectorInterface
      */
     public function getData();
 }

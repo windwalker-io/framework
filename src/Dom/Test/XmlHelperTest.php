@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -11,7 +11,7 @@ namespace Windwalker\Dom\Test;
 use Windwalker\Dom\SimpleXml\XmlHelper;
 
 /**
- * Test class of XmlHelper
+ * Test class of XmlHelper.
  *
  * @since 2.0
  */
@@ -32,7 +32,7 @@ class XmlHelperTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $xml = <<<XML
+        $xml = <<<'XML'
 <root>
 	<field
 		name="List"
@@ -106,9 +106,9 @@ XML;
     }
 
     /**
-     * boolCases
+     * boolCases.
      *
-     * @return  array
+     * @return array
      */
     public function boolCases()
     {
@@ -187,8 +187,8 @@ XML;
      *
      * @param string|int $id
      * @param string     $name
-     * @param boolean    $expect
-     * @param boolean    $default
+     * @param bool       $expect
+     * @param bool       $default
      *
      * @return void
      *
@@ -198,7 +198,7 @@ XML;
      */
     public function testGetBool($id, $name, $expect, $default)
     {
-        $this->assertEquals($expect, XmlHelper::getBool($this->xml, $name, $default), 'Case fail: case_' . $id);
+        $this->assertEquals($expect, XmlHelper::getBool($this->xml, $name, $default), 'Case fail: case_'.$id);
     }
 
     /**
@@ -206,8 +206,8 @@ XML;
      *
      * @param string|int $id
      * @param string     $name
-     * @param boolean    $expect
-     * @param boolean    $default
+     * @param bool       $expect
+     * @param bool       $default
      *
      * @return void
      *
@@ -217,7 +217,7 @@ XML;
      */
     public function testGetFalse($id, $name, $expect, $default)
     {
-        $this->assertEquals(!$expect, XmlHelper::getFalse($this->xml, $name, $default), 'Case fail: case_' . $id);
+        $this->assertEquals(!$expect, XmlHelper::getFalse($this->xml, $name, $default), 'Case fail: case_'.$id);
     }
 
     /**

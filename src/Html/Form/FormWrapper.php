@@ -30,12 +30,12 @@ class FormWrapper extends HtmlElement
     /**
      * Property tokenHandler.
      *
-     * @var  string
+     * @var string
      */
     protected static $tokenHandler;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param mixed $content Element content.
      * @param array $attribs Element attributes.
@@ -46,12 +46,12 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * create
+     * create.
      *
      * @param mixed $content
      * @param array $attribs
      *
-     * @return  static
+     * @return static
      */
     public static function create($content = null, $attribs = [])
     {
@@ -59,7 +59,7 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * start
+     * start.
      *
      * @param string $name
      * @param string $method
@@ -67,7 +67,7 @@ class FormWrapper extends HtmlElement
      * @param string $enctype
      * @param array  $attribs
      *
-     * @return  string
+     * @return string
      */
     public static function start($name = null, $method = null, $action = null, $enctype = null, $attribs = [])
     {
@@ -86,19 +86,19 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * end
+     * end.
      *
-     * @return  string
+     * @return string
      */
     public static function end()
     {
-        return static::getToken() . '</form>';
+        return static::getToken().'</form>';
     }
 
     /**
-     * renderStart
+     * renderStart.
      *
-     * @return  string
+     * @return string
      */
     public function renderStart()
     {
@@ -108,9 +108,9 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * renderEnd
+     * renderEnd.
      *
-     * @return  string
+     * @return string
      */
     public function renderEnd()
     {
@@ -118,9 +118,9 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * getToken
+     * getToken.
      *
-     * @return  string
+     * @return string
      */
     public static function getToken()
     {
@@ -132,11 +132,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * acceptCharset
+     * acceptCharset.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function acceptCharset($value)
     {
@@ -146,11 +146,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * action
+     * action.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function action($value)
     {
@@ -160,11 +160,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * autocomplete
+     * autocomplete.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function autocomplete($value)
     {
@@ -174,11 +174,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * enctype
+     * enctype.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function enctype($value)
     {
@@ -188,11 +188,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * method
+     * method.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function method($value)
     {
@@ -202,11 +202,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * name
+     * name.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function name($value)
     {
@@ -216,11 +216,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * novalidate
+     * novalidate.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function novalidate($value)
     {
@@ -232,11 +232,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * target
+     * target.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function target($value)
     {
@@ -246,11 +246,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * accept
+     * accept.
      *
-     * @param   string $value
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function accept($value)
     {
@@ -260,9 +260,9 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * Method to get property TokenHandler
+     * Method to get property TokenHandler.
      *
-     * @return  string
+     * @return string
      */
     public static function getTokenHandler()
     {
@@ -270,11 +270,11 @@ class FormWrapper extends HtmlElement
     }
 
     /**
-     * Method to set property tokenHandler
+     * Method to set property tokenHandler.
      *
-     * @param   string $tokenHandler
+     * @param string $tokenHandler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public static function setTokenHandler($tokenHandler)
     {

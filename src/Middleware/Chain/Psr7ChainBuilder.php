@@ -27,8 +27,9 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
      * @param mixed $middleware The middleware, can be a object, class name, callback, or middleware object.
      *                          These type will all convert to middleware object and store in chain.
      *
-     * @return  static Return self to support chaining.
      * @throws \ReflectionException
+     *
+     * @return static Return self to support chaining.
      */
     public function add($middleware)
     {
@@ -36,12 +37,13 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
     }
 
     /**
-     * marshalMiddleware
+     * marshalMiddleware.
      *
-     * @param   mixed $middleware
+     * @param mixed $middleware
      *
-     * @return  MiddlewareInterface
      * @throws \ReflectionException
+     *
+     * @return MiddlewareInterface
      */
     protected function marshalMiddleware($middleware)
     {
@@ -55,11 +57,11 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
     /**
      * Middleware logic to be invoked.
      *
-     * @param   Request                      $request  The request.
-     * @param   Response                     $response The response.
-     * @param   callable|MiddlewareInterface $next     The next middleware.
+     * @param Request                      $request  The request.
+     * @param Response                     $response The response.
+     * @param callable|MiddlewareInterface $next     The next middleware.
      *
-     * @return  Response
+     * @return Response
      */
     public function __invoke(Request $request, Response $response, $next = null)
     {
@@ -74,7 +76,7 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
         }
 
         if (!count($this->stack)) {
-            return null;
+            return;
         }
 
         // Start call chaining.
@@ -103,9 +105,9 @@ class Psr7ChainBuilder extends ChainBuilder implements Psr7InvokableInterface
     }
 
     /**
-     * getEndMiddleware
+     * getEndMiddleware.
      *
-     * @return  Psr7InvokableInterface|callable
+     * @return Psr7InvokableInterface|callable
      */
     protected function getEndMiddleware()
     {

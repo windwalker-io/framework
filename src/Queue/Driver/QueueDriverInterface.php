@@ -18,7 +18,7 @@ use Windwalker\Queue\QueueMessage;
 interface QueueDriverInterface
 {
     /**
-     * push
+     * push.
      *
      * @param QueueMessage $message
      *
@@ -27,7 +27,7 @@ interface QueueDriverInterface
     public function push(QueueMessage $message);
 
     /**
-     * pop
+     * pop.
      *
      * @param string $queue
      *
@@ -36,7 +36,7 @@ interface QueueDriverInterface
     public function pop($queue = null);
 
     /**
-     * delete
+     * delete.
      *
      * @param QueueMessage|string $message
      *
@@ -45,7 +45,7 @@ interface QueueDriverInterface
     public function delete(QueueMessage $message);
 
     /**
-     * release
+     * release.
      *
      * @param QueueMessage|string $message
      *

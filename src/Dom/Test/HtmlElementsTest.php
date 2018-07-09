@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Dom\HtmlElement;
 use Windwalker\Dom\HtmlElements;
 
 /**
- * Test class of HtmlElements
+ * Test class of HtmlElements.
  *
  * @since 2.0
  */
@@ -62,7 +62,7 @@ class HtmlElementsTest extends \PHPUnit\Framework\TestCase
      */
     public function test__toString()
     {
-        $expect = <<<DOM
+        $expect = <<<'DOM'
 <p>foo</p>
 <table>
 	<tr>

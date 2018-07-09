@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,16 +12,16 @@ use Windwalker\Router\Compiler\TrieCompiler;
 use Windwalker\Router\RouteHelper;
 
 /**
- * Test class of TrieCompiler
+ * Test class of TrieCompiler.
  *
  * @since 2.0
  */
 class TrieCompilerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * regexList
+     * regexList.
      *
-     * @return  array
+     * @return array
      */
     public function regexList()
     {
@@ -81,7 +81,7 @@ class TrieCompilerTest extends \PHPUnit\Framework\TestCase
     {
         $regex = TrieCompiler::compile($pattern, ['id' => '\d+']);
 
-        $this->assertEquals(chr(1) . '^' . $expected . '$' . chr(1), $regex, 'Fail at: ' . $line);
+        $this->assertEquals(chr(1).'^'.$expected.'$'.chr(1), $regex, 'Fail at: '.$line);
 
         preg_match($regex, $route, $matches);
 

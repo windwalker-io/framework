@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ use Windwalker\Http\Response\TextResponse;
 use Windwalker\Http\Test\Stub\StubOutput;
 
 /**
- * Test class of Output
+ * Test class of Output.
  *
  * @since 3.0
  */
@@ -133,7 +133,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
         $this->instance->sendHeaders(
             new TextResponse(
                 'Flower', 256, [
-                    'x-foo' => 'bar',
+                    'x-foo'    => 'bar',
                     'x-flower' => [
                         'sakura',
                         'rose',
@@ -144,7 +144,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
         );
 
         $expected = [
-            'X-Foo' => ['bar'],
+            'X-Foo'    => ['bar'],
             'X-Flower' => [
                 'sakura',
                 'rose',

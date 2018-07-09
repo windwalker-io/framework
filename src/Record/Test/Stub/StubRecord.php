@@ -23,14 +23,13 @@ class StubRecord extends Record
      * method to make sure the data they are storing in the database is safe and
      * as expected before storage.
      *
-     * @return  static  Method allows chaining
+     * @return static Method allows chaining
      *
      * @since   2.0
      */
     public function validate()
     {
         throw new \RuntimeException('Record save error');
-
         return parent::validate();
     }
 }

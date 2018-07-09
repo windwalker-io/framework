@@ -9,18 +9,18 @@
 namespace Windwalker\Language\Localise;
 
 /**
- * Class NullLocalise
+ * Class NullLocalise.
  *
  * @since 2.0
  */
 class NullLocalise implements LocaliseInterface
 {
     /**
-     * getPluralSuffixes
+     * getPluralSuffixes.
      *
      * @param int $count
      *
-     * @return  string
+     * @return string
      */
     public function getPluralSuffix($count = 1)
     {

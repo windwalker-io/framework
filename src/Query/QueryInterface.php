@@ -13,7 +13,7 @@ interface QueryInterface
     /**
      * Magic function to convert the query to a string.
      *
-     * @return  string    The completed query.
+     * @return string The completed query.
      *
      * @since   2.0
      */
@@ -22,9 +22,9 @@ interface QueryInterface
     /**
      * Get clause  value.
      *
-     * @param   string $clause Get query clause.
+     * @param string $clause Get query clause.
      *
-     * @return  QueryElement|mixed
+     * @return QueryElement|mixed
      */
     public function get($clause);
 
@@ -38,9 +38,9 @@ interface QueryInterface
      * $query->call('a.*')->call('b.id');
      * $query->call(array('a.*', 'b.id'));
      *
-     * @param   mixed $columns A string or an array of field names.
+     * @param mixed $columns A string or an array of field names.
      *
-     * @return  static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -49,9 +49,9 @@ interface QueryInterface
     /**
      * Adds a column, or array of column names that would be used for an INSERT INTO statement.
      *
-     * @param   mixed $columns A column name, or array of column names.
+     * @param mixed $columns A column name, or array of column names.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -63,10 +63,11 @@ interface QueryInterface
      * This method is provided for use where the query object is passed to a function for modification.
      * If you have direct access to the database object, it is recommended you use the getDateFormat method directly.
      *
-     * @return  string  The format string.
+     * @throws \RuntimeException
+     *
+     * @return string The format string.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function dateFormat();
 
@@ -78,9 +79,9 @@ interface QueryInterface
      * Usage:
      * $query->delete('#__a')->where('id = 1');
      *
-     * @param   string $table The name of the table to delete from.
+     * @param string $table The name of the table to delete from.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -94,13 +95,14 @@ interface QueryInterface
      *
      * Note that 'e' is an alias for this method as it is in JDatabaseDatabaseDriver.
      *
-     * @param   string  $text  The string to be escaped.
-     * @param   boolean $extra Optional parameter to provide extra escaping.
+     * @param string $text  The string to be escaped.
+     * @param bool   $extra Optional parameter to provide extra escaping.
      *
-     * @return  string  The escaped string.
+     * @throws \RuntimeException if the internal db property is not a valid object.
+     *
+     * @return string The escaped string.
      *
      * @since   2.0
-     * @throws  \RuntimeException if the internal db property is not a valid object.
      */
     public function escape($text, $extra = false);
 
@@ -114,9 +116,9 @@ interface QueryInterface
      * $query->exec('a.*')->exec('b.id');
      * $query->exec(array('a.*', 'b.id'));
      *
-     * @param   mixed $columns A string or an array of field names.
+     * @param mixed $columns A string or an array of field names.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -130,25 +132,26 @@ interface QueryInterface
      * Usage:
      * $query->select('*')->from('#__a');
      *
-     * @param   mixed  $tables          A string or array of table names.
-     *                                  This can be a JDatabaseQuery object (or a child of it) when used
-     *                                  as a subquery in FROM clause along with a value for $subQueryAlias.
-     * @param   string $subQueryAlias   Alias used when $tables is a JDatabaseQuery.
+     * @param mixed  $tables        A string or array of table names.
+     *                              This can be a JDatabaseQuery object (or a child of it) when used
+     *                              as a subquery in FROM clause along with a value for $subQueryAlias.
+     * @param string $subQueryAlias Alias used when $tables is a JDatabaseQuery.
      *
-     * @return static  Returns this object to allow chaining.
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     *
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
-     * @throws  \InvalidArgumentException
-     * @throws  \RuntimeException
      */
     public function from($tables, $subQueryAlias = null);
 
     /**
-     * expression
+     * expression.
      *
      * @param string $name
      *
-     * @return  string
+     * @return string
      */
     public function expression($name);
 
@@ -158,9 +161,9 @@ interface QueryInterface
      * Usage:
      * $query->group('id');
      *
-     * @param   mixed $columns A string or array of ordering columns.
+     * @param mixed $columns A string or array of ordering columns.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -172,10 +175,10 @@ interface QueryInterface
      * Usage:
      * $query->group('id')->having('COUNT(id) > 5');
      *
-     * @param   mixed $conditions A string or array of columns.
-     * @param   mixed ...$args    Support more arguments to format query.
+     * @param mixed $conditions A string or array of columns.
+     * @param mixed ...$args    Support more arguments to format query.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -195,9 +198,9 @@ interface QueryInterface
      * Result:
      * HAVING ... AND (a < 5 OR b > 6)
      *
-     * @param   mixed|callable $conditions A string, array of where conditions or callback to support logic.
+     * @param mixed|callable $conditions A string, array of where conditions or callback to support logic.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   3.0
      */
@@ -212,7 +215,7 @@ interface QueryInterface
      * @param array|string $table     The table name with alias.
      * @param array|string $condition The join condition.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -228,10 +231,10 @@ interface QueryInterface
      * $query->insert('#__a')->columns('id, title')->values('1,2')->values('3,4');
      * $query->insert('#__a')->columns('id, title')->values(array('1,2', '3,4'));
      *
-     * @param   mixed   $table          The name of the table to insert data into.
-     * @param   boolean $incrementField The name of the field to auto increment.
+     * @param mixed $table          The name of the table to insert data into.
+     * @param bool  $incrementField The name of the field to auto increment.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -243,11 +246,11 @@ interface QueryInterface
      * Usage:
      * $query->join('INNER', 'b ON b.id = a.id);
      *
-     * @param   string       $type       The type of join. This string is prepended to the JOIN keyword.
-     * @param   string       $table      The table name with alias.
-     * @param   string|array $conditions A string or array of conditions.
+     * @param string       $type       The type of join. This string is prepended to the JOIN keyword.
+     * @param string       $table      The table name with alias.
+     * @param string|array $conditions A string or array of conditions.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -262,7 +265,7 @@ interface QueryInterface
      * @param array|string $table     The table name with alias.
      * @param array|string $condition The join condition.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -277,12 +280,13 @@ interface QueryInterface
      * Usage:
      * $query->where('modified_date <> '.$query->nullDate());
      *
-     * @param   boolean $quoted Optionally wraps the null date in database quotes (true by default).
+     * @param bool $quoted Optionally wraps the null date in database quotes (true by default).
      *
-     * @return  string  Null or zero representation of a timestamp.
+     * @throws \RuntimeException
+     *
+     * @return string Null or zero representation of a timestamp.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public function nullDate($quoted = true);
 
@@ -293,9 +297,9 @@ interface QueryInterface
      * $query->order('foo')->order('bar');
      * $query->order(array('foo','bar'));
      *
-     * @param   mixed $columns A string or array of ordering columns.
+     * @param mixed $columns A string or array of ordering columns.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -308,8 +312,8 @@ interface QueryInterface
      * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
      * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
      *
-     * @param   integer $limit  The limit for the result set
-     * @param   integer $offset The offset for the result set
+     * @param int $limit  The limit for the result set
+     * @param int $offset The offset for the result set
      *
      * @return static Returns this object to allow chaining.
      *
@@ -326,7 +330,7 @@ interface QueryInterface
      * @param array|string $table     The table name with alias.
      * @param array|string $condition The join condition.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -345,13 +349,14 @@ interface QueryInterface
      * $query->q('fulltext');
      * $query->q(array('option', 'fulltext'));
      *
-     * @param   mixed   $text   A string or an array of strings to quote.
-     * @param   boolean $escape True to escape the string, false to leave it unchanged.
+     * @param mixed $text   A string or an array of strings to quote.
+     * @param bool  $escape True to escape the string, false to leave it unchanged.
      *
-     * @return  string  The quoted input string.
+     * @throws \RuntimeException if the internal db property is not a valid object.
+     *
+     * @return string The quoted input string.
      *
      * @since   2.0
-     * @throws  \RuntimeException if the internal db property is not a valid object.
      */
     public function quote($text, $escape = true);
 
@@ -368,13 +373,14 @@ interface QueryInterface
      * $query->quoteName('#__a');
      * $query->qn('#__a');
      *
-     * @param   mixed $name   The identifier name to wrap in quotes, or an array of identifier names to wrap in quotes.
-     *                        Each type supports dot-notation name.
+     * @param mixed $name The identifier name to wrap in quotes, or an array of identifier names to wrap in quotes.
+     *                    Each type supports dot-notation name.
      *
-     * @return  mixed  The quote wrapped name, same type of $name.
+     * @throws \RuntimeException if the internal db property is not a valid object.
+     *
+     * @return mixed The quote wrapped name, same type of $name.
      *
      * @since   2.0
-     * @throws  \RuntimeException if the internal db property is not a valid object.
      */
     public function quoteName($name);
 
@@ -387,7 +393,7 @@ interface QueryInterface
      * @param array|string $table     The table name with alias.
      * @param array|string $condition The join condition.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -403,9 +409,9 @@ interface QueryInterface
      * $query->select('a.*')->select('b.id');
      * $query->select(array('a.*', 'b.id'));
      *
-     * @param   mixed $columns A string or an array of field names.
+     * @param mixed $columns A string or an array of field names.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -418,11 +424,11 @@ interface QueryInterface
      * $query->set('a = 1')->set('b = 2');
      * $query->set(array('a = 1', 'b = 2');
      *
-     * @param   mixed  $conditions   A string or array of string conditions.
-     * @param   string $glue         The glue by which to join the condition strings. Defaults to ,.
-     *                               Note that the glue is set on first use and cannot be changed.
+     * @param mixed  $conditions A string or array of string conditions.
+     * @param string $glue       The glue by which to join the condition strings. Defaults to ,.
+     *                           Note that the glue is set on first use and cannot be changed.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -435,9 +441,9 @@ interface QueryInterface
      * Usage:
      * $query->setQuery('select * from #__users');
      *
-     * @param   mixed $sql A SQL query string or DatabaseQuery object
+     * @param mixed $sql A SQL query string or DatabaseQuery object
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -451,9 +457,9 @@ interface QueryInterface
      * Usage:
      * $query->update('#__foo')->set(...);
      *
-     * @param   string $table A table to update.
+     * @param string $table A table to update.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -466,9 +472,9 @@ interface QueryInterface
      * $query->values('1,2,3')->values('4,5,6');
      * $query->values(array('1,2,3', '4,5,6'));
      *
-     * @param   string $values A single tuple, or array of tuples.
+     * @param string $values A single tuple, or array of tuples.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -481,10 +487,10 @@ interface QueryInterface
      * $query->where('a = 1')->where('b = 2');
      * $query->where(array('a = 1', 'b = 2'));
      *
-     * @param   mixed $conditions A string or array of where conditions.
-     * @param   mixed ...$args    Support more arguments to format query.
+     * @param mixed $conditions A string or array of where conditions.
+     * @param mixed ...$args    Support more arguments to format query.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   2.0
      */
@@ -504,9 +510,9 @@ interface QueryInterface
      * Result:
      * WHERE ... AND (a < 5 OR b > 6)
      *
-     * @param   mixed|callable $conditions A string, array of where conditions or callback to support logic.
+     * @param mixed|callable $conditions A string, array of where conditions or callback to support logic.
      *
-     * @return static  Returns this object to allow chaining.
+     * @return static Returns this object to allow chaining.
      *
      * @since   3.0
      */
@@ -521,10 +527,10 @@ interface QueryInterface
      * $query->union('SELECT name FROM  #__foo','distinct')
      * $query->union(array('SELECT name FROM  #__foo', 'SELECT name FROM  #__bar'))
      *
-     * @param   mixed   $query    The Query object or string to union.
-     * @param   boolean $distinct True to only return distinct rows from the union.
+     * @param mixed $query    The Query object or string to union.
+     * @param bool  $distinct True to only return distinct rows from the union.
      *
-     * @return  mixed    The Query object on success or boolean false on failure.
+     * @return mixed The Query object on success or boolean false on failure.
      *
      * @since   2.0
      */
@@ -536,9 +542,9 @@ interface QueryInterface
      * Usage:
      * $query->unionDistinct('SELECT name FROM  #__foo')
      *
-     * @param   mixed $query The Query object or string to union.
+     * @param mixed $query The Query object or string to union.
      *
-     * @return  mixed   The Query object on success or boolean false on failure.
+     * @return mixed The Query object on success or boolean false on failure.
      *
      * @since   2.0
      */
@@ -552,12 +558,11 @@ interface QueryInterface
      * $query->unionAll('SELECT name FROM  #__foo')
      * $query->unionAll(array('SELECT name FROM  #__foo','SELECT name FROM  #__bar'))
      *
-     * @param   mixed $query The Query object or string to union.
+     * @param mixed $query The Query object or string to union.
      *
-     * @return  mixed  The Query object on success or boolean false on failure.
+     * @return mixed The Query object on success or boolean false on failure.
      *
      * @see     union
-     *
      * @since   2.0
      */
     public function unionAll($query);
@@ -603,10 +608,10 @@ interface QueryInterface
      * The argument specifier is optional but recommended for clarity.
      * The argument index used for unspecified tokens is incremented only when used.
      *
-     * @param   string $format The formatting string.
-     * @param   mixed  $_      More arguments to format. [optional]
+     * @param string $format The formatting string.
+     * @param mixed  $_      More arguments to format. [optional]
      *
-     * @return  string  Returns a string produced according to the formatting string.
+     * @return string Returns a string produced according to the formatting string.
      *
      * @since   2.0
      */

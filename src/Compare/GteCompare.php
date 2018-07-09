@@ -9,7 +9,7 @@
 namespace Windwalker\Compare;
 
 /**
- * Class GteCompare
+ * Class GteCompare.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class GteCompare extends Compare
     /**
      * Operator symbol.
      *
-     * @var  string
+     * @var string
      */
     protected $operator = '>=';
 }

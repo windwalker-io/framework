@@ -18,7 +18,7 @@ abstract class AbstractFormElementHelper
     /**
      * Property fieldNamespaces.
      *
-     * @var  \SplPriorityQueue
+     * @var \SplPriorityQueue
      */
     protected static $namespaces = null;
 
@@ -30,11 +30,11 @@ abstract class AbstractFormElementHelper
     protected static $defaultNamespace;
 
     /**
-     * init
+     * init.
      *
-     * @param boolean $reset
+     * @param bool $reset
      *
-     * @return  void
+     * @return void
      */
     public static function init($reset = false)
     {
@@ -48,14 +48,14 @@ abstract class AbstractFormElementHelper
     }
 
     /**
-     * createField
+     * createField.
      *
      * @param string            $name
      * @param \SplPriorityQueue $namespaces
      *
      * @throws \InvalidArgumentException
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function create($name, \SplPriorityQueue $namespaces = null)
     {
@@ -63,9 +63,9 @@ abstract class AbstractFormElementHelper
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  void
+     * @return void
      */
     public static function reset()
     {
@@ -73,12 +73,12 @@ abstract class AbstractFormElementHelper
     }
 
     /**
-     * addNamespace
+     * addNamespace.
      *
      * @param string $namespace
      * @param int    $priority
      *
-     * @return  void
+     * @return void
      */
     public static function addNamespace($namespace, $priority = 256)
     {
@@ -88,9 +88,9 @@ abstract class AbstractFormElementHelper
     }
 
     /**
-     * getNamespaces
+     * getNamespaces.
      *
-     * @return  \SplPriorityQueue
+     * @return \SplPriorityQueue
      */
     public static function getNamespaces()
     {

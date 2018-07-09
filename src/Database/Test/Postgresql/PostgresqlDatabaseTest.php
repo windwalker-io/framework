@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,17 +12,18 @@ use Windwalker\Database\Driver\Postgresql\PostgresqlDriver;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
- * Test class of PostgresqlDatabase
+ * Test class of PostgresqlDatabase.
  *
  * @since 2.0
  */
 class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 {
     /**
-     * testAutoSelect
+     * testAutoSelect.
      *
-     * @return  void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function testAutoSelect()
     {
@@ -98,7 +99,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
     /**
      * Methos to test DB exists.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Database\Driver\Postgresql\PostgresqlDatabase::exsts
      */
@@ -157,9 +158,9 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
 
         $this->assertEquals(
             [
-                static::$dsn['prefix'] . 'categories',
-                static::$dsn['prefix'] . 'flower',
-                static::$dsn['prefix'] . 'nestedsets',
+                static::$dsn['prefix'].'categories',
+                static::$dsn['prefix'].'flower',
+                static::$dsn['prefix'].'nestedsets',
             ],
             $tables
         );
@@ -176,7 +177,7 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
     {
         $tables = $this->db->getDatabase(static::$dbname)->getTableDetails();
 
-        $this->assertEquals(static::$dsn['prefix'] . 'flower', $tables[static::$dsn['prefix'] . 'flower']->Name);
+        $this->assertEquals(static::$dsn['prefix'].'flower', $tables[static::$dsn['prefix'].'flower']->Name);
     }
 
     /**
@@ -190,11 +191,11 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
     {
         $table = $this->db->getDatabase(static::$dbname)->getTableDetail('#__flower');
 
-        $this->assertEquals(static::$dsn['prefix'] . 'flower', $table->Name);
+        $this->assertEquals(static::$dsn['prefix'].'flower', $table->Name);
     }
 
     /**
-     * Destructor
+     * Destructor.
      */
     public function __destruct()
     {
@@ -209,9 +210,9 @@ class PostgresqlDatabaseTest extends AbstractPostgresqlTestCase
     }
 
     /**
-     * tearDownAfterClass
+     * tearDownAfterClass.
      *
-     * @return  void
+     * @return void
      */
     public static function tearDownAfterClass()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -15,7 +15,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Uri\PsrUri;
 
 /**
- * Test class of AbstractRequest
+ * Test class of AbstractRequest.
  *
  * @since 2.1
  */
@@ -50,9 +50,9 @@ class AbstractRequestTest extends AbstractBaseTestCase
     }
 
     /**
-     * testConstruct
+     * testConstruct.
      *
-     * @return  void
+     * @return void
      */
     public function testConstruct()
     {
@@ -71,7 +71,7 @@ class AbstractRequestTest extends AbstractBaseTestCase
         $method = 'post';
         $body = fopen($tmpfile = tempnam(sys_get_temp_dir(), 'windwalker'), 'wb+');
         $headers = [
-            'X-Foo' => ['Flower', 'Sakura'],
+            'X-Foo'        => ['Flower', 'Sakura'],
             'Content-Type' => 'application/json',
         ];
 

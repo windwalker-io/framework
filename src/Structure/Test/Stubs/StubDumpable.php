@@ -35,8 +35,8 @@ class StubDumpable
         $this->iterator = new \ArrayIterator(['wind' => 'walker']);
 
         $this->data = [
-            'self' => $this,
-            'new' => $child,
+            'self'   => $this,
+            'new'    => $child,
             'flower' => ['sakura', 'rose'],
         ];
     }

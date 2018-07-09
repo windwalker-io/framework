@@ -9,16 +9,16 @@
 namespace Windwalker\Language\Localise;
 
 /**
- * Interface LocaliseInterface
+ * Interface LocaliseInterface.
  */
 interface LocaliseInterface
 {
     /**
-     * getPluralSuffixes
+     * getPluralSuffixes.
      *
      * @param int $count
      *
-     * @return  string
+     * @return string
      */
     public function getPluralSuffix($count = 1);
 }

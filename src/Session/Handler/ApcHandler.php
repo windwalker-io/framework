@@ -9,7 +9,7 @@
 namespace Windwalker\Session\Handler;
 
 /**
- * APC session storage handler for PHP
+ * APC session storage handler for PHP.
  *
  * @see    http://www.php.net/manual/en/function.session-set-save-handler.php
  * @since  2.0
@@ -17,7 +17,7 @@ namespace Windwalker\Session\Handler;
 class ApcHandler extends AbstractHandler
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $options Optional parameters
      *
@@ -37,7 +37,7 @@ class ApcHandler extends AbstractHandler
     /**
      * Test to see if the SessionHandler is available.
      *
-     * @return boolean  True on success, false otherwise.
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
@@ -50,48 +50,48 @@ class ApcHandler extends AbstractHandler
      * Read the data for a particular session identifier from the
      * SessionHandler backend.
      *
-     * @param   string $id The session identifier.
+     * @param string $id The session identifier.
      *
-     * @return  string  The session data.
+     * @return string The session data.
      *
      * @since   2.0
      */
     public function read($id)
     {
-        return (string) apc_fetch($this->prefix . $id);
+        return (string) apc_fetch($this->prefix.$id);
     }
 
     /**
      * Write session data to the SessionHandler backend.
      *
-     * @param   string $id           The session identifier.
-     * @param   string $session_data The session data.
+     * @param string $id           The session identifier.
+     * @param string $session_data The session data.
      *
-     * @return  boolean  True on success, false otherwise.
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
     public function write($id, $session_data)
     {
-        return apc_store($this->prefix . $id, $session_data, ini_get("session.gc_maxlifetime"));
+        return apc_store($this->prefix.$id, $session_data, ini_get('session.gc_maxlifetime'));
     }
 
     /**
      * Destroy the data for a particular session identifier in the SessionHandler backend.
      *
-     * @param   string $id The session identifier.
+     * @param string $id The session identifier.
      *
-     * @return  boolean  True on success, false otherwise.
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
     public function destroy($id)
     {
-        return apc_delete($this->prefix . $id);
+        return apc_delete($this->prefix.$id);
     }
 
     /**
-     * Cleanup old sessions
+     * Cleanup old sessions.
      *
      * @link http://php.net/manual/en/sessionhandlerinterafce.gc.php
      *

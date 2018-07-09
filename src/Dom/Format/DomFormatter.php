@@ -20,14 +20,14 @@ class DomFormatter
     /**
      * Property log.
      *
-     * @var  array
+     * @var array
      */
     protected $log = [];
 
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [
         'indentation_character' => '    ',
@@ -48,14 +48,14 @@ class DomFormatter
     /**
      * Property instance.
      *
-     * @var  static[]
+     * @var static[]
      */
     protected static $instance;
 
     /**
-     * getInstance
+     * getInstance.
      *
-     * @return  static
+     * @return static
      */
     public static function getInstance()
     {
@@ -67,11 +67,11 @@ class DomFormatter
     }
 
     /**
-     * Method to set property instance
+     * Method to set property instance.
      *
-     * @param   static $instance
+     * @param static $instance
      *
-     * @return  void
+     * @return void
      */
     public static function setInstance($instance)
     {
@@ -79,11 +79,11 @@ class DomFormatter
     }
 
     /**
-     * format
+     * format.
      *
-     * @param   string $buffer
+     * @param string $buffer
      *
-     * @return  string  Formatted Html string.
+     * @return string Formatted Html string.
      */
     public static function format($buffer)
     {
@@ -107,11 +107,11 @@ class DomFormatter
     }
 
     /**
-     * indent
+     * indent.
      *
-     * @param   string $input
+     * @param string $input
      *
-     * @return  string
+     * @return string
      */
     public function indent($input)
     {
@@ -151,10 +151,10 @@ class DomFormatter
             foreach ($patterns as $pattern => $rule) {
                 if ($match = preg_match($pattern, $subject, $matches)) {
                     $this->log[] = [
-                        'rule' => $rules[$rule],
+                        'rule'    => $rules[$rule],
                         'pattern' => $pattern,
                         'subject' => $subject,
-                        'match' => $matches[0],
+                        'match'   => $matches[0],
                     ];
 
                     $subject = mb_substr($subject, mb_strlen($matches[0]));
@@ -180,7 +180,7 @@ class DomFormatter
                     $output .= str_repeat(
                         $this->options['indentation_character'],
                         $indentationLevel
-                    ) . $matches[0] . "\n";
+                    ).$matches[0]."\n";
 
                     break;
                 }
@@ -203,11 +203,11 @@ class DomFormatter
     }
 
     /**
-     * removeDoubleWhiteSpace
+     * removeDoubleWhiteSpace.
      *
-     * @param  string $input
+     * @param string $input
      *
-     * @return  string
+     * @return string
      */
     protected function removeDoubleWhiteSpace($input)
     {
@@ -225,9 +225,9 @@ class DomFormatter
     }
 
     /**
-     * getTagPatterns
+     * getTagPatterns.
      *
-     * @return  array
+     * @return array
      */
     protected function getTagPatterns()
     {

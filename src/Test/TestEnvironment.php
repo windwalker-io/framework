@@ -19,9 +19,9 @@ use Windwalker\Environment\PlatformHelper;
 class TestEnvironment extends PlatformHelper
 {
     /**
-     * isCli
+     * isCli.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isCli()
     {

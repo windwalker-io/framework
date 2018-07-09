@@ -15,7 +15,7 @@ use Windwalker\Profiler\Renderer\DefaultRenderer;
 use Windwalker\Profiler\Renderer\ProfilerRendererInterface;
 
 /**
- * Class Profiler
+ * Class Profiler.
  *
  * @since 2.0
  */
@@ -24,7 +24,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * The name of the profiler.
      *
-     * @var  string
+     * @var string
      */
     protected $name = '';
 
@@ -35,7 +35,7 @@ class Profiler implements ProfilerInterface, \Countable
      * It is used to quickly find a point
      * without having to traverse $points.
      *
-     * @var  PointInterface[]
+     * @var PointInterface[]
      */
     protected $points = [];
 
@@ -43,7 +43,7 @@ class Profiler implements ProfilerInterface, \Countable
      * A flag to see if we must get
      * the real memory usage, or the usage of emalloc().
      *
-     * @var  boolean
+     * @var bool
      */
     protected $memoryRealUsage;
 
@@ -51,7 +51,7 @@ class Profiler implements ProfilerInterface, \Countable
      * The timestamp with microseconds
      * when the first point was marked.
      *
-     * @var  float
+     * @var float
      */
     protected $startTimeStamp = 0.0;
 
@@ -59,7 +59,7 @@ class Profiler implements ProfilerInterface, \Countable
      * The memory usage in bytes
      * when the first point was marked.
      *
-     * @var  integer
+     * @var int
      */
     protected $startMemoryBytes = 0;
 
@@ -67,26 +67,26 @@ class Profiler implements ProfilerInterface, \Countable
      * The memory peak in bytes during
      * the profiler run.
      *
-     * @var  integer
+     * @var int
      */
     protected $memoryPeakBytes;
 
     /**
      * The profiler renderer.
      *
-     * @var  ProfilerRendererInterface
+     * @var ProfilerRendererInterface
      */
     protected $renderer;
 
     /**
      * Constructor.
      *
-     * @param   string                    $name            The profiler name.
-     * @param   ProfilerRendererInterface $renderer        The renderer.
-     * @param   PointInterface[]          $points          An array of profile points.
-     * @param   boolean                   $memoryRealUsage True to get the real memory usage.
+     * @param string                    $name            The profiler name.
+     * @param ProfilerRendererInterface $renderer        The renderer.
+     * @param PointInterface[]          $points          An array of profile points.
+     * @param bool                      $memoryRealUsage True to get the real memory usage.
      *
-     * @throws  \InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct(
         $name,
@@ -108,13 +108,13 @@ class Profiler implements ProfilerInterface, \Countable
     }
 
     /**
-     * set Point
+     * set Point.
      *
      * @param PointInterface $point
      *
-     * @return  static
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return static
      */
     public function setPoint(PointInterface $point)
     {
@@ -139,11 +139,11 @@ class Profiler implements ProfilerInterface, \Countable
      * This function is called by the constructor when injecting an array of points
      * (mostly for testing purposes).
      *
-     * @param   PointInterface[] $points An array of profile points.
+     * @param PointInterface[] $points An array of profile points.
      *
-     * @return  void
+     * @throws \InvalidArgumentException
      *
-     * @throws  \InvalidArgumentException
+     * @return void
      */
     protected function setPoints(array $points)
     {
@@ -155,7 +155,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Get the name of this profiler.
      *
-     * @return  string  The name of this profiler.
+     * @return string The name of this profiler.
      */
     public function getName()
     {
@@ -165,12 +165,12 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Mark a profile point.
      *
-     * @param   string                   $name The profile point name.
-     * @param   array|CollectorInterface $data The data collection of this point.
+     * @param string                   $name The profile point name.
+     * @param array|CollectorInterface $data The data collection of this point.
      *
-     * @return  ProfilerInterface This method is chainable.
+     * @throws \InvalidArgumentException If the point already exists.
      *
-     * @throws  \InvalidArgumentException  If the point already exists.
+     * @return ProfilerInterface This method is chainable.
      */
     public function mark($name, $data = [])
     {
@@ -215,9 +215,9 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Check if the profiler has marked the given point.
      *
-     * @param   string $name The name of the point.
+     * @param string $name The name of the point.
      *
-     * @return  boolean  True if the profiler has marked the point, false otherwise.
+     * @return bool True if the profiler has marked the point, false otherwise.
      */
     public function hasPoint($name)
     {
@@ -227,28 +227,26 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Get the point identified by the given name.
      *
-     * @param   string $name The name of the point.
+     * @param string $name The name of the point.
      *
-     * @return  PointInterface|mixed  The profile point or the default value.
+     * @return PointInterface|mixed The profile point or the default value.
      */
     public function getPoint($name)
     {
         if (isset($this->points[$name])) {
             return $this->points[$name];
         }
-
-        return null;
     }
 
     /**
      * Get the elapsed time in seconds between the two points.
      *
-     * @param   string $first  The name of the first point.
-     * @param   string $second The name of the second point.
+     * @param string $first  The name of the first point.
+     * @param string $second The name of the second point.
      *
-     * @return  float  The elapsed time between these points in seconds.
+     * @throws \LogicException If the points were not marked.
      *
-     * @throws  \LogicException  If the points were not marked.
+     * @return float The elapsed time between these points in seconds.
      */
     public function getTimeBetween($first, $second)
     {
@@ -269,12 +267,12 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Get the amount of allocated memory in bytes between the two points.
      *
-     * @param   string $first  The name of the first point.
-     * @param   string $second The name of the second point.
+     * @param string $first  The name of the first point.
+     * @param string $second The name of the second point.
      *
-     * @return  integer  The amount of allocated memory between these points in bytes.
+     * @throws \LogicException If the points were not marked.
      *
-     * @throws  \LogicException  If the points were not marked.
+     * @return int The amount of allocated memory between these points in bytes.
      */
     public function getMemoryBetween($first, $second)
     {
@@ -295,7 +293,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Get the memory peak in bytes during the profiler run.
      *
-     * @return  integer  The memory peak in bytes.
+     * @return int The memory peak in bytes.
      */
     public function getMemoryPeakBytes()
     {
@@ -303,9 +301,9 @@ class Profiler implements ProfilerInterface, \Countable
     }
 
     /**
-     * Method to get property MemoryRealUsage
+     * Method to get property MemoryRealUsage.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getMemoryRealUsage()
     {
@@ -315,7 +313,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Get the points in this profiler (from the first to the last).
      *
-     * @return  PointInterface[]  An array of points in this profiler.
+     * @return PointInterface[] An array of points in this profiler.
      */
     public function getPoints()
     {
@@ -325,9 +323,9 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Set the renderer to render this profiler.
      *
-     * @param   ProfilerRendererInterface $renderer The renderer.
+     * @param ProfilerRendererInterface $renderer The renderer.
      *
-     * @return  Profiler  This method is chainable.
+     * @return Profiler This method is chainable.
      */
     public function setRenderer(ProfilerRendererInterface $renderer)
     {
@@ -339,7 +337,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Get the currently used renderer in this profiler.
      *
-     * @return  ProfilerRendererInterface  The renderer.
+     * @return ProfilerRendererInterface The renderer.
      */
     public function getRenderer()
     {
@@ -349,7 +347,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Render the profiler.
      *
-     * @return  string  The rendered profiler.
+     * @return string The rendered profiler.
      */
     public function render()
     {
@@ -359,7 +357,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Cast the profiler to a string using the renderer.
      *
-     * @return  string  The rendered profiler.
+     * @return string The rendered profiler.
      */
     public function __toString()
     {
@@ -369,7 +367,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Get an iterator on the profiler points.
      *
-     * @return  \ArrayIterator  An iterator on the profiler points.
+     * @return \ArrayIterator An iterator on the profiler points.
      */
     public function getIterator()
     {
@@ -379,7 +377,7 @@ class Profiler implements ProfilerInterface, \Countable
     /**
      * Count the number of points in this profiler.
      *
-     * @return  integer  The number of points.
+     * @return int The number of points.
      */
     public function count()
     {
@@ -387,11 +385,11 @@ class Profiler implements ProfilerInterface, \Countable
     }
 
     /**
-     * Method to set property memoryRealUsage
+     * Method to set property memoryRealUsage.
      *
-     * @param   boolean $memoryRealUsage
+     * @param bool $memoryRealUsage
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function useMemoryRealUsage($memoryRealUsage)
     {

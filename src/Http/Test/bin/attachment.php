@@ -5,10 +5,9 @@
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
  */
-
 use Psr\Http\Message\ResponseInterface;
 
-include_once __DIR__ . '/../../../../vendor/autoload.php';
+include_once __DIR__.'/../../../../vendor/autoload.php';
 
 //show($request = \Windwalker\Http\ServerRequestFactory::fromGlobals());
 //
@@ -17,7 +16,7 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 $server = \Windwalker\Http\WebHttpServer::create(
     function ($request, ResponseInterface $response, $finalHandler) {
         $res = new \Windwalker\Http\Response\AttachmentResponse();
-        $res = $res->withFile(__DIR__ . '/.htaccess');
+        $res = $res->withFile(__DIR__.'/.htaccess');
         $res = $res->withFilename('Hello.txt');
 
         return $res;

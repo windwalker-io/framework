@@ -9,7 +9,7 @@
 namespace Windwalker\Dom\SimpleXml;
 
 /**
- * Simple Xml Helper to get attributes from \SimpleXMLElement
+ * Simple Xml Helper to get attributes from \SimpleXMLElement.
  *
  * @since 2.0
  */
@@ -18,9 +18,9 @@ class XmlHelper
     /**
      * The value of false.
      *
-     * @var  array
+     * @var array
      */
-    static protected $falseValue = [
+    protected static $falseValue = [
         'disabled',
         'false',
         'null',
@@ -32,9 +32,9 @@ class XmlHelper
     /**
      * The value of true.
      *
-     * @var  array
+     * @var array
      */
-    static protected $trueValue = [
+    protected static $trueValue = [
         'true',
         'yes',
         '1',
@@ -112,7 +112,7 @@ class XmlHelper
      *
      * @param \SimpleXMLElement $xml A SimpleXMLElement object.
      *
-     * @return  array The return values of all attributes.
+     * @return array The return values of all attributes.
      */
     public static function getAttributes(\SimpleXMLElement $xml)
     {
@@ -132,7 +132,7 @@ class XmlHelper
      * @param string            $attr  The attribute name.
      * @param string            $value The value to set as default.
      *
-     * @return  void
+     * @return void
      */
     public static function def(\SimpleXMLElement $xml, $attr, $value)
     {

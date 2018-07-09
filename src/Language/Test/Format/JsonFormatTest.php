@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Language\Format\JsonFormat;
 use Windwalker\Language\Language;
 
 /**
- * Test class of JsonFormat
+ * Test class of JsonFormat.
  *
  * @since 2.0
  */
@@ -49,14 +49,15 @@ class JsonFormatTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test parse().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Language\Format\JsonFormat::parse
      */
     public function testParse()
     {
-        $file = file_get_contents(__DIR__ . '/../fixtures/json/en-GB.json');
+        $file = file_get_contents(__DIR__.'/../fixtures/json/en-GB.json');
 
         $lang = new Language();
 

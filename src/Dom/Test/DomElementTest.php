@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,16 +12,16 @@ use Windwalker\Dom\DomElement;
 use Windwalker\Dom\Helper\DomHelper;
 
 /**
- * Test class of DomElement
+ * Test class of DomElement.
  *
  * @since 2.0
  */
 class DomElementTest extends AbstractDomTestCase
 {
     /**
-     * domTestCase
+     * domTestCase.
      *
-     * @return  array
+     * @return array
      */
     public function domTestCase()
     {
@@ -78,12 +78,12 @@ class DomElementTest extends AbstractDomTestCase
     /**
      * Method to test create().
      *
-     * @param string  $name
-     * @param string  $expect
-     * @param string  $tag
-     * @param string  $content
-     * @param array   $attribs
-     * @param boolean $forcePaired
+     * @param string $name
+     * @param string $expect
+     * @param string $tag
+     * @param string $content
+     * @param array  $attribs
+     * @param bool   $forcePaired
      *
      * @return void
      *
@@ -98,7 +98,7 @@ class DomElementTest extends AbstractDomTestCase
         $this->assertDomFormatEquals(
             $expect,
             $element->toString($forcePaired),
-            'Dom build case fail: ' . $name
+            'Dom build case fail: '.$name
         );
     }
 

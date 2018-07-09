@@ -18,27 +18,27 @@ class CustomHtmlField extends AbstractField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'html';
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  array
+     * @return array
      */
     public function prepare(&$attrs)
     {
     }
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  mixed
+     * @return mixed
      */
     public function buildInput($attrs)
     {
@@ -52,11 +52,11 @@ class CustomHtmlField extends AbstractField
     }
 
     /**
-     * content
+     * content.
      *
-     * @param   string $content
+     * @param string $content
      *
-     * @return  static
+     * @return static
      */
     public function content($content)
     {

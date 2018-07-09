@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Session\Session;
 use Windwalker\Session\Test\Mock\MockArrayBridge;
 
 /**
- * Test class of Session
+ * Test class of Session.
  *
  * @since 2.0
  */
@@ -34,8 +34,8 @@ class SessionTest extends AbstractSessionTestCase
 
         $this->options = [
             'expire_time' => 20,
-            'force_ssl' => true,
-            'security' => 'security',
+            'force_ssl'   => true,
+            'security'    => 'security',
         ];
 
         parent::setUp();
@@ -175,9 +175,9 @@ class SessionTest extends AbstractSessionTestCase
     }
 
     /**
-     * testTakeAll
+     * testTakeAll.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Session\Session::takeAll
      */
@@ -196,9 +196,9 @@ class SessionTest extends AbstractSessionTestCase
     }
 
     /**
-     * testClean
+     * testClean.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Session\Session::clean
      */

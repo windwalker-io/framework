@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -16,7 +16,7 @@ use Windwalker\Http\Response\Response;
 use Windwalker\Http\Test\Stub\StubOutput;
 
 /**
- * Test class of Server
+ * Test class of Server.
  *
  * @since 3.0
  */
@@ -50,9 +50,9 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * createServer
+     * createServer.
      *
-     * @param  callable $handler
+     * @param callable $handler
      *
      * @return HttpServer
      */
@@ -144,9 +144,9 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testListenWithFinalHandler
+     * testListenWithFinalHandler.
      *
-     * @return  void
+     * @return void
      */
     public function testListenWithFinalHandler()
     {
@@ -163,7 +163,7 @@ class HttpServerTest extends \PHPUnit\Framework\TestCase
             function (\Exception $e, $request, ResponseInterface $response) {
                 $response->getBody()->rewind();
 
-                return $response->getBody()->write(get_class($e) . ': ' . $e->getMessage());
+                return $response->getBody()->write(get_class($e).': '.$e->getMessage());
             }
         );
     }

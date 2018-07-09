@@ -46,8 +46,8 @@ trait ManageComponentTrait
     /**
      * Start a component rendering process.
      *
-     * @param  string $name
-     * @param  array  $data
+     * @param string $name
+     * @param array  $data
      *
      * @return void
      */
@@ -75,7 +75,7 @@ trait ManageComponentTrait
     /**
      * Get the data for the given component.
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return array
      */
@@ -91,8 +91,8 @@ trait ManageComponentTrait
     /**
      * Start the slot rendering process.
      *
-     * @param  string      $name
-     * @param  string|null $content
+     * @param string      $name
+     * @param string|null $content
      *
      * @return void
      */
@@ -119,8 +119,7 @@ trait ManageComponentTrait
         $currentSlot = array_pop(
             $this->slotStack[$this->currentComponent()]
         );
-        $this->slots[$this->currentComponent()]
-        [$currentSlot] = trim(ob_get_clean());
+        $this->slots[$this->currentComponent()][$currentSlot] = trim(ob_get_clean());
     }
 
     /**

@@ -12,7 +12,7 @@ use Windwalker\Database\Driver\AbstractDatabaseDriver;
 use Windwalker\Database\Driver\DatabaseDriverInterface;
 
 /**
- * Class DatabaseFactory
+ * Class DatabaseFactory.
  */
 abstract class DatabaseFactory
 {
@@ -26,19 +26,20 @@ abstract class DatabaseFactory
     /**
      * Property instances.
      *
-     * @var  array
+     * @var array
      */
     protected static $instances = [];
 
     /**
-     * getDbo
+     * getDbo.
      *
      * @param string $driver
      * @param array  $option
      * @param bool   $forceNew
      *
      * @throws \InvalidArgumentException
-     * @return  AbstractDatabaseDriver
+     *
+     * @return AbstractDatabaseDriver
      */
     public static function getDbo($driver = null, $option = [], $forceNew = false)
     {
@@ -61,12 +62,12 @@ abstract class DatabaseFactory
     }
 
     /**
-     * setDbo
+     * setDbo.
      *
      * @param string                 $driver
      * @param AbstractDatabaseDriver $db
      *
-     * @return  void
+     * @return void
      */
     public static function setDbo($driver, AbstractDatabaseDriver $db = null)
     {
@@ -74,11 +75,11 @@ abstract class DatabaseFactory
     }
 
     /**
-     * setDb
+     * setDb.
      *
-     * @param   AbstractDatabaseDriver $db
+     * @param AbstractDatabaseDriver $db
      *
-     * @return  void
+     * @return void
      */
     public static function setDefaultDbo(AbstractDatabaseDriver $db = null)
     {
@@ -92,13 +93,14 @@ abstract class DatabaseFactory
     }
 
     /**
-     * createDbo
+     * createDbo.
      *
      * @param string $driver
      * @param array  $options
      *
      * @throws \RuntimeException
-     * @return  AbstractDatabaseDriver
+     *
+     * @return AbstractDatabaseDriver
      */
     public static function createDbo($driver, array $options)
     {
@@ -111,9 +113,9 @@ abstract class DatabaseFactory
         $resource = isset($options['resource']) ? $options['resource'] : null;
 
         // Derive the class name from the driver.
-        $class = '\\Windwalker\\Database\\Driver\\' . ucfirst(strtolower($options['driver'])) . '\\' . ucfirst(
+        $class = '\\Windwalker\\Database\\Driver\\'.ucfirst(strtolower($options['driver'])).'\\'.ucfirst(
                 strtolower($options['driver'])
-            ) . 'Driver';
+            ).'Driver';
 
         // If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
         if (!class_exists($class)) {
@@ -122,7 +124,7 @@ abstract class DatabaseFactory
 
         /** @var DatabaseDriverInterface $class */
         if (!$class::isSupported()) {
-            throw new \RangeException('Database driver ' . $driver . ' not supported.');
+            throw new \RangeException('Database driver '.$driver.' not supported.');
         }
 
         // Create our new Driver connector based on the options given.

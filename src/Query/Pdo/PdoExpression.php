@@ -11,7 +11,7 @@ namespace Windwalker\Query\Pdo;
 use Windwalker\Query\QueryExpression;
 
 /**
- * Class PdoExpression
+ * Class PdoExpression.
  *
  * @since 2.0
  */

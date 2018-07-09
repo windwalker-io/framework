@@ -44,11 +44,11 @@ class BetweenValidator extends AbstractValidator
     }
 
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {
@@ -56,9 +56,9 @@ class BetweenValidator extends AbstractValidator
     }
 
     /**
-     * Method to get property Start
+     * Method to get property Start.
      *
-     * @return  float
+     * @return float
      *
      * @since  3.4.1
      */
@@ -68,11 +68,11 @@ class BetweenValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property start
+     * Method to set property start.
      *
-     * @param   float $start
+     * @param float $start
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since  3.4.1
      */
@@ -84,9 +84,9 @@ class BetweenValidator extends AbstractValidator
     }
 
     /**
-     * Method to get property End
+     * Method to get property End.
      *
-     * @return  float
+     * @return float
      *
      * @since  3.4.1
      */
@@ -96,11 +96,11 @@ class BetweenValidator extends AbstractValidator
     }
 
     /**
-     * Method to set property end
+     * Method to set property end.
      *
-     * @param   float $end
+     * @param float $end
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since  3.4.1
      */

@@ -10,15 +10,15 @@
 /**
  * UTF-8 aware alternative to strcasecmp
  * A case insensivite string comparison
- * Note: requires utf8_strtolower
+ * Note: requires utf8_strtolower.
  *
  * @param string
  * @param string
  *
  * @return int
+ *
  * @see     http://www.php.net/strcasecmp
  * @see     utf8_strtolower
- * @package utf8
  */
 function utf8_strcasecmp($strX, $strY)
 {
@@ -27,4 +27,3 @@ function utf8_strcasecmp($strX, $strY)
 
     return strcmp($strX, $strY);
 }
-

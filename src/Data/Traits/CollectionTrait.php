@@ -22,11 +22,11 @@ use Windwalker\Utilities\Arr;
 trait CollectionTrait
 {
     /**
-     * each
+     * each.
      *
      * @param callable $callback
      *
-     * @return  static
+     * @return static
      */
     public function each(callable $callback)
     {
@@ -42,7 +42,7 @@ trait CollectionTrait
     }
 
     /**
-     * filter
+     * filter.
      *
      * @param callable $callback
      * @param bool     $keepKey
@@ -57,11 +57,11 @@ trait CollectionTrait
     }
 
     /**
-     * filter
+     * filter.
      *
      * @param callable $callback
      *
-     * @return  static
+     * @return static
      */
     public function filter(callable $callback = null)
     {
@@ -69,11 +69,11 @@ trait CollectionTrait
     }
 
     /**
-     * findFirst
+     * findFirst.
      *
      * @param callable $callback
      *
-     * @return  mixed
+     * @return mixed
      */
     public function findFirst(callable $callback = null)
     {
@@ -81,12 +81,12 @@ trait CollectionTrait
     }
 
     /**
-     * reject
+     * reject.
      *
      * @param callable $callback
      * @param bool     $keepKey
      *
-     * @return  static
+     * @return static
      */
     public function reject(callable $callback, $keepKey = false)
     {
@@ -94,12 +94,12 @@ trait CollectionTrait
     }
 
     /**
-     * partition
+     * partition.
      *
      * @param callable $callback
      * @param bool     $keepKey
      *
-     * @return  static[]
+     * @return static[]
      */
     public function partition(callable $callback, $keepKey = false)
     {
@@ -132,11 +132,11 @@ trait CollectionTrait
     }
 
     /**
-     * apply
+     * apply.
      *
      * @param callable $callback
      *
-     * @return  static
+     * @return static
      */
     public function apply(callable $callback)
     {
@@ -144,11 +144,11 @@ trait CollectionTrait
     }
 
     /**
-     * pipe
+     * pipe.
      *
      * @param callable $callback
      *
-     * @return  static
+     * @return static
      */
     public function pipe(callable $callback)
     {
@@ -156,9 +156,9 @@ trait CollectionTrait
     }
 
     /**
-     * values
+     * values.
      *
-     * @return  static
+     * @return static
      */
     public function values()
     {
@@ -166,11 +166,11 @@ trait CollectionTrait
     }
 
     /**
-     * first
+     * first.
      *
      * @param callable $conditions
      *
-     * @return  mixed
+     * @return mixed
      */
     public function first(callable $conditions = null)
     {
@@ -183,18 +183,18 @@ trait CollectionTrait
                 }
             }
 
-            return null;
+            return;
         }
 
         return array_shift($array);
     }
 
     /**
-     * last
+     * last.
      *
      * @param callable $conditions
      *
-     * @return  mixed
+     * @return mixed
      */
     public function last(callable $conditions = null)
     {
@@ -216,13 +216,13 @@ trait CollectionTrait
     }
 
     /**
-     * takeout
+     * takeout.
      *
      * @param string $key
      * @param mixed  $default
      * @param string $delimiter
      *
-     * @return  mixed
+     * @return mixed
      */
     public function takeout($key, $default = null, $delimiter = '.')
     {
@@ -230,12 +230,12 @@ trait CollectionTrait
     }
 
     /**
-     * chunk
+     * chunk.
      *
      * @param int  $size
      * @param bool $preserveKeys
      *
-     * @return  static
+     * @return static
      */
     public function chunk($size, $preserveKeys = null)
     {
@@ -247,9 +247,9 @@ trait CollectionTrait
     /**
      * Mapping all elements.
      *
-     * @param   callable $callback
+     * @param callable $callback
      *
-     * @return  static  Support chaining.
+     * @return static Support chaining.
      *
      * @since   2.0.9
      */
@@ -267,11 +267,11 @@ trait CollectionTrait
     }
 
     /**
-     * convertArray
+     * convertArray.
      *
      * @param array|Data|DataSet $array
      *
-     * @return  array
+     * @return array
      */
     protected function convertArray($array)
     {
@@ -283,11 +283,11 @@ trait CollectionTrait
     }
 
     /**
-     * allToArray
+     * allToArray.
      *
-     * @param   mixed $value
+     * @param mixed $value
      *
-     * @return  array
+     * @return array
      */
     public static function allToArray($value)
     {
@@ -311,11 +311,11 @@ trait CollectionTrait
     }
 
     /**
-     * bindNewInstance
+     * bindNewInstance.
      *
      * @param mixed $data
      *
-     * @return  static
+     * @return static
      */
     protected function bindNewInstance($data)
     {
@@ -327,9 +327,9 @@ trait CollectionTrait
     }
 
     /**
-     * getNewInstance
+     * getNewInstance.
      *
-     * @return  static
+     * @return static
      */
     protected function getNewInstance()
     {

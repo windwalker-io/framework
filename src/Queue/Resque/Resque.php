@@ -18,12 +18,12 @@ use Resque as PhpResque;
 class Resque extends PhpResque
 {
     /**
-     * Remove items of the specified queue
+     * Remove items of the specified queue.
      *
      * @param string $queue The name of the queue to fetch an item from.
      * @param array  $items
      *
-     * @return integer number of deleted items
+     * @return int number of deleted items
      */
     public static function dequeue($queue, $items = [])
     {
@@ -38,34 +38,34 @@ class Resque extends PhpResque
      * Remove Items from the queue
      * Safely moving each item to a temporary queue before processing it
      * If the Job matches, counts otherwise puts it in a requeue_queue
-     * which at the end eventually be copied back into the original queue
+     * which at the end eventually be copied back into the original queue.
      *
      * @private
      *
      * @param string $queue The name of the queue
      * @param array  $items
      *
-     * @return integer number of deleted items
+     * @return int number of deleted items
      */
     protected static function removeItems($queue, $items = [])
     {
         $counter = 0;
-        $originalQueue = 'queue:' . $queue;
-        $tempQueue = $originalQueue . ':temp:' . time();
-        $requeueQueue = $tempQueue . ':requeue';
+        $originalQueue = 'queue:'.$queue;
+        $tempQueue = $originalQueue.':temp:'.time();
+        $requeueQueue = $tempQueue.':requeue';
 
         // move each item from original queue to temp queue and process it
         $finished = false;
 
         while (!$finished) {
-            $string = self::redis()->rpoplpush($originalQueue, self::redis()->getPrefix() . $tempQueue);
+            $string = self::redis()->rpoplpush($originalQueue, self::redis()->getPrefix().$tempQueue);
 
             if (!empty($string)) {
                 if (self::matchItem($string, $items)) {
                     self::redis()->rpop($tempQueue);
                     $counter++;
                 } else {
-                    self::redis()->rpoplpush($tempQueue, self::redis()->getPrefix() . $requeueQueue);
+                    self::redis()->rpoplpush($tempQueue, self::redis()->getPrefix().$requeueQueue);
                 }
             } else {
                 $finished = true;
@@ -76,7 +76,7 @@ class Resque extends PhpResque
         $finished = false;
 
         while (!$finished) {
-            $string = self::redis()->rpoplpush($requeueQueue, self::redis()->getPrefix() . $originalQueue);
+            $string = self::redis()->rpoplpush($requeueQueue, self::redis()->getPrefix().$originalQueue);
 
             if (empty($string)) {
                 $finished = true;
@@ -92,7 +92,7 @@ class Resque extends PhpResque
 
     /**
      * matching item
-     * item can be ['class'] or ['class' => 'id'] or ['class' => {:foo => 1, :bar => 2}]
+     * item can be ['class'] or ['class' => 'id'] or ['class' => {:foo => 1, :bar => 2}].
      *
      * @private
      *
@@ -131,18 +131,18 @@ class Resque extends PhpResque
     }
 
     /**
-     * Remove List
+     * Remove List.
      *
      * @private
      *
      * @params string $queue the name of the queue
      *
-     * @return integer number of deleted items belongs to this list
+     * @return int number of deleted items belongs to this list
      */
     protected static function removeList($queue)
     {
         $counter = self::size($queue);
-        $result = self::redis()->del('queue:' . $queue);
+        $result = self::redis()->del('queue:'.$queue);
 
         return ($result == 1) ? $counter : 0;
     }

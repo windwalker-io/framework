@@ -18,7 +18,8 @@ class FormDataInput extends Input
     /**
      * The raw JSON string from the request.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected static $raw;
@@ -26,10 +27,10 @@ class FormDataInput extends Input
     /**
      * Prepare source.
      *
-     * @param   array   $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-     * @param   boolean $reference If set to true, he source in first argument will be reference.
+     * @param array $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+     * @param bool  $reference If set to true, he source in first argument will be reference.
      *
-     * @return  void
+     * @return void
      */
     public function prepareSource(&$source = null, $reference = false)
     {
@@ -57,7 +58,7 @@ class FormDataInput extends Input
     /**
      * Gets the raw HTTP data string from the request.
      *
-     * @return  string  The raw HTP data string from the request.
+     * @return string The raw HTP data string from the request.
      *
      * @since   2.0
      */
@@ -67,11 +68,11 @@ class FormDataInput extends Input
     }
 
     /**
-     * setRawData
+     * setRawData.
      *
-     * @param   string $data
+     * @param string $data
      *
-     * @return  string
+     * @return string
      */
     public static function setRawFormData($data)
     {
@@ -79,9 +80,9 @@ class FormDataInput extends Input
     }
 
     /**
-     * loadRawFromRequest
+     * loadRawFromRequest.
      *
-     * @return  string
+     * @return string
      */
     protected function loadRawFromRequest()
     {
@@ -101,14 +102,14 @@ class FormDataInput extends Input
     }
 
     /**
-     * parseFormData
+     * parseFormData.
      *
      * @param string $input
      * @param array  &$data
      *
      * @link  http://stackoverflow.com/questions/5483851/manually-parse-raw-http-data-with-php/5488449#5488449
      *
-     * @return  array
+     * @return array
      */
     public static function parseFormData($input, array &$data)
     {

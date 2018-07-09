@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -15,7 +15,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of ChainBuilder
+ * Test class of ChainBuilder.
  *
  * @since 2.0
  */
@@ -32,8 +32,9 @@ class ChainBuilderTest extends AbstractBaseTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
      * @throws \ReflectionException
+     *
+     * @return void
      */
     protected function setUp()
     {
@@ -56,9 +57,10 @@ class ChainBuilderTest extends AbstractBaseTestCase
     /**
      * Method to test add().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Middleware\Chain\ChainBuilder::add
      */
     public function testAdd()
@@ -84,11 +86,11 @@ class ChainBuilderTest extends AbstractBaseTestCase
      */
     public function testCall()
     {
-        $data = "
+        $data = '
 >>> Othello
 >>> Caesar
 <<< Caesar
-<<< Othello";
+<<< Othello';
 
         $this->assertStringSafeEquals($data, $this->instance->execute());
     }
@@ -102,11 +104,11 @@ class ChainBuilderTest extends AbstractBaseTestCase
 
         $builder = new ChainBuilder($middlewares);
 
-        $data = "
+        $data = '
 >>> Othello
 >>> Caesar
 <<< Caesar
-<<< Othello";
+<<< Othello';
 
         $this->assertStringSafeEquals($data, $builder->execute());
 
@@ -117,11 +119,11 @@ class ChainBuilderTest extends AbstractBaseTestCase
 
         $builder = new ChainBuilder($middlewares, ChainBuilder::SORT_ASC);
 
-        $data = "
+        $data = '
 >>> Caesar
 >>> Othello
 <<< Othello
-<<< Caesar";
+<<< Caesar';
 
         $this->assertStringSafeEquals($data, $builder->execute());
     }

@@ -9,7 +9,7 @@
 namespace Windwalker\Session\Handler;
 
 /**
- * Class AbstractHandler
+ * Class AbstractHandler.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ abstract class AbstractHandler implements HandlerInterface
     /**
      * Property prefix.
      *
-     * @var  string
+     * @var string
      */
     protected $prefix = null;
 
@@ -33,9 +33,9 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
-     * register
+     * register.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function register()
     {

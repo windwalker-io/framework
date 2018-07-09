@@ -22,9 +22,9 @@ class StubContentTypeResponse extends AbstractContentTypeResponse
     /**
      * Handle body to stream object.
      *
-     * @param   string $body The body data.
+     * @param string $body The body data.
      *
-     * @return  StreamInterface  Converted to stream object.
+     * @return StreamInterface Converted to stream object.
      */
     protected function handleBody($body)
     {

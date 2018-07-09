@@ -22,22 +22,23 @@ class EventDispatcherTest extends AbstractBaseTestCase
     /**
      * Property instance.
      *
-     * @var  StubDispatcherAwareDatamapper
+     * @var StubDispatcherAwareDatamapper
      */
     protected $instance;
 
     /**
      * Property listener.
      *
-     * @var  StubDataMapperListener
+     * @var StubDataMapperListener
      */
     protected $listener;
 
     /**
-     * setUp
+     * setUp.
      *
-     * @return  void
      * @throws \Exception
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -49,9 +50,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testFind
+     * testFind.
      *
-     * @return  void
+     * @return void
      */
     public function testFind()
     {
@@ -79,9 +80,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testFindAll
+     * testFindAll.
      *
-     * @return  void
+     * @return void
      */
     public function testFindAll()
     {
@@ -108,9 +109,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testFindOne
+     * testFindOne.
      *
-     * @return  void
+     * @return void
      */
     public function testFindOne()
     {
@@ -133,9 +134,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testFindColumn
+     * testFindColumn.
      *
-     * @return  void
+     * @return void
      */
     public function testFindColumn()
     {
@@ -162,9 +163,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testCreate
+     * testCreate.
      *
-     * @return  void
+     * @return void
      */
     public function testCreate()
     {
@@ -172,9 +173,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testCreateOne
+     * testCreateOne.
      *
-     * @return  void
+     * @return void
      */
     public function testCreateOne()
     {
@@ -182,9 +183,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testUpdate
+     * testUpdate.
      *
-     * @return  void
+     * @return void
      */
     public function testUpdate()
     {
@@ -192,9 +193,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testUpdateOne
+     * testUpdateOne.
      *
-     * @return  void
+     * @return void
      */
     public function testUpdateOne()
     {
@@ -202,9 +203,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testUpdateAll
+     * testUpdateAll.
      *
-     * @return  void
+     * @return void
      */
     public function testUpdateAll()
     {
@@ -212,9 +213,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testSave
+     * testSave.
      *
-     * @return  void
+     * @return void
      */
     public function testSave()
     {
@@ -222,9 +223,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testSaveOne
+     * testSaveOne.
      *
-     * @return  void
+     * @return void
      */
     public function testSaveOne()
     {
@@ -232,9 +233,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testDelete
+     * testDelete.
      *
-     * @return  void
+     * @return void
      */
     public function testDelete()
     {
@@ -242,9 +243,9 @@ class EventDispatcherTest extends AbstractBaseTestCase
     }
 
     /**
-     * testFlush
+     * testFlush.
      *
-     * @return  void
+     * @return void
      */
     public function testFlush()
     {

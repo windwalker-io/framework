@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,16 +13,16 @@ use Windwalker\Html\Option;
 use Windwalker\Html\Select\CheckboxList;
 
 /**
- * Test class of CheckboxList
+ * Test class of CheckboxList.
  *
  * @since 2.0
  */
 class CheckboxListTest extends AbstractDomTestCase
 {
     /**
-     * testCreateList
+     * testCreateList.
      *
-     * @return  void
+     * @return void
      *
      * Windwalker\Html\Select\SelectList::toString
      */
@@ -41,7 +41,7 @@ class CheckboxListTest extends AbstractDomTestCase
             false
         );
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <span class="checkbox-inputs input-select">
 	<input class="opt" value="Asia/Tokyo" type="checkbox" name="form[timezone][]" id="input-form-timezone-asia-tokyo" />
 	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>
@@ -61,9 +61,9 @@ HTML;
     }
 
     /**
-     * testCreateList
+     * testCreateList.
      *
-     * @return  void
+     * @return void
      *
      * Windwalker\Html\Select\SelectList::toString
      */
@@ -82,7 +82,7 @@ HTML;
             false
         );
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <span class="checkbox-inputs input-select">
 	<input class="opt" value="Asia/Tokyo" type="checkbox" name="form[timezone][]" id="input-form-timezone-asia-tokyo" disabled="disabled" readonly="readonly" />
 	<label class="opt" id="input-form-timezone-asia-tokyo-label" for="input-form-timezone-asia-tokyo">Asia - Tokyo</label>

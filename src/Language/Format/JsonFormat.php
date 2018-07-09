@@ -9,7 +9,7 @@
 namespace Windwalker\Language\Format;
 
 /**
- * Class JsonFormat
+ * Class JsonFormat.
  *
  * @since 2.0
  */
@@ -18,16 +18,16 @@ class JsonFormat extends AbstractFormat
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'json';
 
     /**
-     * parse
+     * parse.
      *
      * @param string $string
      *
-     * @return  string[]
+     * @return string[]
      */
     public function parse($string)
     {

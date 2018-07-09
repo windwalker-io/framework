@@ -13,7 +13,7 @@ use Windwalker\Console\Command\Command;
 use Windwalker\Console\Descriptor\AbstractDescriptor;
 
 /**
- * Class TextCommandDescriptor
+ * Class TextCommandDescriptor.
  *
  * @since    2.0
  */
@@ -35,7 +35,7 @@ class TextCommandDescriptor extends AbstractDescriptor
      *
      * @since  2.0
      */
-    protected $template = <<<EOF
+    protected $template = <<<'EOF'
   <info>%-{WIDTH}s</info>%s
 EOF;
 
@@ -51,10 +51,11 @@ EOF;
     /**
      * Render an item description.
      *
-     * @param   mixed $command The item to be described.
+     * @param mixed $command The item to be described.
      *
-     * @throws  \InvalidArgumentException
-     * @return  string  Rendered description.
+     * @throws \InvalidArgumentException
+     *
+     * @return string Rendered description.
      *
      * @since  2.0
      */
@@ -90,7 +91,7 @@ EOF;
     /**
      * Render all items description.
      *
-     * @return  string
+     * @return string
      *
      * @since  2.0
      */

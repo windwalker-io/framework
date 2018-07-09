@@ -22,11 +22,11 @@ abstract class SimpleTemplate
      *
      * Example: The {{ foo.bar.yoo }} will be replace to value of `$data['foo']['bar']['yoo']`
      *
-     * @param   string $string The template to replace.
-     * @param   array  $data   The data to find.
-     * @param   array  $tags   The variable tags.
+     * @param string $string The template to replace.
+     * @param array  $data   The data to find.
+     * @param array  $tags   The variable tags.
      *
-     * @return  string Replaced template.
+     * @return string Replaced template.
      */
     public static function render($string, $data = [], $tags = ['{{', '}}'])
     {
@@ -36,10 +36,10 @@ abstract class SimpleTemplate
 
         list($begin, $end) = $tags;
 
-        $regex = preg_quote($begin) . '\s*(.+?)\s*' . preg_quote($end);
+        $regex = preg_quote($begin).'\s*(.+?)\s*'.preg_quote($end);
 
         return preg_replace_callback(
-            chr(1) . $regex . chr(1),
+            chr(1).$regex.chr(1),
             function ($match) use ($data) {
                 $return = ArrayHelper::getByPath($data, $match[1]);
 

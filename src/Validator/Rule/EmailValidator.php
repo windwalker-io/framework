@@ -18,7 +18,8 @@ class EmailValidator extends RegexValidator
     /**
      * The regular expression to use in testing a form field value.
      *
-     * @var  string
+     * @var string
+     *
      * @see  http://www.w3.org/TR/html-markup/input.email.html
      */
     protected $regex = '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$';

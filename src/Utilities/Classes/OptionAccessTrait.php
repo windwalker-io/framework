@@ -18,17 +18,17 @@ trait OptionAccessTrait
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [];
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @param   string $name
-     * @param   mixed  $default
+     * @param string $name
+     * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getOption($name, $default = null)
     {
@@ -40,12 +40,12 @@ trait OptionAccessTrait
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   string $name
-     * @param   mixed  $value
+     * @param string $name
+     * @param mixed  $value
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOption($name, $value)
     {
@@ -55,9 +55,9 @@ trait OptionAccessTrait
     }
 
     /**
-     * Method to get property Options
+     * Method to get property Options.
      *
-     * @return  array
+     * @return array
      */
     public function getOptions()
     {
@@ -65,11 +65,11 @@ trait OptionAccessTrait
     }
 
     /**
-     * Method to set property options
+     * Method to set property options.
      *
-     * @param   array $options
+     * @param array $options
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setOptions($options)
     {

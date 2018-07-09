@@ -9,7 +9,7 @@
 namespace Windwalker\Compare;
 
 /**
- * Class EqCompare
+ * Class EqCompare.
  *
  * @since 2.0
  */
@@ -18,7 +18,7 @@ class EqCompare extends Compare
     /**
      * Operator symbol.
      *
-     * @var  string
+     * @var string
      */
     protected $operator = '=';
 }

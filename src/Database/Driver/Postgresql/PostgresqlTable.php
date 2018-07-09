@@ -15,25 +15,25 @@ use Windwalker\Database\Schema\Key;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
- * Class PostgresqlTable
+ * Class PostgresqlTable.
  *
  * @since 2.0
  */
 class PostgresqlTable extends AbstractTable
 {
     /**
-     * create
+     * create.
      *
      * @param bool  $ifNotExists
      * @param array $options
      *
-     * @return  static
+     * @return static
      */
     public function create($schema, $ifNotExists = true, $options = [])
     {
         $defaultOptions = [
             'auto_increment' => 1,
-            'sequences' => [],
+            'sequences'      => [],
         ];
 
         $options = array_merge($defaultOptions, $options);
@@ -46,9 +46,9 @@ class PostgresqlTable extends AbstractTable
             $column = $this->prepareColumn($column);
 
             $columns[$column->getName()] = PostgresqlGrammar::build(
-                $column->getType() . $column->getLength(),
+                $column->getType().$column->getLength(),
                 $column->getAllowNull() ? null : 'NOT NULL',
-                $column->getDefault() ? 'DEFAULT ' . $this->db->quote($column->getDefault()) : null
+                $column->getDefault() ? 'DEFAULT '.$this->db->quote($column->getDefault()) : null
             );
 
             // Comment
@@ -67,8 +67,8 @@ class PostgresqlTable extends AbstractTable
 
         foreach ($schema->getIndexes() as $index) {
             $keys[$index->getName()] = [
-                'type' => strtoupper($index->getType()),
-                'name' => $index->getName(),
+                'type'    => strtoupper($index->getType()),
+                'name'    => $index->getName(),
                 'columns' => $index->getColumns(),
             ];
 
@@ -98,11 +98,11 @@ class PostgresqlTable extends AbstractTable
 
         // Comments
         foreach ($comments as $name => $comment) {
-            $query .= ";\n" . PostgresqlGrammar::comment('COLUMN', $this->getName(), $name, $comment);
+            $query .= ";\n".PostgresqlGrammar::comment('COLUMN', $this->getName(), $name, $comment);
         }
 
         foreach ($keyComments as $name => $comment) {
-            $query .= ";\n" . PostgresqlGrammar::comment('INDEX', 'public', $name, $comment);
+            $query .= ";\n".PostgresqlGrammar::comment('INDEX', 'public', $name, $comment);
         }
 
         DatabaseHelper::batchQuery($this->db, $query);
@@ -111,7 +111,7 @@ class PostgresqlTable extends AbstractTable
     }
 
     /**
-     * addColumn
+     * addColumn.
      *
      * @param string $name
      * @param string $type
@@ -121,7 +121,7 @@ class PostgresqlTable extends AbstractTable
      * @param string $comment
      * @param array  $options
      *
-     * @return  static
+     * @return static
      */
     public function addColumn(
         $name,
@@ -147,7 +147,7 @@ class PostgresqlTable extends AbstractTable
         $query = PostgresqlGrammar::addColumn(
             $this->getName(),
             $column->getName(),
-            $column->getType() . $column->getLength(),
+            $column->getType().$column->getLength(),
             $column->getAllowNull(),
             $column->getDefault()
         );
@@ -163,11 +163,11 @@ class PostgresqlTable extends AbstractTable
     }
 
     /**
-     * prepareColumn
+     * prepareColumn.
      *
      * @param Column $column
      *
-     * @return  Column
+     * @return Column
      */
     protected function prepareColumn(Column $column)
     {
@@ -182,14 +182,14 @@ class PostgresqlTable extends AbstractTable
 
         if ($column->getAutoIncrement()) {
             $column->type(PostgresqlType::SERIAL);
-            $options['sequences'][$column->getName()] = $this->getName() . '_' . $column->getName() . '_seq';
+            $options['sequences'][$column->getName()] = $this->getName().'_'.$column->getName().'_seq';
         }
 
         return parent::prepareColumn($column);
     }
 
     /**
-     * modifyColumn
+     * modifyColumn.
      *
      * @param string|Column $name
      * @param string        $type
@@ -199,7 +199,7 @@ class PostgresqlTable extends AbstractTable
      * @param string        $comment
      * @param array         $options
      *
-     * @return  static
+     * @return static
      */
     public function modifyColumn(
         $name,
@@ -228,22 +228,22 @@ class PostgresqlTable extends AbstractTable
         $type = PostgresqlType::getType($type);
         $length = isset($length) ? $length : PostgresqlType::getLength($type);
         $length = PostgresqlType::noLength($type) ? null : $length;
-        $length = $length ? '(' . $length . ')' : null;
+        $length = $length ? '('.$length.')' : null;
 
         $query = $this->db->getQuery(true);
 
         // Type
         $sql = PostgresqlGrammar::build(
-            'ALTER TABLE ' . $query->quoteName($this->getName()),
+            'ALTER TABLE '.$query->quoteName($this->getName()),
             'ALTER COLUMN',
             $query->quoteName($name),
             'TYPE',
-            $type . $length,
+            $type.$length,
             $this->usingTextToNumeric($name, $type)
         );
 
-        $sql .= ";\n" . PostgresqlGrammar::build(
-                'ALTER TABLE ' . $query->quoteName($this->getName()),
+        $sql .= ";\n".PostgresqlGrammar::build(
+                'ALTER TABLE '.$query->quoteName($this->getName()),
                 'ALTER COLUMN',
                 $query->quoteName($name),
                 $allowNull ? 'DROP' : 'SET',
@@ -251,15 +251,15 @@ class PostgresqlTable extends AbstractTable
             );
 
         if (!is_null($default)) {
-            $sql .= ";\n" . PostgresqlGrammar::build(
-                    'ALTER TABLE ' . $query->quoteName($this->getName()),
+            $sql .= ";\n".PostgresqlGrammar::build(
+                    'ALTER TABLE '.$query->quoteName($this->getName()),
                     'ALTER COLUMN',
                     $query->quoteName($name),
-                    'SET DEFAULT' . $query->quote($default)
+                    'SET DEFAULT'.$query->quote($default)
                 );
         }
 
-        $sql .= ";\n" . PostgresqlGrammar::comment(
+        $sql .= ";\n".PostgresqlGrammar::comment(
                 'COLUMN',
                 $this->getName(),
                 $name,
@@ -272,7 +272,7 @@ class PostgresqlTable extends AbstractTable
     }
 
     /**
-     * changeColumn
+     * changeColumn.
      *
      * @param string        $oldName
      * @param string|Column $newName
@@ -283,7 +283,7 @@ class PostgresqlTable extends AbstractTable
      * @param string        $comment
      * @param array         $options
      *
-     * @return  static
+     * @return static
      */
     public function changeColumn(
         $oldName,
@@ -313,23 +313,23 @@ class PostgresqlTable extends AbstractTable
         $type = PostgresqlType::getType($type);
         $length = isset($length) ? $length : PostgresqlType::getLength($type);
         $length = PostgresqlType::noLength($type) ? null : $length;
-        $length = $length ? '(' . $length . ')' : null;
+        $length = $length ? '('.$length.')' : null;
 
         $query = $this->db->getQuery(true);
 
         // Type
         $sql = PostgresqlGrammar::build(
-            'ALTER TABLE ' . $query->quoteName($this->getName()),
+            'ALTER TABLE '.$query->quoteName($this->getName()),
             'ALTER COLUMN',
             $query->quoteName($oldName),
             'TYPE',
-            $type . $length,
+            $type.$length,
             $this->usingTextToNumeric($oldName, $type)
         );
 
         // Not NULL
-        $sql .= ";\n" . PostgresqlGrammar::build(
-                'ALTER TABLE ' . $query->quoteName($this->getName()),
+        $sql .= ";\n".PostgresqlGrammar::build(
+                'ALTER TABLE '.$query->quoteName($this->getName()),
                 'ALTER COLUMN',
                 $query->quoteName($oldName),
                 $allowNull ? 'DROP' : 'SET',
@@ -338,16 +338,16 @@ class PostgresqlTable extends AbstractTable
 
         // Default
         if (!is_null($default)) {
-            $sql .= ";\n" . PostgresqlGrammar::build(
-                    'ALTER TABLE ' . $query->quoteName($this->getName()),
+            $sql .= ";\n".PostgresqlGrammar::build(
+                    'ALTER TABLE '.$query->quoteName($this->getName()),
                     'ALTER COLUMN',
                     $query->quoteName($oldName),
-                    'SET DEFAULT' . $query->quote($default)
+                    'SET DEFAULT'.$query->quote($default)
                 );
         }
 
         // Comment
-        $sql .= ";\n" . PostgresqlGrammar::comment(
+        $sql .= ";\n".PostgresqlGrammar::comment(
                 'COLUMN',
                 $this->getName(),
                 $oldName,
@@ -355,7 +355,7 @@ class PostgresqlTable extends AbstractTable
             );
 
         // Rename
-        $sql .= ";\n" . PostgresqlGrammar::renameColumn(
+        $sql .= ";\n".PostgresqlGrammar::renameColumn(
                 $this->getName(),
                 $oldName,
                 $name
@@ -367,12 +367,12 @@ class PostgresqlTable extends AbstractTable
     }
 
     /**
-     * usingTextToNumeric
+     * usingTextToNumeric.
      *
-     * @param   string $column
-     * @param   string $type
+     * @param string $column
+     * @param string $type
      *
-     * @return  string
+     * @return string
      */
     protected function usingTextToNumeric($column, $type)
     {
@@ -400,12 +400,10 @@ class PostgresqlTable extends AbstractTable
         if (in_array($originType, $textTypes) && in_array($type, $numericTypes)) {
             return sprintf('USING trim(%s)::%s', $this->db->quoteName($column), $type);
         }
-
-        return null;
     }
 
     /**
-     * addIndex
+     * addIndex.
      *
      * @param string       $type
      * @param array|string $columns
@@ -456,7 +454,7 @@ class PostgresqlTable extends AbstractTable
     }
 
     /**
-     * dropIndex
+     * dropIndex.
      *
      * @param string $name
      * @param bool   $constraint
@@ -481,12 +479,12 @@ class PostgresqlTable extends AbstractTable
     }
 
     /**
-     * rename
+     * rename.
      *
-     * @param string  $newName
-     * @param boolean $returnNew
+     * @param string $newName
+     * @param bool   $returnNew
      *
-     * @return  $this
+     * @return $this
      */
     public function rename($newName, $returnNew = true)
     {
@@ -509,7 +507,7 @@ class PostgresqlTable extends AbstractTable
     }
 
     /**
-     * getColumnDetails
+     * getColumnDetails.
      *
      * @param bool $refresh
      *
@@ -528,23 +526,23 @@ class PostgresqlTable extends AbstractTable
                 // Do some dirty translation to MySQL output.
                 $result[$field->column_name] = (object) [
                     'column_name' => $field->column_name,
-                    'type' => $field->column_type,
-                    'null' => $field->Null,
-                    'Default' => $field->Default,
-                    'Field' => $field->column_name,
-                    'Type' => $field->column_type,
-                    'Null' => $field->Null,
-                    'Extra' => null,
-                    'Privileges' => null,
-                    'Comment' => $field->Comment,
-                    'Key' => '',
+                    'type'        => $field->column_type,
+                    'null'        => $field->null,
+                    'Default'     => $field->Default,
+                    'Field'       => $field->column_name,
+                    'Type'        => $field->column_type,
+                    'Null'        => $field->null,
+                    'Extra'       => null,
+                    'Privileges'  => null,
+                    'Comment'     => $field->Comment,
+                    'Key'         => '',
                 ];
             }
 
             $keys = $this->getIndexes();
 
             foreach ($result as $field) {
-                if (preg_match("/^NULL::*/", $field->Default)) {
+                if (preg_match('/^NULL::*/', $field->Default)) {
                     $field->Default = null;
                 }
 
@@ -584,9 +582,9 @@ class PostgresqlTable extends AbstractTable
     }
 
     /**
-     * getIndexes
+     * getIndexes.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function getIndexes()
     {
@@ -607,7 +605,7 @@ WHERE t.oid = ix.indrelid
 	AND a.attrelid = t.oid
 	AND a.attnum = ANY(ix.indkey)
 	AND t.relkind = \'r\'
-	AND t.relname = ' . $this->db->quote($this->db->replacePrefix($this->getName())) . '
+	AND t.relname = '.$this->db->quote($this->db->replacePrefix($this->getName())).'
 ORDER BY t.relname, i.relname;'
         );
 
@@ -622,7 +620,7 @@ ORDER BY t.relname, i.relname;'
             $key->Cardinality = 0;
             $key->Sub_part = null;
             $key->Packed = null;
-            $key->Null = null;
+            $key->null = null;
             $key->Index_type = 'BTREE';
             // TODO: Finish comments query
             $key->Comment = null;
@@ -635,12 +633,13 @@ ORDER BY t.relname, i.relname;'
     /**
      * Get the details list of sequences for a table.
      *
-     * @param   string $table The name of the table.
+     * @param string $table The name of the table.
      *
-     * @return  array  An array of sequences specification for the table.
+     * @throws \RuntimeException
+     *
+     * @return array An array of sequences specification for the table.
      *
      * @since   2.1
-     * @throws  \RuntimeException
      */
     public function getTableSequences($table)
     {
@@ -676,7 +675,7 @@ ORDER BY t.relname, i.relname;'
                 ->leftJoin('pg_namespace n ON n.oid=t.relnamespace')
                 ->leftJoin('pg_attribute a ON a.attrelid=t.oid AND a.attnum=d.refobjsubid')
                 ->leftJoin('information_schema.sequences AS info ON info.sequence_name=s.relname')
-                ->where("s.relkind='S' AND d.deptype='a' AND t.relname=" . $this->db->quote($table));
+                ->where("s.relkind='S' AND d.deptype='a' AND t.relname=".$this->db->quote($table));
 
             $this->db->setQuery($query);
 

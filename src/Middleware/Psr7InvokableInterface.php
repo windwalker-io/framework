@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Interface Psr7InvokableInterface
+ * Interface Psr7InvokableInterface.
  *
  * @since  3.0
  */
@@ -21,11 +21,11 @@ interface Psr7InvokableInterface
     /**
      * Middleware logic to be invoked.
      *
-     * @param   Request                      $request  The request.
-     * @param   Response                     $response The response.
-     * @param   callable|MiddlewareInterface $next     The next middleware.
+     * @param Request                      $request  The request.
+     * @param Response                     $response The response.
+     * @param callable|MiddlewareInterface $next     The next middleware.
      *
-     * @return  Response
+     * @return Response
      */
     public function __invoke(Request $request, Response $response, $next = null);
 }

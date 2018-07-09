@@ -18,7 +18,7 @@ interface DatabaseDriverInterface
     /**
      * Is this driver supported.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isSupported();
 }

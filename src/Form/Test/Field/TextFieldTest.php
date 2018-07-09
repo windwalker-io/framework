@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Form\Field\TextField;
 
 /**
- * Test class of TextField
+ * Test class of TextField.
  *
  * @since 2.0
  */
@@ -71,7 +71,7 @@ class TextFieldTest extends AbstractDomTestCase
      */
     public function testRender()
     {
-        $html = <<<HTML
+        $html = <<<'HTML'
 <input type="text" name="flower" id="test-field" class="stub-flower" placeholder="th" size="60" maxlength="10" readonly="readonly" disabled="disabled" onchange="javascript:void(0);" value="" data-test-element />
 HTML;
 

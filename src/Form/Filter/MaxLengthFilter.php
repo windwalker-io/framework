@@ -36,7 +36,7 @@ class MaxLengthFilter implements FilterInterface
     /**
      * Property utf8.
      *
-     * @var  bool
+     * @var bool
      */
     protected $utf8;
 
@@ -53,11 +53,11 @@ class MaxLengthFilter implements FilterInterface
     }
 
     /**
-     * clean
+     * clean.
      *
      * @param string $text
      *
-     * @return  string
+     * @return string
      */
     public function clean($text)
     {

@@ -12,20 +12,20 @@ use Windwalker\Filesystem\Comparator\FileComparatorInterface;
 use Windwalker\Filesystem\Iterator\RecursiveDirectoryIterator;
 
 /**
- * Class Filesystem
+ * Class Filesystem.
  *
  * @since 2.0
  */
 abstract class Filesystem
 {
     /**
-     * copy
+     * copy.
      *
      * @param string $src
      * @param string $dest
      * @param bool   $force
      *
-     * @return  bool
+     * @return bool
      */
     public static function copy($src, $dest, $force = false)
     {
@@ -39,13 +39,13 @@ abstract class Filesystem
     }
 
     /**
-     * move
+     * move.
      *
      * @param string $src
      * @param string $dest
      * @param bool   $force
      *
-     * @return  bool
+     * @return bool
      */
     public static function move($src, $dest, $force = false)
     {
@@ -59,11 +59,11 @@ abstract class Filesystem
     }
 
     /**
-     * delete
+     * delete.
      *
      * @param string $path
      *
-     * @return  bool
+     * @return bool
      */
     public static function delete($path)
     {
@@ -77,24 +77,24 @@ abstract class Filesystem
     }
 
     /**
-     * files
+     * files.
      *
-     * @param   string $path
-     * @param   bool   $recursive
-     * @param   bool   $toArray
+     * @param string $path
+     * @param bool   $recursive
+     * @param bool   $toArray
      *
-     * @return  \CallbackFilterIterator
+     * @return \CallbackFilterIterator
      */
     public static function files($path, $recursive = false, $toArray = false)
     {
         /**
-         * Files callback
+         * Files callback.
          *
          * @param \SplFileInfo                $current  Current item's value
          * @param string                      $key      Current item's key
          * @param \RecursiveDirectoryIterator $iterator Iterator being filtered
          *
-         * @return boolean   TRUE to accept the current item, FALSE otherwise
+         * @return bool TRUE to accept the current item, FALSE otherwise
          */
         $callback = function ($current, $key, $iterator) {
             return $current->isFile();
@@ -104,24 +104,24 @@ abstract class Filesystem
     }
 
     /**
-     * folders
+     * folders.
      *
-     * @param   string  $path
-     * @param   bool    $recursive
-     * @param   boolean $toArray
+     * @param string $path
+     * @param bool   $recursive
+     * @param bool   $toArray
      *
-     * @return  \CallbackFilterIterator
+     * @return \CallbackFilterIterator
      */
     public static function folders($path, $recursive = false, $toArray = false)
     {
         /**
-         * Files callback
+         * Files callback.
          *
          * @param \SplFileInfo                $current  Current item's value
          * @param string                      $key      Current item's key
          * @param \RecursiveDirectoryIterator $iterator Iterator being filtered
          *
-         * @return boolean   TRUE to accept the current item, FALSE otherwise
+         * @return bool TRUE to accept the current item, FALSE otherwise
          */
         $callback = function ($current, $key, $iterator) use ($path, $recursive) {
             if ($recursive) {
@@ -142,24 +142,24 @@ abstract class Filesystem
     }
 
     /**
-     * items
+     * items.
      *
-     * @param   string  $path
-     * @param   bool    $recursive
-     * @param   boolean $toArray
+     * @param string $path
+     * @param bool   $recursive
+     * @param bool   $toArray
      *
-     * @return  \CallbackFilterIterator
+     * @return \CallbackFilterIterator
      */
     public static function items($path, $recursive = false, $toArray = false)
     {
         /**
-         * Files callback
+         * Files callback.
          *
          * @param \SplFileInfo                $current  Current item's value
          * @param string                      $key      Current item's key
          * @param \RecursiveDirectoryIterator $iterator Iterator being filtered
          *
-         * @return boolean   TRUE to accept the current item, FALSE otherwise
+         * @return bool TRUE to accept the current item, FALSE otherwise
          */
         $callback = function ($current, $key, $iterator) use ($path, $recursive) {
             if ($recursive) {
@@ -170,7 +170,7 @@ abstract class Filesystem
 
                 // If set to recursive, every returned folder name will include a dot (.),
                 // so we can't using isDot() to detect folder.
-                return ($iterator->getBasename() !== '..');
+                return $iterator->getBasename() !== '..';
             } else {
                 return !$iterator->isDot();
             }
@@ -182,18 +182,18 @@ abstract class Filesystem
     /**
      * Find one file and return.
      *
-     * @param  string  $path          The directory path.
-     * @param  mixed   $condition     Finding condition, that can be a string, a regex or a callback function.
-     *                                Callback example:
-     *                                <code>
-     *                                function($current, $key, $iterator)
-     *                                {
-     *                                return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
-     *                                }
-     *                                </code>
-     * @param  boolean $recursive     True to resursive.
+     * @param string $path      The directory path.
+     * @param mixed  $condition Finding condition, that can be a string, a regex or a callback function.
+     *                          Callback example:
+     *                          <code>
+     *                          function($current, $key, $iterator)
+     *                          {
+     *                          return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
+     *                          }
+     *                          </code>
+     * @param bool   $recursive True to resursive.
      *
-     * @return  \SplFileInfo  Finded file info object.
+     * @return \SplFileInfo Finded file info object.
      *
      * @since  2.0
      */
@@ -209,19 +209,19 @@ abstract class Filesystem
     /**
      * Find all files which matches condition.
      *
-     * @param  string  $path        The directory path.
-     * @param  mixed   $condition   Finding condition, that can be a string, a regex or a callback function.
-     *                              Callback example:
-     *                              <code>
-     *                              function($current, $key, $iterator)
-     *                              {
-     *                              return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
-     *                              }
-     *                              </code>
-     * @param  boolean $recursive   True to resursive.
-     * @param  boolean $toArray     True to convert iterator to array.
+     * @param string $path      The directory path.
+     * @param mixed  $condition Finding condition, that can be a string, a regex or a callback function.
+     *                          Callback example:
+     *                          <code>
+     *                          function($current, $key, $iterator)
+     *                          {
+     *                          return @preg_match('^Foo', $current->getFilename())  && ! $iterator->isDot();
+     *                          }
+     *                          </code>
+     * @param bool   $recursive True to resursive.
+     * @param bool   $toArray   True to convert iterator to array.
      *
-     * @return  \CallbackFilterIterator  Found files or paths iterator.
+     * @return \CallbackFilterIterator Found files or paths iterator.
      *
      * @since  2.0
      */
@@ -230,19 +230,19 @@ abstract class Filesystem
         // If conditions is string or array, we make it to regex.
         if (!($condition instanceof \Closure) && !($condition instanceof FileComparatorInterface)) {
             if (is_array($condition)) {
-                $condition = '/(' . implode('|', $condition) . ')/';
+                $condition = '/('.implode('|', $condition).')/';
             } else {
-                $condition = '/' . (string) $condition . '/';
+                $condition = '/'.(string) $condition.'/';
             }
 
             /**
-             * Files callback
+             * Files callback.
              *
              * @param \SplFileInfo                $current  Current item's value
              * @param string                      $key      Current item's key
              * @param \RecursiveDirectoryIterator $iterator Iterator being filtered
              *
-             * @return boolean   TRUE to accept the current item, FALSE otherwise
+             * @return bool TRUE to accept the current item, FALSE otherwise
              */
             $condition = function ($current, $key, $iterator) use ($condition) {
                 return @preg_match($condition, $iterator->getFilename()) && !$iterator->isDot();
@@ -250,13 +250,13 @@ abstract class Filesystem
         } elseif ($condition instanceof FileComparatorInterface) {
             // If condition is compare object, wrap it with callback.
             /**
-             * Files callback
+             * Files callback.
              *
              * @param \SplFileInfo                $current  Current item's value
              * @param string                      $key      Current item's key
              * @param \RecursiveDirectoryIterator $iterator Iterator being filtered
              *
-             * @return boolean   TRUE to accept the current item, FALSE otherwise
+             * @return bool TRUE to accept the current item, FALSE otherwise
              */
             $condition = function ($current, $key, $iterator) use ($condition) {
                 return $condition->compare($current, $key, $iterator);
@@ -271,12 +271,12 @@ abstract class Filesystem
      *
      * Reference: http://www.php.net/manual/en/class.callbackfilteriterator.php
      *
-     * @param  string   $path      The directory path.
-     * @param  \Closure $callback  A callback function to filter file.
-     * @param  boolean  $recursive True to recursive.
-     * @param  boolean  $toArray   True to convert iterator to array.
+     * @param string   $path      The directory path.
+     * @param \Closure $callback  A callback function to filter file.
+     * @param bool     $recursive True to recursive.
+     * @param bool     $toArray   True to convert iterator to array.
      *
-     * @return  \CallbackFilterIterator  Filtered file or path iteator.
+     * @return \CallbackFilterIterator Filtered file or path iteator.
      *
      * @since  2.0
      */
@@ -294,12 +294,13 @@ abstract class Filesystem
     /**
      * Create file iterator of current dir.
      *
-     * @param  string  $path      The directory path.
-     * @param  boolean $recursive True to recursive.
-     * @param  integer $options   FilesystemIterator Flags provides which will affect the behavior of some methods.
+     * @param string $path      The directory path.
+     * @param bool   $recursive True to recursive.
+     * @param int    $options   FilesystemIterator Flags provides which will affect the behavior of some methods.
      *
      * @throws \InvalidArgumentException
-     * @return  \FilesystemIterator|\RecursiveIteratorIterator  File & dir iterator.
+     *
+     * @return \FilesystemIterator|\RecursiveIteratorIterator File & dir iterator.
      */
     public static function createIterator($path, $recursive = false, $options = null)
     {
@@ -323,11 +324,11 @@ abstract class Filesystem
     }
 
     /**
-     * iteratorToArray
+     * iteratorToArray.
      *
      * @param \Traversable $iterator
      *
-     * @return  array
+     * @return array
      */
     public static function iteratorToArray(\Traversable $iterator)
     {

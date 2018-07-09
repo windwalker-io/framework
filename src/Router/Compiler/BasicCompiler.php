@@ -18,12 +18,12 @@ use Windwalker\Router\RouteHelper;
 abstract class BasicCompiler
 {
     /**
-     * compile
+     * compile.
      *
      * @param string $pattern
      * @param array  $requirements
      *
-     * @return  string
+     * @return string
      */
     public static function compile($pattern, $requirements = [])
     {
@@ -32,19 +32,19 @@ abstract class BasicCompiler
         $regex = static::replaceOptionalSegments($pattern);
         $regex = static::replaceWildcards($regex);
 
-        return chr(1) . '^' . static::replaceAllRegex($regex, $requirements) . '$' . chr(1);
+        return chr(1).'^'.static::replaceAllRegex($regex, $requirements).'$'.chr(1);
     }
 
     /**
-     * prepareOptionalSegments
+     * prepareOptionalSegments.
      *
      * @param string $regex
      *
-     * @return  string
+     * @return string
      */
     protected static function replaceOptionalSegments($regex)
     {
-        preg_match(chr(1) . '\(/([a-z][a-zA-Z0-9_,]*)\)' . chr(1), $regex, $matches);
+        preg_match(chr(1).'\(/([a-z][a-zA-Z0-9_,]*)\)'.chr(1), $regex, $matches);
 
         if (!$matches) {
             return $regex;
@@ -65,22 +65,22 @@ abstract class BasicCompiler
             $tail .= ')?';
         }
 
-        $repl = $head . $tail;
+        $repl = $head.$tail;
 
         return str_replace($matches[0], $repl, $regex);
     }
 
     /**
-     * replaceRegex
+     * replaceRegex.
      *
      * @param string $regex
      * @param array  $requirements
      *
-     * @return  string
+     * @return string
      */
     protected static function replaceAllRegex($regex, $requirements = [])
     {
-        $find = chr(1) . '\(([a-z][a-zA-Z0-9_]*)\)' . chr(1);
+        $find = chr(1).'\(([a-z][a-zA-Z0-9_]*)\)'.chr(1);
 
         preg_match_all($find, $regex, $matches, PREG_SET_ORDER);
 
@@ -94,12 +94,12 @@ abstract class BasicCompiler
     }
 
     /**
-     * requirementPattern
+     * requirementPattern.
      *
      * @param string $name
      * @param array  $requirements
      *
-     * @return  string
+     * @return string
      */
     protected static function requirementPattern($name, $requirements = [])
     {
@@ -119,7 +119,7 @@ abstract class BasicCompiler
      */
     protected static function replaceWildcards($regex)
     {
-        preg_match_all(chr(1) . '\(\\*([a-z][a-zA-Z0-9]*)\)' . chr(1), $regex, $matches, PREG_SET_ORDER);
+        preg_match_all(chr(1).'\(\\*([a-z][a-zA-Z0-9]*)\)'.chr(1), $regex, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
             $name = $match[1];

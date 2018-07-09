@@ -26,28 +26,28 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
     /**
      * Property method.
      *
-     * @var  string
+     * @var string
      */
     protected $method;
 
     /**
      * Property uri.
      *
-     * @var  UriInterface
+     * @var UriInterface
      */
     protected $uri;
 
     /**
      * Property requestTarget.
      *
-     * @var  string
+     * @var string
      */
     protected $requestTarget;
 
     /**
      * Property allowMethods.
      *
-     * @var  array
+     * @var array
      */
     protected $allowMethods = [
         'CONNECT',
@@ -64,10 +64,10 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
     /**
      * Class init.
      *
-     * @param  string|UriInterface    $uri     The uri target of this request.
-     * @param  string                 $method  The request method.
-     * @param  string|StreamInterface $body    The request body.
-     * @param  array                  $headers The request headers.
+     * @param string|UriInterface    $uri     The uri target of this request.
+     * @param string                 $method  The request method.
+     * @param string|StreamInterface $body    The request body.
+     * @param array                  $headers The request headers.
      */
     public function __construct($uri = null, $method = null, $body = 'php://memory', $headers = [])
     {
@@ -129,7 +129,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
         $target = $this->uri->getPath();
 
         if ($this->uri->getQuery()) {
-            $target .= '?' . $this->uri->getQuery();
+            $target .= '?'.$this->uri->getQuery();
         }
 
         if (empty($target)) {
@@ -156,8 +156,9 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
      *
      * @param mixed $requestTarget
      *
-     * @return static
      * @throws \InvalidArgumentException if the request target is invalid.
+     *
+     * @return static
      */
     public function withRequestTarget($requestTarget)
     {
@@ -194,8 +195,9 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
      *
      * @param string $method Case-sensitive method.
      *
-     * @return static
      * @throws \InvalidArgumentException for invalid HTTP methods.
+     *
+     * @return static
      */
     public function withMethod($method)
     {
@@ -214,8 +216,9 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
      * This method MUST return a UriInterface instance.
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
+     *
      * @return UriInterface Returns a UriInterface instance
-     *     representing the URI of the request.
+     *                      representing the URI of the request.
      */
     public function getUri()
     {
@@ -270,7 +273,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
         $host = $uri->getHost();
 
         if ($uri->getPort()) {
-            $host .= ':' . $uri->getPort();
+            $host .= ':'.$uri->getPort();
         }
 
         $new->headerNames['host'] = 'Host';
@@ -282,9 +285,9 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
     /**
      * Validate method name.
      *
-     * @param   string $method Method to validate.
+     * @param string $method Method to validate.
      *
-     * @return  string  Valid or not.
+     * @return string Valid or not.
      */
     protected function validateMethod($method)
     {
@@ -299,7 +302,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
         $method = strtoupper($method);
 
         if (!in_array($method, $this->allowMethods)) {
-            throw new \InvalidArgumentException('Invalid HTTP method: ' . $method);
+            throw new \InvalidArgumentException('Invalid HTTP method: '.$method);
         }
 
         return $method;

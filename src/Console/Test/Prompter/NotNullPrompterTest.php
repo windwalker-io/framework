@@ -11,7 +11,7 @@ namespace Windwalker\Console\Test\Prompter;
 use Windwalker\Console\Prompter\NotNullPrompter;
 
 /**
- * Class ValidatePrompterTest
+ * Class ValidatePrompterTest.
  *
  * @since  2.0
  */
@@ -31,13 +31,13 @@ class NotNullPrompterTest extends AbstractPrompterTest
 
         $this->instance = $prompter = new NotNullPrompter('Tell me something: ', null, null, $this->io);
 
-        $this->setStream(" ");
+        $this->setStream(' ');
     }
 
     /**
      * Test prompter ask.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */

@@ -26,28 +26,28 @@ class ClassMeta
     /**
      * Property class.
      *
-     * @var  string
+     * @var string
      */
     protected $class;
 
     /**
      * Property arguments.
      *
-     * @var  array
+     * @var array
      */
     protected $arguments = [];
 
     /**
      * Property caches.
      *
-     * @var  array
+     * @var array
      */
     protected $caches = [];
 
     /**
      * Property container.
      *
-     * @var  Container
+     * @var Container
      */
     protected $container;
 
@@ -64,14 +64,15 @@ class ClassMeta
     }
 
     /**
-     * Method to get property Argument
+     * Method to get property Argument.
      *
-     * @param  string $name
-     * @param  mixed  $default
+     * @param string $name
+     * @param mixed  $default
      *
-     * @return array
      * @throws Exception\DependencyResolutionException
      * @throws \ReflectionException
+     *
+     * @return array
      */
     public function getArgument($name, $default = null)
     {
@@ -87,12 +88,12 @@ class ClassMeta
     }
 
     /**
-     * Method to set property argument
+     * Method to set property argument.
      *
-     * @param   string $name
-     * @param   mixed  $value
+     * @param string $name
+     * @param mixed  $value
      *
-     * @return  static Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setArgument($name, $value)
     {
@@ -109,11 +110,11 @@ class ClassMeta
     }
 
     /**
-     * removeArgument
+     * removeArgument.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static
+     * @return static
      */
     public function removeArgument($name)
     {
@@ -124,11 +125,12 @@ class ClassMeta
     }
 
     /**
-     * Method to get property Arguments
+     * Method to get property Arguments.
      *
-     * @return  array
      * @throws Exception\DependencyResolutionException
      * @throws \ReflectionException
+     *
+     * @return array
      */
     public function getArguments()
     {
@@ -142,11 +144,11 @@ class ClassMeta
     }
 
     /**
-     * Method to set property arguments
+     * Method to set property arguments.
      *
-     * @param   array $arguments
+     * @param array $arguments
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setArguments($arguments)
     {
@@ -158,9 +160,9 @@ class ClassMeta
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  static
+     * @return static
      */
     public function reset()
     {
@@ -170,12 +172,12 @@ class ClassMeta
     }
 
     /**
-     * __call
+     * __call.
      *
-     * @param   string $name
-     * @param   array  $args
+     * @param string $name
+     * @param array  $args
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __call($name, $args)
     {
@@ -193,6 +195,6 @@ class ClassMeta
             return call_user_func_array([$this->container, $name], $args);
         }
 
-        throw new \BadMethodCallException(__METHOD__ . '::' . $name . '() not found.');
+        throw new \BadMethodCallException(__METHOD__.'::'.$name.'() not found.');
     }
 }

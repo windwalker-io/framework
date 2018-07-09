@@ -21,7 +21,7 @@ use Windwalker\Event\ListenerMapper;
 use Windwalker\Record\Exception\NoResultException;
 
 /**
- * Class Record
+ * Class Record.
  *
  * @since 2.0
  */
@@ -34,7 +34,8 @@ class Record extends Entity
     /**
      * Name of the database table to model.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $table = '';
@@ -42,14 +43,15 @@ class Record extends Entity
     /**
      * Property data.
      *
-     * @var  array
+     * @var array
      */
     protected $data = [];
 
     /**
      * Name of the primary key fields in the table.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $keys = [];
@@ -57,7 +59,8 @@ class Record extends Entity
     /**
      * Indicates that the primary keys autoincrement.
      *
-     * @var    boolean
+     * @var bool
+     *
      * @since  2.0
      */
     protected $autoIncrement = null;
@@ -65,7 +68,8 @@ class Record extends Entity
     /**
      * DatabaseDriver object.
      *
-     * @var    AbstractDatabaseDriver
+     * @var AbstractDatabaseDriver
+     *
      * @since  2.0
      */
     protected $db;
@@ -73,21 +77,21 @@ class Record extends Entity
     /**
      * Property dispatcher.
      *
-     * @var  Dispatcher
+     * @var Dispatcher
      */
     protected $dispatcher;
 
     /**
      * Property fieldsCache.
      *
-     * @var  array
+     * @var array
      */
     protected static $fieldsCache = [];
 
     /**
      * Property mapper.
      *
-     * @var  AbstractDataMapper
+     * @var AbstractDataMapper
      */
     protected $mapper;
 
@@ -96,12 +100,13 @@ class Record extends Entity
      * be overridden by child classes to explicitly set the table and key fields
      * for a particular database table.
      *
-     * @param   string             $table   Name of the table to model.
-     * @param   mixed              $keys    Name of the primary key field in the table or array of field names that
-     *                                      compose the primary key.
-     * @param   AbstractDataMapper $mapper  The DataMapper Adapter to access database.
+     * @param string             $table  Name of the table to model.
+     * @param mixed              $keys   Name of the primary key field in the table or array of field names that
+     *                                   compose the primary key.
+     * @param AbstractDataMapper $mapper The DataMapper Adapter to access database.
      *
      * @throws \Exception
+     *
      * @since   2.0
      */
     public function __construct($table = null, $keys = 'id', AbstractDataMapper $mapper = null)
@@ -133,10 +138,10 @@ class Record extends Entity
     /**
      * Magic getter to get a table field.
      *
-     * @param   string $key     The key name.
-     * @param   null   $default The default value.
+     * @param string $key     The key name.
+     * @param null   $default The default value.
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -153,12 +158,13 @@ class Record extends Entity
      * property name.  The rows that will be reordered are those whose value matches
      * the AbstractTable instance for the property specified.
      *
-     * @param   mixed   $src         An associative array or object to bind to the AbstractTable instance.
-     * @param   boolean $updateNulls True to update fields even if they are null.
-     *
-     * @return  static  Method allows chaining
+     * @param mixed $src         An associative array or object to bind to the AbstractTable instance.
+     * @param bool  $updateNulls True to update fields even if they are null.
      *
      * @throws \Exception
+     *
+     * @return static Method allows chaining
+     *
      * @since   2.0
      */
     public function save($src, $updateNulls = false)
@@ -177,12 +183,13 @@ class Record extends Entity
      * method only binds properties that are publicly accessible and optionally
      * takes an array of properties to ignore when binding.
      *
-     * @param   mixed $src          An associative array or object to bind to the AbstractTable instance.
-     * @param   bool  $replaceNulls Replace NULL value.
+     * @param mixed $src          An associative array or object to bind to the AbstractTable instance.
+     * @param bool  $replaceNulls Replace NULL value.
+     *
+     * @throws \Exception
      *
      * @return static Method allows chaining
      *
-     * @throws \Exception
      * @since   2.0
      */
     public function bind($src, $replaceNulls = false)
@@ -205,10 +212,10 @@ class Record extends Entity
 
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
-                'src' => &$src,
-                'fields' => $fields,
+                'src'          => &$src,
+                'fields'       => $fields,
                 'replaceNulls' => &$replaceNulls,
             ]
         );
@@ -223,7 +230,7 @@ class Record extends Entity
         }
 
         // Event
-        $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+        $this->triggerEvent('onAfter'.ucfirst(__FUNCTION__));
 
         return $this;
     }
@@ -232,22 +239,24 @@ class Record extends Entity
      * Method to load a row from the database by primary key and bind the fields
      * to the AbstractTable instance properties.
      *
-     * @param   mixed   $keys    An optional primary key value to load the row by, or an array of fields to match.  If
-     *                           not set the instance property value is used.
-     * @param   boolean $reset   True to reset the default values before loading the new row.
+     * @param mixed $keys  An optional primary key value to load the row by, or an array of fields to match.  If
+     *                     not set the instance property value is used.
+     * @param bool  $reset True to reset the default values before loading the new row.
      *
-     * @return  static  Method allows chaining
      * @throws \Exception
+     *
+     * @return static Method allows chaining
+     *
      * @since   2.0
      */
     public function load($keys = null, $reset = true)
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'conditions' => &$keys,
-                'reset' => &$reset,
+                'reset'      => &$reset,
             ]
         );
 
@@ -284,7 +293,7 @@ class Record extends Entity
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$row,
             ]
@@ -296,12 +305,13 @@ class Record extends Entity
     /**
      * Method to delete a row from the database table by primary key value.
      *
-     * @param   mixed $conditions An optional primary key value to delete.  If not set the instance property value is
-     *                            used.
-     *
-     * @return  static  Method allows chaining
+     * @param mixed $conditions An optional primary key value to delete.  If not set the instance property value is
+     *                          used.
      *
      * @throws \Exception
+     *
+     * @return static Method allows chaining
+     *
      * @since   2.0
      */
     public function delete($conditions = null)
@@ -328,7 +338,7 @@ class Record extends Entity
 
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'conditions' => &$conditions,
             ]
@@ -344,7 +354,7 @@ class Record extends Entity
         }
 
         // Event
-        $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+        $this->triggerEvent('onAfter'.ucfirst(__FUNCTION__));
 
         return $this;
     }
@@ -355,11 +365,11 @@ class Record extends Entity
      * method to make sure the data they are storing in the database is safe and
      * as expected before storage.
      *
-     * @return  static  Method allows chaining
+     * @throws \RuntimeException
+     *
+     * @return static Method allows chaining
      *
      * @since   2.0
-     *
-     * @throws  \RuntimeException
      */
     public function validate()
     {
@@ -373,11 +383,12 @@ class Record extends Entity
      * a new row will be inserted into the database with the properties from the
      * AbstractTable instance.
      *
-     * @param   boolean $updateNulls True to update fields even if they are null.
-     *
-     * @return  static  Method allows chaining
+     * @param bool $updateNulls True to update fields even if they are null.
      *
      * @throws \Exception
+     *
+     * @return static Method allows chaining
+     *
      * @since   2.0
      */
     public function store($updateNulls = false)
@@ -388,7 +399,7 @@ class Record extends Entity
 
         // @Event: Create / Update
         $this->triggerEvent(
-            'onBefore' . $action,
+            'onBefore'.$action,
             [
                 'updateNulls' => &$updateNulls,
             ]
@@ -396,7 +407,7 @@ class Record extends Entity
 
         // @Event: Store
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'updateNulls' => &$updateNulls,
             ]
@@ -407,11 +418,11 @@ class Record extends Entity
         $this->getDataMapper()->saveOne($this, $this->getKeyName(true), $updateNulls);
 
         // @Event: Store
-        $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+        $this->triggerEvent('onAfter'.ucfirst(__FUNCTION__));
 
         // @Event: Create / Update
         $this->triggerEvent(
-            'onAfter' . $action,
+            'onAfter'.$action,
             [
                 'updateNulls' => &$updateNulls,
             ]
@@ -421,16 +432,16 @@ class Record extends Entity
     }
 
     /**
-     * create
-     *
-     * @return  static
+     * create.
      *
      * @throws \Exception
+     *
+     * @return static
      */
     public function create()
     {
         // Event
-        $this->triggerEvent('onBefore' . ucfirst(__FUNCTION__), []);
+        $this->triggerEvent('onBefore'.ucfirst(__FUNCTION__), []);
 
         $this->triggerEvent('onBeforeStore');
 
@@ -440,24 +451,25 @@ class Record extends Entity
         // Event
         $this->triggerEvent('onAfterStore');
 
-        $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+        $this->triggerEvent('onAfter'.ucfirst(__FUNCTION__));
 
         return $this;
     }
 
     /**
-     * update
+     * update.
      *
      * @param bool $updateNulls
      *
-     * @return  static
      * @throws \Exception
+     *
+     * @return static
      */
     public function update($updateNulls = false)
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'updateNulls' => &$updateNulls,
             ]
@@ -481,7 +493,7 @@ class Record extends Entity
             ]
         );
 
-        $this->triggerEvent('onAfter' . ucfirst(__FUNCTION__));
+        $this->triggerEvent('onAfter'.ucfirst(__FUNCTION__));
 
         return $this;
     }
@@ -489,7 +501,7 @@ class Record extends Entity
     /**
      * Get the table name.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -499,11 +511,11 @@ class Record extends Entity
     }
 
     /**
-     * Method to set property table
+     * Method to set property table.
      *
-     * @param   string $table
+     * @param string $table
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTableName($table)
     {
@@ -513,12 +525,13 @@ class Record extends Entity
     }
 
     /**
-     * loadFields
+     * loadFields.
      *
      * @param bool $reset
      *
-     * @return \stdClass[]
      * @throws \Exception
+     *
+     * @return \stdClass[]
      */
     public function getFields($reset = false)
     {
@@ -538,10 +551,10 @@ class Record extends Entity
     /**
      * Method to get the primary key field name for the table.
      *
-     * @param   boolean $multiple True to return all primary keys (as an array) or false to return just the first one
-     *                            (as a string).
+     * @param bool $multiple True to return all primary keys (as an array) or false to return just the first one
+     *                       (as a string).
      *
-     * @return  array|mixed  Array of primary key field names or string containing the first primary key field.
+     * @return array|mixed Array of primary key field names or string containing the first primary key field.
      *
      * @since   2.0
      */
@@ -559,9 +572,10 @@ class Record extends Entity
     /**
      * Validate that the primary key has been set.
      *
-     * @return  boolean  True if the primary key(s) have been set.
-     *
      * @throws \Exception
+     *
+     * @return bool True if the primary key(s) have been set.
+     *
      * @since   2.0
      */
     public function hasPrimaryKey()
@@ -588,12 +602,12 @@ class Record extends Entity
     /**
      * Check a field value exists in database or not, to keep a field unique.
      *
-     * @param   string $field The field name to check.
-     * @param   mixed  $value The value to check.
-     *
-     * @return bool
+     * @param string $field The field name to check.
+     * @param mixed  $value The value to check.
      *
      * @throws \Exception
+     *
+     * @return bool
      */
     public function valueExists($field, $value = null)
     {
@@ -629,12 +643,12 @@ class Record extends Entity
     }
 
     /**
-     * triggerEvent
+     * triggerEvent.
      *
-     * @param   string|Event $event
-     * @param   array        $args
+     * @param string|Event $event
+     * @param array        $args
      *
-     * @return  EventInterface
+     * @return EventInterface
      *
      * @since   2.1
      */
@@ -643,7 +657,7 @@ class Record extends Entity
         $dispatcher = $this->getDispatcher();
 
         if (!$dispatcher instanceof DispatcherInterface) {
-            return null;
+            return;
         }
 
         $args['record'] = $this;
@@ -660,9 +674,9 @@ class Record extends Entity
     }
 
     /**
-     * Method to get property Dispatcher
+     * Method to get property Dispatcher.
      *
-     * @return  DispatcherInterface
+     * @return DispatcherInterface
      *
      * @since   2.1
      */
@@ -680,11 +694,11 @@ class Record extends Entity
     }
 
     /**
-     * Method to set property dispatcher
+     * Method to set property dispatcher.
      *
-     * @param   DispatcherInterface $dispatcher
+     * @param DispatcherInterface $dispatcher
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since   2.1
      */
@@ -702,9 +716,10 @@ class Record extends Entity
      *
      * @param bool $loadDefault
      *
-     * @return  static
-     *
      * @throws \Exception
+     *
+     * @return static
+     *
      * @since   2.0
      */
     public function reset($loadDefault = true)
@@ -720,12 +735,13 @@ class Record extends Entity
     }
 
     /**
-     * loadDefault
+     * loadDefault.
      *
      * @param bool $replace
      *
-     * @return static
      * @throws \Exception
+     *
+     * @return static
      */
     public function loadDefault($replace = false)
     {
@@ -739,10 +755,11 @@ class Record extends Entity
     }
 
     /**
-     * Method to get property Mapper
+     * Method to get property Mapper.
      *
-     * @return  AbstractDataMapper
      * @throws \Exception
+     *
+     * @return AbstractDataMapper
      */
     public function getDataMapper()
     {
@@ -754,11 +771,11 @@ class Record extends Entity
     }
 
     /**
-     * Method to set property mapper
+     * Method to set property mapper.
      *
-     * @param   AbstractDataMapper $mapper
+     * @param AbstractDataMapper $mapper
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDataMapper($mapper)
     {

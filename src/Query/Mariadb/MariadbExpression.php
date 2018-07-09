@@ -11,7 +11,7 @@ namespace Windwalker\Query\Mariadb;
 use Windwalker\Query\Mysql\MysqlExpression;
 
 /**
- * Class MariadbExpression
+ * Class MariadbExpression.
  *
  * @since 2.0
  */

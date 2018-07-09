@@ -31,39 +31,39 @@ class PostgresqlType extends DataType
      *
      * @see  https://en.wikibooks.org/wiki/Converting_MySQL_to_PostgreSQL
      *
-     * @var  array
+     * @var array
      */
     protected static $typeMapping = [
-        DataType::TINYINT => self::SMALLINT,
+        DataType::TINYINT  => self::SMALLINT,
         DataType::DATETIME => self::TIMESTAMP,
-        'tinytext' => self::TEXT,
-        'mediumtext' => self::TEXT,
+        'tinytext'         => self::TEXT,
+        'mediumtext'       => self::TEXT,
         DataType::LONGTEXT => self::TEXT,
         // MysqlType::ENUM => self::VARCHAR, // Postgres support ENUM after 8.3
-        MysqlType::SET => self::TEXT,
+        MysqlType::SET   => self::TEXT,
         MysqlType::FLOAT => self::REAL,
     ];
 
     /**
-     * "Default Length", "Default Value", "PHP Type"
+     * "Default Length", "Default Value", "PHP Type".
      *
-     * @var  array
+     * @var array
      */
     public static $typeDefinitions = [
-        self::BOOLEAN => [1, 0, 'bool'],
-        self::SERIAL => [null, 0, 'int'],
-        self::INTEGER => [null, 0, 'int'],
-        self::SMALLINT => [null, 0, 'int'],
-        self::REAL => [null, 0, 'float'],
+        self::BOOLEAN   => [1, 0, 'bool'],
+        self::SERIAL    => [null, 0, 'int'],
+        self::INTEGER   => [null, 0, 'int'],
+        self::SMALLINT  => [null, 0, 'int'],
+        self::REAL      => [null, 0, 'float'],
         self::TIMESTAMP => [null, '1970-01-01 00:00:00', 'string'],
-        self::INTERVAL => [16, 0, 'string'],
-        self::DATETIME => [null, '1970-01-01 00:00:00', 'string'],
+        self::INTERVAL  => [16, 0, 'string'],
+        self::DATETIME  => [null, '1970-01-01 00:00:00', 'string'],
     ];
 
     /**
      * Property noLength.
      *
-     * @var  array
+     * @var array
      */
     protected static $noLength = [
         self::INTEGER,
@@ -73,11 +73,11 @@ class PostgresqlType extends DataType
     ];
 
     /**
-     * noLength
+     * noLength.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  boolean
+     * @return bool
      */
     public static function noLength($type)
     {

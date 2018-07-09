@@ -9,7 +9,7 @@
 namespace Windwalker\Data;
 
 /**
- * The Data Interface
+ * The Data Interface.
  *
  * @since 2.0
  */
@@ -18,40 +18,40 @@ interface DataInterface
     /**
      * Bind the data into this object.
      *
-     * @param   mixed   $values       The data array or object.
-     * @param   boolean $replaceNulls Replace null or not.
+     * @param mixed $values       The data array or object.
+     * @param bool  $replaceNulls Replace null or not.
      *
-     * @return  Data Return self to support chaining.
+     * @return Data Return self to support chaining.
      */
     public function bind($values, $replaceNulls = false);
 
     /**
      * Is this object empty?
      *
-     * @return  boolean
+     * @return bool
      */
     public function isNull();
 
     /**
      * Is this object has properties?
      *
-     * @return  boolean
+     * @return bool
      */
     public function notNull();
 
     /**
-     * Dump all data as array
+     * Dump all data as array.
      *
-     * @return  array
+     * @return array
      */
     public function dump();
 
     /**
-     * __get
+     * __get.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  mixed
+     * @return mixed
      */
     public function __get($name);
 }

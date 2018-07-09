@@ -21,14 +21,14 @@ class DbProfilerMiddleware extends AbstractMiddleware
     /**
      * Property before.
      *
-     * @var  callable
+     * @var callable
      */
     protected $before;
 
     /**
      * Property after.
      *
-     * @var  callable
+     * @var callable
      */
     protected $after;
 
@@ -46,7 +46,7 @@ class DbProfilerMiddleware extends AbstractMiddleware
     /**
      * Call next middleware.
      *
-     * @param  mixed $data
+     * @param mixed $data
      *
      * @return mixed
      */
@@ -69,9 +69,9 @@ class DbProfilerMiddleware extends AbstractMiddleware
     }
 
     /**
-     * Method to get property Before
+     * Method to get property Before.
      *
-     * @return  callable
+     * @return callable
      */
     public function getBefore()
     {
@@ -80,11 +80,11 @@ class DbProfilerMiddleware extends AbstractMiddleware
     }
 
     /**
-     * Method to set property before
+     * Method to set property before.
      *
-     * @param   callable $before
+     * @param callable $before
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setBefore($before)
     {
@@ -98,9 +98,9 @@ class DbProfilerMiddleware extends AbstractMiddleware
     }
 
     /**
-     * Method to get property After
+     * Method to get property After.
      *
-     * @return  callable
+     * @return callable
      */
     public function getAfter()
     {
@@ -109,11 +109,11 @@ class DbProfilerMiddleware extends AbstractMiddleware
     }
 
     /**
-     * Method to set property after
+     * Method to set property after.
      *
-     * @param   callable $after
+     * @param callable $after
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setAfter($after)
     {

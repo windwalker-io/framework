@@ -18,25 +18,25 @@ abstract class AbstractEngineRenderer extends AbstractRenderer
     /**
      * Property engine.
      *
-     * @var  object
+     * @var object
      */
     protected $engine = null;
 
     /**
-     * Method to get property Engine
+     * Method to get property Engine.
      *
-     * @param   boolean $new
+     * @param bool $new
      *
-     * @return  object
+     * @return object
      */
     abstract public function getEngine($new = false);
 
     /**
-     * Method to set property engine
+     * Method to set property engine.
      *
-     * @param   object $engine
+     * @param object $engine
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     abstract public function setEngine($engine);
 }

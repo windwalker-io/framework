@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Database\Test\AbstractQueryTestCase;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
- * Test class of PostgresqlGrammar
+ * Test class of PostgresqlGrammar.
  *
  * @since 2.0
  */
@@ -27,7 +27,7 @@ class PostgresqlGrammarTest extends AbstractQueryTestCase
      */
     public function testShowDatabases()
     {
-        $expected = "SELECT datname FROM pg_database WHERE a = b AND datistemplate = false;";
+        $expected = 'SELECT datname FROM pg_database WHERE a = b AND datistemplate = false;';
 
         $actual = PostgresqlGrammar::listDatabases('a = b');
 
@@ -108,7 +108,7 @@ class PostgresqlGrammarTest extends AbstractQueryTestCase
      */
     public function testShowTableColumns()
     {
-        $expected = <<<SQL
+        $expected = <<<'SQL'
 SELECT attr.attname AS "column_name",
 	pg_catalog.format_type(attr.atttypid, attr.atttypmod) AS "column_type",
 	CASE WHEN attr.attnotnull IS TRUE THEN 'NO' ELSE 'YES' END AS "Null",
@@ -141,7 +141,7 @@ SQL;
      */
     public function testShowDbTables()
     {
-        $expected = <<<SQL
+        $expected = <<<'SQL'
 SELECT table_name AS "Name"
 FROM information_schema.tables
 WHERE table_type = 'BASE TABLE'
@@ -179,9 +179,9 @@ CREATE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('email')
 SQL;
 
         $columns = [
-            'id' => 'serial NOT NULL',
-            'name' => ['varchar(255)', 'NOT NULL'],
-            'email' => "varchar(255) NOT NULL",
+            'id'    => 'serial NOT NULL',
+            'name'  => ['varchar(255)', 'NOT NULL'],
+            'email' => 'varchar(255) NOT NULL',
         ];
 
         $keys = [
@@ -206,9 +206,9 @@ CREATE UNIQUE INDEX {$this->qn('idx_alias')} ON {$this->qn('foo')} ({$this->qn('
 SQL;
 
         $columns = [
-            'id' => 'int(11) NOT NULL',
-            'name' => ['varchar(255)', 'NOT NULL'],
-            'email' => "varchar(255) NOT NULL",
+            'id'    => 'int(11) NOT NULL',
+            'name'  => ['varchar(255)', 'NOT NULL'],
+            'email' => 'varchar(255) NOT NULL',
         ];
 
         $keys = [
@@ -429,7 +429,7 @@ SQL;
      */
     public function testBuild()
     {
-        $expected = "FLOWER SAKURA SUNFLOWER OLIVE";
+        $expected = 'FLOWER SAKURA SUNFLOWER OLIVE';
 
         $actual = PostgresqlGrammar::build('FLOWER', 'SAKURA', 'SUNFLOWER', 'OLIVE');
 

@@ -16,9 +16,9 @@ namespace Windwalker\Environment;
 class PhpHelper
 {
     /**
-     * isWeb
+     * isWeb.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isWeb()
     {
@@ -34,9 +34,9 @@ class PhpHelper
     }
 
     /**
-     * isCli
+     * isCli.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isCli()
     {
@@ -50,9 +50,9 @@ class PhpHelper
     }
 
     /**
-     * isHHVM
+     * isHHVM.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isHHVM()
     {
@@ -60,9 +60,9 @@ class PhpHelper
     }
 
     /**
-     * isPHP
+     * isPHP.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isPHP()
     {
@@ -70,9 +70,9 @@ class PhpHelper
     }
 
     /**
-     * isEmbed
+     * isEmbed.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isEmbed()
     {
@@ -85,7 +85,7 @@ class PhpHelper
     }
 
     /**
-     * Get PHP version
+     * Get PHP version.
      *
      * @return string
      */
@@ -99,9 +99,9 @@ class PhpHelper
     }
 
     /**
-     * setStrict
+     * setStrict.
      *
-     * @return  void
+     * @return void
      */
     public static function setStrict()
     {
@@ -109,9 +109,9 @@ class PhpHelper
     }
 
     /**
-     * setMuted
+     * setMuted.
      *
-     * @return  void
+     * @return void
      */
     public static function setMuted()
     {
@@ -121,7 +121,7 @@ class PhpHelper
     /**
      * Returns true when the runtime used is PHP and Xdebug is loaded.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasXdebug()
     {
@@ -129,9 +129,9 @@ class PhpHelper
     }
 
     /**
-     * supportPcntl
+     * supportPcntl.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function hasPcntl()
     {
@@ -139,9 +139,9 @@ class PhpHelper
     }
 
     /**
-     * supportCurl
+     * supportCurl.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function hasCurl()
     {
@@ -149,9 +149,9 @@ class PhpHelper
     }
 
     /**
-     * supportMcrypt
+     * supportMcrypt.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function hasMcrypt()
     {

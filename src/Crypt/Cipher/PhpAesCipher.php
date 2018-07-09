@@ -8,13 +8,12 @@
 
 namespace Windwalker\Crypt\Cipher;
 
-include_once __DIR__ . '/../lib/aes.class.php';
+include_once __DIR__.'/../lib/aes.class.php';
 
 /**
  * The PhpAesCipher class.
  *
  * @see    https://gist.github.com/chrisns/3992815
- *
  * @since  3.0
  */
 class PhpAesCipher implements CipherInterface
@@ -28,18 +27,18 @@ class PhpAesCipher implements CipherInterface
     /**
      * Property keyLength.
      *
-     * @var  int
+     * @var int
      */
     protected $keyLength = self::KEY_128BIT;
 
     /**
      * Method to decrypt a data string.
      *
-     * @param   string $data The encrypted string to decrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The encrypted string to decrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string  The decrypted data string.
+     * @return string The decrypted data string.
      *
      * @since    2.0
      */
@@ -51,14 +50,15 @@ class PhpAesCipher implements CipherInterface
     /**
      * Method to encrypt a data string.
      *
-     * @param   string $data The data string to encrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The data string to encrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string  The encrypted data string.
+     * @throws \InvalidArgumentException
+     *
+     * @return string The encrypted data string.
      *
      * @since   2.0
-     * @throws  \InvalidArgumentException
      */
     public function encrypt($data, $key = null, $iv = null)
     {

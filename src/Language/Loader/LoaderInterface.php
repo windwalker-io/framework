@@ -9,23 +9,23 @@
 namespace Windwalker\Language\Loader;
 
 /**
- * Interface LoaderInterface
+ * Interface LoaderInterface.
  */
 interface LoaderInterface
 {
     /**
-     * getName
+     * getName.
      *
-     * @return  string
+     * @return string
      */
     public function getName();
 
     /**
-     * load
+     * load.
      *
      * @param string $file
      *
-     * @return  string
+     * @return string
      */
     public function load($file);
 }

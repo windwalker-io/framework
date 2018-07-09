@@ -20,14 +20,14 @@ abstract class GlobalContainer
     /**
      * Property extensions.
      *
-     * @var  EdgeExtensionInterface[]
+     * @var EdgeExtensionInterface[]
      */
     protected static $extensions = [];
 
     /**
      * Property compilers.
      *
-     * @var  array
+     * @var array
      */
     protected static $globals = [];
 
@@ -53,12 +53,12 @@ abstract class GlobalContainer
     protected static $escapedTags = [];
 
     /**
-     * addExtension
+     * addExtension.
      *
      * @param EdgeExtensionInterface $extension
      * @param string                 $name
      *
-     * @return  void
+     * @return void
      */
     public static function addExtension(EdgeExtensionInterface $extension, $name = null)
     {
@@ -66,27 +66,25 @@ abstract class GlobalContainer
     }
 
     /**
-     * getExtension
+     * getExtension.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  \Twig_ExtensionInterface
+     * @return \Twig_ExtensionInterface
      */
     public static function getExtension($name)
     {
         if (!empty(static::$extensions[$name])) {
             return static::$extensions[$name];
         }
-
-        return null;
     }
 
     /**
-     * removeExtension
+     * removeExtension.
      *
      * @param string $name
      *
-     * @return  void
+     * @return void
      */
     public static function removeExtension($name)
     {
@@ -96,9 +94,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property Extensions
+     * Method to get property Extensions.
      *
-     * @return  EdgeExtensionInterface[]
+     * @return EdgeExtensionInterface[]
      */
     public static function getExtensions()
     {
@@ -106,11 +104,11 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property extensions
+     * Method to set property extensions.
      *
-     * @param   EdgeExtensionInterface[] $extensions
+     * @param EdgeExtensionInterface[] $extensions
      *
-     * @return  void
+     * @return void
      */
     public static function setExtensions(array $extensions)
     {
@@ -118,12 +116,12 @@ abstract class GlobalContainer
     }
 
     /**
-     * setGlobal
+     * setGlobal.
      *
      * @param string $name
      * @param mixed  $value
      *
-     * @return  void
+     * @return void
      */
     public static function addGlobal($name, $value)
     {
@@ -131,27 +129,25 @@ abstract class GlobalContainer
     }
 
     /**
-     * getGlobal
+     * getGlobal.
      *
      * @param string $name
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function getGlobal($name)
     {
         if (array_key_exists($name, static::$globals)) {
             return static::$globals[$name];
         }
-
-        return null;
     }
 
     /**
-     * removeGlobal
+     * removeGlobal.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  void
+     * @return void
      */
     public static function removeGlobal($name)
     {
@@ -161,9 +157,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property Globals
+     * Method to get property Globals.
      *
-     * @return  array
+     * @return array
      */
     public static function getGlobals()
     {
@@ -171,11 +167,11 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property globals
+     * Method to set property globals.
      *
-     * @param   array $globals
+     * @param array $globals
      *
-     * @return  void
+     * @return void
      */
     public static function setGlobals(array $globals)
     {
@@ -183,9 +179,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property RawTags
+     * Method to get property RawTags.
      *
-     * @return  array
+     * @return array
      */
     public static function getRawTags()
     {
@@ -193,7 +189,7 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property rawTags
+     * Method to set property rawTags.
      *
      * @param string $start
      * @param string $end
@@ -204,9 +200,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property ContentTags
+     * Method to get property ContentTags.
      *
-     * @return  array
+     * @return array
      */
     public static function getContentTags()
     {
@@ -214,7 +210,7 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property contentTags
+     * Method to set property contentTags.
      *
      * @param string $start
      * @param string $end
@@ -225,9 +221,9 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to get property EscapedTags
+     * Method to get property EscapedTags.
      *
-     * @return  array
+     * @return array
      */
     public static function getEscapedTags()
     {
@@ -235,7 +231,7 @@ abstract class GlobalContainer
     }
 
     /**
-     * Method to set property escapedTags
+     * Method to set property escapedTags.
      *
      * @param string $start
      * @param string $end

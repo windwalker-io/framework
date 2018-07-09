@@ -9,26 +9,26 @@
 namespace Windwalker\Renderer;
 
 /**
- * Interface RendererInterface
+ * Interface RendererInterface.
  */
 interface RendererInterface
 {
     /**
-     * render
+     * render.
      *
      * @param string $file
      * @param array  $data
      *
-     * @return  string
+     * @return string
      */
     public function render($file, $data = []);
 
     /**
      * Method to escape output.
      *
-     * @param   string $output The output to escape.
+     * @param string $output The output to escape.
      *
-     * @return  string  The escaped output.
+     * @return string The escaped output.
      */
     public function escape($output);
 }

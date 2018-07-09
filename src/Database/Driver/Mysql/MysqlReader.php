@@ -11,11 +11,10 @@ namespace Windwalker\Database\Driver\Mysql;
 use Windwalker\Database\Driver\Pdo\PdoReader;
 
 /**
- * Class MysqlReader
+ * Class MysqlReader.
  *
  * @since 2.0
  */
 class MysqlReader extends PdoReader
 {
 }
-

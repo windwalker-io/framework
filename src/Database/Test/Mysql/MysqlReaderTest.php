@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Database\Driver\Pdo\PdoDriver;
 use Windwalker\Database\Driver\Pdo\PdoReader;
 
 /**
- * Test class of MysqlReader
+ * Test class of MysqlReader.
  *
  * @since 2.0
  */
@@ -145,10 +145,10 @@ class MysqlReaderTest extends AbstractMysqlTestCase
      */
     public function testCountAffected()
     {
-        $this->db->setQuery('INSERT INTO ' . $this->qn('#__flower') . ' (' . $this->qn('catid') . ') VALUES (\'3\')');
+        $this->db->setQuery('INSERT INTO '.$this->qn('#__flower').' ('.$this->qn('catid').') VALUES (\'3\')');
         $this->db->setQuery(
             sprintf(
-                'INSERT INTO ' . $this->qn('#__flower') . ' (%s, %s, %s) VALUES ("3", "", "")',
+                'INSERT INTO '.$this->qn('#__flower').' (%s, %s, %s) VALUES ("3", "", "")',
                 $this->qn('catid'),
                 $this->qn('meaning'),
                 $this->qn('params')
@@ -380,9 +380,10 @@ class MysqlReaderTest extends AbstractMysqlTestCase
     /**
      * Method to test setDb().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Database\Command\AbstractReader::setDriver
      */
     public function testSetDriver()

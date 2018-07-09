@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ use Windwalker\Http\Helper\ServerHelper;
 use Windwalker\Http\UploadedFile;
 
 /**
- * Test class of ServerHelper
+ * Test class of ServerHelper.
  *
  * @since 3.0
  */
@@ -28,8 +28,8 @@ class ServerHelperTest extends \PHPUnit\Framework\TestCase
     public function testGetValue()
     {
         $servers = [
-            'HTTP_FOO' => 'foo',
-            'X_BAR' => 'bar',
+            'HTTP_FOO'    => 'foo',
+            'X_BAR'       => 'bar',
             'CONTENT_BAZ' => ['baz'],
         ];
 
@@ -91,9 +91,9 @@ class ServerHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testParseFormData
+     * testParseFormData.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Http\Helper\ServerHelper::parseFormData
      */
@@ -101,7 +101,7 @@ class ServerHelperTest extends \PHPUnit\Framework\TestCase
     {
         $type = 'multipart/form-data; boundary=----WebKitFormBoundary8zi5vcW6H9OgqKSj';
 
-        $input = <<<DATA
+        $input = <<<'DATA'
 ------WebKitFormBoundary8zi5vcW6H9OgqKSj
 Content-Disposition: form-data; name="flower"
 
@@ -122,7 +122,7 @@ DATA;
 
         $this->assertEquals(
             [
-                'data' => ['flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'],
+                'data'  => ['flower' => 'SAKURA', 'tree' => 'Marabutan', 'fruit' => 'Apple'],
                 'files' => [],
             ],
             ServerHelper::parseFormData($input)

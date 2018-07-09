@@ -21,28 +21,28 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Property data.
      *
-     * @var  array
+     * @var array
      */
     protected $data = [];
 
     /**
      * Property aliases.
      *
-     * @var  array
+     * @var array
      */
     protected $aliases = [];
 
     /**
      * Property fields.
      *
-     * @var  \stdClass[]
+     * @var \stdClass[]
      */
     protected $fields = null;
 
     /**
      * Property casts.
      *
-     * @var  array
+     * @var array
      */
     protected $casts = [];
 
@@ -68,7 +68,7 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Prepare your logic.
      *
-     * @return  void
+     * @return void
      */
     protected function init()
     {
@@ -76,9 +76,9 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * loadFields
+     * loadFields.
      *
-     * @return  \stdClass[]
+     * @return \stdClass[]
      */
     public function getFields()
     {
@@ -86,12 +86,12 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * addField
+     * addField.
      *
-     * @param  string $field
-     * @param  string $default
+     * @param string $field
+     * @param string $default
      *
-     * @return  static
+     * @return static
      */
     public function addField($field, $default = null)
     {
@@ -105,23 +105,23 @@ class Entity extends Data implements \JsonSerializable
         }
 
         $defaultProfile = [
-            'Field' => '',
-            'Type' => '',
-            'Collation' => 'utf8_unicode_ci',
-            'Null' => 'NO',
-            'Key' => '',
-            'Default' => '',
-            'Extra' => '',
+            'Field'      => '',
+            'Type'       => '',
+            'Collation'  => 'utf8_unicode_ci',
+            'Null'       => 'NO',
+            'Key'        => '',
+            'Default'    => '',
+            'Extra'      => '',
             'Privileges' => 'select,insert,update,references',
-            'Comment' => '',
+            'Comment'    => '',
         ];
 
         if (is_string($field)) {
             $field = array_merge(
                 $defaultProfile,
                 [
-                    'Field' => $field,
-                    'Type' => gettype($default),
+                    'Field'   => $field,
+                    'Type'    => gettype($default),
                     'Default' => $default,
                 ]
             );
@@ -143,7 +143,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @param array $fields Fields array.
      *
-     * @return  Entity Return self to support chaining.
+     * @return Entity Return self to support chaining.
      */
     public function addFields($fields)
     {
@@ -159,7 +159,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @param string $field Field name.
      *
-     * @return  Entity Return self to support chaining.
+     * @return Entity Return self to support chaining.
      */
     public function removeField($field)
     {
@@ -175,7 +175,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @param string $name
      *
-     * @return  boolean
+     * @return bool
      */
     public function hasField($name)
     {
@@ -190,6 +190,7 @@ class Entity extends Data implements \JsonSerializable
      * @param bool $all
      *
      * @return \ArrayIterator
+     *
      * @since   2.0
      */
     public function getIterator($all = false)
@@ -200,10 +201,10 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Set column alias.
      *
-     * @param   string $name
-     * @param   string $alias
+     * @param string $name
+     * @param string $alias
      *
-     * @return  static
+     * @return static
      */
     public function setAlias($name, $alias)
     {
@@ -219,9 +220,9 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Resolve alias.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  string
+     * @return string
      */
     public function resolveAlias($name)
     {
@@ -233,11 +234,11 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * __isset
+     * __isset.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  boolean
+     * @return bool
      */
     public function __isset($name)
     {
@@ -250,8 +251,9 @@ class Entity extends Data implements \JsonSerializable
      * @param string $field The field to set.
      * @param mixed  $value The value to set.
      *
-     * @return  void
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function __set($field, $value = null)
     {
@@ -263,7 +265,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @param string $field The field to get.
      *
-     * @return  mixed The value we want ot get.
+     * @return mixed The value we want ot get.
      */
     public function __get($field)
     {
@@ -271,12 +273,13 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * __unset
+     * __unset.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  void
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function __unset($name)
     {
@@ -286,19 +289,20 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Magic setter to set a table field.
      *
-     * @param   string $key   The key name.
-     * @param   mixed  $value The value to set.
+     * @param string $key   The key name.
+     * @param mixed  $value The value to set.
      *
-     * @return  static
+     * @throws \InvalidArgumentException
+     *
+     * @return static
      *
      * @since   2.0
-     * @throws  \InvalidArgumentException
      */
     public function set($key, $value = null)
     {
         $key = $this->resolveAlias($key);
 
-        $mutator = 'set' . $this->toCamelCase($key) . 'Value';
+        $mutator = 'set'.$this->toCamelCase($key).'Value';
 
         if (is_callable([$this, $mutator])) {
             $this->$mutator($value);
@@ -312,10 +316,10 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Magic getter to get a table field.
      *
-     * @param   string $key     The key name.
-     * @param   null   $default The default value.
+     * @param string $key     The key name.
+     * @param null   $default The default value.
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
@@ -323,7 +327,7 @@ class Entity extends Data implements \JsonSerializable
     {
         $key = $this->resolveAlias($key);
 
-        $accessor = 'get' . $this->toCamelCase($key) . 'Value';
+        $accessor = 'get'.$this->toCamelCase($key).'Value';
 
         $value = isset($this->data[$key]) ? $this->data[$key] : null;
 
@@ -347,7 +351,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @param mixed $offset Offset key.
      *
-     * @return  boolean
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -359,8 +363,9 @@ class Entity extends Data implements \JsonSerializable
      *
      * @param mixed $offset Offset key.
      *
-     * @throws  \InvalidArgumentException
-     * @return  mixed The value to return.
+     * @throws \InvalidArgumentException
+     *
+     * @return mixed The value to return.
      */
     public function offsetGet($offset)
     {
@@ -373,8 +378,9 @@ class Entity extends Data implements \JsonSerializable
      * @param mixed $offset Offset key.
      * @param mixed $value  The value to set.
      *
-     * @throws  \InvalidArgumentException
-     * @return  void
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function offsetSet($offset, $value)
     {
@@ -386,8 +392,9 @@ class Entity extends Data implements \JsonSerializable
      *
      * @param mixed $offset Offset key to unset.
      *
-     * @throws  \InvalidArgumentException
-     * @return  void
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function offsetUnset($offset)
     {
@@ -397,7 +404,7 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Count this object.
      *
-     * @return  int
+     * @return int
      */
     public function count()
     {
@@ -409,7 +416,7 @@ class Entity extends Data implements \JsonSerializable
      *
      * @param string $field The field name to check.
      *
-     * @return  boolean True if exists.
+     * @return bool True if exists.
      */
     public function exists($field)
     {
@@ -419,7 +426,7 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Is this object empty?
      *
-     * @return  boolean
+     * @return bool
      */
     public function isNull()
     {
@@ -435,7 +442,7 @@ class Entity extends Data implements \JsonSerializable
     /**
      * Is this object has properties?
      *
-     * @return  boolean
+     * @return bool
      */
     public function notNull()
     {
@@ -443,7 +450,7 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * Dump all data as array
+     * Dump all data as array.
      *
      * @param bool $all
      *
@@ -465,11 +472,11 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * toArray
+     * toArray.
      *
      * @param bool $all
      *
-     * @return  array
+     * @return array
      */
     public function toArray($all)
     {
@@ -489,7 +496,7 @@ class Entity extends Data implements \JsonSerializable
      * definition. It will ignore the primary key as well as any private class
      * properties.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -506,11 +513,11 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * toCamelCase
+     * toCamelCase.
      *
-     * @param  string $input
+     * @param string $input
      *
-     * @return  string
+     * @return string
      */
     protected function toCamelCase($input)
     {
@@ -521,10 +528,10 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
      *
-     * @return  mixed data which can be serialized by json_encode(),
-     *          which is a value of any type other than a resource.
+     * @return mixed data which can be serialized by json_encode(),
+     *               which is a value of any type other than a resource.
      *
      * @since   3.1.3
      */
@@ -534,12 +541,12 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * setCast
+     * setCast.
      *
      * @param string $field
      * @param string $cast
      *
-     * @return  static
+     * @return static
      */
     public function setCast($field, $cast)
     {
@@ -549,28 +556,26 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * getCast
+     * getCast.
      *
      * @param string $field
      *
-     * @return  string
+     * @return string
      */
     public function getCast($field)
     {
         if (isset($this->casts[$field])) {
             return $this->casts[$field];
         }
-
-        return null;
     }
 
     /**
-     * castValue
+     * castValue.
      *
      * @param string $field
      * @param mixed  $value
      *
-     * @return  mixed
+     * @return mixed
      */
     public function castValue($field, $value)
     {
@@ -613,11 +618,11 @@ class Entity extends Data implements \JsonSerializable
     }
 
     /**
-     * toDateTime
+     * toDateTime.
      *
      * @param string $date
      *
-     * @return  bool|\DateTime
+     * @return bool|\DateTime
      */
     public function toDateTime($date)
     {

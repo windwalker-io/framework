@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Renderer\MustacheRenderer;
 
 /**
- * Test class of MustacheRenderer
+ * Test class of MustacheRenderer.
  *
  * @since 2.0
  */
@@ -40,7 +40,7 @@ class MustacheRendererTest extends AbstractDomTestCase
      */
     protected function setUp()
     {
-        static::$path = realpath(__DIR__ . '/Tmpl/mustache');
+        static::$path = realpath(__DIR__.'/Tmpl/mustache');
 
         if (!static::$path) {
             throw new \RuntimeException('Path not exists');
@@ -70,7 +70,7 @@ class MustacheRendererTest extends AbstractDomTestCase
     {
         $html = $this->instance->render('hello', new Chris());
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 Hello Chris
 You have just won $10000!
 Well, $6000, after taxes.
@@ -153,21 +153,21 @@ class Chris
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
-    public $name = "Chris";
+    public $name = 'Chris';
 
     /**
      * Property value.
      *
-     * @var  int
+     * @var int
      */
     public $value = 10000;
 
     /**
-     * taxed_value
+     * taxed_value.
      *
-     * @return  int
+     * @return int
      */
     public function taxed_value()
     {
@@ -177,7 +177,7 @@ class Chris
     /**
      * Property in_ca.
      *
-     * @var  bool
+     * @var bool
      */
     public $in_ca = true;
 }

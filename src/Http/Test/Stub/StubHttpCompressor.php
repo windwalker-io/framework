@@ -18,9 +18,9 @@ use Windwalker\Http\Output\HttpCompressor;
 class StubHttpCompressor extends HttpCompressor
 {
     /**
-     * checkConnectionAlive
+     * checkConnectionAlive.
      *
-     * @return  bool
+     * @return bool
      */
     public function checkConnectionAlive()
     {
@@ -28,9 +28,9 @@ class StubHttpCompressor extends HttpCompressor
     }
 
     /**
-     * checkHeadersSent
+     * checkHeadersSent.
      *
-     * @return  bool
+     * @return bool
      */
     public function checkHeadersSent()
     {

@@ -20,7 +20,7 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
     /**
      * Property db.
      *
-     * @var  \Windwalker\Database\Driver\AbstractDatabaseDriver
+     * @var \Windwalker\Database\Driver\AbstractDatabaseDriver
      */
     protected $db = null;
 
@@ -36,11 +36,11 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * read
+     * read.
      *
      * @param string|int $id
      *
-     * @return  string
+     * @return string
      */
     public function read($id)
     {
@@ -48,7 +48,7 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
         $query = $this->db->getQuery(true);
         $query->select($this->db->quoteName($this->options['data_col']))
             ->from($this->db->quoteName($this->options['table']))
-            ->where($this->db->quoteName($this->options['id_col']) . ' = ' . $this->db->quote($id));
+            ->where($this->db->quoteName($this->options['id_col']).' = '.$this->db->quote($id));
 
         $this->db->setQuery($query);
 
@@ -56,12 +56,12 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * write
+     * write.
      *
      * @param string|int $id
      * @param string     $data
      *
-     * @return  boolean
+     * @return bool
      */
     public function write($id, $data)
     {
@@ -70,7 +70,7 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
         $data = [
             $this->options['data_col'] => $data,
             $this->options['time_col'] => (int) time(),
-            $this->options['id_col'] => $id,
+            $this->options['id_col']   => $id,
         ];
 
         $writer->updateOne($this->options['table'], $data, $this->options['id_col']);
@@ -85,17 +85,17 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * destroy
+     * destroy.
      *
      * @param string|int $id
      *
-     * @return  boolean
+     * @return bool
      */
     public function destroy($id)
     {
         $query = $this->db->getQuery(true);
         $query->delete($this->db->quoteName($this->options['table']))
-            ->where($this->db->quoteName($this->options['id_col']) . ' = ' . $this->db->quote($id));
+            ->where($this->db->quoteName($this->options['id_col']).' = '.$this->db->quote($id));
 
         // Remove a session from the database.
         $this->db->setQuery($query);
@@ -104,17 +104,17 @@ class WindwalkerAdapter extends AbstractDatabaseAdapter
     }
 
     /**
-     * gc
+     * gc.
      *
      * @param string $past
      *
-     * @return  bool
+     * @return bool
      */
     public function gc($past)
     {
         $query = $this->db->getQuery(true);
         $query->delete($this->db->quoteName($this->options['table']))
-            ->where($this->db->quoteName($this->options['time_col']) . ' < ' . $this->db->quote((int) $past));
+            ->where($this->db->quoteName($this->options['time_col']).' < '.$this->db->quote((int) $past));
 
         // Remove expired sessions from the database.
         $this->db->setQuery($query);

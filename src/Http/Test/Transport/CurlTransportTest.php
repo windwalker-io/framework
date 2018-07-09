@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -11,7 +11,7 @@ namespace Windwalker\Http\Test\Transport;
 use Windwalker\Http\Transport\CurlTransport;
 
 /**
- * Test class of CurlTransport
+ * Test class of CurlTransport.
  *
  * @since 2.1
  */
@@ -20,7 +20,7 @@ class CurlTransportTest extends AbstractTransportTest
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = [
         'options' => [CURLOPT_SSL_VERIFYPEER => false],

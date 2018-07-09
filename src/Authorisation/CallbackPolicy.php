@@ -18,7 +18,7 @@ class CallbackPolicy implements PolicyInterface
     /**
      * Property handler.
      *
-     * @var  callable
+     * @var callable
      */
     protected $handler;
 
@@ -33,12 +33,12 @@ class CallbackPolicy implements PolicyInterface
     }
 
     /**
-     * authorise
+     * authorise.
      *
-     * @param   mixed $user
-     * @param   mixed $data
+     * @param mixed $user
+     * @param mixed $data
      *
-     * @return  boolean
+     * @return bool
      */
     public function authorise($user, $data = null)
     {
@@ -46,9 +46,9 @@ class CallbackPolicy implements PolicyInterface
     }
 
     /**
-     * Method to get property Handler
+     * Method to get property Handler.
      *
-     * @return  callable
+     * @return callable
      */
     public function getHandler()
     {
@@ -56,11 +56,11 @@ class CallbackPolicy implements PolicyInterface
     }
 
     /**
-     * Method to set property handler
+     * Method to set property handler.
      *
-     * @param   callable $handler
+     * @param callable $handler
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setHandler($handler)
     {

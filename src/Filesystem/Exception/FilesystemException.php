@@ -9,7 +9,7 @@
 namespace Windwalker\Filesystem\Exception;
 
 /**
- * Exception class for handling errors in the Filesystem package
+ * Exception class for handling errors in the Filesystem package.
  *
  * @since  2.0
  */

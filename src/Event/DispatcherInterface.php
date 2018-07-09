@@ -9,7 +9,7 @@
 namespace Windwalker\Event;
 
 /**
- * Interface DispatcherInterface
+ * Interface DispatcherInterface.
  */
 interface DispatcherInterface extends EventTriggerableInterface
 {
@@ -18,13 +18,13 @@ interface DispatcherInterface extends EventTriggerableInterface
      * If no events are specified, it will be registered to all events matching it's methods name.
      * In the case of a closure, you must specify at least one event name.
      *
-     * @param   object|\Closure $listener     The listener
-     * @param   array|integer   $priorities   An associative array of event names as keys
-     *                                        and the corresponding listener priority as values.
+     * @param object|\Closure $listener   The listener
+     * @param array|int       $priorities An associative array of event names as keys
+     *                                    and the corresponding listener priority as values.
      *
-     * @return  static  This method is chainable.
+     * @throws \InvalidArgumentException
      *
-     * @throws  \InvalidArgumentException
+     * @return static This method is chainable.
      *
      * @since   2.0
      */
@@ -37,7 +37,7 @@ interface DispatcherInterface extends EventTriggerableInterface
      * @param callable $callable
      * @param int      $priority
      *
-     * @return  static
+     * @return static
      *
      * @since   3.0
      */

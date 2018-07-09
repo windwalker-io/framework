@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later. see LICENSE
@@ -13,7 +13,7 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Renderer\PlatesRenderer;
 
 /**
- * Test class of PlatesRenderer
+ * Test class of PlatesRenderer.
  *
  * @since 2.0.9
  */
@@ -41,7 +41,7 @@ class PlatesRendererTest extends AbstractDomTestCase
      */
     protected function setUp()
     {
-        static::$path = realpath(__DIR__ . '/Tmpl/plates');
+        static::$path = realpath(__DIR__.'/Tmpl/plates');
 
         if (!static::$path) {
             throw new \RuntimeException('Path not exists');
@@ -101,7 +101,7 @@ class PlatesRendererTest extends AbstractDomTestCase
     {
         $html = $this->instance->render('profile', ['name' => 'Tony Stark']);
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <html>
 <head>
     <title>User Profile</title>

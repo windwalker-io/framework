@@ -11,7 +11,7 @@ namespace Windwalker\Filesystem;
 use Windwalker\Filesystem\Exception\FilesystemException;
 
 /**
- * A Folder handling class
+ * A Folder handling class.
  *
  * @since  2.0
  */
@@ -26,14 +26,15 @@ abstract class Folder
     /**
      * Copy a folder.
      *
-     * @param   string  $src   The path to the source folder.
-     * @param   string  $dest  The path to the destination folder.
-     * @param   boolean $force Force copy.
+     * @param string $src   The path to the source folder.
+     * @param string $dest  The path to the destination folder.
+     * @param bool   $force Force copy.
      *
-     * @return  boolean  True on success.
+     * @throws FilesystemException
+     *
+     * @return bool True on success.
      *
      * @since   2.0
-     * @throws  FilesystemException
      */
     public static function copy($src, $dest, $force = false)
     {
@@ -60,8 +61,8 @@ abstract class Folder
 
         // Walk through the directory copying files and recursing into folders.
         foreach ($sources as $file) {
-            $srcFile = $src . '/' . $file;
-            $destFile = $dest . '/' . $file;
+            $srcFile = $src.'/'.$file;
+            $destFile = $dest.'/'.$file;
 
             if (is_dir($srcFile)) {
                 static::create($destFile);
@@ -76,13 +77,14 @@ abstract class Folder
     /**
      * Create a folder -- and all necessary parent folders.
      *
-     * @param   string  $path A path to create from the base path.
-     * @param   integer $mode Directory permissions to set for folders created. 0755 by default.
+     * @param string $path A path to create from the base path.
+     * @param int    $mode Directory permissions to set for folders created. 0755 by default.
      *
-     * @return  boolean  True if successful.
+     * @throws FilesystemException
+     *
+     * @return bool True if successful.
      *
      * @since   2.0
-     * @throws  FilesystemException
      */
     public static function create($path = '', $mode = 0755)
     {
@@ -99,7 +101,7 @@ abstract class Folder
             $nested++;
 
             if ($nested > 20 || $parent === $path) {
-                throw new FilesystemException(__METHOD__ . ': Infinite loop detected');
+                throw new FilesystemException(__METHOD__.': Infinite loop detected');
             }
 
             // Create the parent directory
@@ -142,7 +144,7 @@ abstract class Folder
 
             if ($inBaseDir === false) {
                 // Throw a FilesystemException because the path to be created is not in open_basedir
-                throw new FilesystemException(__METHOD__ . ': Path not in open_basedir paths');
+                throw new FilesystemException(__METHOD__.': Path not in open_basedir paths');
             }
         }
 
@@ -153,7 +155,7 @@ abstract class Folder
         if (!@mkdir($path, $mode) && !is_dir($path)) {
             @umask($origmask);
 
-            throw new FilesystemException(__METHOD__ . ': Could not create directory.  Path: ' . $path);
+            throw new FilesystemException(__METHOD__.': Could not create directory.  Path: '.$path);
         }
 
         // Reset umask
@@ -165,13 +167,14 @@ abstract class Folder
     /**
      * Delete a folder.
      *
-     * @param   string $path The path to the folder to delete.
+     * @param string $path The path to the folder to delete.
      *
-     * @return  boolean  True on success.
+     * @throws FilesystemException
+     * @throws \UnexpectedValueException
+     *
+     * @return bool True on success.
      *
      * @since   2.0
-     * @throws  FilesystemException
-     * @throws  \UnexpectedValueException
      */
     public static function delete($path)
     {
@@ -180,7 +183,7 @@ abstract class Folder
         // Sanity check
         if (!rtrim($path, '/\\')) {
             // Bad programmer! Bad Bad programmer!
-            throw new FilesystemException(__METHOD__ . ': You can not delete a base directory.');
+            throw new FilesystemException(__METHOD__.': You can not delete a base directory.');
         }
 
         // Check to make sure the path valid and clean
@@ -216,6 +219,7 @@ abstract class Folder
             return true;
         } else {
             $error = error_get_last();
+
             throw new FilesystemException($error['message'], $error['type']);
         }
     }
@@ -223,12 +227,13 @@ abstract class Folder
     /**
      * Moves a folder.
      *
-     * @param   string $src      The path to the source folder.
-     * @param   string $dest     The path to the destination folder.
-     * @param   bool   $override Override files.
+     * @param string $src      The path to the source folder.
+     * @param string $dest     The path to the destination folder.
+     * @param bool   $override Override files.
      *
      * @throws Exception\FilesystemException
-     * @return  mixed  Error message on false or boolean true on success.
+     *
+     * @return mixed Error message on false or boolean true on success.
      *
      * @since    2.0
      */
@@ -244,10 +249,10 @@ abstract class Folder
             }
 
             foreach (static::items($src, true, static::PATH_RELATIVE) as $item) {
-                if (is_file($src . '/' . $item)) {
-                    File::move($src . '/' . $item, $dest . '/' . $item, true);
-                } elseif (is_dir($src . '/' . $item)) {
-                    static::create($dest . '/' . $item);
+                if (is_file($src.'/'.$item)) {
+                    File::move($src.'/'.$item, $dest.'/'.$item, true);
+                } elseif (is_dir($src.'/'.$item)) {
+                    static::create($dest.'/'.$item);
                 }
             }
 
@@ -264,13 +269,13 @@ abstract class Folder
     }
 
     /**
-     * files
+     * files.
      *
-     * @param string  $path
-     * @param boolean $recursive
-     * @param integer $pathType
+     * @param string $path
+     * @param bool   $recursive
+     * @param int    $pathType
      *
-     * @return  array
+     * @return array
      */
     public static function files($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
     {
@@ -279,17 +284,17 @@ abstract class Folder
         /** @var $file \SplFileInfo */
         foreach (Filesystem::files($path, $recursive) as $file) {
             switch ($pathType) {
-                case ($pathType === self::PATH_BASENAME):
+                case $pathType === self::PATH_BASENAME:
                     $name = $file->getBasename();
                     break;
 
-                case ($pathType === static::PATH_RELATIVE):
+                case $pathType === static::PATH_RELATIVE:
                     $pathLength = strlen($path);
                     $name = $file->getRealPath();
                     $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
 
-                case ($pathType === static::PATH_ABSOLUTE):
+                case $pathType === static::PATH_ABSOLUTE:
                 default:
                     $name = $file->getPathname();
                     break;
@@ -302,13 +307,13 @@ abstract class Folder
     }
 
     /**
-     * items
+     * items.
      *
-     * @param string  $path
-     * @param boolean $recursive
-     * @param integer $pathType
+     * @param string $path
+     * @param bool   $recursive
+     * @param int    $pathType
      *
-     * @return  array
+     * @return array
      */
     public static function items($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
     {
@@ -318,17 +323,17 @@ abstract class Folder
         /** @var $file \SplFileInfo */
         foreach (Filesystem::items($path, $recursive) as $file) {
             switch ($pathType) {
-                case ($pathType === self::PATH_BASENAME):
+                case $pathType === self::PATH_BASENAME:
                     $name = $file->getBasename();
                     break;
 
-                case ($pathType === static::PATH_RELATIVE):
+                case $pathType === static::PATH_RELATIVE:
                     $pathLength = strlen($path);
                     $name = $file->getRealPath();
                     $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
 
-                case ($pathType === static::PATH_ABSOLUTE):
+                case $pathType === static::PATH_ABSOLUTE:
                 default:
                     $name = $file->getPathname();
                     break;
@@ -341,13 +346,13 @@ abstract class Folder
     }
 
     /**
-     * folders
+     * folders.
      *
-     * @param string  $path
-     * @param boolean $recursive
-     * @param integer $pathType
+     * @param string $path
+     * @param bool   $recursive
+     * @param int    $pathType
      *
-     * @return  array
+     * @return array
      */
     public static function folders($path, $recursive = false, $pathType = self::PATH_ABSOLUTE)
     {
@@ -356,17 +361,17 @@ abstract class Folder
         /** @var $file \SplFileInfo */
         foreach (Filesystem::folders($path, $recursive) as $file) {
             switch ($pathType) {
-                case ($pathType === self::PATH_BASENAME):
+                case $pathType === self::PATH_BASENAME:
                     $name = $file->getBasename();
                     break;
 
-                case ($pathType === static::PATH_RELATIVE):
+                case $pathType === static::PATH_RELATIVE:
                     $pathLength = strlen($path);
                     $name = $file->getRealPath();
                     $name = trim(substr($name, $pathLength), DIRECTORY_SEPARATOR);
                     break;
 
-                case ($pathType === static::PATH_ABSOLUTE):
+                case $pathType === static::PATH_ABSOLUTE:
                 default:
                     $name = $file->getPathname();
                     break;
@@ -381,12 +386,12 @@ abstract class Folder
     /**
      * Lists folder in format suitable for tree display.
      *
-     * @param   string  $path     The path of the folder to read.
-     * @param   integer $maxLevel The maximum number of levels to recursively read, defaults to three.
-     * @param   integer $level    The current level, optional.
-     * @param   integer $parent   Unique identifier of the parent folder, if any.
+     * @param string $path     The path of the folder to read.
+     * @param int    $maxLevel The maximum number of levels to recursively read, defaults to three.
+     * @param int    $level    The current level, optional.
+     * @param int    $parent   Unique identifier of the parent folder, if any.
      *
-     * @return  array  Folders in the given folder.
+     * @return array Folders in the given folder.
      *
      * @since   2.0
      */
@@ -410,12 +415,12 @@ abstract class Folder
             // First path, index foldernames
             foreach ($folders as $name) {
                 $id = ++$index;
-                $fullName = Path::clean($path . '/' . $name);
+                $fullName = Path::clean($path.'/'.$name);
 
                 $dirs[] = [
-                    'id' => $id,
-                    'parent' => $parent,
-                    'name' => $name,
+                    'id'       => $id,
+                    'parent'   => $parent,
+                    'name'     => $name,
                     'fullname' => $fullName,
                     'relative' => trim(str_replace($base, '', $fullName), DIRECTORY_SEPARATOR),
                 ];
@@ -432,9 +437,9 @@ abstract class Folder
     /**
      * Makes path name safe to use.
      *
-     * @param   string $path The full path to sanitise.
+     * @param string $path The full path to sanitise.
      *
-     * @return  string  The sanitised string.
+     * @return string The sanitised string.
      *
      * @since   2.0
      */

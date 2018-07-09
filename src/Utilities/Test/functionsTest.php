@@ -11,12 +11,12 @@ namespace Windwalker\Utilities\Test;
  *
  * @since  2.0
  */
-class FunctionsTest extends \PHPUnit\Framework\TestCase
+class functionsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Tests the with method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */

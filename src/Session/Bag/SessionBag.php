@@ -9,7 +9,7 @@
 namespace Windwalker\Session\Bag;
 
 /**
- * Class AbstractSessionBag
+ * Class AbstractSessionBag.
  *
  * @since 2.0
  */
@@ -18,16 +18,16 @@ class SessionBag implements SessionBagInterface
     /**
      * Property data.
      *
-     * @var  array
+     * @var array
      */
     protected $data = [];
 
     /**
-     * setData
+     * setData.
      *
      * @param array $data
      *
-     * @return  void
+     * @return void
      */
     public function setData(array &$data)
     {
@@ -35,12 +35,12 @@ class SessionBag implements SessionBagInterface
     }
 
     /**
-     * get
+     * get.
      *
      * @param string $key
      * @param mixed  $default
      *
-     * @return  mixed
+     * @return mixed
      */
     public function get($key, $default)
     {
@@ -48,12 +48,12 @@ class SessionBag implements SessionBagInterface
     }
 
     /**
-     * set
+     * set.
      *
      * @param string $key
      * @param mixed  $value
      *
-     * @return  $this
+     * @return $this
      */
     public function set($key, $value)
     {
@@ -69,11 +69,11 @@ class SessionBag implements SessionBagInterface
     }
 
     /**
-     * has
+     * has.
      *
      * @param string $name
      *
-     * @return  bool
+     * @return bool
      */
     public function has($name)
     {
@@ -81,9 +81,9 @@ class SessionBag implements SessionBagInterface
     }
 
     /**
-     * all
+     * all.
      *
-     * @return  array
+     * @return array
      */
     public function all()
     {
@@ -91,9 +91,9 @@ class SessionBag implements SessionBagInterface
     }
 
     /**
-     * clean
+     * clean.
      *
-     * @return  $this
+     * @return $this
      */
     public function clear()
     {

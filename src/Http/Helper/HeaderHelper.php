@@ -22,11 +22,11 @@ abstract class HeaderHelper
      *
      * The key will be lower case to search header value and implode array to string by comma.
      *
-     * @param  array  $headers The headers wqe want to search.
-     * @param  string $name    The name to search.
-     * @param  mixed  $default The default value if not found.
+     * @param array  $headers The headers wqe want to search.
+     * @param string $name    The name to search.
+     * @param mixed  $default The default value if not found.
      *
-     * @return string  Found header value.
+     * @return string Found header value.
      *
      * @since  3.0
      */
@@ -49,9 +49,9 @@ abstract class HeaderHelper
      *
      * This method based on phly/http
      *
-     * @param   mixed $name The header to validate.
+     * @param mixed $name The header to validate.
      *
-     * @return  boolean  Valid or not.
+     * @return bool Valid or not.
      *
      * @see http://tools.ietf.org/html/rfc7230#section-3.2
      */
@@ -70,9 +70,9 @@ abstract class HeaderHelper
      * @see http://en.wikipedia.org/wiki/HTTP_response_splitting
      * @see https://tools.ietf.org/html/rfc7230
      *
-     * @param   string $value The value to filter.
+     * @param string $value The value to filter.
      *
-     * @return  string  Filtered value.
+     * @return string Filtered value.
      */
     public static function filter($value)
     {
@@ -89,7 +89,7 @@ abstract class HeaderHelper
                 $ws = ord($value[$i + 2]);
 
                 if ($lf === 10 && in_array($ws, [9, 32], true)) {
-                    $string .= $value[$i] . $value[$i + 1];
+                    $string .= $value[$i].$value[$i + 1];
                     $i += 1;
                 }
 
@@ -118,7 +118,7 @@ abstract class HeaderHelper
      * and tabs in header value. every new line must only contains
      * a single CRLF and a space or tab after it.
      *
-     * @return  boolean  Valid or not.
+     * @return bool Valid or not.
      *
      * @see http://en.wikipedia.org/wiki/HTTP_response_splitting
      * @see https://tools.ietf.org/html/rfc7230
@@ -160,9 +160,9 @@ abstract class HeaderHelper
      *
      * Only allow 1.0, 1.1 and 2.
      *
-     * @param   string $version Version string to validate.
+     * @param string $version Version string to validate.
      *
-     * @return  boolean  Valid or not.
+     * @return bool Valid or not.
      */
     public static function isValidProtocolVersion($version)
     {
@@ -176,9 +176,9 @@ abstract class HeaderHelper
     /**
      * Convert values to array.
      *
-     * @param   mixed $value Value to convert to array.
+     * @param mixed $value Value to convert to array.
      *
-     * @return  array  Converted array.
+     * @return array Converted array.
      */
     public static function allToArray($value)
     {
@@ -194,7 +194,7 @@ abstract class HeaderHelper
 
         foreach ($value as $k => $v) {
             if (!static::isValidValue($v)) {
-                throw new \InvalidArgumentException('Value :' . $value . ' is invalid.');
+                throw new \InvalidArgumentException('Value :'.$value.' is invalid.');
             }
         }
 
@@ -204,9 +204,9 @@ abstract class HeaderHelper
     /**
      * Validate is an array only contains string.
      *
-     * @param   array $array An array to validate.
+     * @param array $array An array to validate.
      *
-     * @return  boolean  valid or not.
+     * @return bool valid or not.
      */
     public static function arrayOnlyContainsString(array $array)
     {
@@ -225,9 +225,7 @@ abstract class HeaderHelper
      * @param array $headers  Headers to convert,
      * @param bool  $toString If true, will implode all header lines with line break.
      *
-     * @return  array|string  Converted headers.
-     *
-     *
+     * @return array|string Converted headers.
      */
     public static function toHeaderLine($headers, $toString = false)
     {
@@ -236,7 +234,7 @@ abstract class HeaderHelper
         foreach ($headers as $key => $value) {
             $value = is_array($value) ? implode(',', $value) : $value;
 
-            $headerArray[] = static::normalizeHeaderName($key) . ': ' . $value;
+            $headerArray[] = static::normalizeHeaderName($key).': '.$value;
         }
 
         if ($toString) {
@@ -249,9 +247,9 @@ abstract class HeaderHelper
     /**
      * Filter a header name to lowercase.
      *
-     * @param   string $header Header name to normalize.
+     * @param string $header Header name to normalize.
      *
-     * @return  string  Normalized name.
+     * @return string Normalized name.
      *
      * @since   3.0
      */
@@ -266,10 +264,10 @@ abstract class HeaderHelper
     /**
      * Prepare attachment headers to response object.
      *
-     * @param  ResponseInterface $response The response object.
-     * @param  string            $filename Download file name.
+     * @param ResponseInterface $response The response object.
+     * @param string            $filename Download file name.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      */
     public static function prepareAttachmentHeaders(ResponseInterface $response, $filename = null)
     {
@@ -279,7 +277,7 @@ abstract class HeaderHelper
             ->withHeader('Content-Encoding', 'none');
 
         if ($filename !== null) {
-            $response = $response->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+            $response = $response->withHeader('Content-Disposition', 'attachment; filename="'.$filename.'"');
         }
 
         return $response;

@@ -9,55 +9,55 @@
 namespace Windwalker\Edge\Cache;
 
 /**
- * Interface EdgeCacheInterface
+ * Interface EdgeCacheInterface.
  *
  * @since  3.0
  */
 interface EdgeCacheInterface
 {
     /**
-     * isExpired
+     * isExpired.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  boolean
+     * @return bool
      */
     public function isExpired($path);
 
     /**
-     * getCacheKey
+     * getCacheKey.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public function getCacheKey($path);
 
     /**
-     * get
+     * get.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  string
+     * @return string
      */
     public function load($path);
 
     /**
-     * store
+     * store.
      *
-     * @param   string $path
-     * @param   string $value
+     * @param string $path
+     * @param string $value
      *
-     * @return  static
+     * @return static
      */
     public function store($path, $value);
 
     /**
-     * remove
+     * remove.
      *
-     * @param   string $path
+     * @param string $path
      *
-     * @return  static
+     * @return static
      */
     public function remove($path);
 }

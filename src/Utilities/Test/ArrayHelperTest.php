@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Test\TestCase\AbstractBaseTestCase;
 use Windwalker\Utilities\ArrayHelper;
 
 /**
- * Test class of ArrayHelper
+ * Test class of ArrayHelper.
  *
  * @since 2.0
  */
@@ -21,7 +21,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Data provider for testArrayUnique.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -48,9 +48,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Data provider for get column
+     * Data provider for get column.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -71,32 +71,32 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'associative array' => [
                 [
                     [
-                        'one' => 1,
-                        'two' => 2,
+                        'one'   => 1,
+                        'two'   => 2,
                         'three' => 3,
-                        'four' => 4,
-                        'five' => 5,
+                        'four'  => 4,
+                        'five'  => 5,
                     ],
                     [
-                        'one' => 6,
-                        'two' => 7,
+                        'one'   => 6,
+                        'two'   => 7,
                         'three' => 8,
-                        'four' => 9,
-                        'five' => 10,
+                        'four'  => 9,
+                        'five'  => 10,
                     ],
                     [
-                        'one' => 11,
-                        'two' => 12,
+                        'one'   => 11,
+                        'two'   => 12,
                         'three' => 13,
-                        'four' => 14,
-                        'five' => 15,
+                        'four'  => 14,
+                        'five'  => 15,
                     ],
                     [
-                        'one' => 16,
-                        'two' => 17,
+                        'one'   => 16,
+                        'two'   => 17,
                         'three' => 18,
-                        'four' => 19,
-                        'five' => 20,
+                        'four'  => 19,
+                        'five'  => 20,
                     ],
                 ],
                 'four',
@@ -111,32 +111,32 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'object array' => [
                 [
                     (object) [
-                        'one' => 1,
-                        'two' => 2,
+                        'one'   => 1,
+                        'two'   => 2,
                         'three' => 3,
-                        'four' => 4,
-                        'five' => 5,
+                        'four'  => 4,
+                        'five'  => 5,
                     ],
                     (object) [
-                        'one' => 6,
-                        'two' => 7,
+                        'one'   => 6,
+                        'two'   => 7,
                         'three' => 8,
-                        'four' => 9,
-                        'five' => 10,
+                        'four'  => 9,
+                        'five'  => 10,
                     ],
                     (object) [
-                        'one' => 11,
-                        'two' => 12,
+                        'one'   => 11,
+                        'two'   => 12,
                         'three' => 13,
-                        'four' => 14,
-                        'five' => 15,
+                        'four'  => 14,
+                        'five'  => 15,
                     ],
                     (object) [
-                        'one' => 16,
-                        'two' => 17,
+                        'one'   => 16,
+                        'two'   => 17,
                         'three' => 18,
-                        'four' => 19,
-                        'five' => 20,
+                        'four'  => 19,
+                        'five'  => 20,
                     ],
                 ],
                 'four',
@@ -152,35 +152,35 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Data provider for get value
+     * Data provider for get value.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
     public function seedTestGetValue()
     {
         $input = [
-            'one' => 1,
-            'two' => 2,
-            'three' => 3,
-            'four' => 4,
-            'five' => 5,
-            'six' => 6,
-            'seven' => 7,
-            'eight' => 8,
-            'nine' => 'It\'s nine',
-            'ten' => 10,
-            'eleven' => 11,
-            'twelve' => 12,
-            'thirteen' => 13,
-            'fourteen' => 14,
-            'fifteen' => 15,
-            'sixteen' => 16,
+            'one'       => 1,
+            'two'       => 2,
+            'three'     => 3,
+            'four'      => 4,
+            'five'      => 5,
+            'six'       => 6,
+            'seven'     => 7,
+            'eight'     => 8,
+            'nine'      => 'It\'s nine',
+            'ten'       => 10,
+            'eleven'    => 11,
+            'twelve'    => 12,
+            'thirteen'  => 13,
+            'fourteen'  => 14,
+            'fifteen'   => 15,
+            'sixteen'   => 16,
             'seventeen' => 17,
             'eightteen' => 'eighteen ninety-five',
-            'nineteen' => 19,
-            'twenty' => 20,
+            'nineteen'  => 19,
+            'twenty'    => 20,
         ];
 
         return [
@@ -262,9 +262,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Data provider for invert
+     * Data provider for invert.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -274,7 +274,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'Case 1' => [
                 // Input
                 [
-                    'New' => ['1000', '1500', '1750'],
+                    'New'  => ['1000', '1500', '1750'],
                     'Used' => ['3000', '4000', '5000', '6000'],
                 ],
                 // Expected
@@ -291,8 +291,8 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'Case 2' => [
                 // Input
                 [
-                    'New' => [1000, 1500, 1750],
-                    'Used' => [2750, 3000, 4000, 5000, 6000],
+                    'New'         => [1000, 1500, 1750],
+                    'Used'        => [2750, 3000, 4000, 5000, 6000],
                     'Refurbished' => [2000, 2500],
                     'Unspecified' => [],
                 ],
@@ -313,8 +313,8 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'Case 3' => [
                 // Input
                 [
-                    'New' => [1000, 1500, 1750],
-                    'valueNotAnArray' => 2750,
+                    'New'                => [1000, 1500, 1750],
+                    'valueNotAnArray'    => 2750,
                     'withNonScalarValue' => [2000, [1000, 3000]],
                 ],
                 // Expected
@@ -329,9 +329,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Data provider for testGroup
+     * Data provider for testGroup.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -410,7 +410,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * seedTestTranspose
+     * seedTestTranspose.
      *
      * @return array
      */
@@ -420,7 +420,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
             [
                 // data
                 [
-                    'Jones' => [123, 223],
+                    'Jones'  => [123, 223],
                     'Arthur' => ['Lancelot', 'Jessica'],
                 ],
                 // expected
@@ -433,9 +433,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Data provider for sorting objects
+     * Data provider for sorting objects.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -444,128 +444,128 @@ class ArrayHelperTest extends AbstractBaseTestCase
         $input1 = [
             (object) [
                 'integer' => 12,
-                'float' => 1.29999,
-                'string' => 'A Test String',
+                'float'   => 1.29999,
+                'string'  => 'A Test String',
             ],
             (object) [
                 'integer' => 15,
-                'float' => 1.29999,
-                'string' => 'C Test String',
+                'float'   => 1.29999,
+                'string'  => 'C Test String',
             ],
             (object) [
                 'integer' => 35,
-                'float' => 1.29999,
-                'string' => 'C Test String',
+                'float'   => 1.29999,
+                'string'  => 'C Test String',
             ],
             (object) [
                 'integer' => 1,
-                'float' => 1.29999,
-                'string' => 'N Test String',
+                'float'   => 1.29999,
+                'string'  => 'N Test String',
             ],
             (object) [
                 'integer' => 5,
-                'float' => 1.29999,
-                'string' => 'T Test String',
+                'float'   => 1.29999,
+                'string'  => 'T Test String',
             ],
             (object) [
                 'integer' => 22,
-                'float' => 1.29999,
-                'string' => 'E Test String',
+                'float'   => 1.29999,
+                'string'  => 'E Test String',
             ],
             (object) [
                 'integer' => 6,
-                'float' => 1.29999,
-                'string' => 'G Test String',
+                'float'   => 1.29999,
+                'string'  => 'G Test String',
             ],
             (object) [
                 'integer' => 6,
-                'float' => 1.29999,
-                'string' => 'L Test String',
+                'float'   => 1.29999,
+                'string'  => 'L Test String',
             ],
         ];
         $input2 = [
             (object) [
                 'integer' => 12,
-                'float' => 1.29999,
-                'string' => 'A Test String',
+                'float'   => 1.29999,
+                'string'  => 'A Test String',
             ],
             (object) [
                 'integer' => 15,
-                'float' => 1.29999,
-                'string' => 'C Test String',
+                'float'   => 1.29999,
+                'string'  => 'C Test String',
             ],
             (object) [
                 'integer' => 35,
-                'float' => 1.29999,
-                'string' => 'C Test String',
+                'float'   => 1.29999,
+                'string'  => 'C Test String',
             ],
             (object) [
                 'integer' => 1,
-                'float' => 1.29999,
-                'string' => 'N Test String',
+                'float'   => 1.29999,
+                'string'  => 'N Test String',
             ],
             (object) [
                 'integer' => 5,
-                'float' => 1.29999,
-                'string' => 't Test String',
+                'float'   => 1.29999,
+                'string'  => 't Test String',
             ],
             (object) [
                 'integer' => 22,
-                'float' => 1.29999,
-                'string' => 'E Test String',
+                'float'   => 1.29999,
+                'string'  => 'E Test String',
             ],
             (object) [
                 'integer' => 6,
-                'float' => 1.29999,
-                'string' => 'g Test String',
+                'float'   => 1.29999,
+                'string'  => 'g Test String',
             ],
             (object) [
                 'integer' => 6,
-                'float' => 1.29999,
-                'string' => 'L Test String',
+                'float'   => 1.29999,
+                'string'  => 'L Test String',
             ],
         ];
 
         if (substr(php_uname(), 0, 6) !== 'Darwin') {
             $input3 = [
                 (object) [
-                    'string' => 'A Test String',
+                    'string'  => 'A Test String',
                     'integer' => 1,
                 ],
                 (object) [
-                    'string' => 'é Test String',
+                    'string'  => 'é Test String',
                     'integer' => 2,
                 ],
                 (object) [
-                    'string' => 'è Test String',
+                    'string'  => 'è Test String',
                     'integer' => 3,
                 ],
                 (object) [
-                    'string' => 'É Test String',
+                    'string'  => 'É Test String',
                     'integer' => 4,
                 ],
                 (object) [
-                    'string' => 'È Test String',
+                    'string'  => 'È Test String',
                     'integer' => 5,
                 ],
                 (object) [
-                    'string' => 'Œ Test String',
+                    'string'  => 'Œ Test String',
                     'integer' => 6,
                 ],
                 (object) [
-                    'string' => 'œ Test String',
+                    'string'  => 'œ Test String',
                     'integer' => 7,
                 ],
                 (object) [
-                    'string' => 'L Test String',
+                    'string'  => 'L Test String',
                     'integer' => 8,
                 ],
                 (object) [
-                    'string' => 'P Test String',
+                    'string'  => 'P Test String',
                     'integer' => 9,
                 ],
                 (object) [
-                    'string' => 'p Test String',
+                    'string'  => 'p Test String',
                     'integer' => 10,
                 ],
             ];
@@ -583,43 +583,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 'T Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'T Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'G Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'G Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                 ],
                 'Should be sorted by the integer field in ascending order',
@@ -634,43 +634,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 'T Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'T Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'G Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'G Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                 ],
                 'Should be sorted by the integer field in ascending order full argument list',
@@ -685,43 +685,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'G Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'G Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 'T Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'T Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                 ],
                 'Should be sorted by the integer field in descending order',
@@ -736,43 +736,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'G Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'G Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 'T Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'T Test String',
                     ],
                 ],
                 'Should be sorted by the string field in ascending order full argument list',
@@ -788,43 +788,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 'T Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'T Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'G Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'G Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'Should be sorted by the string field in descending order',
@@ -840,43 +840,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'g Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'g Test String',
                     ],
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 't Test String',
+                        'float'   => 1.29999,
+                        'string'  => 't Test String',
                     ],
                 ],
                 'Should be sorted by the string field in ascending order with casesensitive comparisons',
@@ -892,43 +892,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 't Test String',
+                        'float'   => 1.29999,
+                        'string'  => 't Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'g Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'g Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'Should be sorted by the string field in descending order with casesensitive comparisons',
@@ -947,43 +947,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'g Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'g Test String',
                     ],
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 't Test String',
+                        'float'   => 1.29999,
+                        'string'  => 't Test String',
                     ],
                 ],
                 'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
@@ -1001,43 +1001,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 't Test String',
+                        'float'   => 1.29999,
+                        'string'  => 't Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'g Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'g Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
@@ -1058,43 +1058,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'g Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'g Test String',
                     ],
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 't Test String',
+                        'float'   => 1.29999,
+                        'string'  => 't Test String',
                     ],
                 ],
                 'Should be sorted by the string,integer field in ascending,descending order with casesensitive comparisons',
@@ -1115,43 +1115,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     (object) [
                         'integer' => 5,
-                        'float' => 1.29999,
-                        'string' => 't Test String',
+                        'float'   => 1.29999,
+                        'string'  => 't Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'g Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'g Test String',
                     ],
                     (object) [
                         'integer' => 1,
-                        'float' => 1.29999,
-                        'string' => 'N Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'N Test String',
                     ],
                     (object) [
                         'integer' => 6,
-                        'float' => 1.29999,
-                        'string' => 'L Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'L Test String',
                     ],
                     (object) [
                         'integer' => 22,
-                        'float' => 1.29999,
-                        'string' => 'E Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'E Test String',
                     ],
                     (object) [
                         'integer' => 15,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 35,
-                        'float' => 1.29999,
-                        'string' => 'C Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'C Test String',
                     ],
                     (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'Should be sorted by the string,integer field in descending,ascending order with casesensitive comparisons',
@@ -1173,43 +1173,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 ],
                 [
                     (object) [
-                        'string' => 'A Test String',
+                        'string'  => 'A Test String',
                         'integer' => 1,
                     ],
                     (object) [
-                        'string' => 'é Test String',
+                        'string'  => 'é Test String',
                         'integer' => 2,
                     ],
                     (object) [
-                        'string' => 'É Test String',
+                        'string'  => 'É Test String',
                         'integer' => 4,
                     ],
                     (object) [
-                        'string' => 'è Test String',
+                        'string'  => 'è Test String',
                         'integer' => 3,
                     ],
                     (object) [
-                        'string' => 'È Test String',
+                        'string'  => 'È Test String',
                         'integer' => 5,
                     ],
                     (object) [
-                        'string' => 'L Test String',
+                        'string'  => 'L Test String',
                         'integer' => 8,
                     ],
                     (object) [
-                        'string' => 'œ Test String',
+                        'string'  => 'œ Test String',
                         'integer' => 7,
                     ],
                     (object) [
-                        'string' => 'Œ Test String',
+                        'string'  => 'Œ Test String',
                         'integer' => 6,
                     ],
                     (object) [
-                        'string' => 'p Test String',
+                        'string'  => 'p Test String',
                         'integer' => 10,
                     ],
                     (object) [
-                        'string' => 'P Test String',
+                        'string'  => 'P Test String',
                         'integer' => 9,
                     ],
                 ],
@@ -1235,43 +1235,43 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 ],
                 [
                     (object) [
-                        'string' => 'A Test String',
+                        'string'  => 'A Test String',
                         'integer' => 1,
                     ],
                     (object) [
-                        'string' => 'é Test String',
+                        'string'  => 'é Test String',
                         'integer' => 2,
                     ],
                     (object) [
-                        'string' => 'É Test String',
+                        'string'  => 'É Test String',
                         'integer' => 4,
                     ],
                     (object) [
-                        'string' => 'è Test String',
+                        'string'  => 'è Test String',
                         'integer' => 3,
                     ],
                     (object) [
-                        'string' => 'È Test String',
+                        'string'  => 'È Test String',
                         'integer' => 5,
                     ],
                     (object) [
-                        'string' => 'L Test String',
+                        'string'  => 'L Test String',
                         'integer' => 8,
                     ],
                     (object) [
-                        'string' => 'Œ Test String',
+                        'string'  => 'Œ Test String',
                         'integer' => 6,
                     ],
                     (object) [
-                        'string' => 'œ Test String',
+                        'string'  => 'œ Test String',
                         'integer' => 7,
                     ],
                     (object) [
-                        'string' => 'P Test String',
+                        'string'  => 'P Test String',
                         'integer' => 9,
                     ],
                     (object) [
-                        'string' => 'p Test String',
+                        'string'  => 'p Test String',
                         'integer' => 10,
                     ],
                 ],
@@ -1282,9 +1282,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Data provider for object inputs
+     * Data provider for object inputs.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -1294,14 +1294,14 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'single object' => [
                 [
                     'integer' => 12,
-                    'float' => 1.29999,
-                    'string' => 'A Test String',
+                    'float'   => 1.29999,
+                    'string'  => 'A Test String',
                 ],
                 null,
                 (object) [
                     'integer' => 12,
-                    'float' => 1.29999,
-                    'string' => 'A Test String',
+                    'float'   => 1.29999,
+                    'string'  => 'A Test String',
                 ],
                 'Should turn array into single object',
             ],
@@ -1309,36 +1309,36 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     'first' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'second' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'third' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 null,
                 (object) [
                     'first' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'second' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'third' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'Should turn multiple dimension array into nested objects',
@@ -1346,14 +1346,14 @@ class ArrayHelperTest extends AbstractBaseTestCase
             'single object with class' => [
                 [
                     'integer' => 12,
-                    'float' => 1.29999,
-                    'string' => 'A Test String',
+                    'float'   => 1.29999,
+                    'string'  => 'A Test String',
                 ],
                 'stdClass',
                 (object) [
                     'integer' => 12,
-                    'float' => 1.29999,
-                    'string' => 'A Test String',
+                    'float'   => 1.29999,
+                    'string'  => 'A Test String',
                 ],
                 'Should turn array into single object',
             ],
@@ -1361,36 +1361,36 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 [
                     'first' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'second' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'third' => [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'stdClass',
                 (object) [
                     'first' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'second' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                     'third' => (object) [
                         'integer' => 12,
-                        'float' => 1.29999,
-                        'string' => 'A Test String',
+                        'float'   => 1.29999,
+                        'string'  => 'A Test String',
                     ],
                 ],
                 'Should turn multiple dimension array into nested objects',
@@ -1399,9 +1399,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Data provider for object inputs
+     * Data provider for object inputs.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -1444,13 +1444,14 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Tests the ArrayHelper::arrayUnique method.
      *
-     * @param   array  $input    The array being input.
-     * @param   string $expected The expected return value.
+     * @param array  $input    The array being input.
+     * @param string $expected The expected return value.
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestArrayUnique
      * @covers        \Windwalker\Utilities\ArrayHelper::arrayUnique
+     *
      * @since         2.0
      */
     public function testArrayUnique($input, $expected)
@@ -1464,15 +1465,16 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Test pulling data from a single column (by index or association).
      *
-     * @param   array  $input   Input array
-     * @param   mixed  $index   Column to pull, either by association or number
-     * @param   array  $expect  The expected results
-     * @param   string $message The failure message
+     * @param array  $input   Input array
+     * @param mixed  $index   Column to pull, either by association or number
+     * @param array  $expect  The expected results
+     * @param string $message The failure message
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestGetColumn
      * @covers        \Windwalker\Utilities\ArrayHelper::getColumn
+     *
      * @since         2.0
      */
     public function testGetColumn($input, $index, $expect, $message)
@@ -1483,18 +1485,19 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Test get value from an array.
      *
-     * @param   array  $input    Input array
-     * @param   mixed  $index    Element to pull, either by association or number
-     * @param   mixed  $default  The defualt value, if element not present
-     * @param   string $type     The type of value returned
-     * @param   array  $expect   The expected results
-     * @param   string $message  The failure message
-     * @param   bool   $defaults Use the defaults (true) or full argument list
+     * @param array  $input    Input array
+     * @param mixed  $index    Element to pull, either by association or number
+     * @param mixed  $default  The defualt value, if element not present
+     * @param string $type     The type of value returned
+     * @param array  $expect   The expected results
+     * @param string $message  The failure message
+     * @param bool   $defaults Use the defaults (true) or full argument list
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestGetValue
      * @covers        \Windwalker\Utilities\ArrayHelper::getValue
+     *
      * @since         2.0
      */
     public function testGetValue($input, $index, $default, $type, $expect, $message, $defaults)
@@ -1509,7 +1512,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Method to test setValue
+     * Method to test setValue.
      *
      * @covers \Windwalker\Utilities\ArrayHelper::setValue
      *
@@ -1519,9 +1522,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     {
         $data = [
             'Archer' => 'Unlimited Blade World',
-            'Saber' => 'Excalibur',
+            'Saber'  => 'Excalibur',
             'Lancer' => 'Gáe Bulg',
-            'Rider' => 'Breaker Gorgon',
+            'Rider'  => 'Breaker Gorgon',
         ];
         $data2 = (object) $data;
 
@@ -1559,12 +1562,13 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Tests the ArrayHelper::invert method.
      *
-     * @param   array  $input    The array being input.
-     * @param   string $expected The expected return value.
+     * @param array  $input    The array being input.
+     * @param string $expected The expected return value.
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestInvert
+     *
      * @since         2.0
      */
     public function testInvert($input, $expected)
@@ -1578,7 +1582,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Test the ArrayHelper::isAssociate method.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      * @sovers  ArrayHelper::isAssociative
@@ -1594,7 +1598,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 ]
             ),
             $this->isFalse(),
-            'Line: ' . __LINE__ . ' This array should not be associative.'
+            'Line: '.__LINE__.' This array should not be associative.'
         );
 
         $this->assertThat(
@@ -1606,7 +1610,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 ]
             ),
             $this->isTrue(),
-            'Line: ' . __LINE__ . ' This array should be associative.'
+            'Line: '.__LINE__.' This array should be associative.'
         );
 
         $this->assertThat(
@@ -1618,21 +1622,22 @@ class ArrayHelperTest extends AbstractBaseTestCase
                 ]
             ),
             $this->isTrue(),
-            'Line: ' . __LINE__ . ' This array should be associative.'
+            'Line: '.__LINE__.' This array should be associative.'
         );
     }
 
     /**
      * Tests the ArrayHelper::group method.
      *
-     * @param   array  $source   The source array.
-     * @param   string $key      Where the elements of the source array are objects or arrays, the key to pivot on.
-     * @param   array  $expected The expected result.
+     * @param array  $source   The source array.
+     * @param string $key      Where the elements of the source array are objects or arrays, the key to pivot on.
+     * @param array  $expected The expected result.
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestGroup
      * @covers        \Windwalker\Utilities\ArrayHelper::group
+     *
      * @since         2.0
      */
     public function testGroup($source, $key, $expected)
@@ -1662,19 +1667,20 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Test sorting an array of objects.
      *
-     * @param   array   $input         Input array of objects
-     * @param   mixed   $key           Key to sort on
-     * @param   mixed   $direction     Ascending (1) or Descending(-1)
-     * @param   string  $casesensitive @todo
-     * @param   string  $locale        @todo
-     * @param   array   $expect        The expected results
-     * @param   string  $message       The failure message
-     * @param   boolean $defaults      Use the defaults (true) or full argument list
+     * @param array  $input         Input array of objects
+     * @param mixed  $key           Key to sort on
+     * @param mixed  $direction     Ascending (1) or Descending(-1)
+     * @param string $casesensitive @todo
+     * @param string $locale        @todo
+     * @param array  $expect        The expected results
+     * @param string $message       The failure message
+     * @param bool   $defaults      Use the defaults (true) or full argument list
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestSortObject
      * @covers        \Windwalker\Utilities\ArrayHelper::sortObjects
+     *
      * @since         2.0
      */
     public function testSortObjects(
@@ -1690,7 +1696,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
     ) {
         // Convert the $locale param to a string if it is an array
         if (is_array($locale)) {
-            $locale = "'" . implode("', '", $locale) . "'";
+            $locale = "'".implode("', '", $locale)."'";
         }
 
         if (empty($input)) {
@@ -1726,15 +1732,16 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Test convert array to object.
      *
-     * @param   string $input     The array being input
-     * @param   string $className The class name to build
-     * @param   string $expect    The expected return value
-     * @param   string $message   The failure message
+     * @param string $input     The array being input
+     * @param string $className The class name to build
+     * @param string $expect    The expected return value
+     * @param string $message   The failure message
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestToObject
      * @covers        \Windwalker\Utilities\ArrayHelper::toObject
+     *
      * @since         2.0
      */
     public function testToObject($input, $className, $expect, $message)
@@ -1747,13 +1754,13 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * testToArray
+     * testToArray.
      *
      * @param $input
      * @param $recursive
      * @param $expect
      *
-     * @return  void
+     * @return void
      *
      * @dataProvider  seedTestToArray
      * @covers        \Windwalker\Utilities\ArrayHelper::toArray
@@ -1766,15 +1773,16 @@ class ArrayHelperTest extends AbstractBaseTestCase
     /**
      * Tests the arraySearch method.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Utilities\ArrayHelper::arraySearch
+     *
      * @since   2.0
      */
     public function testArraySearch()
     {
         $array = [
-            'name' => 'Foo',
+            'name'  => 'Foo',
             'email' => 'foobar@example.com',
         ];
 
@@ -1789,19 +1797,20 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * testFlatten
+     * testFlatten.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Utilities\ArrayHelper::flatten
+     *
      * @since   2.0
      */
     public function testFlatten()
     {
         $array = [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => [
+            'olive'  => 'peace',
+            'pos1'   => [
                 'sunflower' => 'love',
             ],
             'pos2' => [
@@ -1819,34 +1828,34 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Method to test query()
+     * Method to test query().
      *
      * @covers  \Windwalker\Utilities\ArrayHelper::query
      *
-     * @return  void
+     * @return void
      */
     public function testQuery()
     {
         $data = [
             [
-                'id' => 1,
+                'id'    => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object) ['foo' => 'bar'],
+                'data'  => (object) ['foo' => 'bar'],
             ],
             [
-                'id' => 2,
+                'id'    => 2,
                 'title' => 'Macbeth',
-                'data' => [],
+                'data'  => [],
             ],
             [
-                'id' => 3,
+                'id'    => 3,
                 'title' => 'Othello',
-                'data' => 123,
+                'data'  => 123,
             ],
             [
-                'id' => 4,
+                'id'    => 4,
                 'title' => 'Hamlet',
-                'data' => true,
+                'data'  => true,
             ],
         ];
 
@@ -1891,34 +1900,34 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Method to test query()
+     * Method to test query().
      *
      * @covers  \Windwalker\Utilities\ArrayHelper::query
      *
-     * @return  void
+     * @return void
      */
     public function testQueryWithCallback()
     {
         $data = [
             [
-                'id' => 1,
+                'id'    => 1,
                 'title' => 'Julius Caesar',
-                'data' => (object) ['foo' => 'bar'],
+                'data'  => (object) ['foo' => 'bar'],
             ],
             [
-                'id' => 2,
+                'id'    => 2,
                 'title' => 'Macbeth',
-                'data' => [],
+                'data'  => [],
             ],
             [
-                'id' => 3,
+                'id'    => 3,
                 'title' => 'Othello',
-                'data' => 123,
+                'data'  => 123,
             ],
             [
-                'id' => 4,
+                'id'    => 4,
                 'title' => 'Hamlet',
-                'data' => true,
+                'data'  => true,
             ],
         ];
 
@@ -1933,18 +1942,18 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * testMatch
+     * testMatch.
      *
      * @covers \Windwalker\Utilities\ArrayHelper::match
      *
-     * @return  void
+     * @return void
      */
     public function testMatch()
     {
         $data = [
-            'id' => 1,
+            'id'    => 1,
             'title' => 'Julius Caesar',
-            'data' => (object) ['foo' => 'bar'],
+            'data'  => (object) ['foo' => 'bar'],
         ];
 
         $this->assertTrue(ArrayHelper::match($data, ['id' => 1]));
@@ -1955,7 +1964,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Method to test mapKey
+     * Method to test mapKey.
      *
      * @covers \Windwalker\Utilities\ArrayHelper::mapKey
      *
@@ -1964,7 +1973,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
     public function testMapKey()
     {
         $data = [
-            'top' => 'Captain America',
+            'top'    => 'Captain America',
             'middle' => 'Iron Man',
             'bottom' => 'Thor',
         ];
@@ -1976,7 +1985,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
         ];
 
         $expected = [
-            'top' => 'Captain America',
+            'top'    => 'Captain America',
             'middle' => 'Thor',
             'bottom' => 'Iron Man',
         ];
@@ -1990,7 +1999,7 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * Method to test merge
+     * Method to test merge.
      *
      * @covers \Windwalker\Utilities\ArrayHelper::merge
      *
@@ -2000,62 +2009,62 @@ class ArrayHelperTest extends AbstractBaseTestCase
     {
         $data1 = [
             'green' => 'Hulk',
-            'red' => 'empty',
+            'red'   => 'empty',
             'human' => [
-                'dark' => 'empty',
+                'dark'  => 'empty',
                 'black' => [
-                    'male' => 'empty',
-                    'female' => 'empty',
+                    'male'      => 'empty',
+                    'female'    => 'empty',
                     'no-gender' => 'empty',
                 ],
             ],
         ];
         $data2 = [
-            'ai' => 'Jarvis',
+            'ai'    => 'Jarvis',
             'agent' => 'Phil Coulson',
-            'red' => [
-                'left' => 'Pepper',
+            'red'   => [
+                'left'  => 'Pepper',
                 'right' => 'Iron Man',
             ],
             'human' => [
-                'dark' => 'Nick Fury',
+                'dark'  => 'Nick Fury',
                 'black' => [
                     'female' => 'Black Widow',
-                    'male' => 'Loki',
+                    'male'   => 'Loki',
                 ],
             ],
         ];
 
         $expected = [
-            'ai' => 'Jarvis',
+            'ai'    => 'Jarvis',
             'agent' => 'Phil Coulson',
             'green' => 'Hulk',
-            'red' => [
-                'left' => 'Pepper',
+            'red'   => [
+                'left'  => 'Pepper',
                 'right' => 'Iron Man',
             ],
             'human' => [
-                'dark' => 'Nick Fury',
+                'dark'  => 'Nick Fury',
                 'black' => [
-                    'male' => 'Loki',
-                    'female' => 'Black Widow',
+                    'male'      => 'Loki',
+                    'female'    => 'Black Widow',
                     'no-gender' => 'empty',
                 ],
             ],
         ];
 
         $expected2 = [
-            'ai' => 'Jarvis',
+            'ai'    => 'Jarvis',
             'agent' => 'Phil Coulson',
             'green' => 'Hulk',
-            'red' => [
-                'left' => 'Pepper',
+            'red'   => [
+                'left'  => 'Pepper',
                 'right' => 'Iron Man',
             ],
             'human' => [
-                'dark' => 'Nick Fury',
+                'dark'  => 'Nick Fury',
                 'black' => [
-                    'male' => 'Loki',
+                    'male'   => 'Loki',
                     'female' => 'Black Widow',
                 ],
             ],
@@ -2066,9 +2075,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * testGetByPath
+     * testGetByPath.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Utilities\ArrayHelper::getByPath
      */
@@ -2076,8 +2085,8 @@ class ArrayHelperTest extends AbstractBaseTestCase
     {
         $data = [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => [
+            'olive'  => 'peace',
+            'pos1'   => [
                 'sunflower' => 'love',
             ],
             'pos2' => [
@@ -2098,9 +2107,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * testSetByPath
+     * testSetByPath.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Utilities\ArrayHelper::setByPath
      */
@@ -2149,9 +2158,9 @@ class ArrayHelperTest extends AbstractBaseTestCase
     }
 
     /**
-     * testRemoveByPath
+     * testRemoveByPath.
      *
-     * @return  void
+     * @return void
      */
     public function testRemoveByPath()
     {

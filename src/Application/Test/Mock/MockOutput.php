@@ -15,19 +15,19 @@ use Windwalker\Http\Response\Response;
  *
  * @since  2.0
  */
-class MockResponse extends Response
+class MockOutput extends Response
 {
     /**
      * Property sentHeaders.
      *
-     * @var  string[]
+     * @var string[]
      */
     public $sentHeaders = [];
 
     /**
      * Property headers.
      *
-     * @var  array
+     * @var array
      */
     public $headers = [];
 
@@ -35,13 +35,13 @@ class MockResponse extends Response
      * Method to send a header to the client.  We are wrapping this to isolate the header() function
      * from our code base for testing reasons.
      *
-     * @param   string  $string    The header string.
-     * @param   boolean $replace   The optional replace parameter indicates whether the header should
-     *                             replace a previous similar header, or add a second header of the same type.
-     * @param   integer $code      Forces the HTTP response code to the specified value. Note that
-     *                             this parameter only has an effect if the string is not empty.
+     * @param string $string  The header string.
+     * @param bool   $replace The optional replace parameter indicates whether the header should
+     *                        replace a previous similar header, or add a second header of the same type.
+     * @param int    $code    Forces the HTTP response code to the specified value. Note that
+     *                        this parameter only has an effect if the string is not empty.
      *
-     * @return  static
+     * @return static
      *
      * @since   2.0
      */
@@ -56,7 +56,7 @@ class MockResponse extends Response
      * Method to check to see if headers have already been sent.  We are wrapping this to isolate the
      * headers_sent() function from our code base for testing reasons.
      *
-     * @return  boolean  True if the headers have already been sent.
+     * @return bool True if the headers have already been sent.
      *
      * @since   2.0
      */
@@ -69,12 +69,12 @@ class MockResponse extends Response
      * Method to check the current client connection status to ensure that it is alive.  We are
      * wrapping this to isolate the connection_status() function from our code base for testing reasons.
      *
-     * @return  boolean  True if the connection is valid and normal.
+     * @return bool True if the connection is valid and normal.
      *
      * @since   2.0
      */
     public function checkConnectionAlive()
     {
-        return (connection_status() === CONNECTION_NORMAL);
+        return connection_status() === CONNECTION_NORMAL;
     }
 }

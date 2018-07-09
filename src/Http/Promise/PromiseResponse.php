@@ -20,23 +20,23 @@ class PromiseResponse extends Response
     /**
      * Property thenCallables.
      *
-     * @var  callable[]
+     * @var callable[]
      */
     protected $thenCallables = [];
 
     /**
      * Property rejectCallables.
      *
-     * @var  callable[]
+     * @var callable[]
      */
     protected $rejectCallables = [];
 
     /**
-     * then
+     * then.
      *
      * @param callable $callback
      *
-     * @return  static
+     * @return static
      *
      * @since  3.4
      */
@@ -48,11 +48,11 @@ class PromiseResponse extends Response
     }
 
     /**
-     * reject
+     * reject.
      *
      * @param callable $callback
      *
-     * @return  static
+     * @return static
      *
      * @since  3.4
      */
@@ -64,11 +64,11 @@ class PromiseResponse extends Response
     }
 
     /**
-     * resolve
+     * resolve.
      *
      * @param mixed $value
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since  3.4
      */

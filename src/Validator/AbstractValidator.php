@@ -32,7 +32,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * Property multiple.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $multiple = false;
 
@@ -41,7 +41,7 @@ abstract class AbstractValidator implements ValidatorInterface
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     public function validate($value)
     {
@@ -56,18 +56,18 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     abstract protected function test($value);
 
     /**
      * Get error message.
      *
-     * @return  string
+     * @return string
      */
     public function getError()
     {
@@ -75,11 +75,11 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-     * Method to set property error
+     * Method to set property error.
      *
-     * @param   string $error
+     * @param string $error
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setError($error = null)
     {
@@ -93,7 +93,7 @@ abstract class AbstractValidator implements ValidatorInterface
      *
      * @param string $message
      *
-     * @return  static
+     * @return static
      */
     public function setMessage($message)
     {
@@ -103,9 +103,9 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-     * Method to get property Message
+     * Method to get property Message.
      *
-     * @return  string
+     * @return string
      */
     protected function getMessage()
     {
@@ -113,7 +113,7 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-     * formatMessage
+     * formatMessage.
      *
      * @param string $message
      * @param mixed  $value

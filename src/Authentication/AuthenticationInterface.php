@@ -11,42 +11,42 @@ namespace Windwalker\Authentication;
 use Windwalker\Authentication\Method\MethodInterface;
 
 /**
- * Interface AuthenticationInterface
+ * Interface AuthenticationInterface.
  *
  * @since  3.0
  */
 interface AuthenticationInterface
 {
     /**
-     * authenticate
+     * authenticate.
      *
      * @param Credential $credential
      *
-     * @return  bool|Credential
+     * @return bool|Credential
      */
     public function authenticate(Credential $credential);
 
     /**
-     * addMethod
+     * addMethod.
      *
      * @param string          $name
      * @param MethodInterface $method
      *
-     * @return  static
+     * @return static
      */
     public function addMethod($name, MethodInterface $method);
 
     /**
-     * Method to get property Results
+     * Method to get property Results.
      *
-     * @return  integer[]
+     * @return int[]
      */
     public function getResults();
 
     /**
-     * Method to get property Credential
+     * Method to get property Credential.
      *
-     * @return  Credential
+     * @return Credential
      */
     public function getCredential();
 }

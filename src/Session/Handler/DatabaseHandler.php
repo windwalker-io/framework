@@ -11,7 +11,7 @@ namespace Windwalker\Session\Handler;
 use Windwalker\Session\Database\AbstractDatabaseAdapter;
 
 /**
- * Database session storage handler for PHP
+ * Database session storage handler for PHP.
  *
  * @see    http://www.php.net/manual/en/function.session-set-save-handler.php
  * @since  2.0
@@ -26,11 +26,12 @@ class DatabaseHandler extends AbstractHandler
     protected $db;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param  AbstractDatabaseAdapter $db
+     * @param AbstractDatabaseAdapter $db
      *
      * @throws \RuntimeException
+     *
      * @since   2.0
      */
     public function __construct(AbstractDatabaseAdapter $db)
@@ -64,10 +65,11 @@ class DatabaseHandler extends AbstractHandler
     /**
      * Read the data for a particular session identifier from the SessionHandler backend.
      *
-     * @param   string $id The session identifier.
+     * @param string $id The session identifier.
      *
      * @throws \Exception
-     * @return  string  The session data.
+     *
+     * @return string The session data.
      *
      * @since   2.0
      */
@@ -83,11 +85,12 @@ class DatabaseHandler extends AbstractHandler
     /**
      * Write session data to the SessionHandler backend.
      *
-     * @param   string $id   The session identifier.
-     * @param   string $data The session data.
+     * @param string $id   The session identifier.
+     * @param string $data The session data.
      *
-     * @throws  \Exception
-     * @return  boolean  True on success, false otherwise.
+     * @throws \Exception
+     *
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
@@ -103,10 +106,11 @@ class DatabaseHandler extends AbstractHandler
     /**
      * Destroy the data for a particular session identifier in the SessionHandler backend.
      *
-     * @param   string $id The session identifier.
+     * @param string $id The session identifier.
      *
      * @throws \Exception
-     * @return  boolean  True on success, false otherwise.
+     *
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
@@ -122,10 +126,11 @@ class DatabaseHandler extends AbstractHandler
     /**
      * Garbage collect stale sessions from the SessionHandler backend.
      *
-     * @param   integer $lifetime The maximum age of a session.
+     * @param int $lifetime The maximum age of a session.
      *
-     * @throws  \Exception
-     * @return  boolean  True on success, false otherwise.
+     * @throws \Exception
+     *
+     * @return bool True on success, false otherwise.
      *
      * @since   2.0
      */
@@ -142,9 +147,9 @@ class DatabaseHandler extends AbstractHandler
     }
 
     /**
-     * isSupported
+     * isSupported.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isSupported()
     {

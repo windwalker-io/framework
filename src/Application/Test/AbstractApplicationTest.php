@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Application\Test\Stub\StubApplication;
 use Windwalker\Structure\Structure;
 
 /**
- * Test class of AbstractApplication
+ * Test class of AbstractApplication.
  *
  * @since 2.0
  */
@@ -85,7 +85,7 @@ class AbstractApplicationTest extends \PHPUnit\Framework\TestCase
     {
         $config = [
             'flower' => 'sakura',
-            'sky' => [
+            'sky'    => [
                 'bird' => 'seagull',
             ],
         ];

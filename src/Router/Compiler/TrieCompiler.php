@@ -20,17 +20,17 @@ abstract class TrieCompiler
     /**
      * Property vars.
      *
-     * @var  array
+     * @var array
      */
     public static $vars = [];
 
     /**
-     * compile
+     * compile.
      *
      * @param string $pattern
      * @param array  $requirements
      *
-     * @return  string
+     * @return string
      */
     public static function compile($pattern, $requirements = [])
     {
@@ -51,10 +51,10 @@ abstract class TrieCompiler
             } elseif ($segment[0] === '*') {
                 // Match a splat and capture the data to a named variable.
                 $vars[] = $segment = substr($segment, 1);
-                $regex[] = '(?P<' . $segment . '>.*)';
+                $regex[] = '(?P<'.$segment.'>.*)';
             } elseif ($segment[0] === '\\' && $segment[1] === '*') {
                 // Match an escaped splat segment.
-                $regex[] = '\*' . preg_quote(substr($segment, 2));
+                $regex[] = '\*'.preg_quote(substr($segment, 2));
             } elseif ($segment === ':') {
                 // Match an unnamed variable without capture.
                 $regex[] = '[^/]*';
@@ -73,16 +73,16 @@ abstract class TrieCompiler
 
         static::$vars = $vars;
 
-        return chr(1) . '^' . implode('/', $regex) . '$' . chr(1);
+        return chr(1).'^'.implode('/', $regex).'$'.chr(1);
     }
 
     /**
-     * requirementPattern
+     * requirementPattern.
      *
      * @param string $name
      * @param array  $requirements
      *
-     * @return  string
+     * @return string
      */
     protected static function requirementPattern($name, $requirements = [])
     {

@@ -31,23 +31,23 @@ class TextField extends AbstractField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'text';
 
     /**
      * Property options.
      *
-     * @var  Option[]
+     * @var Option[]
      */
     protected $options = [];
 
     /**
-     * prepareRenderInput
+     * prepareRenderInput.
      *
      * @param array $attrs
      *
-     * @return  void
+     * @return void
      */
     public function prepare(&$attrs)
     {
@@ -71,17 +71,17 @@ class TextField extends AbstractField
         $attrs['onfocus'] = $this->getAttribute('onfocus');
         $attrs['onblur'] = $this->getAttribute('onblur');
         $attrs['value'] = $this->escape($this->getValue());
-        $attrs['list'] = $this->getAttribute('list', count($this->options) ? $this->getId() . '-list' : null);
+        $attrs['list'] = $this->getAttribute('list', count($this->options) ? $this->getId().'-list' : null);
 
         $attrs['required'] = $this->required;
     }
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  string
+     * @return string
      *
      * @since  3.4
      */
@@ -97,11 +97,11 @@ class TextField extends AbstractField
     }
 
     /**
-     * addOption
+     * addOption.
      *
      * @param Option $option
      *
-     * @return  static
+     * @return static
      */
     public function addOption(Option $option)
     {
@@ -113,7 +113,7 @@ class TextField extends AbstractField
     }
 
     /**
-     * option
+     * option.
      *
      * @param string $value
      * @param array  $attribs
@@ -128,11 +128,11 @@ class TextField extends AbstractField
     }
 
     /**
-     * setOptions
+     * setOptions.
      *
      * @param array|Option[] $options
      *
-     * @return  static
+     * @return static
      */
     public function setOptions($options)
     {
@@ -142,13 +142,13 @@ class TextField extends AbstractField
     }
 
     /**
-     * max
+     * max.
      *
      * @param int  $length
      * @param bool $addFilter
      * @param bool $utf8
      *
-     * @return  static|mixed
+     * @return static|mixed
      *
      * @since  3.4.2
      */
@@ -162,13 +162,14 @@ class TextField extends AbstractField
     }
 
     /**
-     * prepareOptions
+     * prepareOptions.
      *
      * @param string|\SimpleXMLElement $xml
      * @param Option[]                 $options
      *
      * @throws \InvalidArgumentException
-     * @return  void
+     *
+     * @return void
      */
     protected function handleOptions($xml, $options = [])
     {
@@ -202,9 +203,9 @@ class TextField extends AbstractField
     }
 
     /**
-     * getAccessors
+     * getAccessors.
      *
-     * @return  array
+     * @return array
      *
      * @since   3.1.2
      */
@@ -213,14 +214,14 @@ class TextField extends AbstractField
         return array_merge(
             parent::getAccessors(),
             [
-                'placeholder' => 'placeholder',
-                'size' => 'size',
-                'maxlength' => 'maxlength',
-                'autofocus' => 'autofocus',
+                'placeholder'  => 'placeholder',
+                'size'         => 'size',
+                'maxlength'    => 'maxlength',
+                'autofocus'    => 'autofocus',
                 'autocomplete' => 'autocomplete',
-                'onchange' => 'onchange',
-                'onfocus' => 'onfocus',
-                'onblur' => 'onblur',
+                'onchange'     => 'onchange',
+                'onfocus'      => 'onfocus',
+                'onblur'       => 'onblur',
             ]
         );
     }

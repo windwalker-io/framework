@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Html\Option;
 use Windwalker\Html\Select\SelectList;
 
 /**
- * Test class of SelectList
+ * Test class of SelectList.
  *
  * @since 2.0
  */
@@ -48,9 +48,9 @@ class SelectListTest extends AbstractDomTestCase
     }
 
     /**
-     * testCreateList
+     * testCreateList.
      *
-     * @return  void
+     * @return void
      *
      * Windwalker\Html\Select\SelectList::toString
      */
@@ -69,7 +69,7 @@ class SelectListTest extends AbstractDomTestCase
             false
         );
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <select class="input-select" name="form[timezone]">
 	<option class="opt" value="Asia/Tokyo">Asia - Tokyo</option>
 	<option value="Asia/Taipei">Asia - Taipei</option>
@@ -80,7 +80,7 @@ HTML;
 
         $this->assertHtmlFormatEquals($expect, $select);
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <select class="input-select" name="form[timezone]">
 	<option class="opt" value="Asia/Tokyo">Asia - Tokyo</option>
 	<option value="Asia/Taipei">Asia - Taipei</option>
@@ -96,9 +96,9 @@ HTML;
     }
 
     /**
-     * testCreateList
+     * testCreateList.
      *
-     * @return  void
+     * @return void
      *
      * Windwalker\Html\Select\SelectList::toString
      */
@@ -113,8 +113,7 @@ HTML;
                 ],
                 'Europe' => [
                     new Option('Europe - Paris', 'Asia/Paris'),
-                ]
-                ,
+                ],
                 new Option('UTC', 'UTC'),
             ],
             ['class' => 'input-select'],
@@ -122,7 +121,7 @@ HTML;
             false
         );
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <select class="input-select" name="form[timezone]">
 	<optgroup label="Asia">
 		<option class="opt" value="Asia/Tokyo">Tokyo</option>
@@ -139,7 +138,7 @@ HTML;
 
         $this->assertHtmlFormatEquals($expect, $select);
 
-        $expect = <<<HTML
+        $expect = <<<'HTML'
 <select class="input-select" name="form[timezone]">
 	<optgroup label="Asia">
 		<option class="opt" value="Asia/Tokyo">Tokyo</option>

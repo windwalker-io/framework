@@ -20,19 +20,22 @@ namespace Windwalker\Query;
 class QueryElement
 {
     /**
-     * @var    string  The name of the element.
+     * @var string The name of the element.
+     *
      * @since  2.0
      */
     protected $name = null;
 
     /**
-     * @var    array  An array of elements.
+     * @var array An array of elements.
+     *
      * @since  2.0
      */
     protected $elements = null;
 
     /**
-     * @var    string  Glue piece.
+     * @var string Glue piece.
+     *
      * @since  2.0
      */
     protected $glue = null;
@@ -40,9 +43,9 @@ class QueryElement
     /**
      * Constructor.
      *
-     * @param   string $name     The name of the element.
-     * @param   mixed  $elements String or array.
-     * @param   string $glue     The glue for elements.
+     * @param string $name     The name of the element.
+     * @param mixed  $elements String or array.
+     * @param string $glue     The glue for elements.
      *
      * @since   2.0
      */
@@ -58,7 +61,7 @@ class QueryElement
     /**
      * Magic function to convert the query element to a string.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -68,25 +71,25 @@ class QueryElement
     }
 
     /**
-     * toString
+     * toString.
      *
-     * @return  string
+     * @return string
      */
     public function toString()
     {
         if (substr($this->name, -2) === '()') {
-            return PHP_EOL . substr($this->name, 0, -2) . '(' . implode($this->glue, $this->elements) . ')';
+            return PHP_EOL.substr($this->name, 0, -2).'('.implode($this->glue, $this->elements).')';
         } else {
-            return PHP_EOL . $this->name . ' ' . implode($this->glue, $this->elements);
+            return PHP_EOL.$this->name.' '.implode($this->glue, $this->elements);
         }
     }
 
     /**
      * Appends element parts to the internal list.
      *
-     * @param   mixed $elements String or array.
+     * @param mixed $elements String or array.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -102,7 +105,7 @@ class QueryElement
     /**
      * Gets the elements of this element.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -115,7 +118,7 @@ class QueryElement
      * Method to provide deep copy support to nested objects and arrays
      * when cloning.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -129,9 +132,9 @@ class QueryElement
     }
 
     /**
-     * Method to get property Glue
+     * Method to get property Glue.
      *
-     * @return  string
+     * @return string
      */
     public function getGlue()
     {
@@ -139,11 +142,11 @@ class QueryElement
     }
 
     /**
-     * Method to set property glue
+     * Method to set property glue.
      *
-     * @param   string $glue
+     * @param string $glue
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setGlue($glue)
     {
@@ -153,9 +156,9 @@ class QueryElement
     }
 
     /**
-     * Method to get property Name
+     * Method to get property Name.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -163,11 +166,11 @@ class QueryElement
     }
 
     /**
-     * Method to set property name
+     * Method to set property name.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setName($name)
     {

@@ -18,18 +18,18 @@ class Authorisation implements AuthorisationInterface
     /**
      * Property policies.
      *
-     * @var  PolicyInterface[]
+     * @var PolicyInterface[]
      */
     protected $policies = [];
 
     /**
-     * authorise
+     * authorise.
      *
      * @param string $policy
      * @param mixed  $user
      * @param mixed  $data
      *
-     * @return  boolean
+     * @return bool
      */
     public function authorise($policy, $user, $data = null)
     {
@@ -44,12 +44,12 @@ class Authorisation implements AuthorisationInterface
     }
 
     /**
-     * addPolicy
+     * addPolicy.
      *
-     * @param   string                   $name
-     * @param   PolicyInterface|callable $handler
+     * @param string                   $name
+     * @param PolicyInterface|callable $handler
      *
-     * @return  static
+     * @return static
      */
     public function addPolicy($name, $handler)
     {
@@ -67,27 +67,25 @@ class Authorisation implements AuthorisationInterface
     }
 
     /**
-     * getPolicy
+     * getPolicy.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  PolicyInterface
+     * @return PolicyInterface
      */
     public function getPolicy($name)
     {
         if (isset($this->policies[$name])) {
             return $this->policies[$name];
         }
-
-        return null;
     }
 
     /**
-     * registerPolicy
+     * registerPolicy.
      *
      * @param PolicyProviderInterface $policy
      *
-     * @return  static
+     * @return static
      */
     public function registerPolicyProvider(PolicyProviderInterface $policy)
     {
@@ -97,11 +95,11 @@ class Authorisation implements AuthorisationInterface
     }
 
     /**
-     * hasPolicy
+     * hasPolicy.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  boolean
+     * @return bool
      */
     public function hasPolicy($name)
     {
@@ -109,9 +107,9 @@ class Authorisation implements AuthorisationInterface
     }
 
     /**
-     * Method to get property Policies
+     * Method to get property Policies.
      *
-     * @return  PolicyInterface[]
+     * @return PolicyInterface[]
      */
     public function getPolicies()
     {
@@ -119,11 +117,11 @@ class Authorisation implements AuthorisationInterface
     }
 
     /**
-     * Method to set property policies
+     * Method to set property policies.
      *
-     * @param   PolicyInterface[] $policies
+     * @param PolicyInterface[] $policies
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setPolicies($policies)
     {

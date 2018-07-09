@@ -16,92 +16,92 @@ namespace Windwalker\Database\Schema;
 class Column
 {
     /**
-     * @var boolean
+     * @var bool
      */
     const SIGNED = true;
 
     /**
-     * @var boolean
+     * @var bool
      */
     const UNSIGNED = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     const ALLOW_NULL = true;
 
     /**
-     * @var boolean
+     * @var bool
      */
     const NOT_NULL = false;
 
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = null;
 
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type;
 
     /**
      * Property length.
      *
-     * @var integer
+     * @var int
      */
     protected $length;
 
     /**
      * Property signed.
      *
-     * @var  bool
+     * @var bool
      */
     protected $signed;
 
     /**
      * Property allowNull.
      *
-     * @var  bool
+     * @var bool
      */
     protected $allowNull;
 
     /**
      * Property default.
      *
-     * @var  string
+     * @var string
      */
     protected $default;
 
     /**
      * Property position.
      *
-     * @var  string
+     * @var string
      */
     protected $position;
 
     /**
      * Property comment.
      *
-     * @var  string
+     * @var string
      */
     protected $comment;
 
     /**
      * Property autoIncrement.
      *
-     * @var  boolean
+     * @var bool
      */
     protected $autoIncrement = false;
 
     /**
      * Property primary.
      *
-     * @var boolean
+     * @var bool
      */
     protected $primary;
 
@@ -143,9 +143,9 @@ class Column
     }
 
     /**
-     * Method to get property Name
+     * Method to get property Name.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -153,11 +153,11 @@ class Column
     }
 
     /**
-     * Method to set property name
+     * Method to set property name.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function name($name)
     {
@@ -167,9 +167,9 @@ class Column
     }
 
     /**
-     * Method to get property Type
+     * Method to get property Type.
      *
-     * @return  string
+     * @return string
      */
     public function getType()
     {
@@ -177,11 +177,11 @@ class Column
     }
 
     /**
-     * Method to set property type
+     * Method to set property type.
      *
-     * @param   string $type
+     * @param string $type
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function type($type)
     {
@@ -191,9 +191,9 @@ class Column
     }
 
     /**
-     * Method to get property Position
+     * Method to get property Position.
      *
-     * @return  string
+     * @return string
      */
     public function getPosition()
     {
@@ -201,11 +201,11 @@ class Column
     }
 
     /**
-     * Method to set property position
+     * Method to set property position.
      *
-     * @param   string $position
+     * @param string $position
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function position($position)
     {
@@ -215,9 +215,9 @@ class Column
     }
 
     /**
-     * Method to get property Comment
+     * Method to get property Comment.
      *
-     * @return  string
+     * @return string
      */
     public function getComment()
     {
@@ -225,11 +225,11 @@ class Column
     }
 
     /**
-     * Method to set property comment
+     * Method to set property comment.
      *
-     * @param   string $comment
+     * @param string $comment
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function comment($comment)
     {
@@ -239,9 +239,9 @@ class Column
     }
 
     /**
-     * Method to get property Signed
+     * Method to get property Signed.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getSigned()
     {
@@ -249,11 +249,11 @@ class Column
     }
 
     /**
-     * Method to set property signed
+     * Method to set property signed.
      *
-     * @param   boolean $signed
+     * @param bool $signed
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function signed($signed = true)
     {
@@ -263,9 +263,9 @@ class Column
     }
 
     /**
-     * unsigned
+     * unsigned.
      *
-     * @return  static
+     * @return static
      */
     public function unsigned()
     {
@@ -275,9 +275,9 @@ class Column
     }
 
     /**
-     * Method to get property AllowNull
+     * Method to get property AllowNull.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getAllowNull()
     {
@@ -285,11 +285,11 @@ class Column
     }
 
     /**
-     * Method to set property allowNull
+     * Method to set property allowNull.
      *
-     * @param   boolean $allowNull
+     * @param bool $allowNull
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function allowNull($allowNull = true)
     {
@@ -299,9 +299,9 @@ class Column
     }
 
     /**
-     * notNull
+     * notNull.
      *
-     * @return  static
+     * @return static
      */
     public function notNull()
     {
@@ -311,9 +311,9 @@ class Column
     }
 
     /**
-     * Method to get property Default
+     * Method to get property Default.
      *
-     * @return  string
+     * @return string
      */
     public function getDefault()
     {
@@ -321,11 +321,11 @@ class Column
     }
 
     /**
-     * Method to set property default
+     * Method to set property default.
      *
-     * @param   string $default
+     * @param string $default
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function defaultValue($default)
     {
@@ -335,9 +335,9 @@ class Column
     }
 
     /**
-     * Method to get property AutoIncrement
+     * Method to get property AutoIncrement.
      *
-     * @return  boolean
+     * @return bool
      */
     public function getAutoIncrement()
     {
@@ -345,11 +345,11 @@ class Column
     }
 
     /**
-     * Method to set property autoIncrement
+     * Method to set property autoIncrement.
      *
-     * @param   boolean $autoIncrement
+     * @param bool $autoIncrement
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function autoIncrement($autoIncrement = true)
     {
@@ -359,9 +359,9 @@ class Column
     }
 
     /**
-     * Method to get property Length
+     * Method to get property Length.
      *
-     * @return  int
+     * @return int
      */
     public function getLength()
     {
@@ -369,11 +369,11 @@ class Column
     }
 
     /**
-     * Method to set property length
+     * Method to set property length.
      *
-     * @param   int $length
+     * @param int $length
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function length($length)
     {
@@ -383,19 +383,19 @@ class Column
     }
 
     /**
-     * setOptions
+     * setOptions.
      *
      * @param array $options
      *
-     * @return  static
+     * @return static
      */
     public function setOptions(array $options)
     {
         $defaultOptions = [
-            'primary' => false,
+            'primary'        => false,
             'auto_increment' => false,
-            'position' => null,
-            'length' => null,
+            'position'       => null,
+            'length'         => null,
         ];
 
         $options = array_merge($defaultOptions, $options);
@@ -416,9 +416,9 @@ class Column
     }
 
     /**
-     * Method to get property Primary
+     * Method to get property Primary.
      *
-     * @return  boolean
+     * @return bool
      */
     public function isPrimary()
     {
@@ -426,11 +426,11 @@ class Column
     }
 
     /**
-     * Method to set property primary
+     * Method to set property primary.
      *
-     * @param   boolean $primary
+     * @param bool $primary
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function primary($primary = true)
     {
@@ -449,11 +449,11 @@ class Column
     }
 
     /**
-     * Method to set property suffix
+     * Method to set property suffix.
      *
-     * @param   string $suffix
+     * @param string $suffix
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      *
      * @since  3.4
      */
@@ -465,9 +465,9 @@ class Column
     }
 
     /**
-     * getSuffix
+     * getSuffix.
      *
-     * @return  string
+     * @return string
      *
      * @since  3.4
      */

@@ -9,33 +9,33 @@
 namespace Windwalker\Session\Bag;
 
 /**
- * Interface FlasgBagInterface
+ * Interface FlasgBagInterface.
  */
 interface FlashBagInterface extends SessionBagInterface
 {
     /**
-     * add
+     * add.
      *
      * @param string $msg
      * @param string $type
      *
-     * @return  $this
+     * @return $this
      */
     public function add($msg, $type = 'info');
 
     /**
      * Take all and clean.
      *
-     * @return  array
+     * @return array
      */
     public function takeAll();
 
     /**
-     * getType
+     * getType.
      *
      * @param string $type
      *
-     * @return  array
+     * @return array
      */
     public function getType($type);
 }

@@ -12,7 +12,6 @@ namespace Windwalker\String;
  * The StringHelper class.
  *
  * @since       2.0.8
- *
  * @deprecated  Use Str class instead, this class will rewrite after 4.0
  */
 abstract class StringHelper
@@ -24,7 +23,8 @@ abstract class StringHelper
     /**
      * Increment styles.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected static $incrementStyles = [
@@ -39,11 +39,11 @@ abstract class StringHelper
     ];
 
     /**
-     * isEmptyString
+     * isEmptyString.
      *
      * @param string $string
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isEmpty($string)
     {
@@ -57,11 +57,11 @@ abstract class StringHelper
     }
 
     /**
-     * isZero
+     * isZero.
      *
      * @param string $string
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isZero($string)
     {
@@ -71,10 +71,10 @@ abstract class StringHelper
     /**
      * Quote a string.
      *
-     * @param   string $string The string to quote.
-     * @param   array  $quote  The quote symbol.
+     * @param string $string The string to quote.
+     * @param array  $quote  The quote symbol.
      *
-     * @return  string Quoted string.
+     * @return string Quoted string.
      */
     public static function quote($string, $quote = ['"', '"'])
     {
@@ -84,15 +84,15 @@ abstract class StringHelper
             $quote[1] = $quote[0];
         }
 
-        return $quote[0] . $string . $quote[1];
+        return $quote[0].$string.$quote[1];
     }
 
     /**
      * Back quote a string.
      *
-     * @param   string $string The string to quote.
+     * @param string $string The string to quote.
      *
-     * @return  string Quoted string.
+     * @return string Quoted string.
      */
     public static function backquote($string)
     {
@@ -107,11 +107,11 @@ abstract class StringHelper
      * default: "Label" becomes "Label (2)"
      * dash:    "Label" becomes "Label-2"
      *
-     * @param   string  $string The source string.
-     * @param   string  $style  The the style (default|dash).
-     * @param   integer $n      If supplied, this number is used for the copy, otherwise it is the 'next' number.
+     * @param string $string The source string.
+     * @param string $style  The the style (default|dash).
+     * @param int    $n      If supplied, this number is used for the copy, otherwise it is the 'next' number.
      *
-     * @return  string  The incremented string.
+     * @return string The incremented string.
      *
      * @since   2.0
      */
@@ -150,33 +150,33 @@ abstract class StringHelper
     }
 
     /**
-     * at
+     * at.
      *
      * @param string $string
      * @param int    $num
      *
-     * @return  string
+     * @return string
      */
     public static function at($string, $num)
     {
         $num = (int) $num;
 
         if (Utf8String::strlen($string) < $num) {
-            return null;
+            return;
         }
 
         return Utf8String::substr($string, $num, 1);
     }
 
     /**
-     * remove spaces
+     * remove spaces.
      *
      * See: http://stackoverflow.com/questions/3760816/remove-new-lines-from-string
      * And: http://stackoverflow.com/questions/9558110/php-remove-line-break-or-cr-lf-with-no-success
      *
      * @param string $string
      *
-     * @return  string
+     * @return string
      */
     public static function collapseWhitespace($string)
     {
@@ -186,13 +186,13 @@ abstract class StringHelper
     }
 
     /**
-     * endsWith
+     * endsWith.
      *
-     * @param string  $string
-     * @param string  $target
-     * @param boolean $caseSensitive
+     * @param string $string
+     * @param string $target
+     * @param bool   $caseSensitive
      *
-     * @return  boolean
+     * @return bool
      */
     public static function endsWith($string, $target, $caseSensitive = true)
     {
@@ -214,13 +214,13 @@ abstract class StringHelper
     }
 
     /**
-     * startsWith
+     * startsWith.
      *
-     * @param string  $string
-     * @param string  $target
-     * @param boolean $caseSensitive
+     * @param string $string
+     * @param string $target
+     * @param bool   $caseSensitive
      *
-     * @return  boolean
+     * @return bool
      */
     public static function startsWith($string, $target, $caseSensitive = true)
     {

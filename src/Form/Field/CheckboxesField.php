@@ -20,16 +20,16 @@ class CheckboxesField extends ListField
     /**
      * Property type.
      *
-     * @var  string
+     * @var string
      */
     protected $type = 'checkboxes';
 
     /**
-     * buildInput
+     * buildInput.
      *
      * @param array $attrs
      *
-     * @return  mixed|void
+     * @return mixed|void
      */
     public function buildInput($attrs)
     {
@@ -44,9 +44,9 @@ class CheckboxesField extends ListField
     }
 
     /**
-     * getValue
+     * getValue.
      *
-     * @return  array
+     * @return array
      */
     public function getValue()
     {

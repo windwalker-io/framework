@@ -27,7 +27,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Console application.
      *
-     * @var  Console
+     * @var Console
      *
      * @since  2.0
      */
@@ -45,7 +45,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Console(Argument) name.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -81,7 +81,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * The command description.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -90,7 +90,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * The manual about this command.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -108,7 +108,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * The closure to execute.
      *
-     * @var  callable
+     * @var callable
      *
      * @since  2.0
      */
@@ -126,15 +126,15 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Console constructor.
      *
-     * @param   string          $name   Console name.
-     * @param   IOInterface     $io     Cli input object.
-     * @param   AbstractCommand $parent Parent Console.
+     * @param string          $name   Console name.
+     * @param IOInterface     $io     Cli input object.
+     * @param AbstractCommand $parent Parent Console.
      *
      * @throws \LogicException
      *
      * @since  2.0
      */
-    public function __construct($name = null, IOInterface $io = null, AbstractCommand $parent = null)
+    public function __construct($name = null, IOInterface $io = null, self $parent = null)
     {
         $this->name = $name ?: $this->name;
         $this->io = $io ?: new IO();
@@ -153,9 +153,10 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Execute this command.
      *
+     * @throws \Exception
+     *
      * @return mixed Executed result or exit code.
      *
-     * @throws \Exception
      * @since  2.0
      */
     public function execute()
@@ -190,7 +191,7 @@ abstract class AbstractCommand implements \ArrayAccess
                 $command = $this->getChild($name);
 
                 throw new \RuntimeException(
-                    $e->getMessage() . "\n\n[Usage] " . $command->getUsage(),
+                    $e->getMessage()."\n\n[Usage] ".$command->getUsage(),
                     $e->getCode(),
                     $e
                 );
@@ -217,7 +218,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Prepare execute hook.
      *
-     * @return  void
+     * @return void
      */
     protected function prepareExecute()
     {
@@ -226,9 +227,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Pose execute hook.
      *
-     * @param   mixed $result Executed return value.
+     * @param mixed $result Executed return value.
      *
-     * @return  mixed
+     * @return mixed
      */
     protected function postExecute($result = null)
     {
@@ -263,12 +264,13 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Execute the sub command.
      *
-     * @param   string      $name The command name.
-     * @param   IOInterface $io   The Cli IO object.
-     *
-     * @return  mixed
+     * @param string      $name The command name.
+     * @param IOInterface $io   The Cli IO object.
      *
      * @throws \Exception
+     *
+     * @return mixed
+     *
      * @since  2.0
      */
     protected function executeSubCommand($name, IOInterface $io = null)
@@ -294,9 +296,9 @@ abstract class AbstractCommand implements \ArrayAccess
     }
 
     /**
-     * Method to get property Io
+     * Method to get property Io.
      *
-     * @return  \Windwalker\Console\IO\IOInterface
+     * @return \Windwalker\Console\IO\IOInterface
      */
     public function getIO()
     {
@@ -304,11 +306,11 @@ abstract class AbstractCommand implements \ArrayAccess
     }
 
     /**
-     * Method to set property io
+     * Method to set property io.
      *
-     * @param   \Windwalker\Console\IO\IOInterface $io
+     * @param \Windwalker\Console\IO\IOInterface $io
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setIO($io)
     {
@@ -320,13 +322,13 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Parent command setter.
      *
-     * @param   AbstractCommand $parent The parent comment.
+     * @param AbstractCommand $parent The parent comment.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since  2.0
      */
-    public function setParent(AbstractCommand $parent = null)
+    public function setParent(self $parent = null)
     {
         $this->parent = $parent;
 
@@ -336,7 +338,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get Parent Command.
      *
-     * @return  AbstractCommand
+     * @return AbstractCommand
      *
      * @since  2.0
      */
@@ -348,13 +350,13 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Add an argument(sub command) setting.
      *
-     * @param   string|AbstractCommand $command       The argument name or Console object.
-     *                                                If we just send a string, the object will auto create.
-     * @param   string                 $description   Console description.
-     * @param   Option[]               $options       Console options.
-     * @param   \Closure               $handler       The closure to execute.
+     * @param string|AbstractCommand $command     The argument name or Console object.
+     *                                            If we just send a string, the object will auto create.
+     * @param string                 $description Console description.
+     * @param Option[]               $options     Console options.
+     * @param \Closure               $handler     The closure to execute.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -364,7 +366,7 @@ abstract class AbstractCommand implements \ArrayAccess
             $command = new $command();
         }
 
-        if (!($command instanceof AbstractCommand)) {
+        if (!($command instanceof self)) {
             $command = new static($command, $this->io, $this);
         }
 
@@ -403,10 +405,10 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get argument by offset or return default.
      *
-     * @param   int            $offset  Argument offset.
-     * @param   callable|mixed $default Default value, if is a callable, will execute it.
+     * @param int            $offset  Argument offset.
+     * @param callable|mixed $default Default value, if is a callable, will execute it.
      *
-     * @return  null|string  Values from argument or user input.
+     * @return null|string Values from argument or user input.
      */
     public function getArgument($offset, $default = null)
     {
@@ -426,13 +428,13 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Alias of addCommand if someone think child is more semantic.
      *
-     * @param   string|AbstractCommand $argument      The argument name or Console object.
-     *                                                If we just send a string, the object will auto create.
-     * @param   string                 $description   Console description.
-     * @param   Option[]               $options       Console options.
-     * @param   \Closure               $handler       The closure to execute.
+     * @param string|AbstractCommand $argument    The argument name or Console object.
+     *                                            If we just send a string, the object will auto create.
+     * @param string                 $description Console description.
+     * @param Option[]               $options     Console options.
+     * @param \Closure               $handler     The closure to execute.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -444,9 +446,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get a argument(command) by name path.
      *
-     * @param   string $path Command name path.
+     * @param string $path Command name path.
      *
-     * @return  AbstractCommand|null  Return command or null.
+     * @return AbstractCommand|null Return command or null.
      *
      * @since  2.0
      */
@@ -463,7 +465,7 @@ abstract class AbstractCommand implements \ArrayAccess
                 continue;
             }
 
-            return null;
+            return;
         }
 
         return $command;
@@ -472,7 +474,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get children array.
      *
-     * @return array  children.
+     * @return array children.
      *
      * @since  2.0
      */
@@ -484,9 +486,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Batch set children (sub commands).
      *
-     * @param   array $children An array include argument objects.
+     * @param array $children An array include argument objects.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -504,12 +506,12 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Add a option object to this command.
      *
-     * @param   mixed  $option         The option name. Can be a string, an array or an object.
-     *                                 If we use array, the first element will be option name, others will be alias.
-     * @param   mixed  $default        The default value when we get a non-exists option.
-     * @param   string $description    The option description.
+     * @param mixed  $option      The option name. Can be a string, an array or an object.
+     *                            If we use array, the first element will be option name, others will be alias.
+     * @param mixed  $default     The default value when we get a non-exists option.
+     * @param string $description The option description.
      *
-     * @return  Option  Return Option object.
+     * @return Option Return Option object.
      *
      * @since   2.0
      */
@@ -536,12 +538,12 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Add a option object to this command.
      *
-     * @param   mixed  $option         The option name. Can be a string, an array or an object.
-     *                                 If we use array, the first element will be option name, others will be alias.
-     * @param   mixed  $default        The default value when we get a non-exists option.
-     * @param   string $description    The option description.
+     * @param mixed  $option      The option name. Can be a string, an array or an object.
+     *                            If we use array, the first element will be option name, others will be alias.
+     * @param mixed  $default     The default value when we get a non-exists option.
+     * @param string $description The option description.
      *
-     * @return  Option  Return Option object.
+     * @return Option Return Option object.
      *
      * @since   2.0
      */
@@ -575,10 +577,10 @@ abstract class AbstractCommand implements \ArrayAccess
      *
      * If the name not found, we use alias to find options.
      *
-     * @param   string $name    The option name.
-     * @param   string $default The default value when option not set.
+     * @param string $name    The option name.
+     * @param string $default The default value when option not set.
      *
-     * @return  mixed  The option value we want to get or default value if option not exists.
+     * @return mixed The option value we want to get or default value if option not exists.
      *
      * @since   2.0
      */
@@ -609,9 +611,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get options as array.
      *
-     * @param   boolean $global is Global options.
+     * @param bool $global is Global options.
      *
-     * @return  Option[]  The options array.
+     * @return Option[] The options array.
      *
      * @since   2.0
      */
@@ -623,9 +625,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get option set object.
      *
-     * @param   boolean $global is Global options.
+     * @param bool $global is Global options.
      *
-     * @return  OptionSet  The options array.
+     * @return OptionSet The options array.
      *
      * @since   2.0
      */
@@ -637,7 +639,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get all options include global.
      *
-     * @return array  The options array.
+     * @return array The options array.
      *
      * @since  2.0
      */
@@ -649,9 +651,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Batch add options to command.
      *
-     * @param   mixed $options An options array.
+     * @param mixed $options An options array.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -669,11 +671,11 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * set the option alias.
      *
-     * @param   mixed  $aliases The alias to map this option.
-     * @param   string $name    The option name.
-     * @param   bool   $global  Is global option?
+     * @param mixed  $aliases The alias to map this option.
+     * @param string $name    The option name.
+     * @param bool   $global  Is global option?
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -691,7 +693,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * The command description getter.
      *
-     * @return string  Console description.
+     * @return string Console description.
      *
      * @since  2.0
      */
@@ -703,9 +705,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * The command description setter.
      *
-     * @param   string $description Console description.
+     * @param string $description Console description.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -719,7 +721,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Console name getter.
      *
-     * @return string  Console name.
+     * @return string Console name.
      *
      * @since  2.0
      */
@@ -731,9 +733,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Console name setter.
      *
-     * @param   string $name Console name.
+     * @param string $name Console name.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -747,7 +749,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Console execute code getter.
      *
-     * @return  \Closure  Console execute code.
+     * @return \Closure Console execute code.
      *
      * @since   2.0
      */
@@ -759,9 +761,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Console execute code setter.
      *
-     * @param   callable $handler Console execute handler.
+     * @param callable $handler Console execute handler.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -775,7 +777,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get the application.
      *
-     * @return Console  Console application.
+     * @return Console Console application.
      *
      * @since  2.0
      */
@@ -787,9 +789,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Set the application.
      *
-     * @param   Console $application Application object.
+     * @param Console $application Application object.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -803,7 +805,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get the help manual.
      *
-     * @return string  Help of this Command.
+     * @return string Help of this Command.
      *
      * @since  2.0
      */
@@ -813,11 +815,11 @@ abstract class AbstractCommand implements \ArrayAccess
     }
 
     /**
-     * Sets the help manual
+     * Sets the help manual.
      *
-     * @param   string $help The help manual.
+     * @param string $help The help manual.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -831,7 +833,7 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Get the usage.
      *
-     * @return string  Usage of this command.
+     * @return string Usage of this command.
      *
      * @since  2.0
      */
@@ -843,9 +845,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Sets the usage to tell user how to use this command.
      *
-     * @param   string $usage Usage of this command.
+     * @param string $usage Usage of this command.
      *
-     * @return  AbstractCommand  Return this object to support chaining.
+     * @return AbstractCommand Return this object to support chaining.
      *
      * @since   2.0
      */
@@ -859,10 +861,10 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Render auto complete alternatives.
      *
-     * @param   string                   $wrongName The wrong command name to auto completed.
-     * @param   CommandNotFoundException $exception The exception of wrong argument.
+     * @param string                   $wrongName The wrong command name to auto completed.
+     * @param CommandNotFoundException $exception The exception of wrong argument.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -889,7 +891,7 @@ abstract class AbstractCommand implements \ArrayAccess
              */
             if (levenshtein($wrongName, $commandName) <= (strlen($wrongName) / $denominator)
                 || strpos($commandName, $wrongName) !== false) {
-                $alternatives[] = "    " . $commandName;
+                $alternatives[] = '    '.$commandName;
             }
         }
 
@@ -907,9 +909,9 @@ abstract class AbstractCommand implements \ArrayAccess
     /**
      * Render exception for debugging.
      *
-     * @param   \Exception $exception The exception we want to render.
+     * @param \Exception $exception The exception we want to render.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -943,11 +945,11 @@ EOF;
     /**
      * Raise error message.
      *
-     * @param   \Exception|string $exception Exception object or message string.
+     * @param \Exception|string $exception Exception object or message string.
      *
-     * @return  void
+     * @throws \Exception
      *
-     * @throws  \Exception
+     * @return void
      */
     public function error($exception)
     {
@@ -961,10 +963,10 @@ EOF;
     /**
      * Write a string to standard output.
      *
-     * @param   string  $text The text to display.
-     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     * @param string $text The text to display.
+     * @param bool   $nl   True (default) to append a new line at the end of the output string.
      *
-     * @return  AbstractCommand  Instance of $this to allow chaining.
+     * @return AbstractCommand Instance of $this to allow chaining.
      *
      * @since   2.0
      */
@@ -982,10 +984,10 @@ EOF;
     /**
      * Write a string to standard error output.
      *
-     * @param   string  $text The text to display.
-     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     * @param string $text The text to display.
+     * @param bool   $nl   True (default) to append a new line at the end of the output string.
      *
-     * @return  AbstractCommand  Instance of $this to allow chaining.
+     * @return AbstractCommand Instance of $this to allow chaining.
      *
      * @since   2.0
      */
@@ -999,9 +1001,9 @@ EOF;
     /**
      * Get a value from standard input.
      *
-     * @param   string $question The question you want to ask user.
+     * @param string $question The question you want to ask user.
      *
-     * @return  string  The input string from standard input.
+     * @return string The input string from standard input.
      *
      * @since   2.0
      */
@@ -1017,10 +1019,10 @@ EOF;
     /**
      * Set child command, note the key is no use, we use command name as key.
      *
-     * @param   mixed           $offset No use here.
-     * @param   AbstractCommand $value  Command object.
+     * @param mixed           $offset No use here.
+     * @param AbstractCommand $value  Command object.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -1032,9 +1034,9 @@ EOF;
     /**
      * Is a child exists?
      *
-     * @param   string $offset The command name to get command.
+     * @param string $offset The command name to get command.
      *
-     * @return  boolean  True if command exists.
+     * @return bool True if command exists.
      *
      * @since   2.0
      */
@@ -1046,9 +1048,9 @@ EOF;
     /**
      * Unset a child command.
      *
-     * @param   string $offset The command name to remove.
+     * @param string $offset The command name to remove.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -1060,9 +1062,9 @@ EOF;
     /**
      * Get a command by name.
      *
-     * @param   string $offset The command name to get command.
+     * @param string $offset The command name to get command.
      *
-     * @return  AbstractCommand|null  Return command object if found.
+     * @return AbstractCommand|null Return command object if found.
      *
      * @since   2.0
      */

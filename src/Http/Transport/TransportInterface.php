@@ -22,7 +22,7 @@ interface TransportInterface
     /**
      * Constructor.
      *
-     * @param   array|\ArrayAccess $options Client options object.
+     * @param array|\ArrayAccess $options Client options object.
      *
      * @since   2.1
      */
@@ -31,9 +31,9 @@ interface TransportInterface
     /**
      * Send a request to the server and return a Response object with the response.
      *
-     * @param   RequestInterface $request The request object to store request params.
+     * @param RequestInterface $request The request object to store request params.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
      *
      * @since   2.1
      */
@@ -42,18 +42,19 @@ interface TransportInterface
     /**
      * Use stream to download file.
      *
-     * @param   RequestInterface       $request The request object to store request params.
-     * @param   string|StreamInterface $dest    The dest path to store file.
+     * @param RequestInterface       $request The request object to store request params.
+     * @param string|StreamInterface $dest    The dest path to store file.
      *
-     * @return  ResponseInterface
+     * @return ResponseInterface
+     *
      * @since   2.1
      */
     public function download(RequestInterface $request, $dest);
 
     /**
-     * Method to check if HTTP transport layer available for using
+     * Method to check if HTTP transport layer available for using.
      *
-     * @return  boolean  True if available else false
+     * @return bool True if available else false
      *
      * @since   2.1
      */

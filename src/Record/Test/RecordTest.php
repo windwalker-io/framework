@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -9,13 +9,12 @@
 namespace Windwalker\Record\Test;
 
 use Windwalker\Database\Test\Mysql\AbstractMysqlTestCase;
-use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 use Windwalker\Record\Record;
 use Windwalker\Record\Test\Stub\StubRecord;
 use Windwalker\Test\TestHelper;
 
 /**
- * Test class of Record
+ * Test class of Record.
  *
  * @since 2.0
  */
@@ -32,8 +31,9 @@ class RecordTest extends AbstractMysqlTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
      * @throws \Exception
+     *
+     * @return void
      */
     protected function setUp()
     {
@@ -54,21 +54,22 @@ class RecordTest extends AbstractMysqlTestCase
     }
 
     /**
-     * getInstallSql
+     * getInstallSql.
      *
-     * @return  string
+     * @return string
      */
     protected static function getSetupSql()
     {
-        return file_get_contents(__DIR__ . '/Stub/fixtures.sql');
+        return file_get_contents(__DIR__.'/Stub/fixtures.sql');
     }
 
     /**
      * Method to test __set().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Record\Record::__set
      */
     public function test__set()
@@ -91,9 +92,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test __get().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::__get
      */
     public function test__get()
@@ -104,8 +106,8 @@ class RecordTest extends AbstractMysqlTestCase
 
         $record->bind(
             [
-                'id' => 1,
-                'foo' => 6,
+                'id'    => 1,
+                'foo'   => 6,
                 'title' => 'Sakura',
             ]
         );
@@ -119,9 +121,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test save().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::save
      */
     public function testSave()
@@ -141,9 +144,9 @@ class RecordTest extends AbstractMysqlTestCase
 
         // Test update
         $data = [
-            $key => 1,
-            'title' => 'YOO',
-            'extra_field' => 'BAR' // will not saved
+            $key          => 1,
+            'title'       => 'YOO',
+            'extra_field' => 'BAR', // will not saved
         ];
 
         $this->instance->reset(false)->save($data);
@@ -162,10 +165,10 @@ class RecordTest extends AbstractMysqlTestCase
 
         // Test save null data
         $data = [
-            $key => 2,
-            'title' => null,
-            'alias' => null,
-            'extra_field' => 'BAR' // will not saved
+            $key          => 2,
+            'title'       => null,
+            'alias'       => null,
+            'extra_field' => 'BAR', // will not saved
         ];
 
         $this->instance->reset(true)->save($data, true);
@@ -179,9 +182,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test bind().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::bind
      */
     public function testBind()
@@ -191,7 +195,7 @@ class RecordTest extends AbstractMysqlTestCase
         $record->bind(
             [
                 'title' => 'sakura',
-                'fake' => 'cat',
+                'fake'  => 'cat',
             ]
         );
 
@@ -202,9 +206,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test load().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::load
      */
     public function testLoad()
@@ -217,9 +222,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test delete().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::delete
      */
     public function testDelete()
@@ -253,9 +259,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test check().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::validate
      */
     public function testCheck()
@@ -282,19 +289,20 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test store().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::store
      */
     public function testStore()
     {
         // Test create
         $data = [
-            'title' => 'Lancelot',
-            'meaning' => 'First Knight',
+            'title'    => 'Lancelot',
+            'meaning'  => 'First Knight',
             'ordering' => 123456,
-            'params' => '',
+            'params'   => '',
         ];
 
         $record = $this->instance;
@@ -315,7 +323,7 @@ class RecordTest extends AbstractMysqlTestCase
         $key = $this->instance->getKeyName();
 
         $data = [
-            $key => 1,
+            $key    => 1,
             'title' => 'YOO',
         ];
 
@@ -327,21 +335,22 @@ class RecordTest extends AbstractMysqlTestCase
     }
 
     /**
-     * testCreate
-     *
-     * @return  void
+     * testCreate.
      *
      * @throws \Exception
+     *
+     * @return void
+     *
      * @covers \Windwalker\Record\Record::create
      */
     public function testCreate()
     {
         // Test create with no id
         $data = [
-            'title' => 'Lodovico',
-            'meaning' => 'Kinsman to Brabantio',
+            'title'    => 'Lodovico',
+            'meaning'  => 'Kinsman to Brabantio',
             'ordering' => 123456,
-            'params' => '',
+            'params'   => '',
         ];
 
         $record = $this->instance;
@@ -357,11 +366,11 @@ class RecordTest extends AbstractMysqlTestCase
 
         // Test create with id
         $data = [
-            'id' => 3000,
-            'title' => 'Brabantio',
-            'meaning' => 'senator',
+            'id'       => 3000,
+            'title'    => 'Brabantio',
+            'meaning'  => 'senator',
             'ordering' => 123456,
-            'params' => '',
+            'params'   => '',
         ];
 
         $record = $this->instance;
@@ -376,19 +385,20 @@ class RecordTest extends AbstractMysqlTestCase
     }
 
     /**
-     * testCreateWithEmptyId
+     * testCreateWithEmptyId.
      *
-     * @return  void
      * @throws \Exception
+     *
+     * @return void
      */
     public function testCreateWithEmptyId()
     {
         $data = [
-            'id' => 'A',
-            'title' => 'Brabantio 2',
-            'meaning' => 'senator',
+            'id'       => 'A',
+            'title'    => 'Brabantio 2',
+            'meaning'  => 'senator',
             'ordering' => 123456,
-            'params' => '',
+            'params'   => '',
         ];
 
         $record = $this->instance;
@@ -403,9 +413,9 @@ class RecordTest extends AbstractMysqlTestCase
     }
 
     /**
-     * testUpdate
+     * testUpdate.
      *
-     * @return  void
+     * @return void
      */
     public function testUpdate()
     {
@@ -415,9 +425,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test hasPrimaryKey().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::hasPrimaryKey
      */
     public function testHasPrimaryKey()
@@ -434,9 +445,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test getKeyName().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::getKeyName
      */
     public function testGetKeyName()
@@ -450,9 +462,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test getFields().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::getFields
      */
     public function testGetFields()
@@ -467,9 +480,9 @@ class RecordTest extends AbstractMysqlTestCase
     }
 
     /**
-     * testHasField
+     * testHasField.
      *
-     * @return  void
+     * @return void
      */
     public function testHasField()
     {
@@ -510,9 +523,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test getIterator().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::getIterator
      */
     public function testGetIterator()
@@ -541,9 +555,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test toArray().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::dump
      */
     public function testDump()
@@ -571,9 +586,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test __clone().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::__clone
      */
     public function test__clone()
@@ -624,9 +640,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test valueExists().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::valueExists
      */
     public function testValueExists()
@@ -641,9 +658,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test setAlias().
      *
+     * @throws \ReflectionException
+     *
      * @return void
      *
-     * @throws \ReflectionException
      * @covers \Windwalker\Record\Record::setAlias
      * @covers \Windwalker\Record\Record::resolveAlias
      */
@@ -656,8 +674,8 @@ class RecordTest extends AbstractMysqlTestCase
 
         $record->bind(
             [
-                'id' => 1,
-                'foo' => 6,
+                'id'    => 1,
+                'foo'   => 6,
                 'title' => 'Sakura',
             ]
         );
@@ -694,9 +712,10 @@ class RecordTest extends AbstractMysqlTestCase
     /**
      * Method to test offsetGet().
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @covers \Windwalker\Record\Record::offsetGet
      */
     public function testOffsetGet()

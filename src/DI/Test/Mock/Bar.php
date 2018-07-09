@@ -18,14 +18,14 @@ class Bar
     /**
      * Property queue.
      *
-     * @var  \SplPriorityQueue
+     * @var \SplPriorityQueue
      */
     public $queue = null;
 
     /**
      * Property stack.
      *
-     * @var  \SplStack
+     * @var \SplStack
      */
     public $stack = null;
 

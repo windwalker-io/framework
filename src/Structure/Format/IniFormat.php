@@ -20,7 +20,7 @@ class IniFormat implements FormatInterface
     /**
      * A cache used by stringToobject.
      *
-     * @var  array
+     * @var array
      */
     protected static $cache = [];
 
@@ -30,10 +30,10 @@ class IniFormat implements FormatInterface
      * levels deep.  Therefore we will only go through the first two levels of
      * the object.
      *
-     * @param   object $struct  Data source object.
-     * @param   array  $options Options used by the formatter.
+     * @param object $struct  Data source object.
+     * @param array  $options Options used by the formatter.
      *
-     * @return  string  INI formatted string.
+     * @return string INI formatted string.
      */
     public static function structToString($struct, array $options = [])
     {
@@ -50,7 +50,7 @@ class IniFormat implements FormatInterface
 
                 // Add the section line.
                 $local[] = '';
-                $local[] = '[' . $key . ']';
+                $local[] = '['.$key.']';
 
                 // Add the properties for this section.
                 foreach ($value as $k => $v) {
@@ -58,11 +58,11 @@ class IniFormat implements FormatInterface
                         continue;
                     }
 
-                    $local[] = $k . '=' . static::getValueAsINI($v);
+                    $local[] = $k.'='.static::getValueAsINI($v);
                 }
             } else {
                 // Not in a section so add the property to the global array.
-                $global[] = $key . '=' . static::getValueAsINI($value);
+                $global[] = $key.'='.static::getValueAsINI($value);
             }
         }
 
@@ -72,17 +72,17 @@ class IniFormat implements FormatInterface
     /**
      * Parse an INI formatted string and convert it into an object.
      *
-     * @param   string $data    INI formatted string to convert.
-     * @param   array  $options An array of options used by the formatter, or a boolean setting to process sections.
+     * @param string $data    INI formatted string to convert.
+     * @param array  $options An array of options used by the formatter, or a boolean setting to process sections.
      *
-     * @return  object   Data object.
+     * @return object Data object.
      */
     public static function stringToStruct($data, array $options = [])
     {
         $sections = (isset($options['processSections'])) ? $options['processSections'] : false;
 
         // Check the memory cache for already processed strings.
-        $hash = md5($data . ':' . (int) $sections);
+        $hash = md5($data.':'.(int) $sections);
 
         if (isset(self::$cache[$hash])) {
             return self::$cache[$hash];
@@ -103,7 +103,7 @@ class IniFormat implements FormatInterface
             $line = trim($line);
 
             // Ignore empty lines and comments.
-            if (empty($line) || ($line{0} === ';')) {
+            if (empty($line) || ($line[0] === ';')) {
                 continue;
             }
 
@@ -116,7 +116,7 @@ class IniFormat implements FormatInterface
                     $obj->$section = new \stdClass();
                     continue;
                 }
-            } elseif ($line{0} === '[') {
+            } elseif ($line[0] === '[') {
                 continue;
             }
 
@@ -127,7 +127,7 @@ class IniFormat implements FormatInterface
             }
 
             // Get the key and value for the line.
-            list ($key, $value) = explode('=', $line, 2);
+            list($key, $value) = explode('=', $line, 2);
 
             // If the value is quoted then we assume it is a string.
             $length = strlen($value);
@@ -165,7 +165,7 @@ class IniFormat implements FormatInterface
         }
 
         // Cache the string to save cpu cycles -- thus the world :)
-        self::$cache[$hash] = clone ($obj);
+        self::$cache[$hash] = clone $obj;
 
         return $obj;
     }
@@ -173,9 +173,9 @@ class IniFormat implements FormatInterface
     /**
      * Method to get a value in an INI format.
      *
-     * @param   mixed $value The value to convert to INI format.
+     * @param mixed $value The value to convert to INI format.
      *
-     * @return  string  The value in INI format.
+     * @return string The value in INI format.
      */
     protected static function getValueAsINI($value)
     {
@@ -193,7 +193,7 @@ class IniFormat implements FormatInterface
 
             case 'string':
                 // Sanitize any CRLF characters..
-                $string = '"' . str_replace(["\r\n", "\n"], '\\n', $value) . '"';
+                $string = '"'.str_replace(["\r\n", "\n"], '\\n', $value).'"';
                 break;
         }
 

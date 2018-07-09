@@ -28,34 +28,34 @@ class MysqlType extends DataType
     /**
      * Property types.
      *
-     * @var  array
+     * @var array
      */
     public static $defaultLengths = [
         self::INTEGER => 11,
-        self::BIGINT => 20,
+        self::BIGINT  => 20,
     ];
 
     /**
-     * "Length", "Default", "PHP Type"
+     * "Length", "Default", "PHP Type".
      *
-     * @var  array
+     * @var array
      */
     public static $typeDefinitions = [
-        self::BOOLEAN => [1, 0, 'bool'],
-        self::INTEGER => [11, 0, 'int'],
-        self::ENUM => [null, '', 'string'],
-        self::SET => [null, '', 'string'],
+        self::BOOLEAN  => [1, 0, 'bool'],
+        self::INTEGER  => [11, 0, 'int'],
+        self::ENUM     => [null, '', 'string'],
+        self::SET      => [null, '', 'string'],
         self::DATETIME => [null, '1000-01-01 00:00:00', 'string'],
     ];
 
     /**
      * Property typeMapping.
      *
-     * @var  array
+     * @var array
      */
     protected static $typeMapping = [
         DataType::INTEGER => 'int',
-        DataType::BIT => self::TINYINT,
+        DataType::BIT     => self::TINYINT,
         DataType::BOOLEAN => self::BOOLEAN,
     ];
 }

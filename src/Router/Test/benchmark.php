@@ -5,12 +5,11 @@
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
  */
-
-include_once __DIR__ . '/../../../vendor/autoload.php';
+include_once __DIR__.'/../../../vendor/autoload.php';
 
 use Windwalker\Router\Route;
 
-$routes = file_get_contents(__DIR__ . '/fixtures/routes.txt');
+$routes = file_get_contents(__DIR__.'/fixtures/routes.txt');
 
 $routes = explode("\n", trim($routes));
 
@@ -86,7 +85,7 @@ $bench->addTask(
     function () use ($trie, $routes, $count, &$avg) {
         static $i = 0;
 
-        $trie->setTree(unserialize(file_get_contents(__DIR__ . '/fixtures/cache.trie')));
+        $trie->setTree(unserialize(file_get_contents(__DIR__.'/fixtures/cache.trie')));
 
         if ($i + 1 > $count) {
             $i = 0;
@@ -106,9 +105,9 @@ $bench->addTask(
 $bench->execute(1000);
 echo "\n";
 
-echo $avg['seq'] / 1000 . "\n";
-echo $avg['bin'] / 1000 . "\n";
-echo $avg['trie'] / 1000 . "\n";
+echo $avg['seq'] / 1000 ."\n";
+echo $avg['bin'] / 1000 ."\n";
+echo $avg['trie'] / 1000 ."\n";
 
 echo $bench->render();
 echo "\n";

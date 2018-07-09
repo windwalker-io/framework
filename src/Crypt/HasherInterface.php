@@ -9,28 +9,28 @@
 namespace Windwalker\Crypt;
 
 /**
- * Interface HashInterface
+ * Interface HashInterface.
  *
  * @since  3.2.2
  */
 interface HasherInterface
 {
     /**
-     * create
+     * create.
      *
      * @param string $text
      *
-     * @return  string
+     * @return string
      */
     public function create($text);
 
     /**
      * Verify the password.
      *
-     * @param   string $text The plain text.
-     * @param   string $hash The hashed text.
+     * @param string $text The plain text.
+     * @param string $hash The hashed text.
      *
-     * @return  boolean  Verify success or not.
+     * @return bool Verify success or not.
      */
     public function verify($text, $hash);
 }

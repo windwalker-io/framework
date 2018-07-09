@@ -11,7 +11,7 @@ namespace Windwalker\Language\Format;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class IniFormat
+ * Class IniFormat.
  *
  * @since 2.0
  */
@@ -20,16 +20,16 @@ class YamlFormat extends AbstractFormat
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'yaml';
 
     /**
-     * parse
+     * parse.
      *
      * @param string $string
      *
-     * @return  string[]
+     * @return string[]
      */
     public function parse($string)
     {

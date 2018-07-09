@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -14,7 +14,7 @@ use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Postgresql\PostgresqlGrammar;
 
 /**
- * Test class of PostgresqlTable
+ * Test class of PostgresqlTable.
  *
  * @since 2.0
  */
@@ -23,9 +23,9 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
     protected static $debug = true;
 
     /**
-     * tearDown
+     * tearDown.
      *
-     * @return  void
+     * @return void
      */
     public function tearDown()
     {
@@ -279,9 +279,9 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
     }
 
     /**
-     * Method to test modifyColumn()
+     * Method to test modifyColumn().
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Database\Driver\Postgresql\PostgresqlTable::modifyColumn
      */
@@ -305,9 +305,9 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
     }
 
     /**
-     * testChangeColumn
+     * testChangeColumn.
      *
-     * @return  void
+     * @return void
      */
     public function testChangeColumn()
     {
@@ -383,7 +383,7 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
     }
 
     /**
-     * Destructor
+     * Destructor.
      */
     public function __destruct()
     {
@@ -391,9 +391,9 @@ class PostgresqlTableTest extends AbstractPostgresqlTestCase
     }
 
     /**
-     * tearDownAfterClass
+     * tearDownAfterClass.
      *
-     * @return  void
+     * @return void
      */
     public static function tearDownAfterClass()
     {

@@ -11,7 +11,7 @@ namespace Windwalker\Console\Test\Prompter;
 use Windwalker\Console\Prompter\SelectPrompter;
 
 /**
- * Class SelectPrompterTest
+ * Class SelectPrompterTest.
  *
  * @since  2.0
  */
@@ -20,7 +20,7 @@ class SelectPrompterTest extends AbstractPrompterTest
     /**
      * Property options.
      *
-     * @var  array
+     * @var array
      */
     protected $options = ['red', 'yellow', 'blue'];
 
@@ -42,7 +42,7 @@ class SelectPrompterTest extends AbstractPrompterTest
     /**
      * Test prompter ask.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */
@@ -54,7 +54,7 @@ class SelectPrompterTest extends AbstractPrompterTest
         $in = $this->instance->setAttemptTimes(5)
             ->ask('Please select an option []:', 2);
 
-        $outputCompare = <<<EOF
+        $outputCompare = <<<'EOF'
   [0] - red
   [1] - yellow
   [2] - blue
@@ -80,7 +80,7 @@ EOF;
         // Default value
         $this->assertEquals($in, 2, 'Return value should be default (2).');
 
-        $this->setStream("1");
+        $this->setStream('1');
 
         $in = $this->instance->ask('Please select an option []:', 2);
 

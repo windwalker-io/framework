@@ -12,9 +12,7 @@ namespace Windwalker\Crypt\Cipher;
  * The Simple class.
  *
  * @since       2.0
- *
  * @deprecated  This cipher is not safe.
- *
  * @link        https://github.com/ventoviro/windwalker/issues/260
  * @link        http://www.openwall.com/lists/oss-security/2015/11/08/1
  */
@@ -25,11 +23,11 @@ class SimpleCipher implements CipherInterface
     /**
      * Method to decrypt a data string.
      *
-     * @param   string $data The encrypted string to decrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The encrypted string to decrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string  The decrypted data string.
+     * @return string The decrypted data string.
      *
      * @since    2.0
      */
@@ -47,18 +45,18 @@ class SimpleCipher implements CipherInterface
             }
         }
 
-        $key = sha1($iv . $key);
+        $key = sha1($iv.$key);
 
         return $this->doDecrypt($data, $key);
     }
 
     /**
-     * doDecrypt
+     * doDecrypt.
      *
-     * @param   string $data
-     * @param   string $key
+     * @param string $data
+     * @param string $key
      *
-     * @return  string
+     * @return string
      */
     protected function doDecrypt($data, $key)
     {
@@ -81,31 +79,32 @@ class SimpleCipher implements CipherInterface
     /**
      * Method to encrypt a data string.
      *
-     * @param   string $data The data string to encrypt.
-     * @param   string $key  The private key.
-     * @param   string $iv   The public key.
+     * @param string $data The data string to encrypt.
+     * @param string $key  The private key.
+     * @param string $iv   The public key.
      *
-     * @return  string  The encrypted data string.
+     * @throws \InvalidArgumentException
+     *
+     * @return string The encrypted data string.
      *
      * @since   2.0
-     * @throws  \InvalidArgumentException
      */
     public function encrypt($data, $key = null, $iv = null)
     {
         $iv = $iv ?: $this->getRandomKey(static::DEFAULT_RANDOM_BYTE_LENGTH);
 
-        $key = sha1($iv . $key);
+        $key = sha1($iv.$key);
 
-        return base64_encode($iv . $this->doEncrypt($data, $key));
+        return base64_encode($iv.$this->doEncrypt($data, $key));
     }
 
     /**
-     * doEncrypt
+     * doEncrypt.
      *
-     * @param   string $data The data string to encrypt.
-     * @param   string $key  The key to encrypt data.
+     * @param string $data The data string to encrypt.
+     * @param string $key  The key to encrypt data.
      *
-     * @return  string
+     * @return string
      */
     protected function doEncrypt($data, $key)
     {
@@ -128,9 +127,9 @@ class SimpleCipher implements CipherInterface
     /**
      * Method to generate a random key of a given length.
      *
-     * @param   integer $length The length of the key to generate.
+     * @param int $length The length of the key to generate.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -149,12 +148,12 @@ class SimpleCipher implements CipherInterface
     }
 
     /**
-     * Convert hex to an integer
+     * Convert hex to an integer.
      *
-     * @param   string  $s The hex string to convert.
-     * @param   integer $i The offset?
+     * @param string $s The hex string to convert.
+     * @param int    $i The offset?
      *
-     * @return  integer
+     * @return int
      *
      * @since   2.0
      */
@@ -228,11 +227,11 @@ class SimpleCipher implements CipherInterface
     }
 
     /**
-     * Convert hex to an array of integers
+     * Convert hex to an array of integers.
      *
-     * @param   string $hex The hex string to convert to an integer array.
+     * @param string $hex The hex string to convert to an integer array.
      *
-     * @return  array  An array of integers.
+     * @return array An array of integers.
      *
      * @since   2.0
      */
@@ -252,9 +251,9 @@ class SimpleCipher implements CipherInterface
     /**
      * Convert an integer to a hexadecimal string.
      *
-     * @param   integer $i An integer value to convert to a hex string.
+     * @param int $i An integer value to convert to a hex string.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -274,7 +273,7 @@ class SimpleCipher implements CipherInterface
 
         // Get the second character of the hexadecimal string.
         $k = $i - $j * 16;
-        $s = $s . strtoupper(dechex($k));
+        $s = $s.strtoupper(dechex($k));
 
         return $s;
     }

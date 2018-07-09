@@ -10,14 +10,13 @@ namespace Windwalker\Console;
 
 use Windwalker\Console\Command\AbstractCommand;
 use Windwalker\Console\Command\Command;
-use Windwalker\Console\Command\HelpCommand;
 use Windwalker\Console\Command\RootCommand;
 use Windwalker\Console\IO\IO;
 use Windwalker\Console\IO\IOInterface;
 use Windwalker\Structure\Structure;
 
 /**
- * Class Console
+ * Class Console.
  *
  * @since  2.0
  */
@@ -26,7 +25,7 @@ class Console extends AbstractConsole
     /**
      * The Console title.
      *
-     * @var  string
+     * @var string
      *
      * @since  3.0
      */
@@ -53,14 +52,14 @@ class Console extends AbstractConsole
     /**
      * Property help.
      *
-     * @var  string
+     * @var string
      */
     protected $help = 'Welcome to Windwalker Console.';
 
     /**
      * A default command to run as application.
      *
-     * @var  AbstractCommand
+     * @var AbstractCommand
      *
      * @since  2.0
      */
@@ -69,7 +68,7 @@ class Console extends AbstractConsole
     /**
      * True to set this app auto exit.
      *
-     * @var boolean
+     * @var bool
      *
      * @since  2.0
      */
@@ -78,8 +77,8 @@ class Console extends AbstractConsole
     /**
      * Class init.
      *
-     * @param   IOInterface $io     The Input and output handler.
-     * @param   Structure   $config Application's config object.
+     * @param IOInterface $io     The Input and output handler.
+     * @param Structure   $config Application's config object.
      */
     public function __construct(IOInterface $io = null, Structure $config = null)
     {
@@ -93,9 +92,10 @@ class Console extends AbstractConsole
     /**
      * Execute the application.
      *
-     * @return  int  The Unix Console/Shell exit code.
-     *
      * @throws \Exception
+     *
+     * @return int The Unix Console/Shell exit code.
+     *
      * @since   2.0
      */
     public function execute()
@@ -115,15 +115,15 @@ class Console extends AbstractConsole
     /**
      * Method to run the application routines.
      *
-     * @param   AbstractCommand $command The Command object to execute, default will be rootCommand.
+     * @param AbstractCommand $command The Command object to execute, default will be rootCommand.
      *
-     * @return  int  The Unix Console/Shell exit code.
+     * @throws \LogicException
+     * @throws \Exception
+     *
+     * @return int The Unix Console/Shell exit code.
      *
      * @see     http://tldp.org/LDP/abs/html/exitcodes.html
-     *
      * @since   2.0
-     * @throws  \LogicException
-     * @throws  \Exception
      */
     public function doExecute(AbstractCommand $command = null)
     {
@@ -176,14 +176,15 @@ class Console extends AbstractConsole
     }
 
     /**
-     * executeByPath
+     * executeByPath.
      *
      * @param string      $arguments
      * @param array       $options
      * @param IOInterface $io
      *
-     * @return int
      * @throws \Exception
+     *
+     * @return int
      */
     public function executeByPath($arguments, array $options = [], IOInterface $io = null)
     {
@@ -208,7 +209,7 @@ class Console extends AbstractConsole
     /**
      * Register default command.
      *
-     * @return  Console  Return this object to support chaining.
+     * @return Console Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -231,9 +232,9 @@ class Console extends AbstractConsole
     /**
      * Register a new Console.
      *
-     * @param   string $name The command name.
+     * @param string $name The command name.
      *
-     * @return  AbstractCommand The created commend.
+     * @return AbstractCommand The created commend.
      *
      * @since  2.0
      */
@@ -247,9 +248,9 @@ class Console extends AbstractConsole
      *
      * If a command with the same name already exists, it will be overridden.
      *
-     * @param   AbstractCommand|string $command A Console object.
+     * @param AbstractCommand|string $command A Console object.
      *
-     * @return  AbstractCommand  The registered command.
+     * @return AbstractCommand The registered command.
      *
      * @since  2.0
      */
@@ -265,9 +266,9 @@ class Console extends AbstractConsole
      *
      * Example: getCommand('foo/bar/baz');
      *
-     * @param   string $path The path or name of child.
+     * @param string $path The path or name of child.
      *
-     * @return  AbstractCommand
+     * @return AbstractCommand
      *
      * @since  2.0
      */
@@ -294,9 +295,9 @@ class Console extends AbstractConsole
     }
 
     /**
-     * Activates the circular reference collector
+     * Activates the circular reference collector.
      *
-     * @return  static
+     * @return static
      *
      * @since  3.3
      */
@@ -308,9 +309,9 @@ class Console extends AbstractConsole
     }
 
     /**
-     * Disable the circular reference collector
+     * Disable the circular reference collector.
      *
-     * @return  static
+     * @return static
      *
      * @since  3.3
      */
@@ -324,9 +325,9 @@ class Console extends AbstractConsole
     /**
      * Sets whether to automatically exit after a command execution or not.
      *
-     * @param   boolean $boolean Whether to automatically exit after a command execution or not.
+     * @param bool $boolean Whether to automatically exit after a command execution or not.
      *
-     * @return  Console  Return this object to support chaining.
+     * @return Console Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -340,7 +341,7 @@ class Console extends AbstractConsole
     /**
      * Get the default command.
      *
-     * @return AbstractCommand  Default command.
+     * @return AbstractCommand Default command.
      *
      * @since  2.0
      */
@@ -362,9 +363,9 @@ class Console extends AbstractConsole
     /**
      * Set version.
      *
-     * @param   string $version Set version of this application.
+     * @param string $version Set version of this application.
      *
-     * @return  Console  Return this object to support chaining.
+     * @return Console Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -378,7 +379,7 @@ class Console extends AbstractConsole
     /**
      * Get description.
      *
-     * @return string  Application description.
+     * @return string Application description.
      *
      * @since  2.0
      */
@@ -390,9 +391,9 @@ class Console extends AbstractConsole
     /**
      * Set description.
      *
-     * @param   string $description description of this application.
+     * @param string $description description of this application.
      *
-     * @return  Console  Return this object to support chaining.
+     * @return Console Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -406,9 +407,9 @@ class Console extends AbstractConsole
     /**
      * Set execute code to default command.
      *
-     * @param   callable $closure Console execute code.
+     * @param callable $closure Console execute code.
      *
-     * @return  Console  Return this object to support chaining.
+     * @return Console Return this object to support chaining.
      *
      * @since  2.0
      */
@@ -420,11 +421,11 @@ class Console extends AbstractConsole
     }
 
     /**
-     * setUsage
+     * setUsage.
      *
      * @param string $usage
      *
-     * @return  $this
+     * @return $this
      */
     public function setUsage($usage)
     {
@@ -434,11 +435,11 @@ class Console extends AbstractConsole
     }
 
     /**
-     * setHelp
+     * setHelp.
      *
      * @param string $help
      *
-     * @return  $this
+     * @return $this
      */
     public function setHelp($help)
     {
@@ -448,9 +449,9 @@ class Console extends AbstractConsole
     }
 
     /**
-     * Method to get property Help
+     * Method to get property Help.
      *
-     * @return  string
+     * @return string
      */
     public function getHelp()
     {
@@ -458,9 +459,9 @@ class Console extends AbstractConsole
     }
 
     /**
-     * Method to get property Title
+     * Method to get property Title.
      *
-     * @return  string
+     * @return string
      */
     public function getTitle()
     {
@@ -468,11 +469,11 @@ class Console extends AbstractConsole
     }
 
     /**
-     * Method to set property title
+     * Method to set property title.
      *
-     * @param   string $title
+     * @param string $title
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setTitle($title)
     {

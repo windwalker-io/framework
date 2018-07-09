@@ -20,11 +20,11 @@ use Windwalker\Authentication\Method\AbstractMethod;
 class MockMethod extends AbstractMethod
 {
     /**
-     * authenticate
+     * authenticate.
      *
      * @param Credential $credential
      *
-     * @return  integer
+     * @return int
      */
     public function authenticate(Credential $credential)
     {

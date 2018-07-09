@@ -18,7 +18,8 @@ use Windwalker\Test\TestHelper;
 class InflectorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var    StringInflector
+     * @var StringInflector
+     *
      * @since  2.0
      */
     protected $StringInflector;
@@ -26,7 +27,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testIsCountable.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -41,7 +42,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to seed data to testToPlural.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */
@@ -85,7 +86,7 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
      *
      * This method is called before a test is executed.
      *
-     * @return  void
+     * @return void
      *
      * @since   2.0
      */
@@ -99,10 +100,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::addRule().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::addRule
+     *
      * @since   2.0
      */
     public function testAddRule()
@@ -150,11 +153,13 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::addRule().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::addRule
      * @expectedException  InvalidArgumentException
+     *
      * @since   2.0
      */
     public function testAddRuleException()
@@ -165,10 +170,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::getCachedPlural().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::getCachedPlural
+     *
      * @since   2.0
      */
     public function testGetCachedPlural()
@@ -191,10 +198,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::getCachedSingular().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::getCachedSingular
+     *
      * @since   2.0
      */
     public function testGetCachedSingular()
@@ -217,10 +226,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::matchRegexRule().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::matchRegexRule
+     *
      * @since   2.0
      */
     public function testMatchRegexRule()
@@ -246,10 +257,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::setCache().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::setCache
+     *
      * @since   2.0
      */
     public function testSetCache()
@@ -278,10 +291,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::addCountableRule().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::addCountableRule
+     *
      * @since   2.0
      */
     public function testAddCountableRule()
@@ -312,10 +327,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::addWord().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::addWord
+     *
      * @since   2.0
      */
     public function testAddWord()
@@ -352,10 +369,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::addPluraliseRule().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::addPluraliseRule
+     *
      * @since   2.0
      */
     public function testAddPluraliseRule()
@@ -380,10 +399,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::addSingulariseRule().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::addSingulariseRule
+     *
      * @since   2.0
      */
     public function testAddSingulariseRule()
@@ -408,10 +429,12 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::getInstance().
      *
-     * @return  void
-     *
      * @throws \ReflectionException
+     *
+     * @return void
+     *
      * @covers  \Windwalker\String\StringInflector::getInstance
+     *
      * @since   2.0
      */
     public function testGetInstance()
@@ -441,13 +464,14 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::isCountable().
      *
-     * @param   string  $input    A string.
-     * @param   boolean $expected The expected result of the function call.
+     * @param string $input    A string.
+     * @param bool   $expected The expected result of the function call.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringInflector::isCountable
      * @dataProvider  seedIsCountable
+     *
      * @since         2.0
      */
     public function testIsCountable($input, $expected)
@@ -461,13 +485,14 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::isPlural().
      *
-     * @param   string $singular The singular form of a word.
-     * @param   string $plural   The plural form of a word.
+     * @param string $singular The singular form of a word.
+     * @param string $plural   The plural form of a word.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringInflector::isPlural
      * @dataProvider  seedSinglePlural
+     *
      * @since         2.0
      */
     public function testIsPlural($singular, $plural)
@@ -488,13 +513,14 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::isSingular().
      *
-     * @param   string $singular The singular form of a word.
-     * @param   string $plural   The plural form of a word.
+     * @param string $singular The singular form of a word.
+     * @param string $plural   The plural form of a word.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringInflector::isSingular
      * @dataProvider  seedSinglePlural
+     *
      * @since         2.0
      */
     public function testIsSingular($singular, $plural)
@@ -515,13 +541,14 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::toPlural().
      *
-     * @param   string $singular The singular form of a word.
-     * @param   string $plural   The plural form of a word.
+     * @param string $singular The singular form of a word.
+     * @param string $plural   The plural form of a word.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringInflector::toPlural
      * @dataProvider  seedSinglePlural
+     *
      * @since         2.0
      */
     public function testToPlural($singular, $plural)
@@ -535,9 +562,10 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::toPlural().
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\String\StringInflector::toPlural
+     *
      * @since   2.0
      */
     public function testToPluralAlreadyPlural()
@@ -548,13 +576,14 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::toPlural().
      *
-     * @param   string $singular The singular form of a word.
-     * @param   string $plural   The plural form of a word.
+     * @param string $singular The singular form of a word.
+     * @param string $plural   The plural form of a word.
      *
-     * @return  void
+     * @return void
      *
      * @covers        \Windwalker\String\StringInflector::toSingular
      * @dataProvider  seedSinglePlural
+     *
      * @since         2.0
      */
     public function testToSingular($singular, $plural)
@@ -568,9 +597,10 @@ class InflectorTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test StringInflector::toPlural().
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\String\StringInflector::toSingular
+     *
      * @since   2.0
      */
     public function testToSingularRetFalse()

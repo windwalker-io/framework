@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\Structure\StructureHelper;
 use Windwalker\Test\TestCase\AbstractBaseTestCase;
 
 /**
- * Test class of Structure
+ * Test class of Structure.
  *
  * @since 2.0
  */
@@ -38,16 +38,16 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * getTestData
+     * getTestData.
      *
-     * @return  array
+     * @return array
      */
     protected function getTestData()
     {
         return [
             'flower' => 'sakura',
-            'olive' => 'peace',
-            'pos1' => [
+            'olive'  => 'peace',
+            'pos1'   => [
                 'sunflower' => 'love',
             ],
             'pos2' => [
@@ -206,23 +206,23 @@ class StructureTest extends AbstractBaseTestCase
         $structure = new Structure();
 
         $this->assertEquals(
-            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.json', 'json')->get('flower'),
+            $structure->reset()->loadFile(__DIR__.'/Stubs/flower.json', 'json')->get('flower'),
             'sakura'
         );
         $this->assertEquals(
-            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.yml', 'yaml')->get('flower'),
+            $structure->reset()->loadFile(__DIR__.'/Stubs/flower.yml', 'yaml')->get('flower'),
             'sakura'
         );
         $this->assertEquals(
-            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.ini', 'ini')->get('flower'),
+            $structure->reset()->loadFile(__DIR__.'/Stubs/flower.ini', 'ini')->get('flower'),
             'sakura'
         );
         $this->assertEquals(
-            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.xml', 'xml')->get('flower'),
+            $structure->reset()->loadFile(__DIR__.'/Stubs/flower.xml', 'xml')->get('flower'),
             'sakura'
         );
         $this->assertEquals(
-            $structure->reset()->loadFile(__DIR__ . '/Stubs/flower.php', 'php')->get('flower'),
+            $structure->reset()->loadFile(__DIR__.'/Stubs/flower.php', 'php')->get('flower'),
             'sakura'
         );
     }
@@ -240,28 +240,28 @@ class StructureTest extends AbstractBaseTestCase
 
         $this->assertEquals(
             $structure->reset()->loadString(
-                file_get_contents(__DIR__ . '/Stubs/flower.json'),
+                file_get_contents(__DIR__.'/Stubs/flower.json'),
                 'json'
             )->get('flower'),
             'sakura'
         );
         $this->assertEquals(
             $structure->reset()->loadString(
-                file_get_contents(__DIR__ . '/Stubs/flower.yml'),
+                file_get_contents(__DIR__.'/Stubs/flower.yml'),
                 'yaml'
             )->get('flower'),
             'sakura'
         );
         $this->assertEquals(
             $structure->reset()->loadString(
-                file_get_contents(__DIR__ . '/Stubs/flower.ini'),
+                file_get_contents(__DIR__.'/Stubs/flower.ini'),
                 'ini'
             )->get('flower'),
             'sakura'
         );
         $this->assertEquals(
             $structure->reset()->loadString(
-                file_get_contents(__DIR__ . '/Stubs/flower.xml'),
+                file_get_contents(__DIR__.'/Stubs/flower.xml'),
                 'xml'
             )->get('flower'),
             'sakura'
@@ -302,17 +302,17 @@ class StructureTest extends AbstractBaseTestCase
         $this->assertEquals(
             'new bar value 2',
             $structure1->get('bar.bar2'),
-            'Line: ' . __LINE__ . '. bar.bar2 should be override.'
+            'Line: '.__LINE__.'. bar.bar2 should be override.'
         );
         $this->assertEquals(
             'bar value 1',
             $structure1->get('bar.bar1'),
-            'Line: ' . __LINE__ . '. bar.bar1 should not be override.'
+            'Line: '.__LINE__.'. bar.bar1 should not be override.'
         );
         $this->assertSame(
             'bar value 3',
             $structure1->get('bar.bar3'),
-            'Line: ' . __LINE__ . '. bar.bar3 should not be override.'
+            'Line: '.__LINE__.'. bar.bar3 should not be override.'
         );
 
         $structure = new Structure(['flower' => 'rose', 'honor' => 'Osmanthus month']);
@@ -358,17 +358,17 @@ class StructureTest extends AbstractBaseTestCase
         $this->assertEquals(
             'new bar value 2',
             $structure1->get('bar.bar2'),
-            'Line: ' . __LINE__ . '. bar.bar2 should be override.'
+            'Line: '.__LINE__.'. bar.bar2 should be override.'
         );
         $this->assertEquals(
             'bar value 1',
             $structure1->get('bar.bar1'),
-            'Line: ' . __LINE__ . '. bar.bar1 should not be override.'
+            'Line: '.__LINE__.'. bar.bar1 should not be override.'
         );
         $this->assertSame(
             'bar value 3',
             $structure1->get('bar.bar3'),
-            'Line: ' . __LINE__ . '. bar.bar3 should not be override.'
+            'Line: '.__LINE__.'. bar.bar3 should not be override.'
         );
 
         $structure = new Structure(['flower' => 'rose', 'honor' => 'Osmanthus month']);
@@ -380,9 +380,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testMergeTo
+     * testMergeTo.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Structure\Structure::mergeTo
      */
@@ -469,9 +469,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * Method to test setRaw()
+     * Method to test setRaw().
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Structure\Structure::setRaw
      */
@@ -524,11 +524,11 @@ class StructureTest extends AbstractBaseTestCase
     {
         $structure = new Structure($this->getTestData());
 
-        $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.ini'), $structure->toString('ini'));
-        $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.json'), $structure->toString('json'));
-        $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.yml'), $structure->toString('yml'));
-        $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.xml'), $structure->toString('xml'));
-        $this->assertStringSafeEquals($this->loadFile(__DIR__ . '/Stubs/flower.php'), $structure->toString('php'));
+        $this->assertStringSafeEquals($this->loadFile(__DIR__.'/Stubs/flower.ini'), $structure->toString('ini'));
+        $this->assertStringSafeEquals($this->loadFile(__DIR__.'/Stubs/flower.json'), $structure->toString('json'));
+        $this->assertStringSafeEquals($this->loadFile(__DIR__.'/Stubs/flower.yml'), $structure->toString('yml'));
+        $this->assertStringSafeEquals($this->loadFile(__DIR__.'/Stubs/flower.xml'), $structure->toString('xml'));
+        $this->assertStringSafeEquals($this->loadFile(__DIR__.'/Stubs/flower.php'), $structure->toString('php'));
     }
 
     /**
@@ -550,9 +550,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testAppend
+     * testAppend.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Structure\Structure::push
      */
@@ -585,9 +585,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testShift
+     * testShift.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Structure\Structure::shift
      */
@@ -611,9 +611,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testPop
+     * testPop.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Structure\Structure::pop
      */
@@ -637,9 +637,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testUnshift
+     * testUnshift.
      *
-     * @return  void
+     * @return void
      *
      * @covers \Windwalker\Structure\Structure::unshift
      */
@@ -672,9 +672,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testReset
+     * testReset.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Structure\Structure::reset
      */
@@ -686,9 +686,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testGetRaw
+     * testGetRaw.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Structure\Structure::getRaw
      */
@@ -698,9 +698,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testGetIterator
+     * testGetIterator.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Structure\Structure::getIterator
      */
@@ -716,9 +716,9 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * testCount
+     * testCount.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\Structure\Structure::count
      */
@@ -728,11 +728,11 @@ class StructureTest extends AbstractBaseTestCase
     }
 
     /**
-     * loadFile
+     * loadFile.
      *
      * @param string $file
      *
-     * @return  string
+     * @return string
      */
     protected function loadFile($file)
     {

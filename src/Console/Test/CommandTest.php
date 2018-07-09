@@ -16,7 +16,7 @@ use Windwalker\Console\Test\Mock\MockIO;
 use Windwalker\Console\Test\Stubs\FooCommand;
 
 /**
- * Class CommandTest
+ * Class CommandTest.
  *
  * @since  2.0
  */
@@ -36,7 +36,6 @@ class CommandTest extends \PHPUnit\Framework\TestCase
      * @return void
      *
      * @since  2.0
-     *
      */
     protected function setUp()
     {
@@ -61,9 +60,10 @@ class CommandTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the execute.
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::execute
@@ -110,9 +110,10 @@ class CommandTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the add argument method.
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::addCommand
@@ -391,9 +392,10 @@ class CommandTest extends \PHPUnit\Framework\TestCase
     /**
      * Test get & set code by callable.
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::getHandler
@@ -485,9 +487,10 @@ class CommandTest extends \PHPUnit\Framework\TestCase
     /**
      * Test renderAlternatives.
      *
+     * @throws \Exception
+     *
      * @return void
      *
-     * @throws \Exception
      * @since  2.0
      *
      * @covers \Windwalker\Console\Command\AbstractCommand::renderAlternatives
@@ -565,11 +568,11 @@ Did you mean one of these?
     }
 
     /**
-     * fakeHandler
+     * fakeHandler.
      *
      * @param $command
      *
-     * @return  string
+     * @return string
      */
     public function fakeHandler($command)
     {
@@ -577,9 +580,9 @@ Did you mean one of these?
     }
 
     /**
-     * testError
+     * testError.
      *
-     * @return  void
+     * @return void
      *
      * @expectedException  \Exception
      */

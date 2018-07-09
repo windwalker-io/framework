@@ -18,16 +18,16 @@ class SelectPrompter extends ValidatePrompter
     /**
      * Property listTemplate.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
-    protected $listTemplate = " %-{WIDTH}s[%s] - %s";
+    protected $listTemplate = ' %-{WIDTH}s[%s] - %s';
 
     /**
      * Returning message if valid fail.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -36,7 +36,7 @@ class SelectPrompter extends ValidatePrompter
     /**
      * Returning message if valid fail and close.
      *
-     * @var  string
+     * @var string
      *
      * @since  2.0
      */
@@ -45,10 +45,10 @@ class SelectPrompter extends ValidatePrompter
     /**
      * Show prompt to ask user.
      *
-     * @param   string $msg     Question.
-     * @param   string $default Default value.
+     * @param string $msg     Question.
+     * @param string $default Default value.
      *
-     * @return  string  The value that use input.
+     * @return string The value that use input.
      *
      * @since   2.0
      */
@@ -62,7 +62,7 @@ class SelectPrompter extends ValidatePrompter
     /**
      * Render select option list.
      *
-     * @return  string  list string.
+     * @return string list string.
      *
      * @since   2.0
      */
@@ -81,7 +81,7 @@ class SelectPrompter extends ValidatePrompter
         foreach ($this->options as $key => $description) {
             $tmpl = str_replace('{WIDTH}', $longest, $this->listTemplate);
 
-            $list .= sprintf($tmpl, ' ', $key, $description) . "\n";
+            $list .= sprintf($tmpl, ' ', $key, $description)."\n";
         }
 
         return rtrim($list);
@@ -90,7 +90,7 @@ class SelectPrompter extends ValidatePrompter
     /**
      * Get callable handler.
      *
-     * @return  callable  The validate callback.
+     * @return callable The validate callback.
      *
      * @since   2.0
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project.  @codingStandardsIgnoreStart
+ * Part of Windwalker project.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
  * @license    GNU General Public License version 2 or later.
@@ -20,7 +20,7 @@ use Windwalker\Form\Renderer\FormRendererInterface;
 class MockFormRenderer implements FormRendererInterface
 {
     /**
-     * renderField
+     * renderField.
      *
      * @param AbstractField $field
      * @param array         $attribs
@@ -39,7 +39,7 @@ class MockFormRenderer implements FormRendererInterface
     }
 
     /**
-     * renderLabel
+     * renderLabel.
      *
      * @param AbstractField $field
      * @param array         $attribs
@@ -52,7 +52,7 @@ class MockFormRenderer implements FormRendererInterface
     }
 
     /**
-     * renderInput
+     * renderInput.
      *
      * @param AbstractField $field
      * @param array         $attribs
@@ -61,6 +61,6 @@ class MockFormRenderer implements FormRendererInterface
      */
     public function renderInput(AbstractField $field, array $attribs = [])
     {
-        return 'World: ' . $field->getFieldName();
+        return 'World: '.$field->getFieldName();
     }
 }

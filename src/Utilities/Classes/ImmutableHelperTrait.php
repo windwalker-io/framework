@@ -16,7 +16,7 @@ namespace Windwalker\Utilities\Classes;
 trait ImmutableHelperTrait
 {
     /**
-     * getReturnInstance
+     * getReturnInstance.
      *
      * @param callable $callback
      *

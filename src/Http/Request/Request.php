@@ -39,8 +39,8 @@ class Request extends AbstractRequest implements RequestInterface
      * exact case in which headers were originally specified.
      *
      * @return array Returns an associative array of the message's headers. Each
-     *     key MUST be a header name, and each value MUST be an array of strings
-     *     for that header.
+     *               key MUST be a header name, and each value MUST be an array of strings
+     *               for that header.
      */
     public function getHeaders()
     {
@@ -65,8 +65,8 @@ class Request extends AbstractRequest implements RequestInterface
      * @param string $name Case-insensitive header field name.
      *
      * @return string[] An array of string values as provided for the given
-     *    header. If the header does not appear in the message, this method MUST
-     *    return an empty array.
+     *                  header. If the header does not appear in the message, this method MUST
+     *                  return an empty array.
      */
     public function getHeader($name)
     {
@@ -89,8 +89,8 @@ class Request extends AbstractRequest implements RequestInterface
      * @param string $name Case-insensitive header field name.
      *
      * @return bool Returns true if any header names match the given header
-     *     name using a case-insensitive string comparison. Returns false if
-     *     no matching header name is found in the message.
+     *              name using a case-insensitive string comparison. Returns false if
+     *              no matching header name is found in the message.
      */
     public function hasHeader($name)
     {
@@ -103,14 +103,14 @@ class Request extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * Retrieve the host from the URI instance
+     * Retrieve the host from the URI instance.
      *
      * @return string
      */
     protected function getHostFromUri()
     {
         $host = $this->uri->getHost();
-        $host .= $this->uri->getPort() ? ':' . $this->uri->getPort() : '';
+        $host .= $this->uri->getPort() ? ':'.$this->uri->getPort() : '';
 
         return $host;
     }

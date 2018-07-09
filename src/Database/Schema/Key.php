@@ -33,28 +33,28 @@ class Key
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = null;
 
     /**
      * Property type.
      *
-     * @var  integer
+     * @var int
      */
     protected $type = null;
 
     /**
      * Property columns.
      *
-     * @var  array
+     * @var array
      */
     protected $columns = [];
 
     /**
      * Property comment.
      *
-     * @var  string
+     * @var string
      */
     protected $comment = '';
 
@@ -75,9 +75,9 @@ class Key
     }
 
     /**
-     * Method to get property Name
+     * Method to get property Name.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {
@@ -85,11 +85,11 @@ class Key
     }
 
     /**
-     * Method to set property name
+     * Method to set property name.
      *
-     * @param   string $name
+     * @param string $name
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function name($name)
     {
@@ -99,9 +99,9 @@ class Key
     }
 
     /**
-     * Method to get property Type
+     * Method to get property Type.
      *
-     * @return  int
+     * @return int
      */
     public function getType()
     {
@@ -109,11 +109,11 @@ class Key
     }
 
     /**
-     * Method to set property type
+     * Method to set property type.
      *
-     * @param   int $type
+     * @param int $type
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function type($type)
     {
@@ -123,9 +123,9 @@ class Key
     }
 
     /**
-     * Method to get property Columns
+     * Method to get property Columns.
      *
-     * @return  array
+     * @return array
      */
     public function getColumns()
     {
@@ -133,11 +133,11 @@ class Key
     }
 
     /**
-     * Method to set property columns
+     * Method to set property columns.
      *
-     * @param   array $columns
+     * @param array $columns
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function columns($columns)
     {
@@ -147,9 +147,9 @@ class Key
     }
 
     /**
-     * Method to get property Comment
+     * Method to get property Comment.
      *
-     * @return  string
+     * @return string
      */
     public function getComment()
     {
@@ -157,11 +157,11 @@ class Key
     }
 
     /**
-     * Method to set property comment
+     * Method to set property comment.
      *
-     * @param   string $comment
+     * @param string $comment
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function comment($comment)
     {

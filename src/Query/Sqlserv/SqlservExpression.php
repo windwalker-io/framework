@@ -11,7 +11,7 @@ namespace Windwalker\Query\Sqlserv;
 use Windwalker\Query\QueryExpression;
 
 /**
- * Class SqlservExpression
+ * Class SqlservExpression.
  *
  * @since 2.0
  */
@@ -20,11 +20,11 @@ class SqlservExpression extends QueryExpression
     /**
      * Gets the function to determine the length of a character string.
      *
-     * @param   string $field     A value.
-     * @param   string $operator  Comparison operator between charLength integer value and $condition
-     * @param   string $condition Integer value to compare charLength with.
+     * @param string $field     A value.
+     * @param string $operator  Comparison operator between charLength integer value and $condition
+     * @param string $condition Integer value to compare charLength with.
      *
-     * @return  string  The required char length call.
+     * @return string The required char length call.
      *
      * @since   2.0
      *
@@ -33,34 +33,34 @@ class SqlservExpression extends QueryExpression
     public function char_length($field, $operator = null, $condition = null)
     {
         // @codingStandardsIgnoreEnd
-        return 'DATALENGTH(' . $field . ')' . ($operator !== null && $condition !== null
-                ? ' ' . $operator . ' ' . $condition
+        return 'DATALENGTH('.$field.')'.($operator !== null && $condition !== null
+                ? ' '.$operator.' '.$condition
                 : '');
     }
 
     /**
      * Concatenates an array of column names or values.
      *
-     * @param   array  $values    An array of values to concatenate.
-     * @param   string $separator As separator to place between each value.
+     * @param array  $values    An array of values to concatenate.
+     * @param string $separator As separator to place between each value.
      *
-     * @return  string  The concatenated values.
+     * @return string The concatenated values.
      *
      * @since   2.0
      */
     public function concatenate($values, $separator = null)
     {
         if ($separator) {
-            return '(' . implode('+' . $this->query->quote($separator) . '+', $values) . ')';
+            return '('.implode('+'.$this->query->quote($separator).'+', $values).')';
         }
 
-        return '(' . implode('+', $values) . ')';
+        return '('.implode('+', $values).')';
     }
 
     /**
      * Gets the current date and time.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -72,15 +72,15 @@ class SqlservExpression extends QueryExpression
     /**
      * Get the length of a string in bytes.
      *
-     * @param   string $value The string to measure.
+     * @param string $value The string to measure.
      *
-     * @return  integer
+     * @return int
      *
      * @since   2.0
      */
     public function length($value)
     {
-        return 'LEN(' . $value . ')';
+        return 'LEN('.$value.')';
     }
 
     /**
@@ -88,9 +88,9 @@ class SqlservExpression extends QueryExpression
      *
      * Ensure that the value is properly quoted before passing to the method.
      *
-     * @param   string $value The value to cast as a char.
+     * @param string $value The value to cast as a char.
      *
-     * @return  string  Returns the cast value.
+     * @return string Returns the cast value.
      *
      * @since   2.0
      *
@@ -99,6 +99,6 @@ class SqlservExpression extends QueryExpression
     public function cast_as_char($value)
     {
         // @codingStandardsIgnoreEnd
-        return 'CAST(' . $value . ' as NVARCHAR(10))';
+        return 'CAST('.$value.' as NVARCHAR(10))';
     }
 }

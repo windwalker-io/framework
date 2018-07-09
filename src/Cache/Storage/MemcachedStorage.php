@@ -12,7 +12,7 @@ use Psr\Cache\CacheItemInterface;
 use Windwalker\Cache\Item\CacheItem;
 
 /**
- * Class MemcachedStorage
+ * Class MemcachedStorage.
  *
  * @since 2.0
  */
@@ -21,9 +21,9 @@ class MemcachedStorage extends AbstractDriverCacheStorage
     /**
      * Class init.
      *
-     * @param   \Memcached $driver  The cache storage driver.
-     * @param   int        $ttl     The Time To Live (TTL) of an item
-     * @param   mixed      $options An options array, or an object that implements \ArrayAccess
+     * @param \Memcached $driver  The cache storage driver.
+     * @param int        $ttl     The Time To Live (TTL) of an item
+     * @param mixed      $options An options array, or an object that implements \ArrayAccess
      *
      * @throws \RuntimeException
      */
@@ -39,9 +39,9 @@ class MemcachedStorage extends AbstractDriverCacheStorage
     /**
      * Method to determine whether a storage entry has been set for a key.
      *
-     * @param   string $key The storage entry identifier.
+     * @param string $key The storage entry identifier.
      *
-     * @return  boolean
+     * @return bool
      */
     public function exists($key)
     {
@@ -49,17 +49,18 @@ class MemcachedStorage extends AbstractDriverCacheStorage
 
         $this->driver->get($key);
 
-        return ($this->driver->getResultCode() != \Memcached::RES_NOTFOUND);
+        return $this->driver->getResultCode() != \Memcached::RES_NOTFOUND;
     }
 
     /**
      * Here we pass in a cache key to be fetched from the cache.
-     * A CacheItem object will be constructed and returned to us
+     * A CacheItem object will be constructed and returned to us.
      *
      * @param string $key The unique key of this item in the cache
      *
-     * @return CacheItemInterface  The newly populated CacheItem class representing the stored data in the cache
      * @throws \Exception
+     *
+     * @return CacheItemInterface The newly populated CacheItem class representing the stored data in the cache
      */
     public function getItem($key)
     {
@@ -100,7 +101,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
     }
 
     /**
-     * Remove an item from the cache by its unique key
+     * Remove an item from the cache by its unique key.
      *
      * @param string $key The unique cache key of the item to remove
      *
@@ -122,7 +123,7 @@ class MemcachedStorage extends AbstractDriverCacheStorage
     }
 
     /**
-     * This will wipe out the entire cache's keys
+     * This will wipe out the entire cache's keys.
      *
      * @return static Return self to support chaining
      */
@@ -132,9 +133,9 @@ class MemcachedStorage extends AbstractDriverCacheStorage
     }
 
     /**
-     * connect
+     * connect.
      *
-     * @return  static
+     * @return static
      */
     protected function connect()
     {

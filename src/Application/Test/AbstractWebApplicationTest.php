@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -17,7 +17,7 @@ use Windwalker\Http\Test\Mock\MockOutput;
 use Windwalker\Http\WebHttpServer;
 
 /**
- * Test class of AbstractWebApplication
+ * Test class of AbstractWebApplication.
  *
  * @since 2.0
  */
@@ -57,9 +57,9 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * test__construct
+     * test__construct.
      *
-     * @return  void
+     * @return void
      */
     public function test__construct()
     {
@@ -151,9 +151,9 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetAndSetServer
+     * testGetAndSetServer.
      *
-     * @return  void
+     * @return void
      */
     public function testGetAndSetServer()
     {
@@ -169,9 +169,9 @@ class AbstractWebApplicationTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * testGetAndSetEnvironment
+     * testGetAndSetEnvironment.
      *
-     * @return  void
+     * @return void
      */
     public function testGetAndSetEnvironment()
     {

@@ -17,7 +17,7 @@
  * the search string then 1 to n UTF-8 character positions
  * to obtain byte indexes for - it is more efficient to search
  * the string for multiple characters at once, than make
- * repeated calls to this function
+ * repeated calls to this function.
  *
  * @author  Chris Smith<chris@jalakai.co.uk>
  *
@@ -25,13 +25,12 @@
  * @param int (n times)
  *
  * @return mixed - int if only one input int, array if more
- * @return boolean TRUE if it's all ASCII
- * @package utf8
+ * @return bool  TRUE if it's all ASCII
  */
 function utf8_byte_position()
 {
     $args = func_get_args();
-    $str =& array_shift($args);
+    $str = &array_shift($args);
     if (!is_string($str)) {
         return false;
     }
@@ -127,14 +126,14 @@ function utf8_byte_position()
  * position. If the current character begins at the same place as the
  * supplied byte index, that byte index will be returned. Otherwise
  * this function will step backwards, looking for the index where
- * curent UTF-8 character begins
+ * curent UTF-8 character begins.
+ *
  * @author  Chris Smith<chris@jalakai.co.uk>
  *
  * @param string
  * @param int byte index in the string
  *
  * @return int byte index of start of next UTF-8 character
- * @package utf8
  */
 function utf8_locate_current_chr(&$str, $idx)
 {
@@ -163,13 +162,13 @@ function utf8_locate_current_chr(&$str, $idx)
  * of the start of the next UTF-8 character, relative to supplied
  * position. If the next character begins at the same place as the
  * supplied byte index, that byte index will be returned.
+ *
  * @author  Chris Smith<chris@jalakai.co.uk>
  *
  * @param string
  * @param int byte index in the string
  *
  * @return int byte index of start of next UTF-8 character
- * @package utf8
  */
 function utf8_locate_next_chr(&$str, $idx)
 {
@@ -191,4 +190,3 @@ function utf8_locate_next_chr(&$str, $idx)
 
     return $idx;
 }
-

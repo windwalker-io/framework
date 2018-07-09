@@ -11,7 +11,7 @@ namespace Windwalker\Console\Test\Prompter;
 use Windwalker\Console\Prompter\BooleanPrompter;
 
 /**
- * Class BooleanPrompterTest
+ * Class BooleanPrompterTest.
  *
  * @since  2.0
  */
@@ -35,31 +35,31 @@ class BooleanPrompterTest extends AbstractPrompterTest
     /**
      * Test prompter ask.
      *
-     * @return  void
+     * @return void
      *
      * @since  2.0
      */
     public function testAsk()
     {
-        $this->setStream("y");
+        $this->setStream('y');
 
         $in = $this->instance->ask();
 
         $this->assertTrue($in, 'Input result should be TRUE.');
 
-        $this->setStream("yes");
+        $this->setStream('yes');
 
         $in = $this->instance->ask();
 
         $this->assertTrue($in, 'Input result should be TRUE.');
 
-        $this->setStream("Y");
+        $this->setStream('Y');
 
         $in = $this->instance->ask();
 
         $this->assertTrue($in, 'Input result should be TRUE.');
 
-        $this->setStream("n");
+        $this->setStream('n');
 
         $in = $this->instance->ask();
 

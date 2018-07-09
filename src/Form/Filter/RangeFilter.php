@@ -51,11 +51,11 @@ class RangeFilter implements FilterInterface
     }
 
     /**
-     * clean
+     * clean.
      *
      * @param string|int|float $num
      *
-     * @return  mixed
+     * @return mixed
      */
     public function clean($num)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -12,7 +12,7 @@ use Windwalker\Dom\Test\AbstractDomTestCase;
 use Windwalker\Html\Media\Video;
 
 /**
- * Test class of Video
+ * Test class of Video.
  *
  * @since 2.1
  */
@@ -68,7 +68,7 @@ class VideoTest extends AbstractDomTestCase
             ->height(1920)
             ->width(1080);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <video id="foo" autoplay controls loop muted poster="poster.png" preload="auto" height="1920" width="1080">
     <source src="foo.mp4" type="video/mp4" />
     <source src="foo.ogg" type="video/ogg" />

@@ -11,7 +11,7 @@ namespace Windwalker\Query\Cubrid;
 use Windwalker\Query\Query;
 
 /**
- * Class CubridQuery
+ * Class CubridQuery.
  *
  * @since 2.0
  */
@@ -20,7 +20,7 @@ class CubridQuery extends Query
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'cubrid';
 
@@ -30,7 +30,8 @@ class CubridQuery extends Query
      * same character is used for both sides of the quoted name, else the first character will be
      * used for the opening quote and the second for the closing quote.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nameQuote = '`';
@@ -39,7 +40,8 @@ class CubridQuery extends Query
      * The null or zero representation of a timestamp for the database driver.  This should be
      * defined in child classes to hold the appropriate value for the engine.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $nullDate = '0000-00-00 00:00:00';

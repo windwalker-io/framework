@@ -11,7 +11,7 @@ namespace Windwalker\Cache\Item;
 use Psr\Cache\CacheItemInterface;
 
 /**
- * Class CacheItem
+ * Class CacheItem.
  *
  * @since 2.0
  */
@@ -20,7 +20,8 @@ class CacheItem implements CacheItemInterface
     /**
      * The key for the cache item.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $key;
@@ -28,7 +29,8 @@ class CacheItem implements CacheItemInterface
     /**
      * The value of the cache item.
      *
-     * @var    mixed
+     * @var mixed
+     *
      * @since  2.0
      */
     protected $value;
@@ -36,7 +38,8 @@ class CacheItem implements CacheItemInterface
     /**
      * Whether the cache item is value or not.
      *
-     * @var    boolean
+     * @var bool
+     *
      * @since  2.0
      */
     protected $hit;
@@ -44,31 +47,32 @@ class CacheItem implements CacheItemInterface
     /**
      * Property expiration.
      *
-     * @var  \DateTimeInterface
+     * @var \DateTimeInterface
      */
     protected $expiration;
 
     /**
      * Property defaultExpiration.
      *
-     * @var  string
+     * @var string
      */
     protected $defaultExpiration = 'now +1 year';
 
     /**
      * Class constructor.
      *
-     * @param   string            $key   The key for the cache item.
-     * @param   mixed             $value The value for the cache item.
-     * @param   \DateInterval|int $ttl   The expire time.
+     * @param string            $key   The key for the cache item.
+     * @param mixed             $value The value for the cache item.
+     * @param \DateInterval|int $ttl   The expire time.
      *
      * @throws \Exception
+     *
      * @since   2.0
      */
     public function __construct($key, $value = null, $ttl = null)
     {
         if (strpbrk($key, '{}()/\@:')) {
-            throw new \InvalidArgumentException('Item key name contains invalid characters.' . $key);
+            throw new \InvalidArgumentException('Item key name contains invalid characters.'.$key);
         }
 
         $this->key = $key;
@@ -83,7 +87,7 @@ class CacheItem implements CacheItemInterface
     /**
      * Get the key associated with this CacheItem.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -95,14 +99,14 @@ class CacheItem implements CacheItemInterface
     /**
      * Obtain the value of this cache item.
      *
-     * @return  mixed
+     * @return mixed
      *
      * @since   2.0
      */
     public function get()
     {
         if ($this->isHit() === false) {
-            return null;
+            return;
         }
 
         return $this->value;
@@ -113,9 +117,9 @@ class CacheItem implements CacheItemInterface
      *
      * If the value is set, we are assuming that there was a valid hit on the cache for the given key.
      *
-     * @param   mixed $value The value for the cache item.
+     * @param mixed $value The value for the cache item.
      *
-     * @return  CacheItem
+     * @return CacheItem
      */
     public function set($value)
     {
@@ -128,7 +132,7 @@ class CacheItem implements CacheItemInterface
     /**
      * This boolean value tells us if our cache item is currently in the cache or not.
      *
-     * @return  boolean
+     * @return bool
      *
      * @since   2.0
      */
@@ -145,13 +149,13 @@ class CacheItem implements CacheItemInterface
      * Sets the expiration time for this cache item.
      *
      * @param \DateTimeInterface $expiration
-     *   The point in time after which the item MUST be considered expired.
-     *   If null is passed explicitly, a default value MAY be used. If none is set,
-     *   the value should be stored permanently or for as long as the
-     *   implementation allows.
+     *                                       The point in time after which the item MUST be considered expired.
+     *                                       If null is passed explicitly, a default value MAY be used. If none is set,
+     *                                       the value should be stored permanently or for as long as the
+     *                                       implementation allows.
      *
      * @return static
-     *   The called object.
+     *                The called object.
      */
     public function expiresAt($expiration)
     {
@@ -175,15 +179,16 @@ class CacheItem implements CacheItemInterface
      * Sets the expiration time for this cache item.
      *
      * @param int|\DateInterval $time
-     *   The period of time from the present after which the item MUST be considered
-     *   expired. An integer parameter is understood to be the time in seconds until
-     *   expiration. If null is passed explicitly, a default value MAY be used.
-     *   If none is set, the value should be stored permanently or for as long as the
-     *   implementation allows.
+     *                                The period of time from the present after which the item MUST be considered
+     *                                expired. An integer parameter is understood to be the time in seconds until
+     *                                expiration. If null is passed explicitly, a default value MAY be used.
+     *                                If none is set, the value should be stored permanently or for as long as the
+     *                                implementation allows.
+     *
+     * @throws \Exception
      *
      * @return static
-     *   The called object.
-     * @throws \Exception
+     *                The called object.
      */
     public function expiresAfter($time)
     {
@@ -195,7 +200,7 @@ class CacheItem implements CacheItemInterface
             $this->expiration->add($time);
         } elseif (is_int($time)) {
             $this->expiration = new \DateTime();
-            $this->expiration->add(new \DateInterval('PT' . $time . 'S'));
+            $this->expiration->add(new \DateInterval('PT'.$time.'S'));
         } elseif ($time === null) {
             $this->expiration = new \DateTime($this->defaultExpiration);
         } else {
@@ -208,9 +213,9 @@ class CacheItem implements CacheItemInterface
     }
 
     /**
-     * Method to get property Expiration
+     * Method to get property Expiration.
      *
-     * @return  \DateTimeInterface
+     * @return \DateTimeInterface
      */
     public function getExpiration()
     {

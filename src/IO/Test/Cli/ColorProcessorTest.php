@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -13,7 +13,7 @@ use Windwalker\IO\Cli\Color\ColorStyle;
 use Windwalker\Test\TestEnvironment;
 
 /**
- * Test class of ColorProcessor
+ * Test class of ColorProcessor.
  *
  * @since 2.0
  */
@@ -29,7 +29,7 @@ class ColorProcessorTest extends \PHPUnit\Framework\TestCase
     /**
      * Property winOs.
      *
-     * @var boolean
+     * @var bool
      */
     protected $winOs;
 
@@ -113,11 +113,12 @@ class ColorProcessorTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests the process method for replacing colors
+     * Tests the process method for replacing colors.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Cli\Color\ColorProcessor::process
+     *
      * @since   2.0
      */
     public function testProcessNamed()
@@ -134,11 +135,12 @@ class ColorProcessorTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests the process method for replacing colors
+     * Tests the process method for replacing colors.
      *
-     * @return  void
+     * @return void
      *
      * @covers  \Windwalker\IO\Cli\Color\ColorProcessor::replaceColors
+     *
      * @since   2.0
      */
     public function testProcessReplace()

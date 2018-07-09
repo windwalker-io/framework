@@ -11,7 +11,7 @@ namespace Windwalker\Query\Mariadb;
 use Windwalker\Query\Mysql\MysqlQuery;
 
 /**
- * Class Mariadb
+ * Class Mariadb.
  *
  * @since 2.0
  */
@@ -20,7 +20,7 @@ class MariadbQuery extends MysqlQuery
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = 'mariadb';
 }

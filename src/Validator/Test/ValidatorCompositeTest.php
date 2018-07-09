@@ -17,7 +17,7 @@ use Windwalker\Validator\ValidatorComposite;
 use Windwalker\Validator\ValidatorInterface;
 
 /**
- * Test class of \Windwalker\Validator\ValidatorComposite
+ * Test class of \Windwalker\Validator\ValidatorComposite.
  *
  * @since 3.2
  */
@@ -169,9 +169,9 @@ class ValidatorCompositeTest extends TestCase
     }
 
     /**
-     * testMatchOne
+     * testMatchOne.
      *
-     * @return  void
+     * @return void
      */
     public function testMatchOne()
     {

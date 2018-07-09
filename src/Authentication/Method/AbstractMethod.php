@@ -18,14 +18,14 @@ abstract class AbstractMethod implements MethodInterface
     /**
      * Property status.
      *
-     * @var integer
+     * @var int
      */
     protected $status;
 
     /**
-     * getStatus
+     * getStatus.
      *
-     * @return  integer
+     * @return int
      */
     public function getStatus()
     {

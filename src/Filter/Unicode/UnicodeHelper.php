@@ -9,21 +9,21 @@
 namespace Windwalker\Filter\Unicode;
 
 /**
- * Class UnicodeHelper
+ * Class UnicodeHelper.
  *
  * @since 2.0
  */
 abstract class UnicodeHelper
 {
     /**
-     * latinToAscii
+     * latinToAscii.
      *
-     * @param string  $string
-     * @param integer $case
+     * @param string $string
+     * @param int    $case
      *
      * @note  Port of phputf8's utf8_accents_to_ascii()
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function latinToAscii($string, $case = 0)
     {
@@ -260,11 +260,11 @@ abstract class UnicodeHelper
     }
 
     /**
-     * strtolower
+     * strtolower.
      *
      * @param string $str
      *
-     * @return  string
+     * @return string
      */
     public static function strtolower($str)
     {
@@ -276,13 +276,13 @@ abstract class UnicodeHelper
     }
 
     /**
-     * utf8strtolower
+     * utf8strtolower.
      *
      * @param string $string
      *
      * @note  Port of phputf8's utf8_strtolower()
      *
-     * @return  string
+     * @return string
      */
     public static function utf8strtolower($string)
     {
@@ -524,50 +524,50 @@ abstract class UnicodeHelper
     }
 
     /**
-     * fromUnicode
+     * fromUnicode.
      *
      * @param array $arr
      *
      * @note  Port of phputf8's utf8_from_unicode()
      *
-     * @return  bool|string
+     * @return bool|string
      */
     public static function fromUnicode($arr)
     {
         ob_start();
 
         foreach (array_keys($arr) as $k) {
-            # ASCII range (including control chars)
+            // ASCII range (including control chars)
             if (($arr[$k] >= 0) && ($arr[$k] <= 0x007f)) {
                 echo chr($arr[$k]);
-                # 2 byte sequence
+            // 2 byte sequence
             } else {
                 if ($arr[$k] <= 0x07ff) {
                     echo chr(0xc0 | ($arr[$k] >> 6));
                     echo chr(0x80 | ($arr[$k] & 0x003f));
-                    # Byte order mark (skip)
+                // Byte order mark (skip)
                 } else {
                     if ($arr[$k] == 0xFEFF) {
                         // nop -- zap the BOM
 
-                        # Test for illegal surrogates
+                        // Test for illegal surrogates
                     } else {
                         if ($arr[$k] >= 0xD800 && $arr[$k] <= 0xDFFF) {
                             // found a surrogate
                             trigger_error(
-                                'utf8_from_unicode: Illegal surrogate ' .
-                                'at index: ' . $k . ', value: ' . $arr[$k],
+                                'utf8_from_unicode: Illegal surrogate '.
+                                'at index: '.$k.', value: '.$arr[$k],
                                 E_USER_WARNING
                             );
 
                             return false;
-                            # 3 byte sequence
+                        // 3 byte sequence
                         } else {
                             if ($arr[$k] <= 0xffff) {
                                 echo chr(0xe0 | ($arr[$k] >> 12));
                                 echo chr(0x80 | (($arr[$k] >> 6) & 0x003f));
                                 echo chr(0x80 | ($arr[$k] & 0x003f));
-                                # 4 byte sequence
+                            // 4 byte sequence
                             } else {
                                 if ($arr[$k] <= 0x10ffff) {
                                     echo chr(0xf0 | ($arr[$k] >> 18));
@@ -576,8 +576,8 @@ abstract class UnicodeHelper
                                     echo chr(0x80 | ($arr[$k] & 0x3f));
                                 } else {
                                     trigger_error(
-                                        'utf8_from_unicode: Codepoint out of Unicode range ' .
-                                        'at index: ' . $k . ', value: ' . $arr[$k],
+                                        'utf8_from_unicode: Codepoint out of Unicode range '.
+                                        'at index: '.$k.', value: '.$arr[$k],
                                         E_USER_WARNING
                                     );
 
@@ -598,13 +598,13 @@ abstract class UnicodeHelper
     }
 
     /**
-     * toUnicode
+     * toUnicode.
      *
      * @param string $str
      *
      * @note  Port of phputf8's utf8_to_unicode()
      *
-     * @return  bool
+     * @return bool
      */
     public static function toUnicode($str)
     {
@@ -618,7 +618,7 @@ abstract class UnicodeHelper
         $len = strlen($str);
 
         for ($i = 0; $i < $len; $i++) {
-            $in = ord($str{$i});
+            $in = ord($str[$i]);
 
             if ($mState == 0) {
                 // When mState is zero we expect either a US-ASCII character or a
@@ -669,8 +669,8 @@ abstract class UnicodeHelper
                      * octet of a multi-octet sequence.
                      */
                     trigger_error(
-                        'utf8_to_unicode: Illegal sequence identifier ' .
-                        'in UTF-8 at byte ' . $i,
+                        'utf8_to_unicode: Illegal sequence identifier '.
+                        'in UTF-8 at byte '.$i,
                         E_USER_WARNING
                     );
 
@@ -686,7 +686,7 @@ abstract class UnicodeHelper
                     $tmp = ($tmp & 0x0000003F) << $shift;
                     $mUcs4 |= $tmp;
 
-                    /**
+                    /*
                      * End of the multi-octet sequence. mUcs4 now contains the final
                      * Unicode codepoint to be output
                      */
@@ -705,8 +705,8 @@ abstract class UnicodeHelper
                             ($mUcs4 > 0x10FFFF)
                         ) {
                             trigger_error(
-                                'utf8_to_unicode: Illegal sequence or codepoint ' .
-                                'in UTF-8 at byte ' . $i,
+                                'utf8_to_unicode: Illegal sequence or codepoint '.
+                                'in UTF-8 at byte '.$i,
                                 E_USER_WARNING
                             );
 
@@ -724,13 +724,13 @@ abstract class UnicodeHelper
                         $mBytes = 1;
                     }
                 } else {
-                    /**
+                    /*
                      *((0xC0 & (*in) != 0x80) && (mState != 0))
                      * Incomplete multi-octet sequence.
                      */
                     trigger_error(
-                        'utf8_to_unicode: Incomplete multi-octet ' .
-                        '   sequence in UTF-8 at byte ' . $i,
+                        'utf8_to_unicode: Incomplete multi-octet '.
+                        '   sequence in UTF-8 at byte '.$i,
                         E_USER_WARNING
                     );
 

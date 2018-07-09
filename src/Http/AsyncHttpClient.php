@@ -34,36 +34,36 @@ class AsyncHttpClient extends HttpClient
     /**
      * Property mh.
      *
-     * @var  resource
+     * @var resource
      */
     protected $mh;
 
     /**
      * Property handles.
      *
-     * @var  []
+     * @var []
      */
     protected $tasks = [];
 
     /**
      * Property errors.
      *
-     * @var  \RuntimeException[]
+     * @var \RuntimeException[]
      */
     protected $errors = [];
 
     /**
      * Property stop.
      *
-     * @var  bool
+     * @var bool
      */
     protected $stop = false;
 
     /**
      * Class init.
      *
-     * @param  array         $options   The options of this client object.
-     * @param  CurlTransport $transport The Transport handler, default is CurlTransport.
+     * @param array         $options   The options of this client object.
+     * @param CurlTransport $transport The Transport handler, default is CurlTransport.
      */
     public function __construct($options = [], CurlTransport $transport = null)
     {
@@ -71,9 +71,9 @@ class AsyncHttpClient extends HttpClient
     }
 
     /**
-     * getHandle
+     * getHandle.
      *
-     * @return  resource
+     * @return resource
      */
     public function getMainHandle()
     {
@@ -87,9 +87,9 @@ class AsyncHttpClient extends HttpClient
     }
 
     /**
-     * reset
+     * reset.
      *
-     * @return  static
+     * @return static
      */
     public function reset()
     {
@@ -108,10 +108,11 @@ class AsyncHttpClient extends HttpClient
     /**
      * Send a request to remote.
      *
-     * @param   RequestInterface $request The Psr Request object.
+     * @param RequestInterface $request The Psr Request object.
      *
-     * @return  Promise
      * @throws \RangeException
+     *
+     * @return Promise
      */
     public function send(RequestInterface $request)
     {
@@ -119,8 +120,8 @@ class AsyncHttpClient extends HttpClient
         $transport = $this->getTransport();
 
         $this->tasks[] = [
-            'handle' => $handle = $transport->createHandle($request),
-            'promise' => $promise = new Promise()
+            'handle'  => $handle = $transport->createHandle($request),
+            'promise' => $promise = new Promise(),
         ];
 
         curl_multi_add_handle($this->getMainHandle(), $handle);
@@ -129,12 +130,13 @@ class AsyncHttpClient extends HttpClient
     }
 
     /**
-     * resolve
+     * resolve.
      *
      * @param callable $callback
      *
-     * @return  Response[]
      * @throws \RuntimeException
+     *
+     * @return Response[]
      */
     public function resolve(callable $callback = null)
     {
@@ -192,12 +194,13 @@ class AsyncHttpClient extends HttpClient
     }
 
     /**
-     * Method to set property transport
+     * Method to set property transport.
      *
-     * @param   TransportInterface $transport
+     * @param TransportInterface $transport
      *
-     * @return  static  Return self to support chaining.
      * @throws \InvalidArgumentException
+     *
+     * @return static Return self to support chaining.
      */
     public function setTransport(TransportInterface $transport)
     {
@@ -217,9 +220,9 @@ class AsyncHttpClient extends HttpClient
     }
 
     /**
-     * Method to get property Errors
+     * Method to get property Errors.
      *
-     * @return  \RuntimeException[]
+     * @return \RuntimeException[]
      */
     public function getErrors()
     {
@@ -227,9 +230,9 @@ class AsyncHttpClient extends HttpClient
     }
 
     /**
-     * Method to get property Handles
+     * Method to get property Handles.
      *
-     * @return  \resource[]
+     * @return \resource[]
      */
     public function getHandles()
     {
@@ -237,9 +240,9 @@ class AsyncHttpClient extends HttpClient
     }
 
     /**
-     * Method to get property Tasks
+     * Method to get property Tasks.
      *
-     * @return  resource[]
+     * @return resource[]
      *
      * @since  3.4
      */

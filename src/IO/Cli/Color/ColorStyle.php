@@ -9,91 +9,99 @@
 namespace Windwalker\IO\Cli\Color;
 
 /**
- * Class ColorStyle
+ * Class ColorStyle.
  *
  * @since  2.0
  */
 final class ColorStyle
 {
     /**
-     * Known colors
+     * Known colors.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     private static $knownColors = [
-        'black' => 0,
-        'red' => 1,
-        'green' => 2,
-        'yellow' => 3,
-        'blue' => 4,
+        'black'   => 0,
+        'red'     => 1,
+        'green'   => 2,
+        'yellow'  => 3,
+        'blue'    => 4,
         'magenta' => 5,
-        'cyan' => 6,
-        'white' => 7,
+        'cyan'    => 6,
+        'white'   => 7,
     ];
 
     /**
-     * Known styles
+     * Known styles.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     private static $knownOptions = [
-        'bold' => 1,
+        'bold'       => 1,
         'underscore' => 4,
-        'blink' => 5,
-        'reverse' => 7,
+        'blink'      => 5,
+        'reverse'    => 7,
     ];
 
     /**
-     * Foreground base value
+     * Foreground base value.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     private static $fgBase = 30;
 
     /**
-     * Background base value
+     * Background base value.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     private static $bgBase = 40;
 
     /**
-     * Foreground color
+     * Foreground color.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     private $fgColor = 0;
 
     /**
-     * Background color
+     * Background color.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     private $bgColor = 0;
 
     /**
-     * Array of style options
+     * Array of style options.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     private $options = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param   string $fg      Foreground color.
-     * @param   string $bg      Background color.
-     * @param   array  $options Style options.
+     * @param string $fg      Foreground color.
+     * @param string $bg      Background color.
+     * @param array  $options Style options.
      *
      * @since   2.0
-     * @throws  \InvalidArgumentException
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct($fg = '', $bg = '', $options = [])
     {
@@ -143,7 +151,7 @@ final class ColorStyle
     /**
      * Convert to a string.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -157,12 +165,13 @@ final class ColorStyle
      *
      * Example: fg=red;bg=blue;options=bold,blink
      *
-     * @param   string $string The parameter string.
+     * @param string $string The parameter string.
      *
-     * @return  ColorStyle  Instance of $this to allow chaining.
+     * @throws \RuntimeException
+     *
+     * @return ColorStyle Instance of $this to allow chaining.
      *
      * @since   2.0
-     * @throws  \RuntimeException
      */
     public static function fromString($string)
     {
@@ -204,7 +213,7 @@ final class ColorStyle
     /**
      * Get the translated color code.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -230,7 +239,7 @@ final class ColorStyle
     /**
      * Get the known colors.
      *
-     * @return  string
+     * @return string
      *
      * @since   2.0
      */
@@ -242,7 +251,7 @@ final class ColorStyle
     /**
      * Get the known options.
      *
-     * @return  array
+     * @return array
      *
      * @since   2.0
      */

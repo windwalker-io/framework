@@ -5,8 +5,7 @@
  * @copyright  Copyright (C) 2017 $LYRASOFT.
  * @license    LGPL-2.0-or-later
  */
-
 if (!class_exists('PHPUnit\Framework\TestCase') && class_exists('PHPUnit_Framework_TestCase')) {
     // Split class string to avoid breaking IDE parser from native phpunit compat.
-    class_alias('PHPUnit_Framework_TestCase', 'PHPUnit' . '\Framework\TestCase');
+    class_alias('PHPUnit_Framework_TestCase', 'PHPUnit'.'\Framework\TestCase');
 }

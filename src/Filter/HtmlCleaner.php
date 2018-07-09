@@ -27,7 +27,8 @@ class HtmlCleaner
     /**
      * The array of permitted tags (white list).
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     public $tagsArray = [];
@@ -35,31 +36,35 @@ class HtmlCleaner
     /**
      * The array of permitted tag attributes (white list).
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     public $attrArray = [];
 
     /**
-     * The method for sanitising tags: WhiteList method = 0 (default), BlackList method = 1
+     * The method for sanitising tags: WhiteList method = 0 (default), BlackList method = 1.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     public $tagsMethod = self::USE_WHITE_LIST;
 
     /**
-     * The method for sanitising attributes: WhiteList method = 0 (default), BlackList method = 1
+     * The method for sanitising attributes: WhiteList method = 0 (default), BlackList method = 1.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     public $attrMethod = self::USE_WHITE_LIST;
 
     /**
-     * A flag for XSS checks. Only auto clean essentials = 0, Allow clean blacklisted tags/attr = 1
+     * A flag for XSS checks. Only auto clean essentials = 0, Allow clean blacklisted tags/attr = 1.
      *
-     * @var    integer
+     * @var int
+     *
      * @since  2.0
      */
     public $xssAuto;
@@ -67,7 +72,8 @@ class HtmlCleaner
     /**
      * The list of the default blacklisted tags.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     public $tagBlacklist = [
@@ -98,7 +104,8 @@ class HtmlCleaner
     /**
      * The list of the default blacklisted tag attributes. All event handlers implicit.
      *
-     * @var    array
+     * @var array
+     *
      * @since   2.0
      */
     public $attrBlacklist = [
@@ -112,11 +119,11 @@ class HtmlCleaner
     /**
      * Constructor for inputFilter class. Only first parameter is required.
      *
-     * @param   array   $tagsArray  List of user-defined tags
-     * @param   array   $attrArray  List of user-defined attributes
-     * @param   integer $tagsMethod WhiteList method = 0, BlackList method = 1
-     * @param   integer $attrMethod WhiteList method = 0, BlackList method = 1
-     * @param   integer $xssAuto    Only auto clean essentials = 0, Allow clean blacklisted tags/attr = 1
+     * @param array $tagsArray  List of user-defined tags
+     * @param array $attrArray  List of user-defined attributes
+     * @param int   $tagsMethod WhiteList method = 0, BlackList method = 1
+     * @param int   $attrMethod WhiteList method = 0, BlackList method = 1
+     * @param int   $xssAuto    Only auto clean essentials = 0, Allow clean blacklisted tags/attr = 1
      *
      * @since   2.0
      */
@@ -140,11 +147,11 @@ class HtmlCleaner
     }
 
     /**
-     * Function to determine if contents of an attribute are safe
+     * Function to determine if contents of an attribute are safe.
      *
-     * @param   array $attrSubSet A 2 element array for attribute's name, value
+     * @param array $attrSubSet A 2 element array for attribute's name, value
      *
-     * @return  boolean  True if bad code is detected
+     * @return bool True if bad code is detected
      *
      * @since   2.0
      */
@@ -153,22 +160,21 @@ class HtmlCleaner
         $attrSubSet[0] = strtolower($attrSubSet[0]);
         $attrSubSet[1] = strtolower($attrSubSet[1]);
 
-        return (
+        return
             ((strpos($attrSubSet[1], 'expression') !== false) && ($attrSubSet[0]) === 'style')
             || (strpos($attrSubSet[1], 'javascript:') !== false)
             || (strpos($attrSubSet[1], 'behaviour:') !== false)
             || (strpos($attrSubSet[1], 'vbscript:') !== false)
             || (strpos($attrSubSet[1], 'mocha:') !== false)
-            || (strpos($attrSubSet[1], 'livescript:') !== false)
-        );
+            || (strpos($attrSubSet[1], 'livescript:') !== false);
     }
 
     /**
-     * Internal method to iteratively remove all unwanted tags and attributes
+     * Internal method to iteratively remove all unwanted tags and attributes.
      *
-     * @param   string $source Input string to be 'cleaned'
+     * @param string $source Input string to be 'cleaned'
      *
-     * @return  string  'Cleaned' version of input parameter
+     * @return string 'Cleaned' version of input parameter
      *
      * @since   2.0
      */
@@ -186,11 +192,11 @@ class HtmlCleaner
     }
 
     /**
-     * Internal method to strip a string of certain tags
+     * Internal method to strip a string of certain tags.
      *
-     * @param   string $source Input string to be 'cleaned'
+     * @param string $source Input string to be 'cleaned'
      *
-     * @return  string  'Cleaned' version of input parameter
+     * @return string 'Cleaned' version of input parameter
      *
      * @since   2.0
      */
@@ -222,7 +228,7 @@ class HtmlCleaner
 
             if (($nextOpenTag !== false) && ($nextOpenTag < $tagOpen_end)) {
                 // At this point we have a mal-formed tag -- remove the offending open
-                $postTag = substr($postTag, 0, $tagOpen_start) . substr($postTag, $tagOpen_start + 1);
+                $postTag = substr($postTag, 0, $tagOpen_start).substr($postTag, $tagOpen_start + 1);
                 $tagOpen_start = strpos($postTag, '<');
                 continue;
             }
@@ -256,12 +262,12 @@ class HtmlCleaner
             if (substr($currentTag, 0, 1) === '/') {
                 // Close Tag
                 $isCloseTag = true;
-                list ($tagName) = explode(' ', $currentTag);
+                list($tagName) = explode(' ', $currentTag);
                 $tagName = substr($tagName, 1);
             } else {
                 // Open Tag
                 $isCloseTag = false;
-                list ($tagName) = explode(' ', $currentTag);
+                list($tagName) = explode(' ', $currentTag);
             }
 
             /*
@@ -328,8 +334,7 @@ class HtmlCleaner
                     } else {
                         $attr = substr($fromSpace, 0, $nextSpace);
                     }
-                } else // No more equal signs so add any extra text in the tag into the attribute array [eg. checked]
-                {
+                } else { // No more equal signs so add any extra text in the tag into the attribute array [eg. checked]
                     if ($fromSpace !== '/') {
                         $attr = substr($fromSpace, 0, $nextSpace);
                     }
@@ -357,21 +362,20 @@ class HtmlCleaner
                 if (!$isCloseTag) {
                     // Open or single tag
                     $attrSet = $this->cleanAttributes($attrSet);
-                    $preTag .= '<' . $tagName;
+                    $preTag .= '<'.$tagName;
 
                     for ($i = 0, $count = count($attrSet); $i < $count; $i++) {
-                        $preTag .= ' ' . $attrSet[$i];
+                        $preTag .= ' '.$attrSet[$i];
                     }
 
                     // Reformat single tags to XHTML
-                    if (strpos($fromTagOpen, '</' . $tagName)) {
+                    if (strpos($fromTagOpen, '</'.$tagName)) {
                         $preTag .= '>';
                     } else {
                         $preTag .= ' />';
                     }
-                } else // Closing tag
-                {
-                    $preTag .= '</' . $tagName . '>';
+                } else { // Closing tag
+                    $preTag .= '</'.$tagName.'>';
                 }
             }
 
@@ -389,11 +393,11 @@ class HtmlCleaner
     }
 
     /**
-     * Internal method to strip a tag of certain attributes
+     * Internal method to strip a tag of certain attributes.
      *
-     * @param   array $attrSet Array of attribute pairs to filter
+     * @param array $attrSet Array of attribute pairs to filter
      *
-     * @return  array  Filtered array of attribute pairs
+     * @return array Filtered array of attribute pairs
      *
      * @since   2.0
      */
@@ -466,14 +470,14 @@ class HtmlCleaner
             if ((!$attrFound && $this->attrMethod) || ($attrFound && !$this->attrMethod)) {
                 // Does the attribute have a value?
                 if (empty($attrSubSet[1]) === false) {
-                    $newSet[] = $attrSubSet[0] . '="' . $attrSubSet[1] . '"';
-                } elseif ($attrSubSet[1] === "0") {
+                    $newSet[] = $attrSubSet[0].'="'.$attrSubSet[1].'"';
+                } elseif ($attrSubSet[1] === '0') {
                     // Special Case
                     // Is the value 0?
-                    $newSet[] = $attrSubSet[0] . '="0"';
+                    $newSet[] = $attrSubSet[0].'="0"';
                 } else {
                     // Leave empty attributes alone
-                    $newSet[] = $attrSubSet[0] . '=""';
+                    $newSet[] = $attrSubSet[0].'=""';
                 }
             }
         }
@@ -482,13 +486,13 @@ class HtmlCleaner
     }
 
     /**
-     * Try to convert to plaintext
+     * Try to convert to plaintext.
      *
      * @note    This method will be removed once support for PHP 5.3 is discontinued.
      *
-     * @param   string $source The source string.
+     * @param string $source The source string.
      *
-     * @return  string  Plaintext string
+     * @return string Plaintext string
      *
      * @since   2.0
      */
@@ -498,11 +502,11 @@ class HtmlCleaner
     }
 
     /**
-     * Escape < > and " inside attribute values
+     * Escape < > and " inside attribute values.
      *
-     * @param   string $source The source string.
+     * @param string $source The source string.
      *
-     * @return  string  Filtered string
+     * @return string Filtered string
      *
      * @since   2.0
      */
@@ -540,20 +544,20 @@ class HtmlCleaner
             // Escape bad chars
             $attributeValue = str_replace($badChars, $escapedChars, $attributeValue);
             $attributeValue = $this->stripCssExpressions($attributeValue);
-            $alreadyFiltered .= substr($remainder, 0, $nextBefore) . $attributeValue . $quote;
+            $alreadyFiltered .= substr($remainder, 0, $nextBefore).$attributeValue.$quote;
             $remainder = substr($remainder, $nextAfter + 1);
         }
 
         // At this point, we just have to return the $alreadyFiltered and the $remainder
-        return $alreadyFiltered . $remainder;
+        return $alreadyFiltered.$remainder;
     }
 
     /**
-     * Remove CSS Expressions in the form of <property>:expression(...)
+     * Remove CSS Expressions in the form of <property>:expression(...).
      *
-     * @param   string $source The source string.
+     * @param string $source The source string.
      *
-     * @return  string  Filtered string
+     * @return string Filtered string
      *
      * @since   2.0
      */
@@ -580,9 +584,9 @@ class HtmlCleaner
     }
 
     /**
-     * getTagsMethod
+     * getTagsMethod.
      *
-     * @return  int
+     * @return int
      */
     public function getTagsMethod()
     {
@@ -590,11 +594,11 @@ class HtmlCleaner
     }
 
     /**
-     * setTagsMethod
+     * setTagsMethod.
      *
-     * @param   int $tagsMethod
+     * @param int $tagsMethod
      *
-     * @return  HtmlCleaner  Return self to support chaining.
+     * @return HtmlCleaner Return self to support chaining.
      */
     public function setTagsMethod($tagsMethod)
     {
@@ -604,9 +608,9 @@ class HtmlCleaner
     }
 
     /**
-     * getAttrMethod
+     * getAttrMethod.
      *
-     * @return  int
+     * @return int
      */
     public function getAttrMethod()
     {
@@ -614,11 +618,11 @@ class HtmlCleaner
     }
 
     /**
-     * setAttrMethod
+     * setAttrMethod.
      *
-     * @param   int $attrMethod
+     * @param int $attrMethod
      *
-     * @return  HtmlCleaner  Return self to support chaining.
+     * @return HtmlCleaner Return self to support chaining.
      */
     public function setAttrMethod($attrMethod)
     {
@@ -628,9 +632,9 @@ class HtmlCleaner
     }
 
     /**
-     * getXssAuto
+     * getXssAuto.
      *
-     * @return  int
+     * @return int
      */
     public function getXssMethod()
     {
@@ -638,11 +642,11 @@ class HtmlCleaner
     }
 
     /**
-     * setXssAuto
+     * setXssAuto.
      *
-     * @param   int $xssAuto
+     * @param int $xssAuto
      *
-     * @return  HtmlCleaner  Return self to support chaining.
+     * @return HtmlCleaner Return self to support chaining.
      */
     public function setXssMethod($xssAuto)
     {

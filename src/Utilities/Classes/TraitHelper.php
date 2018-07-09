@@ -16,14 +16,14 @@ namespace Windwalker\Utilities\Classes;
 class TraitHelper
 {
     /**
-     * classUsesRecursive
+     * classUsesRecursive.
      *
      * @link  http://php.net/manual/en/function.class-uses.php#110752
      *
      * @param string|object $class
      * @param bool          $autoload
      *
-     * @return  array
+     * @return array
      */
     public static function classUsesRecursive($class, $autoload = true)
     {

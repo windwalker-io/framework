@@ -31,7 +31,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Table name.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $table = null;
@@ -39,7 +40,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Primary key.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $keys = null;
@@ -47,7 +49,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Table fields.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $fields = null;
@@ -55,7 +58,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Property selectFields.
      *
-     * @var    array
+     * @var array
+     *
      * @since  2.0
      */
     protected $selectFields = null;
@@ -63,7 +67,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Data object class.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $dataClass = 'Windwalker\Data\Data';
@@ -71,7 +76,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Data set object class.
      *
-     * @var    string
+     * @var string
+     *
      * @since  2.0
      */
     protected $datasetClass = 'Windwalker\Data\DataSet';
@@ -79,7 +85,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Property useTransaction.
      *
-     * @var    boolean
+     * @var bool
+     *
      * @since  2.0
      */
     protected $useTransaction = true;
@@ -87,7 +94,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Property dispatcher.
      *
-     * @var  DispatcherInterface
+     * @var DispatcherInterface
      */
     protected $dispatcher;
 
@@ -96,10 +103,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * We don't dependency on database in abstract class, that means you can use other data provider.
      *
-     * @param   string $table Table name.
-     * @param   string $keys  The primary key, default will be `id`.
+     * @param string $table Table name.
+     * @param string $keys  The primary key, default will be `id`.
      *
-     * @throws  \Exception
+     * @throws \Exception
+     *
      * @since   2.0
      */
     public function __construct($table = null, $keys = null)
@@ -117,7 +125,8 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * This method can be override by sub class to prepare come custom setting.
      *
-     * @return  void
+     * @return void
+     *
      * @since   2.0
      */
     protected function init()
@@ -132,20 +141,21 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * - `$mapper->find(array('id' => 5), 'date', 20, 10);`
      * - `$mapper->find(null, 'id', 0, 1);`
      *
-     * @param   mixed   $conditions  Where conditions, you can use array or Compare object.
-     *                               Example:
-     *                               - `array('id' => 5)` => id = 5
-     *                               - `new GteCompare('id', 20)` => 'id >= 20'
-     *                               - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-     * @param   mixed   $order       Order sort, can ba string, array or object.
-     *                               Example:
-     *                               - `id ASC` => ORDER BY id ASC
-     *                               - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
-     * @param   integer $start       Limit start number.
-     * @param   integer $limit       Limit rows.
-     * @param   string  $key         The index key.
+     * @param mixed  $conditions Where conditions, you can use array or Compare object.
+     *                           Example:
+     *                           - `array('id' => 5)` => id = 5
+     *                           - `new GteCompare('id', 20)` => 'id >= 20'
+     *                           - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed  $order      Order sort, can ba string, array or object.
+     *                           Example:
+     *                           - `id ASC` => ORDER BY id ASC
+     *                           - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+     * @param int    $start      Limit start number.
+     * @param int    $limit      Limit rows.
+     * @param string $key        The index key.
      *
-     * @return  mixed|DataSet Found rows data set.
+     * @return mixed|DataSet Found rows data set.
+     *
      * @since   2.0
      */
     public function find($conditions = [], $order = null, $start = null, $limit = null, $key = null)
@@ -177,12 +187,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'conditions' => &$conditions,
-                'order' => &$order,
-                'start' => &$start,
-                'limit' => &$limit,
+                'order'      => &$order,
+                'start'      => &$start,
+                'limit'      => &$limit,
             ]
         );
 
@@ -199,7 +209,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -213,13 +223,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * Same as `$mapper->find(null, 'id', $start, $limit);`
      *
-     * @param mixed   $order Order sort, can ba string, array or object.
-     *                       Example:
-     *                       - 'id ASC' => ORDER BY id ASC
-     *                       - array('catid DESC', 'id') => ORDER BY catid DESC, id
-     * @param integer $start Limit start number.
-     * @param integer $limit Limit rows.
-     * @param string  $key   The index key.
+     * @param mixed  $order Order sort, can ba string, array or object.
+     *                      Example:
+     *                      - 'id ASC' => ORDER BY id ASC
+     *                      - array('catid DESC', 'id') => ORDER BY catid DESC, id
+     * @param int    $start Limit start number.
+     * @param int    $limit Limit rows.
+     * @param string $key   The index key.
      *
      * @return mixed|DataSet Found rows data set.
      */
@@ -227,7 +237,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'order' => &$order,
                 'start' => &$start,
@@ -239,7 +249,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -269,10 +279,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'conditions' => &$conditions,
-                'order' => &$order,
+                'order'      => &$order,
             ]
         );
 
@@ -286,7 +296,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -298,35 +308,35 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Find column as an array.
      *
-     * @param string  $column     The column we want to select.
-     * @param mixed   $conditions Where conditions, you can use array or Compare object.
-     *                            Example:
-     *                            - `array('id' => 5)` => id = 5
-     *                            - `new GteCompare('id', 20)` => 'id >= 20'
-     *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
-     * @param mixed   $order      Order sort, can ba string, array or object.
-     *                            Example:
-     *                            - `id ASC` => ORDER BY id ASC
-     *                            - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
-     * @param integer $start      Limit start number.
-     * @param integer $limit      Limit rows.
-     * @param string  $key        The index key.
-     *
-     * @return  mixed
+     * @param string $column     The column we want to select.
+     * @param mixed  $conditions Where conditions, you can use array or Compare object.
+     *                           Example:
+     *                           - `array('id' => 5)` => id = 5
+     *                           - `new GteCompare('id', 20)` => 'id >= 20'
+     *                           - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed  $order      Order sort, can ba string, array or object.
+     *                           Example:
+     *                           - `id ASC` => ORDER BY id ASC
+     *                           - `array('catid DESC', 'id')` => ORDER BY catid DESC, id
+     * @param int    $start      Limit start number.
+     * @param int    $limit      Limit rows.
+     * @param string $key        The index key.
      *
      * @throws \InvalidArgumentException
+     *
+     * @return mixed
      */
     public function findColumn($column, $conditions = [], $order = null, $start = null, $limit = null, $key = null)
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
-                'column' => &$column,
+                'column'     => &$column,
                 'conditions' => &$conditions,
-                'order' => &$order,
-                'start' => &$start,
-                'limit' => &$limit,
+                'order'      => &$order,
+                'start'      => &$start,
+                'limit'      => &$limit,
             ]
         );
 
@@ -348,7 +358,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -364,13 +374,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * @throws \UnexpectedValueException
      * @throws \InvalidArgumentException
-     * @return  mixed|DataSet  Data set data with inserted id.
+     *
+     * @return mixed|DataSet Data set data with inserted id.
      */
     public function create($dataset)
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'dataset' => &$dataset,
             ]
@@ -384,7 +395,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -399,13 +410,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * @param mixed $data Send a data in and store.
      *
      * @throws \InvalidArgumentException
-     * @return  mixed|Data Data with inserted id.
+     *
+     * @return mixed|Data Data with inserted id.
      */
     public function createOne($data)
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'data' => &$data,
             ]
@@ -417,7 +429,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -429,10 +441,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Update records by data set. Every data depend on this table's primary key to update itself.
      *
-     * @param mixed $dataset      Data set contain data we want to update.
-     * @param array $condFields   The where condition tell us record exists or not, if not set,
-     *                            will use primary key instead.
-     * @param bool  $updateNulls  Update empty fields or not.
+     * @param mixed $dataset     Data set contain data we want to update.
+     * @param array $condFields  The where condition tell us record exists or not, if not set,
+     *                           will use primary key instead.
+     * @param bool  $updateNulls Update empty fields or not.
      *
      * @return mixed|DataSet
      */
@@ -440,10 +452,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
-                'dataset' => &$dataset,
-                'condFields' => &$condFields,
+                'dataset'     => &$dataset,
+                'condFields'  => &$condFields,
                 'updateNulls' => &$updateNulls,
             ]
         );
@@ -459,7 +471,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -471,10 +483,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Same as update(), just update one row.
      *
-     * @param mixed $data         The data we want to update.
-     * @param array $condFields   The where condition tell us record exists or not, if not set,
-     *                            will use primary key instead.
-     * @param bool  $updateNulls  Update empty fields or not.
+     * @param mixed $data        The data we want to update.
+     * @param array $condFields  The where condition tell us record exists or not, if not set,
+     *                           will use primary key instead.
+     * @param bool  $updateNulls Update empty fields or not.
      *
      * @return mixed|Data
      */
@@ -482,10 +494,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
-                'data' => &$data,
-                'condFields' => &$condFields,
+                'data'        => &$data,
+                'condFields'  => &$condFields,
                 'updateNulls' => &$updateNulls,
             ]
         );
@@ -496,7 +508,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -519,15 +531,16 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
      *
      * @throws \InvalidArgumentException
-     * @return  boolean
+     *
+     * @return bool
      */
     public function updateBatch($data, $conditions = [])
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
-                'data' => &$data,
+                'data'       => &$data,
                 'conditions' => &$conditions,
             ]
         );
@@ -536,7 +549,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -555,7 +568,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *                          - `new GteCompare('id', 20)` => 'id >= 20'
      *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
      *
-     * @return  mixed|DataSet Updated data set.
+     * @return mixed|DataSet Updated data set.
      */
     public function flush($dataset, $conditions = [])
     {
@@ -572,9 +585,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
-                'dataset' => &$dataset,
+                'dataset'    => &$dataset,
                 'conditions' => &$conditions,
             ]
         );
@@ -583,7 +596,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -596,12 +609,12 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * Save will auto detect is conditions matched in data or not.
      * If matched, using update, otherwise we will create it as new record.
      *
-     * @param mixed $dataset      The data set contains data we want to save.
-     * @param array $condFields   The where condition tell us record exists or not, if not set,
-     *                            will use primary key instead.
-     * @param bool  $updateNulls  Update empty fields or not.
+     * @param mixed $dataset     The data set contains data we want to save.
+     * @param array $condFields  The where condition tell us record exists or not, if not set,
+     *                           will use primary key instead.
+     * @param bool  $updateNulls Update empty fields or not.
      *
-     * @return  mixed|DataSet Saved data set.
+     * @return mixed|DataSet Saved data set.
      */
     public function save($dataset, $condFields = null, $updateNulls = false)
     {
@@ -612,10 +625,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
-                'dataset' => &$dataset,
-                'condFields' => &$condFields,
+                'dataset'     => &$dataset,
+                'condFields'  => &$condFields,
                 'updateNulls' => &$updateNulls,
             ]
         );
@@ -655,7 +668,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$dataset,
             ]
@@ -667,21 +680,21 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Save only one row.
      *
-     * @param mixed $data         The data we want to save.
-     * @param array $condFields   The where condition tell us record exists or not, if not set,
-     *                            will use primary key instead.
-     * @param bool  $updateNulls  Update empty fields or not.
+     * @param mixed $data        The data we want to save.
+     * @param array $condFields  The where condition tell us record exists or not, if not set,
+     *                           will use primary key instead.
+     * @param bool  $updateNulls Update empty fields or not.
      *
-     * @return  mixed|Data Saved data.
+     * @return mixed|Data Saved data.
      */
     public function saveOne($data, $condFields = null, $updateNulls = false)
     {
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
-                'data' => &$data,
-                'condFields' => &$condFields,
+                'data'        => &$data,
+                'condFields'  => &$condFields,
                 'updateNulls' => &$updateNulls,
             ]
         );
@@ -692,7 +705,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -704,13 +717,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Delete records by where conditions.
      *
-     * @param mixed $conditions   Where conditions, you can use array or Compare object.
-     *                            Example:
-     *                            - `array('id' => 5)` => id = 5
-     *                            - `new GteCompare('id', 20)` => 'id >= 20'
-     *                            - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
+     * @param mixed $conditions Where conditions, you can use array or Compare object.
+     *                          Example:
+     *                          - `array('id' => 5)` => id = 5
+     *                          - `new GteCompare('id', 20)` => 'id >= 20'
+     *                          - `new Compare('id', '%Flower%', 'LIKE')` => 'id LIKE "%Flower%"'
      *
-     * @return  boolean Will be always true.
+     * @return bool Will be always true.
      */
     public function delete($conditions)
     {
@@ -739,7 +752,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onBefore' . ucfirst(__FUNCTION__),
+            'onBefore'.ucfirst(__FUNCTION__),
             [
                 'conditions' => &$conditions,
             ]
@@ -749,7 +762,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
 
         // Event
         $this->triggerEvent(
-            'onAfter' . ucfirst(__FUNCTION__),
+            'onAfter'.ucfirst(__FUNCTION__),
             [
                 'result' => &$result,
             ]
@@ -761,14 +774,13 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Do find action, this method should be override by sub class.
      *
-     * @param array   $conditions Where conditions, you can use array or Compare object.
-     * @param array   $orders     Order sort, can ba string, array or object.
-     * @param integer $start      Limit start number.
-     * @param integer $limit      Limit rows.
+     * @param array $conditions Where conditions, you can use array or Compare object.
+     * @param array $orders     Order sort, can ba string, array or object.
+     * @param int   $start      Limit start number.
+     * @param int   $limit      Limit rows.
+     * @param       $key
      *
-     * @param         $key
-     *
-     * @return  mixed Found rows data set.
+     * @return mixed Found rows data set.
      */
     abstract protected function doFind(array $conditions, array $orders, $start, $limit, $key);
 
@@ -777,19 +789,19 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * @param mixed $dataset The data set contains data we want to store.
      *
-     * @return  mixed  Data set data with inserted id.
+     * @return mixed Data set data with inserted id.
      */
     abstract protected function doCreate($dataset);
 
     /**
      * Do update action, this method should be override by sub class.
      *
-     * @param mixed $dataset      Data set contain data we want to update.
-     * @param array $condFields   The where condition tell us record exists or not, if not set,
-     *                            will use primary key instead.
-     * @param bool  $updateNulls  Update empty fields or not.
+     * @param mixed $dataset     Data set contain data we want to update.
+     * @param array $condFields  The where condition tell us record exists or not, if not set,
+     *                           will use primary key instead.
+     * @param bool  $updateNulls Update empty fields or not.
      *
-     * @return  mixed Updated data set.
+     * @return mixed Updated data set.
      */
     abstract protected function doUpdate($dataset, array $condFields, $updateNulls = false);
 
@@ -799,7 +811,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * @param mixed $data       The data we want to update to every rows.
      * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
-     * @return  boolean
+     * @return bool
      */
     abstract protected function doUpdateBatch($data, array $conditions);
 
@@ -809,7 +821,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      * @param mixed $dataset    Data set contain data we want to update.
      * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
-     * @return  mixed Updated data set.
+     * @return mixed Updated data set.
      */
     abstract protected function doFlush($dataset, array $conditions);
 
@@ -818,7 +830,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * @param mixed $conditions Where conditions, you can use array or Compare object.
      *
-     * @return  boolean Will be always true.
+     * @return bool Will be always true.
      */
     abstract protected function doDelete(array $conditions);
 
@@ -827,14 +839,14 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * @param string $table Table name.
      *
-     * @return  array
+     * @return array
      */
     abstract public function getFields($table = null);
 
     /**
      * Get table name.
      *
-     * @return  string Table name.
+     * @return string Table name.
      */
     public function getTable()
     {
@@ -844,9 +856,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Set table name.
      *
-     * @param   string $table Table name.
+     * @param string $table Table name.
      *
-     * @return  AbstractDataMapper  Return self to support chaining.
+     * @return AbstractDataMapper Return self to support chaining.
      */
     public function setTable($table)
     {
@@ -860,9 +872,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * @param mixed $data The data we want to bind.
      *
-     * @return  object
-     *
      * @throws \UnexpectedValueException
+     *
+     * @return object
      */
     protected function bindData($data)
     {
@@ -884,10 +896,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
      *
      * @param mixed $dataset Data set we want to bind.
      *
-     * @return  object Data set object.
-     *
      * @throws \UnexpectedValueException
      * @throws \InvalidArgumentException
+     *
+     * @return object Data set object.
      */
     protected function bindDataset($dataset)
     {
@@ -915,7 +927,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Get data class.
      *
-     * @return  string Dat class.
+     * @return string Dat class.
      */
     public function getDataClass()
     {
@@ -925,9 +937,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Set data class.
      *
-     * @param   string $dataClass Data class.
+     * @param string $dataClass Data class.
      *
-     * @return  AbstractDataMapper  Return self to support chaining.
+     * @return AbstractDataMapper Return self to support chaining.
      */
     public function setDataClass($dataClass)
     {
@@ -939,7 +951,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Get data set class.
      *
-     * @return  string Data set class.
+     * @return string Data set class.
      */
     public function getDatasetClass()
     {
@@ -949,9 +961,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Set Data set class.
      *
-     * @param   string $datasetClass Dat set class.
+     * @param string $datasetClass Dat set class.
      *
-     * @return  AbstractDataMapper  Return self to support chaining.
+     * @return AbstractDataMapper Return self to support chaining.
      */
     public function setDatasetClass($datasetClass)
     {
@@ -963,9 +975,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * To use transaction or not.
      *
-     * @param boolean $yn Yes or no, keep default that we get this value.
+     * @param bool $yn Yes or no, keep default that we get this value.
      *
-     * @return  boolean
+     * @return bool
      */
     public function useTransaction($yn = null)
     {
@@ -977,19 +989,19 @@ abstract class AbstractDataMapper implements DataMapperInterface
     }
 
     /**
-     * triggerEvent
+     * triggerEvent.
      *
-     * @param   string|Event $event
-     * @param   array        $args
+     * @param string|Event $event
+     * @param array        $args
      *
-     * @return  Event
+     * @return Event
      */
     public function triggerEvent($event, $args = [])
     {
         $dispatcher = $this->getDispatcher();
 
         if (!$dispatcher instanceof DispatcherInterface) {
-            return null;
+            return;
         }
 
         $args['mapper'] = $this;
@@ -1006,9 +1018,9 @@ abstract class AbstractDataMapper implements DataMapperInterface
     }
 
     /**
-     * Method to get property Dispatcher
+     * Method to get property Dispatcher.
      *
-     * @return  DispatcherInterface
+     * @return DispatcherInterface
      */
     public function getDispatcher()
     {
@@ -1024,11 +1036,11 @@ abstract class AbstractDataMapper implements DataMapperInterface
     }
 
     /**
-     * Method to set property dispatcher
+     * Method to set property dispatcher.
      *
-     * @param   DispatcherInterface $dispatcher
+     * @param DispatcherInterface $dispatcher
      *
-     * @return  static  Return self to support chaining.
+     * @return static Return self to support chaining.
      */
     public function setDispatcher(DispatcherInterface $dispatcher)
     {
@@ -1040,10 +1052,10 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Method to get the primary key field name for the table.
      *
-     * @param   boolean $multiple True to return all primary keys (as an array) or false to return just the first one
-     *                            (as a string).
+     * @param bool $multiple True to return all primary keys (as an array) or false to return just the first one
+     *                       (as a string).
      *
-     * @return  array|mixed  Array of primary key field names or string containing the first primary key field.
+     * @return array|mixed Array of primary key field names or string containing the first primary key field.
      *
      * @since   3.0
      */
@@ -1066,7 +1078,7 @@ abstract class AbstractDataMapper implements DataMapperInterface
     /**
      * Validate that the primary key has been set.
      *
-     * @return  boolean  True if the primary key(s) have been set.
+     * @return bool True if the primary key(s) have been set.
      *
      * @since   3.0
      */

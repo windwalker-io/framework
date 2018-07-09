@@ -9,7 +9,7 @@
 namespace Windwalker\Language\Loader;
 
 /**
- * Class AbstractLoader
+ * Class AbstractLoader.
  *
  * @since 2.0
  */
@@ -18,14 +18,14 @@ abstract class AbstractLoader implements LoaderInterface
     /**
      * Property name.
      *
-     * @var  string
+     * @var string
      */
     protected $name = '';
 
     /**
-     * getName
+     * getName.
      *
-     * @return  string
+     * @return string
      */
     public function getName()
     {

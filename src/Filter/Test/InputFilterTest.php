@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of Windwalker project Test files.  @codingStandardsIgnoreStart
+ * Part of Windwalker project Test files.  @codingStandardsIgnoreStart.
  *
  * @copyright  Copyright (C) 2014 - 2015 LYRASOFT Taiwan, Inc. All rights reserved.
  * @license    GNU Lesser General Public License version 3 or later.
@@ -12,7 +12,7 @@ use Windwalker\Filter\InputFilter;
 use Windwalker\Filter\Test\Stub\StubThorCleaner;
 
 /**
- * Test class of InputFilter
+ * Test class of InputFilter.
  *
  * @since 2.0
  */
@@ -49,20 +49,20 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
     /**
      * Produces the array of test cases common to all test runs.
      *
-     * @return  array  Two dimensional array of test cases. Each row consists of three values
-     *                 The first is the type of input data, the second is the actual input data,
-     *                 the third is the expected result of filtering, and the fourth is
-     *                 the failure message identifying the source of the data.
+     * @return array Two dimensional array of test cases. Each row consists of three values
+     *               The first is the type of input data, the second is the actual input data,
+     *               the third is the expected result of filtering, and the fourth is
+     *               the failure message identifying the source of the data.
      */
     public function casesGeneric()
     {
-        $input = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`' .
-            'abcdefghijklmnopqrstuvwxyz{|}~â‚¬â€šÆ’â€žâ€¦â€ â€¡Ë†â€°Å â€¹Å’Å½â€˜â€™â€œâ' .
-            '€�â€¢â€“â€”Ëœâ„¢Å¡â€ºÅ“Å¾Å¸Â¡Â¢Â£Â¤Â¥Â' .
-            '¦Â§Â¨Â©ÂªÂ«Â¬Â­Â®Â¯Â°Â±Â²Â³Â´ÂµÂ¶Â·' .
-            'Â¸Â¹ÂºÂ»Â¼Â½Â¾Â¿Ã€Ã�Ã‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹' .
-            'ÃŒÃ�ÃŽÃ�Ã�Ã‘Ã’Ã“Ã”Ã•Ã–Ã—Ã˜Ã™ÃšÃ›ÃœÃ�ÃžÃ' .
-            'ŸÃ Ã¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã' .
+        $input = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`'.
+            'abcdefghijklmnopqrstuvwxyz{|}~â‚¬â€šÆ’â€žâ€¦â€ â€¡Ë†â€°Å â€¹Å’Å½â€˜â€™â€œâ'.
+            '€�â€¢â€“â€”Ëœâ„¢Å¡â€ºÅ“Å¾Å¸Â¡Â¢Â£Â¤Â¥Â'.
+            '¦Â§Â¨Â©ÂªÂ«Â¬Â­Â®Â¯Â°Â±Â²Â³Â´ÂµÂ¶Â·'.
+            'Â¸Â¹ÂºÂ»Â¼Â½Â¾Â¿Ã€Ã�Ã‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹'.
+            'ÃŒÃ�ÃŽÃ�Ã�Ã‘Ã’Ã“Ã”Ã•Ã–Ã—Ã˜Ã™ÃšÃ›ÃœÃ�ÃžÃ'.
+            'ŸÃ Ã¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã'.
             '°Ã±Ã²Ã³Ã´ÃµÃ¶Ã·Ã¸Ã¹ÃºÃ»Ã¼Ã½Ã¾Ã¿';
 
         return [
@@ -475,8 +475,8 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
             [
                 'unknown_03',
                 '',
-                ["key" => "Value", "key2" => "This&That", "key2" => "This&amp;That"],
-                ["key" => "Value", "key2" => "This&That", "key2" => "This&That"],
+                ['key' => 'Value', 'key2' => 'This&That', 'key2' => 'This&amp;That'],
+                ['key' => 'Value', 'key2' => 'This&That', 'key2' => 'This&That'],
                 'From generic cases',
             ],
             [
@@ -590,11 +590,11 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
     /**
      * Method to test clean().
      *
-     * @param   string $id
-     * @param   string $type    The type of input
-     * @param   string $data    The input
-     * @param   string $expect  The expected result for this test.
-     * @param   string $message The failure message identifying source of test case.
+     * @param string $id
+     * @param string $type    The type of input
+     * @param string $data    The input
+     * @param string $expect  The expected result for this test.
+     * @param string $message The failure message identifying source of test case.
      *
      * @return void
      *
@@ -607,7 +607,7 @@ class InputFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             $expect,
             $this->instance->clean($data, $type),
-            $message . ': ' . $id . '. Using filter: ' . $type
+            $message.': '.$id.'. Using filter: '.$type
         );
     }
 

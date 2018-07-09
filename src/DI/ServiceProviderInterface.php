@@ -9,16 +9,16 @@
 namespace Windwalker\DI;
 
 /**
- * Interface ServiceProviderInterface
+ * Interface ServiceProviderInterface.
  */
 interface ServiceProviderInterface
 {
     /**
      * Registers the service provider with a DI container.
      *
-     * @param   Container $container The DI container.
+     * @param Container $container The DI container.
      *
-     * @return  void
+     * @return void
      */
     public function register(Container $container);
 }

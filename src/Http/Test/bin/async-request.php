@@ -5,8 +5,7 @@
  * @copyright  Copyright (C) 2017 $Asikart.
  * @license    LGPL-2.0-or-later
  */
-
-include_once __DIR__ . '/../../../../vendor/autoload.php';
+include_once __DIR__.'/../../../../vendor/autoload.php';
 
 $http = new \Windwalker\Http\AsyncHttpClient();
 

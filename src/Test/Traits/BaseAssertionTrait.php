@@ -12,14 +12,14 @@ use PHPUnit\Framework\TestCase;
 use Windwalker\Test\Helper\TestStringHelper;
 
 /**
- * StringTestTrait
+ * StringTestTrait.
  *
  * @since  3.2
  */
 trait BaseAssertionTrait
 {
     /**
-     * assertStringDataEquals
+     * assertStringDataEquals.
      *
      * @param string $expected
      * @param string $actual
@@ -29,7 +29,7 @@ trait BaseAssertionTrait
      * @param bool   $canonicalize
      * @param bool   $ignoreCase
      *
-     * @return  void
+     * @return void
      */
     public static function assertStringDataEquals(
         $expected,
@@ -52,7 +52,7 @@ trait BaseAssertionTrait
     }
 
     /**
-     * assertStringDataEquals
+     * assertStringDataEquals.
      *
      * @param string $expected
      * @param string $actual
@@ -62,7 +62,7 @@ trait BaseAssertionTrait
      * @param bool   $canonicalize
      * @param bool   $ignoreCase
      *
-     * @return  void
+     * @return void
      */
     public static function assertStringSafeEquals(
         $expected,
@@ -85,7 +85,7 @@ trait BaseAssertionTrait
     }
 
     /**
-     * assertExpectedException
+     * assertExpectedException.
      *
      * @param callable      $closure
      * @param string|object $class
@@ -93,7 +93,7 @@ trait BaseAssertionTrait
      * @param int           $code
      * @param string        $message
      *
-     * @return  void
+     * @return void
      */
     public static function assertExpectedException(
         callable $closure,
@@ -138,11 +138,11 @@ trait BaseAssertionTrait
     }
 
     /**
-     * expectException
+     * expectException.
      *
      * @param string $exception
      *
-     * @return  mixed
+     * @return mixed
      */
     public function legacyExpectException($exception)
     {

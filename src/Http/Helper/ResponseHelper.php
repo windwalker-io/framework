@@ -18,7 +18,7 @@ abstract class ResponseHelper
     /**
      * Status phrases.
      *
-     * @var  array
+     * @var array
      */
     protected static $phrases = [
         // INFORMATIONAL CODES
@@ -88,30 +88,28 @@ abstract class ResponseHelper
     /**
      * Get status phrase by code.
      *
-     * @param   integer $code Status code to get phrase.
+     * @param int $code Status code to get phrase.
      *
-     * @return  string
+     * @return string
      */
     public static function getPhrase($code)
     {
         if (isset(static::$phrases[$code])) {
             return static::$phrases[$code];
         }
-
-        return null;
     }
 
     /**
      * Validate a status code.
      *
-     * @param   int|string $code
+     * @param int|string $code
      *
-     * @return  boolean  Valid or not.
+     * @return bool Valid or not.
      */
     public static function validateStatus($code)
     {
         $code = (int) $code;
 
-        return ($code >= 100 && $code < 600);
+        return $code >= 100 && $code < 600;
     }
 }

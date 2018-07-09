@@ -9,18 +9,18 @@
 namespace Windwalker\Edge\Loader;
 
 /**
- * Interface EdgeLoaderInterface
+ * Interface EdgeLoaderInterface.
  *
  * @since  3.0
  */
 interface EdgeLoaderInterface
 {
     /**
-     * load
+     * load.
      *
-     * @param   string $key
+     * @param string $key
      *
-     * @return  string
+     * @return string
      */
     public function find($key);
 }

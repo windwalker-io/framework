@@ -9,16 +9,16 @@
 namespace Windwalker\Session\Handler;
 
 /**
- * Class PhpHandler
+ * Class PhpHandler.
  *
  * @since 2.0
  */
 class NativeHandler extends \SessionHandler implements HandlerInterface
 {
     /**
-     * isSupported
+     * isSupported.
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isSupported()
     {
@@ -26,9 +26,9 @@ class NativeHandler extends \SessionHandler implements HandlerInterface
     }
 
     /**
-     * register
+     * register.
      *
-     * @return  mixed
+     * @return mixed
      */
     public function register()
     {

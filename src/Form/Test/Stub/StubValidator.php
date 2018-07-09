@@ -18,15 +18,15 @@ use Windwalker\Validator\AbstractValidator;
 class StubValidator extends AbstractValidator
 {
     /**
-     * Test value and return boolean
+     * Test value and return boolean.
      *
      * @param mixed $value
      *
-     * @return  boolean
+     * @return bool
      */
     protected function test($value)
     {
-        $this->setError('Test Fail: ' . $value);
+        $this->setError('Test Fail: '.$value);
 
         return false;
     }
